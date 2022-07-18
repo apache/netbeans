@@ -34,7 +34,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.netbeans.modules.groovy.editor.api.parser.ApplyGroovyTransformation;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 
 /**
  * Simple {@link ParsingCompilerCustomizer} implementation: adds or disables Groovy AST
@@ -88,8 +88,7 @@ public final class SimpleTransformationCustomizer implements ParsingCompilerCust
 
     @Override
     public CompilerConfiguration configureParsingCompiler(Context ctx, CompilerConfiguration cfg) {
-        Cfg c = IndexingSupport.isIndexingTask(ctx.getConsumerTask()) ?
-                indexing : parsing;
+        Cfg c = GroovyUtils.isIndexingTask(ctx.getConsumerTask()) ? indexing : parsing;
         if (!c.disableTransformations.isEmpty()) {
             Set<String> disabled = cfg.getDisabledGlobalASTTransformations();
             if (disabled == null) {
@@ -105,8 +104,7 @@ public final class SimpleTransformationCustomizer implements ParsingCompilerCust
     
     @Override
     public void decorateCompilation(Context ctx, CompilationUnit cu) {
-        Cfg c = IndexingSupport.isIndexingTask(ctx.getConsumerTask()) ?
-                indexing : parsing;
+        Cfg c = GroovyUtils.isIndexingTask(ctx.getConsumerTask()) ? indexing : parsing;
         GroovyClassLoader transformLoader = cu.getTransformLoader();
         Collection<String> clist = c.addTransformations;
         if (clist == null || clist.isEmpty()) {

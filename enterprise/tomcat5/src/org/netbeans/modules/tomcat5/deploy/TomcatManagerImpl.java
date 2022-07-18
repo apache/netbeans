@@ -46,6 +46,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.NbBundle;
 import java.io.*;
 import java.net.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -570,7 +571,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 }
 
                 // Process the response message
-                reader = new InputStreamReader(hconn.getInputStream(),"UTF-8"); //NOI18N
+                reader = new InputStreamReader(hconn.getInputStream(), StandardCharsets.UTF_8);
                 retries = -1;
                 StringBuffer buff = new StringBuffer();
                 String error = null;

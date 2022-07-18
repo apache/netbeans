@@ -24,7 +24,6 @@
         <asadmin jar="client/appserver-cli.jar"/>
     </tools>
     <java version="1.8">
-        <platform version="1.7"/>
         <platform version="1.8"/>
     </java>
     <javaee version="1.8">
@@ -53,8 +52,6 @@
                 <include name="bean-validator.jar"/>
                 <include name="cdi-api.jar"/>
                 <include name="jaxb-osgi.jar"/>
-                <include name="jaxr-api-osgi.jar"/>
-                <include name="jaxrpc-api-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
             </fileset>
@@ -74,15 +71,13 @@
     <library id="Jersey 2">
         <classpath>
             <fileset dir="modules">
-                <include name="guava.+\.jar"/>
                 <include name="jackson.+\.jar"/>
-                <!-- include name="javax.ws.+\.jar"/ -->
                 <include name="jersey.+\.jar"/>
                 <include name="jettison.*\.jar"/>
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.28/jersey-documentation-2.28-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>
@@ -90,7 +85,7 @@
     <library id="JAX-RS">
         <classpath>
             <fileset dir="modules">
-                <include name="javax.ws.rs-api.jar"/>
+                <include name="jakarta.ws.rs-api.jar"/>
             </fileset>
         </classpath>
         <javadocs>

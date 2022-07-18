@@ -501,8 +501,10 @@ public abstract class RestSupport {
                         Profile.JAKARTA_EE_8_FULL.equals(profile);
         boolean isJakartaee9 = Profile.JAKARTA_EE_9_WEB.equals(profile) ||
                         Profile.JAKARTA_EE_9_FULL.equals(profile);
+        boolean isJakartaee91 = Profile.JAKARTA_EE_9_1_WEB.equals(profile) ||
+                        Profile.JAKARTA_EE_9_1_FULL.equals(profile);
         // Fix for BZ#216345: JAVA_EE_6_WEB profile doesn't contain JAX-RS API
-        return (isJee6 && MiscPrivateUtilities.supportsTargetProfile(project, Profile.JAVA_EE_6_FULL)) || isJee7;
+        return (isJee6 && MiscPrivateUtilities.supportsTargetProfile(project, Profile.JAVA_EE_6_FULL)) || isJee7 || isJee8 || isJakartaee8 || isJakartaee9 || isJakartaee91;
     }
 
     /**

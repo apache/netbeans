@@ -243,7 +243,7 @@ public final class CountingSecurityManager extends SecurityManager {
                     absoluteStacks += value;
                 }
                 int min = absoluteStacks / 50;
-                for (Map.Entry<String, int> entry : stacks.entrySet()) {
+                for (Map.Entry<String, Integer> entry : stacks.entrySet()) {
                     String s = entry.getKey();
                     int value = entry.getValue();
                     if (value > min) {

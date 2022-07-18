@@ -1,0 +1,6 @@
+Code completion result for source line:
+enum EnumTest:int implements EnumInter| {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      EnumInterface1                  [PUBLIC]   EnumTestNamespace
+CLASS      EnumInterface2                  [PUBLIC]   EnumTestNamespace

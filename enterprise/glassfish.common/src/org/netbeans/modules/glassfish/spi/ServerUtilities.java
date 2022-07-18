@@ -321,9 +321,8 @@ public final class ServerUtilities {
                 } else if(!candidate.getNameExt().endsWith(".jar")) {
                     continue;
                 }
-                JarFile jarFile = null;
-                try {
-                    jarFile = new JarFile(FileUtil.toFile(candidate), false);
+                
+                try (JarFile jarFile = new JarFile(FileUtil.toFile(candidate), false)) {
                     Manifest manifest = jarFile.getManifest();
                     if(manifest != null) {
                         Attributes attrs = manifest.getMainAttributes();
@@ -342,18 +341,7 @@ public final class ServerUtilities {
                 } catch (IOException ex) {
                     Logger.getLogger(ServerUtilities.class.getName()).log(Level.INFO,
                             candidate.getPath(), ex);
-                } finally {
-                    if (null != jarFile) {
-                        try {
-                            jarFile.close();
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServerUtilities.class.getName()).log(Level.INFO,
-                                    candidate.getPath(), ex);
-                        }
-                        jarFile = null;
-                    }
                 }
-
             }
         } else {
            Logger.getLogger(ServerUtilities.class.getName()).log(Level.FINER,

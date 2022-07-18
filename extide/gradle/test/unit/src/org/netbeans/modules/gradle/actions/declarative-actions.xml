@@ -20,7 +20,7 @@
 
 -->
 <!DOCTYPE actions SYSTEM "action-mapping.dtd">
-<!-- BEGIN:configuration-declaration-xml -->
+<!-- @start region="configuration-declaration-xml" -->
 <actions>
     <profiles>
         <profile id="provided-config" displayName="Example Provided Config">
@@ -29,12 +29,16 @@
             <actions>
                 <apply-for plugins="java">
                     <action name="run.single">
-                        <args>-PrunClassName=${selectedClass} runSingle --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
+                        <args>-PrunClassName=${selectedClass} runSingle 
+                            --continuous ${javaExec.jvmArgs} ${javaExec.args}
+                        </args>
                     </action>
                 </apply-for>
                 <apply-for plugins="application">
                     <action name="run">
-                        <args>run --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
+                        <args>run --continuous ${javaExec.jvmArgs} 
+                            ${javaExec.args}
+                        </args>
                     </action>
                 </apply-for>
                 <action name="debug.single">
@@ -43,7 +47,7 @@
             </actions>
         </profile>
     </profiles>
-    <!-- END:configuration-declaration-xml -->
+    <!-- @end region="configuration-declaration-xml" -->
 
     <apply-for plugins="java">
         <action name="test.single">

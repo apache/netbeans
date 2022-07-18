@@ -76,7 +76,7 @@ abstract class AbstractGradleClassPathImpl implements FlaggedClassPathImplementa
             }
             support.firePropertyChange(FlaggedClassPathImplementation.PROP_FLAGS, null, null);
         };
-        watcher.addPropertyChangeListener(WeakListeners.propertyChange(listener, null));
+        watcher.addPropertyChangeListener(WeakListeners.propertyChange(listener, watcher));
     }
 
     @Override

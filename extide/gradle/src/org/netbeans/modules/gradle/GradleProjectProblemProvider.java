@@ -87,12 +87,17 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
                 ret.add(ProjectProblem.createError(Bundle.LBL_PrimingRequired(), Bundle.TXT_PrimingRequired(), resolver));
             }
         } else {
-            for (String problem : gp.getProblems()) {
+            for (GradleReport report : gp.getProblems()) {
+                String problem = formatReport(report);
                 String[] lines = problem.split("\\n"); //NOI18N
                 ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), null)); //NOI18N
             }
         }
         return ret;
+    }
+    
+    private String formatReport(GradleReport r) {
+        return r.formatReportForHintOrProblem(true, project.getProjectDirectory());
     }
     
     private class GradleProjectProblemResolver implements ProjectProblemResolver {
@@ -104,11 +109,11 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
                 Quality q = gradleProject.getQuality();
                 Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED
                         : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
-                Set<String> problems = gradleProject.getProblems();
+                Set<GradleReport> problems = gradleProject.getProblems();
                 if (problems.isEmpty()) {
                     return Result.create(st);
                 } else {
-                    return Result.create(st, problems.iterator().next());
+                    return Result.create(st, formatReport(problems.iterator().next()));
                 }
             });
        }

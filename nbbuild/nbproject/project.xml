@@ -132,16 +132,19 @@
             <export>
                 <type>folder</type>
                 <location>${nb.build.dir}/antclasses</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>bootstrap</build-target>
             </export>
             <export>
                 <type>jar</type>
                 <location>${nbantext.jar}</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>bootstrap</build-target>
             </export>
             <export>
                 <type>folder</type>
                 <location>${nb.build.dir}/test/unit/classes</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>bootstrap</build-target>
             </export>
             <view>

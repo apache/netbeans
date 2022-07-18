@@ -31,12 +31,15 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,8 +76,12 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Segment;
+import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CallHierarchyIncomingCall;
 import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
@@ -155,9 +162,12 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.AtomicLockListener;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CodeStyle;
@@ -218,6 +228,7 @@ import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants;
 import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
@@ -225,9 +236,12 @@ import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
+import org.netbeans.modules.editor.indent.api.Reformat;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
+import org.netbeans.spi.lsp.CodeLensProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
@@ -235,6 +249,7 @@ import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -901,8 +916,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
             }
 
-            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
-            if (id2Errors != null) {
+            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
+            for (String key : VALID_ERROR_KEYS) {
+                Map<String, org.netbeans.api.lsp.Diagnostic> diags = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-valid-" + key);
+                if (diags != null) {
+                    id2Errors.putAll(diags);
+                }
+            }
+            if (!id2Errors.isEmpty()) {
                 for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
                     org.netbeans.api.lsp.Diagnostic err = entry.getValue();
                     if (err.getDescription() == null || err.getDescription().isEmpty()) {
@@ -1062,76 +1083,122 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         "# {0} - method name", "# {1} - configuration name", "LBL_DebugWith=Debug {0} with {1}"})
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
+        if (!client.getNbCodeCapabilities().wantsJavaSupport()) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        String uri = params.getTextDocument().getUri();
-        Source source = getSource(uri);
-        if (source == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        CompletableFuture<List<? extends CodeLens>> result = new CompletableFuture<>();
+        CompletableFuture<List<? extends CodeLens>> result = CompletableFuture.completedFuture(Collections.emptyList());
         try {
-            ParserManager.parseWhenScanFinished(Collections.singleton(source), new UserTask() {
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    Parser.Result parserResult = resultIterator.getParserResult();
-                    //look for main methods:
-                    List<CodeLens> lens = new ArrayList<>();
-                    if (parserResult == null) {
-                        // no parser for the sourec type
-                        result.complete(lens);
-                        return;
-                    }
-                    CompilationController cc = CompilationController.get(parserResult);
-                    if (cc != null) {
-                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        AtomicReference<List<Pair<String, String>>> projectConfigurations = new AtomicReference<>();
-                        new TreePathScanner<Void, Void>() {
-                            public Void visitMethod(MethodTree tree, Void p) {
-                                Element el = cc.getTrees().getElement(getCurrentPath());
-                                if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
-                                    Range range = Utils.treeRange(cc, tree);
-                                    List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
-                                    String method = el.getSimpleName().toString();
-                                    lens.add(new CodeLens(range,
-                                                          new Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),
-                                                          null));
-                                    lens.add(new CodeLens(range,
-                                                          new Command(Bundle.LBL_Debug(method), COMMAND_DEBUG_SINGLE, arguments),
-                                                          null));
-                                    // Run and Debug configurations:
-                                    List<Pair<String, String>> configs = projectConfigurations.accumulateAndGet(null, (l, nul) -> l == null ? getProjectConfigurations(source) : l);
-                                    for (Pair<String, String> config : configs) {
-                                        String runConfig = config.first();
-                                        if (runConfig != null) {
-                                            lens.add(new CodeLens(range,
-                                                                  new Command(Bundle.LBL_RunWith(method, runConfig), COMMAND_RUN_SINGLE, Arrays.asList(params.getTextDocument().getUri(), null, runConfig)),
-                                                                  null));
-                                        }
-                                        String debugConfig = config.second();
-                                        if (debugConfig != null) {
-                                            lens.add(new CodeLens(range,
-                                                                  new Command(Bundle.LBL_DebugWith(method, debugConfig), COMMAND_DEBUG_SINGLE, Arrays.asList(params.getTextDocument().getUri(), null, debugConfig)),
-                                                                  null));
-                                        }
-                                    }
-                                }
-                                return null;
-                            }
-                        }.scan(cc.getCompilationUnit(), null);
-                    }
-                    result.complete(lens);
-                }
-            });
-        } catch (ParseException ex) {
-            result.completeExceptionally(ex);
+            String uri = params.getTextDocument().getUri();
+            FileObject file = Utils.fromUri(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
+            if (file == null || doc == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            for (CodeLensProvider provider : MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(CodeLensProvider.class)) {
+                result = result.thenCombine(provider.codeLens(doc), (leftList, rightList) -> mergeLists(leftList, convertCodeLens(doc, rightList)));
+            }
+        } catch (MalformedURLException ex) {
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
         }
         return result;
     }
 
-    private List<Pair<String, String>> getProjectConfigurations(Source source) {
+    private List<CodeLens> convertCodeLens(Document doc, List<? extends org.netbeans.api.lsp.CodeLens> origin) {
+        List<CodeLens> result = new ArrayList<>();
+        for (org.netbeans.api.lsp.CodeLens len : origin) {
+            Command cmd = null;
+            if (len.getCommand() != null) {
+                cmd = new Command(len.getCommand().getTitle(), len.getCommand().getCommand(), len.getCommand().getArguments());
+            }
+            result.add(new CodeLens(callRange2Range(len.getRange(), doc), cmd, len.getData()));
+        }
+        return result;
+    }
+    private List<? extends CodeLens> mergeLists(List<? extends CodeLens> left, List<? extends CodeLens> right) {
+        List<CodeLens> result = new ArrayList<>();
+        result.addAll(left);
+        result.addAll(right);
+        return result;
+    }
+
+    @MimeRegistration(mimeType="text/x-java", service=CodeLensProvider.class) //TODO: other mime types?
+    public static final class MainLens implements CodeLensProvider {
+
+        @Override
+        public CompletableFuture<List<? extends org.netbeans.api.lsp.CodeLens>> codeLens(Document doc) {
+            Source source = Source.create(doc);
+            if (source == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            String uri = Utils.toUri(source.getFileObject());
+            CompletableFuture<List<? extends org.netbeans.api.lsp.CodeLens>> result = new CompletableFuture<>();
+            try {
+                ParserManager.parseWhenScanFinished(Collections.singleton(source), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        Parser.Result parserResult = resultIterator.getParserResult();
+                        //look for main methods:
+                        List<org.netbeans.api.lsp.CodeLens> lens = new ArrayList<>();
+                        if (parserResult == null) {
+                            // no parser for the sourec type
+                            result.complete(lens);
+                            return;
+                        }
+                        CompilationController cc = CompilationController.get(parserResult);
+                        if (cc != null) {
+                            cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                            AtomicReference<List<Pair<String, String>>> projectConfigurations = new AtomicReference<>();
+                            new TreePathScanner<Void, Void>() {
+                                public Void visitMethod(MethodTree tree, Void p) {
+                                    Element el = cc.getTrees().getElement(getCurrentPath());
+                                    if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
+                                        int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree);
+                                        int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tree);
+                                        org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(start, end);
+                                        List<Object> arguments = Collections.singletonList(uri);
+                                        String method = el.getSimpleName().toString();
+                                        lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                              new org.netbeans.api.lsp.Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),
+                                                              null));
+                                        lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                              new org.netbeans.api.lsp.Command(Bundle.LBL_Debug(method), COMMAND_DEBUG_SINGLE, arguments),
+                                                              null));
+                                        // Run and Debug configurations:
+                                        List<Pair<String, String>> configs = projectConfigurations.accumulateAndGet(null, (l, nul) -> l == null ? getProjectConfigurations(source) : l);
+                                        for (Pair<String, String> config : configs) {
+                                            String runConfig = config.first();
+                                            if (runConfig != null) {
+                                                lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                                      new org.netbeans.api.lsp.Command(Bundle.LBL_RunWith(method, runConfig), COMMAND_RUN_SINGLE, Arrays.asList(uri, null, runConfig)),
+                                                                      null));
+                                            }
+                                            String debugConfig = config.second();
+                                            if (debugConfig != null) {
+                                                lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                                      new org.netbeans.api.lsp.Command(Bundle.LBL_DebugWith(method, debugConfig), COMMAND_DEBUG_SINGLE, Arrays.asList(uri, null, debugConfig)),
+                                                                      null));
+                                            }
+                                        }
+                                    }
+                                    return null;
+                                }
+                            }.scan(cc.getCompilationUnit(), null);
+                        }
+                        result.complete(lens);
+                    }
+                });
+            } catch (ParseException ex) {
+                result.completeExceptionally(ex);
+            }
+            return result;
+        }
+    }
+
+    private static List<Pair<String, String>> getProjectConfigurations(Source source) {
         FileObject fo = source.getFileObject();
         Project p = FileOwnerQuery.getOwner(fo);
         if (p != null) {
@@ -1175,13 +1242,46 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
+        String uri = params.getTextDocument().getUri();
+        Document doc = server.getOpenedDocuments().getDocument(uri);
+        return format((LineDocument) doc, 0, doc.getLength());
     }
 
     @Override
-    public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
+        String uri = params.getTextDocument().getUri();
+        LineDocument lDoc = LineDocumentUtils.as(server.getOpenedDocuments().getDocument(uri), LineDocument.class);
+        if (lDoc != null) {
+            Range range = params.getRange();
+            return format(lDoc, Utils.getOffset(lDoc, range.getStart()), Utils.getOffset(lDoc, range.getEnd()));
+        }
+        return CompletableFuture.completedFuture(Collections.emptyList());
+    }
+
+    private CompletableFuture<List<? extends TextEdit>> format(Document doc, int startOffset, int endOffset) {
+        CompletableFuture<List<? extends TextEdit>> result = new CompletableFuture<>();
+        StyledDocument sDoc = LineDocumentUtils.as(doc, StyledDocument.class);
+        if (sDoc != null) {
+            FormatterDocument formDoc = new FormatterDocument(sDoc);
+            Reformat reformat = Reformat.get(formDoc);
+            if (reformat != null) {
+                reformat.lock();
+                try {
+                    reformat.reformat(startOffset, endOffset);
+                    result.complete(formDoc.getEdits());
+                } catch (BadLocationException ex) {
+                    result.completeExceptionally(ex);
+                } finally {
+                    reformat.unlock();
+                }
+            } else {
+                result.complete(Collections.emptyList());
+            }
+        } else {
+            result.complete(Collections.emptyList());
+        }
+        return result;
     }
 
     @Override
@@ -1208,8 +1308,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 }
                 int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                ts.move(pos);
+                if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                    pos += 1;
+                }
                 TreePath path = cc.getTreeUtilities().pathFor(pos);
                 RenameRefactoring ref = new RenameRefactoring(Lookups.singleton(TreePathHandle.create(path, cc)));
+                ref.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                 ref.setNewName("any");
                 Problem p = ref.fastCheckParameters();
                 boolean hasFatalProblem = false;
@@ -1221,7 +1327,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 } else {
                     //XXX: better range computation
-                    TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     int d = ts.move(pos);
                     if (ts.moveNext()) {
                         if (d == 0 && ts.token().id() != JavaTokenId.IDENTIFIER) {
@@ -1272,7 +1377,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
                     if (doc instanceof LineDocument) {
-                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset((LineDocument) doc, params.getPosition()));
+                        int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                        TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                        ts.move(pos);
+                        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                            pos += 1;
+                        }
+                        TreePath path = cc.getTreeUtilities().pathFor(pos);
                         List<Object> lookupContent = new ArrayList<>();
 
                         lookupContent.add(TreePathHandle.create(path, cc));
@@ -1288,6 +1399,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
 
                         refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                        refactoring[0].getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                         refactoring[0].setNewName(params.getNewName());
                         refactoring[0].setSearchInComments(true); //TODO?
                     }
@@ -1339,7 +1451,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
                 for (RefactoringElementImplementation rei : fileChanges) {
                     if (rei instanceof FileRenamePlugin.RenameFile) {
-                        String oldURI = params.getTextDocument().getUri();
+                        String oldURI = Utils.toUri(rei.getParentFile());
                         int dot = oldURI.lastIndexOf('.');
                         int slash = oldURI.lastIndexOf('/');
                         String newURI = oldURI.substring(0, slash + 1) + params.getNewName() + oldURI.substring(dot);
@@ -1477,6 +1589,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                 }
             });
+            for (String key : VALID_ERROR_KEYS) {
+                doc.putProperty("lsp-errors-valid-" + key, null);
+            }
         }
         runDiagnosticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
@@ -1648,7 +1763,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         Document doc = server.getOpenedDocuments().getDocument(uri);
                         if (documentVersion(doc) == originalVersion) {
                             publishDiagnostics(uri, hintDiags);
-                }
+                        }
                     }).schedule(DELAY);
                 }
             });
@@ -1657,7 +1772,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final int DELAY = 500;
 
-    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long originalVersion) {
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
         if (file == null) {
@@ -1668,6 +1783,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
+            long originalVersion = orgV != -1 ? orgV : documentVersion(doc);
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
             ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
                                                     .lookup(ErrorProvider.class);
@@ -1705,7 +1821,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (errors == null) {
                 errors = Collections.emptyList();
             }
-            if (documentVersion(doc) != originalVersion) {
+            if (originalVersion != -1 && documentVersion(doc) != originalVersion) {
                 return result;
             }
             for (org.netbeans.api.lsp.Diagnostic err : errors) {
@@ -1714,6 +1830,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             if (offset < 0) {
                 doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                doc.putProperty("lsp-errors-valid-" + keyPrefix, id2Errors);
+            } else {
+                doc.putProperty("lsp-errors-valid-offsetHints", id2Errors);
             }
             Map<String, org.netbeans.api.lsp.Diagnostic> mergedId2Errors = new HashMap<>();
             for (String k : ERROR_KEYS) {
@@ -1740,7 +1859,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (offset >= 0) {
                 mergedId2Errors.putAll(id2Errors);
             }
-            doc.putProperty("lsp-errors", mergedId2Errors);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -1816,6 +1934,31 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         client.publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<>()));
     }
     
+    private org.netbeans.api.lsp.Diagnostic.ReporterControl reporterControl = new org.netbeans.api.lsp.Diagnostic.ReporterControl() {
+        @Override
+        public void diagnosticChanged(Collection<FileObject> files, String mimeType) {
+            // possibly duplicities are handled by runDiagnosticTasks
+            for (FileObject f : files) {
+                // do not process directories at the moment
+                if (mimeType != null && !f.getMIMEType().equals(mimeType)) {
+                    continue;
+                }
+                URL url = URLMapper.findURL(f, URLMapper.EXTERNAL);
+                try {
+                    String uriString = url.toURI().toString();
+                    String lspUri = URITranslator.getDefault().uriToLSP(uriString);
+                    runDiagnosticTasks(lspUri);
+                } catch (URISyntaxException ex) {
+                    // should not happen
+                }
+            }
+        }
+    };
+    
+    public org.netbeans.api.lsp.Diagnostic.ReporterControl createReporterControl() {
+        return reporterControl;
+    }
+    
     /**
      * Publishes diagnostics to the client. Remembers the file, so that if the file vanishes (i.e. event is received, or
      * it's reported as missing during some processing), the client will get an empty diagnostics message for this file to
@@ -1829,6 +1972,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
     
     private static final String[] ERROR_KEYS = {"errors", "hints"};
+    private static final String[] VALID_ERROR_KEYS = {"errors", "hints", "offsetHints"};
 
     private interface ProduceErrors {
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
@@ -1836,7 +1980,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
-        
+        if (!client.getNbCodeCapabilities().wantsJavaSupport()) {
+            return null;
+        }
         Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);
@@ -2208,7 +2354,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         HierarchyTask<CallHierarchyOutgoingCall> t =  new HierarchyTask<CallHierarchyOutgoingCall>(params.getItem()) {
             @Override
             protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
-                return p.findIncomingCalls(e);
+                return p.findOutgoingCalls(e);
             }
 
             @Override
@@ -2217,5 +2363,221 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         };
         return t.processRequest();
+    }
+
+    private static class FormatterDocument implements StyledDocument, LineDocument, AtomicLockDocument {
+
+        private final StyledDocument doc;
+        private final List<TextEdit> edits = new ArrayList<>();
+        private TextEdit last = null;
+
+        private FormatterDocument(StyledDocument lineDocument) {
+            this.doc = lineDocument;
+        }
+
+        private List<TextEdit> getEdits() {
+            return edits;
+        }
+
+        @Override
+        public Style addStyle(String nm, Style parent) {
+            return doc.addStyle(nm, parent);
+        }
+
+        @Override
+        public void removeStyle(String nm) {
+            doc.removeStyle(nm);
+        }
+
+        @Override
+        public Style getStyle(String nm) {
+            return doc.getStyle(nm);
+        }
+
+        @Override
+        public void setCharacterAttributes(int offset, int length, AttributeSet s, boolean replace) {
+            doc.setCharacterAttributes(offset, length, s, replace);
+        }
+
+        @Override
+        public void setParagraphAttributes(int offset, int length, AttributeSet s, boolean replace) {
+            doc.setParagraphAttributes(offset, length, s, replace);
+        }
+
+        @Override
+        public void setLogicalStyle(int pos, Style s) {
+            doc.setLogicalStyle(pos, s);
+        }
+
+        @Override
+        public Style getLogicalStyle(int p) {
+            return doc.getLogicalStyle(p);
+        }
+
+        @Override
+        public javax.swing.text.Element getParagraphElement(int pos) {
+            return doc.getParagraphElement(pos);
+        }
+
+        @Override
+        public javax.swing.text.Element getCharacterElement(int pos) {
+            return doc.getCharacterElement(pos);
+        }
+
+        @Override
+        public Color getForeground(AttributeSet attr) {
+            return doc.getForeground(attr);
+        }
+
+        @Override
+        public Color getBackground(AttributeSet attr) {
+            return doc.getBackground(attr);
+        }
+
+        @Override
+        public Font getFont(AttributeSet attr) {
+            return doc.getFont(attr);
+        }
+
+        @Override
+        public int getLength() {
+            return doc.getLength();
+        }
+
+        @Override
+        public void addDocumentListener(DocumentListener listener) {
+            doc.addDocumentListener(listener);
+        }
+
+        @Override
+        public void removeDocumentListener(DocumentListener listener) {
+            doc.removeDocumentListener(listener);
+        }
+
+        @Override
+        public void addUndoableEditListener(UndoableEditListener listener) {
+            doc.addUndoableEditListener(listener);
+        }
+
+        @Override
+        public void removeUndoableEditListener(UndoableEditListener listener) {
+            doc.removeUndoableEditListener(listener);
+        }
+
+        @Override
+        public Object getProperty(Object key) {
+            return doc.getProperty(key);
+        }
+
+        @Override
+        public void putProperty(Object key, Object value) {
+        }
+
+        @Override
+        public void remove(int offs, int len) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            Position pos = Utils.createPosition(ldoc, offs);
+            if (last != null && pos.equals(last.getRange().getStart()) && pos.equals(last.getRange().getEnd())) {
+                last.getRange().setEnd(Utils.createPosition(ldoc, offs + len));
+            } else {
+                last = new TextEdit(new Range(pos, Utils.createPosition(ldoc, offs + len)), "");
+                edits.add(last);
+            }
+        }
+
+        @Override
+        public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            Position pos = Utils.createPosition(ldoc, offset);
+            if (last != null && pos.equals(last.getRange().getStart())) {
+                if (str != null) {
+                    last.setNewText(last.getNewText() + str);
+                }
+            } else {
+                last = new TextEdit(new Range(pos, pos), str != null ? str : "");
+                edits.add(last);
+            }
+        }
+
+        @Override
+        public String getText(int offset, int length) throws BadLocationException {
+            return doc.getText(offset, length);
+        }
+
+        @Override
+        public void getText(int offset, int length, Segment txt) throws BadLocationException {
+            doc.getText(offset, length, txt);
+        }
+
+        @Override
+        public javax.swing.text.Position getStartPosition() {
+            return doc.getStartPosition();
+        }
+
+        @Override
+        public javax.swing.text.Position getEndPosition() {
+            return doc.getEndPosition();
+        }
+
+        @Override
+        public javax.swing.text.Position createPosition(int offs) throws BadLocationException {
+            return doc.createPosition(offs);
+        }
+
+        @Override
+        public javax.swing.text.Element[] getRootElements() {
+            return doc.getRootElements();
+        }
+
+        @Override
+        public javax.swing.text.Element getDefaultRootElement() {
+            return doc.getDefaultRootElement();
+        }
+
+        @Override
+        public void render(Runnable r) {
+            doc.render(r);
+        }
+
+        @Override
+        public javax.swing.text.Position createPosition(int offset, javax.swing.text.Position.Bias bias) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            return ldoc.createPosition(offset, bias);
+        }
+
+        @Override
+        public Document getDocument() {
+            return this;
+        }
+
+        @Override
+        public void atomicUndo() {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.atomicUndo();
+        }
+
+        @Override
+        public void runAtomic(Runnable r) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.runAtomic(r);
+        }
+
+        @Override
+        public void runAtomicAsUser(Runnable r) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.runAtomicAsUser(r);
+        }
+
+        @Override
+        public void addAtomicLockListener(AtomicLockListener l) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.addAtomicLockListener(l);
+        }
+
+        @Override
+        public void removeAtomicLockListener(AtomicLockListener l) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.removeAtomicLockListener(l);
+        }
     }
 }

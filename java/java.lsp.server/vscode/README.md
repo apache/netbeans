@@ -101,6 +101,10 @@ Some refactorings are two steps with like Override method ... where method to be
 Change method parameters refactoring is provided using dedidacated form allowing to change, add, move, remove method parameters.
 ![Change method parameters refactoring](images/change_method_params.png)
 
+### Move Members Refactoring
+Move members refactoring provides dedicated form as well.
+![Move members refactoring](images/move_refactoring.png)
+
 ### Some of supported refactorings:
 * Convert to static import 
 * Rename 	
@@ -116,6 +120,8 @@ Change method parameters refactoring is provided using dedidacated form allowing
 * try-catch refactoring
 * switch() statement
 * while() cycle
+* Inline redundant variable 
+* Constructor and method argument refactoring
 
 ## Organize Imports
 Out of the box support for organizing imports in Java sources is available. It removes unused imports, groups imports by packages and updates your imports whenever a file is saved. In addition to the defaults, there is a rich set of configuration options. 
@@ -126,6 +132,14 @@ Go to VSCode `Preferences | Settings`  and search for _NetBeans_ to set `Netbean
 * `Groups` - Groups of import statements (specified by their package prefixes) and their sorting order. Import statements within a group are ordered alphabetically
 
 And `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
+
+## JavaDoc smart editing
+When adding JavaDoc to code NetBeans assists by suggesting to insert preformatted and prepopulated JavaDoc comment. Type `/**` above method signature and IDE offers to complete the JavaDoc. The action creates JavaDoc comment with all arguments prepared.
+![JavaDoc Completion](images/javadoc.png)
+
+## Source Code formatting
+Formatting source code is possible using also other styles than NetBeans. Eclipse, Google and Spring formatters can be used. For Eclipse formatter simply export settings from Eclipse IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings.
+![Source Code formatter](images/SourceCodeFormatter.png) 
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)
@@ -133,7 +147,7 @@ NetBeans Language Server provides Test Explorer view which allows to run all tes
 
 ## Native Image Debugger
 
-NetBeans Language Server allows Java like debugging of native images produced by GraalVM EE native-image tool. It is provided using GDB and via new Run configuration named __Launch Native Image__. This experimental feature works __now__ only on Linux with certain version of GDB, see above. GraalVM Enterprise Edition is needed as it produces full debug information for native images, at this time.
+NetBeans Language Server allows Java like debugging of native images produced by GraalVM native-image tool. It is provided using GDB and via new Run configuration named __Launch Native Image__. This experimental feature works __now__ only on Linux with certain version of GDB, see above.
 
 In order to debug native image applications it is necessary to build such native image with debug information available. It can be done by providing following switches for native-image tool: 
 - `-g -O0` or 
@@ -152,6 +166,18 @@ Setting project's Maven pom.xml to skip native-image build everytime when projec
 
 When native image is built, including debug info then add __Launch Native Image__ configuration to launch.json. Select it in Run & Debug activity window and press F5 to debug Java source code on native image.
 
+## Database Support
+Database Explorer allows to connect to databases using appropriate JDBC drivers.
+Make Default Connection sets selected Database connection as default for IDE. This connection is then used by all IDE editors for SQL Code completion, or Micronaut Data queries, e.g. `findByPagesGreaterThan`
+
+![Database Explorer](images/database-explorer.png)
+
+## OCI Explorer
+Oracle Cloud Infrastructure Explorer supports viewing compartments and resources available on user OCI instance. It is defined by OCI config file which has to be downloaded according to [OCI instructions](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm) and saved in `<users_home>/.oci/config`
+
+![Cloud Explorer](images/cloud-explorer.png)
+
+It is possible to add JDBC connection to Oracle Autonomous DB running in OCI using __Add DB Connection__ menu. It downloads DB Wallet automatically.
 ## Supported Options
 
 * __netbeans.jdkhome__ - path to the JDK, see dedicated section below

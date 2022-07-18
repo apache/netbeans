@@ -51,6 +51,36 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="CodeLensProvider">
+        <api name="LSP_API"/>
+        <summary>Added CodeLensProvider and relevant elements</summary>
+        <version major="1" minor="12"/>
+        <date day="2" month="7" year="2022"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CodeLensProvider.html">CodeLensProvider</a> SPI allows to provide code lens for a given document.
+        </description>
+        <class package="org.netbeans.api.lsp" name="CodeLens"/>
+        <class package="org.netbeans.spi.lsp" name="CodeLensProvider"/>
+    </change>
+    <change id="diagnosticReporter">
+        <api name="LSP_API"/>
+        <summary>Added DiagnosticReporter to trigger diagnostic collection</summary>
+        <version major="1" minor="11"/>
+        <date day="30" month="5" year="2022"/>
+        <author login="sdedic"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/DiagnosticReporter.html">DiagnosticReporter</a> SPI should be implemented to allow
+            alerting the LSP server core that diagnostics for certain file(s) may have changed. The core implementation should then poll 
+            <a href="@TOP@/org/netbeans/spi/lsp/ErrorProvider.html">ErrorProviders</a> to collect the diagnostics.
+            API clients should call <a href="@TOP@/org/netbeans/api/lsp/Diagnostic.html#findReporterControl-org.openide.util.Lookup-org.openide.filesystems.FileObject-">Diagnostic.findReporterControl</a>
+            to obtain an accessor which can fire the alert.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Diagnostic"/>
+        <class package="org.netbeans.spi.lsp" name="DiagnosticReporter"/>
+    </change>
     <change id="CallHierarchyProvider">
         <api name="LSP_API"/>
         <summary>Added CallHierarchyProvider and relevant elements</summary>

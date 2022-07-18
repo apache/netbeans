@@ -6,14 +6,8 @@
         <token id='T_FUNCTION' start='11' end='19'>
             <text>function</text>
         </token>
-        <token id='T_STRING' start='20' end='24'>
-            <text>some</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='24' end='25'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='25' end='27'>
-            <text>ns</text>
+        <token id='T_NAME_QUALIFIED' start='20' end='27'>
+            <text>some\ns</text>
         </token>
         <token id='T_NS_SEPARATOR' start='27' end='28'>
             <text>\</text>

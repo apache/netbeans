@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.api.elements;
 
 import java.util.Collection;
@@ -30,6 +29,7 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
  * @author Raddek Matous
  */
 public class AliasedType extends AliasedElement implements TypeElement {
+
     protected AliasedType(final AliasedName aliasedName, final TypeElement type) {
         super(aliasedName, type);
     }
@@ -37,6 +37,7 @@ public class AliasedType extends AliasedElement implements TypeElement {
     protected final TypeElement getRealType() {
         return (TypeElement) element;
     }
+
     @Override
     public final String asString(PrintAs as) {
         return getRealType().asString(as);
@@ -65,6 +66,11 @@ public class AliasedType extends AliasedElement implements TypeElement {
     @Override
     public boolean isTraited() {
         return getRealType().isTraited();
+    }
+
+    @Override
+    public final boolean isEnum() {
+        return getRealType().isEnum();
     }
 
     @Override

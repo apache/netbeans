@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -289,7 +290,7 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
         }
 
         public InputStream getInputStream() throws IOException {
-            return new ByteArrayInputStream(path.getBytes("UTF-8"));
+            return new ByteArrayInputStream(path.getBytes(StandardCharsets.UTF_8));
         }
 
     }

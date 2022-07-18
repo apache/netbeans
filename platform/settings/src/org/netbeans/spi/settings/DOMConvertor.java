@@ -20,6 +20,7 @@
 package org.netbeans.spi.settings;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;

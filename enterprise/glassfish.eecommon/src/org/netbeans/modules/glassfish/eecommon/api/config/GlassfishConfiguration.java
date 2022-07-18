@@ -506,6 +506,7 @@ public abstract class GlassfishConfiguration implements
         "gfv3",
         "gfv3ee6",
         "gfv3ee6wc",
+        "gfv4ee7",
         "gfv5ee8",
         "gfv510ee8",
         "gfv6ee9",

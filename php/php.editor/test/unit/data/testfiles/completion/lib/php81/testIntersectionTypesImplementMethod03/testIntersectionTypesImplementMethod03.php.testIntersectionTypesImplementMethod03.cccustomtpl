@@ -1,0 +1,4 @@
+Name: testMethod
+public function testMethod(\Test1\Foo&\Test1\Bar $param): \Test1\Foo&\Test1\Bar {
+${cursor};
+}

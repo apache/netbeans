@@ -32,9 +32,9 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  * @author Petr Pisl
  */
 public class JsFunctionReference extends JsObjectReference implements JsFunction {
-    
+
     private final JsFunction original;
-    
+
     public JsFunctionReference(JsObject parent, Identifier declarationName,
             JsFunction original, boolean isDeclared, Set<Modifier> modifiers) {
         super(parent, declarationName, original, isDeclared, modifiers);
@@ -45,7 +45,7 @@ public class JsFunctionReference extends JsObjectReference implements JsFunction
     public JsFunction getOriginal() {
         return this.original;
     }
-    
+
     @Override
     public Collection<? extends JsObject> getParameters() {
         return original.getParameters();
@@ -80,5 +80,5 @@ public class JsFunctionReference extends JsObjectReference implements JsFunction
     public void addDeclaredScope(DeclarationScope scope) {
         original.addDeclaredScope(scope);
     }
-    
+
 }

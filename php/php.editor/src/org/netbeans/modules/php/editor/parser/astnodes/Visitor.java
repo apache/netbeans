@@ -55,6 +55,8 @@ public interface Visitor {
     //public void endVisit(Block block);
     public void visit(BreakStatement breakStatement);
 
+    public void visit(CaseDeclaration caseDeclaration);
+
     //public void endVisit(BreakStatement breakStatement);
     public void visit(CastExpression castExpression);
 
@@ -99,6 +101,8 @@ public interface Visitor {
     //public void endVisit(EchoStatement echoStatement);
     public void visit(EmptyStatement emptyStatement);
 
+    public void visit(EnumDeclaration enumDeclaration);
+
     public void visit(ExpressionArrayAccess node);
 
     //public void endVisit(EmptyStatement emptyStatement);
@@ -111,6 +115,8 @@ public interface Visitor {
     public void visit(FieldsDeclaration fieldsDeclaration);
 
     public void visit(FinallyClause finallyClause);
+
+    public void visit(FirstClassCallableArg firstClassCallableArg);
 
     //public void endVisit(FieldsDeclaration fieldsDeclaration);
     public void visit(ForEachStatement forEachStatement);

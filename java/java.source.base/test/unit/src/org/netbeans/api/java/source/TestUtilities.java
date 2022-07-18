@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
@@ -173,7 +174,7 @@ public final class TestUtilities {
      */
     public static final File copyStringToFile (File f, String content) throws Exception {
         FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
         FileUtil.copy(is, os);
         os.close ();
         is.close();
@@ -190,7 +191,7 @@ public final class TestUtilities {
      */
     public static final FileObject copyStringToFile (FileObject f, String content) throws Exception {
         OutputStream os = f.getOutputStream();
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
         FileUtil.copy(is, os);
         os.close ();
         is.close();

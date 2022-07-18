@@ -201,6 +201,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_END_NOWDOC:
                 name = "T_END_NOWDOC"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_ENUM:
+                name = "T_ENUM"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_EQUAL:
                 name = "T_EQUAL"; //NOI18N
                 break;
@@ -332,6 +335,15 @@ public final class Utils {
                 break;
             case ASTPHP5Symbols.T_MUL_EQUAL:
                 name = "T_MUL_EQUAL"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_FULLY_QUALIFIED:
+                name = "T_NAME_FULLY_QUALIFIED"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_QUALIFIED:
+                name = "T_NAME_QUALIFIED"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_RELATIVE:
+                name = "T_NAME_RELATIVE"; //NOI18N
                 break;
             case ASTPHP5Symbols.T_NEKUDA:
                 name = "T_NEKUDA"; //NOI18N

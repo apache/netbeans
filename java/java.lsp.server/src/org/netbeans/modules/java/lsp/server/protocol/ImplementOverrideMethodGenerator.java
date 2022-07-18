@@ -48,6 +48,8 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -105,7 +107,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 implementMethods.add(new QuickPickItem(createLabel(info, method), enclosingTypeName, null, mustImplement, new ElementData(method)));
             }
             if (!implementMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), null));
+                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         if (typeElement.getKind().isClass() || typeElement.getKind().isInterface()) {
@@ -121,7 +123,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 overrideMethods.add(item);
             }
             if (!overrideMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), null));
+                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         return result;
@@ -139,8 +141,9 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
             int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
             boolean isImplement = ((JsonObject) data).getAsJsonPrimitive(IS_IMPLEMET).getAsBoolean();
             List<QuickPickItem> methods = Arrays.asList(gson.fromJson(((JsonObject) data).get(METHODS), QuickPickItem[].class));
+            String title = isImplement ? Bundle.DN_GenerateImplementMethod(): Bundle.DN_GenerateOverrideMethod();
             String text = isImplement ? Bundle.DN_SelectImplementMethod() : Bundle.DN_SelectOverrideMethod();
-            client.showQuickPick(new ShowQuickPickParams(text, true, methods)).thenAccept(selected -> {
+            client.showQuickPick(new ShowQuickPickParams(title, text, true, methods)).thenAccept(selected -> {
                 try {
                     if (selected != null && !selected.isEmpty()) {
                         WorkspaceEdit edit = generate(uri, offset, isImplement, selected);

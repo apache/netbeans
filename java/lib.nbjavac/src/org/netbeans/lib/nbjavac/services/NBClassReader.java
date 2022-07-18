@@ -22,29 +22,22 @@ import com.sun.tools.javac.code.ClassFinder.BadClassFile;
 import java.util.Set;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.jvm.ClassFile;
 import com.sun.tools.javac.jvm.ClassFile.Version;
 import com.sun.tools.javac.jvm.ClassReader;
 import com.sun.tools.javac.resources.CompilerProperties.Warnings;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.tools.ForwardingJavaFileObject;
 import javax.tools.JavaFileObject;
-import javax.tools.JavaFileObject.Kind;
-import javax.tools.SimpleJavaFileObject;
 
 /**
  *
@@ -54,6 +47,7 @@ public class NBClassReader extends ClassReader {
 
     public static void preRegister(Context context) {
         context.put(classReaderKey, new Context.Factory<ClassReader>() {
+            @Override
             public ClassReader make(Context c) {
                 return new NBClassReader(c);
             }
@@ -113,7 +107,7 @@ public class NBClassReader extends ClassReader {
                         return ;
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(NBClassReader.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(NBClassReader.class.getName()).log(Level.FINE, null, ex);
                 } finally {
                     c.classfile = origFile;
                 }

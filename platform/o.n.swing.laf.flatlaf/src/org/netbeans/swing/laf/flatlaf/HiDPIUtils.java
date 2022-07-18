@@ -38,6 +38,18 @@ public class HiDPIUtils {
      * {@link org.netbeans.swing.plaf.windows8.DPISafeBorder}.
      */
     public static void paintAtScale1x(Graphics g0, int x, int y, int width, int height, HiDPIPainter painter) {
+        paintAtScale1x(g0, x, y, width, height, false, false, painter);
+    }
+
+    /**
+     * @param roundXdown if true, round the starting X position down when converting to device
+     *        pixels, otherwise round to the nearest device pixel position
+     * @param roundYdown if true, round the starting Y position down when converting to device
+     *        pixels, otherwise round to the nearest device pixel position
+     */
+    static void paintAtScale1x(Graphics g0, int x, int y, int width, int height,
+        boolean roundXdown, boolean roundYdown, HiDPIPainter painter)
+    {
         Graphics2D g = (Graphics2D) g0;
         final AffineTransform oldTransform = g.getTransform();
         g.translate(x, y);
@@ -54,13 +66,16 @@ public class HiDPIUtils {
         {
               // HiDPI scaling is active.
               double scale = tx.getScaleX();
-              /* Round the starting (top-left) position up and the end (bottom-right) position down,
-              to ensure we are painting the border in an area that will not be painted over by an
-              adjacent component. */
-              int deviceX = (int) Math.ceil(tx.getTranslateX());
-              int deviceY = (int) Math.ceil(tx.getTranslateY());
-              int deviceXend = (int) (tx.getTranslateX() + width * scale);
-              int deviceYend = (int) (tx.getTranslateY() + height * scale);
+              int deviceX = (int) (roundXdown
+                  ? Math.floor(tx.getTranslateX())
+                  : Math.round(tx.getTranslateX()));
+              int deviceY = (int) (roundYdown
+                  ? Math.floor(tx.getTranslateY())
+                  : Math.round(tx.getTranslateY()));
+              /* Round the the end (bottom-right) position down, to ensure we are painting the
+              border in an area that will not be painted over by an adjacent component. */
+              int deviceXend = (int) Math.floor(tx.getTranslateX() + width * scale);
+              int deviceYend = (int) Math.floor(tx.getTranslateY() + height * scale);
               int deviceWidth = deviceXend - deviceX;
               int deviceHeight = deviceYend - deviceY;
               /* Deactivate the HiDPI scaling transform so we can do paint operations in the device

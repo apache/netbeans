@@ -110,7 +110,10 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
 
     private static class MicronautConfigCompletionQuery extends AsyncCompletionQuery {
 
-        private static final String ICON = "org/netbeans/modules/editor/resources/completion/field_16.png"; //NOI18N
+        private static final String FIELD_ICON = "org/netbeans/modules/editor/resources/completion/field_16.png"; //NOI18N
+        private static final String KEYWORD_ICON = "org/netbeans/modules/java/editor/resources/javakw_16.png"; //NOI18N
+        private static final String FIELD_COLOR = getHTMLColor(64, 198, 88);
+        private static final String KEYWORD_COLOR = getHTMLColor(64, 64, 217);
         private static final Pattern FQN = Pattern.compile("(\\w+\\.)+(\\w+)");
 
         private final Project project;
@@ -128,7 +131,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                     String propName = property.getId();
                     String propType = property.getType();
                     CompletionUtilities.CompletionItemBuilder builder = CompletionUtilities.newCompletionItemBuilder(propName)
-                            .iconResource(ICON)
+                            .iconResource(FIELD_ICON)
                             .leftHtmlText(property.isDeprecated()
                                     ? PROPERTY_NAME_COLOR + "<s>" + propName + "</s></font>"
                                     : PROPERTY_NAME_COLOR + propName + "</font>")
@@ -211,7 +214,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                 public CompletionItem createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize) {
                     resultSet.setAnchorOffset(offset);
                     return CompletionUtilities.newCompletionItemBuilder(propName)
-                            .iconResource(ICON)
+                            .iconResource(FIELD_ICON)
                             .leftHtmlText(PROPERTY_NAME_COLOR + "<b>" + propName + "</b></font>")
                             .sortPriority(10)
                             .onSelect(ctx -> {
@@ -242,6 +245,34 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                                             sb.append("${cursor completionInvoke}");
                                         }
                                         CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(ctx.getComponent());
+                                    }
+                                } catch (BadLocationException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            })
+                            .build();
+                }
+
+                @Override
+                public CompletionItem createValueItem(String value, int offset, boolean isEnum) {
+                    resultSet.setAnchorOffset(offset);
+                    return CompletionUtilities.newCompletionItemBuilder(value)
+                            .iconResource(isEnum ? FIELD_ICON : KEYWORD_ICON)
+                            .leftHtmlText(isEnum ? KEYWORD_COLOR + "<b>" + value + "</b></font>" : FIELD_COLOR + value + "</font>")
+                            .sortPriority(5)
+                            .onSelect(ctx -> {
+                                try {
+                                    Document doc = ctx.getComponent().getDocument();
+                                    LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
+                                    if (lineDocument != null) {
+                                        int caretOffset = ctx.getComponent().getCaretPosition();
+                                        int end = LineDocumentUtils.getWordEnd(lineDocument, caretOffset);
+                                        if (ctx.isOverwrite() && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
+                                            doc.remove(offset, Math.max(caretOffset, end) - offset);
+                                        } else if (offset < caretOffset) {
+                                            doc.remove(offset, caretOffset - offset);
+                                        }
+                                        doc.insertString(offset, value, null);
                                     }
                                 } catch (BadLocationException ex) {
                                     Exceptions.printStackTrace(ex);

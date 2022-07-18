@@ -42,6 +42,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
@@ -60,19 +62,38 @@ import org.openide.filesystems.FileObject;
  */
 public class LspElementUtils {
     
-    public  static StructureElement element2StructureElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor) {
+    public static StructureElement element2StructureElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor, 
+            boolean allowResources, boolean bypassOpen, FileObject parentFile) {
         TreePath path = info.getTrees().getPath(el);
-        if (path == null) {
-            return null;
-        }
-        TreeUtilities tu = info.getTreeUtilities();
-        if (tu.isSynthetic(path)) {
-            return null;
+        if (!allowResources) {
+            if (path == null) {
+                return null;
+            }
+            TreeUtilities tu = info.getTreeUtilities();
+            if (tu.isSynthetic(path)) {
+                return null;
+            }
         }
 
         StructureProvider.Builder builder = StructureProvider.newBuilder(createName(info, el), ElementHeaders.javaKind2Structure(el));
         builder.detail(createDetail(info, el));
-        setOffsets(info, el, builder);
+        FileObject f = null;
+        FileObject owner = null;
+        if (!bypassOpen) {
+            Object[] oi = setOffsets(info, el, builder);
+            if (oi != null) {
+                owner = f = (FileObject)oi[0]; 
+            }
+        } else {
+            f = null;
+            owner = parentFile;
+        }
+        if (owner == null && !bypassOpen && allowResources) {
+            owner = findOwnerResource(info, el);
+        }
+        if (f == null && owner != null) {
+            builder.file(owner);
+        }
         if (info.getElements().isDeprecated(el)) {
             builder.addTag(StructureElement.Tag.Deprecated);
         }
@@ -80,24 +101,72 @@ public class LspElementUtils {
         if (childAcceptor != null) {
             for (Element child : el.getEnclosedElements()) {
                 TreePath p = info.getTrees().getPath(child);
-                if (p == null) {
-                    continue;
+                if (!allowResources) {
+                    if (p == null) {
+                        continue;
+                    }
                 }
-                TypeMirror m = info.getTrees().getTypeMirror(p);
+                TypeMirror m = child.asType();
                 if (childAcceptor.accept(child, m)) {
-                    StructureElement jse = element2StructureElement(info, child, childAcceptor);
+                    StructureElement jse = element2StructureElement(info, child, childAcceptor, allowResources, f == null, owner);
                     if (jse != null) {
                         builder.children(jse);
                     }
                 }
             }
-            if (path.getLeaf().getKind() == Tree.Kind.METHOD || path.getLeaf().getKind() == Tree.Kind.VARIABLE) {
-                getAnonymousInnerClasses(info, path, builder, childAcceptor);
+            if (path != null) {
+                if (path.getLeaf().getKind() == Tree.Kind.METHOD || path.getLeaf().getKind() == Tree.Kind.VARIABLE) {
+                    getAnonymousInnerClasses(info, path, builder, childAcceptor);
+                }
             }
             // ensure children is always filled, if the caller requested traversal, force creation of the list.
             builder.children();
         }
         return builder.build();
+    }
+    
+    public static StructureElement element2StructureElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor) {
+        return element2StructureElement(info, el, childAcceptor, false, false, null);
+    }
+    
+    static FileObject findOwnerResource(CompilationInfo info, Element el) {
+        ElementKind ek = el.getKind();
+        if (ek == ElementKind.MODULE) {
+            // not supported at the moment
+            return null;
+        }
+        Element parent = el;
+        if (!(ek.isClass() || ek.isInterface())) {
+            parent = el.getEnclosingElement();
+            if (!(parent.getKind().isClass() || parent.getKind().isInterface())) {
+                return null;
+            }
+        }
+        ElementHandle h = ElementHandle.create(parent);
+        String s = h.getBinaryName();
+        int lastSlash = s.lastIndexOf('.');
+        int dollar = s.substring(lastSlash + 1).indexOf('$');
+        
+        String resourceName = s.substring(0, dollar >= 0 ? lastSlash + 1 + dollar : s.length()).replace(".", "/"); // NOI18N
+        ClasspathInfo cpInfo = info.getClasspathInfo();
+        final ClassPath[] cps = 
+            new ClassPath[] {
+                cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE),
+                cpInfo.getClassPath(ClasspathInfo.PathKind.OUTPUT),
+                cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),                    
+                cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE)
+            };
+        for (ClassPath cp : cps) {
+            FileObject f = cp.findResource(resourceName);
+            if (f != null) {
+                return f;
+            }
+        }
+        return null;
+    }
+    
+    public  static StructureElement describeElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor, boolean allowBinary) {
+        return element2StructureElement(info, el, childAcceptor, allowBinary, false, null);
     }
     
     public static CompletableFuture<StructureElement> createStructureElement(CompilationInfo info, Element el, boolean resolveSources) {
@@ -227,6 +296,9 @@ public class LspElementUtils {
     }
     
     private static StructureProvider.Builder processOffsetInfo(Object[] info, StructureProvider.Builder builder) {
+        if (info == null) {
+            return builder;
+        }
         int selStart = (int)info[3];
         if (selStart < 0) {
             selStart = (int)info[1];
@@ -260,7 +332,7 @@ public class LspElementUtils {
         }
         builder.expandedStartOffset((int)info[1]).expandedEndOffset((int)info[2]);
         builder.selectionStartOffset(selStart).selectionEndOffset(selEnd);
-       return builder;
+        return builder;
     }
     
     private static CompletableFuture<StructureProvider.Builder> setFutureOffsets(CompilationInfo ci, Element original, 
@@ -282,9 +354,11 @@ public class LspElementUtils {
             info -> processOffsetInfo(info, builder));
     }
     
-    private static void setOffsets(CompilationInfo ci, Element original, StructureProvider.Builder builder) {
+    private static Object[] setOffsets(CompilationInfo ci, Element original, StructureProvider.Builder builder) {
         ElementHandle<Element> h = ElementHandle.create(original);
-        processOffsetInfo(ElementOpenAccessor.getInstance().getOpenInfo(ci.getClasspathInfo(), h, new AtomicBoolean()), builder);
+        Object[] openInfo = ElementOpenAccessor.getInstance().getOpenInfo(ci.getClasspathInfo(), h, new AtomicBoolean());
+        processOffsetInfo(openInfo, builder);
+        return openInfo;
     }
     
     private static void getAnonymousInnerClasses(CompilationInfo info, TreePath path, StructureProvider.Builder builder, ElementAcceptor childAcceptor) {

@@ -42,6 +42,8 @@ import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -284,6 +286,148 @@ public class PHPIndexTest extends PHPNavTestBase {
                 ElementFilter.forFiles(preffered.getFileObject()).prefer(index.getInterfaces(NameKind.exact("AAA")));
         assertEquals(1, aaInterfaces.size());
         assertSame(getFirst(aaInterfaces).getFileObject(), preffered.getFileObject());
+    }
+
+    // NETBEANS-5599 PHP 8.1 Support
+    public void testGetEnums() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testGetEnums_all() throws Exception {
+        Collection<String> enumNames = Arrays.asList(
+                "Simple1", "Simple1", "Simple2", "BackedCaseInt1", "BackedCaseInt2", "BackedCaseString1", "BackedCaseString2",
+                "Impl", "Attributes", "WithTrait"
+        );
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getEnums(NameKind.empty()));
+        assertEquals(enumNames.size(), allTypes.size());
+        for (TypeElement indexedEnum : allTypes) {
+            assertTrue(enumNames.contains(indexedEnum.getName()));
+            assertEquals(indexedEnum, indexedEnum);
+            assertEquals(PhpElementKind.ENUM, indexedEnum.getPhpElementKind());
+        }
+
+        for (TypeElement indexedEnum : allTypes) {
+            Collection<EnumCaseElement> declaredEnumCases = new ArrayList<>(index.getDeclaredEnumCases(indexedEnum));
+            switch (indexedEnum.getName()) {
+                case "Simple1":
+                    assertTrue(declaredEnumCases.isEmpty());
+                    Set<EnumCaseElement> enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.isEmpty());
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.exact("A"));
+                    assertTrue(enumCases.isEmpty());
+                    break;
+
+                case "Simple2":
+                    assertTrue(declaredEnumCases.size() == 5);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 5);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.exact("A"));
+                    assertTrue(enumCases.size() == 1);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.prefix("A"));
+                    assertTrue(enumCases.size() == 2);
+                    break;
+                case "BackedCaseInt1":
+                    assertTrue(declaredEnumCases.isEmpty());
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.isEmpty());
+                    break;
+                case "BackedCaseInt2":
+                    assertTrue(declaredEnumCases.size() == 6);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 6);
+                    break;
+                case "BackedCaseString1":
+                    assertTrue(declaredEnumCases.isEmpty());
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.isEmpty());
+                    break;
+                case "BackedCaseString2":
+                    assertTrue(declaredEnumCases.size() == 7);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 7);
+                    break;
+                case "Impl":
+                    assertTrue(declaredEnumCases.size() == 3);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 3);
+                    break;
+                case "Attributes":
+                    assertTrue(declaredEnumCases.size() == 2);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 2);
+                    break;
+                case "WithTrait":
+                    assertTrue(declaredEnumCases.size() == 2);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 2);
+                    break;
+                default:
+                    assert false : indexedEnum.getName();
+            }
+        }
+        Set<EnumCaseElement> enumCases = index.getEnumCases(NameKind.empty());
+        assertTrue(enumCases.size() == 5 + 6 + 7 + 3 + 2 + 2);
+    }
+
+    public void testGetEnums_exact() throws Exception {
+        Collection<String> enumNames = Arrays.asList(
+                "Simple1", "Simple1", "Simple2", "BackedCaseInt1", "BackedCaseInt2", "BackedCaseString1", "BackedCaseString2",
+                "Impl", "Attributes", "WithTrait"
+        );
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getEnums(NameKind.empty()));
+        assertEquals(enumNames.size(), allTypes.size());
+        for (String enumName : enumNames) {
+            Collection<EnumElement> enums = index.getEnums(NameKind.exact(enumName));
+            assertTrue(!enums.isEmpty());
+            for (EnumElement indexedEnum : enums) {
+                assertEquals(enumName, indexedEnum.getName());
+                assertTrue(enumNames.contains(indexedEnum.getName()));
+                assertTrue(allTypes.contains(indexedEnum));
+            }
+        }
+    }
+
+    public void testGetEnums_prefix() throws Exception {
+        Collection<String> enumNames = Arrays.asList(
+                "Simple1", "Simple1", "Simple2", "BackedCaseInt1", "BackedCaseInt2", "BackedCaseString1", "BackedCaseString2",
+                "Impl", "Attributes", "WithTrait"
+        );
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getEnums(NameKind.empty()));
+        assertEquals(enumNames.size(), allTypes.size());
+        for (String enumName : enumNames) {
+            Collection<EnumElement> enums = index.getEnums(NameKind.prefix(enumName.substring(0, 1)));
+            assertTrue(!enums.isEmpty());
+            for (EnumElement indexedEnum : enums) {
+                assertTrue(enumNames.contains(indexedEnum.getName()));
+                assertTrue(allTypes.contains(indexedEnum));
+            }
+        }
+    }
+
+    public void testGetEnums_preferred() throws Exception {
+        Collection<TypeElement> enums1 = new ArrayList<>(index.getEnums(NameKind.exact("Simple1")));
+        assertEquals(2, enums1.size());
+        TypeElement[] enumsArray = enums1.toArray(new TypeElement[0]);
+        final TypeElement first = enumsArray[0];
+        final TypeElement second = enumsArray[1];
+        assertNotNull(first);
+        assertNotNull(second);
+        assertNotSame(second, first);
+        assertNotNull(first.getFileObject());
+        assertNotNull(second.getFileObject());
+        assertNotSame(second.getFileObject(), first.getFileObject());
+        TypeElement testingCC = "testGetEnums_1.php".equals(first.getFileObject().getNameExt()) ? first : second;
+        final Collection<EnumElement> preferredClasses
+                = ElementFilter.forFiles(testingCC.getFileObject()).prefer(index.getEnums(NameKind.exact("Simple1")));
+        assertEquals(1, preferredClasses.size());
+        final EnumElement preffered = getFirst(preferredClasses);
+        assertEquals(testingCC, preffered);
+        assertEquals(testingCC.getFileObject(), preffered.getFileObject());
+
+        final Collection<EnumElement> emuns2
+                = ElementFilter.forFiles(preffered.getFileObject()).prefer(index.getEnums(NameKind.exact("BackedCaseString1")));
+        assertEquals(1, emuns2.size());
+        assertNotSame(getFirst(emuns2).getFileObject(), preffered.getFileObject());
     }
 
     /**

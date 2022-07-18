@@ -19,12 +19,9 @@
 package org.netbeans.modules.java.lsp.server;
 
 import com.google.gson.stream.JsonWriter;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -32,6 +29,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -43,16 +41,20 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.SymbolTag;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.java.Utilities;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.spi.jumpto.type.SearchType;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -93,6 +95,59 @@ public class Utils {
             case Struct: return SymbolKind.Struct;
             case TypeParameter: return SymbolKind.TypeParameter;
             case Variable: return SymbolKind.Variable;
+        }
+        return SymbolKind.Object;
+    }
+    
+    @NonNull
+    public static QuerySupport.Kind searchType2QueryKind(@NonNull final SearchType searchType) {
+        // copy of org.netbeans.modules.jumpto.common.Utils.toQueryKind
+        switch (searchType) {
+            case CAMEL_CASE:
+                return QuerySupport.Kind.CAMEL_CASE;
+            case CASE_INSENSITIVE_CAMEL_CASE:
+                return QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE;
+            case CASE_INSENSITIVE_EXACT_NAME:
+            case EXACT_NAME:
+                return QuerySupport.Kind.EXACT;
+            case CASE_INSENSITIVE_PREFIX:
+                return QuerySupport.Kind.CASE_INSENSITIVE_PREFIX;
+            case CASE_INSENSITIVE_REGEXP:
+                return QuerySupport.Kind.CASE_INSENSITIVE_REGEXP;
+            case PREFIX:
+                return QuerySupport.Kind.PREFIX;
+            case REGEXP:
+                return QuerySupport.Kind.REGEXP;
+            default:
+                throw new IllegalThreadStateException(String.valueOf(searchType));
+        }
+    }
+    
+    public static SymbolKind cslElementKind2SymbolKind(final org.netbeans.modules.csl.api.ElementKind elementKind) {
+        // copy of org.netbeans.modules.csl.navigation.GsfStructureProvider.convertKind
+        switch(elementKind) {
+            case ATTRIBUTE: return SymbolKind.Property;
+            case CALL: return SymbolKind.Event;
+            case CLASS: return SymbolKind.Class;
+            case CONSTANT: return SymbolKind.Constant;
+            case CONSTRUCTOR: return SymbolKind.Constructor;
+            case DB: return SymbolKind.File;
+            case ERROR: return SymbolKind.Event;
+            case METHOD: return SymbolKind.Method;
+            case FILE: return SymbolKind.File;
+            case FIELD: return SymbolKind.Field;
+            case MODULE: return SymbolKind.Module;
+            case VARIABLE: return SymbolKind.Variable;
+            case GLOBAL: return SymbolKind.Module;
+            case INTERFACE: return SymbolKind.Interface;
+            case KEYWORD: return SymbolKind.Key;
+            case OTHER: return SymbolKind.Object;
+            case PACKAGE: return SymbolKind.Package;
+            case PARAMETER: return SymbolKind.Variable;
+            case PROPERTY: return SymbolKind.Property;
+            case RULE: return SymbolKind.Event;
+            case TAG: return SymbolKind.Operator;
+            case TEST: return SymbolKind.Function;
         }
         return SymbolKind.Object;
     }
@@ -272,6 +327,17 @@ public class Utils {
         }
     }
 
+    public static Position createPosition(LineDocument doc, int offset) {
+        try {
+            int line = LineDocumentUtils.getLineIndex(doc, offset);
+            int column = offset - LineDocumentUtils.getLineStart(doc, offset);
+
+            return new Position(line, column);
+        } catch (BadLocationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     public static int getOffset(LineDocument doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex(doc, pos.getLine()) + pos.getCharacter();
     }
@@ -335,6 +401,47 @@ public class Utils {
         String encoded = sw.toString();
         // We have ["value"], remove the array and quotes
         return encoded.substring(2, encoded.length() - 2);
+    }
+
+    /**
+     * Simple conversion from HTML to plaintext. Removes all html tags incl. attributes,
+     * replaces BR, P and HR tags with newlines.
+     * @param s html text
+     * @return plaintext
+     */
+    public static String html2plain(String s) {
+        boolean inTag = false;
+        int tagStart = -1;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (inTag) {
+                boolean alpha = Character.isAlphabetic(ch);
+                if (tagStart > 0 && !alpha) {
+                    String t = s.substring(tagStart, i).toLowerCase(Locale.ENGLISH);
+                    switch (t) {
+                        case "br": case "p": case "hr": // NOI1N
+                            sb.append("\n");
+                            break;
+                    }
+                    // prevent entering tagstart state again
+                    tagStart = -2;
+                }
+                if (ch == '>') { // NOI18N
+                    inTag = false;
+                } else if (tagStart == -1 && alpha) {
+                    tagStart = i;
+                }
+            } else {
+                if (ch == '<') { // NOI18N
+                    tagStart = -1;
+                    inTag = true;
+                    continue;
+                }
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 
 }

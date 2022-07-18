@@ -48,4 +48,7 @@ public interface TreeViewService {
     
     @JsonRequest("getresource")
     public CompletableFuture<ResourceData> getResource(GetResourceParams params);
+    
+    @JsonRequest("findpath")
+    public CompletableFuture<int[]> findPath(FindPathParams params);
 }

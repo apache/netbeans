@@ -21,6 +21,7 @@ package org.netbeans.modules.ant.debugger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.*;
 import javax.swing.DefaultComboBoxModel;
@@ -300,7 +301,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
             }
         }
         Properties props = new Properties();
-        ByteArrayInputStream bais = new ByteArrayInputStream(propertiesPane.getText().getBytes("ISO-8859-1"));
+        ByteArrayInputStream bais = new ByteArrayInputStream(propertiesPane.getText().getBytes(StandardCharsets.ISO_8859_1));
         props.load(bais);
         int verbosity = 2;
         String verbosityString = (String) verbosityComboBox.getSelectedItem();

@@ -2,10 +2,5 @@ Code completion result for source line:
 co|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     confirm(message: String): Bool  [PUBLIC,   JS Platform
-FIELD      console: Console                [PUBLIC]   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
-FIELD      content: Window                 [PUBLIC]   JS Platform
-FIELD      controllers: XULControllers     [PUBLIC]   JS Platform
 KEYWORD    const                                      ECMAScript 6 - 2015
 KEYWORD    continue                                   null

@@ -615,6 +615,10 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 return JAKARTA_EE_VERSION_9;
             } else if (Profile.JAKARTA_EE_9_FULL.equals(webModule.getJ2eeProfile())) {
                 return JAKARTA_EE_VERSION_9;
+            } else if (Profile.JAKARTA_EE_9_1_WEB.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_91;
+            } else if (Profile.JAKARTA_EE_9_1_FULL.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_91;
             } else if (Profile.JAVA_EE_5.equals(webModule.getJ2eeProfile())) {
               return JAVA_EE_VERSION_15;
             }

@@ -57,6 +57,7 @@ import org.eclipse.lsp4j.debug.ScopesResponse;
 import org.eclipse.lsp4j.debug.SetBreakpointsArguments;
 import org.eclipse.lsp4j.debug.SetBreakpointsResponse;
 import org.eclipse.lsp4j.debug.SetExceptionBreakpointsArguments;
+import org.eclipse.lsp4j.debug.SetExceptionBreakpointsResponse;
 import org.eclipse.lsp4j.debug.SetVariableArguments;
 import org.eclipse.lsp4j.debug.SetVariableResponse;
 import org.eclipse.lsp4j.debug.Source;
@@ -175,7 +176,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
             context.getConfigurationSemaphore().notifyCongigurationDone();;
             future.complete(null);
         } else {
-            ErrorUtilities.completeExceptionally(future, "Failed to launch debug session, the debugger will exit.", ResponseErrorCode.serverErrorStart);
+            ErrorUtilities.completeExceptionally(future, "Failed to launch debug session, the debugger will exit.", ResponseErrorCode.ServerNotInitialized);
         }
         return future;
     }
@@ -201,7 +202,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     }
 
     @Override
-    public CompletableFuture<Void> setExceptionBreakpoints(SetExceptionBreakpointsArguments args) {
+    public CompletableFuture<SetExceptionBreakpointsResponse> setExceptionBreakpoints(SetExceptionBreakpointsArguments args) {
         return breakpointsRequestHandler.setExceptionBreakpoints(args, context);
     }
 

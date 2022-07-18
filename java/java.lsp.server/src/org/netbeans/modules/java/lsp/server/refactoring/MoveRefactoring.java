@@ -55,6 +55,7 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -64,6 +65,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -118,6 +120,11 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
         info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
+        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+        ts.move(offset);
+        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == offset) {
+            offset += 1;
+        }
         String uri = Utils.toUri(info.getFileObject());
         Element element = elementForOffset(info, offset);
         if (element != null) {

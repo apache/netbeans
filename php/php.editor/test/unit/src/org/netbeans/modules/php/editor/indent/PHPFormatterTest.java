@@ -1054,4 +1054,33 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php81/newInInitializers_02.php", options);
     }
+
+    public void testEnumerations_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php81/enumerations_01.php", options);
+    }
+
+    public void testEnumDeclarationBracePlacement_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/php81/enumerationsBP_01.php", options);
+    }
+
+    public void testEnumDeclarationBracePlacement_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.PRESERVE_EXISTING);
+        reformatFileContents("testfiles/formatting/php81/enumerationsBP_02.php", options);
+    }
+
+    public void testEnumDeclarationBracePlacement_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/php81/enumerationsBP_03.php", options);
+    }
+
+    public void testEnumDeclarationBracePlacement_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE_INDENTED);
+        reformatFileContents("testfiles/formatting/php81/enumerationsBP_04.php", options);
+    }
 }

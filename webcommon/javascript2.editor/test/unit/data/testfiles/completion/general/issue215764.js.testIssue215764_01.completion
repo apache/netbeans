@@ -9,11 +9,11 @@ METHOD     getHours(): Number              [PUBLIC]   JS Platform
 METHOD     getMilliseconds(): Number       [PUBLIC]   JS Platform
 METHOD     getMinutes(): Number            [PUBLIC]   JS Platform
 METHOD     getMonth(): Number              [PUBLIC]   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
 METHOD     getSeconds(): Number            [PUBLIC]   JS Platform
 METHOD     getTime(): Number               [PUBLIC]   JS Platform
 METHOD     getTimezoneOffset(): Number     [PUBLIC]   JS Platform
@@ -25,4 +25,4 @@ METHOD     getUTCMilliseconds(): Number    [PUBLIC]   JS Platform
 METHOD     getUTCMinutes(): Number         [PUBLIC]   JS Platform
 METHOD     getUTCMonth(): Number           [PUBLIC]   JS Platform
 METHOD     getUTCSeconds(): Number         [PUBLIC]   JS Platform
-METHOD     getYear(): Number               [PUBLIC,   JS Platform
+FIELD      getVarDate: Function            [PUBLIC]   JS Platform

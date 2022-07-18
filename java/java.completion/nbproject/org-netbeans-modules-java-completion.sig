@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.0.0
+#Version 2.1.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -84,7 +84,7 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$It
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$LambdaItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask
 intf org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory<{org.netbeans.modules.java.completion.JavaCompletionTask$LambdaItemFactory%0}>
-meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$LambdaItemFactory%0} createLambdaItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.TypeElement,javax.lang.model.type.DeclaredType,int,boolean)
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$LambdaItemFactory%0} createLambdaItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.TypeElement,javax.lang.model.type.DeclaredType,int,boolean,boolean)
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$ModuleItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask

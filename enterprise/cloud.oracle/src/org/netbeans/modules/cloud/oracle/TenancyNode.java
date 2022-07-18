@@ -20,27 +20,18 @@ package org.netbeans.modules.cloud.oracle;
 
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
-import java.util.List;
-import javax.swing.Action;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
-import org.openide.loaders.DataNode;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.lookup.Lookups;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyNode extends AbstractNode {
+public class TenancyNode extends OCINode {
     
     private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
     
     public TenancyNode(OCIItem tenancy) {
-        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
+        super(tenancy);
+//        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
         setName(tenancy.getName()); 
         setDisplayName(tenancy.getName());
         setIconBaseWithExtension(ORCL_ICON);
@@ -59,39 +50,6 @@ public class TenancyNode extends AbstractNode {
     
     private Image badgeIcon(Image origImg) {
         return origImg;
-    }
-    @Override
-    public Action[] getActions(boolean context) {
-        return new Action[] {
-            
-        };
-    }
-    
-    public static class TenancyChildFactory extends org.openide.nodes.ChildFactory<CompartmentItem>
-            implements ChangeListener {
-
-        private final OCIItem tenancy;
-
-        public TenancyChildFactory(OCIItem tenancy) {
-            this.tenancy = tenancy;
-        }
-
-        @Override
-        protected boolean createKeys(List<CompartmentItem> toPopulate) {
-            toPopulate.addAll(OCIManager.getDefault().getCompartments(tenancy.getId()));
-            return true;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            
-        }
-
-        @Override
-        protected Node createNodeForKey(CompartmentItem key) {
-            CompartmentNode node = new CompartmentNode(key);
-            return node;
-        }
     }
     
 }

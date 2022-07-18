@@ -37,6 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
@@ -790,7 +791,7 @@ public final class AntBridge {
                 META_INF_PLATFORM_PROVIDER_FS = FileUtil.createMemoryFileSystem();
                 FileObject file = FileUtil.createData(META_INF_PLATFORM_PROVIDER_FS.getRoot(), META_INF_PLATFORM_PROVIDER_REGISTRATION_NAME);
                 try (OutputStream out = file.getOutputStream()) {
-                    out.write("com.sun.tools.javac.platform.JDKPlatformProvider\n".getBytes("UTF-8"));
+                    out.write("com.sun.tools.javac.platform.JDKPlatformProvider\n".getBytes(StandardCharsets.UTF_8));
                 }
                 META_INF_PLATFORM_PROVIDER_REGISTRATION = file.toURL();
             } catch (Throwable t) {

@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.lang.model.SourceVersion;
@@ -110,57 +111,186 @@ public class JavaCompletionCollector implements CompletionCollector {
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         AtomicBoolean ret = new AtomicBoolean(true);
-        try {
-            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    TokenSequence<JavaTokenId> ts = null;
-                    for (TokenSequence<?> cand : resultIterator.getSnapshot().getTokenHierarchy().embeddedTokenSequences(offset, false)) {
-                        if (cand.language() == JavaTokenId.language()) {
-                            ts = (TokenSequence<JavaTokenId>) cand;
-                            break;
-                        }
-                    }
-                    if (ts == null) {//No Java on this offset
-                        return ;
-                    }
-                    if (ts.move(offset) == 0 || !ts.moveNext()) {
-                        if (!ts.movePrevious()) {
-                            ts.moveNext();
-                        }
-                    }
-                    int len = offset - ts.offset();
-                    boolean combinedCompletion = context != null && context.getTriggerKind() == Completion.TriggerKind.TriggerForIncompleteCompletions
-                            || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
-                    CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
-                    controller.toPhase(JavaSource.Phase.RESOLVED);
-                    JavaCompletionTask<Completion> task = JavaCompletionTask.create(offset, new ItemFactoryImpl(controller, offset), combinedCompletion ? EnumSet.of(JavaCompletionTask.Options.COMBINED_COMPLETION) : EnumSet.noneOf(JavaCompletionTask.Options.class), () -> false);
-                    task.run(resultIterator);
-                    List<Completion> results = task.getResults();
-                    if (results != null) {
-                        for (Iterator<Completion> it = results.iterator(); it.hasNext();) {
-                            Completion item = it.next();
-                            if (item == null) {
-                                it.remove();
+        if ((context == null || context.getTriggerKind() != Completion.TriggerKind.TriggerCharacter || context.getTriggerCharacter() == '.')
+                && Utilities.isJavaContext(doc, offset, true)) {
+            try {
+                ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(resultIterator.getSnapshot().getTokenHierarchy(), offset);
+                        if (ts.move(offset) == 0 || !ts.moveNext()) {
+                            if (!ts.movePrevious()) {
+                                ts.moveNext();
                             }
                         }
-                        results.forEach(consumer);
+                        int len = offset - ts.offset();
+                        boolean combinedCompletion = context != null && context.getTriggerKind() == Completion.TriggerKind.TriggerForIncompleteCompletions
+                                || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
+                        CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
+                        controller.toPhase(JavaSource.Phase.RESOLVED);
+                        JavaCompletionTask<Completion> task = JavaCompletionTask.create(offset, new ItemFactoryImpl(controller, offset), combinedCompletion ? EnumSet.of(JavaCompletionTask.Options.COMBINED_COMPLETION) : EnumSet.noneOf(JavaCompletionTask.Options.class), () -> false);
+                        task.run(resultIterator);
+                        List<Completion> results = task.getResults();
+                        if (results != null) {
+                            for (Iterator<Completion> it = results.iterator(); it.hasNext();) {
+                                Completion item = it.next();
+                                if (item == null) {
+                                    it.remove();
+                                }
+                            }
+                            results.forEach(consumer);
+                        }
+                        if (task.hasAdditionalClasses() || task.hasAdditionalMembers()) {
+                            ret.set(false);
+                        }
                     }
-                    if (task.hasAdditionalClasses() || task.hasAdditionalMembers()) {
-                        ret.set(false);
-                    }
-                }
-            });
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
+                });
+            } catch (ParseException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         return ret.get();
+    }
+
+    public static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+
+    public static Supplier<String> getDocumentation(Document doc, int offset, ElementHandle handle) {
+        return () -> {
+            try {
+                JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(offset, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
+                    @Override
+                    public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
+                        return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                    }
+                }, () -> false);
+                ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        task.run(resultIterator);
+                    }
+                });
+                return task.getDocumentation().get();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        };
+    }
+
+    public static Completion.Kind elementKind2CompletionItemKind(ElementKind kind) {
+        switch (kind) {
+            case PACKAGE:
+                return Completion.Kind.Folder;
+            case ENUM:
+                return Completion.Kind.Enum;
+            case CLASS:
+                return Completion.Kind.Class;
+            case ANNOTATION_TYPE:
+                return Completion.Kind.Interface;
+            case INTERFACE:
+                return Completion.Kind.Interface;
+            case ENUM_CONSTANT:
+                return Completion.Kind.EnumMember;
+            case FIELD:
+                return Completion.Kind.Field;
+            case PARAMETER:
+                return Completion.Kind.Variable;
+            case LOCAL_VARIABLE:
+                return Completion.Kind.Variable;
+            case EXCEPTION_PARAMETER:
+                return Completion.Kind.Variable;
+            case METHOD:
+                return Completion.Kind.Method;
+            case CONSTRUCTOR:
+                return Completion.Kind.Constructor;
+            case TYPE_PARAMETER:
+                return Completion.Kind.TypeParameter;
+            case RESOURCE_VARIABLE:
+                return Completion.Kind.Variable;
+            case MODULE:
+                return Completion.Kind.Module;
+            case STATIC_INIT:
+            case INSTANCE_INIT:
+            case OTHER:
+            default:
+                return Completion.Kind.Text;
+        }
+    }
+
+    public static Supplier<List<TextEdit>> addImport(Document doc, int offset, ElementHandle<?> handle) {
+        return () -> {
+            try {
+                AtomicReference<String> pkg = new AtomicReference<>();
+                TextEdit textEdit = modify2TextEdit(JavaSource.forDocument(doc), copy -> {
+                    copy.toPhase(JavaSource.Phase.RESOLVED);
+                    String fqn = SourceUtils.resolveImport(copy, copy.getTreeUtilities().pathFor(offset), handle.getQualifiedName());
+                    if (fqn != null) {
+                        int idx = fqn.lastIndexOf('.');
+                        if (idx >= 0) {
+                            pkg.set(fqn.substring(0, idx + 1));
+                        }
+                    }
+                });
+                if (textEdit == null && pkg.get() != null) {
+                    textEdit = new TextEdit(offset, offset, pkg.get());
+                }
+                return textEdit != null ? Collections.singletonList(textEdit) : null;
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        };
+    }
+
+    public static boolean isOfKind(Element e, EnumSet<ElementKind> kinds) {
+        if (kinds.contains(e.getKind())) {
+            return true;
+        }
+        for (Element ee : e.getEnclosedElements()) {
+            if (isOfKind(ee, kinds)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isInDefaultPackage(Element e) {
+        while (e != null && e.getKind() != ElementKind.PACKAGE) {
+            e = e.getEnclosingElement();
+        }
+        return e != null && e.getSimpleName().length() == 0;
+    }
+
+    private static TextEdit modify2TextEdit(JavaSource js, Task<WorkingCopy> task) throws IOException {
+        FileObject[] file = new FileObject[1];
+        ModificationResult changes = js.runModificationTask(wc -> {
+            task.run(wc);
+            file[0] = wc.getFileObject();
+        });
+        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
+        if (diffs == null) {
+            return null;
+        }
+        int startOffset = -1;
+        int endOffset = -1;
+        StringBuilder sb = new StringBuilder();
+        for (ModificationResult.Difference diff : diffs) {
+            int start = diff.getStartPosition().getOffset();
+            int end = diff.getEndPosition().getOffset();
+            String newText = diff.getNewText();
+            if (startOffset < 0 && endOffset < 0) {
+                startOffset = start;
+                endOffset = end;
+                sb.append(newText);
+            } else if (start == endOffset) {
+                endOffset = end;
+                sb.append(newText);
+            }
+        }
+        return startOffset >= 0 && endOffset >= startOffset ? new TextEdit(startOffset, endOffset, sb.toString()) : null;
     }
 
     private static class ItemFactoryImpl implements JavaCompletionTask.TypeCastableItemFactory<Completion>,
             JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion> {
 
-        private static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
         private static final String EMPTY = "";
         private static final String ERROR = "<error>";
         private static final int DEPRECATED = 10;
@@ -264,7 +394,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                         .detail(label.insert(0, elem.getQualifiedName()).toString());
                 ElementHandle<TypeElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
                 if (handle != null) {
-                    builder.documentation(getDocumentation(doc, handle));
+                    builder.documentation(getDocumentation(doc, offset, handle));
                 }
                 if (elements.isDeprecated(elem)) {
                     builder.addTag(Completion.Tag.Deprecated);
@@ -333,7 +463,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             ElementHandle<VariableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, handle));
+                builder.documentation(getDocumentation(doc, offset, handle));
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);
@@ -374,7 +504,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .insertTextFormat(Completion.TextFormat.PlainText);
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, handle));
+                builder.documentation(getDocumentation(doc, offset, handle));
             }
             try {
                 TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
@@ -519,7 +649,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .sortText(String.format("%04d%s", isDeprecated ? 100 + DEPRECATED : 100, elem.getSimpleName().toString()));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, handle));
+                builder.documentation(getDocumentation(doc, offset, handle));
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);
@@ -621,7 +751,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, handle));
+                builder.documentation(getDocumentation(doc, offset, handle));
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);
@@ -736,7 +866,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         @Override
-        public Completion createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
+        public Completion createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortText = new StringBuilder();
@@ -793,6 +923,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         private Completion createTypeItem(CompilationInfo info, String prefix, ElementHandle<TypeElement> handle, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType) {
+            int off = info.getSnapshot().getEmbeddedOffset(substitutionOffset);
             String name = elem.getQualifiedName().toString();
             int idx = name.lastIndexOf('.');
             String pkgName = idx < 0 ? EMPTY : name.substring(0, idx);
@@ -814,7 +945,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             } else if (info.getTreeUtilities().isModuleInfo(info.getCompilationUnit())) {
                 insertText.append(elem.getQualifiedName());
             } else {
-                TreePath tp = info.getTreeUtilities().pathFor(info.getSnapshot().getEmbeddedOffset(substitutionOffset));
+                TreePath tp = info.getTreeUtilities().pathFor(off);
                 if (tp != null && tp.getLeaf().getKind() == Tree.Kind.IMPORT) {
                     insertText.append(elem.getQualifiedName());
                     inImport = true;
@@ -833,7 +964,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     insertText.append('<'); //NOI18N
                     if (!insideNew || elem.getModifiers().contains(Modifier.ABSTRACT)
                         || info.getSourceVersion().compareTo(SourceVersion.RELEASE_7) < 0
-                        || !allowDiamond(info, substitutionOffset, type)) {
+                        || !allowDiamond(info, off, type)) {
                         while (tas.hasNext()) {
                             TypeMirror ta = tas.next();
                             insertText.append("${").append(cnt++).append(":");
@@ -885,9 +1016,9 @@ public class JavaCompletionCollector implements CompletionCollector {
                             .addCommitCharacter('.');
             }
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, handle));
+                builder.documentation(getDocumentation(doc, off, handle));
                 if (!addSimpleName && !inImport) {
-                    builder.additionalTextEdits(addImport(doc, handle));
+                    builder.additionalTextEdits(addImport(doc, off, handle));
                 }
             }
             if (isDeprecated) {
@@ -1001,7 +1132,7 @@ public class JavaCompletionCollector implements CompletionCollector {
 
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, handle));
+                builder.documentation(getDocumentation(doc, offset, handle));
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);
@@ -1092,28 +1223,6 @@ public class JavaCompletionCollector implements CompletionCollector {
             return locals;
         }
 
-        private Supplier<String> getDocumentation(Document doc, ElementHandle handle) {
-            return () -> {
-                try {
-                    JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(offset, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
-                        @Override
-                        public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
-                            return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
-                        }
-                    }, () -> false);
-                    ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                        @Override
-                        public void run(ResultIterator resultIterator) throws Exception {
-                            task.run(resultIterator);
-                        }
-                    });
-                    return task.getDocumentation().get();
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            };
-        }
-
         private static boolean isSameType(TypeMirror t1, TypeMirror t2, Types types) {
             if (types.isSameType(t1, t2)) {
                 return true;
@@ -1122,25 +1231,6 @@ public class JavaCompletionCollector implements CompletionCollector {
                 return true;
             }
             return t2.getKind().isPrimitive() && types.isSameType(t1, types.boxedClass((PrimitiveType)t2).asType());
-        }
-
-        private static boolean isOfKind(Element e, EnumSet<ElementKind> kinds) {
-            if (kinds.contains(e.getKind())) {
-                return true;
-            }
-            for (Element ee : e.getEnclosedElements()) {
-                if (isOfKind(ee, kinds)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private static boolean isInDefaultPackage(Element e) {
-            while (e != null && e.getKind() != ElementKind.PACKAGE) {
-                e = e.getEnclosingElement();
-            }
-            return e != null && e.getSimpleName().length() == 0;
         }
 
         private static boolean allowDiamond(CompilationInfo info, int offset, DeclaredType type) {
@@ -1174,23 +1264,6 @@ public class JavaCompletionCollector implements CompletionCollector {
             return false;
         }
 
-        private static Supplier<List<TextEdit>> addImport(Document doc, ElementHandle<?> handle) {
-            return () -> {
-                try {
-                    TextEdit textEdit = modify2TextEdit(JavaSource.forDocument(doc), copy -> {
-                        copy.toPhase(JavaSource.Phase.RESOLVED);
-                        Element e = handle.resolve(copy);
-                        if (e != null) {
-                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
-                        }
-                    });
-                    return textEdit != null ? Collections.singletonList(textEdit) : null;
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            };
-        }
-
         private static int findCastEndPosition(TokenSequence<JavaTokenId> ts, int startPos, int endPos) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(ts, startPos, endPos);
             if (last != null && last.token().id() == JavaTokenId.DOT) {
@@ -1220,75 +1293,6 @@ public class JavaCompletionCollector implements CompletionCollector {
                 }
             }
             return null;
-        }
-
-        private static Completion.Kind elementKind2CompletionItemKind(ElementKind kind) {
-            switch (kind) {
-                case PACKAGE:
-                    return Completion.Kind.Folder;
-                case ENUM:
-                    return Completion.Kind.Enum;
-                case CLASS:
-                    return Completion.Kind.Class;
-                case ANNOTATION_TYPE:
-                    return Completion.Kind.Interface;
-                case INTERFACE:
-                    return Completion.Kind.Interface;
-                case ENUM_CONSTANT:
-                    return Completion.Kind.EnumMember;
-                case FIELD:
-                    return Completion.Kind.Field;
-                case PARAMETER:
-                    return Completion.Kind.Variable;
-                case LOCAL_VARIABLE:
-                    return Completion.Kind.Variable;
-                case EXCEPTION_PARAMETER:
-                    return Completion.Kind.Variable;
-                case METHOD:
-                    return Completion.Kind.Method;
-                case CONSTRUCTOR:
-                    return Completion.Kind.Constructor;
-                case TYPE_PARAMETER:
-                    return Completion.Kind.TypeParameter;
-                case RESOURCE_VARIABLE:
-                    return Completion.Kind.Variable;
-                case MODULE:
-                    return Completion.Kind.Module;
-                case STATIC_INIT:
-                case INSTANCE_INIT:
-                case OTHER:
-                default:
-                    return Completion.Kind.Text;
-            }
-        }
-
-        private static TextEdit modify2TextEdit(JavaSource js, Task<WorkingCopy> task) throws IOException {
-            FileObject[] file = new FileObject[1];
-            ModificationResult changes = js.runModificationTask(wc -> {
-                task.run(wc);
-                file[0] = wc.getFileObject();
-            });
-            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
-            if (diffs == null) {
-                return null;
-            }
-            int startOffset = -1;
-            int endOffset = -1;
-            StringBuilder sb = new StringBuilder();
-            for (ModificationResult.Difference diff : diffs) {
-                int start = diff.getStartPosition().getOffset();
-                int end = diff.getEndPosition().getOffset();
-                String newText = diff.getNewText();
-                if (startOffset < 0 && endOffset < 0) {
-                    startOffset = start;
-                    endOffset = end;
-                    sb.append(newText);
-                } else if (start == endOffset) {
-                    endOffset = end;
-                    sb.append(newText);
-                }
-            }
-            return startOffset >= 0 && endOffset >= startOffset ? new TextEdit(startOffset, endOffset, sb.toString()) : null;
         }
     }
 }

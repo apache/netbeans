@@ -78,6 +78,7 @@ public final class GradleJavaSourceSet implements Serializable {
     private static final String DEFAULT_SOURCE_COMPATIBILITY = "1.5"; //NOI18N
 
     Map<SourceType, Set<File>> sources = new EnumMap<>(SourceType.class);
+    Map<SourceType, File> outputs = new EnumMap<>(SourceType.class);
     String name;
     String runtimeConfigurationName;
     String compileConfigurationName;
@@ -364,6 +365,31 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public Set<File> getOutputClassDirs() {
         return outputClassDirs != null ? outputClassDirs : Collections.<File>emptySet();
+    }
+    
+    /**
+     * Represents an unknown value. This is different from a value that is not present,
+     * i.e. an output directory for a language that is not used in the project.
+     * @since 1.19
+     */
+    public static final File UNKNOWN = new File("");
+    
+    /**
+     * Returns output directories for the given source type in the sourceset. Returns
+     * null, if the source type has no output directories. Returns UNKNOWN, if the 
+     * output location is not known.
+     * 
+     * @param srcType language type
+     * @return location or {@code null}.
+     * @since 1.19
+     */
+    public File getOutputClassDir(SourceType srcType) {
+        File f = outputs.get(srcType);
+        if (UNKNOWN.equals(f)) {
+            // make the value canonical, so == can be used.
+            return UNKNOWN;
+        }
+        return f;
     }
 
     /**

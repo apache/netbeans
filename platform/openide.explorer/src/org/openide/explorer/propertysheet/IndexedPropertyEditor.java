@@ -364,7 +364,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Float.class)) {
-                value = new Float(0f);
+                value = 0f;
             }
 
             if (getConvertedType().equals(Long.class)) {

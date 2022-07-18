@@ -25,11 +25,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleProject;
+import org.netbeans.modules.gradle.GradleReport;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
@@ -93,7 +95,7 @@ public abstract class AbstractProjectLoader {
         return ret;
     }
 
-    static GradleProject createGradleProject(ProjectInfoDiskCache.QualifiedProjectInfo info) {
+    static GradleProject createGradleProject(GradleFiles gf, ProjectInfoDiskCache.QualifiedProjectInfo info) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> results = new HashMap<>();
         Set<String> problems = new LinkedHashSet<>(info.getProblems());
@@ -109,7 +111,16 @@ public abstract class AbstractProjectLoader {
             }
 
         }
-        return new GradleProject(info.getQuality(), problems, results.values());
+        Set<GradleReport> reps = new LinkedHashSet<>();
+        if (info.getReports() != null) {
+            for (Report r : info.getReports()) {
+                reps.add(LegacyProjectLoader.copyReport(r));
+            }
+        }
+        for (String s : problems) {
+            reps.add(GradleReport.simple(gf.getBuildScript().toPath(), s));
+        }
+        return new GradleProject(info.getQuality(), reps, results.values());
 
     }
 
@@ -129,6 +140,4 @@ public abstract class AbstractProjectLoader {
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
         ProjectInfoDiskCache.get(gf).storeData(data);
     }
-
-
 }

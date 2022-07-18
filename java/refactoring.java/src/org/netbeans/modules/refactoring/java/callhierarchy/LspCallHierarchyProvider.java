@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.refactoring.java.callhierarchy;
 
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
@@ -30,7 +31,13 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationController;
@@ -64,16 +71,39 @@ import org.openide.util.RequestProcessor;
  */
 @MimeRegistration(mimeType = "text/x-java", service = CallHierarchyProvider.class)
 public class LspCallHierarchyProvider implements CallHierarchyProvider {
+    private static final Logger LOG = Logger.getLogger(LspCallHierarchyProvider.class.getName());
+    
     private static final RequestProcessor HIERARCHY_RP = new RequestProcessor();
     
-    private static final Element findEclosingExecutable(CompilationInfo ci, TreePath tp) {
+    private static TreePath findEnclosingMethorOrInvocation(CompilationInfo ci, TreePath tp) {
+        boolean immediateBody = false;
         while (tp != null && tp.getLeaf().getKind() != Tree.Kind.COMPILATION_UNIT) {
             switch (tp.getLeaf().getKind()) {
                 case METHOD:
+                case METHOD_INVOCATION:
+                    return tp;
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
-                    return ci.getTrees().getElement(tp);
+                    return null;
+                    
+                case BLOCK:
+                    if (immediateBody) {
+                        return null;
+                    }
+                    // permit position inside method braces, but not on statements
+                    immediateBody = true;
+                    break;
+                    
+                case NEW_CLASS:
+                    return tp;
+                    
+                default:
+                    if (tp.getLeaf() instanceof StatementTree) {
+                        return null;
+                    }
+                    immediateBody = false;
+                    break;
             }
             tp = tp.getParentPath();
         }
@@ -93,23 +123,40 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             public void run(ResultIterator resultIterator) throws Exception {
                 Parser.Result r = resultIterator.getParserResult(offset);
                 if ("text/x-java".equals(r.getSnapshot().getMimeType())) {
-                    CompilationInfo ci = CompilationInfo.get(r);
+                    CompilationController ci = CompilationController.get(r);
                     if (ci == null || r.getSnapshot().getSource().getFileObject() == null) {
                         control.complete(null);
                         return;
                     }
+                    ci.toPhase(JavaSource.Phase.PARSED);
                     TreePath tp = ci.getTreeUtilities().pathFor(offset);
                     if (tp == null) {
                         control.complete(null);
                         return;
                     }
                     
-                    Element e = findEclosingExecutable(ci, tp);
-                    if (e == null) {
+                    TreePath origin = findEnclosingMethorOrInvocation(ci, tp);
+                    if (origin == null) {
+                        control.complete(null);
                         return;
                     }
+                    Element e = ci.getTrees().getElement(origin);
+                    if (e == null || !(e.getKind() == ElementKind.CONSTRUCTOR || e.getKind() == ElementKind.METHOD)) {
+                        control.complete(null);
+                        return;
+                    }
+                    ExecutableElement exec = (ExecutableElement)e;
+                    String name;
+                    if (e.getKind() == ElementKind.CONSTRUCTOR) {
+                        name = e.getEnclosingElement().getSimpleName().toString();
+                    } else {
+                        name = e.getSimpleName().toString();
+                    }
                     
-                    StructureElement se = ElementHeaders.toStructureElement(ci, e, null);
+                    StructureElement se = ElementHeaders.convertElement(ci, e, (che, t) -> false, true);
+                    if (se == null) {
+                        control.complete(null);
+                    }
                     CallHierarchyEntry item = new CallHierarchyEntry(se, signature(e));
                     control.complete(Collections.singletonList(item));
                     return;
@@ -155,9 +202,13 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
         }
     }
     
+    private static final String CUSTOM_DATA_SEPARATOR = "##"; // NOI18N
+    
     private static String signature(Element e) {
         ElementHandle h = ElementHandle.create(e);
-        String extra = h.getKind().name() + "/" + String.join("/", SourceUtils.getJVMSignature(h));
+        Element parent = e.getEnclosingElement();
+        String k = parent == null ? "" : parent.getKind().name();
+        String extra = h.getKind().name() + CUSTOM_DATA_SEPARATOR + k + CUSTOM_DATA_SEPARATOR + String.join(CUSTOM_DATA_SEPARATOR, SourceUtils.getJVMSignature(h));
         return extra;
     }
     
@@ -184,30 +235,63 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
         }
         
         public void run(CompilationController parameter) throws Exception {
-            List<CallHierarchyEntry.Call> calls = new ArrayList<>();
+            if (callTarget.getCustomData() == null) {
+                res.complete(null);
+                return;
+            }
+            String[] data = callTarget.getCustomData().split(CUSTOM_DATA_SEPARATOR);
+            if (data.length < 3) {
+                res.complete(null);
+                return;
+            }
+            if (data[1].equals("")) {
+                res.complete(null);
+                return;
+            }
+            ElementKind targetKind;
+            try {
+                targetKind = ElementKind.valueOf(data[1]);
+            } catch (IllegalArgumentException ex) {
+                LOG.log(Level.SEVERE, "Unexpected call entry kind: {0}", data[1]);
+                res.complete(null);
+                return;
+            }
+            ElementHandle<TypeElement> typeHandle;
+            try {
+                typeHandle = ElementHandle.createTypeElementHandle(targetKind, data[2]);
+            } catch (IllegalArgumentException ex) {
+                LOG.log(Level.SEVERE, "Could not convert signature {0} to Element", callTarget.getCustomData());
+                LOG.log(Level.SEVERE, "Exception thrown:", ex);
+                res.complete(null);
+                return;
+            }
+            
             int s = callTarget.getElement().getSelectionStartOffset();
             parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TreePath p = parameter.getTreeUtilities().pathFor(s);
-            Element e = null;
-
-            if (p != null) {
-                Element candidate = parameter.getTrees().getElement(p);
-                if (candidate != null) {
-                    // just do a sanity check
-                    if (callTarget.getCustomData() == null ||
-                        callTarget.getCustomData().equals(signature(candidate))) {
-                        e = candidate;
-                    }
-                }
+            TypeElement typeEl = typeHandle.resolve(parameter);
+            
+            ExecutableElement e;
+            if (callTarget.getElement().getKind() == StructureElement.Kind.Method) {
+                e = ElementFilter.methodsIn(typeEl.getEnclosedElements()).stream().
+                        filter(m -> callTarget.getCustomData().equals(signature(m))).
+                        findFirst().orElse(null);
+            } else {
+                e = ElementFilter.constructorsIn(typeEl.getEnclosedElements()).stream().
+                        filter(m -> callTarget.getCustomData().equals(signature(m))).
+                        findFirst().orElse(null);
             }
 
-            if (e == null) {
+            if (e == null || !(e.getKind() == ElementKind.METHOD || e.getKind() == ElementKind.CONSTRUCTOR)) {
                 res.complete(null);
                 return;
             }
             TreePathHandle tph = TreePathHandle.create(e, parameter);
-
-            CallHierarchyTasks.RootResolver rr = new CallHierarchyTasks.RootResolver(tph, true, true);
+            if (tph == null) {
+                res.complete(null);
+                return;
+            }
+            CallHierarchyTasks.RootResolver rr = new CallHierarchyTasks.RootResolver(tph, type == CallHierarchyModel.HierarchyType.CALLER, true);
             rr.run(parameter);
 
             CallHierarchyModel m = CallHierarchyModel.create(tph, 
@@ -215,7 +299,22 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             m.replaceRoot(rr.getRoot());
 
             Call rootCall = m.getRoot();
-            m.computeCalls(m.getRoot(), () -> processComputedCall(parameter, rootCall));
+            if (rootCall == null) {
+                res.complete(null);
+                return;
+            }
+            m.computeCalls(m.getRoot(), () -> {
+                JavaSource js = JavaSource.forFileObject(fo);
+                if (js == null) {
+                    res.complete(null);
+                    return;
+                }
+                try {
+                    js.runUserActionTask((nested) -> processComputedCall(nested, rootCall), true);
+                } catch (IOException ex) {
+                    res.completeExceptionally(ex);
+                }
+            });
         }
         
         protected abstract CallHierarchyEntry.Call createCall(StructureElement se, Call c, String signature);
@@ -232,7 +331,11 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                 CompletableFuture<StructureElement> elementFuture = ElementHeaders.resolveStructureElement(info, target, true);
                 if (elementFuture.isDone()) {
                     try {
-                        calls.add(createCall(elementFuture.get(), c, signature(target)));
+                        StructureElement sel = elementFuture.get();
+                        if (sel == null) {
+                            continue;
+                        }
+                        calls.add(createCall(sel, c, signature(target)));
                     } catch (ExecutionException ex) {
                         Throwable cause = ex.getCause();
                         if (cause instanceof CancellationException) {
@@ -285,13 +388,14 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             return toCancel != null ? toCancel : res;
         }
 
-        protected void processComputedCall(CompilationInfo info, Call rootCall) {
+        protected void processComputedCall(CompilationController info, Call rootCall) throws IOException {
             List<CallHierarchyEntry.Call> calls = new ArrayList<>();
             List<Call> refs = rootCall.getReferences();
 
             if (cancelled.get()) {
                 return;
             }
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             toCancel = processAsync(info, refs, calls);
             toCancel.handle((r, ex) -> {
                 if (ex != null) { 
@@ -346,27 +450,6 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                 }
                 return new CallHierarchyEntry.Call(i, ranges);
             }
-            
-            /*
-            @Override
-            protected void processComputedCall(CompilationInfo info, Call rootCall) {
-                List<CallHierarchyEntry.Call> calls = new ArrayList<>();
-                List<Call> refs = rootCall.getReferences();
-                
-                if (cancelled.get()) {
-                    return;
-                }
-                toCancel = processAsync(info, refs, calls);
-                toCancel.handle((r, ex) -> {
-                    if (ex != null) { 
-                        res.completeExceptionally((Throwable)ex);
-                    } else {
-                        res.complete(calls);
-                    }
-                    return null;
-                });
-            }
-            */
         }
         return new T(callSource).process();
     } 

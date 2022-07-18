@@ -20,6 +20,7 @@
 package org.netbeans.upgrade.systemoptions;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import org.openide.util.NotImplementedException;
 
@@ -225,7 +226,7 @@ public final class SerParser implements ObjectStreamConstants {
         for (int i = 0; i < len; i++) {
             buf[i] = readByte();
         }
-        String s = new String(buf, "UTF-8"); // NOI18N
+        String s = new String(buf, StandardCharsets.UTF_8);
         if (DEBUG) System.err.println("readUTF: " + s); // NOI18N
         return s;
     }
@@ -501,7 +502,7 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (aw.classdesc.name.equals("[J")) { // NOI18N
                 aw.values.add(new Long(readLong()));
             } else if (aw.classdesc.name.equals("[F")) { // NOI18N
-                aw.values.add(new Float(Float.intBitsToFloat(readInt())));
+                aw.values.add(Float.intBitsToFloat(readInt()));
             } else if (aw.classdesc.name.equals("[D")) { // NOI18N
                 aw.values.add(new Double(Double.longBitsToDouble(readLong())));
             } else if (aw.classdesc.name.equals("[C")) { // NOI18N
@@ -565,7 +566,7 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (fd.type.equals("J")) { // NOI18N
                 values.add(new NameValue(fd, new Long(readLong())));
             } else if (fd.type.equals("F")) { // NOI18N
-                values.add(new NameValue(fd, new Float(Float.intBitsToFloat(readInt()))));
+                values.add(new NameValue(fd, Float.intBitsToFloat(readInt())));
             } else if (fd.type.equals("D")) { // NOI18N
                 values.add(new NameValue(fd, new Double(Double.longBitsToDouble(readLong()))));
             } else if (fd.type.equals("C")) { // NOI18N

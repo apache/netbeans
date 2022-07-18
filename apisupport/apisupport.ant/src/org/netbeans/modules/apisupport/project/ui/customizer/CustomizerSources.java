@@ -22,10 +22,14 @@ package org.netbeans.modules.apisupport.project.ui.customizer;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.apisupport.project.ui.ApisupportAntUIUtils;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.NotifyDescriptor;
 import org.openide.modules.SpecificationVersion;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -87,8 +91,9 @@ final class CustomizerSources extends NbPropertyPanel.Single {
         srcLevelValueBeingUpdated = true;
         try {
             srcLevelValue.removeAllItems();
-            for (int i = 0; i < SingleModuleProperties.SOURCE_LEVELS.length; i++) {
-                srcLevelValue.addItem(SingleModuleProperties.SOURCE_LEVELS[i]);
+            String[] levels = sourceLevels(getProperties().getActiveJavaPlatform());
+            for (String level : levels) {
+                srcLevelValue.addItem(level);
             }
             srcLevelValue.setSelectedItem(getProperty(SingleModuleProperties.JAVAC_SOURCE));
         } finally {
@@ -204,4 +209,23 @@ final class CustomizerSources extends NbPropertyPanel.Single {
         prjFolderValue.getAccessibleContext().setAccessibleDescription(getMessage("ACS_PrjFolderValue"));
     }
     
+    private String[] sourceLevels(JavaPlatform platform) {
+        List<String> levels = new ArrayList<>();
+        levels.add("1.4");
+        levels.add("1.5");
+        levels.add("1.6");
+        levels.add("1.7");
+        levels.add("1.8");
+        try {
+            String platformVersion = platform.getSpecification().getVersion().toString();
+            int maxLevel = Integer.parseInt(platformVersion.split("\\.")[0]);
+            for (int level = 9; level <= maxLevel; level++) {
+                levels.add(Integer.toString(level));
+            }
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return levels.toArray(new String[0]);
+    }
+
 }

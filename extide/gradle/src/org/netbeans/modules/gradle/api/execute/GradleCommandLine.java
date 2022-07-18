@@ -44,6 +44,8 @@ import java.util.logging.Logger;
 import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleVersionRange;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.util.Utilities;
@@ -88,58 +90,76 @@ public final class GradleCommandLine implements Serializable {
      * @since 2.23
      */
     public interface GradleOptionItem {
+        /**
+         * Shall return {@code true} if the IDE supports this option item.
+         *
+         * @return {@code true} if this option is supported by the IDE
+         */
         boolean isSupported();
+
+        /**
+         * Shall return {@code true} if this option is supported by the provided
+         * GradleDistribution.
+         * 
+         * @param dist the GradleDistribution to check.
+         * @return {@code true} if the provided {@link GradleDistribution} supports this option.
+         */
+        boolean supportsGradle(GradleDistribution dist);
         List<String> getFlags();
         String getDescription();
     }
+
+
     /**
      * Gradle command line flags
      */
     public enum Flag implements GradleOptionItem {
         BUILD_CACHE(PARAM, "--build-cache"),
-        CONFIGURATION_CACHE(PARAM, "--configuration-cache"),
+        CONFIGURATION_CACHE(PARAM, GradleVersionRange.from("6.5"), "--configuration-cache"),
         CONFIGURE_ON_DEMAND(PARAM, "--configure-on-demand"),
         CONTINUE(PARAM, "--continue"),
         CONTINUOUS(PARAM, "--continuous", "-t"),
         DAEMON(UNSUPPORTED, "--daemon"),
         DRY_RUN(PARAM, "-m", "--dry-run"),
-        EXPORT_KEYS(PARAM, "--export-keys"),
+        EXPORT_KEYS(PARAM, GradleVersionRange.from("6.2"), "--export-keys"),
         FOREGROUND(UNSUPPORTED, "--foreground"),
-        GUI(UNSUPPORTED, "--gui"),
+        GUI(UNSUPPORTED, GradleVersionRange.until("4.0"), "--gui"),
         HELP(UNSUPPORTED, "--help", "-h", "-?"),
         LOG_DEBUG(PARAM, "-d", "--debug"),
         LOG_INFO(PARAM, "-i", "--info"),
         LOG_QUIET(PARAM, "-q", "--quiet"),
         LOG_WARN(PARAM, "-w", "--warn"),
         NO_BUILD_CACHE(PARAM, "--no-build-cache"),
-        NO_CONFIGURATION_CACHE(PARAM, "--no-configuration-cache"),
+        NO_CONFIGURATION_CACHE(PARAM, GradleVersionRange.from("6.5"), "--no-configuration-cache"),
         NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
         NO_DAEMON(UNSUPPORTED, "--no-daemon"),
         NO_PARALLEL(PARAM, "--no-parallel"),
         NO_REBUILD(PARAM, "-a", "--no-rebuild"),
-        NO_SCAN(PARAM, "--no-scan"),
-        NO_SEARCH_UPWARD(UNSUPPORTED, "--no-search-upward", "-u"),
-        NO_WATCH_FS(PARAM, "--no-watch-fs"),
+        NO_SCAN(PARAM, GradleVersionRange.from("4.3"), "--no-scan"),
+        NO_SEARCH_UPWARD(UNSUPPORTED, GradleVersionRange.until("5.0"), "--no-search-upward", "-u"),
+        NO_WATCH_FS(PARAM, GradleVersionRange.from("6.7"), "--no-watch-fs"),
         OFFLINE(PARAM, "--offline"),
         PARALLEL(PARAM, "--parallel"),
         PROFILE(PARAM, "--profile"),
-        RECOMPILE_SCRIPTS(UNSUPPORTED, "--recompile-scripts"),
+        RECOMPILE_SCRIPTS(UNSUPPORTED, GradleVersionRange.until("5.0"), "--recompile-scripts"),
         REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
-        REFRESH_KEYS(PARAM, "--refresh-keys"),
+        REFRESH_KEYS(PARAM, GradleVersionRange.from("6.2"), "--refresh-keys"),
         RERUN_TASKS(PARAM, "--rerun-tasks"),
-        SCAN(PARAM, "--scan"),
+        SCAN(PARAM, GradleVersionRange.from("4.3"), "--scan"),
+        SHOW_VERSION(PARAM, GradleVersionRange.from("7.5"), "-V", "--show-version"),
         STACKTRACE(PARAM, "-s", "--stacktrace"),
         STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
         STATUS(UNSUPPORTED, "--status"),
         STOP(UNSUPPORTED, "--stop"),
-        UPDATE_LOCKS(PARAM, "--update-locks"),
+        UPDATE_LOCKS(PARAM, GradleVersionRange.from("4.8"), "--update-locks"),
         VERSION(UNSUPPORTED, "--version", "-v"),
-        WATCH_FS(PARAM, "--watch-fs"),
-        WRITE_LOCKS(PARAM,"--write-locks");
+        WATCH_FS(PARAM, GradleVersionRange.from("6.7"), "--watch-fs"),
+        WRITE_LOCKS(PARAM, GradleVersionRange.from("4.8"),"--write-locks");
 
         private Set<Flag> incompatible = Collections.emptySet();
         private final Argument.Kind kind;
         private final List<String> flags;
+        private final GradleDistributionManager.GradleVersionRange supportedRange;
 
         static {
             DAEMON.incompatibleWith(NO_DAEMON);
@@ -173,8 +193,13 @@ public final class GradleCommandLine implements Serializable {
         }
 
         private Flag(Argument.Kind kind, String... flags) {
+            this(kind, GradleDistributionManager.GradleVersionRange.UNBOUNDED, flags);
+        }
+        
+        private Flag(Argument.Kind kind, GradleDistributionManager.GradleVersionRange supportedRange, String... flags) {
             this.kind = kind;
             this.flags = Arrays.asList(flags);
+            this.supportedRange = supportedRange;
         }
 
         private void incompatibleWith(Flag first, Flag... rest) {
@@ -194,6 +219,11 @@ public final class GradleCommandLine implements Serializable {
         @Override
         public final String getDescription() {
             return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
+        }
+
+        @Override
+        public boolean supportsGradle(GradleDistribution dist) {
+            return supportedRange.contains(dist.version);
         }
     }
 
@@ -226,12 +256,17 @@ public final class GradleCommandLine implements Serializable {
             return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
         }
 
+        @Override
+        public boolean supportsGradle(GradleDistribution dist) {
+            return true;
+        }
+
     }
 
     public enum Parameter implements GradleOptionItem {
 
         BUILD_FILE(UNSUPPORTED, "-b", "--build-file"),
-        CONFIGURATION_CACHE_PROBLEMS(PARAM, argValues("fail", "warn"), "--configuration-cache-problems"),
+        CONFIGURATION_CACHE_PROBLEMS(PARAM, GradleVersionRange.from("6.5"), argValues("fail", "warn"), "--configuration-cache-problems"),
         CONSOLE(UNSUPPORTED, argValues("plain", "auto", "rich", "verbose"), "--console"),
         DEPENDENCY_VERIFICATION(PARAM, argValues("strict", "lenient", "off"), "-F", "--dependency-verification"),
         EXCLUDE_TASK(PARAM, "-x", "--exclude-task"),
@@ -239,7 +274,7 @@ public final class GradleCommandLine implements Serializable {
         INIT_SCRIPT(PARAM, "-I", "--init-script"),
         @Deprecated
         IMPORT_BUILD(UNSUPPORTED),
-        INCLUDE_BUILD(PARAM, "--include-build"),
+        INCLUDE_BUILD(PARAM, GradleVersionRange.from("3.1"), "--include-build"),
         MAX_WORKER(PARAM, "--max-worker"),
         PRIORITY(PARAM, argValues("normal", "low"), "--priority"),
         PROJECT_CACHE_DIR(UNSUPPORTED, "--project-cache-dir"),
@@ -247,9 +282,10 @@ public final class GradleCommandLine implements Serializable {
         @Deprecated
         SETTINGS_FILE(UNSUPPORTED, "-c", "--settings-file"),
         WARNING_MODE(PARAM, argValues("all", "fail", "summary", "none"),"--warning-mode"),
-        WRITE_VERIFICATION_METADATA(PARAM, "-M", "write-verification-metadata");
+        WRITE_VERIFICATION_METADATA(PARAM, GradleVersionRange.from("6.2"), "-M", "write-verification-metadata");
 
         final Argument.Kind kind;
+        final GradleDistributionManager.GradleVersionRange supportedRange;
         final List<String> flags;
         final Argument.Values values;
 
@@ -257,12 +293,21 @@ public final class GradleCommandLine implements Serializable {
             this(kind, Argument.Values.ANY, flags);
         }
         
+        Parameter(Argument.Kind kind, GradleDistributionManager.GradleVersionRange supportedRange, String... flags) {
+            this(kind, supportedRange, Argument.Values.ANY, flags);
+        }
+
         Parameter(Argument.Kind kind, Argument.Values values, String... flags) {
+            this(kind, GradleDistributionManager.GradleVersionRange.UNBOUNDED, values, flags);
+        }
+        
+        Parameter(Argument.Kind kind, GradleDistributionManager.GradleVersionRange supportedRange, Argument.Values values, String... flags) {
             this.kind = kind;
             this.values = values;
             this.flags = Arrays.asList(flags);
+            this.supportedRange = supportedRange;
         }
-        
+
         private static Argument.Values argValues(String... values) {
             return new Argument.Values(values);
         }
@@ -280,6 +325,11 @@ public final class GradleCommandLine implements Serializable {
         @Override
         public String getDescription() {
             return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
+        }
+
+        @Override
+        public boolean supportsGradle(GradleDistribution dist) {
+            return supportedRange.contains(dist.version);
         }
     }
 
@@ -302,6 +352,8 @@ public final class GradleCommandLine implements Serializable {
         Kind getKind();
 
         List<String> getArgs();
+
+        boolean supportsGradle(GradleDistribution dist);
     }
 
     interface ArgumentParser<T extends Argument> {
@@ -330,7 +382,7 @@ public final class GradleCommandLine implements Serializable {
 
         @Override
         public List<String> getArgs() {
-            return Collections.singletonList(flag.flags.get(0));
+            return Collections.singletonList(toString());
         }
 
         @Override
@@ -362,6 +414,16 @@ public final class GradleCommandLine implements Serializable {
         public Kind getKind() {
             return flag.kind;
         }
+
+        @Override
+        public boolean supportsGradle(GradleDistribution dist) {
+            return flag.supportsGradle(dist);
+        }
+
+        @Override
+        public String toString() {
+            return flag.flags.get(0);
+        }
     }
 
     static class PropertyArgument implements Argument {
@@ -378,7 +440,7 @@ public final class GradleCommandLine implements Serializable {
 
         @Override
         public List<String> getArgs() {
-            return Collections.singletonList(prop.prefix + key + "=" + value);
+            return Collections.singletonList(toString());
         }
 
         @Override
@@ -412,6 +474,15 @@ public final class GradleCommandLine implements Serializable {
             return this.prop == other.prop;
         }
 
+        @Override
+        public boolean supportsGradle(GradleDistribution dist) {
+            return prop.supportsGradle(dist);
+        }
+
+        @Override
+        public String toString(){
+            return prop.prefix + key + "=" + value;
+        }
     }
 
     static class PropertyParser implements ArgumentParser<PropertyArgument> {
@@ -493,6 +564,18 @@ public final class GradleCommandLine implements Serializable {
             }
             return this.param == other.param;
         }
+
+        @Override
+        public boolean supportsGradle(GradleDistribution dist) {
+            return param.supportsGradle(dist);
+        }
+
+        @Override
+        public String toString() {
+            return param.flags.get(0) + " " + value;
+        }
+
+
     }
 
     static class ParameterParser implements ArgumentParser<ParametricArgument> {
@@ -525,15 +608,46 @@ public final class GradleCommandLine implements Serializable {
     }
     //</editor-fold>
 
+    final GradleDistribution dist;
     final Set<Argument> arguments = new LinkedHashSet<>();
     final Set<String> tasks = new LinkedHashSet<>();
 
-    public GradleCommandLine(GradleCommandLine cmd) {
+    /**
+    /**
+     * Creates a copy instance of the provided GradleCommandLine, but with for a
+     * specified GradleDistribution.
+     *
+     * @param dist the GradleDistribution for compatibility checks. {@code null}
+     *             can be used for unspecified.
+     * @param cmd the command line to copy
+     * @since 2.23
+     */
+    public GradleCommandLine(GradleDistribution dist, GradleCommandLine cmd) {
+        this.dist = dist;
         arguments.addAll(cmd.arguments);
         tasks.addAll(cmd.tasks);
     }
 
-    public GradleCommandLine(String... args) {
+    /**
+     * Creates a copy instance of the provided GradleCommandLine.
+     *
+     * @param cmd the command line to copy
+     */
+    public GradleCommandLine(GradleCommandLine cmd) {
+        this(cmd.dist, cmd);
+    }
+
+    /**
+     * Creates a command line form the specified arguments with compatibility
+     * constraint on a specified Gradle distribution.
+     *
+     * @param dist the GradleDistribution for compatibility checks. {@code null}
+     *             can be used for unspecified.
+     * @param args the command line parameters
+     * @since 2.23
+     */
+    public GradleCommandLine(GradleDistribution dist, String... args) {
+        this.dist = dist;
         Iterator<String> it = Arrays.asList(args).iterator();
         while (it.hasNext()) {
             String arg = it.next();
@@ -551,15 +665,28 @@ public final class GradleCommandLine implements Serializable {
         }
     }
 
+    public GradleCommandLine(String... args) {
+        this(null, args);
+    }
+
+    public GradleCommandLine(GradleDistribution dist, CharSequence argLine) {
+        this(dist, Utilities.parseParameters(argLine.toString()));
+    }
+
     public GradleCommandLine(CharSequence argLine) {
-        this(Utilities.parseParameters(argLine.toString()));
+        this(null, Utilities.parseParameters(argLine.toString()));
     }
 
     private List<String> getArgs(Set<Argument.Kind> kinds) {
         List<String> ret = new LinkedList<>();
         for (Argument arg : arguments) {
             if (kinds.contains(arg.getKind())) {
-                ret.addAll(arg.getArgs());
+                if ((dist == null) || arg.supportsGradle(dist)) {
+                    ret.addAll(arg.getArgs());
+                }
+                if ((dist != null) && !arg.supportsGradle(dist)) {
+                    LOGGER.log(Level.INFO, "'{0}' is not supported by Gradle {1}, so it will be omitted.", new Object[]{arg.toString(), dist.getVersion()});
+                }
             }
         }
         return ret;

@@ -53,8 +53,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
@@ -81,14 +83,17 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
+import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentHighlight;
 import org.eclipse.lsp4j.DocumentHighlightKind;
 import org.eclipse.lsp4j.DocumentHighlightParams;
+import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FoldingRange;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
+import org.eclipse.lsp4j.FormattingOptions;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.ImplementationParams;
@@ -132,6 +137,8 @@ import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -155,11 +162,16 @@ import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.refactoring.ChangeMethodParameterUI;
 import org.netbeans.modules.java.lsp.server.refactoring.MoveElementUI;
 import org.netbeans.modules.java.lsp.server.refactoring.ParameterUI;
 import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
+import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
@@ -1770,13 +1782,14 @@ public class ServerTest extends NbTestCase {
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
-        List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + toString(si.getLocation())).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Class:Test:null:Test:0:0-0:0",
-                                   "Constructor:Test():Test:Test.java:0:7-0:7",
+        Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
+        List<String> actual = symbols.getRight().stream().map(ws -> ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":"
+                + (ws.getLocation().isLeft() ? toString(ws.getLocation().getLeft()) : toString(ws.getLocation().getRight()))).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Method:testMethod():Test:Test.java:2:4-2:38",
-                                   "Class:TestNested:Test:Test%24TestNested:0:0-0:0",
-                                   "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18"),
+                                   "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18",
+                                   "Class:Test:null:Test",
+                                   "Class:TestNested:Test:Test%24TestNested"),
                      actual);
     }
 
@@ -1842,7 +1855,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 17), new Position(2, 17)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 3);
         Optional<CodeAction> generateVariable =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2144,7 +2156,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(0, 15), new Position(0, 15)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 2);
         Optional<CodeAction> implementAllAbstractMethods =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2235,7 +2246,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 35), new Position(2, 35)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 1);
         Optional<CodeAction> implementAllAbstractMethods =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2323,7 +2333,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 5), new Position(1, 5)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 2);
         Optional<CodeAction> implementAllAbstractMethods =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2412,7 +2421,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 4);
         Optional<CodeAction> introduceVariable =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2522,7 +2530,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 4);
         Optional<CodeAction> introduceConstant =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2627,7 +2634,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 4);
         Optional<CodeAction> introduceField =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2732,7 +2738,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 4);
         Optional<CodeAction> introduceMethod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2828,7 +2833,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 6), new Position(2, 6)), new CodeActionContext(Arrays.asList()))).get();
-        assertEquals(4, codeActions.size());
         Optional<CodeAction> generateGetterSetter =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2868,6 +2872,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
+        AtomicReference<Object> data = new AtomicReference<>();
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
@@ -2875,8 +2880,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                return CompletableFuture.completedFuture(params.getItems().stream().filter(item -> item.isPicked()).collect(Collectors.toList()));
+            public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+                Map<String, Either<List<QuickPickItem>, String>> map = new HashMap<>();
+                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("fields"), QuickPickItem[].class));
+                map.put("fields", Either.forLeft(fields.stream().filter(item -> item.isPicked()).collect(Collectors.toList())));
+                return CompletableFuture.completedFuture(map);
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -2886,7 +2894,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 6), new Position(1, 6)), new CodeActionContext(Arrays.asList()))).get();
-        assertEquals(2, codeActions.size());
         Optional<CodeAction> generateConstructor =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2894,6 +2901,7 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateConstructor().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateConstructor.isPresent());
+        data.set(generateConstructor.get().getData());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateConstructor.get()).get();
         assertNotNull(resolvedCodeAction);
         WorkspaceEdit edit = resolvedCodeAction.getEdit();
@@ -2959,7 +2967,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 0), new Position(3, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(10, codeActions.size());
         Optional<CodeAction> generateGetterSetter =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2989,7 +2996,6 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getNewText());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(fileChanges.get(0).getRange(), 0, fileChanges.get(0).getNewText()))));
         codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 0), new Position(3, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateGetter =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3024,6 +3030,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
+        AtomicReference<Object> data = new AtomicReference<>();
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
@@ -3031,10 +3038,14 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
+            public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+                Map<String, Either<List<QuickPickItem>, String>> map = new HashMap<>();
+                List<QuickPickItem> constructors = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("constructors"), QuickPickItem[].class));
+                map.put("constructors", Either.forLeft(constructors.subList(0, 2)));
+                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("fields"), QuickPickItem[].class));
+                map.put("fields", Either.forLeft(fields));
+                return CompletableFuture.completedFuture(map);
             }
-
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3043,7 +3054,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateConstructor =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3051,6 +3061,7 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateConstructor().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateConstructor.isPresent());
+        data.set(generateConstructor.get().getData());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateConstructor.get()).get();
         assertNotNull(resolvedCodeAction);
         WorkspaceEdit edit = resolvedCodeAction.getEdit();
@@ -3108,7 +3119,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(5, 0), new Position(5, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(10, codeActions.size());
         Optional<CodeAction> generateEquals =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3176,7 +3186,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateToString =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3216,6 +3225,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
+        AtomicReference<Object> data = new AtomicReference<>();
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
@@ -3224,9 +3234,32 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
+                List<QuickPickItem> selection = params.getItems().stream()
+                        .filter((i) -> i.getLabel().equals("f1.chars(): IntStream") || i.getLabel().equals("f1.codePoints(): IntStream"))
+                        .sorted((i1, i2) -> i1.getLabel().compareTo(i2.getLabel()))
+                        .collect(Collectors.toList());
+                assertEquals(2, selection.size());
+                return CompletableFuture.completedFuture(selection);
             }
 
+            @Override
+            public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+                Map<String, Either<List<QuickPickItem>, String>> map = new HashMap<>();
+                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("fields"), QuickPickItem[].class));
+                map.put("methods", Either.forLeft(Arrays.asList(new QuickPickItem[] {
+                    new QuickPickItem("s.chars(): IntStream", null, null, false, new CodeActionsProvider.ElementData(ElementHandleAccessor.getInstance().create(ElementKind.METHOD, new String[] {
+                        "java.lang.CharSequence",
+                        "chars",
+                        "()Ljava/util/stream/IntStream;"
+                    }))),
+                    new QuickPickItem("s.codePoints(): IntStream", null, null, false, new CodeActionsProvider.ElementData(ElementHandleAccessor.getInstance().create(ElementKind.METHOD, new String[] {
+                        "java.lang.CharSequence",
+                        "codePoints",
+                        "()Ljava/util/stream/IntStream;"
+                    })))
+                })));
+                return CompletableFuture.completedFuture(map);
+            }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3235,7 +3268,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateDelegateMethod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3243,6 +3275,7 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateDelegateMethod().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateDelegateMethod.isPresent());
+        data.set(generateDelegateMethod.get().getData());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateDelegateMethod.get()).get();
         assertNotNull(resolvedCodeAction);
         WorkspaceEdit edit = resolvedCodeAction.getEdit();
@@ -3298,7 +3331,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateOverrideMethod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3363,7 +3395,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateLogger =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3442,7 +3473,6 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(6, 0), new Position(6, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(8, codeActions.size());
         Optional<CodeAction> organizeImports =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -4476,6 +4506,166 @@ public class ServerTest extends NbTestCase {
                      "} while (${1:true});", obj.getAsJsonPrimitive("snippet").getAsString());
     }
 
+    public void testFormatDocument() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test\n" +
+                      "{\n" +
+                      "    public static void main(String[] args)\n" +
+                      "    {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<? extends TextEdit> edits = server.getTextDocumentService().formatting(new DocumentFormattingParams(id, new FormattingOptions(4, true))).get();
+        assertNotNull(edits);
+        assertEquals(4, edits.size());
+        assertEquals(new Range(new Position(2, 42),
+                               new Position(3, 4)),
+                     edits.get(0).getRange());
+        assertEquals(edits.get(0).getNewText(), " ");
+        assertEquals(new Range(new Position(2, 0),
+                               new Position(2, 4)),
+                     edits.get(1).getRange());
+        assertEquals(edits.get(1).getNewText(), "\n    ");
+        assertEquals(new Range(new Position(0, 17),
+                               new Position(1, 0)),
+                     edits.get(2).getRange());
+        assertEquals(edits.get(2).getNewText(), " ");
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     edits.get(3).getRange());
+        assertEquals(edits.get(3).getNewText(), "\n");
+    }
+
+    public void testFormatSelection() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test\n" +
+                      "{\n" +
+                      "    public static void main(String[] args)\n" +
+                      "    {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<? extends TextEdit> edits = server.getTextDocumentService().rangeFormatting(new DocumentRangeFormattingParams(id, new FormattingOptions(4, true), new Range(new Position(2, 0), new Position(6, 0)))).get();
+        assertNotNull(edits);
+        assertEquals(2, edits.size());
+        assertEquals(new Range(new Position(2, 42),
+                               new Position(3, 4)),
+                     edits.get(0).getRange());
+        assertEquals(edits.get(0).getNewText(), " ");
+        assertEquals(new Range(new Position(2, 0),
+                               new Position(2, 4)),
+                     edits.get(1).getRange());
+        assertEquals(edits.get(1).getNewText(), "    ");
+    }
+
     public void testNoErrorAndHintsFor() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -4842,6 +5032,16 @@ public class ServerTest extends NbTestCase {
             simpleName = simpleName.substring(idx + 3);
         }
         return simpleName + ":" + toString(location.getRange());
+    }
+
+    private String toString(WorkspaceSymbolLocation location) {
+        String path = location.getUri();
+        String simpleName = path.substring(path.lastIndexOf('/') + 1);
+        int idx = simpleName.lastIndexOf("%23");
+        if (idx >= 0) {
+            simpleName = simpleName.substring(idx + 3);
+        }
+        return simpleName;
     }
 
     private String uriToString(String uri) {

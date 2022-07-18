@@ -20,11 +20,35 @@
     under the License.
 
 -->
-## Version 13.0.601
+## Version 14.0.301
+* Settings: `NetBeans:UserDir` is set to `Local` as default value. This means each instance of VSCode runs own VSNetBeans LS
+* Format Document and Format Selection added 
+* External formatters using Eclipse, Google and Spring added.
+* JavaDoc completion added
+* Groovy Go To Symbol added
+* Several refactorings added
+* Settings are Remote-SSH aware
+* Native Image debugging provided by GraalVM works now for GraalVM CE and EE
+* Number of bug fixes and improvements in Java, projects and databases support
+
+## Version 14.0
+* Workaround for VSCode 1.67 error which breaks Projects explorer icon
+* Remove HTML tags from project problem messages
+* Fixes for Gradle projects and LSP
+
+## Version 13.0.301
 * Added base code completion for Spock test framework
   * Spock Block Names are offered inside methods if the class extends Spock Specification
   * Parameter names are offered, if the parameters are defined in a method name that is annotated with @Unroll
 * Added Outline view for Groovy files
+* Significant improvements & bug fixes working with Gradle projects 
+* Info on project problems shown in VSCode 
+* Move refactoring updated to use rich form style
+* Oracle Cloud Explorer added
+* Database Explorer added for JDBC databases including wallet authentication style
+* Micronaut and JPA Entity classes supported together with Repository classes
+* GraalVM native image debugging fixes and improvements
+* Java Call Hierarchy added
 
 ## Version 12.6.301
 * Project Explorer to display logical project structure, dependencies and project files introduced

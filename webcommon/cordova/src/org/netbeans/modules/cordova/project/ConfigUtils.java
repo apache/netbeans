@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
@@ -66,7 +67,7 @@ public final class ConfigUtils {
         }
         FileLock lock = fo.lock();
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FileUtil.toFile(fo)), Charset.forName("UTF-8")));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FileUtil.toFile(fo)), StandardCharsets.UTF_8));
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -76,7 +77,7 @@ public final class ConfigUtils {
                 sb.append(line);
                 sb.append("\n");
             }
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write(sb.toString());
             } finally {

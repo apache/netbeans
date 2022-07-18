@@ -78,7 +78,7 @@ public class ChildNodeFactory extends ChildFactory<Lookup> {
     }
 
     @Override
-    protected boolean createKeys(List toPopulate) {
+    protected boolean createKeys(List<Lookup> toPopulate) {
         
         // the node registry is in the data lookup
         NodeRegistry registry = dataLookup.lookup(NodeRegistry.class);

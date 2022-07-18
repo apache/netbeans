@@ -39,7 +39,6 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -127,6 +126,7 @@ import org.openide.util.Exceptions;
 import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Type;
@@ -1050,6 +1050,67 @@ public class Utilities {
                 enclosingMethodElement.getKind() == ElementKind.CONSTRUCTOR);
     }
 
+    @SuppressWarnings("BoxedValueEquality")
+    public static boolean isReferencedIn(CompilationInfo info, TreePath variable, Iterable<? extends TreePath> in) {
+        final Trees trees = info.getTrees();
+        final Element e = trees.getElement(variable);
+
+        if (e == null) { //TODO: check also error
+            return false;
+        }
+
+        for (TreePath tp : in) {
+
+            if (e.equals(trees.getElement(tp))) {
+                return true;
+            }
+
+            boolean occurs = new ErrorAwareTreePathScanner<Boolean, Void>() {
+                private boolean found = false;
+                @Override
+                public Boolean scan(Tree tree, Void p) {
+                    if (found) {
+                        return true; // fast path
+                    }
+
+                    if (tree == null) {
+                        return false;
+                    }
+
+                    TreePath currentPath = new TreePath(getCurrentPath(), tree);
+                    Element currentElement = trees.getElement(currentPath);
+
+                    if (e.equals(currentElement)) {
+                        found = true;
+                        return true;
+                    }
+
+                    return super.scan(tree, p);
+                }
+
+                @Override
+                public Boolean reduce(Boolean r1, Boolean r2) {
+                    if (r1 == null) {
+                        return r2;
+                    }
+
+                    if (r2 == null) {
+                        return r1;
+                    }
+
+                    return r1 || r2;
+                }
+
+            }.scan(tp, null) == Boolean.TRUE;
+
+            if (occurs) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static Pair<List<? extends TypeMirror>, List<String>> resolveArguments(CompilationInfo info, TreePath invocation, List<? extends ExpressionTree> realArguments, Element target) {
         MethodArguments ma = resolveArguments(info, invocation, realArguments, target, null);
         
@@ -1752,7 +1813,7 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(7);
+    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(8);
     
     static {
         PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N
@@ -3182,7 +3243,8 @@ public class Utilities {
         ExpressionTree switchExpr;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
-        List<CaseLabelTree> patterns = new ArrayList<>();
+
+        List<Tree> patterns = new ArrayList<>();
         Tree leftVariable = null;
         boolean ruleSwitchFlag = st.getKind() == Kind.SWITCH_EXPRESSION;
         if (ruleSwitchFlag) {

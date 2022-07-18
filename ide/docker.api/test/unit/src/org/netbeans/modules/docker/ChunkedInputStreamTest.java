@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -37,12 +38,12 @@ public class ChunkedInputStreamTest extends NbTestCase {
     }
 
     public void testSimple() throws Exception {
-        Charset charset = Charset.forName("UTF-8");
+        Charset charset = StandardCharsets.UTF_8;
         String data = "{\"status\":\"start\",\"id\":\"7ec0c471084729a05270be99fd8450d3e515587d9755f97e15e74a227b4e12a6\",\"from\":\"ubuntu:latest\",\"time\":1447673048}";
 
         ByteArrayInputStream bis = new ByteArrayInputStream(createChunk(createChunk(null, data, charset), "", charset));
         ChunkedInputStream is = new ChunkedInputStream(bis);
-        InputStreamReader r = new InputStreamReader(is, "UTF-8");
+        InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         int ch = -1;
         while ((ch = r.read()) != -1) {
@@ -52,7 +53,7 @@ public class ChunkedInputStreamTest extends NbTestCase {
     }
 
     public void testComplex() throws Exception {
-        Charset charset = Charset.forName("UTF-8");
+        Charset charset = StandardCharsets.UTF_8;
         String data1 = "{\"status\":\"die\",\"id\":\"7ec0c471084729a05270be99fd8450d3e515587d9755f97e15e74a227b4e12a6\",\"from\":\"ubuntu:latest\",\"time\":1447666993}";
         String data2 = "{\"status\":\"stop\",\"id\":\"7ec0c471084729a05270be99fd8450d3e515587d9755f97e15e74a227b4e12a6\",\"from\":\"ubuntu:latest\",\"time\":1447666993}";
         String data3 = "{\"status\":\"start\",\"id\":\"7ec0c471084729a05270be99fd8450d3e515587d9755f97e15e74a227b4e12a6\",\"from\":\"ubuntu:latest\",\"time\":1447667011}";
@@ -65,7 +66,7 @@ public class ChunkedInputStreamTest extends NbTestCase {
                 createChunk(createChunk(createChunk(createChunk(createChunk(createChunk(createChunk(createChunk(
                         null, data1, charset), data2, charset), data3, charset), data4, charset), data5, charset), data6, charset), data7, charset), "", charset));
         ChunkedInputStream is = new ChunkedInputStream(bis);
-        InputStreamReader r = new InputStreamReader(is, "UTF-8");
+        InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         int ch = -1;
         while ((ch = r.read()) != -1) {
@@ -75,12 +76,12 @@ public class ChunkedInputStreamTest extends NbTestCase {
     }
 
     public void testUnfinished() throws Exception {
-        Charset charset = Charset.forName("UTF-8");
+        Charset charset = StandardCharsets.UTF_8;
         String data = "{\"status\":\"die\",\"id\":\"7ec0c471084729a05270be99fd8450d3e515587d9755f97e15e74a227b4e12a6\",\"from\":\"ubuntu:latest\",\"time\":1447666993}";
 
         ByteArrayInputStream bis = new ByteArrayInputStream(createChunk(null, data, charset));
         ChunkedInputStream is = new ChunkedInputStream(bis);
-        InputStreamReader r = new InputStreamReader(is, "UTF-8");
+        InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         int count = data.length();
         while (count > 0) {
@@ -91,7 +92,7 @@ public class ChunkedInputStreamTest extends NbTestCase {
     }
 
     public void testBlocking() throws Exception {
-        Charset charset = Charset.forName("UTF-8");
+        Charset charset = StandardCharsets.UTF_8;
         String data = "{\"status\":\"die\",\"id\":\"7ec0c471084729a05270be99fd8450d3e515587d9755f97e15e74a227b4e12a6\",\"from\":\"ubuntu:latest\",\"time\":1447666993}";
 
         ByteArrayInputStream bis = new ByteArrayInputStream(createChunk(null, data, charset));
@@ -123,7 +124,7 @@ public class ChunkedInputStreamTest extends NbTestCase {
             }
         };
         ChunkedInputStream is = new ChunkedInputStream(fis);
-        InputStreamReader r = new InputStreamReader(is, "UTF-8");
+        InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         int count = data.length();
         while (count > 0) {
@@ -136,7 +137,7 @@ public class ChunkedInputStreamTest extends NbTestCase {
     private byte[] createChunk(byte[] previous, String data, Charset charset) throws UnsupportedEncodingException {
         byte[] bytes = data.getBytes(charset);
         String size = Integer.toString(bytes.length, 16) + "\r\n";
-        byte[] sizeBytes = size.getBytes("ISO-8859-1");
+        byte[] sizeBytes = size.getBytes(StandardCharsets.ISO_8859_1);
         int arraySize = sizeBytes.length + bytes.length + 2;
         if (previous != null) {
             arraySize += previous.length;

@@ -2,361 +2,137 @@ Code completion result for source line:
 | // test catch
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+CONSTRUCTO AggregateError                  [PUBLIC]   JS Platform
 CONSTRUCTO Array                           [PUBLIC]   JS Platform
 CONSTRUCTO ArrayBuffer                     [PUBLIC]   JS Platform
+CONSTRUCTO ArrayBufferTypes                [PUBLIC]   JS Platform
+CONSTRUCTO ArrayBufferView                 [PUBLIC]   JS Platform
+CONSTRUCTO ArrayLike                       [PUBLIC]   JS Platform
+CONSTRUCTO AsyncGenerator                  [PUBLIC]   JS Platform
+CONSTRUCTO AsyncGeneratorFunction          [PUBLIC]   JS Platform
+CONSTRUCTO AsyncIterable                   [PUBLIC]   JS Platform
+CONSTRUCTO AsyncIterableIterator           [PUBLIC]   JS Platform
+CONSTRUCTO AsyncIterator                   [PUBLIC]   JS Platform
+CONSTRUCTO Atomics                         [PUBLIC]   JS Platform
+CONSTRUCTO BigInt                          [PUBLIC]   JS Platform
+CONSTRUCTO BigInt64Array                   [PUBLIC]   JS Platform
+CONSTRUCTO BigIntToLocaleStringOptions     [PUBLIC]   JS Platform
+CONSTRUCTO BigUint64Array                  [PUBLIC]   JS Platform
 CONSTRUCTO Boolean                         [PUBLIC]   JS Platform
+CONSTRUCTO CallableFunction                [PUBLIC]   JS Platform
+CONSTRUCTO ConcatArray                     [PUBLIC]   JS Platform
 CONSTRUCTO DataView                        [PUBLIC]   JS Platform
 CONSTRUCTO Date                            [PUBLIC]   JS Platform
 CONSTRUCTO Error                           [PUBLIC]   JS Platform
+CONSTRUCTO ErrorOptions                    [PUBLIC]   JS Platform
 CONSTRUCTO EvalError                       [PUBLIC]   JS Platform
-CONSTRUCTO Float32Array(length): Array     [PUBLIC]   JS Platform
-CONSTRUCTO Float64Array(length): Array     [PUBLIC]   JS Platform
+CONSTRUCTO FinalizationRegistry            [PUBLIC]   JS Platform
+CONSTRUCTO Float32Array                    [PUBLIC]   JS Platform
+CONSTRUCTO Float64Array                    [PUBLIC]   JS Platform
 CONSTRUCTO Function                        [PUBLIC]   JS Platform
 CONSTRUCTO Generator                       [PUBLIC]   JS Platform
 CONSTRUCTO GeneratorFunction               [PUBLIC]   JS Platform
-CONSTRUCTO Infinity(): Number              [PUBLIC]   JS Platform
-CONSTRUCTO Int16Array(length): Array       [PUBLIC]   JS Platform
-CONSTRUCTO Int32Array(length): Array       [PUBLIC]   JS Platform
-CONSTRUCTO Int8Array(length): Array        [PUBLIC]   JS Platform
+CONSTRUCTO IArguments                      [PUBLIC]   JS Platform
+CONSTRUCTO ImportCallOptions               [PUBLIC]   JS Platform
+CONSTRUCTO ImportMeta                      [PUBLIC]   JS Platform
+CONSTRUCTO Int16Array                      [PUBLIC]   JS Platform
+CONSTRUCTO Int32Array                      [PUBLIC]   JS Platform
+CONSTRUCTO Int8Array                       [PUBLIC]   JS Platform
+CONSTRUCTO Iterable                        [PUBLIC]   JS Platform
+CONSTRUCTO IterableIterator                [PUBLIC]   JS Platform
+CONSTRUCTO Iterator                        [PUBLIC]   JS Platform
+CONSTRUCTO IteratorReturnResult            [PUBLIC]   JS Platform
+CONSTRUCTO IteratorYieldResult             [PUBLIC]   JS Platform
+CONSTRUCTO JSON                            [PUBLIC]   JS Platform
 CONSTRUCTO Map                             [PUBLIC]   JS Platform
-CONSTRUCTO NaN(): Number                   [PUBLIC]   JS Platform
+CONSTRUCTO NewableFunction                 [PUBLIC]   JS Platform
 CONSTRUCTO Number                          [PUBLIC]   JS Platform
 CONSTRUCTO Object                          [PUBLIC]   JS Platform
 CONSTRUCTO Promise                         [PUBLIC]   JS Platform
-CONSTRUCTO Proxy                           [PUBLIC]   JS Platform
+CONSTRUCTO PromiseFulfilledResult          [PUBLIC]   JS Platform
+CONSTRUCTO PromiseLike                     [PUBLIC]   JS Platform
+CONSTRUCTO PromiseRejectedResult           [PUBLIC]   JS Platform
+CONSTRUCTO PropertyDescriptor              [PUBLIC]   JS Platform
+CONSTRUCTO ProxyHandler                    [PUBLIC]   JS Platform
 CONSTRUCTO RangeError                      [PUBLIC]   JS Platform
+CONSTRUCTO ReadonlyArray                   [PUBLIC]   JS Platform
+CONSTRUCTO ReadonlyMap                     [PUBLIC]   JS Platform
+CONSTRUCTO ReadonlySet                     [PUBLIC]   JS Platform
 CONSTRUCTO ReferenceError                  [PUBLIC]   JS Platform
 CONSTRUCTO RegExp                          [PUBLIC]   JS Platform
+CONSTRUCTO RegExpExecArray                 [PUBLIC]   JS Platform
+CONSTRUCTO RegExpMatchArray                [PUBLIC]   JS Platform
 CONSTRUCTO Set                             [PUBLIC]   JS Platform
+CONSTRUCTO SharedArrayBuffer               [PUBLIC]   JS Platform
 CONSTRUCTO String                          [PUBLIC]   JS Platform
 CONSTRUCTO Symbol                          [PUBLIC]   JS Platform
 CONSTRUCTO SyntaxError                     [PUBLIC]   JS Platform
+CONSTRUCTO TemplateStringsArray            [PUBLIC]   JS Platform
 CONSTRUCTO TypeError                       [PUBLIC]   JS Platform
+CONSTRUCTO TypedPropertyDescriptor         [PUBLIC]   JS Platform
 CONSTRUCTO URIError                        [PUBLIC]   JS Platform
-CONSTRUCTO Uint16Array(length): Array      [PUBLIC]   JS Platform
-CONSTRUCTO Uint32Array(length): Array      [PUBLIC]   JS Platform
-CONSTRUCTO Uint8Array(length): Array       [PUBLIC]   JS Platform
-CONSTRUCTO Uint8ClampedArray(length): Arr  [PUBLIC]   JS Platform
+CONSTRUCTO Uint16Array                     [PUBLIC]   JS Platform
+CONSTRUCTO Uint32Array                     [PUBLIC]   JS Platform
+CONSTRUCTO Uint8Array                      [PUBLIC]   JS Platform
+CONSTRUCTO Uint8ClampedArray               [PUBLIC]   JS Platform
 CONSTRUCTO WeakMap                         [PUBLIC]   JS Platform
+CONSTRUCTO WeakRef                         [PUBLIC]   JS Platform
 CONSTRUCTO WeakSet                         [PUBLIC]   JS Platform
-CONSTRUCTO XMLHttpRequest                  [PUBLIC]   JS Platform
-CONSTRUCTO arguments                       [PUBLIC]   JS Platform
-CONSTRUCTO undefined                       [PUBLIC]   JS Platform
-CLASS      AbstractView                    [PUBLIC]   JS Platform
-CLASS      AbstractWorker                  [PUBLIC]   JS Platform
-CLASS      Arguments                       [PUBLIC]   JS Platform
-CLASS      Attr                            [PUBLIC]   JS Platform
-CLASS      CDATASection                    [PUBLIC]   JS Platform
-CLASS      CSS2Properties                  [PUBLIC]   JS Platform
-CLASS      CSSCharsetRule                  [PUBLIC]   JS Platform
-CLASS      CSSFontFaceRule                 [PUBLIC]   JS Platform
-CLASS      CSSImportRule                   [PUBLIC]   JS Platform
-CLASS      CSSMediaRule                    [PUBLIC]   JS Platform
-CLASS      CSSPageRule                     [PUBLIC]   JS Platform
-CLASS      CSSPrimitiveValue               [PUBLIC]   JS Platform
-CLASS      CSSRule                         [PUBLIC]   JS Platform
-CLASS      CSSRuleList                     [PUBLIC]   JS Platform
-CLASS      CSSStyleDeclaration             [PUBLIC]   JS Platform
-CLASS      CSSStyleRule                    [PUBLIC]   JS Platform
-CLASS      CSSStyleSheet                   [PUBLIC]   JS Platform
-CLASS      CSSUnknownRule                  [PUBLIC]   JS Platform
-CLASS      CSSValue                        [PUBLIC]   JS Platform
-CLASS      CSSValueList                    [PUBLIC]   JS Platform
-CLASS      CharacterData                   [PUBLIC]   JS Platform
-CLASS      Comment                         [PUBLIC]   JS Platform
-CLASS      Console                         [PUBLIC]   JS Platform
-CLASS      Counter                         [PUBLIC]   JS Platform
-CLASS      Crypto                          [PUBLIC]   JS Platform
-CLASS      DOMConfiguration                [PUBLIC]   JS Platform
-CLASS      DOMError                        [PUBLIC]   JS Platform
-CLASS      DOMErrorHandler                 [PUBLIC]   JS Platform
-CLASS      DOMException                    [PUBLIC]   JS Platform
-CLASS      DOMImplementation               [PUBLIC]   JS Platform
-CLASS      DOMImplementationCSS            [PUBLIC]   JS Platform
-CLASS      DOMImplementationList           [PUBLIC]   JS Platform
-CLASS      DOMImplementationSource         [PUBLIC]   JS Platform
-CLASS      DOMLocator                      [PUBLIC]   JS Platform
-CLASS      DOMObject                       [PUBLIC]   JS Platform
-CLASS      DOMString                       [PUBLIC]   JS Platform
-CLASS      DOMStringList                   [PUBLIC]   JS Platform
-CLASS      DOMTimeStamp                    [PUBLIC]   JS Platform
-CLASS      DOMUserData                     [PUBLIC]   JS Platform
-CLASS      Document                        [PUBLIC]   JS Platform
-CLASS      DocumentCSS                     [PUBLIC]   JS Platform
-CLASS      DocumentEvent                   [PUBLIC]   JS Platform
-CLASS      DocumentFragment                [PUBLIC]   JS Platform
-CLASS      DocumentRange                   [PUBLIC]   JS Platform
-CLASS      DocumentStyle                   [PUBLIC]   JS Platform
-CLASS      DocumentTraversal               [PUBLIC]   JS Platform
-CLASS      DocumentType                    [PUBLIC]   JS Platform
-CLASS      DocumentView                    [PUBLIC]   JS Platform
-CLASS      Element                         [PUBLIC]   JS Platform
-CLASS      ElementCSSInlineStyle           [PUBLIC]   JS Platform
-CLASS      ElementTraversal                [PUBLIC]   JS Platform
-CLASS      Entity                          [PUBLIC]   JS Platform
-CLASS      EntityReference                 [PUBLIC]   JS Platform
-CLASS      Event                           [PUBLIC]   JS Platform
-CLASS      EventException                  [PUBLIC]   JS Platform
-CLASS      EventListener                   [PUBLIC]   JS Platform
-CLASS      EventTarget                     [PUBLIC]   JS Platform
-CLASS      HTMLAnchorElement               [PUBLIC]   JS Platform
-CLASS      HTMLAppletElement               [PUBLIC]   JS Platform
-CLASS      HTMLAreaElement                 [PUBLIC]   JS Platform
-CLASS      HTMLBRElement                   [PUBLIC]   JS Platform
-CLASS      HTMLBaseElement                 [PUBLIC]   JS Platform
-CLASS      HTMLBaseFontElement             [PUBLIC]   JS Platform
-CLASS      HTMLBodyElement                 [PUBLIC]   JS Platform
-CLASS      HTMLButtonElement               [PUBLIC]   JS Platform
-CLASS      HTMLCollection                  [PUBLIC]   JS Platform
-CLASS      HTMLDListElement                [PUBLIC]   JS Platform
-CLASS      HTMLDirectoryElement            [PUBLIC]   JS Platform
-CLASS      HTMLDivElement                  [PUBLIC]   JS Platform
-CLASS      HTMLDocument                    [PUBLIC]   JS Platform
-CLASS      HTMLElement                     [PUBLIC]   JS Platform
-CLASS      HTMLFieldSetElement             [PUBLIC]   JS Platform
-CLASS      HTMLFontElement                 [PUBLIC]   JS Platform
-CLASS      HTMLFormElement                 [PUBLIC]   JS Platform
-CLASS      HTMLFrameElement                [PUBLIC]   JS Platform
-CLASS      HTMLFrameSetElement             [PUBLIC]   JS Platform
-CLASS      HTMLHRElement                   [PUBLIC]   JS Platform
-CLASS      HTMLHeadElement                 [PUBLIC]   JS Platform
-CLASS      HTMLHeadingElement              [PUBLIC]   JS Platform
-CLASS      HTMLHtmlElement                 [PUBLIC]   JS Platform
-CLASS      HTMLIFrameElement               [PUBLIC]   JS Platform
-CLASS      HTMLImageElement                [PUBLIC]   JS Platform
-CLASS      HTMLInputElement                [PUBLIC]   JS Platform
-CLASS      HTMLIsIndexElement              [PUBLIC]   JS Platform
-CLASS      HTMLLIElement                   [PUBLIC]   JS Platform
-CLASS      HTMLLabelElement                [PUBLIC]   JS Platform
-CLASS      HTMLLegendElement               [PUBLIC]   JS Platform
-CLASS      HTMLLinkElement                 [PUBLIC]   JS Platform
-CLASS      HTMLMapElement                  [PUBLIC]   JS Platform
-CLASS      HTMLMenuElement                 [PUBLIC]   JS Platform
-CLASS      HTMLMetaElement                 [PUBLIC]   JS Platform
-CLASS      HTMLModElement                  [PUBLIC]   JS Platform
-CLASS      HTMLOListElement                [PUBLIC]   JS Platform
-CLASS      HTMLObjectElement               [PUBLIC]   JS Platform
-CLASS      HTMLOptGroupElement             [PUBLIC]   JS Platform
-CLASS      HTMLOptionElement               [PUBLIC]   JS Platform
-CLASS      HTMLOptionsCollection           [PUBLIC]   JS Platform
-CLASS      HTMLParagraphElement            [PUBLIC]   JS Platform
-CLASS      HTMLParamElement                [PUBLIC]   JS Platform
-CLASS      HTMLPreElement                  [PUBLIC]   JS Platform
-CLASS      HTMLQuoteElement                [PUBLIC]   JS Platform
-CLASS      HTMLScriptElement               [PUBLIC]   JS Platform
-CLASS      HTMLSelectElement               [PUBLIC]   JS Platform
-CLASS      HTMLStyleElement                [PUBLIC]   JS Platform
-CLASS      HTMLTableCaptionElement         [PUBLIC]   JS Platform
-CLASS      HTMLTableCellElement            [PUBLIC]   JS Platform
-CLASS      HTMLTableColElement             [PUBLIC]   JS Platform
-CLASS      HTMLTableElement                [PUBLIC]   JS Platform
-CLASS      HTMLTableRowElement             [PUBLIC]   JS Platform
-CLASS      HTMLTableSectionElement         [PUBLIC]   JS Platform
-CLASS      HTMLTextAreaElement             [PUBLIC]   JS Platform
-CLASS      HTMLTitleElement                [PUBLIC]   JS Platform
-CLASS      HTMLUListElement                [PUBLIC]   JS Platform
-CLASS      History                         [PUBLIC]   JS Platform
-CLASS      JSON                            [PUBLIC]   JS Platform
-CLASS      LinkStyle                       [PUBLIC]   JS Platform
-CLASS      Location                        [PUBLIC]   JS Platform
-CLASS      Math                            [PUBLIC]   JS Platform
-CLASS      MediaList                       [PUBLIC]   JS Platform
-CLASS      MouseEvent                      [PUBLIC]   JS Platform
-CLASS      MutationEvent                   [PUBLIC]   JS Platform
-CLASS      NameList                        [PUBLIC]   JS Platform
-CLASS      NamedNodeMap                    [PUBLIC]   JS Platform
-CLASS      Navigator                       [PUBLIC]   JS Platform
-CLASS      Node                            [PUBLIC]   JS Platform
-CLASS      NodeFilter                      [PUBLIC]   JS Platform
-CLASS      NodeIterator                    [PUBLIC]   JS Platform
-CLASS      NodeList                        [PUBLIC]   JS Platform
-CLASS      Notation                        [PUBLIC]   JS Platform
-CLASS      ProcessingInstruction           [PUBLIC]   JS Platform
-CLASS      RGBColor                        [PUBLIC]   JS Platform
-CLASS      Range                           [PUBLIC]   JS Platform
-CLASS      RangeException                  [PUBLIC]   JS Platform
-CLASS      Rect                            [PUBLIC]   JS Platform
-CLASS      Reflect                         [PUBLIC]   JS Platform
-CLASS      Screen                          [PUBLIC]   JS Platform
-CLASS      Storage                         [PUBLIC]   JS Platform
-CLASS      StyleSheet                      [PUBLIC]   JS Platform
-CLASS      StyleSheetList                  [PUBLIC]   JS Platform
-CLASS      Text                            [PUBLIC]   JS Platform
-CLASS      TreeWalker                      [PUBLIC]   JS Platform
-CLASS      TypeInfo                        [PUBLIC]   JS Platform
-CLASS      UIEvent                         [PUBLIC]   JS Platform
-CLASS      UserDataHandler                 [PUBLIC]   JS Platform
-CLASS      ViewCSS                         [PUBLIC]   JS Platform
-CLASS      Window                          [PUBLIC]   JS Platform
 CLASS      b                               [PUBLIC]   with4.js
 CLASS      prototype                       [PUBLIC]   JS Platform
 CLASS      z                               [PUBLIC]   with4.js
-METHOD     Image                           [PUBLIC,   JS Platform
-METHOD     Option                          [PUBLIC,   JS Platform
-METHOD     Runtime(x: String, evalRealm:   [PUBLIC]   JS Platform
-METHOD     Worker                          [PUBLIC,   JS Platform
-METHOD     addEventListener(type: String,  [PUBLIC,   JS Platform
-METHOD     alert(): undefined              [PUBLIC,   JS Platform
-METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
-METHOD     atob(encodedData: String): Str  [PUBLIC,   JS Platform
-METHOD     back(): undefined               [PUBLIC,   JS Platform
-METHOD     blur(): undefined               [PUBLIC,   JS Platform
-METHOD     btoa(stringToEncode: String):   [PUBLIC,   JS Platform
-METHOD     clearImmediate(immediateID: Nu  [PUBLIC,   JS Platform
-METHOD     clearInterval(intervalID: Numb  [PUBLIC,   JS Platform
-METHOD     clearTimeout(timeoutID: Number  [PUBLIC,   JS Platform
-METHOD     close(): undefined              [PUBLIC,   JS Platform
-METHOD     confirm(message: String): Bool  [PUBLIC,   JS Platform
-METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform
+METHOD     ImportAssertions                [PUBLIC]   JS Platform
+METHOD     Intl(): undefined               [PUBLIC]   JS Platform
+METHOD     Math                            [PUBLIC]   JS Platform
+METHOD     PropertyDescriptorMap           [PUBLIC]   JS Platform
+METHOD     Proxy                           [PUBLIC]   JS Platform
+METHOD     Reflect(): undefined            [PUBLIC]   JS Platform
+METHOD     ThisType                        [PUBLIC]   JS Platform
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
 METHOD     decodeURI(encodedURI: String):  [PUBLIC]   JS Platform
 METHOD     decodeURIComponent(encodedURIC  [PUBLIC]   JS Platform
-METHOD     defineProperties(obj: Object,   [PUBLIC,   JS Platform
-METHOD     defineProperty(obj: Object, pr  [PUBLIC,   JS Platform
-METHOD     dump(message: String): undefin  [PUBLIC,   JS Platform
+METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
 METHOD     encodeURI(uri: String): String  [PUBLIC]   JS Platform
 METHOD     encodeURIComponent(uriComponen  [PUBLIC]   JS Platform
-METHOD     entries(obj: Object): Array     [PUBLIC,   JS Platform
-METHOD     escape(regular: String): Strin  [PUBLIC,   JS Platform
-METHOD     eval(x: String): undefined      [PUBLIC]   JS Platform
-METHOD     find(aString: String, aCaseSen  [PUBLIC,   JS Platform
-METHOD     focus(): undefined              [PUBLIC,   JS Platform
-METHOD     forward(): undefined            [PUBLIC,   JS Platform
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
-METHOD     getAttention(): undefined       [PUBLIC,   JS Platform
-METHOD     getComputedStyle(element: Elem  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
-METHOD     getSelection(): Selection       [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
-METHOD     is(value1: String, value2: Str  [PUBLIC,   JS Platform
-METHOD     isExtensible(obj: Object): Boo  [PUBLIC,   JS Platform
+METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
+METHOD     escape(string: String): String  [PUBLIC]   JS Platform
+METHOD     eval(x: String): Object         [PUBLIC]   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
+METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
+METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
 METHOD     isFinite(number: Number): Bool  [PUBLIC]   JS Platform
-METHOD     isFrozen(obj: Object): Boolean  [PUBLIC,   JS Platform
+METHOD     isFrozen(o: Object): Boolean    [PUBLIC,   JS Platform
 METHOD     isNaN(number: Number): Boolean  [PUBLIC]   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     isSealed(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     keys(obj: Object): Array        [PUBLIC,   JS Platform
-METHOD     matchMedia(mediaQueryString: S  [PUBLIC,   JS Platform
-METHOD     moveBy(deltaX: Number, deltaY:  [PUBLIC,   JS Platform
-METHOD     moveTo(x: Number, y: Number):   [PUBLIC,   JS Platform
-METHOD     open(strUrl: String, strWindow  [PUBLIC,   JS Platform
-METHOD     openDialog(url: String, name:   [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     isSealed(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     keys(o: Object): String         [PUBLIC,   JS Platform
 METHOD     parseFloat(string: String): Nu  [PUBLIC]   JS Platform
-METHOD     parseInt(string: String, radix  [PUBLIC]   JS Platform
-METHOD     postMessage(message: String, t  [PUBLIC,   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     print(): undefined              [PUBLIC,   JS Platform
-METHOD     prompt(text: String, value: St  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
-METHOD     removeEventListener(type: Stri  [PUBLIC,   JS Platform
-METHOD     resizeBy(xDelta: Number, yDelt  [PUBLIC,   JS Platform
-METHOD     resizeTo(iWidth: Number, iHeig  [PUBLIC,   JS Platform
-METHOD     scroll(xcoord: Number, ycoord:  [PUBLIC,   JS Platform
-METHOD     scrollBy(X: Number, Y: Number)  [PUBLIC,   JS Platform
-METHOD     scrollByLines(lines: Number):   [PUBLIC,   JS Platform
-METHOD     scrollByPages(pages: Number):   [PUBLIC,   JS Platform
-METHOD     scrollTo(xcoord: Number, ycoor  [PUBLIC,   JS Platform
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
-METHOD     setCursor(): undefined          [PUBLIC,   JS Platform
-METHOD     setImmediate(func: Function):   [PUBLIC,   JS Platform
-METHOD     setInterval(func: Function, de  [PUBLIC,   JS Platform
-METHOD     setTimeout(func: Function, del  [PUBLIC,   JS Platform
-METHOD     showModalDialog(uri: String):   [PUBLIC,   JS Platform
-METHOD     sizeToContent(): undefined      [PUBLIC,   JS Platform
-METHOD     stop(): undefined               [PUBLIC,   JS Platform
+METHOD     parseInt(string: String): Numb  [PUBLIC]   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
 METHOD     test(): undefined               [PUBLIC]   with4.js
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
-METHOD     unescape(escaped: String): Str  [PUBLIC,   JS Platform
-METHOD     updateCommands(sCommandName):   [PUBLIC,   JS Platform
+METHOD     unescape(string: String): Stri  [PUBLIC]   JS Platform
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
-FIELD      Components: Components          [PUBLIC]   JS Platform
-FIELD      applicationCache: Object        [PUBLIC]   JS Platform
-FIELD      closed: Boolean                 [PUBLIC]   JS Platform
-FIELD      console: Console                [PUBLIC]   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
-FIELD      content: Window                 [PUBLIC]   JS Platform
-FIELD      controllers: XULControllers     [PUBLIC]   JS Platform
-FIELD      crypto: Crypto                  [PUBLIC]   JS Platform
-FIELD      defaultStatus: String           [PUBLIC]   JS Platform
-FIELD      dialogArguments: Object         [PUBLIC]   JS Platform
-FIELD      document: document              [PUBLIC]   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform
 FIELD      e: String                       [PUBLIC]   with4.js
-FIELD      frameElement: Element           [PUBLIC]   JS Platform
-FIELD      frames: Array                   [PUBLIC]   JS Platform
-FIELD      fullScreen: Boolean             [PUBLIC]   JS Platform
-FIELD      history: History                [PUBLIC]   JS Platform
-FIELD      innerHeight: Number             [PUBLIC]   JS Platform
-FIELD      innerWidth: Number              [PUBLIC]   JS Platform
-FIELD      length: Number                  [PUBLIC]   JS Platform
-FIELD      localStorage: Storage           [PUBLIC]   JS Platform
-FIELD      location: Location              [PUBLIC]   JS Platform
-FIELD      locationbar: Object             [PUBLIC]   JS Platform
-FIELD      menubar: Object                 [PUBLIC]   JS Platform
-FIELD      name: DOMString                 [PUBLIC]   JS Platform
-FIELD      navigator: Navigator            [PUBLIC]   JS Platform
-FIELD      onabort: Function               [PUBLIC]   JS Platform
-FIELD      onbeforeunload: Function        [PUBLIC]   JS Platform
-FIELD      onblur: Function                [PUBLIC]   JS Platform
-FIELD      onchange: Function              [PUBLIC]   JS Platform
-FIELD      onclick: Function               [PUBLIC]   JS Platform
-FIELD      onclose: Function               [PUBLIC]   JS Platform
-FIELD      oncontextmenu: Function         [PUBLIC]   JS Platform
-FIELD      ondragdrop: Function            [PUBLIC]   JS Platform
-FIELD      onerror: Function               [PUBLIC]   JS Platform
-FIELD      onfocus: Function               [PUBLIC]   JS Platform
-FIELD      onhashchange: Function          [PUBLIC]   JS Platform
-FIELD      onkeydown: Function             [PUBLIC]   JS Platform
-FIELD      onkeypress: Function            [PUBLIC]   JS Platform
-FIELD      onkeyup: Function               [PUBLIC]   JS Platform
-FIELD      onload: Function                [PUBLIC]   JS Platform
-FIELD      onmousedown: Function           [PUBLIC]   JS Platform
-FIELD      onmousemove: Function           [PUBLIC]   JS Platform
-FIELD      onmouseout: Function            [PUBLIC]   JS Platform
-FIELD      onmouseover: Function           [PUBLIC]   JS Platform
-FIELD      onmouseup: Function             [PUBLIC]   JS Platform
-FIELD      onpagehide: Function            [PUBLIC]   JS Platform
-FIELD      onpageshow: Function            [PUBLIC]   JS Platform
-FIELD      onpaint: Function               [PUBLIC]   JS Platform
-FIELD      onpopstate: Function            [PUBLIC]   JS Platform
-FIELD      onreset: Function               [PUBLIC]   JS Platform
-FIELD      onresize: Function              [PUBLIC]   JS Platform
-FIELD      onscroll: Function              [PUBLIC]   JS Platform
-FIELD      onselect: Function              [PUBLIC]   JS Platform
-FIELD      onsubmit: Function              [PUBLIC]   JS Platform
-FIELD      onunload: Function              [PUBLIC]   JS Platform
-FIELD      opener: Window                  [PUBLIC]   JS Platform
-FIELD      outerHeight: Number             [PUBLIC]   JS Platform
-FIELD      outerWidth: Number              [PUBLIC]   JS Platform
-FIELD      pageXOffset: Number             [PUBLIC]   JS Platform
-FIELD      pageYOffset: Number             [PUBLIC]   JS Platform
-FIELD      parent: Window                  [PUBLIC]   JS Platform
-FIELD      performance: Object             [PUBLIC]   JS Platform
-FIELD      personalbar: Object             [PUBLIC]   JS Platform
-FIELD      screen: Screen                  [PUBLIC]   JS Platform
-FIELD      screenLeft: Number              [PUBLIC]   JS Platform
-FIELD      screenTop: Number               [PUBLIC]   JS Platform
-FIELD      screenX: Number                 [PUBLIC]   JS Platform
-FIELD      screenY: Number                 [PUBLIC]   JS Platform
-FIELD      scrollMaxX: Number              [PUBLIC]   JS Platform
-FIELD      scrollMaxY: Number              [PUBLIC]   JS Platform
-FIELD      scrollX: Number                 [PUBLIC]   JS Platform
-FIELD      scrollY: Number                 [PUBLIC]   JS Platform
-FIELD      scrollbars: Object              [PUBLIC]   JS Platform
-FIELD      self: Window                    [PUBLIC]   JS Platform
-FIELD      sessionStorage: Storage         [PUBLIC]   JS Platform
-FIELD      sidebar: Object                 [PUBLIC]   JS Platform
-FIELD      status: String                  [PUBLIC]   JS Platform
-FIELD      statusbar: Object               [PUBLIC]   JS Platform
-FIELD      toolbar: Object                 [PUBLIC]   JS Platform
-FIELD      top: Window                     [PUBLIC]   JS Platform
-FIELD      window: Window                  [PUBLIC]   JS Platform
 FIELD      x: String                       [PUBLIC]   with4.js
 FIELD      y: Number                       [PUBLIC]   with4.js
+VARIABLE   Infinity: Number                [PUBLIC]   JS Platform
+VARIABLE   NaN: Number                     [PUBLIC]   JS Platform
 KEYWORD    async                                      ECMAScript 7 - 2016 (Experimental)
 KEYWORD    await                                      ECMAScript 7 - 2016 (Experimental)
 KEYWORD    break                                      null

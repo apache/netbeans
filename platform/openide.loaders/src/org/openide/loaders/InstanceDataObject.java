@@ -24,6 +24,7 @@ import java.beans.PropertyVetoException;
 import java.io.*;
 import java.lang.ref.*;
 import java.lang.reflect.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.*;
 import org.openide.ServiceType;
@@ -1609,7 +1610,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
             throw new IOException("missing attribute settings.convertor"); // NOI18N
         }
         ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
-        Writer w = new OutputStreamWriter(b, "UTF-8"); // NOI18N
+        Writer w = new OutputStreamWriter(b, StandardCharsets.UTF_8);
         convertorWriteMethod(convertor, new WriterProvider(w, ctx), inst);
         w.close();
         return b;

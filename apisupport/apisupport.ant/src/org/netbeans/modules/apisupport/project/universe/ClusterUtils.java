@@ -61,16 +61,31 @@ public final class ClusterUtils {
      * @return Path to cluster dir or <tt>null</tt> if e.g. wrong type of project.
      */
     public static File getClusterDirectory(Project prj) {
-        NbModuleProvider nbmp = prj.getLookup().lookup(NbModuleProvider.class);
-        if (nbmp != null) {
-            File jar = nbmp.getModuleJarLocation();
-            if (jar != null) {
-                return jar.getParentFile().getParentFile();
-            }
+        File clusterDir = getClusterDirectory(prj.getLookup().lookup(NbModuleProvider.class));
+        if (clusterDir != null) {
+            return clusterDir;
         }
         SuiteProvider sprv = prj.getLookup().lookup(SuiteProvider.class);
         if (sprv != null) {
             return sprv.getClusterDirectory();
+        }
+        return null;
+    }
+
+    /**
+     * Returns path to cluster dir for specified module provider.
+     * Path is returned even if it does not currently exist.
+     * @param prj module provider
+     * @return Path to cluster dir or <tt>null</tt> if e.g. wrong type of project.
+     */
+    // TODO: might be useful as public method, this usage exists elsewhere
+    private static File getClusterDirectory(NbModuleProvider nbmp) {
+        if (nbmp != null) {
+            File jar = nbmp.getModuleJarLocation();
+            if (jar != null) {
+                // Is there a better way?
+                return jar.getParentFile().getParentFile();
+            }
         }
         return null;
     }
@@ -164,14 +179,8 @@ public final class ClusterUtils {
             Project _prj = FileOwnerQuery.getOwner(Utilities.toURI(cd));
             if (_prj != null) {
                 // Must be actual cluster output of a suite or standalone module to qualify. See also: #168804, #180475
-                SuiteProvider prov = _prj.getLookup().lookup(SuiteProvider.class);
-                if (prov != null && cd.equals(prov.getClusterDirectory())) {
+                if(cd.equals(getClusterDirectory(_prj))) {
                     prj = _prj;
-                } else {
-                    NbModuleProvider prov2 = _prj.getLookup().lookup(NbModuleProvider.class);
-                    if (prov2 != null && /* XXX is there a better way? */ cd.equals(prov2.getModuleJarLocation().getParentFile().getParentFile())) {
-                        prj = _prj;
-                    }
                 }
             }
             boolean enabled = (pathsWDC == null) || enabledPaths.contains(path);

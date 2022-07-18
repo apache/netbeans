@@ -21,6 +21,7 @@ package org.netbeans.modules.java.openjdk.project;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.ClassPath.PathConversionMode;
@@ -211,7 +212,7 @@ public class ClassPathProviderImplTest extends NbTestCase {
 
     private void copyString2File(FileObject file, String content) throws IOException {
         try (OutputStream out = file.getOutputStream()) {
-            out.write(content.getBytes("UTF-8"));
+            out.write(content.getBytes(StandardCharsets.UTF_8));
         }
     }
 

@@ -140,8 +140,8 @@
         <folder name="text">
             <folder name="x-gradle+x-groovy">
                 <file name="EditorKit.instance">
-                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.plain.PlainKit"/>
-                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.editor.plain.PlainKit"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.NbEditorKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.editor.NbEditorKit"/>
                     <attr name="beaninfo" boolvalue="false"/>
                 </file>
                 <folder name="MultiView">

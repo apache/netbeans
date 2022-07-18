@@ -208,3 +208,6 @@ label {
     padding: 0px 15px;
     padding-top: 2px;
 }
+.row-always-visible {
+    min-height: calc(var(--vscode-font-size) * 2.2);
+}

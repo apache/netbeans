@@ -74,7 +74,7 @@ import java.util.List;
  */
 public class PathNodeVisitor extends NodeVisitor {
 
-    private final List<Node> treePath = new ArrayList<Node>();
+    private final List<Node> treePath = new ArrayList<>();
 
     public PathNodeVisitor() {
         this(new LexicalContext());

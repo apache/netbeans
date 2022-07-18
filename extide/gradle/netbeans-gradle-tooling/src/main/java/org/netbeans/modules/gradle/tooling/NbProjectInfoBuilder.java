@@ -22,19 +22,22 @@ package org.netbeans.modules.gradle.tooling;
 import groovy.lang.MissingPropertyException;
 import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
-import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
@@ -42,20 +45,24 @@ import org.gradle.api.artifacts.FileCollectionDependency;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.artifacts.ProjectDependency;
 import org.gradle.api.artifacts.ResolveException;
+import org.gradle.api.artifacts.ResolvedArtifact;
 import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.artifacts.component.ComponentIdentifier;
 import org.gradle.api.artifacts.component.ModuleComponentSelector;
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.artifacts.result.ArtifactResolutionResult;
 import org.gradle.api.artifacts.result.ArtifactResult;
 import org.gradle.api.artifacts.result.ComponentArtifactsResult;
 import org.gradle.api.artifacts.result.ResolvedArtifactResult;
 import org.gradle.api.artifacts.result.ResolvedDependencyResult;
 import org.gradle.api.artifacts.result.UnresolvedDependencyResult;
+import org.gradle.api.attributes.Attribute;
+import org.gradle.api.attributes.AttributeContainer;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.initialization.IncludedBuild;
 import org.gradle.api.plugins.JavaPlatformPlugin;
-import org.gradle.api.plugins.UnknownPluginException;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
@@ -65,7 +72,7 @@ import org.gradle.jvm.JvmLibrary;
 import org.gradle.language.base.artifact.SourcesArtifact;
 import org.gradle.language.java.artifact.JavadocArtifact;
 import org.gradle.util.VersionNumber;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 
 /**
  *
@@ -84,7 +91,12 @@ class NbProjectInfoBuilder {
         "jacocoAnt",
         "jdepend",
         "pmd",
+        ".*DependenciesMetadata"
     }));
+    
+    private static final Pattern CONFIG_EXCLUDES_PATTERN = Pattern.compile(
+        CONFIG_EXCLUDES.stream().reduce("", (s1, s2) -> s1 + "|" + s2)
+    );
 
     private static final Set<String> RECOGNISED_PLUGINS = new HashSet<>(asList(new String[]{
         "antlr",
@@ -174,7 +186,8 @@ class NbProjectInfoBuilder {
         model.getInfo().put("project_buildDir", project.getBuildDir());
         model.getInfo().put("project_projectDir", project.getProjectDir());
         model.getInfo().put("project_rootDir", project.getRootDir());
-        model.getInfo().put("gradle_user_home", project.getGradle().getGradleHomeDir());
+        model.getInfo().put("gradle_user_home", project.getGradle().getGradleUserHomeDir());
+        model.getInfo().put("gradle_home", project.getGradle().getGradleHomeDir());
 
         Set<Configuration> visibleConfigurations = configurationsToSave();
         model.getInfo().put("configurations", visibleConfigurations.stream().map(conf->conf.getName()).collect(Collectors.toCollection(HashSet::new )));
@@ -257,6 +270,29 @@ class NbProjectInfoBuilder {
                 .forEach(e -> nbprops.put(e.getKey().substring(NB_PREFIX.length()), String.valueOf(e.getValue())));
         model.getInfo().put("nbprops", nbprops);
     }
+    
+    private Path longestPrefixPath(List<Path> files) {
+        if (files.size() < 2) {
+            return null;
+        }
+        Path first = files.get(0);
+        Path result = null;
+        Path root = first.getRoot();
+        int count = first.getNameCount();
+        for (int i = 1; i <= count; i++) {
+            Path match = root != null ? root.resolve(first.subpath(0, i)) : first.subpath(0, i);
+            
+            for (int pi = 1; pi < files.size(); pi++) {
+                Path p = files.get(pi);
+                if (!p.startsWith(match)) {
+                    return result;
+                }
+            }
+            result = match;
+        }
+        // if all paths (more than one) are the same, something is strange.
+        return null;
+    }
 
     private void detectSources(NbProjectInfoModel model) {
         long time = System.currentTimeMillis();
@@ -267,15 +303,36 @@ class NbProjectInfoBuilder {
         boolean hasKotlin = project.getPlugins().hasPlugin("org.jetbrains.kotlin.android") ||
                             project.getPlugins().hasPlugin("org.jetbrains.kotlin.js") ||
                             project.getPlugins().hasPlugin("org.jetbrains.kotlin.jvm");
-
+        Map<String, Boolean> available = new HashMap<>();
+        available.put("java", hasJava);
+        available.put("groovy", hasGroovy);
+        available.put("kotlin", hasKotlin);
+        
         if (hasJava) {
             SourceSetContainer sourceSets = (SourceSetContainer) getProperty(project, "sourceSets");
             if (sourceSets != null) {
                 model.getInfo().put("sourcesets", storeSet(sourceSets.getNames()));
                 for(SourceSet sourceSet: sourceSets) {
                     String propBase = "sourceset_" + sourceSet.getName() + "_";
+                    
+                    Set<File> outDirs = new LinkedHashSet<>();
+                    sinceGradle("4.0", () -> {
+                        // classesDirs is just an iterable
+                        for (File dir: (ConfigurableFileCollection) getProperty(sourceSet, "output", "classesDirs")) {
+                            outDirs.add(dir);
+                        }
+                    });
+                    beforeGradle("4.0", () -> {
+                        outDirs.add((File)getProperty(sourceSet, "output", "classesDir"));
+                    });
+                    
+                    List<Path> outPaths = outDirs.stream().map(File::toPath).collect(Collectors.toList());
+                    // find the longest common prefix:
+                    Path base = longestPrefixPath(outPaths);
+                    
                     for(String lang: new String[] {"JAVA", "GROOVY", "SCALA", "KOTLIN"}) {
-                        Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(lang.toLowerCase()));
+                        String langId = lang.toLowerCase();
+                        Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(langId));
                         if (compileTask != null) {
                             model.getInfo().put(
                                     propBase + lang + "_source_compatibility",
@@ -297,6 +354,39 @@ class NbProjectInfoBuilder {
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
                         }
+                        if (Boolean.TRUE.equals(available.get(langId))) {
+                            model.getInfo().put(propBase + lang, storeSet(getProperty(sourceSet, langId, "srcDirs")));
+                            DirectoryProperty dirProp = (DirectoryProperty)getProperty(sourceSet, langId, "classesDirectory");
+                            if (dirProp != null) {
+                                File outDir;
+                                
+                                if (dirProp.isPresent()) {
+                                    outDir = dirProp.get().getAsFile();
+                                } else {
+                                    // kotlin plugin uses some weird late binding, so it has the output item, but it cannot be resolved to a 
+                                    // concrete file path at this time. Let's make an approximation from 
+                                    Path candidate = null;
+                                    if (base != null) {
+                                        Path prefix = base.resolve(langId);
+                                        // assume the language has just one output dir in the source set:
+                                        for (int i = 0; i < outPaths.size(); i++) {
+                                            Path p = outPaths.get(i);
+                                            if (p.startsWith(prefix)) {
+                                                if (candidate != null) {
+                                                    candidate = null;
+                                                    break;
+                                                } else {
+                                                    candidate = p;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    outDir = candidate != null ? candidate.toFile() : new File("");
+                                }
+                                
+                                model.getInfo().put(propBase + lang + "_output_classes", outDir);
+                            }
+                        }
                     }
    
                     model.getInfo().put(propBase + "JAVA", storeSet(getProperty(sourceSet, "java", "srcDirs")));
@@ -310,17 +400,7 @@ class NbProjectInfoBuilder {
                     if (hasKotlin) {
                         model.getInfo().put(propBase + "KOTLIN", storeSet(getProperty(getProperty(sourceSet, "kotlin"), "srcDirs")));
                     }
-                    sinceGradle("4.0", () -> {
-                        Set<File> dirs = new LinkedHashSet<>();
-                        // classesDirs is just an iterable
-                        for (File dir: (ConfigurableFileCollection) getProperty(sourceSet, "output", "classesDirs")) {
-                            dirs.add(dir);
-                        }
-                        model.getInfo().put(propBase + "output_classes", dirs);
-                    });
-                    beforeGradle("4.0", () -> {
-                        model.getInfo().put(propBase + "output_classes", Collections.singleton(getProperty(sourceSet, "output", "classesDir")));
-                    });
+                    model.getInfo().put(propBase + "output_classes", outDirs);
                     model.getInfo().put(propBase + "output_resources", sourceSet.getOutput().getResourcesDir());
                     sinceGradle("5.2", () -> {
                         model.getInfo().put(propBase + "GENERATED", storeSet(getProperty(sourceSet, "output", "generatedSourcesDirs", "files")));
@@ -410,8 +490,16 @@ class NbProjectInfoBuilder {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
             model.getInfo().put(propBase + "transitive",  it.isTransitive());
+            model.getInfo().put(propBase + "canBeConsumed", it.isCanBeConsumed());
             model.getInfo().put(propBase + "extendsFrom",  it.getExtendsFrom().stream().map(c -> c.getName()).collect(Collectors.toCollection(HashSet::new)));
             model.getInfo().put(propBase + "description",  it.getDescription());
+
+            Map<String, String> attributes = new LinkedHashMap<>();
+            AttributeContainer attrs = it.getAttributes();
+            for (Attribute<?> attr : attrs.keySet()) {
+                attributes.put(attr.getName(), String.valueOf(attrs.getAttribute(attr)));
+            }
+            model.getInfo().put(propBase + "attributes", attributes);
         });
         //visibleConfigurations = visibleConfigurations.findAll() { resolvable(it) }
         visibleConfigurations.forEach(it -> {
@@ -435,7 +523,18 @@ class NbProjectInfoBuilder {
                             ResolvedDependencyResult rdr = (ResolvedDependencyResult) it2;
                             if (rdr.getRequested() instanceof ModuleComponentSelector) {
                                 ids.add(rdr.getSelected().getId());
-                                componentIds.add(rdr.getSelected().getId().toString());
+                                // do not bother with components that only select a variant, which is itself a component
+                                // TODO: represent as a special component type so the IDE shows it, but the IDE knows it is an abstract
+                                // intermediate with no artifact(s).
+                                if (rdr.getResolvedVariant() == null) {
+                                    componentIds.add(rdr.getSelected().getId().toString());
+                                } else {
+                                    sinceGradle("6.8", () -> {
+                                        if (!rdr.getResolvedVariant().getExternalVariant().isPresent()) {
+                                            componentIds.add(rdr.getSelected().getId().toString());
+                                        }
+                                    });
+                                }
                             }
                         }
                         if (it2 instanceof UnresolvedDependencyResult) {
@@ -447,6 +546,16 @@ class NbProjectInfoBuilder {
                             if(!ignoreUnresolvable && (it.isVisible() || it.isCanBeConsumed())) {
                                 // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
                                 // do not report problems here
+                                Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
+                                if (project.getGradle().getStartParameter().isOffline()) {
+                                    // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
+                                    Throwable prev = null;
+                                    for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
+                                        if (t.getMessage().contains("available for offline")) {
+                                            throw new NeedOnlineModeException("Need online mode", failure);
+                                        }
+                                    }
+                                }
                                 unresolvedProblems.put(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                             }
                         }
@@ -479,6 +588,15 @@ class NbProjectInfoBuilder {
 
             if (resolvable(it)) {
                 try {
+                    Set<ResolvedArtifact> arts = it.getResolvedConfiguration()
+                            .getLenientConfiguration()
+                            .getArtifacts();
+                    
+                    arts.stream().forEach(a -> {
+                        if (!(a.getId().getComponentIdentifier() instanceof ProjectComponentIdentifier)) {
+                            resolvedJvmArtifacts.putIfAbsent(a.getId().getComponentIdentifier().toString(), Collections.singleton(a.getFile()));
+                        }
+                    });
                     it.getResolvedConfiguration()
                             .getLenientConfiguration()
                             .getFirstLevelModuleDependencies(Specs.SATISFIES_ALL)
@@ -619,7 +737,7 @@ class NbProjectInfoBuilder {
     private Set<Configuration> configurationsToSave() {
         return project
                 .getConfigurations()
-                .matching(c -> !CONFIG_EXCLUDES.contains(c.getName()))
+                .matching(c -> !CONFIG_EXCLUDES_PATTERN.matcher(c.getName()).matches())
                 .stream()
                 .flatMap(c -> c.getHierarchy().stream())
                 .collect(Collectors.toSet());

@@ -114,6 +114,19 @@ public function nullsafeOperatorExample(object $object){
 }
 }
 
+enum EnumExample: string {
+
+    case FOO = 'F';
+    case BAR = 'B';
+
+    public function example(): string {
+        return match ($this) {
+            static::FOO => 'Foo',
+            static::BAR => 'Bar',
+        };
+    }
+}
+
 $anonymousFunc = function ($arg) use ($param):int {
     return 1;
 };

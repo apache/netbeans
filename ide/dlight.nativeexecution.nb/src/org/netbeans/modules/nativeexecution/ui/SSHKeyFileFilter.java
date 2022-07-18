@@ -23,6 +23,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.modules.nativeexecution.api.util.Authentication;
@@ -35,7 +36,7 @@ import org.openide.util.Exceptions;
 public class SSHKeyFileFilter implements FileFilter {
 
     private static final Pattern p = Pattern.compile("-+ *BEGIN.*PRIVATE.*KEY *-+.*"); // NOI18N
-    private static final Charset cs = Charset.forName("US-ASCII"); // NOI18N
+    private static final Charset cs = StandardCharsets.US_ASCII;
     private static final SSHKeyFileFilter instance = new SSHKeyFileFilter();
 
     private SSHKeyFileFilter() {

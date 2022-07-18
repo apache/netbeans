@@ -135,7 +135,7 @@ public final class HyperlinkLocation {
     /**
      * Resolves a hyperlink at the given document offset and returns its target
      * location(s). Example usage can be illustrated by:
-     * {@codesnippet HyperlinkLocationTest#testHyperlinkResolve}
+     * {@snippet file="org/netbeans/api/lsp/HyperlinkLocationTest.java" region="testHyperlinkResolve"}
      *
      * @param doc document on which to operate.
      * @param offset offset within document
@@ -163,7 +163,7 @@ public final class HyperlinkLocation {
     /**
      * Resolves a hyperlink at the given document offset and returns its target
      * type definition location(s). Example usage can be illustrated by:
-     * {@codesnippet HyperlinkLocationTest#testHyperlinkTypeDefResolve}
+     * {@snippet file="org/netbeans/api/lsp/HyperlinkLocationTest.java" region="testHyperlinkTypeDefResolve"}
      *
      * @param doc document on which to operate.
      * @param offset offset within document

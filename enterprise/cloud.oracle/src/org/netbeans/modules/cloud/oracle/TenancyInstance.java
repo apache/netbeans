@@ -42,7 +42,7 @@ public class TenancyInstance implements ServerInstanceImplementation {
 
     @Override
     public String getServerDisplayName() {
-        return tenancy.getId();
+        return tenancy.getKey().getValue();
     }
 
     @Override

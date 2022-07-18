@@ -49,7 +49,7 @@ public class WsdlService implements WSService {
     }
     
     public List<WsdlPort> getPorts() {
-        List wsdlPorts = new ArrayList();
+        List<WsdlPort> wsdlPorts = new ArrayList<>();
         if (service==null) return wsdlPorts;
         List<Port> ports = service.getPorts();
         for (Port p:ports)

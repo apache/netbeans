@@ -82,7 +82,6 @@ import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -152,7 +151,7 @@ public class GroovyParser extends Parser {
         cancelled.set(false);
         
         if (!GroovyUtils.isIndexingEnabled()) {
-            if (IndexingSupport.isIndexingTask(task)) { // NOI18N
+            if (GroovyUtils.isIndexingTask(task)) {
                 lastResult = createParseResult(snapshot, null, null);
                 return;
             }
@@ -165,7 +164,9 @@ public class GroovyParser extends Parser {
 
             @Override
             public void error(Error error) {
-                errors.add(error);
+                if (!errors.contains(error)) {
+                    errors.add(error);
+                }
             }
         };
         long t1 = System.currentTimeMillis();
@@ -640,7 +641,7 @@ public class GroovyParser extends Parser {
             );
         }
 
-        boolean indexing = IndexingSupport.isIndexingTask(context.parserTask);
+        boolean indexing = GroovyUtils.isIndexingTask(context.parserTask);
         configuration = makeConfiguration(configuration, context, indexing);
         CU compilationUnit = new CU(indexing, this, configuration,
                 null, classLoader, transformationLoader, cpInfo, classNodeCache,
@@ -803,7 +804,7 @@ public class GroovyParser extends Parser {
             return sanitize(context, sanitizing);
         }
     }
-    
+
     private static void logParsingTime(Context context, long start, boolean cancelled) {
         long diff = System.currentTimeMillis() - start;
         long full = PARSING_TIME.addAndGet(diff);

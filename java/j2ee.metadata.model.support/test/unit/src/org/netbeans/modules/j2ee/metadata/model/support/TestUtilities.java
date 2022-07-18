@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -56,7 +57,7 @@ public class TestUtilities {
     public static final void copyStringToFileObject(FileObject fo, String contents) throws IOException {
         OutputStream os = fo.getOutputStream();
         try {
-            InputStream is = new ByteArrayInputStream(contents.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
             FileUtil.copy(is, os);
         } finally {
             os.close();
@@ -72,7 +73,7 @@ public class TestUtilities {
     public static final void copyStringToFile(File file, String content) throws IOException {
         OutputStream os = new FileOutputStream(file);
         try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             FileUtil.copy(is, os);
         } finally {
             os.close();
@@ -88,7 +89,7 @@ public class TestUtilities {
     public static final String copyStreamToString(InputStream input) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         FileUtil.copy(input, output);
-        return Charset.forName("UTF-8").newDecoder().decode(ByteBuffer.wrap(output.toByteArray())).toString();
+        return StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(output.toByteArray())).toString();
     }
 
     /**

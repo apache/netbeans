@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.junit.NbTestCase;
@@ -96,7 +97,7 @@ public class SymfonyCommandsXmlParserTest extends NbTestCase {
     }
 
     public void testIssue232490() throws Exception {
-        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(getDataDir(), "issue232490.xml")), "UTF-8"));
+        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(getDataDir(), "issue232490.xml")), StandardCharsets.UTF_8));
 
         List<SymfonyCommandVO> commands = new ArrayList<>();
         SymfonyCommandsXmlParser.parse(reader, commands);

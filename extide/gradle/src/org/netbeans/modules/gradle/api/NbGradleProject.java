@@ -38,6 +38,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -307,7 +308,18 @@ public final class NbGradleProject {
     public static NbGradleProject get(Project project) {
         return project instanceof NbGradleProjectImpl ? ((NbGradleProjectImpl) project).getProjectWatcher() : null;
     }
-
+    
+    /**
+     * Returns accessor for Gradle project files. Note that the returned instance is immutable, possibly lazy-initialized.
+     * A change (creation, removal) to project files will not be reflected by the {@link GradleFiles} instance, but this method
+     * may return a new instance.
+     * @return files accessor.
+     * @since 2.24
+     */
+    public GradleFiles getGradleFiles() {
+        return project.getGradleFiles();
+    }
+    
     @Override
     public String toString() {
         return "Watcher for " + project.toString(); //NOI18N

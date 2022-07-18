@@ -22,14 +22,12 @@ import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.util.Optional;
 import javax.swing.event.DocumentListener;
-import org.netbeans.modules.cloud.oracle.OCIManager;
-import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -38,8 +36,8 @@ import org.openide.util.RequestProcessor;
 @NbBundle.Messages({
     "CreateDB=Create AutonomousDatabase",
     "DatabaseName=Database Name",
-    "AdminPassword=ADMIN user password",
-    "ConfirmAdminPassword=Confirm ADMIN user password"
+    "AdminPassword=Provide password for database user ADMIN",
+    "ConfirmAdminPassword=Confirm password for database user ADMIN"
 })
 public class CreateAutonomousDBDialog extends AbstractPasswordPanel {
 

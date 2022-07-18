@@ -1,0 +1,3 @@
+public function testMethod(Foo&Bar $param): Foo&Bar{
+return parent::testMethod($param);
+}

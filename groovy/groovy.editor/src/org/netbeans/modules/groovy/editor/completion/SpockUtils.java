@@ -38,6 +38,11 @@ public class SpockUtils {
     public static boolean isInSpecificationClass(CompletionContext context) {
         
         ClassNode classNode = context.declaringClass;
+        if (classNode == null) {
+            // This shouldn't happen, because this cc is invoked only INSIDE_METHOD cc location.
+            // But I have seed the NPE
+            return false;
+        }
         ParserResult pr = context.getParserResult();
         if (pr != null && pr instanceof GroovyParserResult) {
             GroovyParserResult gpr = (GroovyParserResult) pr;

@@ -37,6 +37,7 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -50,9 +51,11 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
@@ -138,7 +141,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
     @Override
     public Map<OffsetRange, Set<ColoringAttributes>> getHighlights() {
-        return semanticHighlights;
+        return semanticHighlights != null ? Collections.unmodifiableMap(semanticHighlights) : Collections.emptyMap();
     }
 
     @Override
@@ -151,7 +154,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         checkIfResolveDeprecatedElements = true;
         if (isResolveDeprecatedElements()) {
             if (!isLogged()) {
-                LOGGER.info("Resolving of deprecated elements in Semantic analysis - IDE will be possibly slow!");
+                LOGGER.info("Resolving of deprecated elements in Semantic analysis - IDE will be possibly slow!"); // NOI18N
                 setIsLogged(true);
             }
         }
@@ -169,7 +172,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         if (result.getProgram() != null) {
             SemanticHighlightVisitor semanticHighlightVisitor = new SemanticHighlightVisitor(highlights, result.getSnapshot(), result.getModel());
             result.getProgram().accept(semanticHighlightVisitor);
-            if (highlights.size() > 0) {
+            if (!highlights.isEmpty()) {
                 semanticHighlights = highlights;
             } else {
                 semanticHighlights = null;
@@ -238,6 +241,8 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         private Set<TypeConstantElement> deprecatedConstants;
 
+        private Set<EnumCaseElement> deprecatedEnumCases;
+
         private Set<FunctionElement> deprecatedFunctions;
 
         // last visited type declaration
@@ -260,7 +265,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (deprecatedTypes == null) {
                 deprecatedTypes = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypes(NameKind.empty()));
             }
-            return deprecatedTypes;
+            return Collections.unmodifiableSet(deprecatedTypes);
         }
 
         private Set<MethodElement> getDeprecatedMethods() {
@@ -270,7 +275,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (deprecatedMethods == null) {
                 deprecatedMethods = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getMethods(NameKind.empty()));
             }
-            return deprecatedMethods;
+            return Collections.unmodifiableSet(deprecatedMethods);
         }
 
         private Set<FunctionElement> getDeprecatedFunctions() {
@@ -280,7 +285,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (deprecatedFunctions == null) {
                 deprecatedFunctions = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getFunctions(NameKind.empty()));
             }
-            return deprecatedFunctions;
+            return Collections.unmodifiableSet(deprecatedFunctions);
         }
 
         private Set<FieldElement> getDeprecatedFields() {
@@ -290,7 +295,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (deprecatedFields == null) {
                 deprecatedFields = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getFields(NameKind.empty()));
             }
-            return deprecatedFields;
+            return Collections.unmodifiableSet(deprecatedFields);
         }
 
         private Set<TypeConstantElement> getDeprecatedConstants() {
@@ -300,7 +305,17 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (deprecatedConstants == null) {
                 deprecatedConstants = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypeConstants(NameKind.empty()));
             }
-            return deprecatedConstants;
+            return Collections.unmodifiableSet(deprecatedConstants);
+        }
+
+        private Set<EnumCaseElement> getDeprecatedEnumCases() {
+            if (isCancelled()) {
+                return Collections.EMPTY_SET;
+            }
+            if (deprecatedEnumCases == null) {
+                deprecatedEnumCases = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getEnumCases(NameKind.empty()));
+            }
+            return Collections.unmodifiableSet(deprecatedEnumCases);
         }
 
         private void addColoringForNode(ASTNode node, Set<ColoringAttributes> coloring) {
@@ -349,7 +364,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 }
             }
         }
-        
+
         @Override
         public void scan(ASTNode node) {
             if (!isCancelled()) {
@@ -634,6 +649,27 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         }
 
         @Override
+        public void visit(EnumDeclaration node) {
+            if (isCancelled()) {
+                return;
+            }
+            addToPath(node);
+            scan(node.getAttributes());
+            scan(node.getInterfaes());
+            typeInfo = new TypeDeclarationTypeInfo(node);
+            Identifier name = node.getName();
+            addColoringForNode(name, createTypeNameColoring(name));
+            needToScan = new ArrayList<>();
+            if (node.getBody() != null) {
+                node.getBody().accept(this);
+                for (Block block : needToScan) {
+                    block.accept(this);
+                }
+            }
+            removeFromPath();
+        }
+
+        @Override
         public void visit(FieldsDeclaration node) {
             if (isCancelled()) {
                 return;
@@ -772,8 +808,10 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (path != null && path.size() > 1) {
                 parentNode = path.get(1);
             }
-            if (parentNode instanceof ClassDeclaration || parentNode instanceof InterfaceDeclaration
-                    || parentNode instanceof ClassInstanceCreation) {
+            if (parentNode instanceof ClassDeclaration
+                    || parentNode instanceof InterfaceDeclaration
+                    || parentNode instanceof ClassInstanceCreation
+                    || parentNode instanceof EnumDeclaration) {
                 boolean isPrivate = Modifier.isPrivate(node.getModifier());
                 List<Identifier> names = node.getNames();
                 for (Identifier identifier : names) {
@@ -788,11 +826,36 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             super.visit(node);
         }
 
+        @Override
+        public void visit(CaseDeclaration node) {
+            if (isCancelled()) {
+                return;
+            }
+            ASTNode parentNode = null;
+            List<ASTNode> path = getPath();
+            if (path != null && path.size() > 1) {
+                parentNode = path.get(1);
+            }
+            if (parentNode instanceof EnumDeclaration) {
+                Identifier identifier = node.getName();
+                Set<ColoringAttributes> coloring = createEnumCaseDeclarationColoring(identifier);
+                addColoringForNode(identifier, coloring);
+            }
+            super.visit(node);
+        }
+
         private Set<ColoringAttributes> createConstantDeclarationColoring(Identifier constantName) {
             if (isCancelled()) {
                 return Collections.EMPTY_SET;
             }
             return isDeprecatedConstantDeclaration(constantName) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
+        }
+
+        private Set<ColoringAttributes> createEnumCaseDeclarationColoring(Identifier constantName) {
+            if (isCancelled()) {
+                return Collections.EMPTY_SET;
+            }
+            return isDeprecatedEnumCaseDeclaration(constantName) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
         }
 
         private boolean isDeprecatedConstantDeclaration(Identifier constantName) {
@@ -805,6 +868,24 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                         variableScope);
                 for (TypeConstantElement constantElement : getDeprecatedConstants()) {
                     if (constantElement.getName().equals(constantName.getName()) && constantElement.getType().getFullyQualifiedName().equals(typeFullyQualifiedName)) {
+                        isDeprecated = true;
+                        break;
+                    }
+                }
+            }
+            return isDeprecated;
+        }
+
+        private boolean isDeprecatedEnumCaseDeclaration(Identifier constantName) {
+            boolean isDeprecated = false;
+            if (!isCancelled() && isResolveDeprecatedElements()) {
+                VariableScope variableScope = model.getVariableScope(constantName.getStartOffset());
+                QualifiedName typeFullyQualifiedName = VariousUtils.getFullyQualifiedName(
+                        QualifiedName.create(typeInfo.getName()),
+                        constantName.getStartOffset(),
+                        variableScope);
+                for (EnumCaseElement enumCaseElement : getDeprecatedEnumCases()) {
+                    if (enumCaseElement.getName().equals(constantName.getName()) && enumCaseElement.getType().getFullyQualifiedName().equals(typeFullyQualifiedName)) {
                         isDeprecated = true;
                         break;
                     }

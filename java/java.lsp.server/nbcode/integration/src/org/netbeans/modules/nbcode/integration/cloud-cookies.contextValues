@@ -16,5 +16,8 @@
 # under the License.
 
 [org.netbeans.modules.cloud.=]
-org.netbeans.modules.cloud.oracle.items.DatabaseItem
-org.netbeans.modules.cloud.oracle.items.CompartmentItem
+org.netbeans.modules.cloud.oracle.database.DatabaseItem
+org.netbeans.modules.cloud.oracle.compartment.CompartmentItem
+org.netbeans.modules.cloud.oracle.items.OCIItem
+org.netbeans.modules.cloud.oracle.devops.BuildPipelineItem
+org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem

@@ -22,8 +22,8 @@ import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.logging.Level;
 import junit.framework.Test;
@@ -128,12 +128,7 @@ public class BundleURLConnectionTest extends NbTestCase {
             @Override
             public boolean reject(Object obj) {
                 if (obj instanceof byte[]) {
-                    String s;
-                    try {
-                        s = new String((byte[])obj, "UTF-8");
-                    } catch (UnsupportedEncodingException ex) {
-                        throw new IllegalStateException(ex);
-                    }
+                    String s = new String((byte[])obj, StandardCharsets.UTF_8);
                     if (s.startsWith(text)) {
                         found[0] = s;
                     }

@@ -116,4 +116,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/pureIntersectionTypes");
     }
 
+    public void testEnumerations() throws Exception {
+        performTest("structure/enumerations");
+    }
+
 }

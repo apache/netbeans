@@ -69,7 +69,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>3.16</specification-version>
+                        <specification-version>3.27</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -128,7 +128,25 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.9</specification-version>
+                        <specification-version>1.11</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.csl.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.74</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.csl.types</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.17</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -779,24 +797,24 @@
                 <package>org.netbeans.modules.java.lsp.server.ui</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.12.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.debug-0.12.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.debug-0.13.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.24.0.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.xtend.lib.macro-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.12.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.generator-0.12.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.generator-0.13.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.12.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.12.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.13.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.12.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.12.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.xtend.lib-2.24.0.jar</runtime-relative-path>
@@ -807,8 +825,8 @@
                 <binary-origin>external/org.eclipse.xtext.xbase.lib-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j-0.12.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j-0.12.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j-0.13.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j-0.13.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-io-2.5.jar</runtime-relative-path>

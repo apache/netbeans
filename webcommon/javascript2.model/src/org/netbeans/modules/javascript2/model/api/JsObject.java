@@ -35,53 +35,53 @@ public interface JsObject extends JsElement {
     public Map <String, ? extends JsObject> getProperties();
     public void addProperty(String name, JsObject property);
     public JsObject getProperty(String name);
-    
+
     /**
-     * 
+     *
      * @return the object within this is declared
      */
-    public JsObject getParent();  
+    public JsObject getParent();
     List<Occurrence> getOccurrences();
 
     public void addOccurrence(OffsetRange offsetRange);
 
     public String getFullyQualifiedName();
     /**
-     * 
+     *
      * @param offset
-     * @return 
+     * @return
      */
     Collection<? extends TypeUsage> getAssignmentForOffset(int offset);
-    
+
     Collection<? extends TypeUsage> getAssignments();
-    
+
     int getAssignmentCount();
-    
+
     public void addAssignment(TypeUsage typeName, int offset);
     public void clearAssignments();
-    
+
     public boolean isAnonymous();
     public void setAnonymous(boolean value);
     public boolean isDeprecated();
-    
-    
+
+
     /**
-     * 
-     * @return true if the element is virtual and shouldn't be visible to the user in structure scanner. 
+     *
+     * @return true if the element is virtual and shouldn't be visible to the user in structure scanner.
      */
     boolean isVirtual();
-    
+
     /**
-     * 
-     * @return true if the object/function is identified by a name. 
+     *
+     * @return true if the object/function is identified by a name.
      * False if the function is declared as an item in array or the name is an expression
-     */ 
+     */
     public boolean hasExactName();
-    
+
     public Documentation getDocumentation();
     public void setDocumentation(Documentation documentation);
-    
+
     public boolean containsOffset(int offset);
-    
+
     public boolean moveProperty(String name, JsObject newParent);
 }

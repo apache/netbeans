@@ -90,13 +90,13 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 updateResources(uri);
             }
         };
-        this.wPcl = WeakListeners.propertyChange(pcl, null, project);
         // by some miracle, the project might have been loaded!
         NbGradleProject gp = NbGradleProject.get(project);
+        this.wPcl = WeakListeners.propertyChange(pcl, null, gp);
         if (gp.isGradleProjectLoaded()) {
             updateGroups();
         }
-        NbGradleProject.addPropertyChangeListener(project, wPcl);
+        gp.addPropertyChangeListener(wPcl);
     }
     
     private void updateResources(URI uri) {

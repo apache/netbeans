@@ -66,7 +66,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
     private final DataCache dataCache = new DataCache();
     private EncodingHelper encodingHelper = new EncodingHelper();
     private transient long timeStamp = 0;
-    private transient WeakReference lockReference;
+    private transient WeakReference<FileLock> lockReference;
     
     
     private MultiViewElement activeMVElement;
@@ -497,7 +497,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
                     throw new FileAlreadyLockedException("File is already locked by [" + current + "]."); // NO18N
                 }
                 FileLock l = new FileLock();
-                lockReference = new WeakReference(l);
+                lockReference = new WeakReference<>(l);
                 return l;
             }
         }

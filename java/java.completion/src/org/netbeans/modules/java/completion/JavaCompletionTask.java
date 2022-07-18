@@ -31,11 +31,6 @@ import java.util.logging.Level;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
-import static javax.lang.model.element.ElementKind.*;
-import static javax.lang.model.element.Modifier.*;
-import static javax.lang.model.SourceVersion.RELEASE_10;
-import static javax.lang.model.SourceVersion.RELEASE_11;
-import static javax.lang.model.SourceVersion.RELEASE_13;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.ElementFilter;
@@ -55,6 +50,13 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
+
+import static javax.lang.model.element.ElementKind.*;
+import static javax.lang.model.element.Modifier.*;
+import static javax.lang.model.SourceVersion.RELEASE_10;
+import static javax.lang.model.SourceVersion.RELEASE_11;
+import static javax.lang.model.SourceVersion.RELEASE_13;
+import static javax.lang.model.type.TypeKind.VOID;
 
 /**
  *
@@ -119,7 +121,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
     
     public static interface LambdaItemFactory<T> extends ItemFactory<T> {
-        T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon);
+        T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon);
     }
     
     public static interface ModuleItemFactory<T> extends ItemFactory<T> {
@@ -3344,7 +3346,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             addTypeDotClassMembers(env, type);
                         } else if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0
                                 && elements.isFunctionalInterface(element) && itemFactory instanceof LambdaItemFactory) {
-                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, env.addSemicolon()));
+                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, true, env.addSemicolon()));
+                            if (controller.getElementUtilities().getDescriptorElement(element).getReturnType().getKind() != VOID) {
+                                results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, false, env.addSemicolon()));
+                            }
                         }
                         final boolean startsWith = startsWith(env, element.getSimpleName().toString());
                         final boolean withinScope = withinScope(env, element);
@@ -4184,7 +4189,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     continue;
                 }
                 if (!kinds.contains(name.getKind()) && !doNotRemove.contains(name.getQualifiedName())) {
-                    removed.put(name.getQualifiedName(), name);
+                    int idx = name.getQualifiedName().lastIndexOf('.');
+                    String sName = idx < 0 ? name.getQualifiedName() : name.getQualifiedName().substring(idx + 1);
+                    if (startsWith(env, sName, prefix)) {
+                        removed.put(name.getQualifiedName(), name);
+                    }
                     continue;
                 }
                 String qName = name.getQualifiedName();
@@ -4193,10 +4202,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 while ((idx = qName.lastIndexOf('.')) > 0) {
                     if (sName == null) {
                         sName = qName.substring(idx + 1);
-                        if (sName.length() <= 0 || !startsWith(env, sName, prefix)) {
-                            break;
+                        if (sName.length() > 0 && startsWith(env, sName, prefix)) {
+                            results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
                         }
-                        results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
                     }
                     qName = qName.substring(0, idx);
                     doNotRemove.add(qName);
@@ -4218,7 +4226,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             Set<ElementHandle<TypeElement>> declaredTypes = controller.getClasspathInfo().getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix != null ? prefix : EMPTY, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
             results.ensureCapacity(results.size() + declaredTypes.size());
             for (ElementHandle<TypeElement> name : declaredTypes) {
-                if (excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
+                if (!kinds.contains(name.getKind()) || excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
                     continue;
                 }
                 results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));

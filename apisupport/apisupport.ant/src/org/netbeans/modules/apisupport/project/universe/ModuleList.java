@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,7 +55,6 @@ import org.netbeans.modules.apisupport.project.api.ManifestManager;
 import org.netbeans.modules.apisupport.project.api.Util;
 import org.netbeans.modules.apisupport.project.ui.customizer.ClusterInfo;
 import org.netbeans.modules.apisupport.project.ui.customizer.SuiteUtils;
-import static org.netbeans.modules.apisupport.project.universe.Bundle.*;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.netbeans.spi.project.support.ant.PropertyProvider;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
@@ -72,6 +72,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import static org.netbeans.modules.apisupport.project.universe.Bundle.*;
 
 /**
  * Represents list of known modules.
@@ -867,7 +869,7 @@ public final class ModuleList {
         @Messages("junit_placeholder=JUnit from Maven")
         @Override protected LocalizedBundleInfo getBundleInfo() {
             try {
-                return LocalizedBundleInfo.load(new InputStream[] {new ByteArrayInputStream((LocalizedBundleInfo.NAME + '=' + junit_placeholder()).getBytes("ISO-8859-1"))});
+                return LocalizedBundleInfo.load(new InputStream[] {new ByteArrayInputStream((LocalizedBundleInfo.NAME + '=' + junit_placeholder()).getBytes(StandardCharsets.ISO_8859_1))});
             } catch (IOException x) {
                 assert false : x;
                 return LocalizedBundleInfo.EMPTY;

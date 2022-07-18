@@ -316,7 +316,7 @@ public class DbSchemaEjbGenerator {
         String roleBCmr = EntityMember.makeRelationshipFieldName(roleAClassName, colectionType, true);
         
         roleACmr = uniqueAlgorithm(getFieldNames(roleAHelper), roleACmr, null);
-        List roleBFieldNames = getFieldNames(roleBHelper);
+        List<String> roleBFieldNames = getFieldNames(roleBHelper);
         if (tableAName.equals(tableBName)) {
             // Handle the special case when both parts of the join table reference
             // the same table -- in that case both roleACmr and roleBCmr

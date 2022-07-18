@@ -1478,7 +1478,7 @@ public abstract class Properties {
                 } else if (classNames[5].equals(className)) {
                     return new Long(properties.getLong(propertyName, 0l));
                 } else if (classNames[6].equals(className)) {
-                    return new Float(properties.getFloat(propertyName, 0f));
+                    return properties.getFloat(propertyName, 0f);
                 } else if (classNames[7].equals(className)) {
                     return new Double(properties.getDouble(propertyName, 0d));
                 }

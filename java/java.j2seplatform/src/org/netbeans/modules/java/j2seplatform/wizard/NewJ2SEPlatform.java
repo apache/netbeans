@@ -51,6 +51,8 @@ import org.openide.util.Utilities;
  */
 public final class NewJ2SEPlatform extends J2SEPlatformImpl implements Runnable {
 
+    public static final String DISPLAY_NAME_FILE_ATTR = "J2SEPlatform.displayName";
+
     private static final Logger LOGGER = Logger.getLogger(NewJ2SEPlatform.class.getName());
 
     private boolean valid;

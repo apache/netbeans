@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import java.util.TimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -346,9 +348,9 @@ public class HeapTest {
     }
 
     private void compareTextFiles(File goledFile, File outFile) throws IOException {
-        InputStreamReader goldenIsr = new InputStreamReader(new FileInputStream(goledFile), "UTF-8");
+        InputStreamReader goldenIsr = new InputStreamReader(new FileInputStream(goledFile), StandardCharsets.UTF_8);
         LineNumberReader goldenReader = new LineNumberReader(goldenIsr);
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(outFile), "UTF-8");
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(outFile), StandardCharsets.UTF_8);
         LineNumberReader reader = new LineNumberReader(isr);
         String goldenLine = "";
         String line = "";

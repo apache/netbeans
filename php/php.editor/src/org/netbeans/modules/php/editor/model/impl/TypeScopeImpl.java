@@ -34,11 +34,13 @@ import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.TraitElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.model.ClassConstantElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
@@ -50,6 +52,7 @@ import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.nodes.ClassDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ClassInstanceCreationInfo;
+import org.netbeans.modules.php.editor.model.nodes.EnumDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.InterfaceDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.TraitDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -61,7 +64,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 abstract class TypeScopeImpl extends ScopeImpl implements TypeScope {
 
     private Map<String, List<? extends InterfaceScope>> ifaces = new HashMap<>();
-    private Collection<QualifiedName> fqIfaces = new HashSet<>();
+    private Collection<QualifiedName> fqIfaces = new ArrayList<>();
     private Set<? super TypeScope> superRecursionDetection = new HashSet<>();
     private Set<? super TypeScope> subRecursionDetection = new HashSet<>();
 
@@ -80,29 +83,33 @@ abstract class TypeScopeImpl extends ScopeImpl implements TypeScope {
     TypeScopeImpl(Scope inScope, ClassInstanceCreationInfo nodeInfo, boolean isDeprecated) {
         super(inScope, nodeInfo, nodeInfo.getAccessModifiers(), nodeInfo.getOriginalNode().getBody(), isDeprecated);
         List<? extends Expression> interfaces = nodeInfo.getInterfaces();
-        for (Expression identifier : interfaces) {
-            String ifaceName = CodeUtils.extractQualifiedName(identifier);
-            if (ifaceName != null) {
-                ifaces.put(ifaceName, null);
-                fqIfaces.add(VariousUtils.getFullyQualifiedName(QualifiedName.create(ifaceName), nodeInfo.getOriginalNode().getStartOffset(), inScope));
-            }
-        }
+        setInterfaces(interfaces, nodeInfo.getOriginalNode().getStartOffset(), inScope);
     }
 
     TypeScopeImpl(Scope inScope, InterfaceDeclarationInfo nodeInfo, boolean isDeprecated) {
         super(inScope, nodeInfo, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), nodeInfo.getOriginalNode().getBody(), isDeprecated);
         List<? extends Expression> interfaces = nodeInfo.getInterfaces();
-        for (Expression identifier : interfaces) {
-            String ifaceName = CodeUtils.extractQualifiedName(identifier);
-            if (ifaceName != null) {
-                ifaces.put(ifaceName, null);
-                fqIfaces.add(VariousUtils.getFullyQualifiedName(QualifiedName.create(ifaceName), nodeInfo.getOriginalNode().getStartOffset(), inScope));
-            }
-        }
+        setInterfaces(interfaces, nodeInfo.getOriginalNode().getStartOffset(), inScope);
     }
 
     TypeScopeImpl(Scope inScope, TraitDeclarationInfo nodeInfo, boolean isDeprecated) {
         super(inScope, nodeInfo, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), nodeInfo.getOriginalNode().getBody(), isDeprecated);
+    }
+
+    TypeScopeImpl(Scope inScope, EnumDeclarationInfo nodeInfo, boolean isDeprecated) {
+        super(inScope, nodeInfo, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), nodeInfo.getOriginalNode().getBody(), isDeprecated);
+        List<? extends Expression> interfaces = nodeInfo.getInterfaces();
+        setInterfaces(interfaces, nodeInfo.getOriginalNode().getStartOffset(), inScope);
+    }
+
+    private void setInterfaces(List<? extends Expression> interfaces, int offset, Scope inScope) {
+        for (Expression identifier : interfaces) {
+            String ifaceName = CodeUtils.extractQualifiedName(identifier);
+            if (ifaceName != null) {
+                ifaces.put(ifaceName, null);
+                fqIfaces.add(VariousUtils.getFullyQualifiedName(QualifiedName.create(ifaceName), offset, inScope));
+            }
+        }
     }
 
     protected TypeScopeImpl(Scope inScope, ClassElement element) {
@@ -125,9 +132,13 @@ abstract class TypeScopeImpl extends ScopeImpl implements TypeScope {
         super(inScope, element, PhpElementKind.TRAIT);
     }
 
+    protected TypeScopeImpl(Scope inScope, EnumElement element) {
+        super(inScope, element, PhpElementKind.ENUM);
+    }
+
     @Override
     public Collection<QualifiedName> getFQSuperInterfaceNames() {
-        return this.fqIfaces;
+        return Collections.unmodifiableCollection(this.fqIfaces);
     }
 
     @Override
@@ -159,7 +170,7 @@ abstract class TypeScopeImpl extends ScopeImpl implements TypeScope {
                 if (iface == null) {
                     if (indexedElement == null) {
                         Scope inScope = getInScope();
-                        if (inScope instanceof ClassScope || inScope instanceof TraitScope) {
+                        if (inScope instanceof ClassScope || inScope instanceof TraitScope || inScope instanceof EnumScope) {
                             // in case of anonymous class
                             while(!(inScope instanceof NamespaceScope)) {
                                 inScope = inScope.getInScope();
@@ -302,6 +313,11 @@ abstract class TypeScopeImpl extends ScopeImpl implements TypeScope {
     @Override
     public final boolean isTraited() {
         return this.getPhpElementKind().equals(PhpElementKind.TRAIT) || this.getPhpElementKind().equals(PhpElementKind.CLASS);
+    }
+
+    @Override
+    public final boolean isEnum() {
+        return this.getPhpElementKind() == PhpElementKind.ENUM;
     }
 
     @Override

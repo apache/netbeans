@@ -108,7 +108,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         if(singleMethod == null) {
             return className;
         }
-        String builder sb = new StringBuilder(className.length() * 3);
+        StringBuilder sb = new StringBuilder(className.length() * 3);
         sb.append(className);
         if(singleMethod.getEnclosingType() != null) {
             sb.append(singleMethod.getEnclosingType());

@@ -99,7 +99,7 @@ public @interface ConstructorDelegate {
      * order specified by the invoked constructor signature.
      * Each item is a zero-based parameter position in the static creation method signature.
      * Order and type of the referenced parameters must match the target constructor signature.
-     * @return 
+     * @return array of positions
      */
     public int[] delegateParams() default -1;
 }

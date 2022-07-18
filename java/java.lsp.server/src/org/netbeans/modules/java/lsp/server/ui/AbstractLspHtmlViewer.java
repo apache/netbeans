@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.lsp.server.ui;
 
 import java.io.IOException;
-import java.net.URL;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.modules.java.lsp.server.htmlui.Buttons;

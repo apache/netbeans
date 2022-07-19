@@ -522,7 +522,7 @@ public abstract class RestSupport {
     /**
      * Is this JAKARTAEE8 profile project?
      */
-    public boolean isJakartaEE8(){
+    public boolean isJakartaEE8() {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if ( webModule == null ){
             return false;

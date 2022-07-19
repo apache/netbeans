@@ -50,11 +50,8 @@ public class WebParseUtils {
     /** Parsing just for detecting the version  SAX parser used
      */
     public static String getVersion(FileObject fo) throws java.io.IOException, SAXException {
-        InputStream inputStream = fo.getInputStream();
-        try {
+        try (InputStream inputStream = fo.getInputStream()) {
             return ParseUtils.getVersion(inputStream, new VersionHandler(), DDResolver.getInstance());
-        } finally {
-            inputStream.close();
         }
     }
 
@@ -91,7 +88,7 @@ public class WebParseUtils {
         public InputSource resolveEntity(String publicId, String systemId) {
             // additional logging for #127276
             if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Resolving entity [publicId: '" + publicId + "', systemId: '" + systemId + "']");
+                LOGGER.log(Level.FINE, "Resolving entity [publicId: ''{0}'', systemId: ''{1}'']", new Object[]{publicId, systemId});
             }
             String resource=null;
             // return a proper input source
@@ -130,11 +127,8 @@ public class WebParseUtils {
 
     public static SAXParseException parse(FileObject fo)
     throws org.xml.sax.SAXException, java.io.IOException {
-        InputStream inputStream = fo.getInputStream();
-        try {
+        try (InputStream inputStream = fo.getInputStream()) {
             return parse(new InputSource(inputStream));
-        } finally {
-            inputStream.close();
         }
     }
 

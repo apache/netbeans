@@ -147,7 +147,7 @@ public class DDHelper {
      * @since 1.49
      */
     public static FileObject createBeansXml(Profile j2eeProfile, FileObject dir, String name) throws IOException {
-        String template = null;
+        String template = null;       
         if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile ||
                 Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
             template = "beans-3.0.xml"; //NOI18N

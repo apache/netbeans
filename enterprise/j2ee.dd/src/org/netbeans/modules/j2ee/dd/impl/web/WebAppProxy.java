@@ -922,17 +922,10 @@ public class WebAppProxy implements WebApp {
             if (dataObject instanceof DDProviderDataObject) {
                 ((DDProviderDataObject) dataObject).writeModel(webApp);
             } else {
-                FileLock lock = fo.lock();
-                try {
-                    OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing = true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    lock.releaseLock();
+                try (FileLock lock = fo.lock();
+                        OutputStream os = fo.getOutputStream(lock)) {
+                    writing = true;
+                    write(os);
                 }
             }
         }

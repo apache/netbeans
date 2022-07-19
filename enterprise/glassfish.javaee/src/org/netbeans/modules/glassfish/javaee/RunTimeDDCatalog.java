@@ -759,15 +759,15 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         inputSource = resolver.resolveEntity(EJBJAR_2_1_ID, "");
                     } else if (mimeType.equals("text/x-dd-application5.0")) {// NOI18N
                         inputSource = resolver.resolveEntity(APP_5_ID, "");
-                    }else if (mimeType.equals("text/x-dd-application1.4")) {// NOI18N
+                    } else if (mimeType.equals("text/x-dd-application1.4")) {// NOI18N
                         inputSource = resolver.resolveEntity(APP_1_4_ID, "");
-                    }else if (mimeType.equals("text/x-dd-client5.0")) {// NOI18N
+                    } else if (mimeType.equals("text/x-dd-client5.0")) {// NOI18N
                         inputSource = resolver.resolveEntity(APPCLIENT_5_ID, "");
-                    }else if (mimeType.equals("text/x-dd-client1.4")) {// NOI18N
+                    } else if (mimeType.equals("text/x-dd-client1.4")) {// NOI18N
                         inputSource = resolver.resolveEntity(APPCLIENT_1_4_ID, "");
-                    }else if (mimeType.equals("text/x-persistence1.0")) {// NOI18N
+                    } else if (mimeType.equals("text/x-persistence1.0")) {// NOI18N
                         inputSource = resolver.resolveEntity(PERSISTENCE_ID, "");
-                    }else if (mimeType.equals("text/x-orm1.0")) {// NOI18N
+                    } else if (mimeType.equals("text/x-orm1.0")) {// NOI18N
                         inputSource = resolver.resolveEntity(PERSISTENCEORM_ID, "");
                     }
 

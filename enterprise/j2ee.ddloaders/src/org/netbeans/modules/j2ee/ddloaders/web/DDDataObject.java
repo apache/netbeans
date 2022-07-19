@@ -170,8 +170,7 @@ public class DDDataObject extends  DDMultiViewDataObject
                         operationListener);
             }
         }
-        srcRoots = (FileObject[]) srcRootList
-                .toArray(new FileObject[srcRootList.size()]);
+        srcRoots = (FileObject[]) srcRootList.toArray(new FileObject[0]);
     }
 
     private String getPackageName (FileObject clazz) {

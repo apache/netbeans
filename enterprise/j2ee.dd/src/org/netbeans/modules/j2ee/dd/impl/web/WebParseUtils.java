@@ -112,10 +112,12 @@ public class WebParseUtils {
                 resource="/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_3_1.xsd"; //NOI18N
             } else if (systemId!=null && systemId.endsWith("web-fragment_4_0.xsd")) { //NOI18N
                 resource="/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_4_0.xsd"; //NOI18N
+            } else if (systemId!=null && systemId.endsWith("web-fragment_5_0.xsd")) { //NOI18N
+                resource="/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_5_0.xsd"; //NOI18N
             }
             // additional logging for #127276
             if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Got resource: " + resource);
+                LOGGER.log(Level.FINE, "Got resource: {0}", resource);
             }
             if (resource==null) {
                 return null;

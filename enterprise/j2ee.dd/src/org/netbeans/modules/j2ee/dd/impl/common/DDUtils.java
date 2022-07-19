@@ -121,6 +121,8 @@ public class DDUtils {
                 return org.netbeans.modules.j2ee.dd.impl.web.model_3_1.WebApp.createGraph(is);
             } else if (WebApp.VERSION_4_0.equals(version)) {
                 return org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp.createGraph(is);
+            } else if (WebApp.VERSION_5_0.equals(version)) {
+                return org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp.createGraph(is);
             } else {
                 return null;
             }

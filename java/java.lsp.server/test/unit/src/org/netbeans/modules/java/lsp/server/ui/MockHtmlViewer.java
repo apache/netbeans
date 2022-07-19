@@ -58,8 +58,8 @@ public final class MockHtmlViewer extends AbstractLspHtmlViewer {
         });
     }
 
-    public static <T> T assertDialogShown(String text, Class<T> clazz) {
-        Object v = MockTech.applied(data.get(text));
+    public static <T> T assertDialogShown(String id, Class<T> clazz) {
+        Object v = MockTech.applied(data.get(id));
         if (v instanceof Exception) {
             throw new AssertionError((Exception)v);
         }

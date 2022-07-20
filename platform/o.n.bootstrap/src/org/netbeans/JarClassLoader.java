@@ -59,6 +59,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.jar.Attributes;
+import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -77,6 +78,22 @@ import org.openide.util.Exceptions;
  */
 public class JarClassLoader extends ProxyClassLoader {
     private static Stamps cache;
+    private static final Name MULTI_RELEASE = new Name("Multi-Release");
+    private static final int BASE_VERSION = 8;
+    private static final int RUNTIME_VERSION;
+
+    static {
+        int version;
+        try {
+                Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
+                version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
+        }
+        catch (Throwable ex) {
+                version = BASE_VERSION;
+        }
+        RUNTIME_VERSION = version;
+    }    
+    
     static Archive archive = new Archive(); 
 
     static void initializeCache() {
@@ -272,6 +289,12 @@ public class JarClassLoader extends ProxyClassLoader {
                     }
                 }
                 Manifest man = new DelayedManifest();
+                
+                src.setMultiRelease(man.getMainAttributes().containsKey(MULTI_RELEASE));
+                if (src.isMultiRelease() && RUNTIME_VERSION != BASE_VERSION) {
+                    data = src.getClassData(path);
+                }
+                
                 try {
                     definePackage(pkgName, man, src.getURL());
                 } catch (IllegalArgumentException x) {
@@ -336,6 +359,7 @@ public class JarClassLoader extends ProxyClassLoader {
         private ProtectionDomain pd;
         protected JarClassLoader jcl;
         private static Map<String,Source> sources = new HashMap<String, Source>();
+        private boolean multiRelease;
         
         public Source(URL url) {
             this.url = url;
@@ -410,6 +434,14 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         public String toString() {
             return url.toString();
+        }
+
+        private void setMultiRelease(boolean multiRelease) {
+            this.multiRelease = multiRelease;
+        }
+
+        protected boolean isMultiRelease() {
+            return multiRelease;
         }
 
     }
@@ -574,6 +606,17 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected byte[] readClass(String path) throws IOException {
             try {
+                if (isMultiRelease() && RUNTIME_VERSION != BASE_VERSION)
+                {
+                    int ver = RUNTIME_VERSION;
+                    while (ver > BASE_VERSION) {
+                        byte[] data = archive.getData(this, "META-INF/versions/" + ver + "/" + path);
+                        if (data != null) {
+                            return data;
+                        }
+                        ver--;
+                    }
+                }
                 return archive.getData(this, path);
             } catch (ZipException ex) {
                 dumpFiles(file, -1);

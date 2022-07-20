@@ -189,16 +189,18 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
             J2eePlatform j2eePlatform = ProjectUtil.getPlatform(project);
             if (j2eePlatform != null) {
                 Set<Profile> serverProfiles = j2eePlatform.getSupportedProfiles();
-                if (serverProfiles.contains(Profile.JAKARTA_EE_9_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_9_FULL)) {
+                if (serverProfiles.contains(Profile.JAKARTA_EE_9_1_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_9_1_FULL)
+                        || serverProfiles.contains(Profile.JAKARTA_EE_9_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_9_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_3_0;
-                } else if (serverProfiles.contains(Profile.JAKARTA_EE_8_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_8_FULL)) {
-                    return JSFCatalog.RES_FACES_CONFIG_2_3;
-                } else if (serverProfiles.contains(Profile.JAVA_EE_8_WEB) || serverProfiles.contains(Profile.JAVA_EE_8_FULL)) {
+                } else if (serverProfiles.contains(Profile.JAKARTA_EE_8_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_8_FULL)
+                        || serverProfiles.contains(Profile.JAVA_EE_8_WEB) || serverProfiles.contains(Profile.JAVA_EE_8_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_3;
                 } else if (serverProfiles.contains(Profile.JAVA_EE_7_WEB) || serverProfiles.contains(Profile.JAVA_EE_7_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_2;
-                } else if (serverProfiles.contains(Profile.JAVA_EE_5) || serverProfiles.contains(Profile.JAVA_EE_6_WEB) || serverProfiles.contains(Profile.JAVA_EE_6_FULL)) {
+                } else if (serverProfiles.contains(Profile.JAVA_EE_6_WEB) || serverProfiles.contains(Profile.JAVA_EE_6_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_1;
+                } else if (serverProfiles.contains(Profile.JAVA_EE_5)) {
+                    return JSFCatalog.RES_FACES_CONFIG_1_2;
                 }
             }
             if (project != null ) {

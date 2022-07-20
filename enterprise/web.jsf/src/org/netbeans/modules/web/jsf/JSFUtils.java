@@ -67,6 +67,7 @@ public class JSFUtils {
     public static final String DEFAULT_JSF_1_1_NAME = "jsf1102";  //NOI18N
     public static final String DEFAULT_JSF_1_2_NAME = "jsf12";    //NOI18N
     public static final String DEFAULT_JSF_2_0_NAME = "jsf20";    //NOI18N
+    public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
 
     // the name of jstl library
     public static final String DEFAULT_JSTL_1_1_NAME = "jstl11";  //NOI18N

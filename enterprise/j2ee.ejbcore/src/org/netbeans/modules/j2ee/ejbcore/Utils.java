@@ -22,10 +22,8 @@ package org.netbeans.modules.j2ee.ejbcore;
 import java.util.ArrayList;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
@@ -71,7 +69,7 @@ public class Utils {
         if (classpathEntries == null) {
             return "";
         }
-        StringBuffer classpath = new StringBuffer();
+        StringBuilder classpath = new StringBuilder();
         for (int i = 0; i < classpathEntries.length; i++) {
             classpath.append(classpathEntries[i].getAbsolutePath());
             if (i + 1 < classpathEntries.length) {
@@ -161,7 +159,9 @@ public class Utils {
         });
         if (methodModel[0] != null) {
             EjbMethodController ejbMethodController = EjbMethodController.createFromClass(ejbClassFO, ejbClassName[0]);
-            return ejbMethodController != null && ejbMethodController.hasLocal() && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
+            return ejbMethodController != null 
+                    && ejbMethodController.hasLocal() 
+                    && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
         }
         return false;
     }
@@ -204,7 +204,9 @@ public class Utils {
         });
         if (methodModel[0] != null) {
             EjbMethodController ejbMethodController = EjbMethodController.createFromClass(ejbClassFO, ejbClassName[0]);
-            return ejbMethodController != null && ejbMethodController.hasRemote() && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
+            return ejbMethodController != null 
+                    && ejbMethodController.hasRemote() 
+                    && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
         }
         return false;
     }

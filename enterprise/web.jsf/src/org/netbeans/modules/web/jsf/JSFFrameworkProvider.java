@@ -268,14 +268,14 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
         // read the config from resource first
         StringBuilder sbuffer = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
-        String line = br.readLine();
-        while (line != null) {
-            sbuffer.append(line);
-            sbuffer.append(lineSep);
-            line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
+            String line = br.readLine();
+            while (line != null) {
+                sbuffer.append(line);
+                sbuffer.append(lineSep);
+                line = br.readLine();
+            }
         }
-        br.close();
         return sbuffer.toString();
     }
 
@@ -384,14 +384,10 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
     }
 
     public static void createFile(FileObject target, String content, String encoding) throws IOException{
-        FileLock lock = target.lock();
-        try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding));
+        try (FileLock lock = target.lock();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding))) {
             bw.write(content);
             bw.close();
-
-        } finally {
-            lock.releaseLock();
         }
     }
 
@@ -743,7 +739,11 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) || "gfv4".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) 
+                        || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) 
+                        || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) 
+                        || "gfv4".equals(shortName) || "gfv3ee6".equals(shortName) 
+                        || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

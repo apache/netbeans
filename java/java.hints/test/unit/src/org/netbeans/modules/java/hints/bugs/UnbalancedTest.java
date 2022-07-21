@@ -68,6 +68,19 @@ public class UnbalancedTest extends NbTestCase {
                 .assertContainsWarnings("2:19-2:22:verifier:ERR_UnbalancedArrayREAD arr");
     }
 
+    public void testArrayReadOnly3() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private final byte[] arr;\n" +
+                       "    private Test() { arr = new byte[0]; }\n" +
+                       "    private void t() { System.err.println(arr[0]); }\n" +
+                       "}\n")
+                .run(Unbalanced.Array.class)
+                .assertContainsWarnings("2:25-2:28:verifier:ERR_UnbalancedArrayREAD arr");
+    }
+
     public void testArrayNeg1() throws Exception {
         HintTest
                 .create()
@@ -310,6 +323,19 @@ com.sun.tools.javac.tree.JCTree$JCCompilationUnit@40d0726d
                        "}\n")
                 .run(Unbalanced.Collection.class)
                 .assertContainsWarnings("2:35-2:39:verifier:ERR_UnbalancedCollectionREAD coll");
+    }
+
+    public void testCollectionReadOnly4() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private final java.util.List<String> coll;\n" +
+                       "    private Test () { coll = new java.util.ArrayList<String>(1); }\n" +
+                       "    private java.util.stream.Stream t() { return coll.stream(); }\n" +
+                       "}\n")
+                .run(Unbalanced.Collection.class)
+                .assertContainsWarnings("2:41-2:45:verifier:ERR_UnbalancedCollectionREAD coll");
     }
 
     public void testMapReadOnly1() throws Exception {

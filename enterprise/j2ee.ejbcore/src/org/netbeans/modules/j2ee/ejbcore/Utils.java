@@ -240,6 +240,7 @@ public class Utils {
         boolean isCallerFreeform = enterpriseProject.getClass().getName().equals("org.netbeans.modules.ant.freeform.FreeformProject");
 
         boolean isCallerEE6WebProject = isEE6WebProject(enterpriseProject);
+        boolean isCallerEE9WebProject = isEE9WebProject(enterpriseProject);
 
         List<Project> filteredResults = new ArrayList<Project>(allProjects.length);
         for (int i = 0; i < allProjects.length; i++) {
@@ -265,15 +266,19 @@ public class Utils {
             // If the caller project is a freeform project, include caller itself only
             // If the caller project is a Java EE 6 web project, include itself in the list
             if ((isEJBModule && !isCallerFreeform) ||
-                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isCallerEE6WebProject) ) ) {
+                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isCallerEE6WebProject || isCallerEE9WebProject) ) ) {
                 filteredResults.add(allProjects[i]);
             }
         }
-        return filteredResults.toArray(new Project[filteredResults.size()]);
+        return filteredResults.toArray(new Project[0]);
     }
 
     public static boolean isEE6WebProject(Project enterpriseProject) {
         return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb31LiteSupported();
+    }
+    
+    public static boolean isEE9WebProject(Project enterpriseProject) {
+        return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb40LiteSupported();
     }
 
     public static boolean isAppClient(Project project) {

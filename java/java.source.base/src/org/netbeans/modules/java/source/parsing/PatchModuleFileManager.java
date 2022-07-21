@@ -296,7 +296,8 @@ final class PatchModuleFileManager implements JavaFileManager {
 
     private Location fixLocation(Location input) throws IOException {
         if (input == StandardLocation.CLASS_OUTPUT && overrideModuleName != null) {
-            return this.moduleLocations.stream().filter(pl -> overrideModuleName.equals(pl.getModuleName())).map(pl -> (Location) pl).findAny().orElse(input);
+            return moduleLocations(StandardLocation.PATCH_MODULE_PATH)
+                    .stream().filter(pl -> overrideModuleName.equals(pl.getModuleName())).map(pl -> (Location) pl).findAny().orElse(input);
         } else {
             return input;
         }

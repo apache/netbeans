@@ -33,7 +33,7 @@ import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ProjectFactory;

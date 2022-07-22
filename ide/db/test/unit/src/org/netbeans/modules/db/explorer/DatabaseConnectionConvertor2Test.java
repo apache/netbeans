@@ -19,8 +19,6 @@
 package org.netbeans.modules.db.explorer;
 
 import java.io.IOException;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static org.netbeans.modules.db.explorer.DatabaseConnectionConvertor.CONNECTIONS_PATH;
 import org.netbeans.modules.db.test.TestBase;
 import org.netbeans.modules.db.test.Util;

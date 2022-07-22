@@ -33,8 +33,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JEditorPane;
 
-import junit.framework.Assert;
-
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
@@ -78,7 +76,7 @@ public class CompletionTestBaseBase extends NbTestCase {
         private static Lkp DEFAULT;
 
         public Lkp() {
-            Assert.assertNull(DEFAULT);
+            assertNull(DEFAULT);
             DEFAULT = this;
         }
 
@@ -195,7 +193,7 @@ public class CompletionTestBaseBase extends NbTestCase {
                 layers.add(en.nextElement());
             }
 
-            Assert.assertTrue(paths[cntr], found);
+            assertTrue(paths[cntr], found);
         }
 
         return layers.toArray(new URL[0]);

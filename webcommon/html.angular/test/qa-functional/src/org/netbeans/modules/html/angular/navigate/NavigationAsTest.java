@@ -20,8 +20,6 @@ package org.netbeans.modules.html.angular.navigate;
 
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jemmy.JemmyProperties;

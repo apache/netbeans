@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;

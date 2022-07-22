@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.j2ee.web;
 
 import java.io.IOException;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.maven.j2ee.JavaEEMavenTestBase;

@@ -81,14 +81,14 @@ public class RunnerRestCloudDeploy extends RunnerRestCloud {
             throw new GlassFishIdeException("The path attribute of deploy command"
                     + " has to be non-empty!");
         }
-        OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
-        writeParam(wr, "file", command.path.getAbsolutePath());
-        if (command.account != null) {
-            writeParam(wr, "account", command.account);
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            writeParam(wr, "file", command.path.getAbsolutePath());
+            if (command.account != null) {
+                writeParam(wr, "account", command.account);
+            }
+            writeBinaryFile(wr, hconn.getOutputStream(), command.path);
+            wr.append("--" + multipartBoundary + "--").append(NEWLINE);
         }
-        writeBinaryFile(wr, hconn.getOutputStream(), command.path);
-        wr.append("--" + multipartBoundary + "--").append(NEWLINE);
-        wr.close();
     }
     
     private void writeParam(OutputStreamWriter writer, String paramName,

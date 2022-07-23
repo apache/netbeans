@@ -33,6 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -106,82 +107,63 @@ public class TestServer {
 
         @Override
         public void run() {
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                try {
-                    String inputLine = in.readLine();
-                    if (inputLine != null) {
-                        Matcher matcher = HTTP_PATTERN.matcher(inputLine);
-                        if (matcher.matches()) {
-                            while ((inputLine = in.readLine()) != null) {
-                                if (inputLine.equals("")) {
-                                    break;
+                
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                String inputLine = in.readLine();
+                if (inputLine != null) {
+                    Matcher matcher = HTTP_PATTERN.matcher(inputLine);
+                    if (matcher.matches()) {
+                        while ((inputLine = in.readLine()) != null) {
+                            if (inputLine.equals("")) {
+                                break;
+                            }
+                        }
+                        String httpVerb = matcher.group(1);
+                        String resource = matcher.group(2);
+                        if (resource.endsWith("moved.zip")) {
+                            try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+                                out.print("HTTP/1.0 301 Moved Permanently\r\n");
+                                out.print("Location: http://localhost:4444/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip\r\n");
+                                out.print("\r\n");
+                                out.flush();
+                            }
+                        } else if (resource.endsWith("prelude-ml.zip")) {
+                            try (OutputStream rawOut = new BufferedOutputStream(socket.getOutputStream());
+                                    PrintWriter out = new PrintWriter(rawOut, true)) {
+                                out.print("HTTP/1.0 200 OK\r\n");
+                                out.print("Content-Type: application/octet-stream\r\n");
+                                out.print("Connection: close\r\n");
+                                out.print("\r\n");
+                                out.flush();
+                                if(httpVerb.equals("GET")) {
+                                    try (ZipOutputStream zip = new ZipOutputStream(rawOut)) {
+                                        writeFile(zip, "gf_fake.jar", 1024 * 1024 * 10);
+                                        writeFile(zip, "test/gf_fake_lib.jar", 1024 * 1024 * 5);
+                                        zip.flush();
+                                        zip.finish();
+                                    }   
                                 }
                             }
-                            String httpVerb = matcher.group(1);
-                            String resource = matcher.group(2);
-                            if (resource.endsWith("moved.zip")) {
-                                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                                try {
-                                    out.print("HTTP/1.0 301 Moved Permanently\r\n");
-                                    out.print("Location: http://localhost:4444/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip\r\n");
-                                    out.print("\r\n");
-                                    out.flush();
-                                } finally {
-                                    out.close();
-                                }
-                            } else if (resource.endsWith("prelude-ml.zip")) {
-                                OutputStream rawOut = new BufferedOutputStream(socket.getOutputStream());
-                                try {
-                                    PrintWriter out = new PrintWriter(rawOut, true);
-                                    try {
-                                        out.print("HTTP/1.0 200 OK\r\n");
-                                        out.print("Content-Type: application/octet-stream\r\n");
-                                        out.print("Connection: close\r\n");
-                                        out.print("\r\n");
-                                        out.flush();
-                                        if(httpVerb.equals("GET")) {
-                                            ZipOutputStream zip = new ZipOutputStream(rawOut);
-                                            try {
-                                                writeFile(zip, "gf_fake.jar", 1024 * 1024 * 10);
-                                                writeFile(zip, "test/gf_fake_lib.jar", 1024 * 1024 * 5);
-                                                zip.flush();
-                                                zip.finish();
-                                            } finally {
-                                                zip.close();
-                                            }
-                                        }   
-                                    } finally {
-                                        out.close();
-                                    }
-                                } finally {
-                                    rawOut.close();
-                                }
-                            } else {
-                                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                                try {
+                        } else {
+                            try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
                                 out.print("HTTP/1.0 404 Not Found\r\n");
                                 out.print("Connection: close\r\n");
                                 out.print("\r\n");
                                 out.flush();
-                                } finally {
-                                    out.close();
-                                }
                             }
                         }
                     }
-                } finally {
-                    try {
-                        in.close();
-                    } finally {
-                        socket.close();
-                        }    
-                      }
+                }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            } finally {
+                try {    
+                    socket.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
-
     }
 
     private static void writeFile(ZipOutputStream zip, String name, int size) throws IOException {

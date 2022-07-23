@@ -47,15 +47,14 @@ public class RunnerRestCreateConnectorPool extends RunnerRest {
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
         CommandCreateConnectorConnectionPool cmd = (CommandCreateConnectorConnectionPool)command;
-        OutputStreamWriter wr =
-                new OutputStreamWriter(hconn.getOutputStream());
-        StringBuilder data = new StringBuilder();
-        data.append("poolname=").append(cmd.poolName);
-        data.append("&raname=").append(cmd.raName);
-        data.append("&connectiondefinition=").append(cmd.connectionDefinition);
-        appendProperties(data, cmd.properties, "property", true);
-        wr.write(data.toString());
-        wr.close();
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            StringBuilder data = new StringBuilder();
+            data.append("poolname=").append(cmd.poolName);
+            data.append("&raname=").append(cmd.raName);
+            data.append("&connectiondefinition=").append(cmd.connectionDefinition);
+            appendProperties(data, cmd.properties, "property", true);
+            wr.write(data.toString());
+        }
     }
     
     /**

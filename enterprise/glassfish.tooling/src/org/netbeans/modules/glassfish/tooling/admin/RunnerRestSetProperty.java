@@ -48,16 +48,16 @@ public class RunnerRestSetProperty extends RunnerRest {
     
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
-         CommandSetProperty spCommand = (CommandSetProperty) command;
-         StringBuilder data = new StringBuilder();
-         data.append("values=");
-         data.append(spCommand.property);
-         data.append("=\"");
-         data.append(spCommand.value);
-         data.append("\"");
-         wr.write(data.toString());
-         wr.flush();
-         wr.close();
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            CommandSetProperty spCommand = (CommandSetProperty) command;
+            StringBuilder data = new StringBuilder();
+            data.append("values=");
+            data.append(spCommand.property);
+            data.append("=\"");
+            data.append(spCommand.value);
+            data.append("\"");
+            wr.write(data.toString());
+            wr.flush();
+        }
     }
 }

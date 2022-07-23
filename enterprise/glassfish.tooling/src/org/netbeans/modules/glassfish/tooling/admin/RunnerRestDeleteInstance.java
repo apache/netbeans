@@ -44,13 +44,12 @@ public class RunnerRestDeleteInstance extends RunnerRest {
 
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
-         CommandDeleteInstance deleteCommand = (CommandDeleteInstance) command;
-         StringBuilder data = new StringBuilder();
-         data.append("instance_name=").append(deleteCommand.target);
-         
-         wr.write(data.toString());
-         wr.flush();
-         wr.close();
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            CommandDeleteInstance deleteCommand = (CommandDeleteInstance) command;
+            StringBuilder data = new StringBuilder();
+            data.append("instance_name=").append(deleteCommand.target);
+            wr.write(data.toString());
+            wr.flush();
+        }
     }
 }

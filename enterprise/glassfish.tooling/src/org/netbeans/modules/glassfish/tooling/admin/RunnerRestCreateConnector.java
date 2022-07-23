@@ -47,16 +47,15 @@ public class RunnerRestCreateConnector extends RunnerRest {
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
         CommandCreateConnector cmd = (CommandCreateConnector)command;
-        OutputStreamWriter wr =
-                new OutputStreamWriter(hconn.getOutputStream());
-        StringBuilder data = new StringBuilder();
-        data.append("jndi_name=").append(cmd.jndiName);
-        data.append("&enabled=").append(cmd.enabled);
-        appendIfNotEmpty(data, "&target", cmd.target);
-        appendIfNotEmpty(data, "&poolname", cmd.poolName);
-        appendProperties(data, cmd.properties, "property", true);
-        wr.write(data.toString());
-        wr.close();
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            StringBuilder data = new StringBuilder();
+            data.append("jndi_name=").append(cmd.jndiName);
+            data.append("&enabled=").append(cmd.enabled);
+            appendIfNotEmpty(data, "&target", cmd.target);
+            appendIfNotEmpty(data, "&poolname", cmd.poolName);
+            appendProperties(data, cmd.properties, "property", true);
+            wr.write(data.toString());
+        }
     }
     
     /**

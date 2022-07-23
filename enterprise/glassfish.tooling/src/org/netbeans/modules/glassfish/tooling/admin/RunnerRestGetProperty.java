@@ -127,13 +127,13 @@ public class RunnerRestGetProperty extends RunnerRest {
     
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
-         CommandGetProperty gpCommand = (CommandGetProperty) command;
-         StringBuilder data = new StringBuilder();
-         data.append("pattern=").append(gpCommand.propertyPattern);
-         wr.write(data.toString());
-         wr.flush();
-         wr.close();
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            CommandGetProperty gpCommand = (CommandGetProperty) command;
+            StringBuilder data = new StringBuilder();
+            data.append("pattern=").append(gpCommand.propertyPattern);
+            wr.write(data.toString());
+            wr.flush();
+        }
     }
 
 }

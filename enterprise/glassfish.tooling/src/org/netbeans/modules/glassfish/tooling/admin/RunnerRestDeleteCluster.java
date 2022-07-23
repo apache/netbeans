@@ -45,9 +45,9 @@ public class RunnerRestDeleteCluster extends RunnerRest {
 
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
-         wr.write("name=" + ((CommandTarget)command).target);
-         wr.flush();
-         wr.close();
+        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
+            wr.write("name=" + ((CommandTarget)command).target);
+            wr.flush();
+        }
     }
 }

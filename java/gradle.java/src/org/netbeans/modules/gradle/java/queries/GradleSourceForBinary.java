@@ -92,7 +92,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                 // The proper solution will be to change java implementation to use output folder as a fallback if nothing
                 // is found in the cache; then this special case may be removed.
                 boolean canPreferSource = st == SourceType.JAVA;
-                return new Res(project, ss.getName(), EnumSet.of(RESOURCES), canPreferSource);
+                return new Res(project, ss.getName(), EnumSet.of(st), canPreferSource);
             }
         }
         return new Res(project, ss.getName(), ALL_LANGUAGES, false);

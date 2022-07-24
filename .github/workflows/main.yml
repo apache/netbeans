@@ -533,6 +533,47 @@ jobs:
           paths: "./*/*/build/test/*/results/*.xml"
 
 
+  extide-modules-test:
+    name: ExtIDE Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: o.apache.tools.ant.module
+        run: ant $OPTS -f extide/o.apache.tools.ant.module test
+
+      - name: gradle
+        run: ant $OPTS -f extide/gradle test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
+
+
   java-hints-test:
     name: Java Hints ${{ matrix.config }} on Linux/JDK ${{ matrix.java }}
     needs: base-build
@@ -568,6 +609,47 @@ jobs:
       - name: java.hints.declarative
         if: ${{ (matrix.config == 'batch2') && success() }}
         run: ant $OPTS -f java/java.hints.declarative test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
+
+
+  profiler-test:
+    name: Profiler on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: profiler
+        run: ant $OPTS -f profiler/profiler test-unit
+
+      - name: profiler.oql
+        run: ant $OPTS -f profiler/profiler.oql test
 
       - name: Create Test Summary
         uses: test-summary/action@v1
@@ -866,7 +948,9 @@ jobs:
       - build-nbms
       - java-modules-test
       - java-hints-test
+      - profiler-test
       - apisupport-modules-test
+      - extide-modules-test
       - macos
       - php
       - sig-test

@@ -132,8 +132,8 @@ jobs:
           retention-days: 1
 
 
-  sig-test:
-    name: Signature Tests on Linux/JDK ${{ matrix.java }} 
+  paperwork:
+    name: Check Paperwork on Linux/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: ubuntu-latest
     env:
@@ -149,19 +149,52 @@ jobs:
           java-version: ${{ matrix.java }} 
           distribution: 'zulu'
 
+      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          submodules: false
+          fetch-depth: 10
+
+      - name: Print last 10 Commits
+        if: github.event_name == 'pull_request'
+        run: git log --oneline -n10 --pretty=format:'%h %an [%ae] %s'
+
+      - name: Check line endings and verify RAT report
+        if: success() || failure()
+        run: |
+          nbbuild/travis/check-line-endings.sh
+          ant -quiet build-source-config
+          mkdir scratch && cd scratch
+          unzip -qq ../nbbuild/build/release-src*
+          ant $OPTS -quiet rat -Drat-report.haltonfailure=true
+
+      - name: Clean Workspace
+        if: success() || failure()
+        run: cd ..; rm -Rf netbeans; mkdir netbeans
+
       - name: Download Build
+        if: success() || failure()
         uses: actions/download-artifact@v3
         with:
           name: build
 
       - name: Extract
+        if: success() || failure()
         run: tar --zstd -xf build.tar.zst
 
+      - name: Verify libs and licenses
+        if: success() || failure()
+        run: ant $OPTS verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
+
       - name: Run check-sigtests-release
-        run: ant $OPTS check-sigtests-release -Dfail.on.error=true
-        
+        if: success() || failure()
+        run: ant $OPTS -quiet check-sigtests-release -Dfail.on.error=true
+
       - name: Run gen-sigtests-release
-        run: ant $OPTS gen-sigtests-release
+        if: success() || failure()
+        run: ant $OPTS -quiet gen-sigtests-release
+
 
   build-system-test:
     name: Build-System Test on Linux/JDK ${{ matrix.java }}
@@ -944,6 +977,7 @@ jobs:
     needs:
       - base-build
       - linux-commit-validation
+      - paperwork
       - build-system-test
       - build-nbms
       - java-modules-test
@@ -953,7 +987,6 @@ jobs:
       - extide-modules-test
       - macos
       - php
-      - sig-test
       - javafx-test
       - enterprise-test
 

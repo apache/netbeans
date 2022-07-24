@@ -20,6 +20,8 @@ name: NetBeans
 on:
   push:
   pull_request:
+    # unlocked event is used as super secret restart button
+    types: [opened, synchronize, unlocked]
 
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
@@ -28,16 +30,38 @@ concurrency:
   cancel-in-progress: true
 
 env:
+
   OPTS: >
     -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     -Dtest-unit-sys-prop.ignore.random.failures=true
 
+  # flags for conditional, long running steps or jobs configurable with labels. If this is not a PR, everything will run.
+  # 'Java' label
+  test_java: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'JavaDoc' or 'API Change' labels
+  test_javadoc: ${{ contains(github.event.pull_request.labels.*.name, 'JavaDoc') || contains(github.event.pull_request.labels.*.name, 'API Change') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'JavaScript' label
+  test_javascript: ${{ contains(github.event.pull_request.labels.*.name, 'JavaScript') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'PHP' label
+  test_php: ${{ contains(github.event.pull_request.labels.*.name, 'PHP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Platform' label
+  test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # special commands:
+  # 'ci:all-tests' enables everything
+  # 'ci:no-build' disables the build job (and test jobs too)
+
 jobs:
 
-# primary build job, most other jobs use the artifact produced here
-# artifact is only produced once in the matrix
+  # primary build job, most other jobs use the artifact produced here
+  # artifact is only produced once in the matrix
   base-build:
-    name: Build Clusters on JDK ${{ matrix.java }} 
+    name: Build Clusters on JDK ${{ matrix.java }}
+    if: contains(github.event.pull_request.labels.*.name, 'ci:no-build') == false
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -253,6 +277,7 @@ jobs:
         run: ant $OPTS build-source-zips
 
       - name: Build javadoc
+        if: env.test_javadoc == 'true' && success()
         run: ant $OPTS build-javadoc
 
 
@@ -605,6 +630,8 @@ jobs:
 
   platform-modules-test1:
     name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }}
+    # equals env.test_platform == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     strategy:
@@ -773,6 +800,8 @@ jobs:
 
   platform-modules-test2:
     name: Platform Modules batch2 on Linux/JDK ${{ matrix.java }} (some on 11)
+    # equals env.test_platform == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     strategy:
@@ -1000,6 +1029,7 @@ jobs:
         run: ant $OPTS -f java/hudson.maven test
 
       - name: java.completion
+        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.completion test
 
       - name: java.freeform
@@ -1048,6 +1078,7 @@ jobs:
 #        run: ant $OPTS -f java/java.source.ant test
 
       - name: java.source.base
+        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.source.base test
 
       - name: java.source.compat8
@@ -1159,12 +1190,14 @@ jobs:
         run: echo "OPTS_11=-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true" >> $GITHUB_ENV
 
       - name: java/java.completion
+        if: env.test_java == 'true' && success()
         run: ant $OPTS $OPTS_11 -f java/java.completion test
 
       - name: java/java.source
         run: ant $OPTS $OPTS_11 -f java/java.source test-unit
 
       - name: java/java.source.base
+        if: env.test_java == 'true' && success()
         run: .github/retry.sh ant $OPTS $OPTS_11 -f java/java.source.base test
 
       - name: Create Test Summary
@@ -1270,6 +1303,8 @@ jobs:
 
   java-hints-test:
     name: Java Hints ${{ matrix.config }} on Linux/JDK ${{ matrix.java }}
+    # equals env.test_java == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     strategy:
@@ -1414,6 +1449,7 @@ jobs:
         run: ant $OPTS -f webcommon/javascript2.doc test
 
       - name: webcommon/javascript2.editor
+        if: env.test_javascript == 'true' && success()
         run: ant $OPTS -f webcommon/javascript2.editor test-unit
 
       - name: webcommon/javascript2.extdoc
@@ -1721,6 +1757,7 @@ jobs:
 
       # longest step (~40min)
       - name: php.editor
+        if: env.test_php == 'true' && success()
         run: ant $OPTS -f php/php.editor test
 
       - name: php.latte

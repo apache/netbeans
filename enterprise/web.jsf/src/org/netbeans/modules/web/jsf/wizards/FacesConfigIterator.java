@@ -81,10 +81,11 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = Logger.getLogger(FacesConfigIterator.class.getName());
-    private static final String defaultName = "faces-config";   //NOI18N
+    private static final String DEFAULT_NAME = "faces-config";   //NOI18N
     private static final String FACES_CONFIG_PARAM = "javax.faces.CONFIG_FILES";    //NOI18N
+    private static final String JAKARTAEE_FACES_CONFIG_PARAM = "jakarta.faces.CONFIG_FILES";    //NOI18N
     private static final String INIT_PARAM = "InitParam";  //NOI18N
-    private static String RESOURCE_FOLDER = "/org/netbeans/modules/web/jsf/resources/"; //NOI18N
+    private static final String RESOURCE_FOLDER = "/org/netbeans/modules/web/jsf/resources/"; //NOI18N
 
     private int index;
     private transient WizardDescriptor.Panel[] panels;
@@ -129,7 +130,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
             FileObject webInf = wm.getWebInf();
             WebApp ddRoot = (dd == null) ? null : DDProvider.getDefault().getDDRoot(dd);
 
-            boolean isDefaultLocation = defaultName.equals(targetName) && targetDir == webInf;
+            boolean isDefaultLocation = DEFAULT_NAME.equals(targetName) && targetDir == webInf;
             if (!isDefaultLocation && ddRoot != null) {
                 try {
                     //Need to specify config file in javax.faces.FACES_CONFIG property
@@ -138,12 +139,12 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     boolean found = false;
                     int i = 0;
                     for (InitParam param : parameters) {
-                        if (param.getParamName().equals(FACES_CONFIG_PARAM)) {
+                        if (param.getParamName().equals(FACES_CONFIG_PARAM) || param.getParamName().equals(JAKARTAEE_FACES_CONFIG_PARAM)) {
                             found = true;
                             String value = param.getParamValue() + ",\n            /" + FileUtil.getRelativePath(wm.getDocumentBase(), targetDir) + "/" + targetName + ".xml";  //NOI18N
                             ddRoot.removeContextParam(param);
                             InitParam newParameter = (InitParam) ddRoot.createBean(INIT_PARAM);
-                            newParameter.setParamName(FACES_CONFIG_PARAM);
+                            newParameter.setParamName(param.getParamName());
                             newParameter.setParamValue(value);  //NOI18N
                             ddRoot.addContextParam(newParameter);
                             break;
@@ -152,7 +153,11 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     }
                     if (!found) {
                         InitParam contextParam = (InitParam) ddRoot.createBean(INIT_PARAM);
-                        contextParam.setParamName(FACES_CONFIG_PARAM);
+                        if(WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
+                            contextParam.setParamName(JAKARTAEE_FACES_CONFIG_PARAM);
+                        } else {
+                            contextParam.setParamName(FACES_CONFIG_PARAM);
+                        }
                         contextParam.setParamValue("/" + FileUtil.getRelativePath(wm.getDocumentBase(), targetDir) + "/" + targetName + ".xml");  //NOI18N
                         ddRoot.addContextParam(contextParam);
                     }
@@ -184,25 +189,20 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         JSFVersion jsfVersion = JSFVersion.get(wm, false);
         // not found on project classpath (case of Maven project with JSF in deps)
         if (jsfVersion == null) {
-            // XXX - rewrite using javaee.spec.support module
-            Project project = FileOwnerQuery.getOwner(JSFUtils.getFileObject(wm));
-            J2eePlatform j2eePlatform = ProjectUtil.getPlatform(project);
-            if (j2eePlatform != null) {
-                Set<Profile> serverProfiles = j2eePlatform.getSupportedProfiles();
-                if (serverProfiles.contains(Profile.JAKARTA_EE_9_1_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_9_1_FULL)
-                        || serverProfiles.contains(Profile.JAKARTA_EE_9_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_9_FULL)) {
-                    return JSFCatalog.RES_FACES_CONFIG_3_0;
-                } else if (serverProfiles.contains(Profile.JAKARTA_EE_8_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_8_FULL)
-                        || serverProfiles.contains(Profile.JAVA_EE_8_WEB) || serverProfiles.contains(Profile.JAVA_EE_8_FULL)) {
-                    return JSFCatalog.RES_FACES_CONFIG_2_3;
-                } else if (serverProfiles.contains(Profile.JAVA_EE_7_WEB) || serverProfiles.contains(Profile.JAVA_EE_7_FULL)) {
-                    return JSFCatalog.RES_FACES_CONFIG_2_2;
-                } else if (serverProfiles.contains(Profile.JAVA_EE_6_WEB) || serverProfiles.contains(Profile.JAVA_EE_6_FULL)) {
-                    return JSFCatalog.RES_FACES_CONFIG_2_1;
-                } else if (serverProfiles.contains(Profile.JAVA_EE_5)) {
-                    return JSFCatalog.RES_FACES_CONFIG_1_2;
-                }
+            Profile profile = wm.getJ2eeProfile();
+            if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_3_0;
+            } else if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_2_3;
+            } else if (profile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_2_2;
+            } else if (profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_2_1;
+            } else if (profile.isAtLeast(Profile.JAVA_EE_5)) {
+                return JSFCatalog.RES_FACES_CONFIG_1_2;
             }
+            
+            Project project = FileOwnerQuery.getOwner(JSFUtils.getFileObject(wm));
             if (project != null ) {
                 ClassPath compileClasspath = getCompileClasspath(project);
                 if (compileClasspath != null) {
@@ -222,6 +222,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static String facesConfigForVersion(JSFVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_3_0:
+                return JSFCatalog.RES_FACES_CONFIG_3_0;
             case JSF_2_3:
                 return JSFCatalog.RES_FACES_CONFIG_2_3;
             case JSF_2_2:

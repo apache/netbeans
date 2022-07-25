@@ -158,6 +158,8 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     static {
         JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);    //NOI18N
         JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);   //NOI18N
+        JSF_SEEKING_MAP.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);    //NOI18N
+        JSF_SEEKING_MAP.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);   //NOI18N
     }
 
     /**

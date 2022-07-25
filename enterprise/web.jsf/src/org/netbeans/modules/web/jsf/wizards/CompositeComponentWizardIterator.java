@@ -63,7 +63,7 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
 
         FileObject template = Templates.getTemplate( wizard );
         DataObject dTemplate = DataObject.find(template);
-        HashMap<String, Object> templateProperties = new HashMap<String, Object>();
+        HashMap<String, Object> templateProperties = new HashMap<>();
         if (selectedText != null) {
             templateProperties.put("implementation", selectedText);   //NOI18N
         }
@@ -71,7 +71,9 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             JSFVersion version = JSFVersion.forWebModule(webModule);
-            if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
+            if (version != null && version.isAtLeast(JSFVersion.JSF_3_0)) {
+                templateProperties.put("isJSF30", Boolean.TRUE); //NOI18N
+            } else if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
                 templateProperties.put("isJSF22", Boolean.TRUE); //NOI18N
             }
         }

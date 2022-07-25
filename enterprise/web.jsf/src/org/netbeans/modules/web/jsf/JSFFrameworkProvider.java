@@ -387,12 +387,12 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
         try (FileLock lock = target.lock();
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding))) {
             bw.write(content);
-            bw.close();
         }
     }
 
     private class  CreateFacesConfig implements FileSystem.AtomicAction{
         private static final String FACES_SERVLET_CLASS = "javax.faces.webapp.FacesServlet";  //NOI18N
+        private static final String FACES_SERVLET_CLASS_JAKARTAEE = "jakarta.faces.webapp.FacesServlet";  //NOI18N
         private static final String FACES_SERVLET_NAME = "Faces Servlet";                     //NOI18N
         private static final String MYFACES_STARTUP_LISTENER_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener";//NOI18N
 
@@ -456,7 +456,11 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                             servlet = (Servlet)ddRoot.createBean("Servlet"); //NOI18N
                             String servletName = (panel == null) ? FACES_SERVLET_NAME : panel.getServletName();
                             servlet.setServletName(servletName);
-                            servlet.setServletClass(FACES_SERVLET_CLASS);
+                            if (jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                                servlet.setServletClass(FACES_SERVLET_CLASS_JAKARTAEE);
+                            } else {
+                                servlet.setServletClass(FACES_SERVLET_CLASS);
+                            }
                             servlet.setLoadOnStartup(new BigInteger("1"));//NOI18N
                             ddRoot.addServlet(servlet);
 
@@ -471,7 +475,11 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
 
                     if (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
                         InitParam contextParam = (InitParam) ddRoot.createBean("InitParam");    //NOI18N
-                        contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE);
+                        if (jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                            contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE_JAKARTAEE);
+                        } else {
+                            contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE);
+                        }
                         contextParam.setParamValue("Development"); //NOI18N
                         ddRoot.addContextParam(contextParam);
                     }
@@ -688,11 +696,13 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (webModule.getDocumentBase().getFileObject(WELCOME_XHTML) == null) {
                     FileObject target = FileUtil.createData(webModule.getDocumentBase(), WELCOME_XHTML);
                     FileObject template = FileUtil.getConfigRoot().getFileObject(WELCOME_XHTML_TEMPLATE);
-                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    HashMap<String, Object> params = new HashMap<>();
                     if (jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+                        if (jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                            params.put("isJSF30", Boolean.TRUE);    //NOI18N
+                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
                             params.put("isJSF22", Boolean.TRUE);    //NOI18N
-                        } else {
+                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
                             params.put("isJSF20", Boolean.TRUE);    //NOI18N
                         }
                     }

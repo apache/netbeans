@@ -73,9 +73,11 @@ public class JSFConfigUtilities {
 
     private static final Logger LOGGER = Logger.getLogger(JSFConfigUtilities.class.getName());
 
-    private static String CONFIG_FILES_PARAM_NAME = "javax.faces.CONFIG_FILES"; //NOI18N
-    private static String FACES_PARAM = "javax.faces";  //NOI18N
-    private static String DEFAULT_FACES_CONFIG_PATH = "WEB-INF/faces-config.xml"; //NOI18N
+    private static final String CONFIG_FILES_PARAM_NAME = "javax.faces.CONFIG_FILES"; //NOI18N
+    private static final String JAKARTAEE_CONFIG_FILES_PARAM_NAME = "jakarta.faces.CONFIG_FILES"; //NOI18N
+    private static final String FACES_PARAM = "javax.faces";  //NOI18N
+    private static final String JAKARTAEE_FACES_PARAM = "jakarta.faces";  //NOI18N
+    private static final String DEFAULT_FACES_CONFIG_PATH = "WEB-INF/faces-config.xml"; //NOI18N
     private static final Class[] types = new Class[] {
         FacesManagedBean.class,
         Component.class,
@@ -127,7 +129,9 @@ public class JSFConfigUtilities {
                         InitParam[] parameters = ddRoot.getContextParam();
                         for (InitParam param: parameters) {
                             String paramName = param.getParamName();
-                            if (paramName != null && paramName.startsWith(FACES_PARAM)) {
+                            if (paramName != null && 
+                                    (paramName.startsWith(FACES_PARAM) || 
+                                    paramName.startsWith(JAKARTAEE_FACES_PARAM))) {
                                 return true;
                             }
                         }
@@ -398,8 +402,9 @@ public class JSFConfigUtilities {
                             InitParam[] params = webApp.getContextParam();
                             for (int i = 0; i < params.length; i++) {
                                 InitParam initParam = params[i];
-                                if (initParam.getParamName() != null
-                                        && CONFIG_FILES_PARAM_NAME.equals(initParam.getParamName().trim())) {
+                                if (initParam.getParamName() != null && 
+                                        (CONFIG_FILES_PARAM_NAME.equals(initParam.getParamName().trim()) || 
+                                        JAKARTAEE_CONFIG_FILES_PARAM_NAME.equals(initParam.getParamName().trim()))) {
                                     param = initParam;
                                     break;
                                 }

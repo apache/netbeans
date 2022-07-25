@@ -256,6 +256,353 @@ jobs:
         run: ant $OPTS build-javadoc
 
 
+  ide-modules-test:
+    name: IDE Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '8' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: ide/api.xml
+        run: ant $OPTS -f ide/api.xml test
+
+      - name: ide/api.xml.ui
+        run: ant $OPTS -f ide/api.xml.ui test
+
+      - name: ide/bugtracking
+        run: .github/retry.sh ant $OPTS -f ide/bugtracking test
+
+      - name: ide/bugtracking.bridge
+        run: .github/retry.sh ant $OPTS -f ide/bugtracking.bridge test
+
+      - name: ide/bugtracking.commons
+        run: ant $OPTS -f ide/bugtracking.commons test
+
+#      - name: ide/bugzilla
+#        run: ant $OPTS -f ide/bugzilla test
+
+      - name: ide/code.analysis
+        run: ant $OPTS -f ide/code.analysis test
+
+      - name: ide/core.ide
+        run: ant $OPTS -f ide/core.ide test
+
+      - name: ide/csl.api
+        run: ant $OPTS -f ide/csl.api test
+
+      - name: ide/csl.types
+        run: ant $OPTS -f ide/csl.types test
+
+      - name: ide/css.editor
+        run: ant $OPTS -f ide/css.editor test
+
+      - name: ide/css.lib
+        run: ant $OPTS -f ide/css.lib test
+
+      - name: ide/css.model
+        run: ant $OPTS -f ide/css.model test
+
+      - name: ide/db
+        run: .github/retry.sh ant $OPTS -f ide/db test
+
+      - name: ide/db.dataview
+        run: ant $OPTS -f ide/db.dataview test
+
+      - name: ide/db.sql.editor
+        run: ant $OPTS -f ide/db.sql.editor test
+
+      - name: ide/docker.api
+        run: ant $OPTS -f ide/docker.api test
+
+      - name: ide/docker.ui
+        run: ant $OPTS -f ide/docker.ui test
+
+      - name: ide/editor.bookmarks
+        run: ant $OPTS -f ide/editor.bookmarks test
+
+#      - name: ide/editor.bracesmatching
+#        run: ant $OPTS -f ide/editor.bracesmatching test
+
+      - name: ide/editor.document
+        run: ant $OPTS -f ide/editor.document test
+
+      - name: ide/editor.fold
+        run: ant $OPTS -f ide/editor.fold test
+
+      - name: ide/editor.fold.nbui
+        run: ant $OPTS -f ide/editor.fold.nbui test
+
+      - name: ide/editor.guards
+        run: ant $OPTS -f ide/editor.guards test
+
+      - name: ide/editor.indent
+        run: ant $OPTS -f ide/editor.indent test
+
+      - name: ide/editor.indent.project
+        run: ant $OPTS -f ide/editor.indent.project test
+
+      - name: ide/editor.macros
+        run: ant $OPTS -f ide/editor.macros test
+
+      - name: ide/editor.search
+        run: ant $OPTS -f ide/editor.search test
+
+      - name: ide/editor.settings
+        run: ant $OPTS -f ide/editor.settings test
+
+      - name: ide/editor.settings.storage
+        run: .github/retry.sh ant $OPTS -f ide/editor.settings.storage test
+
+      - name: ide/editor.structure
+        run: ant $OPTS -f ide/editor.structure test
+
+      - name: ide/editor.tools.storage
+        run: ant $OPTS -f ide/editor.tools.storage test
+
+      - name: ide/editor.util
+        run: ant $OPTS -f ide/editor.util test
+
+      - name: ide/extbrowser
+        run: ant $OPTS -f ide/extbrowser test
+
+      - name: ide/extexecution.base
+        run: ant $OPTS -f ide/extexecution.base test
+
+      - name: ide/gsf.testrunner.ui
+        run: ant $OPTS -f ide/gsf.testrunner.ui test
+
+      - name: ide/html
+        run: .github/retry.sh ant $OPTS -f ide/html test
+
+      - name: ide/html.custom
+        run: ant $OPTS -f ide/html.custom test
+
+#      - name: ide/html.editor
+#        run: ant $OPTS -f ide/html.editor test
+
+#      - name: ide/html.lexer
+#        run: ant $OPTS -f ide/html.lexer test
+
+      - name: ide/html.parser
+        run: ant $OPTS -f ide/html.parser test
+
+      - name: ide/html.validation
+        run: ant $OPTS -f ide/html.validation test
+
+      - name: ide/hudson
+        run: ant $OPTS -f ide/hudson test
+
+      - name: ide/hudson.git
+        run: ant $OPTS -f ide/hudson.git test
+
+      - name: ide/hudson.mercurial
+        run: ant $OPTS -f ide/hudson.mercurial test
+
+      - name: ide/hudson.subversion
+        run: ant $OPTS -f ide/hudson.subversion test
+
+      - name: ide/hudson.tasklist
+        run: ant $OPTS -f ide/hudson.tasklist test
+
+      - name: ide/hudson.ui
+        run: ant $OPTS -f ide/hudson.ui test
+
+      - name: ide/javascript2.debug
+        run: ant $OPTS -f ide/javascript2.debug test
+
+      - name: ide/languages.toml
+        run: ant $OPTS -f ide/languages.toml test
+
+      - name: ide/languages.yaml
+        run: ant $OPTS -f ide/languages.yaml test
+
+      - name: ide/lexer
+        run: ant $OPTS -f ide/lexer test
+
+      - name: ide/lib.terminalemulator
+        run: ant $OPTS -f ide/lib.terminalemulator test
+
+      - name: ide/libs.freemarker
+        run: ant $OPTS -f ide/libs.freemarker test
+
+#      - name: ide/libs.git
+#        run: ant $OPTS -f ide/libs.git test
+
+      - name: ide/libs.graalsdk
+        run: ant $OPTS -f ide/libs.graalsdk test
+
+#      - name: ide/localhistory
+#        run: ant $OPTS -f ide/localhistory test
+
+      - name: ide/libs.truffleapi
+        run: ant $OPTS -f ide/libs.truffleapi test
+
+      - name: ide/lsp.client
+        run: ant $OPTS -f ide/lsp.client test
+
+      - name: ide/notifications
+        run: ant $OPTS -f ide/notifications test
+
+      - name: ide/o.openidex.util
+        run: ant $OPTS -f ide/o.openidex.util test
+
+#      - name: ide/parsing.api
+#        run: ant $OPTS -f ide/parsing.api test
+
+#      - name: ide/parsing.indexing
+#        run: ant $OPTS -f ide/parsing.indexing test
+
+      - name: ide/parsing.lucene
+        run: ant $OPTS -f ide/parsing.lucene test
+
+      - name: ide/project.ant
+        run: ant $OPTS -f ide/project.ant test
+
+      - name: ide/project.ant.compat8
+        run: ant $OPTS -f ide/project.ant.compat8 test
+
+      - name: ide/project.ant.ui
+        run: ant $OPTS -f ide/project.ant.ui test
+
+      - name: ide/project.libraries
+        run: ant $OPTS -f ide/project.libraries test
+
+      - name: ide/project.libraries.ui
+        run: ant $OPTS -f ide/project.libraries.ui test
+
+      - name: ide/projectapi
+        run: ant $OPTS -f ide/projectapi test
+
+      - name: ide/projectapi.nb
+        run: ant $OPTS -f ide/projectapi.nb test
+
+      - name: ide/projectuiapi.base
+        run: ant $OPTS -f ide/projectuiapi.base test
+
+      - name: ide/refactoring.api
+        run: ant $OPTS -f ide/refactoring.api test
+
+      - name: ide/schema2beans
+        run: ant $OPTS -f ide/schema2beans test
+
+      - name: ide/server
+        run: ant $OPTS -f ide/server test
+
+      - name: ide/spellchecker
+        run: ant $OPTS -f ide/spellchecker test
+
+      - name: ide/spi.editor.hints
+        run: ant $OPTS -f ide/spi.editor.hints test
+
+#      - name: ide/spi.palette
+#        run: ant $OPTS -f ide/spi.palette test
+
+      - name: ide/spi.tasklist
+        run: ant $OPTS -f ide/spi.tasklist test
+
+      - name: ide/tasklist.ui
+        run: ant $OPTS -f ide/tasklist.ui test
+
+      - name: ide/team.commons
+        run: ant $OPTS -f ide/team.commons test
+
+      - name: ide/terminal.nb
+        run: ant $OPTS -f ide/terminal.nb test
+
+      - name: ide/utilities
+        run: ant $OPTS -f ide/utilities test
+
+      - name: ide/versioning.masterfs
+        run: ant $OPTS -f ide/versioning.masterfs test
+
+      - name: ide/versioning.ui
+        run: ant $OPTS -f ide/versioning.ui test
+
+      - name: ide/versioning.util
+        run: ant $OPTS -f ide/versioning.util test
+
+      - name: ide/web.common
+        run: ant $OPTS -f ide/web.common test
+
+      - name: ide/web.common.ui
+        run: ant $OPTS -f ide/web.common.ui test
+
+      - name: ide/web.webkit.debugging
+        run: ant $OPTS -f ide/web.webkit.debugging test
+
+      - name: ide/xml
+        run: ant $OPTS -f ide/xml test
+
+      - name: ide/xml.axi
+        run: ant $OPTS -f ide/xml.axi test
+
+      - name: ide/xml.catalog
+        run: ant $OPTS -f ide/xml.catalog test-unit
+
+      - name: ide/xml.core
+        run: ant $OPTS -f ide/xml.core test
+
+      - name: ide/xml.lexer
+        run: ant $OPTS -f ide/xml.lexer test
+
+      - name: ide/xml.multiview
+        run: ant $OPTS -f ide/xml.multiview test
+
+      - name: ide/xml.retriever
+        run: ant $OPTS -f ide/xml.retriever test
+
+      - name: ide/xml.schema.completion
+        run: ant $OPTS -f ide/xml.schema.completion test
+
+      - name: ide/xml.schema.model
+        run: ant $OPTS -f ide/xml.schema.model test
+
+      - name: ide/xml.text
+        run: ant $OPTS -f ide/xml.text test
+
+      - name: ide/xml.text.obsolete90
+        run: ant $OPTS -f ide/xml.text.obsolete90 test
+
+      - name: ide/xml.wsdl.model
+        run: .github/retry.sh ant $OPTS -f ide/xml.wsdl.model test
+
+      - name: ide/xml.xam
+        run: ant $OPTS -f ide/xml.xam test
+
+      - name: ide/xml.xdm
+        run: ant $OPTS -f ide/xml.xdm test
+
+      - name: ide/xsl
+        run: ant $OPTS -f ide/xsl test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
   java-modules-test:
     name: Java Modules on Linux/JDK ${{ matrix.java }} (some on 11)
     needs: base-build
@@ -980,6 +1327,7 @@ jobs:
       - paperwork
       - build-system-test
       - build-nbms
+      - ide-modules-test
       - java-modules-test
       - java-hints-test
       - profiler-test

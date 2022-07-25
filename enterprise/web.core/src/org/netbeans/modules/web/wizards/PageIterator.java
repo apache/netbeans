@@ -213,7 +213,7 @@ public class PageIterator implements TemplateWizard.Iterator {
         FileObject template = Templates.getTemplate(wiz);
         FileObject templateParent = template.getParent();
         
-        Map<String, Object> wizardProps = new HashMap<String, Object>();
+        Map<String, Object> wizardProps = new HashMap<>();
         String defaultNamespace = null;
 
         if (FileType.JSP.equals(fileType) || FileType.JSF.equals(fileType)) {

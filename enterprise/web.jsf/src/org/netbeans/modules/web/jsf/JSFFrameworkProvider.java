@@ -97,15 +97,15 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
 
     private static final Logger LOGGER = Logger.getLogger(JSFFrameworkProvider.class.getName());
 
-    private static String HANDLER = "com.sun.facelets.FaceletViewHandler";                          //NOI18N
+    private static final String HANDLER = "com.sun.facelets.FaceletViewHandler";    //NOI18N
 
     private static final String J2EE_SERVER_INSTANCE = "j2ee.server.instance";  //NOI18N
-    private static String WELCOME_JSF = "welcomeJSF.jsp";   //NOI18N
-    private static String WELCOME_XHTML = "index.xhtml"; //NOI18N
-    private static String WELCOME_XHTML_TEMPLATE = "/Templates/JSP_Servlet/JSP.xhtml"; //NOI18N
-    private static String FORWARD_JSF = "forwardToJSF.jsp"; //NOI18N
-    private static String RESOURCE_FOLDER = "/org/netbeans/modules/web/jsf/resources/"; //NOI18N
-    private static String DEFAULT_MAPPING = "/faces/*";  //NOI18N
+    private static final String WELCOME_JSF = "welcomeJSF.jsp";   //NOI18N
+    private static final String WELCOME_XHTML = "index.xhtml"; //NOI18N
+    private static final String WELCOME_XHTML_TEMPLATE = "/Templates/JSP_Servlet/JSP.xhtml"; //NOI18N
+    private static final String FORWARD_JSF = "forwardToJSF.jsp"; //NOI18N
+    private static final String RESOURCE_FOLDER = "/org/netbeans/modules/web/jsf/resources/"; //NOI18N
+    private static final String DEFAULT_MAPPING = "/faces/*";  //NOI18N
 
     private boolean createWelcome = true;
 
@@ -254,9 +254,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             if (welcomeFile != null) {
                 result.add(welcomeFile);
             }
-        } catch (IOException exception) {
-           LOGGER.log(Level.WARNING, "Exception during extending an web project", exception); //NOI18N
-        } catch (ConfigurationException exception) {
+        } catch (IOException | ConfigurationException exception) {
            LOGGER.log(Level.WARNING, "Exception during extending an web project", exception); //NOI18N
         }
         createWelcome = true;
@@ -502,7 +500,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                     WelcomeFileList welcomeFiles = ddRoot.getSingleWelcomeFileList();
                     List<String> welcomeFileList = new ArrayList<String>();
 
-                    // add the welcome file only if there not any
+                    // add the welcome file only if there isn't any
                     if (!faceletsEnabled) {
                         if (welcomeFiles == null) {
                             if (facesMapping.charAt(0) == '/') {
@@ -565,7 +563,6 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                         DialogDisplayer.getDefault().notify(warningDialog);
                     }
                 });
-
             }
 
             // copy faces-config.xml

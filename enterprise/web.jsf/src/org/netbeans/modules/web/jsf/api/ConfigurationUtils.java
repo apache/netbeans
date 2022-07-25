@@ -164,7 +164,7 @@ public class ConfigurationUtils {
                     files.add(file);
                 }
             }
-            return files.toArray(new FileObject[files.size()]);
+            return files.toArray(new FileObject[0]);
         }
         return new FileObject [0];
     }

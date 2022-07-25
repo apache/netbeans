@@ -186,7 +186,7 @@ public class JSFUtils {
         }
 
         // create new library and regist in the Library Manager.
-        Map<String, List<URL>> content = new HashMap<String, List<URL>>();
+        Map<String, List<URL>> content = new HashMap<>();
         content.put("classpath", urls); //NOI18N
         LibraryManager.getDefault().createLibrary("j2se", libraryName, libraryName, libraryName, content); //NOI18N
         return true;

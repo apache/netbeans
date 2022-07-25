@@ -25,7 +25,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -89,7 +88,7 @@ public class JSFConfigUtilities {
         Converter.class,
         Renderer.class
     };
-    private static final Set<String> JSF_RESOURCES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> JSF_RESOURCES = new HashSet<>(Arrays.asList(
             "javax.faces.bean.ManagedBean", //NOI18N
             "javax.faces.component.behavior.FacesBehavior", //NOI18N
             "javax.faces.convert.FacesConverter", //NOI18N
@@ -381,7 +380,7 @@ public class JSFConfigUtilities {
     }
 
     public static String[] getConfigFiles(WebModule webModule, FileObject deploymentDesc){
-        Set<String> files = new HashSet<String>();
+        Set<String> files = new HashSet<>();
         if (webModule != null) {
             FileObject baseDir = webModule.getDocumentBase();
             if (baseDir != null) {
@@ -436,6 +435,6 @@ public class JSFConfigUtilities {
             }
 
         }
-        return files.toArray(new String[files.size()]);
+        return files.toArray(new String[0]);
     }
 }

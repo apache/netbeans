@@ -22,7 +22,6 @@ package org.netbeans.modules.web.jsf.wizards;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,17 +37,14 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.modules.j2ee.common.ProjectUtil;
 import org.netbeans.modules.j2ee.core.api.support.classpath.ContainerClassPathModifier;
 import org.netbeans.modules.j2ee.dd.api.common.InitParam;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
 import org.netbeans.modules.j2ee.dd.api.web.WebApp;
-import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.jsf.JSFCatalog;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
-import org.netbeans.modules.web.jsf.JSFFrameworkProvider;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_0;
@@ -57,6 +53,7 @@ import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_2;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_0;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_1;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_2;
+import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_3_0;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -298,7 +295,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                 Templates.setTargetFolder(wizard, webInf);
             }
         }
-        Templates.setTargetName(wizard, defaultName);
+        Templates.setTargetName(wizard, DEFAULT_NAME);
     }
 
     @Override

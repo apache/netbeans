@@ -398,7 +398,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
 
 //        libsInitialized = true;
         repaint();
-        LOG.finest("Time spent in "+this.getClass().getName() +" setLibraryModel = "+(System.currentTimeMillis()-time) +" ms");   //NOI18N
+        LOG.log(Level.FINEST, "Time spent in {0} setLibraryModel = {1} ms", new Object[]{this.getClass().getName(), System.currentTimeMillis()-time});   //NOI18N
     }
 
     private void setServerLibraryModel(Collection<ServerLibraryItem> items) {

@@ -1352,6 +1352,140 @@ jobs:
           paths: "./*/*/build/test/*/results/*.xml"
 
 
+  webcommon-test:
+    name: Webcommon Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '8' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: webcommon/api.knockout
+        run: ant $OPTS -f webcommon/api.knockout test
+
+#      - name: webcommon/cordova
+#        run: ant $OPTS -f webcommon/cordova test
+
+      - name: webcommon/html.angular
+        run: ant $OPTS -f webcommon/html.angular test-unit
+
+      - name: webcommon/html.knockout
+        run: ant $OPTS -f webcommon/html.knockout test-unit
+
+      - name: webcommon/javascript.bower
+        run: ant $OPTS -f webcommon/javascript.bower test
+
+      - name: webcommon/javascript.cdnjs
+        run: ant $OPTS -f webcommon/javascript.cdnjs test
+
+      - name: webcommon/javascript.grunt
+        run: ant $OPTS -f webcommon/javascript.grunt test
+
+      - name: webcommon/javascript.karma
+        run: ant $OPTS -f webcommon/javascript.karma test
+
+      - name: webcommon/javascript.nodejs
+        run: ant $OPTS -f webcommon/javascript.nodejs test
+
+      - name: webcommon/javascript.v8debug
+        run: ant $OPTS -f webcommon/javascript.v8debug test
+
+      - name: webcommon/javascript2.doc
+        run: ant $OPTS -f webcommon/javascript2.doc test
+
+      - name: webcommon/javascript2.editor
+        run: ant $OPTS -f webcommon/javascript2.editor test-unit
+
+      - name: webcommon/javascript2.extdoc
+        run: ant $OPTS -f webcommon/javascript2.extdoc test
+
+      - name: webcommon/javascript2.extjs
+        run: ant $OPTS -f webcommon/javascript2.extjs test
+
+      - name: webcommon/javascript2.jade
+        run: ant $OPTS -f webcommon/javascript2.jade test
+
+      - name: webcommon/javascript2.jquery
+        run: .github/retry.sh ant $OPTS -f webcommon/javascript2.jquery test
+
+      - name: webcommon/javascript2.jsdoc
+        run: ant $OPTS -f webcommon/javascript2.jsdoc test
+
+      - name: webcommon/javascript2.json
+        run: ant $OPTS -f webcommon/javascript2.json test
+
+      - name: webcommon/javascript2.knockout
+        run: ant $OPTS -f webcommon/javascript2.knockout test
+
+      - name: webcommon/javascript2.lexer
+        run: ant $OPTS -f webcommon/javascript2.lexer test
+
+      - name: webcommon/javascript2.model
+        run: ant $OPTS -f webcommon/javascript2.model test
+
+      - name: webcommon/javascript2.nodejs
+        run: ant $OPTS -f webcommon/javascript2.nodejs test-unit
+
+      - name: webcommon/javascript2.prototypejs
+        run: ant $OPTS -f webcommon/javascript2.prototypejs test
+
+      - name: webcommon/javascript2.requirejs
+        run: ant $OPTS -f webcommon/javascript2.requirejs test-unit
+
+      - name: webcommon/javascript2.sdoc
+        run: ant $OPTS -f webcommon/javascript2.sdoc test
+
+      - name: webcommon/languages.apacheconf
+        run: ant $OPTS -f webcommon/languages.apacheconf test
+
+      - name: webcommon/languages.ini
+        run: ant $OPTS -f webcommon/languages.ini test
+
+#      - name: webcommon/lib.v8debug
+#        run: ant $OPTS -f webcommon/lib.v8debug test
+
+      - name: webcommon/libs.graaljs
+        run: ant $OPTS -f webcommon/libs.graaljs test
+
+      - name: webcommon/selenium2.webclient
+        run: ant $OPTS -f webcommon/selenium2.webclient test
+
+      - name: webcommon/web.clientproject
+        run: ant $OPTS -f webcommon/web.clientproject test-unit
+
+      - name: webcommon/web.clientproject.api
+        run: ant $OPTS -f webcommon/web.clientproject.api test
+
+      - name: webcommon/web.inspect
+        run: ant $OPTS -f webcommon/web.inspect test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
+
+
   macos:
     name: Tests on MacOS/JDK ${{ matrix.java }}
     needs: base-build
@@ -1649,6 +1783,7 @@ jobs:
       - profiler-test
       - apisupport-modules-test
       - extide-modules-test
+      - webcommon-test
       - macos
       - php
       - javafx-test

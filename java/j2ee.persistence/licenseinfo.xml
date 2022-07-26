@@ -51,6 +51,24 @@
         <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
     </fileset>
     <fileset>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_2_2.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_2.xsd</file>
+        <license ref="EDL-1.0">
+            Copyright (c) 2008 - 2017 Oracle Corporation.  All rights reserved. 
+
+            Contributors:
+            Linda DeMichiel - Java Persistence 2.2, Version 2.2 (July 7, 2017)
+            Specification available from http://jcp.org/en/jsr/detail?id=338
+        </license>
+        <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_3_0.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_3_0.xsd</file>
+        <license ref="EDL-1.0" />
+        <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
+    </fileset>
+    <fileset>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-1.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-2.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-2.1.xml</file>

@@ -68,5 +68,11 @@
         <license ref="CDDL-1.1" />
         <comment type="CATEGORY_B"/>
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/websvc/core/resources/jakartaee_web_services_metadata_handler_3_0.xsd</file>
+        <file>src/org/netbeans/modules/websvc/core/resources/wsdl_customizationschema_3_0.xsd</file>
+        <license ref="EDL-1.0" />
+        <comment type="CATEGORY_B"/>
+    </fileset>
 </licenseinfo>
 

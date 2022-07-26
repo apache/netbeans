@@ -128,4 +128,9 @@
         <license ref="W3C2" />
         <comment type="CATEGORY_B" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/bindingschema_3_0.xsd</file>
+        <license ref="EDL-1.0" />
+        <comment type="CATEGORY_B" />
+    </fileset>
 </licenseinfo>

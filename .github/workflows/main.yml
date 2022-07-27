@@ -27,15 +27,18 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}-${{ github.base_ref }}
   cancel-in-progress: true
 
+env:
+  OPTS: >
+    -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    -Dtest-unit-sys-prop.ignore.random.failures=true
+
 jobs:
-    
+
 # primary build job, most other jobs use the artifact produced here
 # artifact is only produced once in the matrix
   base-build:
     name: Build Clusters on JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
         java: [ '11', '17' ]
@@ -57,9 +60,12 @@ jobs:
           
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          submodules: false
 
       - name: Build NetBeans
-        run: ant -Dcluster.config=release build-nozip
+        run: ant -quiet -Dcluster.config=release build-nozip
 
       - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}
@@ -77,14 +83,12 @@ jobs:
 
 # secondary jobs
   linux-commit-validation:
+    name: Commit Validation on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    name: Commit Validation on Linux/JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
-        java: [ '8', '11', '17', '19-ea' ]
+        java: [ '8', '11', '17', '19' ]
       fail-fast: false
     steps:
 
@@ -94,6 +98,12 @@ jobs:
           java-version: ${{ matrix.java }} 
           distribution: 'zulu'
 
+      - name: Setup Xvfb
+        if: ${{ matrix.java != '20-ea' }}  # see #4299
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
       - name: Download Build
         uses: actions/download-artifact@v3
         with:
@@ -102,14 +112,8 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: Setup Xvfb
-        if: ${{ matrix.java != '20-ea' }}  # see #4299
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
       - name: Commit Validation tests
-        run: ant -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=release commit-validation
 
       - name: Create Test Summary
         uses: test-summary/action@v1
@@ -127,12 +131,11 @@ jobs:
           path: /home/runner/work/netbeans/netbeans/nbbuild/build/test/commit-validation/results/
           retention-days: 1
 
-  linux-build-system-test:
+
+  build-system-test:
+    name: Build-System Test on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    name: Build-System Test on Linux/JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
         java: [ '11' ]
@@ -153,17 +156,16 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Test Netbeans Build System
-        run: ant -Dcluster.config=release localtest
+        run: ant $OPTS -Dcluster.config=release localtest
 
-  linux-javadoc:
+
+  build-nbms:
+    name: Build NBMs, Source zips and Javadoc on JDK ${{ matrix.java }}
     needs: base-build
-    name: Build NBMs, Source zips and Javadoc on JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ '11' ]
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -181,20 +183,19 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Build nbms
-        run: ant build-nbms
+        run: ant $OPTS build-nbms
 
       - name: Build source zips
-        run: ant build-source-zips
+        run: ant $OPTS build-source-zips
 
       - name: Build javadoc
-        run: ant build-javadoc
+        run: ant $OPTS build-javadoc
+
 
   macos:
+    name: Tests on MacOS/JDK ${{ matrix.java }}
     needs: base-build
-    name: Tests on MacOS/JDK ${{ matrix.java }} 
     runs-on: macos-11
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
         java: [ '11' ]
@@ -224,31 +225,32 @@ jobs:
       - run: brew install ant
 
       - name: Test platform/masterfs.macosx
-        run: ant -f platform/masterfs.macosx test
+        run: ant $OPTS -f platform/masterfs.macosx test
 
       - name: Test platform/core.network
-        run: ant -f platform/core.network test
+        run: ant $OPTS -f platform/core.network test
 
       - name: Commit Validation tests
-        run: ant -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=release commit-validation
 
       - name: Create Test Summary
         uses: test-summary/action@v1
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/*.xml"
+          paths: |
+            "./*/*/build/test/*/results/*.xml"
+            "./nbbuild/build/test/commit-validation/results/*.xml"
+
 
   php:
+    name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }}
     needs: base-build
-    name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }} 
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
     env:
       DISPLAY: ":99.0"
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-      OPTS: -Dtest-unit-sys-prop.ignore.random.failures=true
     strategy:
       matrix:
         java: [ '8' ]
@@ -288,90 +290,91 @@ jobs:
       - name: Test Platform Core Network
         run: ant $OPTS -f platform/core.network test
 
-      - name: Test PHP Hudson
+      - name: hudson.php
         run: ant $OPTS -f php/hudson.php test
 
-      - name: Test PHP Neon
+      - name: languages.neon
         run: ant $OPTS -f php/languages.neon test
 
-      - name: Test PHP API Annotation
+      - name: php.api.annotation
         run: ant $OPTS -f php/php.api.annotation test
 
-      - name: Test PHP API Documentation
+      - name: php.api.documentation
         run: ant $OPTS -f php/php.api.documentation test
 
-      - name: Test PHP API Executable
+      - name: php.api.executable
         run: ant $OPTS -f php/php.api.executable test
 
-      - name: Test PHP API Framework
+      - name: php.api.framework
         run: ant $OPTS -f php/php.api.framework test
 
-      - name: Test PHP API Module
+      - name: php.api.phpmodule
         run: ant $OPTS -f php/php.api.phpmodule test
 
-      - name: Test PHP API Testing
+      - name: php.api.testing
         run: ant $OPTS -f php/php.api.testing test
 
-      - name: Test PHP ApiGen
+      - name: php.apigen
         run: ant $OPTS -f php/php.apigen test
 
-      - name: Test PHP Atoum
+      - name: php.atoum
         run: ant $OPTS -f php/php.atoum test
 
-      - name: Test PHP Code Analysis
+      - name: php.code.analysis
         run: ant $OPTS -f php/php.code.analysis test
 
-      - name: Test PHP Codeception
+      - name: php.codeception
         run: ant $OPTS -f php/php.codeception test
 
-      - name: Test PHP Composer
+      - name: php.composer
         run: ant $OPTS -f php/php.composer test
 
       # needs X fails on Windows
-      - name: Test PHP Debugger
+      - name: php.dbgp
         if: contains(matrix.os, 'ubuntu')
         run: ant $OPTS -f php/php.dbgp test
 
-      - name: Test PHP Doctrine2
+      - name: php.doctrine2
         run: ant $OPTS -f php/php.doctrine2 test
 
-      - name: Test PHP Editor
+      # longest step (~40min)
+      - name: php.editor
         run: ant $OPTS -f php/php.editor test
 
-      - name: Test PHP Latte
+      - name: php.latte
         run: ant $OPTS -f php/php.latte test
 
-      - name: Test PHP Nette Tester
+      - name: php.nette.tester
         run: ant $OPTS -f php/php.nette.tester test
 
-      - name: Test PHPUnit
+      - name: php.phpunit
         run: ant $OPTS -f php/php.phpunit test
 
-      - name: Test PHP Project
+      - name: php.project
         run: ant $OPTS -f php/php.project test
 
-      - name: Test PHP Refactoring
+      - name: php.refactoring
         run: ant $OPTS -f php/php.refactoring test
 
-      - name: Test PHP Smarty
+      - name: php.smarty
         run: ant $OPTS -f php/php.smarty test
 
-      - name: Test PHP Symfony
+      - name: php.symfony
         run: ant $OPTS -f php/php.symfony test
 
-      - name: Test PHP Symfony 2
+      - name: php.symfony2
         run: ant $OPTS -f php/php.symfony2 test
 
-      - name: Test PHP Twig
+      - name: php.twig
         run: ant $OPTS -f php/php.twig test
 
-      - name: Test PHP Zend
+      - name: php.zend
         run: ant $OPTS -f php/php.zend test
 
-      - name: Test PHP Zend 2
+      - name: php.zend2
         run: ant $OPTS -f php/php.zend2 test
 
-      - name: Test PHP Spellchecker Bindings
+      - name: spellchecker.bindings.php
         run: ant $OPTS -f php/spellchecker.bindings.php test
 
       - name: Create Test Summary
@@ -384,10 +387,16 @@ jobs:
 # last job depends on everything so that it is forced to run last even if a long job fails early
   cleanup:
     name: Cleanup Workflow Artifacts
-    needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, php]
+    needs:
+      - base-build
+      - linux-commit-validation
+      - build-system-test
+      - build-nbms
+      - macos
+      - php
+
     # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
-    # if primary jobs fail there won't be anything to cleanup anyway.
-    if: success() || cancelled()
+    if: ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}
     runs-on: ubuntu-latest
     steps:
 

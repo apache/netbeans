@@ -339,8 +339,8 @@ I feel ${wizard.msg}.
             way to rewrite the <a href="#html-and-js">HTML and JavaScript sample</a>
             to <b>Java</b>
             (and possibly run it in a plugin-less browser via 
-            <a onclick="target='_blank'" href="http://bck2brwsr.apidesign.org">bck2brwsr VM</a>). Keep the
-            same HTML, <a onclick="target='_blank'" href="http://freemarker.org/">Freemarker</a>, etc.
+            <a href="http://bck2brwsr.apidesign.org">bck2brwsr VM</a>). Keep the
+            same HTML, <a href="http://freemarker.org/">Freemarker</a>, etc.
             files - just instead of encoding the logic in JavaScript use Java:
         </p>
 <pre>
@@ -374,9 +374,9 @@ I feel ${wizard.msg}.
 </pre>        
 <p>
     The return value of the annotated method is now an
-    <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML/Java</a>
+    <a href="https://bits.netbeans.org/html+java/dev">HTML/Java</a>
     model class which can naturally represent the essential 
-    <a onclick="target='_blank'" href="http://knockoutjs.com">Knockout.js</a> objects
+    <a href="http://knockoutjs.com">Knockout.js</a> objects
     in Java. 
 </p>
     </usecase>

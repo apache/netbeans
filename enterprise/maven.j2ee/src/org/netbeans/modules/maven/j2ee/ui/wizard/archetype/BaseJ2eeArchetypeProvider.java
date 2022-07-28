@@ -98,6 +98,8 @@ abstract class BaseJ2eeArchetypeProvider {
         map.put(Profile.JAKARTA_EE_8_WEB, jakartaEE8Archetype);
         map.put(Profile.JAKARTA_EE_9_FULL, jakartaEE9Archetype);
         map.put(Profile.JAKARTA_EE_9_WEB, jakartaEE9Archetype);
+        map.put(Profile.JAKARTA_EE_9_1_FULL, jakartaEE9Archetype);
+        map.put(Profile.JAKARTA_EE_9_1_WEB, jakartaEE9Archetype);
     }
 
     private Archetype createMojoArchetype(String version, String artifactId) {

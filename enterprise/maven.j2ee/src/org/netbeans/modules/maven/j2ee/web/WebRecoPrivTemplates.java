@@ -150,7 +150,7 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
                 if (cap != null) {
                     if (cap.isEjb31Supported() || isServerSupportingEJB31()) {
                         toRet.addAll(Arrays.asList(WEB_TYPES_EJB));
-                    } else if (cap.isEjb32LiteSupported()) {
+                    } else if (cap.isEjb32LiteSupported() || cap.isEjb40LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_TYPES_EJB32_LITE));
                     } else if (cap.isEjb31LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_TYPES_EJB_LITE));
@@ -180,7 +180,7 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
                     if (cap.isEjb31LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_PRIVILEGED_NAMES_EE6_WEB));
                     }
-                    if (cap.isEjb32LiteSupported()) {
+                    if (cap.isEjb32LiteSupported() || cap.isEjb40LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_PRIVILEGED_NAMES_EE7_WEB));
                     }
                 }
@@ -195,7 +195,8 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
             ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
             ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL) ||
             ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL) ||
-            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL)) {
+            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL) ||
+            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_1_FULL)) {
 
             return true;
         }

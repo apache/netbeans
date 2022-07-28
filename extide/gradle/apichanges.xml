@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="configuration-dependencies">
+            <api name="general"/>
+            <summary>Allow to inspect dependency tree</summary>
+            <version major="2" minor="27"/>
+            <date day="12" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Gradle APIs allow to list dependencies as a flat list, mixing the 4th+ party dependencies in. The API extension allows
+                to inspect the dependency structure and determine what configuration the dependency originates from.
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="GradleBaseProject"/>
+            <class package="org.netbeans.modules.gradle.api" name="GradleConfiguration"/>
+        </change>
         <change id="gradlefiles-versioncatalog">
             <api name="general"/>
             <summary>GradleFiles.Kind.VERSION_CATALOG introduced</summary>

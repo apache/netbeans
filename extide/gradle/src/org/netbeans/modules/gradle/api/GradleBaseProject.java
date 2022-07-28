@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
@@ -52,7 +53,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     String name;
     String group = "";
     String description;
-    String version;
+    String version = "";
     String path;
     String status;
     String parentName;
@@ -73,6 +74,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     Map<File, GradleDependency.ModuleDependency> componentsByFile = new HashMap<>();
     Map<String, GradleConfiguration> configurations = new HashMap<>();
     Set<File> outputPaths = Collections.emptySet();
+    Map<String, String> projectIds = Collections.emptyMap();
+    GradleDependency projectDependencyNode;
 
     transient Boolean resolved = null;
 
@@ -206,6 +209,19 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public Map<String, File> getSubProjects() {
         return subProjects;
     }
+    
+    /**
+     * Finds a GAV for the given project. Returns {@code null} if the project path
+     * is not known (it is not referenced anywhere by this project), or has no known
+     * GAV. The project's own GAV should be always present.
+     * 
+     * @param projectPath Gradle project path
+     * @return GAV coordinates, or {@code null}
+     * @since 2.27
+     */
+    public String findProjectGav(@NonNull String projectPath) {
+        return projectIds.get(projectPath);
+    }
 
     public Set<String> getTaskGroups() {
         return Collections.unmodifiableSet(tasksByGroup.keySet());
@@ -246,7 +262,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         }
         return true;
     }
-
+    
     @Override
     public Set<GradleDependency.ModuleDependency> findModules(String group, String artifact, String version) {
         Set<GradleDependency.ModuleDependency> ret = new HashSet<>();
@@ -319,6 +335,9 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
      *         {@code null} for non-Gradle projects.
      */
     public static GradleBaseProject get(Project project) {
+        if (project == null) {
+            return null;
+        }
         NbGradleProject gp = NbGradleProject.get(project);
         return gp != null ? gp.projectLookup(GradleBaseProject.class) : null;
     }
@@ -421,6 +440,4 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public String toString() {
         return "GradleBaseProject{" + "name=" + name + ", projectDir=" + projectDir + ", plugins=" + plugins + '}';
     }
-
-
 }

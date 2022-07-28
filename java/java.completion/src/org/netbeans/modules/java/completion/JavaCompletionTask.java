@@ -3853,21 +3853,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             }
                         } else {
                             if (!options.contains(Options.ALL_COMPLETION) && e.getModifiers().contains(STATIC)) {
-                                if (startsWith(env, sn)
-                                        && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e))
-                                        && isOfKindAndType(((ExecutableType) asMemberOf(e, t, types)).getReturnType(), e, kinds, baseType, scope, trees, types)
-                                        && env.isAccessible(scope, e, t, isSuperCall)
-                                        && (!Utilities.isExcludeMethods() || !Utilities.isExcluded(eu.getElementName(e.getEnclosingElement(), true) + "." + sn))) { //NOI18N
+                                if (checkMethodAccepted(sn, e, t)) { //NOI18N
                                     hasAdditionalMembers = true;
                                 }
                                 return false;
                             }
                         }
-                        return startsWith(env, sn)
-                                && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e))
-                                && isOfKindAndType(((ExecutableType) asMemberOf(e, t, types)).getReturnType(), e, kinds, baseType, scope, trees, types)
-                                && env.isAccessible(scope, e, t, isSuperCall)
-                                && (!Utilities.isExcludeMethods() || !Utilities.isExcluded(eu.getElementName(e.getEnclosingElement(), true) + "." + sn)); //NOI18N
+                        return checkMethodAccepted(sn, e, t); //NOI18N
                     case CLASS:
                     case ENUM:
                     case INTERFACE:
@@ -3889,6 +3881,33 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 && isStatic;
                 }
                 return false;
+            }
+
+            private boolean checkMethodAccepted(String sn, Element e,
+                    TypeMirror t) {
+                //4 checks to include property accessors
+                String initialPrefix = env.getPrefix();
+                //TODO: maybe cache these?
+                String[] prefixes = {
+                    initialPrefix,
+                    "is" + initialPrefix,
+                    "get" + initialPrefix,
+                    "set" + initialPrefix
+                };
+                for (String prefix : prefixes) {
+                    if (checkMethodAccepted(sn, prefix, e, t)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            private boolean checkMethodAccepted(String sn, String prefix,
+                    Element e, TypeMirror t) {
+                return startsWith(env, sn, prefix)
+                        && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e))
+                        && isOfKindAndType(((ExecutableType) asMemberOf(e, t, types)).getReturnType(), e, kinds, baseType, scope, trees, types)
+                        && env.isAccessible(scope, e, t, isSuperCall)
+                        && (!Utilities.isExcludeMethods() || !Utilities.isExcluded(eu.getElementName(e.getEnclosingElement(), true) + "." + sn));
             }
         };
         boolean addCast = actualType != type && elem instanceof VariableElement && !elem.getKind().isField();

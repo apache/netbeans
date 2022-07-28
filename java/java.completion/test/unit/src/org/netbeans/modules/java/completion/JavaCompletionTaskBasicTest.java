@@ -1298,4 +1298,7 @@ public class JavaCompletionTaskBasicTest extends CompletionTestBase {
     public void testAfteMethodInvocationInMethodBody() throws Exception {
         performTest("SimpleMethodBody", 941, null, "methodBodyContentAndLocalVar.pass");
     }
+    public void testAfteMethodInvocationInMethodBody() throws Exception {
+        performTest("SimpleMethodBody", 941, null, "methodBodyContentAndLocalVar.pass");
+    }
 }

@@ -42,7 +42,7 @@ import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 @DebuggerServiceRegistration(types=LazyDebuggerManagerListener.class)
 public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
 
-    private HashMap<LineBreakpoint, Object> breakpointToAnnotation = new HashMap<>();
+    private final HashMap<LineBreakpoint, Object> breakpointToAnnotation = new HashMap<>();
     private boolean listen = true;
 
     @Override
@@ -71,16 +71,22 @@ public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
     @Override
     public void breakpointAdded (Breakpoint b) {
         if (b instanceof LineBreakpoint) {
-            ((LineBreakpoint) b).addPropertyChangeListener (this);
-            annotate ((LineBreakpoint) b);
+            LineBreakpoint lb = (LineBreakpoint) b;
+            if (GroovyBreakpointStratifier.GROOVY_STRATUM.equals(lb.getStratum())) {
+                lb.addPropertyChangeListener (this);
+                annotate(lb);
+            }
         }
     }
 
     @Override
     public void breakpointRemoved (Breakpoint b) {
         if (b instanceof LineBreakpoint) {
-            ((LineBreakpoint) b).removePropertyChangeListener (this);
-            removeAnnotation ((LineBreakpoint) b);
+            LineBreakpoint lb = (LineBreakpoint) b;
+            if (GroovyBreakpointStratifier.GROOVY_STRATUM.equals(lb.getStratum())) {
+                lb.removePropertyChangeListener (this);
+                removeAnnotation(lb);
+            }
         }
     }
 

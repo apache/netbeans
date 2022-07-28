@@ -64,7 +64,7 @@
 
 
  <answer id="arch-usecases">
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
@@ -74,7 +74,7 @@
     <a href="@TOP@/org/openide/util/Lookup.html">javadoc</a>. 
     For details on this topic, 
     together with code samples, see chapter 4, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
     by Jason Wexbridge and Walter Nyland.
     In addition to that here is
     a list of frequently asked or interesting questions slowly expanding as

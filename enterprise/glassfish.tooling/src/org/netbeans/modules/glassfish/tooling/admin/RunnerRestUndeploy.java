@@ -47,14 +47,14 @@ public class RunnerRestUndeploy extends RunnerRest {
 
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            CommandUndeploy cmd = (CommandUndeploy) command;
-            wr.write("name=" + cmd.name);
-            if (cmd.target != null) {
-                wr.write("&target=" + cmd.target);
-            }
-            wr.flush();
-        }
+         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
+         CommandUndeploy cmd = (CommandUndeploy) command;
+         wr.write("name=" + cmd.name);
+         if (cmd.target != null) {
+             wr.write("&target=" + cmd.target);
+         }
+         wr.flush();
+         wr.close();
     }
 
 }

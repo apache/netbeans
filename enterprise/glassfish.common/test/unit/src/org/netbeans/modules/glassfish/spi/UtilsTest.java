@@ -209,11 +209,10 @@ public class UtilsTest extends NbTestCase {
     @Test
     public void testIsLocalPortOccupied() throws IOException {
         System.out.println("isLocalPortOccupied");
-        int port;
-        try (ServerSocket ss = new ServerSocket(0)) {
-            port = ss.getLocalPort();
-            assert Utils.isLocalPortOccupied(port) : "the port is not occupied?";
-        }
+        ServerSocket ss = new ServerSocket(0);
+        int port = ss.getLocalPort();
+        assert Utils.isLocalPortOccupied(port) : "the port is not occupied?";
+        ss.close();
         assert !Utils.isLocalPortOccupied(port) : "the port is occupied?";
     }
 }

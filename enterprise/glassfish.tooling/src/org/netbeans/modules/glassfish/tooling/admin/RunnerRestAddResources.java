@@ -45,13 +45,15 @@ public class RunnerRestAddResources extends RunnerRest {
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
         CommandAddResources cmd = (CommandAddResources)command;
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            StringBuilder data = new StringBuilder();
-            data.append("xml_file_name=").append(cmd.xmlResFile.getAbsolutePath());
-            if (cmd.target != null) {
-                data.append("&target=").append(cmd.target);
-            }
-            wr.write(data.toString());
+        OutputStreamWriter wr =
+                new OutputStreamWriter(hconn.getOutputStream());
+        StringBuilder data = new StringBuilder();
+        data.append("xml_file_name=").append(cmd.xmlResFile.getAbsolutePath());
+        if (cmd.target != null) {
+            data.append("&target=").append(cmd.target);
         }
+
+        wr.write(data.toString());
+        wr.close();
     }
 }

@@ -271,41 +271,42 @@ public class Utils {
     private static boolean isSecurePort(String hostname, int port, int depth) 
             throws IOException, ConnectException, SocketTimeoutException {
         // Open the socket with a short timeout for connects and reads.
-        try (Socket socket = new Socket()) {
-            try {
-                Logger.getLogger("glassfish-socket-connect-diagnostic").log(Level.FINE, "Using socket.connect", new Exception());
-                socket.connect(new InetSocketAddress(hostname, port), PORT_CHECK_TIMEOUT);
-                socket.setSoTimeout(PORT_CHECK_TIMEOUT);
-            } catch(SocketException ex) { // this could be bug 70020 due to SOCKs proxy not having localhost
-                String socksNonProxyHosts = System.getProperty("socksNonProxyHosts");
-                if(socksNonProxyHosts != null && socksNonProxyHosts.indexOf("localhost") < 0) {
-                    String localhost = socksNonProxyHosts.length() > 0 ? "|localhost" : "localhost";
-                    System.setProperty("socksNonProxyHosts",  socksNonProxyHosts + localhost);
-                    ConnectException ce = new ConnectException();
-                    ce.initCause(ex);
-                    throw ce; //status unknown at this point
-                    //next call, we'll be ok and it will really detect if we are secure or not
-                }
+        Socket socket = new Socket();
+        try {
+            Logger.getLogger("glassfish-socket-connect-diagnostic").log(Level.FINE, "Using socket.connect", new Exception());
+            socket.connect(new InetSocketAddress(hostname, port), PORT_CHECK_TIMEOUT);
+            socket.setSoTimeout(PORT_CHECK_TIMEOUT);
+        } catch(SocketException ex) { // this could be bug 70020 due to SOCKs proxy not having localhost
+            String socksNonProxyHosts = System.getProperty("socksNonProxyHosts");
+            if(socksNonProxyHosts != null && socksNonProxyHosts.indexOf("localhost") < 0) {
+                String localhost = socksNonProxyHosts.length() > 0 ? "|localhost" : "localhost";
+                System.setProperty("socksNonProxyHosts",  socksNonProxyHosts + localhost);
+                ConnectException ce = new ConnectException();
+                ce.initCause(ex);
+                throw ce; //status unknown at this point
+                //next call, we'll be ok and it will really detect if we are secure or not
             }
-            //This is the test query used to ping the server in an attempt to
-            //determine if it is secure or not.
-            InputStream is = socket.getInputStream();        
-            String testQuery = "GET / HTTP/1.0";
-            PrintWriter pw = new PrintWriter(socket.getOutputStream());
-            pw.println(testQuery);
-            pw.println();
-            pw.flush();
-            byte[] respArr = new byte[1024];
-            boolean isSecure = true;
-            while (is.read(respArr) != -1) {
-                String resp = new String(respArr);
-                if (checkHelper(resp) == false) {
-                    isSecure = false;
-                    break;
-                }
-            }
-            return isSecure;
         }
+        //This is the test query used to ping the server in an attempt to
+        //determine if it is secure or not.
+        InputStream is = socket.getInputStream();        
+        String testQuery = "GET / HTTP/1.0";
+        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+        pw.println(testQuery);
+        pw.println();
+        pw.flush();
+        byte[] respArr = new byte[1024];
+        boolean isSecure = true;
+        while (is.read(respArr) != -1) {
+            String resp = new String(respArr);
+            if (checkHelper(resp) == false) {
+                isSecure = false;
+                break;
+            }
+        }
+        // Close the socket
+        socket.close();
+        return isSecure;
     }
 
     private static boolean checkHelper(String respText) {

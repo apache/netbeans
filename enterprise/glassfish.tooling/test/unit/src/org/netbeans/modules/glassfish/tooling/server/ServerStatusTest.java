@@ -35,9 +35,9 @@ public class ServerStatusTest extends CommandHttpTest {
     @Test(groups = {"http-commands"})
     public void testServerStatus() {
         GlassFishServer server = glassFishServer();
-        try (ServerStatus serverStatus = new ServerStatus(server, false)) {
-            serverStatus.check();
-        }
+        ServerStatus serverStatus = new ServerStatus(server, false);
+        serverStatus.check();
+        serverStatus.close();
     }
 
 }

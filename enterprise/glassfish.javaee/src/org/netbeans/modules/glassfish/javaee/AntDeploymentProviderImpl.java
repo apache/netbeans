@@ -71,8 +71,11 @@ class AntDeploymentProviderImpl implements AntDeploymentProvider {
 
     @Override
     public void writeDeploymentScript(OutputStream os, Object moduleType) throws IOException {
-        try (InputStream is = AntDeploymentProviderImpl.class.getResourceAsStream("ant-deploy.xml")) { // NOI18N
+        InputStream is = AntDeploymentProviderImpl.class.getResourceAsStream("ant-deploy.xml"); // NOI18N            
+        try {
             FileUtil.copy(is, os);
+        } finally {
+            is.close();
         }
     }
 
@@ -82,9 +85,21 @@ class AntDeploymentProviderImpl implements AntDeploymentProvider {
             // generate the deployment properties file only if it does not exist
             try {
                 FileObject fo = FileUtil.createData(propFile);
-                try (FileLock lock = fo.lock();
-                        OutputStream os = fo.getOutputStream(lock)) {
-                    props.store(os, ""); // NOI18N
+                FileLock lock = null;
+                try {
+                    lock = fo.lock();
+                    OutputStream os = fo.getOutputStream(lock);
+                    try {
+                        props.store(os, ""); // NOI18N
+                    } finally {
+                        if (null != os) {
+                            os.close();
+                        }
+                    }
+                } finally {
+                    if (null != lock) {
+                        lock.releaseLock();
+                    }
                 }
             } catch (IOException ioe) {
                 Logger.getLogger("glassfish-javaee").log(Level.INFO, null, ioe);      //NOI18N

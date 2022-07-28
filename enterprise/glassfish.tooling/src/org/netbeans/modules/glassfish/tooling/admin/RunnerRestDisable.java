@@ -47,13 +47,15 @@ public class RunnerRestDisable extends RunnerRest {
     protected void handleSend(HttpURLConnection hconn) throws IOException {
         CommandTargetName commandApp = (CommandTargetName)command;
         String target = commandApp.target;
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            StringBuilder data = new StringBuilder();
-            data.append("name=").append(commandApp.name);
-            if (target != null) {
-                data.append("&target=").append(commandApp.target);
-            }
-            wr.write(data.toString());
+        OutputStreamWriter wr =
+                new OutputStreamWriter(hconn.getOutputStream());
+        StringBuilder data = new StringBuilder();
+        data.append("name=").append(commandApp.name);
+        if (target != null) {
+            data.append("&target=").append(commandApp.target);
         }
+
+        wr.write(data.toString());
+        wr.close();
     }
 }

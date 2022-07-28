@@ -84,37 +84,38 @@ public class RunnerRestDeploy extends RunnerRest {
             throw new GlassFishIdeException("The path attribute of deploy command"
                     + " has to be non-empty!");
         }
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            if (!command.dirDeploy) {
-                writeParam(wr, "path", command.path.getAbsolutePath());
-                if (command.name != null) {
-                    writeParam(wr, "name", command.name);
-                }
-                if (command.contextRoot != null) {
-                    writeParam(wr, "contextroot", command.contextRoot);
-                }
-                if (command.target != null) {
-                    writeParam(wr, "target", command.target);
-                }
+        OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
+        if (!command.dirDeploy) {
+            writeParam(wr, "path", command.path.getAbsolutePath());
+            if (command.name != null) {
+                writeParam(wr, "name", command.name);
+            }
+            if (command.contextRoot != null) {
+                writeParam(wr, "contextroot", command.contextRoot);
+            }
+            if (command.target != null) {
+                writeParam(wr, "target", command.target);
+            }
 
-                writeBinaryFile(wr, hconn.getOutputStream(), command.path);
-                wr.append("--" + multipartBoundary + "--").append(NEWLINE);
-            } else {
-                wr.write("path=" + command.path.toString());
-                if (command.name != null) {
-                    wr.write("&");
-                    wr.write("name=" + command.name);
-                }
-                if (command.contextRoot != null) {
-                    wr.write("&");
-                    wr.write("contextroot=" + command.name);
-                }
-                if (command.target != null) {
-                    wr.write("&");
-                    wr.write("target=" + command.target);
-                }
+            writeBinaryFile(wr, hconn.getOutputStream(), command.path);
+            wr.append("--" + multipartBoundary + "--").append(NEWLINE);
+        } else {
+            wr.write("path=" + command.path.toString());
+            if (command.name != null) {
+                wr.write("&");
+                wr.write("name=" + command.name);
+            }
+            if (command.contextRoot != null) {
+                wr.write("&");
+                wr.write("contextroot=" + command.name);
+            }
+            if (command.target != null) {
+                wr.write("&");
+                wr.write("target=" + command.target);
             }
         }
+
+        wr.close();
     }
 
     private void writeParam(OutputStreamWriter writer, String paramName,

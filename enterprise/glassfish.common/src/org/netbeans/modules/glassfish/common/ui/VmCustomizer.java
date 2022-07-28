@@ -388,8 +388,10 @@ public class VmCustomizer extends javax.swing.JPanel {
             // enable the edit field and fill it in
             addressValue.setEnabled(true);
             int debugPort = 9009;
-            try (ServerSocket t = new ServerSocket(0)) {
-                    debugPort = t.getLocalPort();
+            try {
+                ServerSocket t = new ServerSocket(0);
+                debugPort = t.getLocalPort();
+                t.close();
             } catch (IOException ioe) {
                 // I will ignore this nor now.
             }

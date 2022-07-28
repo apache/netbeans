@@ -45,9 +45,9 @@ public class RunnerRestStopCluster extends RunnerRest {
 
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            wr.write("clusterName=" + ((CommandTarget)command).target);
-            wr.flush();
-        }
+         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
+         wr.write("clusterName=" + ((CommandTarget)command).target);
+         wr.flush();
+         wr.close();
     }
 }

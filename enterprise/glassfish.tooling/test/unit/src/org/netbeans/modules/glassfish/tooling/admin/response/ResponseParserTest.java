@@ -39,10 +39,9 @@ public class ResponseParserTest {
     public void restXmlParserSimpleMessage() throws FileNotFoundException, IOException {
         File f = new File(PATH + "version.xml");
         RestXMLResponseParser p = new RestXMLResponseParser();
-        RestActionReport report;
-        try (FileInputStream input = new FileInputStream(f)) {
-            report = p.parse(input);
-        }
+        FileInputStream input = new FileInputStream(f);
+        RestActionReport report = p.parse(input);
+        input.close();
 
         assertTrue(report.getExitCode().equals(ActionReport.ExitCode.SUCCESS));
         assertTrue(report.getCommand().equals("version AdminCommand"));
@@ -55,10 +54,9 @@ public class ResponseParserTest {
     public void restXmlParserComplexMessage() throws FileNotFoundException, IOException {
         File f = new File(PATH + "list-jdbc-resources.xml");
         RestXMLResponseParser p = new RestXMLResponseParser();
-        RestActionReport report;
-        try (FileInputStream input = new FileInputStream(f)) {
-            report = p.parse(input);
-        }
+        FileInputStream input = new FileInputStream(f);
+        RestActionReport report = p.parse(input);
+        input.close();
 
         assertTrue(report.getExitCode().equals(ActionReport.ExitCode.SUCCESS));
         assertTrue(report.getCommand().equals("list-jdbc-resources AdminCommand"));
@@ -78,10 +76,9 @@ public class ResponseParserTest {
     public void testJSONParserSimpleMessage() throws FileNotFoundException, IOException {
         File f = new File(PATH + "location.json");
         RestJSONResponseParser p = new RestJSONResponseParser();
-        RestActionReport report;
-        try (FileInputStream input = new FileInputStream(f)) {
-            report = p.parse(input);
-        }
+        FileInputStream input = new FileInputStream(f);
+        RestActionReport report = p.parse(input);
+        input.close();
         
         assertTrue(report.getExitCode().equals(ActionReport.ExitCode.SUCCESS));
         assertTrue(report.getCommand().equals("__locations AdminCommand"));
@@ -94,10 +91,9 @@ public class ResponseParserTest {
     public void restJSONParserComplexMessage() throws FileNotFoundException, IOException {
         File f = new File(PATH + "list-jdbc-resources.json");
         RestJSONResponseParser p = new RestJSONResponseParser();
-        RestActionReport report;
-        try (FileInputStream input = new FileInputStream(f)) {
-            report = p.parse(input);
-        }
+        FileInputStream input = new FileInputStream(f);
+        RestActionReport report = p.parse(input);
+        input.close();
 
         assertTrue(report.getExitCode().equals(ActionReport.ExitCode.SUCCESS));
         assertTrue(report.getCommand().equals("list-jdbc-resources AdminCommand"));

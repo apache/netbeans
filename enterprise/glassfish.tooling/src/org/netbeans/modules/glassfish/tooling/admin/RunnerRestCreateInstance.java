@@ -44,17 +44,18 @@ public class RunnerRestCreateInstance extends RunnerRest {
 
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            CommandCreateInstance createCommand = (CommandCreateInstance) command;
-            StringBuilder data = new StringBuilder();
-            data.append("instance_name=").append(createCommand.name);
-            data.append("&node=").append(createCommand.node);
-            if (createCommand.target != null) {
-                data.append("&cluster=").append(createCommand.target);
-            }
-            wr.write(data.toString());
-            wr.flush();
-        }
+         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
+         CommandCreateInstance createCommand = (CommandCreateInstance) command;
+         StringBuilder data = new StringBuilder();
+         data.append("instance_name=").append(createCommand.name);
+         data.append("&node=").append(createCommand.node);
+         if (createCommand.target != null) {
+             data.append("&cluster=").append(createCommand.target);
+         } 
+        
+         wr.write(data.toString());
+         wr.flush();
+         wr.close();
     }
     
     

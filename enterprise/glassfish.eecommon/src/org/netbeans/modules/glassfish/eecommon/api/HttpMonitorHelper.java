@@ -102,8 +102,11 @@ public class HttpMonitorHelper {
             ErrorManager.getDefault().notify(ErrorManager.ERROR, cnfe);
         }
         if (needsSave) {
-            try (OutputStream os = new FileOutputStream(webXML)) {
+            OutputStream os = new FileOutputStream(webXML);
+            try {
                 webApp.write(os);
+            } finally {
+                os.close();
             }
         }
         return needRestart;

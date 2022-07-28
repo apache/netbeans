@@ -136,9 +136,10 @@ public class Util {
         String adminPort = null;
         String buffer = null;
         
-        try (FileReader reader = new FileReader(domainXml);
-                BufferedReader br = new BufferedReader(reader)) {
-
+        try {
+            FileReader reader = new FileReader(domainXml);
+            BufferedReader br = new BufferedReader(reader);
+            
             while((buffer = br.readLine()) != null) {
                 if(buffer.indexOf("admin-listener") > -1) {
                     int x = buffer.indexOf(34, buffer.indexOf("port"));
@@ -148,6 +149,8 @@ public class Util {
                 }
             }
             
+            br.close();
+            reader.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

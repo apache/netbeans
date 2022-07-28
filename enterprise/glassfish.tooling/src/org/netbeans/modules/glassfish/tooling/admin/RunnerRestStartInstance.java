@@ -44,13 +44,13 @@ public class RunnerRestStartInstance extends RunnerRest {
 
     @Override
     protected void handleSend(HttpURLConnection hconn) throws IOException {
-        try (OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream())) {
-            CommandTarget cmd = (CommandTarget) command;
-            StringBuilder data = new StringBuilder();
-            data.append("instance_name=").append(cmd.target);
-            
-            wr.write(data.toString());
-            wr.flush();
-        }
+         OutputStreamWriter wr = new OutputStreamWriter(hconn.getOutputStream());
+         CommandTarget cmd = (CommandTarget) command;
+         StringBuilder data = new StringBuilder();
+         data.append("instance_name=").append(cmd.target);
+         
+         wr.write(data.toString());
+         wr.flush();
+         wr.close();
     }
 }

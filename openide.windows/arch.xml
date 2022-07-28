@@ -96,14 +96,14 @@ November 15 2003.
 <answer id="arch-usecases">
     
   <p>
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
      </a>
     For general overview of the concepts, 
     together with code samples, see chapter 6, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
     by Jason Wexbridge and Walter Nyland.
   </p>
     

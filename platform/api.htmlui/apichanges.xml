@@ -57,7 +57,7 @@
         <compatibility addition="yes" binary="compatible" source="compatible"/>
         <description>
             <p>
-                The <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">
+                The <a href="https://bits.netbeans.org/html+java/dev">
                     HTML UI API for Java
                     </a> 
                 revision 1.1 supports technolgy identifiers. Now they can
@@ -78,7 +78,7 @@
         <compatibility addition="yes" binary="compatible" source="compatible"/>
         <description>
             <p>
-                The <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">
+                The <a href="https://bits.netbeans.org/html+java/dev">
                     HTML UI API for Java
                     </a> 
                 and NetBeans has been included

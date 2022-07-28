@@ -265,7 +265,7 @@
              One can define following code in nbactions.xml file to start
              a process during goal execution and attach a debugger to it
              once the execution is over. Here is an example using
-             <a onclick="target='_blank'" href="https://github.com/simpligility/android-maven-plugin/pull/584">enhancement</a>
+             <a href="https://github.com/simpligility/android-maven-plugin/pull/584">enhancement</a>
              in the Maven Android plugin:
              </p>
 <pre>

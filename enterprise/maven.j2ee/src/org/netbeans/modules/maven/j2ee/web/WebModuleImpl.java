@@ -150,6 +150,9 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
             if (Profile.JAKARTA_EE_9_FULL.equals(pomProfile)) {
                 return Profile.JAKARTA_EE_9_WEB;
             }
+            if (Profile.JAKARTA_EE_9_1_FULL.equals(pomProfile)) {
+                return Profile.JAKARTA_EE_9_1_WEB;
+            }
             return pomProfile;
         }
 

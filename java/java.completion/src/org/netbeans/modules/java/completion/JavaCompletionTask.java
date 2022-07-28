@@ -3887,19 +3887,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     TypeMirror t) {
                 //4 checks to include property accessors
                 String initialPrefix = env.getPrefix();
-                //TODO: maybe cache these?
-                String[] prefixes = {
-                    initialPrefix,
-                    "is" + initialPrefix,
-                    "get" + initialPrefix,
-                    "set" + initialPrefix
-                };
-                for (String prefix : prefixes) {
-                    if (checkMethodAccepted(sn, prefix, e, t)){
-                        return true;
-                    }
-                }
-                return false;
+                return checkMethodAccepted(sn, initialPrefix, e, t)
+                        || checkMethodAccepted(sn, "is" + initialPrefix, e, t)
+                        || checkMethodAccepted(sn, "get" + initialPrefix, e, t)
+                        || checkMethodAccepted(sn, "set" + initialPrefix, e, t);
             }
             private boolean checkMethodAccepted(String sn, String prefix,
                     Element e, TypeMirror t) {

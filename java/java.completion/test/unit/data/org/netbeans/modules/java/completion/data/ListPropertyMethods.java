@@ -28,8 +28,8 @@ public class Test {
     public boolean isB() { return b; }
     public static void main(String[] args){
         Test instance = new Test();
-        if (instance.b()){
-            instance.field(instance.fiel);
+        if (instance.B){
+            instance.Field(instance.Fiel);
         }
     }
 

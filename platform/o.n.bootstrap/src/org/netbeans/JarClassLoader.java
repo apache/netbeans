@@ -85,14 +85,13 @@ public class JarClassLoader extends ProxyClassLoader {
     static {
         int version;
         try {
-                Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
-                version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
-        }
-        catch (Throwable ex) {
-                version = BASE_VERSION;
+            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
+            version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
+        } catch (Throwable ex) {
+            version = BASE_VERSION;
         }
         RUNTIME_VERSION = version;
-    }    
+    }
     
     static Archive archive = new Archive(); 
 
@@ -289,8 +288,10 @@ public class JarClassLoader extends ProxyClassLoader {
                     }
                 }
                 Manifest man = new DelayedManifest();
-                
-                src.setMultiRelease(man.getMainAttributes().containsKey(MULTI_RELEASE));
+                if (man.getMainAttributes().containsKey(MULTI_RELEASE)) {
+                    String multiRelease = (String) man.getMainAttributes().get(MULTI_RELEASE);
+                    src.setMultiRelease(multiRelease.equalsIgnoreCase("true"));
+                }
                 if (src.isMultiRelease() && RUNTIME_VERSION != BASE_VERSION) {
                     data = src.getClassData(path);
                 }
@@ -606,8 +607,7 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected byte[] readClass(String path) throws IOException {
             try {
-                if (isMultiRelease() && RUNTIME_VERSION != BASE_VERSION)
-                {
+                if (isMultiRelease() && RUNTIME_VERSION != BASE_VERSION) {
                     int ver = RUNTIME_VERSION;
                     while (ver > BASE_VERSION) {
                         byte[] data = archive.getData(this, "META-INF/versions/" + ver + "/" + path);

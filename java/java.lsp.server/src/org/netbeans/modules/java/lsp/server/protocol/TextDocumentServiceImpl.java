@@ -1510,9 +1510,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     public FoldingRange createInnerClassFold(int start, int end) {
                         return createFold(start, end, FoldingRangeKind.Region);
                     }
-
+                    
                     @Override
                     public FoldingRange createCodeBlockFold(int start, int end) {
+                        return createFold(start, end, FoldingRangeKind.Region);
+                    }
+                    
+                    @Override
+                    public FoldingRange createMethodFold(int start, int end) {
                         return createFold(start, end, FoldingRangeKind.Region);
                     }
 

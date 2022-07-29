@@ -307,7 +307,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                     if (DISABLE_EXTENSION === selected) {
                         vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
                     } else if (DISABLE_JAVA === selected) {
-                        conf.update("netbeans.javaSupport.enabled", true, false);
+                        conf.update("netbeans.javaSupport.enabled", false, true);
                     }
                 });
             }

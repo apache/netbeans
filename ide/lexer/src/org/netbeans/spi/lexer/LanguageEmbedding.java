@@ -140,21 +140,21 @@ public final class LanguageEmbedding<T extends TokenId> {
     /**
      * Whether sections with this embedding should be joined with the other
      * sections with this embedding at the same level.
-     * <br/>
+     * <br>
      * For example for HTML sections embedded in JSP this flag should be true:
      * <pre>
      *  &lt;!-- HTML comment start
      *      &lt;% System.out.println("Hello"); %&gt;
            still in HTML comment --&lt;
      * </pre>
-     * <br/>
+     * <br>
      * Only the embedded sections with the same language path will be joined.
-     * <br/>
+     * <br>
      * When a particular embedded section would get relexed till its end then
      * the next section may get relexed as well. For example if someone would add
      * "--&gt;" at the end of the first line in the example above then the third
      * line that used to be comment will be relexed and it will become an html text.
-     * <br/>
+     * <br>
      * Generally relexing of a next section happens in the following cases:
      * <ul>
      *     <li>

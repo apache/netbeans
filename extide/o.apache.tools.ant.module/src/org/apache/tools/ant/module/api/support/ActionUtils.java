@@ -122,11 +122,11 @@ public final class ActionUtils {
      * </p>
      * @param context a selection as provided to e.g. <code>ActionProvider.isActionEnabled(...)</code>
      * @param dir a constraining parent directory, or null to not check for a parent directory
-     * @param suffix a file suffix (e.g. <samp>.java</samp>) to constrain files by,
+     * @param suffix a file suffix (e.g. <code>.java</code>) to constrain files by,
      *               or null to not check suffixes
      * @param strict if true, all files in the selection have to be accepted
      * @return a nonempty selection of disk files, or null
-     * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled(java.lang.String,%20org.openide.util.Lookup)"><code>ActionProvider.isActionEnabled(...)</code></a>
+     * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled-java.lang.String-org.openide.util.Lookup-"><code>ActionProvider.isActionEnabled(...)</code></a>
      */
     public static FileObject[] findSelectedFiles(Lookup context, FileObject dir, String suffix, boolean strict) {
         if (dir != null && !dir.isFolder()) {
@@ -181,7 +181,7 @@ public final class ActionUtils {
      * <span class="nonnormative">(If you expect the target files to be created
      * by Ant you do not need this method, since Ant's mappers suffice.)</span>
      * The file paths considered by the regular expression (if supplied) always use
-     * <samp>/</samp> as the separator.
+     * <code>/</code> as the separator.
      * <p class="nonnormative">
      * Typical usage to map a set of Java source files to corresponding tests:
      * <code>regexpMapFiles(files, srcDir, Pattern.compile("/([^/]+)\\.java"), testSrcDir, "/\\1Test.java", true)</code>
@@ -239,7 +239,7 @@ public final class ActionUtils {
     /**
      * Create an "includes" string such as is accepted by many Ant commands
      * as well as filesets.
-     * <samp>/</samp> is always used as the separator in the relative paths.
+     * <code>/</code> is always used as the separator in the relative paths.
      * @param files a list of files or folders to include, in the case of folder
      * the generated include contains recursively all files under the folder.
      * @param dir a directory in which all the files reside
@@ -254,7 +254,7 @@ public final class ActionUtils {
     /**
      * Create an "includes" string such as is accepted by many Ant commands
      * as well as filesets.
-     * <samp>/</samp> is always used as the separator in the relative paths.
+     * <code>/</code> is always used as the separator in the relative paths.
      * @param files a list of files or folders to include, in the case of folder
      * the generated include contains recursively all files under the folder.
      * @param dir a directory in which all the files reside

@@ -60,8 +60,8 @@ public class WizardOperator extends NbDialogOperator {
         super(title);
     }
     
-    /** Returns operator of "Next >" button.
-     * @return  JButtonOperator instance of "Next >" button
+    /** Returns operator of "Next &gt;" button.
+     * @return  JButtonOperator instance of "Next &gt;" button
      */
     public JButtonOperator btNext() {
         if (_btNext == null) {
@@ -71,8 +71,8 @@ public class WizardOperator extends NbDialogOperator {
         return _btNext;
     }
     
-    /** Returns operator of "< Back" button.
-     * @return  JButtonOperator instance of "< Back" button
+    /** Returns operator of "&lt; Back" button.
+     * @return  JButtonOperator instance of "&lt; Back" button
      */
     public JButtonOperator btBack() {
         if (_btBack == null) {
@@ -103,12 +103,12 @@ public class WizardOperator extends NbDialogOperator {
         return _lstSteps;
     }
     
-    /** Pushes "Next >" button. */
+    /** Pushes "Next &gt;" button. */
     public void next() {
         btNext().push();
     }
     
-    /** Pushes "< Back" button. */
+    /** Pushes "&lt; Back" button. */
     public void back() {
         btBack().push();
     }

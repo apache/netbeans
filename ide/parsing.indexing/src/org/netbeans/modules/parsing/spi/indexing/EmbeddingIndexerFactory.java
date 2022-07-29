@@ -35,8 +35,8 @@ import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 public abstract class EmbeddingIndexerFactory extends SourceIndexerFactory {
    
     /**
-     * Creates  new {@link Indexer}.
-     * @param indexing for which the indexer should be created
+     * Creates  new {@link EmbeddingIndexer}.
+     * @param indexable for which the indexer should be created
      * @param snapshot for which the indexer should be created
      * @return an indexer
      */

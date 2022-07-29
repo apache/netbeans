@@ -23,12 +23,12 @@ import java.util.EventListener;
 
 /**
  * Listener for begining and end of the atomic locking.
- * <br/>
+ * <br>
  * Only outer atomic lock/unlock is being notified (nested locking is not notified).
- * <br/>
+ * <br>
  * There may be an empty atomic section when the lock is acquired and released
  * but no modification is done inside it.
- * <br/>
+ * <br>
  * Listener may be used to optimize regular document
  * listeners if a large amounts of edits are performed
  * in an atomic change. For example instead of restarting
@@ -56,7 +56,7 @@ import java.util.EventListener;
  *    }
  *
  *    private void modified() {
- *      if (modified && !atomic) {
+ *      if (modified &amp;&amp; !atomic) {
  *        restartTimer(); // restart the timer
  *      }
  *    }

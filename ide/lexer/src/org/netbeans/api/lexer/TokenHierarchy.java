@@ -31,7 +31,7 @@ import org.netbeans.lib.lexer.inc.DocumentInput;
  * Token hierarchy represents a given input source as a browsable hierarchy of tokens.
  * <br>
  * It's is an entry point into the Lexer API.
- * <br/>
+ * <br>
  * It allows to create token sequences for hierarchy exploration
  * and watching for token changes by attaching the token hierarchy listeners.
  * <br>
@@ -46,14 +46,14 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
     
     /**
      * Get or create mutable token hierarchy for the given swing document.
-     * <br/>
+     * <br>
      * The document may define a top language by doing
      * <code>doc.putProperty("mimeType", mimeType)</code>
      * (a language defined for the given mime type will be searched and used)
      * or by doing <code>putProperty(Language.class, language)</code>.
      * Otherwise the returned hierarchy will be inactive and {@link #tokenSequence()}
      * will return null.
-     * <br/>
+     * <br>
      * All the operations with the obtained token hierarchy
      * must be done under document's read lock (or write lock).
      *
@@ -88,11 +88,11 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
      *  will be tokenized.
      * @param skipTokenIds set containing the token ids for which the tokens
      *  should not be created in the created token hierarchy.
-     *  <br/>
+     *  <br>
      *  <code>null</code> may be passed which means that no tokens will be skipped.
-     *  <br/>
+     *  <br>
      *  This applies to top level of the token hierarchy only (not to embedded tokens).
-     *  <br/>
+     *  <br>
      *  The provided set should be efficient enough - ideally created by e.g.
      *  {@link Language#tokenCategoryMembers(String)}
      *  or {@link Language#merge(Collection,Collection)}.
@@ -118,11 +118,11 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
      *  will be tokenized.
      * @param skipTokenIds set containing the token ids for which the tokens
      *  should not be created in the created token hierarchy.
-     *  <br/>
+     *  <br>
      *  <code>null</code> may be passed which means that no tokens will be skipped.
-     *  <br/>
+     *  <br>
      *  This applies to top level of the token hierarchy only (not to embedded tokens).
-     *  <br/>
+     *  <br>
      *  The provided set should be efficient enough - ideally created by e.g.
      *  {@link Language#tokenCategoryMembers(String)}
      *  or {@link Language#merge(Collection,Collection)}.
@@ -148,9 +148,9 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
 
     /**
      * Get token sequence of the top level language of the token hierarchy.
-     * <br/>
+     * <br>
      * For token hierarchies over mutable input sources the input source must be read-locked.
-     * <br/>
+     * <br>
      * The token sequences for inner levels of the token hierarchy can be
      * obtained by calling {@link TokenSequence#embedded()}.
      *
@@ -168,7 +168,7 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
      * @return non-null token sequence or null if the hierarchy is active
      *  and its top level token sequence satisfies the condition
      *  <code>(tokenSequence().language() == language)</code>.
-     *  <br/>
+     *  <br>
      *  Null is returned otherwise.
      */
     public <T extends TokenId> TokenSequence<T> tokenSequence(Language<T> language) {
@@ -180,13 +180,13 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
     /**
      * Get immutable list of token sequences with the given language path
      * from this hierarchy.
-     * <br/>
+     * <br>
      * For mutable token hierarchies the method should only be invoked
      * within read-locked input source. A new list should be
      * obtained after each modification.
      * {@link java.util.ConcurrentModificationException} may be thrown
      * when iterating over (or retrieving items) from the obsolete list.
-     * <br/>
+     * <br>
      * For forward exploration of the list the iterator is preferred over
      * index-based iteration because the list contents can be constructed lazily.
      * 
@@ -242,7 +242,7 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
     
     /**
      * Get a set of language paths used by this token hierarchy.
-     * <br/>
+     * <br>
      * The set includes "static" paths that are those reachable by traversing
      * token ids of the top language and searching for the default embeddings
      * that could be created by
@@ -273,7 +273,7 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
     /**
      * Get input source providing text over which
      * this token hierarchy was constructed.
-     * <br/>
+     * <br>
      * It may be {@link java.lang.CharSequence} or {@link java.io.Reader}
      * or a mutable input source such as swing text document
      * {@link javax.swing.text.Document}.
@@ -287,9 +287,9 @@ public final class TokenHierarchy<I> { // "I" stands for mutable input source
     /**
      * Token hierarchy may be set inactive to release resources consumed
      * by tokens.
-     * <br/>
+     * <br>
      * Only token hierarchies over a mutable input can become inactive.
-     * <br/>
+     * <br>
      * When inactive the hierarchy does not hold any tokens and
      * {@link #tokenSequence()} return null.
      *

@@ -49,7 +49,7 @@ import org.netbeans.lib.lexer.inc.TokenListChange;
 
 /**
  * Token hierarchy operation services tasks of its associated token hierarchy.
- * <br/>
+ * <br>
  * There is one-to-one relationship between token hierarchy and its operation.
  *
  * @author Miloslav Metelka
@@ -115,7 +115,7 @@ public final class TokenHierarchyOperation<I, T extends TokenId> { // "I" stands
 
     /**
      * Mapping of language path to token list lists.
-     * <br/>
+     * <br>
      * If a token list list is contained then all its parents
      * with the shorter language path are also mandatorily maintained.
      */
@@ -467,7 +467,7 @@ public final class TokenHierarchyOperation<I, T extends TokenId> { // "I" stands
     
     /**
      * Get the token list list for the given language path.
-     * <br/>
+     * <br>
      * If the list needs to be created or it was non-mandatory.
      */
     public <ET extends TokenId> TokenListList<ET> tokenListList(LanguagePath languagePath) {

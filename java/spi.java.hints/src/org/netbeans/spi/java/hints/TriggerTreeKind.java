@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 /**Invoke the method for {@link TreePath}s of the given kind.
  *
  * The method must be {@code public static}, the return type must either be assignable to
- * {@link ErrorDescription} or to {@link Iterable}{@code <? extends }{@link ErrorDescription}{@code >}.
+ * {@link org.netbeans.spi.editor.hints.ErrorDescription} or to {@link Iterable}{@code <? extends }{@link org.netbeans.spi.editor.hints.ErrorDescription}{@code >}.
  * Its sole parameter must be {@link HintContext}.
  *
  * @author lahvac

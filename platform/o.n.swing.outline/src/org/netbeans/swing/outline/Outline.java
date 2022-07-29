@@ -99,7 +99,7 @@ import org.netbeans.swing.etable.ETableColumnModel;
  * a tooltip.  Assume the class this is implemented in is a 
  * JPanel subclass or other Swing container.
  * <br>
- * XXX todo: clean up formatting & edit for style
+ * XXX todo: clean up formatting &amp; edit for style
  * <pre>
  * public void initComponents() {
  *   setLayout (new BorderLayout());
@@ -161,7 +161,7 @@ import org.netbeans.swing.etable.ETableColumnModel;
  *      
  *      public java.awt.Color getForeground(Object o) {
  *          File f = (File) o;
- *          if (!f.isDirectory() && !f.canWrite()) {
+ *          if (!f.isDirectory() &amp;&amp; !f.canWrite()) {
  *              return UIManager.getColor ("controlShadow");
  *          }
  *          return null;
@@ -252,7 +252,7 @@ public class Outline extends ETable {
     
     /** Get the RenderDataProvider which is providing text, icons and tooltips
      * for items in the tree column.  The default property for this value is
-     * null, in which case standard JTable/JTree object -> icon/string 
+     * null, in which case standard JTable/JTree object -&gt; icon/string 
      * conventions are used */
     public RenderDataProvider getRenderDataProvider() {
         return renderDataProvider;

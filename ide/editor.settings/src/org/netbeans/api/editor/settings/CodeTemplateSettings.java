@@ -30,16 +30,16 @@ import javax.swing.KeyStroke;
  * <pre>
  * Lookup l = MimeLookup.getLookup(MimePath.parse(mimePath));
  * CodeTemplateSettings cds = l.lookup(CodeTemplateSettings.class);
- * List<CodeTemplateDescription> codeTemplates = cds.getCodeTemplateDescriptions();
+ * List&lt;CodeTemplateDescription&gt; codeTemplates = cds.getCodeTemplateDescriptions();
  * </pre>
  * 
  * <p><b>IMPORTANT</b>: There is a much more powerful API for working with editor
  * code templates in
- * <a href="@org-netbeans-lib-editor-codetemplates@/overview-summary.html">Editor Code Templates</a>
+ * <a href="@org-netbeans-modules-editor-codetemplates@/overview-summary.html">Editor Code Templates</a>
  * module. If you are retrieving this class from <code>MimeLookup</code> you should
  * should probably use the Editor Code Templates API instead.
  * 
- * <p><font color="red">This class must NOT be extended by any API clients.</font>
+ * <p><font style="color:red">This class must NOT be extended by any API clients.</font>
  *
  * @author Martin Roskanin
  */

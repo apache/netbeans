@@ -701,7 +701,7 @@ Branded version of module masks its own parts.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>
@@ -718,7 +718,7 @@ Can also register global XML catalogs as instances of <code>CatalogReader</code>
             Describe the overall architecture.
             <hint>
             What will be API for
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi" shape="rect">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API" shape="rect">
                 clients and what support API</a>?
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>

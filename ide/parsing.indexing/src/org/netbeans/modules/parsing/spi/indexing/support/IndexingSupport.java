@@ -101,7 +101,7 @@ public final class IndexingSupport {
 
     /**
      * Creates a new {@link IndexDocument}. This method does exactly the same as
-     * {@link #createDocument(org.netbeans.modules.parsing.spi.indexing.Indexable), but you can
+     * {@link #createDocument(org.netbeans.modules.parsing.spi.indexing.Indexable)}, but you can
      * use <code>FileObject</code>s directly. The <code>FileObject</code> passed in
      * as a parameter has to be in the folders hierarchy under the root, which
      * this <code>IndexingSupport</code> instance was created for.
@@ -190,7 +190,7 @@ public final class IndexingSupport {
     }
 
     /**
-     * Identifies parser Tasks that are executed by indexing infrastructure. Use to customize the granularity of a {@link Parser.Result}
+     * Identifies parser Tasks that are executed by indexing infrastructure. Use to customize the granularity of a {@link org.netbeans.modules.parsing.spi.Parser.Result}
      * provided by e.g. {@link EmbeddingIndexer} or {@link CustomIndexer}.
      * @param t task to check
      * @return true, if the task is posted by indexing infra.

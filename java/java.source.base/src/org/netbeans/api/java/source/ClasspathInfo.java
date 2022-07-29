@@ -260,8 +260,8 @@ public final class ClasspathInfo {
      * <div class="nonnormative">
      * <p>
      * It uses the {@link Document#StreamDescriptionProperty} to obtain the
-     * {@link DataObject} for the {@link Document} and creates a {@link ClasspathInfo}
-     * for the primary file of the {@link DataObject}
+     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> for the {@link Document} and creates a {@link ClasspathInfo}
+     * for the primary file of the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a>
      * </p>
      * </div>
      * @param doc a document for which the {@link ClasspathInfo} should be created

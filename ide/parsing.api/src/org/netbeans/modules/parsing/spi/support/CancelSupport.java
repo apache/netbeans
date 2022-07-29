@@ -43,7 +43,7 @@ import org.openide.util.Parameters;
  * }
  * }
  * </pre>
- * </p>
+ *
  * @since 1.74
  * @author Tomas Zezula
  */

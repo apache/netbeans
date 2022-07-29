@@ -46,9 +46,9 @@ public interface PropertyEvaluator {
     
     /**
      * Evaluate a block of text possibly containing property references.
-     * The syntax is the same as for Ant: <samp>${foo}</samp> means the value
-     * of the property <samp>foo</samp>; <samp>$$</samp> is an escape for
-     * <samp>$</samp>; references to undefined properties are left unsubstituted.
+     * The syntax is the same as for Ant: <code>${foo}</code> means the value
+     * of the property <code>foo</code>; <code>$$</code> is an escape for
+     * <code>$</code>; references to undefined properties are left unsubstituted.
      * @param text some text possibly containing one or more property references
      * @return its value, or null if some problem (such a circular definition) made
      *         it impossible to retrieve the values of some properties

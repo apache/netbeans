@@ -48,7 +48,7 @@ public class SegmentCache {
     
     /**
      * @return A free {@link javax.swing.text.Segment}. When done, the segment
-     * should be recycled by invoking {@link #releaseSegment()}.
+     * should be recycled by invoking {@link #releaseSegment(Segment)}.
      * 
      * @deprecated Simply returns <code>new Segment()</code>.
      */

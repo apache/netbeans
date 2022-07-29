@@ -450,7 +450,6 @@ public class ProxyClassLoader extends ClassLoader {
     /**
      * Faster way to find a package.
      * @param name package name in org.netbeans.modules.foo format
-     * @param sname package name in org/netbeans/modules/foo/ format
      * @param recurse whether to also ask parents
      * @return located package, or null
      */

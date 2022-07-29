@@ -156,7 +156,6 @@ public interface RepositoryProvider<R, Q, I> {
      * <p>
      * In case an error appears during execution, the implementation 
      * should take care of the error handling, user notification etc.
-     * </p>
      *
      * @param r an implementation specific repository
      * @param criteria
@@ -170,7 +169,6 @@ public interface RepositoryProvider<R, Q, I> {
      * <p>
      * Note that in case this method returns <code>true</code> {@link IssueProvider#attachFile(java.lang.Object, java.io.File, java.lang.String, boolean)}
      * has to be implemented as well.
-     * <p/>
      * 
      * @param r an implementation specific repository
      * @return <code>true</code> in case it is possible to attach files, otherwise <code>false</code>

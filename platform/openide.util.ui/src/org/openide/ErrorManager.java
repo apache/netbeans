@@ -52,7 +52,7 @@ import org.openide.util.WeakSet;
  * for reporting log events, unwanted exceptions, etc.  The methods
  * in this class which are deprecated are annotated with a description
  * how to use use the {@link Logger} methods to achieve the same goal.
- * </p>
+ * 
  * <p>
  * The levels in descending order are:
  * <ul>
@@ -63,7 +63,7 @@ import org.openide.util.WeakSet;
  * <li>INFORMATIONAL
  * <li>UNKNOWN (lowest value)
  * </ul>
- * </p>
+ * 
  *
  * <div class="nonnormative">
  * <p>How to...</p>
@@ -188,8 +188,7 @@ import org.openide.util.WeakSet;
  *     throw all;
  * }
  * </pre>
- * <dd>
- *
+ * 
  * <dt>Logging a warning message just simply uses the JDK's logging API</dt>
  * <dd>
  * <pre>
@@ -405,7 +404,7 @@ public abstract class ErrorManager extends Object {
      * the logging level for error managers of different names. For example, in the basic
      * NetBeans core implementation, you can define a system property with the same name
      * as the future error manager (or a package prefix of it) whose value is the numeric
-     * logging level (e.g. <samp>-J-Dorg.netbeans.modules.mymodule.ComplicatedParser=0</samp>
+     * logging level (e.g. <code>-J-Dorg.netbeans.modules.mymodule.ComplicatedParser=0</code>
      * to log everything). Other implementations may have quite different ways of configuring
      * the error managers.
      * @param name the desired identifying name

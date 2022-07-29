@@ -24,7 +24,7 @@ import java.awt.*;
 import java.awt.datatransfer.Transferable;
 
 /**
- * This interface controls an accept (drag & drop) action.
+ * This interface controls an accept (drag &amp; drop) action.
  *
  * @author David Kaspar
  */

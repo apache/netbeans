@@ -48,13 +48,13 @@ public class ETableColumnModel extends DefaultTableColumnModel {
     private static final String PROP_HIDDEN_POSITION_PREFIX = "HiddenPosition";
     
     /**
-     * List<ETableColumn>: holds list of sorted columns in this model.
+     * List&lt;ETableColumn&gt;: holds list of sorted columns in this model.
      * If the list is empty if no sorting is applied.
      */
     protected transient List<TableColumn> sortedColumns = new ArrayList<TableColumn>();
     
     /**
-     * List<ETableColumn>: holds list of columns that were hidden by the
+     * List&lt;ETableColumn&gt;: holds list of columns that were hidden by the
      * user. The columns contained here are not contained in the inherited
      * tableColumns list.
      */

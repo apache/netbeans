@@ -219,8 +219,8 @@ public abstract class Line extends Annotatable implements Serializable {
     /** Get the line number. The last condition in following should
     * always be true:
     * <PRE>
-    *   Line.Set lineSet = <line set>
-    *   Line l = <some line from line set lineSet>
+    *   Line.Set lineSet = &lt;line set&gt;
+    *   Line l = &lt;some line from line set lineSet&gt;
     *
     *   l.equals (lineSet.getCurrent (l.getLineNumber ()))
     * </PRE>

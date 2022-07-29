@@ -35,8 +35,8 @@ import org.openide.filesystems.FileObject;
 public interface JavaFileWizardIteratorFactory {
     /**
      * Creates an {@link Iterator} with project specific panels for given template.
-     * When the created {@link Iterator} is an instance of the {@link WizardDescriptor.InstantiatingIterator}
-     * the {@link WizardDescriptor.InstantiatingIterator} life cycle methods such as {@link WizardDescriptor.InstantiatingIterator#instantiate}
+     * When the created {@link Iterator} is an instance of the {@link org.openide.WizardDescriptor.InstantiatingIterator}
+     * the {@link org.openide.WizardDescriptor.InstantiatingIterator} life cycle methods such as {@link org.openide.WizardDescriptor.InstantiatingIterator#instantiate()}
      * are called on proper places.
      * @param template the template to create additional panels for
      * @return the {@link Iterator} with additional panels or null when no additional

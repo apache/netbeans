@@ -129,7 +129,7 @@ final class TokenListListUpdate<T extends TokenId> {
      * Mark the given token list as removed in the token list list.
      * All removed token lists should be marked subsequently their increasing offset
      * so it should be necessary to search for the index just once.
-     * <br/>
+     * <br>
      * It's expected that updateStatusImpl() was already called
      * on the corresponding embedding container.
      */
@@ -177,7 +177,7 @@ final class TokenListListUpdate<T extends TokenId> {
      * Mark the given token list to be added to this list of token lists.
      * At the end first the token lists marked for removal will be removed
      * and then the token lists marked for addition will be added.
-     * <br/>
+     * <br>
      * It's expected that updateStatusImpl() was already called
      * on the corresponding embedding container.
      */

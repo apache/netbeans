@@ -74,10 +74,12 @@ public class CompilationController extends CompilationInfo {
     /** Moves the state to required phase. If given state was already reached 
      * the state is not changed. The method will throw exception if a state is 
      * illegal required. Acceptable parameters for thid method are <BR>
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.PARSED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.ELEMENTS_RESOLVED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.RESOLVED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.UP_TO_DATE}   
+     * <ul>
+     * <li>{@link org.netbeans.api.java.source.JavaSource.Phase#PARSED}</li>
+     * <li>{@link org.netbeans.api.java.source.JavaSource.Phase#ELEMENTS_RESOLVED}</li>
+     * <li>{@link org.netbeans.api.java.source.JavaSource.Phase#RESOLVED}</li>
+     * <li>{@link org.netbeans.api.java.source.JavaSource.Phase#UP_TO_DATE}</li>
+     * </ul>
      * @param phase The required phase
      * @return the reached state
      * @throws IllegalArgumentException in case that given state can not be 

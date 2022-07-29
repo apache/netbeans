@@ -172,7 +172,7 @@ public final class Iterators {
         // -------------------------------------------------------------------------
 
         /**
-         * @inheritDoc
+         * {@inheritDoc}
          */
         public boolean hasNext() {
             updateCurrentIterator();
@@ -180,7 +180,7 @@ public final class Iterators {
         }
 
         /**
-         * @inheritDoc         
+         * {@inheritDoc}     
          */
         public E next() {
             updateCurrentIterator();

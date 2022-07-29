@@ -319,7 +319,8 @@ public class PopupManager {
      *  (visible part of the pane).
      *  The placement is first evaluated and put into the popup's client property
      *  by <CODE>popup.putClientProperty(Placement.class, actual-placement)</CODE>.
-     *  The actual placement is <UL>
+     *  The actual placement is 
+     * <UL>
      *  <LI> <CODE>Above</CODE> if the original placement was <CODE>Above</CODE>.
      *  Or if the original placement was <CODE>AbovePreferred</CODE>
      *  or <CODE>Largest</CODE>
@@ -334,6 +335,7 @@ public class PopupManager {
      *  <LI> <CODE>BelowPreferred</CODE> if the original placement
      *  was <CODE>BelowPreferred</CODE>
      *  and there is less space below the cursor than above it.
+     *  </UL>
      *  <P>Once the placement client property is set
      *  the <CODE>popup.setSize()</CODE> is called with the size of the area
      *  above/below the cursor (indicated by the placement).

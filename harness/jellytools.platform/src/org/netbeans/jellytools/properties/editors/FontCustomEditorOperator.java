@@ -36,7 +36,7 @@ import org.netbeans.jemmy.operators.*;
 public class FontCustomEditorOperator extends NbDialogOperator {
 
     /** Creates new FontCustomEditorOperator
-     * @throws TimeoutExpiredException when NbDialog not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when NbDialog not found
      * @param title String title of custom editor */
     public FontCustomEditorOperator(String title) {
         super(title);
@@ -65,7 +65,7 @@ public class FontCustomEditorOperator extends NbDialogOperator {
 
 
     /** Tries to find null JList in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JListOperator
      */
     public JListOperator lstFontName() {
@@ -76,7 +76,7 @@ public class FontCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JList in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JListOperator
      */
     public JListOperator lstFontSize() {
@@ -87,7 +87,7 @@ public class FontCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JTextField in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextFieldOperator
      */
     public JTextFieldOperator txtFontName() {
@@ -98,7 +98,7 @@ public class FontCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JTextField in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextFieldOperator
      */
     public JTextFieldOperator txtFontSize() {
@@ -109,7 +109,7 @@ public class FontCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JTextField in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextFieldOperator
      */
     public JTextFieldOperator txtFontStyle() {
@@ -120,7 +120,7 @@ public class FontCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JList in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JListOperator
      */
     public JListOperator lstFontStyle() {

@@ -38,9 +38,9 @@ import org.openide.util.TopologicalSortException;
  * Register as {@link BindingsProvider}. When called build description of JSON
  * types using methods like {@link #stringProperty(java.lang.String, boolean)}
  * and then pass the result into
- * {@link Response#applyBindings(org.netbeans.spi.knockout.Bindings)} method.
+ * <code>Response#applyBindings(org.netbeans.spi.knockout.Bindings)</code> method.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public final class Bindings {
 

@@ -37,7 +37,7 @@ public interface FlaggedClassPathImplementation extends ClassPathImplementation 
 
     /**
      * Returns the {@link ClassPath}'s flags.
-     * @return the {@link Flag}s
+     * @return the {@link ClassPath.Flag}s
      */
     @NonNull
     Set<ClassPath.Flag> getFlags();

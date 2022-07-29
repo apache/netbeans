@@ -27,7 +27,7 @@ import org.openide.util.Cancellable;
  * it will be called from outside of AWT.
  * 
  * @author Jan Lahoda
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @see TreeElement
  * @since 1.30
  */

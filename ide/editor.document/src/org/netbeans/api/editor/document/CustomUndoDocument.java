@@ -22,15 +22,13 @@ import javax.swing.undo.UndoableEdit;
 
 /**
  * Document that allows adding of a custom undoable edit during atomic transaction.
- * <br/>
+ * <br>
  * To obtain CustomUndoDocument instance the {@link LineDocumentUtils#as(javax.swing.text.Document, java.lang.Class) }
  * or {@link LineDocumentUtils#asRequired(javax.swing.text.Document, java.lang.Class) } may be used:
- * <code>
  * <pre>
  *   Document doc = ...
  *   CustomUndoDocument customUndoDoc = LineDocumentUtils.asRequired(doc, CustomUndoDocument.class);
  * </pre>
- * </code>
  *
  * @author Miloslav Metelka
  * @since 1.8
@@ -40,7 +38,7 @@ public interface CustomUndoDocument {
     /**
      * Add a custom undoable edit to the undoable edits being created
      * during an atomic transaction over the document.
-     * <br/>
+     * <br>
      * For example editor caret may add an undo edit allowing to restore caret(s) positions
      * before (or after) modifications during the atomic lock.
      *

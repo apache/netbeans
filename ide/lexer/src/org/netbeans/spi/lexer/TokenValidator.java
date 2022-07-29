@@ -25,10 +25,10 @@ import org.netbeans.api.lexer.TokenId;
 /**
  * Token validator checks whether an existing token was affected
  * by just performed input source modification so that it needs to be relexed.
- * <br/>
+ * <br>
  * If the modification was limited to a single non-flyweight token and the token validator
  * exists for a particular token id then the token validation is attempted.
- * <br/>
+ * <br>
  * Token validator can refuse validation by returning null from its only method
  * if the modification affects the token or if the validation is unsure.
  *
@@ -36,7 +36,7 @@ import org.netbeans.api.lexer.TokenId;
  * Token validation is part of fine-tuning of the lexing
  * and should be considered for all tokens that may have significant length
  * such as whitespace or comments.
- * <br/>
+ * <br>
  * The advantage of validation is that compared to lexing
  * it typically only explores the modified characters and few adjacent characters.
  *
@@ -51,11 +51,11 @@ public interface TokenValidator<T extends TokenId> {
      * to check whether token in which the text modification occurred
      * was only slightly modified by the performed modification and the lexer's
      * invocation is not necessary.
-     * <br/>
+     * <br>
      * Typically the token can be validated by returning the token with the same
      * token id (just with different length that can be determined
      * by <code>tokenText.length()</code>).
-     * <br/>
+     * <br>
      * But the validator can also return a token with different token id
      * (e.g. the identifier can become a keyword after the modification).
      *
@@ -66,7 +66,7 @@ public interface TokenValidator<T extends TokenId> {
      * @param modRelOffset &gt;0 offset of the text removal/insertion inside the token.
      * @param insertedLength &gt;0 length of the inserted text.
      * @return a new token instance produced by the token factory.
-     *  <br/>
+     *  <br>
      *  Null should be returned if the token must be relexed or if the validator
      *  is unsure whether it's able to resolve the situation properly.
      */

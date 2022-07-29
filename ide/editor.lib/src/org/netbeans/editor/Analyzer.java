@@ -81,7 +81,8 @@ public class Analyzer {
 
     /** Test line separator on given semgment. This implementation simply checks
     * the first line of file but it can be redefined to do more thorough test.
-    * @param seg segment where analyzes are performed
+    * @param chars char array with data to convert
+    * @param len valid portion of chars array
     * @return line separator type found in the file
     */
     public static String testLS(char chars[], int len) {
@@ -453,9 +454,7 @@ public class Analyzer {
     * after the whole initial read is finished.
     * @param doc document for which the initialization is performed
     * @param reader reader from which document should be read
-    * @param lsType line separator type
     * @param testLS test line separator of file and if it's consistent, use it
-    * @param markDistance the distance between the new syntax mark is put
     */
     public static void initialRead(BaseDocument doc, Reader reader, boolean testLS)
     throws IOException {
@@ -685,7 +684,7 @@ public class Analyzer {
 
     /** Get buffer filled with appropriate number of tabs. The buffer
     * can have actually more tabs than requested.
-    * @param numSpaces number of spaces
+    * @param numTabs number of tabs
     */
     public static char[] getTabsBuffer(int numTabs) {
         // check if there's enough space in white space array
@@ -713,7 +712,7 @@ public class Analyzer {
     }
 
     /** Get the string that should be used for indentation of the given level.
-     * @param indent indentation level
+     * param indent indentation level
      * @param expandTabs whether tabs should be expanded to spaces or not
      * @param tabSize size of the '\t' character
      */

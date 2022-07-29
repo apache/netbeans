@@ -165,7 +165,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     /** Find matching bracket or more generally block
      * that matches with the current position.
      * @param offset position of the starting bracket
-     * @param simple whether the search should skip comment and possibly other areas.
+     * @param simpleSearch whether the search should skip comment and possibly other areas.
      *   This can be useful when the speed is critical, because the simple
      *   search is faster.
      * @return array of integers containing starting and ending position
@@ -298,7 +298,6 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     }
 
     /** Get the blocks consisting of comments in a specified document area.
-    * @param doc document to work with
     * @param startPos starting position of the searched document area
     * @param endPos ending position of the searched document area
     */

@@ -92,11 +92,11 @@ is the proper place.
           <author login="sdedic"/>
           <compatibility binary="compatible" source="compatible" addition="yes"/>
           <description>
-              The default action on <a href="@TOP@/org/netbeans/modules/progress/api/ProgressHandle.html">ProgressHandle</a> is sometimes non-visual: open a file, focus a result, 
+              The default action on <a href="@TOP@/org/netbeans/api/progress/ProgressHandle.html">ProgressHandle</a> is sometimes non-visual: open a file, focus a result, 
               display an output window associated with the task, etc. Abstract action can be used now with the basic Progress API without
               dependency on NB- or Swing- specific APIs.
           </description>
-          <class package="org.netbeans.modules.progress.api" name="ProgressHandle"/>
+          <class package="org.netbeans.api.progress" name="ProgressHandle"/>
           <class package="org.netbeans.modules.progress.spi" name="InternalHandle"/>
       </change>
       <change id="progresshandle.time">

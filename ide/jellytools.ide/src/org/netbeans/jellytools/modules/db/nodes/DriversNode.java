@@ -25,7 +25,7 @@ import org.netbeans.jellytools.nodes.Node;
 import org.netbeans.jellytools.Bundle;
 import org.netbeans.jellytools.RuntimeTabOperator;
 
-/** Node representing "Databases > Drivers" node in Services tab.
+/** Node representing "Databases &gt; Drivers" node in Services tab.
  * <p>
  * Usage:<br>
  * <pre>
@@ -43,7 +43,7 @@ public class DriversNode extends Node {
             "DriverListNode_DISPLAYNAME");
     private static final Action addDriverAction = new AddDriverAction();
 
-    /** Finds "Databases > Drivers" node */
+    /** Finds "Databases &gt; Drivers" node */
     public static DriversNode invoke() {
         RuntimeTabOperator.invoke();
         return new DriversNode();

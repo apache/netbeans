@@ -69,7 +69,7 @@ import org.openide.windows.TopComponent;
 /**
  * Basic UI class for view tabs - non scrollable tabbed displayer, which shows all
  * tabs equally sized, proportionally. This class is independent on specific
- * L&F, acts as base class for specific L&F descendants.
+ * L&amp;F, acts as base class for specific L&amp;F descendants.
  * <p>
  * XXX eventually this class should be deleted and a subclass of BasicTabDisplayer can be used;
  * currently this is simply a port of the original code to the new API. Do not introduce any new

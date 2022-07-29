@@ -423,7 +423,7 @@ public final class NbMavenProject {
     }
 
     /**
-     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean) with {@code true}.
+     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean)} with {@code true}.
      */
     @Deprecated
     public void downloadDependencyAndJavadocSource() {

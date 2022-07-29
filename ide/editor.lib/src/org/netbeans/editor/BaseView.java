@@ -102,7 +102,7 @@ public abstract class BaseView extends View {
     * It can be binary composition of INSETS_TOP, MAIN_AREA and INSETS_BOTTOM.
     *
     * @param g Graphics to paint through
-    * @param clip clipping area of graphics object
+    * param clip clipping area of graphics object
     *
     */
     protected abstract int getPaintAreas(Graphics g, int clipY, int clipHeight);
@@ -110,7 +110,7 @@ public abstract class BaseView extends View {
     /** Paint either top insets, main area, or bottom insets.
     *
     * @param g Graphics to paint through
-    * @param clip clipping area of graphics object
+    * param clip clipping area of graphics object
     * @param paintAreas binary composition of paint areas
     */
     protected abstract void paintAreas(Graphics g, int clipY, int clipHeight, int paintAreas);

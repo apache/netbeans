@@ -28,7 +28,7 @@ import org.netbeans.lib.editor.codetemplates.ParametrizedTextParser;
  * Code template is represented by a parametrized text
  * that, after pre-processing, can be pasted into a given
  * text component.
- * <br/>
+ * <br>
  * Code template instances are either persistent (can be retrieved by
  * {@link CodeTemplateManager#getCodeTemplates()})
  * or temporary code templates that can be created

@@ -161,7 +161,8 @@ public final class RefactoringElementsBag {
     
     /**
      * fileChanges are performed after all element changes
-     * @param changes changes to be performed
+     * @param refactoring  changes to be performed
+     * @param el affacted element
      * @see Transaction
      * @see BackupFacility
      */

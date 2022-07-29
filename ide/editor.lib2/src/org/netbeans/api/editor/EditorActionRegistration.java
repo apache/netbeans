@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * of editor actions even without being explicitly created by <code>BaseKit.createActions()</code>.
  * <br>
  * The corresponding annotation processor will build a xml-layer entry file
- * in the corresponding <i>/Editors/&lt;mime-type&gt;/Actions</code> folder.
+ * in the corresponding <code>/Editors/&lt;mime-type&gt;/Actions</code> folder.
  *
  * @since 1.10
  * @author Miloslav Metelka
@@ -51,7 +51,7 @@ public @interface EditorActionRegistration {
     /**
      * Mime type for which the action will be registered.
      * <br>
-     * It implies the target folder of the registration <i>/Editors/&lt;mime-type&gt;/Actions</code>.
+     * It implies the target folder of the registration <code>/Editors/&lt;mime-type&gt;/Actions</code>.
      *
      * @return mime-type of the action registration (for example "text/x-java"
      *  or empty string which means that the action will be registered as global (for all mime-types).

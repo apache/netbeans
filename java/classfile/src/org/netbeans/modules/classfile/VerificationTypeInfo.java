@@ -49,7 +49,7 @@ public abstract class VerificationTypeInfo {
     public static final int ITEM_Null = 5;
     /** Verification type <code>uninitializedThis</code>. */
     public static final int ITEM_UninitializedThis = 6;
-    /** Verification type <code>object</object>. */
+    /** Verification type <code>object</code>. */
     public static final int ITEM_Object = 7;
     /** Verification type <code>uninitialized</code>. */
     public static final int ITEM_Uninitialized = 8;

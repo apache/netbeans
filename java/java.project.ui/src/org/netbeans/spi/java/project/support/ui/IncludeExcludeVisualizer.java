@@ -61,7 +61,7 @@ public class IncludeExcludeVisualizer {
     /**
      * Create a new visualizer.
      * Initially has no roots and includes anything (equivalent to
-     * an include pattern of <samp>**</samp> and an empty exclude pattern).
+     * an include pattern of <code>**</code> and an empty exclude pattern).
      */
     public IncludeExcludeVisualizer() {}
 

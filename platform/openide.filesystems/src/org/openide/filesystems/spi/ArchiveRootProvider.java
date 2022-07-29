@@ -25,8 +25,8 @@ import org.openide.filesystems.URLMapper;
 
 /**
  * A possibility to plug a support for java archives into FileUtil.
- * The interface is used by {@link FileUtil.isArchiveArtifact}, {@link FileUtil.isArchiveFile},
- * {@link FileUtil.getArchiveRoot}, {@link FileUtil.getArchiveFile}.
+ * The interface is used by {@link FileUtil#isArchiveArtifact}, {@link FileUtil#isArchiveFile},
+ * {@link FileUtil#getArchiveRoot}, {@link FileUtil#getArchiveFile}.
  * The implementations are registered in global lookup.
  * @author Tomas Zezula
  * @since 9.10
@@ -107,7 +107,7 @@ public interface ArchiveRootProvider {
 
     /**
      * Returns an URL representing the root of an archive.
-     * Clients may need to first call {@link #isArchiveFile(URL)} to determine if the URL
+     * Clients may need to first call {@link #isArchiveFile(URL,boolean)} to determine if the URL
      * refers to an archive file.
      * @param url of an java archive file
      * @return the archive-protocol URL of the root of the archive
@@ -116,7 +116,7 @@ public interface ArchiveRootProvider {
 
     /**
      * Returns a FileObject representing the root folder of an archive.
-     * Clients may need to first call {@link #isArchiveFile(FileObject)} to determine
+     * Clients may need to first call {@link #isArchiveFile(FileObject,boolean)} to determine
      * if the file object refers to an archive file.
      * The default implementation delegates to {@link ArchiveRootProvider#getArchiveRoot(URL)},
      * it can be overridden by an implementation in more efficient way.

@@ -150,7 +150,7 @@ public final class TextRegionManager {
 
     /**
      * Add a new group to the bottom of the edit groups stack and start its editing.
-     * <br/>
+     * <br>
      * This method should only be called from AWT thread.
      *
      * @param textSyncGroup
@@ -235,7 +235,7 @@ public final class TextRegionManager {
     /**
      * Add a sync group to the manager of text regions which will cause
      * the regions to be updated by the changes performed in the document.
-     * <br/>
+     * <br>
      * This method should be called under document's readlock to ensure
      * that the document will not be modified during execution of this method.
      * 

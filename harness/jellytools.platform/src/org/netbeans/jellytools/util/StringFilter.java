@@ -86,11 +86,11 @@ public class StringFilter {
      *
      * Usage:
      * <br><pre>
-     * replaceString("a-bcd-ef",    "b",  "d",  "")   => a--ef
-     * replaceString("abc-def",     "",   "c",  "")   => -def
-     * replaceString("ab-cdef",     "c",  "",   "")   => ab-
-     * replaceString("ab-cdef-ab",  "ab", "ab", "AB") => AB-cdef-AB
-     * replaceString("abcdef",      "",    "",  "AB") => abcdef
+     * replaceString("a-bcd-ef",    "b",  "d",  "")   =&gt; a--ef
+     * replaceString("abc-def",     "",   "c",  "")   =&gt; -def
+     * replaceString("ab-cdef",     "c",  "",   "")   =&gt; ab-
+     * replaceString("ab-cdef-ab",  "ab", "ab", "AB") =&gt; AB-cdef-AB
+     * replaceString("abcdef",      "",    "",  "AB") =&gt; abcdef
      * </pre>
      *
      * @return filtred string

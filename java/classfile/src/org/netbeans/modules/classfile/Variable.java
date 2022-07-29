@@ -94,7 +94,7 @@ public final class Variable extends Field {
     }
     
     /**
-     * Return a string in the form "<type> <name>".  Class types
+     * Return a string in the form "&lt;type&gt; &lt;name&gt;".  Class types
      * are shown in a "short" form; i.e. "Object" instead of
      * "java.lang.Object"j.
      *

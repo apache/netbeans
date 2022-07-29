@@ -31,7 +31,7 @@ import org.netbeans.jellytools.modules.db.actions.ExecuteCommandAction;
 import org.netbeans.jellytools.nodes.Node;
 import org.netbeans.jemmy.operators.JTreeOperator;
 
-/** Node representing "Databases > ${connection}" node in Services tab.
+/** Node representing "Databases &gt; ${connection}" node in Services tab.
  * <p>
  * Usage:<br>
  * <pre>
@@ -60,7 +60,7 @@ public class ConnectionNode extends Node {
                 "|"+connectionName(url, user, schema));
     }
 
-    /** Finds "Databases > ${connection}" node 
+    /** Finds "Databases &gt; ${connection}" node 
      * @param url database URL
      * @param user user name
      * @param schema schema name */

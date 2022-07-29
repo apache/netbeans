@@ -256,7 +256,7 @@ public interface PacHelperMethodsNetscape {
      * <br>
      * @param args up to max 3 arguments
      * @return 
-     * @see org.netbeans.network.proxy.pac.datetime.PacUtilsDateTime#WEEKDAY_NAMES
+     * @see org.netbeans.core.network.proxy.pac.datetime.PacUtilsDateTime#WEEKDAY_NAMES
      */
     public boolean weekdayRange(Object... args);
 
@@ -320,7 +320,7 @@ public interface PacHelperMethodsNetscape {
      *     true from beginning of year 1995 until the end of year 1997.
      * </pre>
      * 
-     * @see org.netbeans.network.proxy.pac.datetime.PacUtilsDateTime#MONTH_NAMES
+     * @see org.netbeans.core.network.proxy.pac.datetime.PacUtilsDateTime#MONTH_NAMES
      * @param args
      * @return 
      */

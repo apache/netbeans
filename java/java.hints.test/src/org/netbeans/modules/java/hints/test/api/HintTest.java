@@ -137,9 +137,9 @@ import static org.junit.Assert.assertTrue;
  * warnings are produced should look like:
  * <pre>
  * HintTest.create()
- *         .input("&lt;input Java source code>")
- *         .run(&lt;class containg the hint>)
- *         .assertWarnings("&lt;required warning(s)>");
+ *         .input("&lt;input Java source code&gt;")
+ *         .run(&lt;class containg the hint&gt;)
+ *         .assertWarnings("&lt;required warning(s)&gt;");
  * </pre>
  *
  * Note: when verifying that no warnings are produced in a particular situation,
@@ -148,12 +148,12 @@ import static org.junit.Assert.assertTrue;
  * A test verifying that a hint's transformation is correct:
  * <pre>
  * HintTest.create()
- *         .input("&lt;input Java source code>")
- *         .run(&lt;class containg the hint>)
- *         .findWarning("&lt;a warning produce by the hint>")
+ *         .input("&lt;input Java source code&gt;")
+ *         .run(&lt;class containg the hint&gt;)
+ *         .findWarning("&lt;a warning produce by the hint&gt;")
  *         .applyFix() //fill apply the only fix in the given ErrorDescription
  *         .assertCompilable()
- *         .assertOutput("&lt;output Java source code>");
+ *         .assertOutput("&lt;output Java source code&gt;");
  * </pre>
  *
  * All the tests run under the {@code test} branding, which allows to specify test values
@@ -987,7 +987,7 @@ public class HintTest {
         }
         /**Verifies that the current warning provides the given fixes.
          *
-         * @param fixes the {@link Fix#getText() } of the expected fixes
+         * @param expectedFixes the {@link Fix#getText() } of the expected fixes
          * @return itself
          * @throws AssertionError if the expected fixes do not match the provided fixes
          * @since 1.1
@@ -1009,7 +1009,7 @@ public class HintTest {
 
         /**Verifies that the current warning provides the given fixes.
          *
-         * @param fixes the {@link Fix#getText() } of the expected fixes
+         * @param bannedFixes the {@link Fix#getText() } of the expected fixes
          * @return itself
          * @throws AssertionError if the expected fixes do not match the provided fixes
          * @since 1.18
@@ -1187,7 +1187,6 @@ public class HintTest {
          * This method will compare the content of the file exactly with the provided
          * code.
          *
-         * @param fileName the name of the file that should be verified
          * @param code expected content of the resulting file.
          * @return the wrapper itself
          * @throws AssertionError if the result is not compilable

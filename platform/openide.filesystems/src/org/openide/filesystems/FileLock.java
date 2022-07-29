@@ -30,7 +30,7 @@ import java.util.logging.Level;
 * Normally this is sufficient protection. If you really need an atomic read, you may
 * simply lock the file, perform the read, and unlock it when done. The file will still
 * be protected against writes, although the read operation did not request a lock.
-* <p/>
+* <p>
 * The {@code FileLock} implements {@link AutoCloseable}, so it can be created within
 * try-with-resources resource clause and the lock will be released at the end of the try block.
 * 

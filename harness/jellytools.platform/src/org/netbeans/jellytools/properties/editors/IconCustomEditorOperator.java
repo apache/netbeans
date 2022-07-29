@@ -46,7 +46,7 @@ public class IconCustomEditorOperator extends NbDialogOperator {
     private JButtonOperator _btImportToProject;
 
     /** Creates new IconCustomEditorOperator that can handle it.
-     * Throws TimeoutExpiredException when NbDialog not found.
+     * @exception org.netbeans.jemmy.TimeoutExpiredException when NbDialog not found.
      * @param title title of custom editor 
      */
     public IconCustomEditorOperator(String title) {

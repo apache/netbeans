@@ -24,7 +24,8 @@ package org.netbeans.libs.git;
  * different questions during an inter-repository commands, e.g. fetch, push, clone.
  * If an API client runs a git command that accesses a remote repository and the repository
  * requires authentication then this is the class it should use to pass the credentials.
- * <h5>How to use this class</h5>
+ * <p>
+ * <strong>How to use this class</strong>
  * <ol>
  * <li>Get an instance of {@link GitClient} you want to run the fetch command with, see {@link GitRepository}</li>
  * <li>Extend this class and implement all abstract methods</li>
@@ -54,7 +55,7 @@ package org.netbeans.libs.git;
  *     public Boolean askYesNoQuestion (String uri, String prompt);
  * };
  * client.{@link GitClient#setCallback(org.netbeans.libs.git.GitClientCallback) setCallback(myCallback)};
- * List<String> refspecs = Arrays.asList("refs/heads/*:refs/remotes/origin/*");
+ * List&lt;String&gt; refspecs = Arrays.asList("refs/heads/*:refs/remotes/origin/*");
  * client.fetch("http://myrepositoryhost/path", refspecs, pm);
  * </pre>
  * 

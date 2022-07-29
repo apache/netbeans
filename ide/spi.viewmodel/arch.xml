@@ -55,7 +55,7 @@ The debuggercore/<api name="ViewModel" type="export" category="official" url="@o
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
@@ -74,7 +74,7 @@ and filters and updates itself accordingly.
         
 <!--
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented">
             use cases</a> of the new API. Who will use it at
             what circumstances and what will be the typical code to write
             to use the module.
@@ -102,7 +102,7 @@ Used by debugger to display various information - threads, call stack, variables
         
 <!--
         <question id="arch-quality" when="init">
-            How the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
+            How the <a href="https://netbeans.apache.org/participate/qualityevangelism.html">quality</a>
             of your code will be tested and 
             how future regressions are going to be prevented?
             <hint>
@@ -161,7 +161,7 @@ We would like to test 100% of our APIs.
         </question>
 -->
 <answer id="dep-nb">
-    <api name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org" group="java"/> 
+    <api name="OpenAPIs" type="import" category="official" group="java"/> 
 </answer>
 
 
@@ -413,7 +413,7 @@ Nothing.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

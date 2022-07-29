@@ -29,11 +29,11 @@ import org.openide.awt.UndoRedo;
 /**
  * An improved version of UndoRedo manager that locks document before
  * doing any other operations.
- * <br/>
+ * <br>
  * It supports grouping of undoable edits by extending UndoGroupManager.
- * <br/>
+ * <br>
  * It supports save actions that produce a compound undoable edit.
- * <br/>
+ * <br>
  * 
  * <p>
  * Following requirements should be met:
@@ -47,14 +47,14 @@ import org.openide.awt.UndoRedo;
  *   <li>When save occurred inside UM.edits the extra save actions are kept separately and undone
  *     when "coming out of the savepoint" and redone when "coming to a savepoint".</li>
  * </ul>
- * </p>
  * 
- * <p>
  * <tt>Undo Grouping</tt> allows explicit control of what
  * <tt>UndoableEdit</tt>s are coalesced into compound edits, rather than using
  * the rules defined by the edits themselves. Groups are defined using
  * BEGIN_COMMIT_GROUP and END_COMMIT_GROUP. Send these to UndoableEditListener.
- * These must always be paired. <p> These use cases are supported. </p> <ol>
+ * These must always be paired. 
+ * <p> These use cases are supported. </p> 
+ * <ol>
  * <li> Default behavior is defined by {@link UndoManager}.</li> <li>
  * <tt>UnddoableEdit</tt>s issued between {@link #BEGIN_COMMIT_GROUP} and {@link #END_COMMIT_GROUP}
  * are placed into a single
@@ -64,7 +64,7 @@ import org.openide.awt.UndoRedo;
  * <tt>CompoundEdit</tt> and to continue accumulating; an application could do
  * this at strategic points, such as EndOfLine input or cursor movement.</li>
  * </ol>
- * </p>
+ * 
  * 
  * @author Miloslav Metelka
  * @author Jaroslav Tulach

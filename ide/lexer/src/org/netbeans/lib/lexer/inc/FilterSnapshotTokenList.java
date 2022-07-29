@@ -32,12 +32,12 @@ import org.netbeans.lib.lexer.token.AbstractToken;
 
 /**
  * Filtering token list for token hierarchy snapshots.
- * <br/>
+ * <br>
  * It holds an offset diff between offset of a token related to particular snapshot
  * and a "natural" offset of a token (related to null token hierarchy).
- * <br/>
+ * <br>
  * For non-snapshots it's always zero.
- * <br/>
+ * <br>
  * It's used for token sequences over embedded token lists because
  * they are not SnapshotTokenList (only used for root token list) instances
  * so the embedded token lists need an extra relocation.

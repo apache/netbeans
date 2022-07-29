@@ -53,7 +53,7 @@ frames, components.
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API">
                 clients and what support API
             </a>? 
             What parts will be plugable.
@@ -87,7 +87,7 @@ November 15 2003.
 
 <!--
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented">
             usecases</a> of the new API. Who will use it at
             what circumstances and what will be the typical code to write
             to use the module.
@@ -96,14 +96,14 @@ November 15 2003.
 <answer id="arch-usecases">
     
   <p>
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
      </a>
     For general overview of the concepts, 
     together with code samples, see chapter 6, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
     by Jason Wexbridge and Walter Nyland.
   </p>
     
@@ -143,7 +143,7 @@ and cleanup the serialdata section - replace it with proper  "&lt;instance class
 
 <p></p>
     <b>A:</b>Yes it is correct way. You can check
-    <a href="http://www.netbeans.org/source/browse/platform/samples/window-system-groups/">simple test module</a>.
+    <a href="http://source.apidesign.org/hg/netbeans/misc/file/tip/platform/samples/window-system-groups">simple test module</a>.
     First you must get TopComponentGroup instance using find method then call TopComponentGroup.open()/close(). 
     Here is the code in your componentDeactivated method:
     <pre>
@@ -1415,7 +1415,7 @@ No.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

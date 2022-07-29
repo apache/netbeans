@@ -29,7 +29,7 @@ import org.netbeans.api.lexer.TokenId;
 
 /**
  * A set of token ids.
- * <br/>
+ * <br>
  * It is immutable in terms of a collection mutability although physically
  * the set can be mutated.
  *

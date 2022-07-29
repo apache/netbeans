@@ -74,7 +74,7 @@ public interface TokenList<T extends TokenId> {
     
     /**
      * Get token or {@link EmbeddingContainer} at given index in this list.
-     * <br/>
+     * <br>
      * The requested index value may be arbitrarily high
      * (e.g. when TokenSequence.move(index) is used for too high value).
      *
@@ -85,7 +85,7 @@ public interface TokenList<T extends TokenId> {
 
     /**
      * Replace flyweight token at the given index with its non-flyweight copy.
-     * <br/>
+     * <br>
      * This may be requested by <code>TokenSequence.offsetToken()</code>.
      *
      * @param index &gt;=0 index of the flyweight token in this list.
@@ -109,7 +109,7 @@ public interface TokenList<T extends TokenId> {
      * <br>
      * This method can only be called if the token at the given index
      * was already fetched by {@link tokenOrEmbedding(int)}.
-     * <br/>
+     * <br>
      * For EmbeddedTokenList an updateStatus() must be called
      * prior this method to obtain up-to-date results.
      * 
@@ -119,7 +119,7 @@ public interface TokenList<T extends TokenId> {
     
     /**
      * Get absolute offset of a token contained in this token list.
-     * <br/>
+     * <br>
      * For EmbeddedTokenList a EmbeddingContainer.updateStatus() must be called
      * prior this method to obtain up-to-date results.
      *
@@ -130,15 +130,15 @@ public interface TokenList<T extends TokenId> {
     
     /**
      * Get index of the token that "contains" the given offset.
-     * <br/>
+     * <br>
      * The result is in sync with TokenSequence.moveOffset().
      * 
      * @param offset offset for which the token index should be found.
      * @return array of two items where the [0] is token's index and [1] is its offset.
-     *  <br/>
+     *  <br>
      *  If offset &gt;= last-token-end-offset then [0] contains token-count and
      *  [1] conains last-token-end-offset.
-     *  <br/>
+     *  <br>
      *  [0] may contain -1 to indicate that there are no tokens in the token list
      *  ([1] then contains zero).
      */
@@ -146,7 +146,7 @@ public interface TokenList<T extends TokenId> {
     
    /**
      * Get total count of tokens in the list.
-     * <br/>
+     * <br>
      * For token lists that create the tokens lazily
      * this will lead to lexing till the end of the input.
      */
@@ -155,7 +155,7 @@ public interface TokenList<T extends TokenId> {
     /**
      * Return present number of tokens in the token list but do not create
      * any new tokens (because of possible lazy token creation).
-     * <br/>
+     * <br>
      * This is necessary e.g. for <code>TokenSequence.move()</code>
      * that needs a binary search for fast positioning 
      * but using {@link #tokenCount()} would lead to unnecessary creation
@@ -182,7 +182,7 @@ public interface TokenList<T extends TokenId> {
      * </p>
      *
      * @return number of modifications performed to the list.
-     *  <br/>
+     *  <br>
      *  Returns -1 if this list is constructed for immutable input and cannot be mutated. 
      */
     int modCount();
@@ -210,7 +210,7 @@ public interface TokenList<T extends TokenId> {
 
     /**
      * Get lookahead information for the token at the existing token index.
-     * <br/>
+     * <br>
      * Lookahead is number of characters that the lexer has read
      * past the end of the given token in order to recognize it in the text.
      * <br>
@@ -232,10 +232,10 @@ public interface TokenList<T extends TokenId> {
     
     /**
      * Get state information for the token at the existing token index.
-     * <br/>
+     * <br>
      * It is an object defining lexer's state after recognition
      * of the given token.
-     * <br/>
+     * <br>
      * This information allows to restart the lexer at the end of the given token.
      *
      * <p>
@@ -254,9 +254,9 @@ public interface TokenList<T extends TokenId> {
     /**
      * Returns true if the underlying token list does not contain offset ranges
      * that would not be covered by tokens.
-     * <br/>
+     * <br>
      * This could happen if a batch token list would use token id filter.
-     * <br/>
+     * <br>
      * If the token list is continuous the TokenSequence
      * can compute token offsets more efficiently.
      */
@@ -269,11 +269,11 @@ public interface TokenList<T extends TokenId> {
 
     /**
      * Get offset where a first token of this token list should start.
-     * <br/>
+     * <br>
      * If token filtering is used then the first token may start at higher offset.
-     * <br/>
+     * <br>
      * It's guaranteed that there will be no token starting below this offset.
-     * <br/>
+     * <br>
      * For EmbeddedTokenList a updateModCount() must be called
      * prior this method to obtain up-to-date results.
      */
@@ -281,11 +281,11 @@ public interface TokenList<T extends TokenId> {
     
     /**
      * Get offset where the last token of this token list should end.
-     * <br/>
+     * <br>
      * If token filtering is used then the last token may end at lower offset.
-     * <br/>
+     * <br>
      * It's guaranteed that there will be no token ending above this offset.
-     * <br/>
+     * <br>
      * For EmbeddedTokenList a updateModCount() must be called
      * prior this method to obtain up-to-date results.
      */
@@ -293,7 +293,7 @@ public interface TokenList<T extends TokenId> {
     
     /**
      * Check if this token list is removed from token hierarchy.
-     * <br/>
+     * <br>
      * Should only be called under a lock of a root token list.
      * 
      * @return true if the token list was removed or false otherwise.

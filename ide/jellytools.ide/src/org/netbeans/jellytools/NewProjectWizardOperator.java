@@ -29,7 +29,7 @@ import javax.swing.tree.TreePath;
 
 /**
  * Handles NetBeans New Project wizard and its components Categories and
- * Projects. It is invoked from main menu File -> New Project... <br> Usage:
+ * Projects. It is invoked from main menu File -&gt; New Project... <br> Usage:
  * <pre>
  *  NewProjectWizardOperator npwop = NewProjectWizardOperator.invoke();
  *  npwop.selectCategory("Standard");

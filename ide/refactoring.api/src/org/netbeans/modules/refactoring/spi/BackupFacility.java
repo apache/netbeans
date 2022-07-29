@@ -109,7 +109,7 @@ public abstract class BackupFacility {
     
     /**
      * @return default instance of this class. If there is instance of this 
-     * class in META-INF services -> this class is returned. Otherwise default 
+     * class in META-INF services -&gt; this class is returned. Otherwise default 
      * implementation is used.
      */
     public static BackupFacility getDefault() {
@@ -128,11 +128,12 @@ public abstract class BackupFacility {
     /**
      * Handle class representing handle to file(s), which were backuped
      * by
-     * {@link  org.netbeans.modules.refactoring.spi.BackupFacility#backup()}
+     * {@link #backup(org.openide.filesystems.FileObject...) } or {@link #backup(java.util.Collection)  }
      */
     public interface Handle {
         /**
-         * restore file(s), which was stored by  {@link  org.netbeans.modules.refactoring.spi.BackupFacility#backup()}
+         * restore file(s), which was stored by  {@link #backup(org.openide.filesystems.FileObject...) } 
+         * or {@link #backup(java.util.Collection)  }
          * @throws java.io.IOException if restore failed.
          */
         void restore() throws IOException;

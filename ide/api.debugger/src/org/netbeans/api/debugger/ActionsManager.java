@@ -140,7 +140,6 @@ public final class ActionsManager {
      *
      * @param action action constant (default set of constants are defined
      *    in this class with ACTION_ prefix)
-     * @return true if action has been performed
      */
     public final void doAction (final Object action) {
         doiingDo = true;
@@ -169,7 +168,7 @@ public final class ActionsManager {
     /**
      * Post action on this DebuggerEngine.
      * This method does not block till the action is done,
-     * if {@link #canPostAsynchronously} returns true.
+     * if <code>canPostAsynchronously</code> returns true.
      * Otherwise it behaves like {@link #doAction}.
      * The returned task, or
      * {@link ActionsManagerListener} can be used to

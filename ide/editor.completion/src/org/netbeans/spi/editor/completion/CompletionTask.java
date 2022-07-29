@@ -75,7 +75,7 @@ public interface CompletionTask {
      * 
      * @param resultSet non-null result set to which the results
      *  of the refreshing must be added.
-     *  <br/>
+     *  <br>
      *  Null result set may be passed in case the <code>query()</code>
      *  was not invoked yet and user has typed a character. In this case
      *  the provider may hide the completion

@@ -546,8 +546,8 @@ public class BaseTextUI extends BasicTextUI implements
 
     /** Creates a view for an element.
     * @param elem the element
-    * @param p0 the starting offset >= 0
-    * @param p1 the ending offset >= p0
+    * @param p0 the starting offset &gt;= 0
+    * @param p1 the ending offset &gt;= p0
     * @return the view
     */
     public @Override View create(Element elem, int p0, int p1) {

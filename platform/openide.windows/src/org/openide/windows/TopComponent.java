@@ -645,7 +645,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * 
      * @param component the component to open
      * @param displayName the display name of the action
-     * @param image the image to associated with the action
+     * @param iconBase the image to associated with the action
      * @param noIconInMenu true if this icon shall not have an item in menu
      * @see OpenActionRegistration
      * 
@@ -796,7 +796,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * if it is not already.
      * <p>Subclasses should override this method to transfer focus to desired
      * focusable component. <code>TopComponent</code> itself is not focusable.
-     * See for example {@link org.openide.text.CloneableEditor#requestFocus}.
+     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocus--">CloneableEditor#requestFocus</a>.
      * <p><strong>Note:</strong> Use {@link #requestActive} instead to make TopComponent active
      * in the window system (not only focused). This method should be considered deprecated
      * for calling from outside; but it may be overridden (inside of which you may call super).
@@ -816,7 +816,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * if it is not already.
      * <p>Subclasses should override this method to transfer focus to desired
      * focusable component. <code>TopComponent</code> itself is not focusable.
-     * See for example {@link org.openide.text.CloneableEditor#requestFocusInWindow}.
+     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocusInWindow--">CloneableEditor#requestFocusInWindow</a>.
      * <p><strong>Note:</strong> Use {@link #requestActive} instead to make TopComponent active
      * in the window system (not only focused). This method should be considered deprecated
      * for calling from outside; but it may be overridden (inside of which you may call super).
@@ -887,7 +887,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * window.
      * It is safe to call this method outside EDT.
      *
-     * @param True to start 'busy' notification, 'false' to stop it.
+     * @param busy true to start 'busy' notification, 'false' to stop it.
      *
      * @see WindowManager#topComponentMakeBusy(org.openide.windows.TopComponent, boolean)
      * @since 6.51
@@ -1297,7 +1297,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * an action just because focus is transferred from a component with a (potential)
      * node selection to a component that does not have node selections.
      * <p>
-     * If you override the method in your subclass, the default activatedNodes<->lookup synchronization
+     * If you override the method in your subclass, the default activatedNodes&lt;-&gt;lookup synchronization
      * will not be performed. That can influence functionality that relies on activated Nodes being present 
      * in the TopComponent's lookup. If you want to preserve the synchronization, use {@link #associateLookup}
      * instead.

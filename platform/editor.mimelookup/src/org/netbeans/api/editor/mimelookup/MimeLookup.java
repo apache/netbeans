@@ -96,7 +96,7 @@ public final class MimeLookup extends Lookup {
      * Gets a <code>Lookup</code> implementation that exposes objects specific
      * for the given <code>MimePath</code> for the given mime-type
      * or mime-path given as string.
-     * <br/>
+     * <br>
      * The method first translates the string mime-path into {@link MimePath}
      * by using {@link MimePath#parse(String)} and then calls
      * {@link #getLookup(MimePath)}.

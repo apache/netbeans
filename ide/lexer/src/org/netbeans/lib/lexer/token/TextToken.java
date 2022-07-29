@@ -26,7 +26,7 @@ import org.netbeans.lib.lexer.WrapTokenId;
 /**
  * Token with an explicit text - either serving a flyweight token
  * or a non-flyweight replacement for a flyweight token.
- * <br/>
+ * <br>
  * The represented text should be the same like the original content
  * of the recognized text input portion.
  *
@@ -34,7 +34,7 @@ import org.netbeans.lib.lexer.WrapTokenId;
  * The text token can act as a flyweight token by calling
  * {@link AbstractToken.makeFlyweight()}. In such case a single token
  * instance is shared for all the occurrences of the token.
- * <br/>
+ * <br>
  * The rawOffset is -1 and tokenList reference is null.
  * </p>
  *
@@ -50,7 +50,7 @@ public class TextToken<T extends TokenId> extends AbstractToken<T> {
      * Create text token. The token's text
      * is expected to correspond to the recognized input portion
      * (i.e. the text is not custom).
-     * <br/>
+     * <br>
      * The token can be made flyweight by using <code>makeFlyweight()</code>.
      *
      * @param wid non-null identification of the token.

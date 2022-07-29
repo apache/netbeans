@@ -23,7 +23,7 @@ import javax.swing.text.BadLocationException;
 
 /**
  * Indent task performs indentation on a single or multiple lines.
- * <br/>
+ * <br>
  * Typically it is used to fix indentation after newline was inserted
  * or to fix indentation for a selected block of code.
  *
@@ -39,11 +39,11 @@ public interface IndentTask {
     /**
      * Perform reindentation of the line(s) of {@link Context#document()}
      * between {@link Context#startOffset()} and {@link Context#endOffset()}.
-     * <br/>
+     * <br>
      * It is called from AWT thread and it should process synchronously. It is used
      * after a newline is inserted after the user presses Enter
      * or when a current line must be reindented e.g. when Tab is pressed in emacs mode.
-     * <br/>
+     * <br>
      * The method should use information from the context and modify
      * indentation at the given offset in the document.
      * 
@@ -59,7 +59,7 @@ public interface IndentTask {
 
     /**
      * Indent task factory produces indent tasks for the given context.
-     * <br/>
+     * <br>
      * It should be registered in MimeLookup via xml layer in "/Editors/&lt;mime-type&gt;"
      * folder.
      */

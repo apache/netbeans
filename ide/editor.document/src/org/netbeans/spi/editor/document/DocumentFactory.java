@@ -26,7 +26,7 @@ import org.openide.filesystems.FileObject;
 
 /**
  * Interface to create documents. Implementations should be registered in the
- * {@link MimeLookup} for an appropriate MIME type. The system may provide a default
+ * {@link org.netbeans.api.editor.mimelookup.MimeLookup} for an appropriate MIME type. The system may provide a default
  * implementation for all MIME types.
  * 
  * @author sdedic

@@ -147,7 +147,7 @@ public abstract class Field {
     }
 
     /**
-     * Returns al<ClassName,Annotation>l runtime annotations defined for this field.  Inherited
+     * Returns all runtime annotations defined for this field.  Inherited
      * annotations are not included in this collection.
      */
     public final Collection<Annotation> getAnnotations() {

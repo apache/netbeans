@@ -90,7 +90,7 @@ public final class PlatformUiSupport {
      * The model listens on the {@link JavaPlatformManager} and update its
      * state according to the changes.
      * @param activePlatform the active project's platform, can be <code>null</code>.
-     * @param filter project specific filter to filter-out platforms that are not usable in given context
+     * @param filters project specific filter to filter-out platforms that are not usable in given context
      * @return {@link ComboBoxModel}.
      */
     public static ComboBoxModel createPlatformComboBoxModel(String activePlatform, Collection<? extends PlatformFilter> filters) {
@@ -129,7 +129,7 @@ public final class PlatformUiSupport {
     }
 
     /**
-     * Like {@link #storePlatform(EditableProperties, UpdateHelper, Object, Object)}, but platform name may be
+     * Like {@link #storePlatform(EditableProperties, UpdateHelper, String, Object, Object)}, but platform name may be
      * <code>null</code> (in such case the default platform is used).
      * @param props project's shared properties.
      * @param helper {@link UpdateHelper} that is capable to upgrade project metadata if needed.
@@ -216,7 +216,7 @@ public final class PlatformUiSupport {
      * @param projectConfigurationNamespace project configuration namespace.
      * @param platformKey the {@link PlatformKey} got from the platform model.
      * @param sourceLevelKey {@link SourceLevelKey} representing source level; can be <code>null</code>.
-     * @param profileKey {@link Profile} representing required profile; can be <code>null</code> for full JRE.
+     * @param profileKey {@link SourceLevelQuery.Profile} representing required profile; can be <code>null</code> for full JRE.
      * @param updatePreferredPlatform if true the {@link PreferredProjectPlatform} will be updated
      * @since 1.45
      */
@@ -469,13 +469,13 @@ public final class PlatformUiSupport {
     }
 
     /**
-     * Exactly like {@link #createSourceLevelComboBoxModel(ComboBoxModel, String, String, JDK)}
+     * Exactly like {@link #createSourceLevelComboBoxModel(ComboBoxModel, String, String, SpecificationVersion)}
      * but without any minimal JDK version.
      * @param platformComboBoxModel the platform's model used for listenning.
      * @param initialSourceLevel initial source level value, null if unknown.
      * @param initialTargetLevel initial target level value, null if unknown.
      * @return {@link ComboBoxModel} of {@link SourceLevelKey}.
-     * @see #createSourceLevelComboBoxModel(ComboBoxModel, String, String, JDK)
+     * @see #createSourceLevelComboBoxModel(ComboBoxModel, String, String, SpecificationVersion)
      */
     public static ComboBoxModel createSourceLevelComboBoxModel(ComboBoxModel platformComboBoxModel,
             String initialSourceLevel, String initialTargetLevel) {

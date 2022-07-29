@@ -29,7 +29,7 @@ import javax.swing.text.Document;
  * the begining of the atomic operation
  * can be undone by using atomicUndo().
  * Typical scenario of the operation
- * is the following: <PRE>
+ * is the following: <pre>
  *   doc.atomicLock();
  *   try {
  *     ...
@@ -42,11 +42,11 @@ import javax.swing.text.Document;
  *   } finally {
  *     doc.atomicUnlock();
  *   }
- *   <PRE>
- *   <P>The external clients can watch for atomic operations
+ *   </pre>
+ *   <p>The external clients can watch for atomic operations
  *   by registering an listener through
  *   {@link addAtomicLockListener(AtomicLockListener)}
- * @deprecated Use {@link org.netbeans.api.editor.AtomicLockDocument}
+ * @deprecated Use {@link org.netbeans.api.editor.document.AtomicLockDocument}
  */
 @Deprecated
 public interface AtomicLockDocument extends Document {

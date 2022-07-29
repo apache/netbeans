@@ -32,7 +32,7 @@ import javax.enterprise.deploy.spi.TargetModuleID;
  */
 public interface OldJSPDebug extends FindJSPServlet {
 
-    /** Creates a servlet <-> JSP mapping for a given JSP. May be null if the server is not running
+    /** Creates a servlet &lt;-&gt; JSP mapping for a given JSP. May be null if the server is not running
      *  or the page has not been compiled. Also may be null if the server plugin does not support
      *  creation of the line mapping information.
      * @param module web module in which the JSP is located.
@@ -42,7 +42,7 @@ public interface OldJSPDebug extends FindJSPServlet {
      */
     public JspSourceMapper getSourceMapper(TargetModuleID module, String jspResourcePath);
     
-    /** Provides common interface for JSP <----> Java mappings */
+    /** Provides common interface for JSP &lt;----&gt; Java mappings */
     public interface JspSourceMapper {
         
         /** Converts the JSP file name (from the string int the servlet comments into

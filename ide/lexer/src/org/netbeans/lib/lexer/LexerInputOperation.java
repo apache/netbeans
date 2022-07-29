@@ -56,7 +56,7 @@ public abstract class LexerInputOperation<T extends TokenId> {
     
     /**
      * Current reading index which usually corresponds to real offset.
-     * <br/>
+     * <br>
      * It should be set to its initial value in the constructor by descendants.
      */
     protected int readOffset;
@@ -141,7 +141,7 @@ public abstract class LexerInputOperation<T extends TokenId> {
 
     /**
      * Fill appropriate data like token list and offset into a non-flyweight token.
-     * <br/>
+     * <br>
      * This method should also move over the token's characters by increasing
      * starting offset of the token and possibly other related variables.
      * 

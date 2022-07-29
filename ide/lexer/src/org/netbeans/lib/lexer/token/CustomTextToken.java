@@ -26,7 +26,7 @@ import org.netbeans.lib.lexer.WrapTokenId;
  * Token with a custom text and the token length likely different
  * from text's length. It can be used to shrink size of the input chars
  * being referenced from skim token list by referencing some fixed characters.
- * <br/>
+ * <br>
  * Token with the custom text cannot be branched by a language embedding.
  *
  * @author Miloslav Metelka

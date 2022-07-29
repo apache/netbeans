@@ -31,21 +31,21 @@ import org.netbeans.lib.lexer.inc.TokenHierarchyEventInfo;
 
 /**
  * List of token lists that collects all token lists for a given language path.
- * <br/>
+ * <br>
  * There can be both lists with/without joining of the embedded sections.
  * Non-joining TLL gets created when someone asks for TokenHierarchy.tokenSequenceList().
  * Joining TLL gets created if any of the embeddings for the particular language path
  * has LanguageEmbedding.joinSections() set to true.
- * <br/>
+ * <br>
  * Initial implementation attempted to initialize the list of token lists lazily
  * upon asking for it by client. However there was a problem with fixing
  * of token list explorers' state when the list is partially initialized
  * and there is an update of the token hierarchy. Sometimes there were inconsistencies
  * that a particular token list appeared twice in the token list list.
- * <br/>
+ * <br>
  * Current impl is non-lazy so once the list becomes created it gets fully initialized
  * by traversing the parent token lists's tokens for embeddings of the particular language.
- * <br/>
+ * <br>
  * Advantages:
  * <ul>
  *   <li> Easier updating - no issues with incomplete exploration.
@@ -62,9 +62,9 @@ import org.netbeans.lib.lexer.inc.TokenHierarchyEventInfo;
  * 
  * <p>
  * joinSections approach:
- * <br/>
+ * <br>
  * Non-joining embedded token lists' contents will be lexed without token list list assistance.
- * <br/>
+ * <br>
  * JoinTokenList deals with sections joining.
  * </p>
  *

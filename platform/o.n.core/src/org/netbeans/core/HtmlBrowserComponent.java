@@ -157,7 +157,7 @@ public class HtmlBrowserComponent extends CloneableTopComponent implements Prope
         super.open();
     }
 
-    /** Serializes browser component -> writes Replacer object which
+    /** Serializes browser component -&gt; writes Replacer object which
     * holds browser content and look. */
     @Override
     protected Object writeReplace ()

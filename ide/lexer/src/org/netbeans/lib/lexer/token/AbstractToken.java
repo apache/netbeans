@@ -32,7 +32,7 @@ import org.netbeans.lib.lexer.WrapTokenId;
 
 /**
  * Abstract token is base class of all token implementations used in the lexer module.
- * <br/>
+ * <br>
  * Two descendants of AbstractToken:
  * <ul>
  *   <li>{@link DefaultToken} - by default does not contain a text but points
@@ -111,7 +111,7 @@ implements TokenOrEmbedding<T> {
 
     /**
      * Get raw offset of this token.
-     * <br/>
+     * <br>
      * Raw offset must be preprocessed before obtaining the real offset.
      */
     public final int rawOffset() {

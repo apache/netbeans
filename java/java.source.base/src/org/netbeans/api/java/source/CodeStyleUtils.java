@@ -25,7 +25,7 @@ import org.netbeans.lib.editor.util.CharSequenceUtilities;
 
 /**
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @since 0.123
  */
 public final class CodeStyleUtils {

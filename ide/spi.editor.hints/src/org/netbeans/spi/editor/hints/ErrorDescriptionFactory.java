@@ -321,8 +321,9 @@ public class ErrorDescriptionFactory {
      * @param description the text of the error/warning
      * @param details optional "more details" describing the error/warning
      * @param fixes a collection of {@link Fix}es that should be shown for the error/warning
-     * @param file for which the {@link ErrorDescription} should be created
-     * @param errorBounds start and end position of the error/warning
+     * @param doc for which the {@link ErrorDescription} should be created
+     * @param start start position of the error/warning
+     * @param end end position of the error/warning
      * @return a newly created {@link ErrorDescription} based on the given parameters
      * @since 1.39
      */

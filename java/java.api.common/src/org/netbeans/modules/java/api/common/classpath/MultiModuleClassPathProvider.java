@@ -1278,7 +1278,7 @@ public final class MultiModuleClassPathProvider extends AbstractClassPathProvide
 
         /**
          * Sets javac processor {@link ClassPath} properties.
-         * @param processorClassPathProperties the names of properties containing the compiler processor path for sources, by default {@link ProjectProperties#JAVAC_PROCESSORPATH}
+         * @param processorClasspathProperties the names of properties containing the compiler processor path for sources, by default {@link ProjectProperties#JAVAC_PROCESSORPATH}
          * @return {@link Builder}
          */
         @NonNull
@@ -1290,7 +1290,7 @@ public final class MultiModuleClassPathProvider extends AbstractClassPathProvide
 
         /**
          * Sets javac processor {@link ClassPath} properties for test roots.
-         * @param processorClassPathProperties the names of properties containing the compiler processor path for sources, by default {@link ProjectProperties#JAVAC_PROCESSORPATH}
+         * @param processorClasspathProperties the names of properties containing the compiler processor path for sources, by default {@link ProjectProperties#JAVAC_PROCESSORPATH}
          * @return {@link Builder}
          */
         @NonNull
@@ -1301,8 +1301,8 @@ public final class MultiModuleClassPathProvider extends AbstractClassPathProvide
         }
 
         /**
-         * Sets a {@link JavaPlatform} type for boot {@link ClassPath} lookup.
-         * @param platformType the type of {@link JavaPlatform}, by default "j2se"
+         * Sets a {@link org.netbeans.api.java.platform.JavaPlatform} type for boot {@link ClassPath} lookup.
+         * @param platformType the type of {@link org.netbeans.api.java.platform.JavaPlatform}, by default "j2se"
          * @return {@link Builder}
          */
         @NonNull

@@ -45,7 +45,6 @@ public interface WebResourceCollection extends CommonDDBean, DescriptionInterfac
          */
 	public java.lang.String getUrlPattern(int index);
         /** Setter for url-pattern property.
-         * @param index position in the array of url-patterns
          * @param value array of url-pattern properties
          */
 	public void setUrlPattern(java.lang.String[] value);
@@ -78,7 +77,6 @@ public interface WebResourceCollection extends CommonDDBean, DescriptionInterfac
          */
 	public java.lang.String getHttpMethod(int index);
         /** Setter for http-method property.
-         * @param index position in the array of http-methods
          * @param value array of http-method properties
          */
 	public void setHttpMethod(java.lang.String[] value);

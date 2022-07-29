@@ -217,7 +217,7 @@ public final class Option {
         return new Option(shortName, longName, 2);
     }
 
-    /** Creates an option that can accept <q>additional arguments</q>.
+    /** Creates an option that can accept <code>additional arguments</code>.
      * For example to have option that opens few files
      * one could write:<pre>
      * Option openOption = Option.additionalArguments('o', "open");</pre> 
@@ -241,8 +241,8 @@ public final class Option {
      * <code>{ "X.java", "Y.java", "Z.txt" }</code>.
      * <p>
      * Obviously only one such {@link Option#additionalArguments} can be
-     * used at once on a command line. If there was not only the <q>open</q>
-     * but also <q>edit</q> option 
+     * used at once on a command line. If there was not only the <code>open</code>
+     * but also <code>edit</code> option 
      * taking the additional arguments, 
      * then command line like: <pre>
      * --edit X.java --open Y.java Z.txt</pre>
@@ -254,7 +254,7 @@ public final class Option {
     public static Option additionalArguments(char shortName, String longName) {
         return new Option(shortName, longName, 3);
     }
-    /** Creates a default option that accepts <q>additional arguments</q>
+    /** Creates a default option that accepts <code>additional arguments</code>
      * not claimed by any other option. 
      * For example to have option that opens few files
      * one could write:<pre>
@@ -298,7 +298,7 @@ public final class Option {
     /** Creates an option that is always present. This can be useful for
      * processors that want to be notified everytime the command line
      * is successfuly parsed. 
-     * 
+     * <pre>
      * Option always = Option.always();</pre> 
      * and inside of the {@link OptionProcessor} declaring this
      * option use:<pre>

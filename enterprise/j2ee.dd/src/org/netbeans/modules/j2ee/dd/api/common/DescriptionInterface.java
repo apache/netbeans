@@ -69,7 +69,7 @@ public interface DescriptionInterface {
     public String getDefaultDescription();
 
     /**
-     * Returns all description elements in the form of <@link java.util.Map>. 
+     * Returns all description elements in the form of {@link java.util.Map}. 
      *
      * @return map of all descriptions in the form of [locale:description]
      */

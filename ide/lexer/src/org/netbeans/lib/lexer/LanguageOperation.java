@@ -66,7 +66,7 @@ public final class LanguageOperation<T extends TokenId> implements PropertyChang
      * Find the language paths either for this language only
      * or from TokenHierarchyOperation when adding a new default or custom embedding
      * to the token hierarchy.
-     * <br/>
+     * <br>
      * As a language may finally be embedded in itself (e.g. someone might
      * want to syntax color java code snippet embedded in javadoc)
      * this method must prevent creation of infinite language paths

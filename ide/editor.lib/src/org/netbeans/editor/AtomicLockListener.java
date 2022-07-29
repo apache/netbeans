@@ -29,7 +29,7 @@ import java.util.EventListener;
  * a timer restarted after each document modification
  * to update an external pane showing the document structure
  * after 2000ms past the last modification occurred
- * then there could be a following listener used:<PRE>
+ * then there could be a following listener used:<pre>
  *  class MultiListener implements DocumentListener, AtomicLockListener {
  *
  *    private boolean atomic; // whether in atomic change
@@ -60,7 +60,7 @@ import java.util.EventListener;
  *    }
  *
  *  }
- *  <PRE>
+ *  </pre>
  * @deprecated use {@link org.netbeans.api.editor.document.AtomicLockListener}
  */
 @Deprecated

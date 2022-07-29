@@ -28,15 +28,14 @@ import javax.swing.text.Position;
  * is able to find Element for paragraph (line) that contains the specified
  * position and also transform the position to a visual column index (takes
  * tab expansion settings into account).
- * <br/>
+ * <br>
  * To obtain LineDocument instance the {@link LineDocumentUtils#as(javax.swing.text.Document, java.lang.Class) }
  * or {@link LineDocumentUtils#asRequired(javax.swing.text.Document, java.lang.Class) } may be used:
- * <code>
  * <pre>
  *   Document doc = ...
  *   LineDocument lineDoc = LineDocumentUtils.asRequired(doc, LineDocument.class);
  * </pre>
- * </code>
+ * 
  *
  * @author sdedic
  */

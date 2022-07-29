@@ -44,25 +44,25 @@ import org.netbeans.lib.lexer.token.PartToken;
  * Updater looks similar to list iterator
  * but there are differences in the semantics
  * of iterator's modification operations.
- * <br/>
+ * <br>
  * The algorithm used in the {@link #update(int, int)}
  * is based on "General Incremental Lexical Analysis" written
  * by Tim A. Wagner and Susan L. Graham, University
  * of California, Berkeley. It's available online
  * at <a href="http://www.cs.berkeley.edu/Research/Projects/harmonia/papers/twagner-lexing.pdf">
  * twagner-lexing.pdf</a>.
- * <br/>
+ * <br>
  * Ending <code>EOF</code> token is not used but the lookahead
  * of the ending token(s) is increased by one (past the end of the input)
  * if they have reached the EOF.
- * <br/>
+ * <br>
  * Non-startable tokens are not supported.
- * <br/>
+ * <br>
  * When updating a token with lookback one as a result
  * of modification the lookahead of the preceding token is inspected
  * to find out whether the modification has really affected it.
  * This can often save the previous token from being relexed.
- * <br/>
+ * <br>
  * Currently the algorithm computes the lookback values on the fly
  * and it does not store the lookback in the tokens. For typical languages
  * the lookback is reasonably small (0, 1 or 2) so it's usually not worth
@@ -76,12 +76,12 @@ import org.netbeans.lib.lexer.token.PartToken;
  * The algorithm removes the affected tokens in the natural order as they
  * follow in the token stream. That can be used when the removed tokens
  * need to be collected (e.g. in an array).
- * <br/>
+ * <br>
  * If the offset and state after token recognition matches
  * the end offset and state after recognition of the originally present
  * token then the relexing is stopped because a match was found and the newly
  * produced tokens would match the present ones.
- * <br/>
+ * <br>
  * Otherwise the token(s) in the list are removed and replaced
  * by the relexed token and the relexing continues until a match is reached.
  * </p>
@@ -579,7 +579,7 @@ public final class TokenListUpdater {
     /**
      * Relex part of input to create new tokens. This method may sometimes be skipped e.g. for removal of chars
      * corresponding to a single token preceded by a token with zero lookahead.
-     * <br/>
+     * <br>
      * This code is common for both updateRegular() and updateJoined().
      * 
      * @param change non-null token list change.

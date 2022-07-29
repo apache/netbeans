@@ -272,7 +272,7 @@ WHILE:
     * other properties should still be set.
     * @param in the input stream
     * @exception IOException on error
-    * @exception ClassNotFound if a class used to restore the system option is not found
+    * @exception ClassNotFoundException if a class used to restore the system option is not found
     */
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         // hashtable that maps names of properties to setter methods

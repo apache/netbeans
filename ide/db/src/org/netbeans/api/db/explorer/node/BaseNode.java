@@ -187,12 +187,8 @@ public abstract class BaseNode extends AbstractNode {
     }
 
     /**
-     * Set up the node
+     * Set up the node.
      * 
-     * @param dataLookup the data lookup
-     * @param layerEntry the name of the layer entry folder
-     * @param factory the associated child node factory, or null if this node
-     * doesn't provide child nodes.
      */
     protected void setup() {
         // put the node registry and this node into the lookup

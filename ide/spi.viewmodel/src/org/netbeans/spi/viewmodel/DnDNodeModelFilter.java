@@ -67,7 +67,7 @@ public interface DnDNodeModelFilter extends NodeModelFilter {
      * on provided transferable when drop is done.
      *
      * @param original The original DnDNodeModel to filter
-     * @param node The node where to drop
+     * @param object The node where to drop
      * @param t the transferable to drop
      * @param action the Drag and Drop action from {@link java.awt.dnd.DnDConstants}
      * @param index index between children the drop occured at or -1 if not specified

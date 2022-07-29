@@ -170,7 +170,7 @@ public class NbTestSuite extends TestSuite implements NbTest {
      * of GC and hotspot compiler.
      *
      * @param clazz the class to create tests for (from methods starting with test)
-     * @param slowness this must be true: slowness * min < max
+     * @param slowness this must be true: slowness * min &lt; max
      * @param repeat number of times to repeat the test
      */
     public static NbTestSuite linearSpeedSuite (Class<? extends TestCase> clazz, int slowness, int repeat) {

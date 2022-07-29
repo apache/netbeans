@@ -52,7 +52,7 @@ import org.netbeans.lib.editor.util.swing.ElementUtilities;
  *
  * <p>
  * The operation of this view relies on the presence
- * of {@link LockView} under the root view in the view hierarchy.
+ * of {@link org.netbeans.editor.view.spi.LockView} under the root view in the view hierarchy.
  * <br>
  * All the view operation is expected to be single-threaded.
  * <br>
@@ -471,8 +471,8 @@ EstimatedSpanView {
      * on this view at some point later so that the possible
      * layout changes are done.
      *
-     * @param index the starting index into the child views >= 0
-     * @param length the number of existing views to replace >= 0
+     * @param index the starting index into the child views &gt;= 0
+     * @param length the number of existing views to replace &gt;= 0
      * @param views the child views to insert
      */
     public @Override void replace(int index, int length, View[] views) {
@@ -497,7 +497,7 @@ EstimatedSpanView {
      * by replace() so that the addition is treated as a lengthy
      * operation which means that all the added children will
      * have the estimated span flag turned on and
-     * {@link #scheduleResetChildrenEstimatedSpan(int)}
+     * {@code #scheduleResetChildrenEstimatedSpan(int)}
      * will be called to walk through the added children
      * and reset their estimated span to false.
      */
@@ -559,7 +559,7 @@ EstimatedSpanView {
      *
      * @param index index of the first child view to be rebuilt
      * @param count number of chilren in the children array to be rebuilt.
-     *   If <code>index + count<code> is past the end of the children available
+     *   If <code>index + count</code> is past the end of the children available
      *   the value of count will be decreased accordingly.
      */
     public void rebuild(int index, int count) {
@@ -1318,7 +1318,7 @@ EstimatedSpanView {
      * and delegate to this implementation for small amount 
      * of children only.
      *
-     * @param &gt;0 total number of child views of this view. It's given
+     *  &gt;0 total number of child views of this view. It's given
      *  as parameter because subclasses will typically decide their
      *  behavior based on the total view count.
      */
@@ -1421,7 +1421,7 @@ EstimatedSpanView {
      * Returns the child view index representing the given position in
      * the model.
      *
-     * @param offset the position >= 0.
+     * @param offset the position &gt;= 0.
      * @param b either forward or backward bias.
      * @return  index of the view representing the given position, or 
      *   -1 if no view represents that position
@@ -1438,7 +1438,7 @@ EstimatedSpanView {
      * Returns the child view index representing the given position in
      * the model.
      *
-     * @param offset the position >= 0.
+     * @param offset the position &gt;= 0.
      * @return  index of the view representing the given position, or 
      *   -1 if no view represents that position
      */
@@ -1553,16 +1553,16 @@ EstimatedSpanView {
      *  be thought of as the arrow keys typically found on a keyboard;
      *  this may be one of the following:
      *  <ul>
-     *  <code>SwingConstants.WEST</code>
-     *  <code>SwingConstants.EAST</code>
-     *  <code>SwingConstants.NORTH</code>
-     *  <code>SwingConstants.SOUTH</code>
+     *  <li><code>SwingConstants.WEST</code></li>
+     *  <li><code>SwingConstants.EAST</code></li>
+     *  <li><code>SwingConstants.NORTH</code></li>
+     *  <li><code>SwingConstants.SOUTH</code></li>
      *  </ul>
      * @param biasRet an array contain the bias that was checked
      * @return the location within the model that best represents the next
      *  location visual position
      * @exception BadLocationException
-     * @exception IllegalArgumentException if <code>direction</code> is invalid
+     * @exception IllegalArgumentException if {@code direction } is invalid
      */
     public @Override int getNextVisualPositionFrom(int pos, Position.Bias b, Shape a,
     int direction, Position.Bias[] biasRet) throws BadLocationException {
@@ -1780,8 +1780,6 @@ EstimatedSpanView {
      * @param index index at which the views should be added/replaced.
      * @param removeLength number of removed children views. It is useful
      *  when rebuilding children for a portion of the view.
-     * @param elementIndex index of the first child element for which
-     *  the view should be created
      * @param elementCount number of elements for which the views should be created.
      */
     protected void elementReloadChildren(int index, int removeLength,

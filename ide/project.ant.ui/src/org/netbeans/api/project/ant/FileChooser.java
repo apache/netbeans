@@ -143,7 +143,7 @@ public final class FileChooser extends JFileChooser {
     
     /**
      * For "Use Variable Path" option this method returns list of paths which 
-     * start with a variable from {@link PropertyUtils.getGlobalProperties()}. eg.
+     * start with a variable from {@link org.netbeans.spi.project.support.ant.PropertyUtils#getGlobalProperties()}. eg.
      * "${var.MAVEN}/path/file.jar". For all other options selected this method 
      * returns null.
      * 

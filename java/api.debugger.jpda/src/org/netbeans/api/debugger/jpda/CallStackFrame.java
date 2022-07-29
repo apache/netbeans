@@ -94,7 +94,7 @@ public interface CallStackFrame {
      *
      * @param struts a language name or null for default language
      * @return name of file this stack frame is stopped in
-     * @throws NoInformationException if information about source is not 
+     * @throws AbsentInformationException if information about source is not 
      *   included in class file
      */
     public abstract String getSourceName (String struts) 
@@ -104,6 +104,8 @@ public interface CallStackFrame {
      * Returns source path of file this frame is stopped in or null.
      *
      * @return source path of file this frame is stopped in or null
+     * @throws AbsentInformationException if information about source is not 
+     *   included in class file
      */
     public abstract String getSourcePath (String stratum) 
     throws AbsentInformationException;
@@ -112,6 +114,8 @@ public interface CallStackFrame {
      * Returns local variables.
      *
      * @return local variables
+     * @throws AbsentInformationException if information about source is not 
+     *   included in class file
      */
     public abstract LocalVariable[] getLocalVariables () 
     throws AbsentInformationException;

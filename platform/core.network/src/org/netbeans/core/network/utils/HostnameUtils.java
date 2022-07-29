@@ -37,7 +37,6 @@ public class HostnameUtils {
      * 
      * <p>
      * IMPLEMENTATION:
-     * <p>
      * <ul>
      *   <li>On Unix-like OSes (incl Mac OS X) this is the value as returned from
      *       the {@code gethostname()} function from the standard C Library. </li>

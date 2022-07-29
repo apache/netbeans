@@ -43,10 +43,10 @@ public abstract class AsyncCompletionQuery {
 
     /**
      * Called in response to <code>CompletionTask.refresh(null)</code>.
-     * <br/>
+     * <br>
      * The method gets invoked once the the user types a character
      * but the <code>CompletionTask.query()</code> was not yet invoked.
-     * <br/>
+     * <br>
      * The method may want to inspect the typed character before the caret
      * position and decide whether the completion should be hidden
      * if the typed character is inappropriate e.g. ";" for java completion.

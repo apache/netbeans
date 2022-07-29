@@ -29,7 +29,7 @@
  * declare that a frobnitz factory should be located in the system filesystem
  * in the folder {@code FrobnitzFactories/mime/type/} where {@code mime/type} is
  * the associated data type, and should be declared as an instance file whose instance
- * is assignable to {@code FrobnitzFactory} (basename of file irrelevant).<p>
+ * is assignable to {@code FrobnitzFactory} (basename of file irrelevant).
  * <p>(The SPI could also have just declared a global service interface where each
  * instance specifies its desired MIME type in the return value of a method. This
  * would work but would be undesirable from a performance perspective: the first
@@ -81,10 +81,10 @@ public class HtmlFactory implements FrobnitzFactory {
 &#64;ServiceProvider(service=Processor.class)
 &#64;SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class FrobnitzFactoryProcessor extends LayerGeneratingProcessor {
-    public &#64;Override Set&lt;String> getSupportedAnnotationTypes() {
+    public &#64;Override Set&lt;String&gt; getSupportedAnnotationTypes() {
         return Collections.singleton(Registration.class.getCanonicalName());
     }
-    protected boolean handleProcess(Set&lt;? extends TypeElement> annotations,
+    protected boolean handleProcess(Set&lt;? extends TypeElement&gt; annotations,
                                     RoundEnvironment roundEnv)
                       throws LayerGenerationException {
         if (roundEnv.processingOver()) {
@@ -105,17 +105,17 @@ public class FrobnitzFactoryProcessor extends LayerGeneratingProcessor {
  * <p>Now when the module is compiled, {@code build/classes/META-INF/generated-layer.xml}
  * should look something like this:</p>
  * <pre>
-&lt;filesystem>
-    &lt;folder name="FrobnitzFactories">
-        &lt;folder name="text">
-            &lt;folder name="html">
-                &lt;file name="my-module-HtmlFactory.instance">
-                    &lt;attr name="position" intvalue="300"/>
-                &lt;/file>
-            &lt;/folder>
-        &lt;/folder>
-    &lt;/folder>
-&lt;/filesystem>
+&lt;filesystem&gt;
+    &lt;folder name="FrobnitzFactories"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="html"&gt;
+                &lt;file name="my-module-HtmlFactory.instance"&gt;
+                    &lt;attr name="position" intvalue="300"/&gt;
+                &lt;/file&gt;
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+&lt;/filesystem&gt;
  * </pre>
  * <p>and this layer should be loaded automatically by the module system
  * (in addition to any explicit layer specified in source code).</p>
@@ -128,7 +128,7 @@ public class FrobnitzFactoryProcessor extends LayerGeneratingProcessor {
  *     confirming that it succeeds or aborts under the right conditions.
  *     For this, <code>AnnotationProcessorTestUtils</code> is useful.</li>
  * </ol>
- * <p><a href="http://hg.netbeans.org/main/raw-file/tip/openide.util/test/unit/src/org/netbeans/modules/openide/util/ServiceProviderProcessorTest.java"><code>ServiceProviderProcessorTest</code></a>
- * demonstrates both styles.<p>
+ * <p><a href="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/test/unit/src/org/netbeans/modules/openide/util/ServiceProviderProcessorTest.java"><code>ServiceProviderProcessorTest</code></a>
+ * demonstrates both styles.
  */
 package org.openide.filesystems.annotations;

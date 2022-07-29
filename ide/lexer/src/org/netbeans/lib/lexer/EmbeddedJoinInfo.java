@@ -46,18 +46,18 @@ public final class EmbeddedJoinInfo<T extends TokenId> {
     /**
      * Index in terms of join token list
      * that corresponds to first token of wrapped ETL.
-     * <br/>
+     * <br>
      * A join token is counted into an ETL that contains its last part.
      * For example: ETL1, ETL2, ETL3 with JT starting in ETL1 and ending in ETL3
      * then rJTI will be: ETL1:0 ETL2:0 
-     * <br/>
+     * <br>
      * The index must be gap-preprocessed.
      */
     private int rawJoinTokenIndex; // 16 bytes
 
     /**
      * Index of related ETL in a join token list (base).
-     * <br/>
+     * <br>
      * The index must be gap-preprocessed.
      */
     private int rawTokenListIndex; // 20 bytes
@@ -71,7 +71,7 @@ public final class EmbeddedJoinInfo<T extends TokenId> {
      * it means that the ETL1.token(ETL1.tokenCount - 1) is a partToken1
      * and partToken1.joinToken() starts in ETL1 and it spans whole ETL2
      * and some initial portion of ETL3.
-     * <br/>
+     * <br>
      * If partToken1.joinToken() join index is e.g. == 1 then
      * ETL2.EJI2.joinTokenIndex == 1 and ETL3.EJI3.joinTokenIndex == 1.
      * The join token is counted into its last ETL.

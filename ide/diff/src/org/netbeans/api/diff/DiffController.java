@@ -122,7 +122,7 @@ public final class DiffController {
     /**
      * Gets total number of Differences between sources currently displayed in the Diff view.
      * 
-     * @return total number of Differences in sources, an integer >= 0
+     * @return total number of Differences in sources, an integer &gt;= 0
      */
     public int getDifferenceCount() {
         return impl.getDifferenceCount();

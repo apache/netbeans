@@ -32,11 +32,11 @@ import org.netbeans.lib.lexer.TokenOrEmbedding;
 
 /**
  * Description of the change in a token list.
- * <br/>
+ * <br>
  * The change is expressed as a list of removed tokens
  * plus the current list and index and number of the tokens
  * added to the current list.
- * <br/>
+ * <br>
  * Some of the information that needs to be exported into TokenChange
  * is synced in a tokenChangeInfo that this class manages.
  *

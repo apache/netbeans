@@ -24,7 +24,7 @@ import javax.swing.table.AbstractTableModel;
 import org.openide.util.Utilities;
 
 /**
- * <code>TableModel</code> for <code>SwitcherTable</class>.
+ * <code>TableModel</code> for <code>SwitcherTable</code>.
  *
  * @see SwitcherTable
  *

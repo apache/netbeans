@@ -82,8 +82,8 @@ public abstract class GapBranchElement implements Element {
      * for empty doc because of the extra '\n' after the end
      * of the AbstractDocument-based implementations.
      *
-     * @param offset the specified offset >= 0
-     * @return the element index >= 0
+     * @param offset the specified offset &gt;= 0
+     * @return the element index &gt;= 0
      */
     public int getElementIndex(int offset) {
         int low = 0;

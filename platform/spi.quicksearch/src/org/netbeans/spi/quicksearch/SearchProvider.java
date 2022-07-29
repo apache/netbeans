@@ -32,9 +32,9 @@ package org.netbeans.spi.quicksearch;
  *  &lt;folder name="QuickSearch"&gt;
  *      &lt;folder name="MyCategoryID"&gt;
  *          &lt;!--Attribute for localization - provide localized display name of category!--&gt;
- *          &lt;attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.yourmodule.YourBundle"/>
+ *          &lt;attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.yourmodule.YourBundle"/&gt;
  *          &lt;!--Attribute for command prefix - used to narrow search to this category only!--&gt;
- *          &lt;attr name="command" stringvalue="p"/>
+ *          &lt;attr name="command" stringvalue="p"/&gt;
  *          &lt;!--Attribute for category ordering!--&gt;
  *          &lt;attr name="position" intvalue="200"/&gt;
  *          &lt;!--Note that multiple providers can contribute to one category!--&gt;

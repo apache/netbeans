@@ -355,7 +355,7 @@ public final class CompilationInfoImpl {
     
     /**
      * Returns {@link Document} of this {@link CompilationInfoImpl}
-     * @return Document or null when the {@link DataObject} doesn't
+     * @return Document or null when the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> doesn't
      * exist or has no {@link EditorCookie}.
      * @throws java.io.IOException
      */

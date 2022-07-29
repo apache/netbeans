@@ -22,7 +22,7 @@ import org.netbeans.modules.refactoring.spi.ui.FiltersDescription;
 
 /**
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  */
 public abstract class SPIUIAccessor {
     public static SPIUIAccessor DEFAULT;

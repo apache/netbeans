@@ -655,7 +655,7 @@ public class XMLDataObject extends MultiDataObject {
      *             If you can not move to XMLUtil for compatabilty reasons please
      *             replace with following workaround:
      * <pre>
-     * String templ = "<myroot/>";
+     * String templ = "&lt;myroot/&gt;";
      * InputSource in = new InputSource(new StringReader(templ));
      * in.setSystemId("StringReader");  //workaround
      * DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

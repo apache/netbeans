@@ -24,22 +24,23 @@ package org.netbeans.editor;
  * an efficient access to its gap-based data storage
  * and wants to give its clients a hint about how to access
  * the data efficiently.
- * <P>For example {@link javax.swing.text.Document} instance
+ * <p>
+ * For example {@link javax.swing.text.Document} instance
  * having gap-based document content can allow to get an instance
- * of GapStart as a property:<PRE>
+ * of GapStart as a property:<pre>
  *      GapStart gs = (GapStart)doc.getProperty(GapStart.class);
  *      int gapStart = gs.getGapStart();
- * <PRE>
+ * </pre>
  * Once the start of the gap is known the client can optimize
  * access to the document's data. For example if the client
  * does not care about the chunks in which it gets the document's data
- * it can access the characters so that no character copying is done:<PRE>
+ * it can access the characters so that no character copying is done:<pre>
  *      Segment text = new Segment();
  *      doc.getText(0, gapStart, text); // document's data below gap
  *      ...
  *      doc.getText(gapStart, doc.getLength(), text); // document's data over gap
  *      ...
- * <PRE>
+ * </pre>
  *
  * @author Miloslav Metelka
  * @version 1.00

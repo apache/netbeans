@@ -23,7 +23,7 @@ package org.netbeans.lib.lexer;
  * Character preprocessor allows to translate a sequence
  * of characters to a single character so it may be used
  * for example for Unicode sequences translation.
- * <br/>
+ * <br>
  * If there are any preprocessed characters for a particular token
  * then a special token instance get created that provides
  * the preprocessed chars.
@@ -46,7 +46,7 @@ public abstract class CharPreprocessor {
 
     /**
      * Preprocess at least one character of the input.
-     * <br/>
+     * <br>
      * Preprocessor must always preprocess at least one input character
      * per invocation but only a minimum necessary number of characters
      * should be preprocessed by each invocation of this method.
@@ -77,9 +77,9 @@ public abstract class CharPreprocessor {
      * 
      * <p>
      * The processor is only designed to do several-chars-to-one translation.
-     * <br/>
+     * <br>
      * It is not designed to return more than one character for a single input char.
-     * <br/>
+     * <br>
      * Also if the character is really preprocessed it must be composed
      * from at least two input characters (see extraInputLength parameter
      * of {@link #outputPreprocessed(char, int)}.
@@ -92,7 +92,7 @@ public abstract class CharPreprocessor {
      * - the EOF is just information that there is an end of the input
      * and any possibly unfinished escape sequence needs to be translated
      * in a reasonable way.
-     * <br/>
+     * <br>
      * Once all the characters prior EOF were preprocessed the EOF
      * should be returned by {@link #outputOriginal(int)}.
      * </p>
@@ -103,7 +103,7 @@ public abstract class CharPreprocessor {
     /**
      * Check whether the given character may be part of the sequences preprocessed
      * by this preprocessor.
-     * <br/>
+     * <br>
      * The infrastructure may use this method to test whether it can start
      * relexing starting at a particular position.
      */
@@ -113,7 +113,7 @@ public abstract class CharPreprocessor {
      * Return maximum number of extra characters (not being part of the recognized
      * sequence) that this preprocessor
      * may look ahead in order to recognize the preprocessed character sequence.
-     * <br/>
+     * <br>
      * For example for unicode escape sequences the returned number is 1
      * (see UnicodeEscapesPreprocessor implementation for details).
      */
@@ -140,7 +140,7 @@ public abstract class CharPreprocessor {
     
     /**
      * Output the character as it was read from the input.
-     * <br/>
+     * <br>
      * By using this method the infrastructure knows that the character
      * is the same like the original character read by {@link #inputRead()}.
      */
@@ -155,9 +155,9 @@ public abstract class CharPreprocessor {
      * @param ch preprocessed character.
      * @param extraInputLength >0 number of extra input characters
      *  (besides a single character) that form the preprocessed character.
-     * <br/>
+     * <br>
      * For example for unicode escape sequence "\u0020" it's 6-1=5.
-     * <br/>
+     * <br>
      * The number is expected to be greater than zero
      * (otherwise the present implementation would not work correctly).
      * which should be fine for the known implementations 

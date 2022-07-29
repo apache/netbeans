@@ -174,15 +174,6 @@ Module uses following API's:
 </li>
 <li>
     <api 
-        name="SettingsAPI"
-        group="java"
-        type="import"
-        category="official"
-        url="@org-openide-options@/org/openide/options/doc-files/api.html"
-    />
-</li>
-<li>
-    <api 
         name="WindowSystemAPI"
         group="java"
         type="import"
@@ -356,7 +347,7 @@ This property can be used by the modules and is part of the Editor API.
 </api>
 
 <api type="export" group="property" name="javax.swing.text.Document.modificationListener" category="friend" >
-In order to fix <a href="http://www.netbeans.org/issues/show_bug.cgi?id=51872">issue 51872</a> the 
+In order to fix <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=51872">issue 51872</a> the 
 openide needs a way how to be notified about change of a document outside of its Document lock. 
 <code>DocumentListener</code>s are always notified under the lock, so a special contract has
 been established (since version 5.3) by registering an instance of <code>VetoableListener</code>
@@ -364,7 +355,7 @@ by calling <code>putProperty ("modificationListener", listener)</code>. The
 NetBeans aware documents are adviced to honor this property and call the listener
 outside of the document lock when a modification is made. The actual contract
 of the call can be seen in 
-<a href="http://www.netbeans.org/source/browse/openide/test/unit/src/org/openide/text/NbLikeEditorKit.java">NbLikeEditorKit.java</a> 
+<a href="https://github.com/apache/netbeans/tree/master/platform/openide.text/test/unit/src/org/openide/text/NbLikeEditorKit.java">NbLikeEditorKit.java</a> 
 in methods 
 <code>insertString</code> and <code>remove</code>.
 
@@ -459,7 +450,7 @@ The class which calls this is deprecated, but it is still in use by clients.
 Another reflection is used in QuietEditorPane, where DelegatingTransferHandler delegates
 also on two protected methods of TransferHandler: <code>createTransferable</code> and 
 <code>exportDone</code>. This delegation is needed because of drag and drop feature described
-in  <a href="http://www.netbeans.org/issues/show_bug.cgi?id=53439">issue #53439</a>
+in  <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=53439">issue #53439</a>
 </answer>
 
 
@@ -747,7 +738,7 @@ No.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>
@@ -771,7 +762,7 @@ No.
         </question>
 -->
 <answer id="exec-introspection">
-The Editor module operate with plain Swing <a href="http://java.sun.com/j2se/1.4/docs/api/javax/swing/text/Document.html">Document</a> in 
+The Editor module operate with plain Swing <a href="@JDK@/javax/swing/text/Document.html">Document</a> in
 its APIs and checks whether the document does not implement some of the Netbeans extensions defined in
 <a href="@org-openide-text@/org/openide/text/NbDocument.html">NbDocument</a>.
 It also tries to retype <a href="@org-openide-windows@/org/openide/windows/CloneableTopComponent.Ref.html#getComponents--">CloneableTopComponent.Ref.getComponents()</a>
@@ -803,12 +794,12 @@ No.
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi" shape="rect">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API" shape="rect">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
             to describe your general APIs and specify their
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#category-private" shape="rect">
+            <a href="https://netbeans.apache.org/wiki/API_Design#private" shape="rect">
             stability categories</a>.
             If possible please provide simple diagrams.
             </hint>
@@ -824,7 +815,7 @@ No.
 
 <!--
         <question id="arch-quality" when="init">
-            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html" shape="rect">quality</a>
+            How will the <a href="https://netbeans.apache.org/participate/qualityevangelism.html" shape="rect">quality</a>
             of your code be tested and 
             how are future regressions going to be prevented?
             <hint>
@@ -872,7 +863,7 @@ No.
                 at the root of your javadoc
             </hint>
         
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase" shape="rect">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented" shape="rect">
             use cases</a> of the new API. Who will use it under
             what circumstances? What kind of code would typically need to be written
             to use the module?

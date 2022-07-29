@@ -780,7 +780,7 @@
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

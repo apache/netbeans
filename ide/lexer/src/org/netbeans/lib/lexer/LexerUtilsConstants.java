@@ -117,7 +117,7 @@ public final class LexerUtilsConstants {
     
     /**
      * Returns the most embedded language in the given language path.
-     * <br/>
+     * <br>
      * The method casts the resulting language to the generic type requested by the caller.
      */
     public static <T extends TokenId> Language<T> innerLanguage(LanguagePath languagePath) {
@@ -128,7 +128,7 @@ public final class LexerUtilsConstants {
     
     /**
      * Returns language hierarchy of the most embedded language in the given language path.
-     * <br/>
+     * <br>
      * The method casts the resulting language hierarchy to the generic type requested by the caller.
      */
     public static <T extends TokenId> LanguageHierarchy<T> innerLanguageHierarchy(LanguagePath languagePath) {
@@ -138,7 +138,7 @@ public final class LexerUtilsConstants {
     
     /**
      * Returns language operation of the most embedded language in the given language path.
-     * <br/>
+     * <br>
      * The method casts the resulting language operation to the generic type requested by the caller.
      */
     public static <T extends TokenId> LanguageOperation<T> innerLanguageOperation(LanguagePath languagePath) {
@@ -156,7 +156,7 @@ public final class LexerUtilsConstants {
     
     /**
      * Find the language embedding for the given parameters.
-     * <br/>
+     * <br>
      * First the <code>LanguageHierarchy.embedding()</code> method is queried
      * and if no embedding is found then the <code>LanguageProvider.findLanguageEmbedding()</code>.
      */
@@ -274,10 +274,10 @@ public final class LexerUtilsConstants {
      * 
      * @param offset offset for which the token index should be found.
      * @return array of two items where the [0] is token's index and [1] is its offset.
-     *  <br/>
+     *  <br>
      *  If offset &gt;= last-token-end-offset then [0] contains token-count and
      *  [1] conains last-token-end-offset.
-     *  <br/>
+     *  <br>
      *  [0] may contain -1 to indicate that there are no tokens in the token list
      *  ([1] then contains zero).
      */
@@ -331,10 +331,10 @@ public final class LexerUtilsConstants {
      * 
      * @param offset offset for which the token index should be found.
      * @return array of two items where the [0] is token's index and [1] is its offset.
-     *  <br/>
+     *  <br>
      *  If offset &gt;= last-token-end-offset then [0] contains token-count and
      *  [1] conains last-token-end-offset.
-     *  <br/>
+     *  <br>
      *  [0] may contain -1 to indicate that there are no tokens in the token list
      *  ([1] then contains zero).
      */

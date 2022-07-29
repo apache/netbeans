@@ -30,8 +30,8 @@ import java.lang.annotation.Target;
  * <br>
  * Example:
  * <pre>
- * @EditorActionRegistrations({ @EditorActionRegistration(name = "name1", ...),
- *                              @EditorActionRegistration(name = "name2", ...)
+ * &#64;EditorActionRegistrations({ &#64;EditorActionRegistration(name = "name1", ...),
+ *                              &#64;EditorActionRegistration(name = "name2", ...)
  *                            })
  * public class MultiAction extends BaseAction {
  *

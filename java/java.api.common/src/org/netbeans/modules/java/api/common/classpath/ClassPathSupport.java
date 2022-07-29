@@ -616,7 +616,6 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
         /**
          * only applicable to TYPE_JAR
          * 
-         * @return
          */
         public void setJavadocFilePath(String javadoc) {
             javadocFilePath = javadoc;
@@ -625,7 +624,6 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
         /**
          * only applicable to TYPE_JAR
          * 
-         * @return
          */
         public void setSourceFilePath(String source) {
             sourceFilePath = source;

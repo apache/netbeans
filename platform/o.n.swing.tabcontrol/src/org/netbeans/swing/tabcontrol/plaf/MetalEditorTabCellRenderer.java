@@ -28,7 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Renderer for editor tabs in metal l&f
+ * Renderer for editor tabs in metal l&amp;f
  *
  * @author Tim Boudreau
  */

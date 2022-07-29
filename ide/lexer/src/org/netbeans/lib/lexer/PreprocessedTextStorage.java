@@ -26,9 +26,9 @@ import org.netbeans.lib.editor.util.CharSubSequence;
 
 /**
  * Storage of the preprocessed text specific for batch and mutable setups.
- * <br/>
+ * <br>
  * For mutable setups the extra length shifts need to be stored.
- * <br/>
+ * <br>
  * For storage costs cutting only a maximum lookahead is stored (not individual
  * lookaheads).
  *

@@ -188,7 +188,7 @@ public abstract class ModuleInstaller {
      * The default implementation does nothing.
      * @param m a module which is about to be enabled
      * @param parents current list of <code>ClassLoader</code> parents; may be mutated (appended to)
-     * @since org.netbeans.core/1 > 1.6
+     * @since org.netbeans.core/1 &gt; 1.6
      * @see "#27853"
      */
     public void refineClassLoader(Module m, List<? extends ClassLoader> parents) {
@@ -198,7 +198,7 @@ public abstract class ModuleInstaller {
     /** Optionally adds additional token for the module.
      * @param m the module to add token to 
      * @return null or list of tokens this module provides
-     * @since org.netbeans.core/1 > 1.25
+     * @since org.netbeans.core/1 &gt; 1.25
      * @see "#46833"
      */
     public String[] refineProvides (Module m) {

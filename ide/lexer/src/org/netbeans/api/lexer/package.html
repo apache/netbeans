@@ -29,19 +29,19 @@
     The entrance point into Lexer API is
     {@link org.netbeans.api.lexer.TokenHierarchy} class with
     its static methods that provide its instance for the given input source.
-    <br/>
+    <br>
     {@link org.netbeans.api.lexer.TokenHierarchy#tokenSequence()}
     allows to walk through the tokens that were created for the given input.
-    <br/>
+    <br>
     {@link org.netbeans.api.lexer.Token} models a single token recognized in the input.
     It carries a token identification {@link org.netbeans.api.lexer.TokenId} returned by
     {@link org.netbeans.api.lexer.Token#id()}
     and token text represented as {@link java.lang.CharSequence}
     returned by {@link org.netbeans.api.lexer.Token#text()}.
-    <br/>
+    <br>
     {@link org.netbeans.api.lexer.Language} represents
     all the token ids for a single language.
-    <br/>
+    <br>
     Each token id may belong to one or more token categories that allow to better operate
     tokens of the same type (e.g. keywords or operators).
   </body>

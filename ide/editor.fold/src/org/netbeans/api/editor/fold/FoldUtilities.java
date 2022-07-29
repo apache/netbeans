@@ -377,9 +377,9 @@ public final class FoldUtilities {
      * <br>
      * The search deep-dives into hierarchy.
      *
-     * @param offset &gt=0 offset in a document.
+     * @param offset &gt;=0 offset in a document.
      * @return deepset fold in the hierarchy satisfying
-     *  <code>fold.getStartOffset() >= offset && offset <= fold.getEndOffset()</code>
+     *  <code>fold.getStartOffset() &gt;= offset &amp;&amp; offset &lt;= fold.getEndOffset()</code>
      *  or null if there is no such fold (except the root fold) satisfying the condition.
      *  <br>
      *  For two consecutive folds (one ending at the offset and the next one
@@ -398,7 +398,7 @@ public final class FoldUtilities {
      * @param startOffset &gt;=0 only fold ending above it will be returned.
      * @param endOffset &gt;=0 only fold starting below it will be returned.
      * @return collapsed fold satisfying
-     *  <code>fold.getEndOffset() > startOffset and fold.getStartOffset() < endOffset</code>
+     *  <code>fold.getEndOffset() &gt; startOffset and fold.getStartOffset() &lt; endOffset</code>
      *  or null if such fold does not exist.
      */
     public static Fold findCollapsedFold(FoldHierarchy hierarchy,
@@ -414,7 +414,7 @@ public final class FoldUtilities {
      * @param startOffset &gt;=0 only folds ending above it will be returned.
      * @param endOffset &gt;=0 only folds starting before it will be returned.
      * @return iterator over collapsed folds satisfying
-     *  <code>fold.getEndOffset() > startOffset and fold.getStartOffset() < endOffset</code>
+     *  <code>fold.getEndOffset() &gt; startOffset and fold.getStartOffset() &lt; endOffset</code>
      *  <br>
      *  If a particular collapsed fold gets returned then its children
      *  are not deep-dived for collapsed folds. Instead the search continues

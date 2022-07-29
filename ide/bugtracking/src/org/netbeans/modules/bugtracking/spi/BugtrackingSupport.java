@@ -46,11 +46,11 @@ public final class BugtrackingSupport<R, Q, I> {
     /**
      * Creates a new BugtrackingSupport preconfigured with mandatory provider implementations.
      * 
-     * @param repositoryProvider a {@link RepositoryProvider} to access the implementation specific repository.<br/> 
+     * @param repositoryProvider a {@link RepositoryProvider} to access the implementation specific repository.<br> 
      *                           Is mandatory and cannot be null.
-     * @param queryProvider a {@link QueryProvider} to access queries from the given repository.<br/>
+     * @param queryProvider a {@link QueryProvider} to access queries from the given repository.<br>
      *                      Is mandatory and cannot be null.
-     * @param issueProvider an {@link IssueProvider} to access issues from the given repository.<br/>
+     * @param issueProvider an {@link IssueProvider} to access issues from the given repository.<br>
      *                      Is mandatory and cannot be null.
      * @since 1.85
      */
@@ -65,15 +65,15 @@ public final class BugtrackingSupport<R, Q, I> {
      * 
      * @param r a implementation specific repository instance
      * @param issueStatusProvider an {@link IssueStatusProvider} to provide status information 
-     *                            of an implementation specific issue.<br/> 
+     *                            of an implementation specific issue.<br> 
      *                            Might be null.
      * @param issueSchedulingProvider an {@link IssueScheduleProvider} to provide scheduling information 
-     *                                of an implementation specific issue.<br/> 
+     *                                of an implementation specific issue.<br> 
      *                                Might be null.
      * @param issuePriorityProvider an {@link IssuePriorityProvider} to provide priority information 
-     *                              of an implementation specific issue.<br/> 
+     *                              of an implementation specific issue.<br> 
      *                              Might be null.
-     * @param issueFinder an {@link IssueFinder} to find issue references in text..<br/> 
+     * @param issueFinder an {@link IssueFinder} to find issue references in text..<br> 
      *                    Might be null.
      * 
      * @return a {@link Repository} instance
@@ -184,7 +184,7 @@ public final class BugtrackingSupport<R, Q, I> {
 
     /**
      * Priority icons used by default in the Tasks Dashboard sorted from the highest priority. 
-     * <br/>
+     * <br>
      * Use them in case you want your bugtracking plugin implementation to use 
      * the same icons as are used by default in the Tasks Dashboard, or provide a 
      * {@link IssuePriorityProvider} implementation via {@link #createRepository(java.lang.Object, org.netbeans.modules.bugtracking.spi.IssueStatusProvider, org.netbeans.modules.bugtracking.spi.IssueScheduleProvider, org.netbeans.modules.bugtracking.spi.IssuePriorityProvider, org.netbeans.modules.bugtracking.spi.IssueFinder) }

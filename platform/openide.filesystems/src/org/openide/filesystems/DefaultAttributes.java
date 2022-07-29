@@ -67,24 +67,24 @@ import org.xml.sax.helpers.DefaultHandler;
  * (it can then serve to filter a plain list implementation).
  *
  *Description of format of special file ilustrates best DTD file that is showed in next lines:
- *<!ELEMENT attributes (fileobject)*>
- * <!ATTLIST attributes version CDATA #REQUIRED>
- * <!ELEMENT fileobject (attr)*>
- * <!ATTLIST fileobject name CDATA #REQUIRED>
- * <!ELEMENT attr EMPTY>
- * <!ATTLIST attr name CDATA #REQUIRED>
- * <!ATTLIST attr bytevalue CDATA #IMPLIED>
- * <!ATTLIST attr shortvalue CDATA #IMPLIED>
- * <!ATTLIST attr intvalue CDATA #IMPLIED>
- * <!ATTLIST attr longvalue CDATA #IMPLIED>
- * <!ATTLIST attr floatvalue CDATA #IMPLIED>
- * <!ATTLIST attr doublevalue CDATA #IMPLIED>
- * <!ATTLIST attr boolvalue CDATA #IMPLIED>
- * <!ATTLIST attr charvalue CDATA #IMPLIED>
- * <!ATTLIST attr stringvalue CDATA #IMPLIED>
- * <!ATTLIST attr methodvalue CDATA #IMPLIED>
- * <!ATTLIST attr serialvalue CDATA #IMPLIED>
- * <!ATTLIST attr urlvalue CDATA #IMPLIED>
+ * &lt;!ELEMENT attributes (fileobject)*&gt;
+ * &lt;!ATTLIST attributes version CDATA #REQUIRED&gt;
+ * &lt;!ELEMENT fileobject (attr)*&gt;
+ * &lt;!ATTLIST fileobject name CDATA #REQUIRED&gt;
+ * &lt;!ELEMENT attr EMPTY&gt;
+ * &lt;!ATTLIST attr name CDATA #REQUIRED&gt;
+ * &lt;!ATTLIST attr bytevalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr shortvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr intvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr longvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr floatvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr doublevalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr boolvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr charvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr stringvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr methodvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr serialvalue CDATA #IMPLIED&gt;
+ * &lt;!ATTLIST attr urlvalue CDATA #IMPLIED&gt;
  *
  * @author Jaroslav Tulach
  */

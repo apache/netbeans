@@ -36,12 +36,12 @@ import org.openide.util.lookup.ServiceProvider;
  * A general registry permitting clients to find instances of services
  * (implementation of a given interface).
  * This class is inspired by the
- * <a href="http://www.jini.org/">Jini</a>
+ * <a href="https://river.apache.org">Jini</a>
  * registration and lookup mechanism. The difference is that the methods do
  * not throw checked exceptions (as they usually work only locally and not over the network)
  * and that the Lookup API concentrates on the lookup, not on the registration
- * (although {@link Lookup#getDefault} is strongly encouraged to support
- * {@link Lookups#metaInfServices} for registration in addition to whatever
+ * (although {@link Lookup#getDefault()} is strongly encouraged to support
+ * {@link Lookups#metaInfServices(java.lang.ClassLoader) } for registration in addition to whatever
  * else it decides to support).
  * <p>
  * For a general talk about the idea behind the lookup pattern please see
@@ -231,10 +231,10 @@ public abstract class Lookup {
 
     /** The general lookup method. Callers can get list of all instances and classes
      * that match the given <code>template</code>, request more info about
-     * them in form of {@link Lookup.Item} and attach a listener to
+     * them in form of {@link org.openide.util.Lookup.Item} and attach a listener to
      * this be notified about changes. The general interface does not
      * specify whether subsequent calls with the same template produce new
-     * instance of the {@link Lookup.Result} or return shared instance. The
+     * instance of the {@link org.openide.util.Lookup.Result} or return shared instance. The
      * prefered behaviour however is to return shared one.
      *
      * @param template a template describing the services to look for
@@ -269,7 +269,7 @@ public abstract class Lookup {
 
     /**
      * Find all instances corresponding to a given class.
-     * Equivalent to calling {@link #lookupResult} and asking for {@link Lookup.Result#allInstances} but slightly more convenient.
+     * Equivalent to calling {@link #lookupResult} and asking for {@link org.openide.util.Lookup.Result#allInstances()} but slightly more convenient.
      * Subclasses may override this method to produce the same semantics more efficiently.
      * <p>Example usage:</p>
      * {@snippet file="org/openide/util/lookup/SampleLookupUsages.java" region="iterate"}
@@ -447,10 +447,10 @@ public abstract class Lookup {
     public abstract static class Result<T> extends Object {
         /** Registers a listener that is invoked when there is a possible
          * change in this result. 
-         * <p>
+         * 
          * <div class="nonnormative">
          * Sometimes people report that their listener is not receiving 
-         * events (for example <a href="https://netbeans.org/bugzilla/show_bug.cgi?id=191471">IZ 191471</a>)
+         * events (for example <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=191471">IZ 191471</a>)
          * or that the listener receives few events, but then it <em>stops</em>
          * listening.
          * Such behavior is often caused by not keeping strong reference to 
@@ -473,7 +473,7 @@ public abstract class Lookup {
          * should be {@link List} as the order matters, but the {@link Collection}
          * is kept for compatibility reasons) of all instances present in
          * the {@link Result} right now that will never change its content.
-         * <p></p>
+         * 
          * <div class="nonnormative">
          * While the returned collection never changes its content, some
          * implementation like {@link ProxyLookup} may
@@ -505,7 +505,7 @@ public abstract class Lookup {
          * should be {@link List} as the order matters, but the {@link Collection}
          * is kept for compatibility reasons) of all {@link Item items} present in
          * the {@link Result} right now that will never change its content.
-         * <p></p>
+         * 
          * <div class="nonnormative">
          * While the returned collection never changes its content, some
          * implementation like {@link ProxyLookup} may
@@ -513,7 +513,7 @@ public abstract class Lookup {
          * lazily</a>.
          * </div>
          *
-         * @return unmodifiable collection of {@link Lookup.Item} that will never change its content
+         * @return unmodifiable collection of {@link org.openide.util.Lookup.Item} that will never change its content
          *
          * @since 1.8
          */

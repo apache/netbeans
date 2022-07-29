@@ -69,7 +69,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @ServiceProvider(service=Processor.class)
 public final class ActionProcessor extends LayerGeneratingProcessor {

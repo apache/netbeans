@@ -40,7 +40,7 @@
           <compatibility binary="compatible" source="compatible" addition="yes"/>
           <description>
               Bridge that plugs
-              <a href="http://graalvm.org">GraalVM</a> languages
+              <a href="https://graalvm.org">GraalVM</a> languages
               into
               <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
               to obtain enhanced version of

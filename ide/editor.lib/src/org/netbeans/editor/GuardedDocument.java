@@ -181,8 +181,6 @@ public class GuardedDocument extends BaseDocument
     * is updated as result of removal. This function can throw
     * BadLocationException or its descendants to stop the ongoing
     * insert from being actually done.
-    * @param evt document event containing the change including array
-    *  of characters that will be inserted
     */
     protected @Override void preInsertCheck(int offset, String text, AttributeSet a)
     throws BadLocationException {
@@ -417,7 +415,7 @@ public class GuardedDocument extends BaseDocument
      * in turn may resolve through some hierarchy completely
      * independent of the element hierarchy in the document.
      *
-     * @param pos the starting position >= 0
+     * @param pos the starting position &gt;= 0
      * @param s the style to set
      */
     public void setLogicalStyle(int pos, Style s) {
@@ -432,7 +430,7 @@ public class GuardedDocument extends BaseDocument
      * Gets the element that represents the character that
      * is at the given offset within the document.
      *
-     * @param pos the offset >= 0
+     * @param pos the offset &gt;= 0
      * @return the element
      */
     public Element getCharacterElement(int pos) {

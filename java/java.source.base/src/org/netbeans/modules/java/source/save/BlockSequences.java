@@ -109,9 +109,9 @@ public final class BlockSequences {
      * If the anchor position is right at the start of a section, position - 1 is returned.
      * This assumes that document is divided into sections that span whole lines; the returned position
      * is then before the preceding newline and writable.
-     * <p/>
+     * <p>
      * If the anchor is outside readonly section, the anchor pos itself is returned.
-     * <p/>
+     * <p>
      * If the anchor is inside the section, the position after the section is returned IF the
      * token starting at `anchor' leaks outside the section, or the anchor points to a whitespace+comments
      * that extend past the section.

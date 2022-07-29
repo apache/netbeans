@@ -36,7 +36,7 @@
             Describe the overall architecture.
             <hint>
             What will be API for
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
@@ -105,7 +105,7 @@
 
 <!--
         <question id="arch-quality" when="init">
-            How the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
+            How the <a href="https://netbeans.apache.org/participate/qualityevangelism.html">quality</a>
             of your code will be tested and 
             how future regressions are going to be prevented?
             <hint>
@@ -145,7 +145,7 @@
 
 <!--
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented">
             use cases</a> of the new API. Who will use it at
             what circumstances and what will be the typical code to write
             to use the module.
@@ -312,7 +312,7 @@
     <answer id="dep-non-nb">
         <ol>
             <li>
-                <api group="java" name="Ant" type="import" category="third" url="http://ant.apache.org/">
+                <api group="java" name="Ant" type="import" category="third" url="https://ant.apache.org">
                     Ant itself, of course.
                     1.8.0+ is required, 1.10.8 recommended (and currently bundled); some features may be limited to newer versions.
                 </api>
@@ -579,7 +579,7 @@
             <hint>
             If there is a property that can change the behavior of your 
             code, somebody will likely use it. You should describe what it does 
-            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            and the <a href="https://netbeans.apache.org/wiki/API_Design#Life-cycle_of_an_API">stability category</a>
             of this API. You may use
             <pre>
                 &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;
@@ -592,7 +592,7 @@
     <answer id="exec-property">
         <p>
             Generally not except for <a
-            href="http://ant.apache.org/manual/running.html#sysprops">properties
+            href="https://ant.apache.org/manual/running.html#sysprops">properties
             interpreted by Ant itself</a> and the following:
         </p>
         <ul>
@@ -1038,7 +1038,7 @@
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and classify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

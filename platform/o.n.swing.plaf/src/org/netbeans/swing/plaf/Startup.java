@@ -526,7 +526,7 @@ public final class Startup {
      *          provide a font with the requested size.  Results are undefined for values less than 0 or greater
      *          than any hard limit the platform imposes on font size.
      * @param themeURL An optional URL for a theme file, or null. Theme file format documentation can be found
-     *        <a href="ui.netbeans.org/project/ui/docs/ui/themes/themes.html">here</a>.
+     *        <a href="http://ui.netbeans.org/docs/ui/themes/themes.html">here</a>.
      * @param rb resource bundle to use for branding or null. Allows NetBeans to provide enhanced version
      *          of bundle that knows how to deal with branding. The bundle shall have the same keys as
      *          <code>org.netbeans.swing.plaf.Bundle</code> bundle has.

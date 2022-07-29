@@ -45,7 +45,7 @@ import javax.swing.text.AttributeSet;
  * &quot;Nb.[return value of the custom look and feel's getID() method]LFCustoms&quot;.
  * <p>
  * Given that all this class does is return some keys and values, in the future it may be replaced by an
- * XML file similar to <a href="ui.netbeans.org/project/ui/docs/ui/themes/themes.html">theme files</a>.
+ * XML file similar to <a href="http://ui.netbeans.org/docs/ui/themes/themes.html">theme files</a>.
  * <p>
  * This class defines a number of relatively self-explanatory UIManager keys for things used in various parts
  * of NetBeans.
@@ -238,7 +238,7 @@ public abstract class LFCustoms {
     /**
      * LFCustoms implementations which use UIBootstrapValue.Lazy should return
      * any keys that it will install here, so they can be merged into the list
-     * of things to clear on L&F change.
+     * of things to clear on L&amp;F change.
      *
      * @return an array of objects or null.
      */

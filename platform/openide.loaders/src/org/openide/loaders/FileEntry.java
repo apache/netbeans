@@ -360,7 +360,7 @@ public class FileEntry extends MultiDataObject.Entry {
 
         /** Deletes folder associated with entry. Although filesystems delete
          * folders recursively, it is better to delete children DataObjects before
-         * the {@link #FileEntry.Folder} entry is deleted.
+         * the {@link FileEntry.Folder} entry is deleted.
          * @exception IOException when the operation fails
          */
         public void delete () throws IOException {

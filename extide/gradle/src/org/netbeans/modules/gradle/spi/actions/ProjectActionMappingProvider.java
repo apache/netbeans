@@ -39,8 +39,7 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
  *             RunUtils.evaluateAcrionArgs(project, actionMapping.getArgs(), action, context));
  * </pre>
  * <p>
- * Since 2.14, the Provider may return a disabled {@link ActionMapping}. Check using 
- * {@link RunUtils#isActionDisabled}, rather than just {@code == null}.
+ * Since 2.14, the Provider may return a disabled {@link ActionMapping}.
  * 
  * @author Laszlo Kishalmi
  * @since 2.6

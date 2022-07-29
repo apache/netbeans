@@ -43,8 +43,8 @@ import org.netbeans.api.sendopts.CommandException;
  *   private Option option2 = ...;
  *   private Option option3 = ...;
  * 
- *   protected Set&lt;Option> getOptions() {
- *      Set&lt;Option> set = new HashSet&lt;Option>();
+ *   protected Set&lt;Option&gt; getOptions() {
+ *      Set&lt;Option&gt; set = new HashSet&lt;Option&gt;();
  *      set.add(option1);
  *      set.add(option2);
  *      set.add(option3);
@@ -71,7 +71,7 @@ public abstract class OptionProcessor {
     /** Method to override in subclasses to create 
      * the right set of {@link Option}s.
      * See the factory methods that are part of the {@link Option}'s javadoc
-     * or read the <a href="@TOP@/architecture-summary.html#answer-usecases">
+     * or read the <a href="@TOP@/architecture-summary.html#answer-arch-usecases">
      * usecases</a> for the sendopts API.
      * <p>
      * 

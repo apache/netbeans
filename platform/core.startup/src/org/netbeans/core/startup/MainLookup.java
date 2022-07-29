@@ -107,7 +107,7 @@ public final class MainLookup extends ProxyLookup {
         l.changeLookups(newDelegates);
     }
 
-    /** Called when Lookup<ModuleInfo> is ready from the ModuleManager.
+    /** Called when Lookup&lt;ModuleInfo&gt; is ready from the ModuleManager.
      * @see "#28465"
      */
     public static final void moduleLookupReady(Lookup moduleLookup) {

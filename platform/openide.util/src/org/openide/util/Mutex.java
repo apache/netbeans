@@ -52,7 +52,7 @@ import org.openide.util.spi.MutexImplementation;
 * Mutex m = new Mutex();
 *
 * // Grant write access, compute an integer and return it:
-* return m.writeAccess(new Mutex.Action&lt;Integer>(){
+* return m.writeAccess(new Mutex.Action&lt;Integer&gt;(){
 *     public Integer run() {
 *         return 1;
 *     }
@@ -61,7 +61,7 @@ import org.openide.util.spi.MutexImplementation;
 * // Obtain read access, do some computation,
 * // possibly throw an IOException:
 * try {
-*     m.readAccess(new Mutex.ExceptionAction&lt;Void>() {
+*     m.readAccess(new Mutex.ExceptionAction&lt;Void&gt;() {
 *         public Void run() throws IOException {
 *             if (...) throw new IOException();
 *             return null;
@@ -183,7 +183,7 @@ public final class Mutex {
      * @param privileged can enter privileged states of this Mutex
      *  @param executor allows to wrap the work of the mutex with a custom code
      * @since 7.12
-     * @see SimpleMutex#SimpleMutex(org.openide.util.ReadWriteAccess.Privileged, java.util.concurrent.Executor)
+     * see SimpleMutex#SimpleMutex(org.openide.util.ReadWriteAccess.Privileged, java.util.concurrent.Executor) notavailable
      */
     public Mutex(Privileged privileged, Executor executor) {
         this.impl = DefaultMutexImplementation.controlledBy(privileged.delegate, executor);
@@ -208,7 +208,8 @@ public final class Mutex {
     * in a <code>MutexException</code> and thrown from this method. One is encouraged
     * to catch <code>MutexException</code>, obtain the inner exception, and rethrow it.
     * Here is an example:
-    * <p><code><PRE>
+    * 
+    * <PRE>
     * try {
     *   mutex.readAccess (new ExceptionAction () {
     *     public void run () throws IOException {
@@ -218,7 +219,7 @@ public final class Mutex {
     *  } catch (MutexException ex) {
     *    throw (IOException) ex.getException ();
     *  }
-    * </PRE></code>
+    * </PRE>
     * Note that <em>runtime exceptions</em> are always passed through, and neither
     * require this invocation style, nor are encapsulated.
     * @param action the action to execute
@@ -257,7 +258,7 @@ public final class Mutex {
 
     /** Run an action with write access and possibly throw an exception.
     * Here is an example:
-    * <p><code><PRE>
+    * <PRE>
     * try {
     *   mutex.writeAccess (new ExceptionAction () {
     *     public void run () throws IOException {
@@ -267,7 +268,7 @@ public final class Mutex {
     *  } catch (MutexException ex) {
     *    throw (IOException) ex.getException ();
     *  }
-    * </PRE></code>
+    * </PRE>
     *
     * @param action the action to execute
     * @return the result of {@link Mutex.ExceptionAction#run}
@@ -370,7 +371,7 @@ public final class Mutex {
     }
     /** Action to be executed in a mutex without throwing any checked exceptions.
     * Unchecked exceptions will be propagated to calling code.
-     * @param T the type of object to return
+     * @param <T> the type of object to return
     */
     @SuppressWarnings("PublicInnerClass")
     public interface Action<T> extends ExceptionAction<T> {
@@ -386,7 +387,7 @@ public final class Mutex {
     * code should catch the encapsulating exception and rethrow the
     * real one.
     * Unchecked exceptions will be propagated to calling code without encapsulation.
-     * @param T the type of object to return
+     * @param <T> the type of object to return
     */
     @SuppressWarnings("PublicInnerClass")
     public interface ExceptionAction<T> {

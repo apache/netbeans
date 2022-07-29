@@ -36,7 +36,7 @@
             Describe the overall architecture.
             <hint>
             What will be API for
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API">
                 clients and what support API
             </a>? 
             What parts will be plugable.
@@ -79,7 +79,7 @@ will updated to be up-to-date.
 
 <!--
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented">
             usecases</a> of the new API. Who will use it at
             what circumstances and what will be the typical code to write
             to use the module.
@@ -418,7 +418,7 @@ No answer
             <hint>
             If there is a property that can change the behaviour of your 
             code, somebody will likely use it. You should describe what it does 
-            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            and the <a href="https://netbeans.apache.org/wiki/API_Design#Life-cycle_of_an_API">stability category</a>
             of this API. You may use
             <pre>
                 &lt;api group="property" name="id" category="private" url="http://..." &gt;
@@ -751,7 +751,7 @@ No answer
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

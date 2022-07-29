@@ -93,7 +93,7 @@ import org.openide.util.Parameters;
  * copy:
  *
  * <pre>
- * CancellableTask task = new CancellableTask<WorkingCopy>() {
+ * CancellableTask task = new CancellableTask&lt;WorkingCopy&gt;() {
  *
  *        public void run(WorkingCopy workingCopy) throws Exception {
  *            <b>TreeMaker make = workingCopy.getTreeMaker()</b>;
@@ -103,7 +103,7 @@ import org.openide.util.Parameters;
  *    }; 
  * </pre>
  *
- * @see <a href="http://wiki.netbeans.org/wiki/view/JavaHT_Modification">How do I do modification to a source file?</a> 
+ * @see <a href="https://netbeans.apache.org/wiki/JavaHT_Modification">How do I do modification to a source file?</a> 
  *
  * @author Tom Ball
  * @author Pavel Flaska
@@ -1119,7 +1119,7 @@ public final class TreeMaker {
     /**
      * Creates a new TryTree.
      *
-     * @param resource     the resources of the try clause. The elements of the list
+     * @param resources    the resources of the try clause. The elements of the list
      *                     should either be {@link VariableTree}s or {@link ExpressionTree}s.
      * @param tryBlock     the statement block in the try clause.
      * @param catches      the list of catch clauses, or an empty list.
@@ -1242,8 +1242,6 @@ public final class TreeMaker {
      * @param name name of the binding variable
      * @param type the type of the pattern
      * @return the newly created BindingPatternTree
-     * @throws NoSuchMethodException if the used javac does not support
-     *                               BindingPatternTree.
      */
     @Deprecated
     public Tree BindingPattern(CharSequence name,
@@ -1253,7 +1251,7 @@ public final class TreeMaker {
     
       /**
      * Creates a new Tree for a given VariableTree
-     * @specication : 15.20.2
+     * specification : 15.20.2
      * @param vt the VariableTree of the pattern
      * @see com.sun.source.tree.BindingPatternTree
      * @return the newly created BindingPatternTree
@@ -1548,7 +1546,7 @@ public final class TreeMaker {
      *   // create parameters
      *   VariableTree par1 = make.Variable(parMods, "a", make.PrimitiveType(TypeKind.INT), null);
      *   VariableTree par2 = make.Variable(parMods, "b", make.PrimitiveType(TypeKind.FLOAT), null);
-     *   List<VariableTree> parList = new ArrayList<VariableTree>(2);
+     *   List&lt;VariableTree&gt; parList = new ArrayList&lt;VariableTree&gt;(2);
      *   parList.add(par1);
      *   parList.add(par2);
      *   // create method
@@ -3276,7 +3274,7 @@ public final class TreeMaker {
      * Marks a tree as a replacement of some old one. The hint may cause surrounding whitespace to be 
      * carried over to the new tree and comments to be attached to the same (similar) positions
      * as in the old tree. 
-     * <p/>
+     * <p>
      * If 'defaultOnly' is true, the hint is only added if no previous hint exists. You generally want
      * to force the hint, in code manipulation operations. Bulk tree transformers should preserve existing
      * hints - the {@link TreeUtilities#translate} preserves existing relationships.

@@ -23,7 +23,7 @@ import org.netbeans.lib.editor.util.ArrayUtilities;
 
 /**
  * Provides characters to the clients.
- * <br/>
+ * <br>
  * It's implemented either by lexer input operation or preprocessor operation.
  *
  * @author Miloslav Metelka
@@ -61,7 +61,7 @@ public interface CharProvider {
     
     /**
      * Backup given number of characters.
-     * <br/>
+     * <br>
      * The EOF cannot be backup-ed.
      */
     void backup(int count);
@@ -74,11 +74,11 @@ public interface CharProvider {
     
     /**
      * Notify this provider that a token with the given length was recognized.
-     * <br/>
+     * <br>
      * The token length for this particular provider may differ from the real
      * token length in the root lexer input operation due to character
      * preprocessing.
-     * <br/>
+     * <br>
      * The tokenLength at a particular level should be cached by the corresponding provider.
      *
      * @param skipToken whether the token will be skipped due to filtering of its id.
@@ -95,7 +95,7 @@ public interface CharProvider {
     
     /**
      * Collect extra preprocessed characters from the parent providers.
-     * <br/>
+     * <br>
      * They can consist from extra characters before the preprocessed characters
      * in the top provider and the extra characters after 
      * the preprocessed characters in the top provider.

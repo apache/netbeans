@@ -33,7 +33,7 @@ import org.openide.filesystems.FileUtil;
  * <code>"Actions/" + category() + "/" + id().replace('.','-') + ".instance"</code>
  * path.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 7.26
  * @see ActionRegistration
  * @see Actions#forID

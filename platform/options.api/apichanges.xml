@@ -75,14 +75,14 @@
         <compatibility addition="yes" semantic="incompatible">
             Compared to previous versions, the default changed - now 
             the restart is not needed. Applications can change that by using
-            <a href="architecture-summary.html#branding-OPT_RestartAfterImport">
+            <a href="architecture-summary.html#branding-org.netbeans.modules.options.export.OPT_RestartAfterImport">
             this branding API</a> and specifying <code>false</code> as the value
             of associated key.
         </compatibility>
         <description>
             Should an import of settings require a restart? Some applications 
             need that, some don't. There is a 
-            <a href="architecture-summary.html#branding-OPT_RestartAfterImport">
+            <a href="architecture-summary.html#branding-org.netbeans.modules.options.export.OPT_RestartAfterImport">
             branding API</a> to control such behavior now.
         </description>
         <issue number="226998"/>

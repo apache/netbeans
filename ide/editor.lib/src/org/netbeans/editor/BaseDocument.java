@@ -1178,7 +1178,6 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @param ret destination array
      * @param offset offset in the destination array.
      * @param len number of characters to obtain.
-     * @return array with the requested characters.
      */
     public void getChars(int pos, char ret[], int offset, int len)
     throws BadLocationException {
@@ -2060,7 +2059,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /**
      * Add a custom undoable edit during atomic lock of the document.
-     * <br/>
+     * <br>
      * For example code templates use this method to mark an insertion of a code template
      * skeleton into the document. Once the edit gets undone the CT editing will be cancelled.
      *
@@ -2441,7 +2440,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** Property evaluator is useful for lazy evaluation
      * of properties of the document when
-     * {@link javax.swing.text.Document#getProperty(java.lang.String)}
+     * {@link javax.swing.text.Document#getProperty(java.lang.Object)}
      * is called.
      */
     public static interface PropertyEvaluator {

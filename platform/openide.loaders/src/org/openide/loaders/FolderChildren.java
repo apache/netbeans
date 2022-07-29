@@ -504,7 +504,7 @@ implements PropertyChangeListener, ChangeListener, FileChangeListener {
     
     private final class DelayedNode extends FilterNode implements Runnable {
         final FolderChildrenPair pair;
-        /** @GuardedBy("this") */
+        /** &#64;GuardedBy("this") */
         private RequestProcessor.Task task;
 
         public DelayedNode(FolderChildrenPair pair) {

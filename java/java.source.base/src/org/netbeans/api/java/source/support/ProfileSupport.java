@@ -206,7 +206,7 @@ public class ProfileSupport {
      */
     public interface ViolationCollectorFactory {
         /**
-         * Creates a new {@lni ViolationCollector} for given root.
+         * Creates a new {@link ViolationCollector} for given root.
          * @param root the root to be validated
          * @return a new {@link ViolationCollector}
          */

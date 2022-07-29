@@ -353,7 +353,7 @@ public abstract class NodeImpl implements Node, Cloneable {
      * Adds the node newChild to the end of the list of children of this node.
      * Since the model is immutable checks if current node and node being added
      * are not already in tree.
-     * @param newChild - The node to add.
+     * @param node - The node to add.
      * @return The node added.
      */
     public Node appendChild(org.w3c.dom.Node node) {
@@ -372,8 +372,8 @@ public abstract class NodeImpl implements Node, Cloneable {
      * Repalces the node oldNode with newNode.
      * Since the model is immutable checks if current node
      * and the node being put, are not already in tree.
-     * @param newChild - The new node to put in the child list.
-     * @param oldChild - The node being replaced in the list.
+     * @param newNode - The new node to put in the child list.
+     * @param oldNode - The node being replaced in the list.
      * @return The node replaced.
      */
     public Node replaceChild(org.w3c.dom.Node newNode, org.w3c.dom.Node oldNode) {

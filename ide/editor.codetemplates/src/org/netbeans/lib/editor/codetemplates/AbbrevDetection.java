@@ -86,7 +86,7 @@ public final class AbbrevDetection implements DocumentListener, PropertyChangeLi
     /**
      * Document property which determines whether an ongoing document modification
      * should be completely ignored by the abbreviation framework.
-     * <br/>
+     * <br>
      * This is useful e.g. for code templates parameter replication.
      */
     private static final String ABBREV_IGNORE_MODIFICATION_DOC_PROPERTY

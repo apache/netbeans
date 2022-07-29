@@ -41,7 +41,7 @@ import org.netbeans.lib.lexer.token.AbstractToken;
 /**
  * Request for updating of token hierarchy after text modification
  * or custom embedding creation/removal.
- * <br/>
+ * <br>
  * This class contains all the data and methods related to updating.
  *
  * @author Miloslav Metelka

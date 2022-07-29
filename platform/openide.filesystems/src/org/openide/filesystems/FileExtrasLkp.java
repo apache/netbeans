@@ -28,7 +28,7 @@ import org.openide.util.lookup.InstanceContent;
  * Stub for backwards compatibility. The real implementation which bridges
  * in system actions moved to openide.filesystems.compat8
  * 
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 final class FileExtrasLkp extends AbstractLookup {
     final FileSystem fs;

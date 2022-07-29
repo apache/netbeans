@@ -25,7 +25,7 @@ import org.openide.util.Lookup;
 
 /**
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  */
 public interface DelegatingScopeInformation {
 

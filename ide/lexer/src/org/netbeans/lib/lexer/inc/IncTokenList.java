@@ -43,7 +43,7 @@ import org.netbeans.spi.lexer.MutableTextInput;
 /**
  * Incremental token list maintains a list of tokens
  * at the root language level.
- * <br/>
+ * <br>
  * The physical storage contains a gap to speed up list modifications
  * during typing in a document when tokens are typically added/removed
  * at the same index in the list.

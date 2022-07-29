@@ -30,10 +30,10 @@ import org.netbeans.api.project.SourceGroup;
  * folders. In some cases, different presentation, or more precise information on
  * relationship between a SourceGroup and module is needed. Such information can be obtained
  * using {@code MultiModuleGroupQuery}.
- * <p/>
+ * <p>
  * The object can be obtained from project Lookup. If it is not present, the project does not support
  * java modules.
- * <p/>
+ * <p>
  * If the source level of the project is 8 or less, the {@code MultiModuleGroupQuery} may be present,
  * but will return {@code null} on all queries, as modules are not supported before JDK9.
  * @author sdedic
@@ -53,7 +53,7 @@ public interface MultiModuleGroupQuery {
     
     /**
      * Determines which {@link SourceGroup}s are owned by a particular module.
-     * Returns {@link SourceGroups} contained within the module, empty array
+     * Returns {@link SourceGroup}s contained within the module, empty array
      * if module does not exist or does not contain any of the passed {@code SourceGroups}.
      * @param modName module name
      * @param groups groups, to filter.

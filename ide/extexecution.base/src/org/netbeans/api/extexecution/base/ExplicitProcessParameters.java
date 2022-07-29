@@ -58,7 +58,7 @@ import org.openide.util.Lookup;
  * <p>
  * Since these parameters are passed <b>externally</b>, there's an utility method, {@link #buildExplicitParameters(org.openide.util.Lookup)}
  * that builds the explicit parameter instruction based on {@link Lookup} contents. The parameters are
- * merged in the order of the {@link Builder#position configured rank} and appearance (in the sort ascending order). 
+ * merged in the order of the {@see position configured rank} and appearance (in the sort ascending order). 
  * The default rank is {@code 0}, which allows both append or prepend parameters. If an item's 
  * {@link ExplicitProcessParametersTest#isArgReplacement()} is true, all arguments collected so far are discarded.
  * <p>

@@ -31,8 +31,8 @@ import org.netbeans.modules.visual.export.Scene2Image;
  * There is an additional utility is this class to retrieve a list of WidgetPolygonalCoordinates.
  * This list holds widget-polygon tuples designed to be used to create HTML imagemaps. The 
  * following example code shows how this imagemap could be created.
- * <xmp>
-ArrayList<WidgetPolygonalCoordinates> list = null ;
+ * <pre>
+ArrayList&lt;WidgetPolygonalCoordinates&gt; list = null ;
 try {
     list = SceneExporter.createImageMap(scene, 
         imageFile, imageType, zoomType, 
@@ -42,7 +42,7 @@ try {
     //Something bad happened
     return;
 }
-html.append("<img src=\"scene.jpg\" usemap=\"#WidgetMap\"/>\n");
+html.append("&lt;img src=\"scene.jpg\" usemap=\"#WidgetMap\"/&gt;\n");
 String[] mapSections = new String[list.size()];
 int count = 0;
 for (WidgetPolygonalCoordinates wc: list) {
@@ -54,17 +54,17 @@ for (WidgetPolygonalCoordinates wc: list) {
         name = ((SimpleConnectionWidget) widget).getUserObject().getLabel();
     }
     String coordinateString = pointsToString(wc.getPolygon());
-    mapSections[count++] = "<area shape=\"polygon\" coords=\"" + coordinateString + "\" href=\"#" + name + "\">";
-    html.append("<li><a name=\"").append(name).append("\">");
-    html.append(name).append("</a><br>\n");
-    html.append(getRandomText(100)).append("</li>\n");
+    mapSections[count++] = "&lt;area shape=\"polygon\" coords=\"" + coordinateString + "\" href=\"#" + name + "\"&gt;";
+    html.append("&lt;li&gt;&lt;a name=\"").append(name).append("\"&gt;");
+    html.append(name).append("&lt;/a&gt;&lt;br&gt;\n");
+    html.append(getRandomText(100)).append("&lt;/li&gt;\n");
 }
-html.append("\n<map name=\"WidgetMap\">\n");
+html.append("\n&lt;map name=\"WidgetMap\"&gt;\n");
 for (String s : mapSections) {
     html.append(s).append("\n");
 }
-html.append("</map>");
- * </xmp>
+html.append("&lt;/map&gt;");
+ * </pre>
  * 
  * @author krichard
  */
@@ -87,8 +87,8 @@ public final class SceneExporter {
      * of each polygon are stored in an instance of WidgetPolygonalCoordinates.
      * @param file The file used to store the exported image. If null, the method 
      * immediately returns null.
-     * @param SceneExporter.ImageType The image type to be exported for the image map.
-     * @param SceneExporter.ZoomType Defines the strategy
+     * @param imageType The image type to be exported for the image map.
+     * @param zoomType Defines the strategy
      * by which to set the exporting scale factor. Note that certain parameters are
      * nullified by the choice of ZoomType. For instance, if ZoomType.CUSTOM_SIZE is
      * not chosen, then the width and height parameters are not used.
@@ -137,8 +137,8 @@ public final class SceneExporter {
      * @param scene The Scene to be exported as an image.
      * @param file The file used to store the exported image. If null, then it is 
      * assumed that the raw image is to be returned only and not written to a file.
-     * @param SceneExporter.ImageType The image type to be exported for the image map.
-     * @param SceneExporter.ZoomType Defines the strategy
+     * @param imageType The image type to be exported for the image map.
+     * @param zoomType Defines the strategy
      * by which to set the exporting scale factor. Note that certain parameters are
      * nullified by the choice of ZoomType. For instance, if ZoomType.CUSTOM_SIZE is
      * not chosen, then the width and height parameters are not used.

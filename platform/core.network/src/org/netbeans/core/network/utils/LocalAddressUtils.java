@@ -47,7 +47,6 @@ import org.openide.util.RequestProcessor;
 /**
  * Methods for determining the local host's own address. The methods provide
  * two benefits over the core JDK classes.:
- * <p>
  * <ul>
  *    <li><i>Caching</i>. Results from the methods are cached and can therefore
  *       be returned without blocking. An application should call 
@@ -250,13 +249,13 @@ public class LocalAddressUtils {
      * Returns the addresses of the local host.
      * 
      * <p>This is achieved by retrieving the
-     * {@link org.netbeans.network.hname.HostnameUtils#getNetworkHostname() name-of-the-host} 
+     * {@link HostnameUtils#getNetworkHostname() name-of-the-host} 
      * from the system, then resolving that name into a list of {@code InetAddress}es. 
      * 
      * <p>This method returns a cached result and is therefore likely not to
      * block unless this is the first time this class is being referenced.
      * 
-     * @see org.netbeans.network.hname.HostnameUtils#getNetworkHostname()
+     * @see HostnameUtils#getNetworkHostname()
      * @see InetAddress#getAllByName(java.lang.String) 
      * @param ipTypePref filter
      * @return

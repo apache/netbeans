@@ -39,9 +39,9 @@ import java.awt.event.MouseEvent;
  * <p>
  * To provide an implementation of TabbedContainerUI, it is a far better idea to
  * subclass 
- * <a href="plaf/AbstractTabbedContainerUI.html">AbstractTabbedContainerUI</a>, 
- * <a href="plaf/BasicTabbedContainerUI.html">BasicTabbedContainerUI</a>, or 
- * <a href="plaf/BasicScrollingTabbedContainerUI.html">BasicScrollingTabbedContainerUI</a>.
+ * <!-- a href="@org-netbeans-swing-plaf@/plaf/AbstractTabbedContainerUI.html"AbstractTabbedContainerUI -->, 
+ * <!-- a href="@org-netbeans-swing-plaf@/plaf/BasicTabbedContainerUI.html"BasicTabbedContainerUI , or --> 
+ * <!-- a href="@org-netbeans-swing-plaf@/plaf/BasicScrollingTabbedContainerUI.html"BasicScrollingTabbedContainerUI -->.
  *
  * @author Tim Boudreau
  */

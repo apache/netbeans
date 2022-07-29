@@ -108,7 +108,7 @@ is the proper place.
         <description>
 	    Should a MultiViewElement allow spliting? Some applications
 	    may need that, some don't. There is a
-	    <a href="architecture-summary.html#branding-MultiViewElement.Spliting.Enabled">
+	    <a href="@TOP@architecture-summary.html#branding-org.netbeans.core.multiview.MultiViewElement.Spliting.Enabled">
 		branding API</a> to control such behavior now.
         </description>
         <issue number="228448"/>

@@ -32,47 +32,46 @@ import static org.netbeans.api.editor.fold.Bundle.*;
  * Each fold type presents a fold type acceptor as well
  * accepting just itself.
  *
- * <p/>
- * <strike>
+ * <p style="style=text-decoration: line-through">
  * As the <code>equals()</code> method is declared final
  * (delegating to <code>super</code>) the fold types
  * can directly be compared by using <code>==</code>
  * operator.
- * </strike>
-  * <p/>
+ * </p>
+  * <p>
  * FoldTypes are MIME-type specific. Sets of FoldType, which apply
  * to a certain MIME type are collected in a {@link FoldType.Domain},
  * which can be obtained by {@link FoldUtilities#getFoldTypes}. FoldTypes for a MIME type are
  * collected with the help of {@link org.netbeans.spi.editor.fold.FoldTypeProvider}.
- * <p/>
+ * <p>
  * Several generalized types of folds are defined in this class as constants. 
  * When creating custom FoldTypes, please check carefully whether the new FoldType is not, 
  * in fact, one of these general ones,
  * or is not a specialization of it. If a general action (e.g. auto-collapse all folds XXX) would
  * make sense for the new fold, consider to {@link #derive} it from an existing one. 
- * <p/>
+ * <p>
  * Each FoldType has a specific FoldTemplate instance that controls how it is presented. If a
  * new Fold has same semantics as an existing one, but a different {@link FoldTemplate} is needed,
  * use {@link #override} to create a new FoldType with appropriate properties. FoldTypes
  * defined here can be <b>reused</b> in individual MIME types, if their configuration is appropriate.
  * In general, FoldTypes from more general MIME types (e.g. text/xml) can be reused in specialized ones
  * (e.g. text/x-ant+xml).
- * <p/>
+ * <p>
  * FoldTypes can form a hierarchy of generalization. For example java Method fold can have a more general
  * 'parent', {@link #MEMBER}. 
- * <p/>
+ * <p>
  * The generalization is designed to allow several kinds of the same concept operated separately at the
  * level of the language, but managed at once using general options or operations. 
  * If no settings are specified for Method folding, {@link #MEMBER} settings are
  * applied. Likewise, a general-purpose folding operation can work on {@link #MEMBER} fold type,
  * which will affect both FUNCTION in PHP or METHOD in java (and other fold types in other languages).
- * <p/>
+ * <p>
  * Because of this, please be careful
  * to use {@link #isKindOf} to check whether a FoldType is of a specific type. This method respects the
  * generalization. == can be still used to check for exact type match. When using ==, javadoc comments
  * may be evaluated as different from general 'documentation' and yet different from PHP docs. Comparison using 
  * == are safe only when applied on FoldType instances defined for the same MIME type
-* <p/>
+* <p>
  *
  * @author sdedic
  * @author Miloslav Metelka
@@ -215,7 +214,7 @@ public final class FoldType {
      * Derives a FoldType which acts as a child of this instance.
      * The FoldType will be treated as a special case of this instance. If A is the returned
      * instance and B is this instance, then A.isKindOf(B) will return true.
-     * <p/>
+     * <p>
      * 
      * @param code new code for the FoldType
      * @param label human-readable label that describes the FoldType. If {@code null}, the original label will be used.
@@ -269,7 +268,7 @@ public final class FoldType {
     
     /**
      * Checks whether the fold can act as the 'other' type.
-     * This check respect parent relationship (see {@link #parent}). The method returns true,
+     * This check respect parent relationship (see {@link #parent()}). The method returns true,
      * if semantics, operations, settings,... applicable to 'other' could be also applied on
      * this FoldType.
      * 
@@ -309,9 +308,9 @@ public final class FoldType {
      * Represents a value set of {@link FoldType}s for one MIME type.
      * The instance collects all FoldTypes defined for a certain MIME type. "" mime type
      * represents 'global' FoldTypes.
-     * <p/>
+     * <p>
      * The instance will fire change events when the set of fold types change, e.g. as a result
-     * of enabled/disabled modules (appearance of {@link FoldTypeProvider}).
+     * of enabled/disabled modules (appearance of {@link org.netbeans.spi.editor.fold.FoldTypeProvider}).
      * @since 1.35
      */
     public interface Domain {

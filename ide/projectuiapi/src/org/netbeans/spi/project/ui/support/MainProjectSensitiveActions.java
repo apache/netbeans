@@ -57,7 +57,7 @@ public class MainProjectSensitiveActions {
      * @param namePattern a pattern which should be used for determining the action's
      *        name (label). It takes two parameters a la {@link java.text.MessageFormat}:
      *        <code>{0}</code> - number of selected projects (or -1 if a main project is set);
-     *        <code>{1}</code> - name of the first project (if >0).
+     *        <code>{1}</code> - name of the first project (if &gt;0).
      * @param icon icon of the action; may be null, in which case the action will
      *        not have an icon
      * @return an action sensitive to the main project
@@ -77,7 +77,7 @@ public class MainProjectSensitiveActions {
      * @param namePattern a pattern which should be used for determining the action's
      *        name (label). It takes two parameters a la {@link java.text.MessageFormat}:
      *        <code>{0}</code> - number of selected projects (or -1 if a main project is set);
-     *        <code>{1}</code> - name of the first project (if >0).
+     *        <code>{1}</code> - name of the first project (if &gt;0).
      * @param icon icon of the action; may be null, in which case the action will
      *        not have an icon
      * @return an action sensitive to the main project

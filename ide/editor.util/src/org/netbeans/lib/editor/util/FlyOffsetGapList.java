@@ -50,7 +50,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      *
      * @param elem element currently stored in the list.
      * @return raw offset of the element. It needs to be preprocessed
-     * by {@link #raw2RelOffset(int)} to become the real offset.
+     * by {@code #raw2RelOffset(int)} to become the real offset.
      */
     protected abstract int elementRawOffset(E elem);
 
@@ -86,10 +86,10 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      * Return base starting offset to which all the tokens contained in this list
      * are related. The absolute token's offset is a sum of this start offset plus
      * token's offset.
-     * <br/>
+     * <br>
      * There may be just flyweight element(s) at the begining of the list
      * so the start offset gives the necessary basing.
-     * <br/>
+     * <br>
      * By default it's zero.
      */
     protected int startOffset() {
@@ -110,7 +110,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      *
      * @param index of the element in the list.
      * @return offset of the element. It will include {@link #startOffset()}.
-     * @throws IndexOutOfBoundsException if index >= size() or lower than zero
+     * @throws IndexOutOfBoundsException if index &gt;= size() or lower than zero
      */
     protected final int elementOffset(int index) {
         E elem = get(index);
@@ -142,7 +142,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      *  Index equal to <code>size()</code> can be used to get end offset
      *  of the last element.
      * @return offset of the element. It will include {@link #startOffset()}.
-     * @throws IndexOutOfBoundsException if index > size() or lower than zero
+     * @throws IndexOutOfBoundsException if index &gt; size() or lower than zero
      */
     protected final int elementOrEndOffset(int indexOrSize) {
         E elem;
@@ -357,7 +357,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
     /**
      * This method updates element's offset (shifts it above offset gap if necessary)
      * before adding the element to the list.
-     * <bt/>
+     * <br>
      * This method should be called before (or after) the element is physically added
      * to the list. If the element is added below the offset gap
      * then calling of this method is not necessary.
@@ -372,11 +372,11 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
     /**
      * This method updates element's offset (shifts it below offset gap if necessary)
      * before (or after) the element gets removed from the list.
-     * <br/>
+     * <br>
      * This method should be called after the element is physically removed
      * from the list and it's desired that it retains its natural offset
      * (not possibly shifted by the offset gap length).
-     * <br/>
+     * <br>
      * If the element was located below the offset gap prior removal
      * then calling of this method is not necessary.
      */
@@ -403,7 +403,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
     /**
      * Convert the given offset into raw form suitable for storing in this list.
      *
-     * @param offset >=0 absolute offset that includes {@link #startOffset()}.
+     * @param offset &gt;=0 absolute offset that includes {@link #startOffset()}.
      * @return corresponding raw offset.
      */
     protected final int offset2Raw(int offset) {

@@ -34,12 +34,12 @@ import java.util.HashSet;
  * A Polygon which implements a proper equals/hashcode contract.  In order to
  * optimize drag and drop repainting, it is necessary that the Shape objects
  * returned by getTabIndication() be able to be compared properly.
- * <p/>
+ * <p>
  * To ease migration of older code, this class also implements a couple methods
  * of GeneralPath, which was used before. These methods just delegate to
  * addPoint(), so the full functionality of GeneralPath is not replicated
  * (specifically, a polygon must be contiguous and closed).
- * <p/>
+ * <p>
  *
  * @author Tim Boudreau
  */

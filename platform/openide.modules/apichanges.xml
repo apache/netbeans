@@ -496,7 +496,7 @@ javax.xml.ws</pre>
         <description>
             Due to <a href="apichanges.html#split-of-openide-jar">split of openide.jar</a> some important branding files used during startup change their location. 
             Especially the to splash screen picture, location and color of progress bar and the application icon are now in <code>org.netbeans.core.startup</code>
-            package. Here is an example of the branding <a href="http://www.netbeans.org/source/browse/ide/branding/core/src/org/netbeans/core/startup/">as used by NetBeans IDE</a>.
+            package. Here is an example of the branding <a href="https://github.com/apache/netbeans/tree/master/nb/ide.branding">as used by NetBeans IDE</a>.
         </description>
     </change>
     <change id="split-of-openide-jar">
@@ -971,7 +971,7 @@ OpenIDE-Module-Requires: org.openide.compiler.CompilationEngine,
         API. Other packages are blocked from client modules.</p>
         <p>Utilizing this feature for already released modules
         is <b>very dangerous</b>. See issue
-        <a href="http://www.netbeans.org/issues/show_bug.cgi?id=31637">#31637</a>
+        <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=31637">#31637</a>
         for details.</p>
       </description>
       <issue number="19621"/>

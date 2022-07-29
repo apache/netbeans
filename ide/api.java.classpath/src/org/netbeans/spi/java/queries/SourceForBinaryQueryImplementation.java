@@ -35,7 +35,6 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
  * delegates to that implementation. Therefore it is not generally necessary
  * for a project type provider to register its own global implementation of
  * this query, if it depends on the Java Project module and uses this style.
- * </p>
  * <div class="nonnormative">
  * <p>
  * Note that if you supply a <code>SourceForBinaryQueryImplementation</code>
@@ -44,7 +43,7 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
  * used as dependencies as well. Otherwise code completion will not work well;
  * the current parser database creation strategy uses the following search order
  * when deciding what to parse for a binary classpath element:
- * </p>
+ *
  * <ol>
  * <li>The sources returned by <code>SourceForBinaryQueryImplementation</code>,
  *     <em>if</em> these have at least a bootclasspath specified as well by some
@@ -54,8 +53,8 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
  * </ol>
  * </div>
  * @see org.netbeans.api.java.queries.SourceForBinaryQuery
- * @see org.netbeans.api.queries.FileOwnerQuery
- * @see org.netbeans.api.project.Project#getLookup
+ * <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/FileOwnerQuery.html">FileOwnerQuery</a>
+ * <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">Project#getLookup</a>
  * @since org.netbeans.api.java/1 1.4
  */
 public interface SourceForBinaryQueryImplementation {
@@ -73,12 +72,12 @@ public interface SourceForBinaryQueryImplementation {
      * <li>Create a new SourceForBinaryQuery.Result for the binaryRoot, put it into the cache
      * and return it.</li>
      * </ol>
-     * </p>
+     *
      * <p>
      * Any absolute URL may be used but typically it will use the <code>file</code>
      * protocol for directory entries and <code>jar</code> protocol for JAR entries
-     * (e.g. <samp>jar:file:/tmp/foo.jar!/</samp>).
-     * </p>
+     * (e.g. <code>jar:file:/tmp/foo.jar!/</code>).
+     * <p>
      * @param binaryRoot the class path root of Java class files
      * @return a result object encapsulating the answer or null if the binaryRoot is not recognized
      */

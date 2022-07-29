@@ -451,7 +451,7 @@ public class ClassFile {
 
     /**
        Returns the content of the <code>ModulePackages</code> attribute.
-     * @return the {@link List> of packages or null when there is no <code>ModulePackages</code> attribute.
+     * @return the {@link List} of packages or null when there is no <code>ModulePackages</code> attribute.
      * @since 1.53
      */
     public final List<String> getModulePackages() {

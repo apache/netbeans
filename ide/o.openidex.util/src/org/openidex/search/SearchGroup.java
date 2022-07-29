@@ -33,7 +33,7 @@ import org.openide.nodes.Node;
 /**
  * Class which groups individual search types. It provides several services
  * to provide search on them. The services are scanning node system to
- * provide search object for group of search types -> efficient search.
+ * provide search object for group of search types -&gt; efficient search.
  *
  * @author  Peter Zavadsky
  * @author  Marian Petras
@@ -53,9 +53,9 @@ public abstract class SearchGroup {
      * <UL>
      * <LI>property change name = PROP_RESULT
      * <LI>property source = this search type instance
-     * <LI>old value = detail which was changed or <code>null</code> there wasn't before for the node -> new value has to be non-null
+     * <LI>old value = detail which was changed or <code>null</code> there wasn't before for the node -&gt; new value has to be non-null
      * for the latter case.
-     * <LI>new value = detail which was changed or null if the node was removed from the result -> old value has to be non-null
+     * <LI>new value = detail which was changed or null if the node was removed from the result -&gt; old value has to be non-null
      * for that case
      * </UL>
      * This allows implementation of the dynamic changing of result suggested
@@ -161,7 +161,7 @@ public abstract class SearchGroup {
     /**
      * Does search.
      *
-     * @throw RuntimeException USER level annotated runtime exception
+     * @throws RuntimeException USER level annotated runtime exception
      *        on low memory condition (instead of OutOfMemoryError)
      */
     public void search() {
@@ -274,7 +274,7 @@ public abstract class SearchGroup {
      * to all search types) is computed. Then a search group is created
      * for each of the <code>Class</code>s.
      *
-     * @param  search types to create search groups for
+     * @param  items types to create search groups for
      * @return  created search groups
      * @see  SearchType#getSearchTypeClasses()
      */

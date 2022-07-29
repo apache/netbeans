@@ -53,10 +53,10 @@ public final class ModuleInfoUtils {
     
     /**
      * Determines if the configured maven-compiler-plugin isn't too old in case 
-     * there is a main module-info.java in the given project (has to be >= 3.6).
+     * there is a main module-info.java in the given project (has to be &gt;= 3.6).
      * 
      * @param prj the project to be checked
-     * @return <code>true</code> if there is no mofule-info file or if the m-c-p version is new enough (>= 3.6). Otherwise <code>false</code>
+     * @return <code>true</code> if there is no mofule-info file or if the m-c-p version is new enough (&gt;= 3.6). Otherwise <code>false</code>
      */
     public static boolean checkModuleInfoAndCompilerFit(Project prj) {
         NbMavenProject nbprj = prj.getLookup().lookup(NbMavenProject.class);

@@ -44,7 +44,7 @@ public final class ProjectActions {
     public static String TOKEN_JAVAEXEC_JVMARGS = "javaExec.jvmArgs"; // NOI18N
 
     /**
-     * Replaceable token for program parameters as a commandline option. Generates --args <i>&lt;parameter-list></i>, if the extra parameters are present, otherwise
+     * Replaceable token for program parameters as a commandline option. Generates --args <i>&lt;parameter-list&gt;</i>, if the extra parameters are present, otherwise
      * generates an empty String. See {@link #TOKEN_JAVAEXEC_JVMARGS} for code examples.
      * @since 1.9
      */

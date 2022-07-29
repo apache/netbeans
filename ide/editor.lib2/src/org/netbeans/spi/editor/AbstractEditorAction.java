@@ -354,7 +354,7 @@ public abstract class AbstractEditorAction extends TextAction implements
      * Called when property values from wrapper action were transferred into delegate action (this action)
      * so properties like Action.NAME will start to return correct values.
      *
-     * @see AbstractEditorAction()
+     * @see #AbstractEditorAction()
      */
     protected void valuesUpdated() {
     }

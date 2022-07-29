@@ -59,7 +59,8 @@ import org.openide.util.Utilities;
  * <p>
  * BasicTabDisplayerUI implements a mouse listener which will call the appropriate
  * methods when the mouse enters/exits tabs, etc.
- * <h4>Details</h4>
+ * <p>
+ * <strong>Details</strong>
  * <p>
  * State is composed as an integer bitmask which covers all of the supported
  * states of a tab that may affect the way they paint.  These are also the values that

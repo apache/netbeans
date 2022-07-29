@@ -47,22 +47,22 @@ public final class EditorDocumentUtils {
     /**
      * Execute a non mutating runnable under an exclusive document lock over the document
      * (no other read locks or write locks are taking place).
-     * <br/>
+     * <br>
      * Nested calls to {@link #runExclusive(Document, Runnable) } are allowed.
      * The given runnable may also call {@link Document#render(Runnable) }.
-     * <br/>
+     * <br>
      * However any mutations by {@link Document#insertString(int, String, javax.swing.text.AttributeSet) }
      * or {@link Document#remove(int, int) } are prohibited.
-     * <br/>
+     * <br>
      * Calling atomic transactions (BaseDocument.runAtomic() or NbDocument.runAtomic())
      * from the given runnable is prohibited as well.
-     * <br/>
+     * <br>
      * Calls to {@link #runExclusive(Document, Runnable) } within an atomic section
      * are allowed (but no document mutations may be done during runExclusive() call).
-     * <br/>
+     * <br>
      * Calls to {@link Document#render(java.lang.Runnable) } within
      * {@link #runExclusive(Document, Runnable) } are allowed.
-     * <br/>
+     * <br>
      * Calls to {@link #runExclusive(Document, Runnable) } within
      * {@link Document#render(java.lang.Runnable) } are prohibited and may lead to starvation.
      * 
@@ -101,7 +101,7 @@ public final class EditorDocumentUtils {
 
 //    /**
 //     * Reset a possible undo merging so any upcoming edits will be undone separately.
-//     * <br/>
+//     * <br>
 //     * If document does not support undo merging reset the method does nothing.
 //     * 
 //     * @param doc document

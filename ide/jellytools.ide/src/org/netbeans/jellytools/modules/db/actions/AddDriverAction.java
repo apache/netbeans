@@ -23,7 +23,7 @@ import org.netbeans.jellytools.Bundle;
 import org.netbeans.jellytools.actions.ActionNoBlock;
 
 
-/** Used to call "New Driver" popup menu item (Services tab, Databases->Drivers).
+/** Used to call "New Driver" popup menu item (Services tab, Databases-&gt;Drivers).
  * @see org.netbeans.jellytools.actions.Action
  * @author Martin.Schovanek@sun.com */
 public class AddDriverAction extends ActionNoBlock {

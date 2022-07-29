@@ -397,15 +397,15 @@ public final class ReferenceHelper {
      * Adds a project property if necessary to refer to its location of the foreign
      * project - a shared property if the foreign project
      * is {@link CollocationQuery collocated} with this one, else a private property.
-     * This property is named <samp>project.<i>foreignProjectName</i></samp>.
-     * Example: <samp>project.mylib=../mylib</samp>
+     * This property is named <code>project.<i>foreignProjectName</i></code>.
+     * Example: <code>project.mylib=../mylib</code>
      * <p>
      * Adds a project property to refer to the artifact's location.
-     * This property is named <samp>reference.<i>foreignProjectName</i>.<i>targetName</i></samp>
-     * and will use <samp>${project.<i>foreignProjectName</i>}</samp> and be a shared
+     * This property is named <code>reference.<i>foreignProjectName</i>.<i>targetName</i></code>
+     * and will use <code>${project.<i>foreignProjectName</i>}</code> and be a shared
      * property - unless the artifact location is an absolute URI, in which case the property
      * will also be private.
-     * Example: <samp>reference.mylib.jar=${project.mylib}/dist/mylib.jar</samp>
+     * Example: <code>reference.mylib.jar=${project.mylib}/dist/mylib.jar</code>
      * <p>
      * Also records the artifact type, (relative) script path, and build and
      * clean target names.
@@ -941,7 +941,7 @@ public final class ReferenceHelper {
      * the behavior is identical to {@link #createForeignFileReference(AntArtifact)}.
      * <p>
      * Acquires write access.
-     * @param path a file path to refer to (need not currently exist)
+     * @param filepath a file path to refer to (need not currently exist)
      * @param expectedArtifactType the required {@link AntArtifact#getType}
      * @return a string which can refer to that file somehow
      *

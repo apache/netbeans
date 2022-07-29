@@ -75,7 +75,7 @@ public final class CaretInfo {
 
     /**
      * Get a bias of the dot position which is either
-     * {@link Position.Bias.Forward} or {@link Position.Bias.Backward} depending
+     * {@link javax.swing.text.Position.Bias#Forward} or {@link javax.swing.text.Position.Bias#Backward} depending
      * on whether the caret biases towards the next character or previous one.
      * The bias is always forward for non bidirectional text.
      *
@@ -101,7 +101,7 @@ public final class CaretInfo {
     
     /**
      * Get a bias of the mark position which is either
-     * {@link Position.Bias.Forward} or {@link Position.Bias.Backward} depending
+     * {@link javax.swing.text.Position.Bias#Forward} or {@link javax.swing.text.Position.Bias#Backward} depending
      * on whether the caret biases towards the next character or previous one.
      * The bias is always forward for non bidirectional text.
      *

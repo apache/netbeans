@@ -20,7 +20,7 @@ package org.netbeans.modules.maven.execute.model;
 
 /**
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public class NetbeansActionProfile {
     /**

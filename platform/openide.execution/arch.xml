@@ -145,7 +145,7 @@ JRE is enough.
         </question>
 -->
 <answer id="dep-nb">
-<api name="OptionsAPI" group="java" type="import" category="official" url="@org-openide-options@/org/openide/options/doc-files/api.html"/>;
+<!--not used and deprecated <api name="OptionsAPI" group="java" type="import" category="official" url="@org-openide-options@/org/openide/options/doc-files/api.html"/>;-->
 <api group="java" name="WindowSystemAPI" type="import" category="official" url="@org-openide-windows@/org/openide/windows/doc-files/api.html"/>
 </answer>
 
@@ -661,7 +661,7 @@ No.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

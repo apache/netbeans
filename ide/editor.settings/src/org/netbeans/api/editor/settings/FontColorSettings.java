@@ -50,7 +50,7 @@ import javax.swing.text.AttributeSet;
  *
  * <p>Instances of this class should be retrieved from <code>MimeLookup</code>.
  * 
- * <p><font color="red">This class must NOT be extended by any API clients.</font>
+ * <p><font style="color:red">This class must NOT be extended by any API clients.</font>
  *
  * @author Martin Roskanin
  */

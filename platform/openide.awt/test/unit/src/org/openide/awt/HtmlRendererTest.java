@@ -274,7 +274,7 @@ public class HtmlRendererTest extends TestCase {
     /**
      * Test issue #55310: AIOOBE from HtmlRenderer.
      *
-     * @see http://www.netbeans.org/issues/show_bug.cgi?id=55310
+     * @see https://bz.apache.org/netbeans/show_bug.cgi?id=55310
      */
     private void doTestRender55310() {
         doTestRender("<html><b>a </b></html> ");

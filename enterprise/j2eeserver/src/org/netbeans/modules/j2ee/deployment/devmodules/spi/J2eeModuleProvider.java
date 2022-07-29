@@ -514,7 +514,7 @@ public abstract class J2eeModuleProvider {
          * Removes the listener listening for deploy on save.
          * 
          * @param listener listener to remove
-         * @see #addDeployOnSaveListener(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider.DeployOnSaveListener)
+         * @see #addDeployOnSaveListener(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider.ConfigSupport.DeployOnSaveListener)
          * @since 1.97
          */
         public void removeDeployOnSaveListener( DeployOnSaveListener listener );

@@ -113,7 +113,7 @@ public abstract class StackMapFrame {
     /**
      * Returns the <code>offset_delta</code> for this frame type.  From the 
      * Java Virtual Machine Specification, section 4.8.4:
-     * <br/><br/>
+     * <br>
      * "Each stack_map_frame structure specifies the type state at a particular 
      * byte code offset. Each frame type specifies (explicitly or implicitly) a 
      * value, <code>offset_delta</code>, that is used to calulate the actual byte 

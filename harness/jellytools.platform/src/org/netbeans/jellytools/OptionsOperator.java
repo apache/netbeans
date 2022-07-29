@@ -59,13 +59,13 @@ public class OptionsOperator extends NbDialogOperator {
 
     /** 
      * Constant used for indication of user property definition level
-     * (first column after ">>").
+     * (first column after "&gt;&gt;").
      */
     public static final int USER_LEVEL = 2;
 
     /** 
      * Constant used for indication of default property definition level
-     * (second column after ">>").
+     * (second column after "&gt;&gt;").
      */
     public static final int DEFAULT_LEVEL = 3;
 
@@ -163,7 +163,7 @@ public class OptionsOperator extends NbDialogOperator {
     //definition levels
 
     /**
-     * Shows definition levels column by clicking on the "<<" table
+     * Shows definition levels column by clicking on the "&lt;&lt;" table
      * column title.
      */
     public void showLevels() {
@@ -173,7 +173,7 @@ public class OptionsOperator extends NbDialogOperator {
     }
 
     /**
-     * Hides definition levels column by clicking on the ">>" table
+     * Hides definition levels column by clicking on the "&gt;&gt;" table
      * column title.
      */
     public void hideLevels() {
@@ -302,7 +302,7 @@ public class OptionsOperator extends NbDialogOperator {
     }
 
     /**
-     * Clicks on "<<" column header.
+     * Clicks on "&lt;&lt;" column header.
      */
     protected void clickOnSecondHeader() {
         JTableHeader header = treeTable().getTableHeader();
@@ -365,7 +365,7 @@ public class OptionsOperator extends NbDialogOperator {
                                                "OpenIDE-Module-Display-Category"));
     }
 
-    /** Selects Fonts & Colors category. */
+    /** Selects Fonts &amp; Colors category. */
     public void selectFontAndColors() {
         selectCategory(Bundle.getStringTrimmed("org.netbeans.modules.options.colors.Bundle",
                                                "CTL_Font_And_Color_Options"));

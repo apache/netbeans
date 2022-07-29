@@ -189,7 +189,7 @@ public final class ArrayUtilities {
     
     /**
      * Return unmodifiable list for the given array.
-     * <br/>
+     * <br>
      * Unlike <code>Collections.unmodifiableList()</code> this method
      * does not use any extra wrappers etc.
      *

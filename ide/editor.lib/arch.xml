@@ -89,7 +89,7 @@ on the NetBeans IDE (except few specific standalone classes).
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type=&quot;export&quot;/></code>
@@ -286,7 +286,7 @@ mime-type (mentioned in the layer section here as well).
         </question>
 -->
 <answer id="dep-non-nb">
-    <api group="java" name="JAXP" type="import" category="standard" url="http://java.sun.com/xml/jaxp/dist/1.1/docs/api/"> 
+    <api group="java" name="JAXP" type="import" category="standard" url="https://www.oracle.com/java/technologies/jaxp-introduction.html"> 
     Standard XML APIs (DOM, SAX) - distributed with the IDE (in lib/ext/xml-apis*.jar),
     already part of JDK 1.4 and newer).
     </api>
@@ -948,7 +948,7 @@ A test is included in commit validation that checks the editor code changes.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>
@@ -1026,7 +1026,7 @@ No answer
 
 <!--
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented">
             use cases</a> of the new API. Who will use it at
             what circumstances and what will be the typical code to write
             to use the module.

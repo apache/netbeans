@@ -429,7 +429,7 @@ public class ParameterNameProviderImpl {
     /**
      * Utility method for generating method parameter names based on incoming
      * class name when source is unavailable.
-     * <p/>
+     * <p>
      * This method uses both subjective heuristics to follow common patterns
      * for common JDK classes, acronym creation for bicapitalized names, and
      * vowel and repeated character elision if that fails, to generate

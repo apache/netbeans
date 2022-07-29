@@ -38,12 +38,12 @@ import org.openide.util.NbBundle;
 /**
  * Notifies about method entry events.
  *
- * <br><br>
+ * <br>
  * <b>How to use it:</b>
  * <pre style="background-color: rgb(255, 255, 153);">
  *    DebuggerManager.addBreakpoint (MethodBreakpoint.create (
  *        "examples.texteditor.Ted*",
- *        "<init>
+ *        "&lt;init&gt;
  *    ));</pre>
  * This breakpoint stops when some initializer of class Ted or innercalsses is
  * called.

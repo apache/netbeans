@@ -35,11 +35,11 @@ import org.openide.filesystems.FileObject;
  * this query, if it depends on the Java Project module and uses this style.</p>
  *
  * <p>This interface assumes following mapping pattern between source
- * files and unit tests: <code>*.java -> *Test.java</code>. This mapping
+ * files and unit tests: <code>*.java -&gt; *Test.java</code>. This mapping
  * is used for example for unit test generation and for searching test for
  * source. Usage of any other pattern will break this functionality.</p>
  *
- * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup"><code>Project.getLookup()</code></a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--"><code>Project.getLookup()</code></a>
  * @see org.netbeans.api.java.queries.UnitTestForSourceQuery
  * @author Tomas Zezula
  * @since org.netbeans.api.java/1 1.7

@@ -146,7 +146,7 @@ public class RefactoringVisitor extends ErrorAwareTreePathScanner<Tree, Element>
      * <p>
      * <code>tree</code> and <code>newTree</code> cannot be <code>null</code>.
      * If <code>oldTree</code> is null, <code>newTree</code> must be of kind
-     * {@link DocTree.Kind#DOC_COMMENT DOC_COMMENT}.
+     * {@link com.sun.source.doctree.DocTree.Kind#DOC_COMMENT DOC_COMMENT}.
      * 
      * @param tree     the tree to which the doctrees belong.
      * @param oldTree  tree to be replaced, use tree already represented in

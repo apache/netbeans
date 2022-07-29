@@ -164,9 +164,9 @@ public final class FoldHierarchy {
      * and must be obtained on component's document
      * i.e. {@link javax.swing.text.JTextComponent#getDocument()}
      * should be used.
-     *
-     * <p>
-     * <font color="red">
+     * 
+     * 
+     * <div style="color:red">
      * <b>Note:</b> The clients using this method must ensure that
      * they <b>always</b> use this method in the following pattern:<pre>
      *
@@ -177,7 +177,7 @@ public final class FoldHierarchy {
      *         unlock();
      *     }
      * </pre>
-     * </font>
+     * </div>
      *
      * @see #render(Runnable)
      */
@@ -316,7 +316,7 @@ public final class FoldHierarchy {
      * If the method returns {@code false}, there is no provider currently
      * that could define folds. If {@code true} is returned, then there are
      * 'just' no folds at the moment, but they could appear.
-     * <p/>
+     * <p>
      * Note that provider may (dis)appear, so clients should subscribe their
      * {@link FoldHierarchyListener}, and react if a Fold appears. 
      * 

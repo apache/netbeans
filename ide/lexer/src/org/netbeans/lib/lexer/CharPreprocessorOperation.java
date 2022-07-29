@@ -29,12 +29,12 @@ import org.netbeans.spi.lexer.LexerInput;
 /**
  * Character preprocessor delegates all its operation
  * to this class.
- * <br/>
+ * <br>
  * Each preprocessor operation has its parent character provider
  * which is LexerInputOperation if this is there's just one char preprocessor.
- * <br/>
+ * <br>
  * There can be more preprocessors chained above the LexerInputOperation.
- * <br/>
+ * <br>
  * The LexerInput operates on top of the top char provider (preprocessor).
  * @author Miloslav Metelka
  * @version 1.00
@@ -72,7 +72,7 @@ public final class CharPreprocessorOperation implements CharProvider {
     /**
      * Read index corresponding to the first non-preprocessed character
      * after the preprocessed characters.
-     * <br/>
+     * <br>
      * This variable is only valid if (prepStartIndex != lookaheadIndex).
      */
     private int prepEndIndex;
@@ -83,7 +83,7 @@ public final class CharPreprocessorOperation implements CharProvider {
      * are not stored in this array. Once there is a char resulting
      * from translation then all the subsequent chars will be stored
      * in this array even if they did not require translation.
-     * <br/>
+     * <br>
      * Once the token gets created or skipped the indexes are cleared
      * but the allocated array is retained.
      */
@@ -92,7 +92,7 @@ public final class CharPreprocessorOperation implements CharProvider {
     /**
      * Extra read lengths of the input characters corresponding to each preprocessed char
      * on the output.
-     * <br/>
+     * <br>
      * The length shifts are related to the parent but at the end of the processing
      * of a particular token they need to retrieve the raw lengths against
      * the original input text and the extraRawLengthShifts gets populated
@@ -128,7 +128,7 @@ public final class CharPreprocessorOperation implements CharProvider {
     /**
      * Init the given token if necessary before {@link #tokenApproved()}
      * gets called.
-     * <br/>
+     * <br>
      * This method is only called on the preprocessor's operation.
      */
     public void initApprovedToken(AbstractToken token) {
@@ -137,7 +137,7 @@ public final class CharPreprocessorOperation implements CharProvider {
 
     /**
      * Read a single character for preprocessing from the underlying input.
-     * <br/>
+     * <br>
      * The character is obtained either from the real input source
      * or from another (parent) char preprocessor.
      *

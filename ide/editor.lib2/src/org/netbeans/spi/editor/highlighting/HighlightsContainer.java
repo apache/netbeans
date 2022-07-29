@@ -75,7 +75,7 @@ public interface HighlightsContainer {
      * if the above rules are violated the results can't be garanteed.
      * 
      * @param startOffset The starting offset of the area which the caller
-     *  attempts to repaint (or create views for). The staring offset is always >=0.
+     *  attempts to repaint (or create views for). The staring offset is always &gt;=0.
      * @param endOffset The ending offset of the rendered area. The <code>Integer.MAX_VALUE</code>
      *  can be passed in if the end offset is unknown to the caller.
      *  The highlights container is then expected to return all highlights

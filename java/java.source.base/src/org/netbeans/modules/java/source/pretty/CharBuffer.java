@@ -295,7 +295,7 @@ public final class CharBuffer {
      * The implementation attempts not to touch preceding completed lines unless it really needs to strip
      * some lines from the end. If the buffer ends with all-whitespace line but without line terminator,
      * this line is truncated to empty so that the buffer always ends with a newline character.
-     * <p/>
+     * <p>
      * This complicated algorithm helps to preserve boundaries of guarded blocks (see BlockSequences); with simpler
      * implementation, end of a guarded block might get truncated as it ended with whitespaces followed by a newline
      * and such line was trimmed by the previous (simpler) impl.

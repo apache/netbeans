@@ -50,9 +50,9 @@ public interface TabPainter extends Border {
      * corner when constructing the polygon, and end at the bottom right corner,
      * using no more than one point for the bottom left and right corners:
      * <pre>
-     * start here -->    /---------
+     * start here --&gt;    /---------
      *                            |
-     * finish here -->   ----------
+     * finish here --&gt;   ----------
      * </pre>
      */
     Polygon getInteriorPolygon(Component renderer);

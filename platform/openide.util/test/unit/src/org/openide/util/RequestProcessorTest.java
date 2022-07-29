@@ -414,7 +414,7 @@ public class RequestProcessorTest extends NbTestCase {
         }
     }
     
-    /** Test bug http://www.netbeans.org/issues/show_bug.cgi?id=31906
+    /** Test bug https://bz.apache.org/netbeans/show_bug.cgi?id=31906
      */
     public void testBug31906_SimulateDataFolderTest () {
         RequestProcessor rp = new RequestProcessor ("dataFolderTest");

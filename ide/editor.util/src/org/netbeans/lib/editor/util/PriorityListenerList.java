@@ -165,9 +165,9 @@ public class PriorityListenerList<T extends EventListener> implements Serializab
      * <pre>
      *  private void fireMyEvent(MyEvent evt) {
      *      MyListener[][] listenersArray = priorityListenerList.getListenersArray();
-     *      for (int priority = listenersArray.length - 1; priority >= 0; priority--) {
+     *      for (int priority = listenersArray.length - 1; priority &gt;= 0; priority--) {
      *          MyListener[] listeners = listenersArray[priority];
-     *          for (int i = listeners.length - 1; i >= 0; i--) {
+     *          for (int i = listeners.length - 1; i &gt;= 0; i--) {
      *              listeners[i].notify(evt);
      *          }
      *      } 

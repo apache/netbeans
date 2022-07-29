@@ -50,7 +50,7 @@ import org.openide.util.lookup.Lookups;
  * button (a JButton with ellipses) will be displayed when any of the registered
  * scopes is customizable.
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @since 1.30
  */
 public final class ScopePanel extends javax.swing.JPanel {

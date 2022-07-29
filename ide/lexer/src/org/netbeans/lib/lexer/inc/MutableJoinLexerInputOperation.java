@@ -26,14 +26,14 @@ import org.netbeans.lib.lexer.JoinTokenList;
 
 /**
  * Lexer input operation over multiple joined sections (embedded token lists).
- * <br/>
+ * <br>
  * It produces regular tokens (to be added directly into ETL represented by
  * {@link #activeTokenList()} and also special {@link #JoinToken} instances
  * in case a token spans boundaries of multiple ETLs.
- * <br/>
+ * <br>
  * It can either work over JoinTokenList directly or, during a modification,
  * it simulates that certain token lists are already removed/added to underlying token list.
- * <br/>
+ * <br>
  * 
  * {@link #recognizedTokenLastInTokenList()} gives information whether the lastly
  * produced token ends right at boundary of the activeTokenList.

@@ -44,7 +44,7 @@ public final class CallHierarchyEntry {
     private String  customData;
 
     /**
-     * Returns description of the call hierarchy element. See {@link StructureElemen} for structure details,
+     * Returns description of the call hierarchy element. See {@link StructureElement} for structure details,
      * @return description of the structural languagein call hierarchy
      */
     @NonNull
@@ -53,7 +53,7 @@ public final class CallHierarchyEntry {
     }
     
     /**
-     * Returns an opaque, mime type specific data which shall be interpreted by the {@link CallHierarchyProvider}
+     * Returns an opaque, mime type specific data which shall be interpreted by the {@link org.netbeans.spi.lsp.CallHierarchyProvider}
      * in subsequent calls. For example, method signature can be put here.
      * @return provider-specific data
      */
@@ -76,7 +76,7 @@ public final class CallHierarchyEntry {
     /**
      * This structure is used for two purposes. For <b>outgoing calls</b> the {@link #getItem}
      * returns the call target, and {@link #getRanges} returns locations in the origin
-     * {@link CallHierarchyElement} where the target is invoked from. For <b>incoming calls</b>
+     * {@link CallHierarchyEntry} where the target is invoked from. For <b>incoming calls</b>
      * the {@link #getItem} identifies the element that makes the call, while {@link #getRanges}
      * locations where the call was made from from that element.
      * 

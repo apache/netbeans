@@ -29,8 +29,8 @@ import java.util.Set;
 /**
  * Library provider which can define libraries in particular areas.
  * There is no explicit method to save a library; setters on {@link LibraryImplementation} should do this.
- * @param A the type of storage area used by this provider
- * @param L the type of library created by this provider
+ * @param <A> the type of storage area used by this provider
+ * @param <L> the type of library created by this provider
  * @since org.netbeans.modules.project.libraries/1 1.15
  */
 public interface ArealLibraryProvider<A extends LibraryStorageArea, L extends LibraryImplementation2> {

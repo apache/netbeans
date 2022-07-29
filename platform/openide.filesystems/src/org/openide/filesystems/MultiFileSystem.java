@@ -86,8 +86,8 @@ import org.openide.util.NbCollections;
  * is deleted? There must be a way to indicate on the foremost delegate that it should not appear in the
  * composite (even while it remains in one of the delegates). For this reason, <code>MultiFileSystem</code> uses
  * "masks" which are simply empty files named according to the file they should hide, but with the suffix
- * <samp>_hidden</samp>. Thus, for example, if there is a file <samp>subdir/readme.txt_hidden</samp> in a front
- * delegate it will hide any files named <samp>subdir/readme.txt</samp> in delegates further back. These masks
+ * <code>_hidden</code>. Thus, for example, if there is a file <code>subdir/readme.txt_hidden</code> in a front
+ * delegate it will hide any files named <code>subdir/readme.txt</code> in delegates further back. These masks
  * are automatically created as needed when files are "deleted" from <code>MultiFileSystem</code>; or delegate
  * filesystems may explicitly provide them. Normally the mask files are not themselves visible as {@link
  * FileObject}s, since they are an artifact of the deletion logic. However, when nesting
@@ -97,15 +97,15 @@ import org.openide.util.NbCollections;
  * and thus remain potent against cousin delegates.
  * 
  * <p>To support rollback, two pseudo-attribute is defined <b>since 8.5</b>: <b>{@code revealEntries}</b> typed 
- * as <code>Map&lt;String, FileObject &amp; Callable></code>. The attribute is available on a folder, and contains information 
+ * as <code>Map&lt;String, FileObject &amp; Callable&gt;</code>. The attribute is available on a folder, and contains information 
  * on child FileObjects, which have been overriden or masked by the writable layer of the MFS. Map is keyed by 
  * child name, the value is a FileObject that allows access to the masked child attributes and/or content.
  * <p>
  * The returned FileObjects do not leak its neighbours from the lower layers. The parent, children or siblings are
- * returned from the MFS, if they exist. The FileObjects can be also casted to <code>Callable&lt;FileObject></code>. When
+ * returned from the MFS, if they exist. The FileObjects can be also casted to <code>Callable&lt;FileObject&gt;</code>. When
  * called, the original version of the file is restored on the MultiFileSystem, and the restored instance is returned
  * as result.
- * <p>
+ *
  */
 public class MultiFileSystem extends FileSystem {
     static final long serialVersionUID = -767493828111559560L;

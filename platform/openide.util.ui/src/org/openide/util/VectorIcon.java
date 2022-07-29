@@ -44,7 +44,7 @@ import javax.swing.Icon;
  * <p>Hand-crafted painting code is a good design choice for icons that are simple, ubiqutious in
  * the UI (e.g. part of the Look-and-Feel), or highly parameterized. Swing's native Windows L&amp;F
  * uses this approach for many of its basic icons; see
- * {@link com.sun.java.swing.plaf.windows.WindowsIconFactory}.
+ * <a href="https://github.com/openjdk/jdk/blob/master/src/java.desktop/windows/classes/com/sun/java/swing/plaf/windows/WindowsIconFactory.java" >WindowsIconFactory</a>.
  *
  * <p>When developing new icons, or adjusting existing ones, use the {@code VectorIconTester}
  * utility found in

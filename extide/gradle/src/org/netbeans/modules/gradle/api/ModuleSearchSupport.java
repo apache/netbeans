@@ -38,8 +38,7 @@ public interface ModuleSearchSupport {
      * Specifying {@code null} for any of the parameters would mean match
      * all for that parameter.
      *
-     * @see java.util.regex.Pattern
-     * {@
+     * @see java.util.regex.Pattern 
      * @param group regexp matcher for the group part.
      * @param artifact regexp matcher for the artifact part.
      * @param version regexp matcher for the version part.

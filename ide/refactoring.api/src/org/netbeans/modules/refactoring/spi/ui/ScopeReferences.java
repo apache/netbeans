@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /**
  * Allows registration of multiple {@link ScopeReference}s for a single type.
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)

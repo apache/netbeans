@@ -371,7 +371,7 @@ public class MainWindowOperator extends JFrameOperator {
      *      // waits for "Finished" status text
      *      stt.waitText("Finished");
      *
-     *      // order is not significant => following works as well
+     *      // order is not significant =&gt; following works as well
      *      stt.waitText("Finished");
      *      stt.waitText("Compiling");
      *
@@ -379,11 +379,11 @@ public class MainWindowOperator extends JFrameOperator {
      *      stt.waitText("Compiling", true);
      *      stt.waitText("Finished", true);
      *
-     *      // history was removed by above methods => need to produce a new messages
+     *      // history was removed by above methods =&gt; need to produce a new messages
      *      new CompileAction().performAPI();
      *
-     *      // order is significant if removedCompared parameter is true =>
-     *      // => following fails because Finished is shown as second
+     *      // order is significant if removedCompared parameter is true =&gt;
+     *      // =&gt; following fails because Finished is shown as second
      *      stt.waitText("Finished", true);
      *      stt.waitText("Compiling", true);
      *

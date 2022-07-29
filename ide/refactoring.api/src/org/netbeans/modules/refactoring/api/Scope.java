@@ -78,7 +78,7 @@ public final class Scope {
     
     /**
      * Search in dependent libraries.
-     * @return if true search in done in dependent libraries
+     * @return true if search in done in dependent libraries
      * @since 1.43
      */
     public boolean isDependencies() {

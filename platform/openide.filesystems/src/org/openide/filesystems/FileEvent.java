@@ -209,7 +209,7 @@ public class FileEvent extends EventObject {
      *   }
      * 
      *   <b>public boolean</b> equals(Object obj) {
-     *     <b>return</b> obj != null && obj.getClass() == {@link #getClass()};
+     *     <b>return</b> obj != null &amp;&amp; obj.getClass() == {@link #getClass()};
      *   }
      * 
      *   <b>public int</b> hashCode() {

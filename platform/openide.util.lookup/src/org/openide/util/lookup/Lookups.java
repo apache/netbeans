@@ -122,7 +122,7 @@ public class Lookups {
      * to notify listeners on the lookup about that it should trigger the event
      * firing, for example by calling <code>lookup.lookup (Object.class)</code>
      * directly on the lookup returned by this method
-     * that forces a check of the return value of {@link org.openide.util.Lookup.Provider#getLookup}</code>.
+     * that forces a check of the return value of {@link org.openide.util.Lookup.Provider#getLookup}.
      *
      * @param provider the provider that returns a lookup to delegate to
      * @return lookup delegating to the lookup returned by the provider
@@ -165,10 +165,10 @@ public class Lookups {
         return new MetaInfServicesLookup(classLoader, prefix);
     }
     
-    /** Creates a <q>named</q> lookup.
+    /** Creates a <code>named</code> lookup.
      * It is a lookup identified by a given path.
      * Two lookups with the same path should have the same content.
-     * <p>It is expected that each <q>named</q> lookup
+     * <p>It is expected that each <code>named</code> lookup
      * will contain a superset of what would be created by:
      * <code>{@linkplain #metaInfServices(ClassLoader,String) metaInfServices}(theRightLoader, "META-INF/namedservices/" + path + "/")</code>
      *
@@ -177,7 +177,7 @@ public class Lookups {
      * {@link Lookups#forPath(java.lang.String)} can combine lookups
      * from several sources. In current NetBeans Runtime Container, two lookups are used:
      * </p>
-     * <ul class="nonnormative">
+     * <ul>
      * <li><code>Lookups.metaInfServices("META-INF/namedservices/" + path)</code></li>
      * <li><code>org.openide.loaders.FolderLookup(path)</code></li>
      * </ul>
@@ -232,9 +232,9 @@ public class Lookups {
      * assertEquals("Returns C as A.class is not between B and C", c, l2.lookup(B.class));
      * </pre>
      * For more info check the
-     * <a href="http://hg.netbeans.org/main-golden/annotate/4883eaeda744/openide.util/test/unit/src/org/openide/util/lookup/ExcludingLookupTest.java">
+     * <a href="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/ExcludingLookupTest.java">
      * excluding lookup tests</a> and the discussion in issue
-     * <a href="http://openide.netbeans.org/issues/show_bug.cgi?id=53058">53058</a>.
+     * <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=53058">53058</a>.
      *
      * @param lookup the original lookup that should be filtered
      * @param classes array of classes those instances should be excluded
@@ -260,7 +260,7 @@ public class Lookups {
      * of {@link Lookup#getDefault()} to here-in provided lookup. Useful in a
      * multi user environment where different users and their requests should
      * be associated with different content of default lookup.
-     * <p/>
+     * <p>
      * As a special case, {@code executeWith} will execute the Runnable with
      * the system global lookup (the one effective during system bootstrap), when
      * the passed {@code defaultLookup} parameter is {@code null}. This feature may

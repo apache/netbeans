@@ -28,7 +28,7 @@ import org.netbeans.lib.lexer.token.AbstractToken;
 
 /**
  * Filtering token list used by a token sub sequence.
- * <br/>
+ * <br>
  * As the tokens are created lazily this list won't call tokenList.tokenCount()
  * until tokenCount() is called on itself.
  *

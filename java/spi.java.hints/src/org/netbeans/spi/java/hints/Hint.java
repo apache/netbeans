@@ -74,7 +74,7 @@ public @interface Hint {
      */
     public String minSourceVersion() default "";
 
-    /**Whether the hint should be considered a {@link Kind#HINT hint}, e.g. it
+    /**Whether the hint should be considered a {@link Kind#INSPECTION hint}, e.g. it
      * detects a code smell, or otherwise leads to improving the code, or a {@link Kind#ACTION},
      * which is simply an offer to do automatically do something for the user.
      */
@@ -88,7 +88,7 @@ public @interface Hint {
         * The transformation is not intended to improve the code, only allow the
         * user to do some kind of code transformation quickly.
         *
-        * The only meaningful severity for suggestions if {@link Severity#CURRENT_LINE_WARNING}.
+        * The only meaningful severity for suggestions if {@link HintSeverity#CURRENT_LINE_WARNING}.
         */
        ACTION;
     }
@@ -97,10 +97,10 @@ public @interface Hint {
     */
     public enum Options {
         /**The hint does not produce any automatic transformations that could be run
-         * inside the Inspect&Refactor dialog.
+         * inside the Inspect&amp;Refactor dialog.
          */
         QUERY,
-        /**The hint cannot be run inside the Inspect&Refactor dialog.
+        /**The hint cannot be run inside the Inspect&amp;Refactor dialog.
          */
         NO_BATCH,
         /**

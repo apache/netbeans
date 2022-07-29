@@ -68,7 +68,7 @@ public final class UnloadedProjectInformation {
     
     /**
      * Gets URL of the project folder location
-     * Use {@link ProjectManager#findProject} to get the project
+     * Use {@link org.netbeans.api.project.ProjectManager#findProject} to get the project
      * @return url of the project folder
      */
     public URL getURL() {

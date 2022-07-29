@@ -37,12 +37,12 @@ import java.util.List;
  * <pre>
  * Lookup l = MimeLookup.getLookup(MimePath.parse(mimePath));
  * CodeTemplateSettings cds = l.lookup(CodeTemplateSettings.class);
- * List<CodeTemplateDescription> codeTemplates = cds.getCodeTemplateDescriptions();
+ * List&lt;CodeTemplateDescription&gt; codeTemplates = cds.getCodeTemplateDescriptions();
  * </pre>
  * 
  * <p><b>IMPORTANT</b>: There is a much more powerful API for working with editor
  * code templates in
- * <a href="@org-netbeans-lib-editor-codetemplates@/overview-summary.html">Editor Code Templates</a>
+ * <a href="@org-netbeans-modules-editor-codetemplates@/overview-summary.html">Editor Code Templates</a>
  * module. If you are retrieving this class from <code>MimeLookup</code> you should
  * probably use the Editor Code Templates API instead.
  * 
@@ -100,7 +100,7 @@ public final class CodeTemplateDescription {
     }
     
     /**
-     * Creates a new code template description. The same as {@link #CodeTemplates(String, String, String, List<String>, String},
+     * Creates a new code template description. The same as {@link #CodeTemplateDescription(String, String, String, List, String)},
      * but with additional <code>mimePath</code> parameter.
      * 
      * @param abbreviation The abbreviation text that expands this code template.

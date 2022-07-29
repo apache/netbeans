@@ -108,7 +108,7 @@ public class AnnotationTypeProcessor implements XMLDataObject.Processor, Instanc
 
     /** Create an instance.
      * @return the instance of type {@link #instanceClass}
-     * @exception IOException if an I/O error occured
+     * @exception java.io.IOException if an I/O error occured
      * @exception ClassNotFoundException if a class was not found
      */
     public Object instanceCreate() throws java.io.IOException, ClassNotFoundException {
@@ -122,8 +122,6 @@ public class AnnotationTypeProcessor implements XMLDataObject.Processor, Instanc
      * class without actually creating it.
      *
      * @return the representation class of the instance
-     * @exception IOException if an I/O error occurred
-     * @exception ClassNotFoundException if a class was not found
      */
     public Class instanceClass() {
         return AnnotationType.class;

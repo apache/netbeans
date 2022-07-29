@@ -148,7 +148,7 @@ public final class RunUtils {
     
     /**
      *
-     * @param project
+     * @param prj
      * @return true if compile on save is allowed for running the application.
      */
     @Deprecated
@@ -187,7 +187,7 @@ public final class RunUtils {
 
     /**
      *
-     * @param project
+     * @param prj
      * @return true if compile on save is allowed for running tests.
      */
     @Deprecated

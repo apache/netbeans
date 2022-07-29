@@ -26,7 +26,7 @@ import org.netbeans.lib.lexer.TokenList;
 
 /**
  * Description of the change in a token list.
- * <br/>
+ * <br>
  * The change is expressed as a list of removed tokens
  * plus the current list and index and number of the tokens
  * added to the current list.

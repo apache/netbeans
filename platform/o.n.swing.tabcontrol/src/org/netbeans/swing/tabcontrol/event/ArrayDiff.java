@@ -33,7 +33,7 @@ import java.util.*;
  * Class representing a diff of two arrays.  Note that it is
  * <strong>not</strong> designed to work with arrays which contain the same
  * element more than one time - in that case, the results are undefined.
- * <p/>
+ * <p>
  * <p>Note the current implementation is unoptimized and fairly brute force.
  *
  * @author Tim Boudreau

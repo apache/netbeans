@@ -337,7 +337,7 @@ public final class ActionToGoalUtils {
 
     /**
      * read the action mappings from the fileobject attribute "customActionMappings"
-     * @parameter fo should be the project's root directory fileobject
+     * @param fo should be the project's root directory fileobject
      *
      */
     public static ActionToGoalMapping readMappingsFromFileAttributes(FileObject fo) {
@@ -361,7 +361,7 @@ public final class ActionToGoalUtils {
 
     /**
      * writes the action mappings to the fileobject attribute "customActionMappings"
-     * @parameter fo should be the project's root directory fileobject
+     * @param fo should be the project's root directory fileobject
      *
      */
     public static void writeMappingsToFileAttributes(FileObject fo, ActionToGoalMapping mapp) {

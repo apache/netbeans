@@ -75,7 +75,7 @@ public abstract class SourceIndexerFactory {
     /**
      * Called by indexing infrastructure to allow indexer to clean indexes for deleted files.
      * @param deleted the collection of deleted {@link Indexable}s
-     * @param contents an indexing context
+     * @param context an indexing context
      * <div class="nonnormative">
      *  <p>If the {@link IndexingSupport} is used to implement the {@link SourceIndexerFactory}
      * the implementation of this method should delegate to {@link IndexingSupport#isValid()}</p>

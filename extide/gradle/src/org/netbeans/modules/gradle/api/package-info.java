@@ -19,7 +19,7 @@
 /**
  * Domain and access classes for Gradle projects.
  * <p>
- * <img src="doc-files/gradle-classes.png" alt="Main Gradle Support Classes"/>
+ * <img src="doc-files/gradle-classes.png" alt="Main Gradle Support Classes">
  * </p>
  * @since 1.0
  */

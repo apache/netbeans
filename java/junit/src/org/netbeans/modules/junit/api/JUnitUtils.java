@@ -492,16 +492,16 @@ public final class JUnitUtils {
      * a folder plus additional information such as display name) or simply
      * a <code>FileObject</code> representing a folder.
      * If parameter <code>includeSourceGroups</code> is <code>false</code>,
-     * only <code>SourceGroup<code>s are returned (target folders without
+     * only <code>SourceGroup</code>s are returned (target folders without
      * corresponding <code>SourceGroup</code>s are ignored).
      *
-     * @param  src  source group to find test targets for
+     * @param  sourceGroup  source group to find test targets for
      * @param  sourceGroupsOnly  skip target folders without matching
      *                           <code>SourceGroup</code>
      * @return  array which may contain <code>FileObject</code>s
      *          or <code>SourceGroup</code>s (or both);
      *          it may be empty but not <code>null</code>
-     * @see  TestUtil#getFileObject2SourceGroupMap
+     * @see  org.netbeans.modules.java.testrunner.CommonTestUtil#getFileObject2SourceGroupMap
      */
     public Object[] getTestTargets(SourceGroup sourceGroup,
                                    final boolean sourceGroupsOnly) {
@@ -548,7 +548,7 @@ public final class JUnitUtils {
      * Returns an array of source folders corresponding to the given test
      * folder - may contain <code>null</code>s.
      *
-     * @param  srcFolder  <code>FileObject</code> representing source code root,
+     * @param  testFolder  <code>FileObject</code> representing source code root,
      *                    for which source root folders should be found
      * @return  array of <code>FileObject</code>s representing source root
      *          folders, possibly with superfluous <code>null</code> elements

@@ -390,7 +390,7 @@ public class BrokenReferencesSupport {
     }
         
     /**
-     * Service which may be {@linkplain ServiceProvider registered} to download remote libraries or otherwise define them.
+     * Service which may be {@linkplain org.openide.util.lookup.ServiceProvider registered} to download remote libraries or otherwise define them.
      * @since org.netbeans.modules.java.project/1 1.35
      */
     public interface LibraryDefiner {

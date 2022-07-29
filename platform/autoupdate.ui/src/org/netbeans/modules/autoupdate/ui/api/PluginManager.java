@@ -59,7 +59,7 @@ public final class PluginManager {
      * Single module installation can be handled easily by
      * {@link #installSingle(java.lang.String, java.lang.String, java.lang.Object[])}.
 <pre>
-{@link OperationContainer}<InstallSupport> container = OperationContainer.createForInstall();
+{@link OperationContainer}&lt;InstallSupport&gt; container = OperationContainer.createForInstall();
 for ({@link UpdateUnit} u : {@link UpdateManager#getUpdateUnits(org.netbeans.api.autoupdate.UpdateManager.TYPE[]) UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE)}) {
     if (u.getCodeName().matches("org.my.favorite.module")) {
         if (u.getAvailableUpdates().isEmpty()) {

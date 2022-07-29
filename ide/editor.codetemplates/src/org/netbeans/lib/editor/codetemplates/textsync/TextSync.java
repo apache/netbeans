@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * List of regions which have their text synchronized.
- * <br/>
+ * <br>
  * One of the regions is called master and its text will be replicated
  * to all other regions.
  *
@@ -114,7 +114,7 @@ public final class TextSync {
 
     /**
      * Whether this text sync is editable by the user.
-     * <br/>
+     * <br>
      * Newly created text syncs are not editable by default.
      * 
      * @return true if editable false otherwise.

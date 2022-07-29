@@ -133,7 +133,7 @@ public class DefaultOutlineModel implements OutlineModel {
         this( treeModel, new ProxyTableModel(rowModel), largeModel, nodesColumnLabel );
     }
     
-    /** Creates a new instance of DefaultOutlineModel.  <strong><b>Note</b> 
+    /** Creates a new instance of DefaultOutlineModel.  <strong>Note</strong>
      * Do not fire table structure changes from the wrapped TableModel (value
      * changes are okay).  Changes that affect the number of rows must come
      * from the TreeModel.
@@ -211,7 +211,7 @@ public class DefaultOutlineModel implements OutlineModel {
         return treeModel.getChildCount (parent);
     }
     
-    /** Delegates to the RowMapper for > 0 columns; column 0 always
+    /** Delegates to the RowMapper for &gt; 0 columns; column 0 always
      * returns Object.class */
     @Override
     public final Class getColumnClass(int columnIndex) {

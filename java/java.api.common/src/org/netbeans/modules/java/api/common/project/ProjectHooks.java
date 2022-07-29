@@ -260,7 +260,7 @@ public final class ProjectHooks {
          * Sets the name of property referencing the project build script.
          * If not set the {@link ProjectProperties#BUILD_SCRIPT} is used.
          * @param propertyName the name of property holding the name of project's build script.
-         * @return the {@link ProjectOperationsBuilder}
+         * @return the {@link ProjectOperations.ProjectOperationsBuilder}
          */       
         @NonNull
         public ProjectOpenedHookBuilder setBuildScriptProperty(@NonNull final String propertyName) {
@@ -374,7 +374,7 @@ public final class ProjectHooks {
          * Sets the name of property referencing the project build script.
          * If not set the {@link ProjectProperties#BUILD_SCRIPT} is used.
          * @param propertyName the name of property holding the name of project's build script.
-         * @return the {@link ProjectOperationsBuilder}
+         * @return the {@link ProjectOperations.ProjectOperationsBuilder}
          */
         @NonNull
         public ProjectXmlSavedHookBuilder setBuildScriptProperty(@NonNull final String propertyName) {

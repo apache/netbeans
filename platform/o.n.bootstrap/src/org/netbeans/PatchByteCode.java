@@ -163,7 +163,7 @@ public final class PatchByteCode {
     }
     /**
      * Patches a class if it is needed.
-     * @param arr the bytecode
+     * @param data the bytecode
      * @return the enhanced bytecode
      */
     public static byte[] patch(byte[] data) {

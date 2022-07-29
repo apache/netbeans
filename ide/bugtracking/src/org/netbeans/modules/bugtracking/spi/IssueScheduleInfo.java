@@ -54,7 +54,7 @@ public final class IssueScheduleInfo {
      * Issue is scheduled to start to work on it.
      * 
      * @param startDate determines the day from which this issue is scheduled
-     * @param interval determines for how many days an issue is scheduled. Allowed values are >=1.
+     * @param interval determines for how many days an issue is scheduled. Allowed values are &gt;=1.
      * @since 1.85
      */
     public IssueScheduleInfo(Date startDate, int interval) {

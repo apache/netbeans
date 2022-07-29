@@ -25,7 +25,7 @@ import org.openide.nodes.Node;
 
 /**
  * Represents a series of nodes which can be spliced into a children list.
- * @param K the type of key you would like to use to represent nodes
+ * @param <K> the type of key you would like to use to represent nodes
  * @author mkleint
  * @since org.netbeans.modules.projectuiapi/1 1.18
  * @see NodeFactory

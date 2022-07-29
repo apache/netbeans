@@ -30,7 +30,7 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * {@link net.java.html.json.Model HTML for Java} integration). The essential
  * aspect is to create an HTML page and reference its location via {@link #url() } attribute.
  * The page may contain any JavaScript, but as we are Java developers, it is 
- * preferrable to rather use <a href="http://bits.netbeans.org">HTML for Java API</a>.
+ * preferrable to rather use <a href="https://bits.netbeans.org/html+java/dev">HTML for Java API</a>.
  * In such case the associated static method (which is annotated by this annotation) will be
  * called once the HTML page is loaded. One is expected to instantiate class generated 
  * by the {@link net.java.html.json.Model} annotation and call <code>applyBindings()</code>
@@ -41,7 +41,7 @@ import org.netbeans.html.context.spi.Contexts.Id;
 * The above would display a new action in Toolbar and in Menu that would, upon invocation,
  * open up a new component displaying the 
  * <code>ui.html</code> page. The page can use 
- * <a target="_blank" href="http://knockoutjs.com">Knockout.js</a> bindings like 
+ * <a target="_blank" href="https://knockoutjs.com">Knockout.js</a> bindings like 
  * <code>&lt;input data-bind="textInput: text"&gt;&lt;/input&gt;</code> to reference 
  * properties defined by the {@link net.java.html.json.Model} annotation in the generated class
  * <code>UI</code>:

@@ -59,11 +59,11 @@ import javax.lang.model.type.WildcardType;
 import org.netbeans.api.annotations.common.NonNull;
 
 /**
- * Represents a handle for {@link TypeMirror} which can be kept and later resolved
- * by another javac. The Javac {@link TypeMirror}s are valid only in the single
- * {@link javax.tools.CompilationTask} or single run of the
+ * Represents a handle for {@link javax.lang.model.type.TypeMirror} which can be kept and later resolved
+ * by another javac. The Javac {@link javax.lang.model.type.TypeMirror}s are valid only in the single
+ * {@link javax.tools.JavaCompiler.CompilationTask} or single run of the
  * {@link org.netbeans.api.java.source.CancellableTask}. If the client needs to
- * keep a reference to the {@link TypeMirror} and use it in the other CancellableTask
+ * keep a reference to the {@link javax.lang.model.type.TypeMirror} and use it in the other CancellableTask
  * he has to serialize it into the {@link TypeMirrorHandle}.
  * <div class="nonnormative"> 
  * <p>
@@ -71,7 +71,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * </p>
  * <pre>
  * final TypeMirrorHandle[] typeMirrorHandle = new TypeMirrorHandle[1];
- * javaSource.runCompileControlTask(new CancellableTask<CompilationController>() {
+ * javaSource.runCompileControlTask(new CancellableTask&lt;CompilationController&gt;() {
  *     public void run(CompilationController compilationController) {
  *         parameter.toPhase(Phase.RESOLVED);
  *         CompilationUnitTree cu = compilationController.getTree ();
@@ -80,7 +80,7 @@ import org.netbeans.api.annotations.common.NonNull;
  *    }
  * },priority);
  *
- * otherJavaSource.runCompileControlTask(new CancellableTask<CompilationController>() {
+ * otherJavaSource.runCompileControlTask(new CancellableTask&lt;CompilationController&gt;() {
  *     public void run(CompilationController compilationController) {
  *         parameter.toPhase(Phase.RESOLVED);
  *         TypeMirror type = typeMirrorHandle[0].resolve (compilationController);
@@ -89,9 +89,9 @@ import org.netbeans.api.annotations.common.NonNull;
  * },priority);
  * </pre>
  * </div>
- * Currently, not all the {@link TypeMirror} {@link TypeKind kinds} are supported by handle.
- * The unsupported {@link TykeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
- * and {@link TypeKind#PACKAGE}.
+ * Currently, not all the {@link javax.lang.model.type.TypeMirror} {@link javax.lang.model.type.TypeKind kinds} are supported by handle.
+ * The unsupported {@link javax.lang.model.type.TypeKind kinds} are: {@link javax.lang.model.type.TypeKind#EXECUTABLE}, {@link javax.lang.model.type.TypeKind#OTHER},
+ * and {@link javax.lang.model.type.TypeKind#PACKAGE}.
  *
  * @author Jan Lahoda, Dusan Balek
  */
@@ -109,13 +109,13 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     /**
      * Factory method for creating {@link TypeMirrorHandle}.
-     * @param {@link TypeMirror} for which the {@link TypeMirrorHandle} should be created.
-     * Not all the {@link TypeMirror} {@link TypeKind kinds} are currently supported.
-     * The unsupported {@link TykeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
-     * and {@link TypeKind#PACKAGE}.
+     * @param tm for which the {@link TypeMirrorHandle} should be created.
+     * Not all the {@link javax.lang.model.type.TypeMirror} {@link javax.lang.model.type.TypeKind kinds} are currently supported.
+     * The unsupported {@link javax.lang.model.type.TypeKind kinds} are: {@link javax.lang.model.type.TypeKind#EXECUTABLE}, {@link javax.lang.model.type.TypeKind#OTHER},
+     * and {@link javax.lang.model.type.TypeKind#PACKAGE}.
      * @return a new {@link TypeMirrorHandle}
-     * @throws IllegalArgumentException if the {@link TypeMirror} is of an unsupported
-     * {@link TypeKind}.
+     * @throws IllegalArgumentException if the {@link javax.lang.model.type.TypeMirror} is of an unsupported
+     * {@link javax.lang.model.type.TypeKind}.
      */
     public static @NonNull <T extends TypeMirror> TypeMirrorHandle<T> create(@NonNull T tm) {
         return create(tm, new HashMap<TypeMirror, TypeMirrorHandle>());
@@ -221,11 +221,11 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     }
     
     /**
-     * Resolves an {@link TypeMirror} from the {@link TypeMirrorHandle}.
-     * @param {@link CompilationInfo} representing the {@link javax.tools.CompilationTask}
-     * in which the {@link TypeMirror} should be resolved.
-     * @return resolved subclass of {@link TypeMirror} or null if the type cannot be
-     * resolved in this {@link javax.tools.CompilationTask}.
+     * Resolves an {@link javax.lang.model.type.TypeMirror} from the {@link TypeMirrorHandle}.
+     * @param info representing the {@link javax.tools.JavaCompiler.CompilationTask}
+     * in which the {@link javax.lang.model.type.TypeMirror} should be resolved.
+     * @return resolved subclass of {@link javax.lang.model.type.TypeMirror} or null if the type cannot be
+     * resolved in this {@link javax.tools.JavaCompiler.CompilationTask}.
      */
     public T resolve(@NonNull CompilationInfo info) {
         return resolve(info, new HashMap<TypeMirrorHandle, PlaceholderType>());

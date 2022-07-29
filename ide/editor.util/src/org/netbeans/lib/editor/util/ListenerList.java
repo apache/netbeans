@@ -59,7 +59,7 @@ public final class ListenerList<T extends EventListener> implements Serializable
      * method.
      * 
      * <pre>
-     *      List<MyListener> listeners = listenerList.getListeners();
+     *      List&lt;MyListener&gt; listeners = listenerList.getListeners();
      *      for (MyListener l : listeners) {
      *          l.notify(evt);
      *      }

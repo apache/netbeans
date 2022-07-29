@@ -185,9 +185,9 @@ public final class ImageUtilities {
     /**
      * Loads an image based on resource path.
      * Exactly like {@link #loadImage(String)} but may do a localized search.
-     * For example, requesting <samp>org/netbeans/modules/foo/resources/foo.gif</samp>
-     * might actually find <samp>org/netbeans/modules/foo/resources/foo_ja.gif</samp>
-     * or <samp>org/netbeans/modules/foo/resources/foo_mybranding.gif</samp>.
+     * For example, requesting <code>org/netbeans/modules/foo/resources/foo.gif</code>
+     * might actually find <code>org/netbeans/modules/foo/resources/foo_ja.gif</code>
+     * or <code>org/netbeans/modules/foo/resources/foo_mybranding.gif</code>.
      * 
      * <p>Caching of loaded images can be used internally to improve performance.
      * <p> Since version 8.12 the returned image object responds to call
@@ -496,7 +496,7 @@ public final class ImageUtilities {
      */
     private static SVGLoader getSVGLoader() {
         /* "Objects contained in the default lookup are instantiated lazily when first requested."
-        ( http://wiki.netbeans.org/DevFaqLookupDefault ) So the SVGLoader implementation module will
+        ( https://netbeans.apache.org/wiki/DevFaqLookupDefault ) So the SVGLoader implementation module will
         only be loaded the first time an SVG file is actually encountered for loading, rather than,
         for instance, when the startup splash screen initializes ImageUtilities to load its PNG
         image. This was confirmed by printing a debugging message from a static initializer in

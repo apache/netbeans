@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * At runtime the path is registered by {@link NodeOp#registerPropertyEditors() }
  * 
  * @since 7.30
- * @author Jan Horvath <jhorvath@netbeans.org>
+ * @author Jan Horvath &lt;jhorvath@netbeans.org&gt;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.PACKAGE)

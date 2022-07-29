@@ -23,7 +23,7 @@ import org.netbeans.spi.options.OptionsPanelController;
 
 /**
  * Accessor for OptionsPanelController.setCurrentSubcategory
- * (see http://openide.netbeans.org/tutorial/api-design.html#design.less.friend).
+ * @see https://netbeans.apache.org/wiki/API_Design#Allow_access_only_from_a_friend_code 
  * @author Jiri Skrivanek
  */
 public abstract class OptionsPanelControllerAccessor {

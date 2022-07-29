@@ -192,7 +192,7 @@ dependencies, you may do:
 <a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><font class="constant">COMPILE</font></a>);
 cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><font class="function-name">addPropertyChangeListener</font></a>(new <a href="@JDK@/java/beans/PropertyChangeListener.html"><font class="type">PropertyChangeListener</font></a>() {
     <font class="keyword">public void</font> <font class="function-name">propertyChange</font>(<a href="@JDK@/java/beans/PropertyChangeEvent.html"><font class="type">PropertyChangeEvent</font></a> <font class="variable-name">evt</font>) {
-        <font class="keyword">if</font> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><font class="constant">PROP_ROOTS</font></a>.equals(evt.<a href="@JDK@/java/beans/PropertyChangeEvent.html#getPropertyName()"><font class="function-name">getPropertyName()</font></a>)) {
+        <font class="keyword">if</font> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><font class="constant">PROP_ROOTS</font></a>.equals(evt.<a href="@JDK@/java/beans/PropertyChangeEvent.html#getPropertyName--"><font class="function-name">getPropertyName()</font></a>)) {
             <font class="comment">// Update your stuff, because classpath roots have changed.</font>
         }
     }

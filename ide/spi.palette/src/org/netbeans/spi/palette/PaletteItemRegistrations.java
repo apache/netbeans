@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * May be uses to allow multiple
  * {@link PaletteItemRegistration PaletteItemRegistration} at one place.
  *
- * @author Eric Barboni <skygo@netbeans.org>
+ * @author Eric Barboni &lt;skygo@netbeans.org&gt;
  *
  * @since 1.40
  */

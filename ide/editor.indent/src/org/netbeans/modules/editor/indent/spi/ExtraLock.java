@@ -23,9 +23,9 @@ package org.netbeans.modules.editor.indent.spi;
  * Extra locking may be necessary for indentation/reformatting
  * before the document gets write-locked and the actual
  * indentation/reformatting gets started.
- * <br/>
+ * <br>
  * For example java infrastructure requires this.
- * <br/>
+ * <br>
  * The infrastructure guarantees this processing:
  * <pre>
  *   extraLock.lock();

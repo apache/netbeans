@@ -21,7 +21,7 @@ package org.netbeans.api.editor.document;
 
 /**
  * Allows to inspect document's lock state.
- * <i>originally part of <code>BaseDocument</code> interface.
+ * <i>originally part</i> of <code>BaseDocument</code> interface.
  * @author sdedic
  */
 public interface DocumentLockState {

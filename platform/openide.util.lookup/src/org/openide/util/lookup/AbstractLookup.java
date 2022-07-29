@@ -1176,7 +1176,7 @@ public class AbstractLookup extends Lookup implements Serializable {
      * giving creator of the lookup more rights than subsequent users of the lookup).
      * Typical usage: <pre>
      * {@link Content} ic = new {@link InstanceContent#InstanceContent() InstanceContent()};
-     * {@link Lookup} lookup = new {@link AbstractLookup#AbstractLookup(org.openide.util.lookup.AbstractLookup.Content) AbstractLookup(ic)};
+     * {@link org.openide.util.Lookup} lookup = new {@link AbstractLookup#AbstractLookup(org.openide.util.lookup.AbstractLookup.Content) AbstractLookup(ic)};
      * {@link Content#addPair(org.openide.util.lookup.AbstractLookup.Pair) ic.addPair(...)};
      * </pre>
      * @since 1.25

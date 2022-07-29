@@ -232,7 +232,7 @@ public final class Util {
      * list of modules (suitable for disabling; reverse for enabling).
      * @param modules some modules
      * @param modulesByName map from module cnbs to modules (may contain unrelated modules)
-     * @param providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
+     * @param _providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
      * @return a map from modules to lists of modules they depend on
      * @see Utilities#topologicalSort
      * JST-PENDING needed from tests

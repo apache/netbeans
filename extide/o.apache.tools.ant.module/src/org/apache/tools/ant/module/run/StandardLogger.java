@@ -268,7 +268,7 @@ public final class StandardLogger extends AntLogger {
             if (!session.isExceptionConsumed(t)) {
                 session.consumeException(t);
                 StringBuilder msg = new StringBuilder();
-                while (isBuildException(t)) { // http://issues.apache.org/bugzilla/show_bug.cgi?id=43398
+                while (isBuildException(t)) { // https://bz.apache.org/bugzilla/show_bug.cgi?id=43398
                     Throwable cause = t.getCause();
                     if (cause == null) {
                         break;

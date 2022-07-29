@@ -53,7 +53,7 @@ public interface ProjectInformation {
      * on disk, as (part of) an Ant property name, etc.
      * XXX precise format - at least conforms to XML NMTOKEN or ID
      * @return a code name
-     * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/PropertyUtils.html#getUsablePropertyName(java.lang.String)"><code>PropertyUtils.getUsablePropertyName</code></a>
+     * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/PropertyUtils.html#getUsablePropertyName-java.lang.String-"><code>PropertyUtils.getUsablePropertyName</code></a>
      */
     String getName();
     

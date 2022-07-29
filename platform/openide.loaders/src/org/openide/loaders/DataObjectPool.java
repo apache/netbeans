@@ -902,7 +902,7 @@ implements ChangeListener {
         private static final Reference<DataObject> REFERENCE_NOT_SET = new WeakReference<DataObject>(null);
 
         /** weak reference data object with this primary file 
-         * @GuardedBy("DataObjectPool.getPOOL()")
+         * &#64;GuardedBy("DataObjectPool.getPOOL()")
          */
         private Reference<DataObject> obj;
         

@@ -38,7 +38,7 @@ public interface WebPrivilegedTemplates {
      *         by a framework and then appropriate templates for the framework can be offered
      *         in the list of privileged list of templates.
      *
-     * @return full paths to privileged templates, e.g. <samp>Templates/Other/XmlFile.xml</samp>; never null.
+     * @return full paths to privileged templates, e.g. <code>Templates/Other/XmlFile.xml</code>; never null.
      */
     public String[] getPrivilegedTemplates(WebModule webModule);
 }

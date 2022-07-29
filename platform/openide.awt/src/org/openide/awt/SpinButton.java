@@ -31,8 +31,8 @@ import java.util.Vector;
 /**
 * A class that produces a Spin Button.
 *
-* <P>
-* <TABLE BORDER COLS=3 WIDTH=100%>
+* <TABLE>
+* <caption>properties of SpinButton</caption>
 * <TR><TH WIDTH=15%>Property<TH WIDTH=15%>Property Type<TH>Description
 * <TR><TD> Orientation <TD> boolean <TD> Orientation of SpinButton (Left-right or Up-down)
 * <TR><TD> Minimum     <TD> int     <TD> Minimum value.

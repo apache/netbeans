@@ -30,13 +30,13 @@ import org.netbeans.api.annotations.common.NonNull;
  * can be undone by using atomicUndo().
  * <p>Clients may watch for atomic operations
  * by registering an listener through
- * {@link addAtomicLockListener(AtomicLockListener)}
- * <p/>
+ * {@link #addAtomicLockListener(AtomicLockListener)}
+ * <p>
  * The infrastructure registers a stub implementation for all documents;
- * the stub does not perform any locking, except that execution of {@link #runAtomic}
+ * the stub does not perform any locking, except that execution of {@link #runAtomic(java.lang.Runnable) }
  * Runnable is synchronized on the document object.
  * 
- * Also see the predecessor, {@link org.netbeans.editor.AtomicLockDocument}.
+ * Also see the predecessor, <a href="@org-netbeans-modules-editor-lib@/org.netbeans/editor/AtomicLockDocument.html">org.netbeans.editor.AtomicLockDocument</a>.
  */
 public interface AtomicLockDocument {
 

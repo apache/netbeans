@@ -31,7 +31,7 @@ import org.openide.util.Lookup;
  * file is processed and after it is processed, depending on {@link #isBeforeCreation()}
  * and {@link #isAfterCreation()} return values. A decorator may perform both pre- and post- 
  * processing.
- * <p/>
+ * <p>
  * First the decorator is asked to {@link #accept} the creation process; if it does not,
  * it will not be invoked at all. Before/after main file creation the {@link #decorate}
  * method is called to perform its magic. Any reported additional files will be returned
@@ -66,7 +66,7 @@ public interface CreateFromTemplateDecorator {
      * Extends the creation process. The decorator may alter the created file (it is the first in the 
      * returned list) or create additional files. In case it creates files, it must return list of the
      * added files.
-     * <p/>
+     * <p>
      * If the decorator is not interested, it should return simply {@code null}.
      * 
      * @param desc command objects that describes the file creation request

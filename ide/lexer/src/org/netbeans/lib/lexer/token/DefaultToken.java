@@ -31,7 +31,7 @@ import org.netbeans.lib.lexer.WrapTokenId;
 
 /**
  * Default token which by default obtains text from its background storage.
- * <br/>
+ * <br>
  * It is non-flyweight and it does not contain custom text.
  *
  * <p>

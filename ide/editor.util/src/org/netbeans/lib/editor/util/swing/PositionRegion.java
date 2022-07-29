@@ -27,7 +27,7 @@ import javax.swing.text.Position;
 
 /**
  * A pair of positions delimiting a text region in a swing document.
- * <br/>
+ * <br>
  * At all times it should be satisfied that
  * {@link #getStartOffset()} &lt;= {@link #getEndOffset()}.
  *
@@ -60,7 +60,7 @@ public class PositionRegion {
 
     /**
      * Create a fixed position instance that just wraps a given integer offset.
-     * <br/>
+     * <br>
      * This may be useful for situations where a position needs to be used
      * but the document is not available yet. Once the document becomes
      * available the regular position instance (over an existing document)

@@ -4332,7 +4332,7 @@ public class CasualDiff {
     /**
      * Retrieves comment set for the specified tree t. The FieldGroupTree is handled specially:
      * preceding commenst are taken from the FG's first item, following comments from the last item
-     * <p/>
+     * <p>
      * The return may be NEGATIVE to indicate, that the comment set is the same and should be retained
      * in the output. If the value is POSITIVE, the method has handled the copying.
      * 

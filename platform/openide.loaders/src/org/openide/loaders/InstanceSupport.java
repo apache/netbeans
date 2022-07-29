@@ -489,7 +489,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     
     /** Creates new NbClassLoader with restricted PermissionCollection
      * that contains only:
-     * java.io.FilePermission("&lt;&lt;ALL FILES>>", "read")
+     * java.io.FilePermission("&lt;&lt;ALL FILES&gt;&gt;", "read")
      * java.util.PropertyPermission("*", "read")
      *
      * @return ClassLoader

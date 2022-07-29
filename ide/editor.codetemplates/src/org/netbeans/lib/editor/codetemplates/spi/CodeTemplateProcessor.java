@@ -34,10 +34,10 @@ public interface CodeTemplateProcessor {
     /**
      * Update the values of the parameters in the parsed code template
      * before the code template gets physically inserted into the document.
-     * <br/>
+     * <br>
      * The processor may call {@link CodeTemplateInsertRequest#getMasterParameters()}
      * to find the master parameters.
-     * <br/>
+     * <br>
      * On each parameter {@link CodeTemplateParameter#setValue(String)}
      * can be called. The value will be propagated to all slave parameters
      * automatically.
@@ -47,12 +47,12 @@ public interface CodeTemplateProcessor {
     /**
      * Notification that a master parameter's value has been modified
      * by the user and the processor may need to react to it.
-     * <br/>
+     * <br>
      * This notification is only done after the code template was physically
      * inserted into the document i.e. {@link CodeTemplateInsertRequest#isInserted()}
      * returns true.
      * 
-     * <br/>
+     * <br>
      * Typically the processor either does nothing or it may change other
      * parameter(s)' values. The change may occur in the same thread
      * or it may post the parameter's new value recomputation and changing
@@ -69,10 +69,10 @@ public interface CodeTemplateProcessor {
      * @param masterParameter master parameter that was changed.
      * @param typingChange allows to react to user's typing immediately
      *  or only react once the active parameter gets changed e.g. by <i>TAB</i>.
-     *  <br/>
+     *  <br>
      *  <code>true</code> is passed if the parameter value was modified
      *  by user's typing. Some processors may want such immediate reaction.
-     *  <br/>
+     *  <br>
      *  Others will only react when this parameter
      *  is <code>false</code> which happens when
      *  at least one typing change occurred in the current active parameter
@@ -84,7 +84,7 @@ public interface CodeTemplateProcessor {
     /**
      * Notify the processor that the insert request which it services
      * was already completed and there is no more work to do.
-     * <br/>
+     * <br>
      * The processor can free possible resources related to the insert
      * request processing.
      *

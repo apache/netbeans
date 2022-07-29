@@ -88,7 +88,7 @@ public @Deprecated class DefaultPropertyModel extends Object implements ExProper
      * panel = new PropertyPanel (model);
      * </PRE>
      * This constructor replaces the default use of BeanInfo and that is why
-     * simplifies the use of <link>ExPropertyEditor</link>s.
+     * simplifies the use of {@link ExPropertyEditor}s.
      *
      * @param bean the java bean to be introspected
      * @param descr the property descriptor of the property to use

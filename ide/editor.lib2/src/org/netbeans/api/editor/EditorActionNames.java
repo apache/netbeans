@@ -67,7 +67,6 @@ public final class EditorActionNames {
 
     /**
      * Zoom text out by decreasing default font size.
-     * @see #zoomInTextAction
      * @since 1.45
      */
     public static final String zoomTextOut = "zoom-text-out"; // NOI18N

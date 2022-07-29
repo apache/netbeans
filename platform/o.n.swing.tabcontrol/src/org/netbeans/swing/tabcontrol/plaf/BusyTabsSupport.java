@@ -35,7 +35,7 @@ import org.openide.windows.TopComponent;
 
 /**
  * Support class to implement animation in tab headers to indicate some sort of
- * 'busy' state.<br
+ * 'busy' state.<br>
  * The default implementation tracks changes in registered tab containers
  * (<code>install(Tabbed, TabDataModel)</code>) and if any tab is marked as 'busy'
  * (<code>TopComponent.makeBusy(boolean)</code>) it forces repeated repaints of

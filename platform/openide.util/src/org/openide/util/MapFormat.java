@@ -135,7 +135,7 @@ public class MapFormat extends Format {
     }
     */
     /** Returns the value for given key. Subclass may define its own beahvior of
-    * this method. For example, if key is not defined, subclass can return <not defined>
+    * this method. For example, if key is not defined, subclass can return <code>not defined</code>
     * string.
     *
     * @param key Key.

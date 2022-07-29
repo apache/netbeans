@@ -174,7 +174,7 @@ public class FolderLookup extends FolderInstance {
     }
     
     /** Overrides superclass method. It returns instance
-     * for <code>DataObject</code>&<code>InstanceCookie</code> 'pair'. 
+     * for <code>DataObject</code>&amp;<code>InstanceCookie</code> 'pair'. 
      * If the instance is of <code>FolderLookup.Lkp</code> class it is created otherwise
      * new <code>Lkp.ICItem</code> created and returned.
      *

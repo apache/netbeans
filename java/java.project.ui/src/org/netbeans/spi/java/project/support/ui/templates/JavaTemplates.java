@@ -102,7 +102,7 @@ public class JavaTemplates {
      * Sample usage:
      * <pre>
      * &#64;TemplateRegistration(..., iconBase=JavaTemplates.JAVA_ICON)
-     * public static WizardDescriptor.InstantiatingIterator&lt;?> myTemplates() {
+     * public static WizardDescriptor.InstantiatingIterator&lt;?&gt; myTemplates() {
      *     return JavaTemplates.createJavaTemplateIterator();
      * }
      * </pre>

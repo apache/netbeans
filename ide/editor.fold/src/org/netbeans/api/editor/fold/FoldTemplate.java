@@ -28,10 +28,10 @@ import static org.netbeans.api.editor.fold.Bundle.*;
  * act as a fold guard: change to that area will remove the fold because it
  * becomes damaged. It also defines what placeholder should appear in place of the 
  * folded code.
- * <p/>
+ * <p>
  * A template may be attached to a {@link FoldType} instance. Folds of that kind will
  * automatically use the attached Template, if not overriden explicitly.
- * <p/>
+ * <p>
  * The string {@code "..."} ({@link #CONTENT_PLACEHOLDER}) is treated as a placeholder. If a 
  * ContentReader is available for the {@link FoldType}, the placeholder will be replaced by 
  * the product of the Reader. Otherwise the placeholder will remain in the displayText 

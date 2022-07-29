@@ -52,7 +52,7 @@ import org.openide.util.Lookup;
  * </div>
  * <p>
  * GradleExecConfigurations can be also declared by a Plugin that implements a
- * <a href="@TOP@/org/netbeans/spi/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>,
+ * {@link org.netbeans.modules.gradle.spi.actions.GradleActionsProvider GradleActionsProvider },
  * or which uses {@link DefaultGradleActionsProvider#forProjectLayer(org.openide.filesystems.FileObject)}.
  * 
  * @since 2.13
@@ -195,7 +195,7 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
     /**
      * Attempts to find an effective configuration for the project. The effective configuration is the 
      * {@link ProjectConfigurationProvider#getActiveConfiguration()}, unless it has been overriden by contents of 
-     * the `context` {@link Lookup}, or by some caller. Can be used from implementations of {@link AfterBuildActionHoo},
+     * the `context` {@link Lookup}, or by some caller. Can be used from implementations of {@link org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook},
      * {@link BeforeBuildActionHook} etc.
      * 
      * @param prj project

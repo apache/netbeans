@@ -45,7 +45,7 @@ import org.openide.awt.ActionRegistration;
  * Versioning system registration can be done in one of the following ways:
  * <ul>
  *  <li>via {@link org.openide.util.lookup.ServiceProvider}.</li>  
- *  <li>via {@link org.netbeans.modules.versioning.spi.VersioningSystem#Registration}. (recommended) </li> 
+ *  <li>via {@link org.netbeans.modules.versioning.spi.VersioningSystem.Registration}. (recommended) </li> 
  * </ul>
  *
  * @author Maros Sandor
@@ -62,7 +62,7 @@ public abstract class VersioningSystem {
 
     /**
      * Short name of the versioning system, it will be used as menu label and it should define a mnemonic key.
-     * Examples: &CVS, &Subversion, &Mercurial, &Teamware, &SourceSafe, &VSS, &Clearcase, Local &History.
+     * Examples: &amp;CVS, &amp;Subversion, &amp;Mercurial, &amp;Teamware, &amp;SourceSafe, &amp;VSS, &amp;Clearcase, Local &amp;History.
      * @see #getProperty(String) 
      * @see #putProperty(String, Object)  
      */
@@ -324,11 +324,11 @@ public abstract class VersioningSystem {
          * Short name of the versioning system, it will be used as menu label and it should define a mnemonic key.
          * </p>
          * <p>
-         * Examples: &CVS, &Subversion, &Mercurial, &Teamware, &SourceSafe, &VSS, &Clearcase, Local &History.
+         * Examples: &amp;CVS, &amp;Subversion, &amp;Mercurial, &amp;Teamware, &amp;SourceSafe, &amp;VSS, &amp;Clearcase, Local &amp;History.
          * </p>
          * <p>
          * Corresponds with the property value {@link org.netbeans.modules.versioning.spi.VersioningSystem#PROP_MENU_LABEL}.
-         * <p>
+         *
          * @see org.netbeans.modules.versioning.spi.VersioningSystem#PROP_MENU_LABEL
          */
         public String menuLabel();
@@ -350,7 +350,7 @@ public abstract class VersioningSystem {
          *  <li>{".svn", "_svn"}</li>
          *  <li>{".hg"}</li>
          *  <li>{".git"}</li>
-         * <ul>
+         * </ul>
          * @see #getTopmostManagedAncestor(java.io.File) 
          */
         public String[] metadataFolderNames();
@@ -366,7 +366,7 @@ public abstract class VersioningSystem {
          * </ul>
          * returning "Subversion" would make the VCS infrastructure to look for actions under the {@link ActionReference} 
          * paths <code>"Versioning/Subversion/Actions/Unversioned"</code> and <code>"Versioning/Subversion/Actions/Global"</code>.
-         * </p>
+         * 
          * <p>
          * You can also make use of the {@link ActionRegistration#menuText} and {@link ActionRegistration#popupText} 
          * attributes, in case you need a different text in the Main Menu item and a projects popup menu item.
@@ -377,36 +377,37 @@ public abstract class VersioningSystem {
          * <p>
          * Register a <code>VersioningSystem</code> with the <code>actionCategory</code> "Subversion".
          * </p>
-         * <p>
-         * <code> <pre>
-         * <samp>@</samp>VersioningSystem.Registration(actionsCategory="<b>Subversion</b>")
+         * 
+         * <pre>
+         * <code>@</code>VersioningSystem.Registration(actionsCategory="<b>Subversion</b>")
          * public class SubversionVCS extends VersioningSystem {
          *    ...
          * }
-         * </code></pre></p>
+         * </pre>
          * 
          * <p>
          * Register the <code>ImportAction</code> under the <code>ActionReference</code> path 
          * <code>"Versioning/Subversion/Actions/Unversioned"</code> and set <br> 
-         * <code>ActionRegistration.popupText</code> to <code>"Import into &Subversion Repository..."</code> and<br> 
-         * <code>ActionRegistration.menuText</code> to <code>"I&mport into Repository..."</code>.
+         * <code>ActionRegistration.popupText</code> to <code>"Import into &amp;Subversion Repository..."</code> and<br> 
+         * <code>ActionRegistration.menuText</code> to <code>"I&amp;mport into Repository..."</code>.
          * <br></p>
          * 
-         * <p><code> <pre>
-         * <samp>@</samp>ActionID(id = "org.netbeans.modules.subversion.ui.project.ImportAction", category = "Subversion")
-         * <samp>@</samp>ActionRegistration(displayName = "Import into Repository...", popupText="Import into &Subversion Repository...", menuText="I&mport into Repository...")
-         * <samp>@</samp>ActionReferences({ <samp>@</samp>ActionReference(path="<b>Versioning/Subversion/Actions/Unversioned</b>", position=1) })
+         * 
+         * <pre>
+         * <code>@</code>ActionID(id = "org.netbeans.modules.subversion.ui.project.ImportAction", category = "Subversion")
+         * <code>@</code>ActionRegistration(displayName = "Import into Repository...", popupText="Import into &amp;Subversion Repository...", menuText="I&amp;mport into Repository...")
+         * <code>@</code>ActionReferences({ <code>@</code>ActionReference(path="<b>Versioning/Subversion/Actions/Unversioned</b>", position=1) })
          * public final class ImportAction implements ActionListener {
          *   ...
          * }
-         * </code></pre></p>
+         * </pre>
          * <p>
          * The Main Menu for an unversioned project then will be:<br>
-         * <code>Main Menu > Team > Subversion > Import into <u>R</u>epository...</code>
+         * <code>Main Menu &gt; Team &gt; Subversion &gt; Import into <u>R</u>epository...</code>
          * </p>
          * <p>
          * The Popup Menu for an unversioned project then will be:<br>
-         * <code>Popup Menu > Versioning > Import into <u>S</u>ubversion Repository...</code>
+         * <code>Popup Menu &gt; Versioning &gt; Import into <u>S</u>ubversion Repository...</code>
          * </p>
          * 
          * @see org.openide.awt.ActionID

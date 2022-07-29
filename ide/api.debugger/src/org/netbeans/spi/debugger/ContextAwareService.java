@@ -34,7 +34,7 @@ package org.netbeans.spi.debugger;
  *       &lt;/file&gt;
  *   &lt;/folder&gt;</pre>
  *
- * <br/>
+ * <br>
  *
  * @author Martin Entlicher
  * @since 1.16

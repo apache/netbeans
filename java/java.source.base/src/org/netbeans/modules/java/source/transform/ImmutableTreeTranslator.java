@@ -67,7 +67,7 @@ import static org.netbeans.modules.java.source.save.PositionEstimator.*;
  *  <br>&nbsp;&nbsp;return new_tree_to_replace_old
  *  <br>&nbsp;&nbsp;// (returning the original tree leaves it unchanged)
  *  <br>}
- * <p/>
+ * <p>
  * To help code formatting and comment preservation, translated nodes are marked
  * as replacements for their originals.
  */

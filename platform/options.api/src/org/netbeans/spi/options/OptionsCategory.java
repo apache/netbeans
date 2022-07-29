@@ -29,7 +29,7 @@ import org.openide.nodes.AbstractNode;
 import org.openide.util.ImageUtilities;
 
 /**
- * This class represents one category (like "Fonts & Colors"
+ * This class represents one category (like "Fonts &amp; Colors"
  * or "Editor") in Options Dialog.
  * <p>Normally panels are registered using one of the annotations in {@link OptionsPanelController}.
  * They may also be registered in a layer manually as follows:
@@ -50,17 +50,17 @@ import org.openide.util.ImageUtilities;
  *   &lt;/folder&gt;</pre>
  *
  * where:
- * <br/><b>controller</b> should be an instance of <code>OptionsPanelController</code>
- * <br/><b>title</b> should be a localized string where title of your tab inside OD is stored
+ * <br><b>controller</b> should be an instance of <code>OptionsPanelController</code>
+ * <br><b>title</b> should be a localized string where title of your tab inside OD is stored
  * <span class="nonnormative"><strong>Currently unused.</strong></span>
- * <br/><b>categoryName</b> should be a localized string for your tab's category name
- * <br/><b>iconBase</b> should be relative path to icon wou wish to display inside OD
- * <br/><b>keywords</b> should be localized keywords list, separated by comma in Bundle, for quickserach purposes
- * <br/><b>keywordsCategory</b> should be relative path to your panel inside Options dialog
- * <br/><b>description</b> should be a localized string where your tab description is stored
+ * <br><b>categoryName</b> should be a localized string for your tab's category name
+ * <br><b>iconBase</b> should be relative path to icon wou wish to display inside OD
+ * <br><b>keywords</b> should be localized keywords list, separated by comma in Bundle, for quickserach purposes
+ * <br><b>keywordsCategory</b> should be relative path to your panel inside Options dialog
+ * <br><b>description</b> should be a localized string where your tab description is stored
  * <span class="nonnormative"><strong>Currently unused.</strong></span>
  *
- * <br/><br/>
+ * <br><br>
  * Or, when registering a category with sub-panels, instead of
  * <pre style="background-color: rgb(255, 255, 153);">
  *            &lt;attr name="controller" newvalue="org.netbeans.core.ui.options.general.GeneralOptionsPanelController"/&gt;
@@ -71,7 +71,7 @@ import org.openide.util.ImageUtilities;
  * </pre>
  * and supply a folder where instaces of <code>AdvancedOption</code> should be
  * registered. Its instances would be found automatically and shown as sub-panels
-  <br/><br/>
+  <br><br>
  * Use standard {@code position} attributes to sort items registered in layers.
  *
  * @see AdvancedOption

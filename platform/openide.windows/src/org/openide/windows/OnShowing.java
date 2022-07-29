@@ -38,7 +38,7 @@ import org.openide.util.lookup.NamedServiceDefinition;
  * </pre>
  * 
  * @since 6.54
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @NamedServiceDefinition(
     path="Modules/UIReady", // NOI18N

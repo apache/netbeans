@@ -210,7 +210,7 @@ public final class EditorRegistry {
     
     /**
      * Find a component that uses the given document.
-     * <br/>
+     * <br>
      * Scan the component registry starting from the most recently focused text component
      * and test if {@link JTextComponent#getDocument()} returns the document passed
      * as parameter to this method and if so return the component.

@@ -26,7 +26,7 @@ import org.netbeans.jemmy.operators.*;
 
 /**
  * Handle NetBeans New File wizard.
- * It is invoked either from main menu File -> New File...
+ * It is invoked either from main menu File -&gt; New File...
  * <code>NewFileAction.performMenu();</code>
    or from popup menu on folder <code>NewFileAction.performPopup();</code><br>
  * Usage:

@@ -484,7 +484,7 @@ public final class ModuleSystem {
      * @param m the module to build a classpath for
      * @return an approximation of that module's classpath
      * @see "#22466"
-     * @since org.netbeans.core/1 > 1.5
+     * @since org.netbeans.core/1 &gt; 1.5
      */
     public String getEffectiveClasspath(Module m) {
         return installer.getEffectiveClasspath(m);

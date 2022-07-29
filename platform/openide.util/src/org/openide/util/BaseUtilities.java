@@ -168,10 +168,10 @@ public abstract class BaseUtilities {
      * In order to provide useful support for this problem, this queue has been
      * provided.
      * <P>
-     * If you have a reference that needs cleanup, make it implement <link>Runnable</link>
+     * If you have a reference that needs cleanup, make it implement {@link Runnable }
      * and register it with the queue:
      * <PRE>
-     * class MyReference extends WeakReference<Thing> implements Runnable {
+     * class MyReference extends WeakReference&lt;Thing&gt; implements Runnable {
      *     private final OtherInfo dataToCleanUp;
      *     public MyReference(Thing ref, OtherInfo data) {
      *         super(ref, Utilities.queue());
@@ -1004,9 +1004,9 @@ widthcheck:  {
     * <li>Include command names with embedded spaces, such as <code>c:\Program Files\jdk\bin\javac</code>.
     * <li>Include extra command arguments, such as <code>-Dname=value</code>.
     * <li>Do anything else which might require unusual characters or processing. For example:
-    * <p><code><pre>
+    * <pre>
     * "c:\program files\jdk\bin\java" -Dmessage="Hello /\\/\\ there!" -Xmx128m
-    * </pre></code>
+    * </pre>
     * <p>This example would create the following executable name and arguments:
     * <ol>
     * <li> <code>c:\program files\jdk\bin\java</code>
@@ -1197,7 +1197,7 @@ widthcheck:  {
      * @exception TopologicalSortException if the sort cannot succeed due to cycles in the graph, the
      *   exception contains additional information to describe and possibly recover from the error
      * @since 3.30
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=27286">Issue #27286</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=27286">Issue #27286</a>
      */
     public static <T> List<T> topologicalSort(Collection<? extends T> c, Map<? super T, ? extends Collection<? extends T>> edges)
     throws TopologicalSortException {
@@ -1334,24 +1334,24 @@ widthcheck:  {
      * Btw. one can use spaces instead of <code>=</code> sign.
      * For a real world example
      * check the
-     * <a href="http://www.netbeans.org/source/browse/xml/text-edit/compat/src/META-INF/netbeans/">
+     * <a href="https://github.com/apache/netbeans/tree/master/ide/xml">
      * xml module</a>.
      *
      * <P>
-     * For purposes of <link>org.openide.util.io.NbObjectInputStream</link> there is
+     * For purposes of {@link org.openide.util.io.NbObjectInputStream} there is
      * a following special convention:
      * If the
      * className is not listed as one that is to be renamed, the returned
      * string == className, if the className is registered to be renamed
      * than the className != returned value, even in a case when className.equals (retValue)
-     * <p/>
+     * <p>
      * Similar behaviour applies to <b>filenames</b> provided by layers (system filesystem). Filenames
      * can be also translated to adapt to location changes e.g. in action registrations. Note that 
      * <b>no spaces or special characters</b> are allowed in both translated filenames or translation 
      * results. Filenames must conform to regexp {@code ^[/a-zA-Z0-9$_.+-]+$}. Keys and values are treated
      * as paths from fs root.
      * 
-     * <p/>
+     * <p>
      * Example of file path translation (action registration file has moved):
      * <pre>
      * # registration ID has changed
@@ -1550,7 +1550,7 @@ widthcheck:  {
      * and {@link URI#resolve(URI)}.
      * @param f a file
      * @return a {@code file}-protocol URI which may use the host field
-     * @see java.nio.file.Path.toUri
+     * @see java.nio.file.Path#toUri
      * @since 8.25
      */
     public static URI toURI(File f) {

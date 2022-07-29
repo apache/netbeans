@@ -130,7 +130,7 @@ public abstract class J2eePlatformImpl {
      * class.
      *
      * @return list of supported J2EE specification versions.
-     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(java.lang.Object)}
+     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule.Type)}
      */
     public Set<String> getSupportedSpecVersions() {
         return Collections.emptySet();
@@ -149,7 +149,7 @@ public abstract class J2eePlatformImpl {
      * @param moduleType one of the constants defined in 
      *   {@link org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule}
      * @return list of supported J2EE specification versions.
-     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(java.lang.Object)}
+     * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule.Type)}
      */
     public Set <String> getSupportedSpecVersions(Object moduleType) {
         return getSupportedSpecVersions();
@@ -178,7 +178,7 @@ public abstract class J2eePlatformImpl {
     /**
      * Returns a set of supported profiles for the given module type
      * (one of {@link J2eeModule#EAR}, {@link J2eeModule#EJB},
-     * {@link J2eeModule#WAR}, {@link J2eeModule#RAR} and {@link J2eeModule#CAR}).
+     * {@link J2eeModule#WAR}, {@link J2eeModule#CONN} and {@link J2eeModule#CLIENT}).
      * By default method converts specification version returned by
      * {@link #getSupportedSpecVersions(java.lang.Object)} to profiles.
      *

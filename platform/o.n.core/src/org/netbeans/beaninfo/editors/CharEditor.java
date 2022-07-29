@@ -105,7 +105,7 @@ public class CharEditor extends PropertyEditorSupport implements EnhancedPropert
     /**
      * Accepts Character and String values. If the argument is
      * a String the first character is taken as the new value.
-     * @param v new value
+     * @param newValue new value
      */
     public void setValue(Object newValue) throws IllegalArgumentException {
         if (newValue instanceof Character ) {

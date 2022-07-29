@@ -26,7 +26,7 @@ import org.netbeans.jellytools.actions.DeleteAction;
 import org.netbeans.jellytools.modules.db.actions.ConnectUsingAction;
 import org.netbeans.jellytools.nodes.Node;
 
-/** Node representing "Databases > Drivers > ${driver}" node in Runtime tab.
+/** Node representing "Databases &gt; Drivers &gt; ${driver}" node in Runtime tab.
  * <p>
  * Usage:<br>
  * <pre>
@@ -50,7 +50,7 @@ public class DriverNode extends Node {
                 "|"+name);
     }
 
-    /** Finds "Databases > Drivers > ${driver}" node */
+    /** Finds "Databases &gt; Drivers &gt; ${driver}" node */
     public static DriverNode invoke(String name) {
         RuntimeTabOperator.invoke();
         return new DriverNode(name);

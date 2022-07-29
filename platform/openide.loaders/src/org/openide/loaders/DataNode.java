@@ -209,7 +209,6 @@ public class DataNode extends AbstractNode {
      }
 
     /** Get the displayed icon for this node.
-     * A filesystem may {@link org.openide.filesystems.FileSystem#getStatus specially alter} this.
      * Subclassers overriding this method should consider the recommendations
      * in {@link DataObject#createNodeDelegate}.
      * @param type the icon type from {@link java.beans.BeanInfo}
@@ -232,7 +231,6 @@ public class DataNode extends AbstractNode {
     }
 
     /** Get the displayed icon for this node.
-    * A filesystem may {@link org.openide.filesystems.FileSystem#getStatus specially alter} this.
      * Subclassers overriding this method should consider the recommendations
      * in {@link DataObject#createNodeDelegate}.
     * @param type the icon type from {@link java.beans.BeanInfo}

@@ -49,7 +49,7 @@ public interface MutableTokenList<T extends TokenId> extends TokenList<T> {
     
     /**
      * Check whether the whole input was tokenized or not.
-     * <br/>
+     * <br>
      * Incremental algorithm uses this information to determine
      * whether it should relex the input till the end or not.
      */

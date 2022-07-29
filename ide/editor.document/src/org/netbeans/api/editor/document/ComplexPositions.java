@@ -83,7 +83,7 @@ public final class ComplexPositions {
      * @param pos2 non-null position.
      * @return offset of pos1 minus offset of pos2 or diff of their split offsets in case
      *  both positions have the same position's offsets.
-     * @NullPointerException if any passed position is null unless both positions are null
+     * @exception NullPointerException if any passed position is null unless both positions are null
      *  in which case the method would return 0.
      */
     public static int compare(@NonNull Position pos1, @NonNull Position pos2) {

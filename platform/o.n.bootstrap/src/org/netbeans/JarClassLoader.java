@@ -133,7 +133,7 @@ public class JarClassLoader extends ProxyClassLoader {
         this(files, parents, transitive, null);
     }
     /** Creates new JarClassLoader.
-     * @since org.netbeans.core/1 > 1.6
+     * @since org.netbeans.core/1 &gt; 1.6
      * @see ProxyClassLoader#ProxyClassLoader(ClassLoader[],boolean)
      */
     public JarClassLoader(List<File> files, ClassLoader[] parents, boolean transitive, Module mod) {

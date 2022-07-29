@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Group of text syncs that can be traversed by TAB (Shift-TAB) keys. ENTER may
  * be used to activate a special caret text sync.
- * <br/>
+ * <br>
  * {@link TextRegionManager} can maintain multiple groups but only one of them
  * may be active at a given time.
  *

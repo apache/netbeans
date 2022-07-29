@@ -379,7 +379,7 @@ public final class ModuleManager extends Modules {
      * @param transitive if true, these dependencies are considered transitively as well
      * @param considerNeeds if true, dependencies of type {@link Dependency#TYPE_NEEDS} are considered
      * @return a set (possibly empty) of modules managed by this manager, never including m
-     * @since org.netbeans.bootstrap/1 > 2.48
+     * @since org.netbeans.bootstrap/1 &gt; 2.48
      */
     public Set<Module> getModuleInterdependencies(Module m, boolean reverse, boolean transitive, boolean considerNeeds) {
         return Util.moduleInterdependencies(m, reverse, transitive, considerNeeds, modules, modulesByName, getProvidersOf());
@@ -952,7 +952,7 @@ public final class ModuleManager extends Modules {
      * `parent'. The parent is identified either by module specification (parent) or by a classloader
      * which should load the package. For system or bootstrap classes, `parent' may be {@code null}, since
      * boostrap classloaders load more modules together.
-     * <p/>
+     * <p>
      * If <b>both</b> `parent' and `ldr' are {@code null}, access to system/application classpath will be checked.
      * 
      * @param m module that attempts to load resources.

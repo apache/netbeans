@@ -36,19 +36,19 @@ import org.openide.util.Lookup;
  * <pre class="nonnormative">
 public final class TestAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
-        System.err.println("===> running action");
+        System.err.println("===&gt; running action");
         for (Project p : OpenProjects.getDefault().getOpenProjects()) {
             Service s = p.getLookup().lookup(Service.class);
             if (s != null) {
-                System.err.println("===> got a service: " + s.m());
+                System.err.println("===gt; got a service: " + s.m());
             } else {
-                System.err.println("===> nothing for " + p);
+                System.err.println("===gt; nothing for " + p);
             }
         }
     }
     public abstract static class Service {
         static {
-            System.err.println("===> loading Service");
+            System.err.println("===&gt; loading Service");
         }
         public abstract String m();
     }
@@ -56,12 +56,12 @@ public final class TestAction implements ActionListener {
                             projectType="org-netbeans-modules-java-j2seproject")
     public static class ServiceImpl extends Service {
         static {
-            System.err.println("===> loading ServiceImpl");
+            System.err.println("===&gt; loading ServiceImpl");
         }
         private final Project p;
         public ServiceImpl(Project p) {
             this.p = p;
-            System.err.println("===> new ServiceImpl on " + p);
+            System.err.println("===&gt; new ServiceImpl on " + p);
         }
         public String m() {
             return ProjectUtils.getInformation(p).getDisplayName();

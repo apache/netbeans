@@ -34,7 +34,7 @@ import org.netbeans.jemmy.operators.JTextFieldOperator;
 public class StringArrayCustomEditorOperator extends NbDialogOperator {
 
     /** Creates new StringArrayCustomEditorOperator
-     * @throws TimeoutExpiredException when NbDialog not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when NbDialog not found
      * @param title String title of custom editor */
     public StringArrayCustomEditorOperator(String title) {
         super(title);
@@ -59,7 +59,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     //******************************
 
     /** Tries to find "Edit" JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btEdit() {
@@ -72,7 +72,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find "Down" JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btDown() {
@@ -85,7 +85,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find "Up" JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btUp() {
@@ -98,7 +98,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find "Add" JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btAdd() {
@@ -111,7 +111,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find JList in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JListOperator
      */
     public JListOperator lstItemList() {
@@ -122,7 +122,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find "Remove" JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btRemove() {
@@ -135,7 +135,7 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find null JTextField in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JTextFieldOperator
      */
     public JTextFieldOperator txtItemText() {
@@ -146,35 +146,35 @@ public class StringArrayCustomEditorOperator extends NbDialogOperator {
     }
 
     /** clicks on "Edit" JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      */
     public void edit() {
         btEdit().push();
     }
 
     /** clicks on "Down" JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      */
     public void down() {
         btDown().push();
     }
 
     /** clicks on "Up" JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      */
     public void up() {
         btUp().push();
     }
 
     /** clicks on "Add" JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      */
     public void add() {
         btAdd().push();
     }
 
     /** clicks on "Remove" JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      */
     public void remove() {
         btRemove().push();

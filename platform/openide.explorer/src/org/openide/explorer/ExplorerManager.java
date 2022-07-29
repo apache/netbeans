@@ -352,7 +352,7 @@ public final class ExplorerManager extends Object implements Serializable, Clone
      * @param value the new node to explore, or <code>null</code> if none should be explored.
      * @param selection the new nodes to be selected
      * @throws IllegalArgumentException if the node is not within the current root context in the node hierarchy
-     * @throws PropertyVetoExcepion if listeners attached to this explorer manager do so
+     * @throws PropertyVetoException if listeners attached to this explorer manager do so
      */
     public final void setExploredContextAndSelection(final Node value, final Node[] selection)
     throws PropertyVetoException {
@@ -791,10 +791,12 @@ bigloop:
     /**
      * Finds the proper Explorer manager for a given component.  This is done
      * by traversing the component hierarchy and finding the first ancestor
-     * that implements {@link Provider}.  <P> This method should be used in
+     * that implements {@link Provider}.  
+     * <p> 
+     * This method should be used in
      * {@link Component#addNotify} of each component that works with the
      * Explorer manager, e.g.:
-     * <p><pre>
+     * <pre>
      * private transient ExplorerManager explorer;
      *
      * public void addNotify () {

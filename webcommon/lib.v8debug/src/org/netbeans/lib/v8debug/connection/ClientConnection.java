@@ -53,7 +53,7 @@ import static org.netbeans.lib.v8debug.connection.DebuggerConnection.*;
  *   new Thread() {
  *       void run() {
  *           connection.runEventLoop(new ClientConnection.Listener() {
- *               public void header(Map<String, String> properties) {
+ *               public void header(Map&lt;String, String&gt; properties) {
  *                   // header received
  *               }
  *               public void response(V8Response response) {

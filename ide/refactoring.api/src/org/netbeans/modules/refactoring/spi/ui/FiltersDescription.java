@@ -25,7 +25,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.refactoring.api.impl.SPIUIAccessor;
 
 /**
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @since 1.29
  */
 public final class FiltersDescription {

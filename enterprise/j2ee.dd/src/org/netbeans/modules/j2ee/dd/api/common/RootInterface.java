@@ -67,8 +67,8 @@ public interface RootInterface extends ComponentInterface {
      *
      *	Then,
      *		MERGE_UPDATE is 	G1 - E1 + E2	(G1 becomes G2)
-     *		MERGE_UNION is 	G1 U G2 <=> G1 + E2
-     *		MERGE_INTERSECT is	G1 n G2 <=> (G1 U G2) - E1 - E2
+     *		MERGE_UNION is 	G1 U G2 &lt;=&gt; G1 + E2
+     *		MERGE_INTERSECT is	G1 n G2 &lt;=&gt; (G1 U G2) - E1 - E2
      *</pre>
      * @param root of the bean graph that is merged with actual bean graph
      * @param mode type of merging (INTERSECT, UNION, UPDATE)

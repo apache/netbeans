@@ -31,10 +31,10 @@ package org.netbeans.editor;
 public interface TextBatchProcessor {
 
     /** Process one batch of the text.
-    * @doc document to work with
-    * @startPos starting position of the batch
-    * @endPos ending position of the batch
-    * @lastBatch whether this batch is the last one in the text area that
+    * @param doc document to work with
+    * @param startPos starting position of the batch
+    * @param endPos ending position of the batch
+    * @param lastBatch whether this batch is the last one in the text area that
     *   is searched.
     * @return non-negative number to stop the batch processing. The returned
     *   value is remembered and returned from BaseDocument.processText().

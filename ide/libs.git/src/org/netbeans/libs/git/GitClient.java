@@ -95,37 +95,40 @@ import org.netbeans.libs.git.progress.StatusListener;
  * This class provides access to all supported git commands, methods that 
  * allow you to get information about a git repository or affect the behavior 
  * of invoked commands.
- * <br/>
+ * <br>
  * An instance of this class is <strong>always</strong> bound to a local git repository.
  * The repository (identified by a git repository root file) may not exist on disk however
  * because obviously when cloning or initializing a repository it may not yet physically exist.
- * 
- * <h5>Working with this class</h5>
+ * <p>
+ * <strong>Working with this class</strong>
+ * <p>
  * A client of the API should follow these steps in order to run a certain git commands:
  * <ol>
- * <li><h6>Acquire an instance of a git client</h6>
+ * <li><strong>Acquire an instance of a git client</strong>
  * <p>Instances of a git client are provided by {@link GitRepository}. To get one call
  * {@link GitRepository#createClient() }.</p>
  * </li>
- * <li><h6>Configure the client</h6>
+ * <li><strong>Configure the client</strong>
  * <p>Some git client commands may (or may not) require additional setup of the client to successfully finish their work.
  * One quite usual use case is setting an instance of {@link GitClientCallback} to the client so commands like <code>push</code>,
  * <code>fetch</code> or <code>pull</code> may connect to and access a remote repository. To set an instance of <code>GitClientCallback</code>
  * use {@link #setCallback(org.netbeans.libs.git.GitClientCallback) } method.</p>
  * </li>
- * <li><h6>Attaching listeners</h6>
- * <p>Certain git commands may take a long time to finish and they are capable of notifying the world about the progress in their work.<br/>
+ * <li><strong>Attaching listeners</strong>
+ * <p>Certain git commands may take a long time to finish and they are capable of notifying the world about the progress in their work.<br>
  * If you want to be notified about such changes while the command is in process, attach a listener to the client 
- * via {@link #addNotificationListener(org.netbeans.libs.git.progress.NotificationListener) }.<br/>
+ * via {@link #addNotificationListener(org.netbeans.libs.git.progress.NotificationListener) }.<br>
  * An example can be the log command. Digging through the history may take a lot of time so if you do not want to wait for the complete result only
  * and want to present the commit information incrementally as it is accepted one by one into the result, you can do so by adding an instance of 
  * {@link RevisionInfoListener} to the client.</p>
  * </li>
- * <li><h6>Running git commands</h6>
+ * <li><strong>Running git commands</strong>
  * <p>When you have the client correctly set up, you may call any git command we support. The commands are mapped to appropriate methods in <code>GitClient</code>.
- * <br/>Every method representing a git command accepts as a parameter an instance of {@link ProgressMonitor}. With that class you may affect the flow of commands - it
+ * <br>
+ * Every method representing a git command accepts as a parameter an instance of {@link ProgressMonitor}. With that class you may affect the flow of commands - it
  * has the ability to cancel running git commands - and listen for error or information messages the commands produce.</p>
  * </li>
+ * </ol>
  * @author Ondra Vrabec
  */
 public final class GitClient {
@@ -237,7 +240,7 @@ public final class GitClient {
     }
     
     /**
-     * Used as a parameter of {@link #cherryPick(org.netbeans.libs.git.GitClient.CherryPickOperation, java.lang.String[], org.netbeans.libs.git.progress.ProgressMonitor) to set the behavior of the command.
+     * Used as a parameter of {@link #cherryPick(org.netbeans.libs.git.GitClient.CherryPickOperation, java.lang.String[], org.netbeans.libs.git.progress.ProgressMonitor) } to set the behavior of the command.
      * @since 1.27
      */
     public enum CherryPickOperation {

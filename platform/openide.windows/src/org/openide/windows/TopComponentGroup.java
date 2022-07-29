@@ -26,8 +26,8 @@ import java.util.Set;
  * <a href="http://ui.netbeans.org/docs/ui/ws/ws_spec.html#3.7">Window system UI specification document</a>.
  * The concept of window group explains <a href="http://core.netbeans.org/windowsystem/changes.html#2.3">API changes document</a>.
  *
- * <p><p>
- * <b><font color="red"><em>Importatnt note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
+ * <p>
+ * <b><font style="color:red"><em>Importatnt note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
  *
  * @author  Peter Zavadsky
  * @since 4.13

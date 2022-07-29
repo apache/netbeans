@@ -66,7 +66,7 @@ extends FlyOffsetGapList<TokenOrEmbedding<ET>> implements MutableTokenList<ET>, 
     /**
      * Cached start offset of the token for which this embedding container
      * was created.
-     * <br/>
+     * <br>
      * Its value may be shared by multiple embedded token lists.
      */
     private int branchTokenStartOffset; // 40 bytes
@@ -106,7 +106,7 @@ extends FlyOffsetGapList<TokenOrEmbedding<ET>> implements MutableTokenList<ET>, 
     
     /**
      * Storage for lookaheads and states.
-     * <br/>
+     * <br>
      * It's non-null only initialized for mutable token lists
      * or when in testing environment.
      */
@@ -119,7 +119,7 @@ extends FlyOffsetGapList<TokenOrEmbedding<ET>> implements MutableTokenList<ET>, 
     
     /**
      * Additional information in case this ETL is contained in a JoinTokenList.
-     * <br/>
+     * <br>
      * Through this info a reference to the JoinTokenList is held. There is no other
      * indexed structure so the EmbeddedTokenList members of TokenListList
      * must be binary-searched.
@@ -300,7 +300,7 @@ extends FlyOffsetGapList<TokenOrEmbedding<ET>> implements MutableTokenList<ET>, 
     /**
      * Returns absolute offset of the token at the given index
      * (startOffset gets added to the child token's real offset).
-     * <br/>
+     * <br>
      * For token hierarchy snapshots the returned value is corrected
      * in the TokenSequence explicitly by adding TokenSequence.tokenOffsetDiff.
      */

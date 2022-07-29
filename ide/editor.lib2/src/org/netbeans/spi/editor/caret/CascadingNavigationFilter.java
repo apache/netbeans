@@ -34,7 +34,7 @@ import org.openide.util.Parameters;
  * The implementation should call super methods to 
  * allow lower-precedence filters to react. If the implementation desires to
  * disable the filters and take the movement action directly, it can still use
- * the {@link FilterBypass} instance passed.
+ * the {@link javax.swing.text.NavigationFilter.FilterBypass} instance passed.
  * </p><p>
  * There are helper {@link #register} and {@link #unregister} methods which 
  * ensure the chain of filters is correctly maintained. After registering, methods

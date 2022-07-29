@@ -36,11 +36,11 @@ import org.openide.util.Lookup;
 
 /**
  * Line and word related utility methods.
- * <br/>
+ * <br>
  * All the methods working with the document assume that the document is locked against
  * a parallel modification e.g. by including the call within
  * {@link Document#render(java.lang.Runnable)}.
- * <br/>
+ * <br>
  * The utilities were moved from the former Editor Library 2's Utilities
  * and work with {@link LineDocument} only. The methods work only with document
  * data. Utilities that connect document with the UI elements (Swing) can be
@@ -408,10 +408,10 @@ public final class LineDocumentUtils {
     /**
      * Locates the appropriate service for the document. May return {@code null}
      * if the interface/service is not supported by the document.
-     * <p/>
+     * <p>
      * For example, if a code needs to perform an atomic action on the document,
      * it can do so as follows:
-     * <code><pre>
+     * <pre>
      * Document d = ... ; // some parameter ?
      * AtomicLockDocument ald = LineDocumentUtils.as(d, AtomicLockDocument.class); // obtain the optional interface
      * Runnable r = new Runnable() {
@@ -424,7 +424,7 @@ public final class LineDocumentUtils {
      *    r.run();
      * }
      * 
-     * </pre></code>
+     * </pre>
      * @param <T> service type
      * @param d the document
      * @param documentService the service interface

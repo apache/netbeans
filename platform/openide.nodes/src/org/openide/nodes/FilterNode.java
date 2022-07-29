@@ -173,7 +173,7 @@ public class FilterNode extends Node {
      * @param children the children to use for the filter node or <code>null</code> if
      *    default children should be provided
      * @param lookup lookup to use. Do not pass <CODE>orginal.getLookup()</CODE> into this parameter.
-     *        In such case use the {@link #FilterNode(Node, Children)} constructor.
+     *        In such case use the {@link #FilterNode(org.openide.nodes.Node, org.openide.nodes.Children)} constructor.
      *
      * @since 4.4
      */
@@ -287,7 +287,8 @@ public class FilterNode extends Node {
     * node a distinctive display name and tooltip, and performing some special
     * action upon deletion, you may do so without risk of affecting the original
     * node as follows:
-    * <br><code><pre>
+    * <br>
+    * <pre>
     * public MyNode extends FilterNode {
     *   public MyNode (Node orig) {
     *     super (orig, new MyChildren (orig));
@@ -295,7 +296,7 @@ public class FilterNode extends Node {
     *                        DELEGATE_GET_SHORT_DESCRIPTION | DELEGATE_SET_SHORT_DESCRIPTION |
     *                        DELEGATE_DESTROY);
     *     // these will affect only the filter node:
-    *     setDisplayName ("Linking -> " + orig.getDisplayName ());
+    *     setDisplayName ("Linking -&gt; " + orig.getDisplayName ());
     *     setShortDescription ("Something different.");
     *   }
     *   public boolean canRename () { return false; }
@@ -304,7 +305,7 @@ public class FilterNode extends Node {
     *     super.destroy (); // calls Node.destroy(), not orig.destroy()
     *   }
     * }
-    * </pre></code>
+    * </pre>
     * <br>You may still manually delegate where desired using {@link #getOriginal}.
     * Other methods abstract in <code>Node</code> may simply be overridden without
     * any special handling.

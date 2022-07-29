@@ -41,7 +41,7 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.BaseUtilities;
 
-/** Mapper from FileObject -> URL.
+/** Mapper from FileObject -&gt; URL.
  * Should be registered in default lookup. For details see {@link Lookup#getDefault()}.
  * For all methods, if the passed-in file object is the root folder
  * of some filesystem, then it is assumed that any valid file object
@@ -64,7 +64,7 @@ public abstract class URLMapper {
      * Not guaranteed to work from other machines (though it may).
      * <div class="nonnormative">
      * Typical protocols used: <code>file</code> for disk files (see {@link File#toURI});
-     * <code>jar</code> to wrap other URLs (e.g. <samp>jar:file:/some/thing.jar!/some/entry</samp>).
+     * <code>jar</code> to wrap other URLs (e.g. <code>jar:file:/some/thing.jar!/some/entry</code>).
      * </div>
      */
     public static final int EXTERNAL = 1;
@@ -143,7 +143,7 @@ public abstract class URLMapper {
     /** Find an array of FileObjects for this URL.
      * Zero or more FOs may be returned.
      *
-     * For each returned FO, it must be true that FO -> URL gives the
+     * For each returned FO, it must be true that FO -&gt; URL gives the
      * exact URL which was passed in, but depends on appropriate type
      * <code> findURL(FileObject fo, int type) </code>.
      * @param url to wanted FileObjects

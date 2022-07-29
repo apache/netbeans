@@ -34,7 +34,7 @@ import org.netbeans.core.netigso.NetigsoArchiveFactory;
  * an associated {@link BundleContent} implementation. Then you can read
  * cached content of your bundles via {@link #fromArchive(java.lang.String)}.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.3
  */
 public final class NetigsoArchive {

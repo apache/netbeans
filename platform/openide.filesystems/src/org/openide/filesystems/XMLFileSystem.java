@@ -124,8 +124,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * static Value methodName();
  * static Value methodName(FileObject fo);
  * static Value methodName(FileObject fo, String attrName);
- * static Value methodName(Map<String,Object> attrs); // since 7.0
- * static Value methodName(Map<String,Object> attrs, String attrName); // since 7.0
+ * static Value methodName(Map&lt;String,Object&gt; attrs); // since 7.0
+ * static Value methodName(Map&lt;String,Object&gt; attrs, String attrName); // since 7.0
  * </pre>
  * where <code>Value</code> can be any java type.
  * <p>

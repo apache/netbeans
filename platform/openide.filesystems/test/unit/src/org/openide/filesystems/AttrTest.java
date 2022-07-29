@@ -38,7 +38,7 @@ public class AttrTest extends NbTestCase {
    
      /** tests set/get attribute to fileobject special named: 
       *  "\"
-      * see to bug http://installer.netbeans.org/issues/show_bug.cgi?id=8976
+      * see to bug https://bz.apache.org/netbeans/show_bug.cgi?id=8976
       */
     public void testSpecialNamedAttr() throws IOException,PropertyVetoException {
             preprocess();

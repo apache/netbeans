@@ -26,7 +26,7 @@ import org.openide.util.lookup.InstanceContent;
 
 /**
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public final class SavableRegistry {
     private static final RequestProcessor RP = new RequestProcessor("Savable Registry");

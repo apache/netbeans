@@ -42,7 +42,7 @@ import java.util.Properties;
  * }
  * </pre>
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.18
  */
 @Retention(RetentionPolicy.SOURCE)

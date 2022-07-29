@@ -85,7 +85,7 @@ public abstract class ViewRenderingContext {
 	 *
 	 * @param pos the position to convert
 	 * @param a the allocated region to render into
-	 * @param rightToLeft true if the text is rendered right to left.
+	 * @param bias enum to choose rendering side
 	 * @return the bounding box of the given position
 	 * @exception BadLocationException  if the given position does not represent a
 	 *   valid location in the associated document
@@ -102,7 +102,7 @@ public abstract class ViewRenderingContext {
 	 * @param x the X coordinate
 	 * @param y the Y coordinate
 	 * @param a the allocated region to render into
-	 * @param rightToLeft true if the text is rendered right to left
+	 * @param biasReturn enum to choose rendering side
 	 * @return the location within the model that best represents the
 	 *  given point of view
 	 * @see View#viewToModel
@@ -121,12 +121,12 @@ public abstract class ViewRenderingContext {
 	 *
 	 * @param v the view to find the model location to break at.
 	 * @param p0 the location in the model where the
-	 *  fragment should start it's representation >= 0.
-	 * @param pos the graphic location along the axis that the
-	 *  broken view would occupy >= 0.  This may be useful for
+	 *  fragment should start it's representation &gt;= 0.
+	 * @param x the graphic location along the axis that the
+	 *  broken view would occupy &gt;= 0.  This may be useful for
 	 *  things like tab calculations.
 	 * @param len specifies the distance into the view
-	 *  where a potential break is desired >= 0.  
+	 *  where a potential break is desired &gt;= 0.  
 	 * @return the maximum model location possible for a break.
 	 * @see View#breakView
 	 */
@@ -140,7 +140,7 @@ public abstract class ViewRenderingContext {
 	 * model.
 	 *
 	 * @param v the view to use
-	 * @param pos the position to convert >= 0
+	 * @param pos the position to convert &gt;= 0
 	 * @param a the allocated region to render into
 	 * @param direction the direction from the current position that can
 	 *  be thought of as the arrow keys typically found on a keyboard.

@@ -23,7 +23,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 
 /**
- * Interface that plugs in the actual implementation of UI for {@link ProjectProblems} API.
+ * Interface that plugs in the actual implementation of UI for {@link org.netbeans.api.project.ui.ProjectProblems} API.
  * 
  * @author Tomas Zezula, Svatopluk Dedic
  */

@@ -125,7 +125,7 @@ public final class RepositoryManager {
      * 
      * @param connectorId
      * @param repositoryId
-     * @return a Repository with the given connector- and repository id or <code>null<code>.
+     * @return a Repository with the given connector- and repository id or <code>null</code>.
      * @since 1.85
      */
     public Repository getRepository(String connectorId, String repositoryId) {

@@ -72,7 +72,6 @@ public interface Field extends MutableVariable {
     /**
      * Sets value of this field represented as text.
      *
-     * @return sets value of this field represented as text
      * @throws InvalidExpressionException if the expression is not correct
      */
     @Override

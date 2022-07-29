@@ -39,14 +39,14 @@ import org.netbeans.lib.lexer.token.PartToken;
 
 /**
  * Join token list over certain range of ETLs of a TokenListList.
- * <br/>
+ * <br>
  * It does not have any physical storage for its tokens. Regular tokens
  * are stored in individual ETLs. Tokens split across multiple ETLs
  * are represented as PartToken in each ETL referencing a JoinToken.
- * <br/>
+ * <br>
  * The only "countable" part is a last part of a JoinToken. Each ETL holds
  * EmbeddedJoinInfo instance with 
- * <br/>
+ * <br>
  * Lookaheads and states are assigned to a last part of the JoinToken
  * and it's stored normally in ETL like for regular tokens.
  * 
@@ -97,7 +97,7 @@ public final class JoinTokenList<T extends TokenId> implements MutableTokenList<
     /**
      * Length of an index gap for computation of indexes in a JoinTokenList
      * based on ETLs.
-     * <br/>
+     * <br>
      * The above gap checking is done by checking whether the index is above gap length
      * since the initial gap length is so high that the indexes should never reach
      * its size (even decreased by added items).
@@ -107,7 +107,7 @@ public final class JoinTokenList<T extends TokenId> implements MutableTokenList<
     /**
      * Length of an index gap for computation of index of ETL in a JoinTokenList
      * which is useful for finding of a start-token-list-index of the join token list.
-     * <br/>
+     * <br>
      * The above gap checking is done by checking whether the index is above gap length
      * since the initial gap length is so high that the indexes should never reach
      * its size (even decreased by added items).

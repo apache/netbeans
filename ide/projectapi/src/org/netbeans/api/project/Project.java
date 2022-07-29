@@ -37,7 +37,7 @@ import org.openide.util.Lookup;
  * tools or services should <em>not</em> need to explicitly model projects, and
  * should not be using this API much or at all.</p>
  * </div>
- * @see <a href="http://wiki.netbeans.org/BuildSystemHowTo">NetBeans 4.0 Project &amp; Build System How-To</a>
+ * @see <a href="https://netbeans.apache.org/wiki/BuildSystemHowTo">NetBeans 4.0 Project &amp; Build System How-To</a>
  * @author Jesse Glick
  */
 public interface Project extends Lookup.Provider {
@@ -81,9 +81,9 @@ public interface Project extends Lookup.Provider {
      * <li>{@link org.netbeans.spi.queries.FileBuiltQueryImplementation}</li>
      * <li>{@link org.netbeans.spi.queries.SharabilityQueryImplementation}</li>
      * <li>{@link org.netbeans.spi.queries.FileEncodingQueryImplementation}</li>
-     * <li><a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/ProjectOpenedHook.html"><code>ProjectOpenedHook</code></a></li>
-     * <li><a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/RecommendedTemplates.html"><code>RecommendedTemplates</code></a></li>
-     * <li><a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/PrivilegedTemplates.html"><code>PrivilegedTemplates</code></a></li>
+     * <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectOpenedHook.html"><code>ProjectOpenedHook</code></a></li>
+     * <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/RecommendedTemplates.html"><code>RecommendedTemplates</code></a></li>
+     * <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/PrivilegedTemplates.html"><code>PrivilegedTemplates</code></a></li>
      * <li><a href="@org-netbeans-api-java-classpath@/org/netbeans/spi/java/classpath/ClassPathProvider.html"><code>ClassPathProvider</code></a></li>
      * <li><a href="@org-netbeans-api-java-classpath@/org/netbeans/spi/java/queries/SourceForBinaryQueryImplementation.html"><code>SourceForBinaryQueryImplementation</code></a></li>
      * <li><a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceLevelQueryImplementation2.html"><code>SourceLevelQueryImplementation2</code></a></li>

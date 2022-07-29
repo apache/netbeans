@@ -76,7 +76,7 @@ public interface BinaryForSourceQueryImplementation2<Result> extends BinaryForSo
      *
      * @param sourceRoot the source path root
      * @return {@code null} if the sourceRoot is not recognized, or any object
-     *   to feed into {@link #computeRoots(java.lang.Object)} & co. methods
+     *   to feed into {@link #computeRoots(java.lang.Object)} &amp; co. methods
      *   any time later
      * @since 1.58
      */

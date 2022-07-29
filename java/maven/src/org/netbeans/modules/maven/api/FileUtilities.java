@@ -193,7 +193,7 @@ public final class FileUtilities {
      * @param basedir a directory to resolve relative to (need not exist on disk)
      * @param file a file or directory to find a relative path for
      * @return a relativized path (slash-separated), or null if it is not possible (e.g. different DOS drives);
-     *         just <samp>.</samp> in case the paths are the same
+     *         just <code>.</code> in case the paths are the same
      * @throws IllegalArgumentException if the basedir is known to be a file and not a directory
      *
      * copied from project.ant's PropertyUtils

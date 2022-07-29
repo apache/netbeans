@@ -290,7 +290,7 @@ public abstract class CloneableOpenSupport extends Object {
         public boolean isModified();
 
         /** Support for marking the environement modified.
-        * @exception IOException if the environment cannot be marked modified
+        * @exception java.io.IOException if the environment cannot be marked modified
         *    (for example when the file is readonly), when such exception
         *    is the support should discard all previous changes
         */
@@ -307,7 +307,7 @@ public abstract class CloneableOpenSupport extends Object {
         public CloneableOpenSupport findCloneableOpenSupport();
     }
 
-    /** Property change & veto listener. To react to dispose/delete of
+    /** Property change &amp; veto listener. To react to dispose/delete of
     * the data object.
     */
     private static final class Listener extends CloneableTopComponent.Ref implements PropertyChangeListener,

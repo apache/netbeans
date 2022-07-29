@@ -31,7 +31,7 @@ import org.openide.util.Lookup.Item;
  * and provides methods for registration of instances and lazy instances.
  * <PRE>
  * {@link InstanceContent} ic = new {@link InstanceContent#InstanceContent() InstanceContent()};
- * {@link Lookup} lookup = new {@link AbstractLookup#AbstractLookup(org.openide.util.lookup.AbstractLookup.Content) AbstractLookup(ic)};
+ * {@link org.openide.util.Lookup} lookup = new {@link AbstractLookup#AbstractLookup(org.openide.util.lookup.AbstractLookup.Content) AbstractLookup(ic)};
  *
  * ic.{@link #add(java.lang.Object) add(new Object ())};
  * ic.{@link #add(java.lang.Object) add(new Dimension (...))};

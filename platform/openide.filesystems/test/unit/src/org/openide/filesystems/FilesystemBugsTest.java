@@ -184,7 +184,7 @@ public class FilesystemBugsTest extends NbTestCase {
         assertEquals(u, new URL(u.toExternalForm()));
     }
 
-    /** http://installer.netbeans.org/issues/show_bug.cgi?id=26400
+    /** https://bz.apache.org/netbeans/show_bug.cgi?id=26400
     If I have a multifilesystem and set an attribute
     on one of its fileobjects, I will get strange new
     attributes on all parent folders of this fileobject.

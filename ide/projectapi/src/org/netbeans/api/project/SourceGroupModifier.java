@@ -59,13 +59,13 @@ public final class SourceGroupModifier {
      * Creates a source group associated to an existing one. In a project with multiple locations for sources or tests some of those locations
      * can be more appropriate (or completely unrelated) to already existing specific sources. This variant of {@link #createSourceGroup(org.netbeans.api.project.Project, java.lang.String, java.lang.String)}
      * allows to select appropriate locations, if the newly created {@code SourceGroup} should work in association with some existing one.
-     * <p/>
+     * <p>
      * The source group will be created on location most similar to the provided {@code original} group. If {@code projectParts} are specified, the most matching
      * location will be selected.
-     * <p/>
+     * <p>
      * This feature is prototypically used in J2SE modular projects, where multiple locations exists for tests and sources, yet they are related by their owning module. Other
      * project types may also partition project sources into logical groups, similar to modules.
-     * <p/>
+     * <p>
      * Some (java) examples:
      * <ul>
      * <li>to create a source folder in project module, use <code>relativeTo(modulesGroup, "moduleName").createSourceGroup(..)</code>

@@ -103,7 +103,7 @@ public enum GitRefUpdateResult {
 
     /**
      * The ref was renamed from another name
-     * <p>
+     *
      */
     RENAMED,
 

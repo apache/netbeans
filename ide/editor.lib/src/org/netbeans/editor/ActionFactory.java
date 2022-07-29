@@ -2576,7 +2576,7 @@ public class ActionFactory {
         /**
          * Construct new action.
          *
-         * @param toLineEnd whether cutting to line end instead of line begin.
+         * param toLineEnd whether cutting to line end instead of line begin.
          */
         public CutToLineBeginOrEndAction() {
             super(ABBREV_RESET | MAGIC_POSITION_RESET | UNDO_MERGE_RESET);

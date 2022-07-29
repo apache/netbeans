@@ -28,7 +28,7 @@ import org.netbeans.modules.editor.options.AnnotationTypesFolder;
  * pre-initialize some suitable parts of the module to improve first time usage
  * experience - which might suffer from long response time due to class loading
  * and various initialization.
- * See {@link org.netbeans.core.AfterStartWarmUp} for details about how the task is run.
+ * See {@code org.netbeans.core.AfterStartWarmUp} for details about how the task is run.
  *
  */
 

@@ -209,7 +209,7 @@ public final class JumpList {
 
     /**
      * @return Unspecified string.
-     * @deprecate Should have never been public.
+     * @deprecated Should have never been public.
      */
     public static String dump() {
         StringBuilder sb = new StringBuilder();

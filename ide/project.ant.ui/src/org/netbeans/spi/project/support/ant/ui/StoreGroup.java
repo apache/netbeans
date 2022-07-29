@@ -48,13 +48,13 @@ import org.openide.ErrorManager;
  *              for properties which need special handling.</li>
  *          <li>Call the factory methods e.g. {@link #createToggleButtonModel}, {@link #createStringDocument}, etc. which
  *              will create the swing models for you.</li>
- *          <li>Use the models in your Swing controls by calling <CODE>setModel()</CODE> or <CODE>setDocument()</CODE></li>
+ *          <li>Use the models in your Swing controls by calling <code>setModel()</code> or <code>setDocument()</code></li>
  *      </ol>                                         
  * <b>For storing the models back to the properties of project.</b>
  *       <ol>
  *          <li>Get the EditableProperties you want to store the model in e.g. private or project 
  *              properties</li>
- *          <li>Call the store method on given <CODE>SourceGroup<CODE> with the {@link EditableProperties} as parameter</li>
+ *          <li>Call the store method on given <code>SourceGroup</code> with the {@link EditableProperties} as parameter</li>
  *          <li>Manually store models which need some special handling.</li>
  *       </ol>
  *

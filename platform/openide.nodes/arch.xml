@@ -55,14 +55,14 @@ Descripion of nodes can be found
 <answer id="arch-usecases">
     
   <p>
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
      </a>
     For general overview of the concepts related to nodes and <a href="@org-openide-explorer@/overview-summary.html">explorers</a>, 
     together with code samples, see chapter 7, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
     by Jason Wexbridge and Walter Nyland.
   </p>
 </answer>
@@ -699,7 +699,7 @@ No
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

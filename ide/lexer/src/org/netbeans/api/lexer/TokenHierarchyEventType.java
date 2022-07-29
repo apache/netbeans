@@ -39,23 +39,23 @@ public enum TokenHierarchyEventType {
     /**
      * Explicit relexing of a part of the token hierarchy
      * without any text modification.
-     * <br/>
+     * <br>
      * This change is notified under modification lock (write lock)
      * of the corresponding input source.
-     * <br/>
+     * <br>
      * This is not actively used yet (no API support yet).
      */
     RELEX,
 
     /**
      * Complete rebuild of the token hierarchy.
-     * <br/>
+     * <br>
      * This may be necessary because of any changes
      * in input attributes that influence the lexing.
-     * <br/>
+     * <br>
      * Only the removed tokens will be notified.
      * There will be no added tokens because they will be created lazily when asked by clients.
-     * <br/>
+     * <br>
      * This change is notified under modification lock (write lock)
      * of the corresponding input source.
      */
@@ -63,21 +63,21 @@ public enum TokenHierarchyEventType {
 
     /**
      * Token hierarchy became inactive (while being active before) or vice versa.
-     * <br/>
+     * <br>
      * Current activity state can be determined by {@link TokenHierarchy#isActive()}.
-     * <br/>
+     * <br>
      * A maintainer of the given mutable input source may decide to activate/deactivate
      * token hierarchy by using {@link org.netbeans.spi.lexer.TokenHierarchyControl#setActive(boolean)}.
      * For example if a Swing docuemnt is not showing and it has not been edited for a long time
      * its token hierarchy may be deactivated to save memory. Once the hierarchy
      * gets deactivated the clients should drop all the functionality depending
      * on the tokens (for example not provide a token-dependent syntax highlighting).
-     * <br/>
+     * <br>
      * Only the removed tokens will be notified in case the hierarchy becomes inactive.
-     * <br/>
+     * <br>
      * There will be no added tokens notified in case the the hierarchy becomes active because
      * the tokens will be created lazily when asked by clients.
-     * <br/>
+     * <br>
      * This change is notified under modification lock (write lock)
      * of the corresponding input source. Only the initial (automatic) activation
      * of the mutable token hierarchy will happen under the read lock of the client
@@ -89,12 +89,12 @@ public enum TokenHierarchyEventType {
     /**
      * Custom language embedding was created by
      * {@link TokenSequence#createEmbedding(Language,int,int)}.
-     * <br/>
+     * <br>
      * The {@link TokenHierarchyEvent#tokenChange()} contains the token
      * where the embedding was created and the embedded change
      * {@link TokenChange#embeddedChange(int)} that describes the added
      * embedded language.
-     * <br/>
+     * <br>
      * This change is notified under modification lock (write lock)
      * of the corresponding input source.
      */
@@ -103,12 +103,12 @@ public enum TokenHierarchyEventType {
     /**
      * Custom language embedding was removed by
      * {@link TokenSequence#removeEmbedding(Language)}.
-     * <br/>
+     * <br>
      * The {@link TokenHierarchyEvent#tokenChange()} contains the token
      * where the embedding was created and the embedded change
      * {@link TokenChange#embeddedChange(int)} that describes the added
      * embedded language.
-     * <br/>
+     * <br>
      * This change is notified under modification lock (write lock)
      * of the corresponding input source.
      */
@@ -117,7 +117,7 @@ public enum TokenHierarchyEventType {
     /**
      * Notification that result of
      * {@link TokenHierarchy#languagePaths()} has changed.
-     * <br/>
+     * <br>
      * This change may be notified under both read and write lock
      * of the corresponding input source.
      */

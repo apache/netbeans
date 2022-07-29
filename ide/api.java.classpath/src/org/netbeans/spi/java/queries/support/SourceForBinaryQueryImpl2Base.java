@@ -26,7 +26,7 @@ import org.openide.util.Parameters;
 
 /**
  * Base class for {@link SourceForBinaryQueryImplementation2} which need to delegate
- * to other {@link SourceForBinaryQueryImplementation}.
+ * to other {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation}.
  * @since 1.16
  * @author Tomas Zezula
  */
@@ -35,8 +35,8 @@ public abstract class SourceForBinaryQueryImpl2Base implements SourceForBinaryQu
     /**
      * Creates a wrapper for {@link SourceForBinaryQuery.Result}. This method
      * should be used by delegating {@link SourceForBinaryQueryImplementation2}
-     * which need to delegate to {@link SourceForBinaryQueryImplementation}. 
-     * @param result returned by {@link SourceForBinaryQueryImplementation},
+     * which need to delegate to {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation}. 
+     * @param result returned by {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation},
      * When result is already instanceof {@link SourceForBinaryQueryImplementation2.Result}
      * it's returned without wrapping.
      * @return a {@link SourceForBinaryQueryImplementation2.Result}.

@@ -353,7 +353,7 @@ public class Syntax {
     * are already initialized when this method is called. This method
     * must get the state from the mark and set it to the analyzer. Then
     * it must decrease tokenOffset by the preScan stored in the mark state.
-    * @param markState mark state to be loaded into syntax. It must be non-null value.
+    * @param stateInfo mark state to be loaded into syntax. It must be non-null value.
     */
     public void loadState(StateInfo stateInfo) {
         state = stateInfo.getState();

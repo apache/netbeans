@@ -23,7 +23,7 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
 
 /**
  * Factory constructs code template processor for a given insert request.
- * <br/>
+ * <br>
  * The factory instances are looked up
  * by {@link org.netbeans.api.editor.mimelookup.MimeLookup}
  * so they should be registered in an xml-layer in

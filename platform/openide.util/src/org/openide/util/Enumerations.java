@@ -196,7 +196,7 @@ public final class Enumerations extends Object {
      * Before any element is returned
      * for the resulting enumeration it is processed in the {@link Processor} and
      * the processor is allowed to modify it and also add additional elements
-     * at the (current) end of the <q>queue</q> by calling <code>toAdd.add</code>
+     * at the (current) end of the <code>queue</code> by calling <code>toAdd.add</code>
      * or <code>toAdd.addAll</code>. No other methods can be called on the
      * provided <code>toAdd</code> collection.
      * <p>

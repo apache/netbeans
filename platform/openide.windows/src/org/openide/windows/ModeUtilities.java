@@ -39,7 +39,7 @@ package org.openide.windows;
  * of TopComponents at shut-down time in the Windows2Local file system. Note also that 
  * this is not connected with the deprecated notion of {@link Workspace}.
  * 
- * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
+ * @see <a href="http://wiki.apidesign.org/wiki/ExtendingInterfaces">ExtendingInterfaces</a>
  * 
  * @author Mark Phipps
  * @since 6.82

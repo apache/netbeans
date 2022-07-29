@@ -41,7 +41,9 @@ import javax.swing.event.DocumentListener;
  * have factory methods for the most common listeners used in NetBeans
  * and also one universal factory method you can use for other listeners.
  *
- * <H2>How to use it:</H2>
+ * <p>
+ * <strong>How to use it:</strong>
+ * <p>
  * Here is an example how to write a listener/observer and make it listen
  * on some source:
  * <pre>
@@ -95,8 +97,9 @@ import javax.swing.event.DocumentListener;
  *      }
  *  }
  * </pre>
- *
- * <H2>How to <font color=red>not</font> use it:</H2>
+ * <p>
+ * <strong>How to <span style="color:red">not</span> use it:</strong>
+ * <p>
  * Here are examples of a common mistakes done when using <em>weak listener</em>:
  * <pre>
  *  public class Observer {
@@ -127,8 +130,9 @@ import javax.swing.event.DocumentListener;
  * </pre>
  * Mistake: The weak listener is unable to unregister itself from the source
  * once the listener is freed. For explanation, read below.
+ * <p>
+ * <strong>How does it work:</strong>
  *
- <H2>How does it work:</H2>
  * <P>The <em>weak listener</em> is used as a reference-weakening wrapper
  *  around the listener. It is itself strongly referenced from the implementation
  *  of the source (e.g. from its <code>EventListenerList</code>) but it references

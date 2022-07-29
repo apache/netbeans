@@ -803,7 +803,7 @@ No.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>
@@ -840,7 +840,7 @@ certain other modules are enabled. There may be other usages too.
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi" shape="rect">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API" shape="rect">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
@@ -866,7 +866,7 @@ what is explicitly exposed via API (such as J2eeModuleProvider from j2eeserver A
 
 <!--
         <question id="arch-quality" when="init">
-            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html" shape="rect">quality</a>
+            How will the <a href="https://netbeans.apache.org/participate/qualityevangelism.html" shape="rect">quality</a>
             of your code be tested and 
             how are future regressions going to be prevented?
             <hint>
@@ -905,7 +905,7 @@ what is explicitly exposed via API (such as J2eeModuleProvider from j2eeserver A
 
 <!--
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase" shape="rect">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented" shape="rect">
             use cases</a> of the new API. Who will use it under
             what circumstances? What kind of code would typically need to be written
             to use the module?

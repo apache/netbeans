@@ -97,11 +97,11 @@ public class Bundle {
         return getString(getBundle(bundle), key);
     }
     
-    /** Gets string from bundle, removes mnemonic (i.e. '&' or '(&X)') from it
+    /** Gets string from bundle, removes mnemonic (i.e. '&amp;' or '(&amp;X)') from it
      * and cuts parameters like {0} from the end.
      * @param bundle path to bundle (e.g. "org.netbeans.core.Bundle")
      * @param key key of requested string
-     * @return string from bundle in current locale. Mnemonic (i.e. '&' or '(&X)')
+     * @return string from bundle in current locale. Mnemonic (i.e. '&amp;' or '(&amp;X)')
      * is removed and parameter patterns are also removed starting by first '{'.
      */
     public static String getStringTrimmed(String bundle, String key) {
@@ -118,7 +118,7 @@ public class Bundle {
         return java.text.MessageFormat.format(getString(bundle, key), params);
     }
     
-    /** Gets string from bundle and formats it. It removes mnemonic (i.e. '&' or '(&X)') 
+    /** Gets string from bundle and formats it. It removes mnemonic (i.e. '&amp;' or '(&amp;X)') 
      * from it and cuts parameters like {0} from the end if any.
      * @param bundle path to bundle (e.g. "org.netbeans.core.Bundle")
      * @param key key of requested string
@@ -130,7 +130,7 @@ public class Bundle {
         return trim(getString(getBundle(bundle), key, params));
     }
     
-    /** Removes mnemonic (i.e. '&' or '(&X)') and cut parameters like {0} from the end.
+    /** Removes mnemonic (i.e. '&amp;' or '(&amp;X)') and cut parameters like {0} from the end.
      * @param value string to modify
      * @return string with removed mnemonic and parameters like {0} from the end.
      */

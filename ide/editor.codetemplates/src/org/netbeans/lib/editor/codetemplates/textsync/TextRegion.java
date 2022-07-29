@@ -27,7 +27,7 @@ import org.netbeans.lib.editor.util.swing.PositionRegion;
 
 /**
  * Text region inside a document held by a pair of swing text positions.
- * <br/>
+ * <br>
  * A region can have another nested regions.
  *
  * @author Miloslav Metelka

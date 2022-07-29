@@ -80,7 +80,7 @@ J2EE Server Module provides support for development of J2EE modules and framewor
 </api>
 
 <p>
-J2EE Server Module enables using <a href="http://java.sun.com/j2ee/tools/deployment/index.jsp">
+J2EE Server Module enables using <a href="https://jcp.org/aboutJava/communityprocess/mrel/jsr088/index.html">
 J2EE Deployment API</a> (aka JSR88) for plugin integration.
 In addition to that it provides its own API for <b>incremental deployment</b>,
 JSP compilation, server life cycle management (start/stop/debugging mode).
@@ -103,7 +103,7 @@ J2EE Server module furthermore supports devmodules by managing server libraries 
 </answer>
 <!--        
         <question id="arch-usecases" when="init">
-            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            Describe the main <a href="https://netbeans.apache.org/wiki/API_Design#The_Importance_of_Being_Use_Case_Oriented">
             use cases</a> of the new API. Who will use it at
             what circumstances and what will be the typical code to write
             to use the module.
@@ -122,7 +122,7 @@ implement Deployment API to classpath and to provide a
 layer file</a> that will 
 register the server in IDE (specifying URL, user name and password) and 
 register a 
-<a href="http://java.sun.com/j2ee/1.4/docs/api/javax/enterprise/deploy/spi/factories/DeploymentFactory.html">
+<a href="https://docs.oracle.com/javaee/1.4/api/javax/enterprise/deploy/spi/factories/DeploymentFactory.html">
 factory class</a> from Deployment API. Beside that server plugin must also implement some other mandatory APIs.
 </i></p>
 </usecase>
@@ -133,12 +133,12 @@ If a J2EE server does not support Deployment API still needs to be possible
 to implement a server plugin for it. 
 <p><i>
 In this case the plugin needs to implement the Deployment API interfaces (
-<a href="http://java.sun.com/j2ee/1.4/docs/api/javax/enterprise/deploy/spi/factories/DeploymentFactory.html">
+<a href="https://docs.oracle.com/javaee/1.4/api/javax/enterprise/deploy/spi/factories/DeploymentFactory.html">
 DeploymentFactory</a>, 
-<a href="http://java.sun.com/j2ee/1.4/docs/api/javax/enterprise/deploy/spi/DeploymentManager.html">
+<a href="https://docs.oracle.com/javaee/1.4/api/javax/enterprise/deploy/spi/DeploymentManager.html">
 DeploymentManager</a>) and delegate to whetever interface the specific J2EE server provides.
 An example of this is the Tomcat5 plugin implemented in 
-<a href="http://www.netbeans.org/source/browse/tomcatint/tomcat5/">tomcatint/tomcat5</a>
+<a href="https://github.com/apache/netbeans/tree/master/enterprise/tomcat5">tomcatint/tomcat5</a>
 module, although it only supports deployment of web modules and it also supports
 some optional interfaces defined by J2EE Server Module in addition to the Deployment API.
 </i></p>
@@ -475,12 +475,12 @@ Used for definition of server libraries.
                 </api>
             </li>
             <li>
-                <api name="EJB" type="import" category="standard" url="http://java.sun.com/products/ejb/docs.html#specs" group="java">
+                <api name="EJB" type="import" category="standard" url="https://jcp.org/aboutJava/communityprocess/final/jsr019/index.html" group="java">
                     Enterprise JavaBeans API 2.0.
                 </api>
             </li>
             <li>
-                <api name="J2EEDeploymentAPI" type="import" category="standard" url="http://java.sun.com/j2ee/tools/deployment/index.jsp" group="java">
+                <api name="J2EEDeploymentAPI" type="import" category="standard" url="https://jcp.org/aboutJava/communityprocess/mrel/jsr088/index.html" group="java">
                     J2EE Deployment API/JSR88. 
                     Part implemented by this module and used to communicate with 
                     server plugins and with devmodules.
@@ -687,7 +687,7 @@ for xml settings are registered for the settings related to deployed modules.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and classify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>
@@ -787,7 +787,7 @@ No.
             <hint>
             If there is a property that can change the behavior of your 
             code, somebody will likely use it. You should describe what it does 
-            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            and the <a href="https://netbeans.apache.org/wiki/API_Design#Life-cycle_of_an_API">stability category</a>
             of this API. You may use
             <pre>
                 &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;

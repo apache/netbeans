@@ -53,7 +53,7 @@ public final class OptionsDisplayer {
      * @since 1.29
      */
     public static final String KEYMAPS = "Keymaps"; // NOI18N
-    /** Registration name of FontsAndColors category (aka Fonts & Colors).
+    /** Registration name of FontsAndColors category (aka Fonts &amp; Colors).
      * @since 1.29
      */
     public static final String FONTSANDCOLORS = "FontsAndColors"; // NOI18N

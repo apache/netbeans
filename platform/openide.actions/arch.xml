@@ -549,7 +549,7 @@ calls to <code>SharedClassObject.findObject</code> which calls constructor by re
 <answer id="format-clipboard">
 Implementations of cut, copy and paste (<code>CutAction</code>, <code>CopyAction</code>
 and <code>PasteAction</code>) reads/writes from/into clipboard. It uses standard
-<a href="http://java.sun.com/j2se/1.4.1/docs/api/java/awt/datatransfer/package-summary.html">java datatransfer mechanism</a>
+<a href="@JDK@/java/awt/datatransfer/package-summary.html">java datatransfer mechanism</a>
 and <a href="@org-openide-util-ui@/org/openide/util/datatransfer/package-summary.html">Netbeans extension to the mechanism</a>.
 </answer>
 
@@ -839,7 +839,7 @@ No.
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and clasify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>
@@ -911,7 +911,7 @@ it belongs to <em>Window system module</em>.
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi" shape="rect">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API" shape="rect">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
@@ -931,7 +931,7 @@ it belongs to <em>Window system module</em>.
 
 <!--
         <question id="arch-quality" when="init">
-            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html" shape="rect">quality</a>
+            How will the <a href="https://netbeans.apache.org/participate/qualityevangelism.html" shape="rect">quality</a>
             of your code be tested and 
             how are future regressions going to be prevented?
             <hint>

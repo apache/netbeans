@@ -36,12 +36,12 @@
             Describe the overall architecture. 
             <hint>
             What will be API for 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+            <a href="https://netbeans.apache.org/wiki/API_Design#Separate_API_for_clients_from_support_API">
                 clients and what support API</a>? 
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
             to describe your general APIs and specify their
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#category-private">
+            <a href="https://netbeans.apache.org/wiki/API_Design#private">
             stability categories</a>.
             If possible please provide simple diagrams.
             </hint>
@@ -802,7 +802,7 @@
             <hint>
             If there is a property that can change the behavior of your 
             code, somebody will likely use it. You should describe what it does 
-            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            and the <a href="https://netbeans.apache.org/wiki/API_Design#Life-cycle_of_an_API">stability category</a>
             of this API. You may use
             <pre>
                 &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;
@@ -1282,7 +1282,7 @@
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
             Please describe it and classify according to 
-            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            <a href="https://netbeans.apache.org/wiki/API_Design#categories">
             common stability categories</a>.
             </hint>
         </question>

@@ -35,20 +35,20 @@ import org.w3c.dom.NodeList;
 
 /**
  * This class represents the XML Element.
- * An element is of the form <elmName[attributes]/> or <element[attributes]>[TextNode]</elmName>
+ * An element is of the form &lt;elmName[attributes]/&gt; or &lt;element[attributes]&gt;[TextNode]&lt;/elmName&gt;
  * In terms of tokens attibute can have upto 12 tokens.
- * Start of start element token, <.
+ * Start of start element token, &lt;.
  * element namespace token, optional.
  * element namespace seperator, optional.
  * element name token.
  * whitespace token, optional.
- * end of start element token, > or />.
- * start of end element token, </.
+ * end of start element token, &gt; or /&gt;.
+ * start of end element token, &lt;/.
  * element namespace token, optional.
  * element namespace seperator, optional.
  * element name token.
  * whitespace token, optional.
- * end of end element token, >.
+ * end of end element token, &gt;.
  * the end element tokens are optional.
  * @author Ajit
  */
@@ -651,7 +651,7 @@ public class Element extends NodeImpl implements Node, org.w3c.dom.Element {
      * This api is provided for XDMModel purposes only.
      * @param newAttr The new attribute to be added.
      * @param index The index at which attribute to be added
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt; size()).
      * @throws IllegalStateException if a newAttr has already been added to a tree.
      */
     public void addAttribute(Attribute newAttr, int index) {
@@ -666,7 +666,7 @@ public class Element extends NodeImpl implements Node, org.w3c.dom.Element {
      * This api is provided for XDMModel purposes only.
      * @param attr The new attribute to be moved.
      * @param index The index at which attribute to be moved
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt; size()).
      * @throws IllegalStateException if a attr has not already been added to a tree.
      */
     public void reorderAttribute(Attribute attr, int index) {

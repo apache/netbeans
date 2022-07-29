@@ -54,6 +54,7 @@ public class TomcatWebModuleNode extends AbstractNode {
         getCookieSet().add(module);
     }
     
+    @Override
     public Action[] getActions(boolean context){
         TomcatManager tm = (TomcatManager)module.getDeploymentManager();
         java.util.List actions = new LinkedList();

@@ -430,7 +430,9 @@ public class TomcatInstallUtil {
         }
         TomcatInstallUtil.updateDocument(textDoc,TomcatInstallUtil.getDocumentText(doc),"<Server"); //NOI18N
         SaveCookie savec = (SaveCookie) dobj.getCookie(SaveCookie.class);
-        if (savec!=null) savec.save();
+        if (savec!=null) {
+            savec.save();
+        }
     }
 
 }

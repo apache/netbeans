@@ -133,6 +133,7 @@ class ServerLog {
     public void stop() {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
 
+            @Override
             public Void run() {
                 synchronized (ServerLog.this) {
                     service.shutdownNow();

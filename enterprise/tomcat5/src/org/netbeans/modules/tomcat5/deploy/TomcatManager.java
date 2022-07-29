@@ -493,23 +493,28 @@ public class TomcatManager implements DeploymentManager {
 
 // --- DeploymentManager interface implementation ----------------------
 
+    @Override
     public DeploymentConfiguration createConfiguration (DeployableObject deplObj)
     throws InvalidModuleException {
         throw new RuntimeException("This should never be called"); // NOI18N
     }
 
+    @Override
     public Locale getCurrentLocale () {
         return Locale.getDefault ();
     }
 
+    @Override
     public Locale getDefaultLocale () {
         return Locale.getDefault ();
     }
 
+    @Override
     public Locale[] getSupportedLocales () {
         return Locale.getAvailableLocales ();
     }
 
+    @Override
     public boolean isLocaleSupported (Locale locale) {
         if (locale == null) {
             return false;
@@ -524,21 +529,25 @@ public class TomcatManager implements DeploymentManager {
         return false;
     }
 
+    @Override
     public TargetModuleID[] getAvailableModules (ModuleType moduleType, Target[] targetList)
     throws TargetException, IllegalStateException {
         return modules (ENUM_AVAILABLE, moduleType, targetList);
     }
 
+    @Override
     public TargetModuleID[] getNonRunningModules (ModuleType moduleType, Target[] targetList)
     throws TargetException, IllegalStateException {
         return modules (ENUM_NONRUNNING, moduleType, targetList);
     }
 
+    @Override
     public TargetModuleID[] getRunningModules (ModuleType moduleType, Target[] targetList)
     throws TargetException, IllegalStateException {
         return modules (ENUM_RUNNING, moduleType, targetList);
     }
 
+    @Override
     public Target[] getTargets () throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.getTargets called on disconnected instance");   // NOI18N
@@ -550,11 +559,13 @@ public class TomcatManager implements DeploymentManager {
         };
     }
 
+    @Override
     public DConfigBeanVersionType getDConfigBeanVersion () {
         // PENDING
         return null;
     }
 
+    @Override
     public void setDConfigBeanVersion (DConfigBeanVersionType version)
     throws DConfigBeanVersionUnsupportedException {
         if (!DConfigBeanVersionType.V1_3_1.equals (version)) {
@@ -562,33 +573,40 @@ public class TomcatManager implements DeploymentManager {
         }
     }
 
+    @Override
     public boolean isDConfigBeanVersionSupported (DConfigBeanVersionType version) {
         return DConfigBeanVersionType.V1_3_1.equals (version);
     }
 
+    @Override
     public boolean isRedeploySupported () {
         // XXX what this really means
         return false;
     }
 
+    @Override
     public ProgressObject redeploy (TargetModuleID[] targetModuleID, InputStream inputStream, InputStream inputStream2)
     throws UnsupportedOperationException, IllegalStateException {
         // PENDING
         throw new UnsupportedOperationException ("TomcatManager.redeploy not supported yet.");
     }
 
+    @Override
     public ProgressObject redeploy (TargetModuleID[] tmID, File file, File file2)
     throws UnsupportedOperationException, IllegalStateException {
         // PENDING
         throw new UnsupportedOperationException ("TomcatManager.redeploy not supported yet.");
     }
 
+    @Override
     public void release () {
     }
 
+    @Override
     public void setLocale (Locale locale) throws UnsupportedOperationException {
     }
 
+    @Override
     public ProgressObject start (TargetModuleID[] tmID) throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.start called on disconnected instance");   // NOI18N
@@ -602,6 +620,7 @@ public class TomcatManager implements DeploymentManager {
         return impl;
     }
 
+    @Override
     public ProgressObject stop (TargetModuleID[] tmID) throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.stop called on disconnected instance");   // NOI18N
@@ -615,6 +634,7 @@ public class TomcatManager implements DeploymentManager {
         return impl;
     }
 
+    @Override
     public ProgressObject undeploy (TargetModuleID[] tmID) throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.undeploy called on disconnected instance");   // NOI18N
@@ -660,6 +680,7 @@ public class TomcatManager implements DeploymentManager {
      * @throws IllegalStateException when TomcatManager is disconnected
      * @return Object that reports about deployment progress
      */
+    @Override
     public ProgressObject distribute (Target[] targets, InputStream is, InputStream deplPlan)
     throws IllegalStateException {
         if (!isConnected ()) {
@@ -678,6 +699,7 @@ public class TomcatManager implements DeploymentManager {
      * @throws IllegalStateException when TomcatManager is disconnected
      * @return Object that reports about deployment progress
      */
+    @Override
     public ProgressObject distribute (Target[] targets, File moduleArchive, File deplPlan)
     throws IllegalStateException {
         if (!isConnected ()) {
@@ -689,6 +711,7 @@ public class TomcatManager implements DeploymentManager {
         return impl;
     }
 
+    @Override
     public ProgressObject distribute(Target[] target, ModuleType moduleType, InputStream inputStream, InputStream inputStream0) throws IllegalStateException {
         return distribute(target, inputStream, inputStream0);
     }
@@ -725,6 +748,7 @@ public class TomcatManager implements DeploymentManager {
         return connected;
     }
 
+    @Override
     public String toString () {
         return "Tomcat manager ["+uri+", home "+tp.getCatalinaHome()+", base "+tp.getCatalinaBase()+(connected?"conneceted":"disconnected")+"]";    // NOI18N
     }
@@ -1160,7 +1184,7 @@ public class TomcatManager implements DeploymentManager {
     public void terminate() {
         Process proc = getTomcatProcess();
         if (proc != null) {
-            Map<String, String> env = new HashMap<String, String>();
+            Map<String, String> env = new HashMap<>();
             env.put(KEY_UUID, uri);
             ExternalProcessSupport.destroy(process, env);
         }

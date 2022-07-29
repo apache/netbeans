@@ -92,7 +92,7 @@ public class TomcatDatasourceManager implements DatasourceManager {
 
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
-        Set<Datasource> result = new HashSet<Datasource>();
+        Set<Datasource> result = new HashSet<>();
         result.addAll(getTomcatDatasources());
         result.addAll(getTomeeDatasources());
         return result;

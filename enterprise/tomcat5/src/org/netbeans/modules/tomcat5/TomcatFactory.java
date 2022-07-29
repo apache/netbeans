@@ -97,7 +97,7 @@ public final class TomcatFactory implements DeploymentFactory {
     private static final String DISCONNECTED_URI_80 = TOMCAT_URI_PREFIX_80 + "apache-tomcat-8.0.x";   // NOI18N
     private static final String DISCONNECTED_URI_90 = TOMCAT_URI_PREFIX_90 + "apache-tomcat-9.0.x";   // NOI18N
     
-    private static final Set<String> DISCONNECTED_URIS = new HashSet<String>();
+    private static final Set<String> DISCONNECTED_URIS = new HashSet<>();
     static {
         Collections.addAll(DISCONNECTED_URIS, DISCONNECTED_URI_50,
                 DISCONNECTED_URI_55, DISCONNECTED_URI_60, DISCONNECTED_URI_70,
@@ -133,6 +133,7 @@ public final class TomcatFactory implements DeploymentFactory {
      * @throws DeploymentManagerCreationException
      * @return {@link TomcatManager}
      */
+    @Override
     public DeploymentManager getDeploymentManager(String uri, String uname, String passwd)
             throws DeploymentManagerCreationException {
         if (!handlesURI (uri)) {
@@ -164,16 +165,19 @@ public final class TomcatFactory implements DeploymentFactory {
         }
     }
     
+    @Override
     public DeploymentManager getDisconnectedDeploymentManager(String uri) 
     throws DeploymentManagerCreationException {
         // no need to distinguish beetween the connected and disconnected DM for Tomcat
         return getDeploymentManager(uri, null, null);
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(TomcatFactory.class, "LBL_TomcatFactory");
     }
     
+    @Override
     public String getProductVersion() {
         return NbBundle.getMessage(TomcatFactory.class, "LBL_TomcatFactoryVersion");
     }
@@ -182,6 +186,7 @@ public final class TomcatFactory implements DeploymentFactory {
      * @param str
      * @return <CODE>true</CODE> for URIs beggining with <CODE>tomcat[55|60]:</CODE> prefix
      */    
+    @Override
     public boolean handlesURI(String str) {
         return str != null && (str.startsWith(TOMCAT_URI_PREFIX_50)
                 || str.startsWith(TOMCAT_URI_PREFIX_55)

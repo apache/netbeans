@@ -261,6 +261,7 @@ public final class CustomizerSupport {
          *
          * return The number of URL entries in the list.
          */
+        @Override
         public int getSize() {
             return data.size();
         }
@@ -272,6 +273,7 @@ public final class CustomizerSupport {
          *
          * @return The element at the specified position in this list.
          */
+        @Override
         public Object getElementAt(int index) {
             URL url = data.get(index);
             if ("jar".equals(url.getProtocol())) { // NOI18N
@@ -422,6 +424,7 @@ public final class CustomizerSupport {
             label.setLabelFor(resources);
             resources.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerSupport.class,ad));
             resources.addListSelectionListener(new ListSelectionListener() {
+                @Override
                 public void valueChanged(ListSelectionEvent e) {
                     selectionChanged ();
                 }
@@ -455,6 +458,7 @@ public final class CustomizerSupport {
                 org.openide.awt.Mnemonics.setLocalizedText(addButton, text);
                 this.addButton.getAccessibleContext().setAccessibleDescription (ad);
                 addButton.addActionListener( new ActionListener () {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         addPathElement ();
                     }
@@ -490,6 +494,7 @@ public final class CustomizerSupport {
                 org.openide.awt.Mnemonics.setLocalizedText(removeButton, NbBundle.getMessage(CustomizerStartup.class, "CTL_Remove")); // NOI18N
                 removeButton.getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(CustomizerSupport.class,"AD_Remove"));
                 removeButton.addActionListener( new ActionListener () {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         removePathElement ();
                     }
@@ -508,6 +513,7 @@ public final class CustomizerSupport {
                 org.openide.awt.Mnemonics.setLocalizedText(moveUpButton, NbBundle.getMessage(CustomizerSupport.class, "CTL_Up")); // NOI18N
                 moveUpButton.getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(CustomizerSupport.class,"AD_Up"));
                 moveUpButton.addActionListener( new ActionListener () {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         moveUpPathElement ();
                     }
@@ -526,6 +532,7 @@ public final class CustomizerSupport {
                 org.openide.awt.Mnemonics.setLocalizedText(moveDownButton, NbBundle.getMessage(CustomizerSupport.class, "CTL_Down")); // NOI18N
                 moveDownButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerSupport.class,"AD_Down"));
                 moveDownButton.addActionListener( new ActionListener () {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         moveDownPathElement ();
                     }
@@ -721,17 +728,21 @@ public final class CustomizerSupport {
             this.extensions = Arrays.asList(extensions);
         }
 
+        @Override
         public boolean accept(File f) {
-            if (f.isDirectory())
+            if (f.isDirectory()) {
                 return true;
+            }
             String name = f.getName();
             int index = name.lastIndexOf('.');   //NOI18N
-            if (index <= 0 || index==name.length()-1)
+            if (index <= 0 || index==name.length()-1) {
                 return false;
+            }
             String extension = name.substring (index+1).toUpperCase();
             return this.extensions.contains(extension);
         }
 
+        @Override
         public String getDescription() {
             return this.description;
         }

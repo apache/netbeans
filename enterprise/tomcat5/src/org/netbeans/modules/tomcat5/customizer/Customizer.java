@@ -44,6 +44,7 @@ public class Customizer extends JTabbedPane {
         CustomizerDataSupport custData = new CustomizerDataSupport(manager);
         // set help ID according to selected tab
         addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 String helpID = null;
                 switch (getSelectedIndex()) {

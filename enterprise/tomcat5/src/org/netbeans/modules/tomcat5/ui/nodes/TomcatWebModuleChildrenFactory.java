@@ -94,7 +94,7 @@ public class TomcatWebModuleChildrenFactory extends ChildFactory<TomcatWebModule
         DeploymentManager manager = lookup.lookup(DeploymentManager.class);
         Target target = lookup.lookup(Target.class);
 
-        TreeSet<TomcatWebModule> list = new TreeSet<TomcatWebModule>(
+        TreeSet<TomcatWebModule> list = new TreeSet<>(
                 TomcatWebModule.TOMCAT_WEB_MODULE_COMPARATOR);
 
         if (manager instanceof TomcatManager && target != null) {

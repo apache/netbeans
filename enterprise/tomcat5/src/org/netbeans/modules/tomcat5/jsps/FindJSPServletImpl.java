@@ -41,6 +41,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
     }
     
     
+    @Override
     public File getServletTempDirectory(String moduleContextPath) {
         File baseDir = tm.getTomcatProperties().getCatalinaDir();
         if ((baseDir == null) || !baseDir.exists()) {
@@ -65,6 +66,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
         }
     }
     
+    @Override
     public String getServletResourcePath(String moduleContextPath, String jspResourcePath) {
         //String path = module.getWebURL();
         
@@ -118,6 +120,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
         return modClassName.toString();
     }
  
+    @Override
     public String getServletEncoding(String moduleContextPath, String jspResourcePath) {
         return "UTF8"; // NOI18N
     }

@@ -207,6 +207,7 @@ public class TomcatProperties {
 //            }
 //        }
         ip.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 String name = evt.getPropertyName();
                 if (PROP_SERVER_PORT.equals(name) || PROP_USERNAME.equals(name) 
@@ -661,7 +662,7 @@ public class TomcatProperties {
         };
         
         // tomcat libs
-        List<URL> retValue = new ArrayList<URL>();
+        List<URL> retValue = new ArrayList<>();
         retValue.addAll(listUrls(new File(homeDir, tm.libFolder()), nbFilter));
 
         // TOMEE as webapp
@@ -860,6 +861,7 @@ public class TomcatProperties {
     
     private static List<URL> listUrls(final File folder, final String[] filter) {
         File[] jars = folder.listFiles(new FilenameFilter() {
+            @Override
             public boolean accept(File dir, String name) {
                 if (!name.endsWith(".jar") || !dir.equals(folder)) {
                     return false;

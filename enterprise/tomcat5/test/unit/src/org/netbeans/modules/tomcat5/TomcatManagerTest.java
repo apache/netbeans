@@ -35,6 +35,7 @@ public class TomcatManagerTest extends TestBase {
         super(testName);
     }
     
+    @Override
     protected void setUp () throws Exception {
         super.setUp ();
     }

@@ -126,14 +126,17 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         }
     }
     
+    @Override
     public Lookup getLookup() {
         return Lookups.fixed(this);
     }
 
+    @Override
     public void dispose() {
         // no op
     }
 
+    @Override
     public boolean supportsCreateDatasource() {
         return true;
     }
@@ -231,7 +234,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
         Context context = getContext();
-        Set<Datasource> result = new HashSet<Datasource>();
+        Set<Datasource> result = new HashSet<>();
         int length = context.getResource().length;
         if (tomcatVersion != TomcatVersion.TOMCAT_50) {
             // Tomcat 5.5.x or Tomcat 6.0.x
@@ -287,11 +290,12 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     }
     
     
+    @Override
     public Datasource createDatasource(final String name, final String url, 
             final String username, final String password, final String driverClassName) 
             throws ConfigurationException, DatasourceAlreadyExistsException {
         // check whether a resource of the given name is not already defined in the module
-        List<Datasource> conflictingDS = new ArrayList<Datasource>();
+        List<Datasource> conflictingDS = new ArrayList<>();
         for (Datasource datasource : getDatasources()) {
             if (name.equals(datasource.getJndiName())) {
                 conflictingDS.add(datasource);
@@ -329,6 +333,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             } else {
                 // Tomcat 5.5.x or Tomcat 6.0.x
                 modifyContext(new ContextModifier() {
+                    @Override
                     public void modify(Context context) {
                         int idx = context.addResource(true);
                         context.setResourceName(idx, name);
@@ -347,6 +352,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         } else {
             // Tomcat 5.0.x
             modifyContext(new ContextModifier() {
+                @Override
                 public void modify(Context context) {
                     int idx = context.addResource(true);
                     context.setResourceName(idx, name);
@@ -404,6 +410,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         }
         final String newContextPath = contextPath;
         modifyContext(new ContextModifier() {
+            @Override
             public void modify(Context context) {
                 // if Tomcat 5.0.x update also logger prefix
                 if (tomcatVersion == TomcatVersion.TOMCAT_50) {
@@ -424,6 +431,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     /**
      * Listen to context.xml document changes.
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName() == DataObject.PROP_MODIFIED &&
                 evt.getNewValue() == Boolean.FALSE) {
@@ -434,6 +442,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         }
     }
         
+    @Override
     public J2eeModule getJ2eeModule() {
         return j2eeModule;
     }
@@ -664,6 +673,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             final ConfigurationException anonClassException[] = new ConfigurationException[] {null};
             FileSystem fs = folder.getFileSystem();
             fs.runAtomicAction(new FileSystem.AtomicAction() {
+                @Override
                 public void run() throws IOException {
                     String name = file.getName();
                     FileObject configFO = folder.getFileObject(name);
@@ -772,6 +782,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
 
         // create a resource link to the global resource
         modifyContext(new ContextModifier() {
+            @Override
             public void modify(Context context) {
                 int idx = context.addResourceLink(true);
                 context.setResourceLinkName(idx, referenceName);
@@ -782,10 +793,12 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         
     }
 
+    @Override
     public void bindDatasourceReferenceForEjb(String ejbName, String ejbType, String referenceName, String jndiName) throws ConfigurationException {
         // not supported
     }
 
+    @Override
     public String findDatasourceJndiName(String referenceName) throws ConfigurationException {
         Context context = getContext();
         if (context != null) {
@@ -821,6 +834,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         return null;
     }
 
+    @Override
     public String findDatasourceJndiNameForEjb(String ejbName, String referenceName) throws ConfigurationException {
         // not supported
         return null;

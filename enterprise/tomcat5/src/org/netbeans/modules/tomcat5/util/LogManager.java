@@ -86,6 +86,7 @@ public class LogManager {
         //PENDING: currently we copy only Tomcat std & err output. We should
         //         also support copying to Tomcat std input.
         new Thread() {
+            @Override
             public void run() {
                 try {
                     process.waitFor();
@@ -165,6 +166,7 @@ public class LogManager {
                 sharedContextLogViewer.close();
                 sharedContextLogViewer = newSharedContextLog;
 		sharedContextLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
+                   @Override
                    public void callOnStop() {
                        synchronized(sharedContextLogLock) {
                            sharedContextLogViewer = null;
@@ -178,6 +180,7 @@ public class LogManager {
                 }
                 sharedContextLogViewer = newSharedContextLog;
 		sharedContextLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
+                   @Override
                    public void callOnStop() {
                        synchronized(sharedContextLogLock) {
                            sharedContextLogViewer = null;
@@ -273,7 +276,9 @@ public class LogManager {
             moduleConfig = (TomcatModuleConfig)o;
             moduleConfig.refresh();
         }
-        if (!moduleConfig.hasLogger()) return;
+        if (!moduleConfig.hasLogger()) {
+            return;
+        }
         contextLog = (LogViewer)contextLogViewers.get(moduleID);
         LogViewer newContextLog = null;
         try {
@@ -304,6 +309,7 @@ public class LogManager {
                 contextLog.close();
                 contextLog = newContextLog;
                 contextLog.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
+                   @Override
                    public void callOnStop() {
                        contextLogViewers.remove(moduleID);
                    }
@@ -316,6 +322,7 @@ public class LogManager {
                 }
                 contextLog = newContextLog;
                 contextLog.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
+                   @Override
                    public void callOnStop() {
                        contextLogViewers.remove(moduleID);
                    }

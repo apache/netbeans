@@ -174,10 +174,12 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         return libraries;
     }
     
+    @Override
     public String getDisplayName() {
         return displayName;
     }
     
+    @Override
     public Image getIcon() {
         return ImageUtilities.loadImage(ICON);
     }
@@ -206,6 +208,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         return null;
     }
     
+    @Override
     public File[] getToolClasspathEntries(String toolName) {
         // wscompile support
         if (J2eePlatform.TOOL_WSCOMPILE.equals(toolName)) {
@@ -330,6 +333,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         return null;
     }
     
+    @Override
     public boolean isToolSupported(String toolName) {
         // jwsdp support
         if (J2eePlatform.TOOL_WSCOMPILE.equals(toolName)) {
@@ -440,13 +444,9 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         if (J2eePlatform.TOOL_JSR109.equals(toolName)) {
             return false;
         }
-        
         // Test if server has the JAX-WS Tester capability
-        if ("jaxws-tester".equals(toolName)) { //NOI18N
-            return true;
-        }
         
-        return false;
+        return "jaxws-tester".equals(toolName);
     }
 
     @Override
@@ -456,7 +456,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
 
     @Override
     public Set<Profile> getSupportedProfiles() {
-        Set<Profile> profiles = new HashSet<Profile>(5);
+        Set<Profile> profiles = new HashSet<>(5);
         //if (!manager.isTomEE()) {
             // TomEE is new and it actually does not support older specs (classloading separation etc).
             // we will see if that's a problem for anybody
@@ -477,7 +477,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
     
     @Override
     public Set<String> getSupportedJavaPlatformVersions() {
-        Set<String> versions = new HashSet<String>(6);
+        Set<String> versions = new HashSet<>(6);
 
         if (!manager.isTomcat90()) {
             if (!manager.isTomcat80()) {

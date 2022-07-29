@@ -74,10 +74,12 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
         this.manager = manager;
     }
 
+    @Override
     public boolean supportsDeployJDBCDrivers(Target target) {
         return manager.getTomcatProperties().getDriverDeployment();
     }
 
+    @Override
     public ProgressObject deployJDBCDrivers(Target target, Set<Datasource> datasources) {
         return new DriverDeploymentProgressObject(datasources);
     }
@@ -133,7 +135,7 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
 
         /** Returns a list of jdbc drivers that need to be deployed. */
         private List<FileObject> jdbcDriversToDeploy() {
-            List<FileObject> jdbcDriverFiles = new ArrayList<FileObject>();
+            List<FileObject> jdbcDriverFiles = new ArrayList<>();
             Collection<File> driverCP = getJDBCDriverClasspath();
             for (Datasource datasource : datasources) {
                 String className = datasource.getDriverClassName();
@@ -174,38 +176,47 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
             return Arrays.asList(tp.getLibsDir().listFiles());
         }
 
+        @Override
         public DeploymentStatus getDeploymentStatus() {
             return eventSupport.getDeploymentStatus();
         }
 
+        @Override
         public TargetModuleID[] getResultTargetModuleIDs() {
             return null;
         }
 
+        @Override
         public ClientConfiguration getClientConfiguration(TargetModuleID targetModuleID) {
             return null;
         }
 
+        @Override
         public boolean isCancelSupported() {
             return false;
         }
 
+        @Override
         public void cancel() throws OperationUnsupportedException {
             throw new OperationUnsupportedException("Cancel is not supported"); // NOI18N
         }
 
+        @Override
         public boolean isStopSupported() {
             return false;
         }
 
+        @Override
         public void stop() throws OperationUnsupportedException {
             throw new OperationUnsupportedException("Stop is not supported"); // NOI18N
         }
 
+        @Override
         public void addProgressListener(ProgressListener progressListener) {
             eventSupport.addProgressListener(progressListener);
         }
 
+        @Override
         public void removeProgressListener(ProgressListener progressListener) {
             eventSupport.removeProgressListener(progressListener);
         }

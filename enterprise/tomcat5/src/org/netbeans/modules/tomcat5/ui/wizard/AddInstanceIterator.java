@@ -134,14 +134,17 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
         return result;
     }
 
+    @Override
     public boolean hasPrevious() {
         return false;
     }
 
+    @Override
     public boolean hasNext() {
         return false;
     }
 
+    @Override
     public WizardDescriptor.Panel current() {
         if (panel == null) {
             panel = new InstallPanel();

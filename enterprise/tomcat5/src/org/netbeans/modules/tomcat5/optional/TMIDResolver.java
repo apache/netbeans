@@ -43,10 +43,12 @@ public class TMIDResolver extends TargetModuleIDResolver {
         this.tm = (TomcatManager) dm;
     }
     
+    @Override
     public TargetModuleID[] lookupTargetModuleID(java.util.Map queryInfo, Target[] targetList) {
         String contextRoot = (String) queryInfo.get(KEY_CONTEXT_ROOT);
-        if (contextRoot == null)
+        if (contextRoot == null) {
             return EMPTY_TMID_ARRAY;
+        }
         // Tomcat ROOT context path bug hack
         if ("".equals(contextRoot)) { // NOI18N
             contextRoot = "/"; // NOI18N

@@ -48,6 +48,7 @@ public class TomcatTargetNodeTest extends NbTestCase {
             @Override
             public void run() {
                 Children.MUTEX.postWriteRequest(new Runnable() {
+                    @Override
                     public void run() { 
                         latch.countDown();
                         try {

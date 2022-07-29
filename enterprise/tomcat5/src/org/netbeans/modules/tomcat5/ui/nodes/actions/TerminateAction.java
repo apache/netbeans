@@ -38,6 +38,7 @@ import org.openide.util.actions.NodeAction;
  */
 public class TerminateAction extends NodeAction {
     
+    @Override
     protected void performAction(Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
@@ -50,6 +51,7 @@ public class TerminateAction extends NodeAction {
                 Object retValue = DialogDisplayer.getDefault().notify(nd);
                 if (retValue == DialogDescriptor.YES_OPTION) {
                     RequestProcessor.getDefault().post(new Runnable() {
+                        @Override
                         public void run() {
                             tm.terminate();
                             // wait a sec before refreshing the state
@@ -64,6 +66,7 @@ public class TerminateAction extends NodeAction {
         }
     }
     
+    @Override
     protected boolean enable(Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
@@ -78,12 +81,15 @@ public class TerminateAction extends NodeAction {
         return true;
     }
     
+    @Override
     public String getName() {
         return NbBundle.getMessage(TerminateAction.class, "LBL_TerminateAction");
     }
     
+    @Override
     protected boolean asynchronous() { return false; }
     
+    @Override
     public org.openide.util.HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }

@@ -39,11 +39,13 @@ import org.openide.util.actions.NodeAction;
  */
 public class AdminConsoleAction extends NodeAction {
     
+    @Override
     protected void performAction (Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             final TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
             if (cookie != null) {
                 RequestProcessor.getDefault().post(new Runnable() {
+                    @Override
                     public void run() {
                         TomcatManager tm = cookie.getTomcatManager();
                         String adminUrl = tm.getServerUri() + "/admin"; // NOI18N
@@ -58,6 +60,7 @@ public class AdminConsoleAction extends NodeAction {
         }
     }
 
+    @Override
     protected boolean enable (Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
@@ -68,14 +71,17 @@ public class AdminConsoleAction extends NodeAction {
         return true;
     }
 
+    @Override
     public String getName () {
         return NbBundle.getMessage(AdminConsoleAction.class, "LBL_AdminConsoleAction");
     }
     
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx () {
         return HelpCtx.DEFAULT_HELP;
     }

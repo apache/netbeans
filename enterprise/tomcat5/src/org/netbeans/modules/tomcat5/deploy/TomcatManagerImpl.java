@@ -330,10 +330,10 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             }
             StringBuilder result = new StringBuilder();
             while (st.hasMoreTokens()) {
-                result.append("/").append(URLEncoder.encode(st.nextToken(), "UTF-8")); // NOI18N
+                result.append("/").append(URLEncoder.encode(st.nextToken(), StandardCharsets.UTF_8)); // NOI18N
             }
             return result.toString();
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e); // this should never happen
         }
     }
@@ -349,13 +349,13 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
         tmpContextXml.deleteOnExit();
         if (!docBase.equals (ctx.getAttributeValue ("docBase"))) { //NOI18N
             ctx.setAttributeValue ("docBase", docBase); //NOI18N
-            FileOutputStream fos = new FileOutputStream (tmpContextXml);
-            ctx.write (fos);
-            fos.close ();
+            try (FileOutputStream fos = new FileOutputStream (tmpContextXml)) {
+                ctx.write (fos);
+            }
         }
         // http://www.netbeans.org/issues/show_bug.cgi?id=167139
         URL url = tmpContextXml.toURI().toURL();
-        String ret = URLEncoder.encode(url.toString(), "UTF-8"); // NOI18N
+        String ret = URLEncoder.encode(url.toString(), StandardCharsets.UTF_8); // NOI18N
         return ret;
     }
     
@@ -429,52 +429,62 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
     }
     
     /** JSR88 method. */
+    @Override
     public ClientConfiguration getClientConfiguration (TargetModuleID targetModuleID) {
         return null; // PENDING
     }
     
     /** JSR88 method. */
+    @Override
     public DeploymentStatus getDeploymentStatus () {
         return pes.getDeploymentStatus ();
     }
     
     /** JSR88 method. */
+    @Override
     public TargetModuleID[] getResultTargetModuleIDs () {
         return new TargetModuleID [] { tmId };
     }
     
     /** JSR88 method. */
+    @Override
     public boolean isCancelSupported () {
         return false;
     }
     
     /** JSR88 method. */
+    @Override
     public void cancel () 
     throws OperationUnsupportedException {
         throw new OperationUnsupportedException ("cancel not supported in Tomcat deployment"); // NOI18N
     }
     
     /** JSR88 method. */
+    @Override
     public boolean isStopSupported () {
         return false;
     }
     
     /** JSR88 method. */
+    @Override
     public void stop () throws OperationUnsupportedException {
         throw new OperationUnsupportedException ("stop not supported in Tomcat deployment"); // NOI18N
     }
     
     /** JSR88 method. */
+    @Override
     public void addProgressListener (ProgressListener l) {
         pes.addProgressListener (l);
     }
     
     /** JSR88 method. */
+    @Override
     public void removeProgressListener (ProgressListener l) {
         pes.removeProgressListener (l);
     }
     
     /** Executes one management task. */
+    @Override
     public synchronized void run () {
         LOGGER.log(Level.FINE, command);
         pes.fireHandleProgressEvent (tmId, new Status (ActionType.EXECUTE, cmdType, command /* message */, StateType.RUNNING));

@@ -59,7 +59,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
     
     private static final Logger LOGGER = Logger.getLogger(InstallPanelVisual.class.getName());
 
-    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     
     private String errorMessage;
     private boolean infoMessage;
@@ -80,14 +80,17 @@ class InstallPanelVisual extends javax.swing.JPanel {
     public InstallPanelVisual() {
         initComponents();
         DocumentListener updateListener = new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 fireChange();
             }
 
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 fireChange();
             }
 
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 fireChange();
             }
@@ -97,11 +100,13 @@ class InstallPanelVisual extends javax.swing.JPanel {
         jTextFieldUsername.getDocument().addDocumentListener(updateListener);
         jTextFieldPassword.getDocument().addDocumentListener(updateListener);
         createUserCheckBox.getModel().addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 fireChange();
             }
         });
         addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 // if JWSDP installed, disable the catalina base directory
                 if (isJWSDP()) {
@@ -505,11 +510,11 @@ class InstallPanelVisual extends javax.swing.JPanel {
             File homeDir = getHomeDir();
             if (homeDir != null && homeDir.exists()) {
                 File files[] = homeDir.listFiles(new FilenameFilter() {
+                    @Override
                     public boolean accept(File dir, String name) {
-                        if ("jwsdp-shared".equals(name)) { // NOI18N
-                            return true;
-                        }
-                        return false;
+                        // NOI18N
+                        
+                        return "jwsdp-shared".equals(name);
                     }
                 });
                 return files.length != 0;

@@ -963,7 +963,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
 
             createDatabaseView(c);
-            c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
+            if (enableJava) {
+                c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
+            }
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;

@@ -457,6 +457,7 @@ public class JarClassLoaderTest extends NbTestCase {
         try (OutputStream out = new FileOutputStream(jar)) {
             TestFileUtils.writeZipFile(out, jarContent);
         }
+
         JarClassLoader jcl = new JarClassLoader(Arrays.asList(jar), new ProxyClassLoader[0]);
         Class<?> api = jcl.loadClass("api.API");
         Method run = api.getDeclaredMethod("run");

@@ -48,8 +48,10 @@ import java.io.*;
 import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.schema2beans.Schema2BeansRuntimeException;
 import org.netbeans.modules.tomcat5.AuthorizationException;
 import org.netbeans.modules.tomcat5.util.TomcatProperties;
 
@@ -241,7 +243,9 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
      */
     private boolean removeContextFromServer(Server server, String path) {
         // root web application is specified as an empty string
-        if (path.equals("/")) path = ""; // NOI18N
+        if (path.equals("/")) {
+            path = ""; // NOI18N
+        }
         Service[] service = server.getService();
         if (service.length > 0) {
             Engine engine = service[0].getEngine();
@@ -413,7 +417,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 }
             }
         }
-        return (TargetModuleID []) modules.toArray (new TargetModuleID[modules.size ()]);
+        return (TargetModuleID []) modules.toArray (new TargetModuleID[0]);
     }
     
     /** Queries Tomcat server to get JMX beans containing management information
@@ -495,7 +499,6 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
         
         // similar to Tomcat's Ant task
         URLConnection conn = null;
-        InputStreamReader reader = null;
         
         URL urlToConnectTo = null;
 

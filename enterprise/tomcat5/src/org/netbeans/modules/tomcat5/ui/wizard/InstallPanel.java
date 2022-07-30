@@ -106,7 +106,8 @@ class InstallPanel implements WizardDescriptor.Panel, ChangeListener {
         }
 
         Iterator iter = tempList.iterator();
-        while (iter.hasNext())
+        while (iter.hasNext()) {
             ((ChangeListener)iter.next()).stateChanged(event);
+        }
     }
 }

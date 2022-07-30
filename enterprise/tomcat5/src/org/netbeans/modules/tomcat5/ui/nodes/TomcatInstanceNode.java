@@ -112,7 +112,7 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
             actions.add(SystemAction.get(ServerLogAction.class));
         }
         actions.add(SystemAction.get(OpenServerOutputAction.class));
-        return (SystemAction[])actions.toArray(new SystemAction[actions.size()]);
+        return (SystemAction[])actions.toArray(new SystemAction[0]);
     }
         
     private FileObject getTomcatConf() {

@@ -363,7 +363,9 @@ public class TomcatManager implements DeploymentManager {
                     AttachingDICookie attCookie = (AttachingDICookie)o;
                     if (sdi.getTransport().equals(ServerDebugInfo.TRANSPORT_SHMEM)) {
                         String shmem = attCookie.getSharedMemoryName();
-                        if (shmem == null) continue;
+                        if (shmem == null) {
+                            continue;
+                        }
                         if (shmem.equalsIgnoreCase(sdi.getShmemName())) {
                             Object d = s.lookupFirst(null, JPDADebugger.class);
                             if (d != null) {

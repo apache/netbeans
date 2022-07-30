@@ -198,7 +198,6 @@ public class TomcatModuleConfig {
                         loggerPrefix = ctx.getLoggerPrefix();
                         loggerSuffix = ctx.getLoggerSuffix();
                         loggerTimestamp = Boolean.valueOf(ctx.getLoggerTimestamp());
-                        return;
                     }
                 }
             }

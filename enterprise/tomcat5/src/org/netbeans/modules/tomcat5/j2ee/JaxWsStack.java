@@ -169,21 +169,17 @@ public class JaxWsStack implements WSStackImplementation<JaxWs> {
 
     
     private boolean isKeystore() {
-        if (new File(catalinaHome, KEYSTORE_LOCATION).exists()) return true;
-        else return false;
+        return new File(catalinaHome, KEYSTORE_LOCATION).exists();
     }
     private boolean isKeystoreClient() {
-        if (new File(catalinaHome, KEYSTORE_CLIENT_LOCATION).exists()) return true;
-        else return false;
+        return new File(catalinaHome, KEYSTORE_CLIENT_LOCATION).exists();
     }
     
     private boolean isTruststore() {
-        if (new File(catalinaHome, TRUSTSTORE_LOCATION).exists()) return true;
-        else return false;
+        return new File(catalinaHome, TRUSTSTORE_LOCATION).exists();
     }
     private boolean isTruststoreClient() {
-        if (new File(catalinaHome, TRUSTSTORE_CLIENT_LOCATION).exists()) return true;
-        else return false;
+        return new File(catalinaHome, TRUSTSTORE_CLIENT_LOCATION).exists();
     }
     
     private String resolveImplementationVersion() throws IOException {

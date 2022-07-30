@@ -120,7 +120,9 @@ public class TomcatManagerConfig {
      */
     public Engine getEngineElement() {
         Server server = getServerElement();
-        if (server == null) return null;
+        if (server == null) {
+            return null;
+        }
         Service[] service = server.getService();
         if (service.length > 0) {
             return service[0].getEngine();

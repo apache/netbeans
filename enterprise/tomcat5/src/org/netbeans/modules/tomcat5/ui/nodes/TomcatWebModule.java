@@ -225,11 +225,7 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
 
                     if (command == CommandType.START || command == CommandType.STOP) {
                             StatusDisplayer.getDefault().setStatusText(deployStatus.getMessage());
-                            if (command == CommandType.START) {
-                                isRunning = true;
-                            } else {
-                                isRunning = false;
-                            }
+                            isRunning = command == CommandType.START;
                             node.setDisplayName(constructDisplayName());
                     } else if (command == CommandType.UNDEPLOY) {
                         StatusDisplayer.getDefault().setStatusText(deployStatus.getMessage());

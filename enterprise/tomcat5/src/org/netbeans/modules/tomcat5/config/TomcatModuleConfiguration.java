@@ -735,12 +735,17 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     // be moved to the web project
     private boolean isCorrectCP(String contextPath) {
         boolean correct=true;
-        if (!contextPath.equals("") && !contextPath.startsWith("/")) correct=false; //NOI18N
-        else if (contextPath.endsWith("/")) correct=false; //NOI18N
-        else if (contextPath.indexOf("//")>=0) correct=false; //NOI18N
+        if (!contextPath.equals("") && !contextPath.startsWith("/")) {
+            correct=false; //NOI18N
+        } else if (contextPath.endsWith("/")) {
+            correct=false; //NOI18N
+        } else if (contextPath.indexOf("//")>=0) {
+            correct=false; //NOI18N
+        }
         return correct;
     }
 
+    @Override
     public void bindDatasourceReference(final String referenceName, final String jndiName) throws ConfigurationException {
         Set<Datasource>  datasources = getDatasources();
         // check whether a resource of the given name is not already defined

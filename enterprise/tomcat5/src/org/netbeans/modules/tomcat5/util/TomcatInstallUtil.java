@@ -162,29 +162,20 @@ public class TomcatInstallUtil {
     public static String getDocumentText(Document doc) {
         OutputFormat format = new OutputFormat ();
         format.setPreserveSpace (true);
-        StringWriter sw = new StringWriter();
         org.w3c.dom.Element rootElement = doc.getDocumentElement();
         if (rootElement==null) {
             return null;
         }
-        try {
+        try (StringWriter sw = new StringWriter()) {
             XMLSerializer ser = new XMLSerializer (sw, format);
             ser.serialize (rootElement);
             // Apache serializer also fails to include trailing newline, sigh.
             sw.write('\n');
             return sw.toString();
-        }catch(IOException ex) {
+        } catch(IOException ex) {
             System.out.println("ex="+ex);
             //ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             return rootElement.toString();
-        }
-        finally {
-            try {
-                sw.close();
-            } catch(IOException ex) {
-                System.out.println("ex="+ex);
-                //ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            }
         }
     }
     
@@ -335,8 +326,7 @@ public class TomcatInstallUtil {
      */
     public static void patchCatalinaProperties(File catalinaProperties) throws IOException {
         EditableProperties props = new EditableProperties(false);
-        InputStream is = new BufferedInputStream(new FileInputStream(catalinaProperties));
-        try {
+        try (InputStream is = new BufferedInputStream(new FileInputStream(catalinaProperties))) {
             props.load(is);
             String COMMON_LOADER = "common.loader"; // NOI18N
             String commonLoader = props.getProperty(COMMON_LOADER);
@@ -353,15 +343,10 @@ public class TomcatInstallUtil {
                 commonLoaderValue.append(NB_LIB);
                 props.setProperty(COMMON_LOADER, commonLoaderValue.toString());
             }
-        } finally {
-            is.close();
         }
         // store changes
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProperties));
-        try {
+        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProperties))) {
             props.store(out);
-        } finally {
-            out.close();
         }
     }
     
@@ -378,15 +363,12 @@ public class TomcatInstallUtil {
     public static void createNBLibDirectory(File catalinaBase) throws IOException {
         // create a README file
         new File(catalinaBase, "nblib").mkdir(); // NOI18N
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(catalinaBase, "nblib/README"))); // NOI18N
-        try {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(catalinaBase, "nblib/README")))) {  // NOI18N
             for (String line : NbBundle.getMessage(TomcatInstallUtil.class, "MSG_NBLibReadmeContent").split("\n")) { // NOI18N
                 // fix the new line sequence
                 writer.write(line);
                 writer.newLine();
             }
-        } finally {
-            writer.close();
         }
     }
     

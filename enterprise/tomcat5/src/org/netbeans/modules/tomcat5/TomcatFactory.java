@@ -261,25 +261,16 @@ public final class TomcatFactory implements DeploymentFactory {
             if (!bootstrapJar.exists()) {
                 return null;
             }
-            try {
-                JarFile jar = new JarFile(bootstrapJar);
-                try {
-                    Manifest manifest = jar.getManifest();
-                    String specificationVersion = null;
-                    if (manifest != null) {
-                        specificationVersion = manifest.getMainAttributes()
-                                .getValue("Specification-Version"); // NOI18N
-                    }
-                    if (specificationVersion != null) { // NOI18N
-                        specificationVersion = specificationVersion.trim();
-                        return getTomcatVersion(specificationVersion, TomcatVersion.TOMCAT_55);
-                    }
-                } finally {
-                    try {
-                        jar.close();
-                    } catch (IOException ex) {
-                        LOGGER.log(Level.FINEST, null, ex);
-                    }
+            try (JarFile jar = new JarFile(bootstrapJar)) {
+                Manifest manifest = jar.getManifest();
+                String specificationVersion = null;
+                if (manifest != null) {
+                    specificationVersion = manifest.getMainAttributes()
+                            .getValue("Specification-Version"); // NOI18N
+                }
+                if (specificationVersion != null) { // NOI18N
+                    specificationVersion = specificationVersion.trim();
+                    return getTomcatVersion(specificationVersion, TomcatVersion.TOMCAT_55);
                 }
             } catch (IOException e) {
                 LOGGER.log(Level.FINE, null, e);

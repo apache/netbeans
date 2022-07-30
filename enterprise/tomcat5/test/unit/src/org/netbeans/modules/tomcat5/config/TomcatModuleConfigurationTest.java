@@ -549,11 +549,8 @@ public class TomcatModuleConfigurationTest extends TestBase {
 
     private J2eeModule createJ2eeModule(String fileName, String content) throws Exception {
         File file = new File(getWorkDir(), fileName);
-        FileWriter writer = new FileWriter(file);
-        try {
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(content);
-        } finally {
-            writer.close();
         }
         J2eeModuleImpl j2eeModuleImpl = new J2eeModuleImpl(file);
         return J2eeModuleFactory.createJ2eeModule(j2eeModuleImpl);

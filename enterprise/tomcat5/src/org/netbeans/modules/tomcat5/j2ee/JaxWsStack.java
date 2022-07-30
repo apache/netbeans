@@ -193,18 +193,18 @@ public class JaxWsStack implements WSStackImplementation<JaxWs> {
             JarFile jarFile = new JarFile(wsToolsJar);
             JarEntry entry = jarFile.getJarEntry("com/sun/tools/ws/version.properties"); //NOI18N
             if (entry != null) {
-                InputStream is = jarFile.getInputStream(entry);
-                BufferedReader r = new BufferedReader(new InputStreamReader(is));
-                String ln = null;
-                String ver = null;
-                while ((ln=r.readLine()) != null) {
-                    String line = ln.trim();
-                    if (line.startsWith("major-version=")) { //NOI18N
-                        ver = line.substring(14);
+                try (InputStream is = jarFile.getInputStream(entry);
+                        BufferedReader r = new BufferedReader(new InputStreamReader(is))) {
+                    String ln = null;
+                    String ver = null;
+                    while ((ln=r.readLine()) != null) {
+                        String line = ln.trim();
+                        if (line.startsWith("major-version=")) { //NOI18N
+                            ver = line.substring(14);
+                        }
                     }
+                    return ver;
                 }
-                r.close();
-                return ver;
             }           
         }
         return null;

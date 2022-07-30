@@ -688,18 +688,12 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
                         anonClassException[0] = e;
                         return;
                     }
-                    FileLock lock = configFO.lock();
-                    try {
-                        OutputStream os = new BufferedOutputStream(configFO.getOutputStream(lock), 4096);
-                        try {
-                            if (ctx != null) {
-                                ctx.write(os);
-                            }
-                        } finally {
-                            os.close();
+                    
+                    try (FileLock lock = configFO.lock();
+                            OutputStream os = new BufferedOutputStream(configFO.getOutputStream(lock), 4096);) {
+                        if (ctx != null) {
+                            ctx.write(os);
                         }
-                    } finally {
-                        lock.releaseLock();
                     }
                 }
             });

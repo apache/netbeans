@@ -98,6 +98,7 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
             RequestProcessor.getDefault().post(this);
         }
 
+        @Override
         public void run() {
             List<FileObject> jdbcDriverFiles = jdbcDriversToDeploy();
             // deploy the driers if needed
@@ -106,19 +107,11 @@ public class TomcatJDBCDriverDeployer implements JDBCDriverDeployer {
                 for (FileObject file : jdbcDriverFiles) {
                     File libsDir = tp.getLibsDir();
                     File toJar = new File(libsDir, file.getNameExt());
-                    try {
-                        BufferedInputStream is = new BufferedInputStream(file.getInputStream());
-                        try {
-                            String msg = NbBundle.getMessage(TomcatJDBCDriverDeployer.class, "MSG_DeployingJDBCDrivers", toJar.getPath());
-                            eventSupport.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));
-                            BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar));
-                            try {
-                                FileUtil.copy(is, os);
-                            } finally {
-                                os.close();
-                            }
-                        } finally {
-                            is.close();
+                    try (BufferedInputStream is = new BufferedInputStream(file.getInputStream())) {
+                        String msg = NbBundle.getMessage(TomcatJDBCDriverDeployer.class, "MSG_DeployingJDBCDrivers", toJar.getPath());
+                        eventSupport.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));
+                        try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar))) {
+                            FileUtil.copy(is, os);
                         }
                     } catch (IOException e) {
                         LOG.log(Level.INFO, null, e);

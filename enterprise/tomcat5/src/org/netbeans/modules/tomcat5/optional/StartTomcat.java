@@ -835,63 +835,55 @@ public final class StartTomcat extends StartServer implements ProgressObject {
             return; // catalina.properties does not exist, can't do anything
         }
         EditableProperties props = new EditableProperties(false);
-        try {
-            InputStream is = new BufferedInputStream(new FileInputStream(catalinaProp));
-            try {
-                props.load(is);
-                String COMMON_LOADER = "common.loader"; // NOI18N
-                String commonLoader = props.getProperty(COMMON_LOADER);
-                if (commonLoader != null) {
-                    String COMMON_ENDORSED = "${catalina.home}/common/endorsed/*.jar"; // NOI18N 
-                    int idx = commonLoader.indexOf(COMMON_ENDORSED);
-                    if (endorsedEnabled) {
-                        if (idx == -1) { // common/endorsed/*.jar is not present, add it
-                            String COMMON_LIB = "${catalina.home}/" + tm.libFolder() + "/*.jar"; // NOI18N
-                            int commonLibIdx = commonLoader.indexOf(COMMON_LIB);
-                            StringBuffer sb = new StringBuffer(commonLibIdx == -1 
-                                    ? commonLoader 
-                                    : commonLoader.substring(0, commonLibIdx));
-                            if (commonLibIdx != -1) {
-                                sb.append(COMMON_ENDORSED).append(',').append(commonLoader.substring(commonLibIdx));
-                            } else {
-                                if (commonLoader.trim().length() != 0) {
-                                    sb.append(',');
-                                }
-                                sb.append(COMMON_ENDORSED);
-                            }
-                            props.setProperty(COMMON_LOADER, sb.toString());
+        try (InputStream is = new BufferedInputStream(new FileInputStream(catalinaProp))) {
+            props.load(is);
+            String COMMON_LOADER = "common.loader"; // NOI18N
+            String commonLoader = props.getProperty(COMMON_LOADER);
+            if (commonLoader != null) {
+                String COMMON_ENDORSED = "${catalina.home}/common/endorsed/*.jar"; // NOI18N 
+                int idx = commonLoader.indexOf(COMMON_ENDORSED);
+                if (endorsedEnabled) {
+                    if (idx == -1) { // common/endorsed/*.jar is not present, add it
+                        String COMMON_LIB = "${catalina.home}/" + tm.libFolder() + "/*.jar"; // NOI18N
+                        int commonLibIdx = commonLoader.indexOf(COMMON_LIB);
+                        StringBuilder sb = new StringBuilder(commonLibIdx == -1 
+                                ? commonLoader 
+                                : commonLoader.substring(0, commonLibIdx));
+                        if (commonLibIdx != -1) {
+                            sb.append(COMMON_ENDORSED).append(',').append(commonLoader.substring(commonLibIdx));
                         } else {
-                            return;
+                            if (commonLoader.trim().length() != 0) {
+                                sb.append(',');
+                            }
+                            sb.append(COMMON_ENDORSED);
                         }
+                        props.setProperty(COMMON_LOADER, sb.toString());
                     } else {
-                        if (idx != -1) { // common/endorsed/*.jar is present, remove it
-                            String strBefore = commonLoader.substring(0, idx);
-                            int commaIdx = strBefore.lastIndexOf(',');
-                            StringBuffer sb = new StringBuffer(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
-                            String strAfter = commonLoader.substring(idx + COMMON_ENDORSED.length());
-                            if (commaIdx == -1) {
-                                // we have to cut off the trailing comman after the endorsed lib
-                                int trailingCommaIdx = strAfter.indexOf(',');
-                                if (trailingCommaIdx != -1) {
-                                    strAfter = strAfter.substring(trailingCommaIdx + 1);
-                                }
+                        return;
+                    }
+                } else {
+                    if (idx != -1) { // common/endorsed/*.jar is present, remove it
+                        String strBefore = commonLoader.substring(0, idx);
+                        int commaIdx = strBefore.lastIndexOf(',');
+                        StringBuilder sb = new StringBuilder(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
+                        String strAfter = commonLoader.substring(idx + COMMON_ENDORSED.length());
+                        if (commaIdx == -1) {
+                            // we have to cut off the trailing comman after the endorsed lib
+                            int trailingCommaIdx = strAfter.indexOf(',');
+                            if (trailingCommaIdx != -1) {
+                                strAfter = strAfter.substring(trailingCommaIdx + 1);
                             }
-                            sb.append(strAfter);
-                            props.setProperty(COMMON_LOADER, sb.toString());
-                        } else {
-                            return;
                         }
+                        sb.append(strAfter);
+                        props.setProperty(COMMON_LOADER, sb.toString());
+                    } else {
+                        return;
                     }
                 }
-            } finally {
-                is.close();
             }
             // store changes
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProp));
-            try {
+            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProp))) {
                 props.store(out);
-            } finally {
-                out.close();
             }
         } catch (FileNotFoundException fnfe) {
             LOGGER.log(Level.INFO, null, fnfe);

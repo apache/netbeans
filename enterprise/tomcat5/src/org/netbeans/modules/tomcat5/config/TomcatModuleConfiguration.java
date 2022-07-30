@@ -391,15 +391,16 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     /**
      * Set context path.
      */
+    @Override
     public void setContextRoot(String contextPath) throws ConfigurationException {
         // TODO: this contextPath fix code will be removed, as soon as it will 
         // be moved to the web project
         if (!isCorrectCP(contextPath)) {
             String ctxRoot = contextPath;
             java.util.StringTokenizer tok = new java.util.StringTokenizer(contextPath,"/"); //NOI18N
-            StringBuffer buf = new StringBuffer(); //NOI18N
+            StringBuilder buf = new StringBuilder(); //NOI18N
             while (tok.hasMoreTokens()) {
-                buf.append("/"+tok.nextToken()); //NOI18N
+                buf.append("/").append(tok.nextToken()); //NOI18N
             }
             ctxRoot = buf.toString();
             NotifyDescriptor desc = new NotifyDescriptor.Message(
@@ -599,11 +600,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             }
 
             modifier.finished(newConfig);
-        } catch (BadLocationException e) {
-            String msg = NbBundle.getMessage(TomcatModuleConfiguration.class,
-                    "MSG_ConfigurationXmlWriteFail", dataObject.getPrimaryFile().getPath());
-            throw new ConfigurationException(msg, e);
-        } catch (IOException e) {
+        } catch (BadLocationException | IOException e) {
             String msg = NbBundle.getMessage(TomcatModuleConfiguration.class,
                     "MSG_ConfigurationXmlWriteFail", dataObject.getPrimaryFile().getPath());
             throw new ConfigurationException(msg, e);
@@ -611,7 +608,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     }
 
     private static Set<Datasource> getTomeeDatasources(TomeeResources actualResources) {
-        HashSet<Datasource> result = new HashSet<Datasource>();
+        HashSet<Datasource> result = new HashSet<>();
         int resourcesLength = actualResources.getTomeeResource().length;
         for (int i = 0; i < resourcesLength; i++) {
             String type = actualResources.getTomeeResourceType(i);
@@ -713,13 +710,12 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         final StringWriter out = new StringWriter();
         try {
             graph.write(out);
-        } catch (Schema2BeansException ex) {
+        } catch (Schema2BeansException | IOException ex) {
             Logger.getLogger(TomcatModuleConfiguration.class.getName()).log(Level.INFO, null, ex);
-        } catch (IOException ioe) {
-            Logger.getLogger(TomcatModuleConfiguration.class.getName()).log(Level.INFO, null, ioe);
         }
         NbDocument.runAtomic(doc, new Runnable() {
 
+            @Override
             public void run() {
                 try {
                     doc.remove(0, doc.getLength());
@@ -773,7 +769,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
                     createDatasource(referenceName, ds.getUrl(), ds.getUsername(), ds.getPassword(), ds.getDriverClassName());
                 } catch (DatasourceAlreadyExistsException ex) {
                     // this should not happen
-                    LOGGER.info("Datasource with the '" + referenceName + "' reference name already exists."); // NOI18N
+                    LOGGER.log(Level.INFO, "Datasource with the ''{0}'' reference name already exists.", referenceName); // NOI18N
                 }
                 return;
             }

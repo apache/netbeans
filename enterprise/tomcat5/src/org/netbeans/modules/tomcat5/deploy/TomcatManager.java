@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -267,7 +270,7 @@ public class TomcatManager implements DeploymentManager {
         TomcatManagerConfig tmConfig = getTomcatManagerConfig();
         String engineName = tmConfig.getEngineElement().getAttributeValue("name"); //NOI18N
         String hostName = tmConfig.getHostElement().getAttributeValue("name"); //NOI18N
-        StringBuffer catWork = new StringBuffer(tp.getCatalinaDir().toString());
+        StringBuilder catWork = new StringBuilder(tp.getCatalinaDir().toString());
         catWork.append("/work/").append(engineName).append("/").append(hostName); //NOI18N
         return catWork.toString();
     }
@@ -377,7 +380,9 @@ public class TomcatManager implements DeploymentManager {
                         }
                     } else {
                         String host = attCookie.getHostName();
-                        if (host == null) continue;
+                        if (host == null) {
+                            continue;
+                        }
                         if (host.equalsIgnoreCase(sdi.getHost())) {
                             if (attCookie.getPortNumber() == sdi.getPort()) {
                                 Object d = s.lookupFirst(null, JPDADebugger.class);

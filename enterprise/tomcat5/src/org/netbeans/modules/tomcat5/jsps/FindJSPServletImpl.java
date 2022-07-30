@@ -79,7 +79,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
             path = path.replace('.', '/') + ".java";
         else //.jsp*/
         String path = null;
-        String extension = jspResourcePath.substring(jspResourcePath.lastIndexOf("."));
+        String extension = jspResourcePath.substring(jspResourcePath.lastIndexOf('.'));
         if (".jsp".equals(extension)) { // NOI18N
             path = getServletPackageName(jspResourcePath).replace('.', '/') + '/' +
                    getServletClassName(jspResourcePath) + ".java";

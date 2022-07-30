@@ -227,15 +227,7 @@ public final class TomcatFactory implements DeploymentFactory {
                 return version.substring(idx + 1);
             }
             throw new IllegalStateException("Cannot identify the version of the server."); // NOI18N
-        } catch (MalformedURLException e) {
-            throw new IllegalStateException(e);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalAccessException e) {
+        } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -246,11 +238,8 @@ public final class TomcatFactory implements DeploymentFactory {
             // TODO we might use fallback as primary check - it might be faster
             // than loading jars and executing code in JVM
             version = getTomcatVersionString(catalinaHome);
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | UnsupportedClassVersionError ex) {
             LOGGER.log(Level.INFO, null, ex);
-            return getTomcatVersionFallback(catalinaHome);
-        } catch (UnsupportedClassVersionError err) {
-            LOGGER.log(Level.INFO, null, err);
             return getTomcatVersionFallback(catalinaHome);
         }
         return getTomcatVersion(version, TomcatVersion.TOMCAT_50);

@@ -203,7 +203,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             rp ().post (this, 0, Thread.NORM_PRIORITY);
         } catch (java.io.IOException ioex) {
             pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, cmdType, ioex.getLocalizedMessage (), StateType.FAILED));
-        } catch (RuntimeException e) {
+        } catch (MissingResourceException e) {
             String msg = NbBundle.getMessage(TomcatManagerImpl.class, "MSG_DeployBrokenContextXml");
             pes.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, cmdType, msg, StateType.FAILED));
         }
@@ -217,7 +217,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             try {
                 f = tm.getTomcatProperties().getServerXml();
                 server.write(f);
-            } catch (Exception e) {
+            } catch (IOException | Schema2BeansRuntimeException e) {
                 // cannot save changes
                 pes.fireHandleProgressEvent(tmId, new Status (ActionType.EXECUTE, 
                         CommandType.UNDEPLOY, 
@@ -312,10 +312,9 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             rp ().post (this, 0, Thread.NORM_PRIORITY);
         } catch (java.io.IOException ioex) {
             pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, cmdType, ioex.getLocalizedMessage (), StateType.FAILED));
-        } catch (RuntimeException e) {
+        } catch (MissingResourceException e) {
             String msg = NbBundle.getMessage(TomcatManagerImpl.class, "MSG_DeployBrokenContextXml");
             pes.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, cmdType, msg, StateType.FAILED));
-            return;
         }
     }
     

@@ -138,7 +138,7 @@ public class TomcatManager implements DeploymentManager {
      */
     public TomcatManager(boolean conn, String uri, TomcatVersion tomcatVersion)
             throws IllegalArgumentException {
-        LOGGER.log(Level.FINE, "Creating connected TomcatManager uri=" + uri); //NOI18N
+        LOGGER.log(Level.FINE, "Creating connected TomcatManager uri={0}", uri); //NOI18N
         this.connected = conn;
         this.tomcatVersion = tomcatVersion;
         this.uri = uri;
@@ -316,7 +316,7 @@ public class TomcatManager implements DeploymentManager {
 
         sdi = getStartTomcat().getDebugInfo(null);
         if (sdi == null) {
-            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: " + this.toString());
+            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: {0}", this.toString());
         }
 
         for (int i=0; i < sessions.length; i++) {
@@ -352,7 +352,7 @@ public class TomcatManager implements DeploymentManager {
         Session[] sessions = DebuggerManager.getDebuggerManager().getSessions();
         ServerDebugInfo sdi = getStartTomcat().getDebugInfo(null);
         if (sdi == null) {
-            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: " + this.toString());
+            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: {0}", this.toString());
         }
 
         for (int i=0; i < sessions.length; i++) {
@@ -705,7 +705,7 @@ public class TomcatManager implements DeploymentManager {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.distribute called on disconnected instance");   // NOI18N
         }
-        LOGGER.log(Level.FINE, "TomcatManager.distribute archive=" + moduleArchive.getPath() + ", plan=" + deplPlan.getPath()); // NOI18N
+        LOGGER.log(Level.FINE, "TomcatManager.distribute archive={0}, plan={1}", new Object[]{moduleArchive.getPath(), deplPlan.getPath()}); // NOI18N
         TomcatManagerImpl impl = new TomcatManagerImpl (this);
         impl.install (targets[0], moduleArchive, deplPlan);
         return impl;
@@ -815,12 +815,8 @@ public class TomcatManager implements DeploymentManager {
                     tp.setServerPort(Integer.parseInt(TomcatInstallUtil.getPort(server)));
                     tp.setShutdownPort(Integer.parseInt(TomcatInstallUtil.getShutdownPort(server)));
                     tp.setServerHeader(TomcatInstallUtil.getServerHeader(server));
-                } catch (IOException ioe) {
+                } catch (IOException | RuntimeException ioe) {
                     LOGGER.log(Level.INFO, null, ioe);
-                } catch (NumberFormatException nfe) {
-                    LOGGER.log(Level.INFO, null, nfe);
-                } catch (RuntimeException e) {
-                    LOGGER.log(Level.INFO, null, e);
                 }
             }
         }
@@ -856,7 +852,7 @@ public class TomcatManager implements DeploymentManager {
         try {
 
             if (targetFolder == null) {
-                LOGGER.log(Level.INFO, "Cannot find parent folder for base dir " + baseDir.getPath());
+                LOGGER.log(Level.INFO, "Cannot find parent folder for base dir {0}", baseDir.getPath());
                 return null;
             }
             File baseDirFO = new File (targetFolder, baseDir.getName ());
@@ -990,7 +986,7 @@ public class TomcatManager implements DeploymentManager {
                         patternTo[i]
                         )) {
                         if (!(ADMIN_XML.equals(files[i]) && !(new File (fromDir, files[i].substring (slash+1))).exists()) ){
-                            LOGGER.log(Level.INFO, "Cannot create config file "+files[i]);
+                            LOGGER.log(Level.INFO, "Cannot create config file {0}", files[i]);
                             continue;
                         }
                     }

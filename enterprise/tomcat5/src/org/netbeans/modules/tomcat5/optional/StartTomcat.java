@@ -345,12 +345,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                 }
                 try {
                     DebugSupport.allowDebugging(tm);
-                }
-                catch (IOException e) {
-                    // fault, but not a critical one
-                    LOGGER.log(Level.INFO, null, e);
-                }
-                catch (SAXException e) {
+                } catch (IOException | SAXException e) {
                     // fault, but not a critical one
                     LOGGER.log(Level.INFO, null, e);
                 }
@@ -447,8 +442,8 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                         transport = "dt_shmem"; // NOI18N
                         address = tp.getSharedMem();
                     }
-                    LOGGER.log(Level.FINE, "transport: " + transport);    // NOI18N
-                    LOGGER.log(Level.FINE, "address: " + address);    // NOI18N
+                    LOGGER.log(Level.FINE, "transport: {0}", transport);    // NOI18N
+                    LOGGER.log(Level.FINE, "address: {0}", address);    // NOI18N
                     p = pd.exec (
                         new TomcatFormat(startupScript, homeDir),
                         new String[] {

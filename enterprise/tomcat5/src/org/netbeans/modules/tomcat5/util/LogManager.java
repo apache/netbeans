@@ -232,14 +232,12 @@ public class LogManager {
                     TomcatProperties tp = manager.getTomcatProperties();
                     juliLogViewer = new LogViewer(manager, null, null, null, "localhost.", null, true, false); // NOI18N
                     juliLogViewer.setDisplayName(NbBundle.getMessage(LogManager.class, "TXT_JuliLogDisplayName", tp.getDisplayName()));
-                } catch (UnsupportedLoggerException e) { // should never occur
+                } catch (UnsupportedLoggerException | NullPointerException e) { // should never occur
                     Logger.getLogger(LogManager.class.getName()).log(Level.INFO, null, e);
-                    return;
-                } catch (NullPointerException npe) {
-                    Logger.getLogger(LogManager.class.getName()).log(Level.INFO, null, npe);
                     return;
                 }
 		juliLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
+                   @Override
                    public void callOnStop() {
                        synchronized(juliLogLock) {
                            juliLogViewer = null;

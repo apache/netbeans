@@ -474,6 +474,7 @@ public class MonitorSupport {
             this.spy=spy;
         }
         
+        @Override
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals("enabled")){ // NOI18N
                 spy.setEnabled(((Boolean)evt.getNewValue()));
@@ -490,6 +491,7 @@ public class MonitorSupport {
             this.httpMonitorInfo=httpMonitorInfo;
         }
         
+        @Override
         public void resultChanged(LookupEvent lookupEvent) {
             java.util.Iterator it = res.allInstances ().iterator ();
             boolean moduleFound=false;

@@ -263,13 +263,7 @@ public class TomcatInstallUtil {
                         }
                     }
                 }
-            } catch(org.xml.sax.SAXException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(org.openide.loaders.DataObjectNotFoundException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(javax.swing.text.BadLocationException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(java.io.IOException ex){
+            } catch(org.xml.sax.SAXException | javax.swing.text.BadLocationException | java.io.IOException ex){
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -324,9 +318,7 @@ public class TomcatInstallUtil {
             setHttpConnectorAttributeValue(server, ATTR_URI_ENCODING, BUNDLED_DEFAULT_URI_ENCODING);
             setHostAttributeValue(server, ATTR_AUTO_DEPLOY, BUNDLED_DEFAULT_AUTO_DEPLOY.toString());
             server.write(serverXml);
-        } catch (IOException e) {
-            Logger.getLogger(TomcatInstallUtil.class.getName()).log(Level.INFO, null, e);
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             Logger.getLogger(TomcatInstallUtil.class.getName()).log(Level.INFO, null, e);
         }
     }
@@ -408,13 +400,7 @@ public class TomcatInstallUtil {
                 root.setAttribute("port", String.valueOf(port)); //NOI18N
                 updateDocument(dobj,doc);
                 return true;
-            } catch(org.xml.sax.SAXException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(org.openide.loaders.DataObjectNotFoundException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(javax.swing.text.BadLocationException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(java.io.IOException ex){
+            } catch(org.xml.sax.SAXException | javax.swing.text.BadLocationException | java.io.IOException ex){
                 Exceptions.printStackTrace(ex);
             }
         }

@@ -26,6 +26,7 @@ import javax.enterprise.deploy.shared.ModuleType;
 import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.enterprise.deploy.spi.Target;
 import javax.enterprise.deploy.spi.TargetModuleID;
+import javax.enterprise.deploy.spi.exceptions.TargetException;
 import org.netbeans.modules.tomcat5.AuthorizationException;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 import org.netbeans.modules.tomcat5.deploy.TomcatModule;
@@ -114,7 +115,7 @@ public class TomcatWebModuleChildrenFactory extends ChildFactory<TomcatWebModule
                     list.add(new TomcatWebModule(manager, (TomcatModule) modules[i], false));
                 }
 
-            } catch (Exception e) {
+            } catch (IllegalStateException | TargetException e) {
                 if (e.getCause() instanceof AuthorizationException) {
                     // connection to tomcat manager has not been allowed
                     String errMsg = NbBundle.getMessage(TomcatWebModuleChildrenFactory.class,

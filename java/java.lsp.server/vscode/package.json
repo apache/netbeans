@@ -75,7 +75,7 @@
 				{
 					"id": "cloud.resources",
 					"name": "Cloud",
-					"when": "nbJavaLSReady"
+					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"id": "run-config",

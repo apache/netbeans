@@ -307,7 +307,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                     if (DISABLE_EXTENSION === selected) {
                         vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
                     } else if (DISABLE_JAVA === selected) {
-                        conf.update("netbeans.javaSupport.enabled", true, false);
+                        conf.update("netbeans.javaSupport.enabled", false, true);
                     }
                 });
             }
@@ -963,7 +963,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
 
             createDatabaseView(c);
-            c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
+            if (enableJava) {
+                c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
+            }
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;

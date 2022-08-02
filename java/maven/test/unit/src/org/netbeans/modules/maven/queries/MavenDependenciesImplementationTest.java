@@ -179,7 +179,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.RUNTIME));
         
         Dependency dep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();
-        SourceLocation srcLoc = dr.getDeclarationRange(dep);
+        SourceLocation srcLoc = dr.getDeclarationRange(dep, null);
         assertNotNull(srcLoc);
         assertFalse(srcLoc.isEmpty());
         assertTrue(srcLoc.hasPosition());
@@ -213,7 +213,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         ArtifactSpec unknown = ArtifactSpec.createVersionSpec("nbtest", "unknown", "jar", null, "13", false, null, null);
         Dependency unknownDep = Dependency.create(unknown, Scopes.COMPILE, Collections.emptyList(), dep);
         
-        SourceLocation srcLoc = dr.getDeclarationRange(unknownDep);
+        SourceLocation srcLoc = dr.getDeclarationRange(unknownDep, null);
         assertNull(srcLoc);
     }
     
@@ -234,7 +234,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         Dependency libDep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();
         Dependency annoDep = libDep.getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("javax.annotation-api")).findAny().get();
 
-        SourceLocation srcLoc = dr.getDeclarationRange(annoDep);
+        SourceLocation srcLoc = dr.getDeclarationRange(annoDep, null);
         assertNotNull(srcLoc);
 
         Path pomPath = p.getLookup().lookup(NbMavenProject.class).getMavenProject().getFile().toPath();

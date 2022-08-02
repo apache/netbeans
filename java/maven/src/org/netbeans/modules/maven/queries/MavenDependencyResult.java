@@ -47,11 +47,17 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
+import org.netbeans.modules.maven.model.Utilities;
+import org.netbeans.modules.maven.model.pom.ModelList;
+import org.netbeans.modules.maven.model.pom.POMComponent;
+import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.POMModelFactory;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.Scope;
 import org.netbeans.modules.project.dependency.SourceLocation;
+import org.netbeans.modules.xml.xam.ModelSource;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -86,6 +92,15 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
         this.rootNode = rootNode;
         this.scopes = scopes;
         this.problems = problems;
+    }
+
+    @Override
+    public Collection<FileObject> getDependencyFiles() {
+        File file = mavenProject.getMavenProject().getFile();
+        if (file == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singleton(FileUtil.toFileObject(file));
     }
 
     @Override
@@ -301,6 +316,32 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
             }
         }
         if (DependencyResult.PART_CONTAINER.equals(part)) {
+            InputLocation location = effectiveModel.getLocation("dependencies");
+            if (location != null) {
+                return fromInputLocation(location, topLevel);
+            }
+            // make a fallback: locate POM component that corresponds to the dependencies element
+            FileObject pomFileObject = FileUtil.toFileObject(mavenProject.getMavenProject().getFile());
+            ModelSource source = Utilities.createModelSource(pomFileObject);
+            POMModel model = POMModelFactory.getDefault().getModel(source);
+            if (model == null) {
+                return null;
+            }
+            org.netbeans.modules.maven.model.pom.Project project = model.getProject();
+            for (ModelList ml : project.getChildren(ModelList.class)) {
+                if (ml.getListClass() == org.netbeans.modules.maven.model.pom.Dependency.class) {
+                    if ("dependencies".equals(ml.getPeer().getNodeName())) { // NOI18N
+                        int from = ml.findPosition();
+                        int to = ml.findEndPosition();
+                        
+                        if (from == 0 && to == 0) {
+                            from = -1;
+                            to = -1;
+                        }
+                        return new SourceLocation(pomFileObject, from, to, null);
+                    }
+                }
+            }
             return fromInputLocation(effectiveModel.getLocation("dependencies"), topLevel);
         }
         for (org.apache.maven.model.Dependency d : effectiveModel.getDependencies()) {
@@ -315,13 +356,7 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
         return fromInputLocation(selected.getLocation(""), topLevel);
     }
     
-    private SourceLocation fromInputLocation(InputLocation l, Object topLevel) throws IOException {
-        if (l == null) {
-            return null;
-        }
-        InputSource s = l.getSource();
-        String path = s.getLocation();
-        FileObject fo = FileUtil.toFileObject(new File(path));
+    private StyledDocument openDocument(FileObject fo) throws IOException {
         if (fo == null) {
             return null;
         }
@@ -340,6 +375,17 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
                 openedPoms.putIfAbsent(fo, d);
             }
         }
+        return d;
+    }
+    
+    private SourceLocation fromInputLocation(InputLocation l, Object topLevel) throws IOException {
+        if (l == null) {
+            return null;
+        }
+        InputSource s = l.getSource();
+        String path = s.getLocation();
+        FileObject fo = FileUtil.toFileObject(new File(path));
+        StyledDocument d = openDocument(fo);
         LineDocument ld = LineDocumentUtils.as(d, LineDocument.class);
         if (ld == null) {
             return new SourceLocation(fo, -1, -1, topLevel);

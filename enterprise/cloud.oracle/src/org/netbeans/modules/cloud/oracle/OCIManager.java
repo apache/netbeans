@@ -77,6 +77,10 @@ public final class OCIManager {
             Exceptions.printStackTrace(ex);
         }
     }
+    
+    public boolean isValid() {
+        return configProvider != null;
+    }
 
     public static synchronized OCIManager getDefault() {
         if (instance == null) {

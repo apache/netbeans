@@ -53,6 +53,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -476,6 +477,7 @@ public class JarClassLoader extends ProxyClassLoader {
         private int requests;
         private int used;
         private volatile Reference<Manifest> manifest;
+        private volatile Reference<int[]> versions;
         /** #141110: expensive to repeatedly look for them */
         private final Set<String> nonexistentResources = Collections.synchronizedSet(new HashSet<String>());
         private final Set<File> warnedFiles = Collections.synchronizedSet(new HashSet<File>()); // #183696
@@ -607,14 +609,22 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected byte[] readClass(String path) throws IOException {
             try {
-                if (isMultiRelease() && RUNTIME_VERSION != BASE_VERSION) {
-                    int ver = RUNTIME_VERSION;
-                    while (ver > BASE_VERSION) {
-                        byte[] data = archive.getData(this, "META-INF/versions/" + ver + "/" + path);
-                        if (data != null) {
-                            return data;
+                if (isMultiRelease() && RUNTIME_VERSION > BASE_VERSION) {
+                    int[] vers = getVersions();
+                    if (vers.length > 0) {
+                        for (int i = vers.length - 1; i >= 0; i--) {
+                            int version = vers[i];
+                            if (version > RUNTIME_VERSION) {
+                                continue;
+                            }
+                            if (version < BASE_VERSION) {
+                                break;
+                            }
+                            byte[] data = archive.getData(this, "META-INF/versions/" + version + "/" + path);
+                            if (data != null) {
+                                return data;
+                            }
                         }
-                        ver--;
                     }
                 }
                 return archive.getData(this, path);
@@ -623,7 +633,57 @@ public class JarClassLoader extends ProxyClassLoader {
                 throw ex;
             }
         }
-        
+
+        private int[] getVersions() {
+            int[] ret;
+            if (versions != null && (ret = versions.get()) != null) {
+                return ret;
+            }
+            try {
+                JarFile src = getJarFile("versions");
+                Set<Integer> vers = new TreeSet<>();
+                Enumeration<JarEntry> en = src.entries();
+                while (en.hasMoreElements()) {
+                    JarEntry je = en.nextElement();
+                    if (je.isDirectory()) {
+                        String itm = je.getName();
+                        if (itm.startsWith("META-INF/versions/")) {
+                            String res = itm.substring(18);
+                            int idx = res.indexOf('/');
+                            if (idx > 0 && idx == res.length() - 1) {
+                                vers.add(Integer.parseInt(res.substring(0, idx)));
+                            }
+                        }
+                    }
+                }
+                ret = new int[vers.size()];
+                int i = 0;
+                for (Integer ver : vers) {
+                    ret[i++] = ver;
+                }
+                versions = new SoftReference<>(ret);
+                return ret;
+            } catch (ZipException x) { // Unix
+                if (warnedFiles.add(file)) {
+                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
+                    dumpFiles(file, -1);
+                }
+            } catch (FileNotFoundException x) { // Windows
+                if (warnedFiles.add(file)) {
+                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
+                    dumpFiles(file, -1);
+                }
+            } catch (IOException ioe) {
+                if (warnedFiles.add(file)) {
+                    LOGGER.log(Level.WARNING, "problems with " + file, ioe);
+                    dumpFiles(file, -1);
+                }
+            } finally {
+                releaseJarFile();
+            }
+            return new int[0];
+        }
+
         @Override
         public byte[] resource(String path) throws IOException {
             if (nonexistentResources.contains(path)) {

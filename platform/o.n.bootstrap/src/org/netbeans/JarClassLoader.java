@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -53,6 +54,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -77,6 +79,12 @@ import org.openide.util.Exceptions;
  * @author  Petr Nejedly
  */
 public class JarClassLoader extends ProxyClassLoader {
+    //
+    // When making changes to this file, check if
+    // platform/netbinox/src/org/netbeans/modules/netbinox/JarBundleFile.java
+    // should also be adjusted. At least the multi-release handling is similar.
+    //
+    
     private static Stamps cache;
     private static final Name MULTI_RELEASE = new Name("Multi-Release");
     private static final int BASE_VERSION = 8;
@@ -87,7 +95,7 @@ public class JarClassLoader extends ProxyClassLoader {
         try {
             Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
             version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
-        } catch (Throwable ex) {
+        } catch (ReflectiveOperationException ex) {
             version = BASE_VERSION;
         }
         RUNTIME_VERSION = version;
@@ -475,6 +483,7 @@ public class JarClassLoader extends ProxyClassLoader {
         private boolean dead;
         private int requests;
         private int used;
+        private volatile int[] versions;
         private volatile Reference<Manifest> manifest;
         /** #141110: expensive to repeatedly look for them */
         private final Set<String> nonexistentResources = Collections.synchronizedSet(new HashSet<String>());
@@ -607,14 +616,22 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected byte[] readClass(String path) throws IOException {
             try {
-                if (isMultiRelease() && RUNTIME_VERSION != BASE_VERSION) {
-                    int ver = RUNTIME_VERSION;
-                    while (ver > BASE_VERSION) {
-                        byte[] data = archive.getData(this, "META-INF/versions/" + ver + "/" + path);
-                        if (data != null) {
-                            return data;
+                if (isMultiRelease() && RUNTIME_VERSION > BASE_VERSION) {
+                    int[] vers = getVersions();
+                    if (vers.length > 0) {
+                        for (int i = vers.length - 1; i >= 0; i--) {
+                            int version = vers[i];
+                            if (version > RUNTIME_VERSION) {
+                                continue;
+                            }
+                            if (version < BASE_VERSION) {
+                                break;
+                            }
+                            byte[] data = archive.getData(this, "META-INF/versions/" + version + "/" + path);
+                            if (data != null) {
+                                return data;
+                            }
                         }
-                        ver--;
                     }
                 }
                 return archive.getData(this, path);
@@ -623,7 +640,56 @@ public class JarClassLoader extends ProxyClassLoader {
                 throw ex;
             }
         }
-        
+
+        private int[] getVersions() {
+            if (versions != null) {
+                return versions;
+            }
+            try {
+                JarFile src = getJarFile("versions");
+                Set<Integer> vers = new TreeSet<>();
+                Enumeration<JarEntry> en = src.entries();
+                while (en.hasMoreElements()) {
+                    JarEntry je = en.nextElement();
+                    if (je.isDirectory()) {
+                        String itm = je.getName();
+                        if (itm.startsWith("META-INF/versions/")) {
+                            String res = itm.substring(18);
+                            int idx = res.indexOf('/');
+                            if (idx > 0 && idx == res.length() - 1) {
+                                vers.add(Integer.parseInt(res.substring(0, idx)));
+                            }
+                        }
+                    }
+                }
+                int[] ret = new int[vers.size()];
+                int i = 0;
+                for (Integer ver : vers) {
+                    ret[i++] = ver;
+                }
+                versions = ret;
+                return ret;
+            } catch (ZipException x) { // Unix
+                if (warnedFiles.add(file)) {
+                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
+                    dumpFiles(file, -1);
+                }
+            } catch (FileNotFoundException x) { // Windows
+                if (warnedFiles.add(file)) {
+                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
+                    dumpFiles(file, -1);
+                }
+            } catch (IOException ioe) {
+                if (warnedFiles.add(file)) {
+                    LOGGER.log(Level.WARNING, "problems with " + file, ioe);
+                    dumpFiles(file, -1);
+                }
+            } finally {
+                releaseJarFile();
+            }
+            return new int[0];
+        }
+
         @Override
         public byte[] resource(String path) throws IOException {
             if (nonexistentResources.contains(path)) {

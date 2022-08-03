@@ -87,8 +87,10 @@ public class KnowledgeBaseNode extends OCINode {
                         .compartmentId(compartment.getKey().getValue()).build();
                 ListKnowledgeBasesResponse response = client.listKnowledgeBases(request);
                 List<KnowledgeBaseSummary> projects = response.getKnowledgeBaseCollection().getItems();
-                return projects.stream().map(p -> new KnowledgeBaseItem(OCID.of(p.getId(), "KnowledgeBase"), // NOI18N 
-                        p.getDisplayName())).collect(Collectors.toList());
+                return projects.stream().map(p -> new KnowledgeBaseItem(
+                        OCID.of(p.getId(), "KnowledgeBase"), // NOI18N 
+                        p.getCompartmentId(),
+                        p.getDisplayName(), p.getTimeUpdated())).collect(Collectors.toList());
             }
         };
     }

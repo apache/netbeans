@@ -1503,42 +1503,42 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     }
 
     private ConstantCaseLabelTree rewriteChildren(ConstantCaseLabelTree tree) {
-	ExpressionTree newExpression = (ExpressionTree)translate(tree.getConstantExpression());
-	if (newExpression != tree.getConstantExpression()) {
-	    ConstantCaseLabelTree n = make.ConstantCaseLabel(newExpression);
+        ExpressionTree newExpression = (ExpressionTree) translate(tree.getConstantExpression());
+        if (newExpression != tree.getConstantExpression()) {
+            ConstantCaseLabelTree n = make.ConstantCaseLabel(newExpression);
             model.setType(n, model.getType(tree));
-	    copyCommentTo(tree,n);
-            copyPosTo(tree,n);
-	    tree = n;
-	}
-	return tree;
+            copyCommentTo(tree, n);
+            copyPosTo(tree, n);
+            tree = n;
+        }
+        return tree;
     }
 
     private PatternCaseLabelTree rewriteChildren(PatternCaseLabelTree tree) {
-	ExpressionTree newGuard = (ExpressionTree)translate(tree.getGuard());
-	PatternTree newPattern = (PatternTree)translate(tree.getPattern());
-	if (newGuard != tree.getGuard() || newPattern != tree.getPattern()) {
-	    PatternCaseLabelTree n = make.PatternCaseLabel(newPattern, newGuard);
+        ExpressionTree newGuard = (ExpressionTree) translate(tree.getGuard());
+        PatternTree newPattern = (PatternTree) translate(tree.getPattern());
+        if (newGuard != tree.getGuard() || newPattern != tree.getPattern()) {
+            PatternCaseLabelTree n = make.PatternCaseLabel(newPattern, newGuard);
             model.setType(n, model.getType(tree));
-	    copyCommentTo(tree,n);
-            copyPosTo(tree,n);
-	    tree = n;
-	}
-	return tree;
+            copyCommentTo(tree, n);
+            copyPosTo(tree, n);
+            tree = n;
+        }
+        return tree;
     }
 
     private DeconstructionPatternTree rewriteChildren(DeconstructionPatternTree tree) {
-	ExpressionTree newDeconstructor = (ExpressionTree)translate(tree.getDeconstructor());
+        ExpressionTree newDeconstructor = (ExpressionTree) translate(tree.getDeconstructor());
         List<? extends PatternTree> newNestedPatterns = translate(tree.getNestedPatterns());
-	VariableTree newVariable = (VariableTree)translate(tree.getVariable());
-	if (newDeconstructor != tree.getDeconstructor() || newVariable != tree.getVariable() || !Objects.equals(newNestedPatterns, tree.getNestedPatterns())) {
-	    DeconstructionPatternTree n = make.DeconstructionPattern(newDeconstructor, newNestedPatterns, newVariable);
+        VariableTree newVariable = (VariableTree) translate(tree.getVariable());
+        if (newDeconstructor != tree.getDeconstructor() || newVariable != tree.getVariable() || !Objects.equals(newNestedPatterns, tree.getNestedPatterns())) {
+            DeconstructionPatternTree n = make.DeconstructionPattern(newDeconstructor, newNestedPatterns, newVariable);
             model.setType(n, model.getType(tree));
-	    copyCommentTo(tree,n);
-            copyPosTo(tree,n);
-	    tree = n;
-	}
-	return tree;
+            copyCommentTo(tree, n);
+            copyPosTo(tree, n);
+            tree = n;
+        }
+        return tree;
     }
 
     private ParenthesizedPatternTree rewriteChildren(ParenthesizedPatternTree tree) {

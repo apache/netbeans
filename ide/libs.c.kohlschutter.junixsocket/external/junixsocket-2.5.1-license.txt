@@ -2,8 +2,8 @@ Name: junixsocket
 License: Apache-2.0
 Description: junixsocket is a Java/JNI library that allows the use of Unix Domain Sockets (AF_UNIX sockets) from Java.
 Origin: https://github.com/kohlschutter/junixsocket/
-Version: 2.4.0
-Files: junixsocket-common-2.4.0.jar, junixsocket-native-common-2.4.0.jar
+Version: 2.5.1
+Files: junixsocket-common-2.5.1.jar, junixsocket-native-common-2.5.1.jar
 
 
                                  Apache License

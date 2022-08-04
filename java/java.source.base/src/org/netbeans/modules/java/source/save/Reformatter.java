@@ -2801,13 +2801,36 @@ public class Reformatter implements ReformatTask {
         }
 
         @Override
-        public Boolean visitGuardedPattern(GuardedPatternTree node, Void p) {
+        public Boolean visitDefaultCaseLabel(DefaultCaseLabelTree node, Void p) {
+            return true;
+        }
+
+        @Override
+        public Boolean visitConstantCaseLabel(ConstantCaseLabelTree node, Void p) {
+            scan(node.getConstantExpression(), p);
+            return true;
+        }
+
+        @Override
+        public Boolean visitPatternCaseLabel(PatternCaseLabelTree node, Void p) {
             scan(node.getPattern(), p);
             space();
-            accept(AMPAMP);
+            accept(IDENTIFIER);
             space();
-            scan(node.getExpression(), p);
+            scan(node.getGuard(), p);
+            return true;
+        }
 
+        @Override
+        public Boolean visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
+            scan(node.getDeconstructor(), p);
+            accept(LPAREN);
+            scan(node.getNestedPatterns(), p);
+            accept(RPAREN);
+            if (node.getVariable() != null) {
+                space();
+                accept(IDENTIFIER);
+            }
             return true;
         }
 
@@ -2948,7 +2971,7 @@ public class Reformatter implements ReformatTask {
                                 break;
                             case BINDING_PATTERN:
                             case PARENTHESIZED_PATTERN:
-                            case GUARDED_PATTERN:
+                            case PATTERN_CASE_LABEL:
                                 removeWhiteSpace(JavaTokenId.IDENTIFIER);
                                 scan(label, p);
                                 break;

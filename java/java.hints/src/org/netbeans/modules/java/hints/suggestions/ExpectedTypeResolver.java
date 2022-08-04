@@ -34,7 +34,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
@@ -66,6 +68,7 @@ import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
@@ -1416,7 +1419,17 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
     }
 
     @Override
-    public List<? extends TypeMirror> visitGuardedPattern(GuardedPatternTree node, Object p) {
+    public List<? extends TypeMirror> visitConstantCaseLabel(ConstantCaseLabelTree node, Object p) {
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitPatternCaseLabel(PatternCaseLabelTree node, Object p) {
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitDeconstructionPattern(DeconstructionPatternTree node, Object p) {
         return null;
     }
 

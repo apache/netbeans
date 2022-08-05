@@ -35,10 +35,38 @@
                     <file name="org-netbeans-modules-javascript-cdtdebug-ui-vars-tooltip-ToolTipAnnotation.instance"/>
                 </folder>
                 <folder name="Popup">
-                 <!-- <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                  <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
                         <attr name="position" intvalue="850"/>
-                    </file>-->
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="990"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="application">
+            <folder name="x-typescript">
+                <folder name="GlyphGutterActions">
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                </folder>
+                <folder name="ToolTips">
+                    <file name="org-netbeans-modules-javascript-cdtdebug-ui-vars-tooltip-ToolTipAnnotation.instance"/>
+                </folder>
+                <folder name="Popup">
+                  <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                        <attr name="position" intvalue="850"/>
+                    </file>
                     <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
                         <attr name="position" intvalue="900"/>

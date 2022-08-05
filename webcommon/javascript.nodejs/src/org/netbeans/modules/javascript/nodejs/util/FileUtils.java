@@ -66,6 +66,7 @@ public final class FileUtils {
 
     private static final boolean IS_WINDOWS = Utilities.isWindows();
     private static final String JAVASCRIPT_MIME_TYPE = "text/javascript"; // NOI18N
+    public static final String TS_MIME_TYPE = "application/x-typescript";    // NOI18N
     private static final String NODEJS_SOURCES_URL = "https://nodejs.org/dist/v%1$s/node-v%1$s.tar.gz"; // NOI18N
     private static final String IOJS_SOURCES_URL = "https://iojs.org/dist/v%1$s/iojs-v%1$s.tar.gz"; // NOI18N
 
@@ -75,7 +76,7 @@ public final class FileUtils {
 
     public static boolean isJavaScriptFile(FileObject file) {
         assert file != null;
-        return FileUtil.getMIMEType(file, JAVASCRIPT_MIME_TYPE, null) != null;
+        return FileUtil.getMIMEType(file, JAVASCRIPT_MIME_TYPE, TS_MIME_TYPE, null) != null;
     }
 
     public static boolean isJavaScriptFile(File file) {

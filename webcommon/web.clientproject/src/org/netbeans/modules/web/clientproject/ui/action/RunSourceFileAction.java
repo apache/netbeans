@@ -43,6 +43,8 @@ import org.openide.util.NbBundle;
 @ActionReferences({
         @ActionReference(path = "Loaders/text/javascript/Actions", position = 250),
         @ActionReference(path = "Editors/text/javascript/Popup", position = 800),
+        @ActionReference(path = "Loaders/application/x-typescript/Actions", position = 250),
+        @ActionReference(path = "Editors/application/x-typescript/Popup", position = 800),
 })
 public class RunSourceFileAction extends AbstractAction implements ContextAwareAction {
 

@@ -40,6 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class CDTBreakpointsActiveService implements JSBreakpointsInfo {
 
     public static final String JS_MIME_TYPE = "text/javascript";    // NOI18N
+    public static final String TS_MIME_TYPE = "application/x-typescript";    // NOI18N
 
     private volatile boolean active = true;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -52,7 +53,7 @@ public class CDTBreakpointsActiveService implements JSBreakpointsInfo {
     @Override
     public boolean isAnnotatable(FileObject fo) {
         String mimeType = fo.getMIMEType();
-        return JS_MIME_TYPE.equals(mimeType);
+        return JS_MIME_TYPE.equals(mimeType) || TS_MIME_TYPE.equals(mimeType);
     }
 
     @Override

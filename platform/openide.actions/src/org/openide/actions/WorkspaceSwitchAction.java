@@ -84,7 +84,7 @@ public class WorkspaceSwitchAction extends CallableSystemAction {
         }
 
         // check on currently active workspace
-        JRadioButtonMenuItem curItem = (JRadioButtonMenuItem) workspace2Menu.get(currentDeskRef[0]);
+        JRadioButtonMenuItem curItem = workspace2Menu.get(currentDeskRef[0]);
 
         if (curItem != null) {
             curItem.setSelected(true);

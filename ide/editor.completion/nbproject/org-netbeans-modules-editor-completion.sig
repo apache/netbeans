@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58.0
+#Version 1.61.0
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -149,10 +149,38 @@ supr java.lang.Object
 hfds RP,cancelled,component,doc,query,queryCaretOffset,queryInvoked,queryResultSet,refreshResultSet,rpTask
 
 CLSS public final org.netbeans.spi.editor.completion.support.CompletionUtilities
+innr public final static CompletionItemBuilder
+innr public final static OnSelectContext
 meth public static int getPreferredWidth(java.lang.String,java.lang.String,java.awt.Graphics,java.awt.Font)
+meth public static org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder newCompletionItemBuilder(java.lang.String)
 meth public static void renderHtml(javax.swing.ImageIcon,java.lang.String,java.lang.String,java.awt.Graphics,java.awt.Font,java.awt.Color,int,int,boolean)
 supr java.lang.Object
 hfds AFTER_ICON_GAP,AFTER_RIGHT_TEXT_GAP,BEFORE_ICON_GAP,BEFORE_RIGHT_TEXT_GAP,ICON_HEIGHT,ICON_WIDTH
+hcls SpiAccessor
+
+CLSS public final static org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder
+ outer org.netbeans.spi.editor.completion.support.CompletionUtilities
+meth public org.netbeans.spi.editor.completion.CompletionItem build()
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder documentationTask(java.util.function.Supplier<org.netbeans.spi.editor.completion.CompletionTask>)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder endOffset(int)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder iconResource(java.lang.String)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder insertText(java.lang.String)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder leftHtmlText(java.lang.String)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder onSelect(java.util.function.Consumer<org.netbeans.spi.editor.completion.support.CompletionUtilities$OnSelectContext>)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder rightHtmlText(java.lang.String)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder sortPriority(int)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder sortText(java.lang.CharSequence)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder startOffset(int)
+meth public org.netbeans.spi.editor.completion.support.CompletionUtilities$CompletionItemBuilder tooltipTask(java.util.function.Supplier<org.netbeans.spi.editor.completion.CompletionTask>)
+supr java.lang.Object
+hfds documentationTask,endOffset,iconResource,insertText,leftHtmlText,onSelectCallback,rightHtmlText,sortPriority,sortText,startOffset,tooltipTask
+
+CLSS public final static org.netbeans.spi.editor.completion.support.CompletionUtilities$OnSelectContext
+ outer org.netbeans.spi.editor.completion.support.CompletionUtilities
+meth public boolean isOverwrite()
+meth public javax.swing.text.JTextComponent getComponent()
+supr java.lang.Object
+hfds component,overwrite
 
 CLSS public abstract interface !annotation org.netbeans.spi.editor.mimelookup.MimeLocation
  anno 0 java.lang.annotation.Documented()

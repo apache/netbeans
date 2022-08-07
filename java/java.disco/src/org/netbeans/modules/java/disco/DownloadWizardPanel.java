@@ -52,12 +52,12 @@ public class DownloadWizardPanel extends AbstractWizardPanel<DownloadPanel> {
     public void storeSettings(WizardDescriptor wiz) {
         File file = getComponent().getDownload();
         if (file != null)
-            wiz.putProperty(FoojayPlatformIt.PROP_DOWNLOAD, file.getAbsolutePath());
+            wiz.putProperty(DiscoPlatformIt.PROP_DOWNLOAD, file.getAbsolutePath());
     }
 
     @Override
     public void readSettings(WizardDescriptor wiz) {
-        String folder = (String) wiz.getProperty(FoojayPlatformIt.PROP_DOWNLOAD_FOLDER);
+        String folder = (String) wiz.getProperty(DiscoPlatformIt.PROP_DOWNLOAD_FOLDER);
         getComponent().setDownloadFolder(folder);
     }
 }

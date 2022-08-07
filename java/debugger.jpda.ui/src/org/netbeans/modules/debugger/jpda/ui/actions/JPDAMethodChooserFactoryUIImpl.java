@@ -20,6 +20,8 @@
 package org.netbeans.modules.debugger.jpda.ui.actions;
 
 import com.sun.jdi.ReferenceType;
+import java.awt.GraphicsEnvironment;
+import javax.swing.SwingUtilities;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.actions.JPDAMethodChooserFactory;
 import org.netbeans.modules.debugger.jpda.actions.StepIntoActionProvider;
@@ -38,6 +40,10 @@ public class JPDAMethodChooserFactoryUIImpl implements JPDAMethodChooserFactory 
 
     @Override
     public boolean initChooserUI(JPDADebuggerImpl debugger, String url, ReferenceType clazz, int methodLine) {
+        if (GraphicsEnvironment.isHeadless()) {
+            // Not supported in headless environment
+            return false;
+        }
         final MethodChooserSupport cSupport = new MethodChooserSupport(debugger, url, clazz, methodLine);
         boolean continuedDirectly = cSupport.init();
         if (cSupport.getSegmentsCount() == 0) {

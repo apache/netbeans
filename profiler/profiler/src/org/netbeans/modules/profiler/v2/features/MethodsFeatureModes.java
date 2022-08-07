@@ -135,7 +135,7 @@ import org.openide.util.NbPreferences;
 })
 final class MethodsFeatureModes {
     
-    private static abstract class MethodsMode extends FeatureMode {
+    private abstract static class MethodsMode extends FeatureMode {
         
         void initialize() {}
         
@@ -143,7 +143,7 @@ final class MethodsFeatureModes {
         
     }
     
-    private static abstract class SampledMethodsMode extends MethodsMode {
+    private abstract static class SampledMethodsMode extends MethodsMode {
         
         void configureSettings(ProfilingSettings settings) {
             super.configureSettings(settings);
@@ -162,7 +162,7 @@ final class MethodsFeatureModes {
         
     }
     
-    static abstract class AllClassesMode extends SampledMethodsMode {
+    abstract static class AllClassesMode extends SampledMethodsMode {
         
         String getID() {
             return "AllClassesMode"; // NOI18N
@@ -180,7 +180,7 @@ final class MethodsFeatureModes {
         
     }
     
-    static abstract class ProjectClassesMode extends SampledMethodsMode {
+    abstract static class ProjectClassesMode extends SampledMethodsMode {
         
         private final Collection<Lookup.Provider> selectedProjects;
         
@@ -393,7 +393,7 @@ final class MethodsFeatureModes {
         
     }
     
-    private static abstract class InstrMethodsMode extends MethodsMode {
+    private abstract static class InstrMethodsMode extends MethodsMode {
         
         // --- External implementation -----------------------------------------
         
@@ -792,7 +792,7 @@ final class MethodsFeatureModes {
         
     }
     
-    static abstract class SelectedClassesMode extends InstrMethodsMode {
+    abstract static class SelectedClassesMode extends InstrMethodsMode {
         
         abstract void selectForProfiling(Collection<SourceClassInfo> classInfos);
         
@@ -846,7 +846,7 @@ final class MethodsFeatureModes {
         
     }
     
-    static abstract class SelectedMethodsMode extends InstrMethodsMode {
+    abstract static class SelectedMethodsMode extends InstrMethodsMode {
         
         abstract void selectForProfiling(Collection<SourceMethodInfo> methodInfos);
         
@@ -901,7 +901,7 @@ final class MethodsFeatureModes {
     }
     
     
-    static abstract class CustomClassesMode extends MethodsMode {
+    abstract static class CustomClassesMode extends MethodsMode {
         
         private static final String CLASSES_FLAG = "CLASSES_FLAG"; // NOI18N
         private static final String FILTER_FLAG = "FILTER_FLAG"; // NOI18N

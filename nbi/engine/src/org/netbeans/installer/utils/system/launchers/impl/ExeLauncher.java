@@ -134,7 +134,7 @@ public class ExeLauncher extends CommonLauncher {
                     testJVMClass);
             
             // add java compatibility properties number
-            addNumber(fos, new Long("" + compatibleJava.size()).longValue());
+            addNumber(fos, Long.parseLong("" + compatibleJava.size()));
             addJavaCompatibleProperties(fos);
             
             //add overall bundled number and size

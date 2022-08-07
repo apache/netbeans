@@ -22,10 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -33,26 +31,31 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,9 +76,20 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Segment;
+import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -125,10 +139,16 @@ import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.ResourceOperation;
+import org.eclipse.lsp4j.SemanticTokens;
+import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensLegend;
+import org.eclipse.lsp4j.SemanticTokensParams;
+import org.eclipse.lsp4j.SemanticTokensServerFull;
+import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -142,9 +162,12 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.AtomicLockListener;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CodeStyle;
@@ -159,7 +182,9 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.CallHierarchyEntry;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -173,8 +198,11 @@ import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor.FoldCreator;
+import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
+import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase;
+import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.ErrorDescriptionSetter;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriding;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
@@ -200,20 +228,28 @@ import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants;
 import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
+import org.netbeans.api.lsp.StructureElement;
+import org.netbeans.modules.editor.indent.api.Reformat;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.lsp.CallHierarchyProvider;
+import org.netbeans.spi.lsp.CodeLensProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -413,6 +449,47 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void connect(LanguageClient client) {
         this.client = (NbCodeLanguageClient)client;
+    }
+
+    private int[] coloring2TokenType;
+    private int[] coloring2TokenModifier;
+
+    {
+        coloring2TokenType = new int[ColoringAttributes.values().length];
+        Arrays.fill(coloring2TokenType, -1);
+        coloring2TokenModifier = new int[ColoringAttributes.values().length];
+        Arrays.fill(coloring2TokenModifier, -1);
+    }
+
+    public void init(ClientCapabilities clientCapabilities, ServerCapabilities severCapabilities) {
+        SemanticTokensCapabilities semanticTokens = clientCapabilities != null && clientCapabilities.getTextDocument() != null ? clientCapabilities.getTextDocument().getSemanticTokens() : null;
+        if (semanticTokens != null) {
+            SemanticTokensWithRegistrationOptions cap = new SemanticTokensWithRegistrationOptions();
+            cap.setFull(new SemanticTokensServerFull(false));
+            Set<String> knownTokenTypes = semanticTokens.getTokenTypes() != null ? new HashSet<>(semanticTokens.getTokenTypes()) : Collections.emptySet();
+            Map<String, Integer> tokenLegend = new LinkedHashMap<>();
+            for (Entry<ColoringAttributes, List<String>> e : COLORING_TO_TOKEN_TYPE_CANDIDATES.entrySet()) {
+                for (String candidate : e.getValue()) {
+                    if (knownTokenTypes.contains(candidate)) {
+                        coloring2TokenType[e.getKey().ordinal()] = tokenLegend.computeIfAbsent(candidate, c -> tokenLegend.size());
+                        break;
+                    }
+                }
+            }
+            Set<String> knownTokenModifiers = semanticTokens.getTokenModifiers() != null ? new HashSet<>(semanticTokens.getTokenModifiers()) : Collections.emptySet();
+            Map<String, Integer> modifiersLegend = new LinkedHashMap<>();
+            for (Entry<ColoringAttributes, List<String>> e : COLORING_TO_TOKEN_MODIFIERS_CANDIDATES.entrySet()) {
+                for (String candidate : e.getValue()) {
+                    if (knownTokenModifiers.contains(candidate)) {
+                        coloring2TokenModifier[e.getKey().ordinal()] = modifiersLegend.computeIfAbsent(candidate, c -> 1 << modifiersLegend.size());
+                        break;
+                    }
+                }
+            }
+            SemanticTokensLegend legend = new SemanticTokensLegend(new ArrayList<>(tokenLegend.keySet()), new ArrayList<>(modifiersLegend.keySet()));
+            cap.setLegend(legend);
+            severCapabilities.setSemanticTokensProvider(cap);
+        }
     }
 
     @Override
@@ -753,98 +830,63 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        return server.openedProjects().thenCompose(projects -> {
-            JavaSource js = getJavaSource(params.getTextDocument().getUri());
-            if (js == null) {
-                return CompletableFuture.completedFuture(Collections.emptyList());
-            }
+        final CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> resultFuture = new CompletableFuture<>();
+        
+        BACKGROUND_TASKS.post(() -> {
             List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-            try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Trees trees = cc.getTrees();
-                    CompilationUnitTree cu = cc.getCompilationUnit();
-                    if (cu.getPackage() != null) {
-                        TreePath tp = trees.getPath(cu, cu.getPackage());
-                        Element el = trees.getElement(tp);
-                        if (el != null && el.getKind() == ElementKind.PACKAGE) {
-                            String name = Utils.label(cc, el, true);
-                            SymbolKind kind = Utils.elementKind2SymbolKind(el.getKind());
-                            Range range = Utils.treeRange(cc, tp.getLeaf());
-                            result.add(Either.forRight(new DocumentSymbol(name, kind, range, range)));
-                        }
-                    }
-                    for (Element tel : cc.getTopLevelElements()) {
-                        DocumentSymbol ds = element2DocumentSymbol(cc, tel);
-                        if (ds != null)
-                            result.add(Either.forRight(ds));
-                    }
-                }, true);
-            } catch (IOException ex) {
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-            }
-            return CompletableFuture.completedFuture(result);
-        });
-    }
-
-    private static DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) {
-        TreePath path = info.getTrees().getPath(el);
-        if (path == null)
-            return null;
-        TreeUtilities tu = info.getTreeUtilities();
-        if (tu.isSynthetic(path))
-            return null;
-        Range range = Utils.treeRange(info, path.getLeaf());
-        if (range == null)
-            return null;
-        Range selection = Utils.selectionRange(info, path.getLeaf());
-        List<DocumentSymbol> children = new ArrayList<>();
-        for (Element c : el.getEnclosedElements()) {
-            DocumentSymbol ds = element2DocumentSymbol(info, c);
-            if (ds != null) {
-                children.add(ds);
-            }
-        }
-        if (path.getLeaf().getKind() == Kind.METHOD || path.getLeaf().getKind() == Kind.VARIABLE) {
-            children.addAll(getAnonymousInnerClasses(info, path));
-        }
-        String name = Utils.label(info, el, false);
-        String detail = Utils.detail(info, el, false);
-        return new DocumentSymbol(name, Utils.elementKind2SymbolKind(el.getKind()), range, selection != null ? selection : range, detail, children);
-    }
-
-    private static List<DocumentSymbol> getAnonymousInnerClasses(CompilationInfo info, TreePath path) {
-        List<DocumentSymbol> inner = new ArrayList<>();
-        new TreePathScanner<Void, Void>() {
-            @Override
-            public Void visitNewClass(NewClassTree node, Void p) {
-                if (node.getClassBody() != null) {
-                    Range range = Utils.treeRange(info, node);
-                    if (range != null) {
-                        Range selectionRange = Utils.treeRange(info, node.getIdentifier());
-                        Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getClassBody()));
-                        if (e != null) {
-                            Element te = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getIdentifier()));
-                            if (te != null) {
-                                String name = "new " + te.getSimpleName() + "() {...}";
-                                List<DocumentSymbol> children = new ArrayList<>();
-                                for (Element c : e.getEnclosedElements()) {
-                                    DocumentSymbol ds = element2DocumentSymbol(info, c);
-                                    if (ds != null) {
-                                        children.add(ds);
-                                    }
-                                }
-                                inner.add(new DocumentSymbol(name, Utils.elementKind2SymbolKind(e.getKind()), range, selectionRange, null, children));
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromURI(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
+            if (file != null && (doc instanceof LineDocument)) {
+                StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
+                if (structureProvider != null) {
+                    List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                    if (!structureElements.isEmpty()) {
+                        LineDocument lDoc = (LineDocument) doc;
+                        for (StructureElement structureElement : structureElements) {
+                            DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, structureElement);
+                            if (ds != null) {
+                                result.add(Either.forRight(ds));
                             }
                         }
-                    }
+                    };
                 }
-                return null;
             }
-        }.scan(path, null);
-        return inner;
+            resultFuture.complete(result);
+        });
+        return resultFuture;
     }
 
+    private static DocumentSymbol structureElement2DocumentSymbol (LineDocument doc, StructureElement el) {
+        try {
+            Position selectionStartPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getSelectionStartOffset()), el.getSelectionStartOffset() - LineDocumentUtils.getLineStart(doc, el.getSelectionStartOffset()));
+            Position selectionEndPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getSelectionEndOffset()), el.getSelectionEndOffset() - LineDocumentUtils.getLineStart(doc, el.getSelectionEndOffset()));
+            Range selectionRange = new Range(selectionStartPos, selectionEndPos);
+            Position enclosedStartPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getExpandedStartOffset()), el.getExpandedStartOffset() - LineDocumentUtils.getLineStart(doc, el.getExpandedStartOffset()));
+            Position enclosedEndPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getExpandedEndOffset()), el.getExpandedEndOffset() - LineDocumentUtils.getLineStart(doc, el.getExpandedEndOffset()));
+            Range expandedRange = new Range(enclosedStartPos, enclosedEndPos);
+            DocumentSymbol ds;
+            if (el.getChildren() != null && !el.getChildren().isEmpty()) {
+                List<DocumentSymbol> children = new ArrayList<>();
+                for (StructureElement child: el.getChildren()) {
+                    ds = structureElement2DocumentSymbol(doc, child);
+                    if (ds != null) {
+                        children.add(ds);
+                    }
+                }
+                ds = new DocumentSymbol(el.getName(), Utils.structureElementKind2SymbolKind(el.getKind()), expandedRange, selectionRange, el.getDetail(), children);
+                ds.setTags(Utils.elementTags2SymbolTags(el.getTags()));
+                return ds;
+            }
+            ds = new DocumentSymbol(el.getName(), Utils.structureElementKind2SymbolKind(el.getKind()), expandedRange, selectionRange, el.getDetail());
+            ds.setTags(Utils.elementTags2SymbolTags(el.getTags()));
+            return ds;
+        } catch (BadLocationException ex) {
+
+        }
+        return null;
+    }
+    
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
@@ -870,12 +912,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
 
             ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
-            diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+            if (diagnostics.isEmpty()) {
+                diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+            }
 
-            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
-            if (id2Errors != null) {
+            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
+            for (String key : VALID_ERROR_KEYS) {
+                Map<String, org.netbeans.api.lsp.Diagnostic> diags = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-valid-" + key);
+                if (diags != null) {
+                    id2Errors.putAll(diags);
+                }
+            }
+            if (!id2Errors.isEmpty()) {
                 for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
                     org.netbeans.api.lsp.Diagnostic err = entry.getValue();
+                    if (err.getDescription() == null || err.getDescription().isEmpty()) {
+                        continue;
+                    }
                     if (err.getSeverity() == org.netbeans.api.lsp.Diagnostic.Severity.Error) {
                         if (err.getEndPosition().getOffset() < startOffset || err.getStartPosition().getOffset() > endOffset) {
                             continue;
@@ -895,7 +948,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             }
                             action.setKind(kind(err.getSeverity()));
                             if (inputAction.getCommand() != null) {
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand()));
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), Arrays.asList(params.getTextDocument().getUri())));
                             }
                             if (inputAction.getEdit() != null) {
                                 org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
@@ -1030,71 +1083,122 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         "# {0} - method name", "# {1} - configuration name", "LBL_DebugWith=Debug {0} with {1}"})
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
+        if (!client.getNbCodeCapabilities().wantsJavaSupport()) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        String uri = params.getTextDocument().getUri();
-        Source source = getSource(uri);
-        if (source == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        CompletableFuture<List<? extends CodeLens>> result = new CompletableFuture<>();
+        CompletableFuture<List<? extends CodeLens>> result = CompletableFuture.completedFuture(Collections.emptyList());
         try {
-            ParserManager.parseWhenScanFinished(Collections.singleton(source), new UserTask() {
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    Parser.Result parserResult = resultIterator.getParserResult();
-                    //look for main methods:
-                    List<CodeLens> lens = new ArrayList<>();
-                    CompilationController cc = CompilationController.get(parserResult);
-                    if (cc != null) {
-                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        AtomicReference<List<Pair<String, String>>> projectConfigurations = new AtomicReference<>();
-                        new TreePathScanner<Void, Void>() {
-                            public Void visitMethod(MethodTree tree, Void p) {
-                                Element el = cc.getTrees().getElement(getCurrentPath());
-                                if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
-                                    Range range = Utils.treeRange(cc, tree);
-                                    List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
-                                    String method = el.getSimpleName().toString();
-                                    lens.add(new CodeLens(range,
-                                                          new Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),
-                                                          null));
-                                    lens.add(new CodeLens(range,
-                                                          new Command(Bundle.LBL_Debug(method), COMMAND_DEBUG_SINGLE, arguments),
-                                                          null));
-                                    // Run and Debug configurations:
-                                    List<Pair<String, String>> configs = projectConfigurations.accumulateAndGet(null, (l, nul) -> l == null ? getProjectConfigurations(source) : l);
-                                    for (Pair<String, String> config : configs) {
-                                        String runConfig = config.first();
-                                        if (runConfig != null) {
-                                            lens.add(new CodeLens(range,
-                                                                  new Command(Bundle.LBL_RunWith(method, runConfig), COMMAND_RUN_SINGLE, Arrays.asList(params.getTextDocument().getUri(), null, runConfig)),
-                                                                  null));
-                                        }
-                                        String debugConfig = config.second();
-                                        if (debugConfig != null) {
-                                            lens.add(new CodeLens(range,
-                                                                  new Command(Bundle.LBL_DebugWith(method, debugConfig), COMMAND_DEBUG_SINGLE, Arrays.asList(params.getTextDocument().getUri(), null, debugConfig)),
-                                                                  null));
-                                        }
-                                    }
-                                }
-                                return null;
-                            }
-                        }.scan(cc.getCompilationUnit(), null);
-                    }
-                    result.complete(lens);
-                }
-            });
-        } catch (ParseException ex) {
-            result.completeExceptionally(ex);
+            String uri = params.getTextDocument().getUri();
+            FileObject file = Utils.fromUri(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
+            if (file == null || doc == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            for (CodeLensProvider provider : MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(CodeLensProvider.class)) {
+                result = result.thenCombine(provider.codeLens(doc), (leftList, rightList) -> mergeLists(leftList, convertCodeLens(doc, rightList)));
+            }
+        } catch (MalformedURLException ex) {
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
         }
         return result;
     }
 
-    private List<Pair<String, String>> getProjectConfigurations(Source source) {
+    private List<CodeLens> convertCodeLens(Document doc, List<? extends org.netbeans.api.lsp.CodeLens> origin) {
+        List<CodeLens> result = new ArrayList<>();
+        for (org.netbeans.api.lsp.CodeLens len : origin) {
+            Command cmd = null;
+            if (len.getCommand() != null) {
+                cmd = new Command(len.getCommand().getTitle(), len.getCommand().getCommand(), len.getCommand().getArguments());
+            }
+            result.add(new CodeLens(callRange2Range(len.getRange(), doc), cmd, len.getData()));
+        }
+        return result;
+    }
+    private List<? extends CodeLens> mergeLists(List<? extends CodeLens> left, List<? extends CodeLens> right) {
+        List<CodeLens> result = new ArrayList<>();
+        result.addAll(left);
+        result.addAll(right);
+        return result;
+    }
+
+    @MimeRegistration(mimeType="text/x-java", service=CodeLensProvider.class) //TODO: other mime types?
+    public static final class MainLens implements CodeLensProvider {
+
+        @Override
+        public CompletableFuture<List<? extends org.netbeans.api.lsp.CodeLens>> codeLens(Document doc) {
+            Source source = Source.create(doc);
+            if (source == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            String uri = Utils.toUri(source.getFileObject());
+            CompletableFuture<List<? extends org.netbeans.api.lsp.CodeLens>> result = new CompletableFuture<>();
+            try {
+                ParserManager.parseWhenScanFinished(Collections.singleton(source), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        Parser.Result parserResult = resultIterator.getParserResult();
+                        //look for main methods:
+                        List<org.netbeans.api.lsp.CodeLens> lens = new ArrayList<>();
+                        if (parserResult == null) {
+                            // no parser for the sourec type
+                            result.complete(lens);
+                            return;
+                        }
+                        CompilationController cc = CompilationController.get(parserResult);
+                        if (cc != null) {
+                            cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                            AtomicReference<List<Pair<String, String>>> projectConfigurations = new AtomicReference<>();
+                            new TreePathScanner<Void, Void>() {
+                                public Void visitMethod(MethodTree tree, Void p) {
+                                    Element el = cc.getTrees().getElement(getCurrentPath());
+                                    if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
+                                        int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree);
+                                        int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tree);
+                                        org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(start, end);
+                                        List<Object> arguments = Collections.singletonList(uri);
+                                        String method = el.getSimpleName().toString();
+                                        lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                              new org.netbeans.api.lsp.Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),
+                                                              null));
+                                        lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                              new org.netbeans.api.lsp.Command(Bundle.LBL_Debug(method), COMMAND_DEBUG_SINGLE, arguments),
+                                                              null));
+                                        // Run and Debug configurations:
+                                        List<Pair<String, String>> configs = projectConfigurations.accumulateAndGet(null, (l, nul) -> l == null ? getProjectConfigurations(source) : l);
+                                        for (Pair<String, String> config : configs) {
+                                            String runConfig = config.first();
+                                            if (runConfig != null) {
+                                                lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                                      new org.netbeans.api.lsp.Command(Bundle.LBL_RunWith(method, runConfig), COMMAND_RUN_SINGLE, Arrays.asList(uri, null, runConfig)),
+                                                                      null));
+                                            }
+                                            String debugConfig = config.second();
+                                            if (debugConfig != null) {
+                                                lens.add(new org.netbeans.api.lsp.CodeLens(range,
+                                                                      new org.netbeans.api.lsp.Command(Bundle.LBL_DebugWith(method, debugConfig), COMMAND_DEBUG_SINGLE, Arrays.asList(uri, null, debugConfig)),
+                                                                      null));
+                                            }
+                                        }
+                                    }
+                                    return null;
+                                }
+                            }.scan(cc.getCompilationUnit(), null);
+                        }
+                        result.complete(lens);
+                    }
+                });
+            } catch (ParseException ex) {
+                result.completeExceptionally(ex);
+            }
+            return result;
+        }
+    }
+
+    private static List<Pair<String, String>> getProjectConfigurations(Source source) {
         FileObject fo = source.getFileObject();
         Project p = FileOwnerQuery.getOwner(fo);
         if (p != null) {
@@ -1138,13 +1242,46 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
+        String uri = params.getTextDocument().getUri();
+        Document doc = server.getOpenedDocuments().getDocument(uri);
+        return format((LineDocument) doc, 0, doc.getLength());
     }
 
     @Override
-    public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
+        String uri = params.getTextDocument().getUri();
+        LineDocument lDoc = LineDocumentUtils.as(server.getOpenedDocuments().getDocument(uri), LineDocument.class);
+        if (lDoc != null) {
+            Range range = params.getRange();
+            return format(lDoc, Utils.getOffset(lDoc, range.getStart()), Utils.getOffset(lDoc, range.getEnd()));
+        }
+        return CompletableFuture.completedFuture(Collections.emptyList());
+    }
+
+    private CompletableFuture<List<? extends TextEdit>> format(Document doc, int startOffset, int endOffset) {
+        CompletableFuture<List<? extends TextEdit>> result = new CompletableFuture<>();
+        StyledDocument sDoc = LineDocumentUtils.as(doc, StyledDocument.class);
+        if (sDoc != null) {
+            FormatterDocument formDoc = new FormatterDocument(sDoc);
+            Reformat reformat = Reformat.get(formDoc);
+            if (reformat != null) {
+                reformat.lock();
+                try {
+                    reformat.reformat(startOffset, endOffset);
+                    result.complete(formDoc.getEdits());
+                } catch (BadLocationException ex) {
+                    result.completeExceptionally(ex);
+                } finally {
+                    reformat.unlock();
+                }
+            } else {
+                result.complete(Collections.emptyList());
+            }
+        } else {
+            result.complete(Collections.emptyList());
+        }
+        return result;
     }
 
     @Override
@@ -1171,8 +1308,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 }
                 int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                ts.move(pos);
+                if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                    pos += 1;
+                }
                 TreePath path = cc.getTreeUtilities().pathFor(pos);
                 RenameRefactoring ref = new RenameRefactoring(Lookups.singleton(TreePathHandle.create(path, cc)));
+                ref.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                 ref.setNewName("any");
                 Problem p = ref.fastCheckParameters();
                 boolean hasFatalProblem = false;
@@ -1184,7 +1327,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 } else {
                     //XXX: better range computation
-                    TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     int d = ts.move(pos);
                     if (ts.moveNext()) {
                         if (d == 0 && ts.token().id() != JavaTokenId.IDENTIFIER) {
@@ -1235,7 +1377,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
                     if (doc instanceof LineDocument) {
-                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset((LineDocument) doc, params.getPosition()));
+                        int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                        TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                        ts.move(pos);
+                        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                            pos += 1;
+                        }
+                        TreePath path = cc.getTreeUtilities().pathFor(pos);
                         List<Object> lookupContent = new ArrayList<>();
 
                         lookupContent.add(TreePathHandle.create(path, cc));
@@ -1251,6 +1399,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
 
                         refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                        refactoring[0].getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                         refactoring[0].setNewName(params.getNewName());
                         refactoring[0].setSearchInComments(true); //TODO?
                     }
@@ -1302,7 +1451,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
                 for (RefactoringElementImplementation rei : fileChanges) {
                     if (rei instanceof FileRenamePlugin.RenameFile) {
-                        String oldURI = params.getTextDocument().getUri();
+                        String oldURI = Utils.toUri(rei.getParentFile());
                         int dot = oldURI.lastIndexOf('.');
                         int slash = oldURI.lastIndexOf('/');
                         String newURI = oldURI.substring(0, slash + 1) + params.getNewName() + oldURI.substring(dot);
@@ -1440,6 +1589,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                 }
             });
+            for (String key : VALID_ERROR_KEYS) {
+                doc.putProperty("lsp-errors-valid-" + key, null);
+            }
         }
         runDiagnosticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
@@ -1478,7 +1630,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                         wc.toPhase(JavaSource.Phase.RESOLVED);
-                        OrganizeImports.doOrganizeImports(wc, null, false);
+                        if (wc.getDiagnostics().isEmpty()) {
+                            OrganizeImports.doOrganizeImports(wc, null, false);
+                        }
                     });
                     return edits;
                 } catch (IOException ex) {}
@@ -1609,7 +1763,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         Document doc = server.getOpenedDocuments().getDocument(uri);
                         if (documentVersion(doc) == originalVersion) {
                             publishDiagnostics(uri, hintDiags);
-                }
+                        }
                     }).schedule(DELAY);
                 }
             });
@@ -1618,7 +1772,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final int DELAY = 500;
 
-    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long originalVersion) {
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
         if (file == null) {
@@ -1629,6 +1783,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
+            long originalVersion = orgV != -1 ? orgV : documentVersion(doc);
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
             ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
                                                     .lookup(ErrorProvider.class);
@@ -1666,7 +1821,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (errors == null) {
                 errors = Collections.emptyList();
             }
-            if (documentVersion(doc) != originalVersion) {
+            if (originalVersion != -1 && documentVersion(doc) != originalVersion) {
                 return result;
             }
             for (org.netbeans.api.lsp.Diagnostic err : errors) {
@@ -1675,6 +1830,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             if (offset < 0) {
                 doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                doc.putProperty("lsp-errors-valid-" + keyPrefix, id2Errors);
+            } else {
+                doc.putProperty("lsp-errors-valid-offsetHints", id2Errors);
             }
             Map<String, org.netbeans.api.lsp.Diagnostic> mergedId2Errors = new HashMap<>();
             for (String k : ERROR_KEYS) {
@@ -1701,7 +1859,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (offset >= 0) {
                 mergedId2Errors.putAll(id2Errors);
             }
-            doc.putProperty("lsp-errors", mergedId2Errors);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -1777,6 +1934,31 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         client.publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<>()));
     }
     
+    private org.netbeans.api.lsp.Diagnostic.ReporterControl reporterControl = new org.netbeans.api.lsp.Diagnostic.ReporterControl() {
+        @Override
+        public void diagnosticChanged(Collection<FileObject> files, String mimeType) {
+            // possibly duplicities are handled by runDiagnosticTasks
+            for (FileObject f : files) {
+                // do not process directories at the moment
+                if (mimeType != null && !f.getMIMEType().equals(mimeType)) {
+                    continue;
+                }
+                URL url = URLMapper.findURL(f, URLMapper.EXTERNAL);
+                try {
+                    String uriString = url.toURI().toString();
+                    String lspUri = URITranslator.getDefault().uriToLSP(uriString);
+                    runDiagnosticTasks(lspUri);
+                } catch (URISyntaxException ex) {
+                    // should not happen
+                }
+            }
+        }
+    };
+    
+    public org.netbeans.api.lsp.Diagnostic.ReporterControl createReporterControl() {
+        return reporterControl;
+    }
+    
     /**
      * Publishes diagnostics to the client. Remembers the file, so that if the file vanishes (i.e. event is received, or
      * it's reported as missing during some processing), the client will get an empty diagnostics message for this file to
@@ -1790,6 +1972,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
     
     private static final String[] ERROR_KEYS = {"errors", "hints"};
+    private static final String[] VALID_ERROR_KEYS = {"errors", "hints", "offsetHints"};
 
     private interface ProduceErrors {
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
@@ -1797,6 +1980,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
+        if (!client.getNbCodeCapabilities().wantsJavaSupport()) {
+            return null;
+        }
         Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);
@@ -1879,4 +2065,519 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      * this hook, if defined, with the method name and parameter.
      */
     static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
+
+    private static final Map<ColoringAttributes, List<String>> COLORING_TO_TOKEN_TYPE_CANDIDATES = new HashMap<ColoringAttributes, List<String>>() {{
+        put(ColoringAttributes.FIELD, Arrays.asList("field", "member"));
+        put(ColoringAttributes.RECORD_COMPONENT, Arrays.asList("field", "member"));
+        put(ColoringAttributes.LOCAL_VARIABLE, Arrays.asList("variable"));
+        put(ColoringAttributes.PARAMETER, Arrays.asList("parameter"));
+        put(ColoringAttributes.METHOD, Arrays.asList("method", "function"));
+        put(ColoringAttributes.CONSTRUCTOR, Arrays.asList("method", "function"));
+        put(ColoringAttributes.CLASS, Arrays.asList("class"));
+        put(ColoringAttributes.RECORD, Arrays.asList("class"));
+        put(ColoringAttributes.INTERFACE, Arrays.asList("interface"));
+        put(ColoringAttributes.ANNOTATION_TYPE, Arrays.asList("interface"));
+        put(ColoringAttributes.ENUM, Arrays.asList("enum"));
+        put(ColoringAttributes.TYPE_PARAMETER_DECLARATION, Arrays.asList("typeParameter"));
+        put(ColoringAttributes.KEYWORD, Arrays.asList("keyword"));
+    }};
+
+    private static final Map<ColoringAttributes, List<String>> COLORING_TO_TOKEN_MODIFIERS_CANDIDATES = new HashMap<ColoringAttributes, List<String>>() {{
+        put(ColoringAttributes.ABSTRACT, Arrays.asList("abstract"));
+        put(ColoringAttributes.DECLARATION, Arrays.asList("declaration"));
+        put(ColoringAttributes.DEPRECATED, Arrays.asList("deprecated"));
+        put(ColoringAttributes.STATIC, Arrays.asList("static"));
+    }};
+
+    @Override
+    public CompletableFuture<SemanticTokens> semanticTokensFull(SemanticTokensParams params) {
+        JavaSource js = getJavaSource(params.getTextDocument().getUri());
+        List<Integer> result = new ArrayList<>();
+        if (js != null) {
+            try {
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    Document doc = cc.getSnapshot().getSource().getDocument(true);
+                    new SemanticHighlighterBase() {
+                        @Override
+                        protected boolean process(CompilationInfo info, Document doc) {
+                            process(info, doc, new ErrorDescriptionSetter() {
+                                @Override
+                                public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
+                                    //...nothing
+                                }
+
+                                @Override
+                                public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
+                                    int line = 0;
+                                    long column = 0;
+                                    int lastLine = 0;
+                                    long currentLineStart = 0;
+                                    long nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                    Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
+                                    ordered.putAll(colorings);
+                                    for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
+                                        int currentOffset = e.getKey().offset(null);
+                                        while (nextLineStart < currentOffset) {
+                                            line++;
+                                            currentLineStart = nextLineStart;
+                                            nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                            column = 0;
+                                        }
+                                        Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
+                                        int modifiers = 0;
+                                        for (ColoringAttributes c : e.getValue()) {
+                                            int mod = coloring2TokenModifier[c.ordinal()];
+                                            if (mod != (-1)) {
+                                                modifiers |= mod;
+                                            }
+                                        }
+                                        if (tokenType.isPresent() && tokenType.get() >= 0) {
+                                            result.add(line - lastLine);
+                                            result.add((int) (currentOffset - currentLineStart - column));
+                                            result.add(e.getKey().length());
+                                            result.add(tokenType.get());
+                                            result.add(modifiers);
+                                            lastLine = line;
+                                            column = currentOffset - currentLineStart;
+                                        }
+                                    }
+                                }
+                            });
+                            return true;
+                        }
+                    }.process(cc, doc);
+                }, true);
+            } catch (IOException ex) {
+                //TODO: include stack trace:
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            }
+        }
+        SemanticTokens tokens = new SemanticTokens(result);
+        return CompletableFuture.completedFuture(tokens);
+    }
+
+    @Override
+    public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+        FileObject file = fromURI(params.getTextDocument().getUri());
+        if (file == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        // FIXME: probably the MIME type ought be derived from the exact source position, not from the whole file.
+        CallHierarchyProvider chp = MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        if (chp == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+        // PENDING: possibly handle cancellation with this Future ?
+        LineDocument lDoc;
+        try {
+            Document doc = ec.openDocument();
+            if (!(doc instanceof LineDocument)) {
+                return CompletableFuture.completedFuture(null);
+            }
+            lDoc = (LineDocument)doc;
+        } catch (IOException ex) {
+            CompletableFuture f = new CompletableFuture();
+            f.completeExceptionally(ex);
+            return f;
+        }
+        return chp.findCallOrigin(lDoc, Utils.getOffset(lDoc, params.getPosition())).thenApply(l -> {
+            if (l == null) {
+                return null;
+            }
+            List<CallHierarchyItem> res = new ArrayList<>();
+            for (CallHierarchyEntry c : l) {
+                CallHierarchyItem n = callEntryToItem(file, c, callEntryDocument(c, lDoc));
+                if (n != null) {
+                    res.add(n);
+                }
+            }
+            return res;
+        });
+    }
+    
+    private static CallHierarchyItem callEntryToItem(FileObject documentFile, CallHierarchyEntry c, LineDocument lDoc) {
+        FileObject owner = c.getElement().getFile();
+        if (owner == null) {
+            owner = documentFile;
+        }
+        if (owner == null || lDoc == null) {
+            return null;
+        }
+        CallHierarchyItem chi = new CallHierarchyItem();
+        DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, c.getElement());
+        if (ds == null) {
+            return null;
+        }
+        chi.setKind(ds.getKind());
+        chi.setName(ds.getName());
+        chi.setTags(ds.getTags());
+        chi.setRange(ds.getRange());
+        chi.setSelectionRange(ds.getSelectionRange());
+        chi.setUri(Utils.toUri(owner));
+        chi.setData(c.getCustomData());
+        return chi;
+    }
+    
+    LineDocument callEntryDocument(CallHierarchyEntry e, LineDocument documentFile) {
+        FileObject owner = e.getElement().getFile();
+        if (owner != null && owner != documentFile) {
+            // must open the document
+            EditorCookie ck = owner.getLookup().lookup(EditorCookie.class);
+            if (ck == null) {
+                return null;
+            }
+            try {
+                Document doc = ck.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                return (LineDocument)doc;
+            } catch (IOException ex) {
+                // TODO: report to the client ?
+                return null;
+            }
+        } else {
+            return documentFile;
+        }
+    }
+
+    abstract class HierarchyTask<T> {
+        final CallHierarchyItem request;
+        final FileObject file;
+        final CallHierarchyProvider provider;
+        final AtomicBoolean cancelled = new AtomicBoolean();
+        protected LineDocument lineDoc;
+
+        public HierarchyTask(CallHierarchyItem request) {
+            this.request = request;
+            this.file = fromURI(request.getUri());
+            this.provider = file == null ? null :
+                    MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        }
+        
+        public CompletableFuture<List<T>> processRequest() {
+            if (file == null || provider == null) {
+                return null;
+            }
+            try {
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                Document doc = ec.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                lineDoc = (LineDocument)doc;
+            } catch (IOException | RuntimeException ex) {
+                CompletableFuture<List<T>> res = new CompletableFuture<>();
+                res.completeExceptionally(ex);
+                return res;
+            }
+
+            StructureProvider.Builder b = StructureProvider.newBuilder(
+                    request.getName(), StructureElement.Kind.valueOf(request.getKind().toString()));
+
+            b.file(file);
+            b.expandedStartOffset(Utils.getOffset(lineDoc, request.getRange().getStart()));
+            b.expandedEndOffset(Utils.getOffset(lineDoc, request.getRange().getEnd()));
+            b.selectionStartOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getStart()));
+            b.selectionEndOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getEnd()));
+
+            String d;
+            if (request.getData() instanceof JsonPrimitive) {
+                d = ((JsonPrimitive)request.getData()).getAsString();
+            } else if (request.getData() != null) {
+                d = request.getData().toString();
+            } else {
+                d = null;
+            }
+            
+            return callProvider(provider, new CallHierarchyEntry(b.build(), d)).thenApply(this::convert);
+        }
+        
+        List<T> convert(List<CallHierarchyEntry.Call> l) {
+            if (l == null) {
+                return null;
+            }
+            List<T> res = (List<T>)new ArrayList();
+            for (CallHierarchyEntry.Call call : l) {
+                CallHierarchyEntry che = call.getItem();
+                LineDocument lDoc = callEntryDocument(che, lineDoc);
+                CallHierarchyItem callItem = callEntryToItem(file, che, lDoc);
+                if (callItem == null) {
+                    continue;
+                }
+                List<Range> ranges = new ArrayList<>();
+                for (org.netbeans.api.lsp.Range r : call.getRanges()) {
+                    // lDoc cannot be null if callItem != null.
+                    ranges.add(callRange2Range(r, lDoc));
+                }
+                T lspCall = createResultItem(callItem, ranges);
+                res.add(lspCall);
+            }
+            return res;
+        }
+                
+        protected abstract CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e);
+        
+        protected abstract T createResultItem(CallHierarchyItem item, List<Range> ranges);
+    }
+    
+    @Override
+    public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(CallHierarchyIncomingCallsParams params) {
+        HierarchyTask<CallHierarchyIncomingCall> t =  new HierarchyTask<CallHierarchyIncomingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findIncomingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyIncomingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyIncomingCall(item, ranges);
+            }
+        };
+        return t.processRequest();
+    }
+    
+    private static Position offset2Position(Document doc, int offset) {
+        int line = NbDocument.findLineNumber((StyledDocument)doc, offset);
+        int column = NbDocument.findLineColumn((StyledDocument)doc, offset);
+        return new Position(line, column);
+    }
+    
+    private static Range callRange2Range(org.netbeans.api.lsp.Range r, Document doc) {
+        return new Range(offset2Position(doc, r.getStartOffset()), offset2Position(doc, r.getEndOffset()));
+    }
+
+    @Override
+    public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(CallHierarchyOutgoingCallsParams params) {
+        HierarchyTask<CallHierarchyOutgoingCall> t =  new HierarchyTask<CallHierarchyOutgoingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findOutgoingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyOutgoingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyOutgoingCall(item, ranges);
+            }
+        };
+        return t.processRequest();
+    }
+
+    private static class FormatterDocument implements StyledDocument, LineDocument, AtomicLockDocument {
+
+        private final StyledDocument doc;
+        private final List<TextEdit> edits = new ArrayList<>();
+        private TextEdit last = null;
+
+        private FormatterDocument(StyledDocument lineDocument) {
+            this.doc = lineDocument;
+        }
+
+        private List<TextEdit> getEdits() {
+            return edits;
+        }
+
+        @Override
+        public Style addStyle(String nm, Style parent) {
+            return doc.addStyle(nm, parent);
+        }
+
+        @Override
+        public void removeStyle(String nm) {
+            doc.removeStyle(nm);
+        }
+
+        @Override
+        public Style getStyle(String nm) {
+            return doc.getStyle(nm);
+        }
+
+        @Override
+        public void setCharacterAttributes(int offset, int length, AttributeSet s, boolean replace) {
+            doc.setCharacterAttributes(offset, length, s, replace);
+        }
+
+        @Override
+        public void setParagraphAttributes(int offset, int length, AttributeSet s, boolean replace) {
+            doc.setParagraphAttributes(offset, length, s, replace);
+        }
+
+        @Override
+        public void setLogicalStyle(int pos, Style s) {
+            doc.setLogicalStyle(pos, s);
+        }
+
+        @Override
+        public Style getLogicalStyle(int p) {
+            return doc.getLogicalStyle(p);
+        }
+
+        @Override
+        public javax.swing.text.Element getParagraphElement(int pos) {
+            return doc.getParagraphElement(pos);
+        }
+
+        @Override
+        public javax.swing.text.Element getCharacterElement(int pos) {
+            return doc.getCharacterElement(pos);
+        }
+
+        @Override
+        public Color getForeground(AttributeSet attr) {
+            return doc.getForeground(attr);
+        }
+
+        @Override
+        public Color getBackground(AttributeSet attr) {
+            return doc.getBackground(attr);
+        }
+
+        @Override
+        public Font getFont(AttributeSet attr) {
+            return doc.getFont(attr);
+        }
+
+        @Override
+        public int getLength() {
+            return doc.getLength();
+        }
+
+        @Override
+        public void addDocumentListener(DocumentListener listener) {
+            doc.addDocumentListener(listener);
+        }
+
+        @Override
+        public void removeDocumentListener(DocumentListener listener) {
+            doc.removeDocumentListener(listener);
+        }
+
+        @Override
+        public void addUndoableEditListener(UndoableEditListener listener) {
+            doc.addUndoableEditListener(listener);
+        }
+
+        @Override
+        public void removeUndoableEditListener(UndoableEditListener listener) {
+            doc.removeUndoableEditListener(listener);
+        }
+
+        @Override
+        public Object getProperty(Object key) {
+            return doc.getProperty(key);
+        }
+
+        @Override
+        public void putProperty(Object key, Object value) {
+        }
+
+        @Override
+        public void remove(int offs, int len) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            Position pos = Utils.createPosition(ldoc, offs);
+            if (last != null && pos.equals(last.getRange().getStart()) && pos.equals(last.getRange().getEnd())) {
+                last.getRange().setEnd(Utils.createPosition(ldoc, offs + len));
+            } else {
+                last = new TextEdit(new Range(pos, Utils.createPosition(ldoc, offs + len)), "");
+                edits.add(last);
+            }
+        }
+
+        @Override
+        public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            Position pos = Utils.createPosition(ldoc, offset);
+            if (last != null && pos.equals(last.getRange().getStart())) {
+                if (str != null) {
+                    last.setNewText(last.getNewText() + str);
+                }
+            } else {
+                last = new TextEdit(new Range(pos, pos), str != null ? str : "");
+                edits.add(last);
+            }
+        }
+
+        @Override
+        public String getText(int offset, int length) throws BadLocationException {
+            return doc.getText(offset, length);
+        }
+
+        @Override
+        public void getText(int offset, int length, Segment txt) throws BadLocationException {
+            doc.getText(offset, length, txt);
+        }
+
+        @Override
+        public javax.swing.text.Position getStartPosition() {
+            return doc.getStartPosition();
+        }
+
+        @Override
+        public javax.swing.text.Position getEndPosition() {
+            return doc.getEndPosition();
+        }
+
+        @Override
+        public javax.swing.text.Position createPosition(int offs) throws BadLocationException {
+            return doc.createPosition(offs);
+        }
+
+        @Override
+        public javax.swing.text.Element[] getRootElements() {
+            return doc.getRootElements();
+        }
+
+        @Override
+        public javax.swing.text.Element getDefaultRootElement() {
+            return doc.getDefaultRootElement();
+        }
+
+        @Override
+        public void render(Runnable r) {
+            doc.render(r);
+        }
+
+        @Override
+        public javax.swing.text.Position createPosition(int offset, javax.swing.text.Position.Bias bias) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            return ldoc.createPosition(offset, bias);
+        }
+
+        @Override
+        public Document getDocument() {
+            return this;
+        }
+
+        @Override
+        public void atomicUndo() {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.atomicUndo();
+        }
+
+        @Override
+        public void runAtomic(Runnable r) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.runAtomic(r);
+        }
+
+        @Override
+        public void runAtomicAsUser(Runnable r) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.runAtomicAsUser(r);
+        }
+
+        @Override
+        public void addAtomicLockListener(AtomicLockListener l) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.addAtomicLockListener(l);
+        }
+
+        @Override
+        public void removeAtomicLockListener(AtomicLockListener l) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.removeAtomicLockListener(l);
+        }
+    }
 }

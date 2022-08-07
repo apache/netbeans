@@ -156,7 +156,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         txtPackagings.addFocusListener(focus);
         goalcompleter = new TextValueCompleter(Collections.<String>emptyList(), txtGoals, " "); //NOI18N
         profilecompleter = new TextValueCompleter(Collections.<String>emptyList(), txtProfiles, " "); //NOI18N
-
         if( "Aqua".equals(UIManager.getLookAndFeel().getID()) ) { //NOI18N
             this.lblHint.setOpaque(true);
             jScrollPane2.setBorder(null);
@@ -332,7 +331,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         lblPackagings = new javax.swing.JLabel();
         txtPackagings = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        btnDisable = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -494,7 +492,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 436;
-        gridBagConstraints.ipady = 117;
+        gridBagConstraints.ipady = 120;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -577,16 +575,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
         add(jButton1, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(btnDisable, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnDisable.text")); // NOI18N
-        btnDisable.setName(""); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
-        add(btnDisable, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     
 //GEN-FIRST:event_btnAddActionPerformed
@@ -654,9 +642,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     
     private void updateEnabledControls(MappingWrapper wr) {
         boolean notEmpty = wr != null;
-        boolean enable = notEmpty && !ActionToGoalUtils.isDisabledMapping(wr.getMapping());
-
-        if (enable) {
+        if (notEmpty) {
             lblGoals.setEnabled(true);
             lblHint.setEnabled(true);
             lblPackagings.setEnabled(true);
@@ -669,16 +655,12 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             cbRecursively.setEnabled(true);
             cbBuildWithDeps.setEnabled(true);
             btnAddProps.setEnabled(true);
-            btnDisable.setEnabled(true);
+            btnRemove.setEnabled(true);
             if (isGlobal()) {
                 txtPackagings.setEnabled(true);
-            }
+            }            
         } else {
             clearFields();
-        }
-        if (notEmpty) {
-            btnRemove.setEnabled(true);
-        } else {
             btnRemove.setEnabled(false);
         }
     }
@@ -905,7 +887,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         cbRecursively.setEnabled(false);
         cbBuildWithDeps.setEnabled(false);
         btnAddProps.setEnabled(false);
-        btnDisable.setEnabled(false);
         if (handle == null) { //only global settings
             jButton1.setEnabled(false);
             jButton1.setIcon(null);
@@ -953,7 +934,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddProps;
-    private javax.swing.JButton btnDisable;
     private javax.swing.JButton btnRemove;
     private javax.swing.JCheckBox cbBuildWithDeps;
     private javax.swing.JCheckBox cbRecursively;
@@ -1201,6 +1181,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override
         protected MappingWrapper doUpdate() {
             MappingWrapper wr = super.doUpdate();
+            boolean wasEnabled = ActionToGoalUtils.isDisabledMapping(wr.getMapping());
             if (wr != null) {
                 String text = txtGoals.getText();
                 StringTokenizer tok = new StringTokenizer(text, " "); //NOI18N
@@ -1213,6 +1194,9 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 mapp.setGoals(goals);
                 if (handle != null) {
                     handle.markAsModified(getActionMappings());
+                }
+                if (ActionToGoalUtils.isDisabledMapping(wr.getMapping()) != wasEnabled) {
+                    lstMappings.repaint();
                 }
             }
             return wr;

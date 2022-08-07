@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.58
 
 CLSS public java.lang.Object
 cons public init()
@@ -81,6 +81,9 @@ fld protected final static java.lang.String WORKPLACE_FILL = "nb_workplace_fill"
 fld public final static java.lang.String CONTROLFONT = "controlFont"
 fld public final static java.lang.String LISTFONT = "List.font"
 fld public final static java.lang.String MENUFONT = "menuFont"
+fld public final static java.lang.String OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS = "nb.options.categories.button.useNimbusCategoryButton"
+fld public final static java.lang.String OPTIONS_CATEGORIES_SEPARATOR_COLOR = "nb.options.categories.separatorColor"
+fld public final static java.lang.String OPTIONS_USE_UI_DEFAULT_COLORS = "nb.options.useUIDefaultsColors"
 fld public final static java.lang.String PANELFONT = "Panel.font"
 fld public final static java.lang.String PROGRESS_CANCEL_BUTTON_ICON = "nb.progress.cancel.icon"
 fld public final static java.lang.String PROGRESS_CANCEL_BUTTON_PRESSED_ICON = "nb.progress.cancel.icon.pressed"

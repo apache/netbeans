@@ -590,7 +590,13 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
                 setUpFields();
             }
 
-            updateUrlFromFields();
+            if (wd.getDatabaseUrl() == null && jdbcurl.getSampleUrl() != null) {
+                // Show the appropriate sample URL if the user switches the JDBC URL type.
+                urlField.setText(jdbcurl.getSampleUrl());
+                updateFieldsFromUrl();
+            } else {
+                updateUrlFromFields();
+            }
             fireChange();
         }
     }//GEN-LAST:event_templateComboBoxItemStateChanged

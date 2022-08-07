@@ -1340,7 +1340,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
         String getDisplayName();
     }
     
-    private static abstract class AbstractUniverseModule implements UniverseModule {
+    private abstract static class AbstractUniverseModule implements UniverseModule {
         protected final ManifestManager mm;
         protected AbstractUniverseModule(ManifestManager mm) {
             this.mm = mm;

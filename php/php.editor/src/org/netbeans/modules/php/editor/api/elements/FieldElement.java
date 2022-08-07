@@ -28,4 +28,6 @@ public interface FieldElement extends TypedInstanceElement, TypeMemberElement {
     PhpElementKind KIND = PhpElementKind.FIELD;
     String getName(boolean dollared);
     boolean isAnnotation();
+    boolean isUnionType();
+    boolean isIntersectionType();
 }

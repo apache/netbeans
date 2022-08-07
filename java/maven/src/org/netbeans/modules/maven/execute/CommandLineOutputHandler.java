@@ -28,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -201,7 +202,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
         private boolean skipLF = false;
 
         public Output(InputStream instream) {
-            str = new BufferedReader(new InputStreamReader(instream));
+            str = new BufferedReader(new InputStreamReader(instream, getPreferredCharset()));
         }
 
         private String readLine() throws IOException {
@@ -700,7 +701,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
 
         public @Override void run() {
             Reader in = inputOutput.getIn();
-            try (Writer out = new OutputStreamWriter(str)) {
+            try (Writer out = new OutputStreamWriter(str, getPreferredCharset())) {
                 while (true) {
                     int read = in.read();
                     if (read != -1) {
@@ -826,7 +827,46 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
         }
         
     }    
+    
+    /**
+     * Returns the preferred Charset that is obtained by checking the following system properties:
+     * stdout.encoding, sun.stdout.encoding, native.encoding, Charset.defaultCharset()
+     * @see org.netbeans.api.extexecution.base.BaseExecutionService#getInputOutputEncoding
+     * @return Charset
+     */
+    private static Charset getPreferredCharset() {
+        // The CommandLineOutputHandler used the default charset to convert
+        // output from command line invocations to strings. That encoding is
+        // derived from the system file.encoding. From JDK 18 onwards its
+        // default value changed to UTF-8.
+        // JDK 17+ exposes the native encoding as the new system property
+        // native.encoding, prior versions don't have that property and will
+        // report NULL for it.
+        // To account for the behavior of JEP400 the following order is used to determine the encoding:
+        // stdout.encoding, sun.stdout.encoding, native.encoding, Charset.defaultCharset()
+        String[] encodingSystemProperties = new String[]{"stdout.encoding", "sun.stdout.encoding", "native.encoding"};
 
+        Charset preferredCharset = null;
+        for (String encodingProperty : encodingSystemProperties) {
+            String encodingPropertyValue = System.getProperty(encodingProperty);
+            if (encodingPropertyValue == null) {
+                continue;
+            }
+
+            try {
+                preferredCharset = Charset.forName(encodingPropertyValue);
+            } catch (IllegalArgumentException ex) {
+                LOG.log(java.util.logging.Level.WARNING, "Failed to get charset for '" + encodingProperty + "' value : '" + encodingPropertyValue + "'", ex);
+            }
+
+            if (preferredCharset != null) {
+                return preferredCharset;
+            }
+
+        }
+
+        return Charset.defaultCharset();
+    }
 }
 
 

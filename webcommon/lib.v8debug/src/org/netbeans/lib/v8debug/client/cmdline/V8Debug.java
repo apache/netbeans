@@ -1051,7 +1051,7 @@ public class V8Debug {
         }
     }
     
-    final static class TestAccess {
+    static final class TestAccess {
         
         static V8Debug createV8Debug(String hostName, int port, Testeable testeable) throws IOException {
             final V8Debug v8dbg = new V8Debug(hostName, port);

@@ -515,7 +515,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                                     String content = readResource(getClass().getResourceAsStream(RESOURCE_FOLDER + FORWARD_JSF), "UTF-8"); //NOI18N
                                     content = content.replace("__FORWARD__", ConfigurationUtils.translateURI(facesMapping, WELCOME_JSF));
                                     Charset encoding = FileEncodingQuery.getDefaultEncoding();
-                                    content = content.replaceAll("__ENCODING__", encoding.name());
+                                    content = content.replace("__ENCODING__", encoding.name());
                                     FileObject target = FileUtil.createData(webModule.getDocumentBase(), FORWARD_JSF);//NOI18N
                                     createFile(target, content, encoding.name());  //NOI18N
                                     DataObject dob = DataObject.find(target);
@@ -706,7 +706,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             if (!panel.isEnableFacelets() && createWelcome && canCreateNewFile(webModule.getDocumentBase(), WELCOME_JSF)) {
                 String content = readResource(getClass().getResourceAsStream(RESOURCE_FOLDER + WELCOME_JSF), "UTF-8"); //NOI18N
                 Charset encoding = FileEncodingQuery.getDefaultEncoding();
-                content = content.replaceAll("__ENCODING__", encoding.name());
+                content = content.replace("__ENCODING__", encoding.name());
                 FileObject target = FileUtil.createData(webModule.getDocumentBase(), WELCOME_JSF);
                 createFile(target, content, encoding.name());
                 DataObject dob = DataObject.find(target);
@@ -741,7 +741,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) || "gfv4".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

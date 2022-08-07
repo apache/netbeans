@@ -961,6 +961,7 @@
        <table>
            <tbody>
                <tr><td>is:folder</td><td>the Node represents a folder, or a DataFolder</td><td></td></tr>
+               <tr><td>is:file</td><td>the Node represents a file</td><td></td></tr>
                <tr><td>is:project</td><td>the Node represents a project (the project's node itself)</td><td></td></tr>
                <tr><td>is:projectRoot</td><td>the Node represents a root project in a multi-project tree</td><td></td></tr>
                <tr><td>is:subProject</td><td>the Node represents a subproject in a multi-project tree</td><td></td></tr>

@@ -97,9 +97,9 @@ public abstract class ViewModelSupport {
         sb.append ("<font color=");
         sb.append (Integer.toHexString ((color.getRGB () & 0xffffff)));
         sb.append (">");
-        text = text.replaceAll ("&", "&amp;");
-        text = text.replaceAll ("<", "&lt;");
-        text = text.replaceAll (">", "&gt;");
+        text = text.replace ("&", "&amp;");
+        text = text.replace ("<", "&lt;");
+        text = text.replace (">", "&gt;");
         sb.append (text);
         sb.append ("</font>");
         if (italics) sb.append ("</i>");

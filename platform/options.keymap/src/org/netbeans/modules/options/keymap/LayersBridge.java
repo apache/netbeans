@@ -959,7 +959,7 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
                 if (name == null) {
                     name = ""; // #185619: not intended for presentation in this dialog
                 }
-                name = name.replaceAll ("&", "").trim (); // NOI18N
+                name = name.replace ("&", "").trim (); // NOI18N
             }
             return name;
         }

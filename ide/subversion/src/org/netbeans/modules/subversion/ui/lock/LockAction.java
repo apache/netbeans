@@ -54,7 +54,7 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public class LockAction extends ContextAction {
     
-    private final static Logger LOG = Logger.getLogger(LockAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(LockAction.class.getName());
     
     @Override
     protected int getDirectoryEnabledStatus () {

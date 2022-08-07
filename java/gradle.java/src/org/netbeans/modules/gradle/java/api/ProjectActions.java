@@ -32,13 +32,13 @@ public final class ProjectActions {
      * NetBeans Tooling Gradle plugin provided by org.netbeans.gradle module.
      * <div class="nonnormative">
      * The token can be used in <code>action-mapping.xml</code> as followes:
-     * {@codesnippet JavaExecTokenProviderTest.exampleActionMapping}
+     * {@snippet file="org/netbeans/modules/gradle/java/execute/example-action-mapping.xml" region="exampleActionMapping"}
      * </div>
      * The Gradle Java project support consumes {@link ExplicitProcessParameters} from the action's context Lookup, and populates the replaceable token mapping.
      * <div class="nonnormative">
      * The following code injects a specific system property to the VM configuration, and passes "hello Dolly" parameters to the application as main class' parameters. Project
      * actions can be invoked with custom parameters as in the following example:
-     * {@codesnippet JavaExecTokenProviderTest#testExamplePassJvmAndArguments}
+     * {@snippet file="org/netbeans/modules/gradle/java/execute/JavaExecTokenProviderTest.java" region="testExamplePassJvmAndArguments"}
      * </div>
      */
     public static String TOKEN_JAVAEXEC_JVMARGS = "javaExec.jvmArgs"; // NOI18N

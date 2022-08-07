@@ -44,12 +44,12 @@ import org.netbeans.modules.bugzilla.query.QueryParameter.TextFieldParameter;
  */
 public class QueryParameterTest extends NbTestCase implements TestConstants {
 
-    private final static String PARAMETER = "parameter";
-    private final static ParameterValue PV1 = new ParameterValue("pv1");
-    private final static ParameterValue PV2 = new ParameterValue("pv2");
-    private final static ParameterValue PV3 = new ParameterValue("pv3");
-    private final static ParameterValue PV4 = new ParameterValue("pv4");
-    private final static ParameterValue[] VALUES = new ParameterValue[] {PV1, PV2, PV3, PV4};
+    private static final String PARAMETER = "parameter";
+    private static final ParameterValue PV1 = new ParameterValue("pv1");
+    private static final ParameterValue PV2 = new ParameterValue("pv2");
+    private static final ParameterValue PV3 = new ParameterValue("pv3");
+    private static final ParameterValue PV4 = new ParameterValue("pv4");
+    private static final ParameterValue[] VALUES = new ParameterValue[] {PV1, PV2, PV3, PV4};
 
     public QueryParameterTest(String arg0) {
         super(arg0);

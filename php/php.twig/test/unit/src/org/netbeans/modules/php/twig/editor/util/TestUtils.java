@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Various test utilities.
@@ -37,7 +38,7 @@ public final class TestUtils {
      */
     public static String getFileContent(File file) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         try {
             String line = br.readLine();
             while (line != null) {
@@ -58,9 +59,9 @@ public final class TestUtils {
      */
     public static String replaceLinesAndTabs(String input) {
         String escapedString = input;
-        escapedString = escapedString.replaceAll("\n","\\\\n"); //NOI18N
-        escapedString = escapedString.replaceAll("\r","\\\\r"); //NOI18N
-        escapedString = escapedString.replaceAll("\t","\\\\t"); //NOI18N
+        escapedString = escapedString.replace("\n","\\n"); //NOI18N
+        escapedString = escapedString.replace("\r","\\r"); //NOI18N
+        escapedString = escapedString.replace("\t","\\t"); //NOI18N
         return escapedString;
     }
 

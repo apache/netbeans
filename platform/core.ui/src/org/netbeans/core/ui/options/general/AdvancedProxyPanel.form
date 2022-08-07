@@ -42,29 +42,12 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="12" pref="12" max="12" attributes="0"/>
-              <Component id="cbUseProxyAuthentication" min="-2" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sSeparator" pref="512" max="32767" attributes="1"/>
-                  </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lblBasicAuthNote" pref="0" max="32767" attributes="0"/>
+                  <Component id="cbUseProxyAuthentication" alignment="1" max="32767" attributes="0"/>
+                  <Component id="sSeparator" alignment="1" max="32767" attributes="1"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lUserName" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lUserPassword" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pfUserPassword" pref="423" max="32767" attributes="2"/>
-                          <Component id="tfUserName" alignment="0" pref="423" max="32767" attributes="2"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lHttpProxyHost" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lHttpsProxyHost" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -73,13 +56,11 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lNonProxyHostsDescription" alignment="0" min="-2" pref="349" max="-2" attributes="1"/>
-                          <Component id="cbSameProxySettings" alignment="0" min="-2" pref="325" max="-2" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="tfHttpProxyHost" alignment="0" pref="281" max="32767" attributes="2"/>
-                                  <Component id="tfSocksHost" alignment="0" pref="281" max="32767" attributes="2"/>
-                                  <Component id="tfHttpsProxyHost" alignment="0" pref="281" max="32767" attributes="2"/>
+                                  <Component id="tfHttpProxyHost" alignment="0" max="32767" attributes="2"/>
+                                  <Component id="tfSocksHost" alignment="0" max="32767" attributes="2"/>
+                                  <Component id="tfHttpsProxyHost" alignment="0" max="32767" attributes="2"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -94,11 +75,24 @@
                                   <Component id="tfHttpsProxyPort" alignment="0" max="32767" attributes="1"/>
                               </Group>
                           </Group>
-                          <Component id="tfNonProxyHosts" alignment="0" pref="388" max="32767" attributes="2"/>
+                          <Component id="tfNonProxyHosts" alignment="0" max="32767" attributes="2"/>
+                          <Component id="cbSameProxySettings" alignment="0" max="32767" attributes="1"/>
+                          <Component id="lNonProxyHostsDescription" alignment="0" max="32767" attributes="1"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lUserName" max="32767" attributes="0"/>
+                          <Component id="lUserPassword" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="tfUserName" max="32767" attributes="2"/>
+                          <Component id="pfUserPassword" max="32767" attributes="2"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -149,7 +143,9 @@
                   <Component id="lUserPassword" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="pfUserPassword" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="30" max="32767" attributes="0"/>
+              <EmptySpace pref="68" max="32767" attributes="0"/>
+              <Component id="lblBasicAuthNote" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -166,6 +162,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfHttpProxyHost">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/options/general/Bundle.properties" key="ACD_AdvancedProxyPanel_tfHttpProxyHost" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -203,6 +202,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfHttpsProxyHost">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/options/general/Bundle.properties" key="ACD_AdvancedProxyPanel_tfHttpsProxyHost" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -220,6 +222,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfSocksHost">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/options/general/Bundle.properties" key="ACD_AdvancedProxyPanel_tfSocksHost" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -368,6 +373,25 @@
           <ResourceString bundle="org/netbeans/modules/options/general/Bundle.properties" key="ACD_AdvancedProxyPanel_pfUserPassword" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </AccessibilityProperties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblBasicAuthNote">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+          <FontInfo relative="true">
+            <Font component="lblBasicAuthNote" property="font" relativeSize="true" size="-2"/>
+          </FontInfo>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/core/ui/options/general/Bundle.properties" key="AdvancedProxyPanel.lblBasicAuthNote.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Cursor Por defecto"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblBasicAuthNoteMouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

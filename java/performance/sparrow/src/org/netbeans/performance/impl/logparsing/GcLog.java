@@ -23,9 +23,11 @@
  */
 
 package org.netbeans.performance.impl.logparsing;
+
 import org.netbeans.performance.spi.html.*;
 import org.netbeans.performance.spi.*;
 import java.util.*;
+
 /**Wrapper class for a JDK garbage collection log.  This wrapper parses the log
  * and comes up with statistics representing data from it.  It does not hold onto
  * all of the GC events in a garbage collection log.  For a log wrapper that can
@@ -139,21 +141,21 @@ public class GcLog extends AbstractLogFile {
                 }
             }
             
-            addElement (new NameValueLogElement (GC_SECONDS, new Float(totalGcTime)));
+            addElement (new NameValueLogElement (GC_SECONDS, totalGcTime));
             addElement (new NameValueLogElement (GC_TOTAL, new Integer(gcs.size())));
             addElement (new NameValueLogElement (GC_FULLTOTAL, new Integer(fullGcCount)));
             addElement (new NameValueLogElement (GC_MINORTOTAL, new Integer(gcs.size() - fullGcCount)));
             addElement (new NameValueLogElement (GC_TOTALGARBAGE, new Long(totalCollected)));
             addElement (new NameValueLogElement (GC_HGES, new Integer(heapChangeCount)));
             addElement (new NameValueLogElement (GC_AVGCOLLECTEDPERGC, new Long(totalCollected / gcs.size())));
-            addElement (new NameValueLogElement (GC_SECSMAJOR, new Float(totalMajorGcTime)));
-            addElement (new NameValueLogElement (GC_SECSMINOR, new Float(totalMinorGcTime)));
+            addElement (new NameValueLogElement (GC_SECSMAJOR, totalMajorGcTime));
+            addElement (new NameValueLogElement (GC_SECSMINOR, totalMinorGcTime));
             if (fullGcCount != 0) {
-                addElement (new NameValueLogElement (GC_AVGMILLISMAJOR, new Float((totalMajorGcTime / fullGcCount) * 1000)));
+                addElement (new NameValueLogElement (GC_AVGMILLISMAJOR, (float)((totalMajorGcTime / fullGcCount) * 1000)));
             } else {
-                addElement (new NameValueLogElement (GC_AVGMILLISMAJOR, new Float (0)));
+                addElement (new NameValueLogElement (GC_AVGMILLISMAJOR, 0F));
             }
-            addElement (new NameValueLogElement (GC_AVGMILLISMINOR, new Float((totalMinorGcTime / (gcs.size() - fullGcCount))*1000)));
+            addElement (new NameValueLogElement (GC_AVGMILLISMINOR, (float)((totalMinorGcTime / (gcs.size() - fullGcCount))*1000)));
             
         }
     }

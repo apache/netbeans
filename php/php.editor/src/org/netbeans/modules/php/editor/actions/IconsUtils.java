@@ -47,6 +47,8 @@ public final class IconsUtils {
                 break;
             case TRAIT: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "trait" + PNG_EXTENSION, false); //NOI18N
                 break;
+            case ENUM: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "enum" + PNG_EXTENSION, false); //NOI18N
+                break;
             case CONSTANT: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "constant" + PNG_EXTENSION, false); //NOI18N
                 break;
             case FUNCTION: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "function" + PNG_EXTENSION, false); //NOI18N

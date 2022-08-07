@@ -26,14 +26,18 @@
             <code-name-base>org.netbeans.libs.commons_compress</code-name-base>
             <module-dependencies/>
             <friend-packages>
+                <friend>org.netbeans.modules.db.dataview</friend>
                 <friend>org.netbeans.modules.docker.api</friend>
+                <friend>org.netbeans.modules.java.disco</friend>
                 <friend>org.netbeans.modules.javascript.nodejs</friend>
                 <package>org.apache.commons.compress.archivers</package>
                 <package>org.apache.commons.compress.archivers.tar</package>
+                <package>org.apache.commons.compress.archivers.zip</package>
+                <package>org.apache.commons.compress.utils</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.19.jar</runtime-relative-path>
-                <binary-origin>external/commons-compress-1.19.jar</binary-origin>
+                <runtime-relative-path>ext/commons-compress-1.21.jar</runtime-relative-path>
+                <binary-origin>external/commons-compress-1.21.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

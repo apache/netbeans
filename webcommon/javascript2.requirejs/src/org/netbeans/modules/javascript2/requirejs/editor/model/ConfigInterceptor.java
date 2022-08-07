@@ -52,7 +52,7 @@ import org.openide.filesystems.FileUtil;
 @FunctionInterceptor.Registration(priority = 351)
 public class ConfigInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("(require|requirejs)\\.config");  //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("(require|requirejs)\\.config");  //NOI18N
     private static final String PROPERTY_NAME = "name"; //NOI18N
     private static final String PROPERTY_LOCATION = "location"; //NOI18N
 

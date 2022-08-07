@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.81
+#Version 1.83
 
 CLSS public abstract interface java.io.Serializable
 
@@ -708,7 +708,9 @@ fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretL
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_CLOSURE
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_COMMENT
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_CONSTRUCTOR_CALL
+fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_IMPORT
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_METHOD
+fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_PACKAGE
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_PARAMETERS
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_STRING
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation OUTSIDE_CLASSES
@@ -735,6 +737,7 @@ supr java.lang.Object
 hfds LOG,impl
 
 CLSS public abstract org.netbeans.modules.groovy.editor.api.completion.CompletionItem
+cons protected init(org.netbeans.modules.groovy.editor.api.elements.GroovyElement,int)
 fld protected final org.netbeans.modules.groovy.editor.api.elements.GroovyElement element
 innr public static ConstructorItem
 innr public static DynamicFieldItem
@@ -1703,7 +1706,7 @@ meth public boolean index()
 meth public java.util.Set<java.lang.String> getSupportedExtensions()
 meth public void translate(java.lang.Iterable<java.io.File>,java.io.File,org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider$Result)
 supr java.lang.Object
-hcls JavaStubGenerator
+hcls JavaStubGenerator,Task
 
 CLSS public abstract interface org.netbeans.modules.groovy.editor.spi.completion.CompletionProvider
 meth public abstract java.util.Map<org.netbeans.modules.groovy.editor.api.completion.FieldSignature,org.netbeans.modules.groovy.editor.api.completion.CompletionItem> getFields(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
@@ -1745,6 +1748,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

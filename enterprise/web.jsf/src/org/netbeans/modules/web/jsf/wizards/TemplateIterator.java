@@ -341,7 +341,7 @@ public class TemplateIterator implements TemplateWizard.Iterator {
             is = templatePanel.getTemplate();
             String content = JSFFrameworkProvider.readResource(is, ENCODING);
             if (!jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
-                content = content.replaceAll("h:head", "head").replaceAll("h:body", "body"); //NOI18N
+                content = content.replace("h:head", "head").replace("h:body", "body"); //NOI18N
             }
             String namespaceLocation = jsfVersion.isAtLeast(JSFVersion.JSF_2_2) ? NamespaceUtils.JCP_ORG_LOCATION : NamespaceUtils.SUN_COM_LOCATION;
 

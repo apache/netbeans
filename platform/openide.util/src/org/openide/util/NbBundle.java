@@ -1484,7 +1484,7 @@ public class NbBundle extends Object {
      * Local charset to decode using UTF-8 by default, but automatically switching to ISO-8859-1 if UTF-8 decoding fails.
      * 
      */
-    static private class UtfThenIsoCharset extends Charset {
+    private static class UtfThenIsoCharset extends Charset {
 
         private final boolean onlyUTF8;
 

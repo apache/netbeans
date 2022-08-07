@@ -36,10 +36,10 @@ public final class TreeItemData {
     public static final String NO_COMMAND = new String("<no command>"); // NOI18N
     
     private Image iconImage;
-    private URI iconURI;
     private String[] contextValues;
     private String command;
     private URI resourceURI;
+    private boolean leaf;
     
     static {
         try {
@@ -51,6 +51,16 @@ public final class TreeItemData {
 
     public TreeItemData() {
     }
+
+    public boolean isLeaf() {
+        return leaf;
+    }
+
+    public TreeItemData makeLeaf() {
+        this.leaf = true;
+        return this;
+    }
+    
 
     public URI getResourceURI() {
         return resourceURI;
@@ -83,7 +93,7 @@ public final class TreeItemData {
         this.contextValues = contextValues;
         return this;
     }
-
+    
     public String getCommand() {
         return command;
     }
@@ -99,20 +109,9 @@ public final class TreeItemData {
 
     public TreeItemData setIconImage(Image iconImage) {
         this.iconImage = iconImage;
-        this.iconURI = null;
         return this;
     }
 
-    public URI getIconURI() {
-        return iconURI;
-    }
-
-    public TreeItemData setIconURI(URI iconURI) {
-        this.iconURI = iconURI;
-        this.iconImage = null;
-        return this;
-    }
-    
     public TreeItemData merge(TreeItemData data) {
         if (data.getResourceURI() != null) {
             URI u = data.getResourceURI();
@@ -134,10 +133,7 @@ public final class TreeItemData {
         if (data.getIconImage() != null) {
             setIconImage(data.getIconImage());
         }
-        if (data.getIconURI() != null) {
-            URI u = data.getIconURI();
-            setIconURI(u == NO_URI ? null : u);
-        }
+        leaf |= data.isLeaf();
         return this;
     }
 }

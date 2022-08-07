@@ -372,7 +372,7 @@ public class ActionProviderImpl implements ActionProvider {
         return createCustomGradleAction(project, name, command, Lookup.EMPTY, false);
     }
 
-    private final static class CustomAction extends AbstractAction {
+    private static final class CustomAction extends AbstractAction {
 
         private final ActionMapping mapping;
         private final boolean showUI;
@@ -397,7 +397,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     // Copied from the Maven Plugin with minimal changes applied.
-    private static abstract class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
+    private abstract static class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
 
         protected boolean triggeredOnFile = false;
         protected boolean triggeredOnGradle = false;
@@ -549,7 +549,8 @@ public class ActionProviderImpl implements ActionProvider {
                             acts.add(act);
                         }
                     }
-                    acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(), new CustomActionMapping("name"), lookup, true));
+                    acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(),
+                            new CustomActionMapping(ActionMapping.CUSTOM_PREFIX), lookup, true));
                     SwingUtilities.invokeLater(() -> {
                         boolean selected = menu.isSelected();
                         menu.remove(loading);

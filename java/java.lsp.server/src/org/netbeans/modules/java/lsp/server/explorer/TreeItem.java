@@ -43,7 +43,6 @@ public class TreeItem {
     public String description;
     // ?: string | Uri | {dark: string | Uri, light: string | Uri} | ThemeIcon
     public URI iconUri;
-    public int iconIndex;
     // id for the tree item that has to be unique across tree.
     // The id is used to preserve the selection and expansion state of the tree item.
     public int id;
@@ -56,6 +55,25 @@ public class TreeItem {
     public String resourceUri;
     // ?: string | MarkdownString | undefined
     public Object tooltip;
+    
+    // NBLS-specific items, to be processed by the client:
+    // Metadata for the icon.
+    public IconDescriptor iconDescriptor;
+    
+    /**
+     * Metadata that describe an icon origin or contents.
+     */
+    public static class IconDescriptor {
+        /**
+         * Base URI / imageId of the icon.
+         */
+        public URI baseUri;
+        
+        /**
+         * Supplemental IDs from composed merged-in images or applied filters.
+         */
+        public String[] composition;
+    }
 
     public TreeItem() {
     }
@@ -90,5 +108,12 @@ public class TreeItem {
         if (fo != null) {
             this.resourceUri = URLMapper.findURL(fo, URLMapper.EXTERNAL).toString();
         }
+    }
+    
+    public String toString() {
+        return String.format(
+            "TreeItem[%s, id = %d, resource = %s, context = %s",
+            name, id, resourceUri, contextValue
+        );
     }
 }

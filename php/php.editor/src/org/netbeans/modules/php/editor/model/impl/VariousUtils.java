@@ -45,7 +45,9 @@ import org.netbeans.modules.php.editor.api.QualifiedNameKind;
 import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
+import org.netbeans.modules.php.editor.model.CaseElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
@@ -79,6 +81,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression.OperatorType;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
@@ -91,6 +94,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -118,6 +122,7 @@ public final class VariousUtils {
     public static final String STATIC_METHOD_TYPE_PREFIX = "static.mtd" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String FIELD_TYPE_PREFIX = "fld" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String STATIC_FIELD_TYPE_PREFIX = "static.fld" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String STATIC_CONSTANT_TYPE_PREFIX = "static.constant" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String VAR_TYPE_PREFIX = "var" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String ARRAY_TYPE_PREFIX = "array" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String TYPE_TYPE_PREFIX = "type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
@@ -130,6 +135,7 @@ public final class VariousUtils {
     private static final Pattern SEMICOLON_PATTERN = Pattern.compile("\\;"); // NOI18N
     private static final Pattern DOT_PATTERN = Pattern.compile("\\."); // NOI18N
     private static final Pattern TYPE_SEPARATOR_PATTERN = Pattern.compile("\\|"); // NOI18N
+    private static final Pattern TYPE_SEPARATOR_INTERSECTION_PATTERN = Pattern.compile("\\&"); // NOI18N
 
 
     static {
@@ -228,6 +234,8 @@ public final class VariousUtils {
             String typeName;
             if (returnType instanceof UnionType) {
                 typeName = getUnionType((UnionType) returnType);
+            } else if (returnType instanceof IntersectionType){
+                typeName = getIntersectionType((IntersectionType) returnType);
             } else {
                 QualifiedName name = QualifiedName.create(returnType);
                 assert name != null : returnType;
@@ -268,9 +276,39 @@ public final class VariousUtils {
         return sb.toString();
     }
 
+    /**
+     * Get the types separated by "&".
+     *
+     * @param intesectionType
+     * @return types separated by "&"
+     */
+    public static String getIntersectionType(IntersectionType intesectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intesectionType.getTypes()) {
+            QualifiedName name = QualifiedName.create(type);
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            assert name != null : type;
+            sb.append(name.toString());
+        }
+        return sb.toString();
+    }
+
     public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromUnionTypes(UnionType unionType) {
         List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
         for (Expression type : unionType.getTypes()) {
+            QualifiedName name = QualifiedName.create(type);
+            if (name != null) {
+                types.add(Pair.of(name, false));
+            }
+        }
+        return types;
+    }
+
+    public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromIntersectionTypes(IntersectionType intersectionType) {
+        List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
+        for (Expression type : intersectionType.getTypes()) {
             QualifiedName name = QualifiedName.create(type);
             if (name != null) {
                 types.add(Pair.of(name, false));
@@ -533,6 +571,8 @@ public final class VariousUtils {
                     operation = VariousUtils.STATIC_METHOD_TYPE_PREFIX;
                 } else if (VariousUtils.STATIC_FIELD_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
                     operation = VariousUtils.STATIC_FIELD_TYPE_PREFIX;
+                } else if (VariousUtils.STATIC_CONSTANT_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
+                    operation = VariousUtils.STATIC_CONSTANT_TYPE_PREFIX;
                 } else if (VariousUtils.VAR_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
                     operation = VariousUtils.VAR_TYPE_PREFIX;
                 } else if (VariousUtils.ARRAY_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
@@ -602,6 +642,36 @@ public final class VariousUtils {
                             Collection<? extends FieldElement> fields = IndexScopeImpl.getFields(type, fieldName, varScope, PhpModifiers.ALL_FLAGS);
                             for (FieldElement field : fields) {
                                 newRecentTypes.addAll(field.getTypes(offset));
+                            }
+                        }
+                        recentTypes = newRecentTypes;
+                        operation = null;
+                    } else if (operation.startsWith(STATIC_CONSTANT_TYPE_PREFIX)) {
+                        // const or case: const CONSTANT = 1;, case CASE1;
+                        // Name::CONSTANT; Name::CASE1;
+                        Set<TypeScope> newRecentTypes = new HashSet<>();
+                        final Collection<? extends TypeScope> types;
+                        final String constantName;
+                        String[] frgs = DOT_PATTERN.split(frag);
+                        if (frgs.length == 1) {
+                            // uniform variable syntax
+                            constantName = frag;
+                            types = oldRecentTypes;
+                        } else {
+                            assert frgs.length == 2 : semiTypeName;
+                            constantName = frgs[1];
+                            String clsName = frgs[0];
+                            assert clsName != null : frag;
+                            QualifiedName fullyQualifiedName = getFullyQualifiedName(createQuery(clsName, varScope), offset, varScope);
+                            types = IndexScopeImpl.getTypes(fullyQualifiedName, varScope);
+                        }
+                        for (TypeScope type : types) {
+                            List<? extends CaseElement> enumCases = IndexScopeImpl.getEnumCases(QualifiedName.create(constantName), type);
+                            for (CaseElement enumCase : enumCases) {
+                                Scope inScope = enumCase.getInScope();
+                                if (inScope instanceof TypeScope) {
+                                    newRecentTypes.add((TypeScope) inScope);
+                                }
                             }
                         }
                         recentTypes = newRecentTypes;
@@ -1077,6 +1147,16 @@ public final class VariousUtils {
                 }
                 return PRE_OPERATION_TYPE_DELIMITER + STATIC_FIELD_TYPE_PREFIX + fldName;
             }
+        } else if (varBase instanceof StaticConstantAccess) {
+            StaticConstantAccess constantAccess = (StaticConstantAccess) varBase;
+            String clsName = CodeUtils.extractUnqualifiedName(constantAccess.getDispatcher());
+            String constName = CodeUtils.extractQualifiedName(constantAccess.getConstant());
+            if (constName != null) {
+                if (clsName != null) {
+                    return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + clsName + '.' + constName;
+                }
+                return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + constName;
+            }
         }
 
         return null;
@@ -1153,6 +1233,8 @@ public final class VariousUtils {
         int leftBraces = 0;
         int rightBraces = State.PARAMS.equals(state) ? 1 : 0;
         int arrayBrackets = 0;
+        String className = null;
+        String fieldName = null;
         CloneExpressionInfo cloneInfo = new CloneExpressionInfo();
         StringBuilder metaAll = new StringBuilder();
         while (!state.equals(State.INVALID) && !state.equals(State.STOP) && tokenSequence.movePrevious() && skipWhitespaces(tokenSequence)) {
@@ -1199,7 +1281,7 @@ public final class VariousUtils {
                             arrayBrackets++;
                             state = State.IDX;
                         } else if (isString(token)) {
-                            metaAll.insert(0, token.text().toString());
+                            fieldName = token.text().toString();
                             state = isArray ? State.ARRAY_FIELD : State.FIELD;
                         } else if (isVariable(token)) {
                             metaAll.insert(0, token.text().toString());
@@ -1209,10 +1291,10 @@ public final class VariousUtils {
                     case STATIC_REFERENCE:
                         state = State.INVALID;
                         if (isString(token)) {
-                            metaAll.insert(0, token.text().toString());
+                            className = token.text().toString();
                             state = State.CLASSNAME;
                         } else if (isSelf(token) || isParent(token) || isStatic(token)) {
-                            metaAll.insert(0, translateSpecialClassName(varScope, token.text().toString()));
+                            className = translateSpecialClassName(varScope, token.text().toString());
                             state = State.CLASSNAME;
                         } else if (isRightBracket(token)) {
                             rightBraces++;
@@ -1265,10 +1347,19 @@ public final class VariousUtils {
                             state = State.METHOD;
                         }
                         break;
-                    case ARRAY_FIELD:
-                    case FIELD:
+                    case ARRAY_FIELD: // no break
+                    case FIELD: // field or enum case
                         state = State.INVALID;
+                        if (isStaticReference(token)) {
+                            // ::ENUM_CASE
+                            state = State.STATIC_REFERENCE;
+                            break;
+                        }
+                        assert fieldName != null;
+                        metaAll.insert(0, fieldName);
+                        fieldName = null;
                         if (isReference(token)) {
+                            // ->fieldName
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
                             state = State.REFERENCE;
                         }
@@ -1280,17 +1371,26 @@ public final class VariousUtils {
                             break;
                         } else {
                             state = State.VARIABLE;
-                        }
-                    case ARRAY_VARIABLE:
+                        } // no break
+                    case ARRAY_VARIABLE: // no break
                     case VARIABLE:
                         if (state.equals(State.ARRAY_VARIABLE)) {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.ARRAY_TYPE_PREFIX);
                         } else {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.VAR_TYPE_PREFIX);
-                        }
+                        } // no break
                     case CLASSNAME:
                         //TODO: self, parent not handled yet
                         //TODO: maybe rather introduce its own State for self, parent
+                        if (isStaticReference(token)) {
+                            // CLASS_NAME::ENUM_CASE
+                            state = State.STATIC_REFERENCE;
+                            break;
+                        }
+                        if (className != null) {
+                            metaAll.insert(0, className);
+                            className = null;
+                        }
                         if (isNamespaceSeparator(token)) {
                             if (tokenSequence.movePrevious()) {
                                 metaAll.insert(0, token.text().toString());
@@ -1316,6 +1416,10 @@ public final class VariousUtils {
                     state = State.STOP;
                     break;
                 } else if (state.equals(State.CLASSNAME)) {
+                    if (className != null) {
+                        metaAll.insert(0, className);
+                        className = null;
+                    }
                     if (!metaAll.toString().startsWith("\\")) { //NOI18N
                         if (tokenSequence.moveNext()) { // return to last valid token
                             metaAll = transformToFullyQualifiedType(metaAll, tokenSequence, varScope);
@@ -1427,12 +1531,12 @@ public final class VariousUtils {
 
     private static String translateSpecialClassName(Scope scp, String clsName) {
         TypeScope typeScope = null;
-        if (scp instanceof ClassScope || scp instanceof TraitScope) {
+        if (scp instanceof ClassScope || scp instanceof TraitScope || scp instanceof EnumScope) {
             typeScope = (TypeScope) scp;
         } else if (scp instanceof MethodScope) {
             MethodScope msi = (MethodScope) scp;
             Scope inScope = msi.getInScope();
-            if (inScope instanceof ClassScope || inScope instanceof TraitScope) {
+            if (inScope instanceof ClassScope || inScope instanceof TraitScope || inScope instanceof EnumScope) {
                 typeScope = (TypeScope) inScope;
             }
         }
@@ -1544,6 +1648,8 @@ public final class VariousUtils {
                 csi = (ClassScope) methodInScope;
             } else if (methodInScope instanceof TraitScope) {
                 csi = (TraitScope) methodInScope;
+            } else if (methodInScope instanceof EnumScope) {
+                csi = (EnumScope) methodInScope;
             }
         }
         if (inScope instanceof ClassScope || inScope instanceof InterfaceScope) {
@@ -1814,8 +1920,12 @@ public final class VariousUtils {
     public static String qualifyTypeNames(String typeNames, int offset, Scope inScope) {
         StringBuilder retval = new StringBuilder();
         if (typeNames != null) {
-            if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) { //NOI18N
-                for (String typeName : TYPE_SEPARATOR_PATTERN.split(typeNames)) {
+            if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) {
+                boolean isIntersection = typeNames.contains(Type.SEPARATOR_INTERSECTION);
+                String[] types = isIntersection
+                        ? TYPE_SEPARATOR_INTERSECTION_PATTERN.split(typeNames)
+                        : TYPE_SEPARATOR_PATTERN.split(typeNames);
+                for (String typeName : types) {
                     String typeRawPart = typeName;
                     if (CodeUtils.isNullableType(typeRawPart)) {
                         retval.append(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -1829,19 +1939,19 @@ public final class VariousUtils {
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987
-                        retval.append("\\this").append(Type.SEPARATOR); //NOI18N
+                        retval.append("\\this").append(Type.getTypeSeparator(isIntersection)); //NOI18N
                     } else if (!typeRawPart.startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR) && !Type.isPrimitive(typeRawPart)) {
                         QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(typeRawPart), offset, inScope);
                         retval.append(fullyQualifiedName.toString().startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR)
                                 ? "" //NOI18N
                                 : NamespaceDeclarationInfo.NAMESPACE_SEPARATOR);
-                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(Type.SEPARATOR);
+                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(Type.getTypeSeparator(isIntersection));
                     } else {
-                        retval.append(typeRawPart).append(typeArrayPart).append(Type.SEPARATOR);
+                        retval.append(typeRawPart).append(typeArrayPart).append(Type.getTypeSeparator(isIntersection));
                     }
                 }
-                assert retval.length() - Type.SEPARATOR.length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
-                retval = new StringBuilder(retval.toString().substring(0, retval.length() - Type.SEPARATOR.length()));
+                assert retval.length() - Type.getTypeSeparator(isIntersection).length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
+                retval = new StringBuilder(retval.toString().substring(0, retval.length() - Type.getTypeSeparator(isIntersection).length()));
             }
         }
         return retval.toString();

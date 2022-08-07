@@ -21,7 +21,6 @@ package org.netbeans.modules.java.source;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.SourceVersion;
@@ -35,33 +34,25 @@ import org.openide.modules.OnStart;
  */
 public class NoJavacHelper {
 
-    private static final AtomicReference<Boolean> hasWorkingJavac = new AtomicReference<>();
-    public static boolean hasWorkingJavac() {
-        Boolean res = hasWorkingJavac.get();
-        if (res != null) {
-            return res;
-        }
+    public static final int REQUIRED_JAVAC_VERSION = 18; // <- TODO: increment on every release
+    private static final boolean HAS_WORKING_JAVAC;
+
+    static {
+        boolean res;
         try {
-            SourceVersion.valueOf("RELEASE_17");
+            SourceVersion.valueOf("RELEASE_"+REQUIRED_JAVAC_VERSION);
             res = true;
         } catch (IllegalArgumentException ex) {
-            //OK
             res = false;
         }
-        hasWorkingJavac.compareAndSet(null, res);
-        return hasWorkingJavac.get();
+        HAS_WORKING_JAVAC = res;
     }
 
-    public static boolean hasNbJavac() {
-        try {
-            Class.forName("com.sun.tools.javac.comp.Repair");
-            return true;
-        } catch (ClassNotFoundException ex) {
-            //OK
-            return false;
-        }
+    public static boolean hasWorkingJavac() {
+        return HAS_WORKING_JAVAC;
     }
 
+    // safety net if someone manages to start NB on JDK 8 with nb-javac uninstalled
     @OnStart
     public static class FixClasses implements Runnable {
 
@@ -106,7 +97,7 @@ public class NoJavacHelper {
                 Class targetClass = Class.forName(injectToClass);  //NOI18N
 
                 Method defineClass = unsafeClass.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class, ClassLoader.class, ProtectionDomain.class);  //NOI18N
-                defineClass.invoke(unsafe, fqn, classData, 0, classData.length, targetClass.getClassLoader(), targetClass.getProtectionDomain());  //NOI18N 
+                defineClass.invoke(unsafe, fqn, classData, 0, classData.length, targetClass.getClassLoader(), targetClass.getProtectionDomain());  //NOI18N
             } catch (Throwable t) {
                 //ignore...
                 Logger.getLogger(NoJavacHelper.class.getName()).log(Level.WARNING, null, t);

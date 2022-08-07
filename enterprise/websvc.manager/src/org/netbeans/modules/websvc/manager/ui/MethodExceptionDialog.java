@@ -108,7 +108,7 @@ public class MethodExceptionDialog extends JPanel {
     }
 
     private String escape(String line) {
-        return line.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); // NOI18N
+        return line.replace("<", "&lt;").replace(">", "&gt;"); // NOI18N
     }
 
     private final JButton okButton = new JButton(NbBundle.getMessage(this.getClass(), "OPTION_OK")); // NOI18N

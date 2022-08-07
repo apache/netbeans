@@ -52,6 +52,7 @@ KEYWORD    endforeach                                 null
 KEYWORD    endif                                      null
 KEYWORD    endswitch                                  null
 KEYWORD    endwhile                                   null
+KEYWORD    enum                                       null
 KEYWORD    eval()                                     Language Construct
 KEYWORD    exit()                                     Language Construct
 KEYWORD    extends                                    null
@@ -79,12 +80,14 @@ KEYWORD    print '';                                  Language Construct
 KEYWORD    private                                    null
 KEYWORD    protected                                  null
 KEYWORD    public                                     null
+KEYWORD    readonly                                   null
 KEYWORD    require '';                                Language Construct
 KEYWORD    require_once '';                           Language Construct
 KEYWORD    return ;                                   Language Construct
 KEYWORD    static                                     null
 KEYWORD    switch                                     null
 KEYWORD    throw                                      null
+KEYWORD    trait                                      null
 KEYWORD    try                                        null
 KEYWORD    unset()                                    Language Construct
 KEYWORD    use                                        null

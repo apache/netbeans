@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.source.parsing;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.model.JavacElements;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -46,8 +45,8 @@ import junit.framework.*;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.source.ElementUtils;
-import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
@@ -106,7 +105,7 @@ public class ClasspathInfoTest extends NbTestCase {
         assertNotNull( "Classpath Info should be created", ci );
     }
     
-    
+    @RandomlyFails
     public void testGetTypeDeclaration() throws Exception {
         ClasspathInfo ci = ClasspathInfo.create( bootPath, classPath, null);
         JavacTaskImpl jTask = JavacParser.createJavacTask(ci,  (DiagnosticListener) null, (String) null, null, null, null, null, null, Collections.emptyList());

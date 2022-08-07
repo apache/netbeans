@@ -92,7 +92,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     }
 
     private void changeDistDir() {
-        GradleDistribution dist = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome()).defaultDistribution();
+        GradleDistribution dist = GradleDistributionManager.get().defaultDistribution();
         File newDistDir = dist.getDistributionDir();
         if (distDir != null && !distDir.equals(newDistDir)) {
             distDir = newDistDir;

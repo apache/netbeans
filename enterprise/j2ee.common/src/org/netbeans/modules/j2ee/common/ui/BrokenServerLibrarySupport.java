@@ -96,7 +96,7 @@ public final class BrokenServerLibrarySupport {
 
                 @Override
                 public void run() {
-                    J2eeModuleProvider jmp = (J2eeModuleProvider)project.getLookup().lookup(J2eeModuleProvider.class);
+                    J2eeModuleProvider jmp = project.getLookup().lookup(J2eeModuleProvider.class);
                     String serverInstanceID = jmp.getServerInstanceID();
                     ServerInstance inst = Deployment.getDefault().getServerInstance(serverInstanceID);
                     try {
@@ -123,8 +123,7 @@ public final class BrokenServerLibrarySupport {
     }
 
     public static Set<ServerLibraryDependency> getMissingServerLibraries(Project project) {
-        J2eeModuleProvider jmp =
-                (J2eeModuleProvider)project.getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider jmp = project.getLookup().lookup(J2eeModuleProvider.class);
         Set<ServerLibraryDependency> deps = getDependencies(jmp);
 
         String serverInstanceID = jmp.getServerInstanceID();
@@ -143,8 +142,7 @@ public final class BrokenServerLibrarySupport {
     }
 
     public static Set<ServerLibraryDependency> getDeployableServerLibraries(Project project) {
-        J2eeModuleProvider jmp =
-                (J2eeModuleProvider)project.getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider jmp = project.getLookup().lookup(J2eeModuleProvider.class);
         Set<ServerLibraryDependency> deps = getDependencies(jmp);
 
         String serverInstanceID = jmp.getServerInstanceID();

@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -148,15 +149,15 @@ public final class HttpUtils {
         return URLEncoder.encode(value, "UTF-8");
     }
 
-    public static String encodeBase64(String value) throws UnsupportedEncodingException {
-        return Base64.getEncoder().encodeToString(value.getBytes("UTF-8"));
+    public static String encodeBase64(String value) {
+        return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }
 
     public static void configureHeaders(OutputStream os, Map<String, String> defaultHeaders,
             Pair<String, String>... headers) throws IOException {
         StringBuilder sb = new StringBuilder();
         configureHeaders(sb, defaultHeaders, headers);
-        os.write(sb.toString().getBytes("ISO-8859-1")); // NOI18N
+        os.write(sb.toString().getBytes(StandardCharsets.ISO_8859_1));
     }
 
     public static void configureHeaders(StringBuilder sb, Map<String, String> defaultHeaders,
@@ -220,7 +221,7 @@ public final class HttpUtils {
 
     private static Charset getCharset(String contentType) {
         // FIXME the spec default is ISO-8859-1
-        Charset encoding = Charset.forName("UTF-8"); // NOI18N
+        Charset encoding = StandardCharsets.UTF_8;
         if (contentType != null) {
             String[] parts = contentType.trim().split(";"); // NOI18N
             for (String p : parts) {

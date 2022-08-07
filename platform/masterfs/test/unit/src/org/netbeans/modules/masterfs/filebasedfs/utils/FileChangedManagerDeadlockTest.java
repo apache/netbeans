@@ -74,7 +74,7 @@ public class FileChangedManagerDeadlockTest {
         assertTrue("Priority IO should be finished", priorityIO.finished.get());
     }
 
-    private static abstract class IORunnable implements Runnable {
+    private abstract static class IORunnable implements Runnable {
 
         protected Semaphore semaphore;
         final AtomicBoolean finished = new AtomicBoolean(false);

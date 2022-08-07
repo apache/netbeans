@@ -84,12 +84,7 @@ final class SearchTask implements Runnable, Cancellable {
         try {
             makeResultViewBusy(true);
             searchListener.searchStarted();
-            Mutex.EVENT.writeAccess(new Runnable() {
-                @Override
-                public void run() {
-                    resultViewPanel.requestFocusInWindow();
-                }
-            });
+            Mutex.EVENT.writeAccess(resultViewPanel::requestFocusInWindow);
             searchComposition.start(searchListener);
         } catch (RuntimeException e) {
             searchListener.generalError(e);
@@ -177,11 +172,6 @@ final class SearchTask implements Runnable, Cancellable {
     }
 
     private void makeResultViewBusy(final boolean busy) {
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                ResultView.getInstance().makeBusy(busy);
-            }
-        });
+        Mutex.EVENT.writeAccess(() -> ResultView.getInstance().makeBusy(busy));
     }
 }

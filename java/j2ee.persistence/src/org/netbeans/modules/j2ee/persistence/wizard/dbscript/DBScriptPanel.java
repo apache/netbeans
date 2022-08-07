@@ -55,7 +55,7 @@ import org.openide.util.NbBundle;
  */
 public class DBScriptPanel extends javax.swing.JPanel {
     
-    private final static Logger LOGGER = Logger.getLogger(DBScriptPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DBScriptPanel.class.getName());
     private static final String EXTENSION = "sql";//NOI18N
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private JTextComponent packageComboBoxEditor;

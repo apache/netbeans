@@ -57,7 +57,7 @@ public class TestUtilHid {
         return lfs;
     }
 
-    public final static  void destroyLocalFileSystem (String testName) throws IOException {            
+    public static final  void destroyLocalFileSystem (String testName) throws IOException {            
     }
 
     static class StatusFileSystem extends LocalFileSystem {

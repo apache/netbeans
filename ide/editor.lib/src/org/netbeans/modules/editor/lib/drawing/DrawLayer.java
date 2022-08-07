@@ -134,7 +134,7 @@ package org.netbeans.modules.editor.lib.drawing;
      * @deprecated Please use Highlighting SPI instead, for details see
      *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
      */
-    public static abstract class AbstractLayer implements DrawLayer {
+    public abstract static class AbstractLayer implements DrawLayer {
 
         /** Name of this layer. The name of the layer must be unique among
         * layers installed into EditorUI

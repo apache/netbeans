@@ -3,18 +3,10 @@ p| // cc doesn't offer e.g. pull() or push()
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     parseFloat(string: String): Nu  [PUBLIC]   JS Platform
-METHOD     parseInt(string: String, radix  [PUBLIC]   JS Platform
-METHOD     pop(): Object                   [PUBLIC]   JS Platform
-METHOD     postMessage(message: String, t  [PUBLIC,   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     print(): undefined              [PUBLIC,   JS Platform
-METHOD     prompt(text: String, value: St  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
-METHOD     push(element1): Number          [PUBLIC]   JS Platform
-FIELD      pageXOffset: Number             [PUBLIC]   JS Platform
-FIELD      pageYOffset: Number             [PUBLIC]   JS Platform
-FIELD      parent: Window                  [PUBLIC]   JS Platform
-FIELD      performance: Object             [PUBLIC]   JS Platform
-FIELD      personalbar: Object             [PUBLIC]   JS Platform
+METHOD     parseInt(string: String): Numb  [PUBLIC]   JS Platform
+METHOD     pop(): Object|undefined         [PUBLIC]   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     push(items: T[]): Number        [PUBLIC]   JS Platform
 VARIABLE   pavel: Man                      [PUBLIC]   test02.js
 VARIABLE   pe234390: Person234390          [PUBLIC]   issue234390.js

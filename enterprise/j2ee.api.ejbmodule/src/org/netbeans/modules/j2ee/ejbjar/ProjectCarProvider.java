@@ -33,7 +33,7 @@ public class ProjectCarProvider implements CarProvider {
     public org.netbeans.modules.j2ee.api.ejbjar.Car findCar (org.openide.filesystems.FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
         if (project != null) {
-            CarProvider provider = (CarProvider) project.getLookup ().lookup (CarProvider.class);
+            CarProvider provider = project.getLookup().lookup(CarProvider.class);
             if (provider != null) {
                 return provider.findCar(file);
             }

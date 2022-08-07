@@ -78,7 +78,7 @@ public class KnockoutNode extends AbstractNode {
      * @return {@code KnockoutChildFactory} (possibly {@code null})
      * for the given {@code RemoteObject}
      */
-    final static KnockoutChildFactory childFactoryFor(RemoteObject remoteObject) {
+    static final KnockoutChildFactory childFactoryFor(RemoteObject remoteObject) {
         boolean isLeaf = true;
         if (remoteObject != null) {
             RemoteObject.Type type = remoteObject.getType();

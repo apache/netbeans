@@ -407,6 +407,7 @@ public class SourceUtils {
             if (info instanceof WorkingCopy) {
                 CompilationUnitTree nue = (CompilationUnitTree) ((WorkingCopy)info).resolveRewriteTarget(cut);
                 ((WorkingCopy)info).rewrite(info.getCompilationUnit(), GeneratorUtilities.get((WorkingCopy)info).addImports(nue, elementsToImport));
+                ((WorkingCopy)info).invalidateSourceAfter = true;
             } else {
                 final ElementHandle handle = ElementHandle.create(toImport);
                 SwingUtilities.invokeLater(new Runnable() {
@@ -650,7 +651,7 @@ public class SourceUtils {
         return null;
     }
 
-    private static abstract class Match {
+    private abstract static class Match {
 
         private final String name;
 

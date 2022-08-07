@@ -205,7 +205,7 @@ abstract class CreateRefreshAction extends ContextAction {
 
     abstract void persistCanceledCommitMessage (QCreatePatchParameters parameters, String canceledCommitMessage);
 
-    static abstract class Cmd {
+    abstract static class Cmd {
         protected final List<File> candidates;
         protected final OutputLogger logger;
         protected final String logMsgFormat;
@@ -244,7 +244,7 @@ abstract class CreateRefreshAction extends ContextAction {
                 HgCommand.doRemove(repository, candidates, logger);
             }
         }
-        static abstract class CreateRefreshPatchCmd extends Cmd {
+        abstract static class CreateRefreshPatchCmd extends Cmd {
             private HgQueueHookContext context;
             private Collection<HgQueueHook> hooks;
             private File[] hookFiles;

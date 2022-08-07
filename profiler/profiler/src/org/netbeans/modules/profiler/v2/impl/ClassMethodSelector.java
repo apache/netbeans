@@ -372,7 +372,7 @@ public final class ClassMethodSelector {
     }
     
     
-    private static abstract class FileSelector extends JPanel {
+    private abstract static class FileSelector extends JPanel {
         
         abstract void fileSelected();
         
@@ -555,7 +555,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class ProjectSelector extends JPanel {
+    private abstract static class ProjectSelector extends JPanel {
         
         abstract void projectSelected();
         
@@ -652,7 +652,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class PackageSelector extends JPanel {
+    private abstract static class PackageSelector extends JPanel {
         
         abstract void packageSelected();
         
@@ -840,7 +840,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class ClassSelector extends JPanel {
+    private abstract static class ClassSelector extends JPanel {
         
         abstract void classSelected();
         
@@ -1006,7 +1006,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class MethodSelector extends JPanel {
+    private abstract static class MethodSelector extends JPanel {
         
         abstract void methodSelected();
         
@@ -1197,7 +1197,7 @@ public final class ClassMethodSelector {
     }
     
     
-    private static abstract class FilteredListModel<E> implements ListModel<E> {
+    private abstract static class FilteredListModel<E> implements ListModel<E> {
         
         private final Collection<ListDataListener> listeners;
         

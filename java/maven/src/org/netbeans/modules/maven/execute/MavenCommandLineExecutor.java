@@ -37,7 +37,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -117,7 +116,7 @@ import org.openide.windows.OutputListener;
  * VM parameters injected by {@link StartupExtender} API are not affected by this feature. 
  * <p>
  * Example use:
- * {@codesnippet MavenExecutionTestBase#samplePassAdditionalVMargs}
+ * {@snippet file="org/netbeans/modules/maven/execute/MavenExecutionTestBase.java" region="samplePassAdditionalVMargs"}
  * The example will <b>append</b> <code>-DvmArg2=2</code> to VM arguments and <b>replaces</b> all user
  * program arguments with <code>"paramY"</code>. Append mode can be controlled using {@link ExplicitProcessParameters.Builder#appendArgs} or
  * {@link ExplicitProcessParameters.Builder#appendPriorityArgs}.
@@ -143,7 +142,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
 
-    private final static RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
+    private static final RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
     /**
      * Execute maven build in NetBeans execution engine.
      * Most callers should rather use {@link #run} as this variant does no (non-late-bound) prerequisite checks.

@@ -53,6 +53,7 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
+import org.gradle.util.GradleVersion;
 import org.netbeans.api.project.ProjectInformation;
 
 import org.netbeans.api.project.ui.OpenProjects;
@@ -245,6 +246,25 @@ public final class RunUtils {
         return exec != null ? exec.cancel() : false;
     }
 
+    /**
+     * Returns the GradleDistribution for the given project which is compatible
+     * with the JVM runtime, the IDE is running on
+     * .
+     * @param prj the project
+     * @return The project Gradle distribution or the current tooling
+     *         distribution if the runtime JVM is not supported by the project
+     *         specified distribution.
+     * @since 2.23
+     */
+    public static GradleDistribution getCompatibleGradleDistribution(Project prj) {
+        GradleDistributionProvider pvd = prj.getLookup().lookup(GradleDistributionProvider.class);
+        GradleDistribution ret = pvd != null ? pvd.getGradleDistribution() : GradleDistributionManager.get().defaultDistribution();
+        ret = ret != null ? ret : GradleDistributionManager.get().defaultDistribution();
+        ret = ret.isCompatibleWithSystemJava() ? ret : GradleDistributionManager.get().defaultDistribution();
+        return ret;
+
+    }
+
     private static ExecutorTask executeGradleImpl(String runtimeName, final GradleExecutor exec, String initialOutput) {
         InputOutput io = exec.getInputOutput();
         ExecutorTask task = ExecutionEngine.getDefault().execute(runtimeName, exec,
@@ -318,7 +338,7 @@ public final class RunUtils {
      * </ol>
      * <div class="nonnormative">
      * Example of branding: 
-     * {@codesnippet org.netbeans.modules.gradle.api.execute.Bundle#trustDialgoBranding}
+     * {@snippet file="org/netbeans/modules/gradle/api/execute/TestBundle.properties" region="trustDialogBranding"}
      * This branding enables all supported options, and will make the "Trust Permanently" the default one.
      * </div>
      * 

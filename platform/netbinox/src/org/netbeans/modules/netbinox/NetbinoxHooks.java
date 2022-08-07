@@ -278,7 +278,7 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
         archive = netigsoArchive;
     }
 
-    private synchronized static void initRegistry(HookRegistry hr, NetbinoxHooks hooks) {
+    private static synchronized void initRegistry(HookRegistry hr, NetbinoxHooks hooks) {
         hookRegistry = hr;
         hr.addClassLoadingHook(hooks);
         hr.addBundleFileFactoryHook(hooks);

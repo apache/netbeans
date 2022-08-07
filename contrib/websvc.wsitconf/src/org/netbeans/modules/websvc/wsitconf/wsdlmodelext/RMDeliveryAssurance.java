@@ -66,11 +66,11 @@ public enum RMDeliveryAssurance {
     },
     /*AT_MOST_ONCE*/;
     
-    public final static RMDeliveryAssurance getDefault() {
+    public static final RMDeliveryAssurance getDefault() {
         return EXACTLY_ONCE;
     }
 
-    public final static RMDeliveryAssurance getValue(ConfigVersion cfgVersion, Binding b) {
+    public static final RMDeliveryAssurance getValue(ConfigVersion cfgVersion, Binding b) {
         if (ConfigVersion.CONFIG_1_0.equals(cfgVersion)) {
             if (RMModelHelper.isAllowDuplicates(b)) {
                 return AT_LEAST_ONCE;

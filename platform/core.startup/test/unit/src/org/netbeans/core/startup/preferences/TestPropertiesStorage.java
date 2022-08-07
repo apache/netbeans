@@ -20,6 +20,7 @@
 package org.netbeans.core.startup.preferences;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.TreeSet;
@@ -147,13 +148,13 @@ public class TestPropertiesStorage extends TestFileStorage {
      private void overrideStorageEntryWithNewValue(String oldValue, String newValue) throws IOException {
          String newText = constructNewEntryText(oldValue, newValue);         
          OutputStream storageOutputStream = storage.toPropertiesFile().getOutputStream();
-         storageOutputStream.write(newText.getBytes("ISO-8859-1"));
+         storageOutputStream.write(newText.getBytes(StandardCharsets.ISO_8859_1));
          storageOutputStream.close();                     
      }
      
      private void overrideStorageEntryWithNewData(String newData) throws IOException {
          OutputStream storageOutputStream = storage.toPropertiesFile(true).getOutputStream();
-         storageOutputStream.write(newData.getBytes("ISO-8859-1"));
+         storageOutputStream.write(newData.getBytes(StandardCharsets.ISO_8859_1));
          storageOutputStream.close();                     
      }
      
@@ -166,7 +167,7 @@ public class TestPropertiesStorage extends TestFileStorage {
          String newText = before.concat(after);
          
          OutputStream storageOutputStream = storage.toPropertiesFile().getOutputStream();
-         storageOutputStream.write(newText.getBytes("ISO-8859-1"));
+         storageOutputStream.write(newText.getBytes(StandardCharsets.ISO_8859_1));
          storageOutputStream.close();                     
      }
 

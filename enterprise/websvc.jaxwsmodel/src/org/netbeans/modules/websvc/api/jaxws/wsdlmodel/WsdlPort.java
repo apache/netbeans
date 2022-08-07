@@ -45,7 +45,7 @@ public class WsdlPort implements WSPort {
     }
     
     public List<WsdlOperation> getOperations() {
-        List wsdlOperations = new ArrayList();
+        List<WsdlOperation> wsdlOperations = new ArrayList<>();
         if (port==null) return wsdlOperations;
         List<Operation> operations = port.getOperations();
         for (Operation op:operations)

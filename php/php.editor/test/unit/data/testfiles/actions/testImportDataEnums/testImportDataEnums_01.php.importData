@@ -1,0 +1,17 @@
+Caret position: 1030
+Should show uses panel: true
+Defaults:
+ \Namespace1\ExampleClass
+ \Namespace1\ExampleEnum
+
+Names:
+ ExampleClass
+ ExampleEnum
+
+Variants:
+ \Namespace1\ExampleClass
+ Don't import.
+
+ \Namespace1\ExampleEnum
+ Don't import.
+

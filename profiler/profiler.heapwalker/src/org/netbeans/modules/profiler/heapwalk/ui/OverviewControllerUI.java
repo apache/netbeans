@@ -155,6 +155,8 @@ public class OverviewControllerUI extends JTitledPanel {
                 } else if (urls.equals(OverviewController.SHOW_THREADS_URL)) {
                     showThreads = true;
                     refreshSummary();
+                } else if (urls.equals(OverviewController.SHOW_NEXT_SEGMENT_URL)) {
+                    overviewController.showNextSegment();
                 } else {
                     overviewController.showURL(urls);
                 }

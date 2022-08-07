@@ -65,7 +65,6 @@ public class HTMLDocView extends JEditorPane {
         //add listeners for selection support
         addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                getHighlighter().removeAllHighlights();
             }
             public void mousePressed(MouseEvent e) {
                 getHighlighter().removeAllHighlights();
@@ -77,7 +76,11 @@ public class HTMLDocView extends JEditorPane {
                 }
             }
 
-            public void mouseReleased(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+                if(getSelectedText() == null){
+                    getHighlighter().removeAllHighlights();
+                }
+            }
             public void mouseEntered(MouseEvent e) {}
             public void mouseExited(MouseEvent e) {}
         });
@@ -123,7 +126,7 @@ public class HTMLDocView extends JEditorPane {
                     Document doc = getDocument();
                     doc.remove(0, doc.getLength());
                     getEditorKit().read(in, getDocument(), 0);  //!!! still too expensive to be called from AWT
-                    setCaretPosition(0);
+                    setCaretPosition(0); 
                     if (reference != null) {
                         SwingUtilities.invokeLater(new Runnable(){
                             public void run(){

@@ -618,7 +618,7 @@ public class CSS {
     private String replaceHoverInStyleSheetText(String styleSheetText) {
         String clazz = getClassForHover();
         if (clazz != null) {
-            styleSheetText = styleSheetText.replaceAll(":hover", "." + clazz); // NOI18N
+            styleSheetText = styleSheetText.replace(":hover", "." + clazz); // NOI18N
         }
         return styleSheetText;
     }

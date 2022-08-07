@@ -30,6 +30,7 @@ import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
@@ -146,6 +147,17 @@ public final class QualifiedName {
     public static List<QualifiedName> create(UnionType unionType) {
         List<QualifiedName> qualifiedNames = new ArrayList<>();
         for (Expression type : unionType.getTypes()) {
+            QualifiedName qualifiedName = create(type);
+            if (qualifiedName != null) {
+                qualifiedNames.add(qualifiedName);
+            }
+        }
+        return qualifiedNames;
+    }
+
+    public static List<QualifiedName> create(IntersectionType intersectionType) {
+        List<QualifiedName> qualifiedNames = new ArrayList<>();
+        for (Expression type : intersectionType.getTypes()) {
             QualifiedName qualifiedName = create(type);
             if (qualifiedName != null) {
                 qualifiedNames.add(qualifiedName);

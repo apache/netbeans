@@ -152,8 +152,8 @@ public abstract class NbLaunchDelegate {
                 }
             }
         };
-        Project prj = FileOwnerQuery.getOwner(toRun);
         if (nativeImageFile == null) {
+            Project prj = FileOwnerQuery.getOwner(toRun);
             class W extends Writer {
                 @Override
                 public void write(char[] cbuf, int off, int len) throws IOException {
@@ -409,7 +409,7 @@ public abstract class NbLaunchDelegate {
             } catch (IOException ex) {
                 ErrorUtilities.completeExceptionally(launchFuture,
                     "Failed to run debuggee native image: " + ex.getLocalizedMessage(),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 throw ex;
             }
         }, executionDescriptor, "Run - " + nativeImageFile.getName()).run();
@@ -436,6 +436,7 @@ public abstract class NbLaunchDelegate {
         List<String> command = join(nativeImageFile.getAbsolutePath(), args);
         StartDebugParameters.Builder parametersBuilder = StartDebugParameters.newBuilder(command)
                 .debugger(miDebugger)
+                .debuggerDisplayObjects(false)
                 .executionDescriptor(executionDescriptor)
                 .lookup(contextLookup);
         StartDebugParameters parameters = parametersBuilder.build();
@@ -458,7 +459,7 @@ public abstract class NbLaunchDelegate {
         } catch (IllegalStateException ex) {
             ErrorUtilities.completeExceptionally(launchFuture,
                 "Failed to launch debuggee native image. " + ex.getLocalizedMessage(),
-                ResponseErrorCode.serverErrorStart);
+                ResponseErrorCode.ServerNotInitialized);
             debugProgress.finished(false);
             return ;
         }

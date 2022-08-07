@@ -411,4 +411,28 @@ public class GotoDeclarationPHP74Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "    return fn(...$args) => !$f(...$ar^gs);", "    return fn(...$^args) => !$f(...$args);");
     }
 
+    public void testArrowFunctions_GH4209_01a() throws Exception {
+        checkDeclaration(getTestPath(), "$gh4209b = fn() => $g^h4209a > 0 ? $gh4209a + 1 : 2;", "$^gh4209a = 0;");
+    }
+
+    public void testArrowFunctions_GH4209_01b() throws Exception {
+        checkDeclaration(getTestPath(), "$gh4209b = fn() => $gh4209a > 0 ? $gh4^209a + 1 : 2;", "$^gh4209a = 0;");
+    }
+
+    public void testArrowFunctions_GH4209_01c() throws Exception {
+        checkDeclaration(getTestPath(), "$gh4209b = fn($gh4209c) => $gh420^9a > 0 ? $gh4209a + 1 : $gh4209c + 2;", "$^gh4209a = 0;");
+    }
+
+    public void testArrowFunctions_GH4209_01d() throws Exception {
+        checkDeclaration(getTestPath(), "$gh4209b = fn($gh4209c) => $gh4209a > 0 ? $gh4209^a + 1 : $gh4209c + 2;", "$^gh4209a = 0;");
+    }
+
+    public void testArrowFunctions_GH4209_02a() throws Exception {
+        checkDeclaration(getTestPath(), "$gh420^9b = fn($gh4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh4209c + 2;", "$^gh4209b = fn() => $gh4209a > 0 ? $gh4209a + 1 : 2;");
+    }
+
+    public void testArrowFunctions_GH4209_03a() throws Exception {
+        checkDeclaration(getTestPath(), "$gh4209b = fn($gh4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh^4209c + 2;", "$gh4209b = fn($^gh4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh4209c + 2;");
+    }
+
 }

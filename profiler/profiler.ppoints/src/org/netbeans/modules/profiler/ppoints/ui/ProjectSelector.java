@@ -121,7 +121,7 @@ class ProjectSelector extends LazyComboBox<Lookup.Provider> {
         
         private Renderer _renderer;
         
-        final private String extraItemName;
+        private final String extraItemName;
         
         ProjectNameRenderer(String extraItemName) {
             this.extraItemName = extraItemName;

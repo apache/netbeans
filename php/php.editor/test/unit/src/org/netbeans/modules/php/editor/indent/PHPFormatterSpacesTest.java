@@ -1631,4 +1631,66 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, false);
         reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_02b.php", options);
     }
+
+    public void testSpacesAroundIntersectionTypeSeparator_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_01a.php", options);
+    }
+
+    public void testSpacesAroundIntersectionTypeSeparator_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_01b.php", options);
+    }
+
+
+    public void testSpacesAroundIntersectionTypeSeparator_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_02a.php", options);
+    }
+
+    public void testSpacesAroundIntersectionTypeSeparator_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_02b.php", options);
+    }
+
+    public void testSpacesBeforeEnumDecLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceBeforeEnumDecLeftBrace_01a.php", options);
+    }
+
+    public void testSpacesBeforeEnumDecLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceBeforeEnumDecLeftBrace_01b.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_01a.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_01b.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_02a.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_02b.php", options);
+    }
+
 }

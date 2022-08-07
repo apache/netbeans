@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -44,6 +46,8 @@ import org.openide.util.NbPreferences;
  * @author lkishalmi
  */
 public class ProjectTrust {
+    private static final Logger LOG = Logger.getLogger(ProjectTrust.class.getName());
+    
     private static final String KEY_SALT     = "secret";     //NOI18N
     private static final String NODE_PROJECT = "projects"; //NOI18N
     private static final String NODE_TRUST   = "trust";    //NOI18N
@@ -82,6 +86,7 @@ public class ProjectTrust {
     public boolean isTrusted(Project project) {
         synchronized (this) {
             if (temporaryTrustedIds.contains(getPathId(project))) {
+                LOG.log(Level.FINER, "Project {0} temporarily trusted.", project);
                 return true;
             }
         }
@@ -108,7 +113,9 @@ public class ProjectTrust {
             List<String> trust = Files.readAllLines(trustFile);
             String hash = hmacSha256(fromHex(projectId));
             ret = trust.size() == 1 && trust.iterator().next().equals(hash);
+            LOG.log(Level.FINER, "Trust for project {0} is: {1}", new Object[] { project, ret });
         } catch (IOException ex) {
+            LOG.log(Level.FINER, "Could not load trust file {0} for projec {1}.", new Object[] { trustFile, project});
         }
         return ret;        
     }

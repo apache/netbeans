@@ -302,7 +302,7 @@ public abstract class PresentableFileEntry extends FileEntry
      *
      * @return support
      */
-    private synchronized final PropertyChangeSupport getChangeSupport () {
+    private final synchronized PropertyChangeSupport getChangeSupport () {
         if (changeSupport == null) {
             changeSupport = new PropertyChangeSupport (this);
         }

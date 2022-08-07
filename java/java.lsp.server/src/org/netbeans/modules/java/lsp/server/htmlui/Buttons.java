@@ -62,7 +62,7 @@ public final class Buttons {
             + "footer.appendChild(button);\n"
             + "return button;\n"
     )
-    public native static Object createButton0(String id, HTMLViewerSpi.Context callback);
+    public static native Object createButton0(String id, HTMLViewerSpi.Context callback);
 
     static void clickButton0(String id, Object callback) {
         HTMLViewerSpi.Context ctx = (HTMLViewerSpi.Context) callback;
@@ -70,12 +70,12 @@ public final class Buttons {
     }
 
     @JavaScriptBody(args = { "b" }, body = "return b.id;")
-    public native static String buttonName0(Object b);
+    public static native String buttonName0(Object b);
 
     @JavaScriptBody(args = { "b", "text" }, body = "b.innerHTML = text;")
-    public native static void buttonText0(Object b, String text);
+    public static native void buttonText0(Object b, String text);
 
     @JavaScriptBody(args = { "b", "disabled" }, body = "return b.disabled = disabled;")
-    public native static String buttonDisabled0(Object b, boolean disabled);
+    public static native String buttonDisabled0(Object b, boolean disabled);
     
 }

@@ -122,15 +122,18 @@ public class IDENativeTemplateHandler extends CreateFromTemplateHandler {
         params.put("projecName", cd.getName());
         params.put("packagePath", pi.packageName == null ? "" : pi.packageName.replace('.', '/')); // NOI18N
         
-        String mainName;
-        if (!params.containsKey("mainClassName")) { // NOI18N
-            String derived = deriveClassName(pi.artifactId);
-            if (BaseUtilities.isJavaIdentifier(derived)) {
-                mainName = derived;
-            } else {
-                mainName = "App"; // NOI18N
+        String packaging = cd.getValue(TemplateUtils.PARAM_PACKAGING);
+        if (packaging == null || "jar".equals(packaging)) { // NOI18N
+            String mainName;
+            if (!params.containsKey("mainClassName")) { // NOI18N
+                String derived = deriveClassName(pi.artifactId);
+                if (BaseUtilities.isJavaIdentifier(derived)) {
+                    mainName = derived;
+                } else {
+                    mainName = "App"; // NOI18N
+                }
+                params.put("mainClassName", mainName); // NOI18N
             }
-            params.put("mainClassName", mainName); // NOI18N
         }
         
 
@@ -166,8 +169,9 @@ public class IDENativeTemplateHandler extends CreateFromTemplateHandler {
         for (FileObject c : projectContents.getChildren()) {
             result.addAll(new FileBuilder(c, target).defaultMode(FileBuilder.Mode.COPY).withParameters(params).build());
         }
-        for (String k : params.keySet()) {
-            Object v = params.get(k);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String k = entry.getKey();
+            Object v = entry.getValue();
             if (v != null) {
                 p.put(k, v);
             }

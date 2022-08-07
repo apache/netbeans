@@ -1,0 +1,33 @@
+<testresult testFile='treatNamespacedNamesAsSingleTokenError_01b.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='825' end='829'>
+            <text>test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='829' end='830'>
+            <text>\</text>
+        </token>
+        <token id='T_REQUIRE' start='831' end='838'>
+            <text>require</text>
+        </token>
+        <token id='T_SEMICOLON' start='838' end='839'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='840' end='840'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='840'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='829'/>
+            <ASTError start='831' end='838'/>
+            <EmptyStatement start='838' end='839'/>
+        </Statements>
+    </Program>
+</testresult>

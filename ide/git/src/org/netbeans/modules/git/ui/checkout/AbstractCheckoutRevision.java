@@ -30,6 +30,7 @@ import javax.swing.JButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.libs.git.GitBranch;
+import org.netbeans.modules.git.GitModuleConfig;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.git.ui.repository.RevisionDialogController;
 import org.netbeans.modules.git.utils.GitUtils;
@@ -69,7 +70,10 @@ public abstract class AbstractCheckoutRevision implements DocumentListener, Acti
     }
     
     String getBranchName () {
-        return panel.branchNameField.getText();
+        if (GitModuleConfig.getDefault().getAutoReplaceInvalidBranchNameCharacters()) {
+            return GitUtils.normalizeBranchName(panel.branchNameField.getText());
+        }
+        return panel.branchNameField.getText().trim();
     }
     
     boolean isCreateBranchSelected () {
@@ -167,7 +171,7 @@ public abstract class AbstractCheckoutRevision implements DocumentListener, Acti
     })
     private void validateName () {
         msgInvalidName = null;
-        branchName = panel.branchNameField.getText();
+        branchName = getBranchName();
         if (branchName.isEmpty()) {
             msgInvalidName = Bundle.MSG_CheckoutRevision_errorBranchNameEmpty();
         } else if (!GitUtils.isValidBranchName(branchName)) {

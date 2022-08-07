@@ -216,7 +216,7 @@ public class DataEditorReadOnlyTest extends NbTestCase {
             return this.file;
         }
         
-        public synchronized static FileEncodingQueryImpl getDefault () {
+        public static synchronized FileEncodingQueryImpl getDefault () {
             if (instance == null) {
                 instance = new FileEncodingQueryImpl ();
             }

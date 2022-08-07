@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.51.0
+#Version 1.53.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1079,6 +1079,9 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJa
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion EJBJAR_2_1
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion EJBJAR_3_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion EJBJAR_3_1
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion EJBJAR_3_2
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion EJBJAR_3_2_6
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion EJBJAR_4_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.glassfish.eecommon.api.config.EjbJarVersion getEjbJarVersion(java.lang.String)
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion

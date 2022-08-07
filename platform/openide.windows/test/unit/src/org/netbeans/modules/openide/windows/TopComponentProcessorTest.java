@@ -24,6 +24,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import javax.swing.Action;
 import junit.framework.Test;
@@ -126,7 +127,7 @@ public class TopComponentProcessorTest extends  NbTestCase {
     }
     
     private static void assertValidate(String xml) throws Exception {
-        XMLUtil.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("UTF-8"))), false, true, XMLUtil.defaultErrorHandler(), new EntityResolver() {
+        XMLUtil.parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))), false, true, XMLUtil.defaultErrorHandler(), new EntityResolver() {
             public @Override InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                 return new InputSource(new ByteArrayInputStream(new byte[0]));
                 /* XXX when #192595 is implemented, can move DTDs here from core.windows, set validate=true above, and use:

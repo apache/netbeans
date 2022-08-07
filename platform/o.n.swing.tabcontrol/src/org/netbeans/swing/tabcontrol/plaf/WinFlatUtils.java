@@ -89,7 +89,7 @@ class WinFlatUtils {
      * Corresponds to {@code org.netbeans.swing.laf.flatlaf.ui.FlatTabControlIcon}. Just delegate
      * to the HiDPI-enabled Windows icons.
      */
-    final static class FlatTabControlIcon {
+    static final class FlatTabControlIcon {
         public static Icon get(int buttonId, int buttonState) {
             return Windows8VectorTabControlIcon.get(buttonId, buttonState);
         }

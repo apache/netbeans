@@ -32,7 +32,7 @@ import org.openide.util.actions.SystemAction;
  */
 public class SQLNode extends DataNode {
 
-    private final static String ICON_BASE = "org/netbeans/modules/db/sql/loader/resources/sql16.png"; // NOI18N
+    private static final String ICON_BASE = "org/netbeans/modules/db/sql/loader/resources/sql16.png"; // NOI18N
 
     public SQLNode(SQLDataObject dataObject, Lookup lookup) {
         super(dataObject, Children.LEAF, lookup);

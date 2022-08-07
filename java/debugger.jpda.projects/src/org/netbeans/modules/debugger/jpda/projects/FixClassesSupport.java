@@ -53,8 +53,9 @@ public class FixClassesSupport {
     public static void reloadClasses(final JPDADebugger debugger,
                                      Map<String, FileObject> classes) {
         final Map<String, byte[]> map = new HashMap<String, byte[]>();
-        for (String className : classes.keySet()) {
-            FileObject fo = classes.get(className);
+        for (Map.Entry<String, FileObject> entry : classes.entrySet()) {
+            String className = entry.getKey();
+            FileObject fo = entry.getValue();
             InputStream is = null;
             try {
                 is = fo.getInputStream();

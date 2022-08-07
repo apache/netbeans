@@ -27,10 +27,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
@@ -40,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -48,6 +52,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
@@ -76,10 +81,12 @@ import org.openide.util.Parameters;
  * @author tomslot
  */
 public final class CodeUtils {
-    public static final String FUNCTION_TYPE_PREFIX = "@fn:";
-    public static final String METHOD_TYPE_PREFIX = "@mtd:";
-    public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:";
+
+    public static final String FUNCTION_TYPE_PREFIX = "@fn:"; // NOI18N
+    public static final String METHOD_TYPE_PREFIX = "@mtd:"; // NOI18N
+    public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:"; // NOI18N
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
+    public static final String ELLIPSIS = "..."; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(CodeUtils.class.getName());
 
     private CodeUtils() {
@@ -269,7 +276,8 @@ public final class CodeUtils {
      *
      * @param typeName The type name
      * @return The type name. If it is a nullable type, the name is returned
-     * with "?". If it's union type, type names separated by "|" are returned
+     * with "?". If it's a union type, type names separated by "|" are returned.
+     * If it's an intersection type, type names separated by "&" are returned.
      */
     @CheckForNull
     public static String extractQualifiedName(Expression typeName) {
@@ -281,12 +289,24 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             NullableType nullableType = (NullableType) typeName;
             return NULLABLE_TYPE_PREFIX + extractQualifiedName(nullableType.getType());
+        } else if (typeName instanceof ExpressionArrayAccess) {
+            return extractQualifiedName(((ExpressionArrayAccess) typeName).getExpression());
         } else if (typeName instanceof UnionType) {
             UnionType unionType = (UnionType) typeName;
             StringBuilder sb = new StringBuilder();
             for (Expression type : unionType.getTypes()) {
                 if (sb.length() > 0) {
                     sb.append(Type.SEPARATOR);
+                }
+                sb.append(extractQualifiedName(type));
+            }
+            return sb.toString();
+        } else if (typeName instanceof IntersectionType) {
+            IntersectionType intersectionType = (IntersectionType) typeName;
+            StringBuilder sb = new StringBuilder();
+            for (Expression type : intersectionType.getTypes()) {
+                if (sb.length() > 0) {
+                    sb.append(Type.SEPARATOR_INTERSECTION);
                 }
                 sb.append(extractQualifiedName(type));
             }
@@ -797,4 +817,13 @@ public final class CodeUtils {
         return typeName;
     }
 
+    /**
+     * Get an OffsetRange of an ASTNode.
+     *
+     * @param node the ASTNode
+     * @return the OffsetRange
+     */
+    public static OffsetRange getOffsetRagne(@NonNull ASTNode node) {
+        return new OffsetRange(node.getStartOffset(), node.getEndOffset());
+    }
 }

@@ -432,7 +432,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         } else if (testMethods.isEmpty()) {
             members = Collections.singletonList(abstractClassImpl);
         } else {
-            members = new ArrayList<Tree>(testMethods.size() + 1);
+            members = new ArrayList<>(testMethods.size() + 1);
             ((List<Tree>) members).addAll(testMethods);
             ((List<Tree>) members).add(abstractClassImpl);
         }
@@ -918,7 +918,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                                             trees);
 
         List<? extends Tree> tstMembersOrig = tstClass.getMembers();
-        List<Tree> tstMembers = new ArrayList<Tree>(tstMembersOrig.size() + 4);
+        List<Tree> tstMembers = new ArrayList<>(tstMembersOrig.size() + 4);
         tstMembers.addAll(tstMembersOrig);
 
         if (generateMissingInitMembers) {
@@ -1041,7 +1041,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         Iterator<ExecutableElement> srcMethodsIt = srcMethods.iterator();
         Iterator<String> tstMethodNamesIt = testMethodNames.iterator();
 
-        List<MethodTree> testMethods = new ArrayList<MethodTree>(srcMethods.size());
+        List<MethodTree> testMethods = new ArrayList<>(srcMethods.size());
         while (srcMethodsIt.hasNext()) {
             assert tstMethodNamesIt.hasNext();
 
@@ -1465,7 +1465,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     comparisonArgs.add(maker.Identifier(actualValue.getName().toString()));
                     comparisonArgs.add(maker.Identifier(expectedValue.getName().toString()));
                     if ((retTypeKind == TypeKind.DOUBLE) || (retTypeKind == TypeKind.FLOAT)){
-                        comparisonArgs.add(maker.Identifier(new Double(0).toString()));
+                        comparisonArgs.add(maker.Identifier(Double.toString(0)));
                     }
 
                     MethodInvocationTree comparison = maker.MethodInvocation(
@@ -1551,7 +1551,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         }
 
         Set<Modifier> noModifiers = Collections.<Modifier>emptySet();
-        List<VariableTree> paramVariables = new ArrayList<VariableTree>(params.size());
+        List<VariableTree> paramVariables = new ArrayList<>(params.size());
         int index = 0;
         for (TypeMirror param : params) {
             if (param.getKind() == TypeKind.TYPEVAR){
@@ -1685,29 +1685,29 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     defValue = maker.Literal(Boolean.FALSE);
                     break;
                 case CHAR:
-                    defValue = maker.Literal(new Character(' '));
+                    defValue = maker.Literal(' ');
                     break;
                 case BYTE:
-                    defValue = maker.Literal(new Byte((byte) 0));
+                    defValue = maker.Literal((byte) 0);
                     break;
                 case SHORT:
-                    defValue = maker.Literal(new Short((short) 0));
+                    defValue = maker.Literal((short) 0);
                     break;
                 case INT:
-                    defValue = maker.Literal(new Integer(0));
+                    defValue = maker.Literal(0);
                     break;
                 case FLOAT:
-                    defValue = maker.Literal(new Float(0.0F));
+                    defValue = maker.Literal(0.0F);
                     break;
                 case LONG:
-                    defValue = maker.Literal(new Long(0L));
+                    defValue = maker.Literal(0L);
                     break;
                 case DOUBLE:
-                    defValue = maker.Literal(new Double(0.0));
+                    defValue = maker.Literal(0.0D);
                     break;
                 default:
                     assert false : "unknown primitive type";            //NOI18N
-                    defValue = maker.Literal(new Integer(0));
+                    defValue = maker.Literal(0);
                     break;
             }
         } else if ((typeKind == TypeKind.DECLARED)
@@ -2156,7 +2156,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
 
     private List<VariableTree> generateEJBLookupCode(TreeMaker maker, TypeElement srcClass, ExecutableElement srcMethod) {
         final String ejbContainerPackage = "javax.ejb.embeddable.EJBContainer"; // NOI18N
-        List<VariableTree> trees = new ArrayList<VariableTree>();
+        List<VariableTree> trees = new ArrayList<>();
 
         // TODO: there are probably better ways how to generate code below:
         IdentifierTree container = maker.Identifier(ejbContainerPackage); 

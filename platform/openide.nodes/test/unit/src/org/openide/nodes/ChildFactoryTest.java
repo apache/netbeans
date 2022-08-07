@@ -403,6 +403,61 @@ public class ChildFactoryTest extends NbTestCase {
         assertEquals(4, root.getChildren().getNodes(true).length);
         assertEquals("[1, 2, 3, 4]", nodesCreated.toString());
     }
+    
+    /**
+     * Checks that if the same (equal) keys are added for the 2nd time, the nodes
+     * are not re-created. 
+     * @throws Exception 
+     */
+    public void testIncrementalRefreshSameNodes() throws Exception {
+        // negative key will not be mapped to a Node.
+        List<Integer> nodeKeys = Arrays.asList(1, 2, -1, 3, -2, 4, 5);
+        class F extends ChildFactory<Integer> {
+            Semaphore sem = new Semaphore(0);
+            
+            @Override
+            protected boolean createKeys(List<Integer> toPopulate) {
+                for (Integer i : nodeKeys) {
+                    toPopulate.add(i);
+                }
+                sem.release();
+                return true;
+            }
+
+            @Override protected Node createNodeForKey(Integer key) {
+                if (key < 0) {
+                    return null;
+                }
+                Node n = new AbstractNode(Children.LEAF);
+                n.setName(key.toString());
+                return n;
+            }
+            void refresh() {
+                refresh(false);
+            }
+        }
+        
+        F f = new F();
+        
+        Children c = Children.create(f, true);
+        Node[] first = c.getNodes(true);
+        f.sem.acquire();
+        f.sem.drainPermits();
+        
+        f.refresh();
+        Node[] second = c.getNodes();
+        // needed so that all keys are refreshed, the above getNodes() has triggered
+        // createKeys() in async thread.
+        f.sem.acquire();
+        // get the result.
+        second = c.getNodes();
+        
+        assertEquals(first.length, second.length);
+        // since keys did not change the nodes themselves should not change, too.
+        for (int i = 0; i < first.length; i++) {
+            assertSame(first[i], second[i]);
+        }
+    }
 
     public void testIncrementalNodeRemoval() throws Exception { // #211847
         final List<Integer> nodesCreated = new ArrayList<Integer>();

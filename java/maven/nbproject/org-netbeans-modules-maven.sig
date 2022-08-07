@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.151
+#Version 2.153
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1689,6 +1689,7 @@ meth public abstract java.util.Set<? extends org.netbeans.modules.maven.api.outp
 CLSS public final org.netbeans.modules.maven.api.output.OutputUtils
 fld public final static java.util.regex.Pattern linePattern
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.netbeans.api.java.classpath.ClassPath)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.netbeans.api.project.Project)
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.openide.filesystems.FileObject)
 supr java.lang.Object

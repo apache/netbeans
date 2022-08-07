@@ -44,7 +44,7 @@ import org.openide.util.Utilities;
  */
 public final class MacroMap implements Cloneable {
 
-    private final static java.util.logging.Logger log = Logger.getInstance();
+    private static final java.util.logging.Logger log = Logger.getInstance();
     private final ExecutionEnvironment execEnv;
     private final MacroExpander macroExpander;
     private final TreeMap<String, String> hostEnv;

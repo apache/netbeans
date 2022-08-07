@@ -39,14 +39,14 @@ import javax.swing.JTree;
  * @see org.openide.explorer.view.TreeViewDropSupport
  */
 final class DropGlassPane extends JPanel {
-    static private HashMap<Integer,DropGlassPane> map = new HashMap<Integer,DropGlassPane>();
-    final static private int MIN_X = 0;//5;
-    final static private int MIN_Y = 0;//3;
-    final static private int MIN_WIDTH = 0;//10;
-    final static private int MIN_HEIGTH = 0;//3;
-    static private Component oldPane;
-    static private JComponent originalSource;
-    static private boolean wasVisible;
+    private static HashMap<Integer,DropGlassPane> map = new HashMap<Integer,DropGlassPane>();
+    private static final int MIN_X = 0;//5;
+    private static final int MIN_Y = 0;//3;
+    private static final int MIN_WIDTH = 0;//10;
+    private static final int MIN_HEIGTH = 0;//3;
+    private static Component oldPane;
+    private static JComponent originalSource;
+    private static boolean wasVisible;
     Line2D line = null;
     Rectangle prevLineRect = null;
 
@@ -57,7 +57,7 @@ final class DropGlassPane extends JPanel {
      * calculate the new bounds in current pane's boundary.
      * @param comp
      * @return  */
-    synchronized static public DropGlassPane getDefault(JComponent comp) {
+    public static synchronized DropGlassPane getDefault(JComponent comp) {
         Integer id = Integer.valueOf(System.identityHashCode(comp));
 
         if ((map.get(id)) == null) {

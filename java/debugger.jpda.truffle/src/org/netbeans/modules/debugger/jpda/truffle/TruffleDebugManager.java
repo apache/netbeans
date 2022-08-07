@@ -62,12 +62,15 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
     
     private static final Logger LOG = Logger.getLogger(TruffleDebugManager.class.getName());
     
-    private static final String ENGINE_CLASS = "org.graalvm.polyglot.Engine";
-    private static final String ENGINE_BUILDER_CLASS = "org.graalvm.polyglot.Engine$Builder";
+    private static final String ENGINE_CLASS = "org.graalvm.polyglot.Engine";   // NOI18N
+    private static final String ENGINE_BUILDER_CLASS = "org.graalvm.polyglot.Engine$Builder";   // NOI18N
+    private static final String REMOTE_SERVICES_TRIGGER_CLASS = "com.oracle.truffle.api.Truffle";   // NOI18N
+    private static final String REMOTE_SERVICES_TRIGGER_METHOD = "getRuntime";                      // NOI18N
     // Breakpoint on this class triggers search of existing engines
-    private static final String EXISTING_ENGINES_TRIGGER = "com.oracle.truffle.api.frame.Frame";
+    private static final String EXISTING_ENGINES_TRIGGER = "com.oracle.truffle.api.frame.Frame";    // NOI18N
     
     private JPDABreakpoint debugManagerLoadBP;
+    private Map<JPDADebugger, JPDABreakpoint> initServiceBPs = new HashMap<>();
     private static final Map<JPDADebugger, Boolean> haveExistingEnginesTrigger = new WeakHashMap<>();
     private static final Map<JPDADebugger, DebugManagerHandler> dmHandlers = new HashMap<>();
     private static final Map<JPDADebugger, JPDABreakpointListener> debugBPListeners = new HashMap<>();
@@ -110,9 +113,12 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             }
         }
         initLoadBP();
+        JPDABreakpoint bpService = addRemoteServiceInitBP(debugger);
+        DebuggerManager.getDebuggerManager().addBreakpoint(bpService);
         JPDABreakpointListener bpl = addPolyglotEngineCreationBP(debugger);
         LOG.log(Level.FINE, "TruffleDebugManager.sessionAdded({0}), adding BP listener to {1}", new Object[]{session, debugManagerLoadBP});
         synchronized (debugBPListeners) {
+            initServiceBPs.put(debugger, bpService);
             debugBPListeners.put(debugger, bpl);
         }
     }
@@ -123,9 +129,14 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         if (debugger == null) {
             return ;
         }
+        JPDABreakpoint bpService;
         JPDABreakpointListener bpl;
         synchronized (debugBPListeners) {
+            bpService = initServiceBPs.remove(debugger);
             bpl = debugBPListeners.remove(debugger);
+        }
+        if (bpService != null) {
+            DebuggerManager.getDebuggerManager().removeBreakpoint(bpService);
         }
         if (bpl != null) {
             LOG.log(Level.FINE, "TruffleDebugManager.engineRemoved({0}), removing BP listener from {1}", new Object[]{session, debugManagerLoadBP});
@@ -141,12 +152,38 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         }
     }
 
+    private JPDABreakpoint addRemoteServiceInitBP(final JPDADebugger debugger) {
+        MethodBreakpoint bp = MethodBreakpoint.create(REMOTE_SERVICES_TRIGGER_CLASS, REMOTE_SERVICES_TRIGGER_METHOD);
+        bp.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
+        bp.setHidden(true);
+        bp.setSession(debugger);
+
+        JPDABreakpointListener bpl = new JPDABreakpointListener() {
+            @Override
+            public void breakpointReached(JPDABreakpointEvent event) {
+                try {
+                    if (event.getDebugger() == debugger) {
+                        DebugManagerHandler dmh = getDebugManagerHandler(debugger);
+                        dmh.initDebuggerRemoteService(event.getThread());
+                        DebuggerManager.getDebuggerManager().removeBreakpoint(bp);
+                    }
+                } finally {
+                    event.resume();
+                }
+            }
+        };
+        bp.addJPDABreakpointListener(bpl);
+        return bp;
+    }
+
     private JPDABreakpointListener addPolyglotEngineCreationBP(final JPDADebugger debugger) {
         JPDABreakpointListener bpl = new JPDABreakpointListener() {
             @Override
             public void breakpointReached(JPDABreakpointEvent event) {
                 try {
-                    handleEngineBuilder(debugger, event);
+                    if (event.getDebugger() == debugger) {
+                        handleEngineBuilder(debugger, event);
+                    }
                 } finally {
                     event.resume();
                 }
@@ -193,6 +230,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         builderExitBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
         builderExitBreakpoint.setThreadFilters(debugger, new JPDAThread[]{entryEvent.getThread()});
         builderExitBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
+        builderExitBreakpoint.setSession(debugger);
         builderExitBreakpoint.setHidden(true);
         builderExitBreakpoint.addJPDABreakpointListener(exitEvent -> {
             try {
@@ -246,7 +284,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         DebuggerManager.getDebuggerManager().addBreakpoint(execTrigger);
     }
 
-    private void haveNewPE(JPDADebugger debugger, JPDAThreadImpl thread, ObjectReference engine) {
+    private DebugManagerHandler getDebugManagerHandler(JPDADebugger debugger) {
         DebugManagerHandler dmh;
         synchronized (dmHandlers) {
             dmh = dmHandlers.get(debugger);
@@ -255,6 +293,11 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
                 dmHandlers.put(debugger, dmh);
             }
         }
+        return dmh;
+    }
+
+    private void haveNewPE(JPDADebugger debugger, JPDAThreadImpl thread, ObjectReference engine) {
+        DebugManagerHandler dmh = getDebugManagerHandler(debugger);
         dmh.newPolyglotEngineInstance(engine, thread);
     }
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import java.util.prefs.Preferences;
+import java.util.LinkedHashSet;
+import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
@@ -60,17 +64,21 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
@@ -99,6 +107,12 @@ import org.netbeans.modules.java.lsp.server.explorer.LspTreeViewServiceImpl;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
+import org.netbeans.modules.java.lsp.server.input.InputService;
+import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
@@ -107,6 +121,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;
@@ -148,13 +163,23 @@ public final class Server {
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
-            .configureGson(gb -> gb.registerTypeAdapter(SemanticTokensCapabilities.class, (InstanceCreator<SemanticTokensCapabilities>) type -> new SemanticTokensCapabilities(false)))
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())
             .setOutput(io.second())
             .wrapMessages(processor)
-//                .traceMessages(new java.io.PrintWriter(System.err))
+            .configureGson(gb -> {
+                gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
+                    @Override public SemanticTokensCapabilities createInstance(Type type) {
+                        return new SemanticTokensCapabilities(null);
+                    }
+                });
+                gb.registerTypeAdapter(SemanticTokensParams.class, new InstanceCreator<SemanticTokensParams>() {
+                    @Override public SemanticTokensParams createInstance(Type type) {
+                        return new SemanticTokensParams(new TextDocumentIdentifier(""));
+                    }
+                });
+            })
             .create();
     }
 
@@ -180,6 +205,9 @@ public final class Server {
         public MessageConsumer attachLookup(MessageConsumer delegate) {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
+            if (!(delegate instanceof Endpoint)) {
+                return delegate; 
+            }
             return new MessageConsumer() {
                 @Override
                 public void consume(Message msg) throws MessageIssueException, JsonRpcException {
@@ -287,8 +315,9 @@ public final class Server {
         };
     }
 
-    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState {
+    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
+        private static final String NETBEANS_FORMAT = "netbeans.format";
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
@@ -305,6 +334,7 @@ public final class Server {
         );
 
         private final LspTreeViewServiceImpl treeService = new LspTreeViewServiceImpl(sessionLookup);
+        private final LspInputServiceImpl inputService = new LspInputServiceImpl();
 
                 /**
          * Projects that are or were opened. After projects open, their CompletableFutures
@@ -649,7 +679,7 @@ public final class Server {
         @Override
         public OpenedDocuments getOpenedDocuments() {
             return openedDocuments;
-        }
+        } 
 
         private JavaSource showIndexingCompleted(Project[] opened) {
             try {
@@ -673,7 +703,7 @@ public final class Server {
             }
         }
 
-        private InitializeResult constructInitResponse(JavaSource src) {
+        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
                 TextDocumentSyncOptions textDocumentSyncOptions = new TextDocumentSyncOptions();
@@ -683,7 +713,7 @@ public final class Server {
                 capabilities.setTextDocumentSync(textDocumentSyncOptions);
                 CompletionOptions completionOptions = new CompletionOptions();
                 completionOptions.setResolveProvider(true);
-                completionOptions.setTriggerCharacters(Collections.singletonList("."));
+                completionOptions.setTriggerCharacters(Arrays.asList(".", "#", "@", "*"));
                 capabilities.setCompletionProvider(completionOptions);
                 capabilities.setHoverProvider(true);
                 CodeActionOptions codeActionOptions = new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.SourceOrganizeImports, CodeActionKind.Refactor));
@@ -694,10 +724,16 @@ public final class Server {
                 capabilities.setTypeDefinitionProvider(true);
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
+                capabilities.setDocumentFormattingProvider(true);
+                capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
-                        JAVA_BUILD_WORKSPACE,
-                        JAVA_CLEAN_WORKSPACE,
+                
+                CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
+                chOpts.setWorkDoneProgress(true);
+                capabilities.setCallHierarchyProvider(chOpts);
+                Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
+                        NBLS_BUILD_WORKSPACE,
+                        NBLS_CLEAN_WORKSPACE,
                         JAVA_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
@@ -709,6 +745,7 @@ public final class Server {
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
+                        JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
                         JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
@@ -716,7 +753,7 @@ public final class Server {
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
-                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(new ArrayList<>(commands)));
                 capabilities.setWorkspaceSymbolProvider(true);
                 capabilities.setCodeLensProvider(new CodeLensOptions(false));
                 RenameOptions renOpt = new RenameOptions();
@@ -724,6 +761,7 @@ public final class Server {
                 capabilities.setRenameProvider(renOpt);
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
+                textDocumentService.init(init.getCapabilities(), capabilities);
             }
             return new InitializeResult(capabilities);
         }
@@ -733,6 +771,7 @@ public final class Server {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
             hackConfigureGroovySupport(capa);
+            hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -768,7 +807,7 @@ public final class Server {
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
-                        constructInitResponse(checkJavaSupport())
+                        constructInitResponse(init, checkJavaSupport())
                     )
             );
         }
@@ -779,6 +818,12 @@ public final class Server {
                     ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
+                    item.setSection(NETBEANS_FORMAT);
+                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                            workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
+                        }
+                    });
                     item.setSection(NETBEANS_JAVA_IMPORTS);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
@@ -815,6 +860,11 @@ public final class Server {
             return treeService;
         }
 
+        @JsonDelegate
+        public InputService getInputService() {
+            return inputService;
+        }
+
         @Override
         public TextDocumentService getTextDocumentService() {
             return textDocumentService;
@@ -843,14 +893,15 @@ public final class Server {
             });
             sessionServices.add(new WorkspaceUIContext(client));
             sessionServices.add(treeService.getNodeRegistry());
+            sessionServices.add(inputService.getRegistry());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
         }
     }
 
-    public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
-    public static final String JAVA_CLEAN_WORKSPACE =  "java.clean.workspace";
+    public static final String NBLS_BUILD_WORKSPACE =  "nbls.build.workspace";
+    public static final String NBLS_CLEAN_WORKSPACE =  "nbls.clean.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
@@ -882,6 +933,10 @@ public final class Server {
      * Provides code-completion of configurations.
      */
     public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+    /**
+     * Provides resolution of project problems.
+     */
+    public static final String JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS = "java.project.resolveProjectProblems";
 
 
     /**
@@ -916,6 +971,12 @@ public final class Server {
         public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(params.getValue());
+        }
+
+        @Override
+        public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
         }
 
         @Override
@@ -985,6 +1046,12 @@ public final class Server {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
+        }
     };
 
 
@@ -1006,6 +1073,21 @@ public final class Server {
             if (!groovyClassWarningLogged) {
                 groovyClassWarningLogged = true;
                 LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
+            }
+        }
+    }
+
+    private static boolean antClassWarningLogged;
+    private static void hackNoReuseOfOutputsForAntProjects() {
+        final String PROP_AUTO_CLOSE_TABS = "autoCloseTabs"; // NOI18N
+        try {
+            Class antSettings = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.apache.tools.ant.module.AntSettings");
+            Preferences prefs = NbPreferences.forModule(antSettings);
+            prefs.putBoolean(PROP_AUTO_CLOSE_TABS, false);
+        } catch (ReflectiveOperationException ex) {
+            if (!antClassWarningLogged) {
+                antClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Ant support", ex);
             }
         }
     }

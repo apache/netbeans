@@ -36,7 +36,7 @@ public class ItemEditorHelper implements Refreshable {
     /**
      * Model of item providing unified interface between text component and item data
      */
-    public static abstract class ItemEditorModel {
+    public abstract static class ItemEditorModel {
 
         private ItemEditorHelper itemEditorHelper;
 

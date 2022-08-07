@@ -207,6 +207,7 @@ public class GtkLFCustoms extends LFCustoms {
                 // special tree icons - only for property sheet
                 "Tree.gtk_expandedIcon", new GTKExpandedIcon(),
                 "Tree.gtk_collapsedIcon", new GTKCollapsedIcon(),
+                "Slider.paintValue", false
             };
         } else {
             Object[] result = new Object[] {
@@ -214,13 +215,14 @@ public class GtkLFCustoms extends LFCustoms {
                 // special tree icons - only for property sheet
                 "Tree.gtk_expandedIcon", new GTKExpandedIcon(),
                 "Tree.gtk_collapsedIcon", new GTKCollapsedIcon(),
+                "Slider.paintValue", false
             };
             return result;
         }
     }
     
     /** Temporary workaround for GTK L&F */
-    private static abstract class GTKIcon implements Icon {
+    private abstract static class GTKIcon implements Icon {
         private static final int SIZE = 11;
         @Override
         public int getIconWidth() {

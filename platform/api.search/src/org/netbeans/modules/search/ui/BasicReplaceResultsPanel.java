@@ -68,12 +68,7 @@ public class BasicReplaceResultsPanel extends BasicAbstractResultsPanel {
     private void init() {
         JPanel leftPanel = new JPanel();
         replaceButton = new JButton();
-        replaceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                replace();
-            }
-        });
+        replaceButton.addActionListener((ActionEvent e) -> replace());
         updateReplaceButton();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
         JPanel buttonPanel = new JPanel();
@@ -117,13 +112,10 @@ public class BasicReplaceResultsPanel extends BasicAbstractResultsPanel {
         if (location > 0) {
             splitPane.setDividerLocation(location);
         }
-        splitPane.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                String pn = evt.getPropertyName();
-                if (pn.equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
-                    SAVE_TASK.schedule(1000);
-                }
+        splitPane.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            String pn = evt.getPropertyName();
+            if (pn.equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
+                SAVE_TASK.schedule(1000);
             }
         });
     }
@@ -170,20 +162,17 @@ public class BasicReplaceResultsPanel extends BasicAbstractResultsPanel {
     public void displayIssuesToUser(final ReplaceTask task, final String title,
             final String[] problems, final boolean reqAtt) {
 
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                IssuesPanel issuesPanel = new IssuesPanel(title, problems);
-                if (isMacLaf) {
-                    issuesPanel.setBackground(macBackground);
-                }
-                displayIssues(issuesPanel);
-                if (!ResultView.getInstance().isOpened()) {
-                    ResultView.getInstance().open();
-                }
-                if (reqAtt) {
-                    ResultView.getInstance().requestAttention(true);
-                }
+        Mutex.EVENT.writeAccess(() -> {
+            IssuesPanel issuesPanel = new IssuesPanel(title, problems);
+            if (isMacLaf) {
+                issuesPanel.setBackground(macBackground);
+            }
+            displayIssues(issuesPanel);
+            if (!ResultView.getInstance().isOpened()) {
+                ResultView.getInstance().open();
+            }
+            if (reqAtt) {
+                ResultView.getInstance().requestAttention(true);
             }
         });
     }
@@ -224,19 +213,16 @@ public class BasicReplaceResultsPanel extends BasicAbstractResultsPanel {
         an.setDisplayName(NbBundle.getMessage(ResultView.class,
                 "TEXT_INFO_REPLACE_FINISHED", //NOI18N
                 resultModel.getSelectedMatchesCount()));
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                getOutlineView().getOutline().setRootVisible(true);
-                getExplorerManager().setRootContext(an);
-                getOutlineView().validate();
-                getOutlineView().repaint();
-                btnNext.setEnabled(false);
-                btnPrev.setEnabled(false);
-                btnTreeView.setEnabled(false);
-                btnFlatView.setEnabled(false);
-                btnExpand.setEnabled(false);
-            }
+        Mutex.EVENT.writeAccess(() -> {
+            getOutlineView().getOutline().setRootVisible(true);
+            getExplorerManager().setRootContext(an);
+            getOutlineView().validate();
+            getOutlineView().repaint();
+            btnNext.setEnabled(false);
+            btnPrev.setEnabled(false);
+            btnTreeView.setEnabled(false);
+            btnFlatView.setEnabled(false);
+            btnExpand.setEnabled(false);
         });
     }
 

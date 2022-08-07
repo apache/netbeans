@@ -21,5 +21,21 @@
 -->
 <project basedir="." default="build" name="java/java.api.common">
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="generate-antlr-parser" description="Regenerate the CSS parser from the ANTLR3 grammar">
+        <java classname="org.antlr.Tool" fork="true" failonerror="true">
+            <arg value="-verbose"/>
+            <arg value="-o"/>
+            <arg path="src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/"/>
+            <arg path="src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.g"/>
+            <classpath>
+                <pathelement path="${classpath}"/>
+                <pathelement location="../../ide/libs.antlr3.runtime/external/antlr-complete-3.5.2.jar"/>
+            </classpath>
+        </java>
+
+        <!-- delete the not necessary generated file -->
+        <delete verbose="false" file="src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.tokens" failonerror="false"/>
+    </target>
 </project>
 

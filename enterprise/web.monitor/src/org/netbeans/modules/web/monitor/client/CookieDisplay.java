@@ -45,7 +45,7 @@ import org.netbeans.modules.web.monitor.data.*;
 
 public class CookieDisplay extends DataDisplay {
     
-    private final static boolean debug = false;
+    private static final boolean debug = false;
         
     public CookieDisplay() {
 	super();

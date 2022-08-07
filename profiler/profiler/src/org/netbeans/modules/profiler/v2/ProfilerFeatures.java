@@ -300,7 +300,7 @@ final class ProfilerFeatures {
     }
     
     
-    static abstract class Listener {
+    abstract static class Listener {
         
         abstract void featuresChanged(ProfilerFeature changed);
         

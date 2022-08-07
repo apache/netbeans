@@ -328,8 +328,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -338,24 +337,22 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(configurationRadio)
-                            .addComponent(singleRefactorRadio))
+                        .addComponent(singleRefactorRadio)
                         .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(singleRefactoringCombo, 0, 196, Short.MAX_VALUE)
-                            .addComponent(configurationCombo, 0, 196, Short.MAX_VALUE)))
-                    .addComponent(scopeCombo, Alignment.TRAILING, 0, 346, Short.MAX_VALUE))
+                        .addComponent(singleRefactoringCombo, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(configurationRadio)
+                        .addGap(25, 25, 25)
+                        .addComponent(configurationCombo, 0, 242, Short.MAX_VALUE))
+                    .addComponent(scopeCombo, Alignment.TRAILING, 0, 377, Short.MAX_VALUE))
                 .addPreferredGap(ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-                        .addComponent(manageSingleRefactoring, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(manageConfigurations, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(customScopeButton))
+                .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                    .addComponent(manageConfigurations, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(customScopeButton)
+                    .addComponent(manageSingleRefactoring, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
@@ -368,11 +365,12 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                     .addComponent(configurationCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(manageConfigurations)
                     .addComponent(refactorUsingLabel))
-                .addGap(1, 1, 1)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(singleRefactorRadio)
                     .addComponent(singleRefactoringCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(manageSingleRefactoring)
-                    .addComponent(singleRefactorRadio)))
+                    .addComponent(manageSingleRefactoring))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -481,7 +479,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
             
         } else {
             Configuration config = (Configuration) configurationCombo.getSelectedItem();
-            List<HintDescription> hintsToApply = new LinkedList();
+            List<HintDescription> hintsToApply = new LinkedList<>();
             HintsSettings settings = config.getSettings();
             for (Entry<? extends HintMetadata, ? extends Iterable<? extends HintDescription>> e : allHints.entrySet()) {
                 if (!settings.isEnabled(e.getKey())) continue;
@@ -522,7 +520,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         if (customScope==null) {
             return Scopes.specifiedFoldersScope(new Folder[0]);
         }
-        LinkedList list = new LinkedList();
+        List list = new LinkedList<>();
         list.addAll(customScope.getFiles());
         list.addAll(customScope.getFolders());
         list.addAll(customScope.getSourceRoots());

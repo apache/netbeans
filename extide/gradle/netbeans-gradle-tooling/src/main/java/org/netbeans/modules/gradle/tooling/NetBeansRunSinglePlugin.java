@@ -19,19 +19,21 @@
 
 package org.netbeans.modules.gradle.tooling;
 
-import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import org.gradle.api.logging.Logger;
+import org.gradle.api.logging.Logging;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.process.CommandLineArgumentProvider;
-
 /**
  *
  * @author Laszlo Kishalmi
  */
 class NetBeansRunSinglePlugin implements Plugin<Project> {
+    private static final Logger LOG = Logging.getLogger(NetBeansRunSinglePlugin.class);
 
     private static final String RUN_SINGLE_TASK = "runSingle";
     private static final String RUN_SINGLE_MAIN = "runClassName";
@@ -59,7 +61,15 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
                         }
                     });
                 }
-                je.setStandardInput(System.in);
+                try {
+                    je.setStandardInput(System.in);
+                } catch (RuntimeException ex) {
+                    if(LOG.isEnabled(LogLevel.DEBUG)) {
+                        LOG.debug("Failed to set STDIN for Plugin: " + je.toString(), ex);
+                    } else {
+                        LOG.info("Failed to set STDIN for Plugin: " + je.toString());
+                    }
+                }
                 if (project.hasProperty(RUN_SINGLE_CWD)) {
                     je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
                 }

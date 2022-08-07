@@ -70,7 +70,7 @@ public final class CodeSnifferReportParser extends DefaultHandler {
     public static List<Result> parse(File file) {
         try {
             sanitizeFile(file);
-            try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) { // NOI18N
+            try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 return create(reader).getResults();
             }
         } catch (IOException | SAXException ex) {

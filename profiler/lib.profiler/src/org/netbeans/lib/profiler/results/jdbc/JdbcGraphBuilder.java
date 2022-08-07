@@ -71,7 +71,7 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
     private Map<ThreadInfo, Integer> currentSqlLevel;
     private int lastSelectId;
     private RuntimeMemoryCCTNode[] stacksForSelects; // [1- maxSelectId] selectId -> root of its allocation traces tree
-    final private ThreadInfos threadInfos = new ThreadInfos();
+    private final ThreadInfos threadInfos = new ThreadInfos();
     private final SQLParser sqlParser = new SQLParser();
     private TextFilter filter;
 

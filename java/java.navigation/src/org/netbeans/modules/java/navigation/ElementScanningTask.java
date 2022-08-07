@@ -360,7 +360,7 @@ public class ElementScanningTask implements CancellableTask<CompilationInfo>{
         } else if( e instanceof ExecutableElement ) {
             d.htmlHeader = createHtmlHeader(info,  (ExecutableElement)e, info.getElements().isDeprecated(e),d.isInherited, fqn, overridenFrom);
         } else if( e instanceof VariableElement ) {
-            if( !(e.getKind() == ElementKind.FIELD || e.getKind() == ElementKind.ENUM_CONSTANT || e.getKind().name().equals("STATE_COMPONENT")) )
+            if( !(e.getKind() == ElementKind.FIELD || e.getKind() == ElementKind.ENUM_CONSTANT || e.getKind() == ElementKind.RECORD_COMPONENT) )
                 return null;
             d.htmlHeader = createHtmlHeader(info,  (VariableElement)e, info.getElements().isDeprecated(e),d.isInherited, fqn );
         } else if (isModule) {

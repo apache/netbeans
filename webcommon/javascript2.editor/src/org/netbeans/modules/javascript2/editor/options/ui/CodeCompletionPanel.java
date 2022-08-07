@@ -54,7 +54,7 @@ public class CodeCompletionPanel extends JPanel {
     private final ItemListener defaultCheckBoxListener = new DefaultCheckBoxListener();
     private final ItemListener defaultRadioButtonListener = new DefaultRadioButtonListener();
     private final ChangeListener defaultChangeListener = new DefaultChangeListener();
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     public CodeCompletionPanel(Preferences preferences) {
         assert preferences != null;
@@ -67,13 +67,7 @@ public class CodeCompletionPanel extends JPanel {
     }
 
     public static PreferencesCustomizer.Factory getCustomizerFactory() {
-        return new PreferencesCustomizer.Factory() {
-
-            @Override
-            public PreferencesCustomizer create(Preferences preferences) {
-                return new CodeCompletionPreferencesCustomizer(preferences);
-            }
-        };
+        return CodeCompletionPreferencesCustomizer::new;
     }
 
     private void initAutoCompletion() {
@@ -94,46 +88,40 @@ public class CodeCompletionPanel extends JPanel {
                 OptionsUtils.AUTO_STRING_CONCATINATION_DEFAULT);
         autoStringConcatenationCheckBox.setSelected(codeCompletionStringAutoConcatination);
         autoStringConcatenationCheckBox.addItemListener(defaultCheckBoxListener);
-        
-        autoCompletionFullRadioButton.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    setAutoCompletionState(false);
-                }
+
+        autoCompletionFullRadioButton.addItemListener((ItemEvent e) -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                setAutoCompletionState(false);
             }
         });
-        autoCompletionCustomizeRadioButton.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    setAutoCompletionState(true);
-                }
+        autoCompletionCustomizeRadioButton.addItemListener((ItemEvent e) -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                setAutoCompletionState(true);
             }
         });
-        
+
         boolean autoCompletionFull = preferences.getBoolean(
                 OptionsUtils.AUTO_COMPLETION_FULL,
                 OptionsUtils.AUTO_COMPLETION_FULL_DEFAULT);
-        
+
         autoCompletionFullRadioButton.setSelected(autoCompletionFull);
         autoCompletionCustomizeRadioButton.setSelected(!autoCompletionFull);
-        
+
         autoCompletionFullRadioButton.addItemListener(defaultRadioButtonListener);
         autoCompletionCustomizeRadioButton.addItemListener(defaultRadioButtonListener);
-        
+
         boolean autoCompletionVariables = preferences.getBoolean(
                 OptionsUtils.AUTO_COMPLETION_AFTER_DOT,
                 OptionsUtils.AUTO_COMPLETION_AFTER_DOT_DEFAULT);
         autoCompletionAfterDotCheckBox.setSelected(autoCompletionVariables);
         autoCompletionAfterDotCheckBox.addItemListener(defaultCheckBoxListener);
-        
+
         int codeCompletionItemSignatureWidth = preferences.getInt(
-                OptionsUtils.COMPETION_ITEM_SIGNATURE_WIDTH, 
+                OptionsUtils.COMPETION_ITEM_SIGNATURE_WIDTH,
                 OptionsUtils.COMPETION_ITEM_SIGNATURE_WIDTH_DEFAULT);
         codeCompletionSignatureWidthSpinner.setValue(codeCompletionItemSignatureWidth);
         codeCompletionSignatureWidthSpinner.addChangeListener(defaultChangeListener);
-        
+
         id2Saved.put(OptionsUtils.AUTO_COMPLETION_TYPE_RESOLUTION, autoCompletionTypeResolutionCheckBox.isSelected());
         id2Saved.put(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES, autoCompletionSmartQuotesCheckBox.isSelected());
         id2Saved.put(OptionsUtils.AUTO_STRING_CONCATINATION, autoStringConcatenationCheckBox.isSelected());
@@ -145,7 +133,7 @@ public class CodeCompletionPanel extends JPanel {
     void setAutoCompletionState(boolean enabled) {
         autoCompletionAfterDotCheckBox.setEnabled(enabled);
     }
-    
+
     void validateData() {
         preferences.putBoolean(OptionsUtils.AUTO_COMPLETION_TYPE_RESOLUTION, autoCompletionTypeResolutionCheckBox.isSelected());
         preferences.putBoolean(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES, autoCompletionSmartQuotesCheckBox.isSelected());
@@ -296,14 +284,14 @@ public class CodeCompletionPanel extends JPanel {
             }
         }
     }
-    
+
     private final class DefaultChangeListener implements ChangeListener, Serializable {
         @Override
         public void stateChanged(ChangeEvent e) {
             validateData();
         }
     }
-    
+
     static final class CodeCompletionPreferencesCustomizer implements PreferencesCustomizer {
 
         private final Preferences preferences;

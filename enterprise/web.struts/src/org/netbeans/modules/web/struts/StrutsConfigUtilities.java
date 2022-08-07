@@ -132,7 +132,7 @@ public class StrutsConfigUtilities {
         return list;
     }
 
-    private static void addActions(List list, StrutsConfig sConfig) {
+    private static void addActions(List<Action> list, StrutsConfig sConfig) {
         ActionMappings mappings = null;
         if (sConfig != null) {
             mappings = sConfig.getActionMappings();
@@ -143,7 +143,7 @@ public class StrutsConfigUtilities {
             list.add(actions[j]);
     }
     
-    private static void addFormBeans(List list, StrutsConfig sConfig) {
+    private static void addFormBeans(List<FormBean> list, StrutsConfig sConfig) {
         FormBeans formBeans = sConfig.getFormBeans();
         if (formBeans==null) return;
         FormBean [] beans = formBeans.getFormBean();
@@ -151,7 +151,7 @@ public class StrutsConfigUtilities {
             list.add(beans[j]);
     }
     
-    private static void addMessageResource(List list, StrutsConfig sConfig) {
+    private static void addMessageResource(List<MessageResources> list, StrutsConfig sConfig) {
         MessageResources[] rosources = sConfig.getMessageResources();
         for (int j = 0; j < rosources.length; j++)
             list.add(rosources[j]);
@@ -304,7 +304,7 @@ public class StrutsConfigUtilities {
             Servlet servlet = getActionServlet(dd);
             if (servlet!=null) {
                 InitParam[] params = servlet.getInitParam();
-                List list = new ArrayList();
+                List<String> list = new ArrayList<>();
                 for (int i=0;i<params.length;i++) {
                     String paramName=params[i].getParamName();
                     if (paramName!=null) {
@@ -336,7 +336,7 @@ public class StrutsConfigUtilities {
             Servlet servlet = getActionServlet(dd);
             if (servlet!=null) {
                 InitParam[] params = servlet.getInitParam();
-                List list = new ArrayList();
+                List<FileObject> list = new ArrayList<>();
                 FileObject file;
                 for (int i=0;i<params.length;i++) {
                     String paramName=params[i].getParamName();

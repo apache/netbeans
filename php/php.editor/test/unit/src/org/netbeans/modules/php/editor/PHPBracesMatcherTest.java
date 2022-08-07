@@ -729,6 +729,30 @@ public class PHPBracesMatcherTest extends PHPTestBase {
         checkBraceContext("php80/matchExpression_04.php", "        ^}; // match", true);
     }
 
+    public void testFindContextForEnumerations_01() throws Exception {
+        checkBraceContext("php81/enumerations.php", "^} // enum 1", true);
+    }
+
+    public void testFindContextForEnumerations_02() throws Exception {
+        checkBraceContext("php81/enumerations.php", "^} // enum 2", true);
+    }
+
+    public void testFindContextForEnumerations_03() throws Exception {
+        checkBraceContext("php81/enumerations.php", "^} // enum 3", true);
+    }
+
+    public void testFindContextForEnumerations_04() throws Exception {
+        checkBraceContext("php81/enumerations.php", "^} // enum 4", true);
+    }
+
+    public void testFindContextForEnumerations_05() throws Exception {
+        checkBraceContext("php81/enumerations.php", "^} // enum 5", true);
+    }
+
+    public void testFindContextForEnumerations_06() throws Exception {
+        checkBraceContext("php81/enumerations.php", "^} // enum 6", true);
+    }
+
     private void matchesBackward(String original) throws BadLocationException {
         matches(original, true);
     }

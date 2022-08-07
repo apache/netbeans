@@ -91,7 +91,7 @@ public class JMethodIdTable {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
-    synchronized public static JMethodIdTable getDefault() {
+    public static synchronized JMethodIdTable getDefault() {
         if (defaultTable == null) {
             defaultTable = new JMethodIdTable();
         }
@@ -99,11 +99,11 @@ public class JMethodIdTable {
         return defaultTable;
     }
 
-    synchronized public static void reset() {
+    public static synchronized void reset() {
         defaultTable = null;
     }
 
-    synchronized public String debug() {
+    public synchronized String debug() {
         if (entries == null) {
             return "Entries = null, size = " + size + ", nElements = " + nElements + ", threshold = " // NOI18N
                    + threshold + ", incompleteEntries = " + incompleteEntries; // NOI18N
@@ -113,7 +113,7 @@ public class JMethodIdTable {
         }
     }
 
-    synchronized public void readFromStream(DataInputStream in) throws IOException {
+    public synchronized void readFromStream(DataInputStream in) throws IOException {
         size = in.readInt();
         nElements = in.readInt();
         threshold = in.readInt();
@@ -137,7 +137,7 @@ public class JMethodIdTable {
         }
     }
 
-    synchronized public void writeToStream(DataOutputStream out) throws IOException {
+    public synchronized void writeToStream(DataOutputStream out) throws IOException {
         out.writeInt(size);
         out.writeInt(nElements);
         out.writeInt(threshold);
@@ -164,7 +164,7 @@ public class JMethodIdTable {
         }
     }
 
-    synchronized public JMethodIdTableEntry getEntry(int methodId) {
+    public synchronized JMethodIdTableEntry getEntry(int methodId) {
         int pos = hash(methodId) % size;
 
         while ((entries[pos] != null) && (entries[pos].methodId != methodId)) {
@@ -174,7 +174,7 @@ public class JMethodIdTable {
         return entries[pos];
     }
 
-    synchronized public void getNamesForMethodIds(ProfilerClient profilerClient)
+    public synchronized void getNamesForMethodIds(ProfilerClient profilerClient)
                                     throws ClientUtils.TargetAppOrVMTerminated {
         if (staticTable) {
             throw new IllegalStateException("Attempt to update snapshot JMethodIdTable"); // NOI18N
@@ -212,7 +212,7 @@ public class JMethodIdTable {
         completeEntry(methodId, className, methodName, methodSig, isNative);
     }
 
-    synchronized public void checkMethodId(int methodId) {
+    public synchronized void checkMethodId(int methodId) {
         int pos = hash(methodId) % size;
 
         while (entries[pos] != null) {
@@ -235,7 +235,7 @@ public class JMethodIdTable {
         }
     }
 
-    synchronized private void completeEntry(int methodId, String className, String methodName, String methodSig, boolean isNative) {
+    private synchronized void completeEntry(int methodId, String className, String methodName, String methodSig, boolean isNative) {
         int pos = hash(methodId) % size;
 
         while (entries[pos].methodId != methodId) {

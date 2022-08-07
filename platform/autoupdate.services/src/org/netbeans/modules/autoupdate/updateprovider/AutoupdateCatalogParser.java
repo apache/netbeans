@@ -157,7 +157,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
     private static String XML_EXTENSION = ".xml"; // NOI18N
     private static String GZIP_MIME_TYPE = "application/x-gzip"; // NOI18N
     
-    public synchronized static Map<String, UpdateItem> getUpdateItems (URL url, AutoupdateCatalogProvider provider) throws IOException {
+    public static synchronized Map<String, UpdateItem> getUpdateItems (URL url, AutoupdateCatalogProvider provider) throws IOException {
         Map<String, UpdateItem> items = new HashMap<String, UpdateItem> ();
         URI base;
         try {

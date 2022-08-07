@@ -193,7 +193,7 @@ public class RestXMLResponseParser extends RestResponseParser {
     }
 
 
-    static private class RestXMLResponseFilter implements EventFilter {
+    private static class RestXMLResponseFilter implements EventFilter {
 
         @Override
         public boolean accept(XMLEvent event) {

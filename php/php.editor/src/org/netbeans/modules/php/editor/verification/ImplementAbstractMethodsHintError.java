@@ -60,12 +60,14 @@ import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.TraitScope;
+import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
@@ -97,24 +99,30 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
         FileObject fileObject = context.parserResult.getSnapshot().getSource().getFileObject();
         if (fileScope != null && fileObject != null) {
             Collection<? extends ClassScope> allClasses = ModelUtils.getDeclaredClasses(fileScope);
-            for (FixInfo fixInfo : checkHints(allClasses, context)) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-                final String className;
-                if (fixInfo.anonymousClass) {
-                    className = Bundle.ImplementAbstractMethodsHintError_class_anonymous();
-                } else {
-                    className = fixInfo.className;
-                }
-                hints.add(new Hint(
-                        ImplementAbstractMethodsHintError.this,
-                        Bundle.ImplementAbstractMethodsHintDesc(className, fixInfo.lastMethodDeclaration, fixInfo.lastMethodOwnerName),
-                        fileObject,
-                        fixInfo.classNameRange,
-                        createHintFixes(context.doc, fixInfo),
-                        500));
+            addHints(allClasses, context, hints, fileObject);
+            Collection<? extends EnumScope> allEnums = ModelUtils.getDeclaredEnums(fileScope);
+            addHints(allEnums, context, hints, fileObject);
+        }
+    }
+
+    private void addHints(Collection<? extends TypeScope> allClasses, PHPRuleContext context, List<Hint> hints, FileObject fileObject) {
+        for (FixInfo fixInfo : checkHints(allClasses, context)) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
             }
+            final String className;
+            if (fixInfo.anonymousClass) {
+                className = Bundle.ImplementAbstractMethodsHintError_class_anonymous();
+            } else {
+                className = fixInfo.className;
+            }
+            hints.add(new Hint(
+                    ImplementAbstractMethodsHintError.this,
+                    Bundle.ImplementAbstractMethodsHintDesc(className, fixInfo.lastMethodDeclaration, fixInfo.lastMethodOwnerName),
+                    fileObject,
+                    fixInfo.classNameRange,
+                    createHintFixes(context.doc, fixInfo),
+                    500));
         }
     }
 
@@ -129,26 +137,34 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
     private List<HintFix> createHintFixes(BaseDocument doc, FixInfo fixInfo) {
         List<HintFix> hintFixes = new ArrayList<>();
         hintFixes.add(new ImplementAllFix(doc, fixInfo));
-        if (!fixInfo.anonymousClass) {
+        if (!fixInfo.anonymousClass && !fixInfo.isEnum) {
             hintFixes.add(new AbstractClassFix(doc, fixInfo));
         }
         return Collections.unmodifiableList(hintFixes);
     }
 
-    private Collection<FixInfo> checkHints(Collection<? extends ClassScope> allClasses, PHPRuleContext context) {
+    private Collection<FixInfo> checkHints(Collection<? extends TypeScope> allTypes, PHPRuleContext context) {
         List<FixInfo> retval = new ArrayList<>();
         final PhpVersion phpVersion = getPhpVersion(context.parserResult.getSnapshot().getSource().getFileObject());
-        for (ClassScope classScope : allClasses) {
+        for (TypeScope typeScope : allTypes) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return Collections.emptyList();
             }
-            if (!classScope.isAbstract()) {
+            if (!isAbstract(typeScope)) {
                 Index index = context.getIndex();
                 Set<String> allValidMethods = new HashSet<>();
-                allValidMethods.addAll(toNames(getValidInheritedMethods(getInheritedMethods(classScope, index))));
-                allValidMethods.addAll(toNames(index.getDeclaredMethods(classScope)));
+                allValidMethods.addAll(toNames(getValidInheritedMethods(getInheritedMethods(typeScope, index))));
+                allValidMethods.addAll(toNames(index.getDeclaredMethods(typeScope)));
                 ElementFilter declaredMethods = ElementFilter.forExcludedNames(allValidMethods, PhpElementKind.METHOD);
-                Set<MethodElement> accessibleMethods = declaredMethods.filter(index.getAccessibleMethods(classScope, classScope));
+                List<MethodElement> accessibleMethods = new ArrayList<>(declaredMethods.filter(index.getAccessibleMethods(typeScope, typeScope)));
+                // sort to get the same result
+                accessibleMethods.sort((MethodElement m1, MethodElement m2) -> {
+                    int result = m1.getFilenameUrl().compareTo(m2.getFilenameUrl());
+                    if (result == 0) {
+                        return Integer.compare(m1.getOffset(), m2.getOffset());
+                    }
+                    return result;
+                });
                 Set<String> methodSkeletons = new LinkedHashSet<>();
                 MethodElement lastMethodElement = null;
                 FileObject lastFileObject = null;
@@ -172,7 +188,7 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
                                 typeNameResolvers.add(TypeNameResolverImpl.forUnqualifiedName());
                             } else {
                                 typeNameResolvers.add(TypeNameResolverImpl.forFullyQualifiedName(namespaceScope, methodElement.getOffset()));
-                                typeNameResolvers.add(TypeNameResolverImpl.forSmartName(classScope, classScope.getOffset()));
+                                typeNameResolvers.add(TypeNameResolverImpl.forSmartName(typeScope, typeScope.getOffset()));
                             }
                             TypeNameResolver typeNameResolver = TypeNameResolverImpl.forChainOf(typeNameResolvers);
                             String skeleton = methodElement.asString(PrintAs.DeclarationWithEmptyBody, typeNameResolver, phpVersion);
@@ -183,15 +199,29 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
                     }
                 }
                 if (!methodSkeletons.isEmpty() && lastMethodElement != null) {
-                    int classDeclarationOffset = getClassDeclarationOffset(context.parserResult.getSnapshot().getTokenHierarchy(), classScope.getOffset());
-                    int newMethodsOffset = getNewMethodsOffset(classScope, context.doc, classDeclarationOffset);
+                    int classDeclarationOffset = getClassDeclarationOffset(context.parserResult.getSnapshot().getTokenHierarchy(), typeScope.getOffset());
+                    int newMethodsOffset = getNewMethodsOffset(typeScope, context.doc, classDeclarationOffset);
                     if (newMethodsOffset != -1 && classDeclarationOffset != -1) {
-                        retval.add(new FixInfo(classScope, methodSkeletons, lastMethodElement, newMethodsOffset, classDeclarationOffset, classScope.isAnonymous()));
+                        retval.add(new FixInfo(typeScope, methodSkeletons, lastMethodElement, newMethodsOffset, classDeclarationOffset, isAnonymous(typeScope)));
                     }
                 }
             }
         }
         return retval;
+    }
+
+    private boolean isAbstract(TypeScope typeScope) {
+        if (typeScope instanceof ClassScope) {
+            return ((ClassScope) typeScope).isAbstract();
+        }
+        return false;
+    }
+
+    private boolean isAnonymous(TypeScope typeScope) {
+        if (typeScope instanceof ClassScope) {
+            return ((ClassScope) typeScope).isAnonymous();
+        }
+        return false;
     }
 
     private FileScope getFileScope(final FileObject fileObject) {
@@ -212,28 +242,44 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
         return fileScope[0];
     }
 
-    private Set<MethodElement> getInheritedMethods(final ClassScope classScope, final Index index) {
+    private Set<MethodElement> getInheritedMethods(final TypeScope typeScope, final Index index) {
         Set<MethodElement> inheritedMethods = new HashSet<>();
-        Set<MethodElement> declaredSuperMethods =  new HashSet<>();
-        Set<MethodElement> accessibleSuperMethods =  new HashSet<>();
-        Collection<? extends ClassScope> superClasses = classScope.getSuperClasses();
+        Set<MethodElement> declaredSuperMethods = new HashSet<>();
+        Set<MethodElement> accessibleSuperMethods = new HashSet<>();
+        Collection<? extends ClassScope> superClasses = getSuperClasses(typeScope);
         for (ClassScope cls : superClasses) {
             declaredSuperMethods.addAll(index.getDeclaredMethods(cls));
-            accessibleSuperMethods.addAll(index.getAccessibleMethods(cls, classScope));
+            accessibleSuperMethods.addAll(index.getAccessibleMethods(cls, typeScope));
         }
-        Collection<? extends InterfaceScope> superInterface = classScope.getSuperInterfaceScopes();
+        Collection<? extends InterfaceScope> superInterface = typeScope.getSuperInterfaceScopes();
         for (InterfaceScope interfaceScope : superInterface) {
             declaredSuperMethods.addAll(index.getDeclaredMethods(interfaceScope));
-            accessibleSuperMethods.addAll(index.getAccessibleMethods(interfaceScope, classScope));
+            accessibleSuperMethods.addAll(index.getAccessibleMethods(interfaceScope, typeScope));
         }
-        Collection<? extends TraitScope> traits = classScope.getTraits();
+        Collection<? extends TraitScope> traits = getTraits(typeScope);
         for (TraitScope traitScope : traits) {
             declaredSuperMethods.addAll(index.getDeclaredMethods(traitScope));
-            accessibleSuperMethods.addAll(index.getAccessibleMethods(traitScope, classScope));
+            accessibleSuperMethods.addAll(index.getAccessibleMethods(traitScope, typeScope));
         }
         inheritedMethods.addAll(declaredSuperMethods);
         inheritedMethods.addAll(accessibleSuperMethods);
         return inheritedMethods;
+    }
+
+    private Collection<? extends ClassScope> getSuperClasses(TypeScope typeScope) {
+        if (typeScope instanceof ClassScope) {
+            return ((ClassScope) typeScope).getSuperClasses();
+        }
+        return Collections.emptyList();
+    }
+
+    private Collection<? extends TraitScope> getTraits(TypeScope typeScope) {
+        if (typeScope instanceof ClassScope) {
+            return ((ClassScope) typeScope).getTraits();
+        } else if (typeScope instanceof EnumScope) {
+            return ((EnumScope) typeScope).getTraits();
+        }
+        return Collections.emptyList();
     }
 
     private Set<MethodElement> getValidInheritedMethods(Set<MethodElement> inheritedMethods) {
@@ -265,18 +311,18 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
         return previousToken.offset(th);
     }
 
-    private static int getNewMethodsOffset(ClassScope classScope, BaseDocument doc, int classDeclarationOffset) {
+    private static int getNewMethodsOffset(TypeScope typeScope, BaseDocument doc, int classDeclarationOffset) {
         int offset = -1;
-        Collection<? extends MethodScope> declaredMethods = classScope.getDeclaredMethods();
+        Collection<? extends MethodScope> declaredMethods = typeScope.getDeclaredMethods();
         for (MethodScope methodScope : declaredMethods) {
             OffsetRange blockRange = methodScope.getBlockRange();
             if (blockRange != null && blockRange.getEnd() > offset) {
                 offset = blockRange.getEnd();
             }
         }
-        if (offset == -1 && classScope.getBlockRange() != null) {
+        if (offset == -1 && typeScope.getBlockRange() != null) {
             try {
-                int rowStartOfClassEnd = LineDocumentUtils.getLineStart(doc, classScope.getBlockRange().getEnd());
+                int rowStartOfClassEnd = LineDocumentUtils.getLineStart(doc, typeScope.getBlockRange().getEnd());
                 int rowEndOfPreviousRow = rowStartOfClassEnd - 1;
 
                 // #254173 the previous row may have something to break the code
@@ -298,6 +344,7 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
         return offset;
     }
 
+    //~ inner classes
     private static class ImplementAllFix implements HintFix {
         private final BaseDocument doc;
         private final FixInfo fixInfo;
@@ -373,6 +420,7 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
     }
 
     private static class FixInfo {
+
         private List<String> methodSkeletons;
         private String className;
         private int newMethodsOffset;
@@ -381,17 +429,19 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
         private final String lastMethodOwnerName;
         private final int classDeclarationOffset;
         private final boolean anonymousClass;
+        private final boolean isEnum;
 
-        FixInfo(ClassScope classScope, Set<String> methodSkeletons, MethodElement lastMethodElement, int newMethodsOffset, int classDeclarationOffset, boolean anonymousClass) {
+        FixInfo(TypeScope typeScope, Set<String> methodSkeletons, MethodElement lastMethodElement, int newMethodsOffset, int classDeclarationOffset, boolean anonymousClass) {
             this.methodSkeletons = new ArrayList<>(methodSkeletons);
-            className = classScope.getFullyQualifiedName().toString();
+            className = typeScope.getFullyQualifiedName().toString();
             Collections.sort(this.methodSkeletons);
-            this.classNameRange = classScope.getNameRange();
+            this.classNameRange = typeScope.getNameRange();
             this.classDeclarationOffset = classDeclarationOffset;
             this.newMethodsOffset = newMethodsOffset;
             lastMethodDeclaration = lastMethodElement.asString(PrintAs.NameAndParamsDeclaration);
             lastMethodOwnerName = lastMethodElement.getType().getFullyQualifiedName().toString();
             this.anonymousClass = anonymousClass;
+            this.isEnum = typeScope instanceof EnumScope;
         }
     }
 }

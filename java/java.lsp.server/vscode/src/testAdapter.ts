@@ -28,6 +28,7 @@ export class NbTestAdapter {
 	private disposables: { dispose(): void }[] = [];
     private currentRun: TestRun | undefined;
     private itemsToRun: Set<TestItem> | undefined;
+    private started: boolean = false;
 
     constructor() {
         this.testController = tests.createTestController('apacheNetBeansController', 'Apache NetBeans');
@@ -51,16 +52,20 @@ export class NbTestAdapter {
 
     async run(request: TestRunRequest, cancellation: CancellationToken): Promise<void> {
         if (!this.currentRun) {
+            commands.executeCommand('workbench.debug.action.focusRepl');
             cancellation.onCancellationRequested(() => this.cancel());
             this.currentRun = this.testController.createTestRun(request);
             this.itemsToRun = new Set();
+            this.started = false;
             if (request.include) {
                 const include = [...new Map(request.include.map(item => !item.uri && item.parent?.uri ? [item.parent.id, item.parent] : [item.id, item])).values()];
                 for (let item of include) {
                     if (item.uri) {
                         this.set(item, 'enqueued');
                         const idx = item.id.indexOf(':');
-                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                        if (!cancellation.isCancellationRequested) {
+                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                        }
                     }
                 }
             } else {
@@ -71,7 +76,9 @@ export class NbTestAdapter {
                     }
                 }
             }
-            this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+            if (this.started) {
+                this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+            }
             this.itemsToRun = undefined;
             this.currentRun.end();
             this.currentRun = undefined;
@@ -94,9 +101,7 @@ export class NbTestAdapter {
                 case 'failed':
                 case 'errored':
                     this.itemsToRun?.delete(item);
-                    if (message) {
-                        this.currentRun[state](item, message);
-                    }
+                    this.currentRun[state](item, message || new TestMessage(""));
                     break;
             }
             if (!noPassDown) {
@@ -130,6 +135,7 @@ export class NbTestAdapter {
                 this.updateTests(suite);
                 break;
             case 'started':
+                this.started = true;
                 if (currentSuite) {
                     this.set(currentSuite, 'started');
                 }
@@ -150,7 +156,7 @@ export class NbTestAdapter {
                                         if (!currentTest) {
                                             const subName = this.subTestName(item, test);
                                             if (subName) {
-                                                currentTest = item.children.get(test.id);
+                                                currentTest = subName === '()' ? item : item.children.get(test.id);
                                             }
                                         }
                                     });
@@ -228,19 +234,18 @@ export class NbTestAdapter {
                     const parents: Map<TestItem, string> = new Map();
                     currentSuite?.children.forEach(item => {
                         const subName = this.subTestName(item, test);
-                        if (subName) {
+                        if (subName && '()' !== subName) {
                             parents.set(item, subName);
                         }
                     });
-                    if (parents.size === 1) {
-                        parents.forEach((label, parentTest) => {
-                            let arr = parentTests.get(parentTest);
-                            if (!arr) {
-                                parentTests.set(parentTest, arr = []);
-                                children.push(parentTest);
-                            }
-                            arr.push(this.testController.createTestItem(test.id, label));
-                        });
+                    const parent = this.selectParent(parents);
+                    if (parent) {
+                        let arr = parentTests.get(parent.test);
+                        if (!arr) {
+                            parentTests.set(parent.test, arr = []);
+                            children.push(parent.test);
+                        }
+                        arr.push(this.testController.createTestItem(test.id, parent.label));
                     }
                 } else {
                     currentTest = this.testController.createTestItem(test.id, test.name, testUri);
@@ -270,12 +275,25 @@ export class NbTestAdapter {
             }
             return label;
         } else {
-            const regexp = new RegExp(item.id.replace(/#\S*/g, '\\S*'));
+            const regexp = new RegExp(item.id.replace(/[-[\]{}()*+?.,\\^$|\s]/g, '\\$&').replace(/#\w*/g, '\\S*'));
             if (regexp.test(test.id)) {
-                let idx = test.id.indexOf(':');
-                return idx < 0 ? test.id : test.id.slice(idx + 1);
+                return test.name;
             }
         }
         return undefined;
+    }
+
+    selectParent(parents: Map<TestItem, string>): {test: TestItem, label: string} | undefined {
+        let ret: {test: TestItem, label: string} | undefined = undefined;
+        parents.forEach((label, parentTest) => {
+            if (ret) {
+                if (parentTest.id.replace(/#\w*/g, '').length > ret.test.id.replace(/#\w*/g, '').length) {
+                    ret = {test: parentTest, label};
+                }
+            } else {
+                ret = {test: parentTest, label};
+            }
+        });
+        return ret;
     }
 }

@@ -33,6 +33,7 @@ import org.netbeans.html.json.spi.FunctionBinding;
 import org.netbeans.html.json.spi.PropertyBinding;
 import org.netbeans.html.json.spi.Technology;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.protocol.UIContext;
 import org.openide.util.lookup.ServiceProvider;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
 

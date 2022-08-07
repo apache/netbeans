@@ -40,7 +40,7 @@ class ToplinkProvider extends Provider{
      */ 
     private static final String PREFERRED_PROVIDER_CLASS = "oracle.toplink.essentials.PersistenceProvider"; //NOI18N
     private static final String ALTERNATIVE_PROVIDER_CLASS = "oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider";//NOI18N
-    private final static String ECLIPSELINK_PROVIDER_CLASS = "org.eclipse.persistence.jpa.PersistenceProvider";//NOI18N
+    private static final String ECLIPSELINK_PROVIDER_CLASS = "org.eclipse.persistence.jpa.PersistenceProvider";//NOI18N
 
     /**
      * Creates a new instance using the preferred provider class.

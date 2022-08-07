@@ -116,15 +116,15 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         logFine("NbDdeBrowserImpl created with factory:", extBrowserFactory); // NOI18N
     }
     
-    native private byte [] reqDdeMessage (String srv, String topic, String item, int timeout) throws NbBrowserException;
+    private native byte [] reqDdeMessage (String srv, String topic, String item, int timeout) throws NbBrowserException;
     
     /** finds registry entry for browser opening */
-    public native static String getBrowserPath (String browser) throws NbBrowserException;
+    public static native String getBrowserPath (String browser) throws NbBrowserException;
     
     /** returns the command that executes default application for opening of 
      *  .html files
      */
-    public native static String getDefaultOpenCommand() throws NbBrowserException;
+    public static native String getDefaultOpenCommand() throws NbBrowserException;
     
     /** Sets current URL.
      *
@@ -356,16 +356,14 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                 }
 
                 logFine("urlstr:", urlStr); // NOI18N
-                if (!win9xHack(task.browser.realDDEServer())) {
-                    StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage (NbDdeBrowserImpl.class, "MSG_activatingBrowser"));
-                    try {
-                        task.browser.reqDdeMessage(task.browser.realDDEServer(),WWW_ACTIVATE,"-1,0x0",task.browser.getActivateTimeout());
-                    } catch (NbBrowserException ex) {
-                        logFine("Exception, gonna start browser:", ex);
-                        triedStart = true;
-                        startBrowser(task.browser.extBrowserFactory.getBrowserExecutable(), urlStr);
-                    }  
-                }
+                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage (NbDdeBrowserImpl.class, "MSG_activatingBrowser"));
+                try {
+                    task.browser.reqDdeMessage(task.browser.realDDEServer(),WWW_ACTIVATE,"-1,0x0",task.browser.getActivateTimeout());
+                } catch (NbBrowserException ex) {
+                    logFine("Exception, gonna start browser:", ex);
+                    triedStart = true;
+                    startBrowser(task.browser.extBrowserFactory.getBrowserExecutable(), urlStr);
+                }  
                 logFine("firstpart"); // NOI18N
 
                 if (!triedStart) {
@@ -445,15 +443,6 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             return url;
         }
         
-        /**
-         * Checks for IExplorer & Win9x combination.
-         */
-        private boolean win9xHack (String browser) {
-            return browser.equals(ExtWebBrowser.IEXPLORE)
-                   && (Utilities.getOperatingSystem() == Utilities.OS_WIN98 
-                      ||  Utilities.getOperatingSystem() == Utilities.OS_WIN95);
-        }
-
         /** 
          * Utility function that tries to start new browser process.
          *

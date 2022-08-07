@@ -84,13 +84,13 @@ public class SplittedPanel extends JComponent implements Accessible {
     static final long serialVersionUID = 5058424218525927233L;
 
     /** constant for no split - only the first (left/top) component will be shown */
-    public final static int NONE = 0;
+    public static final int NONE = 0;
 
     /** constant for vertical split */
-    public final static int VERTICAL = 1;
+    public static final int VERTICAL = 1;
 
     /** constant for horizontal split */
-    public final static int HORIZONTAL = 2;
+    public static final int HORIZONTAL = 2;
 
     /** constraints constant for adding a splitter */
     public static final Object ADD_SPLITTER = new Integer(0);
@@ -131,7 +131,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     private static MessageFormat descriptionFormat = null;
 
     /** The default split type */
-    private final static int DEFAULT_SPLIT_TYPE = HORIZONTAL;
+    private static final int DEFAULT_SPLIT_TYPE = HORIZONTAL;
 
     /** Save the last preferred setting (first or second). Double click reset the splitPosition to this value */
     private int resetPosition = FIRST_PREFERRED;
@@ -179,29 +179,29 @@ public class SplittedPanel extends JComponent implements Accessible {
 
     /** current keepFirstSame state */
     private boolean keepFirstSame = false;
-    transient private boolean splitIsChanging = false;
+    private transient boolean splitIsChanging = false;
     private int dragPos = -1;
 
     /** true if the panes were swapped, false otherwise */
     private boolean panesSwapped = false;
 
     /** popup menu for setting vertical/horizontal splitting */
-    transient private JPopupMenu popupMenu;
+    private transient JPopupMenu popupMenu;
 
     /** The popup menu item */
-    transient private JRadioButtonMenuItem verticalCMI;
+    private transient JRadioButtonMenuItem verticalCMI;
 
     /** The popup menu item */
-    transient private JRadioButtonMenuItem horizontalCMI;
+    private transient JRadioButtonMenuItem horizontalCMI;
 
     /** The popup menu item */
-    transient private JMenuItem swapCMI;
+    private transient JMenuItem swapCMI;
 
     /** The popup menu item */
-    transient private JMenuItem splitterCMI;
+    private transient JMenuItem splitterCMI;
 
     /** A Vector of SplitChangeListeners */
-    transient private Vector<SplitChangeListener> listeners;
+    private transient Vector<SplitChangeListener> listeners;
 
     /** Accessible context */
     private AccessibleContext accessibleContext;

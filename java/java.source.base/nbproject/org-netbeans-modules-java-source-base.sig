@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.53.0
+#Version 2.56.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1567,6 +1567,7 @@ meth public boolean isEndOfCompoundVariableDeclaration(com.sun.source.tree.Tree)
 meth public boolean isEnum(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
 meth public boolean isEnumConstant(com.sun.source.tree.VariableTree)
+meth public boolean isExpressionStatement(com.sun.source.tree.ExpressionTree)
 meth public boolean isInterface(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
 meth public boolean isModuleInfo(com.sun.source.tree.CompilationUnitTree)
@@ -1641,7 +1642,7 @@ meth public javax.lang.model.type.TypeMirror reattributeTree(com.sun.source.tree
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree)
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree,com.sun.source.util.SourcePositions)
 supr java.lang.Object
-hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,LOG,VARIABLE_CAN_OWN_VARIABLES,handler,info
+hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,LOG,handler,info
 hcls DummyJFO,NBScope,NoImports,ParserSourcePositions,UncaughtExceptionsVisitor,UnrelatedTypeMirrorSet
 
 CLSS public final org.netbeans.api.java.source.TypeMirrorHandle<%0 extends javax.lang.model.type.TypeMirror>

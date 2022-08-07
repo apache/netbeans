@@ -34,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -79,7 +80,7 @@ class ModeParser {
     private InternalConfig internalConfig;
     
     /** Map of TCRefParser instances. Used for fast access. */
-    private Map<String, TCRefParser> tcRefParserMap = new HashMap<String, TCRefParser>(19);
+    private Map<String, TCRefParser> tcRefParserMap = new HashMap<>(19);
     
     /** map of names of tcRefs to their index or null */
     private Map<String,Integer> tcRefOrder;
@@ -302,14 +303,12 @@ class ModeParser {
                 }
             }
             //Append remaining instances if any
-            for (String s: localMap.keySet()) {
-                TCRefParser tcRefParser = localMap.get(s);
+            for (TCRefParser tcRefParser: localMap.values()) {
                 localList.add(tcRefParser);
             }
         } else {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- NO ORDER, USING PARTIAL ORDERING");
-            for (String s: localMap.keySet()) {
-                TCRefParser tcRefParser = localMap.get(s);
+            for (TCRefParser tcRefParser: localMap.values()) {
                 localList.add(tcRefParser);
             }
             
@@ -731,7 +730,7 @@ class ModeParser {
 
             // Update order
             List<TCRefParser> localList = new ArrayList<TCRefParser>(10);
-            Map<String,TCRefParser> localMap = (Map) ((HashMap) tcRefParserMap).clone();
+            Map<String, TCRefParser> localMap = new HashMap<>(tcRefParserMap);
 
             if( null == tcRefOrder ) {
                 //#232307
@@ -1505,7 +1504,7 @@ class ModeParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     /*log("-- DUMP Mode:");
                     log(buff.toString());*/

@@ -42,7 +42,7 @@ public class RunWhenScanFinishedSupport {
     //Scan lock
     private static final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     //Deferred task until scan is done
-    private final static List<DeferredTask> todo = Collections.synchronizedList(new LinkedList<DeferredTask>());
+    private static final List<DeferredTask> todo = Collections.synchronizedList(new LinkedList<DeferredTask>());
 
 
     private RunWhenScanFinishedSupport() {}

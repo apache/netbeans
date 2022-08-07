@@ -53,7 +53,7 @@ import org.openide.util.NbBundle;
  */
 public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
 
-    private transient final List<ChangeListener> listeners; 
+    private final transient List<ChangeListener> listeners; 
 
     /** IP addresses selection content. */
     Set<? extends InetAddress> ips;

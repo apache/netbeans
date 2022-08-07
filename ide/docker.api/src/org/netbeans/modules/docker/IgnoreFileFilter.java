@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.filesystems.FileObject;
@@ -85,7 +86,7 @@ public class IgnoreFileFilter implements FileFilter {
 
     private List<IgnorePattern> load(FileObject dockerignore, char separator) throws IOException {
         List<IgnorePattern> ret = new ArrayList<>();
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(dockerignore.getInputStream(), "UTF-8"))) {
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(dockerignore.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = r.readLine()) != null) {
                 String trimmed = line.trim();

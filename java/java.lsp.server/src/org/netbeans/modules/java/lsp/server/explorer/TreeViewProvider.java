@@ -18,12 +18,17 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.awt.Image;
 import java.beans.BeanInfo;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataListener;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataEvent;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataProvider;
 import java.beans.PropertyChangeEvent;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,11 +40,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem.CollapsibleState;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem.IconDescriptor;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -48,6 +54,7 @@ import org.openide.nodes.NodeEvent;
 import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
@@ -129,46 +136,56 @@ public abstract class TreeViewProvider {
     private SortedMap<Integer, NodeHolder> holdChildren = new TreeMap<>();
     
     /**
-     * Node > identity map.
+     * Node > identity map. Note that FilterNodes equals compare the original node, so
+     * IdentityHashMap-style map must be used.
      */
     // @GuardedBy(this)
-    private Map<Node, Integer> idMap = new WeakHashMap<>();
+    private WeakIdentityMap<Node, Integer> idMap = WeakIdentityMap.newHashMap();
     
     protected TreeViewProvider(String treeId, ExplorerManager manager, TreeNodeRegistry registry, Lookup context) {
         this.treeId = treeId;
         this.context = context;
         this.manager = manager;
+        
+        Node n;
         this.nodeRegistry = registry;
         
         this.nodeListener = new NodeListener() {
             @Override
             public void childrenAdded(NodeMemberEvent ev) {
+                LOG.log(Level.FINER, "tree {0} children of node {2} added: {1}", new Object[] { treeId, ev, ev.getNode() });
                 notifyChange(ev.getNode());
             }
 
             @Override
             public void childrenRemoved(NodeMemberEvent ev) {
+                LOG.log(Level.FINER, "tree {0} children of node {2} removed: {1}", new Object[] { treeId, ev, ev.getNode() });
                 notifyChange(ev.getNode());
             }
 
             @Override
             public void childrenReordered(NodeReorderEvent ev) {
+                LOG.log(Level.FINER, "tree {0} children of node {2} reordered: {1}", new Object[] { treeId, ev, ev.getNode() });
                 notifyChange(ev.getNode());
             }
 
             @Override
             public void nodeDestroyed(NodeEvent ev) {
+                LOG.log(Level.FINER, "tree {0} children of node {2} destroyed: {1}", new Object[] { treeId, ev, ev.getNode() });
                 removeNode(ev.getNode());
                 notifyChange(ev.getNode());
             }
 
             @Override
             public void propertyChange(PropertyChangeEvent ev) {
+                LOG.log(Level.FINER, "tree {0} property of node {2} changed: {1}", new Object[] { treeId, ev, ev.getSource()});
                 notifyChange((Node) ev.getSource());
             }
 
             private void notifyChange(Node src) {
-                onDidChangeTreeData(src, findId(src));
+                int id = findId(src);
+                LOG.log(Level.FINER, "tree {0} tree item changed: {1}", new Object[] { treeId, id});
+                onDidChangeTreeData(src, id);
             }
         };
         factories = context.lookupResult(TreeDataProvider.Factory.class);
@@ -336,6 +353,9 @@ public abstract class TreeViewProvider {
         if (n == null) {
             return -1;
         }
+        if (nodeRegistry == null) {
+            return -1;
+        }
         synchronized (this) {
             Integer lspId = idMap.get(n);
             if (lspId != null) {
@@ -357,6 +377,7 @@ public abstract class TreeViewProvider {
      * @return a TreeItem suitable for LSP transmit
      */
     public TreeItem findTreeItem(Node n) {
+        LOG.log(Level.FINER, "Finding tree item for node {0}", n);
         TreeDataProvider[] pa = this.providers;
         String v;
         boolean expanded;
@@ -379,22 +400,31 @@ public abstract class TreeViewProvider {
         v = data.getContextValues() == null ? "" : String.join(" ", data.getContextValues()); // NOI18N
 
         TreeItem ti = new TreeItem(id, n, expanded, v);
+        if (data.isLeaf()) {
+            ti.collapsibleState = CollapsibleState.None;
+        }
         
         if (data.getIconImage() != null && data.getIconImage() != DUMMY_NODE.getIcon(BeanInfo.ICON_COLOR_16x16)) {
             TreeNodeRegistry.ImageDataOrIndex idoi = nodeRegistry.imageOrIndex(data.getIconImage());
             if (idoi != null) {
-                ti.iconIndex = idoi.imageIndex;
-                ti.iconUri = idoi.imageURI;
+                try {
+                    URI baseURI = builtinURI2URI(idoi.baseURI);
+                    if (baseURI != null) {
+                        ti.iconDescriptor = new IconDescriptor();
+                        ti.iconDescriptor.baseUri = baseURI;
+                        ti.iconDescriptor.composition = idoi.composition;
+                    }
+                } catch (URISyntaxException ex) {
+                    LOG.log(Level.WARNING, "Cannot convert URL: {0}", idoi.baseURI);
+                }
             }
-        } else if (data.getIconURI() != null) {
-            ti.iconUri = data.getIconURI();
         }
         ti.contextValue = v;
         ti.command = data.getCommand();
         if (data.getResourceURI() != null) {
             ti.resourceUri = data.getResourceURI().toString();
         }
-        
+        LOG.log(Level.FINER, "Finding tree item for node {0} => {1} ", new Object[] { n, ti });
         return ti;
     }
     
@@ -427,7 +457,7 @@ public abstract class TreeViewProvider {
             nh.id2Child = newId2Node;
         }
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "Children of id {0}: {1}", new Object[] { parentId, Arrays.asList(ids) });
+            LOG.log(Level.FINER, "Children of id {0}: {1}", new Object[] { parentId, Arrays.toString(ids) });
         }
         if (obsolete != null) {
             synchronized (this) {
@@ -458,6 +488,7 @@ public abstract class TreeViewProvider {
     public CompletionStage<Integer> getNodeId(Node n) {
         Integer i;
         List<Node> toExpand = new ArrayList<>();
+        toExpand.add(n);
         synchronized (this) {
             i = idMap.get(n);
             if (i != null) {
@@ -470,20 +501,26 @@ public abstract class TreeViewProvider {
                 if (i != null) {
                     break;
                 }
+                parent = parent.getParentNode();
             }
             if (parent == null) {
                 return CompletableFuture.completedFuture(null);
             }
         }
-        CompletionStage<Node[]> stage = null;
-        for (Node p : toExpand) {
-            if (stage == null) {
+        CompletionStage<Integer> nextStage = null;
+        // do not iterate index #0
+        for (int idx = toExpand.size() - 1; idx > 0; idx--) {
+            CompletionStage<Node[]> stage = null;
+            Node p = toExpand.get(idx);
+            if (nextStage == null) {
                 stage = getChildren(p);
             } else {
-                stage = stage.thenCompose((nodes) -> getChildren(p));
+                stage = nextStage.thenCompose((x) -> getChildren(p));
             }
+            final int fidx = idx - 1;
+            nextStage = stage.thenApply((ch) -> findId(toExpand.get(fidx)));
         }
-        return stage.thenCompose((any) -> getNodeId(n));
+        return nextStage;
     }
 
     public final CompletionStage<TreeItem> getTreeItem(int id) {
@@ -590,20 +627,21 @@ public abstract class TreeViewProvider {
     
     static final Node DUMMY_NODE = new AbstractNode(Children.LEAF);
 
+    private static ExplorerManager dummyManager() {
+        ExplorerManager m = new ExplorerManager();
+        m.setRootContext(DUMMY_NODE);
+        return m;
+    }
+
     /**
      * Dummy provider that serves root, no children and sinks all events.
      */
-    static final TreeViewProvider NONE = new TreeViewProvider("", new ExplorerManager(), null, Lookup.EMPTY) {
-        final Node root = DUMMY_NODE;
+    static final TreeViewProvider NONE = new TreeViewProvider("", dummyManager(), null, Lookup.EMPTY) {
+        final Node root = super.manager.getRootContext();
         
         @Override
         public CompletionStage<TreeItem> getRootInfo() {
             return super.getRootInfo();
-        }
-
-        @Override
-        public TreeItem findTreeItem(Node n) {
-            return super.findTreeItem(n);
         }
 
         @Override
@@ -613,11 +651,59 @@ public abstract class TreeViewProvider {
 
         @Override
         protected int findId(Node n) {
-            return super.findId(root);
+            // there are no nodes at all
+            return -1; 
         }
         
         @Override
         protected void onDidChangeTreeData(Node n, int id) {
         }
     };
+    
+    static URI builtinURI2URI(URI u) throws URISyntaxException {
+        if (u == null) {
+            return null;
+        }
+        // I could work through URLMapper + FileUtil, but that would open the JAR
+        // as filesystem, which gives some perf overhead:
+        try {
+            if ("jar".equals(u.getScheme())) { // NOI18N
+                URL u2 = u.toURL();
+                String s = u2.getPath();
+                int i = s.indexOf('!');
+                // I don't want to send file: / jar: URLs over LSP wire,
+                // let's have just resource path
+                if (i != -1) {
+                    return new URI("nbres", s.substring(i + 1), null); // NOI18N
+                }
+            }
+        } catch (MalformedURLException ex) {
+            throw new URISyntaxException(u.toString(), ex.getMessage());
+        }
+        return u;
+    }
+
+    public static URI findImageURI(Image i) {
+        URL u = ImageUtilities.findImageBaseURL(i);
+        if (u == null) {
+            return null;
+        }
+        String s = u.toString();
+        try {
+            if (s.contains(":")) {
+                return new URI(s);
+            } else {
+                return new URI("nbres:/" + s);
+            }
+        } catch (URISyntaxException ex) {
+            LOG.log(Level.WARNING, "Unable to interpret image ID: {0}", s);
+            return null;
+        }
+    }
+    
+    /* testing */ SortedMap<Integer, NodeHolder> getHolders() {
+        synchronized (this) {
+            return new TreeMap<>(holdChildren);
+        }
+    }
 }

@@ -1,10 +1,16 @@
 #Signature file v4.1
-#Version 1.51
+#Version 1.53
 
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -36,8 +42,35 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
+
 CLSS public final org.netbeans.modules.j2ee.api.ejbjar.Car
 meth public java.lang.String getJ2eePlatformVersion()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.j2ee.core.Profile getJ2eeProfile()
 meth public org.openide.filesystems.FileObject getDeploymentDescriptor()
 meth public org.openide.filesystems.FileObject getMetaInf()
@@ -49,6 +82,7 @@ hfds impl,impl2,implementations
 
 CLSS public final org.netbeans.modules.j2ee.api.ejbjar.Ear
 meth public java.lang.String getJ2eePlatformVersion()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.j2ee.core.Profile getJ2eeProfile()
 meth public org.openide.filesystems.FileObject getDeploymentDescriptor()
 meth public static org.netbeans.modules.j2ee.api.ejbjar.Ear getEar(org.openide.filesystems.FileObject)
@@ -60,6 +94,7 @@ hfds impl,impl2,implementations
 
 CLSS public final org.netbeans.modules.j2ee.api.ejbjar.EjbJar
 meth public java.lang.String getJ2eePlatformVersion()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.j2ee.core.Profile getJ2eeProfile()
 meth public org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<org.netbeans.modules.j2ee.dd.api.ejb.EjbJarMetadata> getMetadataModel()
 meth public org.openide.filesystems.FileObject getDeploymentDescriptor()
@@ -149,6 +184,7 @@ meth public static org.netbeans.modules.j2ee.api.ejbjar.Ear createEar(org.netbea
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.j2ee.spi.ejbjar.CarImplementation
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getJ2eePlatformVersion()
 meth public abstract org.openide.filesystems.FileObject getDeploymentDescriptor()
 meth public abstract org.openide.filesystems.FileObject getMetaInf()
@@ -167,6 +203,7 @@ CLSS public abstract interface org.netbeans.modules.j2ee.spi.ejbjar.CarsInProjec
 meth public abstract org.netbeans.modules.j2ee.api.ejbjar.Car[] getCars()
 
 CLSS public abstract interface org.netbeans.modules.j2ee.spi.ejbjar.EarImplementation
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getJ2eePlatformVersion()
 meth public abstract org.openide.filesystems.FileObject getDeploymentDescriptor()
 meth public abstract org.openide.filesystems.FileObject getMetaInf()
@@ -189,10 +226,12 @@ CLSS public final org.netbeans.modules.j2ee.spi.ejbjar.EjbJarFactory
 meth public static org.netbeans.modules.j2ee.api.ejbjar.Ear createEar(org.netbeans.modules.j2ee.spi.ejbjar.EarImplementation)
 meth public static org.netbeans.modules.j2ee.api.ejbjar.Ear createEar(org.netbeans.modules.j2ee.spi.ejbjar.EarImplementation2)
 meth public static org.netbeans.modules.j2ee.api.ejbjar.EjbJar createEjbJar(org.netbeans.modules.j2ee.spi.ejbjar.EjbJarImplementation)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.api.ejbjar.EjbJar createEjbJar(org.netbeans.modules.j2ee.spi.ejbjar.EjbJarImplementation2)
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.j2ee.spi.ejbjar.EjbJarImplementation
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getJ2eePlatformVersion()
 meth public abstract org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<org.netbeans.modules.j2ee.dd.api.ejb.EjbJarMetadata> getMetadataModel()
 meth public abstract org.openide.filesystems.FileObject getDeploymentDescriptor()

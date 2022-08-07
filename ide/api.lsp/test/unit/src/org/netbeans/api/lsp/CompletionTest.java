@@ -49,7 +49,7 @@ public class CompletionTest extends NbTestCase {
     public void testCompletionCollect() {
         Document doc = createDocument("text/foo", "");
         int offset = 0;
-        // BEGIN: CompletionTest#testCompletionCollect
+        // @start region="testCompletionCollect"
 
         // Compute and collect completions for a document at a given offset
         boolean isComplete = Completion.collect(doc, offset, null, completion -> {
@@ -88,7 +88,7 @@ public class CompletionTest extends NbTestCase {
             }
         });
 
-        // END: CompletionTest#testCompletionCollect
+        // @end region="testCompletionCollect"
         assertTrue(isComplete);
     }
 
@@ -107,7 +107,7 @@ public class CompletionTest extends NbTestCase {
 
         @Override
         public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
-            // BEGIN: CompletionTest.FooCompletionCollector#builder
+            // @start region="builder"
 
             // Create a builder for creating 'Completion' instance providing its 'label'
             Completion c = CompletionCollector.newBuilder("label")
@@ -123,7 +123,7 @@ public class CompletionTest extends NbTestCase {
                     // create a new 'Completion' instance
                     .build();
 
-            // END: CompletionTest.FooCompletionCollector#builder
+            // @end region="builder"
             consumer.accept(c);
             return true;
         }

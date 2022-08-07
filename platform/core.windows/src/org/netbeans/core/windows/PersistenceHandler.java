@@ -45,7 +45,7 @@ import org.openide.windows.*;
  *
  * @author  Peter Zavadsky, Marek Slama
  */
-final public class PersistenceHandler implements PersistenceObserver {
+public final class PersistenceHandler implements PersistenceObserver {
 
     // Persistence data
     /** Maps mode config name to mode instance. */

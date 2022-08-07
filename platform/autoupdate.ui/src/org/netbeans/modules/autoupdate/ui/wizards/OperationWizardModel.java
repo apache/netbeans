@@ -431,7 +431,7 @@ public abstract class OperationWizardModel {
         final Object[] arr;
         final Object[] closingArr = new Object[] { c };
         if (!Arrays.asList(opts).contains(c)) {
-            List newOpts = new ArrayList<>(Arrays.asList(opts));
+            List<Object> newOpts = new ArrayList<>(Arrays.asList(opts));
             Object o = wd.getProperty("OperationWizardModel_disabledCancel");
             // replace previously disabled cancel
             int n = o == null ? -1 : newOpts.indexOf(o);

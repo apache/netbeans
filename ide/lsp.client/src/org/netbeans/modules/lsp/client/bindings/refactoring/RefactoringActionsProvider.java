@@ -161,8 +161,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
         if (bindings == null) {
             return false;
         }
-        Boolean hasReferences = bindings.getInitResult().getCapabilities().getReferencesProvider();
-        return Utils.isTrue(hasReferences);
+        return Utils.isEnabled(bindings.getInitResult().getCapabilities().getReferencesProvider());
     }
 
     @Override

@@ -19,6 +19,7 @@
 package org.netbeans.modules.debugger.jpda.js.source;
 
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -43,7 +44,7 @@ public class SourceTest extends NbTestCase {
         
         FileObject fo = FileUtil.createMemoryFileSystem().getRoot().createData("test.js");
         final OutputStream os = fo.getOutputStream();
-        os.write(js.getBytes("UTF-8"));
+        os.write(js.getBytes(StandardCharsets.UTF_8));
         os.close();
         
         String wrap = AVATAR_PREFIX + js + AVATAR_SUFFIX;
@@ -60,7 +61,7 @@ public class SourceTest extends NbTestCase {
         
         FileObject fo = FileUtil.createMemoryFileSystem().getRoot().createData("test.js");
         final OutputStream os = fo.getOutputStream();
-        os.write(js.getBytes("UTF-8"));
+        os.write(js.getBytes(StandardCharsets.UTF_8));
         os.close();
         
         String wrap = "// Written by Martin\n// Tested by Jarda\n" + js;

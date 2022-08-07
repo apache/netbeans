@@ -75,7 +75,7 @@ public class JsDocumentationCodeCompletion {
 
         private static final String ANNOTATION_ICON = "org/netbeans/modules/csl/source/resources/icons/annotation.png"; //NOI18N
         private static final ImageIcon IMAGE_ICON = new ImageIcon(ImageUtilities.loadImage(ANNOTATION_ICON));
-        
+
         private final AnnotationCompletionTag tag;
         private final int anchorOffset;
         private final JsDocumentationElement elem;

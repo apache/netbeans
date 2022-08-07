@@ -45,6 +45,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -959,6 +960,7 @@ public class JavacParser extends Parser {
                 sourceLevel,
                 cpInfo,
                 flags.contains(ConfigFlags.MODULE_INFO));
+        String useRelease = useRelease(sourceLevel, validatedSourceLevel);
         if (lintOptions.length() > 0) {
             options.addAll(Arrays.asList(lintOptions.split(" ")));
         }
@@ -971,8 +973,10 @@ public class JavacParser extends Parser {
             options.add("-XDbackgroundCompilation");    //NOI18N
             options.add("-XDcompilePolicy=byfile");     //NOI18N
             options.add("-XD-Xprefer=source");     //NOI18N
-            options.add("-target");                     //NOI18N
-            options.add(validatedSourceLevel.requiredTarget().name);
+            if (useRelease == null) {
+                options.add("-target");                     //NOI18N
+                options.add(validatedSourceLevel.requiredTarget().name);
+            }
         }
         options.add("-XDide");   // NOI18N, javac runs inside the IDE
         if (!DISABLE_PARAMETER_NAMES_READING) {
@@ -984,8 +988,13 @@ public class JavacParser extends Parser {
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
         options.add("-g:lines"); // NOI18N, Make the compiler to maintain line table
         options.add("-g:vars");  // NOI18N, Make the compiler to maintain local variables table
-        options.add("-source");  // NOI18N
-        options.add(validatedSourceLevel.name);
+        if (useRelease != null) {
+            options.add("--release");  // NOI18N
+            options.add(useRelease);
+        } else {
+            options.add("-source");  // NOI18N
+            options.add(validatedSourceLevel.name);
+        }
         if (sourceProfile != null &&
             sourceProfile != SourceLevelQuery.Profile.DEFAULT) {
             options.add("-profile");    //NOI18N, Limit JRE to required compact profile
@@ -1077,6 +1086,23 @@ public class JavacParser extends Parser {
         return task;
     }
 
+    private static String useRelease(final String requestedSource, com.sun.tools.javac.code.Source validatedSourceLevel) {
+        if (requestedSource == null || validatedSourceLevel == null) {
+            return null;
+        }
+        com.sun.tools.javac.code.Source sourceLevel = com.sun.tools.javac.code.Source.lookup(requestedSource);
+        if (sourceLevel == null) {
+            return null;
+        }
+        if (validatedSourceLevel.equals(sourceLevel)) {
+            return null;
+        }
+        if (sourceLevel.compareTo(com.sun.tools.javac.code.Source.JDK7) <= 0) {
+            sourceLevel = com.sun.tools.javac.code.Source.JDK7;
+        }
+        return sourceLevel.isSupported() ? sourceLevel.requiredTarget().multiReleaseValue() : null;
+    }
+
     /*test*/
     public static boolean DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
     static @NonNull com.sun.tools.javac.code.Source validateSourceLevel(
@@ -1131,8 +1157,7 @@ public class JavacParser extends Parser {
                         final boolean checkCp = bootClassPath.findResource("java/lang/Object.class") == null;
                         if (!hasResource("java/lang/AssertionError", new ClassPath[] {ClassPath.EMPTY}, new ClassPath[] {checkCp ? classPath : ClassPath.EMPTY}, new ClassPath[] {srcClassPath})) { // NOI18N
                             LOGGER.log(warnLevel,
-                                       "Even though the source level of {0} is set to: {1}, java.lang.AssertionError cannot be found on the bootclasspath: {2}\n" +
-                                       "Changing source level to 1.3",
+                                       "Even though the source level of {0} is set to: {1}, java.lang.AssertionError cannot be found on the bootclasspath: {2}\n", // NOI18N
                                        new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                             return com.sun.tools.javac.code.Source.JDK1_3;
                         }
@@ -1141,33 +1166,36 @@ public class JavacParser extends Parser {
                 if (source.compareTo(SourceLevelUtils.JDK1_5) >= 0 &&
                     !hasResource("java/lang/StringBuilder", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
-                               "Even though the source level of {0} is set to: {1}, java.lang.StringBuilder cannot be found on the bootclasspath: {2}\n" +
-                               "Changing source level to 1.4",
+                               "Even though the source level of {0} is set to: {1}, java.lang.StringBuilder cannot be found on the bootclasspath: {2}\n",
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                     return com.sun.tools.javac.code.Source.JDK1_4;
                 }
                 if (source.compareTo(SourceLevelUtils.JDK1_7) >= 0 &&
                     !hasResource("java/lang/AutoCloseable", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
-                               "Even though the source level of {0} is set to: {1}, java.lang.AutoCloseable cannot be found on the bootclasspath: {2}\n" +   //NOI18N
-                               "Try with resources is unsupported.",  //NOI18N
+                               "Even though the source level of {0} is set to: {1}, java.lang.AutoCloseable cannot be found on the bootclasspath: {2}\n", //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                 }
                 if (source.compareTo(SourceLevelUtils.JDK1_8) >= 0 &&
                     !hasResource("java/lang/invoke/LambdaMetafactory", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
-                               "Even though the source level of {0} is set to: {1}, java.lang.invoke.LambdaMetafactory cannot be found on the bootclasspath: {2}\n" +   //NOI18N
-                               "Changing source level to 1.7",  //NOI18N
+                               "Even though the source level of {0} is set to: {1}, java.lang.invoke.LambdaMetafactory cannot be found on the bootclasspath: {2}\n", //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                     return SourceLevelUtils.JDK1_7;
                 }
                 if (source.compareTo(SourceLevelUtils.JDK1_9) >= 0 &&
                     !hasResource("java/util/zip/CRC32C", new ClassPath[] {moduleBoot}, new ClassPath[] {moduleCompile, moduleAllUnnamed}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
-                               "Even though the source level of {0} is set to: {1}, java.util.zip.CRC32C cannot be found on the system module path: {2}\n" +   //NOI18N
-                               "Changing source level to 1.8",  //NOI18N
+                               "Even though the source level of {0} is set to: {1}, java.util.zip.CRC32C cannot be found on the system module path: {2}\n", //NOI18N
                                new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
                     return SourceLevelUtils.JDK1_8;
+                }
+                if (source.compareTo(SourceLevelUtils.JDK15) >= 0 &&
+                    !hasResource("java/lang/Record", new ClassPath[] {moduleBoot}, new ClassPath[] {moduleCompile, moduleAllUnnamed}, new ClassPath[] {srcClassPath})) { //NOI18N
+                    LOGGER.log(warnLevel,
+                               "Even though the source level of {0} is set to: {1}, java.lang.Record cannot be found on the system module path: {2}\n", //NOI18N
+                               new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
+                    return SourceLevelUtils.JDK14;
                 }
                 return source;
             }
@@ -1316,7 +1344,7 @@ public class JavacParser extends Parser {
         if (f != null) {
             try {
                 OutputStream os = new FileOutputStream(f);
-                try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8"))) {   //NOI18N
+                try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8))) {
                     writer.println(src);
                     writer.println("----- Classpath: ---------------------------------------------"); // NOI18N
 

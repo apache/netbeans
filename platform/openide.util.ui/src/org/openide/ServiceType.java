@@ -206,9 +206,9 @@ public abstract class ServiceType extends Object implements Serializable, HelpCt
     * @deprecated Use lookup instead.
     */
     @Deprecated
-    public static abstract class Registry implements Serializable {
+    public abstract static class Registry implements Serializable {
         /** suid */
-        final static long serialVersionUID = 8721000770371416481L;
+        static final long serialVersionUID = 8721000770371416481L;
 
         /** Get all available services managed by the engine.
         * @return an enumeration of {@link ServiceType}s

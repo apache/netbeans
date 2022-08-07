@@ -176,7 +176,7 @@ public abstract class FetchLogPiped
     FetchLogPiped(final GlassFishServer server, boolean skip) {
         super(server, skip);
         final String METHOD = "init";
-        this.eventListeners = new LinkedList();
+        this.eventListeners = new LinkedList<>();
         try {
             out = new PipedOutputStream((PipedInputStream)this.in);
         } catch (IOException ioe) {
@@ -218,7 +218,7 @@ public abstract class FetchLogPiped
             boolean skip) {
         super(server, skip);
         final String METHOD = "init";
-        this.eventListeners = new LinkedList();
+        this.eventListeners = new LinkedList<>();
         try {
             out = new PipedOutputStream((PipedInputStream)this.in);
         } catch (IOException ioe) {

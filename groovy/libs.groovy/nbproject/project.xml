@@ -26,6 +26,7 @@
             <code-name-base>org.netbeans.modules.libs.groovy</code-name-base>
             <module-dependencies/>
             <friend-packages>
+                <friend>org.netbeans.modules.groovy.debug</friend>
                 <friend>org.netbeans.modules.groovy.editor</friend>
                 <friend>org.netbeans.modules.groovy.refactoring</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>

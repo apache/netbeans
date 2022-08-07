@@ -72,7 +72,7 @@ public abstract class AntProjectSupportProvider {
     }
     
     
-    public static abstract class Abstract extends AntProjectSupportProvider {
+    public abstract static class Abstract extends AntProjectSupportProvider {
         
         private final Project project;
     

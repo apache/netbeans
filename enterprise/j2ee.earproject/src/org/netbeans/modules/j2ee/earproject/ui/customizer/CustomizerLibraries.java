@@ -102,7 +102,7 @@ public final class CustomizerLibraries extends JPanel implements HelpCtx.Provide
         
         for( int i = 0; i < models.length; i++ ) {
             for (Iterator<ClassPathSupport.Item> it = ClassPathUiSupport.getIterator( models[i] ); it.hasNext(); ) {
-                if ( ((ClassPathSupport.Item)it.next()).isBroken() ) {
+                if (it.next().isBroken()) {
                     broken = true;
                     break;
                 }
@@ -158,7 +158,7 @@ public final class CustomizerLibraries extends JPanel implements HelpCtx.Provide
            };
         for (int i = 0; i < models.length; i++) {
             for (Iterator<ClassPathSupport.Item> it = ClassPathUiSupport.getIterator(models[i]); it.hasNext();) {
-                ClassPathSupport.Item itm = (ClassPathSupport.Item) it.next();
+                ClassPathSupport.Item itm = it.next();
                 if (itm.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {
                     itm.reassignLibraryManager(man);
                 }

@@ -35,7 +35,7 @@ public class Ids extends PatternRule {
         
     }; //NOI18N
     
-    private final static Pattern[] PATTERNS = buildPatterns(PATTERNS_SOURCES);
+    private static final Pattern[] PATTERNS = buildPatterns(PATTERNS_SOURCES);
 
     @Override
     public Pattern[] getPatterns() {

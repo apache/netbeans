@@ -99,6 +99,8 @@ public class TypeInferenceVisitor extends TypeVisitor {
         if (sameVariableName(leaf, node)) {
             if (node.hasInitialExpression()){
                 guessedType = deriveExpressonType(node.getInitialExpression());
+            } else if (node.getType() != null) {
+                    guessedType = node.getType();
             }
         }
     }

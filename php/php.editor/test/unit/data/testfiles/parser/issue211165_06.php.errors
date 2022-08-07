@@ -7,7 +7,7 @@
 [[71,80]-Syntax error
  unexpected:	identifier 'xmlParser'
  after:	{
- expected:	function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public] 71-80:Syntax error
+ expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, readonly] 71-80:Syntax error
  unexpected:	identifier 'xmlParser'
  after:	{
- expected:	function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public
+ expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, readonly

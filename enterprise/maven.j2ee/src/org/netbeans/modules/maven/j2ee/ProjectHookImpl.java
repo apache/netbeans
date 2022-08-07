@@ -57,7 +57,7 @@ import org.openide.windows.WindowSystemListener;
 })
 public class ProjectHookImpl extends ProjectOpenedHook {
 
-    private final static RequestProcessor RP = new RequestProcessor(ProjectHookImpl.class);
+    private static final RequestProcessor RP = new RequestProcessor(ProjectHookImpl.class);
     private final Project project;
 
     private PreferenceChangeListener preferencesListener;

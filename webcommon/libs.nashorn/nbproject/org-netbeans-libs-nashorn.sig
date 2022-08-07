@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 2.0
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -143,8 +143,8 @@ hfds INT32_LIMIT,MAX_PRECISE_DOUBLE,MAX_UINT,MIN_PRECISE_DOUBLE
 
 CLSS public com.oracle.js.parser.Lexer
 cons public init(com.oracle.js.parser.Source,com.oracle.js.parser.TokenStream)
-cons public init(com.oracle.js.parser.Source,com.oracle.js.parser.TokenStream,boolean,boolean,boolean,boolean)
-cons public init(com.oracle.js.parser.Source,int,int,com.oracle.js.parser.TokenStream,boolean,boolean,boolean,boolean,boolean)
+cons public init(com.oracle.js.parser.Source,com.oracle.js.parser.TokenStream,boolean,int,boolean,boolean)
+cons public init(com.oracle.js.parser.Source,int,int,com.oracle.js.parser.TokenStream,boolean,int,boolean,boolean,boolean)
 innr protected abstract interface static LineInfoReceiver
 innr public abstract interface static InnerState
 innr public abstract static LexerToken
@@ -177,7 +177,7 @@ meth public static java.lang.String getWhitespaceRegExp()
 meth public static java.lang.String unicodeEscape(char)
 meth public void lexify()
 supr com.oracle.js.parser.Scanner
-hfds JAVASCRIPT_WHITESPACE,JAVASCRIPT_WHITESPACE_EOL,JAVASCRIPT_WHITESPACE_IN_REGEXP,JSON_WHITESPACE,JSON_WHITESPACE_EOL,LFCR,MAX_INT_L,MIN_INT_L,SPACETAB,XML_LITERALS,es6,innerStates,jsx,jsxClosing,jsxTag,jsxTagCount,last,linePosition,nested,nextStateChange,openExpressionBraces,pauseOnFunctionBody,pauseOnNextLeftBrace,pendingLine,scripting,shebang,source,stream,template,templateExpression
+hfds JAVASCRIPT_WHITESPACE,JAVASCRIPT_WHITESPACE_EOL,JAVASCRIPT_WHITESPACE_IN_REGEXP,JSON_WHITESPACE,JSON_WHITESPACE_EOL,LFCR,MAX_INT_L,MIN_INT_L,SPACETAB,XML_LITERALS,ecmascriptEdition,innerStates,jsx,jsxClosing,jsxTag,jsxTagCount,last,linePosition,nested,nextStateChange,openExpressionBraces,pauseOnFunctionBody,pauseOnNextLeftBrace,pendingLine,scripting,shebang,source,stream,template,templateExpression
 hcls EditStringLexer,State
 
 CLSS public abstract interface static com.oracle.js.parser.Lexer$InnerState
@@ -256,7 +256,7 @@ meth public java.util.List<com.oracle.js.parser.ir.IdentNode> parseFormalParamet
 meth public void setFunctionName(java.lang.String)
 meth public void setReparsedFunction(com.oracle.js.parser.RecompilableScriptFunctionData)
 supr com.oracle.js.parser.AbstractParser
-hfds ANON_FUNCTION_PREFIX,ARGUMENTS_NAME,ARROW_FUNCTION_PREFIX,ASYNC_IDENT,ES6_ARROW_FUNCTION,ES6_CLASS,ES6_COMPUTED_PROPERTY_NAME,ES6_DEFAULT_PARAMETER,ES6_DESTRUCTURING,ES6_FOR_OF,ES6_GENERATOR_FUNCTION,ES6_NEW_TARGET,ES6_REST_PARAMETER,ES6_SPREAD_ARGUMENT,ES6_SPREAD_ARRAY,ES7_ASYNC_FUNCTION,ES7_CLASS_FIELD,ES7_DECORATOR,ES7_REST_SPREAD_PROPERTY,ES7_TRAILING_COMMA,EVAL_NAME,EXEC_NAME,NESTED_FUNCTION_SEPARATOR,PROGRAM_NAME,defaultNames,env,functionDeclarations,lc,namespace,reparsedFunction,scripting,shebang
+hfds ANON_FUNCTION_PREFIX,ARGUMENTS_NAME,ARROW_FUNCTION_PREFIX,ASYNC_IDENT,EVAL_NAME,EXEC_NAME,NESTED_FUNCTION_SEPARATOR,PROGRAM_NAME,defaultNames,env,functionDeclarations,lc,namespace,reparsedFunction,scripting,shebang
 hcls ClassElementKey,ForVariableDeclarationListResult,ParserState,PropertyFunction,VerifyDestructuringPatternNodeVisitor
 
 CLSS public final com.oracle.js.parser.ParserException
@@ -304,7 +304,7 @@ innr public final static Builder
 meth public boolean isStrict()
 meth public static com.oracle.js.parser.ScriptEnvironment$Builder builder()
 supr java.lang.Object
-hfds constAsVar,dumpOnError,earlyLvalueError,emptyStatements,err,es6,es7,functionDeclarationHoisting,functionStatement,jsx,namespace,scripting,shebang,strict,syntaxExtensions
+hfds constAsVar,dumpOnError,earlyLvalueError,ecmascriptEdition,emptyStatements,err,functionDeclarationHoisting,functionStatement,jsx,namespace,scripting,shebang,strict,syntaxExtensions
 
 CLSS public final static com.oracle.js.parser.ScriptEnvironment$Builder
  outer com.oracle.js.parser.ScriptEnvironment
@@ -312,9 +312,8 @@ meth public com.oracle.js.parser.ScriptEnvironment build()
 meth public com.oracle.js.parser.ScriptEnvironment$Builder constAsVar(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder dumpOnError(java.io.PrintWriter)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder earlyLvalueError(boolean)
+meth public com.oracle.js.parser.ScriptEnvironment$Builder ecmacriptEdition(int)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder emptyStatements(boolean)
-meth public com.oracle.js.parser.ScriptEnvironment$Builder es6(boolean)
-meth public com.oracle.js.parser.ScriptEnvironment$Builder es7(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder functionDeclarationHoisting(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder functionStatementBehavior(com.oracle.js.parser.ScriptEnvironment$FunctionStatementBehavior)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder jsx(boolean)
@@ -323,7 +322,7 @@ meth public com.oracle.js.parser.ScriptEnvironment$Builder shebang(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder strict(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder syntaxExtensions(boolean)
 supr java.lang.Object
-hfds constAsVar,dumpOnError,earlyLvalueError,emptyStatements,es6,es7,functionDeclarationHoisting,functionStatementBehavior,jsx,scripting,shebang,strict,syntaxExtensions
+hfds constAsVar,dumpOnError,earlyLvalueError,ecmacriptEdition,emptyStatements,functionDeclarationHoisting,functionStatementBehavior,jsx,scripting,shebang,strict,syntaxExtensions
 
 CLSS public final static !enum com.oracle.js.parser.ScriptEnvironment$FunctionStatementBehavior
  outer com.oracle.js.parser.ScriptEnvironment
@@ -436,14 +435,18 @@ fld public final static com.oracle.js.parser.TokenType ASSIGN_BIT_OR
 fld public final static com.oracle.js.parser.TokenType ASSIGN_BIT_XOR
 fld public final static com.oracle.js.parser.TokenType ASSIGN_DIV
 fld public final static com.oracle.js.parser.TokenType ASSIGN_EXP
+fld public final static com.oracle.js.parser.TokenType ASSIGN_LOG_AND
+fld public final static com.oracle.js.parser.TokenType ASSIGN_LOG_OR
 fld public final static com.oracle.js.parser.TokenType ASSIGN_MOD
 fld public final static com.oracle.js.parser.TokenType ASSIGN_MUL
+fld public final static com.oracle.js.parser.TokenType ASSIGN_NULLISH
 fld public final static com.oracle.js.parser.TokenType ASSIGN_SAR
 fld public final static com.oracle.js.parser.TokenType ASSIGN_SHL
 fld public final static com.oracle.js.parser.TokenType ASSIGN_SHR
 fld public final static com.oracle.js.parser.TokenType ASSIGN_SUB
 fld public final static com.oracle.js.parser.TokenType AT
 fld public final static com.oracle.js.parser.TokenType AWAIT
+fld public final static com.oracle.js.parser.TokenType BIGINT
 fld public final static com.oracle.js.parser.TokenType BINARY_NUMBER
 fld public final static com.oracle.js.parser.TokenType BIT_AND
 fld public final static com.oracle.js.parser.TokenType BIT_NOT
@@ -517,9 +520,11 @@ fld public final static com.oracle.js.parser.TokenType NEW
 fld public final static com.oracle.js.parser.TokenType NE_STRICT
 fld public final static com.oracle.js.parser.TokenType NOT
 fld public final static com.oracle.js.parser.TokenType NULL
+fld public final static com.oracle.js.parser.TokenType NULLISH
 fld public final static com.oracle.js.parser.TokenType OBJECT
 fld public final static com.oracle.js.parser.TokenType OCTAL
 fld public final static com.oracle.js.parser.TokenType OCTAL_LEGACY
+fld public final static com.oracle.js.parser.TokenType OPTIONAL_ACCESS
 fld public final static com.oracle.js.parser.TokenType OR
 fld public final static com.oracle.js.parser.TokenType PACKAGE
 fld public final static com.oracle.js.parser.TokenType PERIOD
@@ -563,9 +568,11 @@ fld public final static com.oracle.js.parser.TokenType YIELD_STAR
 meth public boolean isAssignment()
 meth public boolean isLeftAssociative()
 meth public boolean isOperator(boolean)
+meth public boolean isSupported(int)
 meth public boolean needsParens(com.oracle.js.parser.TokenType,boolean)
 meth public com.oracle.js.parser.TokenKind getKind()
 meth public com.oracle.js.parser.TokenType getNext()
+meth public int getEcmascriptEdition()
 meth public int getLength()
 meth public int getPrecedence()
 meth public java.lang.String getName()
@@ -575,9 +582,7 @@ meth public static com.oracle.js.parser.TokenType valueOf(java.lang.String)
 meth public static com.oracle.js.parser.TokenType[] values()
 meth public void setNext(com.oracle.js.parser.TokenType)
 supr java.lang.Enum<com.oracle.js.parser.TokenType>
-hfds isLeftAssociative,kind,name,next,precedence,values
-
-CLSS abstract interface com.oracle.js.parser.package-info
+hfds ecmascriptEdition,isLeftAssociative,kind,name,next,precedence,values
 
 CLSS public abstract interface java.io.Serializable
 

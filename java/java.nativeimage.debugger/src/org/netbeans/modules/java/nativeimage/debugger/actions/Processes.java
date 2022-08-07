@@ -182,7 +182,7 @@ final class Processes {
         }
     }
 
-    final static class ProcessInfo {
+    static final class ProcessInfo {
 
         private final long pid;
         private final String executable;

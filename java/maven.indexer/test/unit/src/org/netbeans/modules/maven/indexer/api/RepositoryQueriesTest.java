@@ -82,7 +82,7 @@ public class RepositoryQueriesTest extends NbTestCase {
         assertEquals(0, RepositoryQueries.findBySHA1Result(new File(""), Arrays.asList(NullQueryProvider.REPO)).getTotalResultCount());
         assertEquals(0, RepositoryQueries.findClassUsagesResult("", repos).getTotalResultCount());
         assertEquals(0, RepositoryQueries.findDependencyUsageResult("","","", repos).getTotalResultCount());
-        assertEquals(0, RepositoryQueries.findResult(Collections.EMPTY_LIST, repos).getTotalResultCount());
+        assertEquals(0, RepositoryQueries.findResult(Collections.emptyList(), repos).getTotalResultCount());
         assertEquals(0, RepositoryQueries.findVersionsByClassResult("", repos).getTotalResultCount());
         
         RepositoryPreferences.getInstance().addOrModifyRepositoryInfo(NullQueryProvider.REPO);
@@ -92,7 +92,7 @@ public class RepositoryQueriesTest extends NbTestCase {
     private void assertArtefactIds(List<NBVersionInfo> infos, String[] ids) {
         assertEquals(ids.length, infos.size());
         List<String> returnedIds = new ArrayList<>(infos.size());
-        infos.stream().forEach((info) -> returnedIds.add(info.getArtifactId()));
+        infos.forEach((info) -> returnedIds.add(info.getArtifactId()));
         for (String id : ids) {
             assertTrue(returnedIds.contains(id));
         }
@@ -112,6 +112,7 @@ public class RepositoryQueriesTest extends NbTestCase {
         public NullQueryProvider() {
             this.repos = new RepositoryInfo[] {REPO};
         }
+        @Override
         protected String getID() {
             return ID;
         }

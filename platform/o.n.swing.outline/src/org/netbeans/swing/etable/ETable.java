@@ -124,11 +124,11 @@ public class ETable extends JTable {
     private static final String ACTION_FOCUS_NEXT = "focusNext"; //NOI18N
 
     /** Possible value for editing property */
-    private final static int FULLY_EDITABLE = 1;
+    private static final int FULLY_EDITABLE = 1;
     /** Possible value for editing property */
-    private final static int FULLY_NONEDITABLE = 2;
+    private static final int FULLY_NONEDITABLE = 2;
     /** Possible value for editing property */
-    private final static int DEFAULT = 3;
+    private static final int DEFAULT = 3;
 
     /** Key for storing the currently searched column's index. */
     private static final String SEARCH_COLUMN = "SearchColumn";
@@ -177,9 +177,9 @@ public class ETable extends JTable {
     /** */
     int SEARCH_FIELD_SPACE = 3;
     /** */
-    final private JTextField searchTextField = new SearchTextField();
+    private final JTextField searchTextField = new SearchTextField();
     /** */
-    final private int heightOfTextField = searchTextField.getPreferredSize().height;
+    private final int heightOfTextField = searchTextField.getPreferredSize().height;
     
     /** */
     private JPanel searchPanel = null;
@@ -2247,7 +2247,7 @@ public class ETable extends JTable {
                 if (currentSelectionIndex >= sz) {
                     currentSelectionIndex = sz - 1;
                 }
-                int selRow = ((Integer)results.get(currentSelectionIndex)).intValue();
+                int selRow = results.get(currentSelectionIndex).intValue();
                 setRowSelectionInterval(selRow, selRow);
                 Rectangle rect = getCellRect(selRow, 0, true);
                 scrollRectToVisible(rect);
@@ -2436,7 +2436,7 @@ public class ETable extends JTable {
     /**
      * Item to the collection when doing the sorting of table rows.
      */
-    public final static class RowMapping {
+    public static final class RowMapping {
         // index (of the row) in the TableModel
         private final int originalIndex;
         // table model of my table

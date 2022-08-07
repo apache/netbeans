@@ -29,6 +29,7 @@ import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonName0;
 import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonText0;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
+import org.netbeans.modules.java.lsp.server.protocol.UIContext;
 import org.openide.util.Exceptions;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
 import org.openide.util.NbBundle;

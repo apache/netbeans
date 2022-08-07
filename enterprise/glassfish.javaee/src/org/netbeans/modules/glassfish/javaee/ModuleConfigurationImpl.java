@@ -72,7 +72,7 @@ public class ModuleConfigurationImpl implements
         }
     }
     
-    static public ModuleConfigurationImpl get(J2eeModule j2eemodule) {
+    public static ModuleConfigurationImpl get(J2eeModule j2eemodule) {
         synchronized (configs) {
             return configs.get(j2eemodule);
         }

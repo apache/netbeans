@@ -53,7 +53,7 @@ import org.openide.util.ChangeSupport;
  * @author Tomas Stupka
  */
 public abstract class QueryParameter {
-    final static ParameterValue[] EMPTY_PARAMETER_VALUE = new ParameterValue[] {new ParameterValue("", "")}; // NOI18N
+    static final ParameterValue[] EMPTY_PARAMETER_VALUE = new ParameterValue[] {new ParameterValue("", "")}; // NOI18N
 
     static final ParameterValue PV_CONTAINS_ALL_KEYWORDS = new ParameterValue("contains all keywords",  "allwords"); // NOI18N
     static final ParameterValue PV_CONTAINS_ANY_KEYWORDS = new ParameterValue("contains any keywords",  "anywords"); // NOI18N

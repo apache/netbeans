@@ -46,10 +46,11 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
-import static org.netbeans.modules.gradle.spi.newproject.Bundle.*;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.GradleProjectLoader;
@@ -65,6 +66,8 @@ import org.openide.util.NbBundle;
  * @author Laszlo Kishalmi
  */
 public final class TemplateOperation implements Runnable {
+    private static final Logger LOG = Logger.getLogger(TemplateOperation.class.getName());
+    
     public interface ProjectConfigurator {
         void configure(Project project);
     }
@@ -108,6 +111,7 @@ public final class TemplateOperation implements Runnable {
                 if (handle != null) {
                     handle.progress(step.getMessage(), work++);
                 }
+                LOG.log(Level.FINE, "Executing Gradle Project Template Operation {0}", step);
                 Set<FileObject> filesToOpen = step.execute();
                 if (filesToOpen != null) {
                     importantFiles.addAll(filesToOpen);
@@ -129,7 +133,7 @@ public final class TemplateOperation implements Runnable {
         "MSG_CREATE_FOLDER=Creating foder: {0}"
     })
     public void createFolder(File target) {
-        steps.add(new CreateDirStep(target, MSG_CREATE_FOLDER(target.getName())));
+        steps.add(new CreateDirStep(target, Bundle.MSG_CREATE_FOLDER(target.getName())));
     }
 
     @Messages({
@@ -138,7 +142,7 @@ public final class TemplateOperation implements Runnable {
     })
     public void createPackage(File base, String pkg) {
         String relativePath = pkg.replace('.', '/');
-        steps.add(new CreateDirStep(new File(base, relativePath),MSG_CREATE_PACKAGE(pkg)));
+        steps.add(new CreateDirStep(new File(base, relativePath),Bundle.MSG_CREATE_PACKAGE(pkg)));
     }
 
     public void addConfigureProject(File projectDir, ProjectConfigurator configurator) {
@@ -260,8 +264,7 @@ public final class TemplateOperation implements Runnable {
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
             target.mkdirs();
-            ProjectConnection pconn = gconn.forProjectDirectory(target).connect();
-            try {
+            try (ProjectConnection pconn = gconn.forProjectDirectory(target).connect()) {
                 List<String> args = new ArrayList<>();
                 args.add("init");
                 // gradle init --type java-application --test-framework junit-jupiter --dsl groovy --package com.example --project-name example
@@ -293,8 +296,6 @@ public final class TemplateOperation implements Runnable {
             } catch (GradleConnectionException | IllegalStateException ex) {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now
-            } finally {
-                pconn.close();
             }
             return Collections.singleton(FileUtil.toFileObject(target));
         }
@@ -320,7 +321,14 @@ public final class TemplateOperation implements Runnable {
         steps.add(new PreloadProject(projectDir));
     }
 
-    private static class CreateDirStep implements OperationStep {
+    private abstract static class BaseOperationStep implements OperationStep {
+        @Override
+        public final String toString() {
+            return "Step: " + getMessage();
+        }
+    }
+    
+    private static final class CreateDirStep extends BaseOperationStep {
 
         final String message;
         final File dir;
@@ -344,9 +352,10 @@ public final class TemplateOperation implements Runnable {
             }
             return null;
         }
+        
     }
 
-    private static class ConfigureProjectStep implements OperationStep {
+    private static final class ConfigureProjectStep extends BaseOperationStep {
         final File dir;
         final ProjectConfigurator configurator;
 
@@ -358,7 +367,7 @@ public final class TemplateOperation implements Runnable {
         @Override
         @Messages("MSG_CONFIGURING_PROJECT=Configuring Project...")
         public String getMessage() {
-            return MSG_CONFIGURING_PROJECT();
+            return Bundle.MSG_CONFIGURING_PROJECT();
         }
 
         @Override
@@ -367,9 +376,10 @@ public final class TemplateOperation implements Runnable {
                 try {
                     FileObject projectDir = FileUtil.toFileObject(dir);
                     Project project = ProjectManager.getDefault().findProject(projectDir);
+                    ProjectTrust.getDefault().trustProject(project);
                     NbGradleProjectImpl impl = project != null ? project.getLookup().lookup(NbGradleProjectImpl.class): null;
                     if (impl != null) {
-                        impl.fireProjectReload(true);
+                        impl.projectWithQuality(null, Quality.FULL, false, false);
                         configurator.configure(project);
                     }
 
@@ -380,7 +390,7 @@ public final class TemplateOperation implements Runnable {
         }
 
     }
-    private static class PreloadProject implements OperationStep {
+    private static final class PreloadProject extends BaseOperationStep {
 
         final File dir;
 
@@ -396,7 +406,7 @@ public final class TemplateOperation implements Runnable {
             "MSG_PRELOAD_PROJECT=Load: {0}"
         })
         public String getMessage() {
-            return GradleProjects.testForProject(dir) ? MSG_PRELOAD_PROJECT(dir.getName()) : MSM_CHECKING_FOLDER(dir.getName());
+            return GradleProjects.testForProject(dir) ? Bundle.MSG_PRELOAD_PROJECT(dir.getName()) : Bundle.MSM_CHECKING_FOLDER(dir.getName());
         }
 
         @Override
@@ -410,7 +420,7 @@ public final class TemplateOperation implements Runnable {
                     }
                     project = ProjectManager.getDefault().findProject(projectDir);
                     if (project != null) {
-                        //Let's trust the generate project
+                        //Let's trust the generated project
                         ProjectTrust.getDefault().trustProject(project);
                         NbGradleProjectImpl nbProject = project.getLookup().lookup(NbGradleProjectImpl.class);
                         if (nbProject != null) {
@@ -430,7 +440,7 @@ public final class TemplateOperation implements Runnable {
 
     }
 
-    private static class InitGradleWrapper implements OperationStep {
+    private static final class InitGradleWrapper extends BaseOperationStep {
 
         final File projectDir;
 
@@ -441,27 +451,24 @@ public final class TemplateOperation implements Runnable {
         @Override
         @Messages("MSG_INIT_WRAPPER=Initializing Gradle Wrapper")
         public String getMessage() {
-            return MSG_INIT_WRAPPER();
+            return Bundle.MSG_INIT_WRAPPER();
         }
 
         @Override
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
-            ProjectConnection pconn = gconn.forProjectDirectory(projectDir).connect();
-            try {
+            try (ProjectConnection pconn = gconn.forProjectDirectory(projectDir).connect()) {
                 pconn.newBuild().withArguments("--offline").forTasks("wrapper").run(); //NOI18N
             } catch (GradleConnectionException | IllegalStateException ex) {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now
-            } finally {
-                pconn.close();
             }
             return null;
         }
 
     }
 
-    private static class CopyFromFileTemplate implements OperationStep {
+    private static final class CopyFromFileTemplate extends BaseOperationStep {
         final File target;
         final Map<String, ? extends Object> tokens;
         final boolean important;
@@ -480,7 +487,7 @@ public final class TemplateOperation implements Runnable {
             "MSG_COPY_TEMPLATE=Generating {0}..."
         })
         public String getMessage() {
-            return MSG_COPY_TEMPLATE(target.getName());
+            return Bundle.MSG_COPY_TEMPLATE(target.getName());
         }
 
         @Override
@@ -524,7 +531,7 @@ public final class TemplateOperation implements Runnable {
 
     }
 
-    private static class CopyFromTemplate implements OperationStep {
+    private static final class CopyFromTemplate extends BaseOperationStep {
         final File target;
         final Map<String, ? extends Object> tokens;
         final boolean important;
@@ -540,7 +547,7 @@ public final class TemplateOperation implements Runnable {
 
         @Override
         public String getMessage() {
-            return MSG_COPY_TEMPLATE(target.getName());
+            return Bundle.MSG_COPY_TEMPLATE(target.getName());
         }
 
         @Override

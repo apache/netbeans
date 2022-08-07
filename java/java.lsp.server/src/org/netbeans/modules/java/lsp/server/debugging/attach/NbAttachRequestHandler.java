@@ -24,6 +24,7 @@ import com.sun.jdi.connect.Connector.Argument;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,6 +51,7 @@ import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -102,7 +104,7 @@ public final class NbAttachRequestHandler {
                 if (nativeImagePath == null) {
                     ErrorUtilities.completeExceptionally(resultFuture,
                             Bundle.MSG_UnknownNIPath(),
-                            ResponseErrorCode.serverErrorStart);
+                            ResponseErrorCode.ServerNotInitialized);
                     return resultFuture;
                 }
             }
@@ -111,7 +113,7 @@ public final class NbAttachRequestHandler {
         } catch (NumberFormatException nfex) {
             ErrorUtilities.completeExceptionally(resultFuture,
                     nfex.getLocalizedMessage(),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
         }
         return resultFuture;
     }
@@ -122,7 +124,13 @@ public final class NbAttachRequestHandler {
         NIDebugger niDebugger;
         resultFuture.complete(null);
         try {
-            niDebugger = NIDebugRunner.attach(nativeImageFile, processId, miDebugger, null, engine -> {
+            StartDebugParameters startParams = StartDebugParameters.newBuilder(Collections.singletonList(nativeImageFile.getAbsolutePath()))
+                    .debugger(miDebugger)
+                    .debuggerDisplayObjects(false)
+                    .processID(processId)
+                    .workingDirectory(new File(System.getProperty("user.dir", ""))) // NOI18N
+                    .build();
+            niDebugger = NIDebugRunner.start(nativeImageFile, startParams, null, engine -> {
                 Session session = engine.lookupFirst(null, Session.class);
                 NbDebugSession debugSession = new NbDebugSession(session);
                 debugSessionRef.set(debugSession);
@@ -161,7 +169,7 @@ public final class NbAttachRequestHandler {
             String name = (String) attachArguments.get("name");     // NOI18N
             ErrorUtilities.completeExceptionally(resultFuture,
                     Bundle.MSG_InvalidConnector(name),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
         }
         return resultFuture;
     }
@@ -179,7 +187,7 @@ public final class NbAttachRequestHandler {
             if (!arg.isValid(value)) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     Bundle.MSG_ConnectorInvalidValue(argName, value),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return ;
             }
             arg.setValue(value);

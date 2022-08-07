@@ -36,7 +36,7 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * by the {@link net.java.html.json.Model} annotation and call <code>applyBindings()</code>
  * on it. Here is an example: 
  * <p>
- * {@codesnippet org.netbeans.api.htmlui.UICntrl}
+ * {@snippet file="org/netbeans/api/htmlui/UICntrl.java" region="controller"}
 
 * The above would display a new action in Toolbar and in Menu that would, upon invocation,
  * open up a new component displaying the 
@@ -46,7 +46,7 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * properties defined by the {@link net.java.html.json.Model} annotation in the generated class
  * <code>UI</code>:
  * <p>
- * {@codesnippet org.netbeans.api.htmlui.ui.html}
+ * {@snippet file="org/netbeans/api/htmlui/dialog.html" region="org.netbeans.api.htmlui.dialog.html"}
  * 
  * <p>
  * In addition to the above, there is a special support for influencing {@link org.openide.util.Utilities#actionsGlobalContext() 

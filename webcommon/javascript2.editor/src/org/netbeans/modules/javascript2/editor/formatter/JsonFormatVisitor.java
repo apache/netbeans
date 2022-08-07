@@ -49,7 +49,7 @@ public class JsonFormatVisitor extends JsonBaseVisitor<Void> {
                             token.setPrevious(last);
                         }
                         return super.add(token);
-                    }                    
+                    }
                 };
                 int start = 0;
                 for (int i = 0; i < token.getText().length(); i++) {
@@ -132,7 +132,7 @@ public class JsonFormatVisitor extends JsonBaseVisitor<Void> {
     public Void visitArray(JsonParser.ArrayContext ctx) {
         int start = getStart(ctx);
         int finish = getFinish(ctx);
-        FormatToken leftBracket = tokenUtils.getNextToken(start, JsTokenId.BRACKET_LEFT_BRACKET, finish);            
+        FormatToken leftBracket = tokenUtils.getNextToken(start, JsTokenId.BRACKET_LEFT_BRACKET, finish);
         if (leftBracket != null) {
             if (leftBracket.previous() != null) {
                 // mark beginning of the array (see issue #250150)

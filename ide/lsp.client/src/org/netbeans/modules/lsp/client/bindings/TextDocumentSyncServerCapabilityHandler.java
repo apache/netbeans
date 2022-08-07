@@ -336,6 +336,11 @@ public class TextDocumentSyncServerCapabilityHandler {
                     LSPBindings.addBackgroundTask(file, bi);
                     c.putClientProperty(BreadcrumbsImpl.class, bi);
                 }
+                if (c.getClientProperty(SemanticHighlight.class) == null) {
+                    SemanticHighlight sh = new SemanticHighlight(c);
+                    LSPBindings.addBackgroundTask(file, sh);
+                    c.putClientProperty(SemanticHighlight.class, sh);
+                }
             });
         });
     }

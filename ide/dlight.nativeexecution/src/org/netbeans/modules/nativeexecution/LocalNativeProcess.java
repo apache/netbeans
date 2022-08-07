@@ -29,7 +29,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.SequenceInputStream;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -254,14 +254,11 @@ public final class LocalNativeProcess extends AbstractNativeProcess {
 
                         String errorMsg = loc("LocalNativeProcess.windowsProcessStartFailed.1073741515.text", cmd.toString()); // NOI18N
                         if (info.isPtyMode()) {
-                            errorMsg = errorMsg.replaceAll("\n", "\n\r"); // NOI18N
+                            errorMsg = errorMsg.replace("\n", "\n\r"); // NOI18N
                         }
 
                         try {
-                            Charset charset = Charset.isSupported("UTF-8") // NOI18N
-                                    ? Charset.forName("UTF-8") // NOI18N
-                                    : Charset.defaultCharset();
-                            errorPipedOutputStream.write(errorMsg.getBytes(charset));
+                            errorPipedOutputStream.write(errorMsg.getBytes(StandardCharsets.UTF_8));
                             errorPipedOutputStream.flush();
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);

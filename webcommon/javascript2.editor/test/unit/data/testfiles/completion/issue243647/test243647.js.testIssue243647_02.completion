@@ -2,6 +2,7 @@ Code completion result for source line:
 some243647_2.s|; // Only street and sip should be offered
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
 FIELD      sip: String                     [PUBLIC]   some243647B.js
 FIELD      street: String                  [PUBLIC]   some243647B.js

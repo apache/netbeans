@@ -22,18 +22,23 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import org.antlr.v4.runtime.CharStream;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
+import org.netbeans.modules.javascript2.json.api.JsonOptionsQuery;
 import org.netbeans.modules.javascript2.lexer.JsLexer;
-import org.netbeans.modules.javascript2.lexer.JsonLexer;
+import org.netbeans.modules.javascript2.json.parser.JsonLexer;
+import static org.netbeans.modules.javascript2.json.parser.JsonLexer.*;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
+import org.netbeans.spi.lexer.antlr4.TokenMappingLexer;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -301,7 +306,10 @@ public enum JsTokenId implements TokenId {
 
                 @Override
                 protected Lexer<JsTokenId> createLexer(LexerRestartInfo<JsTokenId> info) {
-                    return JsonLexer.create(info);
+                    FileObject fo = (FileObject) info.getAttributeValue(FileObject.class);
+                    boolean allowComments = fo != null ? JsonOptionsQuery.getOptions(fo).isCommentSupported() : false;
+
+                    return new TokenMappingLexer<>(info, (CharStream s) -> new JsonLexer(s, allowComments, true), JsTokenId::mapJsonLexerTokenTypes);
                 }
             }.language();
 
@@ -311,5 +319,28 @@ public enum JsTokenId implements TokenId {
 
     public static Language<JsTokenId> jsonLanguage() {
         return JSON_LANGUAGE;
+    }
+
+    private static JsTokenId mapJsonLexerTokenTypes(int type) {
+        switch (type) {
+            case COLON: return JsTokenId.OPERATOR_COLON;
+            case COMMA: return JsTokenId.OPERATOR_COMMA;
+            case DOT: return JsTokenId.OPERATOR_DOT;
+            case PLUS: return JsTokenId.OPERATOR_PLUS;
+            case MINUS: return JsTokenId.OPERATOR_MINUS;
+            case LBRACE: return JsTokenId.BRACKET_LEFT_CURLY;
+            case RBRACE: return JsTokenId.BRACKET_RIGHT_CURLY;
+            case LBRACKET: return JsTokenId.BRACKET_LEFT_BRACKET;
+            case RBRACKET: return JsTokenId.BRACKET_RIGHT_BRACKET;
+            case TRUE: return JsTokenId.KEYWORD_TRUE;
+            case FALSE: return JsTokenId.KEYWORD_FALSE;
+            case NULL: return JsTokenId.KEYWORD_NULL;
+            case JsonLexer.NUMBER: return JsTokenId.NUMBER;
+            case JsonLexer.STRING: return JsTokenId.STRING;
+            case JsonLexer.LINE_COMMENT: return JsTokenId.LINE_COMMENT;
+            case COMMENT: return JsTokenId.BLOCK_COMMENT;
+            case WS: return JsTokenId.WHITESPACE;
+            default: return JsTokenId.ERROR;
+        }
     }
 }

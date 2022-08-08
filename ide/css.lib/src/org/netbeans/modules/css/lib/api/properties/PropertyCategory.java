@@ -54,6 +54,7 @@ public enum PropertyCategory {
     MARQUEE,
     MULTI_COLUMN_LAYOUT,
     PAGED_MEDIA,
+    POSITIONING,    
     RUBY,
     SPEECH,
     TEXT,

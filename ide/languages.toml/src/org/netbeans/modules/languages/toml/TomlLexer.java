@@ -51,70 +51,80 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
 
     @Override
     public Token<TomlTokenId> nextToken() {
-        org.antlr.v4.runtime.Token nextToken = lexer.nextToken();
-        if (nextToken.getType() == EOF) {
-            return null;
-        }
-        switch (nextToken.getType()) {
-            case TripleQuotationMark:
-            case TripleApostrophe:
-            case StringChar:
-            case QuotationMark:
-            case Apostrophe:
-            case MLBasicStringEnd:
-            case MLLiteralStringEnd:
-                return token(STRING);
+        try {
+            org.antlr.v4.runtime.Token nextToken = lexer.nextToken();
+            if (nextToken.getType() == EOF) {
+                return null;
+            }
+            switch (nextToken.getType()) {
+                case TripleQuotationMark:
+                case TripleApostrophe:
+                    return token(ML_STRING_START);
 
-            case Comma:
-            case ArrayStart:
-            case ArrayEnd:
-            case InlineTableStart:
-            case InlineTableEnd:
+                case StringChar:
+                case QuotationMark:
+                case Apostrophe:
+                    return token(STRING);
 
-            case Dot:
-                return token(SEPARATOR);
+                case MLBasicStringEnd:
+                case MLLiteralStringEnd:
+                    return token(ML_STRING_END);
 
-            case Equals:
-            case TableKeyStart:
-            case TableKeyEnd:
-            case ArrayTableKeyStart:
-            case ArrayTableKeyEnd:
-                return token(OPERATOR);
-            case UnquotedKey:
-                return token(KEY);
-            case Comment:
-                return token(COMMENT);
-            case WS:
-            case NewLine:
-                return token(TomlTokenId.WHITESPACE);
-            case Error:
-                return token(ERROR);
-            case DecimalInteger:
-            case HexInteger:
-            case OctalInteger:
-            case BinaryInteger:
-            case FloatingPoint:
-            case FloatingPointInf:
-            case FloatingPointNaN:
-                return token(NUMBER);
+                case Comma:
+                case ArrayStart:
+                case ArrayEnd:
+                case InlineTableStart:
+                case InlineTableEnd:
 
-            case TrueBoolean:
-            case FalseBoolean:
-                return token(BOOLEAN);
-            
-            case EscapeSequence:
-                return token(ESCAPE_SEQUENCE);
+                case Dot:
+                    return token(DOT);
 
-            case Dash:
-            case Plus:
-            case Colon:
-            case Z:
-            case TimeDelimiter:
-            case DateDigits:
-            case DateComma:
-                return token(DATE);
-            default:
-                return token(COMMENT);
+                case Equals:
+                    return token(EQUALS);
+
+                case TableKeyStart:
+                case TableKeyEnd:
+                case ArrayTableKeyStart:
+                case ArrayTableKeyEnd:
+                    return token(OPERATOR);
+                case UnquotedKey:
+                    return token(KEY);
+                case Comment:
+                    return token(COMMENT);
+                case WS:
+                case NewLine:
+                    return token(TomlTokenId.WHITESPACE);
+                case Error:
+                    return token(ERROR);
+                case DecimalInteger:
+                case HexInteger:
+                case OctalInteger:
+                case BinaryInteger:
+                case FloatingPoint:
+                case FloatingPointInf:
+                case FloatingPointNaN:
+                    return token(NUMBER);
+
+                case TrueBoolean:
+                case FalseBoolean:
+                    return token(BOOLEAN);
+
+                case EscapeSequence:
+                    return token(ESCAPE_SEQUENCE);
+
+                case Dash:
+                case Plus:
+                case Colon:
+                case Z:
+                case TimeDelimiter:
+                case DateDigits:
+                case DateComma:
+                    return token(DATE);
+                default:
+                    return token(ERROR);
+            }
+        } catch (Throwable ex) {
+            return token(ERROR);
         }
     }
 

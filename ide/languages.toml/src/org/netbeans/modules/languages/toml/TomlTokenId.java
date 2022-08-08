@@ -38,9 +38,12 @@ public enum TomlTokenId implements TokenId {
     BOOLEAN("keyword"),
     DATE("date"),
     NUMBER("number"),
+    EQUALS("operator"),
     OPERATOR("operator"),
-    SEPARATOR("separator"),
+    DOT("separator"),
     STRING("string"),
+    ML_STRING_START("string"),
+    ML_STRING_END("string"),
     ESCAPE_SEQUENCE("string_escape"),
     WHITESPACE("whitespace");
 

@@ -49,7 +49,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Stepan Herold
  */
-public class TomcatPlatformImpl extends J2eePlatformImpl2 {
+    public class TomcatPlatformImpl extends J2eePlatformImpl2 {
     
     private static final String WSCOMPILE_LIBS[] = new String[] {
         "jaxrpc/lib/jaxrpc-api.jar",        // NOI18N
@@ -456,43 +456,220 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
 
     @Override
     public Set<Profile> getSupportedProfiles() {
-        Set<Profile> profiles = new HashSet<>(5);
-        //if (!manager.isTomEE()) {
-            // TomEE is new and it actually does not support older specs (classloading separation etc).
-            // we will see if that's a problem for anybody
-            profiles.add(Profile.J2EE_13);
-            profiles.add(Profile.J2EE_14);
-            if (manager.isTomcat60() || manager.isAboveTomcat70()) {
-                profiles.add(Profile.JAVA_EE_5);
+        Set<Profile> profiles = new HashSet<Profile>(10);
+
+        if (manager.isTomEE()) {
+            // Only TomEE versions 8/9 of type Plus/PluME support full profile
+            if (manager.getTomEEType().ordinal() >= 3 ) {
+                switch (manager.getTomEEVersion()) {
+                    case TOMEE_90:
+                        profiles.add(Profile.JAKARTA_EE_9_1_FULL);
+                        break;
+                    case TOMEE_80:
+                        profiles.add(Profile.JAKARTA_EE_8_FULL);
+                        profiles.add(Profile.JAVA_EE_8_FULL);
+                        profiles.add(Profile.JAVA_EE_7_FULL);
+                        profiles.add(Profile.JAVA_EE_6_FULL);
+                        break;
+                    default:
+                        break;
+                }
             }
-        //}
-        if (manager.isAboveTomcat70()) {
-            profiles.add(Profile.JAVA_EE_6_WEB);
-        }
-        if (manager.isTomcat80() || manager.isTomcat90()) {
-            profiles.add(Profile.JAVA_EE_7_WEB);
+            switch (manager.getTomEEVersion()) {
+                case TOMEE_90:
+                    profiles.add(Profile.JAKARTA_EE_9_1_WEB);
+                    break;
+                case TOMEE_80:
+                    profiles.add(Profile.JAKARTA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMEE_71:
+                case TOMEE_70:
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMEE_17:
+                case TOMEE_16:
+                case TOMEE_15:
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (manager.getTomcatVersion()) {
+//                case TOMCAT_101:
+//                    TODO: Add suport for Jakarta EE 10
+//                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+//                    break;
+                case TOMCAT_100:
+                    profiles.add(Profile.JAKARTA_EE_9_1_WEB);
+                    profiles.add(Profile.JAKARTA_EE_9_WEB);
+                    break;
+                case TOMCAT_90:
+                    profiles.add(Profile.JAKARTA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_8_WEB);
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                case TOMCAT_80:
+                    profiles.add(Profile.JAVA_EE_7_WEB);
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMCAT_70:
+                    profiles.add(Profile.JAVA_EE_6_WEB);
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMCAT_60:
+                    profiles.add(Profile.JAVA_EE_5);
+                    break;
+                case TOMCAT_55:
+                case TOMCAT_50:
+                    profiles.add(Profile.J2EE_14);
+                    break;
+                default:
+                    break;
+            }
         }
         return profiles;
     }
     
     @Override
     public Set<String> getSupportedJavaPlatformVersions() {
-        Set<String> versions = new HashSet<>(6);
+        Set<String> versions = new HashSet<String>(14);
 
-        if (!manager.isTomcat90()) {
-            if (!manager.isTomcat80()) {
-                if (!manager.isTomcat70()) {
-                    if (!manager.isTomcat60()) {
-                        versions.add("1.4"); // NOI18N
-                        versions.add("1.5"); // NOI18N
-                    }
-                    versions.add("1.5"); // NOI18N
-                }
-                versions.add("1.6"); // NOI18N
+        // TomEE has different supported Java versions
+        if (manager.isTomEE()) {
+            switch (manager.getTomEEVersion()) {
+                case TOMEE_90:
+                    versions.add("11"); // NOI18N
+                    versions.add("12"); // NOI18N
+                    versions.add("13"); // NOI18N
+                    versions.add("14"); // NOI18N
+                    versions.add("15"); // NOI18N
+                    versions.add("16"); // NOI18N
+                    versions.add("17"); // NOI18N
+                    versions.add("18"); // NOI18N
+                    versions.add("19"); // NOI18N
+                    versions.add("20"); // NOI18N
+                    break;
+                case TOMEE_80:
+                    versions.add("1.8"); // NOI18N
+                    versions.add("9"); // NOI18N
+                    versions.add("10"); // NOI18N
+                    versions.add("11"); // NOI18N
+                    versions.add("12"); // NOI18N
+                    versions.add("13"); // NOI18N
+                    versions.add("14"); // NOI18N
+                    versions.add("15"); // NOI18N
+                    versions.add("16"); // NOI18N
+                    versions.add("17"); // NOI18N
+                    versions.add("18"); // NOI18N
+                    versions.add("19"); // NOI18N
+                    versions.add("20"); // NOI18N
+                    break;
+                case TOMEE_71:
+                case TOMEE_70:
+                    versions.add("1.7"); // NOI18N
+                    versions.add("1.8"); // NOI18N
+                    break;
+                case TOMEE_17:
+                case TOMEE_16:
+                case TOMEE_15:
+                    versions.add("1.6"); // NOI18N
+                    versions.add("1.7"); // NOI18N
+                    versions.add("1.8"); // NOI18N
+                    break;
+                default:
+                    break;
             }
-            versions.add("1.7"); // NOI18N
+        } else {
+            switch (manager.getTomcatVersion()) {
+                case TOMCAT_101:
+                    versions.add("11"); // NOI18N
+                    versions.add("12"); // NOI18N
+                    versions.add("13"); // NOI18N
+                    versions.add("14"); // NOI18N
+                    versions.add("15"); // NOI18N
+                    versions.add("16"); // NOI18N
+                    versions.add("17"); // NOI18N
+                    versions.add("18"); // NOI18N
+                    versions.add("19"); // NOI18N
+                    versions.add("20"); // NOI18N
+                    break;
+                case TOMCAT_100:
+                case TOMCAT_90:
+                    versions.add("1.8"); // NOI18N
+                    versions.add("9"); // NOI18N
+                    versions.add("10"); // NOI18N
+                    versions.add("11"); // NOI18N
+                    versions.add("12"); // NOI18N
+                    versions.add("13"); // NOI18N
+                    versions.add("14"); // NOI18N
+                    versions.add("15"); // NOI18N
+                    versions.add("16"); // NOI18N
+                    versions.add("17"); // NOI18N
+                    versions.add("18"); // NOI18N
+                    versions.add("19"); // NOI18N
+                    versions.add("20"); // NOI18N
+                    break;
+                case TOMCAT_80:
+                    versions.add("1.7"); // NOI18N
+                    versions.add("1.8"); // NOI18N
+                    versions.add("9"); // NOI18N
+                    versions.add("10"); // NOI18N
+                    versions.add("11"); // NOI18N
+                    versions.add("12"); // NOI18N
+                    versions.add("13"); // NOI18N
+                    versions.add("14"); // NOI18N
+                    versions.add("15"); // NOI18N
+                    versions.add("16"); // NOI18N
+                    versions.add("17"); // NOI18N
+                    versions.add("18"); // NOI18N
+                    versions.add("19"); // NOI18N
+                    versions.add("20"); // NOI18N
+                    break;
+                case TOMCAT_70:
+                    versions.add("1.6"); // NOI18N
+                    versions.add("1.7"); // NOI18N
+                    versions.add("1.8"); // NOI18N
+                    versions.add("9"); // NOI18N
+                    versions.add("10"); // NOI18N
+                    versions.add("11"); // NOI18N
+                    versions.add("12"); // NOI18N
+                    versions.add("13"); // NOI18N
+                    versions.add("14"); // NOI18N
+                    versions.add("15"); // NOI18N
+                    versions.add("16"); // NOI18N
+                    versions.add("17"); // NOI18N
+                    versions.add("18"); // NOI18N
+                    versions.add("19"); // NOI18N
+                    versions.add("20"); // NOI18N
+                    break;
+                case TOMCAT_60:
+                    versions.add("1.5"); // NOI18N
+                    versions.add("1.6"); // NOI18N
+                    versions.add("1.7"); // NOI18N
+                    versions.add("1.8"); // NOI18N
+                    break;
+                case TOMCAT_55:
+                case TOMCAT_50:
+                    versions.add("1.4"); // NOI18N
+                    versions.add("1.5"); // NOI18N
+                    versions.add("1.6"); // NOI18N
+                    versions.add("1.7"); // NOI18N
+                    versions.add("1.8"); // NOI18N
+                    break;
+                default:
+                    break;
+            }
         }
-        versions.add("1.8"); // NOI18N
         return versions;
     }
     

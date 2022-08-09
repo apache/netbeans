@@ -456,6 +456,11 @@ public class TomcatManager implements DeploymentManager {
         loadTomEEInfo();
         return tomEEVersion;
     }
+    
+    public synchronized TomEEType getTomEEType() {
+        loadTomEEInfo();
+        return tomEEType;
+    }
 
     public void loadTomEEInfo() {
         boolean fireListener = false;

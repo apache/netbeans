@@ -79,9 +79,7 @@ public class TomcatUsers {
             roles = ""; // NOI18N
         }
         StringBuilder newRoles = new StringBuilder(roles.trim());
-        if (TomcatVersion.TOMCAT_70.equals(version)
-                || TomcatVersion.TOMCAT_80.equals(version)
-                || TomcatVersion.TOMCAT_90.equals(version)) {
+        if (version.isAtLeast(TomcatVersion.TOMCAT_70)) {
             if (!hasRole(roles, "manager-script")) { // NOI18N
                 if (newRoles.length() > 0 && !newRoles.toString().endsWith(",")) { // NOI18N
                     newRoles.append(',');
@@ -139,9 +137,7 @@ public class TomcatUsers {
             }
             if (username.equals(name)) { // NOI18N
                 String roles = user.getAttribute("roles"); // NOI18N
-                if (TomcatVersion.TOMCAT_70.equals(version)
-                        || TomcatVersion.TOMCAT_80.equals(version)
-                        || TomcatVersion.TOMCAT_90.equals(version)) {
+                if (version.isAtLeast(TomcatVersion.TOMCAT_70)) {
                     if (hasRole(roles, "manager-script")) { // NOI18N
                         return true;
                     }                    

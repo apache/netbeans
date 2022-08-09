@@ -87,6 +87,11 @@ public class TopSecurityManagerTest extends TestCase {
     }
      */
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        TrackingHooksCallback.clear();
+    }
 
     private static final class SecMan extends SecurityManager {
     }

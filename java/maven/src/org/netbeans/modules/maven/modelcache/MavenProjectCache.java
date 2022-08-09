@@ -43,11 +43,14 @@ import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.maven.M2AuxilaryConfigImpl;
+import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Mutex;
@@ -113,6 +116,14 @@ public final class MavenProjectCache {
         return mp;
     }
     
+    public static MavenProject loadMavenProject(final File pomFile, ProjectActionContext context, RunConfig runConf) {
+        if (context == null) {
+            return getMavenProject(pomFile, true);
+        } else {
+            return loadOriginalMavenProject(pomFile, context, runConf);
+        }
+    }
+    
     public static MavenExecutionResult getExecutionResult(MavenProject project) {
         return (MavenExecutionResult) project.getContextValue(CONTEXT_EXECUTION_RESULT);
     }
@@ -137,6 +148,10 @@ public final class MavenProjectCache {
             + "Please file a bug report with details about your project and the IDE's log file.\n\n"
     })
     private static @NonNull MavenProject loadOriginalMavenProject(final File pomFile) {
+        return loadOriginalMavenProject(pomFile, null, null);
+    }
+    
+    private static @NonNull MavenProject loadOriginalMavenProject(final File pomFile, ProjectActionContext ctx, RunConfig runConf) {
         long startLoading = System.currentTimeMillis();
         MavenEmbedder projectEmbedder = EmbedderFactory.getProjectEmbedder();
         MavenProject newproject = null;
@@ -147,7 +162,16 @@ public final class MavenProjectCache {
         }
         AuxiliaryConfiguration aux = new M2AuxilaryConfigImpl(projectDir, false);
         ActiveConfigurationProvider config = new ActiveConfigurationProvider(projectDir, aux);
-        M2Configuration active = config.getActiveConfiguration();
+        M2Configuration active;
+        
+        active = config.getActiveConfiguration();
+        if (ctx != null && ctx.getConfiguration() != null) {
+            ProjectConfiguration cfg = ctx.getConfiguration();
+            if (cfg instanceof M2Configuration) {
+                active = (M2Configuration)cfg;
+            }
+        }
+        
         MavenExecutionResult res = null;
         try {
             List<String> mavenConfigOpts = Collections.emptyList();
@@ -173,6 +197,12 @@ public final class MavenProjectCache {
                 } else if (opt.startsWith("--activate-profiles=")) {
                     addActiveProfiles.accept(opt, "--activate-profiles=");
                 }
+            }
+            if (runConf != null) {
+                req.addActiveProfiles(runConf.getActivatedProfiles());
+            }
+            if (ctx != null && ctx.getProfiles() != null) {
+                req.addActiveProfiles(new ArrayList<>(ctx.getProfiles()));
             }
 
             req.setPom(pomFile);
@@ -208,6 +238,17 @@ public final class MavenProjectCache {
                 }
             }
             uprops.putAll(createUserPropsForProjectLoading(active.getProperties()));
+            if (ctx != null && ctx.getProperties() != null) {
+                for (String k : ctx.getProperties().keySet()) {
+                    uprops.setProperty(k, ctx.getProperties().get(k));
+                }
+            }
+            if (runConf != null && runConf.getProperties() != null) {
+                Map<? extends String, ? extends String> props = runConf.getProperties();
+                for (String k : props.keySet()) {
+                    uprops.setProperty(k, props.get(k));
+                }
+            }
             req.setUserProperties(uprops);
             res = projectEmbedder.readProjectWithDependencies(req, true);
             newproject = res.getProject();

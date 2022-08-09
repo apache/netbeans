@@ -18,8 +18,14 @@
  */
 package org.netbeans.modules.maven.queries;
 
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,10 +34,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusContainerException;
 import org.netbeans.api.project.Project;
@@ -98,12 +106,6 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
     
     static String mavenScope(Scope s) {
         return mavenScopes.getOrDefault(s, "runtime");
-    }
-    
-    @Override
-    public ArtifactSpec getProjectArtifact() {
-        init();
-        return mavenToArtifactSpec(nbMavenProject.getMavenProject().getArtifact());
     }
     
     private ArtifactSpec mavenToArtifactSpec(Artifact a) {

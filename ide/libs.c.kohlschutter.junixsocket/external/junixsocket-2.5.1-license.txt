@@ -1,9 +1,10 @@
-Name: Java Native Access
-Version: 5.9.0
+Name: junixsocket
 License: Apache-2.0
-Description: Dynamically access native libraries from Java without JNI.
-Origin: Java Native Access
-URL: https://github.com/java-native-access/jna
+Description: junixsocket is a Java/JNI library that allows the use of Unix Domain Sockets (AF_UNIX sockets) from Java.
+Origin: https://github.com/kohlschutter/junixsocket/
+Version: 2.5.1
+Files: junixsocket-common-2.5.1.jar, junixsocket-native-common-2.5.1.jar
+
 
                                  Apache License
                            Version 2.0, January 2004

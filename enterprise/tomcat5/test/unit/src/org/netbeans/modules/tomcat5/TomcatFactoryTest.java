@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.tomcat5;
 
+import java.util.regex.Pattern;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 
 /**
  *
@@ -33,4 +35,34 @@ public class TomcatFactoryTest extends NbTestCase {
     public void testOldCreate50MethodForAutoupdateModule() {
         assertNotNull(TomcatFactory.create50());
     }
+    
+    public void testTomEEtype() {
+        
+        Pattern TOMEE_JAR_PATTERN = Pattern.compile("tomee-common-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+        Pattern TOMEE_JAXRS_JAR_PATTERN = Pattern.compile("jettison-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+        Pattern TOMEE_WEBPROFILE_JAR_PATTERN = Pattern.compile("openejb-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+        Pattern TOMEE_MICROPROFILE_JAR_PATTERN = Pattern.compile("microprofile-config-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+        Pattern TOMEE_PLUS_JAR_PATTERN = Pattern.compile("activemq-protobuf-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+        Pattern TOMEE_PLUME_JAR_PATTERN = Pattern.compile("eclipselink-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+
+        TomcatManager.TomEEType type = TomcatManager.TomEEType.TOMEE_WEBPROFILE;
+        String file = "activemq-protobuf-1.1.jar";
+        
+        if (TOMEE_PLUME_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_PLUME;
+        } else if (TOMEE_PLUS_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_PLUS;
+        } else if (TOMEE_MICROPROFILE_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_MICROPROFILE;
+        } else if (TOMEE_WEBPROFILE_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_WEBPROFILE;
+        } else if (TOMEE_JAXRS_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_JAXRS;
+        }
+        
+        assertEquals(TomcatManager.TomEEType.TOMEE_PLUS, type);
+        assertNotSame(TomcatManager.TomEEType.TOMEE_MICROPROFILE, type);
+        
+    }
+    
 }

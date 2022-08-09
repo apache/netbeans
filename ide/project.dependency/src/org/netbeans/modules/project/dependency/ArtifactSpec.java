@@ -123,6 +123,7 @@ public final class ArtifactSpec<T> {
         hash = 79 * hash + Objects.hashCode(this.artifactId);
         hash = 79 * hash + Objects.hashCode(this.versionSpec);
         hash = 79 * hash + Objects.hashCode(this.classifier);
+        hash = 79 * hash + Objects.hashCode(this.location);
         return hash;
     }
 
@@ -151,6 +152,9 @@ public final class ArtifactSpec<T> {
             return false;
         }
         if (!Objects.equals(this.classifier, other.classifier)) {
+            return false;
+        }
+        if (!Objects.equals(this.location, other.location)) {
             return false;
         }
         return this.kind == other.kind;

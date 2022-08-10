@@ -17,6 +17,25 @@
 -->
 
 <actions>
+    <action>
+        <actionName>native-build</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <!--
+        <packagings>
+            <packaging>jar</packaging>
+            <packaging>native-image</packaging>
+        </packagings>
+        -->
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <properties>
+            <packaging>native-image</packaging>
+        </properties>
+    </action>
+    
     <profiles>
         <profile>
             <id>micronaut-auto</id>

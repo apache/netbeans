@@ -80,30 +80,10 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             throw new IllegalArgumentException("Expected 3 parameters: resource, compartment, knowledgebase");
         }
         
-        FileObject f = null;
-        String s = "";
-        if (arguments.get(0) instanceof JsonPrimitive) {
-            s = ((JsonPrimitive)arguments.get(0)).getAsString();
-            try {
-                URI uri = new URI(s);
-                f = URLMapper.findFileObject(uri.toURL());
-            } catch (URISyntaxException | MalformedURLException ex) {
-                f = FileUtil.toFileObject(new File(s));
-            }
-        } else {
-            // accept something that looks like vscode.Uri structure
-            JsonObject executeOn = gson.fromJson(gson.toJson(arguments.get(0)), JsonObject.class);
-            if (executeOn.has("fsPath")) {
-                s = executeOn.get("fsPath").getAsString();
-                f = FileUtil.toFileObject(new File(s));
-            }
-        }
-        if (f == null) {
-            throw new IllegalArgumentException("Invalid path specified: " + s);
-        }
+        FileObject f = Utils.extractFileObject(arguments.get(0), gson);
         Project p = FileOwnerQuery.getOwner(f);
         if (p == null) {
-            throw new IllegalArgumentException("Not part of a project " + s);
+            throw new IllegalArgumentException("Not part of a project " + f);
         }
         ProjectVulnerability v = p.getLookup().lookup(ProjectVulnerability.class);
         ProjectInformation pi = ProjectUtils.getInformation(p);

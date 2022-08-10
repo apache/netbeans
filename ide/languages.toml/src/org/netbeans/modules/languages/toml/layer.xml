@@ -40,6 +40,11 @@
                         </folder>
                     </folder>
                 </folder>
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-languages-toml-preferences.xml" url="preferences.xml"/>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>
@@ -49,20 +54,20 @@
                 <file name="x-toml" url="TomlExample.toml"/>
             </folder>
         </folder>
-        <!--folder name="Editor">
+        <folder name="Editor">
             <folder name="Formatting">
                 <folder name="text">
-                    <folder name="x-yaml">
+                    <folder name="x-toml">
                         <file name="TabsAndIndents.instance">
                             <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
                             <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
-                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/yaml/YamlExample.html"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/toml/TomlExample.toml"/>
                             <attr name="position" intvalue="100"/>
                         </file>
                     </folder>
                 </folder>
             </folder>
-        </folder-->
+        </folder>
     </folder>
     <!--folder name="Templates">
         <folder name="Other">

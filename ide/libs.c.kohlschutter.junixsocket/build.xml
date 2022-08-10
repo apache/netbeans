@@ -21,4 +21,23 @@
 -->
 <project name="ide/libs.c.kohlschutter.junixsocket" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="gen-sigtest">
+        <!--
+        Workaround for sigtest generation failures. Problems:
+
+        - RuntimeInvisibleTypeAnnotations are not parsed properly
+          (the org.eclipse.jdt.annotation.NonNull annotation on the return
+          and parameter types causes this code to be executed)
+        - AFUNIXServerSocket::newImpl and
+          AFDatagramSocket::getAncillaryDataSupport return non-public types from
+          protected methods
+        - Protected constructor org.newsclub.net.unix.AFSocketAddress.init
+          (java.lang.Class<org.newsclub.net.unix.SentinelSocketAddress>,int)
+          uses a non-public type as parameter
+        -->
+        <antcall target="projectized.gen-sigtest">
+            <param name="sigtest.gen.fail.on.error" value="false"/>
+        </antcall>
+    </target>
 </project>

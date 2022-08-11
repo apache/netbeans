@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.spi.actions;
 
 
+import java.io.File;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import java.io.IOException;
 import java.io.InputStream;
@@ -401,17 +402,37 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
         @Override
         public ResourceBundle getTranslations() {
             if (resourceBundle == null) {
-                if (resource.getProtocol().equals("nbres")) {
-                    String p = resource.getPath();
+                String p = null;
+                
+                if (resource.getProtocol().equals("nbres")) { // NOI18N
+                    p = resource.getPath();
+                } else {
+                    // This branch is mainly active during tests, as tests and code is expanded on the classpath
+                    String[] cp = System.getProperty("java.class.path", "").split(File.pathSeparator); // NOI18N
+                    String rs = resource.toString();
+                    for (String pref : cp) {
+                        String s = new File(pref).toURI().toString();
+                        if (rs.startsWith(s)) {
+                            String frag = rs.substring(s.length());
+                            if (frag.startsWith("!")) {
+                                frag = frag.substring(1);
+                            }
+                            p = frag;
+                            break;
+                        }
+                    }
+                }
+                if (p != null) {
                     int slash = p.lastIndexOf('/');
-                    p = p.substring(0, slash + 1) + "Bundle";
-                    
+                    p = p.substring(0, slash + 1) + "Bundle"; // NOI18N
                     try {
                         resourceBundle = NbBundle.getBundle(p, Locale.getDefault(), Lookup.getDefault().lookup(ClassLoader.class));
                     } catch (MissingResourceException ex) {
-                        // fallback
-                        resourceBundle = NbBundle.getBundle(M2Configuration.class);
                     }
+                }
+                if (resourceBundle == null) {
+                    // fallback
+                    resourceBundle = NbBundle.getBundle(M2Configuration.class);
                 }
             }
             return resourceBundle;

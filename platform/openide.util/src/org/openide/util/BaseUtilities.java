@@ -60,7 +60,7 @@ public abstract class BaseUtilities {
     public static final int OS_WINNT = 1/* << 0*/;
 
     /** Operating system is Solaris. */
-    public static final int OS_SOLARIS = OS_WINNT << 1;
+    public static final int OS_SOLARIS = OS_WINNT << 3;
 
     /** Operating system is Linux. */
     public static final int OS_LINUX = OS_SOLARIS << 1;

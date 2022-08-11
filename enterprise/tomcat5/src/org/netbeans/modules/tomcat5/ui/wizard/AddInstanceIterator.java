@@ -224,14 +224,14 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
                                 FileUtil.copyFile(
                                     FileUtil.toFileObject(new File(bundledHome, "bin/" + CATALINA)), // NOI18N
                                     FileUtil.toFileObject(new File(homeDir, "bin")),    // NOI18N
-                                    CATALINA.substring(0, CATALINA.indexOf('.'))    // NOI18N
+                                    CATALINA.substring(0, CATALINA.indexOf("."))    // NOI18N
                                 );
                             }
                             if (!setclasspathOK) {
                                 FileUtil.copyFile(
                                     FileUtil.toFileObject(new File(bundledHome, "bin/" + SETCLASSPATH)), // NOI18N
                                     FileUtil.toFileObject(new File(homeDir, "bin")),        // NOI18N
-                                    SETCLASSPATH.substring(0, SETCLASSPATH.indexOf('.'))    // NOI18N
+                                    SETCLASSPATH.substring(0, SETCLASSPATH.indexOf("."))    // NOI18N
                                 );
                             }
                         }

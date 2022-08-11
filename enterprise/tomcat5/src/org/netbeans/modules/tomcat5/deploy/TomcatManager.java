@@ -956,7 +956,7 @@ public class TomcatManager implements DeploymentManager {
             };
             for (int i = 0; i < files.length; i++) {
                 // get folder from, to, name and ext
-                int slash = files[i].lastIndexOf ('/');
+                int slash = files[i].lastIndexOf ("/");
                 String sfolder = files[i].substring (0, slash);
                 File fromDir = new File (homeDir, sfolder); // NOI18N
                 File toDir = new File (baseDir, sfolder); // NOI18N

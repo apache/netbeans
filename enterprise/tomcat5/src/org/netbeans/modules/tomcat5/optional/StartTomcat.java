@@ -864,12 +864,12 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                 } else {
                     if (idx != -1) { // common/endorsed/*.jar is present, remove it
                         String strBefore = commonLoader.substring(0, idx);
-                        int commaIdx = strBefore.lastIndexOf(',');
+                        int commaIdx = strBefore.lastIndexOf(",");
                         StringBuilder sb = new StringBuilder(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
                         String strAfter = commonLoader.substring(idx + COMMON_ENDORSED.length());
                         if (commaIdx == -1) {
                             // we have to cut off the trailing comman after the endorsed lib
-                            int trailingCommaIdx = strAfter.indexOf(',');
+                            int trailingCommaIdx = strAfter.indexOf(",");
                             if (trailingCommaIdx != -1) {
                                 strAfter = strAfter.substring(trailingCommaIdx + 1);
                             }

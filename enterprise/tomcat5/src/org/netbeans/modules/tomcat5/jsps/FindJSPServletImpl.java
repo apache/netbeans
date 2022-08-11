@@ -79,7 +79,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
             path = path.replace('.', '/') + ".java";
         else //.jsp*/
         String path = null;
-        String extension = jspResourcePath.substring(jspResourcePath.lastIndexOf('.'));
+        String extension = jspResourcePath.substring(jspResourcePath.lastIndexOf("."));
         if (".jsp".equals(extension)) { // NOI18N
             path = getServletPackageName(jspResourcePath).replace('.', '/') + '/' +
                    getServletClassName(jspResourcePath) + ".java";
@@ -94,7 +94,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
     // JspUtil and JspCompilationContext
     public String getServletPackageName(String jspUri) {
         String jspBasePackageName = "org/apache/jsp";//NOI18N
-        int iSep = jspUri.lastIndexOf('/');
+        int iSep = jspUri.lastIndexOf("/");
         String packageName = (iSep > 0) ? jspUri.substring(0, iSep) : "";//NOI18N
         if (packageName.length() == 0) {
             return jspBasePackageName;
@@ -106,7 +106,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
     // After Apache code donation, should use org.apache.jasper utilities in
     // JspUtil and JspCompilationContext
     public String getServletClassName(String jspUri) {
-        int iSep = jspUri.lastIndexOf('/') + 1;
+        int iSep = jspUri.lastIndexOf("/") + 1;
         String className = jspUri.substring(iSep);
         StringBuilder modClassName = new StringBuilder("");//NOI18N
         for (int i = 0; i < className.length(); i++) {

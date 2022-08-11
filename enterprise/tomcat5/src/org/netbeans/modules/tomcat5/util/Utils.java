@@ -80,7 +80,7 @@ public final class Utils {
                 }
                 Map<String, List<String>> headerFileds = new HashMap();
                 while ((text = in.readLine()) != null && text.length() > 0) {
-                    int colon = text.indexOf(':');
+                    int colon = text.indexOf(":");
                     if (colon <= 0) {
                         return false; // not an http header
                     }

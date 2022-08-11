@@ -734,7 +734,7 @@ public final class CustomizerSupport {
                 return true;
             }
             String name = f.getName();
-            int index = name.lastIndexOf('.');   //NOI18N
+            int index = name.lastIndexOf(".");   //NOI18N
             if (index <= 0 || index==name.length()-1) {
                 return false;
             }

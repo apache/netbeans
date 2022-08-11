@@ -142,7 +142,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                     ctxPath = "/"+wmfile.getName ();    // NOI18N
                 }
                 else {
-                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ('.'));    // NOI18N
+                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ("."));    // NOI18N
                 }
                 tmId = new TomcatModule (t, ctxPath); // NOI18N
                 command = "deploy?update=true&path="+encodePath(ctxPath)+"&war="+docBase; // NOI18N
@@ -165,7 +165,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                     ctxPath = "/"+wmfile.getName ();    // NOI18N
                 }
                 else {
-                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ('.'));    // NOI18N
+                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ("."));    // NOI18N
                 }
                 ctxPath = ctx.getAttributeValue ("path");
                 tmId = new TomcatModule (t, ctxPath); // NOI18N

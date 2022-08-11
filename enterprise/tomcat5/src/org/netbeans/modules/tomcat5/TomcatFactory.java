@@ -227,7 +227,7 @@ public final class TomcatFactory implements DeploymentFactory {
                 return version.substring(idx + 1);
             }
             throw new IllegalStateException("Cannot identify the version of the server."); // NOI18N
-        } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (MalformedURLException | ReflectiveOperationException e) {
             throw new IllegalStateException(e);
         }
     }

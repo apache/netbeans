@@ -130,19 +130,15 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
             if (listeners == null) {
                 attach = true;
                 listeners = new ArrayList<>();
+                wL = WeakListeners.propertyChange(this, mavenProject);
+                mavenProject.addPropertyChangeListener(wL);
             }
             listeners.add(l);
         }
-        if (!attach) {
-            return;
-        }
-        wL = WeakListeners.propertyChange(this, mavenProject);
-        mavenProject.addPropertyChangeListener(wL);
     }
 
     @Override
     public void removeChangeListener(ChangeListener l) {
-        boolean detach = false;
         synchronized (this) {
             if (listeners == null) {
                 return;
@@ -150,6 +146,7 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
             listeners.remove(l);
             if (listeners.isEmpty()) {
                 mavenProject.removePropertyChangeListener(wL);
+                listeners = null;
             }
         }
     }

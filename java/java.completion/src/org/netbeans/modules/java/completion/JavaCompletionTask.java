@@ -3380,6 +3380,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addAllStaticMemberNames(env);
         }
         final TypeElement enclClass = scope.getEnclosingClass();
+        List<ExecutableElement> methodsIn = null;
+
         for (Element e : locals) {
             switch (simplifyElementKind(e.getKind())) {
                 case ENUM_CONSTANT:
@@ -3399,8 +3401,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     break;
                 case METHOD:
+                    if (methodsIn == null) {
+                        methodsIn = ElementFilter.methodsIn(locals);
+                    }
                     ExecutableType et = (ExecutableType) asMemberOf(e, enclClass != null ? enclClass.asType() : null, types);
-                    if (e.getEnclosingElement() != enclClass && conflictsWithLocal(e.getSimpleName(), enclClass, locals)) {
+                    if (e.getEnclosingElement() != enclClass && conflictsWithLocalMethods(e.getSimpleName(), enclClass, methodsIn)) {
                         results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon()));
                     } else {
                         results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false));
@@ -6216,9 +6221,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         return false;
     }
-    
-    private boolean conflictsWithLocal(Name name, TypeElement enclClass, Iterable<? extends Element> locals) {
-        for (ExecutableElement local : ElementFilter.methodsIn(locals)) {
+
+    private static boolean conflictsWithLocalMethods(Name name, TypeElement enclClass, List<ExecutableElement> methodsIn) {
+        for (ExecutableElement local : methodsIn) {
             if (local.getEnclosingElement() == enclClass && name.contentEquals(local.getSimpleName())) {
                 return true;
             }

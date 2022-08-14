@@ -819,6 +819,26 @@ public class DetectorTest extends TestBase {
                     "[UNINDENTED_TEXT_BLOCK], 6:13-6:29");
     }
 
+    public void testVar() throws Exception {
+        setSourceLevel("11");
+        setShowPrependedText(true);
+        performTest("Var",
+                    "public class Var {\n" +
+                    "    private void test(java.util.List<String> l) {\n" +
+                    "        var v1 = l.iterator();\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:16",
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 1:17-1:21",
+                    "[PUBLIC, INTERFACE], 1:32-1:36",
+                    "[PUBLIC, CLASS], 1:37-1:43",
+                    "[PARAMETER, DECLARATION], 1:45-1:46",
+                    "[LOCAL_VARIABLE, UNUSED, DECLARATION], 2:12-2:14",
+                    "[ : Iterator<String>], 2:14-2:15",
+                    "[PARAMETER], 2:17-2:18",
+                    "[ABSTRACT, PUBLIC, METHOD], 2:19-2:27]");
+    }
+
     private void performTest(String fileName) throws Exception {
         performTest(fileName, new Performer() {
             public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {

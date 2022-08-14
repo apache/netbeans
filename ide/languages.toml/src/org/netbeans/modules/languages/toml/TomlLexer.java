@@ -86,7 +86,7 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
                 case TableKeyEnd:
                 case ArrayTableKeyStart:
                 case ArrayTableKeyEnd:
-                    return token(OPERATOR);
+                    return token(TABLE_MARK);
                 case UnquotedKey:
                     return token(KEY);
                 case Comment:

@@ -95,6 +95,12 @@ public final class Utilities {
     /** Operating system is Windows NT. */
     public static final int OS_WINNT = BaseUtilities.OS_WINNT;
 
+    /** Operating system is Windows 95. */
+    public static final int OS_WIN95 = BaseUtilities.OS_WIN95;
+
+    /** Operating system is Windows 98. */
+    public static final int OS_WIN98 = BaseUtilities.OS_WIN98;
+
     /** Operating system is Solaris. */
     public static final int OS_SOLARIS = BaseUtilities.OS_SOLARIS;
 

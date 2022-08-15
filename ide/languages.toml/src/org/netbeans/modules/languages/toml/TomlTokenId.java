@@ -20,6 +20,7 @@ package org.netbeans.modules.languages.toml;
 
 import java.util.Collection;
 import java.util.EnumSet;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -44,7 +45,7 @@ public enum TomlTokenId implements TokenId {
     STRING("string"),
     ML_STRING_START("string"),
     ML_STRING_END("string"),
-    ESCAPE_SEQUENCE("string_escape"),
+    ESCAPE_SEQUENCE("string-escape"),
     WHITESPACE("whitespace");
 
     private final String category;
@@ -75,6 +76,7 @@ public enum TomlTokenId implements TokenId {
         }
     }.language();
 
+    @MimeRegistration(mimeType = TOML_MIME_TYPE, service = Language.class)
     public static final Language<?> language() {
         return LANGUAGE;
     }

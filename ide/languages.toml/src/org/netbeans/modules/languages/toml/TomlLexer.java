@@ -34,19 +34,14 @@ import static org.netbeans.modules.languages.toml.TomlTokenId.*;
 public final class TomlLexer implements Lexer<TomlTokenId> {
 
     private final TokenFactory<TomlTokenId> tokenFactory;
-    private org.tomlj.internal.TomlLexer lexer;
+    private final org.tomlj.internal.TomlLexer lexer;
 
     public TomlLexer(LexerRestartInfo<TomlTokenId> info) {
         this.tokenFactory = info.tokenFactory();
-        try {
-            this.lexer = new org.tomlj.internal.TomlLexer(new LexerInputCharStream(info.input()));
-            if (info.state() != null) {
-                ((LexerState) info.state()).restore(lexer);
-            }
-        } catch (Throwable ex) {
-            ex.printStackTrace();
+        this.lexer = new org.tomlj.internal.TomlLexer(new LexerInputCharStream(info.input()));
+        if (info.state() != null) {
+            ((LexerState) info.state()).restore(lexer);
         }
-
     }
 
     @Override
@@ -123,7 +118,7 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
                 default:
                     return token(ERROR);
             }
-        } catch (Throwable ex) {
+        } catch (IndexOutOfBoundsException ex) {
             return token(ERROR);
         }
     }

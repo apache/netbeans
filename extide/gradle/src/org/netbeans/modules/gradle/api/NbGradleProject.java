@@ -176,6 +176,11 @@ public final class NbGradleProject {
         public void passivate(NbGradleProject watcher) {
             watcher.detachResourceWatchers();
         }
+
+        @Override
+        public GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+            return new GradleReport(errorClass, location, line, message, causedBy);
+        }
     }
 
     private NbGradleProject(NbGradleProjectImpl project) {

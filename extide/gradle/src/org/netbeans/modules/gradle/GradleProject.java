@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
@@ -125,9 +126,16 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         Path scriptPath = gf.getBuildScript() != null ? gf.getBuildScript().toPath() : null;
         List<GradleReport> reports = new ArrayList<>();
         for (String s : reason) {
-            reports.add(GradleReport.simple(scriptPath, s));
+            reports.add(createGradleReport(scriptPath, s));
         }
         return invalidate(reports.toArray(new GradleReport[reports.size()]));
     }
 
+    public static GradleReport createGradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+        return NbGradleProjectImpl.ACCESSOR.createReport(errorClass, location, line, message, causedBy);
+    }
+
+    public static GradleReport createGradleReport(Path script, String message) {
+        return createGradleReport(null, Objects.toString(script), -1, message, null);
+    }
 }

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.util.Lookup;

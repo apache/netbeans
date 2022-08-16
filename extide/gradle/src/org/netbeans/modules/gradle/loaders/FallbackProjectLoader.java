@@ -58,7 +58,7 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
         for (ProjectInfoExtractor extractor : extractors) {
             ProjectInfoExtractor.Result result = extractor.fallback(files);
             for (String s : result.getProblems()) {
-                problems.add(GradleReport.simple(files.getBuildScript().toPath(), s));
+                problems.add(GradleProject.createGradleReport(files.getBuildScript().toPath(), s));
             }
             for (Object extract : result.getExtract()) {
                 infos.put(extract.getClass(), extract);

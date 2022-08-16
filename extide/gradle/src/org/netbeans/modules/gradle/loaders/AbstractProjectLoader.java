@@ -118,7 +118,7 @@ public abstract class AbstractProjectLoader {
             }
         }
         for (String s : problems) {
-            reps.add(GradleReport.simple(gf.getBuildScript().toPath(), s));
+            reps.add(GradleProject.createGradleReport(gf.getBuildScript().toPath(), s));
         }
         return new GradleProject(info.getQuality(), reps, results.values());
 

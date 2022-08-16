@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.38.0
+#Version 8.39.0
 
 CLSS public abstract interface com.sun.source.doctree.AttributeTree
 innr public final static !enum ValueKind

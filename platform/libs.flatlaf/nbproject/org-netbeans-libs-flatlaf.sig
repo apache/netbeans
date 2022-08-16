@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.10
+#Version 1.11
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
@@ -30,6 +30,9 @@ fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY = "JTextFiel
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ALWAYS = "always"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_NEVER = "never"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ONCE = "once"
+fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE = "JSplitPane.expandableSide"
+fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE_LEFT = "left"
+fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE_RIGHT = "right"
 fld public final static java.lang.String SQUARE_SIZE = "JButton.squareSize"
 fld public final static java.lang.String STYLE = "FlatLaf.style"
 fld public final static java.lang.String STYLE_CLASS = "FlatLaf.styleClass"
@@ -72,6 +75,7 @@ fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabb
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_COLOR = "JToggleButton.tab.underlineColor"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_HEIGHT = "JToggleButton.tab.underlineHeight"
+fld public final static java.lang.String TAB_BUTTON_UNDERLINE_PLACEMENT = "JToggleButton.tab.underlinePlacement"
 fld public final static java.lang.String TEXT_FIELD_CLEAR_CALLBACK = "JTextField.clearCallback"
 fld public final static java.lang.String TEXT_FIELD_LEADING_COMPONENT = "JTextField.leadingComponent"
 fld public final static java.lang.String TEXT_FIELD_LEADING_ICON = "JTextField.leadingIcon"
@@ -216,7 +220,7 @@ meth public void setExtraDefaults(java.util.Map<java.lang.String,java.lang.Strin
 meth public void uninitialize()
 meth public void unregisterUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,globalExtraDefaults,mnemonicHandler,oldPopupFactory,postInitialization,subMenuUsabilityHelper,uiDefaultsGetters,updateUIPending
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,globalExtraDefaults,mnemonicHandler,oldPopupFactory,postInitialization,subMenuUsabilityHelperInstalled,uiDefaultsGetters,updateUIPending
 hcls ActiveFont,FlatUIDefaults,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
@@ -662,6 +666,7 @@ CLSS public com.formdev.flatlaf.util.SystemInfo
 cons public init()
 fld public final static boolean isAARCH64
 fld public final static boolean isJava_11_orLater
+fld public final static boolean isJava_12_orLater
 fld public final static boolean isJava_15_orLater
 fld public final static boolean isJava_17_orLater
 fld public final static boolean isJava_18_orLater
@@ -670,6 +675,7 @@ fld public final static boolean isJetBrainsJVM
 fld public final static boolean isJetBrainsJVM_11_orLater
 fld public final static boolean isKDE
 fld public final static boolean isLinux
+fld public final static boolean isMacFullWindowContentSupported
 fld public final static boolean isMacOS
 fld public final static boolean isMacOS_10_11_ElCapitan_orLater
 fld public final static boolean isMacOS_10_14_Mojave_orLater

@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleProblemReport;
 import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.spi.GradleFiles;
@@ -46,6 +47,7 @@ public final class GradleProject implements Serializable, Lookup.Provider {
     final Set<GradleReport> problems;
     final Quality quality;
     final long evaluationTime = System.currentTimeMillis();
+    private final InstanceContent lookupContent;
     final Lookup lookup;
     final GradleBaseProject baseProject;
 
@@ -57,11 +59,12 @@ public final class GradleProject implements Serializable, Lookup.Provider {
             if (prob != null) probs.add(prob);
         }
         this.problems = probs;
-        InstanceContent ic = new InstanceContent();
+        lookupContent = new InstanceContent();
         for (Object i : infos) {
-            ic.add(i);
+            lookupContent.add(i);
         }
-        lookup = new AbstractLookup(ic);
+        lookupContent.add(createProblemReport(probs));
+        lookup = new AbstractLookup(lookupContent);
         baseProject = lookup.lookup(GradleBaseProject.class);
         assert baseProject != null : "GradleProject always shall have a GradleBaseProject in it's lookup!";
     }
@@ -73,9 +76,15 @@ public final class GradleProject implements Serializable, Lookup.Provider {
             if (prob != null) probs.add(prob);
         }
         this.problems = probs;
-        lookup = origin.lookup;
-        baseProject = lookup.lookup(GradleBaseProject.class);
+
+        GradleProblemReport pr = origin.lookup.lookup(GradleProblemReport.class);
+        baseProject = origin.lookup.lookup(GradleBaseProject.class);
         assert baseProject != null : "GradleProject always shall have a GradleBaseProject in it's lookup!";
+
+        lookupContent = origin.lookupContent;
+        lookupContent.remove(pr);
+        lookupContent.add(createProblemReport(probs));
+        lookup = new AbstractLookup(lookupContent);
     }
 
     @Override
@@ -129,6 +138,10 @@ public final class GradleProject implements Serializable, Lookup.Provider {
             reports.add(createGradleReport(scriptPath, s));
         }
         return invalidate(reports.toArray(new GradleReport[reports.size()]));
+    }
+
+    private static GradleProblemReport createProblemReport(Set<GradleReport> reports) {
+        return NbGradleProjectImpl.ACCESSOR.createProblemReport(reports);
     }
 
     public static GradleReport createGradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {

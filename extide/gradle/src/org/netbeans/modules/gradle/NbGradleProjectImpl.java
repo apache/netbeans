@@ -64,6 +64,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleProblemReport;
 import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.spi.project.CacheDirectoryProvider;
@@ -135,6 +136,8 @@ public final class NbGradleProjectImpl implements Project {
         public abstract void passivate(NbGradleProject watcher);
 
         public abstract GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy);
+
+        public abstract GradleProblemReport createProblemReport(Set<GradleReport> reports);
     }
 
     @java.lang.SuppressWarnings("LeakingThisInConstructor")

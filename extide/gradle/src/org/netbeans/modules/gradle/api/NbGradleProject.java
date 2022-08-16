@@ -181,6 +181,11 @@ public final class NbGradleProject {
         public GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
             return new GradleReport(errorClass, location, line, message, causedBy);
         }
+
+        @Override
+        public GradleProblemReport createProblemReport(Set<GradleReport> reports) {
+            return new GradleProblemReport(reports);
+        }
     }
 
     private NbGradleProject(NbGradleProjectImpl project) {

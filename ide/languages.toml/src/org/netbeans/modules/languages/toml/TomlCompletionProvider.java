@@ -57,19 +57,26 @@ public class TomlCompletionProvider implements CompletionProvider {
     private class TomlCompletionQuery extends AsyncCompletionQuery {
 
         @Override
-        protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
+        protected void query(CompletionResultSet resultSet, Document document, int caretOffset) {
             Set<String> candidates = new HashSet<>();
             try {
-                int prefixOfs = keyPrefixOffset(doc, caretOffset);
-                String prefix = doc.getText(prefixOfs, caretOffset - prefixOfs);
-                int lastDot = prefix.lastIndexOf('.');
-                String simplePrefix = lastDot != -1 ? prefix.substring(lastDot + 1) : prefix;
+                AbstractDocument doc = (AbstractDocument) document;
+                doc.readLock();
+                StringBuilder toml;
+                String simplePrefix, prefix;
+                try {
+                    int prefixOfs = keyPrefixOffset(doc, caretOffset);
+                    prefix = doc.getText(prefixOfs, caretOffset - prefixOfs);
+                    int lastDot = prefix.lastIndexOf('.');
+                    simplePrefix = lastDot != -1 ? prefix.substring(lastDot + 1) : prefix;
 
-                StringBuilder toml = new StringBuilder(doc.getLength());
-                //Remove the current prefix for the parser to get better results
-                toml.append(doc.getText(0, prefixOfs));
-                toml.append(doc.getText(caretOffset, doc.getLength() - caretOffset));
-
+                    toml = new StringBuilder(doc.getLength());
+                    //Remove the current prefix for the parser to get better results
+                    toml.append(doc.getText(0, prefixOfs));
+                    toml.append(doc.getText(caretOffset, doc.getLength() - caretOffset));
+                } finally {
+                    doc.readUnlock();
+                }
                 TomlParseResult parse = Toml.parse(toml.toString());
                 for (String key : parse.dottedKeySet()) {
                     String candidate = matchKey(key, prefix);
@@ -108,20 +115,14 @@ public class TomlCompletionProvider implements CompletionProvider {
     private static final Set<TomlTokenId> DOT_OR_KEY = EnumSet.of(TomlTokenId.DOT, TomlTokenId.KEY);
 
     static int keyPrefixOffset(Document doc, int offset) throws BadLocationException {
-        AbstractDocument d = (AbstractDocument) doc;
-        try {
-            d.readLock();
-            TokenHierarchy th = TokenHierarchy.get(doc);
-            TokenSequence<TomlTokenId> ts = th.tokenSequence();
-            ts.move(offset);
+        TokenHierarchy th = TokenHierarchy.get(doc);
+        TokenSequence<TomlTokenId> ts = th.tokenSequence();
+        ts.move(offset);
+        ts.movePrevious();
+        while ((ts.token() != null) && DOT_OR_KEY.contains(ts.token().id())) {
             ts.movePrevious();
-            while ((ts.token() != null) && DOT_OR_KEY.contains(ts.token().id())) {
-                ts.movePrevious();
-            }
-            ts.moveNext();
-            return ts.offset();
-        } finally {
-            d.readUnlock();
         }
+        ts.moveNext();
+        return ts.offset();
     }
 }

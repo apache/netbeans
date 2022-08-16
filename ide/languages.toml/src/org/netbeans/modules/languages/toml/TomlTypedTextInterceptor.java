@@ -22,13 +22,13 @@ import java.util.EnumSet;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 
 /**
@@ -136,10 +136,10 @@ public class TomlTypedTextInterceptor implements TypedTextInterceptor {
     }
 
     private static int quotesInLine(Context context, char quote) throws BadLocationException {
-        BaseDocument doc = (BaseDocument) context.getDocument();
+        LineDocument doc = (LineDocument) context.getDocument();
         int lineStart = LineDocumentUtils.getLineStart(doc, context.getOffset());
         int lineEnd = LineDocumentUtils.getLineEnd(doc, context.getOffset());
-        char[] line = doc.getChars(lineStart, lineEnd - lineStart);
+        char[] line = doc.getText(lineStart, lineEnd - lineStart).toCharArray();
 
         int quotes = 0;
         for (int i = 0; i < line.length; i++) {

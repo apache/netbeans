@@ -31,7 +31,7 @@ import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleDataObject;
-import org.netbeans.modules.gradle.GradleReport;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
 

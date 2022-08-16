@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle;
+package org.netbeans.modules.gradle.api;
 
 import java.io.File;
 import java.nio.file.FileSystemNotFoundException;

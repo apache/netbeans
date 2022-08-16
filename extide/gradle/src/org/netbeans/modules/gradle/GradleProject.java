@@ -44,7 +44,6 @@ import org.openide.util.lookup.InstanceContent;
  */
 public final class GradleProject implements Serializable, Lookup.Provider {
 
-    final Set<GradleReport> problems;
     final Quality quality;
     final long evaluationTime = System.currentTimeMillis();
     private final InstanceContent lookupContent;
@@ -58,7 +57,6 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         for (GradleReport prob : problems) {
             if (prob != null) probs.add(prob);
         }
-        this.problems = probs;
         lookupContent = new InstanceContent();
         for (Object i : infos) {
             lookupContent.add(i);
@@ -75,7 +73,6 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         for (GradleReport prob : problems) {
             if (prob != null) probs.add(prob);
         }
-        this.problems = probs;
 
         GradleProblemReport pr = origin.lookup.lookup(GradleProblemReport.class);
         baseProject = origin.lookup.lookup(GradleBaseProject.class);
@@ -84,7 +81,7 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         lookupContent = origin.lookupContent;
         lookupContent.remove(pr);
         lookupContent.add(createProblemReport(probs));
-        lookup = new AbstractLookup(lookupContent);
+        lookup = origin.lookup;
     }
 
     @Override
@@ -92,8 +89,9 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         return lookup;
     }
 
-    public Set<GradleReport> getProblems() {
-        return Collections.unmodifiableSet(problems);
+    Set<GradleReport> getProblems() {
+        GradleProblemReport pr = getLookup().lookup(GradleProblemReport.class);
+        return pr.getProblems();
     }
 
     public Quality getQuality() {

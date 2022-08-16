@@ -43,6 +43,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -183,10 +184,10 @@ public class NotifyDescriptor extends Object {
     private static final int MAXIMUM_TEXT_WIDTH = 100;
 
     /** preferred width of text area */
-    private static final int SIZE_PREFERRED_WIDTH = 300;
+    private static final int SIZE_PREFERRED_WIDTH = 350;
 
     /** preferred height of text area */
-    private static final int SIZE_PREFERRED_HEIGHT = 100;
+    private static final int SIZE_PREFERRED_HEIGHT = 150;
     private Object message;
 
     /** The message type. */
@@ -342,7 +343,6 @@ public class NotifyDescriptor extends Object {
         if (newMessage instanceof String) {
             // bugfix #25457, use JTextArea for word-wrapping
             JTextArea area = new JTextArea((String) newMessage);
-            area.setPreferredSize(new Dimension(SIZE_PREFERRED_WIDTH, SIZE_PREFERRED_HEIGHT));
             area.setBackground(UIManager.getColor("Label.background")); // NOI18N
             area.setBorder(BorderFactory.createEmptyBorder());
             area.setLineWrap(true);
@@ -351,7 +351,10 @@ public class NotifyDescriptor extends Object {
             area.setFocusable(true);
             area.getAccessibleContext().setAccessibleName(NbBundle.getMessage(NotifyDescriptor.class, "ACN_NotifyDescriptor_MessageJTextArea")); // NOI18N
             area.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(NotifyDescriptor.class, "ACD_NotifyDescriptor_MessageJTextArea")); // NOI18N
-            newMessage = area;
+            JScrollPane sp = new JScrollPane(area);
+            sp.setBorder(BorderFactory.createEmptyBorder());
+            sp.setPreferredSize(new Dimension(SIZE_PREFERRED_WIDTH, SIZE_PREFERRED_HEIGHT));
+            newMessage = sp;
         }
 
         message = newMessage;

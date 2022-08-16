@@ -267,16 +267,18 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     /**
-     * Returns {@code true} if all configurations are resolved.
-     * @return true - if all configurations are resolved.
+     * Returns {@code true} if all resolvable configurations are resolved.
+     * @return true - if all resolvable configurations are resolved.
      */
     public boolean isResolved() {
         if (resolved == null) {
             boolean b = true;
             for (GradleConfiguration value : configurations.values()) {
-                b &= value.isResolved();
-                if (!b) {
-                    break;
+                if (value.isCanBeResolved()) {
+                    b &= value.isResolved();
+                    if (!b) {
+                        break;
+                    }
                 }
             }
             resolved = b;

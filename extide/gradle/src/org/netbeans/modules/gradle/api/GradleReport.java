@@ -42,7 +42,7 @@ public final class GradleReport {
     private final String message;
     private final GradleReport causedBy;
 
-    public GradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+    GradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
         this.errorClass = errorClass;
         this.location = location;
         this.line = line;
@@ -50,14 +50,6 @@ public final class GradleReport {
         this.causedBy = causedBy;
     }
     
-    public static GradleReport simple(Path script, String message) {
-        return new GradleReport(null, Objects.toString(script), -1, message, null);
-    }
-
-    public GradleReport(Path scriptLocation, String message, GradleReport causedBy) {
-        this(null, scriptLocation.toString(), -1, message, causedBy);
-    }
-
     public @CheckForNull String getLocation() {
         return location;
     }

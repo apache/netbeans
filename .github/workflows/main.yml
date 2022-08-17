@@ -21,10 +21,10 @@ on:
   push:
   pull_request:
 
-# cancel PR workflow run if PR is updated while jobs are still running
-# if this is not a PR run (no github.head_ref defined), it won't be affected
+# cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
+# if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
 concurrency: 
-  group: ${{ github.head_ref || github.run_id }}
+  group: ${{ github.head_ref || github.run_id }}-${{ github.base_ref }}
   cancel-in-progress: true
 
 jobs:

@@ -116,6 +116,10 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public String getDisplayName() {
         return displayName;
     }
+    
+    public boolean isVersionSpecified() {
+        return version != null && !"".equals(version) && !"unspecified".equals(version); // NOI18N
+    }
 
     public String getVersion() {
         return version;
@@ -213,13 +217,23 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     /**
      * Finds a GAV for the given project. Returns {@code null} if the project path
      * is not known (it is not referenced anywhere by this project), or has no known
-     * GAV. The project's own GAV should be always present.
+     * GAV. The project's own GAV should be always present, if defined by the project 
+     * file(s).
      * 
      * @param projectPath Gradle project path
      * @return GAV coordinates, or {@code null}
      * @since 2.27
      */
     public String findProjectGav(@NonNull String projectPath) {
+        if ("".equals(projectPath) || getPath().equals(projectPath)) {
+            String n = getName();
+            String g = getGroup();
+            String v = getVersion();
+            if (n == null || "".equals(n) || g == null || "".equals(g) || v == null || "".equals(v) || "unspecified".equals(v)) {  // NOI18N
+                return null;
+            }
+            return String.format("%s:%s:%s", g, n, v);
+        }
         return projectIds.get(projectPath);
     }
 

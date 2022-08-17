@@ -203,7 +203,7 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             ArtifactSpec part = createProjectArtifact(null, base.getPath(), rootDeps);
             ProjectSpec pspec = ProjectSpec.create(base.getPath(), pf);
             
-            Dependency root = Dependency.create(pspec, part, null, rootDeps, null);
+            Dependency root = Dependency.create(pspec, part, null, rootDeps, project);
             
             return new GradleDependencyResult(project, root);
         }

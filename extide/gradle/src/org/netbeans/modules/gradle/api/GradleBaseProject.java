@@ -229,7 +229,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
             String n = getName();
             String g = getGroup();
             String v = getVersion();
-            if (n == null || "".equals(n) || g == null || "".equals(g) || v == null || "".equals(v) || "unspecified".equals(v)) {  // NOI18N
+            if (n == null || n.isEmpty() || g == null || g.isEmpty() || v == null || v.isEmpty() || "unspecified".equals(v)) {  // NOI18N
                 return null;
             }
             return String.format("%s:%s:%s", g, n, v);

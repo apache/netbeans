@@ -214,7 +214,8 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             if (gav != null) {
                 String[] split = gavSplit(gav);
                 if (split != null) {
-                    boolean snap = split[2].toLowerCase().contains("snapshot-");
+                    String v = split.length > 2 ? split[2] : null;
+                    boolean snap = v == null || v.toLowerCase().contains("snapshot-"); // NOI18N
                     spec = snap ? 
                             ArtifactSpec.createSnapshotSpec(split[0], split[1], null, null, split[2], false, null, info) :
                             ArtifactSpec.createVersionSpec(split[0], split[1], null, null, split[2], false, null, info);

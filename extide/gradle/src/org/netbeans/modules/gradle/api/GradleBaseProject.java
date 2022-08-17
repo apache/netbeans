@@ -53,7 +53,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     String name;
     String group = "";
     String description;
-    String version = "";
+    String version;
     String path;
     String status;
     String parentName;
@@ -335,9 +335,6 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
      *         {@code null} for non-Gradle projects.
      */
     public static GradleBaseProject get(Project project) {
-        if (project == null) {
-            return null;
-        }
         NbGradleProject gp = NbGradleProject.get(project);
         return gp != null ? gp.projectLookup(GradleBaseProject.class) : null;
     }

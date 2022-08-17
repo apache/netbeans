@@ -183,7 +183,7 @@ public final class ArtifactSpec<T> {
     }
     
     public static <V> ArtifactSpec<V> createVersionSpec(
-            @NonNull String groupId, @NonNull String artifactId, 
+            @NullAllowed String groupId, @NonNull String artifactId, 
             @NullAllowed String type, @NullAllowed String classifier, 
             @NonNull String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
         return new ArtifactSpec<V>(VersionKind.REGULAR, groupId, artifactId, versionSpec, type, classifier, optional, localFile, data);

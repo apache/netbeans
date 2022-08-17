@@ -26,6 +26,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -180,6 +181,13 @@ public final class NbGradleProject {
         @Override
         public GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
             return new GradleReport(errorClass, location, line, message, causedBy);
+        }
+
+        @Override
+        public void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems) {
+            baseProject.problems = (problems == null || problems.isEmpty())
+                    ? Collections.emptySet()
+                    : Collections.unmodifiableSet(problems);
         }
     }
 

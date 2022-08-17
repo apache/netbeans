@@ -41,7 +41,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
@@ -133,8 +133,8 @@ public class ProxyAlertProvider implements ProjectProblemsProvider, PropertyChan
     }
     
     private Set<GradleReport> reports() {
-        NbGradleProjectImpl gp = (NbGradleProjectImpl)owner;
-        return gp.getGradleProject().getProblems();
+        GradleBaseProject gbp = GradleBaseProject.get(owner);
+        return gbp.getProblems();
     }
     
     private static final String CLASS_UNKNOWN_HOST = "java.net.UnknownHostException"; // NOI18N

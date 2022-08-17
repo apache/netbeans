@@ -32,8 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -78,18 +77,15 @@ public class GradleHintsProvider {
     }
     
     Map<LineDocument, List<GradleReport>> openReportDocuments(boolean reportNonLocations) {
-        NbGradleProjectImpl gpi = gradleProject.getLookup().lookup(NbGradleProjectImpl.class);
-        if (gpi == null) {
+        GradleBaseProject gbp = GradleBaseProject.get(gradleProject);
+        if (gbp == null) {
             return null;
         }
-        GradleProject gp = gpi.getGradleProject();
-        if (gp == null) {
-            return null;
-        }
-        Set<GradleReport> reports = gp.getProblems();
+        Set<GradleReport> reports = gbp.getProblems();
         Map<String, LineDocument> openedDocs = new HashMap<>();
         Map<LineDocument, List<GradleReport>> documentReports = new HashMap<>();
-        File scriptF = gpi.getGradleFiles().getBuildScript();
+        NbGradleProject gp = NbGradleProject.get(gradleProject);
+        File scriptF = gp.getGradleFiles().getBuildScript();
         for (GradleReport r : reports) {
             String l;
             int line;

@@ -76,6 +76,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     Set<File> outputPaths = Collections.emptySet();
     Map<String, String> projectIds = Collections.emptyMap();
     GradleDependency projectDependencyNode;
+    Set<GradleReport> problems = Collections.emptySet();
 
     transient Boolean resolved = null;
 
@@ -170,6 +171,10 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         return includedBuilds;
     }
 
+    public Set<GradleReport> getProblems() {
+        return problems;
+    }
+    
     /**
      * Returns true if the project directory is the same as the root project's
      * project directory, in short if this project is a root project.

@@ -29,38 +29,42 @@ import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
  *
  * @author sdedic
  */
-public interface ProjectArtifactsImplementation {
+public interface ProjectArtifactsImplementation<Result> {
     /**
-     * Finds project artifact(s) that match the query. 
+     * Finds project artifact(s) that match the query. The implementation should
+     * compute data and store it into implementation-defined Result data structure,
+     * which will be used during subsequent calls.
+     * 
      * @param query the query to answer
-     * @param previous result of previous buildsteps
-     * @param all
+     * @return result structure.
+     */
+    public Result evaluate(ProjectArtifactsQuery.Filter query);
+
+    /**
+     * Returns evaluation order of this Implementation. If the Implementation needs to post-process
+     * 
      * @return 
      */
-    public Result findArtifacts(ProjectArtifactsQuery.Filter query);
-    
-    public interface Result {
-        public Project getProject();
-        
-        /**
-         * @return Reports project artifacts.
-         */
-        public List<ArtifactSpec> getArtifacts();
-
-        /**
-         * If not null, specifies artifacts to be excluded from the final result. For example
-         * a transformation plugin may rename the original artifact so that the original place
-         * is empty.
-         * @return excluded artifacts, or {@code null}.
-         */
-        public Collection<ArtifactSpec> getExcludedArtifacts();
-        
-        public default void addChangeListener(ChangeListener l) {}
-        
-        public default void removeChangeListener(ChangeListener l) {}
-        
-        public default boolean supportsChanges() {
-            return false;
-        }
+    public default int getOrder() {
+        return 10000;
     }
+    
+    public Project findProject(Result r);
+    
+    /**
+     * @return Reports project artifacts.
+     */
+    public List<ArtifactSpec> findArtifacts(Result r);
+    
+    /**
+     * If not null, specifies artifacts to be excluded from the final result. For example
+     * a transformation plugin may rename the original artifact so that the original place
+     * is empty.
+     * @return excluded artifacts, or {@code null}.
+     */
+    public Collection<ArtifactSpec> findExcludedArtifacts(Result r);
+    
+    public void handleChangeListener(Result r, ChangeListener l, boolean add);
+    
+    public boolean computeSupportsChanges(Result r);
 }

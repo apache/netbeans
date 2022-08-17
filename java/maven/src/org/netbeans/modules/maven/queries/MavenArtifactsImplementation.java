@@ -58,7 +58,7 @@ import org.openide.util.WeakListeners;
  * @author sdedic
  */
 @ProjectServiceProvider(service = ProjectArtifactsImplementation.class, projectType = NbMavenProject.TYPE)
-public class MavenArtifactsImplementation implements ProjectArtifactsImplementation {
+public class MavenArtifactsImplementation implements ProjectArtifactsImplementation<MavenArtifactsImplementation.Res> {
     private static final Logger LOG = Logger.getLogger(ProjectArtifactsImplementation.class.getName());
     
     private final Project project;
@@ -66,8 +66,9 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
     public MavenArtifactsImplementation(Project project) {
         this.project = project;
     }
+
     @Override
-    public Result findArtifacts(ProjectArtifactsQuery.Filter query) {
+    public Res evaluate(ProjectArtifactsQuery.Filter query) {
         ProjectActionContext ctx = query.getBuildContext();
         if (ctx != null) {
             if (ctx.getProjectAction() != null) {
@@ -98,6 +99,35 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
             }
         }
         return new Res(project, query);
+    }
+
+    @Override
+    public Project findProject(Res r) {
+        return r.getProject();
+    }
+
+    @Override
+    public List<ArtifactSpec> findArtifacts(Res r) {
+        return r.getArtifacts();
+    }
+
+    @Override
+    public Collection<ArtifactSpec> findExcludedArtifacts(Res r) {
+        return r.getExcludedArtifacts();
+    }
+
+    @Override
+    public void handleChangeListener(Res r, ChangeListener l, boolean add) {
+        if (add) {
+            r.addChangeListener(l);
+        } else {
+            r.removeChangeListener(l);
+        }
+    }
+
+    @Override
+    public boolean computeSupportsChanges(Res r) {
+        return r.supportsChanges();
     }
     
     static class MavenQuery {
@@ -208,7 +238,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
     
     private static final RequestProcessor MAVEN_ARTIFACTS_RP = new RequestProcessor(MavenArtifactsImplementation.class);
 
-    static class Res implements ProjectArtifactsImplementation.Result, PropertyChangeListener {
+    static class Res implements PropertyChangeListener {
         private final Project project;
         private final ProjectArtifactsQuery.Filter filter;
         
@@ -224,12 +254,10 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
             this.filter = filter;
         }
         
-        @Override
         public Project getProject() {
             return project;
         }
 
-        @Override
         public List<ArtifactSpec> getArtifacts() {
             synchronized (this) {
                 if (artifacts != null) {
@@ -269,12 +297,10 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
             }
         }
         
-        @Override
         public Collection<ArtifactSpec> getExcludedArtifacts() {
             return null;
         }
 
-        @Override
         public void addChangeListener(ChangeListener l) {
             synchronized (this) {
                 if (listeners == null) {
@@ -285,7 +311,6 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
             }
         }
 
-        @Override
         public void removeChangeListener(ChangeListener l) {
             synchronized (this) {
                 if (listeners == null) {
@@ -324,7 +349,6 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
             }
         }
 
-        @Override
         public boolean supportsChanges() {
             return true;
         }

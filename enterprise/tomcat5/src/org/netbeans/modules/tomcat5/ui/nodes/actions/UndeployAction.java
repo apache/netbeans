@@ -157,14 +157,11 @@ public class UndeployAction extends NodeAction {
                 final Node node = entry.getKey();
                 final Set<Task> tasks = entry.getValue();
 
-                requestProcessor.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Task task : tasks) {
-                            task.waitFinished();
-                        }
-                        NodeRefreshTask.this.refresh(node);
+                requestProcessor.post( () -> {
+                    for (Task task : tasks) {
+                        task.waitFinished();
                     }
+                    NodeRefreshTask.this.refresh(node);
                 });
             }
         }

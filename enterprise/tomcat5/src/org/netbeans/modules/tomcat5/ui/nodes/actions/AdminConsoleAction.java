@@ -44,16 +44,13 @@ public class AdminConsoleAction extends NodeAction {
         for (int i = 0; i < nodes.length; i++) {
             final TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
             if (cookie != null) {
-                RequestProcessor.getDefault().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        TomcatManager tm = cookie.getTomcatManager();
-                        String adminUrl = tm.getServerUri() + "/admin"; // NOI18N
-                        try {
-                            URLDisplayer.getDefault().showURL(new URL(adminUrl));
-                        } catch (MalformedURLException e) {
-                            Logger.getLogger(AdminConsoleAction.class.getName()).log(Level.INFO, null, e);
-                        }
+                RequestProcessor.getDefault().post( () -> {
+                    TomcatManager tm = cookie.getTomcatManager();
+                    String adminUrl = tm.getServerUri() + "/admin"; // NOI18N
+                    try {
+                        URLDisplayer.getDefault().showURL(new URL(adminUrl));
+                    } catch (MalformedURLException e) {
+                        Logger.getLogger(AdminConsoleAction.class.getName()).log(Level.INFO, null, e);
                     }
                 });
             }

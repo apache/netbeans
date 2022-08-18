@@ -470,16 +470,12 @@ public class TomcatManager implements DeploymentManager {
             tomEEVersion = TomcatFactory.getTomEEVersion(tp.getCatalinaHome(), tp.getCatalinaBase());
             tomEEType = tomEEVersion == null ? null : TomcatFactory.getTomEEType(tp.getCatalinaHome(), tp.getCatalinaBase());
             if (tomEEVersion == null) {
-                tomEEWarListener = new TomEEWarListener(tp, new TomEEWarListener.RefreshHook() {
-
-                    @Override
-                    public void refresh(TomEEVersion version, TomEEType type) {
-                        synchronized (TomcatManager.this) {
-                            tomEEVersion = version;
-                            tomEEType = type;
-                        }
-                        getTomcatPlatform().notifyLibrariesChanged();
+                tomEEWarListener = new TomEEWarListener(tp, (TomEEVersion version, TomEEType type) -> {
+                    synchronized (TomcatManager.this) {
+                        tomEEVersion = version;
+                        tomEEType = type;
                     }
+                    getTomcatPlatform().notifyLibrariesChanged();
                 });
                 File listenFile;
                 if (tp.getCatalinaBase() != null) {

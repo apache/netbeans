@@ -50,16 +50,13 @@ public class TerminateAction extends NodeAction {
                         NotifyDescriptor.YES_NO_OPTION);
                 Object retValue = DialogDisplayer.getDefault().notify(nd);
                 if (retValue == DialogDescriptor.YES_OPTION) {
-                    RequestProcessor.getDefault().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            tm.terminate();
-                            // wait a sec before refreshing the state
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException ie) {}
-                            tm.getInstanceProperties().refreshServerInstance();
-                        }
+                    RequestProcessor.getDefault().post( () -> {
+                        tm.terminate();
+                        // wait a sec before refreshing the state
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException ie) {}
+                        tm.getInstanceProperties().refreshServerInstance();
                     });
                 }
             }

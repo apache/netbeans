@@ -99,27 +99,21 @@ class InstallPanelVisual extends javax.swing.JPanel {
         jTextFieldBaseDir.getDocument().addDocumentListener(updateListener);
         jTextFieldUsername.getDocument().addDocumentListener(updateListener);
         jTextFieldPassword.getDocument().addDocumentListener(updateListener);
-        createUserCheckBox.getModel().addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                fireChange();
-            }
+        createUserCheckBox.getModel().addItemListener( (ItemEvent e) -> {
+            fireChange();
         });
-        addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // if JWSDP installed, disable the catalina base directory
-                if (isJWSDP()) {
-                    if (jCheckBoxShared.isEnabled()) {
-                        jCheckBoxShared.setEnabled(false);
-                        setBaseEnabled(false);
-                    }
-                } else {
-                    if (!jCheckBoxShared.isEnabled()) {
-                        jCheckBoxShared.setEnabled(true);
-                        if (jCheckBoxShared.isSelected()) {
-                            setBaseEnabled(true);
-                        }
+        addChangeListener( (ChangeEvent e) -> {
+            // if JWSDP installed, disable the catalina base directory
+            if (isJWSDP()) {
+                if (jCheckBoxShared.isEnabled()) {
+                    jCheckBoxShared.setEnabled(false);
+                    setBaseEnabled(false);
+                }
+            } else {
+                if (!jCheckBoxShared.isEnabled()) {
+                    jCheckBoxShared.setEnabled(true);
+                    if (jCheckBoxShared.isSelected()) {
+                        setBaseEnabled(true);
                     }
                 }
             }
@@ -505,14 +499,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
         if (isHomeValid()) {
             File homeDir = getHomeDir();
             if (homeDir != null && homeDir.exists()) {
-                File files[] = homeDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        // NOI18N
-                        
-                        return "jwsdp-shared".equals(name);
-                    }
-                });
+                File files[] = homeDir.listFiles( (File dir, String name) -> "jwsdp-shared".equals(name) );  // NOI18N
                 return files.length != 0;
             }
         }
@@ -633,25 +620,20 @@ class InstallPanelVisual extends javax.swing.JPanel {
             textHomeDir = jTextFieldHomeDir.getText();
         }
         if (validationTask == null) {
-            validationTask = RequestProcessor.getDefault().create(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (InstallPanelVisual.this) {
-                        version = TomcatFactory.getTomcatVersion(new File(textHomeDir));
-                        LOGGER.log(Level.FINE, "Detected Tomcat version {0}", version);
-                    }
-
-                    SwingUtilities.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            ChangeEvent event = new ChangeEvent(this);
-                            for (ChangeListener listener : listeners) {
-                                listener.stateChanged(event);
-                            }
-                        }
-                    });
+            validationTask = RequestProcessor.getDefault().create( () -> {
+                synchronized (InstallPanelVisual.this) {
+                    version = TomcatFactory.getTomcatVersion(new File(textHomeDir));
+                    LOGGER.log(Level.FINE, "Detected Tomcat version {0}", version);
                 }
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ChangeEvent event = new ChangeEvent(this);
+                        for (ChangeListener listener : listeners) {
+                            listener.stateChanged(event);
+                        }
+                    }
+                });
             });
         }
         validationTask.schedule(60);

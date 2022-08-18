@@ -182,38 +182,35 @@ public class TomcatInstallUtil {
     public static void updateDocument(final javax.swing.text.Document doc,
             final String newDocInput, final String prefixMark) throws javax.swing.text.BadLocationException {
 
-        Runnable update = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String newDoc = newDocInput;
-                    int origLen = doc.getLength();
-                    String origDoc = doc.getText(0, origLen);
-                    int prefixInd=0;
-                    if (prefixMark!=null) {
-                        prefixInd = origDoc.indexOf(prefixMark);
-                        if (prefixInd>0) {
-                            origDoc=doc.getText(prefixInd,origLen-prefixInd);
-                        }
-                        else {
-                            prefixInd=0;
-                        }
-                        int prefixIndNewDoc = newDoc.indexOf(prefixMark);
-                        if (prefixIndNewDoc > 0) {
-                            newDoc = newDoc.substring(prefixIndNewDoc);
-                        }
+        Runnable update = () -> {
+            try {
+                String newDoc = newDocInput;
+                int origLen = doc.getLength();
+                String origDoc = doc.getText(0, origLen);
+                int prefixInd=0;
+                if (prefixMark!=null) {
+                    prefixInd = origDoc.indexOf(prefixMark);
+                    if (prefixInd>0) {
+                        origDoc=doc.getText(prefixInd,origLen-prefixInd);
                     }
-
-                    if (origDoc.equals(newDoc)) {
-                        // no change in document
-                        return;
+                    else {
+                        prefixInd=0;
                     }
-
-                    doc.remove(prefixInd, origLen - prefixInd);
-                    doc.insertString(prefixInd, newDoc, null);
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
+                    int prefixIndNewDoc = newDoc.indexOf(prefixMark);
+                    if (prefixIndNewDoc > 0) {
+                        newDoc = newDoc.substring(prefixIndNewDoc);
+                    }
                 }
+                
+                if (origDoc.equals(newDoc)) {
+                    // no change in document
+                    return;
+                }
+                
+                doc.remove(prefixInd, origLen - prefixInd);
+                doc.insertString(prefixInd, newDoc, null);
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
             }
         };
 

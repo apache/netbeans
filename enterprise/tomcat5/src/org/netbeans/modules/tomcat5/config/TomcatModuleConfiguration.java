@@ -166,13 +166,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             } else {
                 // create context.xml if it does not exist yet
                 context = genereateContext();
-                TomcatModuleConfiguration.<Context>writeToFile(contextXml, new ConfigurationValue<Context>() {
-
-                    @Override
-                    public Context getValue() throws ConfigurationException {
-                        return getContext();
-                    }
-                });
+                TomcatModuleConfiguration.<Context>writeToFile(contextXml, () -> getContext());
             }
         }
         return context;
@@ -196,13 +190,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             } else if (create) {
                 // create resources.xml if it does not exist yet
                 resources = genereateResources();
-                TomcatModuleConfiguration.<TomeeResources>writeToFile(resourcesXml, new ConfigurationValue<TomeeResources>() {
-
-                    @Override
-                    public TomeeResources getValue() throws ConfigurationException {
-                        return getResources(create);
-                    }
-                });
+                TomcatModuleConfiguration.<TomeeResources>writeToFile(resourcesXml, () -> getResources(create));
             }
             // XXX listener ?
             if (resourcesXml.exists() && resourcesDataObject == null) {
@@ -309,80 +297,69 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
                 // we need to store it to resources.xml
                 TomeeResources resources = getResources(true);
                 assert resources != null;
-                modifyResources(new ResourcesModifier() {
-
-                    @Override
-                    public void modify(TomeeResources tomee) {
-                        Properties props = new Properties();
-                        props.put("userName", username); // NOI18N
-                        props.put("password", password); // NOI18N
-                        props.put("jdbcUrl", url); // NOI18N
-                        props.put("jdbcDriver", driverClassName); // NOI18N
-                        StringWriter sw = new StringWriter();
-                        try {
-                            props.store(sw, null);
-                        } catch (IOException ex) {
-                            // should not really happen
-                            LOGGER.log(Level.WARNING, null, ex);
-                        }
-                        int idx = tomee.addTomeeResource(sw.toString());
-                        tomee.setTomeeResourceId(idx, name);
-                        tomee.setTomeeResourceType(idx, "javax.sql.DataSource"); // NOI18N
+                modifyResources( (TomeeResources tomee) -> {
+                    Properties props = new Properties();
+                    props.put("userName", username); // NOI18N
+                    props.put("password", password); // NOI18N
+                    props.put("jdbcUrl", url); // NOI18N
+                    props.put("jdbcDriver", driverClassName); // NOI18N
+                    StringWriter sw = new StringWriter();
+                    try {
+                        props.store(sw, null);
+                    } catch (IOException ex) {
+                        // should not really happen
+                        LOGGER.log(Level.WARNING, null, ex);
                     }
+                    int idx = tomee.addTomeeResource(sw.toString());
+                    tomee.setTomeeResourceId(idx, name);
+                    tomee.setTomeeResourceType(idx, "javax.sql.DataSource"); // NOI18N
                 });
             } else {
                 // Tomcat 5.5.x or Tomcat 6.0.x
-                modifyContext(new ContextModifier() {
-                    @Override
-                    public void modify(Context context) {
-                        int idx = context.addResource(true);
-                        context.setResourceName(idx, name);
-                        context.setResourceAuth(idx, "Container"); // NOI18N
-                        context.setResourceType(idx, "javax.sql.DataSource"); // NOI18N
-                        context.setResourceDriverClassName(idx, driverClassName);
-                        context.setResourceUrl(idx, url);
-                        context.setResourceUsername(idx, username);
-                        context.setResourcePassword(idx, password);
-                        context.setResourceMaxActive(idx, "20");    // NOI18N
-                        context.setResourceMaxIdle(idx, "10");      // NOI18N
-                        context.setResourceMaxWait(idx, "-1");      // NOI18N
-                    }
-                });
-            }
-        } else {
-            // Tomcat 5.0.x
-            modifyContext(new ContextModifier() {
-                @Override
-                public void modify(Context context) {
+                modifyContext((Context context) -> {
                     int idx = context.addResource(true);
                     context.setResourceName(idx, name);
                     context.setResourceAuth(idx, "Container"); // NOI18N
                     context.setResourceType(idx, "javax.sql.DataSource"); // NOI18N
-
-                    // check whether resource params not already defined
-                    ResourceParams[] resourceParams = context.getResourceParams();
-                    for (int i = 0; i < resourceParams.length; i++) {
-                        if (name.equals(resourceParams[i].getName())) {
-                            // if this happens in means that for this ResourceParams
-                            // element was no repspective Resource element - remove it
-                            context.removeResourceParams(resourceParams[i]);
-                        }
+                    context.setResourceDriverClassName(idx, driverClassName);
+                    context.setResourceUrl(idx, url);
+                    context.setResourceUsername(idx, username);
+                    context.setResourcePassword(idx, password);
+                    context.setResourceMaxActive(idx, "20"); // NOI18N
+                    context.setResourceMaxIdle(idx, "10"); // NOI18N
+                    context.setResourceMaxWait(idx, "-1"); // NOI18N
+                });
+            }
+        } else {
+            // Tomcat 5.0.x
+            modifyContext((Context context) -> {
+                int idx = context.addResource(true);
+                context.setResourceName(idx, name);
+                context.setResourceAuth(idx, "Container"); // NOI18N
+                context.setResourceType(idx, "javax.sql.DataSource"); // NOI18N
+                // check whether resource params not already defined
+                ResourceParams[] resourceParams = context.getResourceParams();
+                for (int i = 0; i < resourceParams.length; i++) {
+                    if (name.equals(resourceParams[i].getName())) {
+                        // if this happens in means that for this ResourceParams
+                        // element was no repspective Resource element - remove it
+                        context.removeResourceParams(resourceParams[i]);
                     }
-                    ResourceParams newResourceParams = createResourceParams(
-                            name, 
-                            new Parameter[] {
-                                createParameter("factory", "org.apache.commons.dbcp.BasicDataSourceFactory"), // NOI18N
-                                createParameter("driverClassName", driverClassName), // NOI18N
-                                createParameter("url", url),                // NOI18N
-                                createParameter("username", username),      // NOI18N
-                                createParameter("password", password),      // NOI18N
-                                createParameter("maxActive", "20"), // NOI18N
-                                createParameter("maxIdle", "10"),   // NOI18N
-                                createParameter("maxWait", "-1")    // NOI18N
-                            }
-                    );
-                    context.addResourceParams(newResourceParams);
                 }
+                ResourceParams newResourceParams = createResourceParams(
+                        name,
+                        new Parameter[] {
+                            createParameter("factory", "org.apache.commons.dbcp.BasicDataSourceFactory"), // NOI18N
+                            createParameter("driverClassName", driverClassName), // NOI18N
+                            createParameter("url", url),                // NOI18N
+                            createParameter("username", username),      // NOI18N
+                            createParameter("password", password),      // NOI18N
+                            createParameter("maxActive", "20"), // NOI18N
+                            createParameter("maxIdle", "10"),   // NOI18N
+                            createParameter("maxWait", "-1")    // NOI18N
+                        }
+                );
+                context.addResourceParams(newResourceParams);
             });
         }
         return new TomcatDatasource(username, url, password, name, driverClassName);
@@ -410,20 +387,17 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             contextPath = ctxRoot;
         }
         final String newContextPath = contextPath;
-        modifyContext(new ContextModifier() {
-            @Override
-            public void modify(Context context) {
-                // if Tomcat 5.0.x update also logger prefix
-                if (tomcatVersion == TomcatVersion.TOMCAT_50) {
-                    String oldContextPath = context.getAttributeValue(ATTR_PATH);
-                    String oldPrefix = context.getLoggerPrefix();
-                    if (oldPrefix != null 
-                            && oldPrefix.equals(computeLoggerPrefix(oldContextPath))) {
-                        context.setLoggerPrefix(computeLoggerPrefix(newContextPath));
-                    }
+        modifyContext( (Context context) -> {
+            // if Tomcat 5.0.x update also logger prefix
+            if (tomcatVersion == TomcatVersion.TOMCAT_50) {
+                String oldContextPath = context.getAttributeValue(ATTR_PATH);
+                String oldPrefix = context.getLoggerPrefix();
+                if (oldPrefix != null 
+                        && oldPrefix.equals(computeLoggerPrefix(oldContextPath))) {
+                    context.setLoggerPrefix(computeLoggerPrefix(newContextPath));
                 }
-                context.setAttributeValue(ATTR_PATH, newContextPath);
             }
+            context.setAttributeValue(ATTR_PATH, newContextPath);
         });
     }
     
@@ -669,28 +643,25 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
             final FileObject folder = cfolder;
             final ConfigurationException anonClassException[] = new ConfigurationException[] {null};
             FileSystem fs = folder.getFileSystem();
-            fs.runAtomicAction(new FileSystem.AtomicAction() {
-                @Override
-                public void run() throws IOException {
-                    String name = file.getName();
-                    FileObject configFO = folder.getFileObject(name);
-                    if (configFO == null) {
-                        configFO = folder.createData(name);
-                    }
-                    T ctx = null;
-                    try {
-                        ctx = store.getValue();
-                    } catch (ConfigurationException e) {
-                        // propagate exception out to the outer class
-                        anonClassException[0] = e;
-                        return;
-                    }
-                    
-                    try (FileLock lock = configFO.lock();
-                            OutputStream os = new BufferedOutputStream(configFO.getOutputStream(lock), 4096);) {
-                        if (ctx != null) {
-                            ctx.write(os);
-                        }
+            fs.runAtomicAction( () -> {
+                String name = file.getName();
+                FileObject configFO = folder.getFileObject(name);
+                if (configFO == null) {
+                    configFO = folder.createData(name);
+                }
+                T ctx = null;
+                try {
+                    ctx = store.getValue();
+                } catch (ConfigurationException e) {
+                    // propagate exception out to the outer class
+                    anonClassException[0] = e;
+                    return;
+                }
+                
+                try (FileLock lock = configFO.lock();
+                        OutputStream os = new BufferedOutputStream(configFO.getOutputStream(lock), 4096);) {
+                    if (ctx != null) {
+                        ctx.write(os);
                     }
                 }
             });
@@ -713,16 +684,12 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         } catch (Schema2BeansException | IOException ex) {
             Logger.getLogger(TomcatModuleConfiguration.class.getName()).log(Level.INFO, null, ex);
         }
-        NbDocument.runAtomic(doc, new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    doc.remove(0, doc.getLength());
-                    doc.insertString(0, out.toString(), null);
-                } catch (BadLocationException ble) {
-                    Exceptions.printStackTrace(ble);
-                }
+        NbDocument.runAtomic(doc, () -> {
+            try {
+                doc.remove(0, doc.getLength());
+                doc.insertString(0, out.toString(), null);
+            } catch (BadLocationException ble) {
+                Exceptions.printStackTrace(ble);
             }
         });
     }
@@ -776,14 +743,11 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         }
 
         // create a resource link to the global resource
-        modifyContext(new ContextModifier() {
-            @Override
-            public void modify(Context context) {
-                int idx = context.addResourceLink(true);
-                context.setResourceLinkName(idx, referenceName);
-                context.setResourceLinkGlobal(idx, jndiName);
-                context.setResourceLinkType(idx, "javax.sql.DataSource"); // NOI18N
-            }
+        modifyContext( (Context context) -> {
+            int idx = context.addResourceLink(true);
+            context.setResourceLinkName(idx, referenceName);
+            context.setResourceLinkGlobal(idx, jndiName);
+            context.setResourceLinkType(idx, "javax.sql.DataSource"); // NOI18N
         });
         
     }

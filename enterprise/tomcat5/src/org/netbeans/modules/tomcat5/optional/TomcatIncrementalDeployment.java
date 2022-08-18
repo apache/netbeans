@@ -108,15 +108,11 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
         } else {
             final P p = new P (module);
             p.supp.fireHandleProgressEvent (module, new Status (ActionType.EXECUTE, CommandType.DISTRIBUTE, "", StateType.COMPLETED));
-            RequestProcessor.getDefault().post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        p.supp.fireHandleProgressEvent (module, new Status (ActionType.EXECUTE, CommandType.DISTRIBUTE, "", StateType.COMPLETED));
-                        
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
+            RequestProcessor.getDefault().post( () -> {
+                try {
+                    p.supp.fireHandleProgressEvent(module, new Status (ActionType.EXECUTE, CommandType.DISTRIBUTE, "", StateType.COMPLETED));
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             });
             return p;

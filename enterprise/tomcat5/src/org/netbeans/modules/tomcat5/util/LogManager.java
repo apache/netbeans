@@ -165,13 +165,10 @@ public class LogManager {
                 sharedContextLogViewer.removeAllLogViewerStopListener();
                 sharedContextLogViewer.close();
                 sharedContextLogViewer = newSharedContextLog;
-		sharedContextLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   @Override
-                   public void callOnStop() {
-                       synchronized(sharedContextLogLock) {
-                           sharedContextLogViewer = null;
-                       }
-                   }
+		sharedContextLogViewer.addLogViewerStopListener( () -> {
+                    synchronized(sharedContextLogLock) {
+                        sharedContextLogViewer = null;
+                    }
                 });
                 sharedContextLogViewer.start();
             } else if (sharedContextLogViewer == null || !sharedContextLogViewer.isOpen()) {
@@ -179,13 +176,10 @@ public class LogManager {
                     sharedContextLogViewer.removeAllLogViewerStopListener();
                 }
                 sharedContextLogViewer = newSharedContextLog;
-		sharedContextLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   @Override
-                   public void callOnStop() {
-                       synchronized(sharedContextLogLock) {
-                           sharedContextLogViewer = null;
-                       }
-                   }
+		sharedContextLogViewer.addLogViewerStopListener( () -> {
+                    synchronized(sharedContextLogLock) {
+                        sharedContextLogViewer = null;
+                    }
                 });
                 sharedContextLogViewer.start();
             }
@@ -236,13 +230,10 @@ public class LogManager {
                     Logger.getLogger(LogManager.class.getName()).log(Level.INFO, null, e);
                     return;
                 }
-		juliLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   @Override
-                   public void callOnStop() {
-                       synchronized(juliLogLock) {
-                           juliLogViewer = null;
-                       }
-                   }
+		juliLogViewer.addLogViewerStopListener( () -> {
+                    synchronized(juliLogLock) {
+                        juliLogViewer = null;
+                    }
                 });
                 juliLogViewer.start();
             }
@@ -306,11 +297,8 @@ public class LogManager {
                 contextLog.removeAllLogViewerStopListener();
                 contextLog.close();
                 contextLog = newContextLog;
-                contextLog.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   @Override
-                   public void callOnStop() {
-                       contextLogViewers.remove(moduleID);
-                   }
+                contextLog.addLogViewerStopListener( () -> {
+                    contextLogViewers.remove(moduleID);
                 });
                 contextLogViewers.put(moduleID, contextLog);
                 contextLog.start();
@@ -319,11 +307,8 @@ public class LogManager {
                     contextLog.removeAllLogViewerStopListener();
                 }
                 contextLog = newContextLog;
-                contextLog.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   @Override
-                   public void callOnStop() {
-                       contextLogViewers.remove(moduleID);
-                   }
+                contextLog.addLogViewerStopListener( () -> {
+                    contextLogViewers.remove(moduleID);
                 });                
                 contextLogViewers.put(moduleID, contextLog);
                 contextLog.start();

@@ -423,11 +423,8 @@ public final class CustomizerSupport {
             resources = new JList(model);
             label.setLabelFor(resources);
             resources.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerSupport.class,ad));
-            resources.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    selectionChanged ();
-                }
+            resources.addListSelectionListener( (ListSelectionEvent e) -> {
+                selectionChanged ();
             });
             JScrollPane spane = new JScrollPane (this.resources);            
             // set the preferred size so that the size won't be set according to
@@ -457,11 +454,8 @@ public final class CustomizerSupport {
                 }
                 org.openide.awt.Mnemonics.setLocalizedText(addButton, text);
                 this.addButton.getAccessibleContext().setAccessibleDescription (ad);
-                addButton.addActionListener( new ActionListener () {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        addPathElement ();
-                    }
+                addButton.addActionListener( (ActionEvent e) -> {
+                    addPathElement ();
                 });
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -493,11 +487,8 @@ public final class CustomizerSupport {
                 removeButton = new JButton();
                 org.openide.awt.Mnemonics.setLocalizedText(removeButton, NbBundle.getMessage(CustomizerStartup.class, "CTL_Remove")); // NOI18N
                 removeButton.getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(CustomizerSupport.class,"AD_Remove"));
-                removeButton.addActionListener( new ActionListener () {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        removePathElement ();
-                    }
+                removeButton.addActionListener( (ActionEvent e) -> {
+                    removePathElement ();
                 });
                 removeButton.setEnabled(false);
                 c = new GridBagConstraints();
@@ -512,11 +503,8 @@ public final class CustomizerSupport {
                 moveUpButton = new JButton();
                 org.openide.awt.Mnemonics.setLocalizedText(moveUpButton, NbBundle.getMessage(CustomizerSupport.class, "CTL_Up")); // NOI18N
                 moveUpButton.getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(CustomizerSupport.class,"AD_Up"));
-                moveUpButton.addActionListener( new ActionListener () {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        moveUpPathElement ();
-                    }
+                moveUpButton.addActionListener( (ActionEvent e) -> {
+                    moveUpPathElement ();
                 });
                 moveUpButton.setEnabled(false);
                 c = new GridBagConstraints();
@@ -531,11 +519,8 @@ public final class CustomizerSupport {
                 moveDownButton = new JButton();
                 org.openide.awt.Mnemonics.setLocalizedText(moveDownButton, NbBundle.getMessage(CustomizerSupport.class, "CTL_Down")); // NOI18N
                 moveDownButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerSupport.class,"AD_Down"));
-                moveDownButton.addActionListener( new ActionListener () {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        moveDownPathElement ();
-                    }
+                moveDownButton.addActionListener( (ActionEvent e) -> {
+                    moveDownPathElement ();
                 });
                 moveDownButton.setEnabled(false);
                 c = new GridBagConstraints();

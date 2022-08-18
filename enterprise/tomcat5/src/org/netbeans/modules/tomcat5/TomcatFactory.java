@@ -382,13 +382,7 @@ public final class TomcatFactory implements DeploymentFactory {
     @CheckForNull
     public static File getTomEEWebAppJar(File parent) {
         File webApps = new File(parent, "webapps"); // NOI18N
-        File[] children = webApps.listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
+        File[] children = webApps.listFiles((File pathname) -> pathname.isDirectory());
         if (children != null) {
             for (File child : children) {
                 File jar = getTomEEJar(child);
@@ -402,13 +396,7 @@ public final class TomcatFactory implements DeploymentFactory {
 
     private static File getTomEEJar(File parentDir) throws IllegalStateException {
         File libDir = new File(parentDir, "lib"); // NOI18N
-        String[] names = libDir.list(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return TOMEE_JAR_PATTERN.matcher(name).matches();
-            }
-        });
+        String[] names = libDir.list((File dir, String name) -> TOMEE_JAR_PATTERN.matcher(name).matches());
         if (names != null && names.length > 0) {
             // XXX based on filename we may improve it later
             return new File(libDir, names[0]);

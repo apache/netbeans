@@ -59,13 +59,8 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
     }
 
     /** Simple comparator for sorting nodes by name. */
-    public static final Comparator<TomcatWebModule> TOMCAT_WEB_MODULE_COMPARATOR = new Comparator<TomcatWebModule>() {
-
-        @Override
-        public int compare(TomcatWebModule wm1, TomcatWebModule wm2) {
-            return wm1.getTomcatModule ().getModuleID().compareTo(wm2.getTomcatModule ().getModuleID());
-        }
-    };
+    public static final Comparator<TomcatWebModule> TOMCAT_WEB_MODULE_COMPARATOR = 
+            (TomcatWebModule wm1, TomcatWebModule wm2) -> wm1.getTomcatModule().getModuleID().compareTo(wm2.getTomcatModule().getModuleID());
 
     private final TomcatModule tomcatModule;
     private final TomcatManager manager;
@@ -110,51 +105,42 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
      */
     @Override
     public Task undeploy() {
-        return rp().post(new Runnable() {
-            @Override
-            public void run () {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_UNDEPLOY",  // NOI18N
+        return rp().post( () -> {
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_UNDEPLOY",  // NOI18N
                     new Object [] { getTomcatModule().getPath() }));
-
-                ProgressObject po = manager.undeploy(target);
-                TomcatProgressListener listener = new TomcatProgressListener(po);
-                po.addProgressListener(listener);
-                listener.updateState();
-
-                CompletionWait wait = new CompletionWait(po);
-                wait.init();
-                wait.waitFinished();
-            }
+            
+            ProgressObject po = manager.undeploy(target);
+            TomcatProgressListener listener = new TomcatProgressListener(po);
+            po.addProgressListener(listener);
+            listener.updateState();
+            
+            CompletionWait wait = new CompletionWait(po);
+            wait.init();
+            wait.waitFinished();
         }, 0);
     }
 
     @Override
     public void start() {
-        rp().post(new Runnable() {
-            @Override
-            public void run () {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STARTING",  // NOI18N
+        rp().post( () -> {
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STARTING",  // NOI18N
                     new Object [] { getTomcatModule().getPath() }));
-                ProgressObject po = manager.start(target);
-                TomcatProgressListener listener = new TomcatProgressListener(po);
-                po.addProgressListener(listener);
-                listener.updateState();
-            }
+            ProgressObject po = manager.start(target);
+            TomcatProgressListener listener = new TomcatProgressListener(po);
+            po.addProgressListener(listener);
+            listener.updateState();
         }, 0);
     }
 
     @Override
     public void stop() {
-        rp().post(new Runnable() {
-            @Override
-            public void run () {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STOPPING",  // NOI18N
+        rp().post( () -> {
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STOPPING",  // NOI18N
                     new Object [] { getTomcatModule ().getPath() }));
-                ProgressObject po = manager.stop(target);
-                TomcatProgressListener listener = new TomcatProgressListener(po);
-                po.addProgressListener(listener);
-                listener.updateState();
-            }
+            ProgressObject po = manager.stop(target);
+            TomcatProgressListener listener = new TomcatProgressListener(po);
+            po.addProgressListener(listener);
+            listener.updateState();
         }, 0);
     }
 

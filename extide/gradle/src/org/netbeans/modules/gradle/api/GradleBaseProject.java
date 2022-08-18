@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
@@ -73,6 +74,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     Map<File, GradleDependency.ModuleDependency> componentsByFile = new HashMap<>();
     Map<String, GradleConfiguration> configurations = new HashMap<>();
     Set<File> outputPaths = Collections.emptySet();
+    Map<String, String> projectIds = Collections.emptyMap();
+    GradleDependency projectDependencyNode;
 
     transient Boolean resolved = null;
 
@@ -112,6 +115,10 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
 
     public String getDisplayName() {
         return displayName;
+    }
+    
+    public boolean isVersionSpecified() {
+        return version != null && !"".equals(version) && !"unspecified".equals(version); // NOI18N
     }
 
     public String getVersion() {
@@ -206,6 +213,29 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public Map<String, File> getSubProjects() {
         return subProjects;
     }
+    
+    /**
+     * Finds a GAV for the given project. Returns {@code null} if the project path
+     * is not known (it is not referenced anywhere by this project), or has no known
+     * GAV. The project's own GAV should be always present, if defined by the project 
+     * file(s).
+     * 
+     * @param projectPath Gradle project path
+     * @return GAV coordinates, or {@code null}
+     * @since 2.27
+     */
+    public String findProjectGav(@NonNull String projectPath) {
+        if ("".equals(projectPath) || getPath().equals(projectPath)) {
+            String n = getName();
+            String g = getGroup();
+            String v = getVersion();
+            if (n == null || n.isEmpty() || g == null || g.isEmpty() || v == null || v.isEmpty() || "unspecified".equals(v)) {  // NOI18N
+                return null;
+            }
+            return String.format("%s:%s:%s", g, n, v);
+        }
+        return projectIds.get(projectPath);
+    }
 
     public Set<String> getTaskGroups() {
         return Collections.unmodifiableSet(tasksByGroup.keySet());
@@ -246,7 +276,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         }
         return true;
     }
-
+    
     @Override
     public Set<GradleDependency.ModuleDependency> findModules(String group, String artifact, String version) {
         Set<GradleDependency.ModuleDependency> ret = new HashSet<>();
@@ -423,6 +453,4 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public String toString() {
         return "GradleBaseProject{" + "name=" + name + ", projectDir=" + projectDir + ", plugins=" + plugins + '}';
     }
-
-
 }

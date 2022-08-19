@@ -133,6 +133,13 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 group.add(task);
             }
         }
+        Map<String, Object> taskInfos = (Map<String, Object>)info.getOrDefault("taskDetails", Collections.emptyMap());
+        for (String tn : prj.getTaskNames()) {
+            Map<String, String> tinfo = (Map<String, String>)taskInfos.get(tn);
+            if (tinfo != null) {
+                prj.taskDependencies.put(tn, Arrays.asList(tinfo.getOrDefault("taskDependencies", "").split(",")));
+            }
+        }
     }
 
     void processDependencies() {

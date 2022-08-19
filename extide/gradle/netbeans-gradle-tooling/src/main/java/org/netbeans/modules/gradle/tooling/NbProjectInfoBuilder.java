@@ -19,11 +19,21 @@
 
 package org.netbeans.modules.gradle.tooling;
 
+import groovy.lang.GroovySystem;
+import groovy.lang.MetaBeanProperty;
+import groovy.lang.MetaClass;
+import groovy.lang.MetaProperty;
 import groovy.lang.MissingPropertyException;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,12 +43,18 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.runtime.metaclass.MultipleSetterProperty;
+import org.gradle.api.NamedDomainObjectContainer;
+import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.UnknownDomainObjectException;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.FileCollectionDependency;
 import org.gradle.api.artifacts.ModuleDependency;
@@ -64,15 +80,30 @@ import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.initialization.IncludedBuild;
+import org.gradle.api.internal.plugins.PluginManagerInternal;
+import org.gradle.api.internal.plugins.PluginRegistry;
+import org.gradle.api.internal.project.ProjectInternal;
+import org.gradle.api.internal.provider.ProviderInternal;
+import org.gradle.api.internal.provider.ValueSupplier.ExecutionTimeValue;
+import org.gradle.api.logging.Logger;
+import org.gradle.api.logging.Logging;
+import org.gradle.api.plugins.ExtensionAware;
+import org.gradle.api.plugins.ExtensionContainer;
+import org.gradle.api.plugins.ExtensionsSchema.ExtensionSchema;
 import org.gradle.api.plugins.JavaPlatformPlugin;
+import org.gradle.api.provider.Provider;
+import org.gradle.api.reflect.HasPublicType;
+import org.gradle.api.reflect.TypeOf;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.api.tasks.TaskDependency;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.jvm.JvmLibrary;
 import org.gradle.language.base.artifact.SourcesArtifact;
 import org.gradle.language.java.artifact.JavadocArtifact;
+import org.gradle.plugin.use.PluginId;
 import org.gradle.util.VersionNumber;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 
@@ -81,6 +112,16 @@ import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
  * @author Laszlo Kishalmi
  */
 class NbProjectInfoBuilder {
+    
+    /**
+     * The logger. Use Gradle logging - use {@code lifecycle} level for messages that should
+     * be printed regularly, and {@code info} for verbose debug messages. This is because if
+     * debug loglevel is enabled, gradle will spit out enormous number of diagnostics. This
+     * Plugin is not for 'end-user' use anyway, so INFO level is enabled when the logging level gradle
+     * project loader is enabled to FINER level.
+     */
+    private static final Logger LOG =  Logging.getLogger(NbProjectInfoBuilder.class);
+    
     private static final String NB_PREFIX = "netbeans.";
     private static final Set<String> CONFIG_EXCLUDES = new HashSet<>(asList( new String[]{
         "archives",
@@ -144,15 +185,18 @@ class NbProjectInfoBuilder {
 
     public NbProjectInfo buildAll() {
         NbProjectInfoModel model = new NbProjectInfoModel();
-        detectProjectMetadata(model);
+        runAndRegisterPerf(model, "meta", this::detectProjectMetadata);
         detectProps(model);
         detectLicense(model);
-        detectPlugins(model);
-        detectSources(model);
+        runAndRegisterPerf(model, "plugins", this::detectPlugins);
+        runAndRegisterPerf(model, "sources", this::detectSources);
         detectTests(model);
-        detectDependencies(model);
-        detectArtifacts(model);
+        runAndRegisterPerf(model, "dependencies", this::detectDependencies);
+        runAndRegisterPerf(model, "artifacts", this::detectArtifacts);
         detectDistributions(model);
+        runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
+        runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
+        runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
         return model;
     }
 
@@ -172,10 +216,391 @@ class NbProjectInfoBuilder {
         }
         model.getInfo().put("license", license);
     }
+    
+    private void detectTaskDependencies(NbProjectInfoModel model) {
+        Map<String, Object> tasks = new HashMap<>();
+        
+        Map<String, Task> taskList = project.getTasks().getAsMap();
+        for (String s : taskList.keySet()) {
+            Task task = taskList.get(s);
+            Map<String, String> taskInfo = new HashMap<>();
+            taskInfo.put("type", task.getClass().getName());
+            taskInfo.put("name", task.getPath());
+            taskInfo.put("enabled", Boolean.toString(task.getEnabled()));
+            taskInfo.put("mustRunAfter", dependenciesAsString(task, task.getMustRunAfter()));
+            taskInfo.put("shouldRunAfter", dependenciesAsString(task, task.getShouldRunAfter()));
+            taskInfo.put("taskDependencies", dependenciesAsString(task, task.getTaskDependencies()));
+        }
+        
+        model.getInfo().put("taskDetails", tasks);
+    }
+    
+    private String dependenciesAsString(Task t, TaskDependency td) {
+        Set<? extends Task> deps = td.getDependencies(t);
+        if (deps.isEmpty()) {
+            return "";
+        }
+        return deps.stream().map(Task::getPath).collect(Collectors.joining(","));
+    }
+    
+    private void detectAdditionalPlugins(NbProjectInfoModel model) {
+        PluginManagerInternal pmi;
+        PluginRegistry reg;
+        if (project.getPluginManager() instanceof PluginManagerInternal) {
+            pmi = (PluginManagerInternal)project.getPluginManager();
+        } else {
+            return;
+        }
+        if (project instanceof ProjectInternal) {
+            reg = ((ProjectInternal)project).getServices().get(PluginRegistry.class);
+        } else {
+            reg = null;
+        }
+        LOG.lifecycle("Detecting additional plugins");
+        final Set<String> plugins = new LinkedHashSet<>();
+        
+        project.getPlugins().matching((Plugin p) -> {
+            for (Class c = p.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
+                Optional<PluginId> id = pmi.findPluginIdForClass(c);
+                if (id.isEmpty() && reg != null) {
+                    id = reg.findPluginForClass(c);
+                }
+                if (id.isPresent()) {
+                    LOG.info("Plugin: {} -> {}", id.get(), p);
+                    plugins.add(id.get().getId());
+                    break;
+                }
+            }
+            return false;
+        }).toArray(); // force iteration :)
+        
+        ((Collection)model.getInfo().get("plugins")).addAll(plugins);
+    }
+    
+    private void runAndRegisterPerf(NbProjectInfoModel model, String s, Consumer<NbProjectInfoModel> r) {
+        runAndRegisterPerf(model, s, () -> r.accept(model));
+    }
+    
+    private void runAndRegisterPerf(NbProjectInfoModel model, String s, Runnable r) {
+        long time = System.currentTimeMillis();
+        try {
+            r.run();
+        } finally {
+            long span = System.currentTimeMillis() - time;
+            model.registerPerf(s, span);
+        }
+    }
+    
+    private void detectExtensions(NbProjectInfoModel model) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : IGNORED_SYSTEM_CLASSES_REGEXP) {
+            if (sb.length() > 0) {
+                sb.append("|"); // NOI18N
+            }
+            sb.append(s);
+        }
+        ignoreClassesPattern = Pattern.compile(sb.toString());
+
+        inspectExtensions("", project.getExtensions());
+        model.getInfo().put("extensions.globalTypes", globalTypes); // NOI18N
+        model.getInfo().put("extensions.propertyTypes", propertyTypes); // NOI18N
+        model.getInfo().put("extensions.propertyValues", values); // NOI18N
+    }
+
+    /**
+     * Ignored properties, which are exposed by Groovy's Metaobject protocol, but should have
+     * been hidden.
+     */
+    private static final Set<String> IGNORED_SYSTEM_PROPERTIES = new HashSet<>(Arrays.asList(
+            "asDynamicObject", 
+            "convention", 
+            "class", 
+            "conventionMapping", 
+            "extensions", 
+            "modelIdentityDisplayName",
+            "project", 
+            "taskThatOwnsThisObject",
+            "additionalMethods",
+            "elementsAsDynamicObject",
+            "collectionSchema"
+    ));
+    
+    private static final String[] IGNORED_SYSTEM_CLASSES_REGEXP = {
+            "java\\..*",
+            "org\\.gradle\\.api\\.file\\..*",
+            "org\\.gradle\\.api\\.reflect\\..*",
+            "org\\.gradle\\.api\\.NamedDomainObject.*"
+    };
+
+    private Class findIterableItemClass(Class clazz) {
+        if (clazz == null) {
+            return null;
+        }
+        Map<TypeVariable<?>, Type> parameters = TypeUtils.getTypeArguments(clazz, Iterable.class);
+        if (parameters == null || parameters.isEmpty()) {
+            return null;
+        }
+        for (Map.Entry<TypeVariable<?>, Type> e : parameters.entrySet()) {
+            TypeVariable<?> tv = e.getKey();
+            if (tv.getGenericDeclaration() == Iterable.class) {
+                Type t = e.getValue();
+                if (!(t instanceof Class) || t == Object.class) {
+                    return null;
+                } else {
+                    return (Class)t;
+                }
+            }
+        }
+        return null;
+    }        
+    
+    public static final String COLLECTION_TYPE_MARKER = "#col"; // NOI18N
+    public static final String COLLECTION_TYPE_NAMED = "named"; // NOI18N
+    public static final String COLLECTION_TYPE_LIST = "list"; // NOI18N
+    public static final String COLLECTION_ITEM_MARKER = "#itemType"; // NOI18N
+    public static final String COLLECTION_ITEM_PREFIX = COLLECTION_ITEM_MARKER + "."; // NOI18N
+    public static final String COLLECTION_CONTENT_PREFIX = "#content"; // NOI18N
+    
+    
+    private static boolean isPrimitiveOrString(Class c) {
+        if (c == Object.class) {
+            return false;
+        }
+        String n = c.getName();
+        if (n.indexOf('.') == -1) {
+            return true;
+        } else if (n.startsWith("java.lang.")) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Inspects extension or plugin objects for properties and their types. Object values are inspected recursively.
+     * Property values are read; values that are {@link ProviderInternal}s are computed
+     * 
+     * @param clazz class to inspect
+     * @param object the value to inspect and dump property values, possibly {@code null}
+     * @param prefix prefix for type and value maps
+     * @param globalTypes map to store information for individual types
+     * @param propertyTypes
+     * @param defaultValues 
+     */
+    private void inspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues) {
+        try {
+            inspectObjectAndValues0(clazz, object, prefix, globalTypes, propertyTypes, defaultValues);
+        } catch (RuntimeException ex) {
+            LOG.warn("Error during inspection of {}, value {}, prefix {}", clazz, object, prefix);
+        }
+    }
+    
+    private void inspectObjectAndValues0(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues) {
+        if (clazz == null || ignoreClassesPattern.matcher(clazz.getName()).matches()) {
+            return;
+        }
+        if (clazz.isEnum() || clazz.isArray()) {
+            return;
+        }
+
+        MetaClass mclazz = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+        Map<String, String> globTypes = globalTypes.computeIfAbsent(clazz.getName(), cn -> new HashMap<>());
+        List<MetaProperty> props = mclazz.getProperties();
+        for (MetaProperty mp : props) {
+            Class propertyDeclaringClass = null;
+            String getterName = null;
+            String propName = mp.getName();
+            // some properties are added by DSL wrappers, we should better ignore them.
+            if (IGNORED_SYSTEM_PROPERTIES.contains(propName)) {
+                continue;
+            }
+            LOG.info("Inspecting {}.{}", clazz.getName(), propName);
+            if (mp instanceof MetaBeanProperty) {
+                MetaBeanProperty mbp = (MetaBeanProperty)mp;
+                
+                // PENDING: not all settable stuff has a setter. Some are containers or objects which are always present,
+                // and have to be configured using their properties, i.e. java.modularity. But there are TOOOO MANY things
+                // that have a getter and are DEFINITELY not meant for a DSL. 
+                // Giving up this time, they should be added if a decent way to filter out implementation garbage is found.
+                if (mbp.getSetter() == null) {
+                    continue;
+                }
+
+                if (mbp.getGetter() == null) {
+                    continue;
+                }
+                getterName = mbp.getGetter().getName();
+                propertyDeclaringClass = mbp.getGetter().getDeclaringClass().getTheClass();
+            }
+            Class t = mp.getType();
+            List<Type> typeParameters = null;
+            if (t == Object.class) {
+                // MultipleSetter is probably for an overloaded setter
+                if (mp instanceof MultipleSetterProperty) {
+                    MultipleSetterProperty msp = (MultipleSetterProperty)mp;
+                    t = msp.getGetter().getReturnType();
+                }
+            }
+            if (propertyDeclaringClass != null && t.getTypeParameters().length > 0) {
+                try {
+                    Method m = propertyDeclaringClass.getDeclaredMethod(getterName);
+                    Type rt = m.getGenericReturnType();
+                    if (rt instanceof ParameterizedType) {
+                        typeParameters = new ArrayList<>(Arrays.asList(((ParameterizedType)rt).getActualTypeArguments()));
+                    }
+                } catch (ReflectiveOperationException ex) {
+                }
+            }
+            Object value = null;
+            if ((mp.getModifiers() & Modifier.PUBLIC) == 0) {
+                continue;
+            }
+            if (object != null) {
+                // Provider must NOT be asked for a value, otherwise it might run a Task in order to compute
+                // the value.
+                if (Provider.class.isAssignableFrom(t)) {
+                    Object potentialValue = mclazz.getProperty(object, propName);
+                    if (potentialValue instanceof ProviderInternal) {
+                        ProviderInternal provided = (ProviderInternal)potentialValue;
+                        t = provided.getType();
+                        ExecutionTimeValue etv = provided.calculateExecutionTimeValue();
+                        if (etv.isFixedValue()) {
+                            value = etv.getFixedValue();
+                        }
+                    } else {
+                        value = potentialValue;
+                        if (value != null) {
+                            t = value.getClass();
+                        }
+                    }
+                } else {
+                    value = mclazz.getProperty(object, propName);
+                }
+           }
+            if (value != null && !(value instanceof Provider)) {
+                if (isPrimitiveOrString(value.getClass())) {
+                    defaultValues.put(prefix + propName, value);
+                } else {
+                    try {
+                        defaultValues.put(prefix + propName, value.toString());
+                    } catch (RuntimeException ex) {
+                        // just ignore... some properties cannot be computed at this time, and their toString() attempts to do that.
+                        LOG.info("Could not get value of {}", propName, ex);
+                    }
+                }
+            }
+            
+            String cn = t.getName();
+            globTypes.put(propName, cn);
+            propertyTypes.put(prefix + propName, cn);
+            if (!!isPrimitiveOrString(t) && !Provider.class.isAssignableFrom(t)) {
+                String newPrefix = prefix + propName + "."; // NOI18N
+                
+                // recursively inspect a structured value.
+                inspectObjectAndValues(t, value, newPrefix, globalTypes, propertyTypes, defaultValues);
+            }
+            
+            if (value != null) {
+                // attemtp to enumerate membrs of a Container or an Iterable.
+                Class itemClass = null;
+                if ((value instanceof NamedDomainObjectContainer) && (value instanceof HasPublicType)) {
+                    String newPrefix;
+                    
+                    TypeOf pubType = ((HasPublicType)value).getPublicType();
+                    if (pubType != null && pubType.getComponentType() != null) {
+                        itemClass = pubType.getComponentType().getConcreteClass();
+                    } else {
+                        itemClass = findIterableItemClass(pubType.getConcreteClass());
+                    }
+                    if (itemClass != null) {
+                        propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
+                        propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, itemClass.getName());
+                        newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
+                        inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                    }
+
+                    NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
+                    Map<String, ?> m = nc.getAsMap();
+                    for (String k : m.keySet()) {
+                        newPrefix = prefix + propName + COLLECTION_CONTENT_PREFIX + k + "."; // NOI18N
+                        Object v = m.get(k);
+                        inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues);
+                    }
+                } else if (Iterable.class.isAssignableFrom(t)) {
+                    itemClass = findIterableItemClass(t);
+                    if (itemClass == null && typeParameters != null && !typeParameters.isEmpty()) {
+                        if (typeParameters.get(0) instanceof Class) {
+                            itemClass = (Class)typeParameters.get(0);
+                        }
+                    }
+                    
+                    if (itemClass != null) {
+                        cn = itemClass.getName();
+                        propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
+                        propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, cn);
+                        String newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
+                        if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) {
+                            inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                        }
+                    }
+                    
+                    if (value instanceof Iterable) {
+                        int index = 0;
+                        for (Object o : (Iterable)value) {
+                            String newPrefix = prefix + propName + COLLECTION_CONTENT_PREFIX + index + "."; // NOI18N
+                            inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Regexp that combines names in {@link #IGNORED_SYSTEM_CLASSES_REGEXP}. Computed at the start of {@link #inspectExtensions}
+     */
+    private Pattern ignoreClassesPattern;
+    
+    Map<String, Map<String, String>> globalTypes = new HashMap<>();
+    Map<String, String> propertyTypes = new HashMap<>();
+    Map<String, Object> values = new HashMap<>();
+
+    /**
+     * Inspects one extension
+     * @param prefix prefix for the extension
+     * @param container 
+     */
+    private void inspectExtensions(String prefix, ExtensionContainer container) {
+        for (ExtensionSchema es : container.getExtensionsSchema().getElements()) {
+            String extName = es.getName();
+            
+            LOG.info("Extension: {}{}", prefix, extName);
+            
+            Object ext;
+            try {
+                ext = project.getExtensions().getByName(extName);
+                if (ext == null) {
+                    continue;
+                }
+            } catch (UnknownDomainObjectException ex) {
+                // ignore, the extension could not be obtained, ignore.
+                continue;
+            }
+            propertyTypes.put(prefix + extName, ext.getClass().getName());
+            inspectObjectAndValues(ext.getClass(), ext, prefix + extName + ".", globalTypes, propertyTypes, values);
+            if (ext instanceof ExtensionAware) {
+                inspectExtensions(prefix + extName + ".", ((ExtensionAware)ext).getExtensions());  // NOI18N
+            }
+        }
+        List<String> propNames = new ArrayList<>(propertyTypes.keySet());
+        Collections.sort(propNames);
+        for (String p : propNames) {
+            LOG.info("Extension property: {}: {} = {}", p, propertyTypes.get(p), values.get(p));  // NOI18N
+        }
+    }
 
     @SuppressWarnings("null")
     private void detectProjectMetadata(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         model.getInfo().put("project_name", project.getName());
         model.getInfo().put("project_path", project.getPath());
         model.getInfo().put("project_status", project.getStatus());
@@ -199,12 +624,12 @@ class NbProjectInfoBuilder {
             sp.put(p.getPath(), p.getProjectDir());
         }
         model.getInfo().put("project_subProjects", sp);
-
+        
         Map<String, File> ib = new HashMap<>();
-        System.out.printf("Gradle Version: %s%n", gradleVersion);
+        LOG.lifecycle("Gradle Version: {}", gradleVersion);
         sinceGradle("3.1", () -> {
             for(IncludedBuild p: project.getGradle().getIncludedBuilds()) {
-                System.out.printf("Include Build: %s%n", p.getName());
+                LOG.lifecycle("Include Build: {}", p.getName());
                 ib.put(p.getName(), p.getProjectDir());
             }
         });
@@ -225,11 +650,9 @@ class NbProjectInfoBuilder {
             tasks.add(arr);
         }
         model.getInfo().put("tasks", tasks);
-        model.registerPerf("meta", System.currentTimeMillis() - time);
     }
 
     private void detectPlugins(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         Set<String> plugins = new HashSet<>();
         for (String plugin : RECOGNISED_PLUGINS) {
             if (project.getPlugins().hasPlugin(plugin)) {
@@ -237,7 +660,6 @@ class NbProjectInfoBuilder {
             }
         }
         model.getInfo().put("plugins", plugins);
-        model.registerPerf("plugins", System.currentTimeMillis() - time);
     }
 
     private void detectTests(NbProjectInfoModel model) {
@@ -297,8 +719,6 @@ class NbProjectInfoBuilder {
     }
 
     private void detectSources(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
-
         boolean hasJava = project.getPlugins().hasPlugin("java-base");
         boolean hasGroovy = project.getPlugins().hasPlugin("groovy-base");
         boolean hasScala = project.getPlugins().hasPlugin("scala-base");
@@ -436,11 +856,9 @@ class NbProjectInfoBuilder {
                 model.noteProblem("No sourceSets found on this project. This project mightbe a Model/Rule based one which is not supported at the moment.");
             }
         }
-        model.registerPerf("plugins", System.currentTimeMillis() - time);
     }
 
     private void detectArtifacts(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         if (project.getPlugins().hasPlugin("java")) {
             model.getInfo().put("main_jar", getProperty(project, "jar", "archivePath"));
         }
@@ -464,7 +882,6 @@ class NbProjectInfoBuilder {
             archives.put(jar.getClassifier(), jar.getArchivePath());
         });
         model.getInfo().put("archives", archives);
-        model.registerPerf("artifacts", System.currentTimeMillis() - time);
     }
 
     private static boolean resolvable(Configuration conf) {
@@ -631,7 +1048,6 @@ class NbProjectInfoBuilder {
     }
     
     private void detectDependencies(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         Set<ComponentIdentifier> ids = new HashSet();
         Map<String, File> projects = new HashMap();
         Map<String, String> unresolvedProblems = new HashMap();
@@ -883,7 +1299,6 @@ class NbProjectInfoBuilder {
         model.getExt().put("resolved_javadoc_artifacts", resolvedJavadocArtifacts);
         model.getInfo().put("project_dependencies", projects);
         model.getInfo().put("unresolved_problems", unresolvedProblems);
-        model.registerPerf("dependencies", System.currentTimeMillis() - time);
     }
 
     private static Set<File> collectResolvedArtifacts(Set<ArtifactResult> res) {

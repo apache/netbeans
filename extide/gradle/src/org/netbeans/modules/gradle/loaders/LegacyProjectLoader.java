@@ -29,8 +29,10 @@ import java.io.PipedOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -170,7 +172,39 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             errors.clear();
             AtomicBoolean onlineResult = new AtomicBoolean();
             info = retrieveProjectInfo(ctx.project, goOnline, pconn, cmd, token, pl, onlineResult);
-
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("Retrieved project info:");
+                List<String> keys = new ArrayList<>(info.getInfo().keySet());
+                Collections.sort(keys);
+                for (String s : keys) {
+                    Object o = info.getInfo().get(s);
+                    // format just the 1st level:
+                    if (o instanceof Collection) {
+                        Collection c = (Collection)o;
+                        if (!c.isEmpty()) {
+                            LOG.finer(String.format("    %-20s: [", s));
+                            for (Object x: c) {
+                                LOG.finer(String.format("    %-20s", x));
+                            }
+                            LOG.finer("    ]");
+                            continue;
+                        }
+                    } else if (o instanceof Map) {
+                        Map m = (Map)o;
+                        if (!m.isEmpty()) {
+                            LOG.finer(String.format("    %-20s: {", s));
+                            List<String> mkeys = new ArrayList<>(m.keySet());
+                            Collections.sort(mkeys);
+                            for (String k : keys) {
+                                LOG.finer(String.format("        %-20s:%s", k, m.get(k)));
+                            }
+                            LOG.finer("    }");
+                        }
+                        continue;
+                    }
+                    LOG.finer(String.format("    %-20s:%s", s, o));
+                }
+            }
             if (!info.getProblems().isEmpty()) {
                 errors.openNotification(
                         TIT_LOAD_ISSUES(base.getProjectDir().getName()),
@@ -394,6 +428,13 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         if (DEBUG_GRADLE_INFO_ACTION) {
             // This would start the Gradle Daemon in Debug Mode, so the Tooling API can be debugged as well
             ret.addJvmArguments("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5006");
+        }
+        if (LOG.isLoggable(Level.FINEST)) {
+            ret.addArguments("--debug");
+        } else if (LOG.isLoggable(Level.FINER)) {
+            ret.addArguments("--info");
+        } else {
+            ret.addArguments("--warn");
         }
         if (token != null) {
             ret.withCancellationToken(token);

@@ -24,18 +24,25 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
+import org.netbeans.modules.gradle.loaders.BaseApiAccessor;
+import org.netbeans.modules.gradle.loaders.BuildPropertiesImplementation;
+import org.openide.util.Exceptions;
+import org.openide.util.TopologicalSortException;
+import org.openide.util.Utilities;
 
 /**
  * This object holds the basic information of the Gradle project.
@@ -76,6 +83,13 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     Set<File> outputPaths = Collections.emptySet();
     Map<String, String> projectIds = Collections.emptyMap();
     GradleDependency projectDependencyNode;
+    Map<String, List<String>> taskDependencies = new HashMap<>();
+    
+    // @GuardedBy(this)
+    /**
+     * Lazy-computed list of tasks mapped to either tasksByName or created descriptions.
+     */
+    private transient Map<String, List<GradleTask>> taskDependenciesResolved = new HashMap<>();
 
     transient Boolean resolved = null;
 
@@ -257,6 +271,94 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public GradleTask getTaskByName(String name) {
         return tasksByName.get(name);
     }
+    
+    /**
+     * Returns immediate dependencies of a Task. In a case that Gradle declares dependency on
+     * a task from another project (different {@link GradleTask#getPath} or a task that is not known
+     * in {@link #getTasks()}, a {@link GradleTask} descriptor with no group or display name can
+     * be included.
+     * Return empty list for tasks that are not registered with {@link #getTasks}.
+     * 
+     * @param t task
+     * @return the dependencies
+     */
+    public List<GradleTask> getTaskDependencies(GradleTask t) {
+        if (tasksByName.get(t.getName()) == null) {
+            return Collections.emptyList();
+        }
+        List<String> taskPaths = taskDependencies.get(t.getName());
+        List<GradleTask> result;
+        
+        synchronized (this) {
+            result = taskDependenciesResolved.get(t.getName());
+            if (result != null) {
+                return result;
+            }
+        }
+        result = new ArrayList<>();
+        for (String s : taskPaths) {
+            int lastColon = s.lastIndexOf(':');
+            String p = s.substring(0, lastColon);
+            String n = p.substring(lastColon + 1);
+            if (path.equals(p)) {
+                GradleTask gr = getTaskByName(n);
+                if (gr != null) {
+                    result.add(gr);
+                    continue;
+                }
+            }
+            result.add(new GradleTask(p, null, n, null));
+        }
+        synchronized (this) {
+            taskDependenciesResolved.putIfAbsent(t.getName(), Collections.unmodifiableList(result));
+        }
+        return result;
+    }
+
+    public List<GradleTask> getTaskPredecessors(GradleTask gt) {
+        Set<String> paths = new HashSet<>();
+        Queue<String> toProcess = new ArrayDeque<>();
+        toProcess.add(gt.getPath());
+        
+        String taskPath;
+        Map<String, String> taskNamesAndPaths = new HashMap<>();
+        
+        while ((taskPath = toProcess.poll()) != null) {
+            if (!paths.add(taskPath)) {
+                continue;
+            }
+            int lastColon = taskPath.lastIndexOf(':');
+            String p = taskPath.substring(0, lastColon);
+            String n = p.substring(lastColon + 1);
+            if (path.equals(p)) {
+                taskNamesAndPaths.put(p, n);
+                toProcess.addAll(taskDependencies.getOrDefault(n, Collections.emptyList()));
+            }
+        }
+        
+        Map<String, List<String>> edges = new HashMap<>();
+        for (String tn : taskNamesAndPaths.values()) {
+            edges.put(path + ":" + tn, taskDependencies.getOrDefault(tn, Collections.emptyList()));
+        }
+        List<String> orderedTasks;
+        
+        try {
+            orderedTasks = Utilities.topologicalSort(paths, edges);
+        } catch (TopologicalSortException ex) {
+            orderedTasks = new ArrayList<>(taskNamesAndPaths.keySet());
+        }
+        List<GradleTask> result = new ArrayList<>();
+        for (String p : orderedTasks) {
+            String n = taskNamesAndPaths.get(p);
+            GradleTask toAdd = n != null ? getTaskByName(n) : null;
+            if (toAdd != null) {
+                result.add(toAdd);
+            } else {
+                result.add(new GradleTask(p, null, n, null));
+            }
+        }
+        return result;
+    }
 
     public Map<String, GradleConfiguration> getConfigurations() {
         return Collections.unmodifiableMap(configurations);
@@ -331,7 +433,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
                 && rootDir.equals(other.rootDir)
                 && !projectDir.equals(other.projectDir);
     }
-
+    
     GradleConfiguration createConfiguration(String name) {
         GradleConfiguration conf = new GradleConfiguration(name);
         configurations.put(name, conf);
@@ -452,5 +554,16 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     @Override
     public String toString() {
         return "GradleBaseProject{" + "name=" + name + ", projectDir=" + projectDir + ", plugins=" + plugins + '}';
+    }
+
+    static {
+        BaseApiAccessor.setInstance(new GradleBaseProject.BaseAccessorImpl());
+    }
+    
+    static class BaseAccessorImpl extends BaseApiAccessor {
+        @Override
+        public BuildPropertiesSupport createExtensionProperties(BuildPropertiesImplementation impl) {
+            return new BuildPropertiesSupport(impl);
+        }
     }
 }

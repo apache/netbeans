@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.api;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.loaders.BuildPropertiesImplementation;
 
 /**
@@ -31,6 +32,10 @@ public final class BuildPropertiesSupport {
 
     BuildPropertiesSupport(BuildPropertiesImplementation impl) {
         this.impl = impl;
+    }
+   
+    public static BuildPropertiesSupport get(Project p) {
+        return p.getLookup().lookup(BuildPropertiesSupport.class);
     }
     
     /**
@@ -49,8 +54,12 @@ public final class BuildPropertiesSupport {
      * @param propertyPath
      * @return Property instance or {@code null}
      */
-    public Property findPropertyValue(String propertyPath) {
-        return impl.findExtensionProperty(propertyPath);
+    public Property findExtensionProperty(String extensionName, String propertyPath) {
+        return impl.findExtensionProperty(extensionName, propertyPath);
+    }
+    
+    public Property findTaskProperty(String extensionName, String propertyPath) {
+        return impl.findExtensionProperty(extensionName, propertyPath);
     }
     
     public enum PropertyKind {

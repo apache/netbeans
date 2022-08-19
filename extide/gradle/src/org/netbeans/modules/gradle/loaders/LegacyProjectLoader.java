@@ -29,6 +29,7 @@ import java.io.PipedOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -184,6 +185,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                         if (!c.isEmpty()) {
                             LOG.finer(String.format("    %-20s: [", s));
                             for (Object x: c) {
+                                if (Object[].class.isInstance(x)) {
+                                    x = Arrays.asList((Object[])x);
+                                }
                                 LOG.finer(String.format("    %-20s", x));
                             }
                             LOG.finer("    ]");
@@ -195,8 +199,12 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                             LOG.finer(String.format("    %-20s: {", s));
                             List<String> mkeys = new ArrayList<>(m.keySet());
                             Collections.sort(mkeys);
-                            for (String k : keys) {
-                                LOG.finer(String.format("        %-20s:%s", k, m.get(k)));
+                            for (String k : mkeys) {
+                                Object x = m.get(k);
+                                if (Object[].class.isInstance(x)) {
+                                    x = Arrays.asList((Object[])x);
+                                }
+                                LOG.finer(String.format("        %-20s:%s", k, x));
                             }
                             LOG.finer("    }");
                         }

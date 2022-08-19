@@ -43,7 +43,9 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             public Set getExtract() {
                 Map<String, String> values = (Map<String, String>)props.getOrDefault("extensions.propertyValues", Collections.emptyMap()); // NOI18N
                 Map<String, String> types = (Map<String, String>)props.getOrDefault("extensions.propertyTypes", Collections.emptyMap()); // NOI18N
-                Accessor a = new Accessor(values, types);
+                Map<String, String> taskValues = (Map<String, String>)props.getOrDefault("taskProperties", Collections.emptyMap()); // NOI18N
+                Map<String, String> taskTypes = (Map<String, String>)props.getOrDefault("taskPropertyTypes", Collections.emptyMap()); // NOI18N
+                Accessor a = new Accessor(values, types, taskValues, taskTypes);
                 return Collections.singleton(a);
             }
 
@@ -57,17 +59,31 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
     private static class Accessor implements BuildPropertiesImplementation {
         private final Map<String, String> propertyMap;
         private final Map<String, String> propertyTypes;
+        private final Map<String, String> taskPropertyMap;
+        private final Map<String, String> taskPropertyTypes;
 
-        public Accessor(Map<String, String> propertyMap, Map<String, String> propertyTypes) {
+        public Accessor(Map<String, String> propertyMap, Map<String, String> propertyTypes,
+                        Map<String, String> taskPropertyMap, Map<String, String> taskPropertyTypes) {
             this.propertyMap = propertyMap;
             this.propertyTypes = propertyTypes;
+            this.taskPropertyMap = taskPropertyMap;
+            this.taskPropertyTypes = taskPropertyTypes;
         }
 
         @Override
-        public BuildPropertiesSupport.Property findExtensionProperty(String propertyPath) {
-            String t = propertyTypes.get(propertyPath);
-            String v = propertyMap.get(propertyPath);
-            String c = propertyTypes.get(propertyPath + "#col");
+        public BuildPropertiesSupport.Property findExtensionProperty(String extension, String propertyPath) {
+            return find(extension + "." + propertyPath, propertyMap, propertyTypes);
+        }
+        
+        @Override
+        public BuildPropertiesSupport.Property findTaskProperty(String task, String propertyPath) {
+            return find(task + "." + propertyPath, taskPropertyMap, taskPropertyTypes);
+        }
+        
+        private BuildPropertiesSupport.Property find(String propertyPath, Map<String, String> values, Map<String, String> types) {
+            String t = types.get(propertyPath);
+            String v = values.get(propertyPath);
+            String c = types.get(propertyPath + "#col");
             
             if (t == null && v == null) {
                 return null;

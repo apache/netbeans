@@ -26,5 +26,6 @@ import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
  * @author sdedic
  */
 public interface BuildPropertiesImplementation {
-    public BuildPropertiesSupport.Property findExtensionProperty(String propertyPath);
+    public BuildPropertiesSupport.Property findTaskProperty(String task, String propertyPath);
+    public BuildPropertiesSupport.Property findExtensionProperty(String extension, String propertyPath);
 }

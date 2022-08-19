@@ -197,6 +197,7 @@ class NbProjectInfoBuilder {
         runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
         runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
         runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
+        runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
         return model;
     }
 
@@ -217,6 +218,24 @@ class NbProjectInfoBuilder {
         model.getInfo().put("license", license);
     }
     
+    private void detectTaskProperties(NbProjectInfoModel model) {
+        Map<String, Object> taskProperties = new HashMap<>();
+        Map<String, String> taskPropertyTypes = new HashMap<>();
+        
+        Map<String, Task> taskList = project.getTasks().getAsMap();
+        for (String s : taskList.keySet()) {
+            Task task = taskList.get(s);
+            Class taskClass = task.getClass();
+            Class nonDecorated = findNonDecoratedClass(taskClass);
+            
+            taskPropertyTypes.put(task.getName(), nonDecorated.getName());
+            inspectObjectAndValues(taskClass, task, task.getName() + ".", globalTypes, taskPropertyTypes, taskProperties);
+        }
+        
+        model.getInfo().put("taskProperties", taskProperties);
+        model.getInfo().put("taskPropertyTypes", taskPropertyTypes);
+    }
+    
     private void detectTaskDependencies(NbProjectInfoModel model) {
         Map<String, Object> tasks = new HashMap<>();
         
@@ -230,6 +249,8 @@ class NbProjectInfoBuilder {
             taskInfo.put("mustRunAfter", dependenciesAsString(task, task.getMustRunAfter()));
             taskInfo.put("shouldRunAfter", dependenciesAsString(task, task.getShouldRunAfter()));
             taskInfo.put("taskDependencies", dependenciesAsString(task, task.getTaskDependencies()));
+            
+            tasks.put(task.getName(), taskInfo);
         }
         
         model.getInfo().put("taskDetails", tasks);
@@ -322,14 +343,17 @@ class NbProjectInfoBuilder {
             "taskThatOwnsThisObject",
             "additionalMethods",
             "elementsAsDynamicObject",
-            "collectionSchema"
+            "collectionSchema",
+            "didWork"
     ));
     
     private static final String[] IGNORED_SYSTEM_CLASSES_REGEXP = {
             "java\\..*",
             "org\\.gradle\\.api\\.file\\..*",
             "org\\.gradle\\.api\\.reflect\\..*",
-            "org\\.gradle\\.api\\.NamedDomainObject.*"
+            "org\\.gradle\\.api\\.NamedDomainObject.*",
+            "org.gradle.api.internal.tasks.DefaultTaskDependency",
+            "org.gradle.api.specs..*"
     };
 
     private Class findIterableItemClass(Class clazz) {
@@ -404,7 +428,8 @@ class NbProjectInfoBuilder {
         }
 
         MetaClass mclazz = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
-        Map<String, String> globTypes = globalTypes.computeIfAbsent(clazz.getName(), cn -> new HashMap<>());
+        Class nonDecorated = findNonDecoratedClass(clazz);
+        Map<String, String> globTypes = globalTypes.computeIfAbsent(nonDecorated.getName(), cn -> new HashMap<>());
         List<MetaProperty> props = mclazz.getProperties();
         for (MetaProperty mp : props) {
             Class propertyDeclaringClass = null;
@@ -490,7 +515,7 @@ class NbProjectInfoBuilder {
                 }
             }
             
-            String cn = t.getName();
+            String cn = findNonDecoratedClass(t).getName();
             globTypes.put(propName, cn);
             propertyTypes.put(prefix + propName, cn);
             if (!!isPrimitiveOrString(t) && !Provider.class.isAssignableFrom(t)) {
@@ -522,7 +547,7 @@ class NbProjectInfoBuilder {
                     NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
                     Map<String, ?> m = nc.getAsMap();
                     for (String k : m.keySet()) {
-                        newPrefix = prefix + propName + COLLECTION_CONTENT_PREFIX + k + "."; // NOI18N
+                        newPrefix = prefix + propName + COLLECTION_CONTENT_PREFIX + "." + k + "."; // NOI18N
                         Object v = m.get(k);
                         inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues);
                     }
@@ -535,7 +560,7 @@ class NbProjectInfoBuilder {
                     }
                     
                     if (itemClass != null) {
-                        cn = itemClass.getName();
+                        cn = findNonDecoratedClass(itemClass).getName();
                         propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
                         propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, cn);
                         String newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
@@ -554,6 +579,13 @@ class NbProjectInfoBuilder {
                 }
             }
         }
+    }
+    
+    private static Class findNonDecoratedClass(Class clazz) {
+        while (clazz != Object.class && (clazz.getModifiers() & 0x1000 /* Modifiers.SYNTHETIC */) > 0) {
+            clazz = clazz.getSuperclass();
+        }
+        return clazz;
     }
 
     /**
@@ -586,7 +618,8 @@ class NbProjectInfoBuilder {
                 // ignore, the extension could not be obtained, ignore.
                 continue;
             }
-            propertyTypes.put(prefix + extName, ext.getClass().getName());
+            Class c = findNonDecoratedClass(ext.getClass());
+            propertyTypes.put(prefix + extName, c.getName());
             inspectObjectAndValues(ext.getClass(), ext, prefix + extName + ".", globalTypes, propertyTypes, values);
             if (ext instanceof ExtensionAware) {
                 inspectExtensions(prefix + extName + ".", ((ExtensionAware)ext).getExtensions());  // NOI18N

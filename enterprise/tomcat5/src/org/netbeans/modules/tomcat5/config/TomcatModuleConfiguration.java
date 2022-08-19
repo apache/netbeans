@@ -743,11 +743,11 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         }
 
         // create a resource link to the global resource
-        modifyContext( (Context context) -> {
+        modifyContext( (Context ctx) -> {
             int idx = context.addResourceLink(true);
-            context.setResourceLinkName(idx, referenceName);
-            context.setResourceLinkGlobal(idx, jndiName);
-            context.setResourceLinkType(idx, "javax.sql.DataSource"); // NOI18N
+            ctx.setResourceLinkName(idx, referenceName);
+            ctx.setResourceLinkGlobal(idx, jndiName);
+            ctx.setResourceLinkType(idx, "javax.sql.DataSource"); // NOI18N
         });
         
     }

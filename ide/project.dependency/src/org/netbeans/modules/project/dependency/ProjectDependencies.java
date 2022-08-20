@@ -30,15 +30,6 @@ import org.netbeans.modules.project.dependency.spi.ProjectDependenciesImplementa
  * @author sdedic
  */
 public class ProjectDependencies {
-    
-    public static ArtifactSpec getProjectArtifact(Project target) {
-        ProjectDependenciesImplementation pds = target.getLookup().lookup(ProjectDependenciesImplementation.class);
-        if (pds == null) {
-            return null;
-        }
-        return pds.getProjectArtifact();
-    }
-    
     /**
      * Finds project dependencies.
      * 

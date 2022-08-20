@@ -780,7 +780,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     })
     private void loadMappings() {
         DefaultListModel model = new DefaultListModel();
-
+        fixedActions = new HashSet<>();
         if (handle != null) {
             boolean isWar = NbMavenProject.TYPE_WAR.equalsIgnoreCase(project.getProjectWatcher().getPackagingType());
             addSingleAction(ActionProvider.COMMAND_BUILD, model);
@@ -808,6 +808,10 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 addSingleAction(ActionProvider.COMMAND_PROFILE_SINGLE + ".deploy", model); //NOI18N
             }
             addSingleAction("javadoc", model); //NOI18N
+            
+            for (String a : CustomizerProviderImpl.ACCESSOR2.getAllActions(handle)) {
+                addSingleAction(a, model, true); //NOI18N
+            }
         }
         for (NetbeansActionMapping elem : getActionMappings().getActions()) {
             if (elem.getActionName().startsWith(CUSTOM_ACTION_PREFIX)) {
@@ -819,7 +823,13 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         lstMappings.setModel(model);
     }
     
+    private Set<String> fixedActions = new HashSet<>();
+    
     private void addSingleAction(String action, DefaultListModel model) {
+        addSingleAction(action, model, false);
+    }
+    
+    private void addSingleAction(String action, DefaultListModel model, boolean ignoreIfNotExist) {
         NetbeansActionMapping mapp = null;
         for (NetbeansActionMapping elem : getActionMappings().getActions()) {
             if (action.equals(elem.getActionName())) {
@@ -829,17 +839,24 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
         boolean userDefined = true;
         if (mapp == null) {
+            if (fixedActions.contains(action)) {
+                return;
+            }
             mapp = ActionToGoalUtils.getDefaultMapping(action, project);
             userDefined = false;
         }
         MappingWrapper wr;
         if (mapp == null) {
+            if (ignoreIfNotExist) {
+                return;
+            }
             wr = new MappingWrapper(action);
         } else {
             wr = new MappingWrapper(mapp);
         }
         wr.setUserDefined(userDefined);
         model.addElement(wr);
+        fixedActions.add(action);
     }
     
     private String createSpaceSeparatedList(List<String> list) {

@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
@@ -115,12 +116,6 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
         }
     }
 
-    // Interim, will vanish after PR#4495 merges
-    @Override
-    public ArtifactSpec getProjectArtifact() {
-        return null;
-    }
-    
     @NbBundle.Messages({
         "# {0} - project directory path",
         "ERR_NoProjectDirectory=Unable to find project directory: {0}"

@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle.editor;
+package org.netbeans.modules.gradle.editor.hints;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.swing.text.BadLocationException;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
@@ -30,8 +29,8 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.GradleDataObject;
 import org.netbeans.modules.gradle.api.GradleReport;
+import org.netbeans.modules.gradle.editor.MimeTypes;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
 
@@ -39,12 +38,12 @@ import org.openide.filesystems.FileObject;
  * Bridges GradleReports to LSP API
  * @author sdedic
  */
-@MimeRegistration(service = ErrorProvider.class, mimeType = GradleDataObject.MIME_TYPE)
+@MimeRegistration(service = ErrorProvider.class, mimeType = MimeTypes.GRADLE_FILE)
 public class LspErrorProvider implements ErrorProvider {
     @Override
     public List<? extends Diagnostic> computeErrors(Context context) {
         FileObject fo = context.file();
-        if (fo == null || !fo.getMIMEType(GradleDataObject.MIME_TYPE).equals(GradleDataObject.MIME_TYPE)) {
+        if (fo == null || !fo.getMIMEType(MimeTypes.GRADLE_FILE).equals(MimeTypes.GRADLE_FILE)) {
             return Collections.emptyList();
         }
         

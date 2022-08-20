@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.customizer;
 
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
-import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -102,7 +101,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         actionRegistry = new CustomActionRegistrationSupport(project);
         lsActions.setCellRenderer(new MyListCellRenderer());
         tfLabel.getDocument().addDocumentListener(applyListener);
-        EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
+        EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         taArgs.setEditorKit(kit);
         taArgs.getDocument().putProperty(Document.StreamDescriptionProperty, project);
         taArgs.getDocument().addDocumentListener(applyListener);

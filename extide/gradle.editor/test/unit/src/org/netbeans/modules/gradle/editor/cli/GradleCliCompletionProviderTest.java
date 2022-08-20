@@ -16,23 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle.editor.cli;
 
-package org.netbeans.modules.gradle.execute;
-
-import org.netbeans.modules.editor.NbEditorKit;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author lkishalmi
  */
+public class GradleCliCompletionProviderTest {
 
-public class GradleCliEditorKit extends NbEditorKit {
-
-    public static final String MIME_TYPE = "text/x-gradle-cli"; //NOI18N
-
-    @Override
-    public String getContentType() {
-        return MIME_TYPE; 
+    /**
+     * Test of createTask method, of class GradleCliCompletionProvider.
+     */
+    @Test
+    public void testCreateInstance() {
+        GradleCliCompletionProvider instance = new GradleCliCompletionProvider();
+        assertNotNull(instance);
     }
 
 }

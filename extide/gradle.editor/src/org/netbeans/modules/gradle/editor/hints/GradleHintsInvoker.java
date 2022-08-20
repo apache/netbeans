@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle.editor;
+package org.netbeans.modules.gradle.editor.hints;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,8 +26,8 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.GradleDataObject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.editor.MimeTypes;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -86,7 +86,7 @@ public class GradleHintsInvoker implements LookupProvider {
                 if (fo == null) {
                     return;
                 }
-                if (!GradleDataObject.MIME_TYPE.equals(fo.getMIMEType())) {
+                if (!(MimeTypes.GRADLE_FILE.equals(fo.getMIMEType()) || MimeTypes.GRADLE_KOTLIN_FILE.equals(fo.getMIMEType()))) {
                     return;
                 }
                 

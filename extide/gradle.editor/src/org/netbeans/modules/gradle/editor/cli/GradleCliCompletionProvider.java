@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.execute;
+package org.netbeans.modules.gradle.editor.cli;
 
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleTask;
@@ -263,7 +263,7 @@ public class GradleCliCompletionProvider implements CompletionProvider {
     
     private static class GradleTaskCompletionItem extends AbstractGradleCompletionItem {
 
-        @StaticResource
+        //This resource is from Gradle Projects module
         private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.gif"; //NOI18N
         private static final ImageIcon TASK_IMAGEICON = ImageUtilities.loadImageIcon(TASK_ICON, false);
 

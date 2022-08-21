@@ -171,6 +171,15 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         return includedBuilds;
     }
 
+    /**
+     * Return the list of problems reported by Gradle on
+     * project inspection. In an ideal case that should be an
+     * empty set.
+     *
+     * @return Gradle reported problems during inspection.
+     * 
+     * @since 2.27
+     */
     public Set<GradleReport> getProblems() {
         return problems;
     }

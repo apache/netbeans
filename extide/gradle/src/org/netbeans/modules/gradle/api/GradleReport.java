@@ -32,8 +32,9 @@ import org.openide.util.NbBundle;
 /**
  * Describes a problem in a buildscript reported by Gradle daemon and/or
  * our infrastructure.
- * 
+ *
  * @author sdedic
+ * @since 2.27
  */
 public final class GradleReport {
     private final String errorClass;

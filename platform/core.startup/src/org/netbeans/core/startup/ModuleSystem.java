@@ -166,7 +166,12 @@ public final class ModuleSystem {
             ignoredJars.add(new File(lib, "tools.jar")); // NOI18N
             ignoredJars.add(new File(lib, "dt.jar")); // NOI18N
         }
+        //TODO: when support for JDK 8 is abandonded, remove:
         for (String entry : System.getProperty("sun.boot.class.path", "").split(File.pathSeparator)) { // NOI18N
+            if (entry.contains("org-netbeans-agent-hooks.jar")) {
+                //should not ignore agent hooks:
+                continue;
+            }
             ignoredJars.add(new File(entry));
         }
         LOG.log(Level.FINE, "Ignored JARs: {0}", ignoredJars);

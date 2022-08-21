@@ -81,6 +81,7 @@ public abstract class TrackingHooksCallback {
                 HookDescription hd = it.next();
                 if (hd.hooks == toRemove) {
                     it.remove();
+                    return ;
                 }
             }
         }

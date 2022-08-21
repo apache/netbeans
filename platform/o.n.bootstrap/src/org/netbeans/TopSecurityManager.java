@@ -140,35 +140,64 @@ public class TopSecurityManager extends TrackingHooks {
         warnedClassesNH.add("org.netbeans.modules.apisupport.project.universe.NbPlatform"); // defaultPlatformLocation
     }
 
+    private static final Class<?> stackWalker;
+    private static final Method getInstance;
+    private static final Method forEach;
+    private static final Method getDeclaringClass;
+    private static final Enum RETAIN_CLASS_REFERENCE;
+
+    static {
+        Class<?> stackWalkerTemp;
+        Method getInstanceTemp;
+        Method forEachTemp;
+        Method getDeclaringClassTemp;
+        Enum RETAIN_CLASS_REFERENCETemp;
+        try {
+            stackWalkerTemp = Class.forName("java.lang.StackWalker");
+            Class<?> stackWalkerOptionTemp = Class.forName("java.lang.StackWalker$Option");
+            Class<?> stackWalkerStackFrameTemp = Class.forName("java.lang.StackWalker$StackFrame");
+            getInstanceTemp = stackWalkerTemp.getDeclaredMethod("getInstance", stackWalkerOptionTemp);
+            forEachTemp = stackWalkerTemp.getDeclaredMethod("forEach", Consumer.class);
+            getDeclaringClassTemp = stackWalkerStackFrameTemp.getDeclaredMethod("getDeclaringClass");
+            RETAIN_CLASS_REFERENCETemp = Enum.valueOf((Class<? extends Enum>)stackWalkerOptionTemp, "RETAIN_CLASS_REFERENCE");
+        } catch (ReflectiveOperationException ex) {
+            stackWalkerTemp = null;
+            getInstanceTemp = null;
+            forEachTemp = null;
+            getDeclaringClassTemp = null;
+            RETAIN_CLASS_REFERENCETemp = null;
+        }
+        stackWalker = stackWalkerTemp;
+        getInstance = getInstanceTemp;
+        forEach = forEachTemp;
+        getDeclaringClass = getDeclaringClassTemp;
+        RETAIN_CLASS_REFERENCE = RETAIN_CLASS_REFERENCETemp;
+    }
 
     public static Class<?>[] getStack() {
-        try {
-            List<Class<?>> classes = new ArrayList<>();
-            //StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).forEach(f -> classes.add(f.getDeclaringClass()));
-            Class<?> stackWalker = Class.forName("java.lang.StackWalker");
-            Class<?> stackWalkerOption = Class.forName("java.lang.StackWalker$Option");
-            Class<?> stackWalkerStackFrame = Class.forName("java.lang.StackWalker$StackFrame");
-            Method getInstance = stackWalker.getDeclaredMethod("getInstance", stackWalkerOption);
-            Object walker = getInstance.invoke(null, Enum.valueOf((Class<? extends Enum>)stackWalkerOption, "RETAIN_CLASS_REFERENCE"));
-            Method forEach = stackWalker.getDeclaredMethod("forEach", Consumer.class);
-            Method getDeclaringClass = stackWalkerStackFrame.getDeclaredMethod("getDeclaringClass");
-            Consumer<?> stackFrameHandler = stack -> {
-                try {
-                    classes.add((Class<?>) getDeclaringClass.invoke(stack));
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    throw TopSecurityManager.<RuntimeException>throwAny(ex);
-                }
-            };
-            forEach.invoke(walker, stackFrameHandler);
-            return classes.toArray(new Class<?>[0]);
-        } catch (ReflectiveOperationException ex) {
-            //JDK 8 compatibility:
-            StackSecurityManager t = new StackSecurityManager();
-            Class<?>[] stack = t.getClassContext();
-            Class<?>[] result = new Class<?>[stack.length - 1];
-            System.arraycopy(stack, 1, result, 0, stack.length - 1);
-            return result;
+        if (stackWalker != null) {
+            try {
+                List<Class<?>> classes = new ArrayList<>();
+                //StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).forEach(f -> classes.add(f.getDeclaringClass()));
+                Object walker = getInstance.invoke(null, RETAIN_CLASS_REFERENCE);
+                Consumer<?> stackFrameHandler = stack -> {
+                    try {
+                        classes.add((Class<?>) getDeclaringClass.invoke(stack));
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                        throw TopSecurityManager.<RuntimeException>throwAny(ex);
+                    }
+                };
+                forEach.invoke(walker, stackFrameHandler);
+                return classes.toArray(new Class<?>[0]);
+            } catch (ReflectiveOperationException ex) {
+            }
         }
+        //JDK 8 compatibility:
+        StackSecurityManager t = new StackSecurityManager();
+        Class<?>[] stack = t.getClassContext();
+        Class<?>[] result = new Class<?>[stack.length - 1];
+        System.arraycopy(stack, 1, result, 0, stack.length - 1);
+        return result;
     }
 
     @SuppressWarnings("unchecked")

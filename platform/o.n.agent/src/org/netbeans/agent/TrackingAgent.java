@@ -19,7 +19,6 @@
 package org.netbeans.agent;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -31,11 +30,13 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TrackingAgent {
 
@@ -838,13 +839,25 @@ public class TrackingAgent {
     );
     //</editor-fold>
 
+    private static final Map<String, List<TrackingTransformer.MethodEnhancement>> className2Enhancements;
+
+    static {
+        className2Enhancements = new HashMap<>();
+        for (TrackingTransformer.MethodEnhancement me : toInject) {
+            className2Enhancements.computeIfAbsent(me.className, cn -> new ArrayList<>())
+                                  .add(me);
+        }
+    }
+
+    private static Logger getLog() {
+        //cannot create the Logger eagerly:
+        return Logger.getLogger(TrackingAgent.class.getName());
+    }
+
     private static Instrumentation instrumentation;
 
     public static void premain(String arg, Instrumentation i) throws IOException, URISyntaxException {
         instrumentation = i;
-        File thisFile = new File(TrackingAgent.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        File hooksFile = new File(thisFile.getParentFile(), "org-netbeans-agent-hooks.jar");
-        i.appendToBootstrapClassLoaderSearch(new JarFile(hooksFile));
     }
 
     public static void install() {
@@ -852,20 +865,18 @@ public class TrackingAgent {
         ClassFileTransformer trackingTransformer = new TrackingTransformer();
         try {
             List<Class<?>> classes2Transform = new ArrayList<>();
-            for (String className : toInject.stream().map(me -> me.className.replace('/', '.')).collect(Collectors.toSet())) {
+            for (String className : className2Enhancements.keySet()) {
                 try {
-                    classes2Transform.add(Class.forName(className));
+                    classes2Transform.add(Class.forName(className.replace('/', '.')));
                 } catch (ClassNotFoundException ex) {
                     //XXX: warn:
-                    System.err.println("cannot instrument:");
-                    ex.printStackTrace();
+                    getLog().log(Level.SEVERE, "cannot instrument:", ex);
                 }
             }
             instrumentation.addTransformer(trackingTransformer, true);
             instrumentation.retransformClasses(classes2Transform.toArray(new Class[0]));
         } catch (UnmodifiableClassException ex) {
-            System.err.println("cannot instrument:");
-            ex.printStackTrace();
+            getLog().log(Level.SEVERE, "cannot instrument:", ex);
         } finally {
             instrumentation.removeTransformer(trackingTransformer);
         }
@@ -883,9 +894,8 @@ public class TrackingAgent {
             if (className == null) {
                 return classfileBuffer;
             }
-            try {
-                List<MethodEnhancement> thisClassEnhancements = toInject.stream().filter(me -> {/*System.err.println("className=" + className); */return className.equals(me.className);}).collect(Collectors.toList());
-            if (thisClassEnhancements.isEmpty()) {
+            List<MethodEnhancement> thisClassEnhancements = className2Enhancements.get(className);
+            if (thisClassEnhancements == null) {
 //                System.err.println("not rewriting: " + className);
                 return classfileBuffer;
             }
@@ -928,7 +938,7 @@ public class TrackingAgent {
                         constantPool.add(null);
                         break;
                     default:
-                        System.err.println("unknown constant pool tag: " + tag);
+                        getLog().log(Level.SEVERE, "unknown constant pool tag: " + tag);
                         return classfileBuffer;
                 }
             }
@@ -1023,10 +1033,6 @@ public class TrackingAgent {
             int len = classfileBuffer.length - lastCopySource;
             System.arraycopy(classfileBuffer, lastCopySource, newBuffer, lastCopyDest, len); lastCopySource += len; lastCopyDest += len;
             return newBuffer;
-            } catch (Throwable t) {
-                t.printStackTrace();
-                throw t;
-            }
         }
 
         private int readShort(byte[] classfileBuffer, int p) {

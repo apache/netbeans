@@ -88,7 +88,7 @@ public class Install implements Runnable {
     private static final Logger LOG = Logger.getLogger(Install.class.getName());
     
     public @Override void run() {
-        TrackingHooks.register(SecMan.DEFAULT, 100, TrackingHooks.Hooks.EXIT, Hooks.NEW_AWT_WINDOW);
+        TrackingHooks.register(SecMan.DEFAULT, 100, Hooks.EXIT, Hooks.NEW_AWT_WINDOW);
     }
     
     @OnStop

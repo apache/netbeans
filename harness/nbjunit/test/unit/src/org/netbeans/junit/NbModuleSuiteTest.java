@@ -232,7 +232,7 @@ public class NbModuleSuiteTest extends NbTestCase {
     public void testModulesForCL() throws Exception {
         Set<String> s = NbModuleSuite.S.findEnabledModules(ClassLoader.getSystemClassLoader());
         s.remove("org.netbeans.modules.nbjunit");
-        assertEquals("Four modules left: " + s, 6, s.size());
+        assertEquals("Six modules left: " + s, 6, s.size());
 
         assertTrue("Util: " + s, s.contains("org.openide.util.ui"));
         assertTrue("Util: " + s, s.contains("org.openide.util"));
@@ -245,7 +245,7 @@ public class NbModuleSuiteTest extends NbTestCase {
     public void testModulesForMe() throws Exception {
         Set<String> s = NbModuleSuite.S.findEnabledModules(getClass().getClassLoader());
         s.remove("org.netbeans.modules.nbjunit");
-        assertEquals("Four modules left: " + s, 6, s.size());
+        assertEquals("Six modules left: " + s, 6, s.size());
 
         assertTrue("Util: " + s, s.contains("org.openide.util.ui"));
         assertTrue("Util: " + s, s.contains("org.openide.util"));

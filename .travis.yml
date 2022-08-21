@@ -256,6 +256,7 @@ matrix:
             - ant $OPTS -f ide/hudson.tasklist test
             - ant $OPTS -f ide/hudson.ui test
             - ant $OPTS -f ide/javascript2.debug test
+            - ant $OPTS -f ide/languages.toml test
             - ant $OPTS -f ide/languages.yaml test
             - ant $OPTS -f ide/lexer test
             - ant $OPTS -f ide/lib.terminalemulator test

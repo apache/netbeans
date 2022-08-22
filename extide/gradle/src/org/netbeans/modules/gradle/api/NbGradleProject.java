@@ -169,7 +169,7 @@ public final class NbGradleProject {
 
         @Override
         public void activate(NbGradleProject watcher) {
-            watcher.attachResourceWatchers();
+            watcher.attachResourceWatchers(true);
         }
 
         @Override
@@ -255,34 +255,37 @@ public final class NbGradleProject {
     private void doFireReload() {
         detachResourceWatchers();
         support.firePropertyChange(PROP_PROJECT_INFO, null, null);
-        attachResourceWatchers();
+        attachResourceWatchers(false);
     }
 
     private void detachResourceWatchers() {
-        for (File resource : resources) {
-            try {
-                FileUtil.removeFileChangeListener(FCHSL, resource);
-            } catch (IllegalArgumentException ex) {
-                assert false : "Something is wrong with the resource handling";
+        synchronized (resources) {
+            for (File resource : resources) {
+                try {
+                    FileUtil.removeFileChangeListener(FCHSL, resource);
+                } catch (IllegalArgumentException ex) {
+                    assert false : "Something is wrong with the resource handling";
+                }
             }
+            resources.clear();
         }
-        resources.clear();
     }
 
-    private void attachResourceWatchers() {
+    private void attachResourceWatchers(boolean elevateQuality) {
         //Never listen on resource changes when only FALLBACK quality is needed
-        if (project.getAimedQuality() == Quality.FALLBACK) return;
-
-        Collection<? extends WatchedResourceProvider> all
-                = project.getLookup().lookupAll(WatchedResourceProvider.class);
-        for (WatchedResourceProvider pvd : all) {
-            resources.addAll(pvd.getWatchedResources());
-        }
-        for (File resource : resources) {
-            try {
-                FileUtil.addFileChangeListener(FCHSL, resource);
-            } catch (IllegalArgumentException ex) {
-                assert false : "Something is wrong with the resource handling";
+        if ((project.getAimedQuality() == Quality.FALLBACK) && !elevateQuality) return;
+        synchronized (resources) {
+            Collection<? extends WatchedResourceProvider> all
+                    = project.getLookup().lookupAll(WatchedResourceProvider.class);
+            for (WatchedResourceProvider pvd : all) {
+                resources.addAll(pvd.getWatchedResources());
+            }
+            for (File resource : resources) {
+                try {
+                    FileUtil.addFileChangeListener(FCHSL, resource);
+                } catch (IllegalArgumentException ex) {
+                    assert false : "Something is wrong with the resource handling";
+                }
             }
         }
     }

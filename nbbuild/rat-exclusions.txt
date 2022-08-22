@@ -215,6 +215,7 @@ javafx/javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
 java/jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh
 java/junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
 ide/languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff
+ide/languages.toml/src/org/netbeans/modules/languages/toml/*.toml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml
 java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template

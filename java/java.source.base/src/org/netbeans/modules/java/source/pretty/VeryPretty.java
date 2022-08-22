@@ -2061,8 +2061,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
-    public void visitDefaultCaseLabel(JCDefaultCaseLabel that) {
+    public void visitDefaultCaseLabel(JCDefaultCaseLabel tree) {
         print("default");
+    }
+
+    @Override
+    public void visitConstantCaseLabel(JCConstantCaseLabel tree) {
+        printExpr(tree.expr);
     }
 
     @Override

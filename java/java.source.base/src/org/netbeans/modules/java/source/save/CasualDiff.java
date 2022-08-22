@@ -76,6 +76,7 @@ import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
+import com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel;
 import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
@@ -1965,23 +1966,14 @@ public class CasualDiff {
         return diffTree((JCTree) oldT.var, (JCTree) newT.var, bounds);
     }
 
+    protected int diffConstantCaseLabel(JCConstantCaseLabel oldT, JCConstantCaseLabel newT, int[] bounds) {
+        return diffTree((JCTree) oldT.expr, (JCTree) newT.expr, bounds);
+    }
+
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
-        List<? extends JCTree> oldPatterns;
-        List<? extends JCTree> newPatterns;
-        
-        if(!(oldT.getLabels().size()==1 && oldT.getLabels().get(0).getKind().toString().equals("DEFAULT_CASE_LABEL"))){
-            oldPatterns = oldT.getLabels();            
-        }else{
-            oldPatterns = oldT.getExpressions();           
-        }
-        
-        if(!(newT.getLabels().size() == 1 && newT.getLabels().get(0).getKind().toString().equals("DEFAULT_CASE_LABEL"))){
-            newPatterns = newT.getLabels();            
-        }else{
-            newPatterns = newT.getExpressions();           
-        }
-        
+        List<? extends JCTree.JCCaseLabel> oldPatterns = oldT.getLabels();
+        List<? extends JCTree.JCCaseLabel> newPatterns = newT.getLabels();
         PositionEstimator patternEst = EstimatorFactory.casePatterns(
                 oldPatterns,
                 newPatterns,
@@ -1990,24 +1982,13 @@ public class CasualDiff {
         int posHint;
         int endpos;
         int copyTo;
-        if (oldPatterns.isEmpty()) {
-            moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.DEFAULT));
-            tokenSequence.moveNext();
+        if (JavaTokenId.DEFAULT == moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.CASE, JavaTokenId.DEFAULT))) {
             copyTo = endpos = posHint = tokenSequence.offset();
-
-            if (!newPatterns.isEmpty()) {
-                copyTo = getOldPos(oldT);
-            }
         } else {
             copyTo = posHint = oldPatterns.iterator().next().getStartPosition();
             endpos = endPos(oldPatterns.get(oldPatterns.size() - 1));
-
-            if (newPatterns.isEmpty()) {
-                moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.CASE));
+            if (newPatterns.size() == 1 && newPatterns.get(0).getKind() == Kind.DEFAULT_CASE_LABEL) {
                 copyTo = tokenSequence.offset();
-                copyTo(localPointer, copyTo);
-                localPointer = copyTo = posHint = endpos;
-                printer.print("default");
             }
         }
         copyTo(localPointer, copyTo);
@@ -5439,8 +5420,10 @@ public class CasualDiff {
         if (oldT == null && newT != null)
             throw new IllegalArgumentException("Null is not allowed in parameters.");
 
-        if (oldT == newT)
-            return elementBounds[0];
+        if (oldT == newT) {
+            copyTo(elementBounds[0], elementBounds[1]);
+            return elementBounds[1];
+        }
 
         if (newT == null) {
             tokenSequence.move(elementBounds[1]);
@@ -5729,6 +5712,13 @@ public class CasualDiff {
               break;
           case BINDINGPATTERN:
               retVal = diffBindingPattern((JCBindingPattern) oldT, (JCBindingPattern) newT, elementBounds);
+              break;
+          case DEFAULTCASELABEL:
+              copyTo(elementBounds[0], elementBounds[1]);
+              retVal = elementBounds[1];
+              break;
+          case CONSTANTCASELABEL:
+              retVal = diffConstantCaseLabel((JCConstantCaseLabel) oldT, (JCConstantCaseLabel) newT, elementBounds);
               break;
           default:
               // handle special cases like field groups and enum constants

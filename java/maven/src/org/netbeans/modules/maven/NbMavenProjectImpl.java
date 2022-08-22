@@ -442,6 +442,7 @@ public final class NbMavenProjectImpl implements Project {
                 ProjectActionContext.newBuilder(ctx.getProject())
                     .withProfiles(ctx.getProfiles())
                     .withProperties(ctx.getProperties())
+                    .forProjectAction(ctx.getProjectAction())
                     .context();
         MavenProject result;
         

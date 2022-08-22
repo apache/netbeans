@@ -24,7 +24,7 @@ import org.eclipse.lsp4j.MessageType;
 import org.netbeans.modules.java.lsp.server.htmlui.Buttons;
 import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonName0;
 import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonText0;
-import org.netbeans.modules.java.lsp.server.htmlui.Browser;
+import org.netbeans.modules.java.lsp.server.htmlui.WebView;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.UIContext;
@@ -92,7 +92,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
     protected final class View {
         final Context ctx;
         private final UIContext ui;
-        private Browser presenter;
+        private WebView presenter;
 
         private View(UIContext ui, Context ctx) {
             this.ui = ui;
@@ -118,15 +118,14 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
                 notifyClose();
                 return;
             }
-            Browser.Config c = new Browser.Config();
-            c.browser((page) -> {
+            presenter = new WebView((page) -> {
                 try {
                     HtmlPageParams params = new HtmlPageParams(page.getId(), page.getText());
                     if (!page.getResources().isEmpty()) {
                         params = params.setResources(page.getResources());
                     }
                     ui.showHtmlPage(params).thenAccept((t) -> {
-                        final Browser p = presenter;
+                        final WebView p = presenter;
                         if (p == null) {
                             return;
                         }
@@ -151,7 +150,6 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
                     Exceptions.printStackTrace(ex);
                 }
             });
-            presenter = new Browser(c);
             presenter.displayPage(ctx);
         }
     }

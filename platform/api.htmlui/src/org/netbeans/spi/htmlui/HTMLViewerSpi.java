@@ -64,7 +64,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
             new ContextAccessor() {
                 @Override
                 public Context newContext(
-                    ClassLoader loader, URL url, URL[] resources, String[] techIds,
+                    ClassLoader loader, URL url, String[] resources, String[] techIds,
                     OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<Lookup> onPageLoad,
                     Class<?> component
                 ) {
@@ -74,7 +74,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
         }
         private final ClassLoader loader;
         private final URL url;
-        private final URL[] resources;
+        private final String[] resources;
         private final String[] techIds;
         private final OnSubmit onSubmit;
         private final Consumer<String> lifeCycleCallback;
@@ -82,7 +82,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
         private final Class<?> component;
 
         private Context(
-            ClassLoader loader, URL url, URL[] resources, String[] techIds,
+            ClassLoader loader, URL url, String[] resources, String[] techIds,
             OnSubmit onSubmit, Consumer<String> lifeCycleCallback,
             Callable<Lookup> onPageLoad, Class<?> component
         ) {
@@ -192,12 +192,13 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
             return loader;
         }
 
-        /** List of resources available to the page.
+        /** List of resources available to the page. Resources are at the same relative
+         * locations like the page.
          *
          * @return resources used in the page displayed by the HTML user interface
          * @since 1.25
          */
-        public URL[] getResources() {
+        public String[] getResources() {
             return resources.clone();
         }
 

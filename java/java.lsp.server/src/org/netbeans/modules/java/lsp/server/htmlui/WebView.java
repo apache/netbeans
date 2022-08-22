@@ -53,17 +53,17 @@ import org.netbeans.spi.htmlui.HTMLViewerSpi;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
-public class Browser implements Closeable {
+public class WebView implements Closeable {
 
-    private static final Logger LOG = Logger.getLogger(Browser.class.getName());
+    private static final Logger LOG = Logger.getLogger(WebView.class.getName());
 
-    private final Config config;
+    private final Consumer<Page> viewer;
     private final String app;
     private Runnable onPageLoad;
     private String id;
 
-    public Browser(Config config) {
-        this.config = config;
+    public WebView(Consumer<Page> viewer) {
+        this.viewer = viewer;
         this.app = findCalleeClassName();
     }
 
@@ -79,9 +79,9 @@ public class Browser implements Closeable {
             };
             this.id = UUID.randomUUID().toString();
             Server.SESSIONS.put(this.id, new Command(this));
-            this.config.getBrowser().accept(new Config.Page(this.id, getText(ctx.getPage(), this.id), getResources(ctx.getResources())));
+            this.viewer.accept(new Page(this.id, getText(ctx.getPage(), this.id), getResources(ctx.getPage(), ctx.getResources())));
         } catch (IOException ex) {
-            Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WebView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -154,12 +154,10 @@ public class Browser implements Closeable {
                 + "</script>\n");
     }
 
-    private Map<String, String> getResources(URL[] resources) throws IOException {
+    private Map<String, String> getResources(URL page, String[] resources) throws IOException {
         Map<String, String> ret = new HashMap<>();
-        for (URL resource : resources) {
-            String path = resource.getPath();
-            int idx = path.lastIndexOf("/");
-            ret.put(idx < 0 ? path : path.substring(idx + 1), getText(resource, null));
+        for (String resource : resources) {
+            ret.put(resource, getText(new URL(page, resource), null));
         }
         return ret;
     }
@@ -208,63 +206,46 @@ public class Browser implements Closeable {
         return "org.netbeans.html"; // NOI18N
     }
 
-    public static final class Config {
-        private Consumer<Page> browser;
-        private Random random = new Random();
+    public static final class Page {
+        private final String id;
+        private final String text;
+        private final Map<String, String> resources;
 
-        public Config() {
+        private Page(String id, String text, Map<String, String> resources) {
+            this.id = id;
+            this.text = text;
+            this.resources = resources;
         }
 
-        public Config browser(Consumer<Page> browser) {
-            this.browser = browser;
-            return this;
+        public String getId() {
+            return id;
         }
 
-        final Consumer<Page> getBrowser() {
-            return browser;
+        public String getText() {
+            return text;
         }
 
-        public static final class Page {
-            private final String id;
-            private final String text;
-            private final Map<String, String> resources;
-
-            public Page(String id, String text, Map<String, String> resources) {
-                this.id = id;
-                this.text = text;
-                this.resources = resources;
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public String getText() {
-                return text;
-            }
-
-            public Map<String, String> getResources() {
-                return resources;
-            }
+        public Map<String, String> getResources() {
+            return resources;
         }
     }
 
     private static final class Command implements Executor, ThreadFactory {
-        private final Browser browser;
+        private final WebView webView;
         private final String id;
         private final Executor RUN;
         private Thread RUNNER;
         private NbCodeLanguageClient client;
         private final ProtoPresenter presenter;
 
-        private Command(Browser browser) {
-            this.browser = browser;
-            this.id = this.browser.id;
+        private Command(WebView webView) {
+            this.webView = webView;
+            this.id = this.webView.id;
             this.RUN = Executors.newSingleThreadExecutor(this);
             this.presenter = ProtoPresenterBuilder.newBuilder().
                 preparator(this::callbackFn, true).
                 loadJavaScript(this::loadJS, false).
-                app(browser.app).
+                app(webView.app).
                 dispatcher(this, true).
                 displayer(this::displayPage).
                 logger(this::log).
@@ -292,7 +273,7 @@ public class Browser implements Closeable {
         private void initialize(NbCodeLanguageClient client) {
             if (this.client == null) {
                 this.client = client;
-                execute(browser.onPageLoad);
+                execute(webView.onPageLoad);
             }
         }
 
@@ -318,7 +299,7 @@ public class Browser implements Closeable {
         }
 
         private void callbackFn(ProtoPresenterBuilder.OnPrepared onReady) {
-            String sb = this.browser.createCallbackFn(id);
+            String sb = this.webView.createCallbackFn(id);
             execScript(sb);
             onReady.callbackIsPrepared("toBrwsrSrvr");
         }
@@ -387,7 +368,7 @@ public class Browser implements Closeable {
     @ServiceProvider(service = CodeActionsProvider.class)
     public static final class Server extends CodeActionsProvider {
 
-        private static final Map<String, Browser.Command> SESSIONS = new HashMap<>();
+        private static final Map<String, WebView.Command> SESSIONS = new HashMap<>();
         private static final String PROCESS_COMMAND = "nb.htmlui.process.command"; // NOI18N
         private static final String ID = "id"; // NOI18N
         private final Gson gson = new Gson();
@@ -403,7 +384,7 @@ public class Browser implements Closeable {
                 final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
                 final String id = (String) m.get(ID);
                 if (id != null) {
-                    Browser.Command c = SESSIONS.get(id);
+                    WebView.Command c = SESSIONS.get(id);
                     if (c != null) {
                         return c.service(client, m).thenApply(res -> res != null ? res : "null");
                     }

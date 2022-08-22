@@ -36,8 +36,8 @@ public interface WebFragment extends org.netbeans.modules.j2ee.dd.api.common.Roo
 
     // Methods specific for WebFragment
 
-	RelativeOrdering newRelativeOrdering();
-	RelativeOrdering[] getOrdering();
-	void setOrdering(RelativeOrdering[] value);
+    RelativeOrdering newRelativeOrdering();
+    RelativeOrdering[] getOrdering();
+    void setOrdering(RelativeOrdering[] value);
 
 }

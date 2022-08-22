@@ -37,12 +37,12 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.project.JavaProjectConstants;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
@@ -145,6 +145,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
 
     private Map<String, GradleJavaSourceSet> gradleSources = Collections.emptyMap();
     private Map<String, Collection<File>> sourceGroups;
+    private Set<File> emptyGenerated;
     private final Map<Pair<String, File>, SourceGroup> cache = new HashMap<>();
 
     public GradleSourcesImpl(Project project) {
@@ -159,7 +160,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         for (SourceType st : stype) {
             Set<File> processed = new HashSet<>();
             for (String group : gradleSources.keySet()) {
-                Set<File> dirs = gradleSources.get(group).getSourceDirs(st);
+                Set<File> dirs = filterEmptyGeneratedDirs(gradleSources.get(group).getSourceDirs(st));
                 boolean unique = dirs.size() == 1;
                 for (File dir : dirs) {
                     if (!processed.contains(dir) && dir.isDirectory()) {
@@ -254,8 +255,12 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
     private void checkChanges(boolean fireChanges) {
         boolean changed = sourceGroups == null;
 
-        if (GradleJavaProject.get(proj) != null) {
-            Map<String, GradleJavaSourceSet> newSources = GradleJavaProject.get(proj).getSourceSets();
+        GradleJavaProject gjp = GradleJavaProject.get(proj);
+        if ( gjp != null) {
+
+            emptyGenerated = checkEmptyGeneratedSourceDirs(gjp);
+
+            Map<String, GradleJavaSourceSet> newSources = gjp.getSourceSets();
             if (sourceGroups != null) {
                 Set<String> enteringGroups = new HashSet<>(newSources.keySet());
                 Set<String> leavingGroups = new HashSet<>(sourceGroups.keySet());
@@ -266,7 +271,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
                 changed = !leavingGroups.isEmpty() || !enteringGroups.isEmpty();
                 if (!changed) {
                     for (String rg : remainingGroups) {
-                        if (!sourceGroups.get(rg).equals(newSources.get(rg).getAvailableDirs(false))) {
+                        if (!sourceGroups.get(rg).equals(filterEmptyGeneratedDirs(newSources.get(rg)))) {
                             changed = true;
                             break;
                         }
@@ -275,7 +280,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
             }
             sourceGroups = new HashMap<>();
             for (Map.Entry<String, GradleJavaSourceSet> entry : newSources.entrySet()) {
-                sourceGroups.put(entry.getKey(), entry.getValue().getAvailableDirs(false));
+                sourceGroups.put(entry.getKey(), filterEmptyGeneratedDirs(entry.getValue()));
             }
             gradleSources = newSources;
             cache.clear();
@@ -283,6 +288,39 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         if (changed && fireChanges) {
             cs.fireChange();
         }
+    }
+
+    private Set<File> checkEmptyGeneratedSourceDirs(GradleJavaProject gjp) {
+        Set<File> ret = new HashSet<>();
+        for (GradleJavaSourceSet ss : gjp.getSourceSets().values()) {
+            for (File dir : ss.getGeneratedSourcesDirs()) {
+                String[] list = dir.list();
+                if ((list == null) || (list.length == 0)) {
+                    ret.add(dir);
+                }
+            }
+        }
+        return ret;
+    }
+
+    private Collection<File> filterEmptyGeneratedDirs(GradleJavaSourceSet ss) {
+        Collection<File> ret = new ArrayList<>();
+        for (File dir : ss.getAvailableDirs(false)) {
+            if (!emptyGenerated.contains(dir)) {
+                ret.add(dir);
+            }
+        }
+        return ret;
+    }
+
+    private Set<File> filterEmptyGeneratedDirs(Set<File> files) {
+        Set<File> ret = new LinkedHashSet<>();
+        for (File dir : files) {
+            if (!emptyGenerated.contains(dir)) {
+                ret.add(dir);
+            }
+        }
+        return ret;
     }
 
     public @Override

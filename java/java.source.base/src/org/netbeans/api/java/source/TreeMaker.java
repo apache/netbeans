@@ -276,7 +276,18 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
-        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> (CaseLabelTree) p).collect(Collectors.toList()), body);
+        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> {
+            if (p instanceof CaseLabelTree) {
+                return (CaseLabelTree) p;
+            }
+            if (p instanceof ExpressionTree) {
+                return delegate.ConstantCaseLabel((ExpressionTree) p);
+            }
+            if (p instanceof PatternTree) {
+                return delegate.PatternCaseLabel((PatternTree) p, null);
+            }
+            throw new IllegalArgumentException("Invalid pattern kind: " + p.getKind()); //NOI18N
+        }).collect(Collectors.toList()), body);
     }
     
     /**
@@ -288,7 +299,18 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
-        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> (CaseLabelTree) p).collect(Collectors.toList()), statements);
+        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> {
+            if (p instanceof CaseLabelTree) {
+                return (CaseLabelTree) p;
+            }
+            if (p instanceof ExpressionTree) {
+                return delegate.ConstantCaseLabel((ExpressionTree) p);
+            }
+            if (p instanceof PatternTree) {
+                return delegate.PatternCaseLabel((PatternTree) p, null);
+            }
+            throw new IllegalArgumentException("Invalid pattern kind: " + p.getKind()); //NOI18N
+        }).collect(Collectors.toList()), statements);
     }
     
     /**

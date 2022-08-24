@@ -55,6 +55,7 @@ import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.NoJavacHelper;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -584,9 +585,11 @@ public class Reformatter implements ReformatTask {
                     return true;
 
                 Boolean ret;
-
-                ret = super.scan(tree, p);
-
+                if (tree != null && tree.getKind().toString().equals(TreeShims.DECONSTRUCTION_PATTERN)) {
+                    ret = scanDeconstructionPattern(tree, p);
+                } else {
+                    ret = super.scan(tree, p);
+                }
                 return ret != null ? ret : true;
             }
             finally {
@@ -2800,7 +2803,7 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
-        @Override
+       /* @Override
         public Boolean visitGuardedPattern(GuardedPatternTree node, Void p) {
             scan(node.getPattern(), p);
             space();
@@ -2809,6 +2812,17 @@ public class Reformatter implements ReformatTask {
             scan(node.getExpression(), p);
 
             return true;
+        }*/
+
+        private Boolean scanDeconstructionPattern(Tree node, Void p) {
+            scan(TreeShims.getDeconstructor(node), p);
+            spaces(0);
+            accept(LPAREN);
+            spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, TreeShims.getNestedPatterns(node));
+            accept(RPAREN);
+            Boolean r = scan(TreeShims.getVariable(node), p);
+            return r;
         }
 
         @Override

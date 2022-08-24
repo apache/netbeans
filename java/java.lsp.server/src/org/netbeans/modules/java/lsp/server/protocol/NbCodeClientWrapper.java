@@ -80,6 +80,11 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     }
 
     @Override
+    public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+        return remote.execInHtmlPage(params);
+    }
+
+    @Override
     public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
         return remote.showQuickPick(params);
     }

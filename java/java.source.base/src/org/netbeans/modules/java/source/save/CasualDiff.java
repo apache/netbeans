@@ -1965,6 +1965,28 @@ public class CasualDiff {
         return diffTree((JCTree) oldT.var, (JCTree) newT.var, bounds);
     }
 
+    protected int diffRecordPattern(Tree oldT, Tree newT, int[] bounds) {
+        int localPointer = bounds[0];
+
+        // deconstructor
+        int[] exprBounds = getBounds((JCTree) TreeShims.getDeconstructor(oldT));
+        copyTo(localPointer, exprBounds[0]);
+        localPointer = diffTree((JCTree) TreeShims.getDeconstructor(oldT), (JCTree) TreeShims.getDeconstructor(newT), exprBounds);
+
+        // Nested Patterns
+        Iterator<? extends PatternTree> oldTIter = TreeShims.getNestedPatterns(oldT).iterator();
+        Iterator<? extends PatternTree> newTIter = TreeShims.getNestedPatterns(newT).iterator();
+        while (oldTIter.hasNext()) {
+            JCTree oldP = (JCTree) oldTIter.next();
+            JCTree newP = (JCTree) newTIter.next();
+            int[] patternBounds = getBounds(oldP);
+            copyTo(localPointer, patternBounds[0]);
+            localPointer = diffTree(oldP, newP, patternBounds);
+        }
+        copyTo(localPointer, bounds[1]);
+        return bounds[1];
+    }
+
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
         List<? extends JCTree> oldPatterns;
@@ -5736,6 +5758,10 @@ public class CasualDiff {
                   if (oldT instanceof FieldGroupTree) {
                       return diffFieldGroup((FieldGroupTree) oldT, (FieldGroupTree) newT, elementBounds);
                   }
+                  break;
+              }
+              if (oldT.getKind().toString().equals(TreeShims.DECONSTRUCTION_PATTERN)) {
+                  retVal = diffRecordPattern(oldT, newT, elementBounds);
                   break;
               }
               String msg = "Diff not implemented: " +

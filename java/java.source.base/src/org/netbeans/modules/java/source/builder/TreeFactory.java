@@ -85,6 +85,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.java.source.TreeShims;
 import static org.netbeans.modules.java.source.save.PositionEstimator.*;
 
 /**
@@ -906,9 +907,13 @@ public class TreeFactory {
         return make.at(NOPOS).BindingPattern((JCVariableDecl) vt);
     }
 
-    public GuardedPatternTree GuardedPattern(PatternTree pattern, ExpressionTree guard) {
-        return make.at(NOPOS).GuardPattern((JCPattern) pattern, (JCExpression) guard);
+    public Tree RecordPattern(ExpressionTree deconstructor, List<PatternTree> nested, VariableTree vt) {
+        return TreeShims.RecordPattern(make.at(NOPOS), deconstructor, nested, vt);
     }
+
+    /*public GuardedPatternTree GuardedPattern(PatternTree pattern, ExpressionTree guard) {
+        return make.at(NOPOS).GuardPattern((JCPattern) pattern, (JCExpression) guard);
+    }*/
 
     public ParenthesizedPatternTree ParenthesizedPattern(PatternTree pattern) {
         return make.at(NOPOS).ParenthesizedPattern((JCPattern) pattern);

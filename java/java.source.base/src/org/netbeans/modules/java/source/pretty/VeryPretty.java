@@ -26,6 +26,7 @@ import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.*;
@@ -108,6 +109,7 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -2077,8 +2079,31 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-	print("(UNKNOWN: " + tree + ")");
-	newline();
+        if ("DECONSTRUCTION_PATTERN".equals(tree.getKind().name())) {
+            visitRecordPattern(tree);
+            return;
+        }
+        print("(UNKNOWN: " + tree + ")");
+        newline();
+    }
+
+    public void visitRecordPattern(JCTree tree) {
+        print((JCExpression) TreeShims.getDeconstructor(tree));
+        print("(");
+        Iterator<? extends PatternTree> it = TreeShims.getNestedPatterns(tree).iterator();
+        while (it.hasNext()) {
+            JCPattern pattern = (JCPattern) it.next();
+            if (pattern instanceof JCBindingPattern) {
+                visitBindingPattern((JCBindingPattern) pattern);
+            } else {
+                visitRecordPattern((JCTree) pattern);
+            }
+            if (it.hasNext()) {
+                print(", ");
+            }
+        }
+        print(") ");
+        print(TreeShims.getVariable(tree).getName().toString());
     }
 
     /**************************************************************************

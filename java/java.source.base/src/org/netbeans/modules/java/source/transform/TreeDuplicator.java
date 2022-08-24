@@ -679,11 +679,12 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitGuardedPattern(GuardedPatternTree tree, Void p) {
-        GuardedPatternTree n = make.GuardedPattern(tree.getPattern(), tree.getExpression());
+       /* GuardedPatternTree n = make.GuardedPattern(tree.getPattern(), tree.getExpression());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
-        return n;
+        return n;*/
+       return null;
     }
 
     @Override

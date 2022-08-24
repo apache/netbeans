@@ -40,6 +40,7 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.source.GeneratorUtilitiesAccessor;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.QualIdentTree;
@@ -119,9 +120,11 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     public Tree translate(Tree tree) {
 	if (tree == null) {
 	    return null;
+        } else if (tree.getKind().name().equals(TreeShims.DECONSTRUCTION_PATTERN)) {
+             return rewriteChildrenRecordPattern(tree);
         } else {
-	    Tree t = tree.accept(this, null);
-            
+            Tree t = tree.accept(this, null);
+
             if (tree2Tag != null && tree != t && tmaker != null) {
                 t = tmaker.asReplacementOf(t, tree, true);
                 tree2Tag.put(t, tree2Tag.get(tree));
@@ -535,8 +538,10 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return rewriteChildren(tree);
     }
     public Tree visitGuardedPattern(GuardedPatternTree tree, Object p) {
-        return rewriteChildren(tree);
+       // return rewriteChildren(tree);
+       return null;
     }
+
     public Tree visitParenthesizedPattern(ParenthesizedPatternTree tree, Object p) {
         return rewriteChildren(tree);
     }
@@ -1429,7 +1434,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return tree;
     }
 
-    private GuardedPatternTree rewriteChildren(GuardedPatternTree tree) {
+    /*private GuardedPatternTree rewriteChildren(GuardedPatternTree tree) {
         PatternTree newPattern = (PatternTree) translate(tree.getPattern());
         ExpressionTree newGuard = (ExpressionTree) translate(tree.getExpression());
         if (newPattern != tree.getPattern() ||
@@ -1441,7 +1446,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             tree = n;
         }
         return tree;
-    }
+    }*/
 
     private ParenthesizedPatternTree rewriteChildren(ParenthesizedPatternTree tree) {
         PatternTree newPattern = (PatternTree) translate(tree.getPattern());
@@ -1478,5 +1483,9 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	    tree = n;
 	}
 	return tree;
+    }
+
+    protected final Tree rewriteChildrenRecordPattern(Tree tree) {
+	return tree; //TBD
     }
 }

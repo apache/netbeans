@@ -29,6 +29,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -45,6 +46,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.windows.IOColors;
 import org.openide.windows.OutputListener;
+
 /**
  * Abstract Lines implementation with handling for getLine wrap calculations, etc.
  */
@@ -302,7 +304,7 @@ abstract class AbstractLines implements Lines, Runnable, ActionListener {
         longestLineLen = 0;
         listener = null;
         dirty = false;
-        curDefColors = getDefColors().clone();
+        curDefColors = new ArrayList<Color>().toArray(getDefColors());
     }
 
     private boolean dirty;

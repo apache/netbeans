@@ -21,6 +21,7 @@ package org.netbeans.modules.classfile;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A stack map frame, as defined by a StackMapTable attribute.  A stack map
@@ -270,7 +271,7 @@ public abstract class StackMapFrame {
          * locals.
          */
         public VerificationTypeInfo[] getLocals() {
-            return locals.clone();
+            return new ArrayList<VerificationTypeInfo>().toArray(locals);
         }
     }
     
@@ -302,7 +303,7 @@ public abstract class StackMapFrame {
          * locals.
          */
         public VerificationTypeInfo[] getLocals() {
-            return locals.clone();
+            return new ArrayList<VerificationTypeInfo>().toArray(locals);
         }
         
         /**
@@ -310,7 +311,7 @@ public abstract class StackMapFrame {
          * stack items.
          */
         public VerificationTypeInfo[] getStackItems() {
-            return stackItems.clone();
+            return new ArrayList<VerificationTypeInfo>().toArray(stackItems);
         }
     }
 }

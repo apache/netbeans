@@ -24,6 +24,7 @@ package org.netbeans.modules.classfile;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * The Code attribute of a method.
@@ -127,7 +128,7 @@ public final class Code {
     }
     
     public final ExceptionTableEntry[] getExceptionTable() {
-        return exceptionTable.clone();
+        return new ArrayList<ExceptionTableEntry>().toArray(exceptionTable);
     }
 
     /**
@@ -143,7 +144,7 @@ public final class Code {
      * Returns the local variable table for this code.
      */
     public final LocalVariableTableEntry[] getLocalVariableTable() {
-        return localVariableTable.clone();
+        return new ArrayList<LocalVariableTableEntry>().toArray(localVariableTable);
     }
 
     /**
@@ -152,7 +153,7 @@ public final class Code {
      * are generic.
      */
     public final LocalVariableTypeTableEntry[] getLocalVariableTypeTable() {
-        return localVariableTypeTable.clone();
+        return new ArrayList<LocalVariableTypeTableEntry>().toArray(localVariableTypeTable);
     }
     
     /**
@@ -160,7 +161,7 @@ public final class Code {
      * information needed by the new classfile verifier in Java 6.
      */
     public final StackMapFrame[] getStackMapTable() {
-        return stackMapTable.clone();
+        return new ArrayList<StackMapFrame>().toArray(stackMapTable);
     }
 
     @Override

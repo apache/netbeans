@@ -88,7 +88,7 @@ public class Annotation {
      * array of AnnotationComponents.
      */
     public final AnnotationComponent[] getComponents() {
-	return components.clone();
+	return new ArrayList<AnnotationComponent>().toArray(components);
     }
 
     /**

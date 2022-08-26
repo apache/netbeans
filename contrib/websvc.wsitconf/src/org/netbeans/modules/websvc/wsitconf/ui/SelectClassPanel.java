@@ -60,7 +60,7 @@ public class SelectClassPanel extends JPanel implements ExplorerManager.Provider
     }
     
     public Node[] getSelectedNodes(){
-        return selectedNodes.clone();
+        return (new ArrayList<Node>()).toArray(selectedNodes);
     }
     
     public ExplorerManager getExplorerManager() {

@@ -190,8 +190,7 @@ public final class
     /** fires event that notifies about new process */
     protected final void fireExecutionStarted (ExecutionEvent ev) {
         runningTasks.add( ev.getProcess() );
-	@SuppressWarnings("unchecked") 
-        Iterator<ExecutionListener> iter = ((HashSet<ExecutionListener>) executionListeners.clone()).iterator();
+        Iterator<ExecutionListener> iter = new HashSet<ExecutionListener>(executionListeners).iterator();
         while (iter.hasNext()) {
             ExecutionListener l = iter.next();
             l.startedExecution(ev);
@@ -201,8 +200,7 @@ public final class
     /** fires event that notifies about the end of a process */
     protected final void fireExecutionFinished (ExecutionEvent ev) {
         runningTasks.remove( ev.getProcess() );
-	@SuppressWarnings("unchecked") 
-        Iterator<ExecutionListener> iter = ((HashSet<ExecutionListener>) executionListeners.clone()).iterator();
+        Iterator<ExecutionListener> iter = new HashSet<ExecutionListener>(executionListeners).iterator();
         while (iter.hasNext()) {
             ExecutionListener l = iter.next();
             l.finishedExecution(ev);

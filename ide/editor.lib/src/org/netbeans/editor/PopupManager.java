@@ -289,7 +289,7 @@ public class PopupManager {
         if (viewParent instanceof JViewport) {
             Rectangle viewBounds = ((JViewport)viewParent).getViewRect();
 
-            Rectangle translatedCursorBounds = (Rectangle)cursorBounds.clone();
+            Rectangle translatedCursorBounds = new Rectangle(cursorBounds);
             if (placement != FixedPoint) {
                 translatedCursorBounds.translate(-viewBounds.x, -viewBounds.y);
             }

@@ -580,7 +580,7 @@ public final class DatabaseConnection implements DBConnection {
 
     @Override
     public Properties getConnectionProperties() {
-        return (Properties) connectionProperties.clone();
+        return new Properties(connectionProperties);
     }
 
     @Override
@@ -589,7 +589,7 @@ public final class DatabaseConnection implements DBConnection {
         if (connectionProperties == null) {
             this.connectionProperties = new Properties();
         } else {
-            this.connectionProperties = (Properties) connectionProperties.clone();
+            this.connectionProperties = new Properties(connectionProperties);
         }
         propertySupport.firePropertyChange(PROP_CONNECTIONPROPERTIES, old, connectionProperties);
     }

@@ -428,8 +428,8 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
         // introduction of new (otherwise redundant) grid lines.
         
         LayoutInfoComparator comp = new LayoutInfoComparator(LayoutInfoComparator.XAXIS);
-        LayoutInfo [] layoutsX = layouts.clone();
-        LayoutInfo [] layoutsY = layouts.clone();
+        LayoutInfo [] layoutsX = new ArrayList<LayoutInfo>().toArray(layouts);
+        LayoutInfo [] layoutsY = new ArrayList<LayoutInfo>().toArray(layouts);
         Arrays.sort(layoutsX, comp);
         comp.cord = LayoutInfoComparator.YAXIS;
         Arrays.sort(layoutsY, comp);

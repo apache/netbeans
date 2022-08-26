@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -260,8 +261,8 @@ public class SpecificationFactory implements DatabaseSpecificationFactory, Drive
     /** Creates deep copy of Map.
     * All items will be cloned. Used internally in this object.
     */
-    private HashMap deepClone(HashMap map) {
-        HashMap newone = (HashMap)map.clone();
+    private Map<Object, Object> deepClone(Map map) {
+        Map<Object, Object> newone = new HashMap<>(map);
         Iterator it = newone.keySet().iterator();
         while (it.hasNext()) {
             Object newkey = it.next();
@@ -269,9 +270,9 @@ public class SpecificationFactory implements DatabaseSpecificationFactory, Drive
             if (newobj instanceof HashMap)
                 deepobj = deepClone((HashMap)newobj);
             else if (newobj instanceof String)
-                deepobj = (Object)new String((String)newobj);
+                deepobj = new String((String)newobj);
             else if (newobj instanceof Vector)
-                deepobj = ((Vector)newobj).clone();
+                deepobj = new Vector((Vector)newobj);
             newone.put(newkey, deepobj);
         }
 

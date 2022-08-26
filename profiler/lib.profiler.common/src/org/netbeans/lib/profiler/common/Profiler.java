@@ -292,7 +292,7 @@ public abstract class Profiler {
         final Vector toNotify;
 
         synchronized (this) {
-            toNotify = (Vector) profilingStateListeners.clone();
+            toNotify = new Vector(profilingStateListeners);
         }
 
         final Iterator iterator = toNotify.iterator();
@@ -325,7 +325,7 @@ public abstract class Profiler {
         final Vector toNotify;
 
         synchronized (this) {
-            toNotify = (Vector) profilingStateListeners.clone();
+            toNotify = new Vector(profilingStateListeners);
         }
 
         final Iterator iterator = toNotify.iterator();
@@ -353,7 +353,7 @@ public abstract class Profiler {
         final Vector toNotify;
 
         synchronized (this) {
-            toNotify = (Vector) profilingStateListeners.clone();
+            toNotify = new Vector(profilingStateListeners);
         }
 
         final Iterator iterator = toNotify.iterator();
@@ -380,7 +380,7 @@ public abstract class Profiler {
         final Vector toNotify;
 
         synchronized (this) {
-            toNotify = (Vector) profilingStateListeners.clone();
+            toNotify = new Vector(profilingStateListeners);
         }
 
         final Iterator iterator = toNotify.iterator();
@@ -407,7 +407,7 @@ public abstract class Profiler {
         final Vector toNotify;
 
         synchronized (this) {
-            toNotify = (Vector) profilingStateListeners.clone();
+            toNotify = new Vector(profilingStateListeners);
         }
 
         final Iterator iterator = toNotify.iterator();

@@ -35,7 +35,7 @@ import org.openide.util.lookup.Lookups;
 final class NetigsoHandle {
     private final ModuleManager mgr;
     // @GuardedBy("toEnable")
-    private final ArrayList<Module> toEnable = new ArrayList<Module>();
+    private final ArrayList<Module> toEnable = new ArrayList<>();
     // @GuardedBy("NetigsoFramework.class")    
     private NetigsoFramework framework;
     // @GuardedBy("this")
@@ -166,9 +166,7 @@ final class NetigsoHandle {
         }
         List<Module> clone;
         synchronized (toEnable) {
-            @SuppressWarnings("unchecked")
-            List<Module> cloneTmp = (List<Module>) toEnable.clone();
-            clone = cloneTmp;
+            clone = new ArrayList<>(toEnable);
             toEnable.clear();
         }
         if (!clone.isEmpty()) {

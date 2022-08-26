@@ -224,11 +224,11 @@ public interface Index extends Node.Cookie {
                 return;
             }
 
-            HashSet cloned;
+            Set cloned;
 
             // clone listener list
             synchronized (this) {
-                cloned = (HashSet) listeners.clone();
+                cloned = new HashSet<>(listeners);
             }
 
             // fire on cloned list to prevent from modifications when firing

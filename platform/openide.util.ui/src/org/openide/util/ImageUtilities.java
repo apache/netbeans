@@ -1254,7 +1254,8 @@ public final class ImageUtilities {
         // the heap with useless properties strings. Saves tens of KBs
         @Override
         public void setProperties(Hashtable props) {
-            props = (Hashtable) props.clone();
+            // props = (Hashtable) props.clone();
+            props = new Hashtable(props);
             consumer.setProperties(props);
         }
     }

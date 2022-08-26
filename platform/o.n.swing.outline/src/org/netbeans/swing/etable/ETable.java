@@ -1635,14 +1635,14 @@ public class ETable extends JTable {
         if ((newFormats == null) || (newFormats.length != quickFilterFormatStrings.length)) {
             return;
         }
-        quickFilterFormatStrings = newFormats.clone();
+        quickFilterFormatStrings = new ArrayList<>().toArray(newFormats);
     }
 
     /**
      * Returns the quickFilterFormatStrings array.
      */
     public String[] getQuickFilterFormatStrings() {
-        return quickFilterFormatStrings.clone();
+        return new ArrayList<String>().toArray(quickFilterFormatStrings);
     }
 
     /**

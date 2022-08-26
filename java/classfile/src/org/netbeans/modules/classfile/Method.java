@@ -26,6 +26,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * A Java method object.
@@ -96,7 +97,7 @@ public final class Method extends Field {
 	    if (exceptions == null)
 		exceptions = new CPClassInfo[0];
 	}
-        return exceptions.clone();
+        return new ArrayList<CPClassInfo>().toArray(exceptions);
     }
     
     /**

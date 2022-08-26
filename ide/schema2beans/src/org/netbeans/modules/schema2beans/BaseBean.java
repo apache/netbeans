@@ -1255,7 +1255,7 @@ public abstract class BaseBean implements Cloneable, Bean {
         }
         
         if (attrCache != null)
-            bean.attrCache = (HashMap) attrCache.clone();  // This does a shallow clone of the HashMap, but that's fine since they're all just Strings in there.
+            bean.attrCache = new HashMap<>(attrCache);  // This does a shallow clone of the HashMap, but that's fine since they're all just Strings in there.
         
         Iterator it = beanPropsIterator();
         

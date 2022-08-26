@@ -153,11 +153,11 @@ public class MultiXMLFSTest extends FSTest implements DataManager {
     /** Clones given Map by casting to a cloneable class - HashMap, Hashtable, or TreeMap */
     private static final Map cloneMap(Map toClone) {
         if (toClone instanceof HashMap) {
-            return (Map) ((HashMap) toClone).clone();
+            return new HashMap(toClone);
         } else if (toClone instanceof Hashtable) {
-            return (Map) ((Hashtable) toClone).clone();
+            return new Hashtable(toClone);
         } else if (toClone instanceof TreeMap) {
-            return (Map) ((TreeMap) toClone).clone();
+            return new TreeMap(toClone);
         }
         
         return null;

@@ -22,6 +22,8 @@
 
 package org.netbeans.modules.classfile;
 
+import java.util.ArrayList;
+
 /**
  * ArrayElementValue:  the value portion of an annotation element that
  * is an array of ElementValue instances.
@@ -39,7 +41,7 @@ public final class ArrayElementValue extends ElementValue {
      * Returns the set of ElementValue instances for this component.
      */
     public ElementValue[] getValues() {
-	return values.clone();
+	return new ArrayList<ElementValue>().toArray(values);
     }
 
     @Override

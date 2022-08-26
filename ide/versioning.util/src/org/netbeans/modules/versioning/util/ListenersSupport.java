@@ -28,8 +28,8 @@ import java.util.*;
  */
 public class ListenersSupport {
 
-    private final Object    source;
-    private HashSet         listeners = new HashSet(1);
+    private final Object   source;
+    private Set<VersioningListener> listeners = new HashSet<>(1);
 
     public ListenersSupport(Object source) {
         this.source = source;
@@ -37,13 +37,13 @@ public class ListenersSupport {
 
     public synchronized void addListener(VersioningListener listener) {
         if (listener == null) throw new IllegalArgumentException();
-        HashSet copy = (HashSet) listeners.clone();
+        Set<VersioningListener> copy = new HashSet<>(listeners);
         copy.add(listener);
         listeners = copy;
     }
 
     public synchronized void removeListener(VersioningListener listener) {
-        HashSet copy = (HashSet) listeners.clone();
+        Set<VersioningListener> copy = new HashSet<>(listeners);
         copy.remove(listener);
         listeners = copy;
     }

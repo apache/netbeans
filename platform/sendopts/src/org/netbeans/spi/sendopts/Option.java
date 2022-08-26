@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
@@ -94,8 +95,10 @@ public final class Option {
         this.shortName = old.shortName;
         this.longName = old.longName;
         this.impl = OptionImpl.cloneImpl(old.impl, this, null);
-        this.keys = (String[])old.keys.clone();
-        this.bundles = (String[])old.bundles.clone();
+        // this.keys = (String[])old.keys.clone();
+        this.keys = new ArrayList<String>().toArray(old.keys);
+        // this.bundles = (String[])old.bundles.clone();
+        this.bundles = new ArrayList<String>().toArray(old.bundles);
         
         this.keys[typeOfDescription] = description;
         this.bundles[typeOfDescription] = bundle;

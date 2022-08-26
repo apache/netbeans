@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -132,7 +133,7 @@ implements FileChangeListener {
                 s.add (arr[i]);
 
         // create own internal copy of passed filesystems
-        setDelegates(arr.clone());
+        setDelegates(new ArrayList<FileSystem>().toArray(arr));
         firePropertyChange ("layers", null, null); // NOI18N
     }
     
@@ -143,7 +144,7 @@ implements FileChangeListener {
     */
     public FileSystem[] getLayers() {
         // don't return reference to internal buffer
-        return getDelegates().clone();
+	return new ArrayList<FileSystem>().toArray(getDelegates());
     }
     
     protected @Override FileSystem createWritableOnForRename(String oldName, String newName) throws IOException {

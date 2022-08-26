@@ -674,7 +674,8 @@ abstract class AbstractFolder extends FileObject {
     protected final void refresh(String added, String removed, boolean reuseChildren) {
         String[] prev = children;
         if (reuseChildren && removed != null && prev != null) {
-            String[] nc = prev.clone();
+            String[] nc = new ArrayList<>().toArray(prev);
+
             for (int i = nc.length; --i >= 0;) {
                 if (removed.equals(nc[i])) {
                     nc[i] = null;

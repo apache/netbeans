@@ -645,7 +645,7 @@ class ModeParser {
         if (DEBUG) Debug.log(ModeParser.class, "removeTCRef ENTER" + " tcRef:" + tcRefName);
         //Update order
         List<TCRefParser> localList = new ArrayList<TCRefParser>(10);
-        Map localMap = (Map) ((HashMap) tcRefParserMap).clone();
+        Map localMap = new HashMap<>(tcRefParserMap);
         
         tcRefParserMap.remove(tcRefName);
         

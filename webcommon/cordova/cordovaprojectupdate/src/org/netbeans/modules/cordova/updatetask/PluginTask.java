@@ -56,7 +56,7 @@ public class PluginTask extends Task {
             }
             initCurrent();
 
-            HashSet<CordovaPlugin> pluginsToInstall = (HashSet<CordovaPlugin>) requestedPlugins.clone();
+            Set<CordovaPlugin> pluginsToInstall = new HashSet<>(requestedPlugins);
 
             //plugins to install
             pluginsToInstall.removeAll(currentPlugins);

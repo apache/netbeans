@@ -251,7 +251,7 @@ final class SheetTableModel implements TableModel, PropertySetModelListener {
     @Override
     public synchronized void addTableModelListener(TableModelListener listener) {
         if (tableModelListenerList == null) {
-            tableModelListenerList = new java.util.ArrayList<TableModelListener>();
+            tableModelListenerList = new ArrayList<>();
         }
 
         tableModelListenerList.add(listener);
@@ -273,7 +273,7 @@ final class SheetTableModel implements TableModel, PropertySetModelListener {
                 return;
             }
 
-            list = (List) ((ArrayList) tableModelListenerList).clone();
+            list = new ArrayList<>(tableModelListenerList);
         }
 
         for (int i = 0; i < list.size(); i++) {

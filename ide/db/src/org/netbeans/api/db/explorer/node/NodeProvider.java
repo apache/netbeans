@@ -111,8 +111,7 @@ public abstract class NodeProvider implements Lookup.Provider {
 
     public synchronized void refresh() {
         initialized = false;
-        @SuppressWarnings("unchecked")
-        TreeSet<Node> nodes = (TreeSet<Node>)nodeSet.clone();
+        Set<Node> nodes = new TreeSet<>(nodeSet);
 
         for (Node child : nodes) {
             if (child instanceof BaseNode) {

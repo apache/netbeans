@@ -106,7 +106,7 @@ public class GrailsRuntimeTest extends NbTestCase {
         desc.getProps().setProperty("wrong", "wrong");
         assertEquals(props, desc.getProps());
 
-        String[] correctArgs = args.clone();
+        String[] correctArgs = new ArrayList<String>.toArray(args);
         args[0] = "wrong";
         assertEquals(correctArgs, desc.getArguments());
         Properties correctProps = new Properties(props);

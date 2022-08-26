@@ -598,14 +598,10 @@ public final class TokenHierarchyOperation<I, T extends TokenId> { // "I" stands
                     return Collections.emptySet();
                 Language<?> lang = rootTokenList.language();
                 LanguageOperation<?> langOp = LexerApiPackageAccessor.get().languageOperation(lang);
-                @SuppressWarnings("unchecked")
-                Set<LanguagePath> clps = (Set<LanguagePath>)
-                        ((HashSet<LanguagePath>)langOp.languagePaths()).clone();
+                Set<LanguagePath> clps = new HashSet<>(langOp.languagePaths());
                 lps = clps;
 
-                @SuppressWarnings("unchecked")
-                Set<Language<?>> cel = (Set<Language<?>>)
-                        ((HashSet<Language<?>>)langOp.exploredLanguages()).clone();
+                Set<Language<?>> cel = new HashSet<>(langOp.exploredLanguages());
                 exploredLanguages = cel;
                 languagePaths = lps;
             }

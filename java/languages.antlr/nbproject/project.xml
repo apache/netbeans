@@ -161,6 +161,10 @@
                 </dependency>
             </module-dependencies>
             <public-packages/>
+            <class-path-extension>
+                <runtime-relative-path>ext/antlr4-parser.jar</runtime-relative-path>
+                <binary-origin>build/parser/antlr4-parser.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

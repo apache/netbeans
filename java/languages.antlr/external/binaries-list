@@ -14,8 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-javac.source=1.8
-
-release.build/parser/antlr4-parser.jar=modules/ext/antlr4-parser.jar
-
-source.reference.antlr4-parser.jar=build/parser-src
+59D7B72E12E4348CBB355929696B3531FA2E54EF https://raw.githubusercontent.com/antlr/grammars-v4/293c9b2a3fef07c1b549a9ac42adfd98cf9bda4a/antlr/antlr4/ANTLRv4Lexer.g4 ANTLRv4Lexer.g4
+B64F65F798215059626B0C5551576AFB2AB250C5 https://raw.githubusercontent.com/antlr/grammars-v4/293c9b2a3fef07c1b549a9ac42adfd98cf9bda4a/antlr/antlr4/ANTLRv4Parser.g4 ANTLRv4Parser.g4
+02F57464E7D6AEE602FB9F1C07A2B51231D0F462 https://raw.githubusercontent.com/antlr/grammars-v4/293c9b2a3fef07c1b549a9ac42adfd98cf9bda4a/antlr/antlr4/LexBasic.g4 LexBasic.g4
+C69EDA58DC59224F15898669B6AE84058B2D5928 https://raw.githubusercontent.com/antlr/grammars-v4/293c9b2a3fef07c1b549a9ac42adfd98cf9bda4a/antlr/antlr4/Java/LexerAdaptor.java LexerAdaptor.java

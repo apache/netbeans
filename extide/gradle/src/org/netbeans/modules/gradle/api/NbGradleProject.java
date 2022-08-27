@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -56,6 +57,8 @@ import org.openide.util.Utilities;
  * @author Laszlo Kishalmi
  */
 public final class NbGradleProject {
+
+    static final Logger LOG = Logger.getLogger(NbGradleProject.class.getName());
 
     /**
      * As loading a Gradle project information into the memory could be a time
@@ -275,6 +278,10 @@ public final class NbGradleProject {
         //Never listen on resource changes when only FALLBACK quality is needed
         if ((project.getAimedQuality() == Quality.FALLBACK) && !elevateQuality) return;
         synchronized (resources) {
+            if (!resources.isEmpty()) {
+                LOG.warning("Gradle ResourceWatcher Leak: " + resources); //NOI18N
+                resources.clear();
+            }
             Collection<? extends WatchedResourceProvider> all
                     = project.getLookup().lookupAll(WatchedResourceProvider.class);
             for (WatchedResourceProvider pvd : all) {

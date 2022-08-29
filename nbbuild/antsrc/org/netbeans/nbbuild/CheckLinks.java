@@ -23,6 +23,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.*;
 
 import org.apache.tools.ant.BuildException;
@@ -50,6 +52,7 @@ public class CheckLinks extends MatchingTask {
     private List<Mapper> mappers = new LinkedList<>();
     private List<Filter> filters = new ArrayList<>();
     private File report;
+    private File externallinksdump;
 
     /** Set whether to check external links (absolute URLs).
      * Local relative links are always checked.
@@ -90,6 +93,12 @@ public class CheckLinks extends MatchingTask {
         this.report = report;
     }
 
+    /**
+     * Folder where we collect all external links for further inspection
+     */
+    public void setExternallinkslist(File externallinksdump) {
+        this.externallinksdump = externallinksdump;
+    }
     /**
      * Add a mapper to translate file names to the "originals".
      */
@@ -132,7 +141,7 @@ public class CheckLinks extends MatchingTask {
         JUnitReportWriter.writeReport(this, null, report, Collections.singletonMap("testBrokenLinks", testMessage));
     }
     
-    private static Pattern hrefOrAnchor = Pattern.compile("<(a|img|link)(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|src)=\"([^\"#]*)(#[^\"]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
+    private static Pattern hrefOrAnchor = Pattern.compile("<(a|img|link|h3)(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
     private static Pattern lineBreak = Pattern.compile("^", Pattern.MULTILINE);
     
     /**
@@ -459,7 +468,7 @@ public class CheckLinks extends MatchingTask {
             while (m.find()) {
                 // Get the stuff involved:
                 String type = m.group(3);
-                if (type.equalsIgnoreCase("name")) {
+                if (type.equalsIgnoreCase("name") || (type.equalsIgnoreCase("id") && !unescape(m.group(4)).startsWith("#"))) {
                     // We have an anchor, therefore refs to it are valid.
                     String name = unescape(m.group(4));
                     if (names.add(name)) {
@@ -635,6 +644,23 @@ public class CheckLinks extends MatchingTask {
             
             if (pattern.matcher (u.toString ()).matches ()) {
                 log ("Matched " + u + " accepted: " + accept, org.apache.tools.ant.Project.MSG_VERBOSE);
+                if (externallinksdump != null) {
+                    try {
+                        String dummyName;
+                        if (accept) {
+                            dummyName = "acceptednetbeans.txt";
+                        } else {
+                            dummyName = "rejectednetbeans.txt";
+                        }
+                        java.nio.file.Files.writeString(
+                                externallinksdump.toPath().resolve(dummyName),
+                                u.toString() + System.lineSeparator(),
+                                java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND
+                        );
+                    } catch (IOException ex) {
+                        Logger.getLogger(CheckLinks.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 return accept;
             }
             return null;

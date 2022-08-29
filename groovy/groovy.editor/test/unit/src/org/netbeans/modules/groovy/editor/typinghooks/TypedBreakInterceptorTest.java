@@ -146,5 +146,20 @@ public class TypedBreakInterceptorTest extends GroovyTestBase {
         // No auto-// on new lines
         insertBreak("foo // ^", "foo // \n^");
     }
+    
+    public void testStringLiteral01() throws Exception {
+        insertBreak("String a = \"\"\" ahoj^how are you? \"\"\"", "String a = \"\"\" ahoj\n^how are you? \"\"\"");            
+    }
+    
+    public void testStringLiteral02() throws Exception {
+        insertBreak("\"\"\" ahoj^how are you?", "\"\"\" ahoj\n^how are you?");
+    }
 
+    public void testStringLiteral03() throws Exception {
+        insertBreak("\"\"\" ahoj^", "\"\"\" ahoj\n^");
+    }
+    
+    public void testStringLiteral04() throws Exception {
+        insertBreak("String a = \" ahoj^how are you? \"", "String a = \" ahoj\\n\\\n^how are you? \"");            
+    }    
 }

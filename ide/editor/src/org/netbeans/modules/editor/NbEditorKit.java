@@ -400,7 +400,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                 String actionNames = prefs.get(settingName, null);
 
                 if (actionNames != null) {
-                    l = new ArrayList();
+                    l = new ArrayList<>();
                     for(StringTokenizer t = new StringTokenizer(actionNames, ","); t.hasMoreTokens(); ) { //NOI18N
                         String action = t.nextToken().trim();
                         l.add(action);

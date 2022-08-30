@@ -161,5 +161,18 @@ public class TypedBreakInterceptorTest extends GroovyTestBase {
     
     public void testStringLiteral04() throws Exception {
         insertBreak("String a = \" ahoj^how are you? \"", "String a = \" ahoj\\n\\\n^how are you? \"");            
-    }    
+    }
+
+    public void testStringLiteral05() throws Exception {
+        insertBreak("String a = ''' ahoj^how are you? '''", "String a = ''' ahoj\n^how are you? '''");            
+    }
+    
+    public void testStringLiteral06() throws Exception {
+        insertBreak("''' ahoj^how are you?", "''' ahoj\n^how are you?");
+    }
+
+    public void testStringLiteral07() throws Exception {
+        insertBreak("''' ahoj^", "''' ahoj\n^");
+    }
+        
 }

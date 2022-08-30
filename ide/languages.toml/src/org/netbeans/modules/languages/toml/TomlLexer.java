@@ -18,7 +18,8 @@
  */
 package org.netbeans.modules.languages.toml;
 
-import org.antlr.v4.runtime.misc.IntegerList;
+import java.lang.reflect.Field;
+import org.antlr.v4.runtime.misc.IntegerStack;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -46,80 +47,76 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
 
     @Override
     public Token<TomlTokenId> nextToken() {
-        try {
-            org.antlr.v4.runtime.Token nextToken = lexer.nextToken();
-            if (nextToken.getType() == EOF) {
-                return null;
-            }
-            switch (nextToken.getType()) {
-                case TripleQuotationMark:
-                case TripleApostrophe:
-                    return token(ML_STRING_START);
+        org.antlr.v4.runtime.Token nextToken = lexer.nextToken();
+        if (nextToken.getType() == EOF) {
+            return null;
+        }
+        switch (nextToken.getType()) {
+            case TripleQuotationMark:
+            case TripleApostrophe:
+                return token(ML_STRING_START);
 
-                case StringChar:
-                case QuotationMark:
-                case Apostrophe:
-                    return token(STRING);
+            case StringChar:
+            case QuotationMark:
+            case Apostrophe:
+                return token(STRING);
 
-                case MLBasicStringEnd:
-                case MLLiteralStringEnd:
-                    return token(ML_STRING_END);
+            case MLBasicStringEnd:
+            case MLLiteralStringEnd:
+                return token(ML_STRING_END);
 
-                case Comma:
-                case ArrayStart:
-                case ArrayEnd:
-                case InlineTableStart:
-                case InlineTableEnd:
+            case Comma:
+            case ArrayStart:
+            case ArrayEnd:
+            case InlineTableStart:
+            case InlineTableEnd:
 
-                case Dot:
-                    return token(DOT);
+            case Dot:
+                return token(DOT);
 
-                case Equals:
-                    return token(EQUALS);
+            case Equals:
+                return token(EQUALS);
 
-                case TableKeyStart:
-                case TableKeyEnd:
-                case ArrayTableKeyStart:
-                case ArrayTableKeyEnd:
-                    return token(TABLE_MARK);
-                case UnquotedKey:
-                    return token(KEY);
-                case Comment:
-                    return token(COMMENT);
-                case WS:
-                case NewLine:
-                    return token(TomlTokenId.WHITESPACE);
-                case Error:
-                    return token(ERROR);
-                case DecimalInteger:
-                case HexInteger:
-                case OctalInteger:
-                case BinaryInteger:
-                case FloatingPoint:
-                case FloatingPointInf:
-                case FloatingPointNaN:
-                    return token(NUMBER);
+            case TableKeyStart:
+            case TableKeyEnd:
+            case ArrayTableKeyStart:
+            case ArrayTableKeyEnd:
+                return token(TABLE_MARK);
+            case UnquotedKey:
+                return token(KEY);
+            case Comment:
+                return token(COMMENT);
+            case WS:
+            case NewLine:
+                return token(TomlTokenId.WHITESPACE);
+            case Error:
+                return token(ERROR);
+            case DecimalInteger:
+            case HexInteger:
+            case OctalInteger:
+            case BinaryInteger:
+            case FloatingPoint:
+            case FloatingPointInf:
+            case FloatingPointNaN:
+                return token(NUMBER);
 
-                case TrueBoolean:
-                case FalseBoolean:
-                    return token(BOOLEAN);
+            case TrueBoolean:
+            case FalseBoolean:
+                return token(BOOLEAN);
 
-                case EscapeSequence:
-                    return token(ESCAPE_SEQUENCE);
+            case EscapeSequence:
+                return token(ESCAPE_SEQUENCE);
 
-                case Dash:
-                case Plus:
-                case Colon:
-                case Z:
-                case TimeDelimiter:
-                case DateDigits:
-                case DateComma:
-                    return token(DATE);
-                default:
-                    return token(ERROR);
-            }
-        } catch (IndexOutOfBoundsException ex) {
-            return token(ERROR);
+            case Dash:
+            case Plus:
+            case Colon:
+            case Z:
+            case TimeDelimiter:
+            case DateDigits:
+            case DateComma:
+                return token(DATE);
+            default:
+                return token(ERROR);
         }
     }
 
@@ -137,21 +134,53 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
     }
 
     private static class LexerState {
+        private static Field ARRAY_DEPTH;
+        private static Field ARRAY_DEPTH_STACK;
+
         final int state;
         final int mode;
-        final IntegerList modes;
+        final IntegerStack modes;
+
+        final int arrayDepth;
+        final IntegerStack arrayDepthStack;
+
+        static {
+            try {
+                // Hack accessing private state parts of TomlLexer
+                // See: https://github.com/tomlj/tomlj/pull/42
+                ARRAY_DEPTH = org.tomlj.internal.TomlLexer.class.getDeclaredField("arrayDepth");
+                ARRAY_DEPTH.setAccessible(true);
+                ARRAY_DEPTH_STACK = org.tomlj.internal.TomlLexer.class.getDeclaredField("arrayDepthStack");
+                ARRAY_DEPTH_STACK.setAccessible(true);
+            } catch (ReflectiveOperationException ex) {
+            }
+        }
 
         LexerState(org.tomlj.internal.TomlLexer lexer) {
             this.state= lexer.getState();
 
             this.mode = lexer._mode;
-            this.modes = new IntegerList(lexer._modeStack);
+            this.modes = new IntegerStack(lexer._modeStack);
+
+            try {
+                this.arrayDepth = ARRAY_DEPTH.getInt(lexer);
+                this.arrayDepthStack = new IntegerStack((IntegerStack)ARRAY_DEPTH_STACK.get(lexer));
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         public void restore(org.tomlj.internal.TomlLexer lexer) {
             lexer.setState(state);
             lexer._modeStack.addAll(modes);
             lexer._mode = mode;
+
+            try {
+                ARRAY_DEPTH.setInt(lexer, arrayDepth);
+                ((IntegerStack) ARRAY_DEPTH_STACK.get(lexer)).addAll(arrayDepthStack);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         @Override

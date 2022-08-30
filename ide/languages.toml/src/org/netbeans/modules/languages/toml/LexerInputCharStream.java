@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.languages.toml;
 
-import java.util.Stack;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.misc.Interval;
 import org.netbeans.spi.lexer.*;
@@ -29,21 +28,23 @@ import org.netbeans.spi.lexer.*;
  */
 public class LexerInputCharStream implements CharStream {
     private final LexerInput input;
-    private final Stack<Integer> markers = new Stack<>();
+    private final StringBuilder readBuffer = new StringBuilder();
+
+    private int index = 0;
 
     public LexerInputCharStream(LexerInput input) {
         this.input = input;
-
     }
 
     @Override
     public String getText(Interval intrvl) {
-        return input.readText(intrvl.a, intrvl.b).toString();
+        int end = Math.min(intrvl.b + 1, readBuffer.length());
+        return readBuffer.substring(intrvl.a, end);
     }
 
     @Override
     public void consume() {
-        input.read();
+        read();
     }
 
     @Override
@@ -55,51 +56,62 @@ public class LexerInputCharStream implements CharStream {
         int c = 0;
         if (count > 0) {
             for (int i = 0; i < count; i++) {
-                c = input.read();
+                c = read();
             }
-            input.backup(count);
+            backup(count);
         } else {
-            input.backup(count);
-            c = input.read();
+            backup(count);
+            c = read();
         }
         return c;
     }
 
+    //Marks are for buffering in ANTLR4, we do not really need them
     @Override
     public int mark() {
-        markers.push(index());
-        return markers.size() - 1;
+        return -1;
     }
 
     @Override
     public void release(int marker) {
-        while (marker < markers.size()) {
-            markers.pop();
-        }
     }
 
     @Override
     public int index() {
-        return input.readLengthEOF();
+        return index;
     }
 
     @Override
     public void seek(int i) {
-        if (i < input.readLengthEOF()) {
-            input.backup(index() - i);
+        if (i < index()) {
+            backup(index() - i);
         } else {
-            while (input.readLengthEOF() < i) {
-                if (input.read() == LexerInput.EOF) {
+            while (index() < i) {
+                if (read() == LexerInput.EOF) {
                     break;
                 }
             }
         }
     }
 
+
+    private int read() {
+        int ret = input.read();
+        if ((readBuffer.length() == index) && (ret != EOF)) {
+            readBuffer.append((char)ret);
+        }
+        index += 1;
+        return ret;
+    }
+
+    private void backup(int count) {
+        index -= count;
+        input.backup(count);
+    }
+
     @Override
     public int size() {
-        return -1;
-        //throw new UnsupportedOperationException("Stream size is unknown.");
+        throw new UnsupportedOperationException("Stream size is unknown.");
     }
 
     @Override

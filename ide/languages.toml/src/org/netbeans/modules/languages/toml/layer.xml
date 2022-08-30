@@ -42,6 +42,13 @@
             </folder>
         </folder>
     </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-toml">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/toml/toml-icon.png"/>
+            </folder>
+        </folder>
+    </folder>
     <folder name="OptionsDialog">
         <folder name="PreviewExamples">
             <folder name="text">

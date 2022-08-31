@@ -26,39 +26,33 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.languages.antlr</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="antlr-generate" depends="init">
+    <target name="download-antlr-grammar" depends="init">
+        <property name="antlr.outdir" location="${src.dir}/org/antlr/parser/antlr4"/>
+        <mkdir dir="${antlr.outdir}"/>
+
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/ANTLRv4Lexer.g4" dest="${antlr.outdir}"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/ANTLRv4Parser.g4" dest="${antlr.outdir}"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/LexBasic.g4" dest="${antlr.outdir}"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/Java/LexerAdaptor.java" dest="${antlr.outdir}"/>
+        <replace file="${antlr.outdir}/LexerAdaptor.java" token="//package" value="package"/>
+    </target>
+
+    <target name="generate-antlr-parser" description="Regenerate the ANTLRv4 parser" depends="init">
+        <property name="antlr.outdir" location="${src.dir}/org/antlr/parser/antlr4"/>
         <path id="antlr4.tool">
             <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
         </path>
-        <property name="antlr.outdir" location="${build.dir}/parser-src/org/antlr/parser/antlr4"/>
-        <mkdir dir="${antlr.outdir}"/>
-        <copy todir="${antlr.outdir}">
-            <fileset dir="external" includes="*.g4"/>
-            <fileset dir="external" includes="*.java"/>
-        </copy>
-        <replace file="${antlr.outdir}/LexerAdaptor.java" token="//package" value="package"/>
+
         <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool">
             <arg value="-o"/><arg value="${antlr.outdir}"/>
-            <arg value="-package"/><arg value="org.antlr.parser.antlr4"/>
+            <!--arg value="-package"/><arg value="org.antlr.parser.antlr4"/-->
             <arg value="${antlr.outdir}/ANTLRv4Lexer.g4"/>
-            <!--arg value="${antlr.outdir}/ANTLRv4Parser.g4"/-->
+            <arg value="${antlr.outdir}/ANTLRv4Parser.g4"/>
         </java>
-    </target>
 
-    <target name="antlr-compile" depends="antlr-generate" extensionOf="-pre-compile">
-        <property name="javac.fork" value="false"/>
-        <mkdir dir="${build.dir}/parser-classes"/>
-        <nb-javac srcdir="${build.dir}/parser-src" destdir="${build.dir}/parser-classes" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" encoding="UTF-8"
-                  deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false"
-                  fork="${javac.fork}"
-        >
-            <classpath refid="cp"/>
-            <compilerarg line="${javac.compilerargs}"/>
-            <processorpath refid="processor.cp"/>
-        </nb-javac>
-        <mkdir dir="${build.dir}/parser"/>
-        <jar jarfile="${build.dir}/parser/antlr4-parser.jar">
-            <fileset dir="${build.dir}/parser-classes"/>
-        </jar>
+        <delete dir="${antlr.outdir}" includes="*.tokens"/>
+        <delete dir="${antlr.outdir}" includes="*.interp"/>
+        <!--delete dir="${antlr.outdir}" includes="*.g4"/-->
+
     </target>
 </project>

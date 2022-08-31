@@ -21,6 +21,7 @@ package org.netbeans.modules.languages.antlr;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.parsing.spi.Parser;
 
 /**
  *
@@ -43,5 +44,11 @@ public class AntlrLanguage extends DefaultLanguageConfig{
     public String getLineCommentPrefix() {
         return "//"; // NOI18N
     }
+
+    @Override
+    public Parser getParser() {
+        return new AntlrParser();
+    }
+
 
 }

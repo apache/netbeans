@@ -125,7 +125,7 @@ implements LookupListener, FlavorListener, AWTEventListener
     //
     // The other problem is an AWT bug
     // 
-    // http://developer.java.sun.com/developer/bugParade/bugs/4818143.html
+    // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4818143
     //
     // sun.awt.datatransfer.ClipboardTransferable.getClipboardData() can hang
     // for very long time (maxlong == eternity).  We tries to avoid the hang by
@@ -341,16 +341,8 @@ implements LookupListener, FlavorListener, AWTEventListener
             lastWindowDeactivated = System.currentTimeMillis();
             lastWindowDeactivatedSource = new WeakReference<Object>(ev.getSource());
             anyWindowIsActivated = false;
-            if( Utilities.isWindows() ) {
-                //#247585 - even listening to clipboard changes when the window isn't active 
-                //may throw a MS Windows error as the 'clipboard copy' action doesn't have enough time to finish
-                systemClipboard.removeFlavorListener(this);
-            }
         }
         if (ev.getID() == WindowEvent.WINDOW_ACTIVATED) {
-            if( Utilities.isWindows() ) {
-                systemClipboard.addFlavorListener(this);
-            }
             anyWindowIsActivated = true;
             if (System.currentTimeMillis() - lastWindowDeactivated < 100 &&
                 ev.getSource() == lastWindowDeactivatedSource.get()) {

@@ -114,13 +114,13 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
                             compilationController.toPhase(Phase.ELEMENTS_RESOLVED);
                             Trees trees = compilationController.getTrees();
                             CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
-                            String desiredClassName = extractDeepestClass(node.getTestcase().getClassName());
+                            String[] classHierarchy = classHierarchy(node.getTestcase().getClassName());
                             List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
                             for (Tree tree : typeDecls) {
                                 Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                                Element classElement = getClassElement(element, desiredClassName);
+                                Element classElement = getClassElement(element, classHierarchy, 0);
                                 if (classElement == null) {
-                                    classElement = getClassElement(element, fo2open[0].getName());
+                                    classElement = getClassElement(element, new String[] {fo2open[0].getName()}, 0);
                                 }
                                 if (classElement != null) {
                                     List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(classElement.getEnclosedElements());
@@ -150,7 +150,7 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         }
     }
 
-    private String extractDeepestClass(String testNodeClassName) {
+    private String[] classHierarchy(String testNodeClassName) {
         String classNamesOnly = testNodeClassName;
         // strip package names
         int lastDot = testNodeClassName.lastIndexOf(".");
@@ -159,20 +159,24 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         }
 
         // split embedded classes
-        String[] classes = classNamesOnly.split("\\$");
-        return classes[classes.length - 1];
+        return classNamesOnly.split("\\$");
     }
 
-    private Element getClassElement(Element element, String className) {
-        if (element == null || element.getKind() != ElementKind.CLASS) {
+    Element getClassElement(Element element, String[] classHierarchy, int depth) {
+        if (element == null || element.getKind() != ElementKind.CLASS || depth >= classHierarchy.length) {
             return null;
         }
 
-        if (element.getSimpleName().contentEquals(className)) {
+        if (!element.getSimpleName().contentEquals(classHierarchy[depth])) {
+          return null;
+        }
+
+        if (depth + 1 == classHierarchy.length) {
             return element;
         }
+
         for (Element enclosedElement : element.getEnclosedElements()) {
-            Element enclosedClass = getClassElement(enclosedElement, className);
+            Element enclosedClass = getClassElement(enclosedElement, classHierarchy, depth + 1);
             if (enclosedClass != null) {
                 return enclosedClass;
             }

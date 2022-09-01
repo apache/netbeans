@@ -220,7 +220,7 @@ public final class ProjectActionContext {
 
         /**
          * Binds to a specific {@link ProjectConfiguration}, which must resolve to an instance of
-         * {@link MavenConfiguration}.
+         * @see <a href="@org-netbeans-modules-maven@/org/netbeans/modules/maven/api/MavenConfiguration.html">MavenConfiguration</a>.
          * @param configuration
          * @return builder instance
          */

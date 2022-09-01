@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.180.0
+#Version 0.181.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1009,6 +1009,7 @@ meth public com.sun.source.tree.ClassTree insertClassMembers(com.sun.source.tree
 meth public com.sun.source.tree.ClassTree insertClassMembers(com.sun.source.tree.ClassTree,java.util.List<? extends com.sun.source.tree.Tree>,int)
 meth public com.sun.source.tree.CompilationUnitTree addImports(com.sun.source.tree.CompilationUnitTree,java.util.Set<? extends javax.lang.model.element.Element>)
 meth public com.sun.source.tree.CompilationUnitTree createFromTemplate(org.openide.filesystems.FileObject,java.lang.String,javax.lang.model.element.ElementKind) throws java.io.IOException
+meth public com.sun.source.tree.ExpressionTree createDefaultLambdaExpression(com.sun.source.tree.LambdaExpressionTree,javax.lang.model.element.ExecutableElement)
 meth public com.sun.source.tree.MethodTree createAbstractMethodImplementation(javax.lang.model.element.TypeElement,javax.lang.model.element.ExecutableElement)
 meth public com.sun.source.tree.MethodTree createConstructor(com.sun.source.tree.ClassTree,java.lang.Iterable<? extends com.sun.source.tree.VariableTree>)
 meth public com.sun.source.tree.MethodTree createConstructor(javax.lang.model.element.TypeElement,java.lang.Iterable<? extends javax.lang.model.element.VariableElement>,javax.lang.model.element.ExecutableElement)
@@ -1025,7 +1026,7 @@ meth public java.util.List<? extends com.sun.source.tree.MethodTree> createOverr
 meth public static org.netbeans.api.java.source.GeneratorUtilities get(org.netbeans.api.java.source.WorkingCopy)
 meth public void copyComments(com.sun.source.tree.Tree,com.sun.source.tree.Tree,boolean)
 supr java.lang.Object
-hfds CLASS_NAME,DEFAULT_RETURN_TYPE_VALUE,GENERATED_METHOD_BODY,LAMBDA_BODY,METHOD_NAME,METHOD_RETURN_TYPE,OVERRIDDEN_METHOD_BODY,SCRIPT_ENGINE_ATTR,SIMPLE_CLASS_NAME,STRING_OUTPUT_MODE_ATTR,SUPER_METHOD_CALL,copy,manager
+hfds CLASS_NAME,DEFAULT_RETURN_TYPE_VALUE,GENERATED_METHOD_BODY,LAMBDA_BODY,LAMBDA_EXPRESSION,METHOD_NAME,METHOD_RETURN_TYPE,OVERRIDDEN_METHOD_BODY,SCRIPT_ENGINE_ATTR,SIMPLE_CLASS_NAME,STRING_OUTPUT_MODE_ATTR,SUPER_METHOD_CALL,copy,manager
 hcls ClassMemberComparator,FieldRefVisitor,ImportsComparator
 
 CLSS public abstract org.netbeans.api.java.source.JavaParserResultTask<%0 extends org.netbeans.modules.parsing.spi.Parser$Result>
@@ -1394,6 +1395,7 @@ meth public com.sun.source.tree.ExpressionTree QualIdent(java.lang.String)
 meth public com.sun.source.tree.ExpressionTree QualIdent(javax.lang.model.element.Element)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public com.sun.source.tree.ExpressionTree createLambdaExpression(com.sun.source.tree.LambdaExpressionTree,java.lang.String)
 meth public com.sun.source.tree.ForLoopTree ForLoop(java.util.List<? extends com.sun.source.tree.StatementTree>,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.ExpressionStatementTree>,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.ForLoopTree addForLoopInitializer(com.sun.source.tree.ForLoopTree,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.ForLoopTree addForLoopUpdate(com.sun.source.tree.ForLoopTree,com.sun.source.tree.ExpressionStatementTree)
@@ -1759,7 +1761,7 @@ meth public void tag(com.sun.source.tree.Tree,java.lang.Object)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.api.java.source.CompilationController
-hfds NOT_LINKED,REWRITE_WHOLE_FILE,afterCommit,changes,docChanges,externalChanges,instance,introducedTrees,overlay,rewriteHints,textualChanges,tree2Tag,treeMaker,usedComments,userInfo
+hfds NOT_LINKED,REWRITE_WHOLE_FILE,afterCommit,changes,docChanges,externalChanges,instance,introducedTrees,invalidateSourceAfter,overlay,rewriteHints,textualChanges,tree2Tag,treeMaker,usedComments,userInfo
 hcls CommentReplicator,CopyEntry,Translator,TreeCollector
 
 CLSS public org.netbeans.api.java.source.matching.Matcher

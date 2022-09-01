@@ -28,8 +28,8 @@ import org.netbeans.spi.lexer.*;
  */
 public class LexerInputCharStream implements CharStream {
     private final LexerInput input;
-    private final StringBuilder readBuffer = new StringBuilder();
 
+    private int tokenMark = Integer.MAX_VALUE;
     private int index = 0;
 
     public LexerInputCharStream(LexerInput input) {
@@ -38,8 +38,12 @@ public class LexerInputCharStream implements CharStream {
 
     @Override
     public String getText(Interval intrvl) {
-        int end = Math.min(intrvl.b + 1, readBuffer.length());
-        return readBuffer.substring(intrvl.a, end);
+        if (intrvl.a < tokenMark) {
+            throw new UnsupportedOperationException("Read before the current token start is not supported: " + intrvl.a + " < " + tokenMark);
+        }
+        int start = intrvl.a - tokenMark;
+        int end = intrvl.b - tokenMark + 1;
+        return String.valueOf(input.readText(start, end));
     }
 
     @Override
@@ -97,9 +101,6 @@ public class LexerInputCharStream implements CharStream {
 
     private int read() {
         int ret = input.read();
-        if ((readBuffer.length() == index) && (ret != EOF)) {
-            readBuffer.append((char)ret);
-        }
         index += 1;
         return ret;
     }
@@ -107,6 +108,10 @@ public class LexerInputCharStream implements CharStream {
     private void backup(int count) {
         index -= count;
         input.backup(count);
+    }
+
+    public final void markToken() {
+        tokenMark = index;
     }
 
     @Override

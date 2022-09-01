@@ -36,10 +36,12 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
 
     private final TokenFactory<TomlTokenId> tokenFactory;
     private final org.tomlj.internal.TomlLexer lexer;
+    private final LexerInputCharStream input;
 
     public TomlLexer(LexerRestartInfo<TomlTokenId> info) {
         this.tokenFactory = info.tokenFactory();
-        this.lexer = new org.tomlj.internal.TomlLexer(new LexerInputCharStream(info.input()));
+        this.input = new LexerInputCharStream(info.input());
+        this.lexer = new org.tomlj.internal.TomlLexer(input);
         if (info.state() != null) {
             ((LexerState) info.state()).restore(lexer);
         }
@@ -130,6 +132,7 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
     }
 
     private Token<TomlTokenId> token(TomlTokenId id) {
+        input.markToken();
         return tokenFactory.createToken(id);
     }
 

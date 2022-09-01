@@ -32,7 +32,7 @@ public final class SingleMethod {
 
     private FileObject file;
     private String methodName;
-    private String enclosingType = null;
+    private String enclosingType;
 
     /**
      * Creates a new instance holding the specified identification
@@ -45,17 +45,19 @@ public final class SingleMethod {
      * @since 1.19
      */
     public SingleMethod(FileObject file, String methodName) {
-        super();
-        if (file == null) {
-            throw new IllegalArgumentException("file is <null>");
-        }
-        if (methodName == null) {
-            throw new IllegalArgumentException("methodName is <null>");
-        }
-        this.file = file;
-        this.methodName = methodName;
+        this(file, methodName, null);
     }
 
+    /**
+     * Creates a new instance holding the specified identification of a method/function in a file.
+     *
+     * @param file file to be kept in the object
+     * @param methodName name of a method inside the file
+     * @param enclosingType the name of the enclosing type. There's no contract on what to put in
+     * here. Different languages will have different requirements or conventions.
+     * @exception java.lang.IllegalArgumentException if the file or method name is {@code null}
+     * @since 1.19
+     */
     public SingleMethod(FileObject file, String methodName, String enclosingType) {
         super();
         if (file == null) {

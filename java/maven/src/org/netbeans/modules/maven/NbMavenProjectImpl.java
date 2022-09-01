@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -69,12 +70,14 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
+import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.configurations.ProjectProfileHandlerImpl;
@@ -82,6 +85,7 @@ import org.netbeans.modules.maven.cos.CopyResourcesOnSave;
 import org.netbeans.modules.maven.debug.MavenJPDAStart;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
+import org.netbeans.modules.maven.execute.ActionToGoalUtils;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.problems.ProblemReporterImpl;
@@ -139,6 +143,7 @@ public final class NbMavenProjectImpl implements Project {
                 if (hardReferencingMavenProject) {
                     hardRefProject = prj;
                 }
+                projectVariants.clear();
             }
             ACCESSOR.doFireReload(watcher);
         }
@@ -421,6 +426,49 @@ public final class NbMavenProjectImpl implements Project {
         // in case someone got already information from the NbMavenProject:
         ACCESSOR.doFireReload(watcher);
         return mp;
+    }
+    
+    /**
+     * Variants of the projects, possibly other than the ones with the
+     * <b>active configuration</b>
+     */
+    private Map<ProjectActionContext, Reference<MavenProject>> projectVariants = new WeakHashMap<>();
+    
+    public @NonNull MavenProject getEvaluatedProject(ProjectActionContext ctx) {
+        if (ctx == null) {
+            return getOriginalMavenProject();
+        }
+        ProjectActionContext stripped = 
+                ProjectActionContext.newBuilder(ctx.getProject())
+                    .withProfiles(ctx.getProfiles())
+                    .withProperties(ctx.getProperties())
+                    .forProjectAction(ctx.getProjectAction())
+                    .context();
+        MavenProject result;
+        
+        synchronized (this) {
+            Reference<MavenProject> ref = projectVariants.get(stripped);
+            if (ref != null) {
+                result = ref.get();
+                if (result != null) {
+                    return result;
+                } else {
+                    projectVariants.remove(stripped);
+                }
+            }
+        }
+        RunConfig runConf = null;
+        if (ctx != null && ctx.getProjectAction() != null) {
+            runConf = ActionToGoalUtils.createRunConfig(ctx.getProjectAction(), this, ctx.getConfiguration(), Lookup.EMPTY);
+        }
+        MavenProject newproject = MavenProjectCache.loadMavenProject(this.getPOMFile(), ctx, runConf);
+        synchronized (this) {
+            Reference<MavenProject> ref = projectVariants.get(stripped);
+            if (ref == null || ref.get() == null) {
+                projectVariants.put(stripped, new SoftReference<>(newproject));
+            }
+        }
+        return newproject;
     }
     
     /**

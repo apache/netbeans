@@ -110,10 +110,10 @@ Contributor(s):
                         else return values[0];
                     }
                     public void setName(String[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(WebApp.VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(WebApp.VERSION_3_1);
                     }
                     public String[] getName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(WebApp.VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(WebApp.VERSION_3_1);
                     }
             </user-code>
         </meta-element>

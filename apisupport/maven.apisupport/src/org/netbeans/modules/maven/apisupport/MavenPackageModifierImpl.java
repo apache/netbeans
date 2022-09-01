@@ -211,11 +211,12 @@ public class MavenPackageModifierImpl implements PackageModifierImplementation {
                             bld = p.getModel().getFactory().createBuild();
                             p.setBuild(bld);
                         }
-                        Plugin plug = bld.findPluginById("org.codehaus.mojo", "nbm-maven-plugin");
+                        Plugin plug = findNbmPlugin(bld);
                         if (plug == null) {
                             //mostly should not happen with nb modules..
                             plug = bld.getModel().getFactory().createPlugin();
-                            plug.setGroupId("org.codehaus.mojo");
+                            // create on new groupID
+                            plug.setGroupId("org.apache.netbeans.utilities");
                             plug.setArtifactId("nbm-maven-plugin");
                             plug.setExtensions(Boolean.TRUE);
                             //set version? let's hope it's managed..
@@ -241,7 +242,7 @@ public class MavenPackageModifierImpl implements PackageModifierImplementation {
 
                     private POMExtensibilityElement findPublicPackagesElement(PluginContainer bld) {
                         POMExtensibilityElement publicPackages = null;
-                        Plugin plug = bld.findPluginById("org.codehaus.mojo", "nbm-maven-plugin");
+                        Plugin plug = findNbmPlugin(bld);
                         if (plug != null) {
                             Configuration conf = plug.getConfiguration();
                             if (conf != null) {
@@ -260,5 +261,13 @@ public class MavenPackageModifierImpl implements PackageModifierImplementation {
                     }
                 }));
     }
-    
+    private Plugin findNbmPlugin(PluginContainer build) {
+        // check old groupid of nbm maven plugin
+        Plugin plugin = build.findPluginById("org.codehaus.mojo", "nbm-maven-plugin");
+        // check new groupid of nbm maven plugins
+        if (plugin == null) {
+            plugin = build.findPluginById("org.apache.netbeans.utilities", "nbm-maven-plugin");
+        }
+        return plugin;
+    }
 }

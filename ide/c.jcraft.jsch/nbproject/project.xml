@@ -38,8 +38,8 @@
                     <code-name-base>libs.c.kohlschutter.junixsocket</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>2.32</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

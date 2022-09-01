@@ -365,6 +365,7 @@
                 <friend>org.netbeans.modules.j2ee.earproject</friend>
                 <friend>org.netbeans.modules.j2ee.ejbcore</friend>
                 <friend>org.netbeans.modules.j2ee.ejbjarproject</friend>
+                <friend>org.netbeans.modules.javaee.beanvalidation</friend>
                 <friend>org.netbeans.modules.maven.j2ee</friend>
                 <friend>org.netbeans.modules.maven.samples</friend>
                 <friend>org.netbeans.modules.web.jsf.editor</friend>

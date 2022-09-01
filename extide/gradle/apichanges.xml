@@ -83,6 +83,37 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-reports">
+            <api name="general"/>
+            <summary>Rich exception reports are exported from Gradle process.</summary>
+            <version major="2" minor="27"/>
+            <date day="20" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Errors are transferred including their causes and script location(s), so the IDE may provide better messages or hints.
+                <p>
+                    The new class <code>
+                        <a href="@TOP@/org/netbeans/modules/gradle/api/GradleReport.html">GradleReport</a>
+                    </code> that contain this information is available from
+                <code><a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#getProblems">GradleBaseProject.getProblems()</a></code> method.
+                </p>
+            </description>
+        </change>
+        <change id="configuration-dependencies">
+            <api name="general"/>
+            <summary>Allow to inspect dependency tree</summary>
+            <version major="2" minor="27"/>
+            <date day="12" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Gradle APIs allow to list dependencies as a flat list, mixing the 4th+ party dependencies in. The API extension allows
+                to inspect the dependency structure and determine what configuration the dependency originates from.
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="GradleBaseProject"/>
+            <class package="org.netbeans.modules.gradle.api" name="GradleConfiguration"/>
+        </change>
         <change id="gradlefiles-versioncatalog">
             <api name="general"/>
             <summary>GradleFiles.Kind.VERSION_CATALOG introduced</summary>
@@ -112,17 +143,6 @@ is the proper place.
                 users can use <code>GradleFiles</code> to get important files or pathnames in the project.
             </description>
             <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
-        </change>
-        <change id="gradle-reports">
-            <api name="general"/>
-            <summary>Rich exception reports are exported from Gradle process.</summary>
-            <version major="2" minor="23"/>
-            <date day="28" month="2" year="2022"/>
-            <author login="sdedic"/>
-            <compatibility semantic="compatible" addition="yes"/>
-            <description>
-                Errors are transferred including their causes and script location(s), so the IDE may provide better messages or hints.
-            </description>
         </change>
         <change id="gradle-cli-update">
             <api name="general"/>

@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.spi.actions;
 
 
+import java.io.File;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +35,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +48,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
+import org.netbeans.modules.maven.execute.ActionNameProvider;
+import org.netbeans.modules.maven.execute.DefaultActionGoalProvider;
 import org.netbeans.modules.maven.execute.DefaultReplaceTokenProvider;
 import org.netbeans.modules.maven.execute.ModelRunConfig;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
@@ -56,6 +62,7 @@ import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
  * a default implementation of MavenActionsProvider, a fallback when nothing is
@@ -362,7 +369,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
      * for just the active one. For {@link M2ConfigProvider#DEFAULT} configuration, the returned
      * mapping contains list of contributed configurations (profiles) if defined.
      */
-    static class ResourceConfigAwareProvider extends AbstractMavenActionsProvider {
+    static class ResourceConfigAwareProvider extends AbstractMavenActionsProvider implements ActionNameProvider {
         /**
          * The backing resource
          */
@@ -384,9 +391,51 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
          */
         private M2ConfigProvider cfg;
         
+        private ResourceBundle resourceBundle;
+        
         ResourceConfigAwareProvider(Project prj, URL resource) {
             this.resource = resource;
             this.project = prj;
+            this.reader = DefaultActionGoalProvider.createI18nReader(getTranslations());
+        }
+
+        @Override
+        public ResourceBundle getTranslations() {
+            if (resourceBundle == null) {
+                String p = null;
+                
+                if (resource.getProtocol().equals("nbres")) { // NOI18N
+                    p = resource.getPath();
+                } else {
+                    // This branch is mainly active during tests, as tests and code is expanded on the classpath
+                    String[] cp = System.getProperty("java.class.path", "").split(File.pathSeparator); // NOI18N
+                    String rs = resource.toString();
+                    for (String pref : cp) {
+                        String s = new File(pref).toURI().toString();
+                        if (rs.startsWith(s)) {
+                            String frag = rs.substring(s.length());
+                            if (frag.startsWith("!")) {
+                                frag = frag.substring(1);
+                            }
+                            p = frag;
+                            break;
+                        }
+                    }
+                }
+                if (p != null) {
+                    int slash = p.lastIndexOf('/');
+                    p = p.substring(0, slash + 1) + "Bundle"; // NOI18N
+                    try {
+                        resourceBundle = NbBundle.getBundle(p, Locale.getDefault(), Lookup.getDefault().lookup(ClassLoader.class));
+                    } catch (MissingResourceException ex) {
+                    }
+                }
+                if (resourceBundle == null) {
+                    // fallback
+                    resourceBundle = NbBundle.getBundle(M2Configuration.class);
+                }
+            }
+            return resourceBundle;
         }
         
         private M2ConfigProvider cfg() {
@@ -431,7 +480,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
                 return pm == null ? allMappings : pm;
             }
         }
-
+        
         @Override
         protected InputStream getActionDefinitionStream() {
             try {

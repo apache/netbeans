@@ -182,6 +182,7 @@
                 <friend>io.github.jeddict.runtime</friend>
                 <friend>io.github.jeddict.rest.generator</friend>
                 <!-- XXX <subpackages> not permitted by schema -->
+                <friend>org.netbeans.modules.micronaut</friend>
                 <package>javax.inject</package>
                 <package>com.google.inject</package>
                 <package>com.google.common.base</package>

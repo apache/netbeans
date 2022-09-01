@@ -32,23 +32,28 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_5/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_6/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_7/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_8/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_9/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_9_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_2/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_4_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_2_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_2_5/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0_frag/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0_frag/*
 
 ###### user-specific files  
 **/nbproject/private/**
@@ -215,6 +220,7 @@ javafx/javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
 java/jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh
 java/junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
 ide/languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff
+ide/languages.toml/src/org/netbeans/modules/languages/toml/*.toml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml
 java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template

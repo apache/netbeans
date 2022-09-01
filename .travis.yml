@@ -256,6 +256,7 @@ matrix:
             - ant $OPTS -f ide/hudson.tasklist test
             - ant $OPTS -f ide/hudson.ui test
             - ant $OPTS -f ide/javascript2.debug test
+            - ant $OPTS -f ide/languages.toml test
             - ant $OPTS -f ide/languages.yaml test
             - ant $OPTS -f ide/lexer test
             - ant $OPTS -f ide/lib.terminalemulator test
@@ -654,7 +655,7 @@ matrix:
           before_install:
             - nvm install 16.13.2
           env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build

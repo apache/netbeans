@@ -1278,9 +1278,8 @@ public final class GeneratorUtilities {
                     if (sym.getKind().isClass() || sym.getKind().isInterface()) {
                         if (sym != element) {
                             explicitNamedImports.add(element);
+                            break;// break if explicitNameImport was added
                         }
-                        // break if explicitNameImport was added, or when the symbol is correctly resolved.
-                        break;
                     }
                 }
             }

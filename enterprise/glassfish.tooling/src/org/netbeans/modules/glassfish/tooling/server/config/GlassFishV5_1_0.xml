@@ -53,6 +53,7 @@
                 <include name="jakarta\..+\.jar"/>
                 <include name="bean-validator.jar"/>
                 <include name="cdi-api.jar"/>
+                <include name="javax.batch-api.jar"/>
                 <include name="jaxb-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
@@ -65,7 +66,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <lookup path="docs/javaee-doc-api.jar"/>
+            <lookup path="docs/jakartaee8-doc-api.jar"/>
         </javadocs>
         <sources>
         </sources>

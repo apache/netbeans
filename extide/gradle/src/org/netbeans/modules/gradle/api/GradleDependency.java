@@ -237,6 +237,30 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
         public Set<File> getFiles() {
             return files;
         }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 73 * hash + Objects.hashCode(this.files);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final FileCollectionDependency other = (FileCollectionDependency) obj;
+            return Objects.equals(this.files, other.files);
+        }
+
+
     }
 
     /**

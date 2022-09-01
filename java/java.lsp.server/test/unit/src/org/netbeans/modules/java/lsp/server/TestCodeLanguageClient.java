@@ -79,6 +79,11 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
     }
 
     @Override
+    public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
         return CompletableFuture.completedFuture(params.getItems().stream().filter(item -> item.isPicked()).collect(Collectors.toList()));
     }

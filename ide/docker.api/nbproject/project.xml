@@ -30,8 +30,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>2.20</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

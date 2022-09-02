@@ -36,10 +36,12 @@ public final class AntlrLexer implements Lexer<AntlrTokenId> {
 
     private final TokenFactory<AntlrTokenId> tokenFactory;
     private org.antlr.parser.antlr4.ANTLRv4Lexer lexer;
+    private final LexerInputCharStream input;
 
     public AntlrLexer(LexerRestartInfo<AntlrTokenId> info) {
         this.tokenFactory = info.tokenFactory();
-        this.lexer = new org.antlr.parser.antlr4.ANTLRv4Lexer(new LexerInputCharStream(info.input()));
+        this.input = new LexerInputCharStream(info.input());
+        this.lexer = new org.antlr.parser.antlr4.ANTLRv4Lexer(input);
         if (info.state() != null) {
             ((LexerState) info.state()).restore(lexer);
         }
@@ -154,6 +156,7 @@ public final class AntlrLexer implements Lexer<AntlrTokenId> {
     }
 
     private Token<AntlrTokenId> token(AntlrTokenId id) {
+        input.markToken();
         return tokenFactory.createToken(id);
     }
 

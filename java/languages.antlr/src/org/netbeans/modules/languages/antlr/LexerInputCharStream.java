@@ -18,11 +18,9 @@
  */
 package org.netbeans.modules.languages.antlr;
 
-import java.util.Stack;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.misc.Interval;
 import org.netbeans.spi.lexer.*;
-import org.openide.util.CharSequences;
 
 /**
  *
@@ -30,8 +28,8 @@ import org.openide.util.CharSequences;
  */
 public class LexerInputCharStream implements CharStream {
     private final LexerInput input;
-    private final StringBuilder readBuffer = new StringBuilder();
 
+    private int tokenMark = Integer.MAX_VALUE;
     private int index = 0;
 
     public LexerInputCharStream(LexerInput input) {
@@ -40,8 +38,12 @@ public class LexerInputCharStream implements CharStream {
 
     @Override
     public String getText(Interval intrvl) {
-        int end = Math.min(intrvl.b + 1, readBuffer.length());
-        return readBuffer.substring(intrvl.a, end);
+        if (intrvl.a < tokenMark) {
+            throw new UnsupportedOperationException("Can't read before the last token end: " + tokenMark);
+        }
+        int start = intrvl.a - tokenMark;
+        int end = intrvl.b - tokenMark + 1;
+        return String.valueOf(input.readText(start, end));
     }
 
     @Override
@@ -74,6 +76,10 @@ public class LexerInputCharStream implements CharStream {
         return -1;
     }
 
+    public void markToken() {
+        tokenMark = index;
+    }
+
     @Override
     public void release(int marker) {
     }
@@ -99,9 +105,6 @@ public class LexerInputCharStream implements CharStream {
 
     private int read() {
         int ret = input.read();
-        if ((readBuffer.length() == index) && (ret != EOF)) {
-            readBuffer.append((char)ret);
-        }
         index += 1;
         return ret;
     }
@@ -113,8 +116,7 @@ public class LexerInputCharStream implements CharStream {
 
     @Override
     public int size() {
-        return -1;
-        //throw new UnsupportedOperationException("Stream size is unknown.");
+        throw new UnsupportedOperationException("Stream size is unknown.");
     }
 
     @Override

@@ -172,7 +172,7 @@ public final class CatalogRootNode extends AbstractNode implements Node.Cookie {
     private static class RootChildren extends Children.Keys implements Comparator, PropertyChangeListener {
         
         /** Contains CatalogReader instances. */
-        private final TreeSet keys = new TreeSet(this);
+        private final Set keys = new TreeSet<>(this);
         
         /**
           * Create new keys, register itself as listener.

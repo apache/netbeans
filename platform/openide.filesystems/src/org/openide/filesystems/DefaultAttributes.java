@@ -1036,7 +1036,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          */
         public void writeToXML(PrintWriter pw) /*throws IOException */ {
             // list of names
-            Iterator<String> it = new TreeSet(keySet()).iterator();
+            Iterator<String> it = new TreeSet<>(keySet()).iterator();
             XMLMapAttr.writeHeading(pw);
 
             while (it.hasNext()) {

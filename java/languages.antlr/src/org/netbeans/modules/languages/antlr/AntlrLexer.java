@@ -45,6 +45,7 @@ public final class AntlrLexer implements Lexer<AntlrTokenId> {
         if (info.state() != null) {
             ((LexerState) info.state()).restore(lexer);
         }
+        input.markToken();
     }
 
     private org.antlr.v4.runtime.Token preFetchedToken = null;

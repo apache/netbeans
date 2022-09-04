@@ -46,6 +46,7 @@
         <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool">
             <arg value="-o"/><arg value="${antlr.outdir}"/>
             <!--arg value="-package"/><arg value="org.antlr.parser.antlr4"/-->
+            <!--arg value="-visitor"/-->
             <arg value="${antlr.outdir}/ANTLRv4Lexer.g4"/>
             <arg value="${antlr.outdir}/ANTLRv4Parser.g4"/>
         </java>

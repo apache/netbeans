@@ -20,7 +20,7 @@ package org.netbeans.modules.languages.antlr;
 
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.DeclarationFinder;
-import org.netbeans.modules.csl.api.SemanticAnalyzer;
+import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -68,6 +68,15 @@ public class AntlrLanguage extends DefaultLanguageConfig{
         return true;
     }
 
+    @Override
+    public OccurrencesFinder getOccurrencesFinder() {
+        return new AntlrOccurancesFinder();
+    }
+
+    @Override
+    public boolean hasOccurrencesFinder() {
+        return true;
+    }
 
     @Override
     public String getPreferredExtension() {

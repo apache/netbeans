@@ -34,6 +34,7 @@ import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
@@ -72,6 +73,10 @@ public class AntlrParserResult extends ParserResult {
         while (!parsingQueue.isEmpty()) {
             parsingQueue.removeFirst().grammarSpec();
         }
+        // Second phase scan
+        ANTLRv4Parser secondPhase = createParser(getSnapshot());
+        secondPhase.addParseListener(createOccurancesListener());
+        secondPhase.grammarSpec();
         finished.set(true);
         return this;
     }
@@ -81,12 +86,16 @@ public class AntlrParserResult extends ParserResult {
         addParseTask(src.createSnapshot(), true);
     }
 
-    private void addParseTask(Snapshot snapshot, boolean imported) {
-        FileObject fo = snapshot.getSource().getFileObject();
+    private ANTLRv4Parser createParser(Snapshot snapshot) {
         CharStream cs = CharStreams.fromString(String.valueOf(snapshot.getText()));
         ANTLRv4Lexer lexer = new org.antlr.parser.antlr4.ANTLRv4Lexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ANTLRv4Parser parser = new ANTLRv4Parser(tokens);
+        return new ANTLRv4Parser(tokens);
+    }
+
+    private void addParseTask(Snapshot snapshot, boolean imported) {
+        FileObject fo = snapshot.getSource().getFileObject();
+        ANTLRv4Parser parser = createParser(snapshot);
 
 
         if (!imported) {
@@ -117,9 +126,10 @@ public class AntlrParserResult extends ParserResult {
     static class Reference {
         final String name;
         final FileObject source;
-        final int defOffset;
+        final OffsetRange defOffset;
+        final List<OffsetRange> occurances = new ArrayList<>();
 
-        public Reference(String name, FileObject source, int defOffset) {
+        public Reference(String name, FileObject source, OffsetRange defOffset) {
             this.name = name;
             this.source = source;
             this.defOffset = defOffset;
@@ -146,14 +156,16 @@ public class AntlrParserResult extends ParserResult {
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
                 Token token = ctx.RULE_REF().getSymbol();
-                Reference ref = new Reference(token.getText(), source, token.getStartIndex());
+                OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
+                Reference ref = new Reference(token.getText(), source, range);
                 references.put(ref.name, ref);
             }
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
                 Token token = ctx.TOKEN_REF().getSymbol();
-                Reference ref = new Reference(token.getText(), source, token.getStartIndex());
+                OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
+                Reference ref = new Reference(token.getText(), source, range);
                 references.put(ref.name, ref);
             }
 
@@ -262,4 +274,34 @@ public class AntlrParserResult extends ParserResult {
 
         };
     }
+
+    ANTLRv4ParserListener createOccurancesListener() {
+        return new ANTLRv4ParserBaseListener() {
+
+            private void addOccurance(Token token) {
+                String refName = token.getText();
+                System.out.println(refName);
+                Reference ref = references.get(refName);
+                if (ref != null) {
+                    ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
+                }
+            }
+
+            @Override
+            public void exitTerminal(ANTLRv4Parser.TerminalContext ctx) {
+                if (ctx.TOKEN_REF() != null) {
+                    addOccurance(ctx.TOKEN_REF().getSymbol());
+                }
+            }
+
+            @Override
+            public void exitRuleref(ANTLRv4Parser.RulerefContext ctx) {
+                if (ctx.RULE_REF() != null) {
+                    addOccurance(ctx.RULE_REF().getSymbol());
+                }
+            }
+
+        };
+    }
+
 }

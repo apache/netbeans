@@ -20,7 +20,6 @@ package org.netbeans.modules.languages.antlr;
 
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
-import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -44,7 +43,7 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         Token<?> token = ts.token();
         String ref = String.valueOf(token.text());
         AntlrParserResult.Reference aref = result.references.get(ref);
-        return aref != null ? new DeclarationLocation(aref.source, aref.defOffset) : DeclarationLocation.NONE;
+        return aref != null ? new DeclarationLocation(aref.source, aref.defOffset.getStart()) : DeclarationLocation.NONE;
     }
 
     @Override

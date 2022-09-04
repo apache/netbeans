@@ -27,6 +27,10 @@
         <file>src/org/antlr/parser/antlr4/LexerAdaptor.java</file>
         <license ref="BSD-antlr4-grammar" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/languages/antlr/resources/antlr.png</file>
+        <license ref="BSD-antlr-icons" />
+    </fileset>
     <!--fileset>
         <file>src/org/antlr/parser/antlr4/ANTLRv4Lexer.java</file>
         <file>src/org/antlr/parser/antlr4/ANTLRv4Parser.java</file>

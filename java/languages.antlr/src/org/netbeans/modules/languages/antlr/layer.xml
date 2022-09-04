@@ -26,6 +26,13 @@
             <folder name="x-antlr4">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.languages.antlr.Bundle#Editors/text/x-antlr4"/>
                 <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="FontAndColors.xml" url="FlatLafDark-FontAndColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.languages.antlr.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
                     <folder name="NetBeans">
                         <folder name="Defaults">
                             <file name="FontAndColors.xml" url="FontAndColors.xml">
@@ -34,6 +41,16 @@
                         </folder>
                     </folder>
                 </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-antlr3">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/antlr/resources/antlr.png"/>
+            </folder>
+            <folder name="x-antlr4">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/antlr/resources/antlr.png"/>
             </folder>
         </folder>
     </folder>

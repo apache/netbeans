@@ -28,16 +28,16 @@
     <fontcolor name="keyword" default="keyword"/>
     <fontcolor name="number" default="number"/>
     <fontcolor name="punctuation" default="operator"/>
-    <fontcolor name="regexp-chars" foreColor="bf4040">
+    <fontcolor name="regexp-chars" foreColor="33ffcc">
         <font style="bold"/>
     </fontcolor>
-    <fontcolor name="rule" foreColor="47478e">
+    <fontcolor name="rule" foreColor="b2b200">
         <font style="bold"/>
     </fontcolor>
     <fontcolor name="string" default="string">
         <font style="bold"/>
     </fontcolor>
-    <fontcolor name="token" foreColor="660e7a">
+    <fontcolor name="token" foreColor="e500e5">
         <font style="bold" />
     </fontcolor>
     <fontcolor name="whitespace" default="whitespace"/>

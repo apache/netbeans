@@ -47,6 +47,7 @@ public enum AntlrTokenId implements TokenId {
     KEYWORD("keyword"),
     NUMBER("number"),
     PUNCTUATION("punctuation"),
+    REGEXP_CHARS("regexp-chars"),
     RULE("rule"),
     STRING("string"),
     TOKEN("token"),

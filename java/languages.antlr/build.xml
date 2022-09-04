@@ -44,13 +44,13 @@
             <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
         </path>
 
-        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool">
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${antlr.outdir}">
             <arg value="-o"/>
             <arg value="${antlr.outdir}"/>
-            <!--arg value="-package"/><arg value="org.antlr.parser.antlr4"/-->
-            <!--arg value="-visitor"/-->
-            <arg value="${antlr.outdir}/ANTLRv4Lexer.g4"/>
-            <arg value="${antlr.outdir}/ANTLRv4Parser.g4"/>
+            <arg value="-package"/>
+            <arg value="org.antlr.parser.antlr4"/>
+            <arg value="ANTLRv4Lexer.g4"/>
+            <arg value="ANTLRv4Parser.g4"/>
         </java>
 
         <delete dir="${antlr.outdir}" includes="*.tokens"/>

@@ -1,4 +1,5 @@
-// Generated from /home/lkishalmi/NetBeansProjects/netbeans/java/languages.antlr/src/org/antlr/parser/antlr4/ANTLRv4Parser.g4 by ANTLR 4.7.2
+// Generated from ANTLRv4Parser.g4 by ANTLR 4.7.2
+package org.antlr.parser.antlr4;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

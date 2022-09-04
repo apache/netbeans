@@ -41,10 +41,12 @@
         <property name="antlr.outdir" location="${src.dir}/org/antlr/parser/antlr4"/>
         <path id="antlr4.tool">
             <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
+            <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
         </path>
 
         <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool">
-            <arg value="-o"/><arg value="${antlr.outdir}"/>
+            <arg value="-o"/>
+            <arg value="${antlr.outdir}"/>
             <!--arg value="-package"/><arg value="org.antlr.parser.antlr4"/-->
             <!--arg value="-visitor"/-->
             <arg value="${antlr.outdir}/ANTLRv4Lexer.g4"/>

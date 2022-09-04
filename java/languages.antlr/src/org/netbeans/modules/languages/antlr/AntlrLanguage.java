@@ -20,6 +20,8 @@ package org.netbeans.modules.languages.antlr;
 
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.DeclarationFinder;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -54,6 +56,22 @@ public class AntlrLanguage extends DefaultLanguageConfig{
     @Override
     public Parser getParser() {
         return new AntlrParser();
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return new AntlrStructureScanner();
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
+    }
+
+
+    @Override
+    public String getPreferredExtension() {
+        return "g4";
     }
 
 

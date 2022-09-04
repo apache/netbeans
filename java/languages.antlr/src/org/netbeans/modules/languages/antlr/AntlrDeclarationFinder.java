@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.languages.antlr;
 
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -46,20 +48,26 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
     }
 
     @Override
-    public OffsetRange getReferenceSpan(Document doc, int caretOffset) {
-        TokenHierarchy<Document> th = TokenHierarchy.get(doc);
-        TokenSequence<?> ts = th.tokenSequence();
-        ts.move(caretOffset);
-        ts.movePrevious();
-        ts.moveNext();
-        Token<?> token = ts.token();
-        if ((token.id() == AntlrTokenId.RULE) || (token.id() == AntlrTokenId.TOKEN)) {
-            int start = ts.offset();
+    public OffsetRange getReferenceSpan(Document document, int caretOffset) {
+        AbstractDocument doc = (AbstractDocument) document;
+        doc.readLock();
+        try {
+            TokenHierarchy<Document> th = TokenHierarchy.get(doc);
+            TokenSequence<?> ts = th.tokenSequence();
+            ts.move(caretOffset);
+            ts.movePrevious();
             ts.moveNext();
-            int end = ts.offset();
-            return new OffsetRange(start, end);
-        } else {
-            return OffsetRange.NONE;
+            Token<?> token = ts.token();
+            if ((token.id() == AntlrTokenId.RULE) || (token.id() == AntlrTokenId.TOKEN)) {
+                int start = ts.offset();
+                ts.moveNext();
+                int end = ts.offset();
+                return new OffsetRange(start, end);
+            } else {
+                return OffsetRange.NONE;
+            }
+        } finally {
+            doc.readUnlock();
         }
     }
 

@@ -19,18 +19,94 @@
 package org.netbeans.modules.languages.antlr;
 
 import org.netbeans.api.lexer.Language;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.filesystems.MIMEResolver;
+import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
 
 /**
  *
  * @author lkishalmi
  */
-@LanguageRegistration(mimeType = AntlrTokenId.MIME_TYPE)
+@NbBundle.Messages(
+        "ANTLRResolver=ANTLR4 Grammar"
+)
+@MIMEResolver.ExtensionRegistration(displayName = "#ANTLRResolver",
+    extension = "g4",
+    mimeType = AntlrTokenId.MIME_TYPE,
+    position = 285
+)
+
+@ActionReferences({
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+            position = 100,
+            separatorAfter = 200
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            position = 300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            position = 400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.PasteAction"),
+            position = 500,
+            separatorAfter = 600
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            position = 700
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            position = 800,
+            separatorAfter = 900
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+            position = 1000,
+            separatorAfter = 1100
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
+            position = 1200,
+            separatorAfter = 1300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-antlr4/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            position = 1500
+    )
+})
+
+@LanguageRegistration(mimeType = AntlrTokenId.MIME_TYPE, useMultiview = true)
 public class AntlrLanguage extends DefaultLanguageConfig{
 
     @Override
@@ -83,5 +159,16 @@ public class AntlrLanguage extends DefaultLanguageConfig{
         return "g4";
     }
 
+    @NbBundle.Messages("Source=&Source")
+    @MultiViewElement.Registration(
+            displayName = "#Source",
+            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+            mimeType = AntlrTokenId.MIME_TYPE,
+            preferredID = "neon.source",
+            position = 1
+    )
+    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
+        return new MultiViewEditorElement(context);
+    }
 
 }

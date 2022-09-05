@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.125
+#Version 1.126
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1023,6 +1023,8 @@ fld public final static int OS_TRU64 = 512
 fld public final static int OS_UNIX_MASK = 3064
 fld public final static int OS_VMS = 8192
 fld public final static int OS_WIN2000 = 4096
+fld public final static int OS_WIN95 = 2
+fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 20487
 fld public final static int OS_WINNT = 1
 fld public final static int OS_WIN_OTHER = 16384

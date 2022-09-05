@@ -20,8 +20,10 @@
 package org.netbeans;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MockModuleInstaller extends ModuleInstaller {
@@ -29,6 +31,7 @@ public class MockModuleInstaller extends ModuleInstaller {
     // For examining results of what happened:
     public final List<String> actions = new ArrayList<String>();
     public final List<Object> args = new ArrayList<Object>();
+    public final Map<String, String[]> provides = new HashMap<>();
 
     public void clear() {
         actions.clear();
@@ -38,6 +41,11 @@ public class MockModuleInstaller extends ModuleInstaller {
     public final Set<Module> delinquents = new HashSet<Module>();
     // For adding modules that don't want to close:
     public final Set<Module> wontclose = new HashSet<Module>();
+
+    @Override
+    public String[] refineProvides(Module m) {
+        return provides.get(m.getCodeNameBase());
+    }
 
     public void prepare(Module m) throws InvalidException {
         if (delinquents.contains(m)) {

@@ -53,6 +53,10 @@
                         <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
                         <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions.xml"/>
                     </file>
+                    <file name="native-image-artifacts.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
+                    </file>
                 </folder>
             </folder>
         </folder>

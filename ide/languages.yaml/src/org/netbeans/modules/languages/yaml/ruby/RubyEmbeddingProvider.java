@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -200,6 +201,7 @@ public class RubyEmbeddingProvider extends EmbeddingProvider {
 //        }
     }
 
+    @MimeRegistration(mimeType = YamlTokenId.YAML_MIME_TYPE, service = TaskFactory.class)
     public static final class Factory extends TaskFactory {
 
         public Factory() {

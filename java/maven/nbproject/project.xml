@@ -316,7 +316,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.80</specification-version>
+                        <specification-version>1.89</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -653,6 +653,8 @@
                 <friend>org.netbeans.modules.maven.util</friend>
                 <!-- JShel support -->
                 <friend>org.netbeans.modules.jshell.support</friend>
+                <!-- sdedic@apache.org -->
+                <friend>org.netbeans.modules.micronaut</friend>
                 <package>org.netbeans.modules.maven.api</package>
                 <package>org.netbeans.modules.maven.api.archetype</package>
                 <package>org.netbeans.modules.maven.api.classpath</package>

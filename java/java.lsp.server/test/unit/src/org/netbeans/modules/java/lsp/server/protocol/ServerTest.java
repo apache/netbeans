@@ -1613,13 +1613,33 @@ public class ServerTest extends NbTestCase {
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        String uri = toURI(src);
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
 
         Diagnostic unresolvable = assertDiags(diags, "Error:2:8-2:12").get(0);
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(toURI(src)), unresolvable.getRange(), new CodeActionContext(Arrays.asList(unresolvable)))).get();
-        if (jdk9Plus()) {
-            assertEquals(2, codeActions.size());
-        }
+        Position pos = unresolvable.getRange().getStart();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(toURI(src)), new Range(pos, pos), new CodeActionContext(Arrays.asList(unresolvable)))).get();
+        Optional<CodeAction> addImport =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Add import for java.util.List".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(addImport.isPresent());
+        assertEquals(addImport.get().getKind(), CodeActionKind.QuickFix);
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = addImport.get().getEdit().getDocumentChanges();
+        assertEquals(1, changes.size());
+        assertTrue(changes.get(0).isLeft());
+        TextDocumentEdit edit = changes.get(0).getLeft();
+        assertEquals(edit.getTextDocument().getUri(), uri);
+        List<TextEdit> fileChanges = edit.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\nimport java.util.List;\n\n",
+                     fileChanges.get(0).getNewText());
     }
 
     public void testFindUsages() throws Exception {
@@ -3680,7 +3700,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
-                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getId(), MoveElementUI.class);
                 ui.setSelectedProject(ui.getAvailableProjects().get(0));
                 ui.setSelectedRoot(ui.getAvailableRoots().get(0));
                 ui.setSelectedPackage(ui.getAvailablePackages().get(2));
@@ -3795,7 +3815,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
-                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getId(), MoveElementUI.class);
                 ui.setSelectedProject(ui.getAvailableProjects().get(0));
                 ui.setSelectedRoot(ui.getAvailableRoots().get(0));
                 ui.setSelectedPackage(ui.getAvailablePackages().get(1));
@@ -4369,7 +4389,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
-                ChangeMethodParameterUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), ChangeMethodParameterUI.class);
+                ChangeMethodParameterUI ui = MockHtmlViewer.assertDialogShown(params.getId(), ChangeMethodParameterUI.class);
                 ui.getParameters().add(1, new ParameterUI("int", "cnt"));
                 ui.doRefactoring();
                 return CompletableFuture.completedFuture(null);

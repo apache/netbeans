@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
@@ -139,6 +140,7 @@ public enum YamlTokenId implements TokenId {
                 }
             }.language();
 
+    @MimeRegistration(mimeType = YAML_MIME_TYPE, service = Language.class)
     public static Language<YamlTokenId> language() {
         return language;
     }

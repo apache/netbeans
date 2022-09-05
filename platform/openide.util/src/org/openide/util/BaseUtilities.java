@@ -59,8 +59,14 @@ public abstract class BaseUtilities {
     /** Operating system is Windows NT. */
     public static final int OS_WINNT = 1/* << 0*/;
 
+    /** Operating system is Windows 95. */
+    public static final int OS_WIN95 = OS_WINNT << 1;
+
+    /** Operating system is Windows 98. */
+    public static final int OS_WIN98 = OS_WIN95 << 1;
+
     /** Operating system is Solaris. */
-    public static final int OS_SOLARIS = OS_WINNT << 1;
+    public static final int OS_SOLARIS = OS_WIN98 << 1;
 
     /** Operating system is Linux. */
     public static final int OS_LINUX = OS_SOLARIS << 1;
@@ -130,7 +136,7 @@ public abstract class BaseUtilities {
      * @deprecated Use {@link #isWindows()} instead.
      */
     @Deprecated
-    public static final int OS_WINDOWS_MASK = OS_WINNT | OS_WIN2000 | OS_WINVISTA | OS_WIN_OTHER;
+    public static final int OS_WINDOWS_MASK = OS_WINNT | OS_WIN95 | OS_WIN98 | OS_WIN2000 | OS_WINVISTA | OS_WIN_OTHER;
 
     /** A mask for Unix platforms.
      * @deprecated Use {@link #isUnix()} instead.
@@ -209,6 +215,10 @@ public abstract class BaseUtilities {
 
             if ("Windows NT".equals(osName)) { // NOI18N
                 operatingSystem = OS_WINNT;
+            } else if ("Windows 95".equals(osName)) { // NOI18N
+                operatingSystem = OS_WIN95;
+            } else if ("Windows 98".equals(osName)) { // NOI18N
+                operatingSystem = OS_WIN98;
             } else if ("Windows 2000".equals(osName)) { // NOI18N
                 operatingSystem = OS_WIN2000;
             } else if ("Windows Vista".equals(osName)) { // NOI18N

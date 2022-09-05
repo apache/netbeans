@@ -44,6 +44,7 @@ import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import static org.netbeans.modules.maven.api.Bundle.*;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -284,6 +285,22 @@ public final class NbMavenProject {
      */ 
     public @NonNull MavenProject getMavenProject() {
         return project.getOriginalMavenProject();
+    }
+    
+    /**
+     * Returns a project evaluated for a certain purpose. The while {@link #getMavenProject}
+     * works with the <b>active configuration</b> and does not apply any action-specific properties,
+     * this method tries to apply mappings, configurations, etc when loading the project model.
+     * <p>
+     * Note that loading an evaluated project may take significant time (comparable to loading
+     * the base project itself). The implementation might optimize if the passed context does not
+     * prescribe different profiles, properties etc than have been used for the default model.
+     * 
+     * @param context the loading context
+     * @return evaluated project
+     */
+    public @NonNull MavenProject getEvaluatedProject(ProjectActionContext context) {
+        return project.getEvaluatedProject(context);
     }
     
     /**

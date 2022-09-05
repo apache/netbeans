@@ -58,11 +58,33 @@ import org.openide.windows.OnShowing;
     "# {1} - the days of abandonement",
     "# {2} - the disk space can be reclaimed (in megabytes)",
     "TIT_ABANDONED_USERDIR=NetBeans {0} was last used {1} days ago.",
+
+    "# {0} - the name of the abandoned cache dir.",
+    "# {1} - the disk space can be reclaimed (in megabytes)",
+    "TIT_ABANDONED_CACHEDIR=NetBeans cache directory {0} seems to be abandoned.",
+
     "# {0} - is the user directory name",
     "# {1} - the days of abandonement",
     "# {2} - the disk space can be reclaimed (in megabytes)",
     "DESC_ABANDONED_USERDIR=Remove unused data and cache directories of NetBeans {0}. "
             + "Free up {2} MB of disk space.",
+
+    "# {0} - is the cache directory name",
+    "# {1} - the disk space can be reclaimed (in megabytes)",
+    "DESC_ABANDONED_CACHEDIR=NetBeans could not find a user dir for cache dir {0}, so it is probably abandoned. "
+            + "Remove abandoned cache dir, "
+            + "free up {1} MB of disk space.",
+
+    "TIT_CONFIRM_CLEANUP=Confirm Cleanup",
+
+    "# {0} - the dirname to be cleaned up",
+    "TXT_CONFIRM_CLEANUP=Remove user and cache data for NetBeans {0}?",
+
+        "# {0} - the dirname to be cleaned up",
+    "TXT_CONFIRM_CACHE_CLEANUP=Remove abandoned cache dir?",
+
+    "# {0} - the dirname to be cleaned up",
+    "LBL_CLEANUP=Removing unused/abandoned user and/or cache dirs."
 })
 public class Janitor {
 
@@ -87,30 +109,37 @@ public class Janitor {
         List<Pair<String, Integer>> otherVersions = getOtherVersions();
 
         for (Pair<String, Integer> ver : otherVersions) {
-            long toFree = size(getUserDir(ver.first())) + size(getCacheDir(ver.first()));
+            String name = ver.first();
+            Integer age = ver.second();
+            long toFree = size(getUserDir(name)) + size(getCacheDir(name));
             toFree = toFree / (1_000_000) + 1;
-            ActionListener cleanupListener = cleanupAction(ver.first());
-            Notification nf = NotificationDisplayer.getDefault().notify(
-                    Bundle.TIT_ABANDONED_USERDIR(ver.first(), ver.second(), toFree),
-                    clean,
-                    Bundle.DESC_ABANDONED_USERDIR(ver.first(), ver.second(), toFree),
-                    cleanupListener);
+            ActionListener cleanupListener;
+            Notification nf;
+            if (getUserDir(name) != null) {
+                cleanupListener = cleanupAction(name, Bundle.TXT_CONFIRM_CLEANUP(name));
+                nf = NotificationDisplayer.getDefault().notify(
+                        Bundle.TIT_ABANDONED_USERDIR(name, age, toFree),
+                        clean,
+                        Bundle.DESC_ABANDONED_USERDIR(name, age, toFree),
+                        cleanupListener);
+
+            } else {
+                cleanupListener = cleanupAction(name, Bundle.TXT_CONFIRM_CACHE_CLEANUP(name));
+                nf = NotificationDisplayer.getDefault().notify(
+                        Bundle.TIT_ABANDONED_CACHEDIR(name, toFree),
+                        clean,
+                        Bundle.DESC_ABANDONED_CACHEDIR(name, toFree),
+                        cleanupListener);
+            }
             CLEANUP_TASKS.put(cleanupListener, nf);
         }
     };
 
-    @Messages({
-        "TIT_CONFIRM_CLEANUP=Confirm Cleanup",
-        "# {0} - the dirname to be cleaned up",
-        "TXT_CONFIRM_CLEANUP=Remove user and cache data for NetBeans {0}?",
-        "# {0} - the dirname to be cleaned up",
-        "LBL_CLEANUP=Removing user and cache dirs of {0}"
-    })
-    static ActionListener cleanupAction(String name) {
+    static ActionListener cleanupAction(String name, String label) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                JanitorPanel panel = new JanitorPanel(Bundle.TXT_CONFIRM_CLEANUP(name));
+                JanitorPanel panel = new JanitorPanel(label);
                 DialogDescriptor descriptor = new DialogDescriptor(
                         panel,
                         Bundle.TIT_CONFIRM_CLEANUP(),

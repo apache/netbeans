@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="3.0">
+
+  <xsd:annotation>
+    <xsd:documentation>
+      This is the XML Schema for the Handler chain configuration descriptor.
+      The configuration file must be in the classpath within the JAR/WAR file.
+
+      All Handler chain configuration descriptors
+      should indicate the descriptor schema by using the Jakarta EE
+      namespace:
+
+      https://jakarta.ee/xml/ns/jakartaee
+
+      and by indicating the version of the schema by
+      using the version element as shown below:
+
+        <handler-chains xmlns="https://jakarta.ee/xml/ns/jakartaee"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+              https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_metadata_handler_3_0.xsd"
+          version="3.0">
+          ...
+        </handler-chains>
+
+      The instance documents may indicate the published version of
+      the schema using the xsi:schemaLocation attribute for Jakarta EE
+      namespace with the following location:
+
+      https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_metadata_handler_3_0.xsd
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:include schemaLocation="jakartaee_9.xsds"/>
+
+  <xsd:element name="handler-chains"
+               type="jakartaee:service-ref_handler-chainsType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        The handler-chains element is the root element for defining
+        handlerchains.
+
+        The Jakarta Web Services Metadata
+        specification defines the @jakarta.jws.HandlerChain annotation
+        that refers to an XML descriptor conforming to this schema.
+
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+</xsd:schema>

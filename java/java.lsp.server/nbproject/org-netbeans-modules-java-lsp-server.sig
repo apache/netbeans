@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20.0
+#Version 2.0.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -14,6 +14,12 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDiagnosticReporter
+cons public init()
+intf org.netbeans.spi.lsp.DiagnosticReporter
+meth public org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+supr java.lang.Object
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDialogDisplayer
 cons public init()
@@ -195,6 +201,12 @@ meth public abstract {org.netbeans.spi.io.InputOutputProvider%3} startFold({org.
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
+meth public abstract org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 
 CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsImplementation
 meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)

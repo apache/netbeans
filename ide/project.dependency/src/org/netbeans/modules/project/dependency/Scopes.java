@@ -29,12 +29,12 @@ import java.util.Set;
  */
 public final class Scopes {
     /**
-     * Build process dependencies. Annotation processors, buildtime tools, code generators.
+     * Build process dependencies. Annotation processors, buildtime tools, code generators
      */
     public static final Scope PROCESS = new DefaultScope("compileProcessing", Collections.emptySet(), Collections.emptySet());
 
     /**
-     * External dependencies, not distributed with the application, but provided by the environment
+     * External dependencies, not distributed with the application, but provided by the environment (= provided dependencies in Maven)
      */
     public static final Scope EXTERNAL = new DefaultScope("external", Collections.emptySet(), Collections.emptySet());
     

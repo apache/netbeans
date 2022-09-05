@@ -47,7 +47,7 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
     public GradleExecutorOptionsPanel(Project project) {
         this.project = project;
         initComponents();
-        EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
+        EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         epCLI.setEditorKit(kit);
         if (project != null) {
             epCLI.getDocument().putProperty(Document.StreamDescriptionProperty, project);

@@ -2834,14 +2834,21 @@ public class ModuleManagerTest extends SetupHid {
         MockEvents ev = new MockEvents();
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
+        
+        createTestJAR(data, jars, "fragment-module-reg", "fragment-module");
 
         // m1 autoload, m2 normal, m3 eager
         Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
-        Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+        Module m2 = mgr.create(new File(jars, "fragment-module-reg.jar"), null, false, false, false);
+        Module m3 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, true);
         List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m2));
         
         assertTrue("Host will be enabled", toEnable.contains(m1));
         assertTrue("Known fragment must be merged in", toEnable.contains(m2));
+        assertTrue("Eager fragment must be merged in", toEnable.contains(m3));
+        
+        // cannot explicitly enable eager module:
+        toEnable.remove(m3);
         mgr.enable(new HashSet<>(toEnable));
     }
     
@@ -2911,7 +2918,7 @@ public class ModuleManagerTest extends SetupHid {
         c.checkHostAndOtherFragmentsLoaded(c.fragmentAutoload);
     }
     
-    public void testAutoloadHostEnablesAllFragments() throws Exception {
+    public void testAutoloadHostEnablesEagerFragments() throws Exception {
         ModsCreator c = new ModsCreator();
         createTestJAR(data, jars, "client-module-depend-host", "client-module");
         c.loadModules();
@@ -2919,7 +2926,7 @@ public class ModuleManagerTest extends SetupHid {
         Module client = c.mgr.create(new File(jars, "client-module-depend-host.jar"), null, false, false, false);
         c.mgr.enable(client);
 
-        c.checkHostAndOtherFragmentsLoaded(c.host);
+        c.checkHostAndOtherFragmentsLoaded();
     }
     
     public void testBrokenAutoloadFragmentDepend() throws Exception {
@@ -2969,6 +2976,92 @@ public class ModuleManagerTest extends SetupHid {
         assertFalse(mgr.getEnabledModules().contains(fragment));
         assertFalse(mgr.getEnabledModules().contains(client));
     }
+    
+    /**
+     * Tests the situation with JavaFX support:
+     * - client depends on core module
+     * - core module NEEDS or REQUIRES a platform module
+     * - platform modules are AUTOLOADS and are fragments
+     * - noone depends on platform modules directly
+     * - each platform module REQUIRES a token
+     * - one token is provided
+     * Under normal circumstances, the autoload fragments would not load since noone depends
+     * on them. But they are providers, and SOME provider is needed. Hence the matching one(s)
+     * will load.
+     * 
+     * @throws Exception 
+     */
+    public void testPickFromAutoloadFragmentsByToken() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        installer.provides.put("org.foo.javafx", new String[] { "org.openide.modules.os.Linux", "org.openide.modules.os.Unix" });
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "foo-javafx-core", "javafx-core");
+        createTestJAR(data, jars, "foo-javafx-linux", "javafx-linux");
+        createTestJAR(data, jars, "foo-javafx-windows", "javafx-windows");
+        createTestJAR(data, jars, "foo-javafx-client", "client-module");
+        createTestJAR(data, jars, "foo-javafx-linux-eager", "javafx-linux-eager");
+
+        Module host = mgr.create(new File(jars, "foo-javafx-core.jar"), null, false, true, false);
+        Module linuxFrag = mgr.create(new File(jars, "foo-javafx-linux.jar"), null, false, true, false);
+        Module linuxEager = mgr.create(new File(jars, "foo-javafx-linux-eager.jar"), null, false, false, true);
+        Module winFrag = mgr.create(new File(jars, "foo-javafx-windows.jar"), null, false, true, false);
+        Module client = mgr.create(new File(jars, "foo-javafx-client.jar"), null, false, false, false);
+        
+        mgr.enable(client);
+        
+        assertTrue(mgr.getEnabledModules().contains(host));
+        assertTrue(mgr.getEnabledModules().contains(linuxFrag));
+        assertTrue(mgr.getEnabledModules().contains(linuxEager));
+        
+        assertFalse(mgr.getEnabledModules().contains(winFrag));
+        assertTrue(mgr.getEnabledModules().contains(client));
+        
+        assertNotNull(client.getClassLoader().getResource("org/foo/javafx/Bundle.properties"));
+        assertNotNull(client.getClassLoader().getResource("org/foo/javafx/Linux.properties"));
+        assertNull(client.getClassLoader().getResource("org/foo/javafx/Windows.properties"));
+        assertNotNull(client.getClassLoader().getResource("org/foo/javafx/Eager.properties"));
+    }
+    
+    /**
+     * Checks that dependencies introduced by the fragment are injected into the 
+     * host module.
+     * @throws Exception 
+     */
+    public void testFragmentDependenciesInjectedIntoMain() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        installer.provides.put("org.foo.javafx", new String[] { "org.openide.modules.os.Windows" });
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "foo-javafx-core", "javafx-core");
+        createTestJAR(data, jars, "foo-javafx-linux", "javafx-linux");
+        createTestJAR(data, jars, "foo-javafx-windows", "javafx-windows");
+        createTestJAR(data, jars, "foo-javafx-client", "client-module");
+        createTestJAR(data, jars, "foo-javafx-linux-eager", "javafx-linux-eager");
+        createTestJAR(data, jars, "agent", "agent");
+
+        Module host = mgr.create(new File(jars, "foo-javafx-core.jar"), null, false, true, false);
+        Module linuxFrag = mgr.create(new File(jars, "foo-javafx-linux.jar"), null, false, true, false);
+        Module linuxEager = mgr.create(new File(jars, "foo-javafx-linux-eager.jar"), null, false, false, true);
+        Module winFrag = mgr.create(new File(jars, "foo-javafx-windows.jar"), null, false, true, false);
+        Module client = mgr.create(new File(jars, "foo-javafx-client.jar"), null, false, false, false);
+        Module agent = mgr.create(new File(jars, "agent.jar"), null, false, true, false);
+        
+        mgr.enable(client);
+        
+        assertTrue(mgr.getEnabledModules().contains(host));
+        assertFalse(mgr.getEnabledModules().contains(linuxFrag));
+        assertFalse(mgr.getEnabledModules().contains(linuxEager));
+        assertTrue(mgr.getEnabledModules().contains(winFrag));
+        assertTrue(mgr.getEnabledModules().contains(client));
+        
+        assertNotNull(host.getClassLoader().getResource("org/agent/HelloWorld.class"));
+        assertNull(client.getClassLoader().getResource("org/agent/HelloWorld.class"));
+    }
 
     private class LogHandler extends Handler {
         private List<LogRecord> warnings = new ArrayList<>();
@@ -3016,7 +3109,7 @@ public class ModuleManagerTest extends SetupHid {
                 host = mgr.create(new File(jars, "host-module.jar"), null, false, true, false);
             }
             if (fragmentService == null) {
-                fragmentService = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
+                fragmentService = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, true);
             }
             if (fragmentRegular == null) {
                 fragmentRegular = mgr.create(new File(jars, "fragment-module-reg.jar"), null, false, false, false);
@@ -3032,13 +3125,17 @@ public class ModuleManagerTest extends SetupHid {
             liveFragments.add(fragmentAutoload);
         }
         
-        void checkHostAndOtherFragmentsLoaded(Module pickedDep) {
+        void checkHostAndOtherFragmentsLoaded(Module... pickedDeps) {
             assertTrue("Fragment host must enable", mgr.getEnabledModules().contains(host));
+            assertTrue("Eager fragment must load with host", mgr.getEnabledModules().contains(fragmentService));
+            Set<Module> picked = new HashSet<>(pickedDeps == null ? Collections.emptyList() : Arrays.asList(pickedDeps));
             for (Module m : liveFragments) {
-                if (m != pickedDep) {
-                    assertTrue("Peer fragment must be autoloaded", mgr.getEnabledModules().contains(m));
+                if (picked.contains(m)) {
+                    assertTrue("Peer fragment must be loaded: " + m.getCodeNameBase(), mgr.getEnabledModules().contains(m));
+                } else if (m != fragmentService) {
+                    assertFalse("Fragment must not activate: " + m.getCodeNameBase(), mgr.getEnabledModules().contains(m));
                 }
-            }
+            }            
             // the fragment with unsatisfied "needs" is not reported, as it is autoload being triggered by host module.
             assertTrue(logHandler.warnings.isEmpty());
         }

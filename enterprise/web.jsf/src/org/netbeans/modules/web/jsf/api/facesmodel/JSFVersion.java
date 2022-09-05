@@ -26,7 +26,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public enum JSFVersion {
     JSF_2_3("JSF 2.3"),
     JSF_3_0("JSF 3.0");
 
-    private static final LinkedHashMap<JSFVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<JSFVersion, String>();
+    private static final LinkedHashMap<JSFVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>();
 
     static {
         SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_3_0, JSFUtils.JSF_3_0__API_SPECIFIC_CLASS);
@@ -96,8 +95,8 @@ public enum JSFVersion {
     private static final Logger LOG = Logger.getLogger(JSFVersion.class.getName());
 
     // caches for holding JSF version and the project CP listeners
-    private static final Map<WebModule, JSFVersion> projectVersionCache = new WeakHashMap<WebModule, JSFVersion>();
-    private static final Map<WebModule, PropertyChangeListener> projectListenerCache = new WeakHashMap<WebModule, PropertyChangeListener>();
+    private static final Map<WebModule, JSFVersion> projectVersionCache = new WeakHashMap<>();
+    private static final Map<WebModule, PropertyChangeListener> projectListenerCache = new WeakHashMap<>();
 
     /**
      * Gets the JSF version supported by the WebModule. It seeks for the JSF only on the classpath including the

@@ -61,6 +61,7 @@ lexer grammar LexBasic;
 package org.antlr.parser.antlr4;
 
 }
+
 // ======================================================
 // Lexer fragments
 //

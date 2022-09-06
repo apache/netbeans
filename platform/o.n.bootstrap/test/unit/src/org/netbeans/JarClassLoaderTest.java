@@ -18,6 +18,7 @@
  */
 package org.netbeans;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,6 +55,8 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.TestFileUtils;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /** Tests that cover some basic aspects of a Proxy/JarClassLoader.
  *
@@ -428,6 +431,8 @@ public class JarClassLoaderTest extends NbTestCase {
 
     public void testMultiReleaseJar() throws Exception {
         clearWorkDir();
+
+        // Prepare multi-release jar file
         File classes = new File(getWorkDir(), "classes");
         classes.mkdirs();
         ToolProvider.getSystemJavaCompiler()
@@ -453,11 +458,14 @@ public class JarClassLoaderTest extends NbTestCase {
                       throw new IllegalStateException(ex);
                   }
              });
+        jarContent.put("test/dummy.txt", "base".getBytes(UTF_8));
+        jarContent.put("META-INF/versions/9/test/dummy.txt", "9".getBytes(UTF_8));
         File jar = new File(getWorkDir(), "multi-release.jar");
         try (OutputStream out = new FileOutputStream(jar)) {
             TestFileUtils.writeZipFile(out, jarContent);
         }
 
+        // Check multi release class loading
         JarClassLoader jcl = new JarClassLoader(Arrays.asList(jar), new ProxyClassLoader[0]);
         Class<?> api = jcl.loadClass("api.API");
         Method run = api.getDeclaredMethod("run");
@@ -470,6 +478,21 @@ public class JarClassLoaderTest extends NbTestCase {
             expected = "base";
         }
         assertEquals(expected, output);
+
+        // Check multi release resource loading
+        try(InputStream is = jcl.getResourceAsStream("test/dummy.txt")) {
+            assertEquals(expected, loadUTF8(is));
+        }
+    }
+
+    private static String loadUTF8(InputStream is) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[2048];
+        int read;
+        while ((read = is.read(buffer)) > 0) {
+            baos.write(buffer, 0, read);
+        }
+        return baos.toString("UTF-8");
     }
 
     private static final class SourceFileObject extends SimpleJavaFileObject {

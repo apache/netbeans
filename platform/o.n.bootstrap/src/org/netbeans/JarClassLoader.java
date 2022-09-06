@@ -86,6 +86,7 @@ public class JarClassLoader extends ProxyClassLoader {
     //
     
     private static Stamps cache;
+    private static final String META_INF = "META-INF/";
     private static final Name MULTI_RELEASE = new Name("Multi-Release");
     private static final int BASE_VERSION = 8;
     private static final int RUNTIME_VERSION;
@@ -296,14 +297,7 @@ public class JarClassLoader extends ProxyClassLoader {
                     }
                 }
                 Manifest man = new DelayedManifest();
-                if (man.getMainAttributes().containsKey(MULTI_RELEASE)) {
-                    String multiRelease = (String) man.getMainAttributes().get(MULTI_RELEASE);
-                    src.setMultiRelease(multiRelease.equalsIgnoreCase("true"));
-                }
-                if (src.isMultiRelease() && RUNTIME_VERSION != BASE_VERSION) {
-                    data = src.getClassData(path);
-                }
-                
+
                 try {
                     definePackage(pkgName, man, src.getURL());
                 } catch (IllegalArgumentException x) {
@@ -368,7 +362,7 @@ public class JarClassLoader extends ProxyClassLoader {
         private ProtectionDomain pd;
         protected JarClassLoader jcl;
         private static Map<String,Source> sources = new HashMap<String, Source>();
-        private boolean multiRelease;
+        private Boolean multiRelease;
         
         public Source(URL url) {
             this.url = url;
@@ -445,11 +439,20 @@ public class JarClassLoader extends ProxyClassLoader {
             return url.toString();
         }
 
-        private void setMultiRelease(boolean multiRelease) {
-            this.multiRelease = multiRelease;
-        }
-
         protected boolean isMultiRelease() {
+            Manifest man = getManifest();
+            if(man == null) {
+                return false;
+            }
+            if(multiRelease != null) {
+                return multiRelease;
+            }
+            if (man.getMainAttributes().containsKey(MULTI_RELEASE)) {
+                String multiReleaseString = (String) man.getMainAttributes().get(MULTI_RELEASE);
+                multiRelease = Boolean.valueOf(multiReleaseString);
+            } else {
+                multiRelease = false;
+            }
             return multiRelease;
         }
 
@@ -616,21 +619,12 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected byte[] readClass(String path) throws IOException {
             try {
-                if (isMultiRelease() && RUNTIME_VERSION > BASE_VERSION) {
+                if ((! path.startsWith(META_INF)) && isMultiRelease() && RUNTIME_VERSION > BASE_VERSION) {
                     int[] vers = getVersions();
-                    if (vers.length > 0) {
-                        for (int i = vers.length - 1; i >= 0; i--) {
-                            int version = vers[i];
-                            if (version > RUNTIME_VERSION) {
-                                continue;
-                            }
-                            if (version < BASE_VERSION) {
-                                break;
-                            }
-                            byte[] data = archive.getData(this, "META-INF/versions/" + version + "/" + path);
-                            if (data != null) {
-                                return data;
-                            }
+                    for (int version: vers) {
+                        byte[] data = archive.getData(this, "META-INF/versions/" + version + "/" + path);
+                        if (data != null) {
+                            return data;
                         }
                     }
                 }
@@ -641,25 +635,22 @@ public class JarClassLoader extends ProxyClassLoader {
             }
         }
 
+        /**
+         * @return versions for which a {@code META-INF/versions/NUMBER} entry exists.
+         * The order is from largest version to lowest. Only versions supported by
+         * the runtime VM are reported.
+         */
         private int[] getVersions() {
             if (versions != null) {
                 return versions;
             }
             try {
-                JarFile src = getJarFile("versions");
-                Set<Integer> vers = new TreeSet<>();
-                Enumeration<JarEntry> en = src.entries();
-                while (en.hasMoreElements()) {
-                    JarEntry je = en.nextElement();
-                    if (je.isDirectory()) {
-                        String itm = je.getName();
-                        if (itm.startsWith("META-INF/versions/")) {
-                            String res = itm.substring(18);
-                            int idx = res.indexOf('/');
-                            if (idx > 0 && idx == res.length() - 1) {
-                                vers.add(Integer.parseInt(res.substring(0, idx)));
-                            }
-                        }
+                Set<Integer> vers = new TreeSet<>(Collections.reverseOrder());
+                for(int i = BASE_VERSION; i <= RUNTIME_VERSION; i++) {
+                    String directory = "META-INF/versions/" + i;
+                    byte[] data = archive.getData(this, directory);
+                    if (data != null && data.length == 0) {
+                        vers.add(i);
                     }
                 }
                 int[] ret = new int[vers.size()];
@@ -669,23 +660,11 @@ public class JarClassLoader extends ProxyClassLoader {
                 }
                 versions = ret;
                 return ret;
-            } catch (ZipException x) { // Unix
-                if (warnedFiles.add(file)) {
-                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
-                    dumpFiles(file, -1);
-                }
-            } catch (FileNotFoundException x) { // Windows
-                if (warnedFiles.add(file)) {
-                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
-                    dumpFiles(file, -1);
-                }
             } catch (IOException ioe) {
                 if (warnedFiles.add(file)) {
                     LOGGER.log(Level.WARNING, "problems with " + file, ioe);
                     dumpFiles(file, -1);
                 }
-            } finally {
-                releaseJarFile();
             }
             return new int[0];
         }

@@ -582,7 +582,8 @@ final class VanillaCompileWorker extends CompileWorker {
                 } else {
                     scan(node.getInitializer(), null);
                 }
-                decl.sym.type = decl.type = error2Object(decl.type);
+                decl.type = error2Object(decl.type);
+                decl.sym.type = error2Object(decl.sym.type);
                 clearAnnotations(decl.sym.getMetadata());
                 return null;
             }

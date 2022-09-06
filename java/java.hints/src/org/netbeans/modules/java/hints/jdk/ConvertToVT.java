@@ -69,7 +69,7 @@ public class ConvertToVT {
             return null;
         }
         List<String> methList = Arrays.asList("newFixedThreadPool", "newCachedThreadPool");
-        String type1 = ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$expr2")).getSimpleName().toString();
+        String expr = ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$expr2")).getSimpleName().toString();
         String method = ctx.getVariableNames().get("$meth1");
         Collection<? extends TreePath> treePaths = ctx.getMultiVariables().get("$var1$");
         boolean factory = false;
@@ -78,7 +78,7 @@ public class ConvertToVT {
                 factory = true;
             }
         }
-        if (type1.equals("Executors") && methList.contains(method)) {
+        if (expr.equals("Executors") && methList.contains(method)) {
             Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), factory).toEditorFix();
             if (factory) {
                 return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToThreadPerTask(), fix);

@@ -171,7 +171,7 @@ public final class SourceRootsUi {
      * Opens the standard dialog for warning an user about illegal source roots.
      * @param roots the set of illegal source/test roots
      */
-    public static void showIllegalRootsDialog (Set/*<File>*/ roots) {
+    public static void showIllegalRootsDialog (Set<File> roots) {
         JButton closeOption = new JButton (NbBundle.getMessage(SourceRootsUi.class,"CTL_SourceRootsUi_Close"));
         closeOption.getAccessibleContext ().setAccessibleDescription (NbBundle.getMessage(SourceRootsUi.class,"AD_SourceRootsUi_Close"));
         JPanel warning = new WarningDlg (roots);

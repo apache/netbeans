@@ -89,7 +89,7 @@ public class Utilities {
             return null;
         }
 
-        Set types = EnumSet.copyOf(Arrays.asList(nodeTypesToMatch));
+        Set<NodeType> types = EnumSet.copyOf(Arrays.asList(nodeTypesToMatch));
         if(!types.contains(current.type())) {
             return null;
         }

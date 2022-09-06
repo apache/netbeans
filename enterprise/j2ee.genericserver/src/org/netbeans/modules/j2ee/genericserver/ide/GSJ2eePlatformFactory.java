@@ -51,13 +51,13 @@ public class GSJ2eePlatformFactory extends J2eePlatformFactory {
             return new File[0];
         }
         
-        public Set getSupportedSpecVersions() {
+        public Set<String> getSupportedSpecVersions() {
             Set<String> result = new HashSet<>();
             result.add(J2eeModule.J2EE_14);
             return result;
         }
         
-        public Set getSupportedModuleTypes() {
+        public Set<Object> getSupportedModuleTypes() {
             Set<Object> result = new HashSet<>();
 //            result.add(J2eeModule.EAR);
 //            result.add(J2eeModule.WAR);
@@ -67,7 +67,7 @@ public class GSJ2eePlatformFactory extends J2eePlatformFactory {
             return result;
         }
         
-        public Set/*<String>*/ getSupportedJavaPlatformVersions() {
+        public Set<String> getSupportedJavaPlatformVersions() {
             Set<String> versions = new HashSet<>();
             versions.add("1.4"); // NOI18N
             versions.add("1.5"); // NOI18N

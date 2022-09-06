@@ -39,7 +39,7 @@ import org.netbeans.modules.xml.spi.dom.*;
 class DTDGrammar implements ExtendedGrammarQuery {
     
     // element name keyed
-    private Map<String, Set>  elementDecls, attrDecls;
+    private Map<String, Set<String>>  elementDecls, attrDecls;
     
     // Map<elementName:String, model:String || model:ContentModel || null>
     // this map is filled asynchronously as it takes some time
@@ -54,12 +54,13 @@ class DTDGrammar implements ExtendedGrammarQuery {
     private Set<String> entities, notations;
 
     /** Set&lt;elementName:String> holding all emenets with <code>EMPTY</code> content model.*/
-    private Set emptyElements;
+    private Set<String> emptyElements;
 
     private List<String> resolvedEntities;
     
     /** Creates new DTDGrammar */
-    DTDGrammar(Map elementDecls, Map contentModels, Map attrDecls, Map attrDefs, Map enums, Set entities, Set notations, Set emptyElements) {
+    DTDGrammar(Map elementDecls, Map contentModels, Map attrDecls, Map attrDefs, Map enums,
+	       Set<String> entities, Set<String> notations, Set<String> emptyElements) {
         this.elementDecls = elementDecls;
         this.attrDecls = attrDecls;
         this.entities = entities;

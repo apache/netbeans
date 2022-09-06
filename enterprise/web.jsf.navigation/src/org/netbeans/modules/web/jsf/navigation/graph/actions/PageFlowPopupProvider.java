@@ -39,7 +39,6 @@ import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.windows.TopComponent;
 import javax.swing.Action;
 import org.netbeans.modules.web.jsf.navigation.PageFlowView;
 import org.netbeans.modules.web.jsf.navigation.Pin;
@@ -79,9 +78,9 @@ public class PageFlowPopupProvider implements PopupMenuProvider {
 
         if (obj != null) {
 
-            Set elements = scene.getSelectedObjects();            
+            Set<?> elements = scene.getSelectedObjects();            
             if( !elements.contains(obj)) {
-                Set<Object> set = new HashSet<Object>();
+                Set<Object> set = new HashSet<>();
                 set.add(obj);
                 scene.setSelectedObjects(set);
             }

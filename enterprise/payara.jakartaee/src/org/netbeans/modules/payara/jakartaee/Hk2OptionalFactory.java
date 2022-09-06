@@ -228,11 +228,11 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
 
         @Override
         public Set instantiate() throws IOException {
-            Set set = delegate.instantiate();
-            if(!set.isEmpty()) {
+            Set<ServerInstance> set = delegate.instantiate();
+            if (!set.isEmpty()) {
                 Object obj = set.iterator().next();
-                if(obj instanceof ServerInstance) {
-                    ServerInstance instance = (ServerInstance) obj;
+                if (obj instanceof ServerInstance) {
+                    ServerInstance instance = (ServerInstance)obj;
                     Lookup lookup = su.getLookupFor(instance);
                     if (lookup != null) {
                         JavaEEServerModule module = lookup.lookup(JavaEEServerModule.class);

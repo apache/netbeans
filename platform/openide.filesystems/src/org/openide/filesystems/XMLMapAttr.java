@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -399,7 +398,7 @@ final class XMLMapAttr implements Map {
         return map.hashCode();
     }
 
-    public synchronized java.util.Set<String> keySet() {
+    public synchronized Set<String> keySet() {
         return map.keySet();
     }
 
@@ -408,7 +407,7 @@ final class XMLMapAttr implements Map {
     }
 
     // XXX this is wrong - values not translated
-    public synchronized java.util.Set entrySet() {
+    public synchronized Set<Map.Entry<String, Attr>> entrySet() {
         return map.entrySet();
     }
 

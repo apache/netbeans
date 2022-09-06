@@ -340,7 +340,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
             DataObject dobj = dTemplate.createFromTemplate(df, targetName, parameters);
             createdFile = dobj.getPrimaryFile();
         }
-        final Set<FileObject> res = new HashSet<>();
+        final Set res = new HashSet<>();
         res.add(createdFile);
         asInstantiatingIterator(projectSpecificIterator)
                 .map((it)->{

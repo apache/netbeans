@@ -630,7 +630,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
      * @return Supported JavaSE platforms.
      */
     @Override
-    public Set getSupportedJavaPlatformVersions() {
+    public Set<String> getSupportedJavaPlatformVersions() {
         return platformsSetFromArray(platforms);
     }
 

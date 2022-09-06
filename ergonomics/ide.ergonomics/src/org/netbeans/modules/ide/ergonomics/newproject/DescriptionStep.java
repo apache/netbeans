@@ -327,7 +327,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
             o = new WizardDescriptor.InstantiatingIterator<WizardDescriptor>() {
                 private TemplateWizard tw;
 
-                public Set instantiate() throws IOException {
+                public Set<DataObject> instantiate() throws IOException {
                     return it.instantiate(tw);
                 }
                 public void initialize(WizardDescriptor wizard) {

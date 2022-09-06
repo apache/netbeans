@@ -86,7 +86,7 @@ public abstract class OnlineSampleWizardIterator extends AbstractWizardIterator 
         "OnlineSampleWizardIterator.applyingTemplate=Applying template..."
     })
     @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
+    public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
         handle.start();
         handle.progress(Bundle.OnlineSampleWizardIterator_creatingProject()); //NOI18N
 

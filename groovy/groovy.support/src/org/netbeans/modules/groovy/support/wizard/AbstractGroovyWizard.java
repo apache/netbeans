@@ -73,7 +73,7 @@ public abstract class AbstractGroovyWizard extends AbstractFileWizard {
     }
 
     @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
+    public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
         handle.start();
         handle.progress(NbBundle.getMessage(AbstractGroovyWizard.class, "LBL_NewGroovyFileWizardIterator_WizardProgress_CreatingFile"));
 

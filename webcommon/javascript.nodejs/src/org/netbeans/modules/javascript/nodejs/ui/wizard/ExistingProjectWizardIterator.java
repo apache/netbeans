@@ -104,7 +104,7 @@ public final class ExistingProjectWizardIterator extends BaseWizardIterator {
 
     @NbBundle.Messages("ExisitngProjectWizardIterator.progress.creating=Creating project")
     @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
+    public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
         handle.start();
         handle.progress(Bundle.ExisitngProjectWizardIterator_progress_creating());
 

@@ -79,7 +79,7 @@ public final class ApplicationXmlWizardIterator implements WizardDescriptor.Inst
         return panels;
     }
 
-    public Set instantiate() throws IOException {
+    public Set<FileObject> instantiate() throws IOException {
         ApplicationXmlWizardPanel1 panel = (ApplicationXmlWizardPanel1) panels[0];
         FileObject confRoot = panel.getSelectedLocation();
 

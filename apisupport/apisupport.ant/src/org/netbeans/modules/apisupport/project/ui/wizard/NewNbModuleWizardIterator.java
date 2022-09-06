@@ -161,7 +161,7 @@ public class NewNbModuleWizardIterator implements WizardDescriptor.AsynchronousI
         return createdProjectFolder;
     }
     
-    public Set instantiate() throws IOException {
+    public Set<FileObject> instantiate() throws IOException {
         final File projectFolder = new File(data.getProjectFolder());
         ModuleUISettings.getDefault().setLastUsedPlatformID(data.getPlatformID());
         WizardDescriptor settings = data.getSettings();

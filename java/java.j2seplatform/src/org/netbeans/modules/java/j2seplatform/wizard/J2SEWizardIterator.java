@@ -112,7 +112,7 @@ public class J2SEWizardIterator implements WizardDescriptor.InstantiatingIterato
      * @return singleton Set with java platform's instance DO inside.
      */
     @Override
-    public java.util.Set instantiate() throws IOException {
+    public Set<JavaPlatform> instantiate() throws IOException {
         //Workaround #44444
         this.detectPanel.storeSettings (this.wizard);
         Set<JavaPlatform> result = new HashSet<JavaPlatform> ();

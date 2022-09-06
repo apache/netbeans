@@ -93,7 +93,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
     private transient WizardDescriptor wiz;
 
     @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
+    public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
         try {
             handle.start(4);
             String projectName = (String) wiz.getProperty(PROJECT_NAME);

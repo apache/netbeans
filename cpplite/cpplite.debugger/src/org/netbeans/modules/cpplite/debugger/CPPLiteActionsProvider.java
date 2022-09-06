@@ -69,7 +69,7 @@ public final class CPPLiteActionsProvider extends ActionsProviderSupport {
     }
 
     @Override
-    public Set getActions () {
+    public Set<Object> getActions () {
         return ACTIONS;
     }
 

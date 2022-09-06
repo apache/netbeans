@@ -123,7 +123,10 @@ public class DTDParser {
     private class Handler extends DefaultHandler implements DeclHandler {
         
         private Map attrs, elements, models, enums, attrDefaults;
-        private Set<String> notations, entities, anys, emptyElements;
+        private Set<String> notations;
+        private Set<String> entities;
+        private Set<String> anys;
+        private Set<String> emptyElements;
         private DTDGrammar dtd;
         
         Handler() {
@@ -134,8 +137,8 @@ public class DTDParser {
             entities  = new TreeSet<>();
             anys = new HashSet();
             enums = new HashMap();
-            attrDefaults = new HashMap();
-            emptyElements = new HashSet();
+            attrDefaults  = new HashMap();
+            emptyElements = new HashSet<>();
             dtd = new DTDGrammar(elements, models, attrs, attrDefaults, enums, entities, notations, emptyElements);
         }
         
@@ -172,7 +175,7 @@ public class DTDParser {
             // parse content model
             
             StringTokenizer tokenizer = new StringTokenizer(model, " \t\n|,()?+*");
-            Set modelset = new TreeSet();
+            Set<String> modelset = new TreeSet();
             while (tokenizer.hasMoreTokens()) {
                 String next = tokenizer.nextToken().trim();
                 if ("#PCDATA".equals(next)) continue;
@@ -189,9 +192,9 @@ public class DTDParser {
         }
         
         public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws SAXException {
-            Set set = (Set) attrs.get(eName);
+            Set<String> set = (Set) attrs.get(eName);
             if (set == null) {
-                set = new TreeSet();
+                set = new TreeSet<>();
                 attrs.put(eName, set);
             }
             set.add(aName);

@@ -249,8 +249,8 @@ public class JSFConfigUtilities {
         }
     }
 
-    public static Set extendJsfFramework(FileObject fileObject, boolean createWelcomeFile) {
-        Set result = Collections.emptySet();
+    public static Set<FileObject> extendJsfFramework(FileObject fileObject, boolean createWelcomeFile) {
+        Set<FileObject> result = Collections.emptySet();
         if (fileObject == null) {
             return result;
         }

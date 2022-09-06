@@ -129,7 +129,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     }
     
     @Override
-    public Set instantiate() throws IOException {
+    public Set<ServerInstance> instantiate() throws IOException {
         Set<ServerInstance> result = new HashSet<>();
         File ir = new File(installRoot);
         ensureExecutable(ir);

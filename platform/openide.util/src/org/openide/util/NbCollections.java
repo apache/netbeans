@@ -225,15 +225,16 @@ public class NbCollections {
     public static <E> Set<E> checkedSetByFilter(Set rawSet, Class<E> type, boolean strict) {
         return new CheckedSet<E>(rawSet, type, strict);
     }
+    
     private static final class CheckedSet<E> extends AbstractSet<E> implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
-        private final Set rawSet;
+        private final Set<E> rawSet;
         private final Class<E> type;
         private final boolean strict;
 
-        public CheckedSet(Set rawSet, Class<E> type, boolean strict) {
+        public CheckedSet(Set<E> rawSet, Class<E> type, boolean strict) {
             this.rawSet = rawSet;
             this.type = type;
             this.strict = strict;

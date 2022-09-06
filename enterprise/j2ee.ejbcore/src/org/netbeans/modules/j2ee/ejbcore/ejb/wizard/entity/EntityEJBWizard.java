@@ -70,7 +70,7 @@ public final class EntityEJBWizard implements WizardDescriptor.InstantiatingIter
 
     }
 
-    public Set instantiate () {
+    public Set<FileObject> instantiate () {
         boolean isCMP = ejbPanel.isCMP();
         EntityGenerator entityGenerator = EntityGenerator.create(
                 Templates.getTargetName(wiz), 

@@ -93,7 +93,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
         this.wiz.putProperty("name",null);          //NOI18N
     }
     
-    @Override public Set instantiate() throws java.io.IOException {
+    @Override public Set<DataObject> instantiate() throws java.io.IOException {
         File projectLocation = (File) wiz.getProperty(WizardProperties.PROJECT_DIR);
         String name = (String) wiz.getProperty(WizardProperties.NAME);
         FileObject templateFO = Templates.getTemplate(wiz);

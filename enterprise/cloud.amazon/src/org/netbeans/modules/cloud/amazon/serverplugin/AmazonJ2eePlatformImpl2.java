@@ -144,7 +144,7 @@ public class AmazonJ2eePlatformImpl2 extends J2eePlatformImpl2 {
     }
 
     @Override
-    public Set getSupportedJavaPlatformVersions() {
+    public Set<String> getSupportedJavaPlatformVersions() {
         return new HashSet<String>(Arrays.asList(new String[] {"1.6","1.5"}));
     }
 

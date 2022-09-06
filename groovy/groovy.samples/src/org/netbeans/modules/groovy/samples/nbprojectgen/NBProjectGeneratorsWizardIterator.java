@@ -73,7 +73,7 @@ public class NBProjectGeneratorsWizardIterator implements WizardDescriptor./*Pro
                 };
     }
 
-    public Set/*<FileObject>*/ instantiate(/*ProgressHandle handle*/) throws IOException {
+    public Set<FileObject> instantiate(/*ProgressHandle handle*/) throws IOException {
         Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
         File dirF = FileUtil.normalizeFile((File) wiz.getProperty("projdir"));
         dirF.mkdirs();

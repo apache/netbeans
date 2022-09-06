@@ -169,7 +169,7 @@ public class JSClientIterator implements ProgressInstantiatingIterator<WizardDes
      * @see org.openide.WizardDescriptor.InstantiatingIterator#instantiate()
      */
     @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
+    public Set<FileObject> instantiate(ProgressHandle handle) throws IOException {
         handle.start();
         Project project = Templates.getProject(myWizard);
         

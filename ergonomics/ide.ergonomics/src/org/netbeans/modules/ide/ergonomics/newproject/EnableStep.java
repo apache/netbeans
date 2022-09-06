@@ -41,6 +41,7 @@ import org.openide.WizardDescriptor;
 import org.openide.WizardDescriptor.Panel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
@@ -164,7 +165,7 @@ public class EnableStep implements WizardDescriptor.FinishablePanel<WizardDescri
             o = new WizardDescriptor.InstantiatingIterator<WizardDescriptor>() {
                 private TemplateWizard tw;
 
-                public Set instantiate() throws IOException {
+                public Set<DataObject> instantiate() throws IOException {
                     return it.instantiate(tw);
                 }
                 public void initialize(WizardDescriptor wizard) {

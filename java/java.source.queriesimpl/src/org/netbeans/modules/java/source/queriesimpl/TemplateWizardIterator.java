@@ -103,7 +103,7 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
     }
 
     @Override
-    public Set instantiate() throws IOException, IllegalArgumentException {
+    public Set<FileObject> instantiate() throws IOException, IllegalArgumentException {
         Set<FileObject> set = delegateIterator.instantiate();
         FileObject template = set.iterator().next();
         if (wiz instanceof TemplateWizard) {

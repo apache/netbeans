@@ -105,7 +105,7 @@ public final class PayaraDDWizardIterator implements WizardDescriptor.Instantiat
     }
     
     @Override
-    public Set instantiate() throws IOException {
+    public Set<FileObject> instantiate() throws IOException {
         Set<FileObject> result = Collections.emptySet();
         PayaraDDWizardPanel wizardPanel = (PayaraDDWizardPanel) panels[0];
         

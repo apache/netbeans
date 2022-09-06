@@ -195,8 +195,8 @@ public class LiveEngine implements ObjectMap, Visitor {
         return result;
     }
 
-    private Path findRoots(Object obj, Set roots) {
-        Set<Path> visited = new HashSet<Path>();
+    private Path findRoots(Object obj, Set<?> roots) {
+        Set<Path> visited = new HashSet<>();
         Path last = Utils.createPath(obj, null);
 
         List<Path> queue = new LinkedList<Path>();

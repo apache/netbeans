@@ -349,21 +349,21 @@ public final class XSLGrammarQuery implements GrammarQuery{
         return attrDecls;
     }
 
-    private static Set getResultElementAttr() {
+    private static Set<String> getResultElementAttr() {
         if (resultElementAttr == null) {
             getElementDecls();
         }
         return resultElementAttr;
     }
 
-    private static Set getTemplate() {
+    private static Set<String> getTemplate() {
         if (template == null) {
             getElementDecls();
         }
         return template;
     }
 
-    private static Set getXslFunctions() {
+    private static Set<String> getXslFunctions() {
         if (xslFunctions == null) {
             xslFunctions = new TreeSet<>(Arrays.asList(new String[]{
                 "boolean(","ceiling(","concat(", "contains(","count(","current()","document(", // NOI18N
@@ -376,7 +376,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
         return xslFunctions;
     }
 
-    private static Set getXPathAxes() {
+    private static Set<String> getXPathAxes() {
         if (xpathAxes == null) {
             xpathAxes = new TreeSet<>(Arrays.asList(new String[]{"ancestor::", "ancestor-or-self::", // NOI18N
             "attribute::", "child::", "descendant::", "descendant-or-self::", "following::", // NOI18N
@@ -427,7 +427,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
             if (prefixList.size() == 0) return org.openide.util.Enumerations.empty();
 
             String firstXslPrefixWithColon = prefixList.get(0) + ":"; // NOI18N
-            Set elements;
+            Set<String> elements;
             if (el.getTagName().startsWith(firstXslPrefixWithColon)) {
                 String parentNCName = el.getTagName().substring(firstXslPrefixWithColon.length());
                 elements = (Set) getElementDecls().get(parentNCName);
@@ -645,7 +645,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
                     if (doc != null) {
                         Element docElement = doc.getDocumentElement();
 
-                        Set childNodeNames = new TreeSet();
+                        Set<String> childNodeNames = new TreeSet<>();
 
                         String combinedXPath;
                         if (subPre.startsWith("/")) { // NOI18N
@@ -832,9 +832,9 @@ public final class XSLGrammarQuery implements GrammarQuery{
         }
     }
 
-    private static void addItemsToEnum(QueueEnumeration enumX, Set set, String startWith, String prefix) {
+    private static void addItemsToEnum(QueueEnumeration enumX, Set<String> set, String startWith, String prefix) {
         Iterator it = set.iterator();
-        while ( it.hasNext()) {
+        while (it.hasNext()) {
             String nextText = (String)it.next();
             if (nextText.startsWith(startWith)) {
                 enumX.put(new MyText(prefix + nextText));

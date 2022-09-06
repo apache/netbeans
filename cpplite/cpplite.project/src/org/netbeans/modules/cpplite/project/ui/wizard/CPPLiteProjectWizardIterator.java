@@ -72,7 +72,7 @@ public class CPPLiteProjectWizardIterator implements WizardDescriptor.Instantiat
     private int idx;
 
     @Override
-    public Set instantiate() throws IOException {
+    public Set<FileObject> instantiate() throws IOException {
         CPPLiteProjectSettings settings = CPPLiteProjectSettings.get(wizard);
         FileObject projectDirectory = FileUtil.toFileObject(new File(settings.getProjectPath()));
         Preferences prefs = CPPLiteProject.getRootPreferences(projectDirectory);

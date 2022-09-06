@@ -47,7 +47,7 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
     private static final String[] C_MIME_TYPES = new String[] {"text/X-c", "text/X-c++", "text/X-h", "text/X-h++"}; // NOI18N
     private static final Set<String> C_MIME_TYPES_SET = new HashSet<>(Arrays.asList(C_MIME_TYPES));
 
-    private static final Set ACTIONS = Collections.singleton (
+    private static final Set<Object> ACTIONS = Collections.singleton (
         ActionsManager.ACTION_TOGGLE_BREAKPOINT
     );
 
@@ -101,7 +101,7 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
      * @return set of actions supported by this ActionsProvider
      */
     @Override
-    public Set getActions () {
+    public Set<Object> getActions () {
         return ACTIONS;
     }
 

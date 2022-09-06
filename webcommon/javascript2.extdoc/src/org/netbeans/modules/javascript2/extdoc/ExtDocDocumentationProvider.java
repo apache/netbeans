@@ -49,9 +49,9 @@ public class ExtDocDocumentationProvider implements JsDocumentationProvider {
     }
 
     @Override
-    public synchronized Set getSupportedTags() {
+    public synchronized Set<String> getSupportedTags() {
         if (supportedTags == null) {
-            supportedTags = new HashSet<String>(ExtDocElementType.values().length);
+            supportedTags = new HashSet<>(ExtDocElementType.values().length);
             for (ExtDocElementType type : ExtDocElementType.values()) {
                 supportedTags.add(type.toString());
             }

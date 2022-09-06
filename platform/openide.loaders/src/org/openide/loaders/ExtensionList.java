@@ -191,14 +191,14 @@ public class ExtensionList extends Object
     // Note that these are unsorted sets; we don't care about order.
     private static boolean equalSets(Set<String> s1, Set<String> s2, boolean flattenCase) {
         if (s1 == null && s2 == null) return true; // quick return
-        Set s1a = normalizeSet(s1, flattenCase);
-        Set s2a = normalizeSet(s2, flattenCase);
+        Set<String> s1a = normalizeSet(s1, flattenCase);
+        Set<String> s2a = normalizeSet(s2, flattenCase);
         return s1a.equals(s2a);
     }
     private static Set<String> normalizeSet(Set<String> s, boolean flattenCase) {
         if (s == null || s.isEmpty()) return Collections.emptySet();
         if (flattenCase) {
-            Set<String> s2 = new HashSet<String>(s.size() * 4 / 3 + 1);
+            Set<String> s2 = new HashSet<>(s.size() * 4 / 3 + 1);
             for (String item: s) {
                 s2.add(item.toLowerCase(Locale.US));
             }

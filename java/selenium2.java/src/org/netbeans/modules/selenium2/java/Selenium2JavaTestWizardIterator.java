@@ -58,7 +58,7 @@ public class Selenium2JavaTestWizardIterator implements WizardDescriptor.Instant
     private transient WizardDescriptor wiz;
 
     @Override
-    public Set instantiate() throws IOException {
+    public Set<FileObject> instantiate() throws IOException {
         FileObject createdFile = null;
         FileObject targetFolder = Templates.getTargetFolder(wiz);
         Selenium2SupportImpl selenium2Support = Selenium2Support.findSelenium2Support(FileOwnerQuery.getOwner(targetFolder));

@@ -48,7 +48,7 @@ public abstract class Provider {
      */
     private final String providerClass;
     
-    private final Set vendorSpecificProperties;
+    private final Set<String> vendorSpecificProperties;
     private final String version;
     
     
@@ -100,8 +100,8 @@ public abstract class Provider {
         return version;
     }
     
-    private Set initPropertyNames(){
-        Set result = new HashSet();
+    private Set<String> initPropertyNames(){
+        Set<String> result = new HashSet();
         result.add(getJdbcDriver());
         result.add(getJdbcUsername());
         result.add(getJdbcUrl());
@@ -118,7 +118,7 @@ public abstract class Provider {
      * Gets the names of all provider specific properties.
      * @return Set of Strings representing names of provider specific properties.
      */
-    public Set getPropertyNames(){
+    public Set<String> getPropertyNames(){
         return this.vendorSpecificProperties;
     }
     

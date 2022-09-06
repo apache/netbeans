@@ -1942,7 +1942,7 @@ public class WizardDescriptor extends DialogDescriptor {
          * @throws IOException
          * @return a set of objects created (the exact type is at the discretion of the caller)
          */
-        public Set/*<?>*/ instantiate() throws IOException;
+        public Set<?> instantiate() throws IOException;
 
         /** Initializes this iterator, called from WizardDescriptor's constructor.
          *

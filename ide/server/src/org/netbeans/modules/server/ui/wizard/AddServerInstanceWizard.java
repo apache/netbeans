@@ -379,7 +379,7 @@ public class AddServerInstanceWizard extends WizardDescriptor {
             wd.putProperty(PROP_CONTENT_DATA, getFirstPanelContentData(registry.isCloud()));
         }
 
-        public Set instantiate() throws IOException {
+        public Set<?> instantiate() throws IOException {
             if (iterator != null) {
                 return iterator.instantiate();
             } else {

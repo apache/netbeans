@@ -83,8 +83,8 @@ package org.antlr.parser.antlr4;
         <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${antlr.outdir}">
             <arg value="-o"/>
             <arg value="${antlr.outdir}"/>
-            <arg value="-package"/>
-            <arg value="org.antlr.parser.antlr4"/>
+            <!--arg value="-package"/>
+            <arg value="org.antlr.parser.antlr4"/-->
             <arg value="ANTLRv4Lexer.g4"/>
             <arg value="ANTLRv4Parser.g4"/>
         </java>

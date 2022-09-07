@@ -749,7 +749,9 @@ public final class Server {
                         JAVA_SUPER_IMPLEMENTATION,
                         JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
-                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
+                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
+                        JAVA_PROJECT_INFO
+                ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
@@ -944,6 +946,12 @@ public final class Server {
      * new project files were generated into workspace subtree.
      */
     public static final String JAVA_CLEAR_PROJECT_CACHES =  "java.clear.project.caches";
+    
+    /**
+     * For a project directory, returns basic project information and structure.
+     * Syntax: nbls.project.info(locations : String | String[], options? : { projectStructure? : boolean; actions? : boolean; recursive? : boolean }) : LspProjectInfo
+     */
+    public static final String JAVA_PROJECT_INFO = "nbls.project.info";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

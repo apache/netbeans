@@ -301,15 +301,19 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             const id = 'redhat.java';
             let e = vscode.extensions.getExtension(id);
             if (e && workspace.name) {
-                const DISABLE_EXTENSION = `Manually disable extension`;
-                const DISABLE_JAVA = `Disable Java in Apache NetBeans Language Server`;
-                vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, DISABLE_EXTENSION, DISABLE_JAVA).then((selected) => {
-                    if (DISABLE_EXTENSION === selected) {
-                        vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
-                    } else if (DISABLE_JAVA === selected) {
-                        conf.update("netbeans.javaSupport.enabled", false, true);
-                    }
-                });
+                if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
+                    conf.update("netbeans.javaSupport.enabled", false, true);
+                } else {
+                    const DISABLE_EXTENSION = `Manually disable extension`;
+                    const DISABLE_JAVA = `Disable Java in Apache NetBeans Language Server`;
+                    vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, DISABLE_EXTENSION, DISABLE_JAVA).then((selected) => {
+                        if (DISABLE_EXTENSION === selected) {
+                            vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
+                        } else if (DISABLE_JAVA === selected) {
+                            conf.update("netbeans.javaSupport.enabled", false, true);
+                        }
+                    });
+                }
             }
         }
     }

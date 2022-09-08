@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
@@ -72,6 +73,7 @@ import java.util.Vector;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
@@ -80,6 +82,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
 import org.openide.util.actions.ActionPresenterProvider;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
@@ -1142,6 +1145,55 @@ public final class Utilities {
     }
 
     /**
+     * The preferred screen.
+     * -2: unknown, need to check variable/property
+     * -1: none specified, use defaultScreenDevice
+     * {@literal >= 0} the index into screenDevices
+     *
+     */
+    private static int preferredScreenIdx = -2;
+    private static String screenPrefName = "NETBEANS_PREFERRED_SCREEN";
+    /**
+     * If there's an environment variable, NETBEANS_PREFERRED_SCREEN,
+     * or a systemProperty by that name,
+     * then use that as an index into
+     * {@link GraphicsEnvironment#getLocalGraphicsEnvironment()#getScreenDevices()}
+     * and return that device.
+     * @return requested screen if specified, otherwise default
+     */
+    private static GraphicsDevice getPreferredScreen()
+    {
+        if(preferredScreenIdx < -1) { // first time here?
+            String screenPrefVal = System.getenv(screenPrefName); //NOI18N
+            if(screenPrefVal == null) {
+                screenPrefVal = System.getProperty(screenPrefName);
+            }
+            if(screenPrefVal != null) {
+                try {
+                    preferredScreenIdx = Integer.parseInt(screenPrefVal);
+                } catch(NumberFormatException ex) {}
+                String printval = screenPrefVal;
+                if(preferredScreenIdx < 0 || preferredScreenIdx >= GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length) {
+                    LOG.warning(() -> screenPrefName + "=" + printval + ": not a valid screen device index");
+                } else {
+                    LOG.info(() -> screenPrefName + "=" + printval);
+                }
+            }
+            if(preferredScreenIdx < -1) {
+                preferredScreenIdx = -1; // no preference
+            }
+        }
+        if(preferredScreenIdx >= 0) {
+            GraphicsDevice[] devs = GraphicsEnvironment
+                    .getLocalGraphicsEnvironment().getScreenDevices();
+            if(preferredScreenIdx < devs.length) {
+                return devs[preferredScreenIdx];
+            }
+        }
+        return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    }
+
+    /**
      * Finds out the monitor where the user currently has the input focus.
      * This method is usually used to help the client code to figure out on
      * which monitor it should place newly created windows/frames/dialogs.
@@ -1159,13 +1211,17 @@ public final class Utilities {
                 //#217737 - try to find the main window which could be placed in secondary screen
                 for( Frame f : Frame.getFrames() ) {
                     if( "NbMainWindow".equals(f.getName())) { //NOI18N
+                        if(f.getWidth() == 0 && f.getHeight() == 0) {
+                            // Use default if NbMainWindow's never been placed.
+                            break;
+                        }
                         return f.getGraphicsConfiguration();
                     }
                 }
             }
         }
 
-        return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        return getPreferredScreen().getDefaultConfiguration();
     }
 
     /**

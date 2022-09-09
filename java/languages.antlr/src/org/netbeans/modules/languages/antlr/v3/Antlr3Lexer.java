@@ -54,22 +54,6 @@ public final class Antlr3Lexer extends AbstractAntlrLexer {
             return null;
         }
         switch (nextToken.getType()) {
-//             PARSER=2, LEXER=3, RULE=4, BLOCK=5, OPTIONAL=6, CLOSURE=7,
-//		POSITIVE_CLOSURE=8, SYNPRED=9, RANGE=10, CHAR_RANGE=11, EPSILON=12, ALT=13,
-//		EOR=14, EOB=15, EOA=16, ID=17, ARG=18, ARGLIST=19, RET=20, LEXER_GRAMMAR=21,
-//		PARSER_GRAMMAR=22, TREE_GRAMMAR=23, COMBINED_GRAMMAR=24, INITACTION=25,
-//		LABEL=26, TEMPLATE=27, SCOPE=28, SEMPRED=29, GATED_SEMPRED=30, SYN_SEMPRED=31,
-//		BACKTRACK_SEMPRED=32, FRAGMENT=33, TREE_BEGIN=34, ROOT=35, BANG=36, REWRITE=37,
-//		ACTION_CONTENT=38, SL_COMMENT=39, ML_COMMENT=40, INT=41, CHAR_LITERAL=42,
-//		STRING_LITERAL=43, DOUBLE_QUOTE_STRING_LITERAL=44, DOUBLE_ANGLE_STRING_LITERAL=45,
-//		BEGIN_ARGUMENT=46, BEGIN_ACTION=47, OPTIONS=48, TOKENS=49, CATCH=50, FINALLY=51,
-//		GRAMMAR=52, PRIVATE=53, PROTECTED=54, PUBLIC=55, RETURNS=56, THROWS=57,
-//		TREE=58, AT=59, COLON=60, COLONCOLON=61, COMMA=62, DOT=63, EQUAL=64, LBRACE=65,
-//		LBRACK=66, LPAREN=67, OR=68, PLUS=69, QM=70, RBRACE=71, RBRACK=72, RPAREN=73,
-//		SEMI=74, SEMPREDOP=75, STAR=76, DOLLAR=77, PEQ=78, NOT=79, WS=80, TOKEN_REF=81,
-//		RULE_REF=82, END_ARGUMENT=83, UNTERMINATED_ARGUMENT=84, ARGUMENT_CONTENT=85,
-//		END_ACTION=86, UNTERMINATED_ACTION=87, OPT_LBRACE=88, LEXER_CHAR_SET=89,
-//		UNTERMINATED_CHAR_SET=90;
             case TOKEN_REF:
                 return token(AntlrTokenId.TOKEN);
             case RULE_REF:
@@ -83,10 +67,24 @@ public final class Antlr3Lexer extends AbstractAntlrLexer {
             case INT:
                 return token(NUMBER);
 
+            case CHAR_LITERAL:
+            case STRING_LITERAL:
+            case DOUBLE_QUOTE_STRING_LITERAL:
+            case DOUBLE_ANGLE_STRING_LITERAL:
+                return token(STRING);
+
+            case BEGIN_ARGUMENT:
+            case BEGIN_ACTION:
+            case END_ARGUMENT:
+            case END_ACTION:
+                return token(PUNCTUATION);
+
+
             case OPTIONS:
             case TOKENS:
             case CATCH:
             case FINALLY:
+            case FRAGMENT:
             case GRAMMAR:
             case LEXER:
             case PARSER:
@@ -98,6 +96,34 @@ public final class Antlr3Lexer extends AbstractAntlrLexer {
             case THROWS:
             case TREE:
                 return token(KEYWORD);
+
+            case AT:
+            case COLON:
+            case COLONCOLON:
+            case COMMA:
+            case DOT:
+            case EQUAL:
+            case LBRACE:
+            case RBRACE:
+            case SEMI:
+            case SEMPREDOP:
+            case PEQ:
+            case REWRITE:
+                return token(PUNCTUATION);
+
+            case LBRACK:
+            case LPAREN:
+            case OR:
+            case PLUS:
+            case QM:
+            case RBRACK:
+            case RPAREN:
+            case STAR:
+            case DOLLAR:
+            case NOT:
+            case LEXER_CHAR_SET:
+            case RANGE:
+                return token(REGEXP_CHARS);
 
             case WS:
                 return token(WHITESPACE);

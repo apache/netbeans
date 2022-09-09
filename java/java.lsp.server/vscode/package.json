@@ -128,7 +128,7 @@
 				},
 				"netbeans.revealActiveInProjects": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Reveals active text editor in Projects view"
 				},
 				"java.test.editor.enableShortcuts": {

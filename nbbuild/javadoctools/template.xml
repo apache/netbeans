@@ -283,15 +283,7 @@ cause it to fail.
 
     <target name="-javadoc-exec-packages-nbjavac" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" if="javadoc.nbjavac">
         <property name="javadoc.source" value="11" />
-        <javadoc source="${javadoc.source}" verbose="false" failonerror="true" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="false" encoding="UTF-8">
-            <!--<arg value="-J-Xbootclasspath/a:${nb_all}/java/libs.javacapi/externa l/nb-javac-jdk-18.0.1+10.jar:${nb_all}/java/libs.javacapi/external/nb-javac-jdk-18.0.1+10-api.jar" /-->
-            <!-- ${nb_all}/java/libs.javacapi/external/nb-javac-jdk-18.0.1+10.jar"/ -->
-            <arg line="--patch-module=jdk.compiler=${nb_all}/java/libs.javacapi/external/nb-javac-jdk-18.0.1+10-api.jar:${nb_all}/java/libs.javacapi/external/nb-javac-jdk-18.0.1+10.jar" />
-            <arg line="--patch-module=java.compiler=${nb_all}/java/libs.javacapi/external/nb-javac-jdk-18.0.1+10-api.jar:${nb_all}/java/libs.javacapi/external/nb-javac-jdk-18.0.1+10.jar" />
-
-            <arg line="--add-exports=jdk.compiler/com.sun.source.tree=ALL-UNNAMED" />
-            <arg line="--add-exports=java.compiler/javax.lang.model=ALL-UNNAMED" />
-            <!-- <arg line="- -add-exports=jdk.compiler/com.sun.source.tree=ALL-UNNAMED" / -->
+        <javadoc source="${javadoc.source}" verbose="false" failonerror="false" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="false" encoding="UTF-8">
             <sourcepath>
                 <pathelement location="${javadoc.docfiles}"/>
                 <pathelement location="${javadoc.src}"/>

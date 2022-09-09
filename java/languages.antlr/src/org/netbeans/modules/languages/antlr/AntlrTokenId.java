@@ -33,6 +33,7 @@ import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.LanguageProvider;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 
 /**
@@ -80,13 +81,13 @@ public enum AntlrTokenId implements TokenId {
                 }
 
                 @Override
-                protected Map<String, Collection<AntlrTokenId>> createTokenCategories() {
-                    return new HashMap<>();
-                }
-
-                @Override
                 protected Lexer<AntlrTokenId> createLexer(LexerRestartInfo<AntlrTokenId> info) {
-                    return new AntlrLexer(info);
+                    FileObject fo =(FileObject) info.getAttributeValue(FileObject.class);
+                    if (fo != null) {
+                        return new AntlrLexer(info);
+                    } else {
+                        return null;
+                    }
                 }
 
                 @Override
@@ -113,7 +114,6 @@ public enum AntlrTokenId implements TokenId {
                 }
             }.language();
 
-    @MimeRegistration(mimeType = MIME_TYPE, service = Language.class)
     public static Language<AntlrTokenId> language() {
         return language;
     }

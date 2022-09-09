@@ -46,9 +46,6 @@
     </folder>
     <folder name="Loaders">
         <folder name="text">
-            <folder name="x-antlr3">
-                <attr name="iconBase" stringvalue="org/netbeans/modules/languages/antlr/resources/antlr.png"/>
-            </folder>
             <folder name="x-antlr4">
                 <attr name="iconBase" stringvalue="org/netbeans/modules/languages/antlr/resources/antlr.png"/>
             </folder>

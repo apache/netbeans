@@ -25,7 +25,6 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.netbeans.spi.lexer.TokenFactory;
 
 import static org.antlr.parser.antlr4.ANTLRv4Lexer.*;
-import org.antlr.v4.runtime.CharStream;
 import static org.netbeans.modules.languages.antlr.AntlrTokenId.*;
 
 /**

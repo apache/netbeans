@@ -33,6 +33,12 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testSimple() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "record Person(String name, String place){}\n"
@@ -64,6 +70,12 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testDuplicateVarName() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "record Person(String name, int s){}\n"
@@ -95,6 +107,12 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testUsingUserVar() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "record Person(String name, int s){}\n"

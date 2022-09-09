@@ -32,11 +32,11 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author mjayan
  */
-public class JavaCompletionTask118FeaturesTest extends CompletionTestBase {
+public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
 
     private static String SOURCE_LEVEL = "19"; //NOI18N
 
-    public JavaCompletionTask118FeaturesTest(String testName) {
+    public JavaCompletionTask119FeaturesTest(String testName) {
         super(testName);
     }
 
@@ -44,10 +44,10 @@ public class JavaCompletionTask118FeaturesTest extends CompletionTestBase {
         NbTestSuite suite = new NbTestSuite();
         try {
             SourceVersion.valueOf("RELEASE_19"); //NOI18N
-            suite.addTestSuite(JavaCompletionTask118FeaturesTest.class);
+            suite.addTestSuite(JavaCompletionTask119FeaturesTest.class);
 
         } catch (IllegalArgumentException ex) {
-            suite.addTest(new JavaCompletionTask118FeaturesTest("noop")); //NOI18N
+            suite.addTest(new JavaCompletionTask119FeaturesTest("noop")); //NOI18N
         }
         return suite;
     }
@@ -56,12 +56,12 @@ public class JavaCompletionTask118FeaturesTest extends CompletionTestBase {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("RecordPattern", 930, null, "AutoCompletion_RecordPattern_1.pass", getLatestSource());
     }
-    
+
     public void testRecordPatternCompletion_2() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("RecordPattern", 1013, null, "AutoCompletion_RecordPattern_2.pass", getLatestSource());
     }
-    
+
     public void testRecordPatternCompletion_3() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("RecordPattern", 1107, null, "AutoCompletion_RecordPattern_3.pass", getLatestSource());

@@ -33,6 +33,12 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testSimple() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
@@ -68,6 +74,12 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testMultipleNested() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft) {}\n"
@@ -103,6 +115,12 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testUserVar() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr,ColoredPoint ur) {}\n"

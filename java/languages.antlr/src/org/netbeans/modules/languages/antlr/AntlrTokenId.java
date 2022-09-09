@@ -87,7 +87,7 @@ public enum AntlrTokenId implements TokenId {
                         return "g4".equals(fo.getExt()) ? new Antlr4Lexer(info) : new Antlr3Lexer(info);
                     } else {
                         // This happens on the very first initialization of a document editor
-                        return null;
+                        return new DummyLexer(info);
                     }
                 }
 

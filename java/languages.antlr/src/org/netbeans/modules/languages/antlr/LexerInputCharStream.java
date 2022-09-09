@@ -43,7 +43,15 @@ public class LexerInputCharStream implements CharStream {
         }
         int start = intrvl.a - tokenMark;
         int end = intrvl.b - tokenMark + 1;
-        return String.valueOf(input.readText(start, end));
+        int toread = end - start - input.readLength();
+        for (int i = 0; i < toread; i++) {
+            input.read();
+        }
+        String ret = String.valueOf(input.readText(start, end));
+        if (toread > 0) {
+            input.backup(toread);
+        }
+        return ret;
     }
 
     @Override

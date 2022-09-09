@@ -40,67 +40,67 @@ import org.openide.windows.TopComponent;
  * @author lkishalmi
  */
 @NbBundle.Messages(
-        "ANTLRResolver=ANTLR4 Grammar"
+        "ANTLRResolver=ANTLR Grammar"
 )
 @MIMEResolver.ExtensionRegistration(displayName = "#ANTLRResolver",
-    extension = "g4",
+    extension = {"g4", "g"},
     mimeType = AntlrTokenId.MIME_TYPE,
     position = 285
 )
 
 @ActionReferences({
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
             position = 100,
             separatorAfter = 200
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
             position = 300
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.PasteAction"),
             position = 500,
             separatorAfter = 600
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 700
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
             position = 800,
             separatorAfter = 900
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
             position = 1000,
             separatorAfter = 1100
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
             position = 1200,
             separatorAfter = 1300
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
             position = 1400
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr4/Actions",
+            path = "Loaders/text/x-antlr/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1500
     )
@@ -164,8 +164,8 @@ public class AntlrLanguage extends DefaultLanguageConfig{
             displayName = "#Source",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             mimeType = AntlrTokenId.MIME_TYPE,
-            preferredID = "neon.source",
-            position = 1
+            preferredID = "antlr.source",
+            position = 100
     )
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
         return new MultiViewEditorElement(context);

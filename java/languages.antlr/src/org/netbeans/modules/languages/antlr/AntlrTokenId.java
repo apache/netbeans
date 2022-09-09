@@ -20,14 +20,14 @@ package org.netbeans.modules.languages.antlr;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
+import org.netbeans.modules.languages.antlr.v3.Antlr3Lexer;
+import org.netbeans.modules.languages.antlr.v4.Antlr4Lexer;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.LanguageProvider;
@@ -65,7 +65,7 @@ public enum AntlrTokenId implements TokenId {
         return category;
     }
 
-    public static final String MIME_TYPE = "text/x-antlr4";
+    public static final String MIME_TYPE = "text/x-antlr";
 
     private static final Language<AntlrTokenId> language =
             new LanguageHierarchy<AntlrTokenId>() {
@@ -84,8 +84,9 @@ public enum AntlrTokenId implements TokenId {
                 protected Lexer<AntlrTokenId> createLexer(LexerRestartInfo<AntlrTokenId> info) {
                     FileObject fo =(FileObject) info.getAttributeValue(FileObject.class);
                     if (fo != null) {
-                        return new AntlrLexer(info);
+                        return "g4".equals(fo.getExt()) ? new Antlr4Lexer(info) : new Antlr3Lexer(info);
                     } else {
+                        // This happens on the very first initialization of a document editor
                         return null;
                     }
                 }

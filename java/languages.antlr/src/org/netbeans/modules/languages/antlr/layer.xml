@@ -23,8 +23,8 @@
 <filesystem>
     <folder name="Editors">
         <folder name="text">
-            <folder name="x-antlr4">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.antlr.Bundle#Editors/text/x-antlr4"/>
+            <folder name="x-antlr">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.languages.antlr.Bundle#Editors/text/x-antlr"/>
                 <folder name="FontsColors">
                     <folder name="FlatLafDark">
                         <folder name="Defaults">
@@ -46,7 +46,7 @@
     </folder>
     <folder name="Loaders">
         <folder name="text">
-            <folder name="x-antlr4">
+            <folder name="x-antlr">
                 <attr name="iconBase" stringvalue="org/netbeans/modules/languages/antlr/resources/antlr.png"/>
             </folder>
         </folder>
@@ -54,13 +54,13 @@
     <folder name="OptionsDialog">
         <folder name="PreviewExamples">
             <folder name="text">
-                <file name="x-antlr4" url="AntlrExample.g4"/>
+                <file name="x-antlr" url="AntlrExample.g4"/>
             </folder>
         </folder>
         <folder name="Editor">
             <folder name="Formatting">
                 <folder name="text">
-                    <folder name="x-antlr4">
+                    <folder name="x-antlr">
                         <file name="TabsAndIndents.instance">
                             <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
                             <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>

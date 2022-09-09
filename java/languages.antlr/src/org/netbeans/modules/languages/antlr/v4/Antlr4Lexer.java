@@ -16,35 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.antlr;
+package org.netbeans.modules.languages.antlr.v4;
 
-import org.antlr.v4.runtime.misc.IntegerList;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
-import org.netbeans.spi.lexer.TokenFactory;
 
 import static org.antlr.parser.antlr4.ANTLRv4Lexer.*;
+import org.netbeans.modules.languages.antlr.AbstractAntlrLexer;
+import org.netbeans.modules.languages.antlr.AntlrTokenId;
 import static org.netbeans.modules.languages.antlr.AntlrTokenId.*;
+import org.netbeans.modules.languages.antlr.LexerInputCharStream;
 
 /**
  *
  * @author lkishalmi
  */
-public final class AntlrLexer implements Lexer<AntlrTokenId> {
+public final class Antlr4Lexer extends AbstractAntlrLexer {
 
-    private final TokenFactory<AntlrTokenId> tokenFactory;
-    private org.antlr.parser.antlr4.ANTLRv4Lexer lexer;
-    private final LexerInputCharStream input;
 
-    public AntlrLexer(LexerRestartInfo<AntlrTokenId> info) {
-        this.tokenFactory = info.tokenFactory();
-        this.input = new LexerInputCharStream(info.input());
-        this.lexer = new org.antlr.parser.antlr4.ANTLRv4Lexer(input);
-        if (info.state() != null) {
-            ((LexerState) info.state()).restore(lexer);
-        }
-        input.markToken();
+    public Antlr4Lexer(LexerRestartInfo<AntlrTokenId> info) {
+        super(info, new org.antlr.parser.antlr4.ANTLRv4Lexer(new LexerInputCharStream(info.input())));
     }
 
     private org.antlr.v4.runtime.Token preFetchedToken = null;
@@ -145,42 +136,4 @@ public final class AntlrLexer implements Lexer<AntlrTokenId> {
         }
     }
 
-    @Override
-    public Object state() {
-        return new LexerState(lexer);
-    }
-
-    @Override
-    public void release() {
-    }
-
-    private Token<AntlrTokenId> token(AntlrTokenId id) {
-        input.markToken();
-        return tokenFactory.createToken(id);
-    }
-
-    private static class LexerState {
-        final int state;
-        final int mode;
-        final IntegerList modes;
-
-        LexerState(org.antlr.v4.runtime.Lexer lexer) {
-            this.state= lexer.getState();
-
-            this.mode = lexer._mode;
-            this.modes = new IntegerList(lexer._modeStack);
-        }
-
-        public void restore(org.antlr.v4.runtime.Lexer lexer) {
-            lexer.setState(state);
-            lexer._modeStack.addAll(modes);
-            lexer._mode = mode;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(state);
-        }
-
-    }
 }

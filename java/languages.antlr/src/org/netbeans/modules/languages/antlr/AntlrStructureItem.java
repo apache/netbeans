@@ -119,7 +119,7 @@ public abstract class AntlrStructureItem implements ElementHandle, StructureItem
 
     public static final class ModeStructureItem extends AntlrStructureItem {
 
-        final List<RuleStructureItem> rules = new ArrayList<>();
+        public final List<RuleStructureItem> rules = new ArrayList<>();
 
         public ModeStructureItem(FileObject source, int startOffset, int stopOffset) {
             super("DEFAULT_MODE", source, startOffset, stopOffset); //NOI18N

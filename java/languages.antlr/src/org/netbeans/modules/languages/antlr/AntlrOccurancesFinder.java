@@ -91,7 +91,8 @@ public class AntlrOccurancesFinder extends OccurrencesFinder<AntlrParserResult> 
             Token<?> token = ts.token();
             if (token.id() == AntlrTokenId.RULE || token.id() == AntlrTokenId.TOKEN) {
                 String refName = String.valueOf(token.text());
-                AntlrParserResult.Reference ref = result.references.get(refName);
+                Map<String, AntlrParserResult.Reference> refs = result.references;
+                AntlrParserResult.Reference ref = refs.get(refName);
                 if (ref != null) {
                     occurrences.put(ref.defOffset, ColoringAttributes.MARK_OCCURRENCES);
                     for (OffsetRange occurance : ref.occurances) {

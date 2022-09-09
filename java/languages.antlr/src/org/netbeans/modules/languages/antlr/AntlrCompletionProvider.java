@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -100,8 +101,8 @@ public class AntlrCompletionProvider implements CompletionProvider {
                             String prefix = getPrefix(result, caretOffset, true);
                             if (prefix != null) {
                                 String mprefix = isCaseSensitive ? prefix : prefix.toUpperCase();
-
-                                for (String ref : result.references.keySet()) {
+                                Map<String, AntlrParserResult.Reference> refs = result.references;
+                                for (String ref : refs.keySet()) {
                                     String mref = isCaseSensitive ? ref : ref.toUpperCase();
                                     boolean match = mref.startsWith(mprefix);
                                     if (match) {

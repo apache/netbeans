@@ -21,6 +21,7 @@ package org.netbeans.nbbuild;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -652,9 +653,9 @@ public class CheckLinks extends MatchingTask {
                         } else {
                             dummyName = "rejectednetbeans.txt";
                         }
-                        java.nio.file.Files.writeString(
+                        java.nio.file.Files.write(
                                 externallinksdump.toPath().resolve(dummyName),
-                                u.toString() + System.lineSeparator(),
+                                (u.toString() + System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
                                 java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND
                         );
                     } catch (IOException ex) {

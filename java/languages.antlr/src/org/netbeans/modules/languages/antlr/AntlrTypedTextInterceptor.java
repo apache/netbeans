@@ -23,13 +23,16 @@ import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.editor.mimelookup.MimeRegistrations;
+import org.netbeans.modules.languages.antlr.v3.Antlr3Language;
+import org.netbeans.modules.languages.antlr.v4.Antlr4Language;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 
 /**
  *
  * @author lkishalmi
  */
-public class AntlrTypedTextInterceptor implements TypedTextInterceptor {
+public final class AntlrTypedTextInterceptor implements TypedTextInterceptor {
 
     private int caretPosition = -1;
 
@@ -144,7 +147,10 @@ public class AntlrTypedTextInterceptor implements TypedTextInterceptor {
     public void cancelled(Context context) {
     }
 
-    @MimeRegistration(mimeType = AntlrTokenId.MIME_TYPE, service = TypedTextInterceptor.Factory.class)
+    @MimeRegistrations({
+            @MimeRegistration(mimeType = Antlr3Language.MIME_TYPE, service = TypedTextInterceptor.Factory.class),
+            @MimeRegistration(mimeType = Antlr4Language.MIME_TYPE, service = TypedTextInterceptor.Factory.class)
+    })
     public static class TomlTypedTextInterceptorFactory implements TypedTextInterceptor.Factory {
 
         @Override

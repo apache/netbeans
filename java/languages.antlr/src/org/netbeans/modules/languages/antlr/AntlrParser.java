@@ -19,28 +19,27 @@
 package org.netbeans.modules.languages.antlr;
 
 import javax.swing.event.ChangeListener;
-import org.netbeans.modules.languages.antlr.v3.Antlr3ParserResult;
-import org.netbeans.modules.languages.antlr.v4.Antlr4ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
-import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author lkishalmi
  */
-public class AntlrParser extends org.netbeans.modules.parsing.spi.Parser {
+public abstract class AntlrParser extends org.netbeans.modules.parsing.spi.Parser {
 
 
     AntlrParserResult lastResult;
 
+    protected abstract AntlrParserResult<?> createParserResult(Snapshot snapshot);
+
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
-        FileObject fo = snapshot.getSource().getFileObject();
+        AntlrParserResult<?> parserResult = createParserResult(snapshot);
 
-        lastResult = "g4".equals(fo.getExt()) ? new Antlr4ParserResult(snapshot).get() : new Antlr3ParserResult(snapshot).get();
+        lastResult = parserResult.get();
     }
 
     @Override

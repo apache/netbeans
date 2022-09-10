@@ -20,20 +20,14 @@ package org.netbeans.modules.languages.antlr;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
-import org.netbeans.modules.languages.antlr.v3.Antlr3Lexer;
-import org.netbeans.modules.languages.antlr.v4.Antlr4Lexer;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.LanguageProvider;
-import org.netbeans.spi.lexer.Lexer;
-import org.netbeans.spi.lexer.LexerRestartInfo;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 
 /**
@@ -65,60 +59,33 @@ public enum AntlrTokenId implements TokenId {
         return category;
     }
 
-    public static final String MIME_TYPE = "text/x-antlr";
+    public static abstract class AntlrLanguageHierarchy extends LanguageHierarchy<AntlrTokenId> {
 
-    private static final Language<AntlrTokenId> language =
-            new LanguageHierarchy<AntlrTokenId>() {
+        @Override
+        protected Collection<AntlrTokenId> createTokenIds() {
+            return EnumSet.allOf(AntlrTokenId.class);
+        }
 
-                @Override
-                protected String mimeType() {
-                    return AntlrTokenId.MIME_TYPE;
-                }
+        @Override
+        protected LanguageEmbedding<? extends TokenId> embedding(Token<AntlrTokenId> token,
+                LanguagePath languagePath, InputAttributes inputAttributes) {
+            switch (token.id()) {
+                case ACTION:
+                    Language<? extends TokenId> javaLanguage = null;
 
-                @Override
-                protected Collection<AntlrTokenId> createTokenIds() {
-                    return EnumSet.allOf(AntlrTokenId.class);
-                }
-
-                @Override
-                protected Lexer<AntlrTokenId> createLexer(LexerRestartInfo<AntlrTokenId> info) {
-                    FileObject fo =(FileObject) info.getAttributeValue(FileObject.class);
-                    if (fo != null) {
-                        return "g4".equals(fo.getExt()) ? new Antlr4Lexer(info) : new Antlr3Lexer(info);
-                    } else {
-                        // This happens on the very first initialization of a document editor
-                        return new DummyLexer(info);
+                    @SuppressWarnings("unchecked") Collection<LanguageProvider> providers = (Collection<LanguageProvider>) Lookup.getDefault().lookupAll(LanguageProvider.class);
+                    for (LanguageProvider provider : providers) {
+                        javaLanguage = (Language<? extends TokenId>) provider.findLanguage("text/x-java"); //NOI18N
+                        if (javaLanguage != null) {
+                            break;
+                        }
                     }
-                }
 
-                @Override
-                protected LanguageEmbedding<? extends TokenId> embedding(Token<AntlrTokenId> token,
-                        LanguagePath languagePath, InputAttributes inputAttributes) {
-                    switch (token.id()) {
-                        case ACTION:
-                            // No dependency on the Ruby module:
-                            //Language rubyLanguage = RubyTokenId.language();
-                            Language<? extends TokenId> javaLanguage = null;
-
-                            @SuppressWarnings("unchecked") Collection<LanguageProvider> providers = (Collection<LanguageProvider>) Lookup.getDefault().lookupAll(LanguageProvider.class);
-                            for (LanguageProvider provider : providers) {
-                                javaLanguage = (Language<? extends TokenId>) provider.findLanguage("text/x-java"); //NOI18N
-                                if (javaLanguage != null) {
-                                    break;
-                                }
-                            }
-
-                            return javaLanguage != null ? LanguageEmbedding.create(javaLanguage, 0, 0, false) : null;
-                        default:
-                            return null;
-                    }
-                }
-            }.language();
-
-    public static Language<AntlrTokenId> language() {
-        return language;
+                    return javaLanguage != null ? LanguageEmbedding.create(javaLanguage, 0, 0, false) : null;
+                default:
+                    return null;
+            }
+        }
     }
-
-
 
 }

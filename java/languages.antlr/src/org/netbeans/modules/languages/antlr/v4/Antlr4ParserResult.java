@@ -191,7 +191,6 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             private void addOccurance(Token token) {
                 String refName = token.getText();
-                System.out.println(refName);
                 Reference ref = references.get(refName);
                 if (ref != null) {
                     ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));

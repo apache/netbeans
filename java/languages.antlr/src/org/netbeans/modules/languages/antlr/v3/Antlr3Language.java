@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.antlr;
+package org.netbeans.modules.languages.antlr.v3;
 
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -26,7 +26,16 @@ import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.languages.antlr.AntlrDeclarationFinder;
+import org.netbeans.modules.languages.antlr.AntlrOccurancesFinder;
+import org.netbeans.modules.languages.antlr.AntlrParser;
+import org.netbeans.modules.languages.antlr.AntlrParserResult;
+import org.netbeans.modules.languages.antlr.AntlrStructureScanner;
+import org.netbeans.modules.languages.antlr.AntlrTokenId;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.spi.lexer.Lexer;
+import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -40,83 +49,100 @@ import org.openide.windows.TopComponent;
  * @author lkishalmi
  */
 @NbBundle.Messages(
-        "ANTLRResolver=ANTLR Grammar"
+        "ANTLRv3Resolver=ANTLR v3 Grammar"
 )
-@MIMEResolver.ExtensionRegistration(displayName = "#ANTLRResolver",
-    extension = {"g4", "g"},
-    mimeType = AntlrTokenId.MIME_TYPE,
-    position = 285
+@MIMEResolver.ExtensionRegistration(displayName = "#ANTLRv3Resolver",
+    extension = "g",
+    mimeType = Antlr3Language.MIME_TYPE,
+    position = 286
 )
 
 @ActionReferences({
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
             position = 100,
             separatorAfter = 200
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
             position = 300
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.PasteAction"),
             position = 500,
             separatorAfter = 600
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 700
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
             position = 800,
             separatorAfter = 900
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
             position = 1000,
             separatorAfter = 1100
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
             position = 1200,
             separatorAfter = 1300
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
             position = 1400
     ),
     @ActionReference(
-            path = "Loaders/text/x-antlr/Actions",
+            path = "Loaders/text/x-antlr3/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1500
     )
 })
 
-@LanguageRegistration(mimeType = AntlrTokenId.MIME_TYPE, useMultiview = true)
-public class AntlrLanguage extends DefaultLanguageConfig{
+@LanguageRegistration(mimeType = Antlr3Language.MIME_TYPE, useMultiview = true)
+public final class Antlr3Language extends DefaultLanguageConfig {
+
+    public static final String MIME_TYPE = "text/x-antlr3";
 
     @Override
     public Language getLexerLanguage() {
-        return AntlrTokenId.language();
+        return language;
     }
 
     @Override
     public String getDisplayName() {
-        return "ANTLR Grammar"; //NOI18N
+        return Bundle.ANTLRv3Resolver();
+    }
+
+    @Override
+    public String getPreferredExtension() {
+        return "g";
+    }
+
+    @Override
+    public Parser getParser() {
+        return new AntlrParser() {
+            @Override
+            protected AntlrParserResult<?> createParserResult(Snapshot snapshot) {
+                return new Antlr3ParserResult(snapshot);
+            }
+        };
     }
 
     @Override
@@ -127,11 +153,6 @@ public class AntlrLanguage extends DefaultLanguageConfig{
     @Override
     public DeclarationFinder getDeclarationFinder() {
         return new AntlrDeclarationFinder();
-    }
-
-    @Override
-    public Parser getParser() {
-        return new AntlrParser();
     }
 
     @Override
@@ -154,17 +175,27 @@ public class AntlrLanguage extends DefaultLanguageConfig{
         return true;
     }
 
-    @Override
-    public String getPreferredExtension() {
-        return "g4";
-    }
+    private static final Language<AntlrTokenId> language
+            = new AntlrTokenId.AntlrLanguageHierarchy() {
+
+                @Override
+                protected String mimeType() {
+                    return Antlr3Language.MIME_TYPE;
+                }
+
+                @Override
+                protected Lexer<AntlrTokenId> createLexer(LexerRestartInfo<AntlrTokenId> info) {
+                    return  new Antlr3Lexer(info);
+                }
+
+    }.language();
 
     @NbBundle.Messages("Source=&Source")
     @MultiViewElement.Registration(
             displayName = "#Source",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-            mimeType = AntlrTokenId.MIME_TYPE,
-            preferredID = "antlr.source",
+            mimeType = Antlr3Language.MIME_TYPE,
+            preferredID = "antlr3.source",
             position = 100
     )
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {

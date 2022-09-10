@@ -21,6 +21,9 @@ package org.netbeans.modules.languages.antlr;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.editor.mimelookup.MimeRegistrations;
+import org.netbeans.modules.languages.antlr.v3.Antlr3Language;
+import org.netbeans.modules.languages.antlr.v4.Antlr4Language;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 
 /**
@@ -56,7 +59,10 @@ public final class AntlrDeletedTextInterceptor implements DeletedTextInterceptor
     public void cancelled(Context context) {
     }
 
-    @MimeRegistration(mimeType = AntlrTokenId.MIME_TYPE, service = DeletedTextInterceptor.Factory.class)
+    @MimeRegistrations({
+        @MimeRegistration(mimeType = Antlr3Language.MIME_TYPE, service = DeletedTextInterceptor.Factory.class),
+        @MimeRegistration(mimeType = Antlr4Language.MIME_TYPE, service = DeletedTextInterceptor.Factory.class),
+    })
     public static class TomlDeletedTextInterceptorFactory implements DeletedTextInterceptor.Factory {
 
         @Override

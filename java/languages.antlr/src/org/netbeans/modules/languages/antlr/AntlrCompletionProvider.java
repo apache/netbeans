@@ -26,11 +26,14 @@ import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.languages.antlr.v3.Antlr3Language;
+import org.netbeans.modules.languages.antlr.v4.Antlr4Language;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -49,7 +52,10 @@ import org.openide.util.Exceptions;
  *
  * @author Laszlo Kishalmi
  */
-@MimeRegistration(mimeType = AntlrTokenId.MIME_TYPE, service = CompletionProvider.class)
+@MimeRegistrations({
+    @MimeRegistration(mimeType = Antlr3Language.MIME_TYPE, service = CompletionProvider.class),
+    @MimeRegistration(mimeType = Antlr4Language.MIME_TYPE, service = CompletionProvider.class),
+})
 public class AntlrCompletionProvider implements CompletionProvider {
 
     @Override

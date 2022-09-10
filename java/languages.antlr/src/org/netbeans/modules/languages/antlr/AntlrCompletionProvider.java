@@ -19,8 +19,10 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
+import java.util.Locale;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -39,6 +41,9 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -46,7 +51,12 @@ import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+
+import static org.netbeans.modules.languages.antlr.AntlrIndexer.FIELD_CASE_INSENSITIVE_DECLARATION;
+import static org.netbeans.modules.languages.antlr.AntlrIndexer.FIELD_DECLARATION;
+import static org.netbeans.modules.languages.antlr.AntlrIndexer.transitiveImports;
 
 /**
  *
@@ -103,19 +113,45 @@ public class AntlrCompletionProvider implements CompletionProvider {
                         @Override
                         public void run(ResultIterator resultIterator) throws Exception {
                             AntlrParserResult result = (AntlrParserResult) resultIterator.getParserResult(caretOffset);
-                            boolean isCaseSensitive = isCaseSensitive();
                             String prefix = getPrefix(result, caretOffset, true);
-                            if (prefix != null) {
-                                String mprefix = isCaseSensitive ? prefix : prefix.toUpperCase();
-                                Map<String, AntlrParserResult.Reference> refs = result.references;
-                                for (String ref : refs.keySet()) {
-                                    String mref = isCaseSensitive ? ref : ref.toUpperCase();
-                                    boolean match = mref.startsWith(mprefix);
-                                    if (match) {
-                                        CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref)
+                            FileObject fo = source.getFileObject();
+                            if (prefix != null && fo != null) {
+                                String prefix_ci = prefix.toLowerCase(Locale.ENGLISH);
+                                QuerySupport qs = AntlrIndexer.getQuerySupport(fo);
+                                QuerySupport.Query.Factory qf = qs.getQueryFactory();
+                                List<FileObject> candidates = transitiveImports(qs, fo);
+                                QuerySupport.Query query = qf.and(
+                                        // Only consider the file itself or imported files
+                                        qf.or(
+                                                candidates.stream()
+                                                        .map(fo2 -> qs.getQueryFactory().file(fo2))
+                                                        .collect(Collectors.toList())
+                                                        .toArray(new QuerySupport.Query[0])
+                                        ),
+                                        qf.field(
+                                                isCaseSensitive() ? FIELD_DECLARATION : FIELD_CASE_INSENSITIVE_DECLARATION,
+                                                isCaseSensitive() ? prefix : prefix_ci,
+                                                isCaseSensitive() ? Kind.PREFIX : Kind.CASE_INSENSITIVE_PREFIX
+                                        )
+                                );
+
+                                for (IndexResult ir : query.execute(FIELD_DECLARATION)) {
+                                    for (String value : ir.getValues(FIELD_DECLARATION)) {
+                                        if (isCaseSensitive()) {
+                                            if (!value.startsWith(prefix)) {
+                                                continue;
+                                            }
+                                        } else {
+                                            if(! value.toLowerCase(Locale.ENGLISH).startsWith(prefix_ci)) {
+                                                continue;
+                                            }
+                                        }
+                                        String[] values = value.split("\\\\");
+                                        CompletionItem item = CompletionUtilities
+                                                .newCompletionItemBuilder(values[0])
                                                 .startOffset(caretOffset - prefix.length())
-                                                .leftHtmlText(ref)
-                                                .sortText(ref)
+                                                .leftHtmlText(values[0])
+                                                .sortText(values[0])
                                                 .build();
                                         resultSet.addItem(item);
                                     }

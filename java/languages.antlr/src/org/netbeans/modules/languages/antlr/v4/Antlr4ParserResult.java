@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.antlr.v4;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.antlr.parser.antlr4.ANTLRv4Lexer;
 import org.antlr.parser.antlr4.ANTLRv4Parser;
@@ -39,6 +40,8 @@ import org.openide.filesystems.FileObject;
  * @author lkishalmi
  */
 public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
+
+    private List<String> imports = new ArrayList<>();
 
     public Antlr4ParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -85,10 +88,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     protected ParseTreeListener createImportListener(FileObject source) {
         return new ANTLRv4ParserBaseListener() {
             private void addImport(String importedGrammar) {
-                FileObject importedFo = source.getParent().getFileObject(importedGrammar + ".g4"); //NOI18N
-                if (importedFo != null) {
-                    addParseTask(importedFo);
-                }
+                imports.add(importedGrammar);
             }
 
             @Override
@@ -235,6 +235,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         };
     }
 
-
-
+    public List<String> getImports() {
+        return Collections.unmodifiableList(imports);
+    }
 }

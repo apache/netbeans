@@ -19,14 +19,10 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.Parser;
@@ -40,7 +36,6 @@ import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -55,54 +50,26 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
     public final List<OffsetRange> folds = new ArrayList<>();
     public final List<AntlrStructureItem> structure = new ArrayList<>();
 
-    final Set<FileObject> queued = new HashSet<>();
-    final Deque<T> parsingQueue = new LinkedList<>();
-
-    final AtomicBoolean finished = new AtomicBoolean();
+    volatile boolean finished = false;
 
     public AntlrParserResult(Snapshot snapshot) {
         super(snapshot);
-        addParseTask(snapshot, false);
     }
-    
 
     public AntlrParserResult get() {
-        while (!parsingQueue.isEmpty()) {
-            evaluateParser(parsingQueue.removeFirst());
-        }
-        // Second phase scan
-        T secondPhase = createParser(getSnapshot());
-        secondPhase.addParseListener(createOccurancesListener());
-        evaluateParser(secondPhase);
-        finished.set(true);
-        return this;
-    }
-
-    protected final void addParseTask(FileObject fo) {
-        Source src = Source.create(fo);
-        addParseTask(src.createSnapshot(), true);
-    }
-
-
-    protected final void addParseTask(Snapshot snapshot, boolean imported) {
-        // TODO: In a more decent implementation we should not try to parse
-        //       other files. Parser results in other files should be put
-        //       and retrieved by the Indexer infrastructure, which is yet to be
-        //       implemented.
-        FileObject fo = snapshot.getSource().getFileObject();
-        if (queued.add(fo)) {
-            T parser = createParser(snapshot);
-
-
-            if (!imported) {
-                parser.addErrorListener(createErrorListener(fo));
-                parser.addParseListener(createFoldListener());
-            }
+        if (! finished) {
+            FileObject fo = getSnapshot().getSource().getFileObject();
+            T parser = createParser(getSnapshot());
+            parser.addErrorListener(createErrorListener(fo));
+            parser.addParseListener(createFoldListener());
             parser.addParseListener(createReferenceListener(fo));
             parser.addParseListener(createImportListener(fo));
             parser.addParseListener(createStructureListener(fo));
-            parsingQueue.add(parser);
+            parser.addParseListener(createOccurancesListener());
+            evaluateParser(parser);
+            finished = true;
         }
+        return this;
     }
 
     @Override
@@ -117,7 +84,7 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     @Override
     protected boolean processingFinished() {
-        return finished.get();
+        return finished;
     }
 
     public static class Reference {

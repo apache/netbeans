@@ -81,25 +81,39 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected ParseTreeListener createFoldListener() {
         return new ANTLRv3ParserBaseListener() {
 
-            private void addFold(Token start, Token stop) {
-                OffsetRange range = new OffsetRange(start.getStopIndex() + 1, stop.getStartIndex());
-                folds.add(range);
+            private void addFold(Token startToken, Token stopToken) {
+                int start = startToken.getStopIndex() + 1;
+                int stop = stopToken.getStartIndex();
+                if(start >= stop) {
+                    return;
+                }
+                OffsetRange range = new OffsetRange(start, stop);
+                if(! folds.contains(range)) {
+                    folds.add(range);
+                }
             }
 
 
             @Override
             public void exitActionBlock(ANTLRv3Parser.ActionBlockContext ctx) {
-                addFold(ctx.BEGIN_ACTION().getSymbol(), ctx.END_ACTION().getSymbol());
+                if(ctx.BEGIN_ACTION() != null && ctx.BEGIN_ACTION().getSymbol() != null
+                        && ctx.END_ACTION() != null && ctx.END_ACTION().getSymbol() != null) {
+                    addFold(ctx.BEGIN_ACTION().getSymbol(), ctx.END_ACTION().getSymbol());
+                }
             }
 
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
-                addFold(ctx.getStart(), ctx.getStop());
+                if(ctx.getStart() != null && ctx.getStop() != null) {
+                    addFold(ctx.getStart(), ctx.getStop());
+                }
             }
 
             @Override
             public void exitTokenSpec(ANTLRv3Parser.TokenSpecContext ctx) {
-                addFold(ctx.getStart(), ctx.getStop());
+                if (ctx.getStart() != null && ctx.getStop() != null) {
+                    addFold(ctx.getStart(), ctx.getStop());
+                }
             }
 
         };

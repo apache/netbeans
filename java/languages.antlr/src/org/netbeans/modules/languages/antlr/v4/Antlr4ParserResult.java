@@ -110,34 +110,55 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     protected ParseTreeListener createFoldListener() {
         return new ANTLRv4ParserBaseListener() {
 
-            private void addFold(Token start, Token stop) {
-                OffsetRange range = new OffsetRange(start.getStopIndex() + 1, stop.getStartIndex());
-                folds.add(range);
+            private void addFold(Token startToken, Token stopToken) {
+                int start = startToken.getStopIndex() + 1;
+                int stop = stopToken.getStartIndex();
+                if(start >= stop) {
+                    return;
+                }
+                OffsetRange range = new OffsetRange(start, stop);
+                if(! folds.contains(range)) {
+                    folds.add(range);
+                }
             }
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
-                addFold(ctx.TOKEN_REF().getSymbol(), ctx.SEMI().getSymbol());
+                if(ctx.TOKEN_REF() != null && ctx.TOKEN_REF().getSymbol() != null
+                        && ctx.SEMI() != null && ctx.SEMI().getSymbol() != null) {
+                    addFold(ctx.TOKEN_REF().getSymbol(), ctx.SEMI().getSymbol());
+                }
             }
 
             @Override
             public void exitActionBlock(ANTLRv4Parser.ActionBlockContext ctx) {
-                addFold(ctx.BEGIN_ACTION().getSymbol(), ctx.END_ACTION().getSymbol());
+                if(ctx.BEGIN_ACTION() != null && ctx.BEGIN_ACTION().getSymbol() != null
+                        && ctx.END_ACTION() != null && ctx.END_ACTION().getSymbol() != null) {
+                    addFold(ctx.BEGIN_ACTION().getSymbol(), ctx.END_ACTION().getSymbol());
+                }
             }
 
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
-                addFold(ctx.RULE_REF().getSymbol(), ctx.SEMI().getSymbol());
+                if (ctx.RULE_REF() != null && ctx.RULE_REF().getSymbol() != null
+                        && ctx.SEMI() != null && ctx.SEMI().getSymbol() != null) {
+                    addFold(ctx.RULE_REF().getSymbol(), ctx.SEMI().getSymbol());
+                }
             }
 
             @Override
             public void exitRules(ANTLRv4Parser.RulesContext ctx) {
-                addFold(ctx.getStart(), ctx.getStop());
+                if(ctx.getStart() != null && ctx.getStop() != null) {
+                    addFold(ctx.getStart(), ctx.getStop());
+                }
             }
 
             @Override
             public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
-                addFold(ctx.identifier().getStop(), ctx.getStop());
+                if (ctx.identifier() != null && ctx.identifier().getStop() != null
+                        && ctx.getStop() != null) {
+                    addFold(ctx.identifier().getStop(), ctx.getStop());
+                }
             }
 
         };

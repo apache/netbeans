@@ -112,14 +112,12 @@ public class AntlrCompletionProvider implements CompletionProvider {
                                     String mref = isCaseSensitive ? ref : ref.toUpperCase();
                                     boolean match = mref.startsWith(mprefix);
                                     if (match) {
-                                        String insert = ref.substring(prefix.length());
-                                        if (insert.length() > 0) {
-                                            CompletionItem item = CompletionUtilities.newCompletionItemBuilder(insert)
-                                                    .leftHtmlText(ref)
-                                                    .sortText(ref)
-                                                    .build();
-                                            resultSet.addItem(item);
-                                        }
+                                        CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref)
+                                                .startOffset(caretOffset - prefix.length())
+                                                .leftHtmlText(ref)
+                                                .sortText(ref)
+                                                .build();
+                                        resultSet.addItem(item);
                                     }
                                 }
                             }

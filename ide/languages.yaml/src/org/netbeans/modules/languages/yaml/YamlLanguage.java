@@ -18,7 +18,13 @@
  */
 package org.netbeans.modules.languages.yaml;
 
+import java.util.Collection;
+import java.util.EnumSet;
+import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.api.lexer.LanguagePath;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenId;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -29,6 +35,11 @@ import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.spi.lexer.LanguageEmbedding;
+import org.netbeans.spi.lexer.LanguageHierarchy;
+import org.netbeans.spi.lexer.LanguageProvider;
+import org.netbeans.spi.lexer.Lexer;
+import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.openide.awt.*;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.Lookup;
@@ -102,12 +113,12 @@ import org.openide.windows.TopComponent;
             position = 1500
     )
 })
-@LanguageRegistration(mimeType = "text/x-yaml", useMultiview = true) //NOI18N
+@LanguageRegistration(mimeType = YamlLanguage.MIME_TYPE, useMultiview = true)
 public class YamlLanguage extends DefaultLanguageConfig {
 
     @Override
     public Language getLexerLanguage() {
-        return YamlTokenId.language();
+        return language();
     }
 
     @Override
@@ -155,12 +166,73 @@ public class YamlLanguage extends DefaultLanguageConfig {
         return null;
     }
 
+    public static final Language<YamlTokenId> language() {
+        return language;
+    }
+
+    private static final Language<YamlTokenId> language =
+        new LanguageHierarchy<YamlTokenId>() {
+
+            @Override
+            protected String mimeType() {
+                return MIME_TYPE;
+            }
+
+            @Override
+            protected Collection<YamlTokenId> createTokenIds() {
+                return EnumSet.allOf(YamlTokenId.class);
+            }
+
+            @Override
+            protected Lexer<YamlTokenId> createLexer(LexerRestartInfo<YamlTokenId> info) {
+                return new YamlLexer(info);
+            }
+
+            @Override
+            protected LanguageEmbedding<? extends TokenId> embedding(Token<YamlTokenId> token,
+                    LanguagePath languagePath, InputAttributes inputAttributes) {
+                switch (token.id()) {
+                    case RUBY_EXPR:
+                    case RUBY:
+                        return findLanguage(YamlLanguage.RUBY_MIME_TYPE);
+                    case PHP:
+                        return findLanguage(YamlLanguage.PHP_MIME_TYPE);
+                    default:
+                        return null;
+                }
+            }
+    }.language();
+
+    private static LanguageEmbedding<? extends TokenId> findLanguage(String mimeType) {
+        Language<? extends TokenId> ret = null;
+
+        Collection<? extends LanguageProvider> providers = Lookup.getDefault().lookupAll(LanguageProvider.class);
+        for (LanguageProvider provider : providers) {
+            ret = provider.findLanguage(mimeType);
+            if (ret != null) {
+                break;
+            }
+        }
+
+        return ret != null ? LanguageEmbedding.create(ret, 0, 0, false) : null;
+    }
+
+    /**
+     * MIME type for YAML. Don't change this without also consulting the various
+     * XML files that cannot reference this value directly.
+     */
+    public static final String MIME_TYPE = "text/x-yaml"; // NOI18N
+
+    public static final String RUBY_MIME_TYPE = "text/x-ruby"; // NOI18N
+    public static final String PHP_MIME_TYPE = "text/x-php5"; // NOI18N
+
+
     @NbBundle.Messages("Source=&Source")
     @MultiViewElement.Registration(
             displayName="#Source",
             iconBase="org/netbeans/modules/languages/yaml/yaml_files_16.png",
             persistenceType=TopComponent.PERSISTENCE_ONLY_OPENED,
-            mimeType=YamlTokenId.YAML_MIME_TYPE,
+            mimeType=MIME_TYPE,
             preferredID="yaml.source",
             position=100
     )

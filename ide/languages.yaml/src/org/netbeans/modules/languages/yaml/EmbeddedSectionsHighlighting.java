@@ -37,7 +37,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
-import static org.netbeans.modules.languages.yaml.YamlTokenId.YAML_MIME_TYPE;
+import static org.netbeans.modules.languages.yaml.YamlLanguage.MIME_TYPE;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
 import org.netbeans.spi.editor.highlighting.HighlightsSequence;
@@ -257,7 +257,7 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
         }
     } // End of Highlights class
 
-    @MimeRegistration(mimeType = YAML_MIME_TYPE, service = HighlightsLayerFactory.class)
+    @MimeRegistration(mimeType = MIME_TYPE, service = HighlightsLayerFactory.class)
     public static final class Factory implements HighlightsLayerFactory {
 
         @Override

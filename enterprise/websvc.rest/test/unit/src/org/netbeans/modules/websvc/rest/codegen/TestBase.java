@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.Entity;
-import junit.framework.Assert;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
@@ -105,13 +104,13 @@ public abstract class TestBase extends NbTestCase {
             URL url = Thread.currentThread().getContextClassLoader().getResource(
                     "org/netbeans/modules/websvc/rest/resources/layer.xml");
             URL url2 = TestBase.class.getResource("layer.xml"); 
-            Assert.assertNotNull(url);
-            Assert.assertNotNull(url2);
+            assertNotNull(url);
+            assertNotNull(url2);
             try {
                 xmlFS.setXmlUrls(new URL[] { url, url2 });
             } catch(Exception e) {
                 e.printStackTrace();
-                Assert.fail(e.getMessage());
+                fail(e.getMessage());
             }
             FileSystem system = new MultiFileSystem(new FileSystem[] {FileUtil.createMemoryFileSystem(), xmlFS});
             defaultRepository = new Repository(system);

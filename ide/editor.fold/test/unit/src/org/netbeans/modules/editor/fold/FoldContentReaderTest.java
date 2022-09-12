@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import junit.framework.Assert;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldTemplate;
@@ -37,9 +36,6 @@ import org.netbeans.spi.editor.fold.FoldManager;
 import org.netbeans.spi.editor.fold.FoldManagerFactory;
 import org.netbeans.spi.editor.fold.FoldOperation;
 import org.openide.util.Exceptions;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 /**
  *
@@ -228,7 +224,7 @@ public class FoldContentReaderTest extends NbTestCase implements FoldManagerFact
                     idx = idx2;
                 }
             } catch (BadLocationException ex) {
-                Assert.fail("Unexpected exception");
+                fail("Unexpected exception");
                 return;
             }
         }

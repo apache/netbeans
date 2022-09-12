@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.maven.j2ee;
 
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;

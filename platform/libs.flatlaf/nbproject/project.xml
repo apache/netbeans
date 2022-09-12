@@ -26,10 +26,7 @@
             <code-name-base>org.netbeans.libs.flatlaf</code-name-base>
             <module-dependencies/>
             <public-packages>
-                <package>com.formdev.flatlaf</package>
-                <package>com.formdev.flatlaf.util</package>
-                <package>com.formdev.flatlaf.ui</package>
-                <package>com.formdev.flatlaf.icons</package>
+                <subpackages>com.formdev.flatlaf</subpackages>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/flatlaf-2.4.jar</runtime-relative-path>

@@ -19,9 +19,13 @@
 package org.netbeans.modules.project.dependency;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -43,7 +47,15 @@ import org.openide.util.*;
  * <p>
  * By default the query will return artifacts produced by project's compilation (incl. packaging, in maven terminology) - 
  * but the exact meaning depends on a build system used, and the project's settings and the active configuration.
- * 
+ * <p>
+ * Different project output are marked by different <b>classifiers</b>. Some special, abstract classifiers may
+ * be defined that should be handled by implementations specific for each build system.
+ * <ul>
+ * <li>{@link Filter#CLASSIFIER_BUNDLED} - describes a product with all dependencies included, such as the output of
+ * <b>shade or shadow plugins</b> in Gradle or Maven. Since the plugins behave differently (maven replaces the original artifact,
+ * while gradle attaches a new one), this meta-classiifer allows to pick the appropriate artifact despite its real classifier depends
+ * on project type. If there are more bundles (shadows), 
+ * </ul>
  * @author sdedic
  */
 public final class ProjectArtifactsQuery {
@@ -140,6 +152,7 @@ public final class ProjectArtifactsQuery {
         
         List<ArtifactSpec> updateResults() {
             boolean changes = false;
+            // accept only first matching artifact.
             Collection<ArtifactSpec> specs = new LinkedHashSet<>();
             for (E<?> e : delegates) {
                 Collection<ArtifactSpec> ex = e.findExcludedArtifacts();
@@ -213,25 +226,27 @@ public final class ProjectArtifactsQuery {
      * perhaps determined by the configured packaging with <b>no classifier</b>. It it possible
      * to list artifacts of all types and/or artifacts with any classifier in one query.
      */
-    public static class Filter {
+    public static final class Filter {
         /**
          * Represents all types of artifacts. The query will return all build products
          */
-        public static final String TYPE_ALL = "all"; // NOI18N
+        public static final String TYPE_ALL = "<all>"; // NOI18N
         
         /**
          * Will return artifacts with any classifier.
          */
-        public static final String CLASSIFIER_ANY = "any"; // NOI18N
+        public static final String CLASSIFIER_ANY = "<any>"; // NOI18N
         
+        private final Set<String> tags;
         private final String classifier;
         private final String artifactType;
         private final ProjectActionContext  buildContext;
         
-        Filter(String artifactType, String classifier, ProjectActionContext buildContext) {
+        Filter(String artifactType, String classifier, Set<String> tags, ProjectActionContext buildContext) {
             this.classifier = classifier;
             this.artifactType = artifactType;
             this.buildContext = buildContext;
+            this.tags = tags == null ? Collections.emptySet() : Collections.unmodifiableSet(tags);
         }
 
         /**
@@ -244,6 +259,14 @@ public final class ProjectArtifactsQuery {
         @CheckForNull
         public String getClassifier() {
             return classifier;
+        }
+        
+        public Set<String> getTags() {
+            return tags;
+        }
+        
+        public boolean hasTag(String t) {
+            return tags.contains(t);
         }
 
         /**
@@ -274,7 +297,7 @@ public final class ProjectArtifactsQuery {
      */
     @NonNull
     public static Filter newQuery(@NullAllowed String artifactType) {
-        return new Filter(artifactType, null, null);
+        return new Filter(artifactType, null, null, null);
     }
     
     /**
@@ -286,6 +309,20 @@ public final class ProjectArtifactsQuery {
      */
     @NonNull
     public static Filter newQuery(@NullAllowed String artifactType, @NullAllowed String classifier, @NullAllowed ProjectActionContext buildContext) {
-        return new Filter(artifactType, classifier, buildContext);
+        return new Filter(artifactType, classifier, null, buildContext);
+    }
+
+    /**
+     * Creates a Filter with the specified properties
+     * @param artifactType the desired type; use {@code null} for the default artifact type (i.e. defined by packaging)
+     * @param classifier the desired classifier; use {@code null} for no classifier
+     * @param buildContext the action context
+     * @return Filter instance.
+     */
+    @NonNull
+    public static Filter newQuery(@NullAllowed String artifactType, @NullAllowed String classifier, @NullAllowed ProjectActionContext buildContext, String... tags) {
+        return new Filter(artifactType, classifier, 
+                tags == null || tags.length == 0 ? null : new HashSet<>(Arrays.asList(tags)), 
+                buildContext);
     }
 }

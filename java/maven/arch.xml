@@ -140,6 +140,14 @@
        It's content is expected to be <code>Action</code> instances.
      </p>
     </api>
+    <api group="layer" name="LifecycleParticipants" type="export" category="official">
+     <p>
+         A module can disable warning for a custom lifecycle participant by creating a <b>folder</b> in 
+         <code>Projects/org-netbeans-modules-maven/LifecycleParticipant</code>. Currently single boolean attribute,
+         <code>ignoreOnModelLoad</code> is supported, which suppresses project problem and warning about
+         the custom participant. The participant's code does not run after project load.         
+     </p>
+    </api>
 
     <api group="layer" name="MavenArchetypes" type="export" category="official">
      <p>

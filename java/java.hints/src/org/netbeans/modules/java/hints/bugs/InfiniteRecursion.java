@@ -23,6 +23,7 @@ import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -548,6 +549,11 @@ public class InfiniteRecursion {
                 recursionPoints.clear();
                 return State.NO;
             }
+        }
+
+        @Override
+        public State visitConstantCaseLabel(ConstantCaseLabelTree node, Void p) {
+            return super.scan(node.getConstantExpression(), p);
         }
 
         @Override

@@ -74,6 +74,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -1444,9 +1445,9 @@ public class Utilities {
                         }
 
                         JCIdent identTree = F.at(pos).Ident(name);
-
+                        JCConstantCaseLabel labelTree = F.at(pos).ConstantCaseLabel(identTree);
                         return com.sun.tools.javac.util.List.of(
-                                new JackpotTrees.CaseWildcard(name, identTree, STATEMENT, com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null)
+                                new JackpotTrees.CaseWildcard(name, identTree, STATEMENT, com.sun.tools.javac.util.List.of(labelTree), com.sun.tools.javac.util.List.nil(), null)
                         );
                     }
                 }

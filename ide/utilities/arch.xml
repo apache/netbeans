@@ -66,7 +66,7 @@
     Module Open File allows to open arbitrary files (i.e. including those not
     accessible from the currently mounted filesystems), both from a GUI
     interface and using the
-    <a href="http://openide.netbeans.org/proposals/arch/cli.html#cli">
+    <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli.html#cli">
     command line interface</a>.</p>
 
     <h4>API &amp; SPI:</h4>
@@ -105,7 +105,7 @@
          group="cli"
          type="export"
          category="devel"
-         url="http://openide.netbeans.org/proposals/arch/cli.html#cli">
+         url="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli.html#cli">
     </api>
     The Open File module adds options to the IDE launcher. If the module is
     enabled, the launcher recognizes switches

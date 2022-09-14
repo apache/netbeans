@@ -791,7 +791,7 @@ The size of ejb-jar.xml or application.xml files, the performance of schema2bean
 </ul>
 The reading/parsing and writing the web.xml is the bottleneck of the DD API performance. Than the schema2beans root object is <b>weakly</b> cached in memmory.
 However, those operations have no visible impact while working with web modules with standard-sized deployment descriptors.<br/>
-The measurements were not provided for DD API specifically, but there may have been some measurements made in <a href="http://schema2beans.netbeans.org">schema2beans infrastructure</a> that is used for DD API implementation. There should be no additional deficites added by DD API. 
+The measurements were not provided for DD API specifically, but there may have been some measurements made in <a href="https://netbeans.apache.org/projects/schema2beans/">schema2beans infrastructure</a> that is used for DD API implementation. There should be no additional deficites added by DD API. 
 </answer>
 <!--
         <question id="perf-limit" when="init">

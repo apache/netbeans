@@ -198,26 +198,14 @@
     
     <!-- old blog entry -->
     <filter pattern="https://netbeans\.apache\.org/blogs/.*" accept="true"/>
+    <!-- old projects entry -->
+    <filter pattern="https://netbeans\.apache\.org/projects/.*" accept="true"/>
     
     <!-- jenkins page -->
     <filter pattern="https://ci-builds\.apache\.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers\.txt" accept="true"/>
     
-    
-   
-    <filter pattern="http://autoupdate\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://core\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://openide\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://lexer\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://platform\.netbeans\.org.*" accept="false"/>
-    <filter pattern="https://platform\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://projects\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://ui\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://translatedfiles\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://logger\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://schema2beans\.netbeans\.org.*" accept="false"/>
-    <filter pattern="http://ui\.netbeans\.org/project/ui/docs/ui/themes/themes.html" accept="false"/>
-     
      <!-- ui gesture -->
     <filter pattern="http://www\.netbeans\.org/servlets/Join" accept="false"/>
+    <!-- all other links are disallowed -->
     <filter pattern="https://.*" accept="false"/>
     <filter pattern="http://.*" accept="false"/>

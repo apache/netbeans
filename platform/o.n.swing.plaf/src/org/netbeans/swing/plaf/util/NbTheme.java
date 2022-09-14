@@ -49,11 +49,11 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
  * <code>NbTheme</code> supports seven kinds of data: Colors, Fonts, Integers,
  * Strings, Borders, Insets and Booleans, which are the major interesting data types typical
  * stored in <code>UIDefaults</code>.  For usage instructions and details,
- * see <A HREF="http://ui.netbeans.org/docs/ui/themes/themes.html">the themes
+ * see <A HREF="https://netbeans.apache.org/projects/ui/themes/themes.html">the themes
  * documentation</a> on the NetBeans web site.
  *
  * @author Jiri Mzourek, Tim Boudreau
- * @see http://ui.netbeans.org/docs/ui/themes/themes.html
+ * @see https://netbeans.apache.org/projects/ui/themes/themes.html
  */
 public class NbTheme extends DefaultMetalTheme implements org.xml.sax.DocumentHandler {
     

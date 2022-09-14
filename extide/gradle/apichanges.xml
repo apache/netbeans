@@ -96,7 +96,7 @@ is the proper place.
                     The new class <code>
                         <a href="@TOP@/org/netbeans/modules/gradle/api/GradleReport.html">GradleReport</a>
                     </code> that contain this information is available from
-                <code><a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#getProblems">GradleBaseProject.getProblems()</a></code> method.
+                <code><a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#getProblems--">GradleBaseProject.getProblems()</a></code> method.
                 </p>
             </description>
         </change>

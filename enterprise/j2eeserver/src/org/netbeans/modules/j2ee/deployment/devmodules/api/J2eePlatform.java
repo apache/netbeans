@@ -508,9 +508,9 @@ public final class J2eePlatform implements Lookup.Provider {
 
     /**
      * Returns the set of supported profiles (terminology of Java EE 6) for
-     * the given module type (one of {@link J2eeModule#EAR},
-     * {@link J2eeModule#EJB}, {@link J2eeModule#WAR}, {@link J2eeModule#CONN}
-     * and {@link J2eeModule#CLIENT}).
+     * the given module type (one of {@link J2eeModule.Type#EAR},
+     * {@link J2eeModule.Type#EJB}, {@link J2eeModule.Type#WAR}, {@link J2eeModule.Type#RAR}
+     * and {@link J2eeModule.Type#CAR}).
      *
      * @param moduleType type of the module
      * @return set of {@link Profile}s supported by the server.

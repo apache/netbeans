@@ -177,8 +177,8 @@ public abstract class J2eePlatformImpl {
 
     /**
      * Returns a set of supported profiles for the given module type
-     * (one of {@link J2eeModule#EAR}, {@link J2eeModule#EJB},
-     * {@link J2eeModule#WAR}, {@link J2eeModule#CONN} and {@link J2eeModule#CLIENT}).
+     * (one of {@link J2eeModule.Type#EAR}, {@link J2eeModule.Type#EJB},
+     * {@link J2eeModule.Type#WAR}, {@link J2eeModule.Type#RAR} and {@link J2eeModule.Type#CAR}).
      * By default method converts specification version returned by
      * {@link #getSupportedSpecVersions(java.lang.Object)} to profiles.
      *

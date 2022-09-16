@@ -88,7 +88,7 @@ public abstract class AntlrStructureItem implements ElementHandle, StructureItem
 
     @Override
     public String getMimeType() {
-        return null;
+        return source.getMIMEType();
     }
 
     @Override

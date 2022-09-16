@@ -63,8 +63,13 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
                 Token token = ctx.id_().getStart();
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
-                Reference ref = new Reference(token.getText(), source, range);
-                references.put(ref.name, ref);
+                String name = token.getText();
+                if (references.containsKey(name)) {
+                    references.get(name).defOffset = range;
+                } else {
+                    Reference ref = new Reference(name, source, range);
+                    references.put(ref.name, ref);
+                }
             }
 
         };
@@ -139,6 +144,10 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
             private void addOccurance(Token token) {
                 String refName = token.getText();
                 Reference ref = references.get(refName);
+                if (ref == null) {
+                    ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
+                    references.put(ref.name, ref);
+                }
                 if (ref != null) {
                     ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
                 }

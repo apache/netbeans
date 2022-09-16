@@ -94,7 +94,9 @@ public class AntlrOccurancesFinder extends OccurrencesFinder<AntlrParserResult> 
                 Map<String, AntlrParserResult.Reference> refs = result.references;
                 AntlrParserResult.Reference ref = refs.get(refName);
                 if (ref != null) {
-                    occurrences.put(ref.defOffset, ColoringAttributes.MARK_OCCURRENCES);
+                    if(ref.defOffset != null) {
+                        occurrences.put(ref.defOffset, ColoringAttributes.MARK_OCCURRENCES);
+                    }
                     for (OffsetRange occurance : ref.occurances) {
                         occurrences.put(occurance, ColoringAttributes.MARK_OCCURRENCES);
                     }

@@ -108,7 +108,12 @@ import org.openide.windows.TopComponent;
             path = "Loaders/text/x-antlr4/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1500
-    )
+    ),
+    @ActionReference(
+            path = "Editors/text/x-antlr4/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1600
+    ),
 })
 
 @LanguageRegistration(mimeType = Antlr4Language.MIME_TYPE, useMultiview = true)

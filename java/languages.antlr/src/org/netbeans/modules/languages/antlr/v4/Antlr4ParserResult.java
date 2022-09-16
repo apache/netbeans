@@ -66,17 +66,24 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
                 Token token = ctx.RULE_REF().getSymbol();
-                OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
-                Reference ref = new Reference(token.getText(), source, range);
-                references.put(ref.name, ref);
+                addReference(token);
             }
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
                 Token token = ctx.TOKEN_REF().getSymbol();
+                addReference(token);
+            }
+
+            public void addReference(Token token) {
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
-                Reference ref = new Reference(token.getText(), source, range);
-                references.put(ref.name, ref);
+                String name = token.getText();
+                if(references.containsKey(name)) {
+                    references.get(name).defOffset = range;
+                } else {
+                    Reference ref = new Reference(name, source, range);
+                    references.put(ref.name, ref);
+                }
             }
 
         };
@@ -213,6 +220,10 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
             private void addOccurance(Token token) {
                 String refName = token.getText();
                 Reference ref = references.get(refName);
+                if (ref == null) {
+                    ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
+                    references.put(ref.name, ref);
+                }
                 if (ref != null) {
                     ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
                 }

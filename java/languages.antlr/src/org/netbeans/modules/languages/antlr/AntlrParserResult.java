@@ -89,8 +89,8 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     public static class Reference {
         public final String name;
-        public final FileObject source;
-        public final OffsetRange defOffset;
+        public FileObject source;
+        public OffsetRange defOffset;
         public final List<OffsetRange> occurances = new ArrayList<>();
 
         public Reference(String name, FileObject source, OffsetRange defOffset) {

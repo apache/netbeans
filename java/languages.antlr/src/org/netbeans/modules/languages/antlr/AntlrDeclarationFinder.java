@@ -18,9 +18,9 @@
  */
 package org.netbeans.modules.languages.antlr;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Token;
@@ -31,15 +31,9 @@ import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
-import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
-import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Query;
-import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Query.Factory;
+import org.netbeans.modules.languages.antlr.AntlrParserResult.Reference;
+import org.netbeans.modules.languages.antlr.v4.Antlr4ParserResult;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
-
-import static org.netbeans.modules.languages.antlr.AntlrIndexer.FIELD_DECLARATION;
-import static org.netbeans.modules.languages.antlr.AntlrIndexer.transitiveImports;
 
 /**
  *
@@ -55,7 +49,8 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         ts.moveNext();
         Token<?> token = ts.token();
         String ref = String.valueOf(token.text());
-        return getDeclarationLocation(info.getSnapshot().getSource().getFileObject(), ref);
+        Set<FileObject> scannedFiles = new HashSet<>();
+        return getDeclarationLocation(info.getSnapshot().getSource().getFileObject(), ref, DeclarationLocation.NONE, scannedFiles);
     }
 
     @Override
@@ -82,64 +77,49 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         }
     }
 
-    public static DeclarationLocation getDeclarationLocation(FileObject sourceFile, String name) {
-        try {
-            QuerySupport qs = AntlrIndexer.getQuerySupport(sourceFile);
-            Factory qf = qs.getQueryFactory();
-            String targetDefinition = name + AntlrIndexer.SEPARATOR;
-            List<FileObject> candidates = transitiveImports(qs, sourceFile);
-            Query query = qf.and(
-                    // Only consider the file itself or imported files
-                    qf.or(
-                           candidates.stream()
-                                    .map(fo -> qs.getQueryFactory().file(fo))
-                                    .collect(Collectors.toList())
-                                    .toArray(new Query[0])
-                    ),
-                    qf.field(FIELD_DECLARATION, targetDefinition, QuerySupport.Kind.PREFIX)
-            );
+    public static DeclarationLocation getDeclarationLocation(FileObject fo, String name, DeclarationLocation existingDL, Set<FileObject> scannedFiles) {
+        DeclarationLocation resultDL = existingDL;
 
-            DeclarationFinder.DeclarationLocation dl = null;
-            for(IndexResult ir: query.execute(FIELD_DECLARATION)) {
-                for (String value : ir.getValues(FIELD_DECLARATION)) {
-                    if (!value.startsWith(targetDefinition)) {
-                        continue;
-                    }
-                    String[] values = value.split("\\\\");
-                    int start = Integer.parseInt(values[1]);
-                    int end = Integer.parseInt(values[2]);
-                    AntlrStructureItem asi = new AntlrStructureItem.RuleStructureItem(name, ir.getFile(), start, end);
-                    DeclarationLocation dln = new DeclarationFinder.DeclarationLocation(ir.getFile(), start, asi);
-                    if (dl == null) {
-                        dl = dln;
-                    }
-                    // If multiple declaration locations are possible (antlr4
-                    // allows redefinition), the original location must be part
-                    // of the alternative locations.
-                    //
-                    // The sortIdx describes the "depth" of the inheritence tree
-                    // until the location is found. Nearer imports are preferred
-                    dl.addAlternative(new AlternativeLocationImpl(dln, candidates.indexOf(ir.getFile())));
+        if(scannedFiles.contains(fo)) {
+            return resultDL;
+        }
+        scannedFiles.add(fo);
+
+        AntlrParserResult result = AntlrLocalIndex.getParserResult(fo);
+
+        Map<String, Reference> refs = result.references;
+
+        if(refs.containsKey(name)) {
+            Reference ref = refs.get(name);
+            AntlrStructureItem asi = new AntlrStructureItem.RuleStructureItem(name, fo, ref.defOffset.getStart(), ref.defOffset.getEnd());
+            DeclarationLocation dln = new DeclarationFinder.DeclarationLocation(fo, ref.defOffset.getStart(), asi);
+            if (resultDL == DeclarationLocation.NONE) {
+                resultDL = dln;
+            }
+            // If multiple declaration locations are possible (antlr4
+            // allows redefinition), the original location must be part
+            // of the alternative locations.
+            resultDL.addAlternative(new AlternativeLocationImpl(dln));
+        }
+
+        if(result instanceof Antlr4ParserResult) {
+            for(String s: ((Antlr4ParserResult) result).getImports()) {
+                FileObject importedFo = fo.getParent().getFileObject(s, "g4");
+                if(importedFo != null) {
+                    resultDL = getDeclarationLocation(importedFo, name, resultDL, scannedFiles);
                 }
             }
-            if(dl == null) {
-                dl = DeclarationFinder.DeclarationLocation.NONE;
-            }
-            return dl;
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-            return DeclarationFinder.DeclarationLocation.NONE;
         }
+
+        return resultDL;
     }
 
     private static class AlternativeLocationImpl implements AlternativeLocation {
 
         private final DeclarationLocation location;
-        private final int sortIdx;
 
-        public AlternativeLocationImpl(DeclarationLocation location, int sortIdx) {
+        public AlternativeLocationImpl(DeclarationLocation location) {
             this.location = location;
-            this.sortIdx = sortIdx;
         }
 
         @Override
@@ -159,11 +139,7 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
 
         @Override
         public int compareTo(DeclarationFinder.AlternativeLocation o) {
-            if(o instanceof AlternativeLocationImpl) {
-                return sortIdx - ((AlternativeLocationImpl) o).sortIdx;
-            } else {
-                return 0;
-            }
+            return 0;
         }
 
     }

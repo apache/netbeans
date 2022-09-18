@@ -835,7 +835,19 @@ public class TrackingAgent {
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
                                                       ),
-                                                      "2AB8,%5s") //aload0, invokespecial #5
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("javax/swing/TransferHandler$TransferAction",
+                                                      "getClipboard",
+                                                      "(Ljavax/swing/JComponent;)Ljava/awt/datatransfer/Clipboard;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "getClipboard",
+                                                        "s" + "()Ljava/awt/datatransfer/Clipboard;",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "B8,%5s,B0") //invokespecial #5, areturn
     );
     //</editor-fold>
 

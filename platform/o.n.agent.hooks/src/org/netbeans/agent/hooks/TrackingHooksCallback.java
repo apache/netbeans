@@ -18,7 +18,9 @@
  */
 package org.netbeans.agent.hooks;
 
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
 import java.nio.file.FileSystems;
@@ -204,6 +206,16 @@ public abstract class TrackingHooksCallback {
         }
     }
 
+    public static Clipboard getClipboard() {
+        for (TrackingHooks h : getDelegates(Hooks.CLIPBOARD)) {
+            Clipboard c = getAccessor().getClipboard(h);
+            if (c != null) {
+                return c;
+            }
+        }
+        return Toolkit.getDefaultToolkit().getSystemClipboard();
+    }
+
     private static final class HookDescription {
         private final TrackingHooks hooks;
         private final int priority;
@@ -246,5 +258,7 @@ public abstract class TrackingHooksCallback {
         public void checkNewAWTWindow(TrackingHooks hooks, Window w);
 
         public void checkExec(TrackingHooks hooks, List<String> command);
+
+        public Clipboard getClipboard(TrackingHooks hooks);
     }
 }

@@ -19,6 +19,7 @@
 package org.netbeans.agent.hooks.api;
 
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
 import java.lang.reflect.AccessibleObject;
 import java.util.List;
 import org.netbeans.agent.hooks.TrackingHooksCallback;
@@ -42,6 +43,8 @@ public abstract class TrackingHooks {
 
     protected void checkExec(List<String> command) {}
 
+    protected Clipboard getClipboard() { return null; }
+
     public static void register(TrackingHooks delegate, int priority, Hooks... hooks) {
         TrackingHooksCallback.register(delegate, priority, hooks);
     }
@@ -61,7 +64,9 @@ public abstract class TrackingHooks {
         ACCESSIBLE,
         NEW_AWT_WINDOW,
         SECURITY_MANAGER,
-        EXEC;
+        EXEC,
+        CLIPBOARD,
+        ;
     }
 
     static {
@@ -109,6 +114,11 @@ public abstract class TrackingHooks {
             @Override
             public void checkExec(TrackingHooks hooks, List<String> command) {
                 hooks.checkExec(command);
+            }
+
+            @Override
+            public Clipboard getClipboard(TrackingHooks hooks) {
+                return hooks.getClipboard();
             }
         });
     }

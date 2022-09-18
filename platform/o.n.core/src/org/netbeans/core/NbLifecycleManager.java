@@ -22,6 +22,7 @@ package org.netbeans.core;
 import java.awt.EventQueue;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -29,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.TopSecurityManager;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.core.startup.CLIOptions;
 import org.netbeans.core.startup.ModuleSystem;
 import org.openide.DialogDisplayer;
@@ -67,6 +70,14 @@ public final class NbLifecycleManager extends LifecycleManager {
         if (!Boolean.getBoolean("TopSecurityManager.disable")) {
             // set security manager
             TopSecurityManager.install();
+            TrackingHooks.register(new TrackingHooks() {
+                private final Clipboard clipboard = Lookup.getDefault().lookup(ExClipboard.class);
+                @Override
+                protected Clipboard getClipboard() {
+                    return clipboard;
+                }
+            }, 0, Hooks.CLIPBOARD);
+
         }
         policyAdvanced = true;
     }

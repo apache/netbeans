@@ -178,6 +178,17 @@ public class TrackingAgentTest {
                 "check exec: [JAVA]\n");
     }
 
+    @Test
+    public void testClipboard() throws Exception {
+        runTest(TestClipboard.class,
+                "going to copy:\n" +
+                "setContents\n" +
+                "going to cut:\n" +
+                "setContents\n" +
+                "going to paste:\n" +
+                "getContents\n");
+    }
+
     private void runTest(Class<?> testClass, String expected) throws Exception {
         Path javaHome = findJavaHome();
         String agentPath = Paths.get(TrackingAgent.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toString();

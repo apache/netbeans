@@ -91,13 +91,13 @@ final class HtmlStructureItem implements StructureItem {
     public String getHtml(HtmlFormatter formatter) {
         formatter.appendHtml(getName());
         if (idAttributeValue != null) {
-            formatter.appendHtml("&nbsp;<font color=808080>id=");
+            formatter.appendHtml("&nbsp;<font color=808080>#");
             formatter.appendText(idAttributeValue);
             formatter.appendHtml("</font>"); //NOI18N
         }
         if (classAttributeValue != null) {
-            formatter.appendHtml("&nbsp;<font color=808080>class=");
-            formatter.appendText(classAttributeValue);
+            formatter.appendHtml("&nbsp;<font color=808080>.");
+            formatter.appendText(classAttributeValue.replace(" ", "."));
             formatter.appendHtml("</font>"); //NOI18N
         }
         return formatter.getText();

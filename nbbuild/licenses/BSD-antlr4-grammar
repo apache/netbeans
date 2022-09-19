@@ -1,15 +1,9 @@
-Name: Antlr
-Description: ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions.
-Version: 4.7.2
-License: BSD-antlr-runtime4
-Origin: Antlr
-URL: https://www.antlr.org
-Files: antlr4-runtime-4.7.2.jar, antlr4-4.7.2.jar, ST4-4.1.jar
+Use of Antlr Grammar is governed by the terms of the license below:
 
-Use of Antlr version 4.7.2 is governed by the terms of the license below:
-
- [The "BSD license"]
-Copyright (c) 2015 Terence Parr, Sam Harwell
+[The "BSD license"]
+Copyright (c) 2012-2014 Terence Parr
+Copyright (c) 2012-2014 Sam Harwell
+Copyright (c) 2015 Gerald Rosenberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

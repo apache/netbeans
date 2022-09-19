@@ -83,6 +83,19 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="lifecycle-white-list">
+            <api name="general"/>
+            <summary>LifecycleParticipants can be ignored</summary>
+            <version major="2" minor="156"/>
+            <date day="9" month="9" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                NetBeans warns if a project / plugin provides AbstractLifecycleParticipants that
+                can reconfigure the project after load. Now some harmless ones can be whitelisted
+                so they do not produce warning / project problem. See <a href="@TOP@/architecture-summary.html#layer-LifecycleParticipants">LifecycleParticipants</a>.
+            </description>
+        </change>
         <change id="evaluated-project">
             <api name="general"/>
             <summary>Project model can be customized for specific action or usage</summary>

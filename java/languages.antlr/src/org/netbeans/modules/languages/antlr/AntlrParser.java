@@ -19,7 +19,7 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeListener;
@@ -78,7 +78,7 @@ public abstract class AntlrParser extends org.netbeans.modules.parsing.spi.Parse
 
     private static void cacheResult(FileObject fo, AntlrParserResult<?> result) {
         synchronized (CACHE) {
-            CACHE.put(fo, new SoftReference<>(result));
+            CACHE.put(fo, new WeakReference<>(result));
         }
     }
 

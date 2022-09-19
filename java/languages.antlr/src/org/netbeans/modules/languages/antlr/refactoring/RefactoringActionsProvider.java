@@ -93,11 +93,15 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
 
     @Override
     public boolean canFindUsages(Lookup lookup) {
+        boolean ret = false;
         EditorCookie ec = lookup.lookup(EditorCookie.class);
-        Document doc = ec.getDocument();
-        FileObject file = NbEditorUtilities.getFileObject(doc);
-        return Antlr3Language.MIME_TYPE.equals(file.getMIMEType())
-                || Antlr4Language.MIME_TYPE.equals(file.getMIMEType());
+        if (ec != null) {
+            Document doc = ec.getDocument();
+            FileObject file = NbEditorUtilities.getFileObject(doc);
+            ret = Antlr3Language.MIME_TYPE.equals(file.getMIMEType())
+                    || Antlr4Language.MIME_TYPE.equals(file.getMIMEType());
+        }
+        return ret;
     }
 
     public static boolean isFromEditor(EditorCookie ec) {

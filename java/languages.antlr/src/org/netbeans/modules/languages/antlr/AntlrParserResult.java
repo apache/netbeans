@@ -66,6 +66,11 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
             parser.addParseListener(createStructureListener(fo));
             parser.addParseListener(createOccurancesListener());
             evaluateParser(parser);
+
+            // Start a second parsing phase for checking;
+            parser = createParser(getSnapshot());
+            parser.addParseListener(createCheckReferences(fo));
+            evaluateParser(parser);
             finished = true;
         }
         return this;
@@ -107,6 +112,8 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
     protected abstract ParseTreeListener createFoldListener();
     protected abstract ParseTreeListener createStructureListener(FileObject source);
     protected abstract ParseTreeListener createOccurancesListener();
+
+    protected abstract ParseTreeListener createCheckReferences(FileObject source);
 
     protected ANTLRErrorListener createErrorListener(FileObject source) {
         return new BaseErrorListener() {

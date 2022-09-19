@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.languages.antlr.v3;
 
+import java.util.function.Consumer;
 import org.antlr.parser.antlr3.ANTLRv3Lexer;
 import org.antlr.parser.antlr3.ANTLRv3Parser;
 import org.antlr.parser.antlr3.ANTLRv3ParserBaseListener;
@@ -27,6 +28,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.api.Severity;
+import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.languages.antlr.AntlrParserResult;
 import org.netbeans.modules.languages.antlr.AntlrStructureItem;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -41,7 +44,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     public Antlr3ParserResult(Snapshot snapshot) {
         super(snapshot);
     }
-    
+
     @Override
     protected ANTLRv3Parser createParser(Snapshot snapshot) {
         CharStream cs = CharStreams.fromString(String.valueOf(snapshot.getText()));
@@ -54,7 +57,6 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected void evaluateParser(ANTLRv3Parser parser) {
         parser.grammarDef();
     }
-
 
     @Override
     protected ParseTreeListener createReferenceListener(FileObject source) {
@@ -71,10 +73,19 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
                     references.put(ref.name, ref);
                 }
             }
-
         };
+    }
 
-
+    @Override
+    protected ParseTreeListener createCheckReferences(FileObject source) {
+        return new ANTLRv3OccuranceListener((token) -> {
+            String name = token.getText();
+            if (!"EOF".equals(name) && (!references.containsKey(name) || references.get(name).defOffset == null)) {
+                //TODO: It seems the ANTLRv3 Grammar Occurance finder could be a bit smarter
+                //Adding the following line could produce false positives.
+                //errors.add(new DefaultError(null, "Unknown Reference: " + name, null, source, token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
+            }
+        });
     }
 
     @Override
@@ -89,19 +100,18 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
             private void addFold(Token startToken, Token stopToken) {
                 int start = startToken.getStopIndex() + 1;
                 int stop = stopToken.getStartIndex();
-                if(start >= stop) {
+                if (start >= stop) {
                     return;
                 }
                 OffsetRange range = new OffsetRange(start, stop);
-                if(! folds.contains(range)) {
+                if (!folds.contains(range)) {
                     folds.add(range);
                 }
             }
 
-
             @Override
             public void exitActionBlock(ANTLRv3Parser.ActionBlockContext ctx) {
-                if(ctx.BEGIN_ACTION() != null && ctx.BEGIN_ACTION().getSymbol() != null
+                if (ctx.BEGIN_ACTION() != null && ctx.BEGIN_ACTION().getSymbol() != null
                         && ctx.END_ACTION() != null && ctx.END_ACTION().getSymbol() != null) {
                     addFold(ctx.BEGIN_ACTION().getSymbol(), ctx.END_ACTION().getSymbol());
                 }
@@ -109,7 +119,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
 
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
-                if(ctx.getStart() != null && ctx.getStop() != null) {
+                if (ctx.getStart() != null && ctx.getStop() != null) {
                     addFold(ctx.getStart(), ctx.getStop());
                 }
             }
@@ -139,67 +149,66 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
 
     @Override
     protected ParseTreeListener createOccurancesListener() {
-        return new ANTLRv3ParserBaseListener() {
-
-            private void addOccurance(Token token) {
+        return new ANTLRv3OccuranceListener((token) -> {
                 String refName = token.getText();
                 Reference ref = references.get(refName);
                 if (ref == null) {
                     ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
                     references.put(ref.name, ref);
                 }
-                if (ref != null) {
-                    ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
-                }
-            }
-
-            @Override
-            public void exitAtom(ANTLRv3Parser.AtomContext ctx) {
-                if (ctx.RULE_REF() != null) {
-                    addOccurance(ctx.RULE_REF().getSymbol());
-                }
-            }
-
-            @Override
-            public void exitRewrite_tree_atom(ANTLRv3Parser.Rewrite_tree_atomContext ctx) {
-                if (ctx.TOKEN_REF() != null) {
-                    addOccurance(ctx.TOKEN_REF().getSymbol());
-                }
-                if (ctx.RULE_REF() != null) {
-                    addOccurance(ctx.RULE_REF().getSymbol());
-                }
-            }
-
-            @Override
-            public void exitNotTerminal(ANTLRv3Parser.NotTerminalContext ctx) {
-                if (ctx.TOKEN_REF() != null) {
-                    addOccurance(ctx.TOKEN_REF().getSymbol());
-                }
-            }
-
-            @Override
-            public void exitTokenSpec(ANTLRv3Parser.TokenSpecContext ctx) {
-                if (ctx.TOKEN_REF() != null) {
-                    addOccurance(ctx.TOKEN_REF().getSymbol());
-                }
-            }
-
-            @Override
-            public void exitId_(ANTLRv3Parser.Id_Context ctx) {
-                addOccurance(ctx.getStart());
-            }
-
-            @Override
-            public void exitTerminal_(ANTLRv3Parser.Terminal_Context ctx) {
-                if (ctx.TOKEN_REF() != null) {
-                    addOccurance(ctx.TOKEN_REF().getSymbol());
-                }
-            }
-
-
-        };
+                ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
+        });
     }
 
+    private static class ANTLRv3OccuranceListener extends ANTLRv3ParserBaseListener {
 
+        private final Consumer<Token> onOccurance;
 
+        public ANTLRv3OccuranceListener(Consumer<Token> onOccurance) {
+            this.onOccurance = onOccurance;
+        }
+
+        @Override
+        public void exitAtom(ANTLRv3Parser.AtomContext ctx) {
+            if (ctx.RULE_REF() != null) {
+                onOccurance.accept(ctx.RULE_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitRewrite_tree_atom(ANTLRv3Parser.Rewrite_tree_atomContext ctx) {
+            if (ctx.TOKEN_REF() != null) {
+                onOccurance.accept(ctx.TOKEN_REF().getSymbol());
+            }
+            if (ctx.RULE_REF() != null) {
+                onOccurance.accept(ctx.RULE_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitNotTerminal(ANTLRv3Parser.NotTerminalContext ctx) {
+            if (ctx.TOKEN_REF() != null) {
+                onOccurance.accept(ctx.TOKEN_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitTokenSpec(ANTLRv3Parser.TokenSpecContext ctx) {
+            if (ctx.TOKEN_REF() != null) {
+                onOccurance.accept(ctx.TOKEN_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitId_(ANTLRv3Parser.Id_Context ctx) {
+            onOccurance.accept(ctx.getStart());
+        }
+
+        @Override
+        public void exitTerminal_(ANTLRv3Parser.Terminal_Context ctx) {
+            if (ctx.TOKEN_REF() != null) {
+                onOccurance.accept(ctx.TOKEN_REF().getSymbol());
+            }
+        }
+    }
 }

@@ -20,7 +20,10 @@ package org.netbeans.modules.languages.antlr.v4;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import org.antlr.parser.antlr4.ANTLRv4Lexer;
 import org.antlr.parser.antlr4.ANTLRv4Parser;
 import org.antlr.parser.antlr4.ANTLRv4ParserBaseListener;
@@ -30,6 +33,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.api.Severity;
+import org.netbeans.modules.csl.spi.DefaultError;
+import org.netbeans.modules.languages.antlr.AntlrParser;
 import org.netbeans.modules.languages.antlr.AntlrParserResult;
 import org.netbeans.modules.languages.antlr.AntlrStructureItem;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -75,6 +81,16 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
                 addReference(token);
             }
 
+            @Override
+            public void exitTokensSpec(ANTLRv4Parser.TokensSpecContext ctx) {
+                List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
+                for (ANTLRv4Parser.IdentifierContext id : ids) {
+                    if (id.TOKEN_REF() != null) {
+                        addReference(id.TOKEN_REF().getSymbol());
+                    }
+                }
+            }
+
             public void addReference(Token token) {
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
                 String name = token.getText();
@@ -87,8 +103,25 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
             }
 
         };
+    }
 
 
+    @Override
+    protected ParseTreeListener createCheckReferences(FileObject source) {
+        final Map<String, Reference> allRefs = new HashMap<>(references);
+        for (String im : imports) {
+            FileObject fo = source.getParent().getFileObject(im + ".g4");
+            if (fo != null) {
+                AntlrParserResult pr = AntlrParser.getParserResult(fo);
+                allRefs.putAll(pr.references);
+            }
+        }
+        return new ANTLRv4OccuranceListener((token) -> {
+            String name = token.getText();
+            if(!"EOF".equals(name) && (!allRefs.containsKey(name) || (allRefs.get(name).defOffset == null))) {
+                errors.add(new DefaultError(null, "Unknown Reference: " + name, null, source, token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
+            }
+        });
     }
 
     @Override
@@ -213,40 +246,44 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         };
     }
 
+    private void addOccurance(Token token) {
+        String refName = token.getText();
+        Reference ref = references.get(refName);
+        if (ref == null) {
+            ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
+            references.put(ref.name, ref);
+        }
+       ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
+    }
+
     @Override
     protected ParseTreeListener createOccurancesListener() {
-        return new ANTLRv4ParserBaseListener() {
-
-            private void addOccurance(Token token) {
-                String refName = token.getText();
-                Reference ref = references.get(refName);
-                if (ref == null) {
-                    ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
-                    references.put(ref.name, ref);
-                }
-                if (ref != null) {
-                    ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
-                }
-            }
-
-            @Override
-            public void exitTerminal(ANTLRv4Parser.TerminalContext ctx) {
-                if (ctx.TOKEN_REF() != null) {
-                    addOccurance(ctx.TOKEN_REF().getSymbol());
-                }
-            }
-
-            @Override
-            public void exitRuleref(ANTLRv4Parser.RulerefContext ctx) {
-                if (ctx.RULE_REF() != null) {
-                    addOccurance(ctx.RULE_REF().getSymbol());
-                }
-            }
-
-        };
+        return new ANTLRv4OccuranceListener(this::addOccurance);
     }
 
     public List<String> getImports() {
         return Collections.unmodifiableList(imports);
+    }
+
+    private static class ANTLRv4OccuranceListener extends ANTLRv4ParserBaseListener {
+        private final Consumer<Token> onOccurance;
+
+        public ANTLRv4OccuranceListener(Consumer<Token> onOccurance) {
+            this.onOccurance = onOccurance;
+        }
+
+        @Override
+        public void exitTerminal(ANTLRv4Parser.TerminalContext ctx) {
+            if (ctx.TOKEN_REF() != null) {
+                onOccurance.accept(ctx.TOKEN_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitRuleref(ANTLRv4Parser.RulerefContext ctx) {
+            if (ctx.RULE_REF() != null) {
+                onOccurance.accept(ctx.RULE_REF().getSymbol());
+            }
+        }
     }
 }

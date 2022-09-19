@@ -28,12 +28,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.api.Severity;
-import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.languages.antlr.AntlrParserResult;
 import org.netbeans.modules.languages.antlr.AntlrStructureItem;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -59,7 +56,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     }
 
     @Override
-    protected ParseTreeListener createReferenceListener(FileObject source) {
+    protected ParseTreeListener createReferenceListener() {
         return new ANTLRv3ParserBaseListener() {
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
@@ -69,7 +66,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
                 if (references.containsKey(name)) {
                     references.get(name).defOffset = range;
                 } else {
-                    Reference ref = new Reference(name, source, range);
+                    Reference ref = new Reference(name, getFileObject(), range);
                     references.put(ref.name, ref);
                 }
             }
@@ -77,7 +74,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     }
 
     @Override
-    protected ParseTreeListener createCheckReferences(FileObject source) {
+    protected ParseTreeListener createCheckReferences() {
         return new ANTLRv3OccuranceListener((token) -> {
             String name = token.getText();
             if (!"EOF".equals(name) && (!references.containsKey(name) || references.get(name).defOffset == null)) {
@@ -89,7 +86,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     }
 
     @Override
-    protected ParseTreeListener createImportListener(FileObject source) {
+    protected ParseTreeListener createImportListener() {
         return new ANTLRv3ParserBaseListener();
     }
 
@@ -135,12 +132,12 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     }
 
     @Override
-    protected ParseTreeListener createStructureListener(FileObject source) {
+    protected ParseTreeListener createStructureListener() {
         return new ANTLRv3ParserBaseListener() {
 
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
-                AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.id_().getText(), source, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.id_().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                 structure.add(rule);
             }
 

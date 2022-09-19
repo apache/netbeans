@@ -67,7 +67,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     }
 
     @Override
-    protected ParseTreeListener createReferenceListener(FileObject source) {
+    protected ParseTreeListener createReferenceListener() {
         return new ANTLRv4ParserBaseListener() {
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
@@ -97,7 +97,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
                 if(references.containsKey(name)) {
                     references.get(name).defOffset = range;
                 } else {
-                    Reference ref = new Reference(name, source, range);
+                    Reference ref = new Reference(name, getFileObject(), range);
                     references.put(ref.name, ref);
                 }
             }
@@ -107,10 +107,10 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
 
     @Override
-    protected ParseTreeListener createCheckReferences(FileObject source) {
+    protected ParseTreeListener createCheckReferences() {
         final Map<String, Reference> allRefs = new HashMap<>(references);
         for (String im : imports) {
-            FileObject fo = source.getParent().getFileObject(im + ".g4");
+            FileObject fo = getFileObject().getParent().getFileObject(im + ".g4");
             if (fo != null) {
                 AntlrParserResult pr = AntlrParser.getParserResult(fo);
                 allRefs.putAll(pr.references);
@@ -119,13 +119,13 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         return new ANTLRv4OccuranceListener((token) -> {
             String name = token.getText();
             if(!"EOF".equals(name) && (!allRefs.containsKey(name) || (allRefs.get(name).defOffset == null))) {
-                errors.add(new DefaultError(null, "Unknown Reference: " + name, null, source, token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
+                errors.add(new DefaultError(null, "Unknown Reference: " + name, null, getFileObject(), token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
             }
         });
     }
 
     @Override
-    protected ParseTreeListener createImportListener(FileObject source) {
+    protected ParseTreeListener createImportListener() {
         return new ANTLRv4ParserBaseListener() {
             private void addImport(String importedGrammar) {
                 imports.add(importedGrammar);
@@ -205,7 +205,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     }
 
     @Override
-    protected ParseTreeListener createStructureListener(FileObject source) {
+    protected ParseTreeListener createStructureListener() {
         return new ANTLRv4ParserBaseListener() {
             final List<AntlrStructureItem.RuleStructureItem> lexerStructure = new ArrayList<>();
 
@@ -213,21 +213,21 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
                 if (ctx.FRAGMENT() == null) {
                     // Do not represent fragments in the structure
-                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.TOKEN_REF().getText(), source, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.TOKEN_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                     lexerStructure.add(rule);
                 }
             }
 
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
-                AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.RULE_REF().getText(), source, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.RULE_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                 structure.add(rule);
             }
 
             @Override
             public void exitRules(ANTLRv4Parser.RulesContext ctx) {
                 if (!lexerStructure.isEmpty()) {
-                    AntlrStructureItem.ModeStructureItem mode = new AntlrStructureItem.ModeStructureItem(source, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    AntlrStructureItem.ModeStructureItem mode = new AntlrStructureItem.ModeStructureItem(getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                     mode.rules.addAll(lexerStructure);
                     structure.add(mode);
                     lexerStructure.clear();
@@ -237,7 +237,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             @Override
             public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
-                AntlrStructureItem.ModeStructureItem mode = new AntlrStructureItem.ModeStructureItem(ctx.identifier().getText(), source, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                AntlrStructureItem.ModeStructureItem mode = new AntlrStructureItem.ModeStructureItem(ctx.identifier().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                 mode.rules.addAll(lexerStructure);
                 structure.add(mode);
                 lexerStructure.clear();

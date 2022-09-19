@@ -59,17 +59,17 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
         if (! finished) {
             FileObject fo = getSnapshot().getSource().getFileObject();
             T parser = createParser(getSnapshot());
-            parser.addErrorListener(createErrorListener(fo));
+            parser.addErrorListener(createErrorListener());
             parser.addParseListener(createFoldListener());
-            parser.addParseListener(createReferenceListener(fo));
-            parser.addParseListener(createImportListener(fo));
-            parser.addParseListener(createStructureListener(fo));
+            parser.addParseListener(createReferenceListener());
+            parser.addParseListener(createImportListener());
+            parser.addParseListener(createStructureListener());
             parser.addParseListener(createOccurancesListener());
             evaluateParser(parser);
 
             // Start a second parsing phase for checking;
             parser = createParser(getSnapshot());
-            parser.addParseListener(createCheckReferences(fo));
+            parser.addParseListener(createCheckReferences());
             evaluateParser(parser);
             finished = true;
         }
@@ -104,18 +104,22 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
         }
     }
 
+    protected final FileObject getFileObject() {
+        return getSnapshot().getSource().getFileObject();
+    }
+
     protected abstract T createParser(Snapshot snapshot);
     protected abstract void evaluateParser(T parser);
 
-    protected abstract ParseTreeListener createReferenceListener(FileObject source);
-    protected abstract ParseTreeListener createImportListener(FileObject source);
+    protected abstract ParseTreeListener createReferenceListener();
+    protected abstract ParseTreeListener createImportListener();
     protected abstract ParseTreeListener createFoldListener();
-    protected abstract ParseTreeListener createStructureListener(FileObject source);
+    protected abstract ParseTreeListener createStructureListener();
     protected abstract ParseTreeListener createOccurancesListener();
 
-    protected abstract ParseTreeListener createCheckReferences(FileObject source);
+    protected abstract ParseTreeListener createCheckReferences();
 
-    protected ANTLRErrorListener createErrorListener(FileObject source) {
+    protected ANTLRErrorListener createErrorListener() {
         return new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
@@ -124,7 +128,7 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
                     Token offendingToken = (Token) offendingSymbol;
                     errorPosition = offendingToken.getStartIndex();
                 }
-                errors.add(new DefaultError(null, msg, null, source, errorPosition, errorPosition, Severity.ERROR));
+                errors.add(new DefaultError(null, msg, null, getFileObject(), errorPosition, errorPosition, Severity.ERROR));
             }
 
         };

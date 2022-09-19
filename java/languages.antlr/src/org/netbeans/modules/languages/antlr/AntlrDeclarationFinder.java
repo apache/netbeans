@@ -85,7 +85,7 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         }
         scannedFiles.add(fo);
 
-        AntlrParserResult result = AntlrLocalIndex.getParserResult(fo);
+        AntlrParserResult result = AntlrParser.getParserResult(fo);
 
         Reference ref = ((Map<String, Reference>) result.references).get(name);
 

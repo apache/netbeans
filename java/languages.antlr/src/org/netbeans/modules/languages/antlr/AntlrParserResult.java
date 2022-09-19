@@ -21,7 +21,6 @@ package org.netbeans.modules.languages.antlr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;

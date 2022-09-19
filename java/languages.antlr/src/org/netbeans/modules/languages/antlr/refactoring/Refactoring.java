@@ -36,7 +36,7 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.languages.antlr.AntlrLocalIndex;
+import org.netbeans.modules.languages.antlr.AntlrParser;
 import org.netbeans.modules.languages.antlr.AntlrParserResult;
 import org.netbeans.modules.languages.antlr.AntlrParserResult.Reference;
 import org.netbeans.modules.languages.antlr.v4.Antlr4Language;
@@ -109,7 +109,7 @@ public class Refactoring {
                             throw new CancellationException();
                         }
 
-                        Antlr4ParserResult result = (Antlr4ParserResult) AntlrLocalIndex.getParserResult(cf);
+                        Antlr4ParserResult result = (Antlr4ParserResult) AntlrParser.getParserResult(cf);
 
                         result.getImports().forEach(s -> {
                             FileObject referencedFO = parent.getFileObject(s, "g4");
@@ -137,7 +137,7 @@ public class Refactoring {
                     }
                     scannedFileObjects.add(fo);
 
-                    AntlrParserResult<?> result = (AntlrParserResult) AntlrLocalIndex.getParserResult(fo);
+                    AntlrParserResult<?> result = (AntlrParserResult) AntlrParser.getParserResult(fo);
 
                     Reference ref = result.references.get(name);
 

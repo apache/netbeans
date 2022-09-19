@@ -122,7 +122,7 @@ public class AntlrCompletionProvider implements CompletionProvider {
 
             String mprefix = isCaseSensitive ? prefix : prefix.toUpperCase();
 
-            AntlrParserResult result = AntlrLocalIndex.getParserResult(fo);
+            AntlrParserResult result = AntlrParser.getParserResult(fo);
             Map<String, AntlrParserResult.Reference> refs = result.references;
             for (String ref : refs.keySet()) {
                 String mref = isCaseSensitive ? ref : ref.toUpperCase();

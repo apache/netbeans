@@ -114,7 +114,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
 
     /** Copies this file. This allows the filesystem to perform any additional
     * operation associated with the copy. But the default implementation is simple
-    * copy of the file and its attributes
+    * copy of the file and its attributes  Since version 9.32, the file POSIX
+    * permissions are copied as well.
     *
     * @param target target folder to move this file to
     * @param name new basename of file

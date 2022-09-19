@@ -108,16 +108,17 @@ public class Refactoring {
                         if (cancel.get()) {
                             throw new CancellationException();
                         }
+                        if (Antlr4Language.MIME_TYPE.equals(cf.getMIMEType())) {
+                            Antlr4ParserResult result = (Antlr4ParserResult) AntlrParser.getParserResult(cf);
 
-                        Antlr4ParserResult result = (Antlr4ParserResult) AntlrParser.getParserResult(cf);
-
-                        result.getImports().forEach(s -> {
-                            FileObject referencedFO = parent.getFileObject(s, "g4");
-                            if(referencedFO != null) {
-                                imports.computeIfAbsent(cf, cd2 -> new HashSet<>())
-                                        .add(referencedFO);
-                            }
-                        });
+                            result.getImports().forEach(s -> {
+                                FileObject referencedFO = parent.getFileObject(s, "g4");
+                                if(referencedFO != null) {
+                                    imports.computeIfAbsent(cf, cd2 -> new HashSet<>())
+                                            .add(referencedFO);
+                                }
+                            });
+                        }
                     }
                 }
 

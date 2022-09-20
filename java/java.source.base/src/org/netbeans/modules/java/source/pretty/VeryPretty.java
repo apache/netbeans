@@ -109,7 +109,6 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.netbeans.modules.java.source.query.CommentSet;

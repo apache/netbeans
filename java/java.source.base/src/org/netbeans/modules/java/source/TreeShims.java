@@ -28,14 +28,12 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Names;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +47,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import com.sun.tools.javac.tree.TreeMaker;
 
 public class TreeShims {
 
@@ -63,8 +60,8 @@ public class TreeShims {
 //    public static final String NULL_LITERAL = "NULL_LITERAL"; //NOI18N
 //    public static final String PARENTHESIZED_PATTERN = "PARENTHESIZED_PATTERN"; //NOI18N
 //    public static final String GUARDED_PATTERN = "GUARDED_PATTERN"; //NOI18N
-    public static final String DECONSTRUCTION_PATTERN = "DECONSTRUCTION_PATTERN";
-    public static final String RECORDPATTERN = "RECORDPATTERN";
+//    public static final String DECONSTRUCTION_PATTERN = "DECONSTRUCTION_PATTERN";
+//    public static final String RECORDPATTERN = "RECORDPATTERN";
 //
 //    public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
 //        try {
@@ -397,57 +394,57 @@ public class TreeShims {
 //        }
 //    }
 
-    public static ExpressionTree getDeconstructor(Tree node) {
-        try {
-            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
-            return isJDKVersionRelease19_Or_Above()
-                    ? (ExpressionTree) gpt.getDeclaredMethod("getDeconstructor").invoke(node) //NOI18N
-                    : null;
-        } catch (NoSuchMethodException | ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(ex);
-        }
-    }
+//  public static ExpressionTree getDeconstructor(Tree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
+//            return isJDKVersionRelease19_Or_Above()
+//                    ? (ExpressionTree) gpt.getDeclaredMethod("getDeconstructor").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
 
-    public static List<? extends PatternTree> getNestedPatterns(Tree node) {
-        try {
-            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
-            return isJDKVersionRelease19_Or_Above()
-                    ? (List<? extends PatternTree>) gpt.getDeclaredMethod("getNestedPatterns").invoke(node) //NOI18N
-                    : null;
-        } catch (NoSuchMethodException | ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(ex);
-        }
-    }
+//    public static List<? extends PatternTree> getNestedPatterns(Tree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
+//            return isJDKVersionRelease19_Or_Above()
+//                    ? (List<? extends PatternTree>) gpt.getDeclaredMethod("getNestedPatterns").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
 
-    public static VariableTree getVariable(Tree node) {
-        try {
-            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
-            return isJDKVersionRelease19_Or_Above()
-                    ? (VariableTree) gpt.getDeclaredMethod("getVariable").invoke(node) //NOI18N
-                    : null;
-        } catch (NoSuchMethodException | ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(ex);
-        }
-    }
+//    public static VariableTree getVariable(Tree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
+//            return isJDKVersionRelease19_Or_Above()
+//                    ? (VariableTree) gpt.getDeclaredMethod("getVariable").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
 
-    public static Tree RecordPattern(TreeMaker make, ExpressionTree deconstructor, List<PatternTree> nested, VariableTree var) {
-        ListBuffer<JCTree.JCPattern> nestedVar = new ListBuffer<>();
-        for (PatternTree t : nested) {
-            nestedVar.append((JCTree.JCPattern) t);
-        }
-        try {
-            Method getMethod = TreeMaker.class.getDeclaredMethod("RecordPattern", JCTree.JCExpression.class, com.sun.tools.javac.util.List.class, JCTree.JCVariableDecl.class);
-            return (Tree) getMethod.invoke(make, (JCTree.JCExpression) deconstructor, nestedVar.toList(), (JCTree.JCVariableDecl) var);
-        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(ex);
-        }
-    }
+//    public static Tree RecordPattern(TreeMaker make, ExpressionTree deconstructor, List<PatternTree> nested, VariableTree var) {
+//        ListBuffer<JCTree.JCPattern> nestedVar = new ListBuffer<>();
+//        for (PatternTree t : nested) {
+//            nestedVar.append((JCTree.JCPattern) t);
+//        }
+//        try {
+//            Method getMethod = TreeMaker.class.getDeclaredMethod("RecordPattern", JCTree.JCExpression.class, com.sun.tools.javac.util.List.class, JCTree.JCVariableDecl.class);
+//            return (Tree) getMethod.invoke(make, (JCTree.JCExpression) deconstructor, nestedVar.toList(), (JCTree.JCVariableDecl) var);
+//        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
 
     public static Element toRecordComponent(Element el) {
         if (el == null ||el.getKind() != ElementKind.FIELD) {
@@ -482,9 +479,9 @@ public class TreeShims {
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
     }
 
-    public static boolean isJDKVersionRelease19_Or_Above(){
-        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(19) >= 0;
-    }
+//    public static boolean isJDKVersionRelease19_Or_Above(){
+//        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(19) >= 0;
+//    }
 
 //    public static boolean isJDKVersionRelease18_Or_Above() {
 //        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(18) >= 0;

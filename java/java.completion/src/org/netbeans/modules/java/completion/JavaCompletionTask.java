@@ -57,7 +57,6 @@ import static javax.lang.model.SourceVersion.RELEASE_10;
 import static javax.lang.model.SourceVersion.RELEASE_11;
 import static javax.lang.model.SourceVersion.RELEASE_13;
 import static javax.lang.model.type.TypeKind.VOID;
-import org.netbeans.modules.java.completion.impl.TreeShims;
 
 /**
  *

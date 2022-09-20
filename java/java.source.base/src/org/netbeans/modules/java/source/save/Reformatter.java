@@ -55,7 +55,6 @@ import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.NoJavacHelper;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -585,11 +584,9 @@ public class Reformatter implements ReformatTask {
                     return true;
 
                 Boolean ret;
-                if (tree != null && tree.getKind().toString().equals(TreeShims.DECONSTRUCTION_PATTERN)) {
-                    ret = scanDeconstructionPattern(tree, p);
-                } else {
-                    ret = super.scan(tree, p);
-                }
+
+                ret = super.scan(tree, p);
+
                 return ret != null ? ret : true;
             }
             finally {
@@ -2803,32 +2800,49 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
-       /* @Override
-        public Boolean visitGuardedPattern(GuardedPatternTree node, Void p) {
+        @Override
+        public Boolean visitDefaultCaseLabel(DefaultCaseLabelTree node, Void p) {
+            accept(DEFAULT);
+            return true;
+        }
+
+        @Override
+        public Boolean visitConstantCaseLabel(ConstantCaseLabelTree node, Void p) {
+            scan(node.getConstantExpression(), p);
+            return true;
+        }
+
+        @Override
+        public Boolean visitPatternCaseLabel(PatternCaseLabelTree node, Void p) {
             scan(node.getPattern(), p);
             space();
-            accept(AMPAMP);
+            accept(IDENTIFIER);
             space();
-            scan(node.getExpression(), p);
-
+            scan(node.getGuard(), p);
             return true;
-        }*/
+        }
 
-        private Boolean scanDeconstructionPattern(Tree node, Void p) {
-            scan(TreeShims.getDeconstructor(node), p);
+        @Override
+        public Boolean visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
+            scan(node.getDeconstructor(), p);
             spaces(0);
             accept(LPAREN);
             spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, TreeShims.getNestedPatterns(node));
+            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
             accept(RPAREN);
-            Boolean r = scan(TreeShims.getVariable(node), p);
-            return r;
+            if (node.getVariable() != null) {
+                space();
+                accept(IDENTIFIER);
+            }
+            return true;
         }
 
         @Override
         public Boolean visitParenthesizedPattern(ParenthesizedPatternTree node, Void p) {
             accept(LPAREN);
+            spaces(0);
             scan(node.getPattern(), p);
+            spaces(0);
             accept(RPAREN);
             return true;
         }
@@ -2947,36 +2961,24 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitCase(CaseTree node, Void p) {
-            List<? extends Tree> labels = node.getLabels();
-            if (labels != null && labels.size() > 0) {
+            List<? extends CaseLabelTree> labels = node.getLabels();
+            if (labels != null && !labels.isEmpty()) {
                 if (tokens.token().id() == JavaTokenId.DEFAULT && labels.get(0).getKind() == Kind.DEFAULT_CASE_LABEL) {
                     accept(DEFAULT);
                 } else {
                     accept(CASE);
                     space();
-                    for (Tree label : labels) {
-                        switch (label.getKind()) {
-                            case DEFAULT_CASE_LABEL:
-                                removeWhiteSpace(JavaTokenId.DEFAULT);
-                                accept(DEFAULT);
-                                break;
-                            case BINDING_PATTERN:
-                            case PARENTHESIZED_PATTERN:
-                            case GUARDED_PATTERN:
-                                removeWhiteSpace(JavaTokenId.IDENTIFIER);
-                                scan(label, p);
-                                break;
-                            case NULL_LITERAL:
-                                removeWhiteSpace(JavaTokenId.NULL);
-                                scan(label, p);
-                                break;
-                            default:
-                                scan(label, p);
-                                break;
+                    for (Iterator<? extends CaseLabelTree> it = labels.iterator(); it.hasNext();) {
+                        CaseLabelTree label = it.next();
+                        scan(label, p);
+                        if (it.hasNext()) {
+                            spaces(0);
+                            accept(COMMA);
+                            space();
                         }
                     }
                 }
-            } else if (node.getExpressions().size() > 0) {
+            } else if (!node.getExpressions().isEmpty()) {
                 List<? extends ExpressionTree> exprs = node.getExpressions();
                 accept(CASE);
                 space();
@@ -3030,15 +3032,14 @@ public class Reformatter implements ReformatTask {
                 if (tokens.offset() >= endPos) {
                     break;
                 }
-                if (tokens.token().id() == forToken) {
-                    break;
-                }
                 if (tokens.token().id() == WHITESPACE) {
                     String text = tokens.token().text().toString();
                     String ind = getIndent();
                     if (!ind.equals(text)) {
                         addDiff(new Diff(tokens.offset(), tokens.offset() + tokens.token().length(), " "));
                     }
+                } else if (forToken == null || tokens.token().id() == forToken) {
+                    break;
                 }
             } while (tokens.moveNext());
         }

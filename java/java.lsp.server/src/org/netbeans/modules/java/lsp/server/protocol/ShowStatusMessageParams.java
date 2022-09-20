@@ -30,6 +30,9 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class ShowStatusMessageParams extends MessageParams {
     private Integer timeout;
 
+    public ShowStatusMessageParams() {
+    }
+
     public ShowStatusMessageParams(MessageType type, String message) {
         super(type, message);
     }

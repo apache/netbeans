@@ -103,7 +103,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Setup Xvfb
-        if: ${{ matrix.java != '19-ea' }}  # see #4299
+        if: ${{ matrix.java != '20-ea' }}  # see #4299
         run: |
           echo "DISPLAY=:99.0" >> $GITHUB_ENV
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &

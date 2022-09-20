@@ -495,10 +495,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 localResult(env);
                 addKeywordsForBlock(env);
                 break;
-            default:
-                if (path.getLeaf().getKind().toString().equals(TreeShims.DECONSTRUCTION_PATTERN)) {
-                    insideDeconstructionRecordPattern(env);
-                }
+            case DECONSTRUCTION_PATTERN:
+                insideDeconstructionRecordPattern(env);
                 break;
         }
     }

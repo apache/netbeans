@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
@@ -49,7 +50,6 @@ import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.modules.java.hints.errors.Utilities;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -76,19 +76,20 @@ public class ConvertToNestedRecordPattern {
 
     private static final int RECORD_PATTERN_PREVIEW_JDK_VERSION = 19;
 
-    @TriggerTreeKind(Tree.Kind.INSTANCE_OF)
+    @TriggerTreeKind(Tree.Kind.DECONSTRUCTION_PATTERN)
     public static ErrorDescription convertToNestedRecordPattern(HintContext ctx) {
         if (Utilities.isJDKVersionLower(RECORD_PATTERN_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview")) {
             return null;
         }
         TreePath t = ctx.getPath();
-        InstanceOfTree iot = (InstanceOfTree)t.getLeaf();
-        if(iot.getPattern()==null || !(iot.getPattern().getKind().toString().equals(TreeShims.DECONSTRUCTION_PATTERN))) {
+        if (!t.getParentPath().getLeaf().getKind().equals(Tree.Kind.INSTANCE_OF)) {
             return null;
         }
         Set<String> recordPatternVarSet = new HashSet<>();
         Map<PatternTree, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
-        recordComponentMap = findNested(iot.getPattern(), recordComponentMap);
+        DeconstructionPatternTree recordPattern = (DeconstructionPatternTree) t.getLeaf();
+        recordComponentMap = findNested(recordPattern, recordComponentMap);
+
         for (PatternTree p : recordComponentMap.keySet()) {
             BindingPatternTree bTree = (BindingPatternTree) p;
             recordPatternVarSet.add(bTree.getVariable().getName().toString());
@@ -98,7 +99,6 @@ public class ConvertToNestedRecordPattern {
         }
         Set<TreePath> convertPath = new HashSet<>();
         List<String> localVarList = new ArrayList<>();
-        localVarList.add(iot.getExpression().toString());
         Map<String, List<UserVariables>> userVars = new HashMap<>();
         new TreePathScanner<Void, Void>() {
 
@@ -135,7 +135,8 @@ public class ConvertToNestedRecordPattern {
             recordComponentMap.put(pTree, new ArrayList<>());
             return recordComponentMap;
         } else {
-            for (PatternTree p : TreeShims.getNestedPatterns(pTree)) {
+            DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
+            for (PatternTree p : bTree.getNestedPatterns()) {
                 findNested(p, recordComponentMap);
             }
         }
@@ -183,10 +184,11 @@ public class ConvertToNestedRecordPattern {
         protected void performRewrite(JavaFix.TransformationContext ctx) {
             WorkingCopy wc = ctx.getWorkingCopy();
             TreePath t = ctx.getPath();
-            InstanceOfTree iotree = (InstanceOfTree)t.getLeaf();
-            TypeElement type;
+            TypeElement type = null;
             Map<PatternTree, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
-            recordComponentMap = findNested(iotree.getPattern(), recordComponentMap);
+            DeconstructionPatternTree recordPattern = (DeconstructionPatternTree) t.getLeaf();
+            recordComponentMap = findNested(recordPattern, recordComponentMap);
+            
             Set<String> localVars = new HashSet<>(localVarList);
             for (PatternTree p : recordComponentMap.keySet()) {
                 List<PatternTree> bindTree = new ArrayList<>();
@@ -222,7 +224,7 @@ public class ConvertToNestedRecordPattern {
                 recordComponentMap.put(p, bindTree);
             }
 
-            PatternTree d = createNestedPattern((PatternTree) iotree.getPattern(), wc, recordComponentMap);
+            DeconstructionPatternTree d = (DeconstructionPatternTree) createNestedPattern((PatternTree) t.getLeaf(), wc, recordComponentMap);
             while (t != null && t.getLeaf().getKind() != Tree.Kind.IF) {
                 t = t.getParentPath();
             }
@@ -243,16 +245,17 @@ public class ConvertToNestedRecordPattern {
             if (map.containsKey(pTree) && map.get(pTree).size()>0) {
                 BindingPatternTree p = (BindingPatternTree) pTree;
                 VariableTree v = (VariableTree) p.getVariable();
-                return (PatternTree) wc.getTreeMaker().RecordPattern((ExpressionTree) v.getType(), map.get(pTree), v);
+                return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern((ExpressionTree) v.getType(), map.get(pTree), v);
             } else {
                 return pTree;
             }
         }
+        DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
         List<PatternTree> list = new ArrayList<>();
-        for (PatternTree p : TreeShims.getNestedPatterns(pTree)) {
+        for (PatternTree p : bTree.getNestedPatterns()) {
             PatternTree val = createNestedPattern(p, wc, map);
             list.add(val);
         }
-        return (PatternTree) wc.getTreeMaker().RecordPattern(TreeShims.getDeconstructor(pTree), list, TreeShims.getVariable(pTree));
+        return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern(bTree.getDeconstructor(), list, bTree.getVariable());
     }
 }

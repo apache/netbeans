@@ -510,7 +510,20 @@ public abstract class RestSupport {
     /**
      * Is this JAKARTAEE9 profile project?
      */
-    public boolean isJakartaEE9(){
+    public boolean isJakartaEE91() {
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if ( webModule == null ){
+            return false;
+        }
+        Profile profile = webModule.getJ2eeProfile();
+        return Profile.JAKARTA_EE_9_1_WEB.equals(profile) ||
+                        Profile.JAKARTA_EE_9_1_FULL.equals(profile);
+    }
+    
+    /**
+     * Is this JAKARTAEE9 profile project?
+     */
+    public boolean isJakartaEE9() {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if ( webModule == null ){
             return false;
@@ -522,7 +535,7 @@ public abstract class RestSupport {
     /**
      * Is this JAKARTAEE8 profile project?
      */
-    public boolean isJakartaEE8(){
+    public boolean isJakartaEE8() {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if ( webModule == null ){
             return false;

@@ -438,7 +438,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
             String simpleName = elem.getSimpleName().toString();
             return new CI(simpleName + "()", smartType ? 650 - SMART_TYPE : 650, simpleName + "#0#");
         }
-
+        
         @Override
         public CI createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
             String simpleName = elem.getSimpleName().toString();

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.23
+#Version 2.25
 
 CLSS public abstract interface java.io.Serializable
 
@@ -72,8 +72,6 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
-CLSS public abstract interface org.gradle.tooling.model.Model
-
 CLSS public final org.netbeans.modules.gradle.api.GradleBaseProject
 fld public final static java.lang.String PRIVATE_TASK_GROUP = "<private>"
 intf java.io.Serializable
@@ -120,6 +118,7 @@ CLSS public final org.netbeans.modules.gradle.api.GradleConfiguration
 intf java.io.Serializable
 intf java.lang.Comparable<org.netbeans.modules.gradle.api.GradleConfiguration>
 intf org.netbeans.modules.gradle.api.ModuleSearchSupport
+meth public boolean isCanBeConsumed()
 meth public boolean isCanBeResolved()
 meth public boolean isEmpty()
 meth public boolean isResolved()
@@ -128,6 +127,7 @@ meth public int compareTo(org.netbeans.modules.gradle.api.GradleConfiguration)
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public java.lang.String toString()
+meth public java.util.Map<java.lang.String,java.lang.String> getAttributes()
 meth public java.util.Set<org.netbeans.modules.gradle.api.GradleConfiguration> getAllParents()
 meth public java.util.Set<org.netbeans.modules.gradle.api.GradleConfiguration> getExtendsFrom()
 meth public java.util.Set<org.netbeans.modules.gradle.api.GradleDependency$ModuleDependency> findModules(java.lang.String)
@@ -137,7 +137,7 @@ meth public java.util.Set<org.netbeans.modules.gradle.api.GradleDependency$Proje
 meth public java.util.Set<org.netbeans.modules.gradle.api.GradleDependency$UnresolvedDependency> getUnresolved()
 meth public org.netbeans.modules.gradle.api.GradleDependency$FileCollectionDependency getFiles()
 supr java.lang.Object
-hfds canBeResolved,description,extendsFrom,files,modules,name,projects,transitive,unresolved
+hfds attributes,canBeConsumed,canBeResolved,description,extendsFrom,files,modules,name,projects,transitive,unresolved
 
 CLSS public abstract org.netbeans.modules.gradle.api.GradleDependency
 innr public final static !enum Type
@@ -253,6 +253,7 @@ meth public java.util.concurrent.CompletionStage<org.netbeans.modules.gradle.api
 meth public java.util.prefs.Preferences getPreferences(boolean)
 meth public org.netbeans.modules.gradle.api.NbGradleProject$Quality getAimedQuality()
 meth public org.netbeans.modules.gradle.api.NbGradleProject$Quality getQuality()
+meth public org.netbeans.modules.gradle.spi.GradleFiles getGradleFiles()
 meth public static java.util.prefs.Preferences getPreferences(org.netbeans.api.project.Project,boolean)
 meth public static javax.swing.ImageIcon getIcon()
 meth public static org.netbeans.modules.gradle.api.NbGradleProject get(org.netbeans.api.project.Project)
@@ -393,6 +394,7 @@ fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLin
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag REFRESH_KEYS
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag RERUN_TASKS
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag SCAN
+fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag SHOW_VERSION
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag STACKTRACE
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag STACKTRACE_FULL
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag STATUS
@@ -628,6 +630,7 @@ fld public final static java.lang.String BUILD_FILE_NAME_KTS = "build.gradle.kts
 fld public final static java.lang.String GRADLE_PROPERTIES_NAME = "gradle.properties"
 fld public final static java.lang.String SETTINGS_FILE_NAME = "settings.gradle"
 fld public final static java.lang.String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"
+fld public final static java.lang.String VERSION_CATALOG = "gradle/libs.versions.toml"
 fld public final static java.lang.String WRAPPER_PROPERTIES = "gradle/wrapper/gradle-wrapper.properties"
 innr public final static !enum Kind
 innr public static SettingsFile
@@ -667,6 +670,7 @@ fld public final static org.netbeans.modules.gradle.spi.GradleFiles$Kind ROOT_PR
 fld public final static org.netbeans.modules.gradle.spi.GradleFiles$Kind ROOT_SCRIPT
 fld public final static org.netbeans.modules.gradle.spi.GradleFiles$Kind SETTINGS_SCRIPT
 fld public final static org.netbeans.modules.gradle.spi.GradleFiles$Kind USER_PROPERTIES
+fld public final static org.netbeans.modules.gradle.spi.GradleFiles$Kind VERSION_CATALOG
 meth public static org.netbeans.modules.gradle.spi.GradleFiles$Kind valueOf(java.lang.String)
 meth public static org.netbeans.modules.gradle.spi.GradleFiles$Kind[] values()
 supr java.lang.Enum<org.netbeans.modules.gradle.spi.GradleFiles$Kind>
@@ -988,11 +992,6 @@ meth public static java.awt.Image getTreeFolderIcon(boolean)
 supr java.lang.Object
 hfds ICON_KEY_UIMANAGER,ICON_KEY_UIMANAGER_NB,ICON_PATH,OPENED_ICON_KEY_UIMANAGER,OPENED_ICON_KEY_UIMANAGER_NB,OPENED_ICON_PATH
 
-CLSS public abstract interface org.netbeans.modules.gradle.tooling.Model
-intf java.io.Serializable
-meth public abstract boolean hasException()
-meth public abstract java.lang.String getGradleException()
-
 CLSS public abstract interface org.netbeans.spi.project.ProjectConfiguration
 meth public abstract java.lang.String getDisplayName()
 
@@ -1091,6 +1090,7 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
 innr public final static PasswordLine
 innr public final static QuickPick

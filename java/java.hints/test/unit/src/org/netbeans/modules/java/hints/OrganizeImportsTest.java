@@ -49,4 +49,27 @@ public class OrganizeImportsTest extends NbTestCase {
                               "     List l = new ArrayList();\n" +
                               "}\n");
     }
+
+    public void testClashing() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "import java.awt.*;\n" +
+                       "import java.util.List;\n" +
+                       "import java.util.*;\n" +
+                       "public class Test {\n" +
+                       "     List l = new ArrayList();\n" +
+                       "     Button b;\n" +
+                       "}\n")
+                .run(OrganizeImports.class)
+                .findWarning("2:0-2:22:verifier:MSG_OragnizeImports")
+                .applyFix()
+                .assertOutput("package test;\n" +
+                              "import java.awt.*;\n" +
+                              "import java.util.*;\n" +
+                              "import java.util.List;\n" +
+                              "public class Test {\n" +
+                              "     List l = new ArrayList();\n" +
+                              "     Button b;\n" +
+                              "}\n");
+    }
 }

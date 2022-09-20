@@ -19,7 +19,6 @@
 package org.netbeans.modules.javascript2.jade.editor;
 
 import java.util.Collections;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.modules.csl.api.test.CslTestBase;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.ParserManager;

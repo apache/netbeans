@@ -56,7 +56,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToNestedRecordPattern.class)
-                .findWarning("7:12-7:63:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
+                .findWarning("7:25-7:63:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n"
@@ -97,7 +97,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToNestedRecordPattern.class)
-                .findWarning("7:12-7:64:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
+                .findWarning("7:25-7:64:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n"
@@ -140,7 +140,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToNestedRecordPattern.class)
-                .findWarning("7:12-7:118:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
+                .findWarning("7:25-7:118:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n"

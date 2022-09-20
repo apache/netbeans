@@ -19,7 +19,6 @@
 package org.netbeans.api.db.explorer.support;
 
 import javax.swing.JComboBox;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.db.explorer.*;
 import org.netbeans.modules.db.test.TestBase;
 import org.netbeans.modules.db.test.Util;

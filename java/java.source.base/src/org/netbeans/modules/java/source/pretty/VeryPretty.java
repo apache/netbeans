@@ -2063,8 +2063,22 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
-    public void visitDefaultCaseLabel(JCDefaultCaseLabel that) {
+    public void visitDefaultCaseLabel(JCDefaultCaseLabel tree) {
         print("default");
+    }
+
+    @Override
+    public void visitConstantCaseLabel(JCConstantCaseLabel tree) {
+        printExpr(tree.expr);
+    }
+
+    @Override
+    public void visitPatternCaseLabel(JCPatternCaseLabel tree) {
+        print(tree.pat);
+        if (tree.guard != null) {
+            print(" when ");
+            printExpr(tree.guard);
+        }
     }
 
     @Override
@@ -2079,31 +2093,30 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-        if ("DECONSTRUCTION_PATTERN".equals(tree.getKind().name())) {
-            visitRecordPattern(tree);
-            return;
-        }
         print("(UNKNOWN: " + tree + ")");
         newline();
     }
-
-    public void visitRecordPattern(JCTree tree) {
-        print((JCExpression) TreeShims.getDeconstructor(tree));
+    
+    @Override
+    public void visitRecordPattern(JCRecordPattern tree) {
+        print((JCExpression) tree.deconstructor);
         print("(");
-        Iterator<? extends PatternTree> it = TreeShims.getNestedPatterns(tree).iterator();
+        Iterator<JCPattern> it = tree.nested.iterator();
         while (it.hasNext()) {
-            JCPattern pattern = (JCPattern) it.next();
+            JCPattern pattern = it.next();
             if (pattern instanceof JCBindingPattern) {
                 visitBindingPattern((JCBindingPattern) pattern);
             } else {
-                visitRecordPattern((JCTree) pattern);
+                visitRecordPattern((JCRecordPattern) pattern);
             }
             if (it.hasNext()) {
                 print(", ");
             }
         }
         print(") ");
-        print(TreeShims.getVariable(tree).getName().toString());
+        if (tree.var != null) {
+            print(tree.var.name.toString());
+        }
     }
 
     /**************************************************************************

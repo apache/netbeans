@@ -23,7 +23,6 @@ import java.util.List;
 import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;

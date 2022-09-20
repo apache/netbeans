@@ -22,6 +22,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -132,7 +134,7 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
     public Set<String> getCommands() {
         return COMMANDS;
     }
-
+    
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         if (arguments.size() < 1) {
@@ -140,29 +142,79 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
         }
         FileObject f = Utils.extractFileObject(arguments.get(0), gson);
         Project p = FileOwnerQuery.getOwner(f);
-        if (p == null || p.getProjectDirectory() != f) {
+        if (p == null) {
             throw new IllegalArgumentException("Not a project " + f);
         }
         String artifactType = null;
         ProjectActionContext ctx = null;
+        String[] tags = null;
+        String classifier = null;
         
         if (arguments.size() > 1) {
             // 2nd parameter is the project action
             Object o = arguments.get(1);
-            if (!(o instanceof JsonPrimitive)) {
-                throw new IllegalArgumentException("String or null expected as parameter #3, got " + o);
+            if (o instanceof JsonObject) {
+                JsonObject request = (JsonObject)o;
+                if (request.has("action")) {
+                    Object a = request.get("action");
+                    if (a instanceof JsonPrimitive) {
+                        ctx = ProjectActionContext.newBuilder(p).forProjectAction(((JsonPrimitive)a).getAsString()).context();
+                    } else {
+                        throw new IllegalArgumentException("String expected as action, got " + a);
+                    }
+                }
+                if (request.has("type")) {
+                    Object t = request.get("type");
+                    if (t instanceof JsonPrimitive) {
+                        artifactType = ((JsonPrimitive)t).getAsString();
+                    } else {
+                        throw new IllegalArgumentException("String expected as type, got " + t);
+                    }
+                }
+                if (request.has("classifier")) {
+                    Object c = request.get("classifier");
+                    if (c instanceof JsonPrimitive) {
+                        classifier = ((JsonPrimitive)c).getAsString();
+                    } else {
+                        throw new IllegalArgumentException("String expected as classifier, got " + c);
+                    }
+                }
+                if (request.has("tags")) {
+                    Object t = request.get("tags");
+                    if (t instanceof JsonPrimitive) {
+                        tags = new String[] { ((JsonPrimitive)t).getAsString() };
+                    } else if (t instanceof JsonArray) {
+                        JsonArray arr = (JsonArray)t;
+                        tags = new String[arr.size()];
+                        int index = 0;
+                        for (Object item : arr) {
+                            if (item instanceof JsonPrimitive) {
+                                tags[index++] = ((JsonPrimitive)item).getAsString();
+                            } else {
+                                throw new IllegalArgumentException("String expected as tag, got " + item);
+                            }
+                        }
+                    } else {
+                        throw new IllegalArgumentException("String or array expected as tags, got " + t);
+                    }
+                }
+                
+            } else if (o instanceof JsonPrimitive) {
+                ctx = ProjectActionContext.newBuilder(p).forProjectAction(((JsonPrimitive)o).getAsString()).context();
+            } else {
+                throw new IllegalArgumentException("String, structure, or null expected as parameter #2, got " + o);
             }
-            ctx = ProjectActionContext.newBuilder(p).forProjectAction(((JsonPrimitive)o).getAsString()).context();
+            
         }
         if (arguments.size() > 2) {
             // 3rd parameter is the type of artifact
             Object o = arguments.get(2);
             if (!(o instanceof JsonPrimitive)) {
-                throw new IllegalArgumentException("String or null expected as parameter #2, got " + o);
+                throw new IllegalArgumentException("String or null expected as parameter #3, got " + o);
             }
             artifactType = ((JsonPrimitive)o).getAsString();
         }
-        ProjectArtifactsQuery.Filter filter = ProjectArtifactsQuery.newQuery(artifactType, null, ctx);
+        ProjectArtifactsQuery.Filter filter = ProjectArtifactsQuery.newQuery(artifactType, classifier, ctx, tags);
         CompletableFuture result = new CompletableFuture();
         METADATA_PROCESSOR.post(() -> {
             try {

@@ -211,7 +211,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
-                if (ctx.FRAGMENT() == null) {
+                if ((ctx.FRAGMENT() == null) && (ctx.TOKEN_REF() != null)) {
                     // Do not represent fragments in the structure
                     AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.TOKEN_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                     lexerStructure.add(rule);
@@ -220,8 +220,10 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
-                AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.RULE_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-                structure.add(rule);
+                if (ctx.RULE_REF() != null) {
+                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.RULE_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    structure.add(rule);
+                }
             }
 
             @Override

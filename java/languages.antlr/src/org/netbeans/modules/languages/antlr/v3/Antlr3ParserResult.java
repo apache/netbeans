@@ -137,8 +137,11 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
 
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
-                AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.id_().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-                structure.add(rule);
+                if (ctx.id_() != null) {
+                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(
+                            ctx.id_().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    structure.add(rule);
+                }
             }
 
         };

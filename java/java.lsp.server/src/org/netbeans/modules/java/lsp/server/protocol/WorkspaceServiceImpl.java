@@ -609,6 +609,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                             }
                         }
                     });
+                    locations = locs.toArray(new URL[0]);
                 } else if (o instanceof JsonPrimitive) {
                     String s = ((JsonPrimitive)o).getAsString();
                     try {

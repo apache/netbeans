@@ -26,6 +26,23 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change id="add-actions-keyStrokeToString">
+        <api name="awt"/>
+        <summary>Add Actions.keyStrokeToString utility method.</summary>
+        <version major="7" minor="88"/>
+        <date day="25" month="3" year="2023"/>
+        <author login="ebakke"/>
+        <compatibility binary="compatible" semantic="compatible" source="compatible" addition="yes" deprecation="no" deletion="no"/>
+        <description>
+            <p>The Actions.keyStrokeToString method has been added as a public API, to avoid
+               duplication of the same logic in the editor.lib module. This method has identical
+               semantics to the existing org.netbeans.editor.Utilities.Actions.keyStrokeToString
+               method (which now delegates to the new Actions.keyStrokeToString), but is available
+               without depending on the editor infrastructure.
+            </p>
+        </description>
+        <class name="Actions" package="org.openide.awt"/>
+    </change>
     <change id="configureDefaultRenderingHints">
         <api name="awt"/>
         <summary>Added GraphicsUtils.configureDefaultRenderingHints(Graphics).</summary>

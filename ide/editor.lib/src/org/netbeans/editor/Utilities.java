@@ -83,6 +83,7 @@ import org.netbeans.modules.editor.lib.BeforeSaveTasks;
 import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.view.DocumentView;
 import org.netbeans.modules.editor.lib2.view.EditorView;
+import org.openide.awt.Actions;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
@@ -1292,47 +1293,14 @@ public class Utilities {
 
     /**
      * Creates nice textual representation of KeyStroke.
-     * Modifiers and an actual key label are concated by plus signs
+     * Modifiers and an actual key label are concated per the platform-specific convention
      * @param stroke the KeyStroke to get description of
      * @return String describing the KeyStroke
      */
     public static String keyStrokeToString( KeyStroke stroke ) {
-        String modifText = KeyEvent.getKeyModifiersText( stroke.getModifiers() );
-        String keyText = (stroke.getKeyCode() == KeyEvent.VK_UNDEFINED) ? 
-            String.valueOf(stroke.getKeyChar()) : getKeyText(stroke.getKeyCode());
-        if( modifText.length() > 0 ) return modifText + '+' + keyText;
-        else return keyText;
-    }
-    
-    /** @return slight modification of what KeyEvent.getKeyText() returns.
-     *  The numpad Left, Right, Down, Up get extra result.
-     */
-    private static String getKeyText(int keyCode) {
-        String ret = KeyEvent.getKeyText(keyCode);
-        if (ret != null) {
-            switch (keyCode) {
-                case KeyEvent.VK_KP_DOWN:
-                    ret = prefixNumpad(ret, KeyEvent.VK_DOWN);
-                    break;
-                case KeyEvent.VK_KP_LEFT:
-                    ret = prefixNumpad(ret, KeyEvent.VK_LEFT);
-                    break;
-                case KeyEvent.VK_KP_RIGHT:
-                    ret = prefixNumpad(ret, KeyEvent.VK_RIGHT);
-                    break;
-                case KeyEvent.VK_KP_UP:
-                    ret = prefixNumpad(ret, KeyEvent.VK_UP);
-                    break;
-            }
-        }
-        return ret;
-    }
-    
-    private static String prefixNumpad(String key, int testKeyCode) {
-        if (key.equals(KeyEvent.getKeyText(testKeyCode))) {
-            key = NbBundle.getBundle(BaseKit.class).getString("key-prefix-numpad") + key;
-        }
-        return key;
+        /* The related logic has now been moved into org.openide.awt.Actions, so that it can be used
+        by modules that do not depend on the editor infrastructure. */
+        return Actions.keyStrokeToString(stroke);
     }
 
     private static void checkOffsetValid(Document doc, int offset) throws BadLocationException {

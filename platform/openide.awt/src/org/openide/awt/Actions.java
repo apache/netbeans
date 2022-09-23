@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -128,25 +129,100 @@ public class Actions {
             return null;
         }
 
-        KeyStroke accelerator = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+        KeyStroke stroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
 
-        if (accelerator == null) {
+        if (stroke == null) {
             return null;
         }
 
-        int modifiers = accelerator.getModifiers();
-        String acceleratorText = ""; // NOI18N
+        return keyStrokeToString(stroke);
+    }
 
-        if (modifiers > 0) {
-            acceleratorText = KeyEvent.getKeyModifiersText(modifiers);
-            acceleratorText += "+"; // NOI18N
-        } else if (accelerator.getKeyCode() == KeyEvent.VK_UNDEFINED) {
-            return ""; // NOI18N
+    // Based on com.formdev.flatlaf.FlatMenuItemRenderer.getMacOSModifiersExText
+    private static String getMacOSModifiersExText(int modifiersEx) {
+        /* Use the proper MacOS convention, which uses single-character modifier symbols, in the
+        order below, without "+" or space separators. */
+        StringBuilder buf = new StringBuilder();
+        if ((modifiersEx & InputEvent.CTRL_DOWN_MASK) != 0) {
+            buf.append('\u2303'); // MacOS "control key" symbol.
         }
+        if ((modifiersEx & (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK)) != 0) {
+            buf.append('\u2325'); // MacOS "option key" symbol.
+        }
+        if ((modifiersEx & InputEvent.SHIFT_DOWN_MASK) != 0) {
+            buf.append('\u21E7'); // MacOS "shift key" symbol.
+        }
+        if ((modifiersEx & InputEvent.META_DOWN_MASK) != 0) {
+            buf.append('\u2318'); // MacOS "command key" symbol.
+        }
+        return buf.toString();
+    }
 
-        acceleratorText += KeyEvent.getKeyText(accelerator.getKeyCode());
+    /**
+     * Creates nice textual representation of KeyStroke.
+     * Modifiers and an actual key label are concated per the platform-specific convention
+     * @param stroke the KeyStroke to get description of
+     * @return String describing the KeyStroke
+     */
+    public static String keyStrokeToString( KeyStroke stroke ) {
+        boolean macOS = Utilities.isMac();
+        String modifText = macOS
+                ? getMacOSModifiersExText(stroke.getModifiers())
+                : InputEvent.getModifiersExText(stroke.getModifiers());
+        String keyText = (stroke.getKeyCode() == KeyEvent.VK_UNDEFINED) ?
+            String.valueOf(stroke.getKeyChar()) : getKeyText(stroke.getKeyCode());
+        if (!modifText.isEmpty()) {
+            if (macOS) {
+                return modifText + keyText;
+            } else {
+                return modifText + '+' + keyText;
+            }
+        } else {
+            return keyText;
+        }
+    }
 
-        return acceleratorText;
+    /** @return slight modification of what KeyEvent.getKeyText() returns.
+     *  The numpad Left, Right, Down, Up get extra result.
+     */
+    private static String getKeyText(int keyCode) {
+        String ret = KeyEvent.getKeyText(keyCode);
+        if (ret != null) {
+            switch (keyCode) {
+                case KeyEvent.VK_KP_DOWN:
+                    ret = prefixNumpad(ret, KeyEvent.VK_DOWN);
+                    break;
+                case KeyEvent.VK_KP_LEFT:
+                    ret = prefixNumpad(ret, KeyEvent.VK_LEFT);
+                    break;
+                case KeyEvent.VK_KP_RIGHT:
+                    ret = prefixNumpad(ret, KeyEvent.VK_RIGHT);
+                    break;
+                case KeyEvent.VK_KP_UP:
+                    ret = prefixNumpad(ret, KeyEvent.VK_UP);
+                    break;
+            }
+        }
+        return ret;
+    }
+
+    private static String prefixNumpad(String key, int nonNumpadCode) {
+        final String REPLACABLE_PREFIX = "KP_";
+        final String usePrefix = NbBundle.getMessage(Actions.class, "key-prefix-numpad");
+        final String nonNumpadName = KeyEvent.getKeyText(nonNumpadCode);
+        if (key.equals(nonNumpadName)) {
+            /* AWT's name for the key does not distinguish the numpad vs. non-numpad version of the
+            key; add our "Numpad-" prefix. */
+            return usePrefix + key;
+        } else if (key.startsWith(REPLACABLE_PREFIX)) {
+            /* AWT's name for the numpad key uses the somewhat confusing "KP_" prefix (e.g.
+            "KP_LEFT"); use our own preferred prefix instead (e.g. "Numpad-LEFT"). */
+            return usePrefix + key.substring(REPLACABLE_PREFIX.length());
+        } else {
+            /* AWT is using some other convention to disambiguate the numpad vs. non-numpad version
+            of the key. Use AWT's name in this case. */
+            return key;
+        }
     }
 
     /** Attaches menu item to an action.

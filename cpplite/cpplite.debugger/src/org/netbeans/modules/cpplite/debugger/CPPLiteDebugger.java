@@ -388,7 +388,7 @@ public final class CPPLiteDebugger {
             return ;
         }
         breakpointsHandler.dispose();
-        if (sendExit) {
+        if (sendExit && proxy != null) {
             proxy.send(new Command("-gdb-exit"));
         }
         Utils.unmarkCurrent ();

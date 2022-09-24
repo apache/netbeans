@@ -64,16 +64,17 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
             new ContextAccessor() {
                 @Override
                 public Context newContext(
-                    ClassLoader loader, URL url, String[] techIds,
+                    ClassLoader loader, URL url, String[] resources, String[] techIds,
                     OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<Lookup> onPageLoad,
                     Class<?> component
                 ) {
-                    return new Context(loader, url, techIds, onSubmit, lifeCycleCallback, onPageLoad, component);
+                    return new Context(loader, url, resources, techIds, onSubmit, lifeCycleCallback, onPageLoad, component);
                 }
             };
         }
         private final ClassLoader loader;
         private final URL url;
+        private final String[] resources;
         private final String[] techIds;
         private final OnSubmit onSubmit;
         private final Consumer<String> lifeCycleCallback;
@@ -81,12 +82,13 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
         private final Class<?> component;
 
         private Context(
-            ClassLoader loader, URL url, String[] techIds,
+            ClassLoader loader, URL url, String[] resources, String[] techIds,
             OnSubmit onSubmit, Consumer<String> lifeCycleCallback,
             Callable<Lookup> onPageLoad, Class<?> component
         ) {
             this.loader = loader;
             this.url = url;
+            this.resources = resources;
             this.techIds = techIds;
             this.onSubmit = onSubmit;
             this.lifeCycleCallback = lifeCycleCallback;
@@ -188,6 +190,16 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
          */
         public ClassLoader getClassLoader() {
             return loader;
+        }
+
+        /** List of resources available to the page. Resources are at the same relative
+         * locations like the page.
+         *
+         * @return resources used in the page displayed by the HTML user interface
+         * @since 1.25
+         */
+        public String[] getResources() {
+            return resources.clone();
         }
 
         /** Set of technologies to prefer.

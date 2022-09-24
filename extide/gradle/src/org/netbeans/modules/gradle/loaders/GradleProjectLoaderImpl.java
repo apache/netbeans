@@ -88,7 +88,8 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     ret = loader.load();
                     LOGGER.log(Level.FINER, "Loaded with loader {0} -> {1}", new Object[] { loader, ret });
                 }
-                if (ret != null) {
+                if ((ret != null) && ret.getQuality().atLeast(aim)) {
+                    // We have the quality we are looking for, let's be happy with that
                     break;
                 }
             } else {

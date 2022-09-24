@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.86
+#Version 7.87
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1795,6 +1795,7 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
 innr public final static PasswordLine
 innr public final static QuickPick

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.57
+#Version 1.58
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -967,6 +967,7 @@ meth public org.netbeans.modules.j2ee.deployment.plugins.spi.ServerInstanceDescr
 meth public org.netbeans.modules.j2ee.deployment.plugins.spi.StartServer getStartServer(javax.enterprise.deploy.spi.DeploymentManager)
 meth public org.openide.WizardDescriptor$InstantiatingIterator getAddInstanceIterator()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe6()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe7()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe9()

@@ -101,7 +101,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-import junit.framework.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.AbstractLookup;
@@ -542,7 +541,7 @@ public class UtilitiesTest extends NbTestCase {
             InstanceContent.Convertor<Boolean, JSeparator> separatorConvertor = new InstanceContent.Convertor<Boolean, JSeparator>() {
 
                 public JSeparator convert(Boolean obj) {
-                    Assert.fail("should not be creating the JSeparator yet");
+                    fail("should not be creating the JSeparator yet");
                     return new JSeparator();
                 }
 

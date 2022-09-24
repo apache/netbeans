@@ -67,6 +67,9 @@ public final class DebugConnector {
     @NonNull
     private List<String> descriptions;
 
+    public DebugConnector() {
+    }
+
     public DebugConnector(String id, String name, String type, List<String> arguments, List<String> defaultValues, List<String> descriptions) {
         this.id = id;
         this.name = name;

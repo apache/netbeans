@@ -187,7 +187,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         return "null";
     }
 
-    @HTMLDialog(url = "ui/ChangeMethodParameters.html")
+    @HTMLDialog(url = "ui/ChangeMethodParameters.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showChangeMethodParametersUI(
         CompilationController ci,
         NbCodeLanguageClient client,

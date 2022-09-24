@@ -54,13 +54,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.Protectable;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestResult;
+import org.junit.Assert;
 import org.netbeans.junit.internal.NbModuleLogHandler;
 
 /**

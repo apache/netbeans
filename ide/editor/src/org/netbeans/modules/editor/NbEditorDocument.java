@@ -130,7 +130,6 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
                 return null;
             }
         });
-        putProperty("Issue-222763-debug", new Exception()); // Issue #222763 debugging - to be removed soon
     }
 
     public @Override int getShiftWidth() {

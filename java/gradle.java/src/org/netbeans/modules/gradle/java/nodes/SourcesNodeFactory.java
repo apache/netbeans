@@ -20,11 +20,14 @@
 package org.netbeans.modules.gradle.java.nodes;
 
 import java.awt.Image;
+import java.beans.PropertyChangeListener;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -49,6 +52,7 @@ import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -58,7 +62,8 @@ import org.openide.util.RequestProcessor;
 public final class SourcesNodeFactory implements NodeFactory {
 
     private static final String WARNING_BADGE = "org/netbeans/modules/gradle/resources/warning-badge.png"; //NOI18N
-    
+
+
     @Override
     public NodeList<?> createNodes(Project project) {
         return new NList(project);
@@ -67,8 +72,21 @@ public final class SourcesNodeFactory implements NodeFactory {
     private static class NList extends AbstractGradleNodeList<SourceGroup> implements ChangeListener {
         private static final RequestProcessor RP = new RequestProcessor(SourcesNodeFactory.NList.class);
         private final Project project;
+
+        private List<SourceGroup> generatedGroups = Collections.emptyList();
+        private final PropertyChangeListener pcl = (evt) -> {
+            if (NbGradleProject.PROP_RESOURCES.equals(evt.getPropertyName())) {
+                String path = ((URI) evt.getNewValue()).getPath();
+                for (SourceGroup group : generatedGroups) {
+                    if (path.startsWith(group.getRootFolder().toURI().getPath())) {
+                        RP.post(this::fireChange);
+                    }
+                }
+            }
+        };
         private NList(Project prj) {
             project = prj;
+            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, this));
         }
         
         @Override
@@ -79,7 +97,9 @@ public final class SourcesNodeFactory implements NodeFactory {
             ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
             ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_KOTLIN)));
             ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES)));
-            ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GENERATED)));
+            List<SourceGroup> generated = Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GENERATED));
+            ret.addAll(generated);
+            generatedGroups = generated;
             ret.sort(Comparator.comparing(SourceGroup::getName));
             return ret;
         }
@@ -95,6 +115,10 @@ public final class SourcesNodeFactory implements NodeFactory {
             if (owner == null) {
                 //#152418 if project for folder is not found, just look the other way..
                 Logger.getLogger(SourcesNodeFactory.class.getName()).log(Level.INFO, "Cannot find a project owner for folder {0}", group.getRootFolder()); //NOI18N
+                return null;
+            }
+            // Do not display empty Generated SourceGroups
+            if (generatedGroups.contains(group) && (group.getRootFolder() != null) && group.getRootFolder().getChildren().length == 0) {
                 return null;
             }
             String name = group.getName();

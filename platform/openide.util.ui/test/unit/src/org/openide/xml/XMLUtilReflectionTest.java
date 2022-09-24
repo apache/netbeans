@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.xml.sax.InputSource;

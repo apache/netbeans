@@ -83,6 +83,37 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="project-action-context">
+            <api name="general"/>
+            <summary>Added <code>ProjectActionContext</code> that can pass action-like environment to project queries</summary>
+            <version major="1" minor="89"/>
+            <date day="10" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/api/project/ProjectActionContext.html">ProjectActionContext</a></code> can be used
+                    to inform various project queries about the intended action or environment for which the value is requested. This
+                    contract is optional for query implementors.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectActionContext"/>
+        </change>
+        <change id="active-configuration-getset">
+            <api name="general"/>
+            <summary>Added <code>ProjectUtils.get/setActiveConfiguration</code> convenience methods</summary>
+            <version major="1" minor="89"/>
+            <date day="10" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Clients do not need to interact with Project's Lookup and <a href="@TOP@/org/netbeans/spi/project/ProjectConfigurationProvider.html">ProjectConfigurationProvider</a> directly,
+                    handling missing provider and mutex; they can use the convenience API method.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectUtils"/>
+        </change>
         <change id="project-priming-action">
             <api name="general"/>
             <summary>Added <code>ActionProvider.COMMAND_PRIME</code> that initializes the project for IDE use.</summary>

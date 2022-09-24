@@ -1178,6 +1178,8 @@ fld public final static int OS_UNIX_MASK = 1709048
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
+fld public final static int OS_WIN95 = 2
+fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
  anno 0 java.lang.Deprecated()
 fld public final static int OS_WINNT = 1

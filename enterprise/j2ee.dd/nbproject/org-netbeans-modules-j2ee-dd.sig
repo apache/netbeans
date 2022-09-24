@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56.0
+#Version 1.57.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -179,6 +179,7 @@ fld public final static java.lang.String VERSION_5_0 = "5"
 fld public final static java.lang.String VERSION_6_0 = "6"
 fld public final static java.lang.String VERSION_7_0 = "7"
 fld public final static java.lang.String VERSION_8_0 = "8"
+fld public final static java.lang.String VERSION_9_0 = "9"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract int addEjbRef(org.netbeans.modules.j2ee.dd.api.common.EjbRef)
 meth public abstract int addEnvEntry(org.netbeans.modules.j2ee.dd.api.common.EnvEntry)

@@ -515,7 +515,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
             return false;
         }
         TextSync last = removed.get(removed.size()-1).activeTextSync();
-        return last.isCaretMarker() && last.isCompletionInvoke();
+        return last != null && last.isCaretMarker() && last.isCompletionInvoke();
     }
 
     void release() {

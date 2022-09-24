@@ -21,7 +21,7 @@ package org.netbeans.core.startup;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 

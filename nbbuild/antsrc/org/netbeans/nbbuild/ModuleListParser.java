@@ -47,6 +47,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
+import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathExpression;
@@ -563,9 +564,14 @@ final class ModuleListParser {
         "modules",
         "modules/eager",
         "modules/autoload",
-        "lib",
         "core",
     };
+
+    private static final String[] PLATFORM_MODULE_DIRS = {
+        "lib",
+        "agent",
+    };
+
     /**
      * Look for all possible modules in a NB build.
      * Checks modules/{,autoload/,eager/}*.jar as well as well-known core/*.jar and lib/boot.jar in each cluster.
@@ -573,10 +579,11 @@ final class ModuleListParser {
      */
     private static void doScanBinaries(File cluster, Map<String,Entry> entries) throws IOException {
         File moduleAutoDepsDir = new File(new File(cluster, "config"), "ModuleAutoDeps");
-            for (String moduleDir : MODULE_DIRS) {
-                if (moduleDir.endsWith("lib") && !cluster.getName().contains("platform")) {
-                    continue;
-                }
+        Stream<String> allModuleDirs = Stream.of(MODULE_DIRS);
+        if (cluster.getName().contains("platform")) {
+            allModuleDirs = Stream.concat(allModuleDirs, Stream.of(PLATFORM_MODULE_DIRS));
+        }
+            for (String moduleDir : allModuleDirs.toArray(s -> new String[s])) {
                 File dir = new File(cluster, moduleDir.replace('/', File.separatorChar));
                 if (!dir.isDirectory()) {
                     continue;

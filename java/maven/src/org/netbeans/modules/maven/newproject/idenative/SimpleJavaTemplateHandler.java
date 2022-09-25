@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.newproject.idenative;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import javax.xml.namespace.QName;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -29,7 +30,13 @@ import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
 import org.netbeans.modules.maven.classpath.AbstractBootPathImpl;
 import org.netbeans.modules.maven.model.ModelOperation;
+import org.netbeans.modules.maven.model.pom.Build;
+import org.netbeans.modules.maven.model.pom.Configuration;
+import org.netbeans.modules.maven.model.pom.Dependency;
+import org.netbeans.modules.maven.model.pom.POMComponentFactory;
+import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.Project;
 import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.modules.maven.options.MavenSettings;
@@ -77,20 +84,61 @@ public class SimpleJavaTemplateHandler extends IDENativeTemplateHandler {
                             }
                         }
                         if (setLevel) {
-                            Project root = model.getProject();
-                            if (root != null) {
-                                Properties props = root.getProperties();
-                                if (props == null) {
-                                    props = model.getFactory().createProperties();
-                                    root.setProperties(props);
-                                }
-                                JavaPlatform active = AbstractBootPathImpl.getActivePlatform(MavenSettings.getDefault().getDefaultJdk());
-                                if (active == null) {
-                                    active = JavaPlatformManager.getDefault().getDefaultPlatform();
-                                }
-                                String version = active.getSpecification().getVersion().toString();
-                                props.setProperty("maven.compiler.source", version);
-                                props.setProperty("maven.compiler.target", version);
+                            final String targetVersion = "1.8";
+                            final String sourceVersion = "19";
+                            final String compilerVersion = sourceVersion + ".0.0";
+
+                            final Project root = model.getProject();
+                            final POMComponentFactory factory = model.getFactory();
+                            Build build = root.getBuild();
+                            if (build == null) {
+                                build = factory.createBuild();
+                                model.getProject().setBuild(build);
+                            }
+                            {
+                                Plugin compiler = factory.createPlugin();
+                                compiler.setGroupId("org.apache.maven.plugins");
+                                compiler.setArtifactId("maven-compiler-plugin");
+                                compiler.setVersion("3.8.1");
+
+                                final Dependency dep = factory.createDependency();
+                                dep.setGroupId("org.frgaal");
+                                dep.setArtifactId("compiler-maven-plugin");
+                                dep.setVersion(compilerVersion);
+                                compiler.addDependency(dep);
+
+                                Configuration config = factory.createConfiguration();
+                                config.setSimpleParameter("compilerId", "frgaal");
+                                config.setSimpleParameter("source", sourceVersion);
+                                config.setSimpleParameter("target", targetVersion);
+                                compiler.setConfiguration(config);
+                                build.addPlugin(compiler);
+                            }
+
+                            Properties props = root.getProperties();
+                            if (props == null) {
+                                props = model.getFactory().createProperties();
+                                root.setProperties(props);
+                            }
+                            props.setProperty("netbeans.compile.on.save", "none");
+
+                            {
+                                Plugin jar = factory.createPlugin();
+                                jar.setGroupId("org.apache.maven.plugins");
+                                jar.setArtifactId("maven-jar-plugin");
+                                jar.setVersion("3.2.0");
+                                Configuration config = factory.createConfiguration();
+
+                                POMExtensibilityElement archive = factory.createPOMExtensibilityElement(new QName("archive"));
+                                POMExtensibilityElement manifestEntries = factory.createPOMExtensibilityElement(new QName("manifestEntries"));
+                                POMExtensibilityElement multiRelease = factory.createPOMExtensibilityElement(new QName("Multi-Release"));
+                                multiRelease.setElementText("true");
+                                manifestEntries.addAnyElement(multiRelease, 0);
+                                archive.addAnyElement(manifestEntries, 0);
+                                config.addExtensibilityElement(archive);
+
+                                jar.setConfiguration(config);
+                                build.addPlugin(jar);
                             }
                         }
                     }

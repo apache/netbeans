@@ -59,6 +59,10 @@ public class CLILookupExecTest extends NbTestCase {
         System.setProperty("netbeans.dirs", cluster2.toString());
     }
     
+
+    protected void tearDown() throws Exception {
+    }
+    
     public void testModuleInAClusterCanBeFound() throws Exception {
         createJAR(home, "test-module-one", One.class);
         createJAR(cluster2, "test-module-two", Two.class);

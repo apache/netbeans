@@ -58,6 +58,7 @@ public class NbClipboardIsUsedBySwingComponentsTest extends NbTestCase {
         assertEquals ("Correct clipboard found", Clip.class, clip.getClass());
         this.clip = (Clip)clip;
 
+        inMiddleOfSettingUpTheManager();
         TrackingHooks.register(new TrackingHooks() {
             @Override
             protected Clipboard getClipboard() {

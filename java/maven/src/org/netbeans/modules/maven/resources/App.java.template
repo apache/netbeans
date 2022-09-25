@@ -12,8 +12,17 @@ package ${package};
  * @author ${user}
  */
 public class ${name} {
+    record Hello(String msg, String who) {
+        String message() {
+            return """
+            Enjoy latest Java features provided by NetBeans! And...
+            {msg} {who}!
+            """.replace("{msg}", msg).replace("{who}", who);
+        }
+    }
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        var world = new Hello("Hello", "World");
+        System.out.println(world.message());
     }
 }

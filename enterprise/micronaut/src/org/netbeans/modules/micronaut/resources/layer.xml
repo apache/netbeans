@@ -59,6 +59,14 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="LifecycleParticipants">
+                <folder name="org.graalvm.buildtools.maven.NativeExtension">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+                <folder name="io.micronaut.build.testresources.TestResourcesLifecycleExtension">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+            </folder>
         </folder>
     </folder>
     <folder name="Templates">

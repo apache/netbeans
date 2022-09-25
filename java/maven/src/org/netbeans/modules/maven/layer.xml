@@ -170,6 +170,12 @@
                     <attr name="position" intvalue="3200"/>
                 </file>
             </folder>
+            <folder name="LifecycleParticipants">
+                <!-- Lifecycle participant classes with special handling; folders with attributes -->
+                <folder name="org.sonatype.nexus.maven.staging.deploy.DeployLifecycleParticipant">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+            </folder>
             <file name="nbactions.xml" url="nbactions.xml"/>
         </folder>
     </folder>

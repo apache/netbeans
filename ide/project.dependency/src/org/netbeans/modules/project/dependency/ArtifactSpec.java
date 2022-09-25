@@ -22,7 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.NonNull;
@@ -45,10 +48,58 @@ import org.openide.filesystems.URLMapper;
  * The version specified is further classified by {@link VersionKind}, to 
  * distinguish versions possibly from repositories, development versions and
  * floating versions.
+ * <p>
+ * The ArtifactSpec may provide additional tags, that can further describe the artifact,
+ * but those tags are not part of "identity" of the artifact, for dependencies or build
+ * systems, only 
+ * <ul>
+ * <li>group
+ * <li>artifact
+ * <li>version
+ * <li>classifier
+ * <Li>extension
+ * </ul>
+ * are important.
  * 
  * @author sdedic
  */
 public final class ArtifactSpec<T> {
+    
+    /**
+     * A tag for an artifact with basic output of the project's code/contents.
+     * You almost never want this, usually you want {@code null} classifier to 
+     * identify the <b>default</b> output. But in rare cases you really do want
+     * to avoid post-processing or shading, this (abstract) classifier should
+     * identify an artifact before those steps.
+     * <p>
+     * If used in a query, a non-tagged artifact may be returned if the implementation
+     * does not support the tag.
+     */
+    public static final String TAG_BASE = "<basic>"; // NOI18N
+    
+    /**
+     * Tag for an artifact, that eventually contains dependencies bundled in. If used
+     * in a query, an ordinary (non-tagged) artifact may be returned from the query in case
+     * the implementation does not support the tag. Implementations may use additional, more
+     * specific tags on the returned artifacts.
+     */
+    public static final String TAG_SHADED = "<shaded>";
+
+    /**
+     * Classifier for an artifact that contains sources.
+     */
+    public static final String CLASSIFIER_SOURCES = "sources"; // NOI18N
+
+    /**
+     * Classifier for an artifact that contains test code
+     */
+    public static final String CLASSIFIER_TESTS = "tests"; // NOI18N
+
+    /**
+     * Classifier for an artifact that contains test sources.
+     */
+    public static final String CLASSIFIER_TEST_SOURCES = "test-sources"; // NOI18N
+    
     static final Logger LOG = Logger.getLogger(ProjectDependencies.class.getName());
     
     /**
@@ -74,10 +125,14 @@ public final class ArtifactSpec<T> {
     private final String classifier;
     private final boolean optional;
     private final URI location;
+    
+    // note: tags is NOT a part of hascode / equals, as externally only the classifier
+    // is visible, e.g. to the build system.
+    private final Set<String> tags;
     private FileObject localFile;
     final T data;
 
-    ArtifactSpec(VersionKind kind, String groupId, String artifactId, String versionSpec, String type, String classifier, boolean optional, URI location, FileObject localFile, T impl) {
+    ArtifactSpec(VersionKind kind, String groupId, String artifactId, String versionSpec, String type, String classifier, boolean optional, URI location, FileObject localFile, Set<String> tags, T impl) {
         this.kind = kind;
         this.groupId = groupId;
         this.artifactId = artifactId;
@@ -88,6 +143,7 @@ public final class ArtifactSpec<T> {
         this.type = type;
         this.location = location;
         this.localFile = localFile;
+        this.tags = tags == null ? Collections.emptySet() : tags;
     }
 
     public T getData() {
@@ -119,6 +175,10 @@ public final class ArtifactSpec<T> {
             }
         }
         return f == FileUtil.getConfigRoot() ? null : f;
+    }
+    
+    public boolean hasTag(String tag) {
+        return tags.contains(tag);
     }
 
     public URI getLocation() {
@@ -238,23 +298,25 @@ public final class ArtifactSpec<T> {
                 // should not happen
             }
         }
-        return new ArtifactSpec<V>(VersionKind.REGULAR, groupId, artifactId, versionSpec, type, classifier, optional, uri, localFile, data);
+        return new ArtifactSpec<V>(VersionKind.REGULAR, groupId, artifactId, versionSpec, type, classifier, optional, uri, localFile, Collections.emptySet(), data);
     }
 
     public static <V> ArtifactSpec<V> createSnapshotSpec(
             @NonNull String groupId, @NonNull String artifactId, 
             @NullAllowed String type, @NullAllowed String classifier, 
             @NonNull String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
-        URL u = URLMapper.findURL(localFile, URLMapper.EXTERNAL);
         URI uri = null;
-        if (u != null) {
-            try {
-                uri = u.toURI();
-            } catch (URISyntaxException ex) {
-                // should not happen
+        if (localFile != null) {
+            URL u = URLMapper.findURL(localFile, URLMapper.EXTERNAL);
+            if (u != null) {
+                try {
+                    uri = u.toURI();
+                } catch (URISyntaxException ex) {
+                    // should not happen
+                }
             }
         }
-        return new ArtifactSpec<V>(VersionKind.SNAPSHOT, groupId, artifactId, versionSpec, type, classifier, optional, uri, localFile, data);
+        return new ArtifactSpec<V>(VersionKind.SNAPSHOT, groupId, artifactId, versionSpec, type, classifier, optional, uri, localFile, Collections.emptySet(), data);
     }
     
     public static final <T> Builder<T> builder(String group, String artifact, String version, T projectData) {
@@ -272,6 +334,7 @@ public final class ArtifactSpec<T> {
         private boolean optional;
         private FileObject localFile;
         private URI location;
+        private Set<String> tags;
         
         public Builder(String groupId, String artifactId, String versionSpec, T data) {
             this.groupId = groupId;
@@ -299,6 +362,25 @@ public final class ArtifactSpec<T> {
             this.localFile = localFile;
             return this;
         }
+        
+        public Builder tag(String tag) {
+            if (tags == null) {
+                tags = new HashSet<>();
+            }
+            tags.add(tag);
+            return this;
+        }
+        
+        public Builder tags(String... tags) {
+            if (tags == null || tags.length == 0) {
+                return this;
+            } else {
+                for (String t : tags) {
+                    tag(t);
+                }
+                return this;
+            }
+        }
 
         /**
          * Forces the local file reference. Unlike {@link #localFile}, if {@code null} is
@@ -319,7 +401,7 @@ public final class ArtifactSpec<T> {
         }
         
         public ArtifactSpec build() {
-            return new ArtifactSpec(kind, groupId, artifactId, versionSpec, type, classifier, optional, location, localFile, data);
+            return new ArtifactSpec(kind, groupId, artifactId, versionSpec, type, classifier, optional, location, localFile, tags, data);
         }
     }
 }

@@ -1083,7 +1083,7 @@ public class Utilities {
             final JavaPlatformManager man = JavaPlatformManager.getDefault();
             if (select.getSpecification().getVersion() != null) {
                 for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                    if (!"j2se".equals(p.getSpecification().getName()) || p.getSpecification().getVersion() == null) continue;
+                    if (!p.isValid() || !"j2se".equals(p.getSpecification().getName()) || p.getSpecification().getVersion() == null) continue;
                     if (p.getSpecification().getVersion().compareTo(select.getSpecification().getVersion()) > 0) {
                         select = p;
                     }

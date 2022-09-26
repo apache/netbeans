@@ -386,16 +386,10 @@ public class HtmlCompletionProvider implements CompletionProvider {
                             } else {
                                 ts.move(dotPos - 1);
                                 if (ts.moveNext() || ts.movePrevious()) {
-                                    if (!CharSequenceUtilities.equals("/>", ts.token().text()) && null != LexerUtils.followsToken(ts, HTMLTokenId.TAG_OPEN, true, false,
-                                            HTMLTokenId.ARGUMENT,
-                                            HTMLTokenId.VALUE,
-                                            HTMLTokenId.VALUE_CSS,
-                                            HTMLTokenId.VALUE_JAVASCRIPT,
-                                            HTMLTokenId.OPERATOR,
+                                    if (!CharSequenceUtilities.equals("/>", ts.token().text()) &&
+                                        null == LexerUtils.followsToken(ts, HTMLTokenId.TAG_CLOSE, true, false,
                                             HTMLTokenId.WS,
-                                            HTMLTokenId.EL_CLOSE_DELIMITER,
-                                            HTMLTokenId.EL_CONTENT,
-                                            HTMLTokenId.EL_OPEN_DELIMITER)) {
+                                            HTMLTokenId.TAG_CLOSE_SYMBOL)) {
                                         ret[0] = true;
                                     }
                                 }

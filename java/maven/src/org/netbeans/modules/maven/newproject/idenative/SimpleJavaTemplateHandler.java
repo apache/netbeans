@@ -111,6 +111,11 @@ public class SimpleJavaTemplateHandler extends IDENativeTemplateHandler {
                                 config.setSimpleParameter("compilerId", "frgaal");
                                 config.setSimpleParameter("source", sourceVersion);
                                 config.setSimpleParameter("target", targetVersion);
+                                POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(new QName("compilerArgs"));
+                                POMExtensibilityElement arg = factory.createPOMExtensibilityElement(new QName("arg"));
+                                arg.setElementText("--enable-preview");
+                                compilerArgs.addExtensibilityElement(arg);
+                                config.addExtensibilityElement(compilerArgs);
                                 compiler.setConfiguration(config);
                                 build.addPlugin(compiler);
                             }

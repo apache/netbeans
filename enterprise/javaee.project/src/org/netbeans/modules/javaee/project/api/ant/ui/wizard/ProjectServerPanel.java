@@ -423,24 +423,26 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
         if (serverInstanceWrapper != null) {
             try {
                 J2eePlatform j2eePlatform = Deployment.getDefault().getServerInstance(serverInstanceWrapper.getServerInstanceID()).getJ2eePlatform();
-                Set<Profile> profiles = new TreeSet<Profile>(Profile.UI_COMPARATOR);
+                Set<Profile> profiles = new TreeSet<>(Profile.UI_COMPARATOR);
                 profiles.addAll(j2eePlatform.getSupportedProfiles(j2eeModuleType));
                 for (Profile profile : profiles) {
                     // j2ee 1.3 and 1.4 is not supported anymore
                     if (Profile.J2EE_13.equals(profile) || Profile.J2EE_14.equals(profile)) {
                         continue;
                     }
-                    if (j2eeModuleType ==J2eeModule.Type.WAR) {
-                        if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || 
-                                Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) || 
-                                Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_FULL.equals(profile)) {
+                    if (j2eeModuleType == J2eeModule.Type.WAR) {
+                        if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile)
+                                || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile)
+                                || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_FULL.equals(profile)
+                                || Profile.JAKARTA_EE_10_FULL.equals(profile)) {
                             // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
                             continue;
                         }
                     } else {
-                        if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || 
-                                Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile) || 
-                                Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)) {
+                        if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
+                                || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
+                                || Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
+                                || Profile.JAKARTA_EE_10_WEB.equals(profile)) {
                             // for EE apps always skip web profile
                             continue;
                         }

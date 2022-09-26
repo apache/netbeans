@@ -576,7 +576,9 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (ddRoot != null) {
                     Profile profile = webModule.getJ2eeProfile();
                     if (profile != null && profile.isAtLeast(Profile.JAVA_EE_5) && jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                        if (jsfVersion.isAtLeast(JSFVersion.JSF_4_0)) {
+                            facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_4_0;
+                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_3_0;
                         } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_3)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_3;

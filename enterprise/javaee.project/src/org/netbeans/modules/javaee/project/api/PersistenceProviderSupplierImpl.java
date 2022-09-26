@@ -81,7 +81,8 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
 
             boolean defaultFound = false; // see issue #225071
 
-            lessEE7 = !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)
+            lessEE7 = !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_FULL)
+                    && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)
                     && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_FULL)
                     && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_FULL) 
                     && !platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_WEB) && !platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_FULL) 

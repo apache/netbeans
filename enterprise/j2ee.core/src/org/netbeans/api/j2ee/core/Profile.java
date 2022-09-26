@@ -73,6 +73,10 @@ public final class Profile {
 
     public static final Profile JAKARTA_EE_9_1_FULL  = new Profile(15, "9.1", null, "JakartaEE91Full.displayName");
 
+    public static final Profile JAKARTA_EE_10_WEB  = new Profile(16, "10", "web", "JakartaEE10Web.displayName");
+
+    public static final Profile JAKARTA_EE_10_FULL  = new Profile(17, "10", null, "JakartaEE10Full.displayName");
+
     private final int order;
 
     // cache
@@ -182,6 +186,12 @@ public final class Profile {
         } else if (JAKARTA_EE_9_1_WEB.toPropertiesString().equals(valueMinusQuotes)
                 || "JAKARTA_EE_9_1_WEB".equals(value)) {
             return JAKARTA_EE_9_1_WEB;
+        } else if (JAKARTA_EE_10_FULL.toPropertiesString().equals(valueMinusQuotes)
+                || "JAKARTA_EE_10_FULL".equals(value)) {
+            return JAKARTA_EE_10_FULL;
+        } else if (JAKARTA_EE_10_WEB.toPropertiesString().equals(valueMinusQuotes)
+                || "JAKARTA_EE_10_WEB".equals(value)) {
+            return JAKARTA_EE_10_WEB;
         } else {
           return null;
         }

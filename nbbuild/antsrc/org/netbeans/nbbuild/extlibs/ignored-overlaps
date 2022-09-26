@@ -121,3 +121,6 @@ platform/o.apache.commons.lang3/external/commons-lang3-3.8.1.jar java/maven.embe
 
 # Used only in unittests for mysql db specific tests
 ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/external/mysql-connector-j-8.0.31.jar
+
+# Jakarta EE API doc is repackaged to align with old NetBeans format, embedded indexes are thus identically and can be ignored.
+enterprise/jakartaee10.platform/external/generated-jakarta.jakartaee-api-10.0.0-javadoc.jar enterprise/jakartaee10.platform/external/jakarta.jakartaee-api-10.0.0-javadoc.jar

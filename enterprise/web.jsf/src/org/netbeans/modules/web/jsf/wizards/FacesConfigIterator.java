@@ -187,7 +187,9 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         // not found on project classpath (case of Maven project with JSF in deps)
         if (jsfVersion == null) {
             Profile profile = wm.getJ2eeProfile();
-            if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_4_0;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_3_0;
             } else if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_2_3;
@@ -219,6 +221,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static String facesConfigForVersion(JSFVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_4_0:
+                return JSFCatalog.RES_FACES_CONFIG_4_0;
             case JSF_3_0:
                 return JSFCatalog.RES_FACES_CONFIG_3_0;
             case JSF_2_3:

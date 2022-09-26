@@ -19,7 +19,7 @@
 package org.netbeans.modules.j2ee.ddloaders.ejb;
 
 /**
- * Recognizes ejb-jar.xml for Jakarta EE 9/9.1, ejb-jar with version number 4.0.
+ * Recognizes ejb-jar.xml for Jakarta EE 9/9.1/10, ejb-jar with version number 4.0.
  * Needed for providing a different set of actions than for older versions 
  * of ejb-jar.xml.
  * See #76967.

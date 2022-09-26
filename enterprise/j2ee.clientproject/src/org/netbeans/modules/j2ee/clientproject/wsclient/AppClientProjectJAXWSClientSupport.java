@@ -114,6 +114,10 @@ public class AppClientProjectJAXWSClientSupport extends ProjectJAXWSClientSuppor
                 return JAKARTA_EE_VERSION_91;
             } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeClientModule.getJ2eeProfile())) {
                 return JAKARTA_EE_VERSION_91;
+            } else if (Profile.JAKARTA_EE_10_WEB.equals(j2eeClientModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_10;
+            } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeClientModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_10;
             } else if (Profile.JAVA_EE_5.equals(j2eeClientModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }

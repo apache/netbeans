@@ -780,6 +780,7 @@ meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory creat
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe8()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe9()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe91()
+meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe10()
 supr java.lang.Object
 hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,jakartaee91Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
 
@@ -972,6 +973,7 @@ meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory crea
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe9()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe91()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe10()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory
 hfds commonUtilities,df,hasWizard
 hcls J2eeInstantiatingIterator

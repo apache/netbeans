@@ -1195,6 +1195,7 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEV
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_1
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_10_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_7_0

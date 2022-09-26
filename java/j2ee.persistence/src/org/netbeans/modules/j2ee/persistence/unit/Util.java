@@ -26,6 +26,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.provider.Provider;
 import org.openide.filesystems.FileObject;
@@ -64,7 +65,7 @@ public class Util {
      * @param pu persistence unit that contains the properties
      * @return Array of property names
      */
-    public static ArrayList<String> getAvailPropNames(Provider propCat, PersistenceUnit pu) {
+    public static ArrayList<String> getAvailPropNames(Persistence persistence, Provider propCat, PersistenceUnit pu) {
 
         List<String> propsList = getPropsNamesExceptGeneral(propCat);
 
@@ -79,7 +80,10 @@ public class Util {
                     }
                 }
             }
-
+            if(Persistence.VERSION_3_1.equals(persistence.getVersion())
+                    || Persistence.VERSION_3_0.equals(persistence.getVersion())) {
+                availProps.replaceAll(s -> s.replace(PersistenceUnit.JAVAX_NAMESPACE, PersistenceUnit.JAKARTA_NAMESPACE));
+            }
             return availProps;
         }
 

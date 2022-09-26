@@ -288,7 +288,7 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
                 Node propertiesNode = persistenceUnitNode[i].getChildren().getNodes()[1];
                 Provider prov = persistenceUnits[i].getProvider()!=null ? ProviderUtil.getProvider(persistenceUnits[i]) : Util.getDefaultProvider(project);
                 pan[i].addSection(new SectionPanel(this, mainPUNode, mainPUNode.getDisplayName(), persistenceUnits[i], false, false));
-                pan[i].addSection(new SectionPanel(this, propertiesNode, propertiesNode.getDisplayName(), new PropertiesPanel.PropertiesParamHolder(persistenceUnits[i], prov), false, false));
+                pan[i].addSection(new SectionPanel(this, propertiesNode, propertiesNode.getDisplayName(), new PropertiesPanel.PropertiesParamHolder(persistence, persistenceUnits[i], prov), false, false));
             }        
             addSection(persistenceUnitsCont);
             setRoot(root);
@@ -404,12 +404,16 @@ public class PersistenceToolBarMVElement extends ToolBarMultiViewElement impleme
                 PersistenceUnit punit;
                 boolean useModelgen = false;
                 String modelGenLib = null;
-                if(Persistence.VERSION_2_2.equals(version))
-                {
+                if(Persistence.VERSION_3_1.equals(version)) {
+                    useModelgen = true;
+                    punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+                } else if(Persistence.VERSION_3_0.equals(version)) {
+                    useModelgen = true;
+                    punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+                } else if(Persistence.VERSION_2_2.equals(version)) {
                     useModelgen = true;
                     punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-                } else if(Persistence.VERSION_2_1.equals(version))
-                {
+                } else if(Persistence.VERSION_2_1.equals(version)) {
                     useModelgen = true;
                     punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
                 } else if(Persistence.VERSION_2_0.equals(version)) {

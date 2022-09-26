@@ -38,6 +38,7 @@ import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.EntityMappingsMetadata;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
+import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.editor.CompletionContext;
 import org.netbeans.modules.j2ee.persistence.editor.JPAEditorUtil;
 import org.netbeans.modules.j2ee.persistence.provider.Provider;
@@ -319,7 +320,8 @@ public abstract class PUCompletor {
             String itemTexts[] = keys.toArray(new String[]{});
             for (int i = 0; i < itemTexts.length; i++) {
                 if (itemTexts[i].startsWith(typedChars.trim())
-                        || itemTexts[i].startsWith("javax.persistence." + typedChars.trim())) { // NOI18N
+                        || itemTexts[i].startsWith(PersistenceUnit.JAVAX_NAMESPACE + typedChars.trim())
+                        || itemTexts[i].startsWith(PersistenceUnit.JAKARTA_NAMESPACE + typedChars.trim())) { // NOI18N
                     JPACompletionItem item = JPACompletionItem.createAttribValueItem(caretOffset - typedChars.length(),
                             itemTexts[i]);
                     results.add(item);

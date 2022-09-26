@@ -57,7 +57,7 @@ public class JPAParseUtils {
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {
             if ("persistence".equals(rawName)) { //NOI18N
                 String version = atts.getValue("version"); //NOI18N
-                throw new SAXException(ParseUtils.EXCEPTION_PREFIX+(version==null?Persistence.VERSION_2_2:version));
+                throw new SAXException(ParseUtils.EXCEPTION_PREFIX+(version==null?Persistence.VERSION_3_1:version));
             }
         }
 
@@ -70,7 +70,7 @@ public class JPAParseUtils {
         public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) throws SAXException {
             if ("persistence".equals(qName)) { //NOI18N
                 String version = attributes.getValue("version"); //NOI18N
-                throw new SAXException(ParseUtils.EXCEPTION_PREFIX+(version==null?Persistence.VERSION_2_2:version));
+                throw new SAXException(ParseUtils.EXCEPTION_PREFIX+(version==null?Persistence.VERSION_3_1:version));
             }
         }
 
@@ -91,11 +91,13 @@ public class JPAParseUtils {
         public InputSource resolveEntity(String publicId, String systemId) {
             // additional logging for #127276
             if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Resolving entity [publicId: '" + publicId + "', systemId: '" + systemId + "']");
+                LOGGER.log(Level.FINE, "Resolving entity [publicId: ''{0}'', systemId: ''{1}'']", new Object[]{publicId, systemId});
             }
             String resource=null;
             // return a proper input source
-            if (systemId!=null && systemId.endsWith("persistence_2_2.xsd")) {
+            if (systemId!=null && systemId.endsWith("persistence_3_0.xsd")) {
+                resource="/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_3_0.xsd"; //NOI18N
+            } else if (systemId!=null && systemId.endsWith("persistence_2_2.xsd")) {
                 resource="/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_2.xsd"; //NOI18N
                 LOGGER.log(Level.INFO, "Persistence2_2: " + resource);
             } else if (systemId!=null && systemId.endsWith("persistence_2_1.xsd")) {
@@ -107,7 +109,7 @@ public class JPAParseUtils {
             }
             // additional logging for #127276
             if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Got resource: " + resource);
+                LOGGER.log(Level.FINE, "Got resource: {0}", resource);
             }
             if (resource==null) {
                 return null;

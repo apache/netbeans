@@ -33,14 +33,16 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
 
-    private static String SOURCE_LEVEL = "19"; //NOI18N
-
     public JavaCompletionTask119FeaturesTest(String testName) {
         super(testName);
     }
 
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
+        if (!System.getProperty("java.version").startsWith("19")) {
+            suite.addTest(new JavaCompletionTask119FeaturesTest("noop"));
+            return suite;
+        }
         try {
             SourceVersion.valueOf("RELEASE_19"); //NOI18N
             suite.addTestSuite(JavaCompletionTask119FeaturesTest.class);

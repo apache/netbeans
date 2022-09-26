@@ -39,6 +39,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
             //OK, skip test
             return;
         }
+        if(!System.getProperty("java.version").startsWith("19")) return;
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
@@ -80,6 +81,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
             //OK, skip test
             return;
         }
+        if(!System.getProperty("java.version").startsWith("19")) return;
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft) {}\n"
@@ -121,6 +123,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
             //OK, skip test
             return;
         }
+        if(!System.getProperty("java.version").startsWith("19")) return;
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr,ColoredPoint ur) {}\n"

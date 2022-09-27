@@ -1824,7 +1824,7 @@ meth public static java.net.URL getPlatformBuilderConfig(org.netbeans.modules.pa
 meth public static org.netbeans.modules.payara.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static void destroyBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 supr java.lang.Object
-hfds CONFIG_V4,CONFIG_V5,builders,config
+hfds CONFIG_V4,CONFIG_V5,CONFIG_V6,builders,config
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigUtils
 cons public init()

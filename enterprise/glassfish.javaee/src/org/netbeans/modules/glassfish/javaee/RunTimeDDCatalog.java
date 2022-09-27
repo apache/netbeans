@@ -493,6 +493,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String APP_9= JAKARTAEE_NS+"/"+APP_9_XSD; // NOI18N
     public static final String APP_9_ID = "SCHEMA:"+APP_9; // NOI18N
     
+    private static final String APP_10_XSD="application_10.xsd"; // NOI18N
+    private static final String APP_10= JAKARTAEE_NS+"/"+APP_10_XSD; // NOI18N
+    public static final String APP_10_ID = "SCHEMA:"+APP_10; // NOI18N
+    
     private static final String APPCLIENT_TAG="application-client"; //NOI18N
     private static final String APPCLIENT_1_4_XSD="application-client_1_4.xsd"; // NOI18N
     private static final String APPCLIENT_1_4= J2EE_NS+"/"+APPCLIENT_1_4_XSD; // NOI18N
@@ -517,7 +521,11 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String APPCLIENT_9_XSD="application-client_9.xsd"; // NOI18N
     private static final String APPCLIENT_9= JAKARTAEE_NS+"/"+APPCLIENT_9_XSD; // NOI18N
     public static final String APPCLIENT_9_ID = "SCHEMA:"+APPCLIENT_9; // NOI18N
-    
+
+    private static final String APPCLIENT_10_XSD="application-client_10.xsd"; // NOI18N
+    private static final String APPCLIENT_10= JAKARTAEE_NS+"/"+APPCLIENT_10_XSD; // NOI18N
+    public static final String APPCLIENT_10_ID = "SCHEMA:"+APPCLIENT_10; // NOI18N
+
     private static final String WEBSERVICES_TAG="webservices"; //NOI18N
     private static final String WEBSERVICES_1_1_XSD="j2ee_web_services_1_1.xsd"; // NOI18N
     private static final String WEBSERVICES_1_1= IBM_J2EE_NS+"/"+WEBSERVICES_1_1_XSD; // NOI18N
@@ -611,6 +619,18 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBFRAGMENT_5_0_XSD="web-fragment_5_0.xsd"; // NOI18N
     private static final String WEBFRAGMENT_5_0 = JAKARTAEE_NS+"/"+WEBFRAGMENT_5_0_XSD; // NOI18N
     public static final String WEBFRAGMENT_5_0_ID = "SCHEMA:"+WEBFRAGMENT_5_0; // NOI18N
+
+    private static final String WEBAPP_6_0_XSD="web-app_6_0.xsd"; // NOI18N
+    private static final String WEBAPP_6_0 = JAKARTAEE_NS+"/"+WEBAPP_6_0_XSD; // NOI18N
+    public static final String WEBAPP_6_0_ID = "SCHEMA:"+WEBAPP_6_0; // NOI18N
+    
+    private static final String WEBCOMMON_6_0_XSD="web-common_6_0.xsd"; // NOI18N
+    private static final String WEBCOMMON_6_0 = JAKARTAEE_NS+"/"+WEBCOMMON_6_0_XSD; // NOI18N
+    public static final String WEBCOMMON_6_0_ID = "SCHEMA:"+WEBCOMMON_6_0; // NOI18N
+    
+    private static final String WEBFRAGMENT_6_0_XSD="web-fragment_6_0.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_6_0 = JAKARTAEE_NS+"/"+WEBFRAGMENT_6_0_XSD; // NOI18N
+    public static final String WEBFRAGMENT_6_0_ID = "SCHEMA:"+WEBFRAGMENT_6_0; // NOI18N
 
     public static final String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
     public static final String NEW_PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"; // NOI18N
@@ -741,6 +761,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_9_XSD);
             } else if ( systemId.endsWith(APPCLIENT_9_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_9_XSD);
+            } else if ( systemId.endsWith(APP_10_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_10_XSD);
+            } else if ( systemId.endsWith(APPCLIENT_10_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_10_XSD);
             }
             //web-app, web-common & web-fragment
             else if ( systemId.endsWith(WEBAPP_2_5_XSD)) {
@@ -769,6 +793,12 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_5_0_XSD);
             } else if ( systemId.endsWith(WEBCOMMON_5_0_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_5_0_XSD);
+            } else if ( systemId.endsWith(WEBAPP_6_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_6_0_XSD);
+            } else if ( systemId.endsWith(WEBFRAGMENT_6_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_6_0_XSD);
+            } else if ( systemId.endsWith(WEBCOMMON_6_0_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_6_0_XSD);
             }
             //persistence & orm
             else if ( systemId.endsWith(PERSISTENCEORM_XSD)) {
@@ -954,6 +984,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         case "text/x-dd-client1.4":  // NOI18N
                             inputSource = resolver.resolveEntity(APPCLIENT_1_4_ID, "");
                             break;
+                        case "text/x-dd-servlet6.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_6_0_ID, "");
+                            break;
                         case "text/x-dd-servlet5.0":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBAPP_5_0_ID, "");
                             break;
@@ -968,6 +1001,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                             break;
                         case "text/x-dd-servlet2.5":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBAPP_2_5_ID, "");
+                            break;
+                        case "text/x-dd-servlet-fragment6.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_6_0_ID, "");
                             break;
                         case "text/x-dd-servlet-fragment5.0":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBFRAGMENT_5_0_ID, "");

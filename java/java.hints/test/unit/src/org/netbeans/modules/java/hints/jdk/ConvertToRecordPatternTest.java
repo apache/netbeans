@@ -33,10 +33,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testSimple() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_19");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
+        if (!isRecordClassPresent()) {
             return;
         }
         HintTest.create()
@@ -70,10 +67,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testDuplicateVarName() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_19");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
+        if (!isRecordClassPresent()) {
             return;
         }
         HintTest.create()
@@ -107,10 +101,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testUsingUserVar() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_19");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
+        if (!isRecordClassPresent()) {
             return;
         }
         HintTest.create()
@@ -141,5 +132,14 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "        return -1;\n"
                         + "    }\n"
                         + "}\n");
+    }
+
+    private boolean isRecordClassPresent() {
+        try {
+            Class.forName("java.lang.Record");
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
     }
 }

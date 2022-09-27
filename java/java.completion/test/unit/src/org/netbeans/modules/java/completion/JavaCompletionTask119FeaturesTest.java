@@ -39,10 +39,6 @@ public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
 
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
-        if (!System.getProperty("java.version").startsWith("19")) {
-            suite.addTest(new JavaCompletionTask119FeaturesTest("noop"));
-            return suite;
-        }
         try {
             SourceVersion.valueOf("RELEASE_19"); //NOI18N
             suite.addTestSuite(JavaCompletionTask119FeaturesTest.class);

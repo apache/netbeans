@@ -98,7 +98,7 @@ public enum GlassFishVersion {
     /** GlassFish 6.2.5 */
     GF_6_2_5       ((short) 6, (short) 2, (short) 5, (short) 0, GlassFishVersion.GF_6_2_5_STR),
     /** GlassFish 6.2.5 */
-    GF_7_0_0       ((short) 7, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_6_2_5_STR);
+    GF_7_0_0       ((short) 7, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_7_0_0_STR);
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
@@ -290,6 +290,7 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_6_2_3, GF_6_2_3_STR_NEXT);
         initStringValuesMapFromArray(GF_6_2_4, GF_6_2_4_STR_NEXT);
         initStringValuesMapFromArray(GF_6_2_5, GF_6_2_5_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_0, GF_7_0_0_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////

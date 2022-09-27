@@ -136,6 +136,10 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
                     ? hk2dm
                     : evaluatedDm;
             if (version != null
+                    && GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
+                retVal = new ModuleConfigurationImpl(
+                        module, new Hk2Configuration(module, version), dm);
+            } else if (version != null
                     && GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
                 retVal = new ModuleConfigurationImpl(
                         module, new Hk2Configuration(module, version), dm);

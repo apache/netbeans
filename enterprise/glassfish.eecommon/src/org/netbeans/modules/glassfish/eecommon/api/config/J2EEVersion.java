@@ -89,8 +89,8 @@ public final class J2EEVersion extends J2EEBaseVersion {
     /** Represents Jakarta EE version 10.0.0
      */
     public static final J2EEVersion JAKARTAEE_10_0 = new J2EEVersion(
-            "10.0.0", 91000,    // NOI18N
-            "10.0.0", 91000);   // NOI18N
+            "10.0.0", 100000,    // NOI18N
+            "10.0.0", 100000);   // NOI18N
     
     /** -----------------------------------------------------------------------
      *  Implementation

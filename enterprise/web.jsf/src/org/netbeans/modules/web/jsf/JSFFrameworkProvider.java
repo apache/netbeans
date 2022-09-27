@@ -748,7 +748,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) 
+                if ("gfv700ee10".equals(shortName) || "gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) 
                         || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) 
                         || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) 
                         || "gfv4".equals(shortName) || "gfv3ee6".equals(shortName) 

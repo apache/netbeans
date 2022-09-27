@@ -249,6 +249,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String JAVA_EE_JAVADOC = "javaee-doc-api.jar"; // NOI18N
     private static final String JAKARTA_EE_8_JAVADOC = "jakartaee8-doc-api.jar"; // NOI18N
     private static final String JAKARTA_EE_9_JAVADOC = "jakartaee9-doc-api.jar"; // NOI18N
+    private static final String JAKARTA_EE_10_JAVADOC = "jakartaee10-doc-api.jar"; // NOI18N
 
     private static boolean ensureGlassFishApiSupport(GlassFishServer server) {
         String installRoot = server.getServerRoot();
@@ -262,7 +263,11 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
         }
         
         File j2eeDoc;
-        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_6)) {
+        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_7_0_0)) {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
+                "docs/" + JAKARTA_EE_10_JAVADOC,
+                Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        } else if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_6)) {
             j2eeDoc = InstalledFileLocator.getDefault().locate(
                 "docs/" + JAKARTA_EE_9_JAVADOC,
                 Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);

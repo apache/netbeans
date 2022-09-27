@@ -193,6 +193,9 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
                 if (WebApp.VERSION_5_0.equals(waVersion)) {
                     return Profile.JAKARTA_EE_9_WEB;
                 }
+                if (WebApp.VERSION_6_0.equals(waVersion)) {
+                    return Profile.JAKARTA_EE_10_WEB;
+                }
             } catch (IOException exc) {
                 ErrorManager.getDefault().notify(exc);
             }

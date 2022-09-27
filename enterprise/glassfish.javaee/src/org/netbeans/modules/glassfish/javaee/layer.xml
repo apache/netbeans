@@ -407,11 +407,11 @@
                         </folder>
                     </folder>
             </folder>
-                <folder name="gfv7ee10">
+                <folder name="gfv700ee10">
                     <file name="Descriptor" url="nbdepjakartaee10.xml"/>
                     <!-- -->
                     <file name="Factory.instance">
-                        <attr name="urlPattern" stringvalue="^\[.*deployer:gfv610ee9[w]?[c]?:.*$"/>
+                        <attr name="urlPattern" stringvalue="^\[.*deployer:gfv700ee10[w]?[c]?:.*$"/>
                         <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory.create"/>
                         <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2DeploymentFactory.createJakartaEe10"/>
                         <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory"/>

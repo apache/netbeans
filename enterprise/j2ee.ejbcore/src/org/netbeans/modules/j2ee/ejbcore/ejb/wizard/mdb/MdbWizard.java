@@ -188,8 +188,8 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
         if (profile != null) {
             if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
               return Profile.JAKARTA_EE_10_FULL;
-            } else if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
-              return Profile.JAKARTA_EE_10_FULL;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_1_WEB)) {
+              return Profile.JAKARTA_EE_9_1_FULL;
             } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
               return Profile.JAKARTA_EE_9_FULL;
             } else if (profile.isAtLeast(Profile.JAKARTA_EE_8_WEB)) {

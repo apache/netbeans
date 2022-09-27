@@ -28,7 +28,7 @@
     <!--
     The disconnected-string element contains the String parameter to DeploymentFactory.getDisconnectedDeploymentManager()
     -->
-    <disconnected-string>deployer:gfv7ee10</disconnected-string>
+    <disconnected-string>deployer:gfv700ee10</disconnected-string>
 
     <!--
     The container-limitation element modifies a plugin to say that not all j2ee deployments are valid.

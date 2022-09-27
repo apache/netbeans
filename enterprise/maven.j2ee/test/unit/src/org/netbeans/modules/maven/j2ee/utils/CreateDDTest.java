@@ -76,7 +76,7 @@ public class CreateDDTest extends JavaEEMavenTestBase {
         assertEquals(false, isWebDDpresent(project));
     }
         
-    // gfv7ee10 - Jakarta EE 10
+    // gfv700ee10 - Jakarta EE 10
     public void testCreateDDIfRequired_nullServerPassed_glassfish7() {
         MavenProjectSupport.setServerID(project, ECLIPSEGLASSFISH7);
         MavenProjectSupport.createWebXMLIfRequired(project, null);
@@ -133,7 +133,7 @@ public class CreateDDTest extends JavaEEMavenTestBase {
         assertEquals(false, isWebDDpresent(project));
     }
 
-    // gfv7ee10 - Jakarta EE 10
+    // gfv700ee10 - Jakarta EE 10
     public void testCreateDDIfRequired_glassfish7Passed() {
         MavenProjectSupport.createWebXMLIfRequired(project, ECLIPSEGLASSFISH7);
         assertEquals(false, isWebDDpresent(project));

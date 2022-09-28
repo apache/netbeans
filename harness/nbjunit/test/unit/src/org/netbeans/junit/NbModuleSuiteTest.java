@@ -240,7 +240,7 @@ public class NbModuleSuiteTest extends NbTestCase {
         assertTrue("junit: " + s, s.contains("org.netbeans.libs.junit4"));
         assertTrue("insane: " + s, s.contains("org.netbeans.insane"));
         assertTrue("agent: " + s, s.contains("org.netbeans.agent"));
-        assertTrue("agent hooks: " + s, s.contains("org.netbeans.agent.hook"));
+        assertTrue("agent hooks: " + s, s.contains("org.netbeans.agent.hooks"));
     }
 
     public void testModulesForMe() throws Exception {
@@ -254,7 +254,7 @@ public class NbModuleSuiteTest extends NbTestCase {
         assertTrue("JUnit: " + s, s.contains("org.netbeans.libs.junit4"));
         assertTrue("insane: " + s, s.contains("org.netbeans.insane"));
         assertTrue("agent: " + s, s.contains("org.netbeans.agent"));
-        assertTrue("agent hooks: " + s, s.contains("org.netbeans.agent.hook"));
+        assertTrue("agent hooks: " + s, s.contains("org.netbeans.agent.hooks"));
     }
 
     public void testAddSuite() throws Exception{

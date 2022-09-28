@@ -110,7 +110,14 @@
             <fileset dir="${export.interfaces}" includes="footer.gen"/>
         </concat>
         
-        <taskdef name="javadoc-index" classname="org.netbeans.nbbuild.JavadocIndex" classpath="${nbantext.jar}"/>
+        <taskdef name="javadoc-index" classname="org.netbeans.nbbuild.JavadocIndex">
+            <classpath>
+                <pathelement location="${nbantext.jar}"/>
+                <fileset dir="${nb_all}/nbbuild/external">
+                    <include name="jsoup*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
         <javadoc-index target="${netbeans.javadoc.dir}/allclasses.xml">
             <packageslist dir="${netbeans.javadoc.dir}">
                 <include name="**/allclasses-noframe.html"/>

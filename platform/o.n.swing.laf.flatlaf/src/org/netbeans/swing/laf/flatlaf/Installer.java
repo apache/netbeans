@@ -38,6 +38,10 @@ public class Installer extends ModuleInstall {
 
         // tell FlatLaf that it should look for .properties files in the given package
         FlatLaf.registerCustomDefaultsSource("org.netbeans.swing.laf.flatlaf", getClass().getClassLoader());
+
+        // don't allow FlatLaf to update UI on system font changes because this would
+        // invoke UIManager.setLookAndFeel() and SwingUtilities.updateComponentTreeUI()
+        System.setProperty( "flatlaf.updateUIOnSystemFontChange", "false" );
     }
 
 }

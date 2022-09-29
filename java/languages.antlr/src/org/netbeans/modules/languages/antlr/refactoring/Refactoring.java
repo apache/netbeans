@@ -148,7 +148,7 @@ public class Refactoring {
                         if(ref.defOffset != null) {
                             ranges.add(ref.defOffset);
                         }
-                        ranges.addAll(ref.occurances);
+                        ranges.addAll(result.getOccurrences(name));
                     }
 
                     for(OffsetRange or : ranges) {

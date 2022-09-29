@@ -90,7 +90,7 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         Reference ref = ((Map<String, Reference>) result.references).get(name);
 
         if(ref != null && ref.defOffset != null) {
-            AntlrStructureItem asi = new AntlrStructureItem.RuleStructureItem(name, fo, ref.defOffset.getStart(), ref.defOffset.getEnd());
+            AntlrStructureItem asi = new AntlrStructureItem.RuleStructureItem(name, false, fo, ref.defOffset.getStart(), ref.defOffset.getEnd());
             DeclarationLocation dln = new DeclarationFinder.DeclarationLocation(fo, ref.defOffset.getStart(), asi);
             if (resultDL == DeclarationLocation.NONE) {
                 resultDL = dln;

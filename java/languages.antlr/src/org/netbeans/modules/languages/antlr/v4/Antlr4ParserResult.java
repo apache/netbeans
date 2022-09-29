@@ -33,6 +33,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
@@ -51,9 +52,11 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     private final List<String> imports = new ArrayList<>();
 
     private static final Logger LOG = Logger.getLogger(Antlr4ParserResult.class.getName());
+    public static final Reference HIDDEN = new Reference("HIDDEN", OffsetRange.NONE);
     
     public Antlr4ParserResult(Snapshot snapshot) {
         super(snapshot);
+        references.put(HIDDEN.name, HIDDEN);
     }
     
     @Override
@@ -69,6 +72,11 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         parser.grammarSpec();
     }
 
+    private static Token getIdentifierToken(ANTLRv4Parser.IdentifierContext ctx) {
+        TerminalNode tn = ctx.RULE_REF() != null ? ctx.RULE_REF() : ctx.TOKEN_REF();
+        return tn.getSymbol();
+    }
+    
     @Override
     protected ParseTreeListener createReferenceListener() {
         return new ANTLRv4ParserBaseListener() {
@@ -92,6 +100,19 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
                         addReference(id.TOKEN_REF().getSymbol());
                     }
                 }
+            }
+
+            @Override
+            public void exitChannelsSpec(ANTLRv4Parser.ChannelsSpecContext ctx) {
+                List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
+                for (ANTLRv4Parser.IdentifierContext id : ids) {
+                    addReference(getIdentifierToken(id));
+                }
+            }
+
+            @Override
+            public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
+                addReference(getIdentifierToken(ctx.identifier()));
             }
 
             public void addReference(Token token) {
@@ -285,6 +306,20 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         public void exitRuleref(ANTLRv4Parser.RulerefContext ctx) {
             if (ctx.RULE_REF() != null) {
                 onOccurance.accept(ctx.RULE_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitLexerCommandExpr(ANTLRv4Parser.LexerCommandExprContext ctx) {
+            onOccurance.accept(getIdentifierToken(ctx.identifier()));
+        }
+
+        
+        @Override
+        public void exitChannelsSpec(ANTLRv4Parser.ChannelsSpecContext ctx) {
+            List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
+            for (ANTLRv4Parser.IdentifierContext id : ids) {
+                onOccurance.accept(getIdentifierToken(id));
             }
         }
     }

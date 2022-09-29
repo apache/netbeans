@@ -1034,6 +1034,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (!window.activeTextEditor?.document?.uri) {
                 return;
             }
+            if (!tv.visible) {
+                return;
+            }
             let vis : Visualizer | undefined = await ts.findPath(tv, window.activeTextEditor?.document?.uri?.toString());
             if (!vis) {
                 return;

@@ -76,6 +76,7 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -507,6 +508,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             null // value
             );
         }
+        tweakIconLabelVerticalAlignment(optionPane);
 
         if (UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class ||
             UIManager.getLookAndFeel().getClass() == BasicLookAndFeel.class) {
@@ -583,6 +585,18 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
 
             getContentPane().remove(currentButtonsPanel);
             currentButtonsPanel = null;
+        }
+    }
+
+    private static void tweakIconLabelVerticalAlignment(Component component) {
+        if (component instanceof JLabel) {
+            if ("OptionPane.iconLabel".equals(component.getName())) {
+                ((JLabel) component).setVerticalAlignment(SwingConstants.CENTER);
+            }
+        } else if (component instanceof JComponent) {
+            for (Component childComponent : ((JComponent) component).getComponents()) {
+                tweakIconLabelVerticalAlignment(childComponent);
+            }
         }
     }
 

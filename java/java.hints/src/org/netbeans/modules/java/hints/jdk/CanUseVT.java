@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
     "ERR_CanUseVT=Can Use Virtual Thread Executor",
     "ERR_CanUseThreadPerTask=Can Use Executors.newThreadPerTaskExecutor"
 })
-@Hint(displayName = "#DN_CanUseVT", description = "#DESC_CanUseVT", category = "rules15",
+@Hint(displayName = "#DN_CanUseVT", description = "#DESC_CanUseVT", category = "suggestions", hintKind = Hint.Kind.ACTION,
         minSourceVersion = "19")
 public class CanUseVT {
 

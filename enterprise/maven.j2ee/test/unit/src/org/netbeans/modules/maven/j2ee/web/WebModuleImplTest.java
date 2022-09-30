@@ -149,7 +149,7 @@ public class WebModuleImplTest extends JavaEEMavenTestBase {
     }
 
     public void testGetJ2eeProfile_jakartaEE10WebSpecification() throws IOException {
-        checkJ2eeProfile(Profile.JAKARTA_EE_10_WEB, "jakarta.platform", "jakarta.jakartaee-web-api", "1.0.0"); //NOI18N
+        checkJ2eeProfile(Profile.JAKARTA_EE_10_WEB, "jakarta.platform", "jakarta.jakartaee-web-api", "10.0.0"); //NOI18N
     }
 
     public void testGetJ2eeProfile_javaEE5Full_glassfish() throws IOException {

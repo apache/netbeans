@@ -41,8 +41,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import static junit.framework.TestCase.fail;
 import org.netbeans.junit.internal.NbModuleLogHandler;
 
 /** Collects log messages.
@@ -420,7 +420,7 @@ public final class Log extends Handler {
             }
 
             if (count == 0) {
-                Assert.fail("No instance of this type reported");
+                fail("No instance of this type reported");
             }
             
             for (int i = 0; i < count; i++) {

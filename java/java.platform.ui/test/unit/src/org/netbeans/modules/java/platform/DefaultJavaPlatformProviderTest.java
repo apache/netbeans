@@ -23,7 +23,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import junit.framework.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
@@ -52,7 +51,7 @@ public class DefaultJavaPlatformProviderTest extends NbTestCase {
         fs.getRoot();
         rp = new Repository(fs);
         System.setProperty("org.openide.util.Lookup", DefaultJavaPlatformProviderTest.Lkp.class.getName()); //NOI18N
-        Assert.assertEquals(DefaultJavaPlatformProviderTest.Lkp.class, Lookup.getDefault().getClass());
+        assertEquals(DefaultJavaPlatformProviderTest.Lkp.class, Lookup.getDefault().getClass());
     }
 
     public void testMissingLayer202479() throws Exception {

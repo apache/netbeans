@@ -85,7 +85,7 @@ public abstract class UIContext {
     public abstract boolean isValid();
     public abstract void showMessage(MessageParams msg);
     public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
-        showMessage(new MessageParams(MessageType.Log, msg.getUri()));
+        showMessage(new MessageParams(MessageType.Log, msg.getText()));
         return CompletableFuture.completedFuture(null);
     }
     public abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
@@ -136,7 +136,7 @@ public abstract class UIContext {
 
         @Override
         public Message showStatusMessage(ShowStatusMessageParams msg) {
-            System.out.println(msg.getType() + ": " + msg.getMessage());
+            System.err.println(msg.getType() + ": " + msg.getMessage());
             return (int timeInMillis) -> {};
         }
 
@@ -147,7 +147,7 @@ public abstract class UIContext {
 
         @Override
         public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
-            System.out.println("Open in browser: " + msg.getUri());
+            System.err.println("Open in browser: " + msg.getText());
             return CompletableFuture.completedFuture(null);
         }
 

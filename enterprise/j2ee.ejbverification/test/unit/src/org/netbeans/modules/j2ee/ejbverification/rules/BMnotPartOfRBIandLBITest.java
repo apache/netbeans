@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.j2ee.ejbverification.rules;
 
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.modules.j2ee.ejbverification.HintTestBase;
 import org.netbeans.modules.j2ee.ejbverification.TestBase;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;

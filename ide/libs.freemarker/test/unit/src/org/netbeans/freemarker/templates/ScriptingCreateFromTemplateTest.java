@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.junit.MockServices;

@@ -33,11 +33,20 @@ import {
 } from 'vscode-languageserver-protocol';
 
 export interface HtmlPageParams {
-    uri: string;
+    id: string;
+    text: string;
+    pause: boolean;
+    resources?: {
+        [name: string]: string;
+    };
 }
 
 export namespace HtmlPageRequest {
-    export const type = new ProtocolRequestType<HtmlPageParams, string, never, void, void>('window/showHtmlPage');
+    export const type = new ProtocolRequestType<HtmlPageParams, void, never, void, void>('window/showHtmlPage');
+};
+
+export namespace ExecInHtmlPageRequest {
+    export const type = new ProtocolRequestType<HtmlPageParams, boolean, never, void, void>('window/execInHtmlPage');
 };
 
 export interface ShowStatusMessageParams extends ShowMessageParams {

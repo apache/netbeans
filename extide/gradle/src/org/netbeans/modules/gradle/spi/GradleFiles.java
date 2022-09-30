@@ -220,7 +220,7 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isRootProject() {
-        return (buildScript != null) && rootDir.equals(projectDir);
+        return isProject() && rootDir.equals(projectDir);
     }
 
     public boolean isSubProject() {

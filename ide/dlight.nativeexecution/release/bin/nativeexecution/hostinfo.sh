@@ -39,7 +39,7 @@ else
          BITNESS=64
       fi
    else
-      uname -a | egrep "x86_64|WOW64|sparc64" >/dev/null
+      uname -a | egrep "x86_64|WOW64|sparc64|aarch64" >/dev/null
       if [ $? -eq 0 ]; then
          BITNESS=64
       fi

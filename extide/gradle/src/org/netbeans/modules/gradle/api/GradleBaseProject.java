@@ -76,6 +76,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     Set<File> outputPaths = Collections.emptySet();
     Map<String, String> projectIds = Collections.emptyMap();
     GradleDependency projectDependencyNode;
+    Set<GradleReport> problems = Collections.emptySet();
 
     transient Boolean resolved = null;
 
@@ -170,6 +171,19 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         return includedBuilds;
     }
 
+    /**
+     * Return the list of problems reported by Gradle on
+     * project inspection. In an ideal case that should be an
+     * empty set.
+     *
+     * @return Gradle reported problems during inspection.
+     * 
+     * @since 2.27
+     */
+    public Set<GradleReport> getProblems() {
+        return problems;
+    }
+    
     /**
      * Returns true if the project directory is the same as the root project's
      * project directory, in short if this project is a root project.

@@ -25,12 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
@@ -45,6 +43,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.maven.M2AuxilaryConfigImpl;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -68,9 +67,15 @@ public final class MavenProjectCache {
     private static final String CONTEXT_EXECUTION_RESULT = "NB_Execution_Result";
     private static final String CONTEXT_PARTICIPANTS = "NB_AbstractParticipant_Present";
     
-    private static final Set<String> PARTICIPANT_WHITELIST = new HashSet<String>(Arrays.asList(new String[] {
-        "org.sonatype.nexus.maven.staging.deploy.DeployLifecycleParticipant"
-    }));
+    /**
+     * Folder with module-configurable whitelist of lifecycle participants. Currently only 'ignore' can be specified.
+     */
+    private static final String LIFECYCLE_PARTICIPANT_PREFIX = "Projects/" + NbMavenProject.TYPE + "/LifecycleParticipants/"; // NOI18N
+    
+    /**
+     * Attribute that specifies the lifecycle participant should be silently ignored on model load.
+     */
+    private static final String ATTR_IGNORE_ON_LOAD = "ignoreOnModelLoad"; // NOI18N
     
     //File is referenced during lifetime of the Project. FileObject cannot be used as with rename it changes value@!!!
     private static final Map<File, WeakReference<MavenProject>> file2Project = new WeakHashMap<File, WeakReference<MavenProject>>();
@@ -149,6 +154,12 @@ public final class MavenProjectCache {
     })
     private static @NonNull MavenProject loadOriginalMavenProject(final File pomFile) {
         return loadOriginalMavenProject(pomFile, null, null);
+    }
+    
+    private static boolean isLifecycleParticipatnIgnored(AbstractMavenLifecycleParticipant instance) {
+        String n = instance.getClass().getName();
+        FileObject check = FileUtil.getConfigFile(LIFECYCLE_PARTICIPANT_PREFIX + n);
+        return check != null && check.getAttribute(ATTR_IGNORE_ON_LOAD) == Boolean.TRUE;
     }
     
     private static @NonNull MavenProject loadOriginalMavenProject(final File pomFile, ProjectActionContext ctx, RunConfig runConf) {
@@ -283,11 +294,11 @@ public final class MavenProjectCache {
 //                            } else {
                                 List<String> parts = new ArrayList<String>();
                                 for (AbstractMavenLifecycleParticipant part : lookup) {
-                                    String name = part.getClass().getName();
-                                    if (PARTICIPANT_WHITELIST.contains(name)) {
+                                    if (isLifecycleParticipatnIgnored(part)) {
                                         //#204898 create a whitelist of known not harmful participants that can be just ignored
                                         continue;
                                     }
+                                    String name = part.getClass().getName();
                                     parts.add(name);
                                 }
                                 if (parts.size() > 0) {

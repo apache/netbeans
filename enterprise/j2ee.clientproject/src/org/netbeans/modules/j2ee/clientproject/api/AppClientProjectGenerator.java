@@ -804,15 +804,11 @@ public class AppClientProjectGenerator {
     private static void createManifest(FileObject dir, String path) throws IOException {
         if (dir.getFileObject(path) == null) {
             FileObject manifest = FileUtil.createData(dir, path);
-            FileLock lock = manifest.lock();
-            try {
-                try (OutputStream os = manifest.getOutputStream(lock); PrintWriter pw = new PrintWriter(os, true)) {
-                    pw.println("Manifest-Version: 1.0"); // NOI18N
-                    pw.println("X-COMMENT: Main-Class will be added automatically by build"); // NOI18N
-                    pw.println(); // safest to end in \n\n due to JRE parsing bug
-                }
-            } finally {
-                lock.releaseLock();
+            try (FileLock lock = manifest.lock();
+                    OutputStream os = manifest.getOutputStream(lock); PrintWriter pw = new PrintWriter(os, true)) {
+                pw.println("Manifest-Version: 1.0"); // NOI18N
+                pw.println("X-COMMENT: Main-Class will be added automatically by build"); // NOI18N
+                pw.println(); // safest to end in \n\n due to JRE parsing bug
             }
         }
     }

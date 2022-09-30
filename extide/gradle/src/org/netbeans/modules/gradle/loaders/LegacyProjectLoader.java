@@ -58,10 +58,10 @@ import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectErrorNotifications;
-import org.netbeans.modules.gradle.GradleReport;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.GRADLE_LOADER_RP;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
@@ -233,7 +233,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     LOG.log(FINE, "Thrown exception:", info.getGradleException()); //NOI18N
                     File f = ctx.project.getGradleFiles().getBuildScript();
                     for (String s : info.getProblems()) {
-                        reps.add(GradleReport.simple(f == null ? null : f.toPath(), s));
+                        reps.add(GradleProject.createGradleReport(f == null ? null : f.toPath(), s));
                     }
                     return ctx.previous.invalidate(info.getProblems().toArray(new GradleReport[0]));
                 }
@@ -275,7 +275,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             }
         }
         
-        return new GradleReport(orig.getErrorClass(), loc, orig.getLineNumber(), orig.getMessage(), 
+        return GradleProject.createGradleReport(orig.getErrorClass(), loc, orig.getLineNumber(), orig.getMessage(),
                 orig.getCause() == null ? null : copyReport(orig.getCause()));
     }
     
@@ -283,7 +283,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         List<GradleReport> problems = new ArrayList<>();
         Throwable th = ex;
         while (th != null) {
-            problems.add(GradleReport.simple(null, th.getMessage()));
+            problems.add(GradleProject.createGradleReport(null, th.getMessage()));
         }
         return problems;
     }
@@ -385,7 +385,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         if (reported.getCause() != null && reported.getCause() != reported) {
             nested = createReport(reported.getCause());
         }
-        return new GradleReport(reported.getClass().getName(), loc, line, reported.getMessage(), nested);
+        return GradleProject.createGradleReport(reported.getClass().getName(), loc, line, reported.getMessage(), nested);
     }
 
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {

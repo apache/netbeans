@@ -32,8 +32,6 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import org.netbeans.jellytools.*;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;
 import org.netbeans.jellytools.nodes.Node;

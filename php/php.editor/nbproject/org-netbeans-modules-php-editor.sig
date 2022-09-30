@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.14.0
+#Version 2.17.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1914,6 +1914,9 @@ fld public final static int T_MINUS_EQUAL = 92
 fld public final static int T_MOD_EQUAL = 96
 fld public final static int T_MUL_EQUAL = 93
 fld public final static int T_NAMESPACE = 74
+fld public final static int T_NAME_FULLY_QUALIFIED = 171
+fld public final static int T_NAME_QUALIFIED = 170
+fld public final static int T_NAME_RELATIVE = 169
 fld public final static int T_NEKUDA = 127
 fld public final static int T_NEKUDOTAIM = 152
 fld public final static int T_NEW = 140
@@ -2032,6 +2035,12 @@ meth public java.lang.String getTableData()
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable18
+cons protected init()
+fld protected final java.lang.StringBuilder sb
+meth public java.lang.String getTableData()
+supr java.lang.Object
+
+CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable19
 cons protected init()
 fld protected final java.lang.StringBuilder sb
 meth public java.lang.String getTableData()
@@ -2808,6 +2817,12 @@ meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Statement
 hfds body
 
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg
+cons public init(int,int)
+meth public java.lang.String toString()
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Expression
+
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Statement)
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Statement)
@@ -3157,6 +3172,9 @@ meth public boolean isCurrent()
 meth public boolean isGlobal()
 meth public java.lang.String toString()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Identifier> getSegments()
+meth public static org.netbeans.modules.php.editor.parser.astnodes.NamespaceName create(int,int,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Expression
 hfds current,global
@@ -3709,6 +3727,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldAccess)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FinallyClause)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ForStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.FormalParameter)
@@ -3953,6 +3972,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Expressio
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldAccess)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FinallyClause)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ForStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.FormalParameter)

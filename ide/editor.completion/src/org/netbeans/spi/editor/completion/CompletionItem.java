@@ -52,6 +52,14 @@ public interface CompletionItem {
     void defaultAction(JTextComponent component);
 
     /**
+     * Indicate if single-clicking the item in the completion list should invoke the default action.
+     * Normally a double-click is required.
+     */
+    default boolean shouldSingleClickInvokeDefaultAction() {
+        return false;
+    }
+
+    /**
      * Process the key pressed when this completion item was selected
      * in the completion popup window.
      * <br/>

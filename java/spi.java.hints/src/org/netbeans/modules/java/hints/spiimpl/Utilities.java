@@ -99,6 +99,7 @@ import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1090,7 +1091,7 @@ public class Utilities {
                     .filter((p) -> "j2se".equals(p.getSpecification().getName()))
                     .filter((p) -> p.getSpecification().getVersion() != null)
                     .filter((p) -> p.getSpecification().getVersion().compareTo(maxVersion) < 0)
-                    .max((p1, p2) -> p1.getSpecification().getVersion().compareTo(p2.getSpecification().getVersion()))
+                    .max(Comparator.comparing((p) -> p.getSpecification().getVersion()))
                     .orElse(JavaPlatform.getDefault());
 
             final ClasspathInfo result = new ClasspathInfo.Builder(select.getBootstrapLibraries())

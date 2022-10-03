@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
@@ -39,6 +38,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.micronaut.AbstractMicronautArtifacts;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
 import org.netbeans.modules.project.dependency.spi.ProjectArtifactsImplementation;
@@ -111,100 +111,30 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
         return true;
     }
 
-   static class R implements PropertyChangeListener {
-        private final Project project;
+   static class R extends AbstractMicronautArtifacts {
         private final NbMavenProject mavenProject;
-        private final ProjectArtifactsQuery.Filter query;
-
-        // @GuardedBy(this)
-        private final List<ChangeListener> listeners = new ArrayList<>();
-        // @GuardedBy(this)
-        private List<ArtifactSpec> artifacts;
-        
-        private PropertyChangeListener projectL;
 
         public R(Project project, NbMavenProject mavenProject, ProjectArtifactsQuery.Filter query) {
-            this.project = project;
+            super(project, query);
             this.mavenProject = mavenProject;
-            this.query = query;
-        }
-
-        public Project getProject() {
-            return project;
-        }
-        
-        public void addChangeListener(ChangeListener l) {
-            synchronized (this) {
-                if (projectL == null) {
-                    projectL = WeakListeners.propertyChange(this, project);
-                    mavenProject.addPropertyChangeListener(projectL);
-                }
-                listeners.add(l);
-            }
-        }
-        
-        public void removeChangeListener(ChangeListener l) {
-            synchronized (this) {
-                listeners.remove(l);
-            }
-        }
-
-        public List<ArtifactSpec> getArtifacts() {
-            synchronized (this) {
-                if (artifacts != null) {
-                    return artifacts;
-                }
-            }
-            List<ArtifactSpec> as = update();
-            synchronized (this) {
-                if (artifacts == null) {
-                    artifacts = as;
-                }
-            }
-            return as;
         }
 
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (!NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
-                return;
-            }
-            List<ArtifactSpec> old;
-            
-            synchronized (this) {
-                if (artifacts == null) {
-                    return;
-                }
-                old = artifacts;
-                artifacts = null;
-                if (listeners.isEmpty()) {
-                    return;
-                }
-            }
-            
-            List<ArtifactSpec> n = update();
-            ChangeListener[] ll;
-            
-            synchronized (this) {
-                if (artifacts == null) {
-                    this.artifacts = n;
-                }
-                if (old != null && n.equals(old)) {
-                    return;
-                }
-                ll = listeners.toArray(new ChangeListener[listeners.size()]);
-            }
-            ChangeEvent e = new ChangeEvent(this);
-            for (ChangeListener l : ll) {
-                l.stateChanged(e);
-            }
+        protected void attach(PropertyChangeListener l) {
+            mavenProject.addPropertyChangeListener(l);
         }
 
-        public Collection<ArtifactSpec> getExcludedArtifacts() {
-            return null;
+        @Override
+        protected void detach(PropertyChangeListener l) {
+        }
+
+        @Override
+        protected boolean accept(PropertyChangeEvent e) {
+            return NbMavenProject.PROP_PROJECT.equals(e.getPropertyName());
         }
         
-        private List<ArtifactSpec> update() {
+        @Override
+        protected List<ArtifactSpec> compute() {
             ProjectActionContext buildCtx;
             
             if (query.getBuildContext() != null) {
@@ -214,7 +144,7 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
                     buildCtx = query.getBuildContext();
                 }
             } else {
-                buildCtx = ProjectActionContext.newBuilder(project).forProjectAction(ActionProvider.COMMAND_BUILD).context();
+                buildCtx = ProjectActionContext.newBuilder(getProject()).forProjectAction(ActionProvider.COMMAND_BUILD).context();
             }
             if (query.getArtifactType() != null && 
                 !SUPPORTED_ARTIFACT_TYPES.contains(query.getArtifactType()) &&

@@ -19,11 +19,9 @@
 package org.netbeans.modules.micronaut.maven;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Collection;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.api.project.ProjectManager;

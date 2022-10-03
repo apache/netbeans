@@ -311,7 +311,7 @@ public final class NbGradleProjectImpl implements Project {
         synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (!force && c.getQuality().atLeast(aim)) {
                     return CompletableFuture.completedFuture(c);
                 }
                 if (!force && attemptedQuality.atLeast(aim)) {

@@ -270,7 +270,7 @@ public final class NbGradleProjectImpl implements Project {
        synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (! force && c.getQuality().atLeast(aim)) {
                     LOG.log(Level.FINER, "Asked for {0}, got {1} already: ", new Object[] { aim, c.getQuality() });
                     return c;
                 }

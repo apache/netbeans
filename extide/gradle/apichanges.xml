@@ -83,6 +83,27 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="regular-project-Lookup">
+            <api name="general"/>
+            <summary>Expose regular Lookup in NbGradleProject.</summary>
+            <version major="2" minor="28"/>
+            <date day="4" month="10" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html">NbGradleProject</a> offered just <a href="org/netbeans/modules/gradle/api/NbGradleProject.html#projectLookup-java.lang.Class-">projectLookup(Class)</a>,
+                    that cannot return more instances or deliver change events. A regular Lookup instance, that switch when the project reloads is now available from
+                    <a href="org/netbeans/modules/gradle/api/NbGradleProject.html#refreshableProjectLookup--">NbGradleProject.refreshableProjectLookup()</a>.
+                </p>
+                <p>
+                    Minor API changes giving access to a complete <a href="org/netbeans/modules/gradle/api/execute/RunConfig.html">RunConfig</a> for a project action or an action
+                    mapping.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+        </change>
         <change id="gradle-reports">
             <api name="general"/>
             <summary>Rich exception reports are exported from Gradle process.</summary>

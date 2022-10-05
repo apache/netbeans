@@ -1428,6 +1428,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_03b");
     }
 
+    public void testGH4684() throws Exception {
+        performTest("parser/gh4684");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

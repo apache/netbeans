@@ -372,7 +372,7 @@ class NbProjectInfoBuilder {
                 Class fc = c;
                 // with Gradle 7.1+, plugins can be better enumerated. Prior to 7.1 I can only get IDs for registry-supplied plugins.
                 Optional<PluginId> id = sinceGradleOrDefault("7.1", () -> pmi.findPluginIdForClass(fc), Optional::empty); // NOI18N
-                if (id.isEmpty() && reg != null) {
+                if (!id.isPresent() && reg != null) {
                     id = reg.findPluginForClass(c);
                 }
                 if (id.isPresent()) {

@@ -27,5 +27,6 @@ public class Installer extends ModuleInstall {
         super.validate();
         //#211655
         System.setProperty( "jna.boot.library.name", "jnidispatch-nb" ); //NOI18N
+        System.setProperty( "jna.nosys", "false" ); //NOI18N
     }
 }

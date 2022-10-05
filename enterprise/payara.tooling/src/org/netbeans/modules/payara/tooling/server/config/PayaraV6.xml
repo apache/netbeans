@@ -33,6 +33,8 @@ under the License.
         <platform version="17"/>
     </java>
     <javaee version="9.1.0">
+        <profile version="9.0.0" type="web"/>
+        <profile version="9.0.0" type="full" check="full"/>
         <profile version="9.1.0" type="web"/>
         <profile version="9.1.0" type="full" check="full"/>
         <module type="war"/>

@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
@@ -132,7 +134,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
                 return null;
             }
              
-            return find(base.getScope(), path, values, types);
+            return find(base.getScope(), path, values, types, ""); // NOI18N
         }
         
         private Map<String, String> types(BuildPropertiesSupport.Property p) {
@@ -168,7 +170,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             if (c == null) {
                 return null;
             }
-            return Arrays.asList(c.split(";"));
+            return Arrays.asList(c.split(";;")).stream().map(s -> s.replaceAll("\\;", ";")).collect(Collectors.toList());
         }
 
         @Override
@@ -177,13 +179,16 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
                 return null;
             }
             Map<String, String> types = types(container);
-            if (!"named".equals(types.get(container.getId().toString()))) {
+            String coltype = types.get(container.getId().toString() + "#col");
+            if (!("named".equals(coltype) || "map".equals(coltype))) {
                 return null;
             }
             String path = container.getId().toString();
             Map<String, String> values = values(container);
+            String itemType = types.getOrDefault(container.getId().toString() + "#itemType", "");
             
-            String k = path + "." + key;
+            String escaped = key.replace(";", "\\;");
+            String k = path + "." + escaped;
             String v = values.get(k);
             if (v == null) {
                 k = path + "[" + key + "]";
@@ -192,7 +197,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             if (v == null) {
                 return null;
             }
-            return find(container.getScope(), k, values, types);
+            return find(container.getScope(), k, values, types, itemType);
         }
 
         @Override
@@ -201,11 +206,12 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
                 return null;
             }
             Map<String, String> types = types(container);
-            if (!"list".equals(types.get(container.getId().toString()))) {
+            if (!"list".equals(types.get(container.getId().toString() + "#col"))) {
                 return null;
             }
             Map<String, String> values = values(container);
             String path = container.getId().toString() + "[";
+            String itemType = types.getOrDefault(container.getId().toString() + "#itemType", "");
             return new Iterator<BuildPropertiesSupport.Property>() {
                 int index = 0;
                 String obj;
@@ -232,17 +238,17 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
                         k = k + property;
                     }
                     return find(container.getScope(), k, 
-                            values, types);
+                            values, types, itemType);
                 }
             };
         }
         
-        private BuildPropertiesSupport.Property find(String src, String propertyPath, Map<String, String> values, Map<String, String> types) {
+        private BuildPropertiesSupport.Property find(String src, String propertyPath, Map<String, String> values, Map<String, String> types, String defType) {
             String t = types.get(propertyPath);
             String c = types.get(propertyPath + "#col");
-            String v = values.get(propertyPath);
+            Object v = values.get(propertyPath);
             
-            if (t == null && v == null) {
+            if (t == null && (v == null && c == null)) {
                 return null;
             }
             
@@ -252,8 +258,11 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             if (c != null) {
                 // collection values not supported now.
                 return new BuildPropertiesSupport.Property(propertyPath, src, n,
-                        "named".equals(c)  ? BuildPropertiesSupport.PropertyKind.MAP : BuildPropertiesSupport.PropertyKind.LIST, 
-                        t, v);
+                        "named".equals(c) || "map".equals(c) ? BuildPropertiesSupport.PropertyKind.MAP : BuildPropertiesSupport.PropertyKind.LIST, 
+                        t, Objects.toString(v, null));
+            }
+            if (t == null) {
+                t = defType == null ? "" : defType;
             }
             if ("".equals(t)) { // NOI18N
                 return new BuildPropertiesSupport.Property(propertyPath, src, n, BuildPropertiesSupport.PropertyKind.EXISTS, t, null);
@@ -265,7 +274,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             } else {
                 kind = BuildPropertiesSupport.PropertyKind.STRUCTURE;
             }
-            return new BuildPropertiesSupport.Property(propertyPath, src, n, kind, t, v);
+            return new BuildPropertiesSupport.Property(propertyPath, src, n, kind, t, Objects.toString(v, null));
         }
     }
 }

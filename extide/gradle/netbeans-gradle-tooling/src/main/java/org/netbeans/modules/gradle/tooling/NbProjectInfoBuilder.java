@@ -478,6 +478,7 @@ class NbProjectInfoBuilder {
     
     public static final String COLLECTION_TYPE_MARKER = "#col"; // NOI18N
     public static final String COLLECTION_TYPE_NAMED = "named"; // NOI18N
+    public static final String COLLECTION_TYPE_MAP = "map"; // NOI18N
     public static final String COLLECTION_TYPE_LIST = "list"; // NOI18N
     public static final String COLLECTION_ITEM_MARKER = "#itemType"; // NOI18N
     public static final String COLLECTION_ITEM_PREFIX = COLLECTION_ITEM_MARKER + "."; // NOI18N
@@ -522,6 +523,17 @@ class NbProjectInfoBuilder {
         }
     }
     
+    private boolean isMutableType(Object potentialValue) {
+        if (potentialValue instanceof PropertyInternal) {
+            return true;
+        } else if ((potentialValue instanceof NamedDomainObjectContainer) && (potentialValue instanceof HasPublicType)) {
+            return true;
+        } else if (potentialValue instanceof Iterable || potentialValue instanceof Map) {
+            return true;
+        }
+        return false;
+    }
+    
     private void inspectObjectAndValues0(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
         Class nonDecorated = findNonDecoratedClass(clazz);
         
@@ -533,7 +545,10 @@ class NbProjectInfoBuilder {
             } else {
                 typeKey = prefix;
             }
-            propertyTypes.putIfAbsent(typeKey, nonDecorated.getName());
+            if (propertyTypes.putIfAbsent(typeKey, nonDecorated.getName()) != null && object == null) {
+                // type already introspected, no value to fetch properties from.
+                return;
+            }
         }
         if (clazz == null || (excludes == null && ignoreClassesPattern.matcher(clazz.getName()).matches())) {
             return;
@@ -585,13 +600,7 @@ class NbProjectInfoBuilder {
                         // just ignore - the value cannot be obtained
                         continue;
                     }
-                    boolean ok = false;
-                    if (potentialValue instanceof PropertyInternal) {
-                        ok = true;
-                    } else if ((potentialValue instanceof NamedDomainObjectContainer) && (potentialValue instanceof HasPublicType)) {
-                        ok = true;
-                    }
-                    if (!ok) {
+                    if (!isMutableType(potentialValue)) {
                         continue;
                     }
                 }
@@ -640,7 +649,7 @@ class NbProjectInfoBuilder {
                 } catch (RuntimeException ex) {
                     // just ignore - the property value cannot be obtained
                 }
-           }
+            }
             if (value != null && !(value instanceof Provider)) {
                 if (isPrimitiveOrString(value.getClass())) {
                     defaultValues.put(prefix + propName, value);
@@ -672,8 +681,8 @@ class NbProjectInfoBuilder {
                     } else {
                         itemClass = findIterableItemClass(pubType.getConcreteClass());
                     }
+                    propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
                     if (itemClass != null) {
-                        propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
                         propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, itemClass.getName());
                         newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
                         inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
@@ -682,7 +691,7 @@ class NbProjectInfoBuilder {
                     NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
                     Map<String, ?> m = nc.getAsMap();
                     List<String> ss = new ArrayList<>(m.keySet());
-                    propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, String.join(";", ss));
+                    propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, String.join(";;", ss));
                     for (String k : m.keySet()) {
                         newPrefix = prefix + propName + "." + k + "."; // NOI18N
                         Object v = m.get(k);
@@ -698,9 +707,9 @@ class NbProjectInfoBuilder {
                         }
                     }
                     
+                    propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
                     if (itemClass != null) {
                         cn = findNonDecoratedClass(itemClass).getName();
-                        propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
                         propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, cn);
                         String newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
                         if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
@@ -710,11 +719,55 @@ class NbProjectInfoBuilder {
                     
                     if (value instanceof Iterable) {
                         int index = 0;
-                        for (Object o : (Iterable)value) {
-                            String newPrefix = prefix + propName + "[" + index + "]."; // NOI18N
-                            defaultValues.put(prefix + propName + "[" + index + "]", Objects.toString(o)); //NOI18N
-                            inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
-                            index++;
+                        try {
+                            for (Object o : (Iterable)value) {
+                                String newPrefix = prefix + propName + "[" + index + "]."; // NOI18N
+                                defaultValues.put(prefix + propName + "[" + index + "]", Objects.toString(o)); //NOI18N
+                                inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                                index++;
+                            }
+                        } catch (RuntimeException ex) {
+                            // values cannot be obtained
+                        }
+                        dumped = true;
+                    }
+                } else if (value instanceof Map) {
+                    Map mvalue = (Map)value;
+                    Set<Object> ks = mvalue.keySet();
+                    Class keyClass = findIterableItemClass(ks.getClass());
+                    if (keyClass == null || keyClass == java.lang.Object.class) {
+                        boolean ok = true;
+                        for (Object k : ks) {
+                            if (!(k instanceof String)) {
+                                ok = false;
+                            }
+                        }
+                        if (ok) {
+                            keyClass = String.class;
+                        }
+                    }
+                    if (keyClass == String.class) {
+                        itemClass = findIterableItemClass(mvalue.values().getClass());
+
+                        String keys = ks.stream().map(k -> k.toString()).map((String k) -> k.replace(";", "\\;")).collect(Collectors.joining(";;"));
+                        propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, keys);
+                        
+                        propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_MAP);
+                        if (itemClass != null) {
+                            cn = findNonDecoratedClass(itemClass).getName();
+                            propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, cn);
+                            String newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
+                            if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
+                                inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                            }
+                        }
+
+                        for (Object o : ks) {
+                            String k = o.toString();
+                            String newPrefix = prefix + propName + "[" + k + "]"; // NOI18N
+                            Object v = mvalue.get(o);
+                            defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
+                            inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
                         }
                         dumped = true;
                     }

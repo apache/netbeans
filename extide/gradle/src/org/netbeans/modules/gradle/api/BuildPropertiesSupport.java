@@ -71,13 +71,18 @@ public final class BuildPropertiesSupport {
     }
    
     /**
-     * Obtain an instance for the project.
+     * Obtain an instance for the project. Returns {@code null}, if the project does not support
+     * BuildProperties access. 
      * @param p the project
-     * @return instance of {@link BuildPropertiesSupport} for the project.
+     * @return instance of {@link BuildPropertiesSupport} for the project, or {@code null}.
      */
     public static BuildPropertiesSupport get(Project p) {
-        List<BuildPropertiesImplementation> impls = new ArrayList<>(NbGradleProject.get(p).refreshableProjectLookup().lookupAll(BuildPropertiesImplementation.class));
-        return new BuildPropertiesSupport(impls);
+        NbGradleProject nbgp = NbGradleProject.get(p);
+        if (nbgp == null) {
+            return null;
+        }
+        List<BuildPropertiesImplementation> impls = new ArrayList<>(nbgp.refreshableProjectLookup().lookupAll(BuildPropertiesImplementation.class));
+        return impls.isEmpty() ? null : new BuildPropertiesSupport(impls);
     }
     
     /**
@@ -143,7 +148,7 @@ public final class BuildPropertiesSupport {
 
             @Override
             public boolean hasNext() {
-                if (!del.hasNext()) {
+                if (del != null && !del.hasNext()) {
                     del = null;
                 }
                 while (del == null) {
@@ -151,7 +156,7 @@ public final class BuildPropertiesSupport {
                         return false;
                     }
                     del = containers.next().items(owner, path);
-                    if (!del.hasNext()) {
+                    if (del != null && !del.hasNext()) {
                         del = null;
                     }
                 }

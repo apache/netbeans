@@ -268,6 +268,7 @@ public class GradleJarArtifactTest extends NbTestCase {
         
         NbGradleProject project = NbGradleProject.get(p);
         File buildscript = project.getGradleFiles().getBuildScript();
+        Thread.sleep(2000);
         Files.write(buildscript.toPath(), 
                 Arrays.asList(
                     "",

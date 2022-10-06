@@ -37,13 +37,18 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.cloud.oracle.adm.AuditException;
 import org.netbeans.modules.cloud.oracle.adm.ProjectVulnerability;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.parsing.api.ResultIterator;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -74,6 +79,11 @@ public class ProjectAuditCommand extends CodeActionsProvider {
     
     private final Gson gson = new Gson();
 
+    @NbBundle.Messages({
+        "# {0} - project name",
+        "# {1} - cause message",
+        "ERR_KnowledgeBaseSearchFailed=Could not search for knowledge base of project {0}: {1}"
+    })
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         if (arguments.size() < 3) {
@@ -102,23 +112,36 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         }
         String compartment = ((JsonPrimitive) arguments.get(2)).getAsString();
         String knowledgeBase = ((JsonPrimitive) arguments.get(1)).getAsString();
-        
-        return v.findKnowledgeBase(compartment, knowledgeBase).thenCompose((kb) -> {
+        boolean forceAudit;
+        if (arguments.size() > 4) {
+            forceAudit = ((JsonPrimitive)arguments.get(4)).getAsBoolean();
+        } else {
+            forceAudit = false;
+        }
+        final String fn = n;
+        return v.findKnowledgeBase(compartment, knowledgeBase).
+                exceptionally(th -> {
+                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(Bundle.ERR_KnowledgeBaseSearchFailed(fn, th.getMessage()),
+                            NotifyDescriptor.ERROR_MESSAGE));
+                    return null;
+                }).thenCompose((kb) -> {
             if (kb == null) {
-                throw new IllegalArgumentException("Unknown Knowledgebase " + knowledgeBase);
+                return CompletableFuture.completedFuture(null);
             }
-
+            CompletableFuture<String> exec;
+            
             switch (command) {
                 case COMMAND_EXECUTE_AUDIT:
-                    v.runProjectAudit(kb, true);
+                    exec = v.runProjectAudit(kb, true, true);
                     break;
-                case COMMAND_LOAD_AUDIT:
-                    v.runProjectAudit(kb, false);
-                    break;
+                case COMMAND_LOAD_AUDIT: {
+                    exec = v.runProjectAudit(kb, false, forceAudit);
+                }
                 default:
+                    return CompletableFuture.completedFuture(null);
                     
             }
-            return CompletableFuture.completedFuture(null);
+            return (CompletableFuture<Object>)(CompletableFuture)exec;
         });
     } 
 

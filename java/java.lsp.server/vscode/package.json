@@ -326,6 +326,11 @@
 								"default": "${command:java.attachDebugger.pickProcess}",
 								"description": "Process Id of the debuggee"
 							},
+							"listen": {
+								"type": "string",
+								"default": "false",
+								"description": "Listen for the debuggee to attach"
+							},
 							"timeout": {
 								"type": "string",
 								"default": "30000",

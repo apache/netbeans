@@ -56,6 +56,8 @@ import static javax.lang.model.element.Modifier.*;
 import static javax.lang.model.SourceVersion.RELEASE_10;
 import static javax.lang.model.SourceVersion.RELEASE_11;
 import static javax.lang.model.SourceVersion.RELEASE_13;
+import static javax.lang.model.SourceVersion.RELEASE_17;
+import static javax.lang.model.SourceVersion.RELEASE_19;
 import static javax.lang.model.type.TypeKind.VOID;
 
 /**
@@ -205,6 +207,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String VAR_KEYWORD = "var"; //NOI18N
     private static final String VOID_KEYWORD = "void"; //NOI18N
     private static final String VOLATILE_KEYWORD = "volatile"; //NOI18N
+    private static final String WHEN_KEYWORD = "when"; //NOI18N
     private static final String WHILE_KEYWORD = "while"; //NOI18N
     private static final String WITH_KEYWORD = "with"; //NOI18N
     private static final String YIELD_KEYWORD = "yield"; //NOI18N
@@ -489,6 +492,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
             case DEFAULT_CASE_LABEL:
                 localResult(env);
                 addKeywordsForBlock(env);
+                break;
+            case PARENTHESIZED_PATTERN:
+                insideParenthesizedPattern(env);
                 break;
         }
     }
@@ -1546,11 +1552,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         localResult(env);
         addKeywordsForBlock(env);
         
-        String prefix = env.getPrefix();
-        if (env.getController().getSourceVersion().compareTo(RELEASE_13) >= 0 && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+        if (env.getController().getSourceVersion().compareTo(RELEASE_13) >= 0) {
             TreePath parentPath = env.getPath().getParentPath();
             if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                addKeyword(env, YIELD_KEYWORD, null, false);
+                addKeyword(env, YIELD_KEYWORD, SPACE, false);
             }
         }
     }
@@ -2362,44 +2367,43 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 lastCase = t;
             }
             if (lastCase != null) {
-                StatementTree last = null;
                 List<? extends StatementTree> statements = lastCase.getStatements();
                 if (statements == null) {
-                    Tree caseBody = lastCase.getBody();
-                    if (caseBody instanceof StatementTree) {
-                        statements = Collections.singletonList((StatementTree) caseBody);
+                    int pos = (int) sourcePositions.getStartPosition(root, lastCase.getBody());
+                    if (pos != Diagnostic.NOPOS && pos < offset) {
+                        addKeyword(env, CASE_KEYWORD, SPACE, false);
+                        addKeyword(env, DEFAULT_KEYWORD, COLON, false);
                     }
-                }
-                for (StatementTree stat : statements) {
-                    int pos = (int) sourcePositions.getStartPosition(root, stat);
-                    if (pos == Diagnostic.NOPOS || offset <= pos) {
-                        break;
+                } else {
+                    Tree last = null;
+                    for (StatementTree stat : statements) {
+                        int pos = (int) sourcePositions.getStartPosition(root, stat);
+                        if (pos == Diagnostic.NOPOS || offset <= pos) {
+                            break;
+                        }
+                        last = stat;
                     }
-                    last = stat;
-                }
-                if (last != null) {
-                    if (last.getKind() == Tree.Kind.TRY) {
-                        if (((TryTree) last).getFinallyBlock() == null) {
-                            addKeyword(env, CATCH_KEYWORD, null, false);
-                            addKeyword(env, FINALLY_KEYWORD, null, false);
-                            if (((TryTree) last).getCatches().isEmpty()) {
-                                return;
+                    if (last != null) {
+                        if (last.getKind() == Tree.Kind.TRY) {
+                            if (((TryTree) last).getFinallyBlock() == null) {
+                                addKeyword(env, CATCH_KEYWORD, null, false);
+                                addKeyword(env, FINALLY_KEYWORD, null, false);
+                                if (((TryTree) last).getCatches().isEmpty()) {
+                                    return;
+                                }
+                            }
+                        } else if (last.getKind() == Tree.Kind.IF) {
+                            if (((IfTree) last).getElseStatement() == null) {
+                                addKeyword(env, ELSE_KEYWORD, null, false);
                             }
                         }
-                    } else if (last.getKind() == Tree.Kind.IF) {
-                        if (((IfTree) last).getElseStatement() == null) {
-                            addKeyword(env, ELSE_KEYWORD, null, false);
-                        }
+                    }
+                    localResult(env);
+                    addKeywordsForBlock(env);
+                    if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_13) >= 0 && path.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
+                        addKeyword(env, YIELD_KEYWORD, SPACE, false);
                     }
                 }
-                localResult(env);
-                addKeywordsForBlock(env);
-                String prefix = env.getPrefix();
-                if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_13) >= 0
-                    && path.getLeaf().getKind() == Kind.SWITCH_EXPRESSION && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
-                    addKeyword(env, YIELD_KEYWORD, null, false);
-                }
-
             } else {
                 TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, path.getLeaf(), offset);
                 if (ts != null && ts.token().id() == JavaTokenId.LBRACE) {
@@ -2418,47 +2422,59 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationUnitTree root = env.getRoot();
         CompilationController controller = env.getController();
         TreePath parentPath = path.getParentPath();
-        ExpressionTree caseExpressionTree = null;
+        CaseLabelTree firstCaseLabelTree = null;
+        CaseLabelTree lastCaseLabelTree = null;
         ExpressionTree caseErroneousTree = null;
-        List<? extends ExpressionTree> caseTreeList = cst.getExpressions();
-        if (!caseTreeList.isEmpty() && caseTreeList.size() == 1) {
-            caseExpressionTree = caseTreeList.get(0);
-            caseErroneousTree = caseTreeList.get(0);
-        } else if (caseTreeList.size() > 1) {
-            caseExpressionTree = caseTreeList.get(0);
-            for (ExpressionTree et : caseTreeList) {
+        List<? extends CaseLabelTree> caseTreeList = cst.getLabels();
+        if (!caseTreeList.isEmpty()) {
+            firstCaseLabelTree = caseTreeList.get(0);
+            lastCaseLabelTree = caseTreeList.get(caseTreeList.size() - 1);
+            if (lastCaseLabelTree != null && lastCaseLabelTree.getKind() == Tree.Kind.CONSTANT_CASE_LABEL) {
+                ExpressionTree et = ((ConstantCaseLabelTree) lastCaseLabelTree).getConstantExpression();
                 if (et != null && et.getKind() == Tree.Kind.ERRONEOUS) {
                     caseErroneousTree = et;
-                    break;
                 }
             }
         }
 
-        if (caseExpressionTree != null && ((sourcePositions.getStartPosition(root, caseExpressionTree) >= offset)
+        if (firstCaseLabelTree != null && ((sourcePositions.getStartPosition(root, firstCaseLabelTree) >= offset)
                 || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
 
             if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                ExpressionTree exprTree = null;
+                ExpressionTree exprTree;
                 if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
                     exprTree = ((SwitchTree) parentPath.getLeaf()).getExpression();
                 } else {
                     exprTree = ((SwitchExpressionTree) parentPath.getLeaf()).getExpression();
                 }
                 TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(parentPath, exprTree));
-                if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
-                    addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
+                if (tm.getKind() == TypeKind.DECLARED) {
+                    if (((DeclaredType) tm).asElement().getKind() == ENUM) {
+                        addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
+                    } else {
+                        addLocalConstantsAndTypes(env);
+                        if (env.getController().getSourceVersion().compareTo(RELEASE_17) >= 0) {
+                            addCaseLabels(env, cst);
+                        }
+                    }
                 } else {
                     addLocalConstantsAndTypes(env);
                 }
             }
+        } else if (lastCaseLabelTree != null && lastCaseLabelTree.getKind() == Tree.Kind.PATTERN_CASE_LABEL
+                && env.getController().getSourceVersion().compareTo(RELEASE_19) >= 0 && sourcePositions.getEndPosition(root, firstCaseLabelTree) < offset) {
+            addKeyword(env, WHEN_KEYWORD, SPACE, false);
         } else {
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
             if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER) {
-                for (ExpressionTree caseExpression : caseTreeList) {
-                    if (caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER) {
-                        TreePath tPath = new TreePath(path, caseExpression);
-                        insideExpression(env, tPath);
-                        return;
+                for (CaseLabelTree clt : caseTreeList) {
+                    if (clt != null && clt.getKind() == Tree.Kind.CONSTANT_CASE_LABEL) {
+                        ExpressionTree caseExpression = ((ConstantCaseLabelTree) clt).getConstantExpression();
+                        if (caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER) {
+                            TreePath tPath = new TreePath(path, caseExpression);
+                            insideExpression(env, tPath);
+                            return;
+                        }
                     }
                 }
             } else if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
@@ -3236,6 +3252,18 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addClassTypes(env, null);
         }
 
+    }
+
+    private void insideParenthesizedPattern(Env env) {
+        final int offset = env.getOffset();
+        final CompilationController controller = env.getController();
+        final SourcePositions sp = controller.getTrees().getSourcePositions();
+        final TreePath path = env.getPath();
+        PatternTree pt = ((ParenthesizedPatternTree) path.getLeaf()).getPattern();
+        if (pt.getKind() == Tree.Kind.BINDING_PATTERN && env.getController().getSourceVersion().compareTo(RELEASE_19) >= 0
+                && sp.getEndPosition(path.getCompilationUnit(), pt) < offset) {
+            addKeyword(env, WHEN_KEYWORD, SPACE, false);
+        }
     }
 
     private void localResult(Env env) throws IOException {
@@ -4026,6 +4054,46 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     results.add(itemFactory.createVariableItem(env.getController(), (VariableElement) e, e.asType(), anchorOffset, null, false, elements.isDeprecated(e), false, env.assignToVarPos()));
                 }
             }
+        }
+    }
+
+    private void addCaseLabels(Env env, CaseTree cst) {
+        TreePath path = env.getPath().getParentPath();
+        boolean nullUsed = false;
+        boolean defaultUsed = false;
+        boolean patternUsedInCase = false;
+        List<? extends CaseTree> caseTrees = null;
+        if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
+            caseTrees = ((SwitchTree) path.getLeaf()).getCases();
+        } else if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH_EXPRESSION) {
+            caseTrees = ((SwitchExpressionTree) path.getLeaf()).getCases();
+        }
+        if (caseTrees != null) {
+            for (CaseTree ct : caseTrees) {
+                for (CaseLabelTree clt : ct.getLabels()) {
+                    switch (clt.getKind()) {
+                        case DEFAULT_CASE_LABEL:
+                            defaultUsed = true;
+                            break;
+                        case CONSTANT_CASE_LABEL:
+                            if ((((ConstantCaseLabelTree) clt).getConstantExpression()).getKind() == Tree.Kind.NULL_LITERAL) {
+                                nullUsed = true;
+                            }
+                            break;
+                        case PATTERN_CASE_LABEL:
+                            if (ct == cst) {
+                                patternUsedInCase = true;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        if (!nullUsed) {
+            addKeyword(env, NULL_KEYWORD, null, false);
+        }
+        if (!defaultUsed && !patternUsedInCase) {
+            addKeyword(env, DEFAULT_KEYWORD, null, false);
         }
     }
 

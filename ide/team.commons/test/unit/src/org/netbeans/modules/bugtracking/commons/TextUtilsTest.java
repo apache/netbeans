@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.bugtracking.commons;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import static org.netbeans.modules.bugtracking.commons.TextUtils.trimSpecial;
 
 /**
@@ -32,17 +31,17 @@ public class TextUtilsTest {
     public TextUtilsTest() {
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testShortenTextNullText() {
         shortenText(null, 5);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testShortenTextNegativeLimit() {
         shortenText("abc", -7);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testShortenTextZeroLimit() {
         shortenText("abc", 0);
     }
@@ -119,38 +118,38 @@ public class TextUtilsTest {
         assertEquals("alpha beta gamma", shortenText("alpha beta gamma", 17));
 
         assertEquals("alpha beta ...", shortenText("alpha beta gamma", 10));
-        assertEquals("alpha  bet...",  shortenText("alpha  beta gamma", 10));
-        assertEquals("alpha   be...",  shortenText("alpha   beta gamma", 10));
-        assertEquals("alpha    b...",  shortenText("alpha    beta gamma", 10));
-        assertEquals("alpha ...",      shortenText("alpha     beta gamma", 10));
-        assertEquals("alpha ...",      shortenText("alpha      beta gamma", 10));
-        assertEquals("alpha ...",      shortenText("alpha       beta gamma", 10));
+        assertEquals("alpha  bet...", shortenText("alpha  beta gamma", 10));
+        assertEquals("alpha   be...", shortenText("alpha   beta gamma", 10));
+        assertEquals("alpha    b...", shortenText("alpha    beta gamma", 10));
+        assertEquals("alpha ...", shortenText("alpha     beta gamma", 10));
+        assertEquals("alpha ...", shortenText("alpha      beta gamma", 10));
+        assertEquals("alpha ...", shortenText("alpha       beta gamma", 10));
 
         assertEquals("alpha beta gamma", shortenText("alpha beta gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta  gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta   gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta    gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta     gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta      gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta       gamma", 16));
-        assertEquals("alpha beta ...",   shortenText("alpha beta        gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta  gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta   gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta    gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta     gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta      gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta       gamma", 16));
+        assertEquals("alpha beta ...", shortenText("alpha beta        gamma", 16));
 
-        assertEquals("alp...",            TextUtils.shortenText("alpha beta gamma delta", 1, 3));
-        assertEquals("alp...",            TextUtils.shortenText("alpha beta gamma delta", 2, 3));
-        assertEquals("alp...",            TextUtils.shortenText("alpha beta gamma delta", 3, 3));
-        assertEquals("alp...",            TextUtils.shortenText("alpha beta gamma delta", 4, 3));
-        assertEquals("alp...",            TextUtils.shortenText("alpha beta gamma delta", 5, 3));
-        assertEquals("alp...",            TextUtils.shortenText("alpha beta gamma delta", 6, 3));
+        assertEquals("alp...", TextUtils.shortenText("alpha beta gamma delta", 1, 3));
+        assertEquals("alp...", TextUtils.shortenText("alpha beta gamma delta", 2, 3));
+        assertEquals("alp...", TextUtils.shortenText("alpha beta gamma delta", 3, 3));
+        assertEquals("alp...", TextUtils.shortenText("alpha beta gamma delta", 4, 3));
+        assertEquals("alp...", TextUtils.shortenText("alpha beta gamma delta", 5, 3));
+        assertEquals("alp...", TextUtils.shortenText("alpha beta gamma delta", 6, 3));
 
-        assertEquals("alpha ...",         TextUtils.shortenText("alpha beta gamma delta", 1, 8));
-        assertEquals("alpha be...",       TextUtils.shortenText("alpha beta gamma delta", 2, 8));
-        assertEquals("alpha be...",       TextUtils.shortenText("alpha beta gamma delta", 3, 8));
-        assertEquals("alpha be...",       TextUtils.shortenText("alpha beta gamma delta", 4, 8));
-        assertEquals("alpha be...",       TextUtils.shortenText("alpha beta gamma delta", 5, 8));
-        assertEquals("alpha be...",       TextUtils.shortenText("alpha beta gamma delta", 6, 8));
+        assertEquals("alpha ...", TextUtils.shortenText("alpha beta gamma delta", 1, 8));
+        assertEquals("alpha be...", TextUtils.shortenText("alpha beta gamma delta", 2, 8));
+        assertEquals("alpha be...", TextUtils.shortenText("alpha beta gamma delta", 3, 8));
+        assertEquals("alpha be...", TextUtils.shortenText("alpha beta gamma delta", 4, 8));
+        assertEquals("alpha be...", TextUtils.shortenText("alpha beta gamma delta", 5, 8));
+        assertEquals("alpha be...", TextUtils.shortenText("alpha beta gamma delta", 6, 8));
 
-        assertEquals("alpha beta ...",    TextUtils.shortenText("alpha beta gamma delta", 1, 14));
-        assertEquals("alpha beta ...",    TextUtils.shortenText("alpha beta gamma delta", 2, 14));
+        assertEquals("alpha beta ...", TextUtils.shortenText("alpha beta gamma delta", 1, 14));
+        assertEquals("alpha beta ...", TextUtils.shortenText("alpha beta gamma delta", 2, 14));
         assertEquals("alpha beta gam...", TextUtils.shortenText("alpha beta gamma delta", 3, 14));
         assertEquals("alpha beta gam...", TextUtils.shortenText("alpha beta gamma delta", 4, 14));
         assertEquals("alpha beta gam...", TextUtils.shortenText("alpha beta gamma delta", 5, 14));
@@ -161,7 +160,7 @@ public class TextUtilsTest {
         return TextUtils.shortenText(text, 2, limit);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testTrimSpecialNullText() {
         trimSpecial(null);
     }
@@ -191,6 +190,20 @@ public class TextUtilsTest {
         assertEquals("a \tb", trimSpecial(" a \tb"));
         assertEquals("a \tb", trimSpecial(" \ta \tb"));
         assertEquals("a \tb", trimSpecial("a \tb\t\t"));
+    }
+
+    @Test
+    public void testEncodeURL() {
+        {//latin symbols test
+            String text = "test";
+            String encodedText = TextUtils.encodeURL(text);
+            assertEquals(text, TextUtils.decodeURL(encodedText));
+        }
+        {//cyrillic symbols test
+            String text = "тест";
+            String encodedText = TextUtils.encodeURL(text);
+            assertEquals(text, TextUtils.decodeURL(encodedText));
+        }
     }
 
 }

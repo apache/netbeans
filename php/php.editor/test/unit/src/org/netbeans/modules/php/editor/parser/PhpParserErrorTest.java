@@ -1355,4 +1355,8 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03b.php");
     }
 
+    public void testGH4684() throws Exception {
+        checkErrors("testfiles/parser/gh4684.php");
+    }
+
 }

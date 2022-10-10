@@ -97,8 +97,4 @@ UnsupportedOperationException
 VerifyError
 VirtualMachineError
 Void
-com
 java
-javax
-org
-sun

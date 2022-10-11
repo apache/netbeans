@@ -2782,6 +2782,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath tPath = new TreePath(path, t);
         if (t.getKind() == Tree.Kind.MODIFIERS) {
             insideModifiers(env, tPath);
+        } else if (t.getKind() == Tree.Kind.IDENTIFIER && YIELD_KEYWORD.contentEquals(((IdentifierTree) t).getName())) {
+            TreePath sPath = controller.getTreeUtilities().getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+            if (sPath != null) {
+                localResult(env);
+                addValueKeywords(env);
+            }
         } else if (t.getKind() == Tree.Kind.MEMBER_SELECT && ERROR.contentEquals(((MemberSelectTree) t).getIdentifier())) {
             controller.toPhase(Phase.ELEMENTS_RESOLVED);
             TreePath expPath = new TreePath(tPath, ((MemberSelectTree) t).getExpression());
@@ -4772,6 +4778,30 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, withinLabeledStatement(env) ? null : SEMI, anchorOffset, false));
                     }
                     break;
+                case SWITCH_EXPRESSION:
+                    lastCase = null;
+                    root = env.getRoot();
+                    sourcePositions = env.getSourcePositions();
+                    for (CaseTree t : ((SwitchExpressionTree) tp.getLeaf()).getCases()) {
+                        if (sourcePositions.getStartPosition(root, t) >= env.getOffset()) {
+                            break;
+                        }
+                        lastCase = t;
+                    }
+                    if (!caseAdded && (lastCase == null || lastCase.getExpression() != null)) {
+                        caseAdded = true;
+                        if (Utilities.startsWith(CASE_KEYWORD, prefix)) {
+                            results.add(itemFactory.createKeywordItem(CASE_KEYWORD, SPACE, anchorOffset, false));
+                        }
+                        if (Utilities.startsWith(DEFAULT_KEYWORD, prefix)) {
+                            results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, COLON, anchorOffset, false));
+                        }
+                    }
+                    if (!breakAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
+                        breakAdded = true;
+                        results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, withinLabeledStatement(env) ? null : SEMI, anchorOffset, false));
+                    }
+                    break;
                 case DO_WHILE_LOOP:
                 case ENHANCED_FOR_LOOP:
                 case FOR_LOOP:
@@ -5590,6 +5620,25 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         }
                     }
                     return ret;
+                case SWITCH_EXPRESSION:
+                    SwitchExpressionTree sew = (SwitchExpressionTree) tree;
+                    if (sew.getExpression() != lastTree && sew.getExpression().getKind() != Tree.Kind.ERRONEOUS) {
+                        return null;
+                    }
+                    ret = new HashSet<>();
+                    types = controller.getTypes();
+                    ret.add(controller.getTypes().getPrimitiveType(TypeKind.INT));
+                    te = controller.getElements().getTypeElement("java.lang.Enum"); //NOI18N
+                    if (te != null) {
+                        ret.add(types.getDeclaredType(te));
+                    }
+                    if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_7) >= 0) {
+                        te = controller.getElements().getTypeElement("java.lang.String"); //NOI18N
+                        if (te != null) {
+                            ret.add(types.getDeclaredType(te));
+                        }
+                    }
+                    return ret;
                 case METHOD_INVOCATION:
                     MethodInvocationTree mi = (MethodInvocationTree) tree;
                     sourcePositions = env.getSourcePositions();
@@ -5967,6 +6016,23 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         {
                             return null;
                         }
+                    } else if (exp.getKind() == Tree.Kind.ERRONEOUS) {
+                        Iterator<? extends Tree> it = ((ErroneousTree) exp).getErrorTrees().iterator();
+                        if (it.hasNext()) {
+                            Tree t = it.next();
+                            if (t.getKind() == Tree.Kind.IDENTIFIER && YIELD_KEYWORD.contentEquals(((IdentifierTree) t).getName())) {
+                                TreePath sPath = tu.getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+                                if (sPath != null) {
+                                    path = sPath;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case YIELD:
+                    TreePath sPath = tu.getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+                    if (sPath != null) {
+                        path = sPath;
                     }
                     break;
                 case BLOCK:

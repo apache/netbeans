@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.antlr;
+package org.netbeans.modules.languages.antlr.v3;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -28,14 +28,13 @@ import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
-import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.languages.antlr.v3.Antlr3Language;
-import org.netbeans.modules.languages.antlr.v4.Antlr4Language;
-import org.netbeans.modules.languages.antlr.v4.Antlr4ParserResult;
+import org.netbeans.modules.languages.antlr.AntlrParser;
+import org.netbeans.modules.languages.antlr.AntlrParserResult;
+import org.netbeans.modules.languages.antlr.AntlrTokenId;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -49,11 +48,8 @@ import org.openide.filesystems.FileObject;
  *
  * @author Laszlo Kishalmi
  */
-@MimeRegistrations({
-    @MimeRegistration(mimeType = Antlr3Language.MIME_TYPE, service = CompletionProvider.class),
-    @MimeRegistration(mimeType = Antlr4Language.MIME_TYPE, service = CompletionProvider.class),
-})
-public class AntlrCompletionProvider implements CompletionProvider {
+@MimeRegistration(mimeType = Antlr3Language.MIME_TYPE, service = CompletionProvider.class)
+public class Antlr3CompletionProvider implements CompletionProvider {
 
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
@@ -106,45 +102,29 @@ public class AntlrCompletionProvider implements CompletionProvider {
                     return;
                 }
 
-                Set<FileObject> scannedFiles = new HashSet<>();
-                addReferencesForFile(fo, isCaseSensitive, caretOffset - prefix.length(), prefix, resultSet, scannedFiles);
+                String mprefix = isCaseSensitive ? prefix : prefix.toUpperCase();
+
+                AntlrParserResult result = AntlrParser.getParserResult(fo);
+                Map<String, AntlrParserResult.Reference> refs = result.references;
+
+                int startOffset = caretOffset - prefix.length();
+                for (String ref : refs.keySet()) {
+                    String mref = isCaseSensitive ? ref : ref.toUpperCase();
+                    boolean match = mref.startsWith(mprefix);
+                    if (match) {
+                        CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref)
+                                .startOffset(startOffset)
+                                .leftHtmlText(ref)
+                                .sortText(ref)
+                                .build();
+                        resultSet.addItem(item);
+                    }
+                }
 
             } finally {
                 resultSet.finish();
             }
         }
 
-        public void addReferencesForFile(FileObject fo, boolean isCaseSensitive, int removeLength, String prefix, CompletionResultSet resultSet, Set<FileObject> scannedFiles) {
-            if(scannedFiles.contains(fo)) {
-                return;
-            }
-            scannedFiles.add(fo);
-
-            String mprefix = isCaseSensitive ? prefix : prefix.toUpperCase();
-
-            AntlrParserResult result = AntlrParser.getParserResult(fo);
-            Map<String, AntlrParserResult.Reference> refs = result.references;
-            for (String ref : refs.keySet()) {
-                String mref = isCaseSensitive ? ref : ref.toUpperCase();
-                boolean match = mref.startsWith(mprefix);
-                if (match) {
-                    CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref)
-                            .startOffset(removeLength)
-                            .leftHtmlText(ref)
-                            .sortText(ref)
-                            .build();
-                    resultSet.addItem(item);
-                }
-            }
-
-            if(result instanceof Antlr4ParserResult) {
-                for(String s: ((Antlr4ParserResult) result).getImports()) {
-                    FileObject importedFo = fo.getParent().getFileObject(s, "g4");
-                    if(importedFo != null) {
-                        addReferencesForFile(importedFo, isCaseSensitive, removeLength, prefix, resultSet, scannedFiles);
-                    }
-                }
-            }
-        }
     }
 }

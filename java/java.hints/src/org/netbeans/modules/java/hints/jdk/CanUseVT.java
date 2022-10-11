@@ -22,6 +22,7 @@ import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ConstraintVariableType;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -40,7 +41,7 @@ import org.openide.util.NbBundle;
     "ERR_CanUseVT=Can Use Virtual Thread Executor",
     "ERR_CanUseThreadPerTask=Can Use Executors.newThreadPerTaskExecutor"
 })
-@Hint(displayName = "#DN_CanUseVT", description = "#DESC_CanUseVT", category = "suggestions", hintKind = Hint.Kind.ACTION,
+@Hint(displayName = "#DN_CanUseVT", description = "#DESC_CanUseVT", category = "suggestions", hintKind = Hint.Kind.INSPECTION, severity = Severity.HINT,
         minSourceVersion = "19")
 public class CanUseVT {
 

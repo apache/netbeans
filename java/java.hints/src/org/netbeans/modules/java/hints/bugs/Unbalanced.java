@@ -152,7 +152,7 @@ public class Unbalanced {
                 if (secondAccess != null) {
                     record(ctx.getInfo(), var, secondAccess);
                 }
-            } else if (!var.getModifiers().contains(Modifier.FINAL)) {
+            } else {
                 record(ctx.getInfo(), var, State.WRITE, State.READ);
             }
 
@@ -254,9 +254,7 @@ public class Unbalanced {
                 }
             }
 
-            if (!var.getModifiers().contains(Modifier.FINAL)) {
-                record(ctx.getInfo(), var, State.WRITE, State.READ);
-            }
+            record(ctx.getInfo(), var, State.WRITE, State.READ);
 
             return null;
         }

@@ -1551,13 +1551,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         localResult(env);
         addKeywordsForBlock(env);
-        
-        if (env.getController().getSourceVersion().compareTo(RELEASE_13) >= 0) {
-            TreePath parentPath = env.getPath().getParentPath();
-            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                addKeyword(env, YIELD_KEYWORD, SPACE, false);
-            }
-        }
     }
 
     @SuppressWarnings("fallthrough")
@@ -2400,9 +2393,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     localResult(env);
                     addKeywordsForBlock(env);
-                    if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_13) >= 0 && path.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                        addKeyword(env, YIELD_KEYWORD, SPACE, false);
-                    }
                 }
             } else {
                 TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, path.getLeaf(), offset);
@@ -4751,6 +4741,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         boolean caseAdded = false;
         boolean breakAdded = false;
         boolean continueAdded = false;
+        boolean yieldAdded = false;
         TreePath tp = env.getPath();
         while (tp != null) {
             switch (tp.getLeaf().getKind()) {
@@ -4797,9 +4788,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, COLON, anchorOffset, false));
                         }
                     }
-                    if (!breakAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
-                        breakAdded = true;
-                        results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, withinLabeledStatement(env) ? null : SEMI, anchorOffset, false));
+                    if (!yieldAdded && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+                        yieldAdded = true;
+                        results.add(itemFactory.createKeywordItem(YIELD_KEYWORD, SPACE, anchorOffset, false));
                     }
                     break;
                 case DO_WHILE_LOOP:
@@ -4860,6 +4851,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath tp = env.getPath();
         boolean cAdded = false;
         boolean bAdded = false;
+        boolean yAdded = false;
         while (tp != null && !(cAdded && bAdded)) {
             switch (tp.getLeaf().getKind()) {
                 case DO_WHILE_LOOP:
@@ -4874,6 +4866,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (!bAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
                         results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, SEMI, anchorOffset, false));
                         bAdded = true;
+                    }
+                    break;
+                case SWITCH_EXPRESSION:
+                    if (!yAdded && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+                        results.add(itemFactory.createKeywordItem(YIELD_KEYWORD, SPACE, anchorOffset, false));
+                        yAdded = true;
                     }
                     break;
             }

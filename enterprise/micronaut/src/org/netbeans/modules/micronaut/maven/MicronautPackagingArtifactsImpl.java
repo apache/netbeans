@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
@@ -53,6 +55,8 @@ import org.openide.util.lookup.Lookups;
  * @author sdedic
  */
 public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplementation<MicronautPackagingArtifactsImpl.R> {
+    private static final Logger LOG = Logger.getLogger(MicronautPackagingArtifactsImpl.class.getName());
+    
     // TBD: possibly configure the N-I plugin coordinates in the IDE settings.
     
     /**
@@ -75,6 +79,7 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
     public MicronautPackagingArtifactsImpl(Project project) {
         this.project = project;
         mavenProject = project.getLookup().lookup(NbMavenProject.class);
+        LOG.log(Level.FINE, "Created for project {0}", project.getProjectDirectory());
     }
 
     @Override
@@ -149,20 +154,27 @@ public class MicronautPackagingArtifactsImpl implements ProjectArtifactsImplemen
             if (query.getArtifactType() != null && 
                 !SUPPORTED_ARTIFACT_TYPES.contains(query.getArtifactType()) &&
                 !ProjectArtifactsQuery.Filter.TYPE_ALL.equals(query.getArtifactType())) {
+                LOG.log(Level.FINE, "Unsupported type: {0}", query.getArtifactType());
                 return Collections.emptyList();
             }
             if (query.getClassifier()!= null && !ProjectArtifactsQuery.Filter.CLASSIFIER_ANY.equals(query.getClassifier())) {
+                LOG.log(Level.FINE, "Unsupported classifier: {0}", query.getClassifier());
                 return Collections.emptyList();
             }
             MavenProject model = mavenProject.getEvaluatedProject(buildCtx);
             if (!MicronautMavenConstants.PACKAGING_NATIVE.equals(model.getPackaging())) {
+                LOG.log(Level.FINE, "Unsupported packaging: {0}", model.getPackaging());
                 return Collections.emptyList();
             }
             List<ArtifactSpec> nativeStuff = new ArrayList<>();
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Configured build plugins: {0}", model.getBuild().getPlugins());
+            }
             for (Plugin p : model.getBuild().getPlugins()) {
                 if (!(MicronautMavenConstants.NATIVE_BUILD_PLUGIN_GROUP.equals(p.getGroupId()) && MicronautMavenConstants.NATIVE_BUILD_PLUGIN_ID.equals(p.getArtifactId()))) {
                     continue;
                 }
+                LOG.log(Level.FINE, "Configured executions: {0}", p.getExecutions());
                 for (PluginExecution pe : p.getExecutions()) {
                     if (pe.getGoals().contains(MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK)) { // NOI18N
                         Xpp3Dom dom = model.getGoalConfiguration(MicronautMavenConstants.NATIVE_BUILD_PLUGIN_GROUP, MicronautMavenConstants.NATIVE_BUILD_PLUGIN_ID, pe.getId(), MicronautMavenConstants.PLUGIN_GOAL_COMPILE_NOFORK); // NOI18N

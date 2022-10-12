@@ -262,7 +262,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
         public void run(WorkingCopy copy) throws Exception {
             copy.toPhase(JavaSource.Phase.RESOLVED);
             TreeMaker tm = copy.getTreeMaker();
-            ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getTypeDecls().get(0);
+            ModuleTree modle = copy.getCompilationUnit().getModule();
             ModuleTree newModle = modle;
             for (String mName : mNames) {
                 newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));

@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -45,14 +46,20 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     public final List<DefaultError> errors = new ArrayList<>();
     public final Map<String, Reference> references = new TreeMap<>();
+    public final Map<String, List<OffsetRange>> occurrences = new HashMap<>();
 
     public final List<OffsetRange> folds = new ArrayList<>();
     public final List<AntlrStructureItem> structure = new ArrayList<>();
 
     volatile boolean finished = false;
 
+    public static final Reference EOF = new Reference("EOF", OffsetRange.NONE); //NOI18N
+    
     public AntlrParserResult(Snapshot snapshot) {
         super(snapshot);
+        
+        references.put(EOF.name, EOF);
+        
     }
 
     public AntlrParserResult get() {
@@ -63,12 +70,12 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
             parser.addParseListener(createFoldListener());
             parser.addParseListener(createReferenceListener());
             parser.addParseListener(createImportListener());
-            parser.addParseListener(createStructureListener());
-            parser.addParseListener(createOccurancesListener());
             evaluateParser(parser);
 
             // Start a second parsing phase for checking;
             parser = createParser(getSnapshot());
+            parser.addParseListener(createStructureListener());
+            parser.addParseListener(createOccurancesListener());
             parser.addParseListener(createCheckReferences());
             evaluateParser(parser);
             finished = true;
@@ -93,19 +100,31 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     public static class Reference {
         public final String name;
-        public FileObject source;
-        public OffsetRange defOffset;
-        public final List<OffsetRange> occurances = new ArrayList<>();
+        public final OffsetRange defOffset;
 
-        public Reference(String name, FileObject source, OffsetRange defOffset) {
+        public Reference(String name, OffsetRange defOffset) {
             this.name = name;
-            this.source = source;
             this.defOffset = defOffset;
         }
     }
 
     protected final FileObject getFileObject() {
         return getSnapshot().getSource().getFileObject();
+    }
+    
+    public final List<? extends OffsetRange> getOccurrences(String refName) {
+        ArrayList<OffsetRange> ret = new ArrayList<>();
+        if (references.containsKey(refName)) {
+            ret.add(references.get(refName).defOffset);
+        }
+        if (occurrences.containsKey(refName)) {
+            ret.addAll(occurrences.get(refName));
+        }
+        return ret;
+    } 
+    
+    protected final void markOccurrence(String refName, OffsetRange or) {
+        occurrences.computeIfAbsent(refName, s -> new ArrayList<>()).add(or);
     }
 
     protected abstract T createParser(Snapshot snapshot);

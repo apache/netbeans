@@ -27,7 +27,7 @@ import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.languages.antlr.AntlrDeclarationFinder;
-import org.netbeans.modules.languages.antlr.AntlrOccurancesFinder;
+import org.netbeans.modules.languages.antlr.AntlrOccurrencesFinder;
 import org.netbeans.modules.languages.antlr.AntlrParser;
 import org.netbeans.modules.languages.antlr.AntlrParserResult;
 import org.netbeans.modules.languages.antlr.AntlrStructureScanner;
@@ -172,7 +172,7 @@ public final class Antlr3Language extends DefaultLanguageConfig {
 
     @Override
     public OccurrencesFinder getOccurrencesFinder() {
-        return new AntlrOccurancesFinder();
+        return new AntlrOccurrencesFinder();
     }
 
     @Override

@@ -85,12 +85,12 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         }
         scannedFiles.add(fo);
 
-        AntlrParserResult result = AntlrParser.getParserResult(fo);
+        AntlrParserResult<?> result = AntlrParser.getParserResult(fo);
 
-        Reference ref = ((Map<String, Reference>) result.references).get(name);
+        Reference ref = result.references.get(name);
 
-        if(ref != null && ref.defOffset != null) {
-            AntlrStructureItem asi = new AntlrStructureItem.RuleStructureItem(name, fo, ref.defOffset.getStart(), ref.defOffset.getEnd());
+        if(ref != null && ref.defOffset != OffsetRange.NONE) {
+            AntlrStructureItem asi = new AntlrStructureItem.RuleStructureItem(name, false, fo, ref.defOffset.getStart(), ref.defOffset.getEnd());
             DeclarationLocation dln = new DeclarationFinder.DeclarationLocation(fo, ref.defOffset.getStart(), asi);
             if (resultDL == DeclarationLocation.NONE) {
                 resultDL = dln;

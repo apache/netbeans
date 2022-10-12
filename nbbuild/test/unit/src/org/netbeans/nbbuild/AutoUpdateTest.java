@@ -167,8 +167,8 @@ public class AutoUpdateTest extends TestBase {
         modules.setClusters("platform|ide");
         File catalog = extractString(
                 "<module_updates>\n" +
-                " <module codenamebase='org.apache.commons.io' distribution='ide/org-apache-commons-io.jar' downloadsize='109043' targetcluster='ide'>\n" +
-                "  <manifest AutoUpdate-Show-In-Client='false' OpenIDE-Module='org.apache.commons.io' OpenIDE-Module-Name='Apache Commons IO Bundle' OpenIDE-Module-Specification-Version='1.4'/>\n" +
+                " <module codenamebase='org.apache.commons-io' distribution='ide/org-apache-commons-io.jar' downloadsize='109043' targetcluster='ide'>\n" +
+                "  <manifest AutoUpdate-Show-In-Client='false' OpenIDE-Module='org.apache.commons-io' OpenIDE-Module-Name='Apache Commons IO Bundle' OpenIDE-Module-Specification-Version='1.4'/>\n" +
                 " </module>\n" +
                 "</module_updates>\n");
         File bundle = new File(getWorkDir(), "ide/org-apache-commons-io.jar");
@@ -176,7 +176,7 @@ public class AutoUpdateTest extends TestBase {
         OutputStream os = new FileOutputStream(bundle);
         Manifest m = new Manifest();
         m.getMainAttributes().putValue("Manifest-Version", "1.0");
-        m.getMainAttributes().putValue("Bundle-SymbolicName", "org.apache.commons.io");
+        m.getMainAttributes().putValue("Bundle-SymbolicName", "org.apache.commons-io");
         new JarOutputStream(os, m).close();
         au.setUpdateCenter(catalog.toURI().toURL());
         au.execute();
@@ -192,7 +192,7 @@ public class AutoUpdateTest extends TestBase {
         assertEquals(bundle.length(), new File(install, "ide/modules/org-apache-commons-io.jar").length());
         File config = new File(install, "ide/config/Modules/org-apache-commons-io.xml");
         assertTrue(config.isFile());
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n<module name=\"org.apache.commons.io\">\n    <param name=\"autoload\">true</param>\n    <param name=\"eager\">false</param>\n    <param name=\"jar\">modules/org-apache-commons-io.jar</param>\n    <param name=\"reloadable\">false</param>\n</module>\n", readFile(config));
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n<module name=\"org.apache.commons-io\">\n    <param name=\"autoload\">true</param>\n    <param name=\"eager\">false</param>\n    <param name=\"jar\">modules/org-apache-commons-io.jar</param>\n    <param name=\"reloadable\">false</param>\n</module>\n", readFile(config));
     }
     
     public void testDownloadAndExtractExternal() throws Exception {

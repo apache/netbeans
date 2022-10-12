@@ -23,7 +23,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.apache.commons.io</code-name-base>
+            <code-name-base>org.apache.commons-io</code-name-base>
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.apache.commons.codec</code-name-base>

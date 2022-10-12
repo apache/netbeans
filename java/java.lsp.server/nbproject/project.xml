@@ -663,6 +663,11 @@
                         <specification-version>9.24</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.apache.commons-io</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>

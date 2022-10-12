@@ -1551,13 +1551,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         localResult(env);
         addKeywordsForBlock(env);
-        
-        if (env.getController().getSourceVersion().compareTo(RELEASE_13) >= 0) {
-            TreePath parentPath = env.getPath().getParentPath();
-            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                addKeyword(env, YIELD_KEYWORD, SPACE, false);
-            }
-        }
     }
 
     @SuppressWarnings("fallthrough")
@@ -2400,9 +2393,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     localResult(env);
                     addKeywordsForBlock(env);
-                    if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_13) >= 0 && path.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                        addKeyword(env, YIELD_KEYWORD, SPACE, false);
-                    }
                 }
             } else {
                 TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, path.getLeaf(), offset);
@@ -2782,6 +2772,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath tPath = new TreePath(path, t);
         if (t.getKind() == Tree.Kind.MODIFIERS) {
             insideModifiers(env, tPath);
+        } else if (t.getKind() == Tree.Kind.IDENTIFIER && YIELD_KEYWORD.contentEquals(((IdentifierTree) t).getName())) {
+            TreePath sPath = controller.getTreeUtilities().getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+            if (sPath != null) {
+                localResult(env);
+                addValueKeywords(env);
+            }
         } else if (t.getKind() == Tree.Kind.MEMBER_SELECT && ERROR.contentEquals(((MemberSelectTree) t).getIdentifier())) {
             controller.toPhase(Phase.ELEMENTS_RESOLVED);
             TreePath expPath = new TreePath(tPath, ((MemberSelectTree) t).getExpression());
@@ -4745,6 +4741,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         boolean caseAdded = false;
         boolean breakAdded = false;
         boolean continueAdded = false;
+        boolean yieldAdded = false;
         TreePath tp = env.getPath();
         while (tp != null) {
             switch (tp.getLeaf().getKind()) {
@@ -4770,6 +4767,30 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (!breakAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
                         breakAdded = true;
                         results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, withinLabeledStatement(env) ? null : SEMI, anchorOffset, false));
+                    }
+                    break;
+                case SWITCH_EXPRESSION:
+                    lastCase = null;
+                    root = env.getRoot();
+                    sourcePositions = env.getSourcePositions();
+                    for (CaseTree t : ((SwitchExpressionTree) tp.getLeaf()).getCases()) {
+                        if (sourcePositions.getStartPosition(root, t) >= env.getOffset()) {
+                            break;
+                        }
+                        lastCase = t;
+                    }
+                    if (!caseAdded && (lastCase == null || lastCase.getExpression() != null)) {
+                        caseAdded = true;
+                        if (Utilities.startsWith(CASE_KEYWORD, prefix)) {
+                            results.add(itemFactory.createKeywordItem(CASE_KEYWORD, SPACE, anchorOffset, false));
+                        }
+                        if (Utilities.startsWith(DEFAULT_KEYWORD, prefix)) {
+                            results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, COLON, anchorOffset, false));
+                        }
+                    }
+                    if (!yieldAdded && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+                        yieldAdded = true;
+                        results.add(itemFactory.createKeywordItem(YIELD_KEYWORD, SPACE, anchorOffset, false));
                     }
                     break;
                 case DO_WHILE_LOOP:
@@ -4830,6 +4851,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath tp = env.getPath();
         boolean cAdded = false;
         boolean bAdded = false;
+        boolean yAdded = false;
         while (tp != null && !(cAdded && bAdded)) {
             switch (tp.getLeaf().getKind()) {
                 case DO_WHILE_LOOP:
@@ -4844,6 +4866,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (!bAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
                         results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, SEMI, anchorOffset, false));
                         bAdded = true;
+                    }
+                    break;
+                case SWITCH_EXPRESSION:
+                    if (!yAdded && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+                        results.add(itemFactory.createKeywordItem(YIELD_KEYWORD, SPACE, anchorOffset, false));
+                        yAdded = true;
                     }
                     break;
             }
@@ -5590,6 +5618,25 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         }
                     }
                     return ret;
+                case SWITCH_EXPRESSION:
+                    SwitchExpressionTree sew = (SwitchExpressionTree) tree;
+                    if (sew.getExpression() != lastTree && sew.getExpression().getKind() != Tree.Kind.ERRONEOUS) {
+                        return null;
+                    }
+                    ret = new HashSet<>();
+                    types = controller.getTypes();
+                    ret.add(controller.getTypes().getPrimitiveType(TypeKind.INT));
+                    te = controller.getElements().getTypeElement("java.lang.Enum"); //NOI18N
+                    if (te != null) {
+                        ret.add(types.getDeclaredType(te));
+                    }
+                    if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_7) >= 0) {
+                        te = controller.getElements().getTypeElement("java.lang.String"); //NOI18N
+                        if (te != null) {
+                            ret.add(types.getDeclaredType(te));
+                        }
+                    }
+                    return ret;
                 case METHOD_INVOCATION:
                     MethodInvocationTree mi = (MethodInvocationTree) tree;
                     sourcePositions = env.getSourcePositions();
@@ -5967,6 +6014,23 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         {
                             return null;
                         }
+                    } else if (exp.getKind() == Tree.Kind.ERRONEOUS) {
+                        Iterator<? extends Tree> it = ((ErroneousTree) exp).getErrorTrees().iterator();
+                        if (it.hasNext()) {
+                            Tree t = it.next();
+                            if (t.getKind() == Tree.Kind.IDENTIFIER && YIELD_KEYWORD.contentEquals(((IdentifierTree) t).getName())) {
+                                TreePath sPath = tu.getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+                                if (sPath != null) {
+                                    path = sPath;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case YIELD:
+                    TreePath sPath = tu.getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+                    if (sPath != null) {
+                        path = sPath;
                     }
                     break;
                 case BLOCK:

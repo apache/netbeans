@@ -18,9 +18,7 @@
  */
 package org.netbeans.modules.languages.antlr.v3;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;

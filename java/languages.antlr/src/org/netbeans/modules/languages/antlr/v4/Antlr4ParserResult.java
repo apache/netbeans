@@ -231,7 +231,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
-                boolean fragment = ctx.FRAGMENT() == null;
+                boolean fragment = ctx.FRAGMENT() != null;
                 if (ctx.TOKEN_REF() != null) {
                     // Do not represent fragments in the structure
                     AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.TOKEN_REF().getText(), fragment, getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);

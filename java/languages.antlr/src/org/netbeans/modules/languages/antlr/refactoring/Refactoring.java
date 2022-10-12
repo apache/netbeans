@@ -148,8 +148,8 @@ public class Refactoring {
                         if(ref.defOffset != null) {
                             ranges.add(ref.defOffset);
                         }
-                        ranges.addAll(result.getOccurrences(name));
                     }
+                    ranges.addAll(result.getOccurrences(name));
 
                     for(OffsetRange or : ranges) {
                         PositionBounds bounds;

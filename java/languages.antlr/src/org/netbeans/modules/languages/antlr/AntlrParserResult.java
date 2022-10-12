@@ -19,7 +19,6 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,16 +120,11 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
         if (occurrences.containsKey(refName)) {
             ret.addAll(occurrences.get(refName));
         }
-        return !ret.isEmpty() ? ret : Collections.emptyList();
+        return ret;
     } 
     
     protected final void markOccurrence(String refName, OffsetRange or) {
-        List<OffsetRange> ol = occurrences.get(refName);
-        if (ol == null) {
-            ol = new ArrayList<>();
-            occurrences.put(refName, ol);
-        }
-        ol.add(or);
+        occurrences.computeIfAbsent(refName, s -> new ArrayList<>()).add(or);
     }
 
     protected abstract T createParser(Snapshot snapshot);

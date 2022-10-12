@@ -26,6 +26,26 @@
   	<apidef name="modules">Modules API</apidef>
   </apidefs>
 <changes>
+    <change id="osgi.bundle.symbolic">
+        <api name="modules"/>
+        <summary>Less restrictive check of code names of modules and OSGi bundles (2)</summary>
+        <version major="7" minor="66"/>
+        <date day="12" month="10" year="2022"/>
+        <author login="matthiasblaesing"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+        </compatibility>
+        <description>
+            <p>
+                <a href="@TOP@/org/openide/modules/Dependency.html#create-int-java.lang.String-">Dependency.create</a>
+                now allows code name base to start with number or dash and
+                contain dashes (like <em>org.apache.commons-io</em>).
+                This increases the inter-operability with OSGi bundles
+                using such naming style.
+            </p>
+        </description>
+        <class package="org.openide.modules" name="Dependency"/>
+        <issue number="GH-3794"/>
+    </change>
     <change id="PatchSuper-ctors">
         <api name="modules"/>
         <summary>Better support for constructor invocation</summary>

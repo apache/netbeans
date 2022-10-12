@@ -104,10 +104,12 @@ public class DependencyTest extends NbTestCase {
     
     public void testParseCodenameHyphen() throws Exception {
         Dependency.create(Dependency.TYPE_MODULE, "org.foo.bar.thing-io");
+        Dependency.create(Dependency.TYPE_MODULE, "-test.is.a.strange.name");
     }
     
     public void testParseCodenameUnderscore() throws Exception {
         Dependency.create(Dependency.TYPE_MODULE, "org.foo.bar.thing_io");
+        Dependency.create(Dependency.TYPE_MODULE, "_test.is.a.strange.name");
     }
     
     public void testParseRangedRelVers() throws Exception {
@@ -147,7 +149,6 @@ public class DependencyTest extends NbTestCase {
     
     public void testMisparseBadCodename() throws Exception {
         misparse(Dependency.TYPE_MODULE, "org.foo/-1");
-        misparse(Dependency.TYPE_MODULE, "org-foo/1");
         misparse(Dependency.TYPE_MODULE, "org.foo./1");
     }
     
@@ -156,7 +157,6 @@ public class DependencyTest extends NbTestCase {
         misparse(Dependency.TYPE_MODULE, "org.foo/3-3");
         misparse(Dependency.TYPE_MODULE, "org.foo/3-");
         misparse(Dependency.TYPE_MODULE, "org.foo/-3");
-        misparse(Dependency.TYPE_MODULE, "org.foo/3,4,5");
         misparse(Dependency.TYPE_MODULE, "org.foo/1-2 = build99");
         misparse(Dependency.TYPE_MODULE, "org.foo/[123] > 1");
     }
@@ -195,10 +195,6 @@ public class DependencyTest extends NbTestCase {
         misparse(Dependency.TYPE_REQUIRES, "some.thing = whatever-impl-version");
     }
     
-    public void testMisparseRequiresBadCodeName() throws Exception {
-        misparse(Dependency.TYPE_REQUIRES, "some-thing");
-    }
-    
     public void testMisparseDuplicates() throws Exception {
         misparse(Dependency.TYPE_MODULE, "org.foo/1 > 1.0, org.foo/2 > 2.0");
         // Was actually used in tomcatint/tomcat40/manifest.mf:
@@ -214,6 +210,7 @@ public class DependencyTest extends NbTestCase {
         Dependency.create(Dependency.TYPE_MODULE, "acme.2.webapp.importing");
         Dependency.create(Dependency.TYPE_MODULE, "acme.2xyz.webapp.importing");
         Dependency.create(Dependency.TYPE_MODULE, "org.apache.servicemix.specs.jsr303_api_1.0.0");
+        Dependency.create(Dependency.TYPE_MODULE, "1st.module.ever");
     }
     
     public void testConstants() throws Exception {

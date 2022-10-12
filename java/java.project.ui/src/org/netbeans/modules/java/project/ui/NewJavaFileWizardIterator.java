@@ -231,7 +231,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
         return res;
     }
     
-    private void addRequires(FileObject createdFile, Set<String> requiredModuleNames) throws IOException {
+    private void addRequires(FileObject createdFile, String createdModuleName, Set<String> requiredModuleNames) throws IOException {
         if (requiredModuleNames == null) {
             requiredModuleNames = new LinkedHashSet<>();
             ClassPath modulePath = ClassPath.getClassPath(createdFile, JavaClassPathConstants.MODULE_COMPILE_PATH);
@@ -241,6 +241,9 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     requiredModuleNames.add(name);
                 }
             }
+        }
+        if (createdModuleName != null) {
+            requiredModuleNames.remove(createdModuleName);
         }
         if (!requiredModuleNames.isEmpty()) {
             final JavaSource src = JavaSource.forFileObject(createdFile);
@@ -281,6 +284,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
         FileObject template = Templates.getTemplate( wiz );
         
         FileObject createdFile = null;
+        String createdModuleName = null;
         Set<String> requiredModuleNames = null;
         if (this.type == Type.PACKAGE) {
             targetName = targetName.replace( '.', '/' ); // NOI18N
@@ -324,6 +328,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     targetName,
                     Collections.singletonMap("moduleName", moduleName)); //NOI18N
             createdFile = dobj.getPrimaryFile();
+            createdModuleName = moduleName;
         } else {
             DataObject dTemplate = DataObject.find(template);
             Object superclassProperty = wiz.getProperty(SUPERCLASS);
@@ -353,7 +358,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                 })
                 .ifPresent(res::addAll);
         if (this.type == Type.MODULE_INFO) {
-            addRequires(createdFile, requiredModuleNames);
+            addRequires(createdFile, createdModuleName, requiredModuleNames);
         }
         return Collections.unmodifiableSet(res);
     }

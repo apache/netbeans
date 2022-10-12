@@ -298,6 +298,10 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
      * @since 2.28
      */
     public List<GradleTask> getTaskPredecessors(GradleTask gt, boolean directs) {
+        // sanity check to rule out tasks from other projects or mocks.
+        if (gt.getName() == null || getTaskByName(gt.getName()) != gt) {
+            return Collections.emptyList();
+        }
         // do not cache direct dependencies, they're cheap.
         if (!directs) {
             synchronized (this) {
@@ -314,26 +318,29 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         String taskPath;
         Map<String, String> taskNamesAndPaths = new HashMap<>();
         boolean first = true;
+        Set<String> ownTasks = new HashSet<>();
         while ((taskPath = toProcess.poll()) != null) {
             if (taskPath.equals("") || !paths.add(taskPath)) {
                 continue;
             }
             int lastColon = taskPath.lastIndexOf(':');
-            String p = taskPath.substring(0, lastColon + 1);
+            // path for the root project (lastColon == 0) is ":". Path for any subproject must not contain a possible colon delimiter between project path and the task.
+            String p = taskPath.substring(0, Math.max(1, lastColon));
             String n = taskPath.substring(lastColon + 1);
+            taskNamesAndPaths.put(taskPath, n);
             if (path.equals(p)) {
-                // taskNamesAndPaths only receives tasks from this project.
-                taskNamesAndPaths.put(taskPath, n);
-            }
-            if (!directs || first) {
-                // if directs, allow just the 1st level to be added to toProcess.
-                toProcess.addAll(taskDependencies.getOrDefault(n, Collections.emptyList()));
+                ownTasks.add(taskPath);
+                if (!directs || first){
+                    // if directs, allow just the 1st level to be added to toProcess.
+                    toProcess.addAll(taskDependencies.getOrDefault(n, Collections.emptyList()));
+                }
             }
             first = false;
         }
+        paths.remove(gt.getPath());
         
         Map<String, List<String>> edges = new HashMap<>();
-        for (String tn : taskNamesAndPaths.keySet()) {
+        for (String tn : ownTasks) {
             String sn = taskNamesAndPaths.get(tn);
             for (String pred : taskDependencies.getOrDefault(sn, Collections.emptyList())) {
                 if (pred.isEmpty()) {
@@ -352,12 +359,15 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         List<GradleTask> result = new ArrayList<>();
         for (String p : orderedTasks) {
             String n = taskNamesAndPaths.get(p);
-            GradleTask toAdd = n != null ? getTaskByName(n) : null;
-            if (toAdd != null) {
-                result.add(toAdd);
-            } else {
-                result.add(new GradleTask(p, null, n, null));
+            GradleTask toAdd = null;
+            
+            if (ownTasks.contains(p)) {
+                toAdd = getTaskByName(n);
             }
+            if (toAdd == null) {
+                toAdd = new GradleTask(p, n);
+            }
+            result.add(toAdd);
         }
         if (!directs) {
             synchronized (this) {

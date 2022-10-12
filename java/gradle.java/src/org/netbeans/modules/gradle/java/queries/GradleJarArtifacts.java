@@ -286,7 +286,9 @@ public class GradleJarArtifacts implements ProjectArtifactsImplementation<Gradle
                 }
                 boolean shadowApplied = false;
                 List<GradleTask> jarTasks = new ArrayList<>();
-                for (GradleTask dep : gbp.getTaskPredecessors(gt, false)) {
+                List<GradleTask> tasks = new ArrayList<>(gbp.getTaskPredecessors(gt, false));
+                tasks.add(gt);
+                for (GradleTask dep : tasks) {
                     if (gbp.isTaskInstanceOf(dep.getName(), TASKCLASS_SHADOW_JAR)) {
                         addShadowJarArtifacts(dep.getName(), gbp, result);
                         shadowApplied = true;

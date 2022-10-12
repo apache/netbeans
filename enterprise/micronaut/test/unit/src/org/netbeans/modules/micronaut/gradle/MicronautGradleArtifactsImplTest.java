@@ -191,5 +191,68 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         assertEquals("exe", spec.getType());
     }
     
+    
+    public void testSubprojectJarOutput() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+
+        FileObject testApp = dataFO.getFileObject("gradle/artifacts/multi");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simple");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy.getFileObject("oci"));
+        ProjectTrust.getDefault().trustProject(p);
+
+        NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(null));
+        
+        assertNotNull(ar);
+        assertEquals(1, ar.getArtifacts().size());
+        ArtifactSpec spec = ar.getArtifacts().get(0);
+        assertEquals("jar", spec.getType());
+        assertEquals(null, spec.getClassifier());
+    }
+
+    public void testSubprojectShadowOutput() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+
+        FileObject testApp = dataFO.getFileObject("gradle/artifacts/multi");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simple");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy.getFileObject("oci"));
+        ProjectTrust.getDefault().trustProject(p);
+
+        NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
+                ProjectArtifactsQuery.newQuery(null, null, null, ArtifactSpec.TAG_SHADED)
+        );
+        
+        assertNotNull(ar);
+        assertEquals(1, ar.getArtifacts().size());
+        ArtifactSpec spec = ar.getArtifacts().get(0);
+        assertEquals("jar", spec.getType());
+        assertEquals("all", spec.getClassifier());
+    }
+
+    public void testNativeOutputInSubprojectNativeBuild() throws Exception {
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        
+        FileObject testApp = dataFO.getFileObject("gradle/artifacts/multi");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simple");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy.getFileObject("oci"));
+        ProjectTrust.getDefault().trustProject(p);
+        NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
+                ProjectArtifactsQuery.newQuery("exe", null, 
+                        ProjectActionContext.newBuilder(p).forProjectAction("native-build").context()
+                )
+        );
+        
+        assertNotNull(ar);
+        assertEquals(1, ar.getArtifacts().size());
+        ArtifactSpec spec = ar.getArtifacts().get(0);
+        assertEquals("exe", spec.getType());
+    }
 }
 

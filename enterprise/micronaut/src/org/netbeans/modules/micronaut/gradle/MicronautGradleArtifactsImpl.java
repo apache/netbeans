@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
@@ -156,14 +157,23 @@ public class MicronautGradleArtifactsImpl implements ProjectArtifactsImplementat
         }
         final String[] args = RunUtils.evaluateActionArgs(project, action, mapping.getArgs(), lkp);
         RunConfig rc = RunUtils.createRunConfig(project, action, "Searching for artifacts", Lookup.EMPTY, cfg, Collections.emptySet(), args);
-        Optional<GradleTask> nativeCompileTask = rc.getCommandLine().getTasks().stream().
-                map(t -> gbp.getTaskByName(t)).filter(Objects::nonNull).
-                flatMap(t -> gbp.getTaskPredecessors(t, false).stream()).
-                filter(t -> t.getName().equals(TASK_NATIVE_COMPILE)).findAny();
-        if (!nativeCompileTask.isPresent()) {
-            return null;
+        
+        if (!rc.getCommandLine().getTasks().contains(TASK_NATIVE_COMPILE)) {
+            boolean found = false;
+            for (String t : rc.getCommandLine().getTasks()) {
+                GradleTask task = gbp.getTaskByName(t);
+                if (task != null) {
+                    for (GradleTask pred : gbp.getTaskPredecessors(task, false)) {
+                        if (!pred.isExternal() && TASK_NATIVE_COMPILE.equals(pred.getName())) {
+                            found = true;
+                        }
+                    }
+                }
+            }
+            if (!found) {
+                return null;
+            }
         }
-            
         return new R(project, gbp, gp, filter);
     }
 

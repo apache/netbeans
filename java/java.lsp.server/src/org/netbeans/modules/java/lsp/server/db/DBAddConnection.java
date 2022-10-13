@@ -231,7 +231,7 @@ public class DBAddConnection extends CodeActionsProvider {
                     switch (params.getStep()) {
                         case 4:
                             Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
-                            if (passwordData != null && !passwordData.getRight().isEmpty()) {
+                            if (passwordData != null) {
                                 Either<List<QuickPickItem>,String> driverData = data.get(DRIVER);
                                 Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
                                 Either<List<QuickPickItem>,String> userData = data.get(USER_ID);

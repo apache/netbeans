@@ -48,6 +48,9 @@ env:
   # 'PHP' label
   test_php: ${{ contains(github.event.pull_request.labels.*.name, 'PHP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
+  # 'Groovy' label
+  test_groovy: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
   # 'Platform' label
   test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -1683,6 +1686,61 @@ jobs:
           paths: "./*/*/build/test/*/results/*.xml"
 
 
+  groovy-test:
+    name: Groovy on Linux/JDK ${{ matrix.java }}
+    # equals env.test_groovy == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '8' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: groovy/groovy.editor
+        run: ant $OPTS -f groovy/groovy.editor test
+
+      - name: groovy/groovy.gsp
+        run: ant $OPTS -f groovy/groovy.gsp test
+
+      - name: groovy/groovy.support
+        run: ant $OPTS -f groovy/groovy.support test
+
+#      - name: groovy/groovy
+#        run: ant $OPTS -f groovy/groovy test
+
+#      - name: groovy/groovy.java
+#        run: ant $OPTS -f groovy/groovy.java test
+
+#      - name: groovy/groovy.kit
+#        run: ant $OPTS -f groovy/groovy.kit test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
+
+
   enterprise-test:
     name: Enterprise on Linux/JDK ${{ matrix.java }}
     needs: base-build
@@ -1898,6 +1956,7 @@ jobs:
       - macos
       - php
       - javafx-test
+      - groovy-test
       - enterprise-test
 
     # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job

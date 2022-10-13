@@ -1083,6 +1083,9 @@ jobs:
 
       - name: harness/jellytools.platform
         run: ant $OPTS -Dvanilla.javac.exists=true -f harness/jellytools.platform test -Dtest.config=stable
+
+      - name: ergonomics/ide.ergonomics
+        run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
         
       - name: Create Test Summary
         uses: test-summary/action@v1

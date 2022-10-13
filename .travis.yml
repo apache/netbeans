@@ -64,19 +64,6 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS build
             - nbbuild/travis/ant.sh $OPTS test -Dtest.includes=NoTestsJustBuild
 
-        - name: Test harness modules
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - ant $OPTS -f harness/o.n.insane test
-            - ant $OPTS -f harness/apisupport.harness test
-            - ant $OPTS -f harness/nbjunit test
-            - ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
-
         - name: Test nb modules
           jdk: openjdk8
           env:

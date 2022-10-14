@@ -1025,6 +1025,18 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/issue240274.php", options);
     }
 
+    public void testGH4635_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/gh4635_01.php", options);
+    }
+
+    public void testGH4635_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/gh4635_02.php", options);
+    }
+
     public void testSpacesAroundReturnType01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/spaces/spaceAroundReturnType01.php", options);

@@ -6276,6 +6276,61 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testTryWithResources() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        } catch (Exception e) {\n"
+                + "            System.out.println(\"CATCH\");\n"
+                + "        } finally {\n"
+                + "            System.out.println(\"FINALLY\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        } catch (Exception e) {\n"
+                + "            System.out.println(\"CATCH\");\n"
+                + "        } finally {\n"
+                + "            System.out.println(\"FINALLY\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( final   PrintStream  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (final PrintStream out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
 
     public void testSynchronizedBlockAfterFor() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");

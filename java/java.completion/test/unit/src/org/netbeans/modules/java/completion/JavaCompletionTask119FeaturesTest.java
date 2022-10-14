@@ -23,13 +23,14 @@ import java.util.List;
 import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mjayan
+ * @author Dusan Balek
  */
 public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
 
@@ -66,6 +67,23 @@ public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
 
     private String getLatestSource() {
         return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_") + 1);
+    }
+
+    public void testCasePatternGuard_1() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1080, null, "AutoCompletion_Guard_PatternMatchingSwitch.pass", getLatestSource());
+    }
+
+    public void testCasePatternGuard_2() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1194, null, "AutoCompletion_Guard_PatternMatchingSwitch.pass", getLatestSource());
+    }
+
+    public void noop() {
+    }
+
+    static {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
 
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)

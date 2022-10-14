@@ -50,6 +50,20 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
         return suite;
     }
 
+    public void testCaseLabels_1() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 998, null, "AutoCompletion_CaseLabels_PatternMatchingSwitch_1.pass", getLatestSource());
+    }
+
+    public void testCaseLabels_2() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1004, null, "AutoCompletion_CaseLabels_PatternMatchingSwitch_2.pass", getLatestSource());
+    }
+
+    public void testCaseLabels_3() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1011, "s, ", "AutoCompletion_CaseLabels_PatternMatchingSwitch_3.pass", getLatestSource());
+    }
 
     public void testVariableNameSuggestion() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");

@@ -583,7 +583,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             File tmpFolder = Places.getCacheDirectory();
             // see also issue #250365
             String noSpaceLeftMsg = null;
-            if(e.getMessage().contains("No space left on device")) {
+            if(e.getMessage() != null && e.getMessage().contains("No space left on device")) {
                 noSpaceLeftMsg = Bundle.MSG_NoSpace(tmpFolder.getAbsolutePath(), repo.getName());
             }
             

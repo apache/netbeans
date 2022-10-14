@@ -126,6 +126,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         });
         cbConfiguration.setModel(configModel);
         cbConfiguration.addActionListener(this::configurationChanged);
+        btRemove.setEnabled(getSelectedMapping() != null);
     }
     
     private void configurationChanged(ActionEvent e) {
@@ -519,6 +520,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         autoApply = true;
         GradleExecConfiguration cfg = (GradleExecConfiguration)cbConfiguration.getSelectedItem();
         btnDisableAction.setEnabled(!cfg.isDefault());
+        btRemove.setEnabled(getSelectedMapping() != null);
     }
     
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed

@@ -69,6 +69,7 @@ public class HtmlCompletionQueryTest extends HtmlCompletionTestBase {
     public static Test suite() throws IOException, BadLocationException {
 	TestSuite suite = new TestSuite();
         suite.addTest(new HtmlCompletionQueryTest("testSimpleEndTagBeforeText"));
+        suite.addTest(new HtmlCompletionQueryTest("testNoAutocompletionAfterEndTag"));
         return suite;
     }
 
@@ -330,6 +331,12 @@ public class HtmlCompletionQueryTest extends HtmlCompletionTestBase {
     public void testNoEndTagAutocompletion() throws BadLocationException, ParseException {
         //test end tag ac for unknown tags
         assertItems("<div><bla>|", arr(), Match.EMPTY);
+    }
+    
+    public void testNoAutocompletionAfterEndTag() throws BadLocationException, ParseException {
+        // Test for not calling auto completion after end tag is already added
+        assertItems("<div></div>|", arr(), Match.EMPTY);
+        assertItems("<img />|", arr(), Match.EMPTY);
     }
 
     public void testJustBeforeTag() throws BadLocationException, ParseException {

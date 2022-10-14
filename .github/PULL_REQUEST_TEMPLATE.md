@@ -14,3 +14,4 @@ Please make sure (eg. `git log`) that all commits have a valid name and email ad
 
 If you're a first time contributor, see the Contributing guidelines for more information.
 
+If you're a committer, please label the PR before pressing "Create pull request" so that the right test jobs can run.

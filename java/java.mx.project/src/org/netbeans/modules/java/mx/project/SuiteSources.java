@@ -771,7 +771,10 @@ final class SuiteSources implements Sources,
 
         @Override
         public Collection<String> depNames() {
-            return mxPrj.dependencies();
+            List<String> both = new ArrayList<>();
+            both.addAll(mxPrj.dependencies());
+            both.addAll(mxPrj.generatedDependencies());
+            return both;
         }
 
         @Override

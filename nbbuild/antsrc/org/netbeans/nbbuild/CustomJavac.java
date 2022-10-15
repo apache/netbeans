@@ -323,8 +323,8 @@ public class CustomJavac extends Javac {
         }
 
         private static synchronized Class<?> findMainCompilerClass() throws MalformedURLException, ClassNotFoundException, URISyntaxException {
-            Class<?> c = mainCompilerClass == null ? null : mainCompilerClass.get();
-            if (c == null) {
+            Object c = System.getProperties().get(MAIN_COMPILER_CLASS);
+            if (!(c instanceof Class<?>)) {
                 File where = new File(CustomJavac.class.getProtectionDomain().getCodeSource().getLocation().toURI());
                 List<URL> urls = new ArrayList<>();
                 final File external = new File(where.getParentFile().getParentFile(), "external");
@@ -339,11 +339,12 @@ public class CustomJavac extends Javac {
                     throw new BuildException("Cannot find nb-javac-*.jar libraries in " + external);
                 }
                 URLClassLoader loader = new NbJavacLoader(urls.toArray(new URL[0]), CustomJavac.class.getClassLoader().getParent());
-                c = Class.forName(MAIN_COMPILER_CLASS, true, loader);
-                assertIsolatedClassLoader(c, loader);
-                mainCompilerClass = new SoftReference<>(c);
+                final Class<?> newCompilerClass = Class.forName(MAIN_COMPILER_CLASS, true, loader);
+                assertIsolatedClassLoader(newCompilerClass, loader);
+                System.getProperties().put(MAIN_COMPILER_CLASS, newCompilerClass);
+                c = newCompilerClass;
             }
-            return c;
+            return (Class<?>) c;
         }
 
         private static void assertIsolatedClassLoader(Class<?> c, URLClassLoader loader) throws ClassNotFoundException, BuildException {

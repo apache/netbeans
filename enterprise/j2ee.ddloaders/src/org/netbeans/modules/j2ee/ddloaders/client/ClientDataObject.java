@@ -171,7 +171,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
         if (updateTask == null) {
             updateTask = RequestProcessor.getDefault().post(new Runnable() {
                 public void run() {
-                    java.util.List changes = null;
+                    List<DDChangeEvent> changes = null;
                     synchronized (ClientDataObject.this) {
                         if (!ClientDataObject.this.isValid()) {
                             return;
@@ -277,7 +277,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     }
 
     
-    private void showDDChangesDialog(List changes) {
+    private void showDDChangesDialog(List<DDChangeEvent> changes) {
         final JButton processButton;
         final JButton processAllButton;
         final JButton closeButton;

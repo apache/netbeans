@@ -848,7 +848,7 @@ public class QueryBuilderGraphFrame extends JPanel
                 SQLQueryFactory.createTable(tableName, corrName, schemaName);
             JoinTable joinTable=SQLQueryFactory.createJoinTable(tbl);
             
-            List columnNames = new ArrayList();
+            List<String> columnNames = new ArrayList<>();
             columnNames.add("*"); // NOI18N
             
             // Insert the table into the model first, so that column insertions can refer to it

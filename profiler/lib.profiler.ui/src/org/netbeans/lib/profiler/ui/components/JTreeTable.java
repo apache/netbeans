@@ -908,11 +908,11 @@ public class JTreeTable extends JTable implements CellTipAware, MouseListener, M
         treeTableModelAdapter.changeRoot(newRoot);
     }
     
-    public void setup(List expanded, TreePath selected) {
+    public void setup(List<TreePath> expanded, TreePath selected) {
         treeTableModelAdapter.setup(expanded, selected);
     }
     
-    public List getExpandedPaths() {
+    public List<TreePath> getExpandedPaths() {
         return treeTableModelAdapter.getExpandedPaths();
     }
 

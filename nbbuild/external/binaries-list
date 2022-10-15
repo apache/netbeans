@@ -19,3 +19,5 @@ A8E7C929F046F3890F4A986F3D7EE8E4C4253C6B org.apidesign.javadoc:codesnippet-docle
 B8A142EBDE0CDC071A347B2E93C8548C2A5D09B0 org.netbeans.tools:sigtest-maven-plugin:1.4
 C9AD4A0850AB676C5C64461A05CA524CDFFF59F1 com.googlecode.json-simple:json-simple:1.1.1
 3A4E4ECCF553036BB0DDBA675486D574B62A01D8 org.apache.netbeans.modules.jackpot30:tool:12.3
+DBA592C75DD52B97EC88A6B06ADF71D4F3C3DED9 com.dukescript.nbjavac:nb-javac:jdk-19+33:api
+A36688EDA1DE51508A039AED3518771C6F75E416 com.dukescript.nbjavac:nb-javac:jdk-19+33

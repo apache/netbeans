@@ -20,15 +20,29 @@
 package org.netbeans.nbbuild;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.tools.StandardLocation;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.Javac;
+import org.apache.tools.ant.taskdefs.compilers.Javac13;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
@@ -39,7 +53,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * and a separate task for {@link #cleanUpStaleClasses}.
  */
 public class CustomJavac extends Javac {
-
     public CustomJavac() {}
 
     private Path processorPath;
@@ -115,7 +128,42 @@ public class CustomJavac extends Javac {
         } else {
             log("Warning: could not create " + generatedClassesDir, Project.MSG_WARN);
         }
-        super.compile();
+
+        try {
+            Class<?> mainClazz = findMainCompilerClass();
+            super.add(new Javac13() {
+                @Override
+                public boolean execute() throws BuildException {
+                    attributes.log("Using modern compiler", Project.MSG_VERBOSE);
+                    Commandline cmd = setupModernJavacCommand();
+                    final String[] args = cmd.getArguments();
+                    for (int i = 0; i < args.length; i++) {
+                        if ("-target".equals(args[i]) || "-source".equals(args[i])) {
+                            args[i] = "--release";
+                            if (args[i + 1].equals("1.8")) {
+                                args[i + 1] = "8";
+                            }
+                        }
+                    }
+                    attributes.log("Compler args: " + Arrays.toString(args), Project.MSG_INFO);
+                    try {
+                        Method compile = mainClazz.getMethod("compile", String[].class);
+                        int result = (Integer) compile.invoke(null, (Object) args);
+                        return result == 0;
+                    } catch (Exception ex) {
+                        if (ex instanceof BuildException) {
+                            throw (BuildException) ex;
+                        }
+                        throw new BuildException("Error starting modern compiler",
+                                ex, location);
+                    }
+                }
+
+            });
+            super.compile();
+        } catch (Exception ex) {
+            throw new BuildException(ex);
+        }
     }
 
     private boolean isBootclasspathOptionUsed() {
@@ -248,4 +296,70 @@ public class CustomJavac extends Javac {
         return false;
     }
 
+    private static final String MAIN_COMPILER_CLASS = "com.sun.tools.javac.Main";
+    private static Reference<Class<?>> mainCompilerClass;
+    private static synchronized Class<?> findMainCompilerClass() throws MalformedURLException, ClassNotFoundException, URISyntaxException {
+        Class<?> c = mainCompilerClass == null ? null : mainCompilerClass.get();
+        if (c == null) {
+            File where = new File(CustomJavac.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            List<URL> urls = new ArrayList<>();
+            final File external = new File(where.getParentFile().getParentFile(), "external");
+            if (external.isDirectory()) {
+                for (File f : external.listFiles()) {
+                    if (f.getName().startsWith("nb-javac-")) {
+                        urls.add(f.toURI().toURL());
+                    }
+                }
+            }
+            if (urls.isEmpty()) {
+                throw new BuildException("Cannot find nb-javac-*.jar libraries in " + external);
+            }
+            URLClassLoader loader = new NoJavaAPILoader(urls.toArray(new URL[0]), CustomJavac.class.getClassLoader().getParent());
+            c = Class.forName(MAIN_COMPILER_CLASS, true, loader);
+            if (c.getClassLoader() != loader) {
+                throw new BuildException("Class " + c + " loaded by " + c.getClassLoader() + " and not " + loader);
+            }
+            Class<?> stdLoc = c.getClassLoader().loadClass(StandardLocation.class.getName());
+            if (stdLoc.getClassLoader() != loader) {
+                throw new BuildException("Class " + stdLoc + " loaded by " + stdLoc.getClassLoader() + " and not " + loader);
+            }
+            mainCompilerClass = new SoftReference<>(c);
+        }
+        return c;
+    }
+
+    private static final class NoJavaAPILoader extends URLClassLoader {
+        private final Map<String,Class<?>> priorityLoaded;
+        public NoJavaAPILoader(URL[] urls, ClassLoader parent) {
+            super(urls, parent);
+            this.priorityLoaded = new HashMap<>();
+        }
+
+        @Override
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            if (isNbJavacClass(name)) {
+                Class<?> clazz = priorityLoaded.get(name);
+                if (clazz == null) {
+                    clazz = findClass(name);
+                    priorityLoaded.put(name, clazz);
+                }
+                return clazz;
+            }
+            return super.loadClass(name, resolve);
+        }
+
+        @Override
+        public Class<?> loadClass(String name) throws ClassNotFoundException {
+            return loadClass(name, false);
+        }
+
+        private static boolean isNbJavacClass(String name) {
+            return
+                name.startsWith("javax.annotation.") ||
+                name.startsWith("javax.tools.") ||
+                name.startsWith("javax.lang.model.") ||
+                name.startsWith("com.sun.source.") ||
+                name.startsWith("com.sun.tools.");
+        }
+    }
 }

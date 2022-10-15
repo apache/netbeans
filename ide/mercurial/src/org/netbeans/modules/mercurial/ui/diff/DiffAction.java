@@ -34,6 +34,7 @@ import org.netbeans.modules.mercurial.ui.actions.ContextAction;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage.HgRevision;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import static org.netbeans.modules.mercurial.ui.diff.Bundle.*;
 
 /**
@@ -89,7 +90,7 @@ public class DiffAction extends ContextAction {
                     NbBundle.getMessage(DiffAction.class, "MSG_DIFF_NOT_SUPPORTED_INVIEW_INFO")); // NOI18N
             logger.output(""); // NOI18N
             logger.closeLog();
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                     NbBundle.getMessage(DiffAction.class, "MSG_DIFF_NOT_SUPPORTED_INVIEW"),// NOI18N
                     NbBundle.getMessage(DiffAction.class, "MSG_DIFF_NOT_SUPPORTED_INVIEW_TITLE"),// NOI18N
                     JOptionPane.INFORMATION_MESSAGE);

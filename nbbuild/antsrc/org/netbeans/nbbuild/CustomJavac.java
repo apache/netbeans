@@ -20,7 +20,6 @@
 package org.netbeans.nbbuild;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -130,27 +129,41 @@ public class CustomJavac extends Javac {
         }
 
         try {
-            Class<?> mainClazz = findMainCompilerClass();
+            Class<?> mainClazz = NbJavacLoader.findMainCompilerClass();
             super.add(new Javac13() {
                 @Override
                 public boolean execute() throws BuildException {
                     attributes.log("Using modern compiler", Project.MSG_VERBOSE);
                     Commandline cmd = setupModernJavacCommand();
                     final String[] args = cmd.getArguments();
+                    boolean bootClasspath = false;
                     for (int i = 0; i < args.length; i++) {
-                        if ("-target".equals(args[i]) || "-source".equals(args[i])) {
-                            args[i] = "--release";
-                            if (args[i + 1].equals("1.8")) {
-                                args[i + 1] = "8";
-                            }
+                        if (args[i].startsWith("-Xbootclasspath/p:")) { // ide/html
+                            bootClasspath = true;
+                        }
+                        if (args[i].startsWith("-J")) {
+                            args[i] = "-Xlint:none"; // webcommon/javascript2.editor
                         }
                     }
-                    attributes.log("Compler args: " + Arrays.toString(args), Project.MSG_INFO);
+                    for (int i = 0; i < args.length; i++) {
+                        if (!bootClasspath) {
+                            if ("-target".equals(args[i]) || "-source".equals(args[i])) {
+                                args[i] = "--release";
+                                if (args[i + 1].startsWith("1.")) {
+                                    args[i + 1] = "8";
+                                }
+                            }
+                        }
+                        if ("-Werror".equals(args[i])) {
+                            args[i] = "-Xlint:none";
+                        }
+                    }
                     try {
                         Method compile = mainClazz.getMethod("compile", String[].class);
                         int result = (Integer) compile.invoke(null, (Object) args);
                         return result == 0;
                     } catch (Exception ex) {
+                        attributes.log("Compiler arguments: " + Arrays.toString(args), Project.MSG_ERR);
                         if (ex instanceof BuildException) {
                             throw (BuildException) ex;
                         }
@@ -162,6 +175,9 @@ public class CustomJavac extends Javac {
             });
             super.compile();
         } catch (Exception ex) {
+            if (ex instanceof BuildException) {
+                throw (BuildException) ex;
+            }
             throw new BuildException(ex);
         }
     }
@@ -296,26 +312,41 @@ public class CustomJavac extends Javac {
         return false;
     }
 
-    private static final String MAIN_COMPILER_CLASS = "com.sun.tools.javac.Main";
-    private static Reference<Class<?>> mainCompilerClass;
-    private static synchronized Class<?> findMainCompilerClass() throws MalformedURLException, ClassNotFoundException, URISyntaxException {
-        Class<?> c = mainCompilerClass == null ? null : mainCompilerClass.get();
-        if (c == null) {
-            File where = new File(CustomJavac.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            List<URL> urls = new ArrayList<>();
-            final File external = new File(where.getParentFile().getParentFile(), "external");
-            if (external.isDirectory()) {
-                for (File f : external.listFiles()) {
-                    if (f.getName().startsWith("nb-javac-")) {
-                        urls.add(f.toURI().toURL());
+    private static final class NbJavacLoader extends URLClassLoader {
+        private static final String MAIN_COMPILER_CLASS = "com.sun.tools.javac.Main";
+        private static Reference<Class<?>> mainCompilerClass;
+        private final Map<String,Class<?>> priorityLoaded;
+
+        private NbJavacLoader(URL[] urls, ClassLoader parent) {
+            super(urls, parent);
+            this.priorityLoaded = new HashMap<>();
+        }
+
+        private static synchronized Class<?> findMainCompilerClass() throws MalformedURLException, ClassNotFoundException, URISyntaxException {
+            Class<?> c = mainCompilerClass == null ? null : mainCompilerClass.get();
+            if (c == null) {
+                File where = new File(CustomJavac.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                List<URL> urls = new ArrayList<>();
+                final File external = new File(where.getParentFile().getParentFile(), "external");
+                if (external.isDirectory()) {
+                    for (File f : external.listFiles()) {
+                        if (f.getName().startsWith("nb-javac-")) {
+                            urls.add(f.toURI().toURL());
+                        }
                     }
                 }
+                if (urls.isEmpty()) {
+                    throw new BuildException("Cannot find nb-javac-*.jar libraries in " + external);
+                }
+                URLClassLoader loader = new NbJavacLoader(urls.toArray(new URL[0]), CustomJavac.class.getClassLoader().getParent());
+                c = Class.forName(MAIN_COMPILER_CLASS, true, loader);
+                assertIsolatedClassLoader(c, loader);
+                mainCompilerClass = new SoftReference<>(c);
             }
-            if (urls.isEmpty()) {
-                throw new BuildException("Cannot find nb-javac-*.jar libraries in " + external);
-            }
-            URLClassLoader loader = new NoJavaAPILoader(urls.toArray(new URL[0]), CustomJavac.class.getClassLoader().getParent());
-            c = Class.forName(MAIN_COMPILER_CLASS, true, loader);
+            return c;
+        }
+
+        private static void assertIsolatedClassLoader(Class<?> c, URLClassLoader loader) throws ClassNotFoundException, BuildException {
             if (c.getClassLoader() != loader) {
                 throw new BuildException("Class " + c + " loaded by " + c.getClassLoader() + " and not " + loader);
             }
@@ -323,16 +354,6 @@ public class CustomJavac extends Javac {
             if (stdLoc.getClassLoader() != loader) {
                 throw new BuildException("Class " + stdLoc + " loaded by " + stdLoc.getClassLoader() + " and not " + loader);
             }
-            mainCompilerClass = new SoftReference<>(c);
-        }
-        return c;
-    }
-
-    private static final class NoJavaAPILoader extends URLClassLoader {
-        private final Map<String,Class<?>> priorityLoaded;
-        public NoJavaAPILoader(URL[] urls, ClassLoader parent) {
-            super(urls, parent);
-            this.priorityLoaded = new HashMap<>();
         }
 
         @Override

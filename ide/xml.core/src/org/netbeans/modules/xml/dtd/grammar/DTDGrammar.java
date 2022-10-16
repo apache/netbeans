@@ -24,8 +24,6 @@ import javax.swing.Icon;
 
 import org.w3c.dom.*;
 
-import org.openide.ErrorManager;
-
 import org.netbeans.modules.xml.api.model.*;
 import org.netbeans.modules.xml.spi.dom.*;
 
@@ -70,11 +68,11 @@ class DTDGrammar implements ExtendedGrammarQuery {
         this.emptyElements = emptyElements;
     }
 
-    void setResolvedEntities(List/*<String>*/ resolvedEntities) {
+    void setResolvedEntities(List<String> resolvedEntities) {
         this.resolvedEntities = resolvedEntities;
     }
     
-    public List/*<String>*/ getResolvedEntities() {
+    public List<String> getResolvedEntities() {
         return resolvedEntities;
     }
     

@@ -368,7 +368,7 @@ public class ReferencesBrowserControllerUI extends JTitledPanel {
     private List expandedPaths = null;
     private TreePath selectedPath = null;
     
-    public List getExpandedPaths() {
+    public List<TreePath> getExpandedPaths() {
         if (!showsData()) return null;
         return fieldsListTable.getExpandedPaths();
     }

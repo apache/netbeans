@@ -260,7 +260,7 @@ public class QueryBuilderMetaData {
         boolean retVal = false;
 
         // TODO JFB should not catch this.
-        List cols;
+        List<String> cols;
         String checkedTable;
         try {
             checkedTable = checkTableName(tableName);
@@ -433,8 +433,8 @@ public class QueryBuilderMetaData {
         List<List<String>> tables = getTables();
 
         // Convert from List<table, schema> to "table.schema", expected by query editor
-        List<String> result = new ArrayList<String>();
-        for (List fullTable : tables) {
+        List<String> result = new ArrayList<>();
+        for (List<String> fullTable : tables) {
             String schema = (String) fullTable.get(0);
             String table = (String) fullTable.get(1);
             result.add(((schema == null) || (schema.equals(""))) ? table : schema + "." + table);
@@ -797,7 +797,7 @@ public class QueryBuilderMetaData {
 
 
     // Get the list of column names associated with the specified table name, with no Exception
-    public void getColumnNames(String fullTableName, List columnNames) {
+    public void getColumnNames(String fullTableName, List<String> columnNames) {
         try {
             columnNames.addAll(getColumnNames(fullTableName));
         } catch (SQLException sqle) {
@@ -846,7 +846,7 @@ public class QueryBuilderMetaData {
     /**
      * Returns the primary key columns of the specified table
      */
-    List getPrimaryKeys(String fullTableName) throws SQLException {
+    List<String> getPrimaryKeys(String fullTableName) throws SQLException {
 
         Log.getLogger().entering("QueryBuilderMetaData", "getPrimaryKeys", fullTableName); // NOI18N
         String schemaName = null;
@@ -859,42 +859,6 @@ public class QueryBuilderMetaData {
             tableName = table[0];
         }
         return getPrimaryKeys(schemaName, tableName);
-
-        /*
-        List primaryKeys = new ArrayList();
-        String tableName, schemaName=null;
-        String[] table = fullTableName.split("\\."); // NOI18N
-        if (table.length>1) {
-	    schemaName=table[0];
-	    tableName = table[1];
-        } else
-	    tableName=table[0];
-        boolean firstTime = true;
-        while ( true ) {
-	    try {
-		checkMetaData();
-		ResultSet rs = _databaseMetaData.getPrimaryKeys(null, schemaName, tableName);
-		if (rs != null) {
-		    String name;
-		    while (rs.next()) {
-			name = rs.getString("COLUMN_NAME"); // NOI18N
-			primaryKeys.add(name);
-		    }
-		    rs.close();
-		}
-		break;
-	    } catch (SQLException sqle) {
-		if ( firstTime ) {
-		    refreshDataBaseMetaData();
-		    firstTime = false;
-		} else {
-		    reportDatabaseError("DATABASE_ERROR", sqle); // NOI18N
-		    break;
-		}
-	    }
-        }
-        return primaryKeys;
-        **/
     }
 
     //    private List<List<String>> allTables = null ;

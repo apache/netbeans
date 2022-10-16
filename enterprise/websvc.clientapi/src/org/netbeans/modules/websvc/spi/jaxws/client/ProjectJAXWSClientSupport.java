@@ -347,8 +347,8 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         }
     }
 
-    public List getServiceClients() {
-        List<Client> jaxWsClients = new ArrayList<Client>();
+    public List<Client> getServiceClients() {
+        List<Client> jaxWsClients = new ArrayList<>();
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null) {
             Client[] clients = jaxWsModel.getClients();

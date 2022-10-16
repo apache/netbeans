@@ -31,6 +31,7 @@ import org.antlr.parser.antlr4.ANTLRv4ParserBaseListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -64,7 +65,9 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         CharStream cs = CharStreams.fromString(String.valueOf(snapshot.getText()));
         ANTLRv4Lexer lexer = new org.antlr.parser.antlr4.ANTLRv4Lexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        return new ANTLRv4Parser(tokens);
+        ANTLRv4Parser ret = new ANTLRv4Parser(tokens);
+        ret.removeErrorListener(ConsoleErrorListener.INSTANCE);
+        return ret;
     }
 
     @Override
@@ -82,14 +85,18 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         return new ANTLRv4ParserBaseListener() {
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
-                Token token = ctx.RULE_REF().getSymbol();
-                addReference(token);
+                if (ctx.RULE_REF() != null) {
+                    Token token = ctx.RULE_REF().getSymbol();
+                    addReference(token);
+                }
             }
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
-                Token token = ctx.TOKEN_REF().getSymbol();
-                addReference(token);
+                if (ctx.TOKEN_REF() != null) {
+                    Token token = ctx.TOKEN_REF().getSymbol();
+                    addReference(token);
+                }
             }
 
             @Override
@@ -112,7 +119,9 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             @Override
             public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
-                addReference(getIdentifierToken(ctx.identifier()));
+                if (ctx.identifier() != null) {
+                    addReference(getIdentifierToken(ctx.identifier()));
+                }
             }
 
             public void addReference(Token token) {
@@ -311,7 +320,9 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
         @Override
         public void exitLexerCommandExpr(ANTLRv4Parser.LexerCommandExprContext ctx) {
-            onOccurance.accept(getIdentifierToken(ctx.identifier()));
+            if (ctx.identifier() != null) {
+                onOccurance.accept(getIdentifierToken(ctx.identifier()));
+            }
         }
 
         

@@ -53,7 +53,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     private final List<String> imports = new ArrayList<>();
 
     private static final Logger LOG = Logger.getLogger(Antlr4ParserResult.class.getName());
-    public static final Reference HIDDEN = new Reference("HIDDEN", OffsetRange.NONE);
+    public static final Reference HIDDEN = new Reference(ReferenceType.CHANNEL, "HIDDEN", OffsetRange.NONE);
     
     public Antlr4ParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -84,18 +84,26 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     protected ParseTreeListener createReferenceListener() {
         return new ANTLRv4ParserBaseListener() {
             @Override
+            public void exitGrammarType(ANTLRv4Parser.GrammarTypeContext ctx) {
+                grammarType = GrammarType.MIXED;
+                if (ctx.LEXER() != null)  grammarType = GrammarType.LEXER;
+                if (ctx.PARSER() != null) grammarType = GrammarType.PARSER;                
+            }
+            
+            @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
                 if (ctx.RULE_REF() != null) {
                     Token token = ctx.RULE_REF().getSymbol();
-                    addReference(token);
+                    addReference(ReferenceType.RULE, token);
                 }
             }
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
                 if (ctx.TOKEN_REF() != null) {
+                    ReferenceType type = ctx.FRAGMENT() != null ? ReferenceType.FRAGMENT : ReferenceType.TOKEN;
                     Token token = ctx.TOKEN_REF().getSymbol();
-                    addReference(token);
+                    addReference(type, token);
                 }
             }
 
@@ -104,7 +112,7 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
                 List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
                 for (ANTLRv4Parser.IdentifierContext id : ids) {
                     if (id.TOKEN_REF() != null) {
-                        addReference(id.TOKEN_REF().getSymbol());
+                        addReference(ReferenceType.TOKEN, id.TOKEN_REF().getSymbol());
                     }
                 }
             }
@@ -113,21 +121,21 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
             public void exitChannelsSpec(ANTLRv4Parser.ChannelsSpecContext ctx) {
                 List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
                 for (ANTLRv4Parser.IdentifierContext id : ids) {
-                    addReference(getIdentifierToken(id));
+                    addReference(ReferenceType.CHANNEL, getIdentifierToken(id));
                 }
             }
 
             @Override
             public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
                 if (ctx.identifier() != null) {
-                    addReference(getIdentifierToken(ctx.identifier()));
+                    addReference(ReferenceType.MODE, getIdentifierToken(ctx.identifier()));
                 }
             }
 
-            public void addReference(Token token) {
+            public void addReference(ReferenceType type, Token token) {
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
                 String name = token.getText();
-                Reference ref = new Reference(name, range);
+                Reference ref = new Reference(type, name, range);
                 references.put(ref.name, ref);
             }
 

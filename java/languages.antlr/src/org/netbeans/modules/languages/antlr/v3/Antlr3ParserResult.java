@@ -65,11 +65,22 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected ParseTreeListener createReferenceListener() {
         return new ANTLRv3ParserBaseListener() {
             @Override
+            public void exitGrammarDef(ANTLRv3Parser.GrammarDefContext ctx) {
+                grammarType = GrammarType.MIXED;
+                if (ctx.LEXER() != null)  grammarType = GrammarType.LEXER;
+                if (ctx.PARSER() != null) grammarType = GrammarType.PARSER;
+                if (ctx.TREE() != null)   grammarType = GrammarType.TREE;
+            }
+            
+            @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
                 Token token = ctx.id_().getStart();
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
                 String name = token.getText();
-                Reference ref = new Reference(name, range);
+                ReferenceType rtype = Character.isUpperCase(name.charAt(0)) ? ReferenceType.TOKEN : ReferenceType.RULE;
+                rtype = ((rtype == ReferenceType.TOKEN) && (ctx.FRAGMENT() != null)) ? ReferenceType.FRAGMENT : rtype;
+                
+                Reference ref = new Reference(rtype, name, range);
                 references.put(ref.name, ref);
             }
         };

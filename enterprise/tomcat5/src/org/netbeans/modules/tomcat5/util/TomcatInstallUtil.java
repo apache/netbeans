@@ -162,67 +162,55 @@ public class TomcatInstallUtil {
     public static String getDocumentText(Document doc) {
         OutputFormat format = new OutputFormat ();
         format.setPreserveSpace (true);
-        StringWriter sw = new StringWriter();
         org.w3c.dom.Element rootElement = doc.getDocumentElement();
         if (rootElement==null) {
             return null;
         }
-        try {
+        try (StringWriter sw = new StringWriter()) {
             XMLSerializer ser = new XMLSerializer (sw, format);
             ser.serialize (rootElement);
             // Apache serializer also fails to include trailing newline, sigh.
             sw.write('\n');
             return sw.toString();
-        }catch(IOException ex) {
+        } catch(IOException ex) {
             System.out.println("ex="+ex);
             //ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             return rootElement.toString();
-        }
-        finally {
-            try {
-                sw.close();
-            } catch(IOException ex) {
-                System.out.println("ex="+ex);
-                //ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            }
         }
     }
     
     public static void updateDocument(final javax.swing.text.Document doc,
             final String newDocInput, final String prefixMark) throws javax.swing.text.BadLocationException {
 
-        Runnable update = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String newDoc = newDocInput;
-                    int origLen = doc.getLength();
-                    String origDoc = doc.getText(0, origLen);
-                    int prefixInd=0;
-                    if (prefixMark!=null) {
-                        prefixInd = origDoc.indexOf(prefixMark);
-                        if (prefixInd>0) {
-                            origDoc=doc.getText(prefixInd,origLen-prefixInd);
-                        }
-                        else {
-                            prefixInd=0;
-                        }
-                        int prefixIndNewDoc = newDoc.indexOf(prefixMark);
-                        if (prefixIndNewDoc > 0) {
-                            newDoc = newDoc.substring(prefixIndNewDoc);
-                        }
+        Runnable update = () -> {
+            try {
+                String newDoc = newDocInput;
+                int origLen = doc.getLength();
+                String origDoc = doc.getText(0, origLen);
+                int prefixInd=0;
+                if (prefixMark!=null) {
+                    prefixInd = origDoc.indexOf(prefixMark);
+                    if (prefixInd>0) {
+                        origDoc=doc.getText(prefixInd,origLen-prefixInd);
                     }
-
-                    if (origDoc.equals(newDoc)) {
-                        // no change in document
-                        return;
+                    else {
+                        prefixInd=0;
                     }
-
-                    doc.remove(prefixInd, origLen - prefixInd);
-                    doc.insertString(prefixInd, newDoc, null);
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
+                    int prefixIndNewDoc = newDoc.indexOf(prefixMark);
+                    if (prefixIndNewDoc > 0) {
+                        newDoc = newDoc.substring(prefixIndNewDoc);
+                    }
                 }
+                
+                if (origDoc.equals(newDoc)) {
+                    // no change in document
+                    return;
+                }
+                
+                doc.remove(prefixInd, origLen - prefixInd);
+                doc.insertString(prefixInd, newDoc, null);
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
             }
         };
 
@@ -263,13 +251,7 @@ public class TomcatInstallUtil {
                         }
                     }
                 }
-            } catch(org.xml.sax.SAXException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(org.openide.loaders.DataObjectNotFoundException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(javax.swing.text.BadLocationException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(java.io.IOException ex){
+            } catch(org.xml.sax.SAXException | javax.swing.text.BadLocationException | java.io.IOException ex){
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -324,9 +306,7 @@ public class TomcatInstallUtil {
             setHttpConnectorAttributeValue(server, ATTR_URI_ENCODING, BUNDLED_DEFAULT_URI_ENCODING);
             setHostAttributeValue(server, ATTR_AUTO_DEPLOY, BUNDLED_DEFAULT_AUTO_DEPLOY.toString());
             server.write(serverXml);
-        } catch (IOException e) {
-            Logger.getLogger(TomcatInstallUtil.class.getName()).log(Level.INFO, null, e);
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             Logger.getLogger(TomcatInstallUtil.class.getName()).log(Level.INFO, null, e);
         }
     }
@@ -343,8 +323,7 @@ public class TomcatInstallUtil {
      */
     public static void patchCatalinaProperties(File catalinaProperties) throws IOException {
         EditableProperties props = new EditableProperties(false);
-        InputStream is = new BufferedInputStream(new FileInputStream(catalinaProperties));
-        try {
+        try (InputStream is = new BufferedInputStream(new FileInputStream(catalinaProperties))) {
             props.load(is);
             String COMMON_LOADER = "common.loader"; // NOI18N
             String commonLoader = props.getProperty(COMMON_LOADER);
@@ -361,15 +340,10 @@ public class TomcatInstallUtil {
                 commonLoaderValue.append(NB_LIB);
                 props.setProperty(COMMON_LOADER, commonLoaderValue.toString());
             }
-        } finally {
-            is.close();
         }
         // store changes
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProperties));
-        try {
+        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProperties))) {
             props.store(out);
-        } finally {
-            out.close();
         }
     }
     
@@ -386,15 +360,12 @@ public class TomcatInstallUtil {
     public static void createNBLibDirectory(File catalinaBase) throws IOException {
         // create a README file
         new File(catalinaBase, "nblib").mkdir(); // NOI18N
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(catalinaBase, "nblib/README"))); // NOI18N
-        try {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(catalinaBase, "nblib/README")))) {  // NOI18N
             for (String line : NbBundle.getMessage(TomcatInstallUtil.class, "MSG_NBLibReadmeContent").split("\n")) { // NOI18N
                 // fix the new line sequence
                 writer.write(line);
                 writer.newLine();
             }
-        } finally {
-            writer.close();
         }
     }
     
@@ -408,13 +379,7 @@ public class TomcatInstallUtil {
                 root.setAttribute("port", String.valueOf(port)); //NOI18N
                 updateDocument(dobj,doc);
                 return true;
-            } catch(org.xml.sax.SAXException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(org.openide.loaders.DataObjectNotFoundException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(javax.swing.text.BadLocationException ex){
-                Exceptions.printStackTrace(ex);
-            } catch(java.io.IOException ex){
+            } catch(org.xml.sax.SAXException | javax.swing.text.BadLocationException | java.io.IOException ex){
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -430,7 +395,9 @@ public class TomcatInstallUtil {
         }
         TomcatInstallUtil.updateDocument(textDoc,TomcatInstallUtil.getDocumentText(doc),"<Server"); //NOI18N
         SaveCookie savec = (SaveCookie) dobj.getCookie(SaveCookie.class);
-        if (savec!=null) savec.save();
+        if (savec!=null) {
+            savec.save();
+        }
     }
 
 }

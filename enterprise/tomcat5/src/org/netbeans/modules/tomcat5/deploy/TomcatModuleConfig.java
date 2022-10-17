@@ -84,11 +84,8 @@ public class TomcatModuleConfig {
             timestampContextXML = contextXml.lastModified();
             Context ctx = Context.createGraph(contextXml);
             return ctx;
-        } catch (IOException ioe) {
+        } catch (IOException | RuntimeException ioe) {
             Logger.getLogger(TomcatModuleConfig.class.getName()).log(Level.INFO, null, ioe);
-            return null;
-        } catch (RuntimeException e) {
-            Logger.getLogger(TomcatModuleConfig.class.getName()).log(Level.INFO, null, e);
             return null;
         }
     }
@@ -201,7 +198,6 @@ public class TomcatModuleConfig {
                         loggerPrefix = ctx.getLoggerPrefix();
                         loggerSuffix = ctx.getLoggerSuffix();
                         loggerTimestamp = Boolean.valueOf(ctx.getLoggerTimestamp());
-                        return;
                     }
                 }
             }

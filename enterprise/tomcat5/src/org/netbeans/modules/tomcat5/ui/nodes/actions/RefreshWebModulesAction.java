@@ -33,6 +33,7 @@ public class RefreshWebModulesAction extends NodeAction {
     public RefreshWebModulesAction() {
     }
     
+    @Override
     protected boolean enable(org.openide.nodes.Node[] nodes) {
         RefreshWebModulesCookie cookie;
         for (int i=0; i<nodes.length; i++) {
@@ -44,11 +45,13 @@ public class RefreshWebModulesAction extends NodeAction {
         return true;
     }
     
+    @Override
     public String getName() {
         //return org.openide.util.NbBundle.getMessage(RemoveInstanceAction.class, "LBL_Remove");
         return NbBundle.getMessage(RefreshWebModulesAction.class, "LBL_RefreshWebModulesAction"); // NOI18N
     }
     
+    @Override
     protected void performAction(org.openide.nodes.Node[] nodes) {
         for (int i=0; i<nodes.length; i++) {
             RefreshWebModulesCookie cookie = (RefreshWebModulesCookie)nodes[i].getCookie(RefreshWebModulesCookie.class);            
@@ -59,8 +62,10 @@ public class RefreshWebModulesAction extends NodeAction {
     }
     
     
+    @Override
     protected boolean asynchronous() { return false; }
     
+    @Override
     public org.openide.util.HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }

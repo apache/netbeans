@@ -215,6 +215,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.gradle</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.29</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.j2ee.core.utilities</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -438,6 +447,10 @@
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                         <recursive/>
                         <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.gradle.java</code-name-base>
+                        <recursive/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

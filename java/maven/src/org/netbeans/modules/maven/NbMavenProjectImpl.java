@@ -456,6 +456,10 @@ public final class NbMavenProjectImpl implements Project {
                     projectVariants.remove(stripped);
                 }
             }
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Loading evaluated project. Action = {0}, properties = {1}, profiles = {2}",
+                        new Object[] { stripped.getProjectAction(), stripped.getProperties(), stripped.getProfiles() });
+            }
         }
         RunConfig runConf = null;
         if (ctx != null && ctx.getProjectAction() != null) {
@@ -513,6 +517,7 @@ public final class NbMavenProjectImpl implements Project {
             + "Please file a bug report with details about your project and the IDE's log file.\n\n"
     })
     private @NonNull MavenProject loadOriginalMavenProject(boolean reload) {
+        LOG.log(Level.FINE, "Loading original project: {0}", getPOMFile());
         MavenProject newproject;
         try {
             synchronized(MODEL_LOCK) {
@@ -521,6 +526,7 @@ public final class NbMavenProjectImpl implements Project {
             newproject = MavenProjectCache.getMavenProject(this.getPOMFile(), reload);
             if (newproject == null) { //null when no pom.xml in project folder..
                 newproject = MavenProjectCache.getFallbackProject(projectFile);
+                LOG.log(Level.FINE, "Project {0} going to fallback, with packaging: {1}", new Object[] { getPOMFile(), newproject.getPackaging() });
             }
             final MavenExecutionResult res = MavenProjectCache.getExecutionResult(newproject);
             final MavenProject np = newproject;
@@ -971,8 +977,10 @@ public final class NbMavenProjectImpl implements Project {
             String newPackaging = packaging != null ? packaging : NbMavenProject.TYPE_JAR;
             List<Lookup> lookups = new ArrayList<>();
             List<String> old = currentIds;
+            LOG.log(Level.FINE, "Watcher is: {0}, packaging is: {1}", new Object[] { watcher, newPackaging });
             if (watcher != null) {
                 newPackaging = watcher.getPackagingType(); 
+                LOG.log(Level.FINE, "Watcher {0} returned packacing: {1}", new Object[] { watcher, newPackaging });
                 if (newPackaging == null) {
                     newPackaging = NbMavenProject.TYPE_JAR;
                 }
@@ -1004,6 +1012,8 @@ public final class NbMavenProjectImpl implements Project {
                     }
                     currentIds = newComponents;
                 }
+                LOG.log(Level.FINE, "Composing lookups for {0}, packaging: {1}, lookups: {2}: ", 
+                        new Object[] { watcher.getMavenProject().getFile(), newPackaging, newComponents });
                 setLookups(lookups.toArray(new Lookup[lookups.size()]));
             }
         }

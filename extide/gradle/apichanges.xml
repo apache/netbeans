@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="external-tasks">
+            <api name="general"/>
+            <summary>Representing external tasks</summary>
+            <version major="2" minor="29"/>
+            <date day="11" month="10" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Tasks declared by other projects are marked as 'external'. Tasjs can report their declaring project's path.
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="GradleTask"/>
+        </change>
         <change id="build-properties-tasks">
             <api name="general"/>
             <summary>New APIs that provide access to values of build properties and tasks.</summary>

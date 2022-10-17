@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.antlr.v3;
 
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import org.antlr.parser.antlr3.ANTLRv3Lexer;
 import org.antlr.parser.antlr3.ANTLRv3Parser;
 import org.antlr.parser.antlr3.ANTLRv3ParserBaseListener;
@@ -37,6 +38,8 @@ import org.netbeans.modules.parsing.api.Snapshot;
  * @author lkishalmi
  */
 public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
+    
+    private static final Logger LOG = Logger.getLogger(Antlr3ParserResult.class.getName());
 
     public Antlr3ParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -63,12 +66,8 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
                 Token token = ctx.id_().getStart();
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
                 String name = token.getText();
-                if (references.containsKey(name)) {
-                    references.get(name).defOffset = range;
-                } else {
-                    Reference ref = new Reference(name, getFileObject(), range);
-                    references.put(ref.name, ref);
-                }
+                Reference ref = new Reference(name, range);
+                references.put(ref.name, ref);
             }
         };
     }
@@ -77,7 +76,7 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected ParseTreeListener createCheckReferences() {
         return new ANTLRv3OccuranceListener((token) -> {
             String name = token.getText();
-            if (!"EOF".equals(name) && (!references.containsKey(name) || references.get(name).defOffset == null)) {
+            if (!references.containsKey(name)) {
                 //TODO: It seems the ANTLRv3 Grammar Occurance finder could be a bit smarter
                 //Adding the following line could produce false positives.
                 //errors.add(new DefaultError(null, "Unknown Reference: " + name, null, source, token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
@@ -137,9 +136,10 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
 
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
+                boolean fragment = ctx.FRAGMENT() != null;
                 if (ctx.id_() != null) {
                     AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(
-                            ctx.id_().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                            ctx.id_().getText(), fragment, getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                     structure.add(rule);
                 }
             }
@@ -151,12 +151,8 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected ParseTreeListener createOccurancesListener() {
         return new ANTLRv3OccuranceListener((token) -> {
                 String refName = token.getText();
-                Reference ref = references.get(refName);
-                if (ref == null) {
-                    ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
-                    references.put(ref.name, ref);
-                }
-                ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
+                OffsetRange or = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
+                markOccurrence(refName, or);
         });
     }
 

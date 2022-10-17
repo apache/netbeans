@@ -1083,6 +1083,9 @@ public class TokenFormatter {
                                     case WHITESPACE_AROUND_UNARY_OP:
                                         countSpaces = docOptions.spaceAroundUnaryOps ? 1 : countSpaces;
                                         break;
+                                    case WHITESPACE_AROUND_TEXTUAL_OP:
+                                        countSpaces = 1;
+                                        break;
                                     case WHITESPACE_BEFORE_BINARY_OP:
                                         if (docOptions.wrapAfterBinOps) {
                                             countSpaces = docOptions.spaceAroundBinaryOps ? 1 : 0;

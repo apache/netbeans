@@ -148,8 +148,10 @@ public abstract class AntlrStructureItem implements ElementHandle, StructureItem
 
     public static final class RuleStructureItem extends AntlrStructureItem {
 
-        public RuleStructureItem(String name, FileObject source, int startOffset, int stopOffset) {
+        final boolean fragment;
+        public RuleStructureItem(String name, boolean fragment, FileObject source, int startOffset, int stopOffset) {
             super(name, source, startOffset, stopOffset);
+            this.fragment = fragment;
         }
 
         @Override
@@ -164,7 +166,11 @@ public abstract class AntlrStructureItem implements ElementHandle, StructureItem
 
         @Override
         public ElementKind getKind() {
-            return Character.isUpperCase(name.charAt(0)) ? ElementKind.FIELD : ElementKind.RULE;
+            if (fragment) {
+                return ElementKind.CONSTANT;
+            } else {
+                return Character.isUpperCase(name.charAt(0)) ? ElementKind.FIELD : ElementKind.RULE;
+            }
         }
     }
 }

@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -33,7 +34,7 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
  *
  * @author lkishalmi
  */
-public class AntlrOccurancesFinder extends OccurrencesFinder<AntlrParserResult> {
+public class AntlrOccurrencesFinder extends OccurrencesFinder<AntlrParserResult> {
 
     private int caretPosition;
     private boolean cancelled;
@@ -82,7 +83,7 @@ public class AntlrOccurancesFinder extends OccurrencesFinder<AntlrParserResult> 
         return false;
     }
 
-    private void computeOccurrences(AntlrParserResult result) {
+    private void computeOccurrences(AntlrParserResult<?> result) {
         TokenHierarchy<?> tokenHierarchy = result.getSnapshot().getTokenHierarchy();
         TokenSequence<?> ts = tokenHierarchy.tokenSequence();
         ts.move(caretPosition);
@@ -91,15 +92,8 @@ public class AntlrOccurancesFinder extends OccurrencesFinder<AntlrParserResult> 
             Token<?> token = ts.token();
             if (token.id() == AntlrTokenId.RULE || token.id() == AntlrTokenId.TOKEN) {
                 String refName = String.valueOf(token.text());
-                Map<String, AntlrParserResult.Reference> refs = result.references;
-                AntlrParserResult.Reference ref = refs.get(refName);
-                if (ref != null) {
-                    if(ref.defOffset != null) {
-                        occurrences.put(ref.defOffset, ColoringAttributes.MARK_OCCURRENCES);
-                    }
-                    for (OffsetRange occurance : ref.occurances) {
-                        occurrences.put(occurance, ColoringAttributes.MARK_OCCURRENCES);
-                    }
+                for (OffsetRange occurance : result.getOccurrences(refName)) {
+                    occurrences.put(occurance, ColoringAttributes.MARK_OCCURRENCES);
                 }
             }
         }

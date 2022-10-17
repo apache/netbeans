@@ -99,6 +99,7 @@ import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,6 +110,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -160,6 +163,7 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
@@ -1079,21 +1083,22 @@ public class Utilities {
                     return c;
                 }
             }
-            JavaPlatform select = JavaPlatform.getDefault();
+
             final JavaPlatformManager man = JavaPlatformManager.getDefault();
-            if (select.getSpecification().getVersion() != null) {
-                for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                    if (!p.isValid() || !"j2se".equals(p.getSpecification().getName()) || p.getSpecification().getVersion() == null) continue;
-                    if (p.getSpecification().getVersion().compareTo(select.getSpecification().getVersion()) > 0) {
-                        select = p;
-                    }
-                }
-            }
+            final SpecificationVersion maxVersion = new SpecificationVersion(SourceVersion.latest().ordinal()+".99"); // cap at feature version of nb-javac
+            JavaPlatform select = Stream.of(man.getInstalledPlatforms())
+                    .filter(JavaPlatform::isValid)
+                    .filter((p) -> "j2se".equals(p.getSpecification().getName()))
+                    .filter((p) -> p.getSpecification().getVersion() != null)
+                    .filter((p) -> p.getSpecification().getVersion().compareTo(maxVersion) < 0)
+                    .max(Comparator.comparing((p) -> p.getSpecification().getVersion()))
+                    .orElse(JavaPlatform.getDefault());
+
             final ClasspathInfo result = new ClasspathInfo.Builder(select.getBootstrapLibraries())
                                                           .setModuleBootPath(select.getBootstrapLibraries())
                                                           .build();
             if (cached != null) {
-                    this.cached = new WeakReference<>(result);
+                cached = new WeakReference<>(result);
             }
             if (weakL == null) {
                 man.addPropertyChangeListener(weakL = WeakListeners.propertyChange(this, man));

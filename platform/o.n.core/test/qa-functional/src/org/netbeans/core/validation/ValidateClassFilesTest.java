@@ -78,7 +78,11 @@ public class ValidateClassFilesTest extends NbTestCase {
                 final File file = path.toFile();
                 if (file.getName().endsWith(".jar")) {
 
-                    int classFileVersion = classFileVersions.getOrDefault(file.getName(), 52);
+                    if(! classFileVersions.containsKey(file.getName())) {
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    int classFileVersion = classFileVersions.get(file.getName());
 
                     JarFile jf = new JarFile(file);
                     Enumeration<JarEntry> en = jf.entries();
@@ -129,7 +133,7 @@ public class ValidateClassFilesTest extends NbTestCase {
                 if (dep.getType() == Dependency.TYPE_JAVA) {
                     String javaVersion = dep.getVersion();
                     if (javaVersion.startsWith("1.")) {
-                        break;
+                        javaVersion = javaVersion.substring(2);
                     }
                     int classFileVersion = Integer.parseInt(javaVersion) + 44;
                     for (File jar : module.getAllJars()) {

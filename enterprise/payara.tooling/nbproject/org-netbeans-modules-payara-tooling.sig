@@ -1824,7 +1824,7 @@ meth public static java.net.URL getPlatformBuilderConfig(org.netbeans.modules.pa
 meth public static org.netbeans.modules.payara.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static void destroyBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 supr java.lang.Object
-hfds CONFIG_V4,CONFIG_V5,builders,config
+hfds CONFIG_V4,CONFIG_V5,CONFIG_V6,builders,config
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigUtils
 cons public init()
@@ -1856,6 +1856,10 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_8_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v8_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v8_0_0_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_0_0_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_1_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v9_1_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -1887,6 +1891,8 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_7
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_8
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v8_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v9_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v9_1_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version[] values()

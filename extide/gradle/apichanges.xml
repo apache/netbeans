@@ -83,6 +83,50 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="build-properties-tasks">
+            <api name="general"/>
+            <summary>New APIs that provide access to values of build properties and tasks.</summary>
+            <version major="2" minor="28"/>
+            <date day="4" month="10" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Gradle buildscript objects are introspected from within the gradle instance. All active plugins are enumerated.
+                    Extensions are detected. An API is provided to get dependent task, or a closure of the dependents, and to check tasks' type 
+                    to identify tasks of interest.
+                    See <a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#getTaskPredecessors-org.netbeans.modules.gradle.api.GradleTask-boolean-">GradleBaseProject.getTaskPredecessors()</a> and
+                    <a href="@TOP@/org/netbeans/modules/gradle/api/GradleBaseProject.html#isTaskInstanceOf-java.lang.String-java.lang.String-">GradleBaseProject.isTaskInstanceOf()</a>
+                </p>
+                <p>
+                    Certain task and extension property values can be accessed by APIs, that allows NetBean plugins to access
+                    configuration of tasks within the script. See <a href="org-netbeans-modules-gradle/org/netbeans/modules/gradle/api/BuildPropertiesSupport.html">BuildPropertiesSupport</a>.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="GradleBaseProject"/>
+            <class package="org.netbeans.modules.gradle.api" name="BuildPropertiesSupport"/>
+        </change>
+        <change id="regular-project-Lookup">
+            <api name="general"/>
+            <summary>Expose regular Lookup in NbGradleProject.</summary>
+            <version major="2" minor="28"/>
+            <date day="4" month="10" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html">NbGradleProject</a> offered just <a href="org/netbeans/modules/gradle/api/NbGradleProject.html#projectLookup-java.lang.Class-">projectLookup(Class)</a>,
+                    that cannot return more instances or deliver change events. A regular Lookup instance, that switch when the project reloads is now available from
+                    <a href="org/netbeans/modules/gradle/api/NbGradleProject.html#refreshableProjectLookup--">NbGradleProject.refreshableProjectLookup()</a>.
+                </p>
+                <p>
+                    Minor API changes giving access to a complete <a href="org/netbeans/modules/gradle/api/execute/RunConfig.html">RunConfig</a> for a project action or an action
+                    mapping.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+        </change>
         <change id="gradle-reports">
             <api name="general"/>
             <summary>Rich exception reports are exported from Gradle process.</summary>

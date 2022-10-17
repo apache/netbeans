@@ -134,16 +134,16 @@ public class Antlr4Formatter implements Formatter {
 
     @Override
     public int indentSize() {
-        return 3;
+        return 4;
     }
 
     @Override
     public int hangingIndentSize() {
-        return 3;
+        return 4;
     }
     
     static int getIndentSize(Document doc) {
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        return prefs.getInt(SimpleValueNames.INDENT_SHIFT_WIDTH, 3);
+        return prefs.getInt(SimpleValueNames.INDENT_SHIFT_WIDTH, 4);
     }
 }

@@ -133,8 +133,6 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                         addTokens("", caretOffset, resultSet, "lexer", "parser", "grammar");
                     }
                 }
-            } catch (Throwable th) {
-                //System.out.println(th);
             } finally {
                 resultSet.finish();
             }

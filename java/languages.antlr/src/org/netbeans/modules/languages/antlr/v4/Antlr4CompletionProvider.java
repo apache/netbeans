@@ -33,8 +33,6 @@ import org.antlr.parser.antlr4.ANTLRv4Lexer;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -86,18 +84,6 @@ public class Antlr4CompletionProvider implements CompletionProvider {
             this.caseSensitive = caseSensitive;
         }
 
-        //TODO: This is a Lexer based pretty dumb implementation. Only offer
-        //      prefix if the cursor is at the end of a start of token/lexer rule.
-        //      Shall be replaced with a better approach.
-        private String getPrefix(Document doc, int caretOffset, boolean upToOffset) throws BadLocationException {
-            LineDocument lineDoc = LineDocumentUtils.asRequired(doc, LineDocument.class);
-            int start = LineDocumentUtils.getWordStart(lineDoc, caretOffset);
-            int end = LineDocumentUtils.getWordEnd(lineDoc, caretOffset);
-            String prefix = doc.getText(start, (upToOffset ? caretOffset : end) - start);
-
-            return (prefix.length() > 0) && !Character.isWhitespace(prefix.codePointAt(prefix.length() - 1)) ? prefix : "";
-        }
-
         @Override
         protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
             AbstractDocument adoc = (AbstractDocument) doc;
@@ -143,12 +129,10 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                         tokens.previous();
                         lookAround(fo, tokens, caretOffset, prefix, resultSet);
                     } else {
-                        //Empty grammar so far offer lexer and grammar
-                        addTokens("", caretOffset, resultSet, "lexer", "grammar");
+                        //Empty grammar so far offer lexer, parser and grammar
+                        addTokens("", caretOffset, resultSet, "lexer", "parser", "grammar");
                     }
                 }
-            } catch (Throwable th) {
-                System.out.println(th);
             } finally {
                 resultSet.finish();
             }
@@ -162,6 +146,9 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                 if (t.isPresent() && t.get().getType() != LEXER) {
                     addTokens(prefix, caretOffset, resultSet, "lexer");
                 }                
+                if (t.isPresent() && t.get().getType() != PARSER) {
+                    addTokens(prefix, caretOffset, resultSet, "parser");
+                }                
                 if (t.isPresent() && (t.get().getType() != LEXER) && (t.get().getType() != GRAMMAR)) {
                     addTokens(prefix, caretOffset, resultSet, "grammar");
                 }
@@ -174,11 +161,12 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                     opt = tokens.previous(DEFAULT_CHANNEL);
                 }
                 if (!opt.isPresent()) {
-                    addTokens(prefix, caretOffset, resultSet, "lexer", "grammar");
+                    addTokens(prefix, caretOffset, resultSet, "lexer", "parser", "grammar");
                     return;
                 } else {
                     pt = opt.get();
                     switch (pt.getType()) {
+                        case PARSER:
                         case LEXER:
                             Optional<Token> t = tokens.next(DEFAULT_CHANNEL);
                             if (!t.isPresent() || t.get().getType() != GRAMMAR) {

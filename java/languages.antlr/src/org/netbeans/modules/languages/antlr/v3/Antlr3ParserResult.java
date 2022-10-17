@@ -26,6 +26,7 @@ import org.antlr.parser.antlr3.ANTLRv3ParserBaseListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -50,7 +51,9 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
         CharStream cs = CharStreams.fromString(String.valueOf(snapshot.getText()));
         ANTLRv3Lexer lexer = new ANTLRv3Lexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        return new ANTLRv3Parser(tokens);
+        ANTLRv3Parser ret = new ANTLRv3Parser(tokens);
+        ret.removeErrorListener(ConsoleErrorListener.INSTANCE);
+        return ret;
     }
 
     @Override

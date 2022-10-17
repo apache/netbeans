@@ -64,7 +64,6 @@ public abstract class AntlrParserResult<T extends Parser> extends ParserResult {
 
     public AntlrParserResult get() {
         if (! finished) {
-            FileObject fo = getSnapshot().getSource().getFileObject();
             T parser = createParser(getSnapshot());
             parser.addErrorListener(createErrorListener());
             parser.addParseListener(createFoldListener());

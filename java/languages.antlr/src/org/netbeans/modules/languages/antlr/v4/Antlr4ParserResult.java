@@ -21,8 +21,10 @@ package org.netbeans.modules.languages.antlr.v4;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import org.antlr.parser.antlr4.ANTLRv4Lexer;
@@ -143,16 +145,30 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     }
 
 
+    private void collectReferences(FileObject fo, Map<String, Reference> refs, Set<String> visited) {
+        if (!visited.contains(fo.getName())) {
+            refs.putAll(references);
+            visited.add(fo.getName());
+            for (String im : imports) {
+                FileObject ifo = getFileObject().getParent().getFileObject(im + ".g4");
+                if (ifo != null) {
+                    Antlr4ParserResult pr = (Antlr4ParserResult) AntlrParser.getParserResult(ifo);
+                    if (pr != null) {
+                        pr.collectReferences(ifo, refs, visited);
+                    }
+                }
+                visited.add(im);
+            }
+        }
+    }
+
     @Override
     protected ParseTreeListener createCheckReferences() {
         final Map<String, Reference> allRefs = new HashMap<>(references);
-        for (String im : imports) {
-            FileObject fo = getFileObject().getParent().getFileObject(im + ".g4");
-            if (fo != null) {
-                AntlrParserResult pr = AntlrParser.getParserResult(fo);
-                allRefs.putAll(pr.references);
-            }
-        }
+        Set<String> visitedImports = new HashSet<>();
+
+        collectReferences(getFileObject(), allRefs, visitedImports);
+
         return new ANTLRv4OccuranceListener((token) -> {
             String name = token.getText();
             if(!allRefs.containsKey(name)) {

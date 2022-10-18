@@ -22,15 +22,13 @@ import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IfTree;
-import com.sun.source.tree.InstanceOfTree;
-import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePathScanner;
+import com.sun.source.tree.CaseTree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,11 +42,13 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
+import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -94,13 +94,13 @@ public class ConvertToNestedRecordPattern {
             BindingPatternTree bTree = (BindingPatternTree) p;
             recordPatternVarSet.add(bTree.getVariable().getName().toString());
         }
-        while (t != null && t.getLeaf().getKind() != Tree.Kind.IF) {
+        while (t != null && t.getLeaf().getKind() != Tree.Kind.BLOCK) {
             t = t.getParentPath();
         }
         Set<TreePath> convertPath = new HashSet<>();
         List<String> localVarList = new ArrayList<>();
         Map<String, List<UserVariables>> userVars = new HashMap<>();
-        new TreePathScanner<Void, Void>() {
+        new CancellableTreePathScanner<Void, Void>() {
 
             @Override
             public Void visitVariable(VariableTree node, Void p) {
@@ -122,6 +122,11 @@ public class ConvertToNestedRecordPattern {
                 }
                 return super.visitVariable(node, p);
             }
+
+            @Override
+            protected boolean isCanceled() {
+                return ctx.isCanceled();
+            }
         }.scan(t, null);
         if (!convertPath.isEmpty()) {
             Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), convertPath, localVarList, userVars).toEditorFix();
@@ -131,14 +136,22 @@ public class ConvertToNestedRecordPattern {
     }
 
     private static Map<PatternTree, List<PatternTree>> findNested(PatternTree pTree, Map<PatternTree, List<PatternTree>> recordComponentMap) {
-        if (pTree instanceof BindingPatternTree) {
-            recordComponentMap.put(pTree, new ArrayList<>());
-            return recordComponentMap;
-        } else {
-            DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
-            for (PatternTree p : bTree.getNestedPatterns()) {
-                findNested(p, recordComponentMap);
-            }
+        switch (pTree.getKind()) {
+            case BINDING_PATTERN:
+                recordComponentMap.put(pTree, new ArrayList<>());
+                return recordComponentMap;
+            case DECONSTRUCTION_PATTERN:
+                DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
+                for (PatternTree p : bTree.getNestedPatterns()) {
+                    findNested(p, recordComponentMap);
+                }
+                break;
+            case PARENTHESIZED_PATTERN:
+                ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) pTree;
+                findNested(parenthTree.getPattern(), recordComponentMap);
+                break;
+            default:
+                return recordComponentMap;
         }
         return recordComponentMap;
     }
@@ -188,7 +201,7 @@ public class ConvertToNestedRecordPattern {
             Map<PatternTree, List<PatternTree>> recordComponentMap = new LinkedHashMap<>();
             DeconstructionPatternTree recordPattern = (DeconstructionPatternTree) t.getLeaf();
             recordComponentMap = findNested(recordPattern, recordComponentMap);
-            
+
             Set<String> localVars = new HashSet<>(localVarList);
             for (PatternTree p : recordComponentMap.keySet()) {
                 List<PatternTree> bindTree = new ArrayList<>();
@@ -201,13 +214,12 @@ public class ConvertToNestedRecordPattern {
                 outer:
                 for (RecordComponentElement recordComponent : type.getRecordComponents()) {
                     String name = recordComponent.getSimpleName().toString();
-                    String returnType = recordComponent.getAccessor().getReturnType().toString();
-                    returnType = returnType.substring(returnType.lastIndexOf(".") + 1);
+                    TypeMirror returnType = recordComponent.getAccessor().getReturnType();
                     if (userVars.get(v.getName().toString()) != null) {
                         for (UserVariables var : userVars.get(v.getName().toString())) {
                             if (var.getMethodName().equals(name)) {
                                 bindTree.add((BindingPatternTree) wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().
-                                        Modifiers(EnumSet.noneOf(Modifier.class)), var.getVariable(), wc.getTreeMaker().Identifier(returnType), null)));
+                                        Modifiers(EnumSet.noneOf(Modifier.class)), var.getVariable(), wc.getTreeMaker().Type(returnType), null)));
                                 continue outer;
                             }
                         }
@@ -219,43 +231,48 @@ public class ConvertToNestedRecordPattern {
                     }
                     localVars.add(name);
                     bindTree.add((BindingPatternTree) wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().
-                            Modifiers(EnumSet.noneOf(Modifier.class)), name, wc.getTreeMaker().Identifier(returnType), null)));
+                            Modifiers(EnumSet.noneOf(Modifier.class)), name, wc.getTreeMaker().Type(returnType), null)));
                 }
                 recordComponentMap.put(p, bindTree);
             }
 
             DeconstructionPatternTree d = (DeconstructionPatternTree) createNestedPattern((PatternTree) t.getLeaf(), wc, recordComponentMap);
-            while (t != null && t.getLeaf().getKind() != Tree.Kind.IF) {
+            while (t != null && t.getLeaf().getKind() != Tree.Kind.BLOCK) {
                 t = t.getParentPath();
             }
-            IfTree it = (IfTree) t.getLeaf();
-            InstanceOfTree iot = (InstanceOfTree) ((ParenthesizedTree) it.getCondition()).getExpression();
-            StatementTree bt = it.getThenStatement();
-            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), d);
+
             List<Tree> removeList = replaceOccurrences.stream().map(tph -> tph.resolve(wc).getLeaf()).collect(Collectors.toList());
-            for(Tree tree : removeList) {
-                bt = wc.getTreeMaker().removeBlockStatement((BlockTree) bt, (StatementTree) tree);
+            for (Tree tree : removeList) {
+              StatementTree statementTree = (StatementTree) tree;
+              Utilities.removeStatements(wc, TreePath.getPath(t, statementTree), null);
             }
-            wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), bt, it.getElseStatement()));
+            wc.rewrite(ctx.getPath().getLeaf(), d);
         }
     }
 
     private static PatternTree createNestedPattern(PatternTree pTree, WorkingCopy wc, Map<PatternTree, List<PatternTree>> map) {
-        if (pTree instanceof BindingPatternTree) {
-            if (map.containsKey(pTree) && map.get(pTree).size()>0) {
-                BindingPatternTree p = (BindingPatternTree) pTree;
-                VariableTree v = (VariableTree) p.getVariable();
-                return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern((ExpressionTree) v.getType(), map.get(pTree), v);
-            } else {
+        switch (pTree.getKind()) {
+            case BINDING_PATTERN:
+                if (map.containsKey(pTree) && !map.get(pTree).isEmpty()) {
+                    BindingPatternTree p = (BindingPatternTree) pTree;
+                    VariableTree v = (VariableTree) p.getVariable();
+                    return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern((ExpressionTree) v.getType(), map.get(pTree), v);
+                } else {
+                    return pTree;
+                }
+            case DECONSTRUCTION_PATTERN:
+                DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
+                List<PatternTree> list = new ArrayList<>();
+                for (PatternTree p : bTree.getNestedPatterns()) {
+                    PatternTree val = createNestedPattern(p, wc, map);
+                    list.add(val);
+                }
+                return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern(bTree.getDeconstructor(), list, bTree.getVariable());
+            case PARENTHESIZED_PATTERN:
+                ParenthesizedPatternTree parenthTree = (ParenthesizedPatternTree) pTree;
+                return createNestedPattern(parenthTree.getPattern(), wc, map);
+            default:
                 return pTree;
-            }
         }
-        DeconstructionPatternTree bTree = (DeconstructionPatternTree) pTree;
-        List<PatternTree> list = new ArrayList<>();
-        for (PatternTree p : bTree.getNestedPatterns()) {
-            PatternTree val = createNestedPattern(p, wc, map);
-            list.add(val);
-        }
-        return (DeconstructionPatternTree) wc.getTreeMaker().RecordPattern(bTree.getDeconstructor(), list, bTree.getVariable());
     }
 }

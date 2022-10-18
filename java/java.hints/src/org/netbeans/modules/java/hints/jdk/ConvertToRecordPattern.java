@@ -28,7 +28,6 @@ import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.source.tree.VariableTree;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +49,7 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
+import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -70,12 +70,12 @@ import org.openide.util.NbBundle;
     "DN_ConvertToRecordPattern=Convert to instanceof <record pattern>",
     "DESC_ConvertToRecordPattern=Convert to instanceof <record pattern>",
     "ERR_ConvertToRecordPattern=instanceof <record pattern> can be used here",
-    "FIX_ConvertToRecordPattern=Use instanceof <record pattern>"
+    "FIX_ConvertToRecordPattern=Use instanceof record pattern"
 })
 @Hint(displayName = "#DN_ConvertToRecordPattern", description = "#DESC_ConvertToRecordPattern", category = "rules15",
         minSourceVersion = "19")
 public class ConvertToRecordPattern {
- 
+
     private static final int RECORD_PATTERN_PREVIEW_JDK_VERSION = 19;
 
     @TriggerPatterns({
@@ -91,7 +91,7 @@ public class ConvertToRecordPattern {
             Set<String> localVarList = new HashSet<>();
             localVarList.add(ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$expr")).getSimpleName().toString());
             Map<String, String> varNames = new HashMap<>();
-            new TreePathScanner<Void, Void>() {
+            new CancellableTreePathScanner<Void, Void>() {
                 String variableName = null;
 
                 @Override
@@ -109,6 +109,11 @@ public class ConvertToRecordPattern {
                         convertPath.add(getCurrentPath());
                     }
                     return super.visitVariable(node, p);
+                }
+
+                @Override
+                protected boolean isCanceled() {
+                    return ctx.isCanceled();
                 }
             }.scan(ctx.getPath(), null);
             TypeElement type = (TypeElement) ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$typeI0"));
@@ -151,13 +156,12 @@ public class ConvertToRecordPattern {
             StatementTree bt = it.getThenStatement();
 
             List<PatternTree> bindTree = new ArrayList<>();
-            
+
             List<RecordComponentElement> recordSignature = new ArrayList<>();
             recordSig.stream().map(elem -> elem.resolve(wc)).forEach(elem -> {
-                recordSignature.add((RecordComponentElement)elem);
+                recordSignature.add((RecordComponentElement) elem);
             });
             Set<String> localVars = new HashSet<>(localVarList);
-            //List<RecordComponentElement> recordSignature = recordSig.stream().map(elem -> (RecordComponentElement)elem.resolve(wc)).collect(Collectors.toList()));
             for (RecordComponentElement recordComponent : recordSignature) {
                 String compName = recordComponent.getSimpleName().toString();
                 String name = null;
@@ -181,7 +185,7 @@ public class ConvertToRecordPattern {
             InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), wc.getTreeMaker().RecordPattern((ExpressionTree) pattern.
                     getVariable().getType(), bindTree, pattern.getVariable()));
             List<Tree> removeList = replaceOccurrences.stream().map(tph -> tph.resolve(wc).getLeaf()).collect(Collectors.toList());
-            for(Tree t : removeList) {
+            for (Tree t : removeList) {
                 bt = wc.getTreeMaker().removeBlockStatement((BlockTree) bt, (StatementTree) t);
             }
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), bt, it.getElseStatement()));

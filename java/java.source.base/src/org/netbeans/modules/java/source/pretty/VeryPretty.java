@@ -2098,16 +2098,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     
     @Override
     public void visitRecordPattern(JCRecordPattern tree) {
-        print((JCExpression) tree.deconstructor);
+        print(tree.deconstructor);
         print("(");
         Iterator<JCPattern> it = tree.nested.iterator();
         while (it.hasNext()) {
             JCPattern pattern = it.next();
-            if (pattern instanceof JCBindingPattern) {
-                visitBindingPattern((JCBindingPattern) pattern);
-            } else {
-                visitRecordPattern((JCRecordPattern) pattern);
-            }
+            doAccept(pattern, true);
             if (it.hasNext()) {
                 print(", ");
             }

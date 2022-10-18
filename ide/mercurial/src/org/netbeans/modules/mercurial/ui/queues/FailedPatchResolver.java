@@ -29,6 +29,7 @@ import org.netbeans.modules.mercurial.OutputLogger;
 import org.netbeans.modules.mercurial.util.HgUtils;
 import org.netbeans.modules.versioning.util.Utils;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -92,7 +93,7 @@ class FailedPatchResolver {
     void resolveFailure () {
         if (isFailure()) {
             HgUtils.openOutput(logger);
-            if (JOptionPane.showConfirmDialog(null, NbBundle.getMessage(FailedPatchResolver.class, "MSG_FailedPatchResolver_patchApplyFailed", failedPatch), //NOI18N
+            if (JOptionPane.showConfirmDialog(Utilities.findDialogParent(), NbBundle.getMessage(FailedPatchResolver.class, "MSG_FailedPatchResolver_patchApplyFailed", failedPatch), //NOI18N
                     NbBundle.getMessage(FailedPatchResolver.class, "LBL_FailedPatchResolver_patchApplyFailed"), //NOI18N
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                 for (Map.Entry<File, File> e : rejects.entrySet()) {

@@ -886,7 +886,7 @@ public class ProjectProblemsProviders {
             if (lastSelectedFile != null) {
                 chooser.setSelectedFile(lastSelectedFile);
             }
-            int option = chooser.showOpenDialog(null);
+            int option = chooser.showOpenDialog(Utilities.findDialogParent());
             if (option == JFileChooser.APPROVE_OPTION) {
                 updateReference(chooser.getSelectedFile());
                 lastSelectedFile = chooser.getSelectedFile();
@@ -928,7 +928,7 @@ public class ProjectProblemsProviders {
             if (lastSelectedFile != null) {
                 chooser.setSelectedFile(lastSelectedFile);
             }
-            int option = chooser.showOpenDialog(null);
+            int option = chooser.showOpenDialog(Utilities.findDialogParent());
             if (option == JFileChooser.APPROVE_OPTION) {
                 updateReference(chooser.getSelectedFile());
                 lastSelectedFile = chooser.getSelectedFile();

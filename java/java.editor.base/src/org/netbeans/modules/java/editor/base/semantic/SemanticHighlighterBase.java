@@ -678,19 +678,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return super.visitCase(node, p);
         }
 
-
-        @Override
-        public Void visitBindingPattern(BindingPatternTree node, Void p) {
-            VariableTree variable = node.getVariable();
-            scan(variable, p);
-            tl.moveToOffset(sourcePositions.getEndPosition(info.getCompilationUnit(), node));
-            tl.moveNext();
-            if (TokenUtilities.equals(tl.currentToken().text(), "when")) {      //NOI18N
-                contextKeywords.add(tl.currentToken());
-            }
-            return null;
-        }
-
         @Override
         public Void visitUses(UsesTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));

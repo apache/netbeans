@@ -243,8 +243,8 @@ public class ConvertToNestedRecordPattern {
 
             List<Tree> removeList = replaceOccurrences.stream().map(tph -> tph.resolve(wc).getLeaf()).collect(Collectors.toList());
             for (Tree tree : removeList) {
-              StatementTree statementTree = (StatementTree) tree;
-              Utilities.removeStatements(wc, TreePath.getPath(t, statementTree), null);
+                StatementTree statementTree = (StatementTree) tree;
+                Utilities.removeStatements(wc, TreePath.getPath(t, statementTree), null);
             }
             wc.rewrite(ctx.getPath().getLeaf(), d);
         }

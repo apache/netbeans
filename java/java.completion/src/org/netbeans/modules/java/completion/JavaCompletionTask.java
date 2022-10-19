@@ -130,6 +130,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         T createModuleItem(String moduleName, int substitutionOffset);
     }
 
+    public static interface RecordPatternItemFactory<T> extends ItemFactory<T> {
+        T createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars);
+    }
+
     public static enum Options {
 
         ALL_COMPLETION,
@@ -492,6 +496,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
             case DEFAULT_CASE_LABEL:
                 localResult(env);
                 addKeywordsForBlock(env);
+                break;
+            case DECONSTRUCTION_PATTERN:
+                insideDeconstructionRecordPattern(env);
                 break;
             case PARENTHESIZED_PATTERN:
                 insideParenthesizedPattern(env);
@@ -3250,6 +3257,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     }
 
+    private void insideDeconstructionRecordPattern(final Env env) throws IOException {
+        final CompilationController controller = env.getController();
+        final Elements elements = controller.getElements();
+        TypeMirror tm = controller.getTreeUtilities().parseType(env.getPrefix(), env.getScope().getEnclosingClass());
+        TypeElement e = (TypeElement) ((DeclaredType) tm).asElement();
+        if (e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind().equals(ElementKind.RECORD))) {
+            results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+        }
+    }
+
     private void insideParenthesizedPattern(Env env) {
         final int offset = env.getOffset();
         final CompilationController controller = env.getController();
@@ -4234,7 +4251,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         };
         for (TypeElement e : controller.getElementUtilities().getGlobalTypes(acceptor)) {
-            results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+            Tree iot = env.getPath().getLeaf();
+            TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, iot, env.getOffset());
+            if (env.getPrefix() != null && e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind().equals(ElementKind.RECORD))
+                    && ts != null && ts.token().id() == JavaTokenId.INSTANCEOF) {
+                results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, e, (DeclaredType) e.asType(), anchorOffset, null, controller.getElements().isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+            } else {
+                results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+            }
         }
     }
 

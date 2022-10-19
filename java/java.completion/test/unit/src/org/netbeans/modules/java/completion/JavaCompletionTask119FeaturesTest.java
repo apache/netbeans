@@ -1,4 +1,3 @@
-package org.netbeans.modules.java.completion;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,7 +16,7 @@ package org.netbeans.modules.java.completion;
  * specific language governing permissions and limitations
  * under the License.
  */
-
+package org.netbeans.modules.java.completion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +50,24 @@ public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
         return suite;
     }
 
+    public void testRecordPatternCompletion_1() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("RecordPattern", 930, null, "AutoCompletion_RecordPattern_1.pass", getLatestSource());
+    }
+
+    public void testRecordPatternCompletion_2() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("RecordPattern", 1013, null, "AutoCompletion_RecordPattern_2.pass", getLatestSource());
+    }
+
+    public void testRecordPatternCompletion_3() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("RecordPattern", 1107, null, "AutoCompletion_RecordPattern_3.pass", getLatestSource());
+    }
+
+    private String getLatestSource() {
+        return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_") + 1);
+    }
 
     public void testCasePatternGuard_1() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
@@ -69,12 +86,9 @@ public class JavaCompletionTask119FeaturesTest extends CompletionTestBase {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
 
-    private String getLatestSource() {
-        return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_")+1);
-    }
-
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
         private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
 
         @Override

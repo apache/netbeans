@@ -2825,8 +2825,10 @@ public class Reformatter implements ReformatTask {
         @Override
         public Boolean visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
             scan(node.getDeconstructor(), p);
+            spaces(0);
             accept(LPAREN);
-            scan(node.getNestedPatterns(), p);
+            spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
             accept(RPAREN);
             if (node.getVariable() != null) {
                 space();

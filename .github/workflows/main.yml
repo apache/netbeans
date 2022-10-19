@@ -600,9 +600,6 @@ jobs:
       - name: ide/xml.text
         run: ant $OPTS -f ide/xml.text test
 
-      - name: ide/xml.text.obsolete90
-        run: ant $OPTS -f ide/xml.text.obsolete90 test
-
       - name: ide/xml.wsdl.model
         run: .github/retry.sh ant $OPTS -f ide/xml.wsdl.model test
 

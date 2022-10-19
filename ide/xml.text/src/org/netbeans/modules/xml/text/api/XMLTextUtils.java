@@ -28,8 +28,7 @@ import org.netbeans.modules.xml.text.indent.XMLLexerFormatter;
 
 /**
  * Miscellaneous utilities for working with XML in text form.  This class
- * replaces the old Util class which contains references to old lexer and was
- * removed to the {@code xml.text.obsolete90} module.
+ * replaces the old Util class which contained references to the old lexer.
  * 
  * @author sdedic
  * @since 1.60

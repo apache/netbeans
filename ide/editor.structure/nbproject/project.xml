@@ -156,7 +156,6 @@
             <friend-packages>
                 <friend>org.netbeans.modules.mobility.svgcore</friend>
                 <friend>org.netbeans.modules.xml.text</friend>
-                <friend>org.netbeans.modules.xml.text.obsolete90</friend>
                 <package>org.netbeans.modules.editor.structure.api</package>
                 <package>org.netbeans.modules.editor.structure.formatting</package>
                 <package>org.netbeans.modules.editor.structure.spi</package>

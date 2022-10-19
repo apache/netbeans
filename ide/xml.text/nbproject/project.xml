@@ -448,7 +448,6 @@
                 <friend>org.netbeans.modules.xml.schema.abe</friend>
                 <friend>org.netbeans.modules.xml.schema.completion</friend>
                 <friend>org.netbeans.modules.xml.schema.ui.basic</friend>
-                <friend>org.netbeans.modules.xml.text.obsolete90</friend>
                 <friend>org.netbeans.modules.xsl</friend>
                 <friend>org.netbeans.modules.xslt.core</friend>
                 <package>org.netbeans.modules.xml.text.api</package>

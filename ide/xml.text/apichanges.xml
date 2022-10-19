@@ -91,9 +91,16 @@ is the proper place.
             <compatibility binary="compatible" source="incompatible" semantic="compatible" addition="yes" deprecation="yes" deletion="yes"/>
             <description>
                 <p>
-                    The xml.text.syntax API uses the old and long deprecated lexer. The API is now moved to a new compatibility-only 
+                    The xml.text.syntax API uses the old and long deprecated lexer. The API was moved to a new compatibility-only 
                     <code>xml.text.deprecated90</code> module and a new API in <code>org.netbeans.modules.xml.text.api.dom</code> package is offered.               
+                    Subsequently, the <code>xml.text.deprecated90</code> module was removed from the IDE as part of
+                    <a href="https://github.com/apache/netbeans/pull/4821">pull request #4821</a>.
                 </p>
+
+                <p>
+                    References here are included for historial purposes.
+                </p>
+
                 <p>
                     The following classes/packages have been moved to xml.text.obsolete90 module:
                 </p>

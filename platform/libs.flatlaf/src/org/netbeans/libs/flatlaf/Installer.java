@@ -19,8 +19,6 @@
 package org.netbeans.libs.flatlaf;
 
 import com.formdev.flatlaf.FlatSystemProperties;
-import java.io.File;
-import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.ModuleInstall;
 
 public class Installer extends ModuleInstall {
@@ -28,7 +26,6 @@ public class Installer extends ModuleInstall {
     @Override
     public void validate() {
         super.validate();
-        File libDirectory = InstalledFileLocator.getDefault().locate("modules/lib", "org.netbeans.libs.flatlaf", false); //NOI18N
-        System.setProperty( FlatSystemProperties.NATIVE_LIBRARY_PATH, libDirectory.getAbsolutePath() );
+        System.setProperty( FlatSystemProperties.NATIVE_LIBRARY_PATH, "system");
     }
 }

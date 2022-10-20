@@ -54,16 +54,6 @@ matrix:
             - chmod a+x nbbuild/travis/ant.sh
             - nbbuild/travis/ant.sh build -Dcluster.config=platform
 
-        - name: Compile all modules & tests
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-          script:
-            - nbbuild/travis/ant.sh $OPTS build
-            - nbbuild/travis/ant.sh $OPTS test -Dtest.includes=NoTestsJustBuild
-
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
           env:

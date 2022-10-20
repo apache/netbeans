@@ -54,6 +54,9 @@ env:
   # 'Platform' label
   test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
+  # 'tests' label for building all tests
+  test_tests: ${{ contains(github.event.pull_request.labels.*.name, 'tests') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
   # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger build-tools job
   # see job condition (env vars don't work for job conditions https://github.com/actions/runner/issues/1189 )
 
@@ -251,6 +254,11 @@ jobs:
 
       - name: Test Netbeans Build System
         run: ant $OPTS -Dcluster.config=release localtest
+
+      - name: Build all Tests
+        # runs only in PRs if requested, nowhere else (~18 min)
+        if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
+        run: ant -quiet -Dcluster.config=release test -Dtest.includes=NoTestsJustBuild
 
 
   build-nbms:

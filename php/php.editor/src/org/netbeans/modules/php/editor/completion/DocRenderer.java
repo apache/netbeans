@@ -811,6 +811,12 @@ final class DocRenderer {
             } else if (indexedElement instanceof InterfaceElement) {
                 InterfaceElement interfaceElement = (InterfaceElement) indexedElement;
                 inheritedElements.addAll(getAllInheritedInterfaces(interfaceElement));
+            } else if (indexedElement instanceof FieldElement) {
+                FieldElement fieldElement = (FieldElement) indexedElement;
+                inheritedElements.addAll(getAllOverriddenFields(fieldElement));
+            } else if (indexedElement instanceof TypeConstantElement) {
+                TypeConstantElement constElement = (TypeConstantElement) indexedElement;
+                inheritedElements.addAll(getAllOverriddenConstants(constElement));
             }
             return inheritedElements;
         }
@@ -973,6 +979,62 @@ final class DocRenderer {
                 return Collections.emptySet();
             }
             return index.getInheritedMethods(type);
+        }
+
+        private static List<FieldElement> getAllOverriddenFields(FieldElement field) {
+            List<FieldElement> fields = new ArrayList<>();
+            getOverriddenFields(field, fields);
+            return fields;
+        }
+
+        private static void getOverriddenFields(FieldElement field, List<FieldElement> fields) {
+            Set<FieldElement> overriddenFields = getOverriddenFields(field);
+            fields.addAll(overriddenFields);
+            for (FieldElement overriddenField : overriddenFields) {
+                getOverriddenFields(overriddenField, fields);
+            }
+        }
+
+        private static Set<FieldElement> getOverriddenFields(FieldElement field) {
+            ElementFilter fieldNameFilter = ElementFilter.forName(NameKind.exact(field.getName()));
+            return fieldNameFilter.filter(getInheritedFields(field));
+        }
+
+        private static Set<FieldElement> getInheritedFields(FieldElement field) {
+            Index index = getIndex(field);
+            TypeElement type = field.getType();
+            if (type == null) {
+                return Collections.emptySet();
+            }
+            return index.getInheritedFields(type);
+        }
+
+        private static List<TypeConstantElement> getAllOverriddenConstants(TypeConstantElement constant) {
+            List<TypeConstantElement> constants = new ArrayList<>();
+            getOverriddenConstants(constant, constants);
+            return constants;
+        }
+
+        private static void getOverriddenConstants(TypeConstantElement constant, List<TypeConstantElement> constants) {
+            Set<TypeConstantElement> overriddenConstants = getOverriddenConstants(constant);
+            constants.addAll(overriddenConstants);
+            for (TypeConstantElement overriddenConstant : overriddenConstants) {
+                getOverriddenConstants(overriddenConstant, constants);
+            }
+        }
+
+        private static Set<TypeConstantElement> getOverriddenConstants(TypeConstantElement constant) {
+            ElementFilter constantNameFilter = ElementFilter.forName(NameKind.exact(constant.getName()));
+            return constantNameFilter.filter(getInheritedConstants(constant));
+        }
+
+        private static Set<TypeConstantElement> getInheritedConstants(TypeConstantElement constant) {
+            Index index = getIndex(constant);
+            TypeElement type = constant.getType();
+            if (type == null) {
+                return Collections.emptySet();
+            }
+            return index.getInheritedTypeConstants(type);
         }
 
         @CheckForNull

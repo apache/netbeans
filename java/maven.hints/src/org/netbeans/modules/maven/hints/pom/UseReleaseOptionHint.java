@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.hints.pom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.xml.namespace.QName;
@@ -66,32 +67,36 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     @Override
     public List<ErrorDescription> getErrorsForDocument(POMModel model, Project prj) {
 
-        List<ErrorDescription> hints = new ArrayList<>();
-
         Build build = model.getProject().getBuild();
-        if (build != null) {
-            for (Plugin plugin : build.getPlugins()) {
-                if ("maven-compiler-plugin".equals(plugin.getArtifactId())) {
-                    if (!isPluginCompatible(plugin)) {
-                        return Collections.emptyList();
+
+        if (build != null && build.getPlugins() != null) {
+
+            List<ErrorDescription> hints = new ArrayList<>();
+            Optional<Plugin> compilerPlugin = build.getPlugins().stream()
+                    .filter((p) -> "maven-compiler-plugin".equals(p.getArtifactId()))
+                    .filter(this::isPluginCompatible)
+                    .findFirst();
+
+            if (compilerPlugin.isPresent()) {
+                hints.addAll(createHintsForParent("", compilerPlugin.get().getConfiguration()));
+                if (compilerPlugin.get().getExecutions() != null) {
+                    for (PluginExecution exec : compilerPlugin.get().getExecutions()) {
+                        hints.addAll(createHintsForParent("", exec.getConfiguration()));
                     }
-                    hints.addAll(createHintsForParent("", plugin.getConfiguration()));
-                    if (plugin.getExecutions() != null) {
-                        for (PluginExecution exec : plugin.getExecutions()) {
-                            hints.addAll(createHintsForParent("", exec.getConfiguration()));
-                        }
-                    }
-                    break;
                 }
+            } else {
+                return Collections.emptyList();
             }
+
+            Properties properties = model.getProject().getProperties();
+            if (properties != null) {
+                hints.addAll(createHintsForParent("maven.compiler.", properties));
+            }
+
+            return hints;
         }
 
-        Properties properties = model.getProject().getProperties();
-        if (properties != null) {
-            hints.addAll(createHintsForParent("maven.compiler.", properties));
-        }
-
-        return hints;
+        return Collections.emptyList();
     }
 
     private List<ErrorDescription> createHintsForParent(String prefix, POMComponent parent) {

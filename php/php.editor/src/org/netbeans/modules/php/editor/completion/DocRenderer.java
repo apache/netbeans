@@ -239,6 +239,17 @@ final class DocRenderer {
         private static final Pattern DESC_HEADER_PATTERN = Pattern.compile("(\r?\n)*(.*?((\r?\n){2,}|\\.\\s*\r?\n)|.*)", Pattern.DOTALL); // NOI18N
         private static final Pattern INLINE_INHERITDOC_PATTERN = Pattern.compile("\\{@inheritdoc *\\}", Pattern.CASE_INSENSITIVE); // NOI18N
         private static final ArrayList<String> LINK_TAGS = new ArrayList<>();
+        // see: https://pear.php.net/package/PhpDocumentor/docs/latest/phpDocumentor/tutorial_tags.inlineinheritdoc.pkg.html
+        // phpdocumentor separates a doc comment into a header and description.
+        // only description is replaced.
+        // e.g.
+        // /**
+        //  * Header.
+        //  * Description.
+        //  */
+        // /** {@inheritdoc} */ -> /** Description. */
+        private static final boolean INHERITDOC_FOR_PHPDOCUMENTOR = Boolean.getBoolean("nb.php.editor.inheritDocForPhpdocumentor"); // NOI18N
+        static volatile boolean UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER = false; // for unit tests
 
         static {
             LINK_TAGS.add("@link"); // NOI18N
@@ -633,12 +644,15 @@ final class DocRenderer {
             if (description == null) {
                 return parentDescription;
             }
-            if (description != null && hasInlineInheritdoc(description)) {
+            if (hasInlineInheritdoc(description)) {
                 if (parentDescription != null && !parentDescription.trim().isEmpty()) {
                     if (INLINE_INHERITDOC_PATTERN.matcher(description.trim()).matches()) {
                         return parentDescription;
                     }
-                    String inheritdoc = removeDescriptionHeader(parentDescription);
+                    String inheritdoc = parentDescription;
+                    if (INHERITDOC_FOR_PHPDOCUMENTOR || UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER) {
+                        inheritdoc = removeDescriptionHeader(parentDescription);
+                    }
                     return replaceInlineInheritdoc(description, inheritdoc);
                 }
             }

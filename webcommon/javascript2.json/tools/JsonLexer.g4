@@ -20,11 +20,7 @@
  *
  * @author Tomas Zezula
  */
-grammar Json;
-
-options {
-language=Java;
-}
+lexer grammar JsonLexer;
 
 @lexer::header {
 /*
@@ -48,33 +44,7 @@ language=Java;
 package org.netbeans.modules.javascript2.json.parser;
 }
 
-@parser::header {
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-package org.netbeans.modules.javascript2.json.parser;
-}
-
 @lexer::members {
-public static final int WHITESPACES = 1;
-public static final int COMMENTS = 2;
-public static final int ERRORS = 3;
-
 private static final Recovery[] RECOVERIES = {
     Recovery.createLineCommentRecovery(),
     Recovery.createCommentRecovery(),
@@ -161,14 +131,7 @@ public void recover(LexerNoViableAltException e) {
 }
 }
 
-
-json                : value?EOF;
-value               : (STRING | NUMBER | TRUE | FALSE | NULL | array | object);
-object              : LBRACE (pair (COMMA pair)*)? RBRACE;
-pair               : key COLON value;
-key                 : STRING;
-array               : LBRACKET (value (COMMA value)*)? RBRACKET;
-
+channels { WHITESPACES, COMMENTS, ERRORS }
 
 COLON               : ':';
 COMMA               : ',';
@@ -189,12 +152,14 @@ fragment DIGIT_19   : [1-9];
 fragment DIGIT      : DIGIT_0 | DIGIT_19;
 fragment FRACTION   : DOT DIGIT+;
 fragment EXPONENT   : ('e'|'E')(PLUS | MINUS)? DIGIT+;
+
 STRING              : QUOTE (CHAR)* QUOTE;
 fragment QUOTE      : '"';
 fragment CHAR       : ~[\u0000-\u001F"\\] | CONTROL;
 fragment CONTROL    : '\\' (["\\/bfnrt] | UNICODE);
 fragment UNICODE    : 'u' HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT;
 fragment HEXDIGIT   : [0-9a-fA-F];
+
 LINE_COMMENT        : '//' .*? '\r'? '\n' {isCommentSupported}? -> channel(COMMENTS);
 COMMENT             : '/*' .*? '*/' {isCommentSupported}? -> channel(COMMENTS);
 WS                  : [ \t\r\n]+ -> channel(WHITESPACES);

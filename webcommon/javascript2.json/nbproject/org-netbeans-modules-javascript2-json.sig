@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21
+#Version 1.22
 
 CLSS public java.lang.Object
 cons public init()
@@ -133,6 +133,7 @@ meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreeP
 meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreePattern(java.lang.String,int,org.antlr.v4.runtime.Lexer)
 meth public void addParseListener(org.antlr.v4.runtime.tree.ParseTreeListener)
 meth public void dumpDFA()
+meth public void dumpDFA(java.io.PrintStream)
 meth public void enterOuterAlt(org.antlr.v4.runtime.ParserRuleContext,int)
 meth public void enterRecursionRule(org.antlr.v4.runtime.ParserRuleContext,int)
  anno 0 java.lang.Deprecated()
@@ -159,6 +160,7 @@ hfds _tracer,bypassAltsAtnCache
 CLSS public org.antlr.v4.runtime.ParserRuleContext
 cons public init()
 cons public init(org.antlr.v4.runtime.ParserRuleContext,int)
+fld public final static org.antlr.v4.runtime.ParserRuleContext EMPTY
 fld public java.util.List<org.antlr.v4.runtime.tree.ParseTree> children
 fld public org.antlr.v4.runtime.RecognitionException exception
 fld public org.antlr.v4.runtime.Token start
@@ -229,7 +231,6 @@ hfds _listeners,_stateNumber,ruleIndexMapCache,tokenTypeMapCache
 CLSS public org.antlr.v4.runtime.RuleContext
 cons public init()
 cons public init(org.antlr.v4.runtime.RuleContext,int)
-fld public final static org.antlr.v4.runtime.ParserRuleContext EMPTY
 fld public int invokingState
 fld public org.antlr.v4.runtime.RuleContext parent
 intf org.antlr.v4.runtime.tree.RuleNode

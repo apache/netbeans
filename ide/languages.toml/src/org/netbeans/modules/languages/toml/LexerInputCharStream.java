@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.toml;
 
 import org.antlr.v4.runtime.CharStream;
+import static org.antlr.v4.runtime.IntStream.UNKNOWN_SOURCE_NAME;
 import org.antlr.v4.runtime.misc.Interval;
 import org.netbeans.spi.lexer.*;
 
@@ -39,11 +40,19 @@ public class LexerInputCharStream implements CharStream {
     @Override
     public String getText(Interval intrvl) {
         if (intrvl.a < tokenMark) {
-            throw new UnsupportedOperationException("Read before the current token start is not supported: " + intrvl.a + " < " + tokenMark);
+            throw new UnsupportedOperationException("Can't read before the last token end: " + tokenMark);
         }
         int start = intrvl.a - tokenMark;
         int end = intrvl.b - tokenMark + 1;
-        return String.valueOf(input.readText(start, end));
+        int toread = end - start - input.readLength();
+        for (int i = 0; i < toread; i++) {
+            input.read();
+        }
+        String ret = String.valueOf(input.readText(start, end));
+        if (toread > 0) {
+            input.backup(toread);
+        }
+        return ret;
     }
 
     @Override
@@ -74,6 +83,10 @@ public class LexerInputCharStream implements CharStream {
     @Override
     public int mark() {
         return -1;
+    }
+
+    public void markToken() {
+        tokenMark = index;
     }
 
     @Override
@@ -108,10 +121,6 @@ public class LexerInputCharStream implements CharStream {
     private void backup(int count) {
         index -= count;
         input.backup(count);
-    }
-
-    public final void markToken() {
-        tokenMark = index;
     }
 
     @Override

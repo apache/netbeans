@@ -41,7 +41,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/tomlj.jar</runtime-relative-path>
-                <binary-origin>external/tomlj-1.0.0.jar</binary-origin>
+                <binary-origin>external/tomlj-1.1.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

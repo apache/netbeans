@@ -143,7 +143,6 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
     private void setDefaultMinimumSize(){
         switch (UiUtils.getLAF()) {
             case WINDOWS_CLASSIC :
-            case WINDOWS_XP :
                 setMinimumSize(new Dimension(560, 420 + EXTRA_SIZE));
                 break;
             case GTK:

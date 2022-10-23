@@ -75,7 +75,6 @@ public class ExeLauncher extends CommonLauncher {
     public static final String MIN_IBM_JAVA_VERSION = "1.5.0";
 
     public static final String OSNAME_WINDOWS    = "Windows";
-    public static final String OSNAME_WINDOWS_XP = "XP";
     public static final String OSNAME_WINDOWS_VISTA = "Vista";
     public static final String OSNAME_WINDOWS_2K = "2000";
     public static final String OSNAME_WINDOWS_2K3 = "2003";
@@ -198,8 +197,6 @@ public class ExeLauncher extends CommonLauncher {
             List<JavaCompatibleProperties> list = new ArrayList<JavaCompatibleProperties>();
             list.add(new JavaCompatibleProperties(
                     MIN_JAVA_VERSION_WINDOWS_VISTA, null, null, OSNAME_WINDOWS_VISTA, null));
-            list.add(new JavaCompatibleProperties(
-                    MIN_JAVA_VERSION_WINDOWS, null, null, OSNAME_WINDOWS_XP, null));
             list.add(new JavaCompatibleProperties(
                     MIN_JAVA_VERSION_WINDOWS, null, null, OSNAME_WINDOWS_2K, null));
             list.add(new JavaCompatibleProperties(

@@ -20,13 +20,17 @@ package org.netbeans.modules.gradle.api;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import static junit.framework.TestCase.assertNotNull;
+import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
+import org.netbeans.modules.gradle.GradleBaseProjectInternal;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -205,4 +209,57 @@ public class GradleBaseProjectTest extends AbstractGradleProjectTestCase {
         assertEquals(":p1:jar", external.getPath());
         assertEquals(":p1", external.getProjectPath());
     }
+    
+    private void assertProjectLoadedWithNoProblems(Project p, String expectedVersion) {
+        GradleBaseProject gbp = GradleBaseProject.get(p);
+        assertNotNull(gbp);
+        assertTrue(NbGradleProject.get(p).getQuality().atLeast(NbGradleProject.Quality.FULL));
+        assertEquals(0, gbp.getProblems().size());
+        GradleBaseProjectInternal baseInternal = NbGradleProject.get(p).projectLookup(GradleBaseProjectInternal.class);
+        assertNotNull(baseInternal);
+        assertEquals(expectedVersion, baseInternal.getGradleVersion());
+    }
+    
+    private Project makeProjectWithWrapper(String subdir, String gradleVersion) throws Exception {
+        FileObject src = FileUtil.toFileObject(getDataDir()).getFileObject(subdir);
+        projectDir = FileUtil.copyFile(src, FileUtil.toFileObject(getWorkDir()), src.getNameExt());
+        
+        GradleDistribution dist = GradleDistributionManager.get().defaultDistribution();
+        GradleConnector gconn = GradleConnector.newConnector();
+        gconn = gconn.useGradleUserHomeDir(dist.getGradleUserHome());
+        if (dist.isAvailable()) {
+            gconn = gconn.useInstallation(dist.getDistributionDir());
+        } else {
+            gconn = gconn.useDistribution(dist.getDistributionURI());
+        }
+        try (ProjectConnection c = gconn.forProjectDirectory(FileUtil.toFile(projectDir)).connect()) {
+            c.newBuild().forTasks("wrapper").addArguments("wrapper", "--gradle-version", gradleVersion).run();
+        }
+        
+        Project p = ProjectManager.getDefault().findProject(projectDir);
+        assertNotNull(p);
+        ProjectTrust.getDefault().trustProject(p);
+        
+        OpenProjects.getDefault().open(new Project[] { p }, true);
+        OpenProjects.getDefault().openProjects().get();
+        
+        NbGradleProject.get(p).toQuality("Load data", NbGradleProject.Quality.FULL, false).toCompletableFuture().get();
+        return p;
+    }
+    
+    public void testOldGradle683ProjectLoads() throws Exception {
+        Project p = makeProjectWithWrapper("projects/oldgradle/basic", "6.8.3");
+        assertProjectLoadedWithNoProblems(p, "6.8.3");
+    }
+
+    public void testOldGradle700ProjectLoads() throws Exception {
+        Project p = makeProjectWithWrapper("projects/oldgradle/basic", "7.0");
+        assertProjectLoadedWithNoProblems(p, "7.0");
+    }
+
+    public void testOldGradle710ProjectLoads() throws Exception {
+        Project p = makeProjectWithWrapper("projects/oldgradle/basic", "7.1");
+        assertProjectLoadedWithNoProblems(p, "7.1");
+    }
 }
+

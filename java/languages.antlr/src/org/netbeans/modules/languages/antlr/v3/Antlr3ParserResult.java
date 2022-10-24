@@ -87,18 +87,6 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     }
 
     @Override
-    protected ParseTreeListener createCheckReferences() {
-        return new ANTLRv3OccuranceListener((token) -> {
-            String name = token.getText();
-            if (!references.containsKey(name)) {
-                //TODO: It seems the ANTLRv3 Grammar Occurance finder could be a bit smarter
-                //Adding the following line could produce false positives.
-                //errors.add(new DefaultError(null, "Unknown Reference: " + name, null, source, token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
-            }
-        });
-    }
-
-    @Override
     protected ParseTreeListener createImportListener() {
         return new ANTLRv3ParserBaseListener();
     }

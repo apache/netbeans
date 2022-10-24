@@ -20,7 +20,6 @@ package org.netbeans.modules.languages.antlr.v4;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import org.netbeans.modules.languages.antlr.*;
 import java.util.Map;
 import java.util.Optional;
@@ -94,6 +93,11 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                 if (fo == null) {
                     return;
                 }
+                AntlrParserResult<?> r = AntlrParser.getParserResult(fo);
+                if (!(r instanceof Antlr4ParserResult)) {
+                    return;
+                }
+                Antlr4ParserResult result = (Antlr4ParserResult) r;
 
                 String prefix = "";
                 adoc.readLock();
@@ -129,7 +133,7 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                             return;
                         }
                         tokens.previous();
-                        lookAround(fo, tokens, caretOffset, prefix, resultSet);
+                        lookAround(result, tokens, caretOffset, prefix, resultSet);
                     } else {
                         //Empty grammar so far offer lexer, parser and grammar
                         addTokens("", caretOffset, resultSet, "lexer", "parser", "grammar");
@@ -140,8 +144,7 @@ public class Antlr4CompletionProvider implements CompletionProvider {
             }
         }
 
-        private void lookAround(FileObject fo, AntlrTokenSequence tokens, int caretOffset, String prefix, CompletionResultSet resultSet) {
-            AntlrParserResult<?> result = AntlrParser.getParserResult(fo);
+        private void lookAround(Antlr4ParserResult result, AntlrTokenSequence tokens, int caretOffset, String prefix, CompletionResultSet resultSet) {
             AntlrParserResult.GrammarType grammarType = result != null ? result.getGrammarType(): AntlrParserResult.GrammarType.UNKNOWN;
             Optional<Token> opt = tokens.previous(DEFAULT_CHANNEL);
             if (!opt.isPresent()) {
@@ -193,14 +196,14 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                             if (lexerCommand.isPresent()) {
                                 switch (lexerCommand.get().getText()) {
                                     case "channel": 
-                                        addReferences(fo, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.CHANNEL));
+                                        addReferences(result, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.CHANNEL));
                                         return;
                                     case "mode":
                                     case "pushMode":
-                                        addReferences(fo, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.MODE));
+                                        addReferences(result, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.MODE));
                                         return;
                                     case "type":
-                                        addReferences(fo, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.TOKEN));
+                                        addReferences(result, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.TOKEN));
                                         return;
                                 }
                             }
@@ -237,7 +240,7 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                                         rtypes.add(ReferenceType.RULE);
                                     }
                                 }
-                                addReferences(fo, prefix, caretOffset, resultSet, rtypes);
+                                addReferences(result, prefix, caretOffset, resultSet, rtypes);
                             }
 
                     }
@@ -262,13 +265,24 @@ public class Antlr4CompletionProvider implements CompletionProvider {
             }
         }
 
-        public void addReferences(FileObject fo, String prefix, int caretOffset, CompletionResultSet resultSet, Set<ReferenceType> rtypes) {
-            Set<FileObject> scanned = new HashSet<>();
-            Map<String,AntlrParserResult.Reference> matchingRefs = new HashMap<>();
-            addReferencesForFile(fo, prefix, matchingRefs, scanned, rtypes);
-
+        public void addReferences(Antlr4ParserResult result, String prefix, int caretOffset, CompletionResultSet resultSet, Set<ReferenceType> rtypes) {
+            
+            Map<String,AntlrParserResult.Reference> matching = new HashMap<>();
+            String mprefix = caseSensitive ? prefix : prefix.toUpperCase();
+            
+            result.allImports().values().forEach((r) ->{
+                Map<String, AntlrParserResult.Reference> refs = r.references;
+                for (AntlrParserResult.Reference ref : refs.values()) {
+                    String mref = caseSensitive ? ref.name : ref.name.toUpperCase();
+                    boolean match = mref.startsWith(mprefix);
+                    if (match && !matching.containsKey(ref.name) && rtypes.contains(ref.type)) {
+                        matching.put(ref.name, ref);
+                    }
+                }
+            });
+ 
             int startOffset = caretOffset - prefix.length();
-            for (AntlrParserResult.Reference ref : matchingRefs.values()) {
+            for (AntlrParserResult.Reference ref : matching.values()) {
                 CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref.name)
                         .iconResource(getReferenceIcon(ref.type))
                         .startOffset(startOffset)
@@ -279,36 +293,6 @@ public class Antlr4CompletionProvider implements CompletionProvider {
 
             }            
         }
-        
-        public void addReferencesForFile(FileObject fo, String prefix, Map<String,AntlrParserResult.Reference> matching, Set<FileObject> scannedFiles, Set<ReferenceType> rtypes) {
-            if (scannedFiles.contains(fo)) {
-                return;
-            }
-            scannedFiles.add(fo);
-
-            
-            String mprefix = caseSensitive ? prefix : prefix.toUpperCase();
-
-            AntlrParserResult<?> result = AntlrParser.getParserResult(fo);
-            Map<String, AntlrParserResult.Reference> refs = result.references;
-            for (AntlrParserResult.Reference ref : refs.values()) {
-                String mref = caseSensitive ? ref.name : ref.name.toUpperCase();
-                boolean match = mref.startsWith(mprefix);
-                if (match && !matching.containsKey(ref) && rtypes.contains(ref.type)) {
-                    matching.put(ref.name, ref);
-                }
-            }
-
-            if (result instanceof Antlr4ParserResult) {
-                for (String s : ((Antlr4ParserResult) result).getImports()) {
-                    FileObject importedFo = fo.getParent().getFileObject(s, "g4");
-                    if (importedFo != null) {
-                        addReferencesForFile(importedFo, prefix, matching, scannedFiles, rtypes);
-                    }
-                }
-            }
-        }
-
     }
     
     //The folowing is an excrept of org.netbeans.modules.csl.navigation.Icons

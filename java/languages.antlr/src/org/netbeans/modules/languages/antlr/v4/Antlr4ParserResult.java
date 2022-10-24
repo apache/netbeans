@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -75,6 +76,25 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     @Override
     protected void evaluateParser(ANTLRv4Parser parser) {
         parser.grammarSpec();
+        checkReferences();
+    }
+
+    private void checkReferences() {
+        Map<String, Reference> allRefs = new HashMap<>(references.size() * 2);
+        for (Antlr4ParserResult pr : allImports().values()) {
+            allRefs.putAll(pr.references);
+        }
+        occurrences.forEach((refName, offsets) -> {
+            if (!allRefs.containsKey(refName)) {
+                for (OffsetRange offset : offsets) {
+                    errors.add(new DefaultError(null, "Unknown Reference: " + refName, null, getFileObject(), offset.getStart(), offset.getEnd(), Severity.ERROR));
+                }
+            }
+        });
+    }
+    
+    public List<String> getImports() {
+        return Collections.unmodifiableList(imports);
     }
 
     private static Token getIdentifierToken(ANTLRv4Parser.IdentifierContext ctx) {
@@ -142,39 +162,6 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
             }
 
         };
-    }
-
-
-    private void collectReferences(FileObject fo, Map<String, Reference> refs, Set<String> visited) {
-        if (!visited.contains(fo.getName())) {
-            refs.putAll(references);
-            visited.add(fo.getName());
-            for (String im : imports) {
-                FileObject ifo = getFileObject().getParent().getFileObject(im + ".g4");
-                if (ifo != null) {
-                    Antlr4ParserResult pr = (Antlr4ParserResult) AntlrParser.getParserResult(ifo);
-                    if (pr != null) {
-                        pr.collectReferences(ifo, refs, visited);
-                    }
-                }
-                visited.add(im);
-            }
-        }
-    }
-
-    @Override
-    protected ParseTreeListener createCheckReferences() {
-        final Map<String, Reference> allRefs = new HashMap<>(references);
-        Set<String> visitedImports = new HashSet<>();
-
-        collectReferences(getFileObject(), allRefs, visitedImports);
-
-        return new ANTLRv4OccuranceListener((token) -> {
-            String name = token.getText();
-            if(!allRefs.containsKey(name)) {
-                errors.add(new DefaultError(null, "Unknown Reference: " + name, null, getFileObject(), token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
-            }
-        });
     }
 
     @Override
@@ -316,11 +303,38 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     protected ParseTreeListener createOccurancesListener() {
         return new ANTLRv4OccuranceListener(this::addOccurance);
     }
-
-    public List<String> getImports() {
-        return Collections.unmodifiableList(imports);
+    
+    private Optional<Antlr4ParserResult> getParserResult(String grammarName) {
+        Optional<Antlr4ParserResult> ret = Optional.empty();
+        FileObject fo = getFileObject().getParent().getFileObject(grammarName + ".g4");
+        
+        if (fo != null) {
+            ret = Optional.of(fo.equals(getFileObject()) ? this : (Antlr4ParserResult) AntlrParser.getParserResult(fo));
+        }
+        return ret;
     }
 
+    private void addImports(Set<String> visited, String importedGrammar) {
+        if (visited.add(importedGrammar)) {
+            getParserResult(importedGrammar).ifPresent((result) -> {
+                for (String im : result.getImports()) {
+                    addImports(visited, im);
+                }
+            });
+        }
+    }
+    
+
+    public Map<String, Antlr4ParserResult> allImports() {
+        Set<String> visited = new HashSet<>();
+        addImports(visited, getFileObject().getName());
+        Map<String, Antlr4ParserResult> ret = new HashMap<>();
+        for (String im : visited) {
+            getParserResult(im).ifPresent((result) -> ret.put(im, result));
+        }
+        return ret;
+    }
+    
     private static class ANTLRv4OccuranceListener extends ANTLRv4ParserBaseListener {
         private final Consumer<Token> onOccurance;
 

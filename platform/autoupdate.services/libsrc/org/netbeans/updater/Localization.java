@@ -232,7 +232,7 @@ class Localization {
      * Branding tokens with underscores are broken apart naturally: so e.g.
      * branding "f4j_ce" looks first for "f4j_ce" branding, then "f4j" branding, then none.
      */
-    private static class LocaleIterator extends Object implements Iterator {
+    private static class LocaleIterator extends Object implements Iterator<String> {
         /** this flag means, if default locale is in progress */
         private boolean defaultInProgress = false;
 
@@ -267,7 +267,7 @@ class Localization {
         /** @return next sufix.
         * @exception NoSuchElementException if there is no more locale sufix.
         */
-        public Object next () throws NoSuchElementException {
+        public String next () throws NoSuchElementException {
             if (current == null)
                 throw new NoSuchElementException();
 

@@ -76,7 +76,7 @@ public class WsdlJavaMethod implements JavaMethod {
 
     public List<JavaParameter> getParametersList() {
         if(this.parameters == null) {
-            this.parameters = new ArrayList<JavaParameter>();
+            this.parameters = new ArrayList<>();
             for(com.sun.tools.ws.processor.model.java.JavaParameter p:this.method.getParametersList()) {
                 this.parameters.add(new WsdlJavaParameter(p));
             }
@@ -84,7 +84,7 @@ public class WsdlJavaMethod implements JavaMethod {
         return this.parameters;
     }
 
-    public Iterator getExceptions() {
+    public Iterator<String> getExceptions() {
         return this.method.getExceptions();
     }
 }

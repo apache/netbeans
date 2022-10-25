@@ -58,7 +58,7 @@ public class AddIndexDDL {
         icmd.setIndexName(indexName);
         icmd.setIndexType(isUnique ? ColumnItem.UNIQUE : "");
         
-        Iterator enu = columns.iterator();
+        Iterator<String> enu = columns.iterator();
         while (enu.hasNext()) {
             icmd.specifyColumn((String)enu.next());
         }

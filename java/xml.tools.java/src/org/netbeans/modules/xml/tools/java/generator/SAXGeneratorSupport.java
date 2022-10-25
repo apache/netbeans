@@ -618,7 +618,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         modifiedClass = genUtils.addImplementsClause(javaClass, interfaceName);
                     }
                     
-                    Iterator it = model.getElementBindings().values().iterator();
+                    Iterator<ElementBindings.Entry> it = model.getElementBindings().values().iterator();
                     while (it.hasNext()) {
                         ElementBindings.Entry next = (ElementBindings.Entry) it.next();
                         
@@ -628,7 +628,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         String methodName ;
                         final String handler = next.getType();
                         MethodTree method;
-                        ExpressionTree tree =genUtils.makeQualIdent(getSAXAttributes());
+                        ExpressionTree tree = genUtils.makeQualIdent(getSAXAttributes());
                         List varTree = new ArrayList();
                         VariableTree var;
                         ModifiersTree mods = make.Modifiers(EnumSet.of(Modifier.FINAL));

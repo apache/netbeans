@@ -62,7 +62,7 @@ public final class JAXWSView {
     /** Lookup the IDE to find the JAXWSView instance
      */
     public static JAXWSView getJAXWSView() {
-       Iterator it = implementations.allInstances().iterator();
+       Iterator<? extends JAXWSViewProvider> it = implementations.allInstances().iterator();
        while (it.hasNext()) {
           JAXWSViewProvider impl = (JAXWSViewProvider)it.next();
           JAXWSView wsv = impl.findJAXWSView ();

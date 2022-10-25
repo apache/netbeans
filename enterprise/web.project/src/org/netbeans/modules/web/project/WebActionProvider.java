@@ -406,7 +406,7 @@ public class WebActionProvider extends BaseActionProvider {
             List serviceClients = wscs.getServiceClients();
             //we store all ws client names into hash set for later fast searching
             HashSet<String> scNames = new HashSet<String>();
-            for (Iterator scIt = serviceClients.iterator(); scIt.hasNext();) {
+            for (Iterator<WsCompileClientEditorSupport.ServiceSettings> scIt = serviceClients.iterator(); scIt.hasNext();) {
                 WsCompileClientEditorSupport.ServiceSettings serviceClientSettings =
                         (WsCompileClientEditorSupport.ServiceSettings) scIt.next();
                 scNames.add(serviceClientSettings.getServiceName());
@@ -431,7 +431,7 @@ public class WebActionProvider extends BaseActionProvider {
                     if (wss != null) { //project contains ws
                         List<WsCompileEditorSupport.ServiceSettings> services = wss.getServices();
                         boolean match = false;
-                        for (Iterator sIt = services.iterator(); sIt.hasNext();) {
+                        for (Iterator<WsCompileEditorSupport.ServiceSettings> sIt = services.iterator(); sIt.hasNext();) {
                             WsCompileEditorSupport.ServiceSettings serviceSettings =
                                     (WsCompileEditorSupport.ServiceSettings) sIt.next();
                             String serviceName = serviceSettings.getServiceName();

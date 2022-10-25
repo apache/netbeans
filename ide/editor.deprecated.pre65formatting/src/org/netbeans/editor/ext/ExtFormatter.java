@@ -198,7 +198,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
 
     /** Get the iterator over the format layers.
     */
-    public Iterator formatLayerIterator() {
+    public Iterator<FormatLayer> formatLayerIterator() {
         return formatLayerList.iterator();
     }
 

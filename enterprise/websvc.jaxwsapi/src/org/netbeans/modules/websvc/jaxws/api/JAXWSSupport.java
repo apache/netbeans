@@ -72,7 +72,7 @@ public final class JAXWSSupport {
         if (f == null) {
             throw new NullPointerException("Passed null to JAXWSSupport.getJAXWSSupport(FileObject)"); // NOI18N
         }
-        Iterator it = implementations.allInstances().iterator();
+        Iterator<? extends JAXWSSupportProvider> it = implementations.allInstances().iterator();
         while (it.hasNext()) {
             JAXWSSupportProvider supportProvider = (JAXWSSupportProvider)it.next();
             JAXWSSupport wss = supportProvider.findJAXWSSupport(f);

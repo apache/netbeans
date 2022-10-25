@@ -88,7 +88,7 @@ public class ListTypeTreeNode extends AbstractParameterTreeNode {
             structureType = "java.lang.Object"; // NOI18N
         }
         
-        Iterator iter = childCollection.iterator();
+        Iterator<?> iter = childCollection.iterator();
         for (int i = 0; iter.hasNext(); i++) {
             TypeNodeData data = ReflectionHelper.createTypeData(structureType, "[" + i + "]", iter.next());
             data.setAssignable(thisData.isAssignable());

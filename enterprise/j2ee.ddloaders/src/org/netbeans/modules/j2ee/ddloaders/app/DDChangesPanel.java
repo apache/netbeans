@@ -101,12 +101,12 @@ public class DDChangesPanel extends JPanel {
         return new java.awt.Dimension(600, 400);
     }
     
-    synchronized void setChanges (List changes) {
-        listModel.clear ();
+    synchronized void setChanges(List<DefaultListModel> changes) {
+        listModel.clear();
         if (changes != null) {
-            Iterator<?> it = changes.iterator ();
-            while (it.hasNext ())
-                listModel.addElement (it.next ());
+            Iterator<DefaultListModel> it = changes.iterator();
+            while (it.hasNext())
+                listModel.addElement(it.next());
         }
     }
     

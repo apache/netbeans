@@ -84,7 +84,7 @@ public final class WebServicesClientSupport {
         if (f == null) {
             throw new NullPointerException("Passed null to WebServicesClientSupport.getWebServicesClientSupport(FileObject)"); // NOI18N
         }
-        Iterator it = implementations.allInstances().iterator();
+        Iterator<WebServicesClientSupportProvider> it = implementations.allInstances().iterator();
         while (it.hasNext()) {
             WebServicesClientSupportProvider impl = (WebServicesClientSupportProvider)it.next();
             WebServicesClientSupport wscs = impl.findWebServicesClientSupport (f);

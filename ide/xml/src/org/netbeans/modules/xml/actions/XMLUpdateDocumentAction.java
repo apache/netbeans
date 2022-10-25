@@ -82,7 +82,7 @@ public final class XMLUpdateDocumentAction extends CookieAction {
                     // use lookup to emulate N-cookies - performers
 
                     // delegate to all registered performers
-                    Iterator it = result.allInstances().iterator();
+                    Iterator<Performer> it = result.allInstances().iterator();
                     while (it.hasNext()) {
                         Performer next = (Performer) it.next();
                         next.perform(activatedNodes[i]);

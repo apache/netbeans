@@ -52,7 +52,7 @@ public class FieldsDeclaration extends BodyDeclaration {
             throw new IllegalArgumentException();
         }
 
-        for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext();) {
+        for (Iterator<?> iter = variablesAndDefaults.iterator(); iter.hasNext();) {
             final Object next = iter.next();
             if (next instanceof SingleFieldDeclaration) {
                 this.fields.add((SingleFieldDeclaration) next);

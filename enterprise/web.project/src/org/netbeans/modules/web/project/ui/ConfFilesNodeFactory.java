@@ -247,7 +247,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
 
             synchronized (privateLock) {
                 if ((!iconChange && event.isIconChange()) || (!nameChange && event.isNameChange())) {
-                    Iterator it = files.iterator();
+                    Iterator<FileObject> it = files.iterator();
                     while (it.hasNext()) {
                         FileObject fo = (FileObject) it.next();
                         if (event.hasChanged(fo)) {
@@ -280,7 +280,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
 
         private void setGroups(Collection groups) {
             if (groupsListeners != null) {
-                Iterator it = groupsListeners.keySet().iterator();
+                Iterator<SourceGroup> it = groupsListeners.keySet().iterator();
                 while (it.hasNext()) {
                     SourceGroup group = (SourceGroup) it.next();
                     PropertyChangeListener pcl = (PropertyChangeListener) groupsListeners.get(group);
@@ -289,7 +289,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
             }
             groupsListeners = new HashMap<SourceGroup, PropertyChangeListener>();
             Set<FileObject> roots = new HashSet<FileObject>();
-            Iterator it = groups.iterator();
+            Iterator<SourceGroup> it = groups.iterator();
             while (it.hasNext()) {
                 SourceGroup group = (SourceGroup) it.next();
                 PropertyChangeListener pcl = WeakListeners.propertyChange(this, group);
@@ -303,7 +303,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
 
         protected void setFiles(Set files) {
             if (fileSystemListeners != null) {
-                Iterator it = fileSystemListeners.keySet().iterator();
+                Iterator<FileSystem> it = fileSystemListeners.keySet().iterator();
                 while (it.hasNext()) {
                     FileSystem fs = (FileSystem) it.next();
                     FileStatusListener fsl = (FileStatusListener) fileSystemListeners.get(fs);
@@ -316,7 +316,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
             if (files == null) {
                 return;
             }
-            Iterator it = files.iterator();
+            Iterator<FileObject> it = files.iterator();
             Set<FileSystem> hookedFileSystems = new HashSet<FileSystem>();
             while (it.hasNext()) {
                 FileObject fo = (FileObject) it.next();

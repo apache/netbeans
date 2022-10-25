@@ -48,7 +48,7 @@ public class ConfigFilesListener extends AbstractFilesListener {
         //locate the root to listen to
         Collection servers = ServerRegistry.getInstance().getServers();
         ArrayList result = new ArrayList();
-        for (Iterator i=servers.iterator(); i.hasNext();) {
+        for (Iterator<Server> i=servers.iterator(); i.hasNext();) {
             Server s = (Server) i.next();
             String[] paths = s.getDeploymentPlanFiles(provider.getJ2eeModule().getType());
             if (paths == null)

@@ -172,7 +172,7 @@ public abstract class GrammarQueryManager {
             return null;
         }
         
-        private synchronized Iterator getRegistrations() {
+        private synchronized Iterator<GrammarQueryManager> getRegistrations() {
             if (registrations != null) {
                 return registrations.allInstances().iterator();
             }

@@ -204,7 +204,7 @@ public class Snapshot {
         };
     }
 
-    public Iterator getReferrers(Object obj, boolean includeWeak) {
+    public Iterator<Object> getReferrers(Object obj, boolean includeWeak) {
         List<Object> instances  = new ArrayList<>();
         List<Object> references = new ArrayList<>();
         
@@ -232,7 +232,7 @@ public class Snapshot {
         return instances.iterator();
     }
 
-    public Iterator getReferees(Object obj, boolean includeWeak) {
+    public Iterator<Object> getReferees(Object obj, boolean includeWeak) {
         List<Object> instances = new ArrayList<>();
         List<Object> values    = new ArrayList<>();
         
@@ -273,7 +273,7 @@ public class Snapshot {
         return instances.iterator();
     }
 
-    public Iterator getFinalizerObjects() {
+    public Iterator<Instance> getFinalizerObjects() {
         JavaClass clazz = findClass("java.lang.ref.Finalizer"); // NOI18N
         Instance queue = (Instance) clazz.getValueOfStaticField("queue"); // NOI18N
         Instance head = (Instance) queue.getValueOfField("head"); // NOI18N
@@ -299,7 +299,7 @@ public class Snapshot {
     }
     
     public List getRootsList() {
-        List<Object> roots = new ArrayList<Object>();
+        List<Object> roots = new ArrayList<>();
         for(Object rootObj : delegate.getGCRoots()) {
             GCRoot root = (GCRoot)rootObj;
             Instance inst = root.getInstance();
@@ -338,7 +338,7 @@ public class Snapshot {
         
         List<ReferenceChain> result = new ArrayList<>();
         
-        Iterator<Instance> toInspect = getRoots();
+        Iterator toInspect = getRoots();
         ReferenceChain path = null;
         State s = new State(path, toInspect);
         

@@ -510,8 +510,8 @@ public final class XSLGrammarQuery implements GrammarQuery{
             // XSL Attributes of Result element
             possibleAttributes = new TreeSet<>();
             if (prefixList.size() > 0) {
-                Iterator it = getResultElementAttr().iterator();
-                while ( it.hasNext()) {
+                Iterator<String> it = getResultElementAttr().iterator();
+                while (it.hasNext()) {
                     possibleAttributes.add((String)prefixList.get(0) + ":" + (String) it.next()); // NOI18N
                 }
             }
@@ -532,8 +532,8 @@ public final class XSLGrammarQuery implements GrammarQuery{
             }
         }
 
-        Iterator it = possibleAttributes.iterator();
-        while ( it.hasNext()) {
+        Iterator<String> it = possibleAttributes.iterator();
+        while (it.hasNext()) {
             String next = (String) it.next();
             if (next.startsWith(prefix)) {
                 if (existingAttributes.getNamedItem(next) == null) {
@@ -571,7 +571,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
                         UserCatalog catalog = UserCatalog.getDefault();
                         if (catalog == null) return org.openide.util.Enumerations.empty();
                         QueueEnumeration en = new QueueEnumeration();
-                        Iterator it = catalog.getPublicIDs();
+                        Iterator<String> it = catalog.getPublicIDs();
                         while (it.hasNext()) {
                             String next = (String) it.next();
                             if (next != null && next.startsWith(prefix)) {
@@ -818,9 +818,9 @@ public final class XSLGrammarQuery implements GrammarQuery{
     private static void addXslElementsToEnum(QueueEnumeration enumX, Set elements, String namespacePrefix, String startWith) {
         if (elements == null) return;
         if (startWith.startsWith(namespacePrefix) || namespacePrefix.startsWith(startWith)) {
-            Iterator it = elements.iterator();
+            Iterator<String> it = elements.iterator();
             while ( it.hasNext()) {
-                Object next = it.next();
+                String next = it.next();
                 if (next != resultElements) {
                     String nextText = namespacePrefix + (String)next;
                     if (nextText.startsWith(startWith)) {
@@ -833,7 +833,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
     }
 
     private static void addItemsToEnum(QueueEnumeration enumX, Set set, String startWith, String prefix) {
-        Iterator it = set.iterator();
+        Iterator<String> it = set.iterator();
         while ( it.hasNext()) {
             String nextText = (String)it.next();
             if (nextText.startsWith(startWith)) {

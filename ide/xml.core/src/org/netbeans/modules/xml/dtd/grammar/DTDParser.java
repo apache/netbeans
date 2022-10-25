@@ -143,7 +143,7 @@ public class DTDParser {
          * Update value of ANY declared content models
          */
         DTDGrammar getDTDGrammar() {
-            Iterator it = anys.iterator();
+            Iterator<String> it = anys.iterator();
             while (it.hasNext()) {
                 String name = (String) it.next();
                 elements.put(name, elements.keySet());

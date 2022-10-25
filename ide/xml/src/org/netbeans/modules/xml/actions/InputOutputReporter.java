@@ -254,7 +254,7 @@ public final class InputOutputReporter implements CookieObserver {
      */
     public static void releaseAllAnnotations() {
         synchronized (hyperlinks) {
-            Iterator it = hyperlinks.iterator();
+            Iterator<Hyperlink> it = hyperlinks.iterator();
             while (it.hasNext()) {
                 ((Hyperlink)it.next()).detach();
             }

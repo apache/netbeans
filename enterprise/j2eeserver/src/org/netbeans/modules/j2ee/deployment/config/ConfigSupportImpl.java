@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -151,8 +152,8 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
     
     public static FileObject[] getConfigurationFiles(J2eeModuleProvider jmp) {
         Collection servers = ServerRegistry.getInstance().getServers();
-        ArrayList files = new ArrayList();
-        for (Iterator i=servers.iterator(); i.hasNext();) {
+        List<FileObject> files = new ArrayList<>();
+        for (Iterator<Server> i=servers.iterator(); i.hasNext();) {
             Server s  = (Server) i.next();
             File[] configs = getDeploymentConfigurationFiles(jmp, s, true);
             for (int j=0; j<configs.length; j++) {
@@ -977,7 +978,7 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         
         allRelativePaths = new HashMap();
         Collection servers = ServerRegistry.getInstance().getServers();
-        for (Iterator i=servers.iterator(); i.hasNext();) {
+        for (Iterator<Server> i=servers.iterator(); i.hasNext();) {
             Server server = (Server) i.next();
             collectData(server, allRelativePaths);
         }

@@ -200,9 +200,18 @@ class NbProjectInfoBuilder {
         runAndRegisterPerf(model, "dependencies", this::detectDependencies);
         runAndRegisterPerf(model, "artifacts", this::detectArtifacts);
         detectDistributions(model);
-        runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
-        runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
-        runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
+        
+        // introspection is only allowed for gradle 7.4 and above.
+        // TODO: investigate if some of the instrospection could be done for earlier Gradles.
+        sinceGradle("7.0", () -> {
+            runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
+        });
+        sinceGradle("7.0", () -> {
+            runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
+        });
+        sinceGradle("7.0", () -> {
+            runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
+        });
         runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
         runAndRegisterPerf(model, "artifacts", this::detectConfigurationArtifacts);
         storeGlobalTypes(model);
@@ -351,6 +360,10 @@ class NbProjectInfoBuilder {
         model.getInfo().put("configurationArtifacts", data); // NOI18N
     }
     
+    /**
+     * Relies on PluginManagerInternal.findPluginIdForClass (gradle 7.1) and PluginRegistry.findPluginForClass (gradle 7.0)
+     * @param model 
+     */
     private void detectAdditionalPlugins(NbProjectInfoModel model) {
         final PluginManagerInternal pmi;
         PluginRegistry reg;
@@ -854,6 +867,7 @@ class NbProjectInfoBuilder {
         model.getInfo().put("project_rootDir", project.getRootDir());
         model.getInfo().put("gradle_user_home", project.getGradle().getGradleUserHomeDir());
         model.getInfo().put("gradle_home", project.getGradle().getGradleHomeDir());
+        model.getInfo().put("gradle_version", project.getGradle().getGradleVersion());
 
         Set<Configuration> visibleConfigurations = configurationsToSave();
         model.getInfo().put("configurations", visibleConfigurations.stream().map(conf->conf.getName()).collect(Collectors.toCollection(HashSet::new )));

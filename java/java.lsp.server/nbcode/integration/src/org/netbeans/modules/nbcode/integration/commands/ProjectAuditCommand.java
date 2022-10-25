@@ -21,10 +21,6 @@ package org.netbeans.modules.nbcode.integration.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,17 +33,14 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.cloud.oracle.adm.AuditException;
+import org.netbeans.modules.cloud.oracle.adm.AuditOptions;
 import org.netbeans.modules.cloud.oracle.adm.ProjectVulnerability;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -104,22 +97,25 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         if (n == null) {
             n = p.getProjectDirectory().getName();
         }
+        final String fn = n;
         if (v == null) {
             throw new IllegalArgumentException("Project " + n + " does not support vulnerability audits");
         }
-        if (arguments.size() < 3) {
-            throw new IllegalArgumentException("Expected 3 parameters: resource, compartment, knowledgebase");
+        if (arguments.size() < 3 || !(arguments.get(1) instanceof JsonPrimitive)) {
+            throw new IllegalArgumentException("Expected 3 parameters: resource, knowledgebase, options");
         }
-        String compartment = ((JsonPrimitive) arguments.get(2)).getAsString();
+        
         String knowledgeBase = ((JsonPrimitive) arguments.get(1)).getAsString();
-        boolean forceAudit;
-        if (arguments.size() > 4) {
-            forceAudit = ((JsonPrimitive)arguments.get(4)).getAsBoolean();
-        } else {
-            forceAudit = false;
+        Object o = arguments.get(2);
+        if (!(o instanceof JsonObject)) {
+            throw new IllegalArgumentException("Expected structure, got  " + o);
         }
-        final String fn = n;
-        return v.findKnowledgeBase(compartment, knowledgeBase).
+        JsonObject options = (JsonObject)o;
+        
+        boolean forceAudit = options.has("force") && options.get("force").getAsBoolean();
+        String preferredName = options.has("auditName") ? options.get("auditName").getAsString() : null;
+        
+        return v.findKnowledgeBase(knowledgeBase).
                 exceptionally(th -> {
                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(Bundle.ERR_KnowledgeBaseSearchFailed(fn, th.getMessage()),
                             NotifyDescriptor.ERROR_MESSAGE));
@@ -132,10 +128,10 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             
             switch (command) {
                 case COMMAND_EXECUTE_AUDIT:
-                    exec = v.runProjectAudit(kb, true, true);
+                    exec = v.runProjectAudit(kb, AuditOptions.makeNewAudit().setAuditName(preferredName));
                     break;
                 case COMMAND_LOAD_AUDIT: {
-                    exec = v.runProjectAudit(kb, false, forceAudit);
+                    exec = v.runProjectAudit(kb, new AuditOptions().setRunIfNotExists(forceAudit).setAuditName(preferredName));
                 }
                 default:
                     return CompletableFuture.completedFuture(null);

@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.languages.antlr.v4;
 
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import org.netbeans.modules.languages.antlr.*;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +49,7 @@ import org.openide.filesystems.FileObject;
 import org.netbeans.api.annotations.common.StaticResource;
 
 import static org.antlr.parser.antlr4.ANTLRv4Lexer.*;
+import org.netbeans.modules.languages.antlr.AntlrParserResult.ReferenceType;
 import static org.netbeans.modules.languages.antlr.AntlrTokenSequence.DEFAULT_CHANNEL;
 
 /**
@@ -92,6 +93,11 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                 if (fo == null) {
                     return;
                 }
+                AntlrParserResult<?> r = AntlrParser.getParserResult(fo);
+                if (!(r instanceof Antlr4ParserResult)) {
+                    return;
+                }
+                Antlr4ParserResult result = (Antlr4ParserResult) r;
 
                 String prefix = "";
                 adoc.readLock();
@@ -127,7 +133,7 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                             return;
                         }
                         tokens.previous();
-                        lookAround(fo, tokens, caretOffset, prefix, resultSet);
+                        lookAround(result, tokens, caretOffset, prefix, resultSet);
                     } else {
                         //Empty grammar so far offer lexer, parser and grammar
                         addTokens("", caretOffset, resultSet, "lexer", "parser", "grammar");
@@ -138,7 +144,8 @@ public class Antlr4CompletionProvider implements CompletionProvider {
             }
         }
 
-        private void lookAround(FileObject fo, AntlrTokenSequence tokens, int caretOffset, String prefix, CompletionResultSet resultSet) {
+        private void lookAround(Antlr4ParserResult result, AntlrTokenSequence tokens, int caretOffset, String prefix, CompletionResultSet resultSet) {
+            AntlrParserResult.GrammarType grammarType = result != null ? result.getGrammarType(): AntlrParserResult.GrammarType.UNKNOWN;
             Optional<Token> opt = tokens.previous(DEFAULT_CHANNEL);
             if (!opt.isPresent()) {
                 //At the start of the file;
@@ -165,6 +172,7 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                     return;
                 } else {
                     pt = opt.get();
+                    // chack our previous token
                     switch (pt.getType()) {
                         case PARSER:
                         case LEXER:
@@ -182,6 +190,24 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                             //Command: offer 'channel', 'skip', etc...
                             addTokens(prefix, caretOffset, resultSet, "skip", "more", "type", "channel", "mode", "pushMode", "popMode");
                             return;
+                        case LPAREN:
+                            Optional<Token> lexerCommand = tokens.previous(DEFAULT_CHANNEL);
+                            // We are not necessary in a lexerCommand here, just taking chances
+                            if (lexerCommand.isPresent()) {
+                                switch (lexerCommand.get().getText()) {
+                                    case "channel": 
+                                        addReferences(result, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.CHANNEL));
+                                        return;
+                                    case "mode":
+                                    case "pushMode":
+                                        addReferences(result, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.MODE));
+                                        return;
+                                    case "type":
+                                        addReferences(result, prefix, caretOffset, resultSet, EnumSet.of(ReferenceType.TOKEN));
+                                        return;
+                                }
+                            }
+                            // the fall through is intentional, as of betting on lexerCommand did not come through
                         default:
                             tokens.seekTo(caretOffset);
                             Optional<Token> semi = tokens.previous(SEMI);
@@ -189,22 +215,32 @@ public class Antlr4CompletionProvider implements CompletionProvider {
                             Optional<Token> colon = tokens.previous(COLON);
                             if (semi.isPresent() && colon.isPresent()
                                     && semi.get().getStartIndex() < colon.get().getStartIndex()) {
+                                
+                                EnumSet<ReferenceType> rtypes = EnumSet.noneOf(ReferenceType.class);
+                                
                                 // we are in lexer/parser ruledef
-                                
-                                Set<FileObject> scanned = new HashSet<>();
-                                Map<String,AntlrParserResult.Reference> matchingRefs = new HashMap<>();
-                                addReferencesForFile(fo, prefix, matchingRefs, scanned);
-                                
-                                int startOffset = caretOffset - prefix.length();
-                                for (AntlrParserResult.Reference ref : matchingRefs.values()) {
-                                    CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref.name)
-                                            .startOffset(startOffset)
-                                            .leftHtmlText(ref.name)
-                                            .sortText(ref.name)
-                                            .build();
-                                    resultSet.addItem(item);
-                                    
+                                Optional<Token> ref = tokens.previous(DEFAULT_CHANNEL);
+                                if (ref.isPresent() && (ref.get().getType() == RULE_REF || ref.get().getType() == TOKEN_REF)) {
+                                    if (ref.get().getType() == TOKEN_REF) {
+                                        rtypes.add(ReferenceType.FRAGMENT);
+                                    } else {
+                                        rtypes.add(ReferenceType.TOKEN);
+                                        rtypes.add(ReferenceType.RULE);
+                                        if (grammarType == AntlrParserResult.GrammarType.MIXED) {
+                                            rtypes.add(ReferenceType.FRAGMENT);
+                                        }
+                                    }
+                                } else {
+                                    // A bit odd definition, let's rely on the grammarType
+                                    if ((grammarType == AntlrParserResult.GrammarType.LEXER) || (grammarType == AntlrParserResult.GrammarType.MIXED)) {
+                                        rtypes.add(ReferenceType.FRAGMENT);
+                                    }
+                                    if ((grammarType == AntlrParserResult.GrammarType.PARSER) || (grammarType == AntlrParserResult.GrammarType.MIXED)) {
+                                        rtypes.add(ReferenceType.TOKEN);
+                                        rtypes.add(ReferenceType.RULE);
+                                    }
                                 }
+                                addReferences(result, prefix, caretOffset, resultSet, rtypes);
                             }
 
                     }
@@ -229,33 +265,51 @@ public class Antlr4CompletionProvider implements CompletionProvider {
             }
         }
 
-        public void addReferencesForFile(FileObject fo, String prefix, Map<String,AntlrParserResult.Reference> matching, Set<FileObject> scannedFiles) {
-            if (scannedFiles.contains(fo)) {
-                return;
-            }
-            scannedFiles.add(fo);
-
+        public void addReferences(Antlr4ParserResult result, String prefix, int caretOffset, CompletionResultSet resultSet, Set<ReferenceType> rtypes) {
+            
+            Map<String,AntlrParserResult.Reference> matching = new HashMap<>();
             String mprefix = caseSensitive ? prefix : prefix.toUpperCase();
-
-            AntlrParserResult<?> result = AntlrParser.getParserResult(fo);
-            Map<String, AntlrParserResult.Reference> refs = result.references;
-            for (String ref : refs.keySet()) {
-                String mref = caseSensitive ? ref : ref.toUpperCase();
-                boolean match = mref.startsWith(mprefix);
-                if (match && !matching.containsKey(ref)) {
-                    matching.put(ref, refs.get(ref));
-                }
-            }
-
-            if (result instanceof Antlr4ParserResult) {
-                for (String s : ((Antlr4ParserResult) result).getImports()) {
-                    FileObject importedFo = fo.getParent().getFileObject(s, "g4");
-                    if (importedFo != null) {
-                        addReferencesForFile(importedFo, prefix, matching, scannedFiles);
+            
+            result.allImports().values().forEach((r) ->{
+                Map<String, AntlrParserResult.Reference> refs = r.references;
+                for (AntlrParserResult.Reference ref : refs.values()) {
+                    String mref = caseSensitive ? ref.name : ref.name.toUpperCase();
+                    boolean match = mref.startsWith(mprefix);
+                    if (match && !matching.containsKey(ref.name) && rtypes.contains(ref.type)) {
+                        matching.put(ref.name, ref);
                     }
                 }
-            }
-        }
+            });
+ 
+            int startOffset = caretOffset - prefix.length();
+            for (AntlrParserResult.Reference ref : matching.values()) {
+                CompletionItem item = CompletionUtilities.newCompletionItemBuilder(ref.name)
+                        .iconResource(getReferenceIcon(ref.type))
+                        .startOffset(startOffset)
+                        .leftHtmlText(ref.name)
+                        .sortText(caseSensitive ? ref.name : ref.name.toUpperCase())
+                        .build();
+                resultSet.addItem(item);
 
+            }            
+        }
+    }
+    
+    //The folowing is an excrept of org.netbeans.modules.csl.navigation.Icons
+    private static final String ICON_BASE = "org/netbeans/modules/csl/source/resources/icons/";    
+    private static String getReferenceIcon(ReferenceType rtype) {
+        switch (rtype) {
+            case CHANNEL:
+                return ICON_BASE + "database.gif";
+            case FRAGMENT:
+                return ICON_BASE + "constantPublic.png";
+            case MODE: 
+                return ICON_BASE + "class.png";
+            case RULE:
+                return ICON_BASE + "rule.png";
+            case TOKEN:
+                return ICON_BASE + "fieldPublic.png";
+        }
+        return null;
     }
 }

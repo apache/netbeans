@@ -50,7 +50,7 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         work = FileUtil.toFileObject(getWorkDir());
     }
 
-    public void testProperties() throws Exception {
+    public void testNoPluginNegative() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
@@ -71,35 +71,10 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         Project project = ProjectManager.getDefault().findProject(pom.getParent());
 
         List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
-        assertEquals(2, hints.size());
-    }
-
-    public void testPropertiesNegative() throws Exception {
-        FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-            "    <modelVersion>4.0.0</modelVersion>\n" +
-            "    <groupId>test</groupId>\n" +
-            "    <artifactId>mavenproject1</artifactId>\n" +
-            "    <version>1.0-SNAPSHOT</version>\n" +
-            "    <packaging>jar</packaging>\n" +
-            "    <properties>\n" +
-            "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n" +
-            "        <exec.mainClass>test.mavenproject1.Mavenproject1</exec.mainClass>\n" +
-            "        <maven.compiler.source>8</maven.compiler.source>\n" +
-            "        <maven.compiler.target>8</maven.compiler.target>\n" +
-            "    </properties>\n" +
-            "</project>");
-
-        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
-        Project project = ProjectManager.getDefault().findProject(pom.getParent());
-
-        List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
         assertEquals(0, hints.size());
     }
 
-    public void testCompilerPlugin() throws Exception {
-        FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
+    private static final String COMPILER_POM =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
             "    <modelVersion>4.0.0</modelVersion>\n" +
@@ -141,13 +116,36 @@ public class UseReleaseOptionHintTest extends NbTestCase {
             "            </plugin>\n" +
             "        </plugins>\n" +
             "    </build>\n" +
-            "</project>");
+            "</project>";
+
+    public void testCompilerPlugin() throws Exception {
+        FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM);
 
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
         Project project = ProjectManager.getDefault().findProject(pom.getParent());
 
         List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
         assertEquals(6, hints.size());
+    }
+
+    public void testOldCompilerPluginNegative() throws Exception {
+        FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM.replaceFirst("3.10.1", "3.5"));
+
+        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
+        Project project = ProjectManager.getDefault().findProject(pom.getParent());
+
+        List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(0, hints.size());
+    }
+
+    public void testCompilerPluginButOldTargetNegative() throws Exception {
+        FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM.replace("11", "5").replace("17", "1.4"));
+
+        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
+        Project project = ProjectManager.getDefault().findProject(pom.getParent());
+
+        List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(0, hints.size());
     }
 
 }

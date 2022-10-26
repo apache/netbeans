@@ -77,7 +77,7 @@ public class RunFileADMAction implements ActionListener{
         final String projectDisplayName = ProjectUtils.getInformation(project).getDisplayName();
         if (kbItem != null) {
             try {
-                VulnerabilityWorker.getInstance().findVulnerability(project, true, true);
+                VulnerabilityWorker.getInstance().findVulnerability(project, AuditOptions.makeNewAudit());
             } catch (AuditException exc) {
                 ErrorUtils.processError(exc, Bundle.MSG_CreatingAuditFailed(projectDisplayName));
             }

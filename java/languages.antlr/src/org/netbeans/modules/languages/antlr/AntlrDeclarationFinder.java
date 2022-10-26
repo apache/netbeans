@@ -19,7 +19,6 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
@@ -49,8 +48,17 @@ public class AntlrDeclarationFinder implements DeclarationFinder {
         ts.moveNext();
         Token<?> token = ts.token();
         String ref = String.valueOf(token.text());
+        FileObject fo = info.getSnapshot().getSource().getFileObject();
         Set<FileObject> scannedFiles = new HashSet<>();
-        return getDeclarationLocation(info.getSnapshot().getSource().getFileObject(), ref, DeclarationLocation.NONE, scannedFiles);
+
+        DeclarationLocation ret = getDeclarationLocation(fo, ref, DeclarationLocation.NONE, scannedFiles);
+        if (ret == DeclarationLocation.NONE) {
+            FileObject rfo = fo.getParent().getFileObject(ref, "g4");
+            if (rfo != null) {
+                ret = new DeclarationFinder.DeclarationLocation(rfo, 0);
+            }
+        }
+        return ret;
     }
 
     @Override

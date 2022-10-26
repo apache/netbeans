@@ -1,6 +1,12 @@
     private int|callable $callable;
                 --------
 HINT:"callable" cannot be used as a property type.
+    private false $false;
+            -----
+HINT:"false" cannot be used as a standalone type.
+    private null $null;
+            ----
+HINT:"null" cannot be used as a standalone type.
     private bool|false $boolFalse;
                  -----
 HINT:Type "false" is duplicated.
@@ -20,9 +26,24 @@ HINT:Redundant combination: "iterable|Traversable" contains both "iterable" and 
             --------------------------
 HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "Traversable".
 HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "array".
+    private null|false $nullFalse; // PHP 8.2: OK
+                 -----
+HINT:"false" cannot be used as a standalone type.
+    public function returnFalse(): false {
+                                   -----
+HINT:"false" cannot be used as a standalone type.
+    public function returnNull(): null {
+                                  ----
+HINT:"null" cannot be used as a standalone type.
     public function returnDuplicatedType(): UnionType2|UnionType2 {
                                                        ----------
 HINT:Type "UnionType2" is duplicated.
+    public function parameterFalse(false $false) {
+                                   -----
+HINT:"false" cannot be used as a standalone type.
+    public function parameterNull(null $null) {
+                                  ----
+HINT:"null" cannot be used as a standalone type.
     public function parameterDuplicatedType(UnionType2|UnionType2 $duplicatedType) {
                                                        ----------
 HINT:Type "UnionType2" is duplicated.

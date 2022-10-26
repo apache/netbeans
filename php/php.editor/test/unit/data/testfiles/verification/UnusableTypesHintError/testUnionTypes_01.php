@@ -29,6 +29,7 @@ class UnusableTypes {
     private iterable|array $iterable1;
     private iterable|Traversable $iterable2;
     private iterable|array|Traversable $iterable3;
+    private null|false $nullFalse; // PHP 8.2: OK
 
     public function returnFalse(): false {
     }

@@ -86,11 +86,15 @@ public class UnusableTypesHintError extends HintErrorRule {
         if (phpParseResult.getProgram() != null) {
             FileObject fileObject = phpParseResult.getSnapshot().getSource().getFileObject();
             if (fileObject != null) {
-                CheckVisitor checkVisitor = new CheckVisitor(this, fileObject, phpParseResult.getModel(), CodeUtils.getPhpVersion(fileObject));
+                CheckVisitor checkVisitor = new CheckVisitor(this, fileObject, phpParseResult.getModel(), getPhpVersion(fileObject));
                 phpParseResult.getProgram().accept(checkVisitor);
                 result.addAll(checkVisitor.getHints());
             }
         }
+    }
+
+    protected PhpVersion getPhpVersion(FileObject fileObject) {
+        return CodeUtils.getPhpVersion(fileObject);
     }
 
     //~ Inner classes
@@ -229,6 +233,8 @@ public class UnusableTypesHintError extends HintErrorRule {
             Expression type = nullableType.getType();
             if (phpVersion.hasMixedType() && type instanceof NamespaceName && isMixedType((NamespaceName) type)) {
                 createError(type, Type.MIXED, UnusableType.Context.Nullable);
+            } else if (type instanceof NamespaceName && isNullType((NamespaceName) type)) {
+                createError(type, Type.NULL, UnusableType.Context.Nullable);
             }
             super.visit(nullableType);
         }
@@ -328,16 +334,41 @@ public class UnusableTypesHintError extends HintErrorRule {
         }
 
         private void checkFalseAndNullTypes(NamespaceName type) {
-            if (isFalseType(type)) {
+            if (isFalseType(type) && !phpVersion.hasNullAndFalseAndTrueTypes()) {
                 createError(type, Type.FALSE, UnusableType.Context.Standalone);
-            } else if (isNullType(type)) {
+            } else if (isNullType(type) && !phpVersion.hasNullAndFalseAndTrueTypes()) {
                 createError(type, Type.NULL, UnusableType.Context.Standalone);
+            }
+        }
+
+        private void checkFalseAndNullTypes(UnionType unionType) {
+            // null|false or false|null
+            if (phpVersion.hasNullAndFalseAndTrueTypes() || unionType.getTypes().size() != 2) {
+                return;
+            }
+            Expression falseType = null;
+            boolean hasNull = false;
+            for (Expression type : unionType.getTypes()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (type instanceof NamespaceName) {
+                    if (isFalseType((NamespaceName) type)) {
+                        falseType = type;
+                    } else if (isNullType((NamespaceName) type)) {
+                        hasNull = true;
+                    }
+                }
+            }
+            if (falseType != null && hasNull) {
+                createError(falseType, Type.FALSE, UnusableType.Context.Standalone);
             }
         }
 
         private void checkUnionType(UnionType unionType) {
             checkDuplicateType(unionType.getTypes());
             checkRedundantTypeCombination(unionType);
+            checkFalseAndNullTypes(unionType); // null|false or false|null
         }
 
         private void checkDuplicateType(List<Expression> types) {

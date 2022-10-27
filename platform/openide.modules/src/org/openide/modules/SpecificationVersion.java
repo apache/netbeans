@@ -29,12 +29,12 @@ import java.util.*;
  * @author Jesse Glick
  * @since 1.24
  */
-public final class SpecificationVersion implements Comparable<SpecificationVersion> {
+public final class SpecificationVersion implements Comparable {
     // Might be a bit wasteful of memory, but many SV's are created during
     // startup, so best to not have to reparse them each time!
     // In fact sharing the int arrays might save a bit of memory overall,
     // since it is unusual for a module to be deleted.
-    private static final Map<String,int[]> parseCache = new HashMap<>(200);
+    private static final Map<String,int[]> parseCache = new HashMap<String,int[]>(200);
     private final int[] digits;
 
     /** Parse from string. Must be Dewey-decimal. */
@@ -86,9 +86,8 @@ public final class SpecificationVersion implements Comparable<SpecificationVersi
     }
 
     /** Perform a Dewey-decimal comparison. */
-    @Override
-    public int compareTo(SpecificationVersion o) {
-        int[] od = o.digits;
+    public int compareTo(Object o) {
+        int[] od = ((SpecificationVersion) o).digits;
         int len1 = digits.length;
         int len2 = od.length;
         int max = Math.max(len1, len2);
@@ -106,7 +105,6 @@ public final class SpecificationVersion implements Comparable<SpecificationVersi
     }
 
     /** Overridden to compare contents. */
-    @Override
     public boolean equals(Object o) {
         if (!(o instanceof SpecificationVersion)) {
             return false;
@@ -116,7 +114,6 @@ public final class SpecificationVersion implements Comparable<SpecificationVersi
     }
 
     /** Overridden to hash by contents. */
-    @Override
     public int hashCode() {
         int hash = 925295;
         int len = digits.length;
@@ -129,7 +126,6 @@ public final class SpecificationVersion implements Comparable<SpecificationVersi
     }
 
     /** String representation (Dewey-decimal). */
-    @Override
     public String toString() {
         StringBuilder buf = new StringBuilder((digits.length * 3) + 1);
 

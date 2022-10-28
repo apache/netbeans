@@ -19,12 +19,14 @@
 package org.netbeans.modules.languages.antlr.v3;
 
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import org.antlr.parser.antlr3.ANTLRv3Lexer;
 import org.antlr.parser.antlr3.ANTLRv3Parser;
 import org.antlr.parser.antlr3.ANTLRv3ParserBaseListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -37,6 +39,8 @@ import org.netbeans.modules.parsing.api.Snapshot;
  * @author lkishalmi
  */
 public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
+    
+    private static final Logger LOG = Logger.getLogger(Antlr3ParserResult.class.getName());
 
     public Antlr3ParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -47,7 +51,9 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
         CharStream cs = CharStreams.fromString(String.valueOf(snapshot.getText()));
         ANTLRv3Lexer lexer = new ANTLRv3Lexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        return new ANTLRv3Parser(tokens);
+        ANTLRv3Parser ret = new ANTLRv3Parser(tokens);
+        ret.removeErrorListener(ConsoleErrorListener.INSTANCE);
+        return ret;
     }
 
     @Override
@@ -59,30 +65,25 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected ParseTreeListener createReferenceListener() {
         return new ANTLRv3ParserBaseListener() {
             @Override
+            public void exitGrammarDef(ANTLRv3Parser.GrammarDefContext ctx) {
+                grammarType = GrammarType.MIXED;
+                if (ctx.LEXER() != null)  grammarType = GrammarType.LEXER;
+                if (ctx.PARSER() != null) grammarType = GrammarType.PARSER;
+                if (ctx.TREE() != null)   grammarType = GrammarType.TREE;
+            }
+            
+            @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
                 Token token = ctx.id_().getStart();
                 OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
                 String name = token.getText();
-                if (references.containsKey(name)) {
-                    references.get(name).defOffset = range;
-                } else {
-                    Reference ref = new Reference(name, getFileObject(), range);
-                    references.put(ref.name, ref);
-                }
+                ReferenceType rtype = Character.isUpperCase(name.charAt(0)) ? ReferenceType.TOKEN : ReferenceType.RULE;
+                rtype = ((rtype == ReferenceType.TOKEN) && (ctx.FRAGMENT() != null)) ? ReferenceType.FRAGMENT : rtype;
+                
+                Reference ref = new Reference(rtype, name, range);
+                references.put(ref.name, ref);
             }
         };
-    }
-
-    @Override
-    protected ParseTreeListener createCheckReferences() {
-        return new ANTLRv3OccuranceListener((token) -> {
-            String name = token.getText();
-            if (!"EOF".equals(name) && (!references.containsKey(name) || references.get(name).defOffset == null)) {
-                //TODO: It seems the ANTLRv3 Grammar Occurance finder could be a bit smarter
-                //Adding the following line could produce false positives.
-                //errors.add(new DefaultError(null, "Unknown Reference: " + name, null, source, token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
-            }
-        });
     }
 
     @Override
@@ -137,9 +138,10 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
 
             @Override
             public void exitRule_(ANTLRv3Parser.Rule_Context ctx) {
+                boolean fragment = ctx.FRAGMENT() != null;
                 if (ctx.id_() != null) {
                     AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(
-                            ctx.id_().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                            ctx.id_().getText(), fragment, getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                     structure.add(rule);
                 }
             }
@@ -151,12 +153,8 @@ public final class Antlr3ParserResult extends AntlrParserResult<ANTLRv3Parser> {
     protected ParseTreeListener createOccurancesListener() {
         return new ANTLRv3OccuranceListener((token) -> {
                 String refName = token.getText();
-                Reference ref = references.get(refName);
-                if (ref == null) {
-                    ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
-                    references.put(ref.name, ref);
-                }
-                ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
+                OffsetRange or = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
+                markOccurrence(refName, or);
         });
     }
 

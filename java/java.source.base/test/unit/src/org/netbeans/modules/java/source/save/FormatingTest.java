@@ -3322,6 +3322,183 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testNormalRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package test;\n"
+                + "record Point(int x, int y){}\n"
+                + "public class Test {\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Point\n"
+                + "                (int     x, int    \n"
+                + "                y) p) {\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden = "package test;\n"
+                + "\n"
+                + "record Point(int x, int y) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Point(int x, int y) p) {\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testNestedRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul,ColoredPoint lr) {}\n"
+                + "enum Color {RED,GREEN,BLUE}\n"
+                + "record ColoredPoint(Point p, Color c) {}\n"
+                + "record Point(int x, int y) {}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof\n"
+                + "                Rect\n"
+                + "                (       ColoredPoint      ul,   ColoredPoint\n"
+                + "                        lr)    r) {\n"
+                + "            Point p = ul.p();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul, ColoredPoint lr) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "enum Color {\n"
+                + "    RED, GREEN, BLUE\n"
+                + "}\n"
+                + "\n"
+                + "record ColoredPoint(Point p, Color c) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "record Point(int x, int y) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr) r) {\n"
+                + "            Point p = ul.p();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testMultipleNestingRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul,ColoredPoint lr) {}\n"
+                + "enum Color {RED,GREEN,BLUE}\n"
+                + "record ColoredPoint(Point p, Color c) {}\n"
+                + "record Point(int x, int y) {}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof\n"
+                + "                Rect\n"
+                + "                (       ColoredPoint(Point   \n"
+                + "                        p, Color \n"
+                + "                                c\n"
+                + "                        )      ul,   ColoredPoint\n"
+                + "                        lr)    r\n"
+                + "                ) {\n"
+                + "            int x = p.x();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden = "package test;\n"
+                + "\n"
+                + "record Rect(ColoredPoint ul, ColoredPoint lr) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "enum Color {\n"
+                + "    RED, GREEN, BLUE\n"
+                + "}\n"
+                + "\n"
+                + "record ColoredPoint(Point p, Color c) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "record Point(int x, int y) {\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    private void test(Object o) {\n"
+                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c) ul, ColoredPoint lr) r) {\n"
+                + "            int x = p.x();\n"
+                + "            System.out.println(\"Hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+    
     public void testDoWhile() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,

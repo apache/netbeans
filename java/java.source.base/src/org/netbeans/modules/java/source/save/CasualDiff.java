@@ -105,6 +105,7 @@ import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCParens;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCProvides;
+import com.sun.tools.javac.tree.JCTree.JCRecordPattern;
 import com.sun.tools.javac.tree.JCTree.JCRequires;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
@@ -1964,6 +1965,28 @@ public class CasualDiff {
 
     protected int diffBindingPattern(JCBindingPattern oldT, JCBindingPattern newT, int[] bounds) {
         return diffTree((JCTree) oldT.var, (JCTree) newT.var, bounds);
+    }
+
+    protected int diffRecordPattern(JCRecordPattern oldT, JCRecordPattern newT, int[] bounds) {
+        int localPointer = bounds[0];
+
+        // deconstructor
+        int[] exprBounds = getBounds(oldT.deconstructor);
+        copyTo(localPointer, exprBounds[0]);
+        localPointer = diffTree(oldT.deconstructor, newT.deconstructor, exprBounds);
+
+        // Nested Patterns
+        Iterator<? extends JCTree> oldTIter = oldT.nested.iterator();
+        Iterator<? extends JCTree> newTIter = newT.nested.iterator();
+        while (oldTIter.hasNext()) {
+            JCTree oldP = oldTIter.next();
+            JCTree newP = newTIter.next();
+            int[] patternBounds = getBounds(oldP);
+            copyTo(localPointer, patternBounds[0]);
+            localPointer = diffTree(oldP, newP, patternBounds);
+        }
+        copyTo(localPointer, bounds[1]);
+        return bounds[1];
     }
 
     protected int diffConstantCaseLabel(JCConstantCaseLabel oldT, JCConstantCaseLabel newT, int[] bounds) {
@@ -5719,6 +5742,9 @@ public class CasualDiff {
               break;
           case CONSTANTCASELABEL:
               retVal = diffConstantCaseLabel((JCConstantCaseLabel) oldT, (JCConstantCaseLabel) newT, elementBounds);
+              break;
+          case RECORDPATTERN:
+              retVal = diffRecordPattern((JCRecordPattern) oldT, (JCRecordPattern) newT, elementBounds);
               break;
           default:
               // handle special cases like field groups and enum constants

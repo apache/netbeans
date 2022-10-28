@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
+import com.sun.source.tree.BindingPatternTree;
+import com.sun.source.tree.CaseLabelTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExportsTree;
@@ -32,6 +35,7 @@ import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.Tree;
@@ -655,6 +659,23 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 }
             }
             return super.visitRequires(tree, p);
+        }
+
+        @Override
+        public Void visitCase(CaseTree node, Void p) {
+            tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), node));
+            List<? extends CaseLabelTree> labels = node.getLabels();
+            for (CaseLabelTree labelTree : labels) {
+                if (labelTree.getKind().equals(Tree.Kind.PATTERN_CASE_LABEL)) {
+                    PatternCaseLabelTree patternLabel = (PatternCaseLabelTree) labelTree;
+                    tl.moveToOffset(sourcePositions.getEndPosition(info.getCompilationUnit(), patternLabel.getPattern()));
+                    tl.moveNext();
+                    if (tl.currentToken() != null && TokenUtilities.equals(tl.currentToken().text(), "when")) {      //NOI18N
+                        contextKeywords.add(tl.currentToken());
+                    }
+                }
+            }
+            return super.visitCase(node, p);
         }
 
         @Override

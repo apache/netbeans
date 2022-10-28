@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.HeadlessException;
-import java.awt.KeyboardFocusManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -289,30 +288,13 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Tries to find an appropriate component to parent the file chooser to
-     * when showing a dialog.
-     * @return this
-     */
-    private Component findDialogParent() {
-        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (parent == null) {
-            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-        }
-        if (parent == null) {
-            Frame[] f = Frame.getFrames();
-            parent = f.length == 0 ? null : f[f.length - 1];
-        }
-        return parent;
-    }
-
-    /**
      * Show an open dialog that allows multiple selection.
      * @return An array of files, or null if the user cancelled the dialog
      */
     public File[] showMultiOpenDialog() {
         JFileChooser chooser = createFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        int result = chooser.showOpenDialog(findDialogParent());
+        int result = chooser.showOpenDialog(Utilities.findDialogParent());
         if (JFileChooser.APPROVE_OPTION == result) {
             File[] files = chooser.getSelectedFiles();
             return files == null ? new File[0] : files;
@@ -336,7 +318,7 @@ public class FileChooserBuilder {
             }
         }
         chooser.setMultiSelectionEnabled(false);
-        int dlgResult = chooser.showOpenDialog(findDialogParent());
+        int dlgResult = chooser.showOpenDialog(Utilities.findDialogParent());
         if (JFileChooser.APPROVE_OPTION == dlgResult) {
             File result = chooser.getSelectedFile();
             if (result != null && !result.exists()) {
@@ -363,7 +345,7 @@ public class FileChooserBuilder {
                 return showFileDialog( fileDialog, FileDialog.SAVE );
             }
         }
-        int result = chooser.showSaveDialog(findDialogParent());
+        int result = chooser.showSaveDialog(Utilities.findDialogParent());
         if (JFileChooser.APPROVE_OPTION == result) {
             return chooser.getSelectedFile();
         } else {
@@ -434,7 +416,7 @@ public class FileChooserBuilder {
             return null;
         if( dirsOnly && !BaseUtilities.isMac() )
             return null;
-        Component parentComponent = findDialogParent();
+        Component parentComponent = Utilities.findDialogParent();
         Frame parentFrame = (Frame) SwingUtilities.getAncestorOfClass(Frame.class, parentComponent);
         FileDialog fileDialog = new FileDialog(parentFrame);
         if (title != null) {

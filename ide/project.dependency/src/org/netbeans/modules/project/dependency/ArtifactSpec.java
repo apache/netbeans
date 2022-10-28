@@ -72,7 +72,7 @@ public final class ArtifactSpec<T> {
      * to avoid post-processing or shading, this (abstract) classifier should
      * identify an artifact before those steps.
      * <p>
-     * If used in a query, a non-tagged artifact may be returned if the implementation
+     * If used in a query, a non-tagged artifact may be still returned if the implementation
      * does not support the tag.
      */
     public static final String TAG_BASE = "<basic>"; // NOI18N
@@ -156,7 +156,7 @@ public final class ArtifactSpec<T> {
      * represents the build output, usually in project's build directory. Note that FileObject for 
      * a dependency and its corresponding Project may not be the same.
      * 
-     * @return 
+     * @return local file, if it exists.
      */
     public FileObject getLocalFile() {
         // It's not locked well, but localFile will eventually become non-null, even though
@@ -174,9 +174,25 @@ public final class ArtifactSpec<T> {
                 f = localFile = FileUtil.getConfigRoot();
             }
         }
+        // note: config root is used as 'nothing is here' marker
         return f == FileUtil.getConfigRoot() ? null : f;
     }
     
+    /**
+     * Checks if the artifact has the specific tag. Tags are optional indicators of artifact's purpose or 
+     * characteristics, they are typically technology and/or build system specific. Two 'abstract' tags
+     * are defined (implementations may use additional more specific tags, too):
+     * <ul>
+     * <li>{@link #TAG_BASE} for product of a project, and
+     * <li>{@link #TAG_SHADED} for a bundled product (e.g. with dependencies).
+     * </ul>
+     * The exact meaning is build-system specific.
+     * <p>
+     * Tags are typically not used in dependency specifications.
+     * 
+     * @param tag the tag to test
+     * @return true, if the artifact is tagged.
+     */
     public boolean hasTag(String tag) {
         return tags.contains(tag);
     }
@@ -276,8 +292,8 @@ public final class ArtifactSpec<T> {
     }
     
     /**
-     * Returns opaque project-specific data. If searching for
-     * a project-specific extension, use {@link ProjectDependencies#findAdapters} instead.
+     * Returns opaque project-specific data. You must use project-specific API to
+     * extract information that may be linked in here.
      * 
      * @return unspecified underlying project data
      */
@@ -288,7 +304,7 @@ public final class ArtifactSpec<T> {
     public static <V> ArtifactSpec<V> createVersionSpec(
             @NullAllowed String groupId, @NonNull String artifactId, 
             @NullAllowed String type, @NullAllowed String classifier, 
-            @NonNull String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
+            @NullAllowed String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
         URL u = localFile == null ? null : URLMapper.findURL(localFile, URLMapper.EXTERNAL);
         URI uri = null;
         if (u != null) {
@@ -302,9 +318,9 @@ public final class ArtifactSpec<T> {
     }
 
     public static <V> ArtifactSpec<V> createSnapshotSpec(
-            @NonNull String groupId, @NonNull String artifactId, 
+            @NullAllowed String groupId, @NullAllowed String artifactId, 
             @NullAllowed String type, @NullAllowed String classifier, 
-            @NonNull String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
+            @NullAllowed String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
         URI uri = null;
         if (localFile != null) {
             URL u = URLMapper.findURL(localFile, URLMapper.EXTERNAL);
@@ -391,7 +407,8 @@ public final class ArtifactSpec<T> {
          * @return builder instance.
          */
         public Builder forceLocalFile(FileObject localFile) {
-            this.localFile = localFile == null ?FileUtil.getConfigRoot() : localFile;
+            // note: config root is used as 'nothing is here' marker
+            this.localFile = localFile == null ? FileUtil.getConfigRoot() : localFile;
             return this;
         }
 

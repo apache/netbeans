@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle.adm;
 
+import com.oracle.bmc.model.BmcException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
@@ -64,31 +65,29 @@ public class RunFileADMAction implements ActionListener{
     }
     
     
+    @NbBundle.Messages({
+        "MSG_ProjectAuditInfo=Project Audits in GraalVM Ext Pack performs check for vulnerable dependencies using Vulnerabilities knowledgebase in Oracle OCI. If you want to learn more and setup OCI account, go to https://www.oracle.com/cloud/free/ .",
+        "# {0} - project display name",
+        "MSG_ProjectAuditNoKB=No Knowlege Base assigned for {0}.\n Select or create in Cloud Explorer a Knowledge Base, where to run Vulnerability Audit for this project."
+    })
     @Override
     public void actionPerformed(ActionEvent e) {
         Project project = FileOwnerQuery.getOwner(file);
-        System.out.println("Running adm action:");
-        System.out.println("  Project: " + project.toString());
-        System.out.println("  File: " + file.getPath());
-//        CloudResourcesStorage storage = project.getLookup().lookup(CloudResourcesStorage.class);
         KnowledgeBaseItem kbItem = VulnerabilityWorker.getKnowledgeBaseForProject(project);
+        final String projectDisplayName = ProjectUtils.getInformation(project).getDisplayName();
         if (kbItem != null) {
-            VulnerabilityWorker.getInstance().findVulnerability(project, true);
+            try {
+                VulnerabilityWorker.getInstance().findVulnerability(project, AuditOptions.makeNewAudit());
+            } catch (AuditException exc) {
+                ErrorUtils.processError(exc, Bundle.MSG_CreatingAuditFailed(projectDisplayName));
+            }
         } else {
-            System.out.println("!!!!!! KnowledgeBase neni");
             if (OCIManager.getDefault().getConfigProvider() == null
                     || OCIManager.getDefault().getTenancy().equals(Optional.empty())) {
-                String message = "Project Audits in GraalVM Ext Pack performs check for "
-                        + "vulnerable dependencies using Vulnerabilities knowledgebase in Oracle OCI. "
-                        + "If you want to learn more and setup OCI account, go to https://www.oracle.com/cloud/free/ .";
-                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(message));
+                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_ProjectAuditInfo()));
             } else {
-                String message = "No Knowlege Base assigned for " + ProjectUtils.getInformation(project).getDisplayName() 
-                        + ".\n Select or create in Cloud Explorer a Knowledge Base, where to run Vulnerability Audit for this project.";
-                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(message));
+                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_ProjectAuditNoKB(projectDisplayName)));
             }
-            System.out.println("Config provider: " + OCIManager.getDefault().getConfigProvider());
-            System.out.println("Tenancy: " + OCIManager.getDefault().getTenancy());
         }
     }
     

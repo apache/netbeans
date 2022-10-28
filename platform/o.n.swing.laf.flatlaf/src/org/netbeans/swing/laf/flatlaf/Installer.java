@@ -22,6 +22,8 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.*;
 
@@ -38,6 +40,16 @@ public class Installer extends ModuleInstall {
 
         // tell FlatLaf that it should look for .properties files in the given package
         FlatLaf.registerCustomDefaultsSource("org.netbeans.swing.laf.flatlaf", getClass().getClassLoader());
+
+        // tell FlatLaf to look for possible user .properties files in LookAndFeel folder of config file system
+        FileObject customFolder = FileUtil.getConfigFile("LookAndFeel");
+        if (customFolder != null && customFolder.isFolder()) {
+            FlatLaf.registerCustomDefaultsSource(customFolder.toURL());
+        }
+
+        // don't allow FlatLaf to update UI on system font changes because this would
+        // invoke UIManager.setLookAndFeel() and SwingUtilities.updateComponentTreeUI()
+        System.setProperty( "flatlaf.updateUIOnSystemFontChange", "false" );
     }
 
 }

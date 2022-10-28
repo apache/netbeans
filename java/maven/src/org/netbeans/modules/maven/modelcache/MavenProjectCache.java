@@ -108,6 +108,7 @@ public final class MavenProjectCache {
                     if (ref != null) {
                         MavenProject mp = ref.get();
                         if (mp != null) {
+                            LOG.log(Level.FINE, "Maven project {0} loaded from cache, packacing = {1}", new Object[] { pomFile, mp.getPackaging() });
                             return mp;
                         }
                     }
@@ -169,6 +170,7 @@ public final class MavenProjectCache {
         //TODO have independent from M2AuxiliaryConfigImpl
         FileObject projectDir = FileUtil.toFileObject(pomFile.getParentFile());
         if (projectDir == null || !projectDir.isValid()) {
+            LOG.log(Level.INFO, "Project directory is not valid: {0} from pom {1}, parent {2}", new Object[] { projectDir, pomFile, pomFile.getParentFile() });
             return getFallbackProject(pomFile);
         }
         AuxiliaryConfiguration aux = new M2AuxilaryConfigImpl(projectDir, false);
@@ -190,6 +192,7 @@ public final class MavenProjectCache {
                 FileObject mavenConfig = root.getFileObject(".mvn/maven.config");
                 if (mavenConfig != null && mavenConfig.isData()) {
                     mavenConfigOpts = Arrays.asList(mavenConfig.asText().split("\\s+"));
+                    LOG.log(Level.FINE, "Found maven config options: {0}", mavenConfigOpts);
                     break;
                 }
             }
@@ -261,11 +264,16 @@ public final class MavenProjectCache {
                 }
             }
             req.setUserProperties(uprops);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "request property 'packaging': {0}", req.getSystemProperties().get("packaging"));
+                LOG.log(Level.FINE, "embedder property 'packaging': {0}", projectEmbedder.getSystemProperties().get("packaging"));
+            }
             res = projectEmbedder.readProjectWithDependencies(req, true);
             newproject = res.getProject();
             
             //#204898
             if (newproject != null) {
+                LOG.log(Level.FINE, "Loaded project for {0}, packaging: {1}", new Object[] { pomFile, newproject.getPackaging() });
                 ClassLoader projectRealm = newproject.getClassRealm();
                 if (projectRealm != null) {
                     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
@@ -333,6 +341,12 @@ public final class MavenProjectCache {
             if (LOG.isLoggable(Level.FINE) && SwingUtilities.isEventDispatchThread()) {
                 LOG.log(Level.FINE, "Project " + pomFile.getPath() + " loaded in AWT event dispatching thread!", new RuntimeException());
             }
+            if (LOG.isLoggable(Level.FINE) && !res.getExceptions().isEmpty()) {
+                LOG.log(Level.FINE, "Errors encountered during loading the project:");
+                for (Throwable t : res.getExceptions()) {
+                    LOG.log(Level.FINE, "Maven reported:", t);
+                }
+            }
         }
         return newproject;
     }
@@ -341,6 +355,7 @@ public final class MavenProjectCache {
         "LBL_Incomplete_Project_Desc=Partially loaded Maven project; try building it."
     })
     public static MavenProject getFallbackProject(File projectFile) throws AssertionError {
+        LOG.log(Level.INFO, "Creating fallback project for " + projectFile, new Throwable());
         MavenProject newproject = new MavenProject();
         newproject.setGroupId("error");
         newproject.setArtifactId("error");

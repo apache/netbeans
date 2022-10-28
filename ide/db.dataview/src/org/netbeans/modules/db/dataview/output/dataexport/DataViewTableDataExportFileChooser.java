@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.db.dataview.output.DataViewTableUIModel;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -76,8 +77,7 @@ public class DataViewTableDataExportFileChooser {
 
     private static boolean checkFile(File file) {
         if (file.exists()) {
-            int a = JOptionPane.showConfirmDialog(
-                    null,
+            int a = JOptionPane.showConfirmDialog(Utilities.findDialogParent(),
                     Bundle.LBL_OVEWRITE_DIALOG(),
                     Bundle.MSG_OVEWRITE_DIALOG(),
                     JOptionPane.YES_NO_OPTION);

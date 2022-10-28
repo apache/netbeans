@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -138,7 +141,7 @@ public class TomcatManager implements DeploymentManager {
      */
     public TomcatManager(boolean conn, String uri, TomcatVersion tomcatVersion)
             throws IllegalArgumentException {
-        LOGGER.log(Level.FINE, "Creating connected TomcatManager uri=" + uri); //NOI18N
+        LOGGER.log(Level.FINE, "Creating connected TomcatManager uri={0}", uri); //NOI18N
         this.connected = conn;
         this.tomcatVersion = tomcatVersion;
         this.uri = uri;
@@ -267,7 +270,7 @@ public class TomcatManager implements DeploymentManager {
         TomcatManagerConfig tmConfig = getTomcatManagerConfig();
         String engineName = tmConfig.getEngineElement().getAttributeValue("name"); //NOI18N
         String hostName = tmConfig.getHostElement().getAttributeValue("name"); //NOI18N
-        StringBuffer catWork = new StringBuffer(tp.getCatalinaDir().toString());
+        StringBuilder catWork = new StringBuilder(tp.getCatalinaDir().toString());
         catWork.append("/work/").append(engineName).append("/").append(hostName); //NOI18N
         return catWork.toString();
     }
@@ -316,7 +319,7 @@ public class TomcatManager implements DeploymentManager {
 
         sdi = getStartTomcat().getDebugInfo(null);
         if (sdi == null) {
-            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: " + this.toString());
+            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: {0}", this.toString());
         }
 
         for (int i=0; i < sessions.length; i++) {
@@ -352,7 +355,7 @@ public class TomcatManager implements DeploymentManager {
         Session[] sessions = DebuggerManager.getDebuggerManager().getSessions();
         ServerDebugInfo sdi = getStartTomcat().getDebugInfo(null);
         if (sdi == null) {
-            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: " + this.toString());
+            LOGGER.log(Level.INFO, "DebuggerInfo cannot be found for: {0}", this.toString());
         }
 
         for (int i=0; i < sessions.length; i++) {
@@ -363,7 +366,9 @@ public class TomcatManager implements DeploymentManager {
                     AttachingDICookie attCookie = (AttachingDICookie)o;
                     if (sdi.getTransport().equals(ServerDebugInfo.TRANSPORT_SHMEM)) {
                         String shmem = attCookie.getSharedMemoryName();
-                        if (shmem == null) continue;
+                        if (shmem == null) {
+                            continue;
+                        }
                         if (shmem.equalsIgnoreCase(sdi.getShmemName())) {
                             Object d = s.lookupFirst(null, JPDADebugger.class);
                             if (d != null) {
@@ -375,7 +380,9 @@ public class TomcatManager implements DeploymentManager {
                         }
                     } else {
                         String host = attCookie.getHostName();
-                        if (host == null) continue;
+                        if (host == null) {
+                            continue;
+                        }
                         if (host.equalsIgnoreCase(sdi.getHost())) {
                             if (attCookie.getPortNumber() == sdi.getPort()) {
                                 Object d = s.lookupFirst(null, JPDADebugger.class);
@@ -463,16 +470,12 @@ public class TomcatManager implements DeploymentManager {
             tomEEVersion = TomcatFactory.getTomEEVersion(tp.getCatalinaHome(), tp.getCatalinaBase());
             tomEEType = tomEEVersion == null ? null : TomcatFactory.getTomEEType(tp.getCatalinaHome(), tp.getCatalinaBase());
             if (tomEEVersion == null) {
-                tomEEWarListener = new TomEEWarListener(tp, new TomEEWarListener.RefreshHook() {
-
-                    @Override
-                    public void refresh(TomEEVersion version, TomEEType type) {
-                        synchronized (TomcatManager.this) {
-                            tomEEVersion = version;
-                            tomEEType = type;
-                        }
-                        getTomcatPlatform().notifyLibrariesChanged();
+                tomEEWarListener = new TomEEWarListener(tp, (TomEEVersion version, TomEEType type) -> {
+                    synchronized (TomcatManager.this) {
+                        tomEEVersion = version;
+                        tomEEType = type;
                     }
+                    getTomcatPlatform().notifyLibrariesChanged();
                 });
                 File listenFile;
                 if (tp.getCatalinaBase() != null) {
@@ -493,23 +496,28 @@ public class TomcatManager implements DeploymentManager {
 
 // --- DeploymentManager interface implementation ----------------------
 
+    @Override
     public DeploymentConfiguration createConfiguration (DeployableObject deplObj)
     throws InvalidModuleException {
         throw new RuntimeException("This should never be called"); // NOI18N
     }
 
+    @Override
     public Locale getCurrentLocale () {
         return Locale.getDefault ();
     }
 
+    @Override
     public Locale getDefaultLocale () {
         return Locale.getDefault ();
     }
 
+    @Override
     public Locale[] getSupportedLocales () {
         return Locale.getAvailableLocales ();
     }
 
+    @Override
     public boolean isLocaleSupported (Locale locale) {
         if (locale == null) {
             return false;
@@ -524,21 +532,25 @@ public class TomcatManager implements DeploymentManager {
         return false;
     }
 
+    @Override
     public TargetModuleID[] getAvailableModules (ModuleType moduleType, Target[] targetList)
     throws TargetException, IllegalStateException {
         return modules (ENUM_AVAILABLE, moduleType, targetList);
     }
 
+    @Override
     public TargetModuleID[] getNonRunningModules (ModuleType moduleType, Target[] targetList)
     throws TargetException, IllegalStateException {
         return modules (ENUM_NONRUNNING, moduleType, targetList);
     }
 
+    @Override
     public TargetModuleID[] getRunningModules (ModuleType moduleType, Target[] targetList)
     throws TargetException, IllegalStateException {
         return modules (ENUM_RUNNING, moduleType, targetList);
     }
 
+    @Override
     public Target[] getTargets () throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.getTargets called on disconnected instance");   // NOI18N
@@ -550,11 +562,13 @@ public class TomcatManager implements DeploymentManager {
         };
     }
 
+    @Override
     public DConfigBeanVersionType getDConfigBeanVersion () {
         // PENDING
         return null;
     }
 
+    @Override
     public void setDConfigBeanVersion (DConfigBeanVersionType version)
     throws DConfigBeanVersionUnsupportedException {
         if (!DConfigBeanVersionType.V1_3_1.equals (version)) {
@@ -562,33 +576,40 @@ public class TomcatManager implements DeploymentManager {
         }
     }
 
+    @Override
     public boolean isDConfigBeanVersionSupported (DConfigBeanVersionType version) {
         return DConfigBeanVersionType.V1_3_1.equals (version);
     }
 
+    @Override
     public boolean isRedeploySupported () {
         // XXX what this really means
         return false;
     }
 
+    @Override
     public ProgressObject redeploy (TargetModuleID[] targetModuleID, InputStream inputStream, InputStream inputStream2)
     throws UnsupportedOperationException, IllegalStateException {
         // PENDING
         throw new UnsupportedOperationException ("TomcatManager.redeploy not supported yet.");
     }
 
+    @Override
     public ProgressObject redeploy (TargetModuleID[] tmID, File file, File file2)
     throws UnsupportedOperationException, IllegalStateException {
         // PENDING
         throw new UnsupportedOperationException ("TomcatManager.redeploy not supported yet.");
     }
 
+    @Override
     public void release () {
     }
 
+    @Override
     public void setLocale (Locale locale) throws UnsupportedOperationException {
     }
 
+    @Override
     public ProgressObject start (TargetModuleID[] tmID) throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.start called on disconnected instance");   // NOI18N
@@ -602,6 +623,7 @@ public class TomcatManager implements DeploymentManager {
         return impl;
     }
 
+    @Override
     public ProgressObject stop (TargetModuleID[] tmID) throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.stop called on disconnected instance");   // NOI18N
@@ -615,6 +637,7 @@ public class TomcatManager implements DeploymentManager {
         return impl;
     }
 
+    @Override
     public ProgressObject undeploy (TargetModuleID[] tmID) throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.undeploy called on disconnected instance");   // NOI18N
@@ -660,6 +683,7 @@ public class TomcatManager implements DeploymentManager {
      * @throws IllegalStateException when TomcatManager is disconnected
      * @return Object that reports about deployment progress
      */
+    @Override
     public ProgressObject distribute (Target[] targets, InputStream is, InputStream deplPlan)
     throws IllegalStateException {
         if (!isConnected ()) {
@@ -678,17 +702,19 @@ public class TomcatManager implements DeploymentManager {
      * @throws IllegalStateException when TomcatManager is disconnected
      * @return Object that reports about deployment progress
      */
+    @Override
     public ProgressObject distribute (Target[] targets, File moduleArchive, File deplPlan)
     throws IllegalStateException {
         if (!isConnected ()) {
             throw new IllegalStateException ("TomcatManager.distribute called on disconnected instance");   // NOI18N
         }
-        LOGGER.log(Level.FINE, "TomcatManager.distribute archive=" + moduleArchive.getPath() + ", plan=" + deplPlan.getPath()); // NOI18N
+        LOGGER.log(Level.FINE, "TomcatManager.distribute archive={0}, plan={1}", new Object[]{moduleArchive.getPath(), deplPlan.getPath()}); // NOI18N
         TomcatManagerImpl impl = new TomcatManagerImpl (this);
         impl.install (targets[0], moduleArchive, deplPlan);
         return impl;
     }
 
+    @Override
     public ProgressObject distribute(Target[] target, ModuleType moduleType, InputStream inputStream, InputStream inputStream0) throws IllegalStateException {
         return distribute(target, inputStream, inputStream0);
     }
@@ -725,6 +751,7 @@ public class TomcatManager implements DeploymentManager {
         return connected;
     }
 
+    @Override
     public String toString () {
         return "Tomcat manager ["+uri+", home "+tp.getCatalinaHome()+", base "+tp.getCatalinaBase()+(connected?"conneceted":"disconnected")+"]";    // NOI18N
     }
@@ -791,12 +818,8 @@ public class TomcatManager implements DeploymentManager {
                     tp.setServerPort(Integer.parseInt(TomcatInstallUtil.getPort(server)));
                     tp.setShutdownPort(Integer.parseInt(TomcatInstallUtil.getShutdownPort(server)));
                     tp.setServerHeader(TomcatInstallUtil.getServerHeader(server));
-                } catch (IOException ioe) {
+                } catch (IOException | RuntimeException ioe) {
                     LOGGER.log(Level.INFO, null, ioe);
-                } catch (NumberFormatException nfe) {
-                    LOGGER.log(Level.INFO, null, nfe);
-                } catch (RuntimeException e) {
-                    LOGGER.log(Level.INFO, null, e);
                 }
             }
         }
@@ -832,7 +855,7 @@ public class TomcatManager implements DeploymentManager {
         try {
 
             if (targetFolder == null) {
-                LOGGER.log(Level.INFO, "Cannot find parent folder for base dir " + baseDir.getPath());
+                LOGGER.log(Level.INFO, "Cannot find parent folder for base dir {0}", baseDir.getPath());
                 return null;
             }
             File baseDirFO = new File (targetFolder, baseDir.getName ());
@@ -929,7 +952,7 @@ public class TomcatManager implements DeploymentManager {
             };
             for (int i = 0; i < files.length; i++) {
                 // get folder from, to, name and ext
-                int slash = files[i].lastIndexOf ('/');
+                int slash = files[i].lastIndexOf ("/");
                 String sfolder = files[i].substring (0, slash);
                 File fromDir = new File (homeDir, sfolder); // NOI18N
                 File toDir = new File (baseDir, sfolder); // NOI18N
@@ -938,24 +961,14 @@ public class TomcatManager implements DeploymentManager {
                 if (patternTo[i] == null) {
                     File fileToCopy = new File(homeDir, files[i]);
                     if (!fileToCopy.exists()) {
-                        LOGGER.log(Level.INFO, "Cannot copy file " + fileToCopy.getAbsolutePath() + " to the Tomcat base dir, since it does not exist.");
+                        LOGGER.log(Level.INFO, "Cannot copy file {0} to the Tomcat base dir, since it does not exist.", fileToCopy.getAbsolutePath());
                         continue;
                     }
-                    FileInputStream is = new FileInputStream(fileToCopy);
-                    FileOutputStream os = new FileOutputStream(targetFile);
-                    try {
+                    try (FileInputStream is = new FileInputStream(fileToCopy);
+                            FileOutputStream os = new FileOutputStream(targetFile)) {
                         FileUtil.copy(is, os);
                     } catch (IOException ioe) {
                         LOGGER.log(Level.INFO, null, ioe);
-                    } finally {
-                        try {
-                            if (os != null)
-                                os.close();
-                        } catch (IOException ioe) { } // ignored
-                        try {
-                            if (is != null)
-                                is.close();
-                        } catch (IOException ioe) { } // ignored
                     }
                 } else {
                     // use patched version
@@ -966,7 +979,7 @@ public class TomcatManager implements DeploymentManager {
                         patternTo[i]
                         )) {
                         if (!(ADMIN_XML.equals(files[i]) && !(new File (fromDir, files[i].substring (slash+1))).exists()) ){
-                            LOGGER.log(Level.INFO, "Cannot create config file "+files[i]);
+                            LOGGER.log(Level.INFO, "Cannot create config file {0}", files[i]);
                             continue;
                         }
                     }
@@ -1024,12 +1037,8 @@ public class TomcatManager implements DeploymentManager {
      * Create a file and fill it with the data.
      */
     private void writeToFile(File file, String data) throws IOException {
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(data);
-        } finally {
-            if (bw != null) bw.close();
         }
     }
 
@@ -1038,19 +1047,22 @@ public class TomcatManager implements DeploymentManager {
      * @return success status.
      */
     private boolean copyAndPatch (File src, File dst, String from, String to) {
-        java.io.Reader r = null;
-        java.io.Writer out = null;
-        if (!src.exists())
+        
+        if (!src.exists()) {
             return false;
-        try {
-            r = new BufferedReader (new InputStreamReader (new FileInputStream (src), "utf-8")); // NOI18N
+        }
+        try (Reader r = new BufferedReader (new InputStreamReader (new FileInputStream (src), StandardCharsets.UTF_8));
+                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream (dst), StandardCharsets.UTF_8))) {
+             // NOI18N
             StringBuilder sb = new StringBuilder();
             final char[] BUFFER = new char[4096];
             int len;
 
             for (;;) {
                 len = r.read (BUFFER);
-                if (len == -1) break;
+                if (len == -1) {
+                    break;
+                }
                 sb.append (BUFFER, 0, len);
             }
             int idx = sb.toString ().indexOf (from);
@@ -1059,25 +1071,13 @@ public class TomcatManager implements DeploymentManager {
             }
             else {
                 // Something unexpected
-                LOGGER.log(Level.INFO, "Pattern " + from + " not found in " + src.getPath()); // NOI18N
+                LOGGER.log(Level.INFO, "Pattern {0} not found in {1}", new Object[]{from, src.getPath()}); // NOI18N
             }
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream (dst), "utf-8")); // NOI18N
             out.write (sb.toString ());
 
         } catch (java.io.IOException ioe) {
             LOGGER.log(Level.INFO, null, ioe);
             return false;
-        } finally {
-            try {
-                if (out != null)
-                    out.close ();
-            } catch (java.io.IOException ioe) { // ignore this
-            }
-            try {
-                if (r != null)
-                    r.close ();
-            } catch (java.io.IOException ioe) { // ignore this
-            }
         }
         return true;
     }
@@ -1160,7 +1160,7 @@ public class TomcatManager implements DeploymentManager {
     public void terminate() {
         Process proc = getTomcatProcess();
         if (proc != null) {
-            Map<String, String> env = new HashMap<String, String>();
+            Map<String, String> env = new HashMap<>();
             env.put(KEY_UUID, uri);
             ExternalProcessSupport.destroy(process, env);
         }

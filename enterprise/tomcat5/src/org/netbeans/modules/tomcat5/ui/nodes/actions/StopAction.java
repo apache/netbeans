@@ -33,6 +33,7 @@ public class StopAction extends NodeAction {
     public StopAction() {
     }
 
+    @Override
     protected boolean enable(org.openide.nodes.Node[] nodes) {
         TomcatWebModuleCookie cookie;
         for (int i=0; i<nodes.length; i++) {
@@ -45,10 +46,12 @@ public class StopAction extends NodeAction {
         return true;
     }
     
+    @Override
     public String getName() {
         return NbBundle.getMessage(StopAction.class, "LBL_StopAction"); //NOI18N
     }
     
+    @Override
     protected void performAction(org.openide.nodes.Node[] nodes) {
         
         for (int i=0; i<nodes.length; i++) {
@@ -61,8 +64,10 @@ public class StopAction extends NodeAction {
     
    
     
+    @Override
     protected boolean asynchronous() { return false; }
     
+    @Override
     public org.openide.util.HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }

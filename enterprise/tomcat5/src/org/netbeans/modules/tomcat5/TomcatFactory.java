@@ -97,7 +97,7 @@ public final class TomcatFactory implements DeploymentFactory {
     private static final String DISCONNECTED_URI_80 = TOMCAT_URI_PREFIX_80 + "apache-tomcat-8.0.x";   // NOI18N
     private static final String DISCONNECTED_URI_90 = TOMCAT_URI_PREFIX_90 + "apache-tomcat-9.0.x";   // NOI18N
     
-    private static final Set<String> DISCONNECTED_URIS = new HashSet<String>();
+    private static final Set<String> DISCONNECTED_URIS = new HashSet<>();
     static {
         Collections.addAll(DISCONNECTED_URIS, DISCONNECTED_URI_50,
                 DISCONNECTED_URI_55, DISCONNECTED_URI_60, DISCONNECTED_URI_70,
@@ -133,6 +133,7 @@ public final class TomcatFactory implements DeploymentFactory {
      * @throws DeploymentManagerCreationException
      * @return {@link TomcatManager}
      */
+    @Override
     public DeploymentManager getDeploymentManager(String uri, String uname, String passwd)
             throws DeploymentManagerCreationException {
         if (!handlesURI (uri)) {
@@ -164,16 +165,19 @@ public final class TomcatFactory implements DeploymentFactory {
         }
     }
     
+    @Override
     public DeploymentManager getDisconnectedDeploymentManager(String uri) 
     throws DeploymentManagerCreationException {
         // no need to distinguish beetween the connected and disconnected DM for Tomcat
         return getDeploymentManager(uri, null, null);
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(TomcatFactory.class, "LBL_TomcatFactory");
     }
     
+    @Override
     public String getProductVersion() {
         return NbBundle.getMessage(TomcatFactory.class, "LBL_TomcatFactoryVersion");
     }
@@ -182,6 +186,7 @@ public final class TomcatFactory implements DeploymentFactory {
      * @param str
      * @return <CODE>true</CODE> for URIs beggining with <CODE>tomcat[55|60]:</CODE> prefix
      */    
+    @Override
     public boolean handlesURI(String str) {
         return str != null && (str.startsWith(TOMCAT_URI_PREFIX_50)
                 || str.startsWith(TOMCAT_URI_PREFIX_55)
@@ -222,15 +227,7 @@ public final class TomcatFactory implements DeploymentFactory {
                 return version.substring(idx + 1);
             }
             throw new IllegalStateException("Cannot identify the version of the server."); // NOI18N
-        } catch (MalformedURLException e) {
-            throw new IllegalStateException(e);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalAccessException e) {
+        } catch (MalformedURLException | ReflectiveOperationException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -241,11 +238,8 @@ public final class TomcatFactory implements DeploymentFactory {
             // TODO we might use fallback as primary check - it might be faster
             // than loading jars and executing code in JVM
             version = getTomcatVersionString(catalinaHome);
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | UnsupportedClassVersionError ex) {
             LOGGER.log(Level.INFO, null, ex);
-            return getTomcatVersionFallback(catalinaHome);
-        } catch (UnsupportedClassVersionError err) {
-            LOGGER.log(Level.INFO, null, err);
             return getTomcatVersionFallback(catalinaHome);
         }
         return getTomcatVersion(version, TomcatVersion.TOMCAT_50);
@@ -267,25 +261,16 @@ public final class TomcatFactory implements DeploymentFactory {
             if (!bootstrapJar.exists()) {
                 return null;
             }
-            try {
-                JarFile jar = new JarFile(bootstrapJar);
-                try {
-                    Manifest manifest = jar.getManifest();
-                    String specificationVersion = null;
-                    if (manifest != null) {
-                        specificationVersion = manifest.getMainAttributes()
-                                .getValue("Specification-Version"); // NOI18N
-                    }
-                    if (specificationVersion != null) { // NOI18N
-                        specificationVersion = specificationVersion.trim();
-                        return getTomcatVersion(specificationVersion, TomcatVersion.TOMCAT_55);
-                    }
-                } finally {
-                    try {
-                        jar.close();
-                    } catch (IOException ex) {
-                        LOGGER.log(Level.FINEST, null, ex);
-                    }
+            try (JarFile jar = new JarFile(bootstrapJar)) {
+                Manifest manifest = jar.getManifest();
+                String specificationVersion = null;
+                if (manifest != null) {
+                    specificationVersion = manifest.getMainAttributes()
+                            .getValue("Specification-Version"); // NOI18N
+                }
+                if (specificationVersion != null) { // NOI18N
+                    specificationVersion = specificationVersion.trim();
+                    return getTomcatVersion(specificationVersion, TomcatVersion.TOMCAT_55);
                 }
             } catch (IOException e) {
                 LOGGER.log(Level.FINE, null, e);
@@ -397,13 +382,7 @@ public final class TomcatFactory implements DeploymentFactory {
     @CheckForNull
     public static File getTomEEWebAppJar(File parent) {
         File webApps = new File(parent, "webapps"); // NOI18N
-        File[] children = webApps.listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
+        File[] children = webApps.listFiles((File pathname) -> pathname.isDirectory());
         if (children != null) {
             for (File child : children) {
                 File jar = getTomEEJar(child);
@@ -417,13 +396,7 @@ public final class TomcatFactory implements DeploymentFactory {
 
     private static File getTomEEJar(File parentDir) throws IllegalStateException {
         File libDir = new File(parentDir, "lib"); // NOI18N
-        String[] names = libDir.list(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return TOMEE_JAR_PATTERN.matcher(name).matches();
-            }
-        });
+        String[] names = libDir.list((File dir, String name) -> TOMEE_JAR_PATTERN.matcher(name).matches());
         if (names != null && names.length > 0) {
             // XXX based on filename we may improve it later
             return new File(libDir, names[0]);

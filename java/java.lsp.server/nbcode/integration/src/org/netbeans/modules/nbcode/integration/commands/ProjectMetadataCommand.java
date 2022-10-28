@@ -44,14 +44,17 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
+import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.lsp.server.protocol.Server;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery.ArtifactsResult;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -215,18 +218,11 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
             artifactType = ((JsonPrimitive)o).getAsString();
         }
         ProjectArtifactsQuery.Filter filter = ProjectArtifactsQuery.newQuery(artifactType, classifier, ctx, tags);
-        CompletableFuture result = new CompletableFuture();
-        METADATA_PROCESSOR.post(() -> {
-            try {
-                ArtifactsResult arts = ProjectArtifactsQuery.findArtifacts(p, filter);
-                // must serialize in advance, since we cannot configure gson instance in lsp4j
-                Object o = gson.toJsonTree(arts.getArtifacts());
-                result.complete(o);
-            } catch (Exception | Error ex) {
-                result.completeExceptionally(ex);
-            }
-        });
-        
-        return result;
+        return Lookup.getDefault().lookup(LspServerState.class).asyncOpenFileOwner(f).thenApplyAsync((project) -> {
+            ArtifactsResult arts = ProjectArtifactsQuery.findArtifacts(p, filter);
+            // must serialize in advance, since we cannot configure gson instance in lsp4j
+            Object o = gson.toJsonTree(arts.getArtifacts());
+            return o;
+        }, METADATA_PROCESSOR);
     }
 }

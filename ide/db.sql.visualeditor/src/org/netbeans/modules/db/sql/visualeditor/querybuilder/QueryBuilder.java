@@ -758,7 +758,7 @@ public class QueryBuilder extends TopComponent
         
         // we could reuse this to find the tablename if the user
         // only specifies "select 'column_name' from 'table_name'"
-        List fromTables;
+        List<JoinTable> fromTables;
         // from
         if ( _queryModel.getFrom() != null ) {
 
@@ -904,7 +904,7 @@ public class QueryBuilder extends TopComponent
             {
                 // Check every table in the From list, to see if any have
                 // this column
-                List fromTables = _queryModel.getFrom().getTableList();
+                List<JoinTable> fromTables = _queryModel.getFrom().getTableList();
                 boolean found=false;
                 for ( int j = 0; j < fromTables.size(); j++ ) {
                     String fromTableName = ( (JoinTable) fromTables.get(j) ).getFullTableName();

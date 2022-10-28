@@ -128,7 +128,7 @@
 				},
 				"netbeans.revealActiveInProjects": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Reveals active text editor in Projects view"
 				},
 				"java.test.editor.enableShortcuts": {
@@ -325,6 +325,11 @@
 								"type": "string",
 								"default": "${command:java.attachDebugger.pickProcess}",
 								"description": "Process Id of the debuggee"
+							},
+							"listen": {
+								"type": "string",
+								"default": "false",
+								"description": "Listen for the debuggee to attach"
 							},
 							"timeout": {
 								"type": "string",

@@ -113,12 +113,24 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "class GrandchildInlineTagClass extends ChildInlineTagC^lass {", false, "");
     }
 
+    public void testInheritdocClassWithInlineTagForPhpDocumentor() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "class GrandchildInlineTagClass extends ChildInlineTagC^lass {", false, "", true);
+    }
+
     public void testInheritdocInterfaceOnlyTag() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "class GrandchildClass extends ChildClass implements ChildInterf^ace {", false, "");
     }
 
     public void testInheritdocInterfaceWithInlineTag() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "interface GrandchildInlineTagInterface extends ChildInlineTagI^nterface {", false, "");
+    }
+
+    public void testInheritdocInterfaceWithInlineTagForPhpDocumentor() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "interface GrandchildInlineTagInterface extends ChildInlineTagI^nterface {", false, "", true);
+    }
+
+    public void testInheritdocChildMethodSingleSentence() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->testSingle^Sentence();", false, "");
     }
 
     public void testInheritdocChildMethodOnlyTag() throws Exception {
@@ -145,6 +157,10 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$grandchildClass->testInlin^e($param1, $param2);", false, "");
     }
 
+    public void testInheritdocMethodWithInlineTagForPhpDocumentor() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$grandchildClass->testInlin^e($param1, $param2);", false, "", true);
+    }
+
     public void testInheritdocMethodWithMissingParam() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->testMissing^Param($param1);", false, "");
     }
@@ -153,6 +169,46 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         // not {@inheritdoc} but @inheritdoc
         // the same result as the normal tag
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->testInvalidT^ag();", false, "");
+    }
+
+    public void testInheritdocConstWithSingleSentence() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "ChildClass::CONSTANT_SINGLE_^SENTENCE;", false, "");
+    }
+
+    public void testInheritdocConstOnlyTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "ChildClass::CONSTANT_ONL^Y_TAG;", false, "");
+    }
+
+    public void testInheritdocConstInlineTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "ChildClass::CONSTANT_INLIN^E_TAG;", false, "");
+    }
+
+    public void testInheritdocConstInlineTagForPhpDocumentor() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "ChildClass::CONSTANT_INLIN^E_TAG;", false, "", true);
+    }
+
+    public void testInheritdocConstWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "ChildClass::CONSTANT_WITHOUT_PH^PDOC;", false, "");
+    }
+
+    public void testInheritdocFieldWithSingleSentence() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->fieldSingle^Sentence;", false, "");
+    }
+
+    public void testInheritdocFieldOnlyTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->fieldOnl^ytag;", false, "");
+    }
+
+    public void testInheritdocFieldInlineTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->fieldInli^neTag;", false, "");
+    }
+
+    public void testInheritdocFieldInlineTagForPhpDocumentor() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->fieldInlineT^ag;", false, "", true);
+    }
+
+    public void testInheritdocFieldWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->fieldWithoutP^hpDoc;", false, "");
     }
 
     public void testFieldTypedWithoutPhpDoc() throws Exception {
@@ -220,6 +276,16 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
             }
         }
         return documentation;
+    }
+
+    public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix, boolean followPhpdocumentor) throws Exception {
+        if (followPhpdocumentor) {
+            DocRenderer.PHPDocExtractor.UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER = true;
+        }
+        checkCompletionDocumentation(file, caretLine, includeModifiers, itemPrefix);
+        if (followPhpdocumentor) {
+            DocRenderer.PHPDocExtractor.UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER = false;
+        }
     }
 
     @Override

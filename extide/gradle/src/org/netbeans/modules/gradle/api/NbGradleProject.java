@@ -47,7 +47,9 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.Lookups;
 
 /**
  * Facade object for NetBeans Gradle project internals, with some convenience
@@ -202,7 +204,32 @@ public final class NbGradleProject {
     public <T> T projectLookup(Class<T> clazz) {
         return project.getGradleProject().getLookup().lookup(clazz);
     }
-
+    
+    private transient volatile Lookup lookupProxy;
+    
+    /**
+     * Returns a Lookup that tracks potential project reloads. Always delegates to the latest
+     * loaded model and project Lookup adjusted for applied plugins etc. 
+     * <p>
+     * Use this Lookup in preference to {@link #projectLookup}, if you need to adapt for changes
+     * e.g. after script reload.
+     * 
+     * @return Lookup instance.
+     * @since 2.28
+     */
+    public Lookup refreshableProjectLookup() {
+        Lookup l = lookupProxy;
+        if (l != null) {
+            return l;
+        }
+        synchronized (this) {
+            if (lookupProxy != null) {
+                return lookupProxy;
+            }
+            return lookupProxy = Lookups.proxy(() -> project.getGradleProject().getLookup());
+        }
+    }
+    
     /**
      * Return the actual Quality information on the currently loaded Project.
      *

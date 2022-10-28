@@ -83,7 +83,7 @@ public interface TurboProvider {
 
         private final boolean enabled;
 
-        private final List<Object> speculative;
+        private final List<Object[]> speculative;
 
         private final Memory memory;
 

@@ -19,11 +19,13 @@
 
 package org.netbeans.modules.websvc.api.jaxws.wsdlmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sun.tools.ws.processor.model.Operation;
 import com.sun.tools.ws.processor.model.Port;
 import com.sun.tools.ws.wsdl.document.soap.SOAPStyle;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.netbeans.modules.websvc.jaxwsmodelapi.WSPort;
 
 /**

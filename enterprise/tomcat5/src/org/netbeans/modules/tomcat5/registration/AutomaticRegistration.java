@@ -116,9 +116,7 @@ public class AutomaticRegistration {
 
         File catalinaHome = new File(catalinaHomeValue);
         if (!catalinaHome.exists()) {
-            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server. "
-                    + "The Catalina Home directory " + catalinaHomeValue // NOI18N
-                    + " does not exist."); // NOI18N
+            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server. The Catalina Home directory {0} does not exist.", catalinaHomeValue); // NOI18N
             return 3;
         }
 
@@ -146,7 +144,7 @@ public class AutomaticRegistration {
         } else if (version.startsWith("9.")) { // NOI18N
             urlTmp = new StringBuilder(TomcatFactory.TOMCAT_URI_PREFIX_90);
         } else {
-            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server. " + " The version " + version + " is not supported."); // NOI18N
+            LOGGER.log(Level.INFO, "Cannot register the default Tomcat server.  The version {0} is not supported.", version); // NOI18N
             return 5;
         }
         urlTmp.append(TomcatFactory.TOMCAT_URI_HOME_PREFIX);

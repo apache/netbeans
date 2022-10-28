@@ -59,12 +59,8 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
     }
 
     /** Simple comparator for sorting nodes by name. */
-    public static final Comparator<TomcatWebModule> TOMCAT_WEB_MODULE_COMPARATOR = new Comparator<TomcatWebModule>() {
-
-        public int compare(TomcatWebModule wm1, TomcatWebModule wm2) {
-            return wm1.getTomcatModule ().getModuleID().compareTo(wm2.getTomcatModule ().getModuleID());
-        }
-    };
+    public static final Comparator<TomcatWebModule> TOMCAT_WEB_MODULE_COMPARATOR = 
+            (TomcatWebModule wm1, TomcatWebModule wm2) -> wm1.getTomcatModule().getModuleID().compareTo(wm2.getTomcatModule().getModuleID());
 
     private final TomcatModule tomcatModule;
     private final TomcatManager manager;
@@ -107,66 +103,66 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
      *             task is finished it implicate that undeployment is finished
      *             (failed or completed).
      */
+    @Override
     public Task undeploy() {
-        return rp().post(new Runnable() {
-            public void run () {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_UNDEPLOY",  // NOI18N
+        return rp().post( () -> {
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_UNDEPLOY",  // NOI18N
                     new Object [] { getTomcatModule().getPath() }));
-
-                ProgressObject po = manager.undeploy(target);
-                TomcatProgressListener listener = new TomcatProgressListener(po);
-                po.addProgressListener(listener);
-                listener.updateState();
-
-                CompletionWait wait = new CompletionWait(po);
-                wait.init();
-                wait.waitFinished();
-            }
+            
+            ProgressObject po = manager.undeploy(target);
+            TomcatProgressListener listener = new TomcatProgressListener(po);
+            po.addProgressListener(listener);
+            listener.updateState();
+            
+            CompletionWait wait = new CompletionWait(po);
+            wait.init();
+            wait.waitFinished();
         }, 0);
     }
 
+    @Override
     public void start() {
-        rp().post(new Runnable() {
-            public void run () {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STARTING",  // NOI18N
+        rp().post( () -> {
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STARTING",  // NOI18N
                     new Object [] { getTomcatModule().getPath() }));
-                ProgressObject po = manager.start(target);
-                TomcatProgressListener listener = new TomcatProgressListener(po);
-                po.addProgressListener(listener);
-                listener.updateState();
-            }
+            ProgressObject po = manager.start(target);
+            TomcatProgressListener listener = new TomcatProgressListener(po);
+            po.addProgressListener(listener);
+            listener.updateState();
         }, 0);
     }
 
+    @Override
     public void stop() {
-        rp().post(new Runnable() {
-            public void run () {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STOPPING",  // NOI18N
+        rp().post( () -> {
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(TomcatWebModule.class, "MSG_START_STOPPING",  // NOI18N
                     new Object [] { getTomcatModule ().getPath() }));
-                ProgressObject po = manager.stop(target);
-                TomcatProgressListener listener = new TomcatProgressListener(po);
-                po.addProgressListener(listener);
-                listener.updateState();
-            }
+            ProgressObject po = manager.stop(target);
+            TomcatProgressListener listener = new TomcatProgressListener(po);
+            po.addProgressListener(listener);
+            listener.updateState();
         }, 0);
     }
 
+    @Override
     public boolean isRunning() {
         return isRunning;
     }
 
 
     private String constructDisplayName(){
-        if (isRunning())
+        if (isRunning()) {
             return getTomcatModule ().getPath();
-        else
+        } else {
             return getTomcatModule ().getPath() + " [" + NbBundle.getMessage(TomcatWebModuleNode.class, "LBL_Stopped")  // NOI18N
-               +  "]";
+                    +  "]";
+        }
     }
 
     /**
      * Opens the log file defined for this web moudel in the ouput window.
      */
+    @Override
     public void openLog() {
         manager.logManager().openContextLog(tomcatModule);
     }
@@ -178,6 +174,7 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
      * @return <code>true</code> if there is a logger defined for this module,
      *         <code>false</code> otherwise.
      */
+    @Override
     public boolean hasLogger() {
          return manager.logManager().hasContextLogger(tomcatModule);
     }
@@ -192,6 +189,7 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
             this.progressObject = progressObject;
         }
 
+        @Override
         public void handleProgressEvent(ProgressEvent progressEvent) {
             updateState();
         }
@@ -213,11 +211,7 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
 
                     if (command == CommandType.START || command == CommandType.STOP) {
                             StatusDisplayer.getDefault().setStatusText(deployStatus.getMessage());
-                            if (command == CommandType.START) {
-                                isRunning = true;
-                            } else {
-                                isRunning = false;
-                            }
+                            isRunning = command == CommandType.START;
                             node.setDisplayName(constructDisplayName());
                     } else if (command == CommandType.UNDEPLOY) {
                         StatusDisplayer.getDefault().setStatusText(deployStatus.getMessage());
@@ -280,6 +274,7 @@ public class TomcatWebModule implements TomcatWebModuleCookie {
          *
          * @param evt event to handle
          */
+        @Override
         public void handleProgressEvent(ProgressEvent evt) {
             synchronized (this) {
                 DeploymentStatus status = progressObject.getDeploymentStatus();

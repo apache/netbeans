@@ -92,7 +92,7 @@ public class TomcatDatasourceManager implements DatasourceManager {
 
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
-        Set<Datasource> result = new HashSet<Datasource>();
+        Set<Datasource> result = new HashSet<>();
         result.addAll(getTomcatDatasources());
         result.addAll(getTomeeDatasources());
         return result;
@@ -103,16 +103,12 @@ public class TomcatDatasourceManager implements DatasourceManager {
      * in the server.xml configuration file.
      */
     public Set<Datasource> getTomcatDatasources() {
-        HashSet<Datasource> result = new HashSet<Datasource>();
+        HashSet<Datasource> result = new HashSet<>();
         File serverXml = tm.getTomcatProperties().getServerXml();
         Server server;
         try {
             server = Server.createGraph(serverXml);
-        } catch (IOException e) {
-            // ok, log it and give up
-            Logger.getLogger(TomcatDatasourceManager.class.getName()).log(Level.INFO, null, e);
-            return Collections.<Datasource>emptySet();
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             // server.xml file is most likely not parseable, log it and give up
             Logger.getLogger(TomcatDatasourceManager.class.getName()).log(Level.INFO, null, e);
             return Collections.<Datasource>emptySet();

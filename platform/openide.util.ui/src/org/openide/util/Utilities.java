@@ -1325,6 +1325,32 @@ public final class Utilities {
         );
     }
 
+    /**
+     * This is for use in situations where a standard swing API,
+     * such as {@linkplain JOptionPane.show*} or {@linkplain JFileChooser.show*},
+     * is used to display a dialog. {@code null} should never be used
+     * as a dialog's parent because it
+     * frequently does the wrong thing in a multi-screen setup.
+     * <p>
+     * The use of the NetBeans API
+     * {@linkplain DialogDisplayer.getDefault.*}
+     * is encouraged to display a dialog, but stuff happens.
+     * @return A suitable parent component for swing dialog displayers.
+     * @since 9.26
+     */
+    // PR4739
+    public static Component findDialogParent() {
+        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (parent == null) {
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        }
+        if (parent == null) {
+            Frame[] f = Frame.getFrames();
+            parent = f.length == 0 ? null : f[f.length - 1];
+        }
+        return parent;
+    }
+
     /** @return size of the screen. The size is modified for Windows OS
      * - some points are subtracted to reflect a presence of the taskbar
      *

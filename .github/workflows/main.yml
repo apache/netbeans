@@ -1651,8 +1651,8 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: micronaut
-        run: ant $OPTS -f enterprise/micronaut test
+      - name: enterprise/micronaut
+        run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 
       - name: spring.webmvc
         run: ant $OPTS -f enterprise/spring.webmvc test

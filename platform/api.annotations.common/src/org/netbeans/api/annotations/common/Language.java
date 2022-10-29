@@ -29,10 +29,10 @@ import java.lang.annotation.Target;
  * Allows to mark a specific variable so that the is expected to contain source
  * code in a given language.
  *
- * @since 1.44
+ * @since 1.48
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.CLASS) //TODO: can be SOURCE after PR 4882
 @Documented
 public @interface Language {
 

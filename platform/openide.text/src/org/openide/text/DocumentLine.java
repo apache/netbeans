@@ -918,7 +918,7 @@ public abstract class DocumentLine extends Line {
     * ways to obtain a line set for documents following
     * NetBeans conventions.
     */
-    public static abstract class Set extends Line.Set {
+    public abstract static class Set extends Line.Set {
         /** listener on document changes, accessed from LazyLines */
         final LineListener listener;
 

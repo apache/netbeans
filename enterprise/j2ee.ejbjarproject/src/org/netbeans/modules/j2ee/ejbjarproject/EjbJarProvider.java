@@ -25,6 +25,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -112,6 +113,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
     }
     
     /** @deprecated use getJavaSources */
+    @Deprecated
     public ClassPath getClassPath() {
         ClassPathProvider cpp = project.getClassPathProvider();
         if (cpp != null) {
@@ -305,7 +307,9 @@ public final class EjbJarProvider extends J2eeModuleProvider
             platformVersion = Profile.JAVA_EE_7_FULL;
         }
 
-        if (platformVersion.isAtLeast(Profile.JAVA_EE_7_WEB)) {
+        if (platformVersion.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            return EjbJar.VERSION_4_0;
+        } else if (platformVersion.isAtLeast(Profile.JAVA_EE_7_WEB)) {
             return EjbJar.VERSION_3_2;
         } else if (platformVersion.isAtLeast(Profile.JAVA_EE_6_WEB)) {
             return EjbJar.VERSION_3_1;
@@ -528,7 +532,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
     }
 
     private static class IT implements Iterator<J2eeModule.RootedEntry> {
-        java.util.Enumeration ch;
+        Enumeration<? extends FileObject> ch;
         FileObject root;
         
         private IT(FileObject f) {

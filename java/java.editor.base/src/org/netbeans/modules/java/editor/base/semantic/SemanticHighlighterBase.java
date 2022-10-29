@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
+import com.sun.source.tree.BindingPatternTree;
+import com.sun.source.tree.CaseLabelTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExportsTree;
@@ -32,6 +35,7 @@ import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.Tree;
@@ -249,14 +253,15 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
         }
         
-        Map<Element, List<UnusedDescription>> element2Unused = UnusedDetector.findUnused(info) //XXX: unnecessarily ugly
+        Map<Element, List<UnusedDescription>> element2Unused = UnusedDetector.findUnused(info, () -> cancel.get()) //XXX: unnecessarily ugly
                                                                              .stream()
                                                                              .collect(Collectors.groupingBy(ud -> ud.unusedElement));
-        for (Element decl : v.type2Uses.keySet()) {
+        for (Map.Entry<Element, List<Use>> entry : v.type2Uses.entrySet()) {
             if (cancel.get())
                 return ;
             
-            List<Use> uses = v.type2Uses.get(decl);
+            Element decl = entry.getKey();
+            List<Use> uses = entry.getValue();
             
             for (Use u : uses) {
                 if (u.spec == null)
@@ -307,18 +312,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     
     private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(
             ElementKind.LOCAL_VARIABLE, ElementKind.RESOURCE_VARIABLE,
-            ElementKind.EXCEPTION_PARAMETER);
-    private static final ElementKind BINDING_VARIABLE;
-
-    static {
-        ElementKind bindingVariable;
-        try {
-            LOCAL_VARIABLES.add(bindingVariable = ElementKind.valueOf(TreeShims.BINDING_VARIABLE));
-        } catch (IllegalArgumentException ex) {
-            bindingVariable = null;
-        }
-        BINDING_VARIABLE = bindingVariable;
-    }
+            ElementKind.EXCEPTION_PARAMETER, ElementKind.BINDING_VARIABLE);
 
     private static boolean isLocalVariableClosure(Element el) {
         return el.getKind() == ElementKind.PARAMETER ||
@@ -474,7 +468,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             addModifiers(decl, c);
             
-            if (decl.getKind().isField() || TreeShims.isRecordComponent(decl.getKind())) {
+            if (decl.getKind().isField() || decl.getKind() == ElementKind.RECORD_COMPONENT) {
                 if (decl.getKind().isField()) {
                     c.add(ColoringAttributes.FIELD);
                 } else {
@@ -551,7 +545,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             isDeclType = decl.getKind().isClass() || decl.getKind().isInterface();
             Collection<ColoringAttributes> c = null;
 
-            if (decl.getKind().isField() || isLocalVariableClosure(decl) || TreeShims.isRecordComponent(decl.getKind())) {
+            if (decl.getKind().isField() || isLocalVariableClosure(decl) || decl.getKind() == ElementKind.RECORD_COMPONENT) {
                 c = getVariableColoring(decl);
             }
             
@@ -728,6 +722,23 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 }
             }
             return super.visitRequires(tree, p);
+        }
+
+        @Override
+        public Void visitCase(CaseTree node, Void p) {
+            tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), node));
+            List<? extends CaseLabelTree> labels = node.getLabels();
+            for (CaseLabelTree labelTree : labels) {
+                if (labelTree.getKind().equals(Tree.Kind.PATTERN_CASE_LABEL)) {
+                    PatternCaseLabelTree patternLabel = (PatternCaseLabelTree) labelTree;
+                    tl.moveToOffset(sourcePositions.getEndPosition(info.getCompilationUnit(), patternLabel.getPattern()));
+                    tl.moveNext();
+                    if (tl.currentToken() != null && TokenUtilities.equals(tl.currentToken().text(), "when")) {      //NOI18N
+                        contextKeywords.add(tl.currentToken());
+                    }
+                }
+            }
+            return super.visitCase(node, p);
         }
 
         @Override
@@ -985,7 +996,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             scan(tree.getExtendsClause(), null);
             scan(tree.getImplementsClause(), null);
             try {
-                List<? extends Tree> permitList = TreeShims.getPermits(tree);
+                List<? extends Tree> permitList = tree.getPermitsClause();
                 if (permitList != null && !permitList.isEmpty()) {
                     tl.moveNext();
                     Token t = firstIdentifierToken("permits");// NOI18N
@@ -1016,7 +1027,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         private boolean isRecordComponent(Tree member) {
             Element el = info.getTrees().getElement(new TreePath(getCurrentPath(), member));
-            return el != null && TreeShims.isRecordComponent(Utilities.toRecordComponent(el).getKind());
+            return el != null && Utilities.toRecordComponent(el).getKind() == ElementKind.RECORD_COMPONENT;
         }
 
         @Override

@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -440,8 +441,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
             writer.close();
             String xml = writer.toString();
             
-            InputStream inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));  
-            
+            InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));  
             
             return inputStream;
         } catch (IOException ex) {

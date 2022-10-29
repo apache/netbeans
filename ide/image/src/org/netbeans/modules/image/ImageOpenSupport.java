@@ -133,7 +133,7 @@ public class ImageOpenSupport extends OpenSupport implements OpenCookie, CloseCo
             final ImageDataObject imageObj = (ImageDataObject)entry.getDataObject();
             final CloneableTopComponent.Ref editors = allEditors;
 
-            Enumeration e = editors.getComponents();
+            Enumeration<CloneableTopComponent> e = editors.getComponents();
             while(e.hasMoreElements()) {
                 final Object pane = e.nextElement();
                 SwingUtilities.invokeLater(new Runnable() {

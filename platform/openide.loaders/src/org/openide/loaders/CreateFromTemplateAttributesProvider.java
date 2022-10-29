@@ -39,6 +39,7 @@ import java.util.Map;
  * @since deprecated from 7.59
  * @deprecated Use {@link CreateFromTemplateAttributes} in {@code openide.filesystems.templates} instead.
  */
+@Deprecated
 public interface CreateFromTemplateAttributesProvider {
     /** Called when a template is about to be instantiated to provide additional
      * values to the {@link CreateFromTemplateHandler} that will handle the 

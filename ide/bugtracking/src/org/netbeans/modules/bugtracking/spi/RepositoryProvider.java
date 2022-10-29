@@ -40,7 +40,7 @@ public interface RepositoryProvider<R, Q, I> {
      * A query from this repository was saved or removed.
      * @since 1.85
      */
-    public final static String EVENT_QUERY_LIST_CHANGED = "bugtracking.repository.queries.changed"; // NOI18N
+    public static final String EVENT_QUERY_LIST_CHANGED = "bugtracking.repository.queries.changed"; // NOI18N
     
     /**
      * The content of unsubmitted issues for the repository changes.

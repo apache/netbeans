@@ -42,6 +42,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_ABSTRACT:
                 name = "T_ABSTRACT"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG:
+                name = "T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_AND_EQUAL:
                 name = "T_AND_EQUAL"; //NOI18N
                 break;
@@ -198,6 +201,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_END_NOWDOC:
                 name = "T_END_NOWDOC"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_ENUM:
+                name = "T_ENUM"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_EQUAL:
                 name = "T_EQUAL"; //NOI18N
                 break;
@@ -330,6 +336,15 @@ public final class Utils {
             case ASTPHP5Symbols.T_MUL_EQUAL:
                 name = "T_MUL_EQUAL"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_NAME_FULLY_QUALIFIED:
+                name = "T_NAME_FULLY_QUALIFIED"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_QUALIFIED:
+                name = "T_NAME_QUALIFIED"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_RELATIVE:
+                name = "T_NAME_RELATIVE"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_NEKUDA:
                 name = "T_NEKUDA"; //NOI18N
                 break;
@@ -395,6 +410,9 @@ public final class Utils {
                 break;
             case ASTPHP5Symbols.T_QUESTION_MARK:
                 name = "T_QUESTION_MARK"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_READONLY:
+                name = "T_READONLY"; //NOI18N
                 break;
             case ASTPHP5Symbols.T_REFERENCE:
                 name = "T_REFERENCE"; //NOI18N

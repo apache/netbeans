@@ -27,6 +27,36 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="findDialogParent">
+         <api name="util"/>
+         <summary>static method Utilities.findDialogParent added</summary>
+         <version major="9" minor="26"/>
+         <date day="15" month="10" year="2022"/>
+         <author login="errael"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added <code>findDialogParent</code> to provide a parent component for standard swing dialog displayers
+                 such as <code>JOptionPane</code> and <code>JFileChooser</code>.
+                 This method first checks <code>KeyboardFocusManager</code>, then uses an active frame.
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
+    <change id="propertyURL">
+      <api name="util"/>
+      <summary>Declaration of long-used URL image property</summary>  
+      <version major="9" minor="24"/>
+      <date year="2021" month="1" day="15"/>
+      <author login="sdedic"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"/>
+      <description>
+          The property <code>url</code> is documented in Javadoc <b>since 8.12</b> but the key string was not
+          added to the API. <a href="@TOP@/org/openide/util/ImageUtilities.html#PROPERTY_URL">It is now</a>, along with a 
+          <a href="@TOP@/org/openide/util/ImageUtilities.html#findImageBaseURL-java.awt.Image-">convenience method</a>, which should be used in preference.
+      </description>
+      <class package="org.openide.util" name="ImageUtilities"/>
+    </change>
     <change id="SVGLoader">
       <api name="util"/>
       <summary>Support loading of SVG icons for scalable rendering on HiDPI displays.</summary>

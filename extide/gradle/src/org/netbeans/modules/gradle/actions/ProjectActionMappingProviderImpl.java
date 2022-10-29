@@ -78,7 +78,7 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
                 }
             }
         };
-        NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, null));
+        NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, NbGradleProject.get(project)));
         File projectDir = FileUtil.toFile(project.getProjectDirectory());
         projectMappingFile = new File(projectDir, GradleFiles.GRADLE_PROPERTIES_NAME);
         loadProjectCustomMappings();

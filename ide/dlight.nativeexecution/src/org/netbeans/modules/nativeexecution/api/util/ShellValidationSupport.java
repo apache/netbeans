@@ -40,8 +40,8 @@ import org.openide.util.NbPreferences;
  */
 public final class ShellValidationSupport {
     
-    protected final static ShellValidationStatus NOSHELL = new ShellValidationStatus(null, Arrays.asList("No shell"), null); // NOI18N
-    protected final static ShellValidationStatus VALID = new ShellValidationStatus(null, null, null);
+    protected static final ShellValidationStatus NOSHELL = new ShellValidationStatus(null, Arrays.asList("No shell"), null); // NOI18N
+    protected static final ShellValidationStatus VALID = new ShellValidationStatus(null, null, null);
 
     private ShellValidationSupport() {
     }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.150
+#Version 2.154
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1160,6 +1160,7 @@ hcls AccessorImpl,FCHSL
 
 CLSS public org.netbeans.modules.maven.api.PluginPropertyUtils
 innr public abstract interface static ConfigurationBuilder
+innr public final static PluginConfigPathParams
 meth public static <%0 extends java.lang.Object> {%%0} getPluginPropertyBuildable(org.apache.maven.project.MavenProject,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.maven.api.PluginPropertyUtils$ConfigurationBuilder<{%%0}>)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -1260,6 +1261,11 @@ meth public static java.lang.String[] getReportPluginPropertyList(org.netbeans.a
  anno 4 org.netbeans.api.annotations.common.NonNull()
  anno 5 org.netbeans.api.annotations.common.NonNull()
  anno 6 org.netbeans.api.annotations.common.NullAllowed()
+meth public static java.util.List<org.apache.maven.artifact.Artifact> getPluginPathProperty(org.netbeans.api.project.Project,org.netbeans.modules.maven.api.PluginPropertyUtils$PluginConfigPathParams,boolean,java.util.List<org.apache.maven.artifact.resolver.ArtifactResolutionException>)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public static java.util.Properties getPluginPropertyParameter(org.apache.maven.project.MavenProject,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1282,11 +1288,27 @@ meth public static org.codehaus.plexus.component.configurator.expression.Express
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds CONTEXT_EXPRESSION_EVALUATOR,DUMMY_EVALUATOR,LIFECYCLE_PLUGINS
-hcls ExternalDefaultBuilder
+hcls DependencyListBuilder,ExternalDefaultBuilder
 
 CLSS public abstract interface static org.netbeans.modules.maven.api.PluginPropertyUtils$ConfigurationBuilder<%0 extends java.lang.Object>
  outer org.netbeans.modules.maven.api.PluginPropertyUtils
 meth public abstract {org.netbeans.modules.maven.api.PluginPropertyUtils$ConfigurationBuilder%0} build(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator)
+
+CLSS public final static org.netbeans.modules.maven.api.PluginPropertyUtils$PluginConfigPathParams
+ outer org.netbeans.modules.maven.api.PluginPropertyUtils
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public java.lang.String getArtifactType()
+meth public java.lang.String getDefaultScope()
+meth public java.lang.String getGoal()
+meth public java.lang.String getPathItemName()
+meth public java.lang.String getPathProperty()
+meth public java.lang.String getPluginArtifactId()
+meth public java.lang.String getPluginGroupId()
+meth public void setArtifactType(java.lang.String)
+meth public void setDefaultScope(java.lang.String)
+meth public void setGoal(java.lang.String)
+supr java.lang.Object
+hfds artifactType,defaultScope,goal,pathItemName,pathProperty,pluginArtifactId,pluginGroupId
 
 CLSS public abstract interface org.netbeans.modules.maven.api.ProjectProfileHandler
 meth public abstract java.util.List<java.lang.String> getActiveProfiles(boolean)
@@ -1667,6 +1689,7 @@ meth public abstract java.util.Set<? extends org.netbeans.modules.maven.api.outp
 CLSS public final org.netbeans.modules.maven.api.output.OutputUtils
 fld public final static java.util.regex.Pattern linePattern
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.netbeans.api.java.classpath.ClassPath)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.netbeans.api.project.Project)
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.openide.filesystems.FileObject)
 supr java.lang.Object
@@ -1955,6 +1978,7 @@ meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
 hfds ENV_JAVAHOME,ENV_PREFIX,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
+hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
  outer org.netbeans.modules.maven.execute.MavenCommandLineExecutor

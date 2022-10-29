@@ -821,7 +821,7 @@ public final class JavadocImports {
                 jdctx.doc = javac.getDocument();
                 jdctx.javac = javac;
                 long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), dcComment, node);
-                int errorBodyLength = body.trim().substring(0, body.length()).trim().length();
+                int errorBodyLength = body.trim().length();
                 int caretOffset = (int) startPosition + errorBodyLength;
                 TreePath javadocFor = result[0].getTreePath();
                 if (javadocFor == null) {
@@ -853,7 +853,7 @@ public final class JavadocImports {
                     // if position in token == 0 resolve CC according to previous token
                     jdctx.jdts.movePrevious();
                 }
-                jdctx.positions = (DocSourcePositions) trees.getSourcePositions();
+                jdctx.positions = trees.getSourcePositions();
                 if (jdctx.positions != null) {
                     //insideTag(result[0], jdctx, caretOffset, prevTagError ? Kind.SEE : JavadocCompletionUtils.normalizedKind(result[0].getLeaf()));
                     insideTag(result[0], jdctx, caretOffset);

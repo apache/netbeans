@@ -580,7 +580,7 @@ public abstract class OptionImpl implements Cloneable {
         return new AlternativeOptionsImpl(option, null, list);
     }
 
-    public static abstract class Trampoline {
+    public abstract static class Trampoline {
         public static Trampoline DEFAULT;
         static {
             try {

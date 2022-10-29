@@ -129,8 +129,8 @@ final class ComponentBuilders {
     
     static class ComponentBuilder<T extends Component> extends InstanceBuilder<T> {
         
-        private final static int MAX_WIDTH = 10000;
-        private final static int MAX_HEIGHT = 10000;
+        private static final int MAX_WIDTH = 10000;
+        private static final int MAX_HEIGHT = 10000;
         
         protected final String className;
         

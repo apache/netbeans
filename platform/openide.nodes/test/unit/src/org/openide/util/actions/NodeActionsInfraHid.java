@@ -24,7 +24,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.nodes.Node;
 import org.openide.util.ContextGlobalProvider;
 import org.openide.util.Lookup;

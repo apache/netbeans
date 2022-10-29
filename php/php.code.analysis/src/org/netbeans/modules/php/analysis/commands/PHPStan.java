@@ -78,6 +78,7 @@ public final class PHPStan {
      // configuration files
     public static final String CONFIG_FILE_NAME = "phpstan.neon";  // NOI18N
     public static final String DIST_CONFIG_FILE_NAME = "phpstan.neon.dist";  // NOI18N
+    public static final String ALTERNATIVE_DIST_CONFIG_FILE_NAME = "phpstan.dist.neon";  // NOI18N
 
     private final String phpStanPath;
     private int analyzeGroupCounter = 1;
@@ -99,8 +100,8 @@ public final class PHPStan {
     }
 
     @NbBundle.Messages("PHPStan.script.label=PHPStan")
-    public static String validate(String codeSnifferPath) {
-        return PhpExecutableValidator.validateCommand(codeSnifferPath, Bundle.PHPStan_script_label());
+    public static String validate(String phpStanPath) {
+        return PhpExecutableValidator.validateCommand(phpStanPath, Bundle.PHPStan_script_label());
     }
 
     public void startAnalyzeGroup() {

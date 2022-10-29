@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -96,7 +97,7 @@ public class PHPLexerUtils extends TestCase {
     public static String getFileContent (File file) throws Exception{
         StringBuffer sb = new StringBuffer();
         String lineSep = "\n";//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         String line = br.readLine();
         while (line != null) {
             sb.append(line);
@@ -109,7 +110,7 @@ public class PHPLexerUtils extends TestCase {
     
     public static List<LexerResultItem> getExpectedResults (File file) throws Exception {
         List<LexerResultItem> results = new ArrayList<LexerResultItem>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         String line = br.readLine();
         LexerResultItem resultItem = null;
         while (line != null) {
@@ -138,20 +139,16 @@ public class PHPLexerUtils extends TestCase {
      * @return String the formatted string
      */
     public static String getXmlStringValue(String input) {
-        String escapedString = input;
-        escapedString = escapedString.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedString = escapedString.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedString = escapedString.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedString = escapedString.replaceAll("'", "&apos;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedString = replaceLinesAndTabs(escapedString);
-        return escapedString;
+        String escapedString = input.replace("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$
+                                    .replace(">", "&gt;") //$NON-NLS-1$ //$NON-NLS-2$
+                                    .replace("<", "&lt;") //$NON-NLS-1$ //$NON-NLS-2$
+                                    .replace("'", "&apos;"); //$NON-NLS-1$ //$NON-NLS-2$
+        return replaceLinesAndTabs(escapedString);
     }
     
     public static String replaceLinesAndTabs(String input) {
-        String escapedString = input;
-        escapedString = escapedString.replaceAll("\n","\\\\n");
-        escapedString = escapedString.replaceAll("\r","\\\\r");
-        escapedString = escapedString.replaceAll("\t","\\\\t");
-        return escapedString;
+        return input.replace("\n","\\n")
+                    .replace("\r","\\r")
+                    .replace("\t","\\t");
     }
 }

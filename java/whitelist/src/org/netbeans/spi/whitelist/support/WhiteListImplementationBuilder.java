@@ -18,7 +18,7 @@
  */
 package org.netbeans.spi.whitelist.support;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -719,11 +719,7 @@ final class WhiteListImplementationBuilder {
         }
 
         private byte[] decode(String str) {
-            try {
-                return str.getBytes("UTF-8");   //NOI18N
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalStateException("No UTF-8 supported");  //Should never happen
-            }
+            return str.getBytes(StandardCharsets.UTF_8);
         }
 
         private static class Entry {

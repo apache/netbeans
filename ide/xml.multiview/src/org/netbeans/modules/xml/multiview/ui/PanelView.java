@@ -50,7 +50,7 @@ public abstract class PanelView extends javax.swing.JPanel {
     //transient NodeSelectedListener nodeListener = null;
     
     /** Explorer manager, valid when this view is showing */
-    transient private ExplorerManager manager;
+    private transient ExplorerManager manager;
     /** weak variation of the listener for property change on the explorer manager */
     transient PropertyChangeListener wlpc;
     /** weak variation of the listener for vetoable change on the explorer manager */
@@ -142,7 +142,7 @@ public abstract class PanelView extends javax.swing.JPanel {
      * The view should display the panel corresponding to the selected nodes
      * @param nodes the nodes used to update the view
      */
-    abstract public void showSelection(Node[] nodes) ;
+    public abstract void showSelection(Node[] nodes) ;
     
     /** The view can change the explorer manager's current selection.
      * @param value the new node to explore

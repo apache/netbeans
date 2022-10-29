@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.1
+#Version 7.5.0.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -50,6 +50,7 @@ meth public boolean isWriteDependencyLocks()
 meth public int getMaxWorkerCount()
 meth public int hashCode()
 meth public java.io.File getBuildFile()
+ anno 0 java.lang.Deprecated()
  anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public java.io.File getCurrentDir()
 meth public java.io.File getGradleUserHomeDir()
@@ -58,6 +59,7 @@ meth public java.io.File getProjectCacheDir()
 meth public java.io.File getProjectDir()
  anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public java.io.File getSettingsFile()
+ anno 0 java.lang.Deprecated()
  anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public java.lang.String toString()
 meth public java.util.List<java.io.File> getAllInitScripts()
@@ -74,6 +76,8 @@ meth public org.gradle.StartParameter newBuild()
 meth public org.gradle.StartParameter newInstance()
 meth public org.gradle.StartParameter setBuildProjectDependencies(boolean)
 meth public org.gradle.api.artifacts.verification.DependencyVerificationMode getDependencyVerificationMode()
+meth public org.gradle.api.launcher.cli.WelcomeMessageConfiguration getWelcomeMessageConfiguration()
+ anno 0 org.gradle.api.Incubating()
 meth public org.gradle.api.logging.LogLevel getLogLevel()
 meth public org.gradle.api.logging.configuration.ConsoleOutput getConsoleOutput()
 meth public org.gradle.api.logging.configuration.ShowStacktrace getShowStacktrace()
@@ -83,6 +87,7 @@ meth public void includeBuild(java.io.File)
 meth public void setBuildCacheDebugLogging(boolean)
 meth public void setBuildCacheEnabled(boolean)
 meth public void setBuildFile(java.io.File)
+ anno 0 java.lang.Deprecated()
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setBuildScan(boolean)
 meth public void setConfigureOnDemand(boolean)
@@ -116,6 +121,7 @@ meth public void setRefreshDependencies(boolean)
 meth public void setRefreshKeys(boolean)
 meth public void setRerunTasks(boolean)
 meth public void setSettingsFile(java.io.File)
+ anno 0 java.lang.Deprecated()
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setShowStacktrace(org.gradle.api.logging.configuration.ShowStacktrace)
 meth public void setSystemPropertiesArgs(java.util.Map<java.lang.String,java.lang.String>)
@@ -123,10 +129,12 @@ meth public void setTaskNames(java.lang.Iterable<java.lang.String>)
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setTaskRequests(java.lang.Iterable<? extends org.gradle.TaskExecutionRequest>)
 meth public void setWarningMode(org.gradle.api.logging.configuration.WarningMode)
+meth public void setWelcomeMessageConfiguration(org.gradle.api.launcher.cli.WelcomeMessageConfiguration)
+ anno 0 org.gradle.api.Incubating()
 meth public void setWriteDependencyLocks(boolean)
 meth public void setWriteDependencyVerifications(java.util.List<java.lang.String>)
 supr java.lang.Object
-hfds buildCacheDebugLogging,buildCacheEnabled,buildFile,buildProjectDependencies,buildScan,configureOnDemand,continueOnFailure,continuous,currentDir,dryRun,excludedTaskNames,gradleUserHomeDir,includedBuilds,initScripts,isExportKeys,isRefreshKeys,lockedDependenciesToUpdate,loggingConfiguration,noBuildScan,offline,parallelismConfiguration,profile,projectCacheDir,projectDir,projectProperties,refreshDependencies,rerunTasks,settingsFile,systemPropertiesArgs,taskRequests,verificationMode,writeDependencyLocks,writeDependencyVerifications
+hfds buildCacheDebugLogging,buildCacheEnabled,buildFile,buildProjectDependencies,buildScan,configureOnDemand,continueOnFailure,continuous,currentDir,dryRun,excludedTaskNames,gradleUserHomeDir,includedBuilds,initScripts,isExportKeys,isRefreshKeys,lockedDependenciesToUpdate,loggingConfiguration,noBuildScan,offline,parallelismConfiguration,profile,projectCacheDir,projectDir,projectProperties,refreshDependencies,rerunTasks,settingsFile,systemPropertiesArgs,taskRequests,verificationMode,welcomeMessageConfiguration,writeDependencyLocks,writeDependencyVerifications
 
 CLSS public abstract interface org.gradle.TaskExecutionRequest
 meth public abstract java.io.File getRootDir()

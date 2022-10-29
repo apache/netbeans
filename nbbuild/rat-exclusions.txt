@@ -26,28 +26,34 @@ nbbuild/user.build.properties
 ###### generated build artifacts
 nbbuild/gitinfo.properties
 nbbuild/netbeansrelease.properties
+nbbuild/netbeansrelease.json
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_5/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_6/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_7/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_8/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_9/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_9_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_2/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_4_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_2_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_2_5/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0_frag/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0_frag/*
 
 ###### user-specific files  
 **/nbproject/private/**
@@ -65,6 +71,7 @@ java/java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample
 platform/lib.uihandler/src/org/netbeans/lib/uihandler/pubKey
 maven.indexer/external/NOTICE-patched-indexer-core-6.0.0
 nbbuild/hudson/.hgmail-profiler
+nbbuild/jms-config/*
 nbbuild/l10n.patterns
 platform/o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt
 platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/MetaInfServicesLookupTestRunnable.txt
@@ -155,6 +162,7 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 **/*.oql
 **/*.ser
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
+**/*.npss
 
 ######  generated test files 
 **/*.pass
@@ -212,6 +220,7 @@ javafx/javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
 java/jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh
 java/junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
 ide/languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff
+ide/languages.toml/src/org/netbeans/modules/languages/toml/*.toml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml
 java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template
@@ -219,3 +228,7 @@ ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExampleIndent
 ide/properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample
+
+
+###### GitHub Issue tooling
+.github/**

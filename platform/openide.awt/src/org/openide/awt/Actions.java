@@ -914,7 +914,7 @@ public class Actions {
     * if such change occures, updateState method is called to
     * reflect it.
     */
-    private static abstract class Bridge extends Object implements PropertyChangeListener {
+    private abstract static class Bridge extends Object implements PropertyChangeListener {
         /** component to work with */
         protected JComponent comp;
 

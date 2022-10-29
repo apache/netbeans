@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.66
+#Version 2.71
 
 CLSS public abstract interface !annotation com.google.common.annotations.Beta
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -1551,13 +1551,6 @@ CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lan
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
 
-CLSS public abstract interface !annotation javax.enterprise.inject.Typed
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD, TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault java.lang.Class<?>[] value()
-
 CLSS public abstract interface !annotation javax.inject.Inject
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -1642,6 +1635,7 @@ fld protected org.apache.maven.project.ProjectBuilder projectBuilder
 fld protected org.codehaus.plexus.PlexusContainer container
  anno 0 org.codehaus.plexus.component.annotations.Requirement(boolean optional=false, java.lang.Class<?> role=class java.lang.Object, java.lang.String hint="", java.lang.String[] hints=[])
 intf org.apache.maven.Maven
+meth protected <%0 extends java.lang.Object> java.util.Collection<{%%0}> getProjectScopedExtensionComponents(java.util.Collection<org.apache.maven.project.MavenProject>,java.lang.Class<{%%0}>)
 meth protected org.codehaus.plexus.logging.Logger getLogger()
  anno 0 java.lang.Deprecated()
 meth public org.apache.maven.execution.MavenExecutionResult execute(org.apache.maven.execution.MavenExecutionRequest)
@@ -2058,6 +2052,7 @@ supr org.apache.maven.repository.legacy.metadata.ResolutionGroup
 CLSS public abstract interface org.apache.maven.artifact.repository.ArtifactRepository
 meth public abstract boolean isBlacklisted()
  anno 0 java.lang.Deprecated()
+meth public abstract boolean isBlocked()
 meth public abstract boolean isProjectAware()
 meth public abstract boolean isUniqueVersion()
  anno 0 java.lang.Deprecated()
@@ -2080,6 +2075,7 @@ meth public abstract org.apache.maven.repository.Proxy getProxy()
 meth public abstract void setAuthentication(org.apache.maven.artifact.repository.Authentication)
 meth public abstract void setBlacklisted(boolean)
  anno 0 java.lang.Deprecated()
+meth public abstract void setBlocked(boolean)
 meth public abstract void setId(java.lang.String)
 meth public abstract void setLayout(org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout)
 meth public abstract void setMirroredRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
@@ -2145,6 +2141,7 @@ cons public init(java.lang.String,java.lang.String,org.apache.maven.artifact.rep
 cons public init(java.lang.String,java.lang.String,org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
 intf org.apache.maven.artifact.repository.ArtifactRepository
 meth public boolean isBlacklisted()
+meth public boolean isBlocked()
 meth public boolean isProjectAware()
 meth public boolean isUniqueVersion()
 meth public java.lang.String getKey()
@@ -2162,13 +2159,14 @@ meth public org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout
 meth public org.apache.maven.repository.Proxy getProxy()
 meth public void setAuthentication(org.apache.maven.artifact.repository.Authentication)
 meth public void setBlacklisted(boolean)
+meth public void setBlocked(boolean)
 meth public void setLayout(org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout)
 meth public void setMirroredRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 meth public void setProxy(org.apache.maven.repository.Proxy)
 meth public void setReleaseUpdatePolicy(org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
 meth public void setSnapshotUpdatePolicy(org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
 supr org.apache.maven.wagon.repository.Repository
-hfds authentication,blacklisted,layout,mirroredRepositories,proxy,releases,snapshots
+hfds authentication,blacklisted,blocked,layout,mirroredRepositories,proxy,releases,snapshots
 
 CLSS public org.apache.maven.artifact.repository.DefaultArtifactRepositoryFactory
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.artifact.repository.ArtifactRepositoryFactory, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
@@ -2223,6 +2221,7 @@ intf org.apache.maven.artifact.repository.ArtifactRepository
 meth protected static <%0 extends java.lang.Object> boolean eq({%%0},{%%0})
 meth public boolean equals(java.lang.Object)
 meth public boolean isBlacklisted()
+meth public boolean isBlocked()
 meth public boolean isProjectAware()
 meth public boolean isUniqueVersion()
 meth public int hashCode()
@@ -2245,6 +2244,7 @@ meth public org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout
 meth public org.apache.maven.repository.Proxy getProxy()
 meth public void setAuthentication(org.apache.maven.artifact.repository.Authentication)
 meth public void setBlacklisted(boolean)
+meth public void setBlocked(boolean)
 meth public void setId(java.lang.String)
 meth public void setLayout(org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout)
 meth public void setMirroredRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
@@ -2253,7 +2253,7 @@ meth public void setReleaseUpdatePolicy(org.apache.maven.artifact.repository.Art
 meth public void setSnapshotUpdatePolicy(org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
 meth public void setUrl(java.lang.String)
 supr java.lang.Object
-hfds authentication,basedir,id,layout,mirroredRepositories,protocol,proxy,releases,snapshots,url
+hfds authentication,basedir,blocked,id,layout,mirroredRepositories,protocol,proxy,releases,snapshots,url
 
 CLSS public abstract interface org.apache.maven.artifact.repository.RepositoryCache
  anno 0 java.lang.Deprecated()
@@ -2414,6 +2414,7 @@ hfds merged,metadata
 hcls MetadataRepository
 
 CLSS public org.apache.maven.artifact.repository.metadata.Plugin
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
@@ -2506,10 +2507,13 @@ CLSS public org.apache.maven.artifact.repository.metadata.SnapshotVersion
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
 meth public java.lang.String getClassifier()
 meth public java.lang.String getExtension()
 meth public java.lang.String getUpdated()
 meth public java.lang.String getVersion()
+meth public java.lang.String toString()
 meth public org.apache.maven.artifact.repository.metadata.SnapshotVersion clone()
 meth public void setClassifier(java.lang.String)
 meth public void setExtension(java.lang.String)
@@ -3069,6 +3073,35 @@ meth public java.lang.String toString()
 supr java.lang.Object
 hfds file
 
+CLSS public abstract interface org.apache.maven.building.Problem
+innr public final static !enum Severity
+meth public abstract int getColumnNumber()
+meth public abstract int getLineNumber()
+meth public abstract java.lang.Exception getException()
+meth public abstract java.lang.String getLocation()
+meth public abstract java.lang.String getMessage()
+meth public abstract java.lang.String getSource()
+meth public abstract org.apache.maven.building.Problem$Severity getSeverity()
+
+CLSS public final static !enum org.apache.maven.building.Problem$Severity
+ outer org.apache.maven.building.Problem
+fld public final static org.apache.maven.building.Problem$Severity ERROR
+fld public final static org.apache.maven.building.Problem$Severity FATAL
+fld public final static org.apache.maven.building.Problem$Severity WARNING
+meth public static org.apache.maven.building.Problem$Severity valueOf(java.lang.String)
+meth public static org.apache.maven.building.Problem$Severity[] values()
+supr java.lang.Enum<org.apache.maven.building.Problem$Severity>
+
+CLSS public abstract interface org.apache.maven.building.ProblemCollector
+meth public abstract java.util.List<org.apache.maven.building.Problem> getProblems()
+meth public abstract void add(org.apache.maven.building.Problem$Severity,java.lang.String,int,int,java.lang.Exception)
+meth public abstract void setSource(java.lang.String)
+
+CLSS public org.apache.maven.building.ProblemCollectorFactory
+cons public init()
+meth public static org.apache.maven.building.ProblemCollector newInstance(java.util.List<org.apache.maven.building.Problem>)
+supr java.lang.Object
+
 CLSS public abstract interface org.apache.maven.building.Source
 meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
 meth public abstract java.lang.String getLocation()
@@ -3119,6 +3152,7 @@ fld public final static java.lang.String ALSO_MAKE_DEPENDENTS = "amd"
 fld public final static java.lang.String ALTERNATE_GLOBAL_SETTINGS = "gs"
 fld public final static java.lang.String ALTERNATE_GLOBAL_TOOLCHAINS = "gt"
 fld public final static java.lang.String BUILDER = "b"
+fld public final static java.lang.String COLOR = "color"
 fld public final static java.lang.String ENCRYPT_MASTER_PASSWORD = "emp"
 fld public final static java.lang.String ENCRYPT_PASSWORD = "ep"
 fld public final static java.lang.String FAIL_AT_END = "fae"
@@ -3142,6 +3176,7 @@ fld public final static long MB = 1048576
 meth public static java.lang.String formatDuration(long)
 meth public static java.lang.String formatTimestamp(long)
 meth public static java.lang.String showVersion()
+meth public static java.lang.String showVersionMinimal()
 meth public static void showError(org.slf4j.Logger,java.lang.String,java.lang.Throwable,boolean)
 supr java.lang.Object
 hfds ONE_DAY,ONE_HOUR,ONE_MINUTE,ONE_SECOND
@@ -3187,7 +3222,7 @@ meth public static int doMain(java.lang.String[],org.codehaus.plexus.classworlds
 meth public static int main(java.lang.String[],org.codehaus.plexus.classworlds.ClassWorld)
 meth public static void main(java.lang.String[])
 supr java.lang.Object
-hfds ANSI_RESET,EXTENSIONS_FILENAME,EXT_CLASS_PATH,LAST_ANSI_SEQUENCE,MVN_MAVEN_CONFIG,classWorld,configurationProcessors,dispatcher,eventSpyDispatcher,executionRequestPopulator,maven,modelProcessor,plexusLoggerManager,slf4jLogger,slf4jLoggerFactory,toolchainsBuilder
+hfds ANSI_RESET,EXTENSIONS_FILENAME,EXT_CLASS_PATH,LAST_ANSI_SEQUENCE,MVN_MAVEN_CONFIG,classWorld,cliManager,configurationProcessors,dispatcher,eventSpyDispatcher,executionRequestPopulator,maven,modelProcessor,plexusLoggerManager,slf4jLogger,slf4jLoggerFactory,toolchainsBuilder
 hcls ExitException
 
 CLSS public org.apache.maven.cli.ResolveFile
@@ -4581,7 +4616,7 @@ meth public void setGoals(java.lang.Object)
 meth public void setGroupId(java.lang.String)
 meth public void setVersion(java.lang.String)
 supr org.apache.maven.model.ConfigurationContainer
-hfds artifactId,dependencies,executionMap,executions,extensions,goals,groupId,key,version
+hfds artifactId,dependencies,executionMap,executions,extensions,goals,groupId,version
 
 CLSS public org.apache.maven.model.PluginConfiguration
 cons public init()
@@ -4892,6 +4927,7 @@ cons public init()
 intf org.apache.maven.model.building.ModelBuilder
 meth protected boolean hasFatalErrors(org.apache.maven.model.building.ModelProblemCollectorExt)
 meth protected boolean hasModelErrors(org.apache.maven.model.building.ModelProblemCollectorExt)
+meth protected org.apache.maven.model.building.ModelBuildingResult build(org.apache.maven.model.building.ModelBuildingRequest,java.util.Collection<java.lang.String>) throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.model.building.DefaultModelBuilder setDependencyManagementImporter(org.apache.maven.model.composition.DependencyManagementImporter)
 meth public org.apache.maven.model.building.DefaultModelBuilder setDependencyManagementInjector(org.apache.maven.model.management.DependencyManagementInjector)
 meth public org.apache.maven.model.building.DefaultModelBuilder setInheritanceAssembler(org.apache.maven.model.inheritance.InheritanceAssembler)
@@ -4904,6 +4940,7 @@ meth public org.apache.maven.model.building.DefaultModelBuilder setModelUrlNorma
 meth public org.apache.maven.model.building.DefaultModelBuilder setModelValidator(org.apache.maven.model.validation.ModelValidator)
 meth public org.apache.maven.model.building.DefaultModelBuilder setPluginConfigurationExpander(org.apache.maven.model.plugin.PluginConfigurationExpander)
 meth public org.apache.maven.model.building.DefaultModelBuilder setPluginManagementInjector(org.apache.maven.model.management.PluginManagementInjector)
+meth public org.apache.maven.model.building.DefaultModelBuilder setProfileActivationFilePathInterpolator(org.apache.maven.model.path.ProfileActivationFilePathInterpolator)
 meth public org.apache.maven.model.building.DefaultModelBuilder setProfileInjector(org.apache.maven.model.profile.ProfileInjector)
 meth public org.apache.maven.model.building.DefaultModelBuilder setProfileSelector(org.apache.maven.model.profile.ProfileSelector)
 meth public org.apache.maven.model.building.DefaultModelBuilder setReportConfigurationExpander(org.apache.maven.model.plugin.ReportConfigurationExpander)
@@ -4913,7 +4950,7 @@ meth public org.apache.maven.model.building.ModelBuildingResult build(org.apache
 meth public org.apache.maven.model.building.ModelBuildingResult build(org.apache.maven.model.building.ModelBuildingRequest,org.apache.maven.model.building.ModelBuildingResult) throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.model.building.Result<? extends org.apache.maven.model.Model> buildRawModel(java.io.File,int,boolean)
 supr java.lang.Object
-hfds dependencyManagementImporter,dependencyManagementInjector,inheritanceAssembler,lifecycleBindingsInjector,modelInterpolator,modelNormalizer,modelPathTranslator,modelProcessor,modelUrlNormalizer,modelValidator,pluginConfigurationExpander,pluginManagementInjector,profileInjector,profileSelector,reportConfigurationExpander,reportingConverter,superPomProvider
+hfds dependencyManagementImporter,dependencyManagementInjector,inheritanceAssembler,lifecycleBindingsInjector,modelInterpolator,modelNormalizer,modelPathTranslator,modelProcessor,modelUrlNormalizer,modelValidator,pluginConfigurationExpander,pluginManagementInjector,profileActivationFilePathInterpolator,profileInjector,profileSelector,reportConfigurationExpander,reportingConverter,superPomProvider
 
 CLSS public org.apache.maven.model.building.DefaultModelBuilderFactory
 cons public init()
@@ -4921,6 +4958,7 @@ meth protected org.apache.maven.model.building.ModelProcessor newModelProcessor(
 meth protected org.apache.maven.model.composition.DependencyManagementImporter newDependencyManagementImporter()
 meth protected org.apache.maven.model.inheritance.InheritanceAssembler newInheritanceAssembler()
 meth protected org.apache.maven.model.interpolation.ModelInterpolator newModelInterpolator()
+meth protected org.apache.maven.model.interpolation.ModelVersionProcessor newModelVersionPropertiesProcessor()
 meth protected org.apache.maven.model.io.ModelReader newModelReader()
 meth protected org.apache.maven.model.locator.ModelLocator newModelLocator()
 meth protected org.apache.maven.model.management.DependencyManagementInjector newDependencyManagementInjector()
@@ -4929,6 +4967,7 @@ meth protected org.apache.maven.model.normalization.ModelNormalizer newModelNorm
 meth protected org.apache.maven.model.path.ModelPathTranslator newModelPathTranslator()
 meth protected org.apache.maven.model.path.ModelUrlNormalizer newModelUrlNormalizer()
 meth protected org.apache.maven.model.path.PathTranslator newPathTranslator()
+meth protected org.apache.maven.model.path.ProfileActivationFilePathInterpolator newProfileActivationFilePathInterpolator()
 meth protected org.apache.maven.model.path.UrlNormalizer newUrlNormalizer()
 meth protected org.apache.maven.model.plugin.LifecycleBindingsInjector newLifecycleBindingsInjector()
 meth protected org.apache.maven.model.plugin.PluginConfigurationExpander newPluginConfigurationExpander()
@@ -5302,8 +5341,12 @@ meth public void write(java.io.Writer,org.apache.maven.model.Model) throws java.
 supr java.lang.Object
 hfds NAMESPACE,fileComment
 
+CLSS abstract interface org.apache.maven.model.io.xpp3.package-info
+
 CLSS public abstract interface org.apache.maven.model.locator.ModelLocator
 meth public abstract java.io.File locatePom(java.io.File)
+
+CLSS abstract interface org.apache.maven.model.package-info
 
 CLSS public org.apache.maven.model.resolution.InvalidRepositoryException
 cons public init(java.lang.String,org.apache.maven.model.Repository)
@@ -5348,6 +5391,7 @@ hfds log,pluginContext
 CLSS public abstract org.apache.maven.plugin.AbstractMojoExecutionException
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
 fld protected java.lang.Object source
 fld protected java.lang.String longMessage
 meth public java.lang.Object getSource()
@@ -5581,12 +5625,14 @@ cons public init(java.lang.Object,java.lang.String,java.lang.String)
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Exception)
 cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
 supr org.apache.maven.plugin.AbstractMojoExecutionException
 
 CLSS public org.apache.maven.plugin.MojoFailureException
 cons public init(java.lang.Object,java.lang.String,java.lang.String)
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
 supr org.apache.maven.plugin.AbstractMojoExecutionException
 
 CLSS public org.apache.maven.plugin.MojoNotFoundException
@@ -6422,7 +6468,7 @@ meth public void writeModel(java.io.Writer) throws java.io.IOException
 meth public void writeOriginalModel(java.io.Writer) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds activeProfiles,artifact,artifactFilter,artifactMap,artifacts,attachedArtifacts,basedir,classRealm,collectedProjects,compileSourceRoots,context,dependencyArtifacts,executionProject,executionRoot,extensionArtifactMap,extensionArtifacts,extensionDependencyFilter,file,injectedProfileIds,lifecyclePhases,managedVersionMap,model,moduleAdjustments,originalModel,parent,parentArtifact,parentFile,pluginArtifactMap,pluginArtifactRepositories,pluginArtifacts,projectBuilderConfiguration,projectReferences,releaseArtifactRepository,remoteArtifactRepositories,remotePluginRepositories,remoteProjectRepositories,reportArtifactMap,reportArtifacts,resolvedArtifacts,scriptSourceRoots,snapshotArtifactRepository,testCompileSourceRoots
+hfds LOGGER,activeProfiles,artifact,artifactFilter,artifactMap,artifacts,attachedArtifacts,basedir,classRealm,collectedProjects,compileSourceRoots,context,dependencyArtifacts,executionProject,executionRoot,extensionArtifactMap,extensionArtifacts,extensionDependencyFilter,file,injectedProfileIds,lifecyclePhases,managedVersionMap,model,moduleAdjustments,originalModel,parent,parentArtifact,parentFile,pluginArtifactMap,pluginArtifactRepositories,pluginArtifacts,projectBuilderConfiguration,projectReferences,releaseArtifactRepository,remoteArtifactRepositories,remotePluginRepositories,remoteProjectRepositories,reportArtifactMap,reportArtifacts,resolvedArtifacts,scriptSourceRoots,snapshotArtifactRepository,testCompileSourceRoots
 
 CLSS public abstract interface org.apache.maven.project.MavenProjectBuilder
  anno 0 java.lang.Deprecated()
@@ -6689,7 +6735,7 @@ cons public init()
 intf org.apache.maven.repository.MirrorSelector
 meth public org.apache.maven.settings.Mirror getMirror(org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.settings.Mirror>)
 supr java.lang.Object
-hfds EXTERNAL_WILDCARD,WILDCARD
+hfds EXTERNAL_HTTP_WILDCARD,EXTERNAL_WILDCARD,WILDCARD
 
 CLSS public org.apache.maven.repository.DelegatingLocalArtifactRepository
  anno 0 java.lang.Deprecated()
@@ -7191,6 +7237,7 @@ CLSS public org.apache.maven.settings.Mirror
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
+meth public boolean isBlocked()
 meth public java.lang.String getLayout()
 meth public java.lang.String getMirrorOf()
 meth public java.lang.String getMirrorOfLayouts()
@@ -7198,13 +7245,14 @@ meth public java.lang.String getName()
 meth public java.lang.String getUrl()
 meth public java.lang.String toString()
 meth public org.apache.maven.settings.Mirror clone()
+meth public void setBlocked(boolean)
 meth public void setLayout(java.lang.String)
 meth public void setMirrorOf(java.lang.String)
 meth public void setMirrorOfLayouts(java.lang.String)
 meth public void setName(java.lang.String)
 meth public void setUrl(java.lang.String)
 supr org.apache.maven.settings.IdentifiableBase
-hfds layout,mirrorOf,mirrorOfLayouts,name,url
+hfds blocked,layout,mirrorOf,mirrorOfLayouts,name,url
 
 CLSS public org.apache.maven.settings.Profile
 cons public init()
@@ -7600,6 +7648,109 @@ meth public void write(java.io.OutputStream,org.apache.maven.settings.Settings) 
 meth public void write(java.io.Writer,org.apache.maven.settings.Settings) throws java.io.IOException
 supr java.lang.Object
 hfds NAMESPACE,fileComment
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.DependencyGraphBuilder
+meth public abstract org.apache.maven.shared.dependency.graph.DependencyNode buildDependencyGraph(org.apache.maven.project.MavenProject,org.apache.maven.artifact.resolver.filter.ArtifactFilter) throws org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException
+meth public abstract org.apache.maven.shared.dependency.graph.DependencyNode buildDependencyGraph(org.apache.maven.project.MavenProject,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.Collection<org.apache.maven.project.MavenProject>) throws org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException
+
+CLSS public org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.DependencyNode
+meth public abstract boolean accept(org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor)
+meth public abstract java.lang.String getPremanagedScope()
+meth public abstract java.lang.String getPremanagedVersion()
+meth public abstract java.lang.String getVersionConstraint()
+meth public abstract java.lang.String toNodeString()
+meth public abstract java.util.List<org.apache.maven.shared.dependency.graph.DependencyNode> getChildren()
+meth public abstract org.apache.maven.artifact.Artifact getArtifact()
+meth public abstract org.apache.maven.shared.dependency.graph.DependencyNode getParent()
+
+CLSS public org.apache.maven.shared.dependency.graph.filter.AncestorOrSelfDependencyNodeFilter
+cons public init(java.util.List<org.apache.maven.shared.dependency.graph.DependencyNode>)
+cons public init(org.apache.maven.shared.dependency.graph.DependencyNode)
+intf org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+supr java.lang.Object
+hfds descendantNodes
+
+CLSS public org.apache.maven.shared.dependency.graph.filter.AndDependencyNodeFilter
+cons public init(java.util.List<org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter>)
+cons public init(org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter,org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter)
+intf org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public java.util.List<org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter> getDependencyNodeFilters()
+supr java.lang.Object
+hfds filters
+
+CLSS public org.apache.maven.shared.dependency.graph.filter.ArtifactDependencyNodeFilter
+cons public init(org.apache.maven.artifact.resolver.filter.ArtifactFilter)
+intf org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public org.apache.maven.artifact.resolver.filter.ArtifactFilter getArtifactFilter()
+supr java.lang.Object
+hfds filter
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter
+meth public abstract boolean accept(org.apache.maven.shared.dependency.graph.DependencyNode)
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.BuildingDependencyNodeVisitor
+cons public init()
+cons public init(org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor)
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public org.apache.maven.shared.dependency.graph.DependencyNode getDependencyTree()
+meth public org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor getDependencyNodeVisitor()
+supr java.lang.Object
+hfds parentNodes,rootNode,visitor
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor
+cons public init()
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public java.util.List<org.apache.maven.shared.dependency.graph.DependencyNode> getNodes()
+supr java.lang.Object
+hfds nodes
+
+CLSS public abstract interface org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public abstract boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public abstract boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.FilteringDependencyNodeVisitor
+cons public init(org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor,org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter)
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter getDependencyNodeFilter()
+meth public org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor getDependencyNodeVisitor()
+supr java.lang.Object
+hfds filter,visitor
+
+CLSS public org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor
+cons public init(java.io.Writer)
+cons public init(java.io.Writer,org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens)
+fld public final static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens EXTENDED_TOKENS
+fld public final static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens STANDARD_TOKENS
+fld public final static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens WHITESPACE_TOKENS
+innr public static GraphTokens
+intf org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor
+meth public boolean endVisit(org.apache.maven.shared.dependency.graph.DependencyNode)
+meth public boolean visit(org.apache.maven.shared.dependency.graph.DependencyNode)
+supr java.lang.Object
+hfds depth,tokens,writer
+
+CLSS public static org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor$GraphTokens
+ outer org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public java.lang.String getFillIndent(boolean)
+meth public java.lang.String getNodeIndent(boolean)
+supr java.lang.Object
+hfds fillIndent,lastFillIndent,lastNodeIndent,nodeIndent
 
 CLSS public org.apache.maven.shared.dependency.tree.DefaultDependencyTreeBuilder
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.shared.dependency.tree.DependencyTreeBuilder, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
@@ -8181,7 +8332,6 @@ supr org.apache.maven.wagon.StreamWagon
 
 CLSS public org.apache.maven.wagon.providers.http.HttpWagon
 cons public init()
-meth public java.util.List<java.lang.String> getFileList(java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
 supr org.apache.maven.wagon.providers.http.wagon.shared.AbstractHttpClientWagon
 
 CLSS public abstract interface !annotation org.apache.maven.wagon.providers.http.httpclient.annotation.Contract
@@ -8191,12 +8341,33 @@ CLSS public abstract interface !annotation org.apache.maven.wagon.providers.http
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault org.apache.maven.wagon.providers.http.httpclient.annotation.ThreadingBehavior threading()
 
+CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.client.RedirectStrategy
+meth public abstract boolean isRedirected(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+meth public abstract org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest getRedirect(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+
 CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.client.ServiceUnavailableRetryStrategy
 meth public abstract boolean retryRequest(org.apache.maven.wagon.providers.http.httpclient.HttpResponse,int,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext)
 meth public abstract long getRetryInterval()
 
 CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.conn.ssl.TrustStrategy
 intf org.apache.maven.wagon.providers.http.httpclient.ssl.TrustStrategy
+
+CLSS public org.apache.maven.wagon.providers.http.httpclient.impl.client.DefaultRedirectStrategy
+ anno 0 org.apache.maven.wagon.providers.http.httpclient.annotation.Contract(org.apache.maven.wagon.providers.http.httpclient.annotation.ThreadingBehavior threading=IMMUTABLE)
+cons public init()
+cons public init(java.lang.String[])
+fld public final static int SC_PERMANENT_REDIRECT = 308
+fld public final static java.lang.String REDIRECT_LOCATIONS = "http.protocol.redirect-locations"
+ anno 0 java.lang.Deprecated()
+fld public final static org.apache.maven.wagon.providers.http.httpclient.impl.client.DefaultRedirectStrategy INSTANCE
+intf org.apache.maven.wagon.providers.http.httpclient.client.RedirectStrategy
+meth protected boolean isRedirectable(java.lang.String)
+meth protected java.net.URI createLocationURI(java.lang.String) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+meth public boolean isRedirected(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+meth public java.net.URI getLocationURI(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+meth public org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest getRedirect(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+supr java.lang.Object
+hfds log,redirectMethods
 
 CLSS public abstract interface org.apache.maven.wagon.providers.http.httpclient.ssl.TrustStrategy
 meth public abstract boolean isTrusted(java.security.cert.X509Certificate[],java.lang.String) throws java.security.cert.CertificateException
@@ -8205,7 +8376,6 @@ CLSS public abstract org.apache.maven.wagon.providers.http.wagon.shared.Abstract
 cons public init()
 fld protected final static int SC_TOO_MANY_REQUESTS = 429
 meth protected int backoff(int,java.lang.String) throws java.lang.InterruptedException,org.apache.maven.wagon.TransferFailedException
-meth protected java.lang.String calculateRelocatedUrl(org.apache.maven.wagon.providers.http.httpclient.HttpResponse)
 meth protected java.lang.String getURL(org.apache.maven.wagon.repository.Repository)
 meth protected java.lang.String getUserAgent(org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest)
 meth protected org.apache.maven.wagon.providers.http.httpclient.client.AuthCache getAuthCache()
@@ -8261,7 +8431,7 @@ meth public static org.apache.maven.wagon.providers.http.wagon.shared.HttpMethod
 meth public static org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration merge(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration)
 meth public static void copyConfig(org.apache.maven.wagon.providers.http.wagon.shared.HttpMethodConfiguration,org.apache.maven.wagon.providers.http.httpclient.client.config.RequestConfig$Builder)
 supr java.lang.Object
-hfds ALLOW_CIRCULAR_REDIRECTS,COERCE_PATTERN,CONNECTION_TIMEOUT,CONN_MANAGER_TIMEOUT,COOKIE_POLICY,DEFAULT_PROXY,HANDLE_AUTHENTICATION,HANDLE_REDIRECTS,LOCAL_ADDRESS,MAX_REDIRECTS,PROXY_AUTH_PREF,REJECT_RELATIVE_REDIRECT,SO_TIMEOUT,STALE_CONNECTION_CHECK,TARGET_AUTH_PREF,USE_EXPECT_CONTINUE
+hfds ALLOW_CIRCULAR_REDIRECTS,COERCE_PATTERN,CONNECTION_TIMEOUT,CONN_MANAGER_TIMEOUT,COOKIE_POLICY,DEFAULT_PROXY,HANDLE_AUTHENTICATION,HANDLE_CONTENT_COMPRESSION,HANDLE_REDIRECTS,HANDLE_URI_NORMALIZATION,LOCAL_ADDRESS,MAX_REDIRECTS,PROXY_AUTH_PREF,REJECT_RELATIVE_REDIRECT,SO_TIMEOUT,STALE_CONNECTION_CHECK,TARGET_AUTH_PREF,USE_EXPECT_CONTINUE
 
 CLSS public org.apache.maven.wagon.providers.http.wagon.shared.EncodingUtil
 cons public init()
@@ -8272,12 +8442,6 @@ meth public static java.lang.String encodeURLToString(java.lang.String,java.lang
 meth public static java.net.URI encodeURL(java.lang.String) throws java.net.MalformedURLException,java.net.URISyntaxException
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-
-CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HtmlFileListParser
-cons public init()
-meth public static java.util.List<java.lang.String> parseFileList(java.lang.String,java.io.InputStream) throws org.apache.maven.wagon.TransferFailedException
-supr java.lang.Object
-hfds APACHE_INDEX_SKIP,MAILTO_URLS,SKIPS,URLS_TO_PARENT,URLS_WITH_PATHS
 
 CLSS public org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration
 cons public init()
@@ -8340,6 +8504,13 @@ meth public boolean retryRequest(org.apache.maven.wagon.providers.http.httpclien
 meth public long getRetryInterval()
 supr java.lang.Object
 hfds maxRetries,retryInterval
+
+CLSS public org.apache.maven.wagon.providers.http.wagon.shared.WagonRedirectStrategy
+cons public init()
+meth public boolean isRedirected(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+meth public org.apache.maven.wagon.providers.http.httpclient.client.methods.HttpUriRequest getRedirect(org.apache.maven.wagon.providers.http.httpclient.HttpRequest,org.apache.maven.wagon.providers.http.httpclient.HttpResponse,org.apache.maven.wagon.providers.http.httpclient.protocol.HttpContext) throws org.apache.maven.wagon.providers.http.httpclient.ProtocolException
+supr org.apache.maven.wagon.providers.http.httpclient.impl.client.DefaultRedirectStrategy
+hfds LOGGER,SC_PERMANENT_REDIRECT
 
 CLSS public org.apache.maven.wagon.proxy.ProxyInfo
 cons public init()
@@ -9027,6 +9198,7 @@ cons public init()
 fld protected boolean isCaseSensitive
 fld protected java.lang.String[] excludes
 fld protected java.lang.String[] includes
+fld protected java.util.Comparator<java.lang.String> filenameComparator
 fld public final static java.lang.String[] DEFAULTEXCLUDES
 intf org.codehaus.plexus.util.Scanner
 meth protected boolean couldHoldIncluded(java.lang.String)
@@ -9045,6 +9217,7 @@ meth public static boolean match(java.lang.String,java.lang.String)
 meth public void addDefaultExcludes()
 meth public void setCaseSensitive(boolean)
 meth public void setExcludes(java.lang.String[])
+meth public void setFilenameComparator(java.util.Comparator<java.lang.String>)
 meth public void setIncludes(java.lang.String[])
 supr java.lang.Object
 hfds excludesPatterns,includesPatterns
@@ -9499,6 +9672,7 @@ meth public abstract java.lang.String[] getIncludedFiles()
 meth public abstract void addDefaultExcludes()
 meth public abstract void scan()
 meth public abstract void setExcludes(java.lang.String[])
+meth public abstract void setFilenameComparator(java.util.Comparator<java.lang.String>)
 meth public abstract void setIncludes(java.lang.String[])
 
 CLSS public final org.codehaus.plexus.util.SelectorUtils
@@ -9778,6 +9952,7 @@ meth public java.lang.String toString()
 meth public java.lang.String[] getArguments()
 meth public java.lang.String[] getCommandline()
 meth public java.lang.String[] getEnvironmentVariables() throws org.codehaus.plexus.util.cli.CommandLineException
+meth public java.lang.String[] getRawCommandline()
 meth public java.lang.String[] getShellCommandline()
 meth public java.util.Properties getSystemEnvVars() throws java.lang.Exception
 meth public long getPid()
@@ -11150,6 +11325,7 @@ CLSS public final org.eclipse.aether.repository.RemoteRepository
 innr public final static Builder
 intf org.eclipse.aether.repository.ArtifactRepository
 meth public boolean equals(java.lang.Object)
+meth public boolean isBlocked()
 meth public boolean isRepositoryManager()
 meth public int hashCode()
 meth public java.lang.String getContentType()
@@ -11163,7 +11339,7 @@ meth public org.eclipse.aether.repository.Authentication getAuthentication()
 meth public org.eclipse.aether.repository.Proxy getProxy()
 meth public org.eclipse.aether.repository.RepositoryPolicy getPolicy(boolean)
 supr java.lang.Object
-hfds URL_PATTERN,authentication,host,id,mirroredRepositories,protocol,proxy,releasePolicy,repositoryManager,snapshotPolicy,type,url
+hfds URL_PATTERN,authentication,blocked,host,id,mirroredRepositories,protocol,proxy,releasePolicy,repositoryManager,snapshotPolicy,type,url
 
 CLSS public final static org.eclipse.aether.repository.RemoteRepository$Builder
  outer org.eclipse.aether.repository.RemoteRepository
@@ -11172,6 +11348,7 @@ cons public init(org.eclipse.aether.repository.RemoteRepository)
 meth public org.eclipse.aether.repository.RemoteRepository build()
 meth public org.eclipse.aether.repository.RemoteRepository$Builder addMirroredRepository(org.eclipse.aether.repository.RemoteRepository)
 meth public org.eclipse.aether.repository.RemoteRepository$Builder setAuthentication(org.eclipse.aether.repository.Authentication)
+meth public org.eclipse.aether.repository.RemoteRepository$Builder setBlocked(boolean)
 meth public org.eclipse.aether.repository.RemoteRepository$Builder setContentType(java.lang.String)
 meth public org.eclipse.aether.repository.RemoteRepository$Builder setId(java.lang.String)
 meth public org.eclipse.aether.repository.RemoteRepository$Builder setMirroredRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
@@ -11182,7 +11359,7 @@ meth public org.eclipse.aether.repository.RemoteRepository$Builder setRepository
 meth public org.eclipse.aether.repository.RemoteRepository$Builder setSnapshotPolicy(org.eclipse.aether.repository.RepositoryPolicy)
 meth public org.eclipse.aether.repository.RemoteRepository$Builder setUrl(java.lang.String)
 supr java.lang.Object
-hfds AUTH,DEFAULT_POLICY,ID,MIRRORED,PROXY,RELEASES,REPOMAN,SNAPSHOTS,TYPE,URL,authentication,delta,id,mirroredRepositories,prototype,proxy,releasePolicy,repositoryManager,snapshotPolicy,type,url
+hfds AUTH,BLOCKED,DEFAULT_POLICY,ID,MIRRORED,PROXY,RELEASES,REPOMAN,SNAPSHOTS,TYPE,URL,authentication,blocked,delta,id,mirroredRepositories,prototype,proxy,releasePolicy,repositoryManager,snapshotPolicy,type,url
 
 CLSS public final org.eclipse.aether.repository.RepositoryPolicy
 cons public init()
@@ -11443,6 +11620,7 @@ meth public !varargs static long getLong(org.eclipse.aether.RepositorySystemSess
 supr java.lang.Object
 
 CLSS public final org.eclipse.aether.util.StringUtils
+ anno 0 java.lang.Deprecated()
 meth public static boolean isEmpty(java.lang.String)
 supr java.lang.Object
 
@@ -11500,9 +11678,11 @@ CLSS public final org.eclipse.aether.util.repository.DefaultMirrorSelector
 cons public init()
 intf org.eclipse.aether.repository.MirrorSelector
 meth public org.eclipse.aether.repository.RemoteRepository getMirror(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.util.repository.DefaultMirrorSelector add(java.lang.String,java.lang.String,java.lang.String,boolean,boolean,java.lang.String,java.lang.String)
 meth public org.eclipse.aether.util.repository.DefaultMirrorSelector add(java.lang.String,java.lang.String,java.lang.String,boolean,java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds EXTERNAL_WILDCARD,WILDCARD,mirrors
+hfds EXTERNAL_HTTP_WILDCARD,EXTERNAL_WILDCARD,WILDCARD,mirrors
 hcls MirrorDef
 
 CLSS public final org.eclipse.aether.util.repository.DefaultProxySelector
@@ -12418,10 +12598,14 @@ meth public abstract java.io.File resolve(org.eclipse.aether.artifact.Artifact)
 CLSS public org.netbeans.modules.maven.embedder.DependencyTreeFactory
 cons public init()
 meth public static org.apache.maven.shared.dependency.tree.DependencyNode createDependencyTree(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.embedder.MavenEmbedder,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static org.apache.maven.shared.dependency.tree.DependencyNode createDependencyTree(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.embedder.MavenEmbedder,java.util.Collection<java.lang.String>) throws org.apache.maven.MavenExecutionException
 supr java.lang.Object
+hfds LOG
 
 CLSS public final org.netbeans.modules.maven.embedder.EmbedderFactory
 fld public final static java.lang.String PROP_COMMANDLINE_PATH = "commandLineMavenPath"
+meth public static boolean isOfflineException(java.lang.Throwable)
 meth public static boolean isProjectEmbedderLoaded()
 meth public static java.io.File getDefaultMavenHome()
 meth public static java.io.File getEffectiveMavenHome()
@@ -12732,6 +12916,7 @@ fld public final static java.lang.String LOG_KEY_PREFIX = "org.slf4j.simpleLogge
 fld public final static java.lang.String SHOW_DATE_TIME_KEY = "org.slf4j.simpleLogger.showDateTime"
 fld public final static java.lang.String SHOW_LOG_NAME_KEY = "org.slf4j.simpleLogger.showLogName"
 fld public final static java.lang.String SHOW_SHORT_LOG_NAME_KEY = "org.slf4j.simpleLogger.showShortLogName"
+fld public final static java.lang.String SHOW_THREAD_ID_KEY = "org.slf4j.simpleLogger.showThreadId"
 fld public final static java.lang.String SHOW_THREAD_NAME_KEY = "org.slf4j.simpleLogger.showThreadName"
 fld public final static java.lang.String SYSTEM_PREFIX = "org.slf4j.simpleLogger."
 fld public final static java.lang.String WARN_LEVEL_STRING_KEY = "org.slf4j.simpleLogger.warnLevelString"
@@ -12770,12 +12955,12 @@ meth public void warn(java.lang.String,java.lang.Object)
 meth public void warn(java.lang.String,java.lang.Object,java.lang.Object)
 meth public void warn(java.lang.String,java.lang.Throwable)
 supr org.slf4j.helpers.MarkerIgnoringBase
-hfds CONFIG_PARAMS,INITIALIZED,START_TIME,serialVersionUID,shortLogName
+hfds CONFIG_PARAMS,INITIALIZED,START_TIME,TID_PREFIX,serialVersionUID,shortLogName
 
 CLSS public org.slf4j.impl.SimpleLoggerConfiguration
 cons public init()
 supr java.lang.Object
-hfds CACHE_OUTPUT_STREAM_DEFAULT,CONFIGURATION_FILE,DATE_TIME_FORMAT_STR_DEFAULT,DEFAULT_LOG_LEVEL_DEFAULT,LEVEL_IN_BRACKETS_DEFAULT,LOG_FILE_DEFAULT,SHOW_DATE_TIME_DEFAULT,SHOW_LOG_NAME_DEFAULT,SHOW_SHORT_LOG_NAME_DEFAULT,SHOW_THREAD_NAME_DEFAULT,WARN_LEVELS_STRING_DEFAULT,cacheOutputStream,dateFormatter,dateTimeFormatStr,defaultLogLevel,levelInBrackets,logFile,outputChoice,properties,showDateTime,showLogName,showShortLogName,showThreadName,warnLevelString
+hfds CACHE_OUTPUT_STREAM_DEFAULT,CONFIGURATION_FILE,DATE_TIME_FORMAT_STR_DEFAULT,DEFAULT_LOG_LEVEL_DEFAULT,LEVEL_IN_BRACKETS_DEFAULT,LOG_FILE_DEFAULT,SHOW_DATE_TIME_DEFAULT,SHOW_LOG_NAME_DEFAULT,SHOW_SHORT_LOG_NAME_DEFAULT,SHOW_THREAD_ID_DEFAULT,SHOW_THREAD_NAME_DEFAULT,WARN_LEVELS_STRING_DEFAULT,cacheOutputStream,dateFormatter,dateTimeFormatStr,defaultLogLevel,levelInBrackets,logFile,outputChoice,properties,showDateTime,showLogName,showShortLogName,showThreadId,showThreadName,warnLevelString
 
 CLSS public org.slf4j.impl.SimpleLoggerFactory
 cons public init()
@@ -12833,9 +13018,10 @@ supr java.lang.Object
 hfds BASELENGTH,CHUNK_SEPARATOR,CHUNK_SIZE,EIGHTBIT,FOURBYTE,LOOKUPLENGTH,PAD,SIGN,SIXTEENBIT,TWENTYFOURBITGROUP,base64Alphabet,lookUpBase64Alphabet
 
 CLSS public org.sonatype.plexus.components.cipher.DefaultPlexusCipher
- anno 0 javax.enterprise.inject.Typed(java.lang.Class<?>[] value=[class org.sonatype.plexus.components.cipher.PlexusCipher])
  anno 0 javax.inject.Named(java.lang.String value="default")
-cons public init() throws org.sonatype.plexus.components.cipher.PlexusCipherException
+ anno 0 javax.inject.Singleton()
+ anno 0 org.eclipse.sisu.Typed(java.lang.Class<?>[] value=[class org.sonatype.plexus.components.cipher.PlexusCipher])
+cons public init()
 intf org.sonatype.plexus.components.cipher.PlexusCipher
 meth public boolean isEncryptedString(java.lang.String)
 meth public java.lang.String decorate(java.lang.String)
@@ -12851,22 +13037,20 @@ supr java.lang.Object
 hfds ENCRYPTED_STRING_PATTERN,_cipher
 
 CLSS public org.sonatype.plexus.components.cipher.PBECipher
-cons public init() throws org.sonatype.plexus.components.cipher.PlexusCipherException
-fld protected boolean _onLinux
+cons public init()
 fld protected final static byte WIPER = 0
 fld protected final static int CHUNK_SIZE = 16
+fld protected final static int PBE_ITERATIONS = 1000
 fld protected final static int SALT_SIZE = 8
 fld protected final static int SPICE_SIZE = 16
 fld protected final static java.lang.String CIPHER_ALG = "AES/CBC/PKCS5Padding"
 fld protected final static java.lang.String DIGEST_ALG = "SHA-256"
 fld protected final static java.lang.String KEY_ALG = "AES"
 fld protected final static java.lang.String STRING_ENCODING = "UTF8"
-fld protected java.security.MessageDigest _digester
-fld protected java.security.SecureRandom _secureRandom
-fld protected static int PBE_ITERATIONS
 meth public java.lang.String decrypt64(java.lang.String,java.lang.String) throws org.sonatype.plexus.components.cipher.PlexusCipherException
 meth public java.lang.String encrypt64(java.lang.String,java.lang.String) throws org.sonatype.plexus.components.cipher.PlexusCipherException
 supr java.lang.Object
+hfds _secureRandom
 
 CLSS public abstract interface org.sonatype.plexus.components.cipher.PlexusCipher
 fld public final static char ENCRYPTED_STRING_DECORATION_START = '{'
@@ -12887,10 +13071,15 @@ cons public init(java.lang.Throwable)
 supr java.lang.Exception
 
 CLSS public org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher
-cons public init()
+ anno 0 javax.inject.Named(java.lang.String value="")
+ anno 0 javax.inject.Singleton()
+cons public init(org.sonatype.plexus.components.cipher.PlexusCipher)
+cons public init(org.sonatype.plexus.components.cipher.PlexusCipher,java.util.Map<java.lang.String,org.sonatype.plexus.components.sec.dispatcher.PasswordDecryptor>,java.lang.String)
+ anno 0 javax.inject.Inject()
+ anno 3 javax.inject.Named(java.lang.String value="${_configurationFile:-~/.settings-security.xml}")
+fld protected final java.util.Map<java.lang.String,org.sonatype.plexus.components.sec.dispatcher.PasswordDecryptor> _decryptors
+fld protected final org.sonatype.plexus.components.cipher.PlexusCipher _cipher
 fld protected java.lang.String _configurationFile
-fld protected java.util.Map _decryptors
-fld protected org.sonatype.plexus.components.cipher.PlexusCipher _cipher
 fld public final static char ATTR_START = '['
 fld public final static char ATTR_STOP = ']'
 fld public final static java.lang.String SYSTEM_PROPERTY_SEC_LOCATION = "settings.security"
@@ -12900,29 +13089,18 @@ meth public java.lang.String decrypt(java.lang.String) throws org.sonatype.plexu
 meth public java.lang.String getConfigurationFile()
 meth public static void main(java.lang.String[]) throws java.lang.Exception
 meth public void setConfigurationFile(java.lang.String)
-supr org.codehaus.plexus.logging.AbstractLogEnabled
+supr java.lang.Object
+hfds DEFAULT_CONFIGURATION
 
 CLSS public abstract interface org.sonatype.plexus.components.sec.dispatcher.PasswordDecryptor
-fld public final static java.lang.String ROLE
 meth public abstract java.lang.String decrypt(java.lang.String,java.util.Map,java.util.Map) throws org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException
-hcls 1
-
-CLSS public org.sonatype.plexus.components.sec.dispatcher.PasswordDecryptorException
-cons public init()
-cons public init(java.lang.String)
-cons public init(java.lang.String,java.lang.Throwable)
-cons public init(java.lang.Throwable)
-supr java.lang.Exception
 
 CLSS public abstract interface org.sonatype.plexus.components.sec.dispatcher.SecDispatcher
-fld public final static java.lang.String ROLE
 fld public final static java.lang.String[] SYSTEM_PROPERTY_MASTER_PASSWORD
 fld public final static java.lang.String[] SYSTEM_PROPERTY_SERVER_PASSWORD
 meth public abstract java.lang.String decrypt(java.lang.String) throws org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException
-hcls 1
 
 CLSS public org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException
-cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
@@ -12933,7 +13111,7 @@ cons public init()
 fld public final static int PROTOCOL_DELIM_LEN
 fld public final static java.lang.String PROTOCOL_DELIM = "://"
 fld public final static java.lang.String[] URL_PROTOCOLS
-meth public static java.util.Map getConfig(org.sonatype.plexus.components.sec.dispatcher.model.SettingsSecurity,java.lang.String)
+meth public static java.util.Map<java.lang.String,java.lang.String> getConfig(org.sonatype.plexus.components.sec.dispatcher.model.SettingsSecurity,java.lang.String)
 meth public static org.sonatype.plexus.components.sec.dispatcher.model.SettingsSecurity read(java.lang.String,boolean) throws org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException
 supr java.lang.Object
 

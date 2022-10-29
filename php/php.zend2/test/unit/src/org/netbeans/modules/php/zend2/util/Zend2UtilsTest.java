@@ -19,9 +19,6 @@
 package org.netbeans.modules.php.zend2.util;
 
 import java.io.File;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.api.editor.PhpClass;
 import org.openide.filesystems.FileObject;

@@ -74,6 +74,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -91,15 +92,14 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -110,6 +110,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -127,12 +129,9 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
 import net.bytebuddy.dynamic.DynamicType.Unloaded;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.implementation.MethodCall;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -164,10 +163,13 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
+
+import static com.sun.source.tree.CaseTree.CaseKind.STATEMENT;
 
 /**
  *
@@ -548,6 +550,7 @@ public class Utilities {
         return t.getKind() == Kind.ERRONEOUS || (t.getKind() == Kind.IDENTIFIER && ((IdentifierTree) t).getName().contentEquals("<error>")); //TODO: <error>...
     }
     
+    @SuppressWarnings({"BoxedValueEquality"})
     private static boolean containsError(Tree t) {
         return new ErrorAwareTreeScanner<Boolean, Void>() {
             @Override
@@ -555,7 +558,7 @@ public class Utilities {
                 if (node != null && isErrorTree(node)) {
                     return true;
                 }
-                return super.scan(node, p) ==Boolean.TRUE;
+                return super.scan(node, p) == Boolean.TRUE;
             }
             @Override
             public Boolean reduce(Boolean r1, Boolean r2) {
@@ -580,7 +583,7 @@ public class Utilities {
             ParserFactory factory = ParserFactory.instance(context);
             ScannerFactory scannerFactory = ScannerFactory.instance(context);
             Names names = Names.instance(context);
-            Parser parser = newParser(context, (NBParserFactory) factory, scannerFactory.newScanner(buf, false), false, false, CancelService.instance(context), names);
+            Parser parser = new JackpotJavacParser(context, (NBParserFactory) factory, scannerFactory.newScanner(buf, false), false, false, CancelService.instance(context), names);
             if (parser instanceof JavacParser) {
                 if (pos != null)
                     pos[0] = new ParserSourcePositions((JavacParser)parser);
@@ -610,7 +613,7 @@ public class Utilities {
             ScannerFactory scannerFactory = ScannerFactory.instance(context);
             Names names = Names.instance(context);
             Scanner scanner = scannerFactory.newScanner(buf, false);
-            Parser parser = newParser(context, (NBParserFactory) factory, scanner, false, false, CancelService.instance(context), names);
+            Parser parser = new JackpotJavacParser(context, (NBParserFactory) factory, scanner, false, false, CancelService.instance(context), names);
             if (parser instanceof JavacParser) {
                 if (pos != null)
                     pos[0] = new ParserSourcePositions((JavacParser)parser);
@@ -1080,21 +1083,22 @@ public class Utilities {
                     return c;
                 }
             }
-            JavaPlatform select = JavaPlatform.getDefault();
+
             final JavaPlatformManager man = JavaPlatformManager.getDefault();
-            if (select.getSpecification().getVersion() != null) {
-                for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                    if (!"j2se".equals(p.getSpecification().getName()) || p.getSpecification().getVersion() == null) continue;
-                    if (p.getSpecification().getVersion().compareTo(select.getSpecification().getVersion()) > 0) {
-                        select = p;
-                    }
-                }
-            }
+            final SpecificationVersion maxVersion = new SpecificationVersion(SourceVersion.latest().ordinal()+".99"); // cap at feature version of nb-javac
+            JavaPlatform select = Stream.of(man.getInstalledPlatforms())
+                    .filter(JavaPlatform::isValid)
+                    .filter((p) -> "j2se".equals(p.getSpecification().getName()))
+                    .filter((p) -> p.getSpecification().getVersion() != null)
+                    .filter((p) -> p.getSpecification().getVersion().compareTo(maxVersion) < 0)
+                    .max(Comparator.comparing((p) -> p.getSpecification().getVersion()))
+                    .orElse(JavaPlatform.getDefault());
+
             final ClasspathInfo result = new ClasspathInfo.Builder(select.getBootstrapLibraries())
                                                           .setModuleBootPath(select.getBootstrapLibraries())
                                                           .build();
             if (cached != null) {
-                    this.cached = new WeakReference<>(result);
+                cached = new WeakReference<>(result);
             }
             if (weakL == null) {
                 man.addPropertyChangeListener(weakL = WeakListeners.propertyChange(this, man));
@@ -1287,33 +1291,6 @@ public class Utilities {
         return true;
     }
 
-    private static Class<?> parserClass;
-    private static synchronized Parser newParser(Context ctx, NBParserFactory fac,
-                                                 Lexer S, boolean keepDocComments,
-                                                 boolean keepLineMap, CancelService cancelService,
-                                                 Names names) {
-        try {
-            if (parserClass == null) {
-                Method switchBlockStatementGroup = JavacParser.class.getDeclaredMethod("switchBlockStatementGroup");
-                Method delegate;
-                if (switchBlockStatementGroup.getReturnType().equals(com.sun.tools.javac.util.List.class)) {
-                    delegate = JackpotJavacParser.class.getDeclaredMethod("switchBlockStatementGroupListImpl");
-                } else {
-                    delegate = JackpotJavacParser.class.getDeclaredMethod("switchBlockStatementGroupImpl");
-                }
-                parserClass = load(new ByteBuddy()
-                                    .subclass(JackpotJavacParser.class)
-                                    .method(ElementMatchers.named("switchBlockStatementGroup")).intercept(MethodCall.invoke(delegate))
-                                    .make())
-                            .getLoaded();
-            }
-            return (Parser) parserClass.getConstructor(Context.class, NBParserFactory.class, Lexer.class, boolean.class, boolean.class, CancelService.class, Names.class)
-                    .newInstance(ctx, fac, S, keepDocComments, keepLineMap, cancelService, names);
-        } catch (ReflectiveOperationException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
     static <T> Loaded<T> load(Unloaded<T> unloaded) {
         ClassLoadingStrategy<ClassLoader> strategy;
 
@@ -1365,6 +1342,7 @@ public class Utilities {
         }
 
 
+        @Override
         public JCVariableDecl formalParameter(boolean lambdaParam, boolean recordComponents) {
             if (token.kind == TokenKind.IDENTIFIER) {
                 if (token.name().startsWith(dollar)) {
@@ -1378,35 +1356,7 @@ public class Utilities {
                     }
                 }
             }
-            JCTree.JCVariableDecl result = null;
-            try {
-                Class<?>[] paramTypes = {boolean.class, boolean.class};
-                result = (JCTree.JCVariableDecl) MethodHandles.lookup()
-                        .findSpecial(JavacParser.class, "formalParameter", MethodType.methodType(JCTree.JCVariableDecl.class, paramTypes), JackpotJavacParser.class) // NOI18N
-                        .invoke(this, lambdaParam, recordComponents);
-            } catch (Throwable ex) {
-                throw new IllegalStateException(ex);
-            }
-            return result;
-
-        }
-        
-        @Override
-        public JCVariableDecl formalParameter(boolean lambdaParam) {
-            if (token.kind == TokenKind.IDENTIFIER) {
-                if (token.name().startsWith(dollar)) {
-                    com.sun.tools.javac.util.Name name = token.name();
-
-                    Token peeked = S.token(1);
-
-                    if (peeked.kind == TokenKind.COMMA || peeked.kind == TokenKind.RPAREN) {
-                        nextToken();
-                        return JackpotTrees.createVariableWildcard(ctx, name);
-                    }
-                }
-            }
-
-            return super.formalParameter(lambdaParam);
+            return super.formalParameter(lambdaParam, recordComponents);
         }
 
         @Override
@@ -1448,6 +1398,7 @@ public class Utilities {
             return super.catchClause();
         }
         
+        @Override
         public com.sun.tools.javac.util.List<JCTree> classOrInterfaceOrRecordBodyDeclaration(com.sun.tools.javac.util.Name className, boolean isInterface, boolean isRecord) {
 
             if (token.kind == TokenKind.IDENTIFIER) {
@@ -1465,36 +1416,9 @@ public class Utilities {
                 }
             }
 
-            com.sun.tools.javac.util.List<JCTree> result = null;
-            Class<?>[] argsType = {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class};
-            try {
-                result = (com.sun.tools.javac.util.List<JCTree>) MethodHandles.lookup().findSpecial(JavacParser.class, "classOrInterfaceOrRecordBodyDeclaration", MethodType.methodType(com.sun.tools.javac.util.List.class, argsType), JackpotJavacParser.class) // NOI18N
-                        .invoke(this, className, false, false);
-            } catch (Throwable ex) {
-                throw new IllegalStateException(ex);
-            }
-            return result;
+            return super.classOrInterfaceOrRecordBodyDeclaration(className, isInterface, isRecord);
         }
         
-        @Override
-        public com.sun.tools.javac.util.List<JCTree> classOrInterfaceBodyDeclaration(com.sun.tools.javac.util.Name className, boolean isInterface) {
-            if (token.kind == TokenKind.IDENTIFIER) {
-                if (token.name().startsWith(dollar)) {
-                    com.sun.tools.javac.util.Name name = token.name();
-
-                    Token peeked = S.token(1);
-
-                    if (peeked.kind == TokenKind.SEMI) {
-                        nextToken();
-                        nextToken();
-                        
-                        return com.sun.tools.javac.util.List.<JCTree>of(F.Ident(name));
-                    }
-                }
-            }
-            return super.classOrInterfaceBodyDeclaration(className, isInterface);
-        }
-
         @Override
         protected JCExpression checkExprStat(JCExpression t) {
             if (t.getTag() == JCTree.Tag.IDENT) {
@@ -1505,37 +1429,8 @@ public class Utilities {
             return super.checkExprStat(t);
         }
 
-        protected JCCase switchBlockStatementGroupImpl() throws Throwable {
-            if (token.kind == TokenKind.CASE) {
-                Token peeked = S.token(1);
-
-                if (peeked.kind == TokenKind.IDENTIFIER) {
-                    String ident = peeked.name().toString();
-
-                    if (ident.startsWith("$") && ident.endsWith("$")) {
-                        nextToken();
-                        
-                        int pos = token.pos;
-                        com.sun.tools.javac.util.Name name = token.name();
-
-                        nextToken();
-
-                        if (token.kind == TokenKind.SEMI) {
-                            nextToken();
-                        }
-
-                        JCIdent identTree = F.at(pos).Ident(name);
-                        return JackpotTrees.createJCCase(name, identTree, com.sun.tools.javac.util.List.nil());
-                    }
-                }
-            }
-
-            return (JCCase) MethodHandles.lookup()
-                                         .findSpecial(NBJavacParser.class, "switchBlockStatementGroup", MethodType.methodType(JCCase.class), JackpotJavacParser.class)
-                                         .invoke(this);
-        }
-
-        protected com.sun.tools.javac.util.List<JCCase> switchBlockStatementGroupListImpl() throws Throwable {
+        @Override
+        protected com.sun.tools.javac.util.List<JCCase> switchBlockStatementGroup() {
             if (token.kind == TokenKind.CASE) {
                 Token peeked = S.token(1);
 
@@ -1555,16 +1450,14 @@ public class Utilities {
                         }
 
                         JCIdent identTree = F.at(pos).Ident(name);
+                        JCConstantCaseLabel labelTree = F.at(pos).ConstantCaseLabel(identTree);
                         return com.sun.tools.javac.util.List.of(
-                                    JackpotTrees.createJCCase(name, identTree, "STATEMENT", com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null)
-                                );
+                                new JackpotTrees.CaseWildcard(name, identTree, STATEMENT, com.sun.tools.javac.util.List.of(labelTree), com.sun.tools.javac.util.List.nil(), null)
+                        );
                     }
                 }
             }
-
-            return (com.sun.tools.javac.util.List<JCCase>) MethodHandles.lookup()
-                        .findSpecial(NBJavacParser.class, "switchBlockStatementGroup", MethodType.methodType(com.sun.tools.javac.util.List.class), JackpotJavacParser.class)
-                        .invoke(this);
+            return super.switchBlockStatementGroup();
         }
 
         @Override
@@ -1763,7 +1656,7 @@ public class Utilities {
 
     private static class ParserSourcePositions implements SourcePositions {
 
-        private JavacParser parser;
+        private final JavacParser parser;
 
         private ParserSourcePositions(JavacParser parser) {
             this.parser = parser;

@@ -20,7 +20,9 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.awt.Dialog;
 import java.awt.HeadlessException;
+import java.util.concurrent.CompletableFuture;
 import org.netbeans.modules.java.lsp.server.LspServerUtils;
+import org.netbeans.modules.java.lsp.server.protocol.UIContext;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -61,6 +63,16 @@ public class AbstractDialogDisplayer extends DialogDisplayer {
         adapter.clientNotifyLater();
     }
 
+    @Override
+    public <T extends NotifyDescriptor> CompletableFuture<T> notifyFuture(T descriptor) {
+        UIContext ctx = context.lookup(UIContext.class);
+        if (ctx == null) {
+            ctx = UIContext.find();
+        }
+        NotifyDescriptorAdapter adapter = new NotifyDescriptorAdapter(descriptor, ctx);
+        return adapter.clientNotifyCompletion();
+    }
+    
     @Override
     public Dialog createDialog(DialogDescriptor descriptor) {
         throw new HeadlessException();

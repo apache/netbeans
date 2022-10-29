@@ -771,7 +771,10 @@ final class SuiteSources implements Sources,
 
         @Override
         public Collection<String> depNames() {
-            return mxPrj.dependencies();
+            List<String> both = new ArrayList<>();
+            both.addAll(mxPrj.dependencies());
+            both.addAll(mxPrj.generatedDependencies());
+            return both;
         }
 
         @Override
@@ -970,7 +973,16 @@ final class SuiteSources implements Sources,
             int prefix = libName.indexOf(':');
             final String simpleName = libName.substring(prefix + 1);
 
-            File simpleJar = new File(mxCache, simpleName + "_" + lib.sha1() + ".jar");
+            File simpleJar = null;
+            if (lib.path() != null && !lib.path().isEmpty()) {
+                FileObject relativePath = dir.getFileObject(lib.path());
+                if (relativePath != null) {
+                    simpleJar = FileUtil.toFile(relativePath);
+                }
+            }
+            if (simpleJar == null) {
+                simpleJar = new File(mxCache, simpleName + "_" + lib.sha1() + ".jar");
+            }
             if (simpleJar.exists()) {
                 return simpleJar;
             }

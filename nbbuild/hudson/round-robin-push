@@ -76,7 +76,7 @@ if [ -z "$TMP" ]; then
   TMP="/tmp"
 fi
 
-ANT_OPTS="-Xmx512m -XX:MaxPermSize=128m"
+ANT_OPTS="-Xmx512m"
 export ANT_OPTS
 
 BASETIP=`hg log -r . --template '{node}'`

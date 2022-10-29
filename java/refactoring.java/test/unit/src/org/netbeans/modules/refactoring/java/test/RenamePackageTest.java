@@ -20,8 +20,10 @@
 package org.netbeans.modules.refactoring.java.test;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
@@ -37,8 +39,10 @@ import org.openide.util.lookup.Lookups;
  */
 public class RenamePackageTest extends RefactoringTestBase {
 
+    private static final Set<String> MODULAR_TESTS = new HashSet<>(Arrays.asList("testModuleOpens"));
+
     public RenamePackageTest(String name) {
-        super(name, "1.8");
+        super(name, MODULAR_TESTS.contains(name) ? "9" : "1.8");
     }
     
     static {
@@ -129,6 +133,26 @@ public class RenamePackageTest extends RefactoringTestBase {
                 + "}"));
     }
     
+    public void testModuleOpens() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("module-info.java", "module m {\n"
+                + "exports t;\n"
+                + "opens t;\n"
+                + "}"),
+                new File("t/A.java", "package t;\n"
+                + "public class A {\n"
+                + "}"));
+        performRenameFolder(src.getFileObject("t"), "u", false);
+        verifyContent(src,
+                new File("module-info.java", "module m {\n"
+                + "exports u;\n"
+                + "opens u;\n"
+                + "}"),
+                new File("u/A.java", "package u;\n"
+                + "public class A {\n"
+                + "}"));
+    }
+
         
     private void performRenameFolder(FileObject source, final String newname, boolean searchInComments, Problem... expectedProblems) throws Exception {
         final RenameRefactoring[] r = new RenameRefactoring[1];

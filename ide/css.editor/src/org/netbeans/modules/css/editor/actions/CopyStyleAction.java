@@ -91,7 +91,7 @@ public abstract class CopyStyleAction extends BaseAction {
     }
     
     /** Produces XML PI text. */
-    public final static class XML extends CopyStyleAction {
+    public static final class XML extends CopyStyleAction {
         
         public static final String copyStyleAction =  NbBundle.getMessage(CopyStyleAction.class, "Copy-XML-Style");//NOI18N
         
@@ -108,7 +108,7 @@ public abstract class CopyStyleAction extends BaseAction {
     }
     
     /** Produces HTML style text. */
-    public final static class HTML extends CopyStyleAction {
+    public static final class HTML extends CopyStyleAction {
 
         public static final String copyStyleAction = NbBundle.getMessage(CopyStyleAction.class, "Copy-HTML-Style");//NOI18N
         

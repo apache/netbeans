@@ -36,9 +36,12 @@ import java.util.logging.LogRecord;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import junit.framework.Test;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClassIndex.SearchKind;
@@ -48,7 +51,6 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.classfile.ClassFile;
-import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -1921,6 +1923,139 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertEquals(expected, file2Fixed);
     }
 
+    public void testRecordPatterns() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point p) ul)) {\n"
+                        + "            int x = p.x();\n"
+                        + "            System.out.println(\"Hello\");\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testEnhancedSwitch1() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case Rect r: \n"
+                        + "                System.out.println(\"Hello\");\n"
+                        + "                break;\n"
+                        + "            default:\n"
+                        + "                break;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testEnhancedSwitch2() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case null: \n"
+                        + "                System.out.println(\"Hello\");\n"
+                        + "                break;\n"
+                        + "            default:\n"
+                        + "                break;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testEnhancedSwitch3() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case (String s): \n"
+                        + "                System.out.println(\"Hello\");\n"
+                        + "                break;\n"
+                        + "            default:\n"
+                        + "                break;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
     public static void noop() {}
 
     @Override
@@ -1958,13 +2093,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
     }
 
     public static Test suite() {
-        if (NoJavacHelper.hasNbJavac()) {
-            return new VanillaCompileWorkerTest("noop");
-        } else {
-//            return new VanillaCompileWorkerTest("testAnonymousClasses");
-//            return new VanillaCompileWorkerTest("testPreserveValidInitializers");
-            return new NbTestSuite(VanillaCompileWorkerTest.class);
-        }
+        return new NbTestSuite(VanillaCompileWorkerTest.class);
     }
 
     static {

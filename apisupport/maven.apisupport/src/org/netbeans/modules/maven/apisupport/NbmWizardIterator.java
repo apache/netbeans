@@ -53,6 +53,8 @@ import static org.netbeans.modules.maven.apisupport.MavenNbModuleImpl.APACHE_SNA
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
+import org.netbeans.modules.maven.model.pom.Plugin;
+import org.netbeans.modules.maven.model.pom.PluginManagement;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 
 public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiatingIterator<WizardDescriptor> {
@@ -147,48 +149,59 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
                 NBMNativeMWI.instantiate(vi, projFile, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), null);
 
             } else {
-            getLatestArchetypeVersion(NB_APP_ARCH);
-            ArchetypeWizards.createFromArchetype(projFile, vi, archetype, additional, true);
-            List<ModelOperation<POMModel>> opers = new ArrayList<ModelOperation<POMModel>>();
-            if (Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES))) {
-                //now we have the nbm-archetype (or the netbeans platform one).
-                ModelOperation<POMModel> osgi = addNbmPluginOsgiParameter(projFile);
-                if (osgi != null) {
-                    opers.add(osgi);
+                getLatestArchetypeVersion(NB_APP_ARCH);
+                ArchetypeWizards.createFromArchetype(projFile, vi, archetype, additional, true);
+                List<ModelOperation<POMModel>> opers = new ArrayList<>();
+                if (Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES))) {
+                    //now we have the nbm-archetype (or the netbeans platform one).
+                    ModelOperation<POMModel> osgi = addNbmPluginOsgiParameter(projFile);
+                    if (osgi != null) {
+                        opers.add(osgi);
+                    }
                 }
-            }
-            if (SNAPSHOT_VERSION.equals(version)) { // NOI18N
-                opers.add(addSnapshotRepo());
-            }
-            if (!opers.isEmpty()) {
-                FileObject prjDir = FileUtil.toFileObject(projFile);
-                if (prjDir != null) {
-                    FileObject pom = prjDir.getFileObject("pom.xml");
-                    if (pom != null) {
-                        Project prj = ProjectManager.getDefault().findProject(prjDir);
-                        if (prj != null) {
-                           Utilities.performPOMModelOperations(pom, opers);
+                if (SNAPSHOT_VERSION.equals(version)) { // NOI18N
+                    opers.add(addSnapshotRepo());
+                }
+
+                // upgrade nbm plugin version to latest
+                opers.add((ModelOperation<POMModel>) (POMModel model) -> {
+                    org.netbeans.modules.maven.model.pom.Project project = model.getProject();
+                    PluginManagement pm = project.getBuild().getPluginManagement();
+                    if (pm != null) {
+                        Plugin plg = PluginBackwardPropertyUtils.findPluginFromPluginManagement(pm);
+                        plg.setVersion(MavenNbModuleImpl.getLatestNbmPluginVersion());
+                    }
+                });
+
+                if (!opers.isEmpty()) {
+                    FileObject prjDir = FileUtil.toFileObject(projFile);
+                    if (prjDir != null) {
+                        FileObject pom = prjDir.getFileObject("pom.xml");
+                        if (pom != null) {
+                            Project prj = ProjectManager.getDefault().findProject(prjDir);
+                            if (prj != null) {
+                               Utilities.performPOMModelOperations(pom, opers);
+                            }
                         }
                     }
                 }
-            }
-            
-            if (nbm_artifactId != null && projFile.exists()) {
-                //NOW we have the nbm-Platform or nbm suite template
-                //create the nbm module
-                
-                //a bit of a hack, the archetype + modified parent project has not reloaded yet properly
-                Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(projFile));
-                MavenProject mp = p.getLookup().lookup(NbMavenProject.class).loadAlternateMavenProject(EmbedderFactory.getProjectEmbedder(), Collections.<String>emptyList(), null);
-                
-                ProjectInfo nbm = new ProjectInfo(vi.groupId, nbm_artifactId, vi.version, vi.packageName);
-                File nbm_folder = FileUtil.normalizeFile(new File(projFile, nbm_artifactId));
-                NBMNativeMWI.instantiate(nbm, nbm_folder, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), mp);
-                if (archetype == NB_APP_ARCH) {
-                    File appDir = new File(projFile, "application"); //NOI18N
-                    addModuleToApplication(appDir, new ProjectInfo("${project.groupId}", nbm.artifactId, "${project.version}", nbm.packageName), null); // NOI18N
+
+                if (nbm_artifactId != null && projFile.exists()) {
+                    //NOW we have the nbm-Platform or nbm suite template
+                    //create the nbm module
+
+                    //a bit of a hack, the archetype + modified parent project has not reloaded yet properly
+                    Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(projFile));
+                    MavenProject mp = p.getLookup().lookup(NbMavenProject.class).loadAlternateMavenProject(EmbedderFactory.getProjectEmbedder(), Collections.<String>emptyList(), null);
+
+                    ProjectInfo nbm = new ProjectInfo(vi.groupId, nbm_artifactId, vi.version, vi.packageName);
+                    File nbm_folder = FileUtil.normalizeFile(new File(projFile, nbm_artifactId));
+                    NBMNativeMWI.instantiate(nbm, nbm_folder, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), mp);
+                    if (archetype == NB_APP_ARCH) {
+                        File appDir = new File(projFile, "application"); //NOI18N
+                        addModuleToApplication(appDir, new ProjectInfo("${project.groupId}", nbm.artifactId, "${project.version}", nbm.packageName), null); // NOI18N
+                    }
                 }
-            }
             }
             
             //TODO what is this supposed to do?
@@ -303,20 +316,18 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
    }
 
     private static ModelOperation<POMModel> addSnapshotRepo() throws IOException {
-        return new ModelOperation<POMModel>() {
-                    public @Override void performOperation(POMModel model) {
-                        Repository repo = model.getFactory().createRepository();
-                        repo.setId(APACHE_SNAPSHOT_REPO_ID); // NOI18N
-                        repo.setName("Apache Development Snapshot Repository"); // NOI18N
-                        /* Is the following necessary?
-                        RepositoryPolicy policy = model.getFactory().createSnapshotRepositoryPolicy();
-                        policy.setEnabled(true);
-                        repo.setSnapshots(policy);
-                         */
-                        repo.setUrl("https://repository.apache.org/content/repositories/snapshots/"); // NOI18N
-                        model.getProject().addRepository(repo);
-                    }
-                };
+        return (POMModel model) -> {
+            Repository repo = model.getFactory().createRepository();
+            repo.setId(APACHE_SNAPSHOT_REPO_ID); // NOI18N
+            repo.setName("Apache Development Snapshot Repository"); // NOI18N
+            /* Is the following necessary?
+            RepositoryPolicy policy = model.getFactory().createSnapshotRepositoryPolicy();
+            policy.setEnabled(true);
+            repo.setSnapshots(policy);
+            */
+            repo.setUrl("https://repository.apache.org/content/repositories/snapshots/"); // NOI18N
+            model.getProject().addRepository(repo);
+        };
    }
 
     private static void addModuleToApplication(File file, ProjectInfo nbm, Object object) {
@@ -324,7 +335,7 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
         if (appPrjFO == null) {
             return;
         }
-        List<ModelOperation<POMModel>> operations = new ArrayList<ModelOperation<POMModel>>();
+        List<ModelOperation<POMModel>> operations = new ArrayList<>();
         operations.add(ArchetypeWizards.addDependencyOperation(nbm, null));
         Utilities.performPOMModelOperations(appPrjFO.getFileObject("pom.xml"), operations);
     }

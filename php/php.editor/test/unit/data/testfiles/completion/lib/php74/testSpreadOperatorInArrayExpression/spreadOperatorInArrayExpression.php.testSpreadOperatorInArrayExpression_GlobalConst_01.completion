@@ -14,3 +14,4 @@ CONSTANT   CONSTANT4 [?, 100 => 0, ?]      [PUBLIC]   Foo
 CONSTANT   CONSTANT5 [?, 100 => 0, ?]      [PUBLIC]   Foo
 ------------------------------------
 KEYWORD    array                                      null
+KEYWORD    new                                        null

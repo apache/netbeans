@@ -22,14 +22,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -64,6 +63,7 @@ import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
 import org.openide.windows.InputOutput;
+
 
 /**
  *
@@ -138,7 +138,7 @@ public class MavenExecutionTestBase extends NbTestCase {
             Map<String, String> profileProperties) throws IOException, XmlPullParserException {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(
-                getClass().getResourceAsStream("nbactions-template.xml"), "UTF-8"))) {
+                getClass().getResourceAsStream("nbactions-template.xml"), StandardCharsets.UTF_8))) {
             String l;
             
             while ((l = rdr.readLine()) != null) {
@@ -377,7 +377,7 @@ public class MavenExecutionTestBase extends NbTestCase {
     //====================== samples =====================
     public static void samplePassAdditionalVMargs() {
         Project prj = null;
-        // BEGIN: MavenExecutionTestBase#samplePassAdditionalVMargs
+        // @start region="samplePassAdditionalVMargs"
         // get action provider:
         ActionProvider projectActionProvider = prj.getLookup().lookup(ActionProvider.class);
         
@@ -388,6 +388,6 @@ public class MavenExecutionTestBase extends NbTestCase {
                 build();
         // pass explicit parameters to the Run action:
         projectActionProvider.invokeAction(ActionProvider.COMMAND_RUN, Lookups.fixed(params));
-        // END: MavenExecutionTestBase#samplePassAdditionalVMargs
+        // @end region="samplePassAdditionalVMargs"
     }
 }

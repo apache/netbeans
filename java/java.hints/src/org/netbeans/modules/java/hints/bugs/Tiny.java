@@ -29,6 +29,7 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.SwitchTree;
@@ -91,18 +92,53 @@ import org.openide.util.NbBundle.Messages;
 })
 public class Tiny {
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.stringReplaceAllDot", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.stringReplaceAllDot", category="bugs", suppressWarnings="ReplaceAllDot")
-    @TriggerPattern(value="$str.replaceAll(\".\", $to)",
-                    constraints=@ConstraintVariableType(variable="$str", type="java.lang.String"))
-    public static ErrorDescription stringReplaceAllDot(HintContext ctx) {
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.singleCharRegex", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.singleCharRegex", category="bugs", suppressWarnings="SingleCharRegex")
+    @TriggerPatterns({
+        @TriggerPattern(value="$str.replaceAll($pattern, $to)",
+                constraints = {
+                    @ConstraintVariableType(variable="$str", type="java.lang.String"),
+                    @ConstraintVariableType(variable="$pattern", type="java.lang.String") }),
+        @TriggerPattern(value = "$str.replaceFirst($pattern, $repl)",
+                constraints = {
+                    @ConstraintVariableType(variable = "$str", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$pattern", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$repl", type = "java.lang.String")
+                }),
+        @TriggerPattern(value="$str.split($pattern)",
+                constraints = {
+                    @ConstraintVariableType(variable="$str", type="java.lang.String"),
+                    @ConstraintVariableType(variable="$pattern", type="java.lang.String") }),
+        @TriggerPattern(value = "$str.split($pattern, $limit)",
+                constraints = {
+                    @ConstraintVariableType(variable = "$str", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$pattern", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$limit", type = "int")
+                })
+    })
+    public static ErrorDescription singleCharRegex(HintContext ctx) {
         Tree constant = ((MethodInvocationTree) ctx.getPath().getLeaf()).getArguments().get(0);
         TreePath constantTP = new TreePath(ctx.getPath(), constant);
 
-        String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_string-replace-all-dot");
-        Fix fix = JavaFixUtilities.rewriteFix(ctx, fixDisplayName, constantTP, "\"\\\\.\"");
-        String displayName = NbBundle.getMessage(Tiny.class, "ERR_string-replace-all-dot");
+        if (constantTP.getLeaf().getKind() == Kind.STRING_LITERAL) {
 
-        return ErrorDescriptionFactory.forTree(ctx, constant, displayName, fix);
+            String value = (String) ((LiteralTree) constantTP.getLeaf()).getValue();
+
+            if (value != null && value.length() == 1 && isRegExControlCharacter(value.charAt(0))) {
+
+                String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_single-char-regex");
+                String displayName = NbBundle.getMessage(Tiny.class, "ERR_single-char-regex");
+
+                Fix fix = JavaFixUtilities.rewriteFix(ctx, fixDisplayName, constantTP, "\"\\\\"+value.charAt(0)+"\"");
+                return ErrorDescriptionFactory.forTree(ctx, constant, displayName, fix);
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean isRegExControlCharacter(char c) {
+        return c == '.' || c == '$' || c == '|' || c == '^' || c == '?' || c == '*' || c == '+' || c == '\\'
+                        || c == '(' || c == ')' || c == '[' || c == ']'  || c == '{' || c == '}';
     }
 
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.newObject", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.newObject", category="bugs", suppressWarnings="ResultOfObjectAllocationIgnored", options=Options.QUERY)

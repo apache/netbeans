@@ -20,8 +20,6 @@
 package org.netbeans.modules.bugtracking.commons;
 
 import java.util.Calendar;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import junit.framework.TestCase;
 
 /**

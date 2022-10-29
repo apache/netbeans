@@ -1,9 +1,17 @@
 #Signature file v4.1
-#Version 2.21
+#Version 2.25
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
 meth public abstract void close() throws java.io.IOException
+
+CLSS public abstract interface java.io.Externalizable
+intf java.io.Serializable
+meth public abstract void readExternal(java.io.ObjectInput) throws java.io.IOException,java.lang.ClassNotFoundException
+meth public abstract void writeExternal(java.io.ObjectOutput) throws java.io.IOException
+
+CLSS public abstract interface java.io.Flushable
+meth public abstract void flush() throws java.io.IOException
 
 CLSS public java.io.IOException
 cons public init()
@@ -12,13 +20,46 @@ cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
 
+CLSS public abstract java.io.InputStream
+cons public init()
+intf java.io.Closeable
+meth public abstract int read() throws java.io.IOException
+meth public boolean markSupported()
+meth public int available() throws java.io.IOException
+meth public int read(byte[]) throws java.io.IOException
+meth public int read(byte[],int,int) throws java.io.IOException
+meth public long skip(long) throws java.io.IOException
+meth public void close() throws java.io.IOException
+meth public void mark(int)
+meth public void reset() throws java.io.IOException
+supr java.lang.Object
+
+CLSS public abstract java.io.OutputStream
+cons public init()
+intf java.io.Closeable
+intf java.io.Flushable
+meth public abstract void write(int) throws java.io.IOException
+meth public void close() throws java.io.IOException
+meth public void flush() throws java.io.IOException
+meth public void write(byte[]) throws java.io.IOException
+meth public void write(byte[],int,int) throws java.io.IOException
+supr java.lang.Object
+
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.AutoCloseable
 meth public abstract void close() throws java.lang.Exception
 
+CLSS public abstract interface java.lang.Cloneable
+
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -36,6 +77,14 @@ meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
 
+CLSS public java.lang.Error
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.Throwable
+
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
 cons public init()
@@ -49,6 +98,11 @@ CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
+
+CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
+meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
+meth public java.util.Spliterator<{java.lang.Iterable%0}> spliterator()
+meth public void forEach(java.util.function.Consumer<? super {java.lang.Iterable%0}>)
 
 CLSS public java.lang.Object
 cons public init()
@@ -64,6 +118,10 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void run()
+
 CLSS public java.lang.RuntimeException
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
 cons public init()
@@ -71,6 +129,77 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+
+CLSS public java.lang.Thread
+cons public init()
+cons public init(java.lang.Runnable)
+cons public init(java.lang.Runnable,java.lang.String)
+cons public init(java.lang.String)
+cons public init(java.lang.ThreadGroup,java.lang.Runnable)
+cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String)
+cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long)
+cons public init(java.lang.ThreadGroup,java.lang.String)
+fld public final static int MAX_PRIORITY = 10
+fld public final static int MIN_PRIORITY = 1
+fld public final static int NORM_PRIORITY = 5
+innr public abstract interface static UncaughtExceptionHandler
+innr public final static !enum State
+intf java.lang.Runnable
+meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
+meth public boolean isInterrupted()
+meth public final boolean isAlive()
+meth public final boolean isDaemon()
+meth public final int getPriority()
+meth public final java.lang.String getName()
+meth public final java.lang.ThreadGroup getThreadGroup()
+meth public final void checkAccess()
+meth public final void join() throws java.lang.InterruptedException
+meth public final void join(long) throws java.lang.InterruptedException
+meth public final void join(long,int) throws java.lang.InterruptedException
+meth public final void resume()
+ anno 0 java.lang.Deprecated()
+meth public final void setDaemon(boolean)
+meth public final void setName(java.lang.String)
+meth public final void setPriority(int)
+meth public final void stop()
+ anno 0 java.lang.Deprecated()
+meth public final void stop(java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
+meth public final void suspend()
+ anno 0 java.lang.Deprecated()
+meth public int countStackFrames()
+ anno 0 java.lang.Deprecated()
+meth public java.lang.ClassLoader getContextClassLoader()
+meth public java.lang.StackTraceElement[] getStackTrace()
+meth public java.lang.String toString()
+meth public java.lang.Thread$State getState()
+meth public java.lang.Thread$UncaughtExceptionHandler getUncaughtExceptionHandler()
+meth public long getId()
+meth public static boolean holdsLock(java.lang.Object)
+meth public static boolean interrupted()
+meth public static int activeCount()
+meth public static int enumerate(java.lang.Thread[])
+meth public static java.lang.Thread currentThread()
+meth public static java.lang.Thread$UncaughtExceptionHandler getDefaultUncaughtExceptionHandler()
+meth public static java.util.Map<java.lang.Thread,java.lang.StackTraceElement[]> getAllStackTraces()
+meth public static void dumpStack()
+meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
+meth public static void sleep(long) throws java.lang.InterruptedException
+meth public static void sleep(long,int) throws java.lang.InterruptedException
+meth public static void yield()
+meth public void destroy()
+ anno 0 java.lang.Deprecated()
+meth public void interrupt()
+meth public void run()
+meth public void setContextClassLoader(java.lang.ClassLoader)
+meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
+meth public void start()
+supr java.lang.Object
+
+CLSS public abstract interface static java.lang.Thread$UncaughtExceptionHandler
+ outer java.lang.Thread
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void uncaughtException(java.lang.Thread,java.lang.Throwable)
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -112,6 +241,13 @@ CLSS public abstract interface !annotation java.lang.annotation.Inherited
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface !annotation java.lang.annotation.Repeatable
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> value()
+
 CLSS public abstract interface !annotation java.lang.annotation.Retention
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -125,6 +261,170 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.reflect.AnnotatedElement
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getDeclaredAnnotation(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.annotation.Annotation> {%%0}[] getAnnotationsByType(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.annotation.Annotation> {%%0}[] getDeclaredAnnotationsByType(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public abstract java.lang.annotation.Annotation[] getAnnotations()
+meth public abstract java.lang.annotation.Annotation[] getDeclaredAnnotations()
+meth public boolean isAnnotationPresent(java.lang.Class<? extends java.lang.annotation.Annotation>)
+
+CLSS public abstract interface java.lang.reflect.GenericArrayType
+intf java.lang.reflect.Type
+meth public abstract java.lang.reflect.Type getGenericComponentType()
+
+CLSS public abstract interface java.lang.reflect.InvocationHandler
+meth public abstract java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
+
+CLSS public abstract interface java.lang.reflect.ParameterizedType
+intf java.lang.reflect.Type
+meth public abstract java.lang.reflect.Type getOwnerType()
+meth public abstract java.lang.reflect.Type getRawType()
+meth public abstract java.lang.reflect.Type[] getActualTypeArguments()
+
+CLSS public abstract interface java.lang.reflect.Type
+meth public java.lang.String getTypeName()
+
+CLSS public abstract java.net.URLStreamHandler
+cons public init()
+meth protected abstract java.net.URLConnection openConnection(java.net.URL) throws java.io.IOException
+meth protected boolean equals(java.net.URL,java.net.URL)
+meth protected boolean hostsEqual(java.net.URL,java.net.URL)
+meth protected boolean sameFile(java.net.URL,java.net.URL)
+meth protected int getDefaultPort()
+meth protected int hashCode(java.net.URL)
+meth protected java.lang.String toExternalForm(java.net.URL)
+meth protected java.net.InetAddress getHostAddress(java.net.URL)
+meth protected java.net.URLConnection openConnection(java.net.URL,java.net.Proxy) throws java.io.IOException
+meth protected void parseURL(java.net.URL,java.lang.String,int,int)
+meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+supr java.lang.Object
+
+CLSS public abstract java.security.BasicPermission
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.String)
+intf java.io.Serializable
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.Permission
+
+CLSS public abstract interface java.security.Guard
+meth public abstract void checkGuard(java.lang.Object)
+
+CLSS public abstract java.security.Permission
+cons public init(java.lang.String)
+intf java.io.Serializable
+intf java.security.Guard
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean implies(java.security.Permission)
+meth public abstract int hashCode()
+meth public abstract java.lang.String getActions()
+meth public final java.lang.String getName()
+meth public java.lang.String toString()
+meth public java.security.PermissionCollection newPermissionCollection()
+meth public void checkGuard(java.lang.Object)
+supr java.lang.Object
+
+CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons protected init()
+innr public static SimpleEntry
+innr public static SimpleImmutableEntry
+intf java.util.Map<{java.util.AbstractMap%0},{java.util.AbstractMap%1}>
+meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
+meth public abstract java.util.Set<java.util.Map$Entry<{java.util.AbstractMap%0},{java.util.AbstractMap%1}>> entrySet()
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public boolean isEmpty()
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Collection<{java.util.AbstractMap%1}> values()
+meth public java.util.Set<{java.util.AbstractMap%0}> keySet()
+meth public void clear()
+meth public void putAll(java.util.Map<? extends {java.util.AbstractMap%0},? extends {java.util.AbstractMap%1}>)
+meth public {java.util.AbstractMap%1} get(java.lang.Object)
+meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
+meth public {java.util.AbstractMap%1} remove(java.lang.Object)
+supr java.lang.Object
+
+CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
+intf java.lang.Iterable<{java.util.Collection%0}>
+meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
+meth public abstract boolean add({java.util.Collection%0})
+meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
+meth public abstract boolean contains(java.lang.Object)
+meth public abstract boolean containsAll(java.util.Collection<?>)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isEmpty()
+meth public abstract boolean remove(java.lang.Object)
+meth public abstract boolean removeAll(java.util.Collection<?>)
+meth public abstract boolean retainAll(java.util.Collection<?>)
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.lang.Object[] toArray()
+meth public abstract java.util.Iterator<{java.util.Collection%0}> iterator()
+meth public abstract void clear()
+meth public boolean removeIf(java.util.function.Predicate<? super {java.util.Collection%0}>)
+meth public java.util.Spliterator<{java.util.Collection%0}> spliterator()
+meth public java.util.stream.Stream<{java.util.Collection%0}> parallelStream()
+meth public java.util.stream.Stream<{java.util.Collection%0}> stream()
+
+CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public <%0 extends java.lang.Comparable<? super {%%0}>> java.util.Comparator<{java.util.Comparator%0}> thenComparing(java.util.function.Function<? super {java.util.Comparator%0},? extends {%%0}>)
+meth public <%0 extends java.lang.Object> java.util.Comparator<{java.util.Comparator%0}> thenComparing(java.util.function.Function<? super {java.util.Comparator%0},? extends {%%0}>,java.util.Comparator<? super {%%0}>)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int compare({java.util.Comparator%0},{java.util.Comparator%0})
+meth public java.util.Comparator<{java.util.Comparator%0}> reversed()
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparing(java.util.Comparator<? super {java.util.Comparator%0}>)
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparingDouble(java.util.function.ToDoubleFunction<? super {java.util.Comparator%0}>)
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparingInt(java.util.function.ToIntFunction<? super {java.util.Comparator%0}>)
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparingLong(java.util.function.ToLongFunction<? super {java.util.Comparator%0}>)
+meth public static <%0 extends java.lang.Comparable<? super {%%0}>> java.util.Comparator<{%%0}> naturalOrder()
+meth public static <%0 extends java.lang.Comparable<? super {%%0}>> java.util.Comparator<{%%0}> reverseOrder()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Comparable<? super {%%1}>> java.util.Comparator<{%%0}> comparing(java.util.function.Function<? super {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Comparator<{%%0}> comparing(java.util.function.Function<? super {%%0},? extends {%%1}>,java.util.Comparator<? super {%%1}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> comparingDouble(java.util.function.ToDoubleFunction<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> comparingInt(java.util.function.ToIntFunction<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> comparingLong(java.util.function.ToLongFunction<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> nullsFirst(java.util.Comparator<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> nullsLast(java.util.Comparator<? super {%%0}>)
+
+CLSS public abstract interface java.util.EventListener
+
+CLSS public java.util.EventObject
+cons public init(java.lang.Object)
+fld protected java.lang.Object source
+intf java.io.Serializable
+meth public java.lang.Object getSource()
+meth public java.lang.String toString()
+supr java.lang.Object
+
+CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
+meth public abstract boolean hasNext()
+meth public abstract {java.util.Iterator%0} next()
+meth public void forEachRemaining(java.util.function.Consumer<? super {java.util.Iterator%0}>)
+meth public void remove()
+
+CLSS public abstract interface java.util.ListIterator<%0 extends java.lang.Object>
+intf java.util.Iterator<{java.util.ListIterator%0}>
+meth public abstract boolean hasNext()
+meth public abstract boolean hasPrevious()
+meth public abstract int nextIndex()
+meth public abstract int previousIndex()
+meth public abstract void add({java.util.ListIterator%0})
+meth public abstract void remove()
+meth public abstract void set({java.util.ListIterator%0})
+meth public abstract {java.util.ListIterator%0} next()
+meth public abstract {java.util.ListIterator%0} previous()
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
@@ -154,6 +454,81 @@ meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.uti
 meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
 meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
+CLSS public abstract interface static java.util.Map$Entry<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ outer java.util.Map
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract {java.util.Map$Entry%0} getKey()
+meth public abstract {java.util.Map$Entry%1} getValue()
+meth public abstract {java.util.Map$Entry%1} setValue({java.util.Map$Entry%1})
+meth public static <%0 extends java.lang.Comparable<? super {%%0}>, %1 extends java.lang.Object> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByKey()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Comparable<? super {%%1}>> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByValue()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByKey(java.util.Comparator<? super {%%0}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByValue(java.util.Comparator<? super {%%1}>)
+
+CLSS public abstract interface java.util.Queue<%0 extends java.lang.Object>
+intf java.util.Collection<{java.util.Queue%0}>
+meth public abstract boolean add({java.util.Queue%0})
+meth public abstract boolean offer({java.util.Queue%0})
+meth public abstract {java.util.Queue%0} element()
+meth public abstract {java.util.Queue%0} peek()
+meth public abstract {java.util.Queue%0} poll()
+meth public abstract {java.util.Queue%0} remove()
+
+CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
+intf java.util.Collection<{java.util.Set%0}>
+meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
+meth public abstract boolean add({java.util.Set%0})
+meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Set%0}>)
+meth public abstract boolean contains(java.lang.Object)
+meth public abstract boolean containsAll(java.util.Collection<?>)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isEmpty()
+meth public abstract boolean remove(java.lang.Object)
+meth public abstract boolean removeAll(java.util.Collection<?>)
+meth public abstract boolean retainAll(java.util.Collection<?>)
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.lang.Object[] toArray()
+meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
+meth public abstract void clear()
+meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
+
+CLSS public abstract interface java.util.SortedSet<%0 extends java.lang.Object>
+intf java.util.Set<{java.util.SortedSet%0}>
+meth public abstract java.util.Comparator<? super {java.util.SortedSet%0}> comparator()
+meth public abstract java.util.SortedSet<{java.util.SortedSet%0}> headSet({java.util.SortedSet%0})
+meth public abstract java.util.SortedSet<{java.util.SortedSet%0}> subSet({java.util.SortedSet%0},{java.util.SortedSet%0})
+meth public abstract java.util.SortedSet<{java.util.SortedSet%0}> tailSet({java.util.SortedSet%0})
+meth public abstract {java.util.SortedSet%0} first()
+meth public abstract {java.util.SortedSet%0} last()
+meth public java.util.Spliterator<{java.util.SortedSet%0}> spliterator()
+
+CLSS public abstract interface java.util.concurrent.BlockingQueue<%0 extends java.lang.Object>
+intf java.util.Queue<{java.util.concurrent.BlockingQueue%0}>
+meth public abstract boolean add({java.util.concurrent.BlockingQueue%0})
+meth public abstract boolean contains(java.lang.Object)
+meth public abstract boolean offer({java.util.concurrent.BlockingQueue%0})
+meth public abstract boolean offer({java.util.concurrent.BlockingQueue%0},long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
+meth public abstract boolean remove(java.lang.Object)
+meth public abstract int drainTo(java.util.Collection<? super {java.util.concurrent.BlockingQueue%0}>)
+meth public abstract int drainTo(java.util.Collection<? super {java.util.concurrent.BlockingQueue%0}>,int)
+meth public abstract int remainingCapacity()
+meth public abstract void put({java.util.concurrent.BlockingQueue%0}) throws java.lang.InterruptedException
+meth public abstract {java.util.concurrent.BlockingQueue%0} poll(long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
+meth public abstract {java.util.concurrent.BlockingQueue%0} take() throws java.lang.InterruptedException
+
+CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
+
+CLSS public abstract interface java.util.concurrent.Future<%0 extends java.lang.Object>
+meth public abstract boolean cancel(boolean)
+meth public abstract boolean isCancelled()
+meth public abstract boolean isDone()
+meth public abstract {java.util.concurrent.Future%0} get() throws java.lang.InterruptedException,java.util.concurrent.ExecutionException
+meth public abstract {java.util.concurrent.Future%0} get(long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException,java.util.concurrent.ExecutionException,java.util.concurrent.TimeoutException
+
 CLSS public abstract interface java.util.function.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
 meth public <%0 extends java.lang.Object> java.util.function.Function<{%%0},{java.util.function.Function%1}> compose(java.util.function.Function<? super {%%0},? extends {java.util.function.Function%0}>)
@@ -161,11 +536,3126 @@ meth public <%0 extends java.lang.Object> java.util.function.Function<{java.util
 meth public abstract {java.util.function.Function%1} apply({java.util.function.Function%0})
 meth public static <%0 extends java.lang.Object> java.util.function.Function<{%%0},{%%0}> identity()
 
+CLSS public abstract interface java.util.function.Supplier<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract {java.util.function.Supplier%0} get()
+
+CLSS public abstract interface javax.activation.DataSource
+meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
+meth public abstract java.io.OutputStream getOutputStream() throws java.io.IOException
+meth public abstract java.lang.String getContentType()
+meth public abstract java.lang.String getName()
+
+CLSS public abstract interface !annotation javax.annotation.Generated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PACKAGE, TYPE, ANNOTATION_TYPE, METHOD, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String comments()
+meth public abstract !hasdefault java.lang.String date()
+meth public abstract java.lang.String[] value()
+
+CLSS public abstract interface !annotation javax.annotation.ManagedBean
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface !annotation javax.annotation.PostConstruct
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.annotation.PreDestroy
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.annotation.Priority
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract int value()
+
+CLSS public abstract interface !annotation javax.annotation.Resource
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.annotation.Resources)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, FIELD, METHOD])
+innr public final static !enum AuthenticationType
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean shareable()
+meth public abstract !hasdefault java.lang.Class<?> type()
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract !hasdefault java.lang.String lookup()
+meth public abstract !hasdefault java.lang.String mappedName()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault javax.annotation.Resource$AuthenticationType authenticationType()
+
+CLSS public final static !enum javax.annotation.Resource$AuthenticationType
+ outer javax.annotation.Resource
+fld public final static javax.annotation.Resource$AuthenticationType APPLICATION
+fld public final static javax.annotation.Resource$AuthenticationType CONTAINER
+meth public static javax.annotation.Resource$AuthenticationType valueOf(java.lang.String)
+meth public static javax.annotation.Resource$AuthenticationType[] values()
+supr java.lang.Enum<javax.annotation.Resource$AuthenticationType>
+
+CLSS public abstract interface !annotation javax.annotation.Resources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.annotation.Resource[] value()
+
+CLSS public abstract interface !annotation javax.annotation.security.DeclareRoles
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] value()
+
+CLSS public abstract interface !annotation javax.annotation.security.DenyAll
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.annotation.security.PermitAll
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.annotation.security.RolesAllowed
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] value()
+
+CLSS public abstract interface !annotation javax.annotation.security.RunAs
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation javax.annotation.sql.DataSourceDefinition
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.annotation.sql.DataSourceDefinitions)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean transactional()
+meth public abstract !hasdefault int initialPoolSize()
+meth public abstract !hasdefault int isolationLevel()
+meth public abstract !hasdefault int loginTimeout()
+meth public abstract !hasdefault int maxIdleTime()
+meth public abstract !hasdefault int maxPoolSize()
+meth public abstract !hasdefault int maxStatements()
+meth public abstract !hasdefault int minPoolSize()
+meth public abstract !hasdefault int portNumber()
+meth public abstract !hasdefault java.lang.String databaseName()
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract !hasdefault java.lang.String password()
+meth public abstract !hasdefault java.lang.String serverName()
+meth public abstract !hasdefault java.lang.String url()
+meth public abstract !hasdefault java.lang.String user()
+meth public abstract !hasdefault java.lang.String[] properties()
+meth public abstract java.lang.String className()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.annotation.sql.DataSourceDefinitions
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.annotation.sql.DataSourceDefinition[] value()
+
+CLSS public abstract interface !annotation javax.inject.Inject
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.inject.Named
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 javax.inject.Qualifier()
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface javax.inject.Provider<%0 extends java.lang.Object>
+meth public abstract {javax.inject.Provider%0} get()
+
 CLSS public abstract interface !annotation javax.inject.Qualifier
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.inject.Scope
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.inject.Singleton
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.Access
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.AccessType value()
+
+CLSS public final !enum javax.persistence.AccessType
+fld public final static javax.persistence.AccessType FIELD
+fld public final static javax.persistence.AccessType PROPERTY
+meth public static javax.persistence.AccessType valueOf(java.lang.String)
+meth public static javax.persistence.AccessType[] values()
+supr java.lang.Enum<javax.persistence.AccessType>
+
+CLSS public abstract interface !annotation javax.persistence.AssociationOverride
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.AssociationOverrides)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract !hasdefault javax.persistence.JoinColumn[] joinColumns()
+meth public abstract !hasdefault javax.persistence.JoinTable joinTable()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.AssociationOverrides
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.AssociationOverride[] value()
+
+CLSS public abstract interface javax.persistence.AttributeConverter<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract {javax.persistence.AttributeConverter%0} convertToEntityAttribute({javax.persistence.AttributeConverter%1})
+meth public abstract {javax.persistence.AttributeConverter%1} convertToDatabaseColumn({javax.persistence.AttributeConverter%0})
+
+CLSS public abstract interface javax.persistence.AttributeNode<%0 extends java.lang.Object>
+meth public abstract java.lang.String getAttributeName()
+meth public abstract java.util.Map<java.lang.Class,javax.persistence.Subgraph> getKeySubgraphs()
+meth public abstract java.util.Map<java.lang.Class,javax.persistence.Subgraph> getSubgraphs()
+
+CLSS public abstract interface !annotation javax.persistence.AttributeOverride
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.AttributeOverrides)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String name()
+meth public abstract javax.persistence.Column column()
+
+CLSS public abstract interface !annotation javax.persistence.AttributeOverrides
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.AttributeOverride[] value()
+
+CLSS public abstract interface !annotation javax.persistence.Basic
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean optional()
+meth public abstract !hasdefault javax.persistence.FetchType fetch()
+
+CLSS public abstract interface javax.persistence.Cache
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract boolean contains(java.lang.Class,java.lang.Object)
+meth public abstract void evict(java.lang.Class)
+meth public abstract void evict(java.lang.Class,java.lang.Object)
+meth public abstract void evictAll()
+
+CLSS public final !enum javax.persistence.CacheRetrieveMode
+fld public final static javax.persistence.CacheRetrieveMode BYPASS
+fld public final static javax.persistence.CacheRetrieveMode USE
+meth public static javax.persistence.CacheRetrieveMode valueOf(java.lang.String)
+meth public static javax.persistence.CacheRetrieveMode[] values()
+supr java.lang.Enum<javax.persistence.CacheRetrieveMode>
+
+CLSS public final !enum javax.persistence.CacheStoreMode
+fld public final static javax.persistence.CacheStoreMode BYPASS
+fld public final static javax.persistence.CacheStoreMode REFRESH
+fld public final static javax.persistence.CacheStoreMode USE
+meth public static javax.persistence.CacheStoreMode valueOf(java.lang.String)
+meth public static javax.persistence.CacheStoreMode[] values()
+supr java.lang.Enum<javax.persistence.CacheStoreMode>
+
+CLSS public abstract interface !annotation javax.persistence.Cacheable
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean value()
+
+CLSS public final !enum javax.persistence.CascadeType
+fld public final static javax.persistence.CascadeType ALL
+fld public final static javax.persistence.CascadeType DETACH
+fld public final static javax.persistence.CascadeType MERGE
+fld public final static javax.persistence.CascadeType PERSIST
+fld public final static javax.persistence.CascadeType REFRESH
+fld public final static javax.persistence.CascadeType REMOVE
+meth public static javax.persistence.CascadeType valueOf(java.lang.String)
+meth public static javax.persistence.CascadeType[] values()
+supr java.lang.Enum<javax.persistence.CascadeType>
+
+CLSS public abstract interface !annotation javax.persistence.CollectionTable
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String catalog()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String schema()
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract !hasdefault javax.persistence.Index[] indexes()
+meth public abstract !hasdefault javax.persistence.JoinColumn[] joinColumns()
+meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
+
+CLSS public abstract interface !annotation javax.persistence.Column
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean insertable()
+meth public abstract !hasdefault boolean nullable()
+meth public abstract !hasdefault boolean unique()
+meth public abstract !hasdefault boolean updatable()
+meth public abstract !hasdefault int length()
+meth public abstract !hasdefault int precision()
+meth public abstract !hasdefault int scale()
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String table()
+
+CLSS public abstract interface !annotation javax.persistence.ColumnResult
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class type()
+meth public abstract java.lang.String name()
+
+CLSS public final !enum javax.persistence.ConstraintMode
+fld public final static javax.persistence.ConstraintMode CONSTRAINT
+fld public final static javax.persistence.ConstraintMode NO_CONSTRAINT
+fld public final static javax.persistence.ConstraintMode PROVIDER_DEFAULT
+meth public static javax.persistence.ConstraintMode valueOf(java.lang.String)
+meth public static javax.persistence.ConstraintMode[] values()
+supr java.lang.Enum<javax.persistence.ConstraintMode>
+
+CLSS public abstract interface !annotation javax.persistence.ConstructorResult
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class targetClass()
+meth public abstract javax.persistence.ColumnResult[] columns()
+
+CLSS public abstract interface !annotation javax.persistence.Convert
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.Converts)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean disableConversion()
+meth public abstract !hasdefault java.lang.Class converter()
+meth public abstract !hasdefault java.lang.String attributeName()
+
+CLSS public abstract interface !annotation javax.persistence.Converter
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean autoApply()
+
+CLSS public abstract interface !annotation javax.persistence.Converts
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.Convert[] value()
+
+CLSS public abstract interface !annotation javax.persistence.DiscriminatorColumn
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int length()
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault javax.persistence.DiscriminatorType discriminatorType()
+
+CLSS public final !enum javax.persistence.DiscriminatorType
+fld public final static javax.persistence.DiscriminatorType CHAR
+fld public final static javax.persistence.DiscriminatorType INTEGER
+fld public final static javax.persistence.DiscriminatorType STRING
+meth public static javax.persistence.DiscriminatorType valueOf(java.lang.String)
+meth public static javax.persistence.DiscriminatorType[] values()
+supr java.lang.Enum<javax.persistence.DiscriminatorType>
+
+CLSS public abstract interface !annotation javax.persistence.DiscriminatorValue
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation javax.persistence.ElementCollection
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class targetClass()
+meth public abstract !hasdefault javax.persistence.FetchType fetch()
+
+CLSS public abstract interface !annotation javax.persistence.Embeddable
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.Embedded
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.EmbeddedId
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.Entity
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String name()
+
+CLSS public javax.persistence.EntityExistsException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.persistence.PersistenceException
+
+CLSS public abstract interface javax.persistence.EntityGraph<%0 extends java.lang.Object>
+meth public abstract !varargs void addAttributeNodes(java.lang.String[])
+meth public abstract !varargs void addAttributeNodes(javax.persistence.metamodel.Attribute<{javax.persistence.EntityGraph%0},?>[])
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<? extends {%%0}> addKeySubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.EntityGraph%0},{%%0}>,java.lang.Class<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<? extends {%%0}> addSubclassSubgraph(java.lang.Class<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<? extends {%%0}> addSubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.EntityGraph%0},{%%0}>,java.lang.Class<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addKeySubgraph(java.lang.String)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addKeySubgraph(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addKeySubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.EntityGraph%0},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addSubgraph(java.lang.String)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addSubgraph(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addSubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.EntityGraph%0},{%%0}>)
+meth public abstract java.lang.String getName()
+meth public abstract java.util.List<javax.persistence.AttributeNode<?>> getAttributeNodes()
+
+CLSS public abstract interface !annotation javax.persistence.EntityListeners
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class[] value()
+
+CLSS public abstract interface javax.persistence.EntityManager
+meth public abstract !varargs javax.persistence.StoredProcedureQuery createStoredProcedureQuery(java.lang.String,java.lang.Class[])
+meth public abstract !varargs javax.persistence.StoredProcedureQuery createStoredProcedureQuery(java.lang.String,java.lang.String[])
+meth public abstract <%0 extends java.lang.Object> java.util.List<javax.persistence.EntityGraph<? super {%%0}>> getEntityGraphs(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.EntityGraph<{%%0}> createEntityGraph(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.TypedQuery<{%%0}> createNamedQuery(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.TypedQuery<{%%0}> createQuery(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.TypedQuery<{%%0}> createQuery(javax.persistence.criteria.CriteriaQuery<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} find(java.lang.Class<{%%0}>,java.lang.Object)
+meth public abstract <%0 extends java.lang.Object> {%%0} find(java.lang.Class<{%%0}>,java.lang.Object,java.util.Map<java.lang.String,java.lang.Object>)
+meth public abstract <%0 extends java.lang.Object> {%%0} find(java.lang.Class<{%%0}>,java.lang.Object,javax.persistence.LockModeType)
+meth public abstract <%0 extends java.lang.Object> {%%0} find(java.lang.Class<{%%0}>,java.lang.Object,javax.persistence.LockModeType,java.util.Map<java.lang.String,java.lang.Object>)
+meth public abstract <%0 extends java.lang.Object> {%%0} getReference(java.lang.Class<{%%0}>,java.lang.Object)
+meth public abstract <%0 extends java.lang.Object> {%%0} merge({%%0})
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract boolean contains(java.lang.Object)
+meth public abstract boolean isJoinedToTransaction()
+meth public abstract boolean isOpen()
+meth public abstract java.lang.Object getDelegate()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getProperties()
+meth public abstract javax.persistence.EntityGraph<?> createEntityGraph(java.lang.String)
+meth public abstract javax.persistence.EntityGraph<?> getEntityGraph(java.lang.String)
+meth public abstract javax.persistence.EntityManagerFactory getEntityManagerFactory()
+meth public abstract javax.persistence.EntityTransaction getTransaction()
+meth public abstract javax.persistence.FlushModeType getFlushMode()
+meth public abstract javax.persistence.LockModeType getLockMode(java.lang.Object)
+meth public abstract javax.persistence.Query createNamedQuery(java.lang.String)
+meth public abstract javax.persistence.Query createNativeQuery(java.lang.String)
+meth public abstract javax.persistence.Query createNativeQuery(java.lang.String,java.lang.Class)
+meth public abstract javax.persistence.Query createNativeQuery(java.lang.String,java.lang.String)
+meth public abstract javax.persistence.Query createQuery(java.lang.String)
+meth public abstract javax.persistence.Query createQuery(javax.persistence.criteria.CriteriaDelete)
+meth public abstract javax.persistence.Query createQuery(javax.persistence.criteria.CriteriaUpdate)
+meth public abstract javax.persistence.StoredProcedureQuery createNamedStoredProcedureQuery(java.lang.String)
+meth public abstract javax.persistence.StoredProcedureQuery createStoredProcedureQuery(java.lang.String)
+meth public abstract javax.persistence.criteria.CriteriaBuilder getCriteriaBuilder()
+meth public abstract javax.persistence.metamodel.Metamodel getMetamodel()
+meth public abstract void clear()
+meth public abstract void close()
+meth public abstract void detach(java.lang.Object)
+meth public abstract void flush()
+meth public abstract void joinTransaction()
+meth public abstract void lock(java.lang.Object,javax.persistence.LockModeType)
+meth public abstract void lock(java.lang.Object,javax.persistence.LockModeType,java.util.Map<java.lang.String,java.lang.Object>)
+meth public abstract void persist(java.lang.Object)
+meth public abstract void refresh(java.lang.Object)
+meth public abstract void refresh(java.lang.Object,java.util.Map<java.lang.String,java.lang.Object>)
+meth public abstract void refresh(java.lang.Object,javax.persistence.LockModeType)
+meth public abstract void refresh(java.lang.Object,javax.persistence.LockModeType,java.util.Map<java.lang.String,java.lang.Object>)
+meth public abstract void remove(java.lang.Object)
+meth public abstract void setFlushMode(javax.persistence.FlushModeType)
+meth public abstract void setProperty(java.lang.String,java.lang.Object)
+
+CLSS public abstract interface javax.persistence.EntityManagerFactory
+meth public abstract <%0 extends java.lang.Object> void addNamedEntityGraph(java.lang.String,javax.persistence.EntityGraph<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract boolean isOpen()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getProperties()
+meth public abstract javax.persistence.Cache getCache()
+meth public abstract javax.persistence.EntityManager createEntityManager()
+meth public abstract javax.persistence.EntityManager createEntityManager(java.util.Map)
+meth public abstract javax.persistence.EntityManager createEntityManager(javax.persistence.SynchronizationType)
+meth public abstract javax.persistence.EntityManager createEntityManager(javax.persistence.SynchronizationType,java.util.Map)
+meth public abstract javax.persistence.PersistenceUnitUtil getPersistenceUnitUtil()
+meth public abstract javax.persistence.criteria.CriteriaBuilder getCriteriaBuilder()
+meth public abstract javax.persistence.metamodel.Metamodel getMetamodel()
+meth public abstract void addNamedQuery(java.lang.String,javax.persistence.Query)
+meth public abstract void close()
+
+CLSS public javax.persistence.EntityNotFoundException
+cons public init()
+cons public init(java.lang.String)
+supr javax.persistence.PersistenceException
+
+CLSS public abstract interface !annotation javax.persistence.EntityResult
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String discriminatorColumn()
+meth public abstract !hasdefault javax.persistence.FieldResult[] fields()
+meth public abstract java.lang.Class entityClass()
+
+CLSS public abstract interface javax.persistence.EntityTransaction
+meth public abstract boolean getRollbackOnly()
+meth public abstract boolean isActive()
+meth public abstract void begin()
+meth public abstract void commit()
+meth public abstract void rollback()
+meth public abstract void setRollbackOnly()
+
+CLSS public final !enum javax.persistence.EnumType
+fld public final static javax.persistence.EnumType ORDINAL
+fld public final static javax.persistence.EnumType STRING
+meth public static javax.persistence.EnumType valueOf(java.lang.String)
+meth public static javax.persistence.EnumType[] values()
+supr java.lang.Enum<javax.persistence.EnumType>
+
+CLSS public abstract interface !annotation javax.persistence.Enumerated
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.EnumType value()
+
+CLSS public abstract interface !annotation javax.persistence.ExcludeDefaultListeners
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.ExcludeSuperclassListeners
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public final !enum javax.persistence.FetchType
+fld public final static javax.persistence.FetchType EAGER
+fld public final static javax.persistence.FetchType LAZY
+meth public static javax.persistence.FetchType valueOf(java.lang.String)
+meth public static javax.persistence.FetchType[] values()
+supr java.lang.Enum<javax.persistence.FetchType>
+
+CLSS public abstract interface !annotation javax.persistence.FieldResult
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String column()
+meth public abstract java.lang.String name()
+
+CLSS public final !enum javax.persistence.FlushModeType
+fld public final static javax.persistence.FlushModeType AUTO
+fld public final static javax.persistence.FlushModeType COMMIT
+meth public static javax.persistence.FlushModeType valueOf(java.lang.String)
+meth public static javax.persistence.FlushModeType[] values()
+supr java.lang.Enum<javax.persistence.FlushModeType>
+
+CLSS public abstract interface !annotation javax.persistence.ForeignKey
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String foreignKeyDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault javax.persistence.ConstraintMode value()
+
+CLSS public abstract interface !annotation javax.persistence.GeneratedValue
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String generator()
+meth public abstract !hasdefault javax.persistence.GenerationType strategy()
+
+CLSS public final !enum javax.persistence.GenerationType
+fld public final static javax.persistence.GenerationType AUTO
+fld public final static javax.persistence.GenerationType IDENTITY
+fld public final static javax.persistence.GenerationType SEQUENCE
+fld public final static javax.persistence.GenerationType TABLE
+meth public static javax.persistence.GenerationType valueOf(java.lang.String)
+meth public static javax.persistence.GenerationType[] values()
+supr java.lang.Enum<javax.persistence.GenerationType>
+
+CLSS public abstract interface !annotation javax.persistence.Id
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.IdClass
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class value()
+
+CLSS public abstract interface !annotation javax.persistence.Index
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean unique()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract java.lang.String columnList()
+
+CLSS public abstract interface !annotation javax.persistence.Inheritance
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.InheritanceType strategy()
+
+CLSS public final !enum javax.persistence.InheritanceType
+fld public final static javax.persistence.InheritanceType JOINED
+fld public final static javax.persistence.InheritanceType SINGLE_TABLE
+fld public final static javax.persistence.InheritanceType TABLE_PER_CLASS
+meth public static javax.persistence.InheritanceType valueOf(java.lang.String)
+meth public static javax.persistence.InheritanceType[] values()
+supr java.lang.Enum<javax.persistence.InheritanceType>
+
+CLSS public abstract interface !annotation javax.persistence.JoinColumn
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.JoinColumns)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean insertable()
+meth public abstract !hasdefault boolean nullable()
+meth public abstract !hasdefault boolean unique()
+meth public abstract !hasdefault boolean updatable()
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String referencedColumnName()
+meth public abstract !hasdefault java.lang.String table()
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+
+CLSS public abstract interface !annotation javax.persistence.JoinColumns
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract javax.persistence.JoinColumn[] value()
+
+CLSS public abstract interface !annotation javax.persistence.JoinTable
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String catalog()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String schema()
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract !hasdefault javax.persistence.ForeignKey inverseForeignKey()
+meth public abstract !hasdefault javax.persistence.Index[] indexes()
+meth public abstract !hasdefault javax.persistence.JoinColumn[] inverseJoinColumns()
+meth public abstract !hasdefault javax.persistence.JoinColumn[] joinColumns()
+meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
+
+CLSS public abstract interface !annotation javax.persistence.Lob
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public final !enum javax.persistence.LockModeType
+fld public final static javax.persistence.LockModeType NONE
+fld public final static javax.persistence.LockModeType OPTIMISTIC
+fld public final static javax.persistence.LockModeType OPTIMISTIC_FORCE_INCREMENT
+fld public final static javax.persistence.LockModeType PESSIMISTIC_FORCE_INCREMENT
+fld public final static javax.persistence.LockModeType PESSIMISTIC_READ
+fld public final static javax.persistence.LockModeType PESSIMISTIC_WRITE
+fld public final static javax.persistence.LockModeType READ
+fld public final static javax.persistence.LockModeType WRITE
+meth public static javax.persistence.LockModeType valueOf(java.lang.String)
+meth public static javax.persistence.LockModeType[] values()
+supr java.lang.Enum<javax.persistence.LockModeType>
+
+CLSS public javax.persistence.LockTimeoutException
+cons public init()
+cons public init(java.lang.Object)
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable,java.lang.Object)
+cons public init(java.lang.Throwable)
+meth public java.lang.Object getObject()
+supr javax.persistence.PersistenceException
+hfds entity
+
+CLSS public abstract interface !annotation javax.persistence.ManyToMany
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class targetEntity()
+meth public abstract !hasdefault java.lang.String mappedBy()
+meth public abstract !hasdefault javax.persistence.CascadeType[] cascade()
+meth public abstract !hasdefault javax.persistence.FetchType fetch()
+
+CLSS public abstract interface !annotation javax.persistence.ManyToOne
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean optional()
+meth public abstract !hasdefault java.lang.Class targetEntity()
+meth public abstract !hasdefault javax.persistence.CascadeType[] cascade()
+meth public abstract !hasdefault javax.persistence.FetchType fetch()
+
+CLSS public abstract interface !annotation javax.persistence.MapKey
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.MapKeyClass
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class value()
+
+CLSS public abstract interface !annotation javax.persistence.MapKeyColumn
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean insertable()
+meth public abstract !hasdefault boolean nullable()
+meth public abstract !hasdefault boolean unique()
+meth public abstract !hasdefault boolean updatable()
+meth public abstract !hasdefault int length()
+meth public abstract !hasdefault int precision()
+meth public abstract !hasdefault int scale()
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String table()
+
+CLSS public abstract interface !annotation javax.persistence.MapKeyEnumerated
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.EnumType value()
+
+CLSS public abstract interface !annotation javax.persistence.MapKeyJoinColumn
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.MapKeyJoinColumns)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean insertable()
+meth public abstract !hasdefault boolean nullable()
+meth public abstract !hasdefault boolean unique()
+meth public abstract !hasdefault boolean updatable()
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String referencedColumnName()
+meth public abstract !hasdefault java.lang.String table()
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+
+CLSS public abstract interface !annotation javax.persistence.MapKeyJoinColumns
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract javax.persistence.MapKeyJoinColumn[] value()
+
+CLSS public abstract interface !annotation javax.persistence.MapKeyTemporal
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.TemporalType value()
+
+CLSS public abstract interface !annotation javax.persistence.MappedSuperclass
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.MapsId
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface !annotation javax.persistence.NamedAttributeNode
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String keySubgraph()
+meth public abstract !hasdefault java.lang.String subgraph()
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation javax.persistence.NamedEntityGraph
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedEntityGraphs)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean includeAllAttributes()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault javax.persistence.NamedAttributeNode[] attributeNodes()
+meth public abstract !hasdefault javax.persistence.NamedSubgraph[] subclassSubgraphs()
+meth public abstract !hasdefault javax.persistence.NamedSubgraph[] subgraphs()
+
+CLSS public abstract interface !annotation javax.persistence.NamedEntityGraphs
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.NamedEntityGraph[] value()
+
+CLSS public abstract interface !annotation javax.persistence.NamedNativeQueries
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.NamedNativeQuery[] value()
+
+CLSS public abstract interface !annotation javax.persistence.NamedNativeQuery
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedNativeQueries)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class resultClass()
+meth public abstract !hasdefault java.lang.String resultSetMapping()
+meth public abstract !hasdefault javax.persistence.QueryHint[] hints()
+meth public abstract java.lang.String name()
+meth public abstract java.lang.String query()
+
+CLSS public abstract interface !annotation javax.persistence.NamedQueries
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.NamedQuery[] value()
+
+CLSS public abstract interface !annotation javax.persistence.NamedQuery
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedQueries)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.LockModeType lockMode()
+meth public abstract !hasdefault javax.persistence.QueryHint[] hints()
+meth public abstract java.lang.String name()
+meth public abstract java.lang.String query()
+
+CLSS public abstract interface !annotation javax.persistence.NamedStoredProcedureQueries
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.NamedStoredProcedureQuery[] value()
+
+CLSS public abstract interface !annotation javax.persistence.NamedStoredProcedureQuery
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedStoredProcedureQueries)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class[] resultClasses()
+meth public abstract !hasdefault java.lang.String[] resultSetMappings()
+meth public abstract !hasdefault javax.persistence.QueryHint[] hints()
+meth public abstract !hasdefault javax.persistence.StoredProcedureParameter[] parameters()
+meth public abstract java.lang.String name()
+meth public abstract java.lang.String procedureName()
+
+CLSS public abstract interface !annotation javax.persistence.NamedSubgraph
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class type()
+meth public abstract java.lang.String name()
+meth public abstract javax.persistence.NamedAttributeNode[] attributeNodes()
+
+CLSS public javax.persistence.NoResultException
+cons public init()
+cons public init(java.lang.String)
+supr javax.persistence.PersistenceException
+
+CLSS public javax.persistence.NonUniqueResultException
+cons public init()
+cons public init(java.lang.String)
+supr javax.persistence.PersistenceException
+
+CLSS public abstract interface !annotation javax.persistence.OneToMany
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean orphanRemoval()
+meth public abstract !hasdefault java.lang.Class targetEntity()
+meth public abstract !hasdefault java.lang.String mappedBy()
+meth public abstract !hasdefault javax.persistence.CascadeType[] cascade()
+meth public abstract !hasdefault javax.persistence.FetchType fetch()
+
+CLSS public abstract interface !annotation javax.persistence.OneToOne
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean optional()
+meth public abstract !hasdefault boolean orphanRemoval()
+meth public abstract !hasdefault java.lang.Class targetEntity()
+meth public abstract !hasdefault java.lang.String mappedBy()
+meth public abstract !hasdefault javax.persistence.CascadeType[] cascade()
+meth public abstract !hasdefault javax.persistence.FetchType fetch()
+
+CLSS public javax.persistence.OptimisticLockException
+cons public init()
+cons public init(java.lang.Object)
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable,java.lang.Object)
+cons public init(java.lang.Throwable)
+meth public java.lang.Object getEntity()
+supr javax.persistence.PersistenceException
+hfds entity
+
+CLSS public abstract interface !annotation javax.persistence.OrderBy
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface !annotation javax.persistence.OrderColumn
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean insertable()
+meth public abstract !hasdefault boolean nullable()
+meth public abstract !hasdefault boolean updatable()
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+
+CLSS public abstract interface javax.persistence.Parameter<%0 extends java.lang.Object>
+meth public abstract java.lang.Class<{javax.persistence.Parameter%0}> getParameterType()
+meth public abstract java.lang.Integer getPosition()
+meth public abstract java.lang.String getName()
+
+CLSS public final !enum javax.persistence.ParameterMode
+fld public final static javax.persistence.ParameterMode IN
+fld public final static javax.persistence.ParameterMode INOUT
+fld public final static javax.persistence.ParameterMode OUT
+fld public final static javax.persistence.ParameterMode REF_CURSOR
+meth public static javax.persistence.ParameterMode valueOf(java.lang.String)
+meth public static javax.persistence.ParameterMode[] values()
+supr java.lang.Enum<javax.persistence.ParameterMode>
+
+CLSS public javax.persistence.Persistence
+cons public init()
+fld protected final static java.util.Set<javax.persistence.spi.PersistenceProvider> providers
+ anno 0 java.lang.Deprecated()
+fld public final static java.lang.String PERSISTENCE_PROVIDER = "javax.persistence.spi.PeristenceProvider"
+ anno 0 java.lang.Deprecated()
+meth public static javax.persistence.EntityManagerFactory createEntityManagerFactory(java.lang.String)
+meth public static javax.persistence.EntityManagerFactory createEntityManagerFactory(java.lang.String,java.util.Map)
+meth public static javax.persistence.PersistenceUtil getPersistenceUtil()
+meth public static void generateSchema(java.lang.String,java.util.Map)
+supr java.lang.Object
+hcls PersistenceUtilImpl
+
+CLSS public abstract interface !annotation javax.persistence.PersistenceContext
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.PersistenceContexts)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String unitName()
+meth public abstract !hasdefault javax.persistence.PersistenceContextType type()
+meth public abstract !hasdefault javax.persistence.PersistenceProperty[] properties()
+meth public abstract !hasdefault javax.persistence.SynchronizationType synchronization()
+
+CLSS public final !enum javax.persistence.PersistenceContextType
+fld public final static javax.persistence.PersistenceContextType EXTENDED
+fld public final static javax.persistence.PersistenceContextType TRANSACTION
+meth public static javax.persistence.PersistenceContextType valueOf(java.lang.String)
+meth public static javax.persistence.PersistenceContextType[] values()
+supr java.lang.Enum<javax.persistence.PersistenceContextType>
+
+CLSS public abstract interface !annotation javax.persistence.PersistenceContexts
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.PersistenceContext[] value()
+
+CLSS public javax.persistence.PersistenceException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.RuntimeException
+
+CLSS public abstract interface !annotation javax.persistence.PersistenceProperty
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String name()
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation javax.persistence.PersistenceUnit
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.PersistenceUnits)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String unitName()
+
+CLSS public abstract interface javax.persistence.PersistenceUnitUtil
+intf javax.persistence.PersistenceUtil
+meth public abstract boolean isLoaded(java.lang.Object)
+meth public abstract boolean isLoaded(java.lang.Object,java.lang.String)
+meth public abstract java.lang.Object getIdentifier(java.lang.Object)
+
+CLSS public abstract interface !annotation javax.persistence.PersistenceUnits
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.PersistenceUnit[] value()
+
+CLSS public abstract interface javax.persistence.PersistenceUtil
+meth public abstract boolean isLoaded(java.lang.Object)
+meth public abstract boolean isLoaded(java.lang.Object,java.lang.String)
+
+CLSS public javax.persistence.PessimisticLockException
+cons public init()
+cons public init(java.lang.Object)
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable,java.lang.Object)
+cons public init(java.lang.Throwable)
+meth public java.lang.Object getEntity()
+supr javax.persistence.PersistenceException
+hfds entity
+
+CLSS public final !enum javax.persistence.PessimisticLockScope
+fld public final static javax.persistence.PessimisticLockScope EXTENDED
+fld public final static javax.persistence.PessimisticLockScope NORMAL
+meth public static javax.persistence.PessimisticLockScope valueOf(java.lang.String)
+meth public static javax.persistence.PessimisticLockScope[] values()
+supr java.lang.Enum<javax.persistence.PessimisticLockScope>
+
+CLSS public abstract interface !annotation javax.persistence.PostLoad
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PostPersist
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PostRemove
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PostUpdate
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PrePersist
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PreRemove
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PreUpdate
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.persistence.PrimaryKeyJoinColumn
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.PrimaryKeyJoinColumns)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String columnDefinition()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String referencedColumnName()
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+
+CLSS public abstract interface !annotation javax.persistence.PrimaryKeyJoinColumns
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract javax.persistence.PrimaryKeyJoinColumn[] value()
+
+CLSS public abstract interface javax.persistence.Query
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Parameter<{%%0}> getParameter(int,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Parameter<{%%0}> getParameter(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Query setParameter(javax.persistence.Parameter<{%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Object> {%%0} getParameterValue(javax.persistence.Parameter<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract boolean isBound(javax.persistence.Parameter<?>)
+meth public abstract int executeUpdate()
+meth public abstract int getFirstResult()
+meth public abstract int getMaxResults()
+meth public abstract java.lang.Object getParameterValue(int)
+meth public abstract java.lang.Object getParameterValue(java.lang.String)
+meth public abstract java.lang.Object getSingleResult()
+meth public abstract java.util.List getResultList()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getHints()
+meth public abstract java.util.Set<javax.persistence.Parameter<?>> getParameters()
+meth public abstract javax.persistence.FlushModeType getFlushMode()
+meth public abstract javax.persistence.LockModeType getLockMode()
+meth public abstract javax.persistence.Parameter<?> getParameter(int)
+meth public abstract javax.persistence.Parameter<?> getParameter(java.lang.String)
+meth public abstract javax.persistence.Query setFirstResult(int)
+meth public abstract javax.persistence.Query setFlushMode(javax.persistence.FlushModeType)
+meth public abstract javax.persistence.Query setHint(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.Query setLockMode(javax.persistence.LockModeType)
+meth public abstract javax.persistence.Query setMaxResults(int)
+meth public abstract javax.persistence.Query setParameter(int,java.lang.Object)
+meth public abstract javax.persistence.Query setParameter(int,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.Query setParameter(int,java.util.Date,javax.persistence.TemporalType)
+meth public abstract javax.persistence.Query setParameter(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.Query setParameter(java.lang.String,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.Query setParameter(java.lang.String,java.util.Date,javax.persistence.TemporalType)
+meth public abstract javax.persistence.Query setParameter(javax.persistence.Parameter<java.util.Calendar>,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.Query setParameter(javax.persistence.Parameter<java.util.Date>,java.util.Date,javax.persistence.TemporalType)
+meth public java.util.stream.Stream getResultStream()
+
+CLSS public abstract interface !annotation javax.persistence.QueryHint
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String name()
+meth public abstract java.lang.String value()
+
+CLSS public javax.persistence.QueryTimeoutException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable,javax.persistence.Query)
+cons public init(java.lang.Throwable)
+cons public init(javax.persistence.Query)
+meth public javax.persistence.Query getQuery()
+supr javax.persistence.PersistenceException
+hfds query
+
+CLSS public javax.persistence.RollbackException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.persistence.PersistenceException
+
+CLSS public abstract interface !annotation javax.persistence.SecondaryTable
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.SecondaryTables)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String catalog()
+meth public abstract !hasdefault java.lang.String schema()
+meth public abstract !hasdefault javax.persistence.ForeignKey foreignKey()
+meth public abstract !hasdefault javax.persistence.Index[] indexes()
+meth public abstract !hasdefault javax.persistence.PrimaryKeyJoinColumn[] pkJoinColumns()
+meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.SecondaryTables
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.SecondaryTable[] value()
+
+CLSS public abstract interface !annotation javax.persistence.SequenceGenerator
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.SequenceGenerators)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int allocationSize()
+meth public abstract !hasdefault int initialValue()
+meth public abstract !hasdefault java.lang.String catalog()
+meth public abstract !hasdefault java.lang.String schema()
+meth public abstract !hasdefault java.lang.String sequenceName()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.SequenceGenerators
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.SequenceGenerator[] value()
+
+CLSS public final !enum javax.persistence.SharedCacheMode
+fld public final static javax.persistence.SharedCacheMode ALL
+fld public final static javax.persistence.SharedCacheMode DISABLE_SELECTIVE
+fld public final static javax.persistence.SharedCacheMode ENABLE_SELECTIVE
+fld public final static javax.persistence.SharedCacheMode NONE
+fld public final static javax.persistence.SharedCacheMode UNSPECIFIED
+meth public static javax.persistence.SharedCacheMode valueOf(java.lang.String)
+meth public static javax.persistence.SharedCacheMode[] values()
+supr java.lang.Enum<javax.persistence.SharedCacheMode>
+
+CLSS public abstract interface !annotation javax.persistence.SqlResultSetMapping
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.SqlResultSetMappings)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.persistence.ColumnResult[] columns()
+meth public abstract !hasdefault javax.persistence.ConstructorResult[] classes()
+meth public abstract !hasdefault javax.persistence.EntityResult[] entities()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.SqlResultSetMappings
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.SqlResultSetMapping[] value()
+
+CLSS public abstract interface !annotation javax.persistence.StoredProcedureParameter
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault javax.persistence.ParameterMode mode()
+meth public abstract java.lang.Class type()
+
+CLSS public abstract interface javax.persistence.StoredProcedureQuery
+intf javax.persistence.Query
+meth public abstract <%0 extends java.lang.Object> javax.persistence.StoredProcedureQuery setParameter(javax.persistence.Parameter<{%%0}>,{%%0})
+meth public abstract boolean execute()
+meth public abstract boolean hasMoreResults()
+meth public abstract int executeUpdate()
+meth public abstract int getUpdateCount()
+meth public abstract java.lang.Object getOutputParameterValue(int)
+meth public abstract java.lang.Object getOutputParameterValue(java.lang.String)
+meth public abstract java.lang.Object getSingleResult()
+meth public abstract java.util.List getResultList()
+meth public abstract javax.persistence.StoredProcedureQuery registerStoredProcedureParameter(int,java.lang.Class,javax.persistence.ParameterMode)
+meth public abstract javax.persistence.StoredProcedureQuery registerStoredProcedureParameter(java.lang.String,java.lang.Class,javax.persistence.ParameterMode)
+meth public abstract javax.persistence.StoredProcedureQuery setFlushMode(javax.persistence.FlushModeType)
+meth public abstract javax.persistence.StoredProcedureQuery setHint(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(int,java.lang.Object)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(int,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(int,java.util.Date,javax.persistence.TemporalType)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(java.lang.String,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(java.lang.String,java.util.Date,javax.persistence.TemporalType)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(javax.persistence.Parameter<java.util.Calendar>,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.StoredProcedureQuery setParameter(javax.persistence.Parameter<java.util.Date>,java.util.Date,javax.persistence.TemporalType)
+
+CLSS public abstract interface javax.persistence.Subgraph<%0 extends java.lang.Object>
+meth public abstract !varargs void addAttributeNodes(java.lang.String[])
+meth public abstract !varargs void addAttributeNodes(javax.persistence.metamodel.Attribute<{javax.persistence.Subgraph%0},?>[])
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<? extends {%%0}> addKeySubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.Subgraph%0},{%%0}>,java.lang.Class<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<? extends {%%0}> addSubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.Subgraph%0},{%%0}>,java.lang.Class<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addKeySubgraph(java.lang.String)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addKeySubgraph(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addKeySubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.Subgraph%0},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addSubgraph(java.lang.String)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addSubgraph(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.Subgraph<{%%0}> addSubgraph(javax.persistence.metamodel.Attribute<{javax.persistence.Subgraph%0},{%%0}>)
+meth public abstract java.lang.Class<{javax.persistence.Subgraph%0}> getClassType()
+meth public abstract java.util.List<javax.persistence.AttributeNode<?>> getAttributeNodes()
+
+CLSS public final !enum javax.persistence.SynchronizationType
+fld public final static javax.persistence.SynchronizationType SYNCHRONIZED
+fld public final static javax.persistence.SynchronizationType UNSYNCHRONIZED
+meth public static javax.persistence.SynchronizationType valueOf(java.lang.String)
+meth public static javax.persistence.SynchronizationType[] values()
+supr java.lang.Enum<javax.persistence.SynchronizationType>
+
+CLSS public abstract interface !annotation javax.persistence.Table
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String catalog()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String schema()
+meth public abstract !hasdefault javax.persistence.Index[] indexes()
+meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
+
+CLSS public abstract interface !annotation javax.persistence.TableGenerator
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.TableGenerators)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int allocationSize()
+meth public abstract !hasdefault int initialValue()
+meth public abstract !hasdefault java.lang.String catalog()
+meth public abstract !hasdefault java.lang.String pkColumnName()
+meth public abstract !hasdefault java.lang.String pkColumnValue()
+meth public abstract !hasdefault java.lang.String schema()
+meth public abstract !hasdefault java.lang.String table()
+meth public abstract !hasdefault java.lang.String valueColumnName()
+meth public abstract !hasdefault javax.persistence.Index[] indexes()
+meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.TableGenerators
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.TableGenerator[] value()
+
+CLSS public abstract interface !annotation javax.persistence.Temporal
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.TemporalType value()
+
+CLSS public final !enum javax.persistence.TemporalType
+fld public final static javax.persistence.TemporalType DATE
+fld public final static javax.persistence.TemporalType TIME
+fld public final static javax.persistence.TemporalType TIMESTAMP
+meth public static javax.persistence.TemporalType valueOf(java.lang.String)
+meth public static javax.persistence.TemporalType[] values()
+supr java.lang.Enum<javax.persistence.TemporalType>
+
+CLSS public javax.persistence.TransactionRequiredException
+cons public init()
+cons public init(java.lang.String)
+supr javax.persistence.PersistenceException
+
+CLSS public abstract interface !annotation javax.persistence.Transient
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface javax.persistence.Tuple
+meth public abstract <%0 extends java.lang.Object> {%%0} get(int,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} get(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} get(javax.persistence.TupleElement<{%%0}>)
+meth public abstract java.lang.Object get(int)
+meth public abstract java.lang.Object get(java.lang.String)
+meth public abstract java.lang.Object[] toArray()
+meth public abstract java.util.List<javax.persistence.TupleElement<?>> getElements()
+
+CLSS public abstract interface javax.persistence.TupleElement<%0 extends java.lang.Object>
+meth public abstract java.lang.Class<? extends {javax.persistence.TupleElement%0}> getJavaType()
+meth public abstract java.lang.String getAlias()
+
+CLSS public abstract interface javax.persistence.TypedQuery<%0 extends java.lang.Object>
+intf javax.persistence.Query
+meth public abstract <%0 extends java.lang.Object> javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(javax.persistence.Parameter<{%%0}>,{%%0})
+meth public abstract java.util.List<{javax.persistence.TypedQuery%0}> getResultList()
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setFirstResult(int)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setFlushMode(javax.persistence.FlushModeType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setHint(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setLockMode(javax.persistence.LockModeType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setMaxResults(int)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(int,java.lang.Object)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(int,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(int,java.util.Date,javax.persistence.TemporalType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(java.lang.String,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(java.lang.String,java.util.Date,javax.persistence.TemporalType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(javax.persistence.Parameter<java.util.Calendar>,java.util.Calendar,javax.persistence.TemporalType)
+meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(javax.persistence.Parameter<java.util.Date>,java.util.Date,javax.persistence.TemporalType)
+meth public abstract {javax.persistence.TypedQuery%0} getSingleResult()
+meth public java.util.stream.Stream<{javax.persistence.TypedQuery%0}> getResultStream()
+
+CLSS public abstract interface !annotation javax.persistence.UniqueConstraint
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract java.lang.String[] columnNames()
+
+CLSS public final !enum javax.persistence.ValidationMode
+fld public final static javax.persistence.ValidationMode AUTO
+fld public final static javax.persistence.ValidationMode CALLBACK
+fld public final static javax.persistence.ValidationMode NONE
+meth public static javax.persistence.ValidationMode valueOf(java.lang.String)
+meth public static javax.persistence.ValidationMode[] values()
+supr java.lang.Enum<javax.persistence.ValidationMode>
+
+CLSS public abstract interface !annotation javax.persistence.Version
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface javax.persistence.criteria.AbstractQuery<%0 extends java.lang.Object>
+intf javax.persistence.criteria.CommonAbstractCriteria
+meth public abstract !varargs javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> groupBy(javax.persistence.criteria.Expression<?>[])
+meth public abstract !varargs javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> having(javax.persistence.criteria.Predicate[])
+meth public abstract !varargs javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> where(javax.persistence.criteria.Predicate[])
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Root<{%%0}> from(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Root<{%%0}> from(javax.persistence.metamodel.EntityType<{%%0}>)
+meth public abstract boolean isDistinct()
+meth public abstract java.lang.Class<{javax.persistence.criteria.AbstractQuery%0}> getResultType()
+meth public abstract java.util.List<javax.persistence.criteria.Expression<?>> getGroupList()
+meth public abstract java.util.Set<javax.persistence.criteria.Root<?>> getRoots()
+meth public abstract javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> distinct(boolean)
+meth public abstract javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> groupBy(java.util.List<javax.persistence.criteria.Expression<?>>)
+meth public abstract javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> having(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.AbstractQuery%0}> where(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Predicate getGroupRestriction()
+meth public abstract javax.persistence.criteria.Selection<{javax.persistence.criteria.AbstractQuery%0}> getSelection()
+
+CLSS public abstract interface javax.persistence.criteria.CollectionJoin<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.criteria.PluralJoin<{javax.persistence.criteria.CollectionJoin%0},java.util.Collection<{javax.persistence.criteria.CollectionJoin%1}>,{javax.persistence.criteria.CollectionJoin%1}>
+meth public abstract !varargs javax.persistence.criteria.CollectionJoin<{javax.persistence.criteria.CollectionJoin%0},{javax.persistence.criteria.CollectionJoin%1}> on(javax.persistence.criteria.Predicate[])
+meth public abstract javax.persistence.criteria.CollectionJoin<{javax.persistence.criteria.CollectionJoin%0},{javax.persistence.criteria.CollectionJoin%1}> on(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.metamodel.CollectionAttribute<? super {javax.persistence.criteria.CollectionJoin%0},{javax.persistence.criteria.CollectionJoin%1}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.CommonAbstractCriteria
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Subquery<{%%0}> subquery(java.lang.Class<{%%0}>)
+meth public abstract javax.persistence.criteria.Predicate getRestriction()
+
+CLSS public abstract interface javax.persistence.criteria.CompoundSelection<%0 extends java.lang.Object>
+intf javax.persistence.criteria.Selection<{javax.persistence.criteria.CompoundSelection%0}>
+
+CLSS public abstract interface javax.persistence.criteria.CriteriaBuilder
+innr public abstract interface static Case
+innr public abstract interface static Coalesce
+innr public abstract interface static In
+innr public abstract interface static SimpleCase
+innr public final static !enum Trimspec
+meth public abstract !varargs <%0 extends java.lang.Object> javax.persistence.criteria.CompoundSelection<{%%0}> construct(java.lang.Class<{%%0}>,javax.persistence.criteria.Selection<?>[])
+meth public abstract !varargs <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> function(java.lang.String,java.lang.Class<{%%0}>,javax.persistence.criteria.Expression<?>[])
+meth public abstract !varargs javax.persistence.criteria.CompoundSelection<java.lang.Object[]> array(javax.persistence.criteria.Selection<?>[])
+meth public abstract !varargs javax.persistence.criteria.CompoundSelection<javax.persistence.Tuple> tuple(javax.persistence.criteria.Selection<?>[])
+meth public abstract !varargs javax.persistence.criteria.Predicate and(javax.persistence.criteria.Predicate[])
+meth public abstract !varargs javax.persistence.criteria.Predicate or(javax.persistence.criteria.Predicate[])
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Expression<{%%0}> greatest(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Expression<{%%0}> least(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate between(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate between(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0},{%%0})
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate greaterThan(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate greaterThan(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate greaterThanOrEqualTo(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate greaterThanOrEqualTo(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate lessThan(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate lessThan(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate lessThanOrEqualTo(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Comparable<? super {%%0}>> javax.persistence.criteria.Predicate lessThanOrEqualTo(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<java.lang.Double> avg(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> abs(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> diff(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> diff(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> diff({%%0},javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> max(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> min(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> neg(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> prod(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> prod(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> prod({%%0},javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> sum(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> sum(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> sum(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.lang.Number> javax.persistence.criteria.Expression<{%%0}> sum({%%0},javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object, %3 extends {%%2}> javax.persistence.criteria.MapJoin<{%%0},{%%1},{%%3}> treat(javax.persistence.criteria.MapJoin<{%%0},{%%1},{%%2}>,java.lang.Class<{%%3}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends {%%1}> javax.persistence.criteria.CollectionJoin<{%%0},{%%2}> treat(javax.persistence.criteria.CollectionJoin<{%%0},{%%1}>,java.lang.Class<{%%2}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends {%%1}> javax.persistence.criteria.Join<{%%0},{%%2}> treat(javax.persistence.criteria.Join<{%%0},{%%1}>,java.lang.Class<{%%2}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends {%%1}> javax.persistence.criteria.ListJoin<{%%0},{%%2}> treat(javax.persistence.criteria.ListJoin<{%%0},{%%1}>,java.lang.Class<{%%2}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends {%%1}> javax.persistence.criteria.SetJoin<{%%0},{%%2}> treat(javax.persistence.criteria.SetJoin<{%%0},{%%1}>,java.lang.Class<{%%2}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.CriteriaBuilder$SimpleCase<{%%0},{%%1}> selectCase(javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Collection<{%%0}>> javax.persistence.criteria.Predicate isMember(javax.persistence.criteria.Expression<{%%0}>,javax.persistence.criteria.Expression<{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Collection<{%%0}>> javax.persistence.criteria.Predicate isMember({%%0},javax.persistence.criteria.Expression<{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Collection<{%%0}>> javax.persistence.criteria.Predicate isNotMember(javax.persistence.criteria.Expression<{%%0}>,javax.persistence.criteria.Expression<{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Collection<{%%0}>> javax.persistence.criteria.Predicate isNotMember({%%0},javax.persistence.criteria.Expression<{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Map<?,{%%0}>> javax.persistence.criteria.Expression<java.util.Collection<{%%0}>> values({%%1})
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Map<{%%0},?>> javax.persistence.criteria.Expression<java.util.Set<{%%0}>> keys({%%1})
+meth public abstract <%0 extends java.lang.Object, %1 extends {%%0}> javax.persistence.criteria.Path<{%%1}> treat(javax.persistence.criteria.Path<{%%0}>,java.lang.Class<{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends {%%0}> javax.persistence.criteria.Root<{%%1}> treat(javax.persistence.criteria.Root<{%%0}>,java.lang.Class<{%%1}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaBuilder$Case<{%%0}> selectCase()
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaBuilder$Coalesce<{%%0}> coalesce()
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaBuilder$In<{%%0}> in(javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaDelete<{%%0}> createCriteriaDelete(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaQuery<{%%0}> createQuery(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaUpdate<{%%0}> createCriteriaUpdate(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> all(javax.persistence.criteria.Subquery<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> any(javax.persistence.criteria.Subquery<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> coalesce(javax.persistence.criteria.Expression<? extends {%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> coalesce(javax.persistence.criteria.Expression<? extends {%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> literal({%%0})
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> nullLiteral(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> nullif(javax.persistence.criteria.Expression<{%%0}>,javax.persistence.criteria.Expression<?>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> nullif(javax.persistence.criteria.Expression<{%%0}>,{%%0})
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> some(javax.persistence.criteria.Subquery<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.ParameterExpression<{%%0}> parameter(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.ParameterExpression<{%%0}> parameter(java.lang.Class<{%%0}>,java.lang.String)
+meth public abstract <%0 extends java.util.Collection<?>> javax.persistence.criteria.Expression<java.lang.Integer> size(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.util.Collection<?>> javax.persistence.criteria.Expression<java.lang.Integer> size({%%0})
+meth public abstract <%0 extends java.util.Collection<?>> javax.persistence.criteria.Predicate isEmpty(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract <%0 extends java.util.Collection<?>> javax.persistence.criteria.Predicate isNotEmpty(javax.persistence.criteria.Expression<{%%0}>)
+meth public abstract javax.persistence.criteria.CriteriaQuery<java.lang.Object> createQuery()
+meth public abstract javax.persistence.criteria.CriteriaQuery<javax.persistence.Tuple> createTupleQuery()
+meth public abstract javax.persistence.criteria.Expression<java.lang.Double> sqrt(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Double> sumAsDouble(javax.persistence.criteria.Expression<java.lang.Float>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Double> toDouble(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Float> toFloat(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> length(javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> locate(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> locate(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String,int)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> locate(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> locate(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.Integer>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> mod(java.lang.Integer,javax.persistence.criteria.Expression<java.lang.Integer>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> mod(javax.persistence.criteria.Expression<java.lang.Integer>,java.lang.Integer)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> mod(javax.persistence.criteria.Expression<java.lang.Integer>,javax.persistence.criteria.Expression<java.lang.Integer>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> toInteger(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Long> count(javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Long> countDistinct(javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Long> sumAsLong(javax.persistence.criteria.Expression<java.lang.Integer>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Long> toLong(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Number> quot(java.lang.Number,javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Number> quot(javax.persistence.criteria.Expression<? extends java.lang.Number>,java.lang.Number)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Number> quot(javax.persistence.criteria.Expression<? extends java.lang.Number>,javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> concat(java.lang.String,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> concat(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> concat(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> lower(javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> substring(javax.persistence.criteria.Expression<java.lang.String>,int)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> substring(javax.persistence.criteria.Expression<java.lang.String>,int,int)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> substring(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.Integer>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> substring(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.Integer>,javax.persistence.criteria.Expression<java.lang.Integer>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> toString(javax.persistence.criteria.Expression<java.lang.Character>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> trim(char,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> trim(javax.persistence.criteria.CriteriaBuilder$Trimspec,char,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> trim(javax.persistence.criteria.CriteriaBuilder$Trimspec,javax.persistence.criteria.Expression<java.lang.Character>,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> trim(javax.persistence.criteria.CriteriaBuilder$Trimspec,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> trim(javax.persistence.criteria.Expression<java.lang.Character>,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> trim(javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.String> upper(javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Expression<java.math.BigDecimal> toBigDecimal(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.math.BigInteger> toBigInteger(javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Expression<java.sql.Date> currentDate()
+meth public abstract javax.persistence.criteria.Expression<java.sql.Time> currentTime()
+meth public abstract javax.persistence.criteria.Expression<java.sql.Timestamp> currentTimestamp()
+meth public abstract javax.persistence.criteria.Order asc(javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Order desc(javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Predicate and(javax.persistence.criteria.Expression<java.lang.Boolean>,javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Predicate conjunction()
+meth public abstract javax.persistence.criteria.Predicate disjunction()
+meth public abstract javax.persistence.criteria.Predicate equal(javax.persistence.criteria.Expression<?>,java.lang.Object)
+meth public abstract javax.persistence.criteria.Predicate equal(javax.persistence.criteria.Expression<?>,javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Predicate exists(javax.persistence.criteria.Subquery<?>)
+meth public abstract javax.persistence.criteria.Predicate ge(javax.persistence.criteria.Expression<? extends java.lang.Number>,java.lang.Number)
+meth public abstract javax.persistence.criteria.Predicate ge(javax.persistence.criteria.Expression<? extends java.lang.Number>,javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Predicate gt(javax.persistence.criteria.Expression<? extends java.lang.Number>,java.lang.Number)
+meth public abstract javax.persistence.criteria.Predicate gt(javax.persistence.criteria.Expression<? extends java.lang.Number>,javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Predicate isFalse(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Predicate isNotNull(javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Predicate isNull(javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Predicate isTrue(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Predicate le(javax.persistence.criteria.Expression<? extends java.lang.Number>,java.lang.Number)
+meth public abstract javax.persistence.criteria.Predicate le(javax.persistence.criteria.Expression<? extends java.lang.Number>,javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Predicate like(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String)
+meth public abstract javax.persistence.criteria.Predicate like(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String,char)
+meth public abstract javax.persistence.criteria.Predicate like(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String,javax.persistence.criteria.Expression<java.lang.Character>)
+meth public abstract javax.persistence.criteria.Predicate like(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Predicate like(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>,char)
+meth public abstract javax.persistence.criteria.Predicate like(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.Character>)
+meth public abstract javax.persistence.criteria.Predicate lt(javax.persistence.criteria.Expression<? extends java.lang.Number>,java.lang.Number)
+meth public abstract javax.persistence.criteria.Predicate lt(javax.persistence.criteria.Expression<? extends java.lang.Number>,javax.persistence.criteria.Expression<? extends java.lang.Number>)
+meth public abstract javax.persistence.criteria.Predicate not(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Predicate notEqual(javax.persistence.criteria.Expression<?>,java.lang.Object)
+meth public abstract javax.persistence.criteria.Predicate notEqual(javax.persistence.criteria.Expression<?>,javax.persistence.criteria.Expression<?>)
+meth public abstract javax.persistence.criteria.Predicate notLike(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String)
+meth public abstract javax.persistence.criteria.Predicate notLike(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String,char)
+meth public abstract javax.persistence.criteria.Predicate notLike(javax.persistence.criteria.Expression<java.lang.String>,java.lang.String,javax.persistence.criteria.Expression<java.lang.Character>)
+meth public abstract javax.persistence.criteria.Predicate notLike(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>)
+meth public abstract javax.persistence.criteria.Predicate notLike(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>,char)
+meth public abstract javax.persistence.criteria.Predicate notLike(javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.String>,javax.persistence.criteria.Expression<java.lang.Character>)
+meth public abstract javax.persistence.criteria.Predicate or(javax.persistence.criteria.Expression<java.lang.Boolean>,javax.persistence.criteria.Expression<java.lang.Boolean>)
+
+CLSS public abstract interface static javax.persistence.criteria.CriteriaBuilder$Case<%0 extends java.lang.Object>
+ outer javax.persistence.criteria.CriteriaBuilder
+intf javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$Case%0}>
+meth public abstract javax.persistence.criteria.CriteriaBuilder$Case<{javax.persistence.criteria.CriteriaBuilder$Case%0}> when(javax.persistence.criteria.Expression<java.lang.Boolean>,javax.persistence.criteria.Expression<? extends {javax.persistence.criteria.CriteriaBuilder$Case%0}>)
+meth public abstract javax.persistence.criteria.CriteriaBuilder$Case<{javax.persistence.criteria.CriteriaBuilder$Case%0}> when(javax.persistence.criteria.Expression<java.lang.Boolean>,{javax.persistence.criteria.CriteriaBuilder$Case%0})
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$Case%0}> otherwise(javax.persistence.criteria.Expression<? extends {javax.persistence.criteria.CriteriaBuilder$Case%0}>)
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$Case%0}> otherwise({javax.persistence.criteria.CriteriaBuilder$Case%0})
+
+CLSS public abstract interface static javax.persistence.criteria.CriteriaBuilder$Coalesce<%0 extends java.lang.Object>
+ outer javax.persistence.criteria.CriteriaBuilder
+intf javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$Coalesce%0}>
+meth public abstract javax.persistence.criteria.CriteriaBuilder$Coalesce<{javax.persistence.criteria.CriteriaBuilder$Coalesce%0}> value(javax.persistence.criteria.Expression<? extends {javax.persistence.criteria.CriteriaBuilder$Coalesce%0}>)
+meth public abstract javax.persistence.criteria.CriteriaBuilder$Coalesce<{javax.persistence.criteria.CriteriaBuilder$Coalesce%0}> value({javax.persistence.criteria.CriteriaBuilder$Coalesce%0})
+
+CLSS public abstract interface static javax.persistence.criteria.CriteriaBuilder$In<%0 extends java.lang.Object>
+ outer javax.persistence.criteria.CriteriaBuilder
+intf javax.persistence.criteria.Predicate
+meth public abstract javax.persistence.criteria.CriteriaBuilder$In<{javax.persistence.criteria.CriteriaBuilder$In%0}> value(javax.persistence.criteria.Expression<? extends {javax.persistence.criteria.CriteriaBuilder$In%0}>)
+meth public abstract javax.persistence.criteria.CriteriaBuilder$In<{javax.persistence.criteria.CriteriaBuilder$In%0}> value({javax.persistence.criteria.CriteriaBuilder$In%0})
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$In%0}> getExpression()
+
+CLSS public abstract interface static javax.persistence.criteria.CriteriaBuilder$SimpleCase<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ outer javax.persistence.criteria.CriteriaBuilder
+intf javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}>
+meth public abstract javax.persistence.criteria.CriteriaBuilder$SimpleCase<{javax.persistence.criteria.CriteriaBuilder$SimpleCase%0},{javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}> when({javax.persistence.criteria.CriteriaBuilder$SimpleCase%0},javax.persistence.criteria.Expression<? extends {javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}>)
+meth public abstract javax.persistence.criteria.CriteriaBuilder$SimpleCase<{javax.persistence.criteria.CriteriaBuilder$SimpleCase%0},{javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}> when({javax.persistence.criteria.CriteriaBuilder$SimpleCase%0},{javax.persistence.criteria.CriteriaBuilder$SimpleCase%1})
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$SimpleCase%0}> getExpression()
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}> otherwise(javax.persistence.criteria.Expression<? extends {javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}>)
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.CriteriaBuilder$SimpleCase%1}> otherwise({javax.persistence.criteria.CriteriaBuilder$SimpleCase%1})
+
+CLSS public final static !enum javax.persistence.criteria.CriteriaBuilder$Trimspec
+ outer javax.persistence.criteria.CriteriaBuilder
+fld public final static javax.persistence.criteria.CriteriaBuilder$Trimspec BOTH
+fld public final static javax.persistence.criteria.CriteriaBuilder$Trimspec LEADING
+fld public final static javax.persistence.criteria.CriteriaBuilder$Trimspec TRAILING
+meth public static javax.persistence.criteria.CriteriaBuilder$Trimspec valueOf(java.lang.String)
+meth public static javax.persistence.criteria.CriteriaBuilder$Trimspec[] values()
+supr java.lang.Enum<javax.persistence.criteria.CriteriaBuilder$Trimspec>
+
+CLSS public abstract interface javax.persistence.criteria.CriteriaDelete<%0 extends java.lang.Object>
+intf javax.persistence.criteria.CommonAbstractCriteria
+meth public abstract !varargs javax.persistence.criteria.CriteriaDelete<{javax.persistence.criteria.CriteriaDelete%0}> where(javax.persistence.criteria.Predicate[])
+meth public abstract javax.persistence.criteria.CriteriaDelete<{javax.persistence.criteria.CriteriaDelete%0}> where(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Root<{javax.persistence.criteria.CriteriaDelete%0}> from(java.lang.Class<{javax.persistence.criteria.CriteriaDelete%0}>)
+meth public abstract javax.persistence.criteria.Root<{javax.persistence.criteria.CriteriaDelete%0}> from(javax.persistence.metamodel.EntityType<{javax.persistence.criteria.CriteriaDelete%0}>)
+meth public abstract javax.persistence.criteria.Root<{javax.persistence.criteria.CriteriaDelete%0}> getRoot()
+
+CLSS public abstract interface javax.persistence.criteria.CriteriaQuery<%0 extends java.lang.Object>
+intf javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.CriteriaQuery%0}>
+meth public abstract !varargs javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> groupBy(javax.persistence.criteria.Expression<?>[])
+meth public abstract !varargs javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> having(javax.persistence.criteria.Predicate[])
+meth public abstract !varargs javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> multiselect(javax.persistence.criteria.Selection<?>[])
+meth public abstract !varargs javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> orderBy(javax.persistence.criteria.Order[])
+meth public abstract !varargs javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> where(javax.persistence.criteria.Predicate[])
+meth public abstract java.util.List<javax.persistence.criteria.Order> getOrderList()
+meth public abstract java.util.Set<javax.persistence.criteria.ParameterExpression<?>> getParameters()
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> distinct(boolean)
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> groupBy(java.util.List<javax.persistence.criteria.Expression<?>>)
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> having(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> multiselect(java.util.List<javax.persistence.criteria.Selection<?>>)
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> orderBy(java.util.List<javax.persistence.criteria.Order>)
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> select(javax.persistence.criteria.Selection<? extends {javax.persistence.criteria.CriteriaQuery%0}>)
+meth public abstract javax.persistence.criteria.CriteriaQuery<{javax.persistence.criteria.CriteriaQuery%0}> where(javax.persistence.criteria.Expression<java.lang.Boolean>)
+
+CLSS public abstract interface javax.persistence.criteria.CriteriaUpdate<%0 extends java.lang.Object>
+intf javax.persistence.criteria.CommonAbstractCriteria
+meth public abstract !varargs javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> where(javax.persistence.criteria.Predicate[])
+meth public abstract <%0 extends java.lang.Object, %1 extends {%%0}> javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> set(javax.persistence.criteria.Path<{%%0}>,{%%1})
+meth public abstract <%0 extends java.lang.Object, %1 extends {%%0}> javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> set(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.CriteriaUpdate%0},{%%0}>,{%%1})
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> set(javax.persistence.criteria.Path<{%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> set(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.CriteriaUpdate%0},{%%0}>,javax.persistence.criteria.Expression<? extends {%%0}>)
+meth public abstract javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> set(java.lang.String,java.lang.Object)
+meth public abstract javax.persistence.criteria.CriteriaUpdate<{javax.persistence.criteria.CriteriaUpdate%0}> where(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Root<{javax.persistence.criteria.CriteriaUpdate%0}> from(java.lang.Class<{javax.persistence.criteria.CriteriaUpdate%0}>)
+meth public abstract javax.persistence.criteria.Root<{javax.persistence.criteria.CriteriaUpdate%0}> from(javax.persistence.metamodel.EntityType<{javax.persistence.criteria.CriteriaUpdate%0}>)
+meth public abstract javax.persistence.criteria.Root<{javax.persistence.criteria.CriteriaUpdate%0}> getRoot()
+
+CLSS public abstract interface javax.persistence.criteria.Expression<%0 extends java.lang.Object>
+intf javax.persistence.criteria.Selection<{javax.persistence.criteria.Expression%0}>
+meth public abstract !varargs javax.persistence.criteria.Predicate in(java.lang.Object[])
+meth public abstract !varargs javax.persistence.criteria.Predicate in(javax.persistence.criteria.Expression<?>[])
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Expression<{%%0}> as(java.lang.Class<{%%0}>)
+meth public abstract javax.persistence.criteria.Predicate in(java.util.Collection<?>)
+meth public abstract javax.persistence.criteria.Predicate in(javax.persistence.criteria.Expression<java.util.Collection<?>>)
+meth public abstract javax.persistence.criteria.Predicate isNotNull()
+meth public abstract javax.persistence.criteria.Predicate isNull()
+
+CLSS public abstract interface javax.persistence.criteria.Fetch<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.criteria.FetchParent<{javax.persistence.criteria.Fetch%0},{javax.persistence.criteria.Fetch%1}>
+meth public abstract javax.persistence.criteria.FetchParent<?,{javax.persistence.criteria.Fetch%0}> getParent()
+meth public abstract javax.persistence.criteria.JoinType getJoinType()
+meth public abstract javax.persistence.metamodel.Attribute<? super {javax.persistence.criteria.Fetch%0},?> getAttribute()
+
+CLSS public abstract interface javax.persistence.criteria.FetchParent<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.Fetch<{%%0},{%%1}> fetch(java.lang.String)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.Fetch<{%%0},{%%1}> fetch(java.lang.String,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Fetch<{javax.persistence.criteria.FetchParent%1},{%%0}> fetch(javax.persistence.metamodel.PluralAttribute<? super {javax.persistence.criteria.FetchParent%1},?,{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Fetch<{javax.persistence.criteria.FetchParent%1},{%%0}> fetch(javax.persistence.metamodel.PluralAttribute<? super {javax.persistence.criteria.FetchParent%1},?,{%%0}>,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Fetch<{javax.persistence.criteria.FetchParent%1},{%%0}> fetch(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.FetchParent%1},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Fetch<{javax.persistence.criteria.FetchParent%1},{%%0}> fetch(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.FetchParent%1},{%%0}>,javax.persistence.criteria.JoinType)
+meth public abstract java.util.Set<javax.persistence.criteria.Fetch<{javax.persistence.criteria.FetchParent%1},?>> getFetches()
+
+CLSS public abstract interface javax.persistence.criteria.From<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.criteria.FetchParent<{javax.persistence.criteria.From%0},{javax.persistence.criteria.From%1}>
+intf javax.persistence.criteria.Path<{javax.persistence.criteria.From%1}>
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> javax.persistence.criteria.MapJoin<{%%0},{%%1},{%%2}> joinMap(java.lang.String)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> javax.persistence.criteria.MapJoin<{%%0},{%%1},{%%2}> joinMap(java.lang.String,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.CollectionJoin<{%%0},{%%1}> joinCollection(java.lang.String)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.CollectionJoin<{%%0},{%%1}> joinCollection(java.lang.String,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.Join<{%%0},{%%1}> join(java.lang.String)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.Join<{%%0},{%%1}> join(java.lang.String,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.ListJoin<{%%0},{%%1}> joinList(java.lang.String)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.ListJoin<{%%0},{%%1}> joinList(java.lang.String,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.MapJoin<{javax.persistence.criteria.From%1},{%%0},{%%1}> join(javax.persistence.metamodel.MapAttribute<? super {javax.persistence.criteria.From%1},{%%0},{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.MapJoin<{javax.persistence.criteria.From%1},{%%0},{%%1}> join(javax.persistence.metamodel.MapAttribute<? super {javax.persistence.criteria.From%1},{%%0},{%%1}>,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.SetJoin<{%%0},{%%1}> joinSet(java.lang.String)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.SetJoin<{%%0},{%%1}> joinSet(java.lang.String,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CollectionJoin<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.CollectionAttribute<? super {javax.persistence.criteria.From%1},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.CollectionJoin<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.CollectionAttribute<? super {javax.persistence.criteria.From%1},{%%0}>,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Join<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.From%1},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Join<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.From%1},{%%0}>,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.ListJoin<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.ListAttribute<? super {javax.persistence.criteria.From%1},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.ListJoin<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.ListAttribute<? super {javax.persistence.criteria.From%1},{%%0}>,javax.persistence.criteria.JoinType)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.SetJoin<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.SetAttribute<? super {javax.persistence.criteria.From%1},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.SetJoin<{javax.persistence.criteria.From%1},{%%0}> join(javax.persistence.metamodel.SetAttribute<? super {javax.persistence.criteria.From%1},{%%0}>,javax.persistence.criteria.JoinType)
+meth public abstract boolean isCorrelated()
+meth public abstract java.util.Set<javax.persistence.criteria.Join<{javax.persistence.criteria.From%1},?>> getJoins()
+meth public abstract javax.persistence.criteria.From<{javax.persistence.criteria.From%0},{javax.persistence.criteria.From%1}> getCorrelationParent()
+
+CLSS public abstract interface javax.persistence.criteria.Join<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.criteria.From<{javax.persistence.criteria.Join%0},{javax.persistence.criteria.Join%1}>
+meth public abstract !varargs javax.persistence.criteria.Join<{javax.persistence.criteria.Join%0},{javax.persistence.criteria.Join%1}> on(javax.persistence.criteria.Predicate[])
+meth public abstract javax.persistence.criteria.From<?,{javax.persistence.criteria.Join%0}> getParent()
+meth public abstract javax.persistence.criteria.Join<{javax.persistence.criteria.Join%0},{javax.persistence.criteria.Join%1}> on(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.JoinType getJoinType()
+meth public abstract javax.persistence.criteria.Predicate getOn()
+meth public abstract javax.persistence.metamodel.Attribute<? super {javax.persistence.criteria.Join%0},?> getAttribute()
+
+CLSS public final !enum javax.persistence.criteria.JoinType
+fld public final static javax.persistence.criteria.JoinType INNER
+fld public final static javax.persistence.criteria.JoinType LEFT
+fld public final static javax.persistence.criteria.JoinType RIGHT
+meth public static javax.persistence.criteria.JoinType valueOf(java.lang.String)
+meth public static javax.persistence.criteria.JoinType[] values()
+supr java.lang.Enum<javax.persistence.criteria.JoinType>
+
+CLSS public abstract interface javax.persistence.criteria.ListJoin<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.criteria.PluralJoin<{javax.persistence.criteria.ListJoin%0},java.util.List<{javax.persistence.criteria.ListJoin%1}>,{javax.persistence.criteria.ListJoin%1}>
+meth public abstract !varargs javax.persistence.criteria.ListJoin<{javax.persistence.criteria.ListJoin%0},{javax.persistence.criteria.ListJoin%1}> on(javax.persistence.criteria.Predicate[])
+meth public abstract javax.persistence.criteria.Expression<java.lang.Integer> index()
+meth public abstract javax.persistence.criteria.ListJoin<{javax.persistence.criteria.ListJoin%0},{javax.persistence.criteria.ListJoin%1}> on(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.metamodel.ListAttribute<? super {javax.persistence.criteria.ListJoin%0},{javax.persistence.criteria.ListJoin%1}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.MapJoin<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+intf javax.persistence.criteria.PluralJoin<{javax.persistence.criteria.MapJoin%0},java.util.Map<{javax.persistence.criteria.MapJoin%1},{javax.persistence.criteria.MapJoin%2}>,{javax.persistence.criteria.MapJoin%2}>
+meth public abstract !varargs javax.persistence.criteria.MapJoin<{javax.persistence.criteria.MapJoin%0},{javax.persistence.criteria.MapJoin%1},{javax.persistence.criteria.MapJoin%2}> on(javax.persistence.criteria.Predicate[])
+meth public abstract javax.persistence.criteria.Expression<java.util.Map$Entry<{javax.persistence.criteria.MapJoin%1},{javax.persistence.criteria.MapJoin%2}>> entry()
+meth public abstract javax.persistence.criteria.MapJoin<{javax.persistence.criteria.MapJoin%0},{javax.persistence.criteria.MapJoin%1},{javax.persistence.criteria.MapJoin%2}> on(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Path<{javax.persistence.criteria.MapJoin%1}> key()
+meth public abstract javax.persistence.criteria.Path<{javax.persistence.criteria.MapJoin%2}> value()
+meth public abstract javax.persistence.metamodel.MapAttribute<? super {javax.persistence.criteria.MapJoin%0},{javax.persistence.criteria.MapJoin%1},{javax.persistence.criteria.MapJoin%2}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.Order
+meth public abstract boolean isAscending()
+meth public abstract javax.persistence.criteria.Expression<?> getExpression()
+meth public abstract javax.persistence.criteria.Order reverse()
+
+CLSS public abstract interface javax.persistence.criteria.ParameterExpression<%0 extends java.lang.Object>
+intf javax.persistence.Parameter<{javax.persistence.criteria.ParameterExpression%0}>
+intf javax.persistence.criteria.Expression<{javax.persistence.criteria.ParameterExpression%0}>
+
+CLSS public abstract interface javax.persistence.criteria.Path<%0 extends java.lang.Object>
+intf javax.persistence.criteria.Expression<{javax.persistence.criteria.Path%0}>
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.util.Map<{%%0},{%%1}>> javax.persistence.criteria.Expression<{%%2}> get(javax.persistence.metamodel.MapAttribute<{javax.persistence.criteria.Path%0},{%%0},{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.util.Collection<{%%0}>> javax.persistence.criteria.Expression<{%%1}> get(javax.persistence.metamodel.PluralAttribute<{javax.persistence.criteria.Path%0},{%%1},{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Path<{%%0}> get(java.lang.String)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Path<{%%0}> get(javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.criteria.Path%0},{%%0}>)
+meth public abstract javax.persistence.criteria.Expression<java.lang.Class<? extends {javax.persistence.criteria.Path%0}>> type()
+meth public abstract javax.persistence.criteria.Path<?> getParentPath()
+meth public abstract javax.persistence.metamodel.Bindable<{javax.persistence.criteria.Path%0}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.PluralJoin<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+intf javax.persistence.criteria.Join<{javax.persistence.criteria.PluralJoin%0},{javax.persistence.criteria.PluralJoin%2}>
+meth public abstract javax.persistence.metamodel.PluralAttribute<? super {javax.persistence.criteria.PluralJoin%0},{javax.persistence.criteria.PluralJoin%1},{javax.persistence.criteria.PluralJoin%2}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.Predicate
+innr public final static !enum BooleanOperator
+intf javax.persistence.criteria.Expression<java.lang.Boolean>
+meth public abstract boolean isNegated()
+meth public abstract java.util.List<javax.persistence.criteria.Expression<java.lang.Boolean>> getExpressions()
+meth public abstract javax.persistence.criteria.Predicate not()
+meth public abstract javax.persistence.criteria.Predicate$BooleanOperator getOperator()
+
+CLSS public final static !enum javax.persistence.criteria.Predicate$BooleanOperator
+ outer javax.persistence.criteria.Predicate
+fld public final static javax.persistence.criteria.Predicate$BooleanOperator AND
+fld public final static javax.persistence.criteria.Predicate$BooleanOperator OR
+meth public static javax.persistence.criteria.Predicate$BooleanOperator valueOf(java.lang.String)
+meth public static javax.persistence.criteria.Predicate$BooleanOperator[] values()
+supr java.lang.Enum<javax.persistence.criteria.Predicate$BooleanOperator>
+
+CLSS public abstract interface javax.persistence.criteria.Root<%0 extends java.lang.Object>
+intf javax.persistence.criteria.From<{javax.persistence.criteria.Root%0},{javax.persistence.criteria.Root%0}>
+meth public abstract javax.persistence.metamodel.EntityType<{javax.persistence.criteria.Root%0}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.Selection<%0 extends java.lang.Object>
+intf javax.persistence.TupleElement<{javax.persistence.criteria.Selection%0}>
+meth public abstract boolean isCompoundSelection()
+meth public abstract java.util.List<javax.persistence.criteria.Selection<?>> getCompoundSelectionItems()
+meth public abstract javax.persistence.criteria.Selection<{javax.persistence.criteria.Selection%0}> alias(java.lang.String)
+
+CLSS public abstract interface javax.persistence.criteria.SetJoin<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.criteria.PluralJoin<{javax.persistence.criteria.SetJoin%0},java.util.Set<{javax.persistence.criteria.SetJoin%1}>,{javax.persistence.criteria.SetJoin%1}>
+meth public abstract !varargs javax.persistence.criteria.SetJoin<{javax.persistence.criteria.SetJoin%0},{javax.persistence.criteria.SetJoin%1}> on(javax.persistence.criteria.Predicate[])
+meth public abstract javax.persistence.criteria.SetJoin<{javax.persistence.criteria.SetJoin%0},{javax.persistence.criteria.SetJoin%1}> on(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.metamodel.SetAttribute<? super {javax.persistence.criteria.SetJoin%0},{javax.persistence.criteria.SetJoin%1}> getModel()
+
+CLSS public abstract interface javax.persistence.criteria.Subquery<%0 extends java.lang.Object>
+intf javax.persistence.criteria.AbstractQuery<{javax.persistence.criteria.Subquery%0}>
+intf javax.persistence.criteria.Expression<{javax.persistence.criteria.Subquery%0}>
+meth public abstract !varargs javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> groupBy(javax.persistence.criteria.Expression<?>[])
+meth public abstract !varargs javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> having(javax.persistence.criteria.Predicate[])
+meth public abstract !varargs javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> where(javax.persistence.criteria.Predicate[])
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> javax.persistence.criteria.MapJoin<{%%0},{%%1},{%%2}> correlate(javax.persistence.criteria.MapJoin<{%%0},{%%1},{%%2}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.CollectionJoin<{%%0},{%%1}> correlate(javax.persistence.criteria.CollectionJoin<{%%0},{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.Join<{%%0},{%%1}> correlate(javax.persistence.criteria.Join<{%%0},{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.ListJoin<{%%0},{%%1}> correlate(javax.persistence.criteria.ListJoin<{%%0},{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.criteria.SetJoin<{%%0},{%%1}> correlate(javax.persistence.criteria.SetJoin<{%%0},{%%1}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.criteria.Root<{%%0}> correlate(javax.persistence.criteria.Root<{%%0}>)
+meth public abstract java.util.Set<javax.persistence.criteria.Join<?,?>> getCorrelatedJoins()
+meth public abstract javax.persistence.criteria.AbstractQuery<?> getParent()
+meth public abstract javax.persistence.criteria.CommonAbstractCriteria getContainingQuery()
+meth public abstract javax.persistence.criteria.Expression<{javax.persistence.criteria.Subquery%0}> getSelection()
+meth public abstract javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> distinct(boolean)
+meth public abstract javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> groupBy(java.util.List<javax.persistence.criteria.Expression<?>>)
+meth public abstract javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> having(javax.persistence.criteria.Expression<java.lang.Boolean>)
+meth public abstract javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> select(javax.persistence.criteria.Expression<{javax.persistence.criteria.Subquery%0}>)
+meth public abstract javax.persistence.criteria.Subquery<{javax.persistence.criteria.Subquery%0}> where(javax.persistence.criteria.Expression<java.lang.Boolean>)
+
+CLSS abstract interface javax.persistence.criteria.package-info
+
+CLSS public abstract interface javax.persistence.metamodel.Attribute<%0 extends java.lang.Object, %1 extends java.lang.Object>
+innr public final static !enum PersistentAttributeType
+meth public abstract boolean isAssociation()
+meth public abstract boolean isCollection()
+meth public abstract java.lang.Class<{javax.persistence.metamodel.Attribute%1}> getJavaType()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.reflect.Member getJavaMember()
+meth public abstract javax.persistence.metamodel.Attribute$PersistentAttributeType getPersistentAttributeType()
+meth public abstract javax.persistence.metamodel.ManagedType<{javax.persistence.metamodel.Attribute%0}> getDeclaringType()
+
+CLSS public final static !enum javax.persistence.metamodel.Attribute$PersistentAttributeType
+ outer javax.persistence.metamodel.Attribute
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType BASIC
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType ELEMENT_COLLECTION
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType EMBEDDED
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType MANY_TO_MANY
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType MANY_TO_ONE
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType ONE_TO_MANY
+fld public final static javax.persistence.metamodel.Attribute$PersistentAttributeType ONE_TO_ONE
+meth public static javax.persistence.metamodel.Attribute$PersistentAttributeType valueOf(java.lang.String)
+meth public static javax.persistence.metamodel.Attribute$PersistentAttributeType[] values()
+supr java.lang.Enum<javax.persistence.metamodel.Attribute$PersistentAttributeType>
+
+CLSS public abstract interface javax.persistence.metamodel.BasicType<%0 extends java.lang.Object>
+intf javax.persistence.metamodel.Type<{javax.persistence.metamodel.BasicType%0}>
+
+CLSS public abstract interface javax.persistence.metamodel.Bindable<%0 extends java.lang.Object>
+innr public final static !enum BindableType
+meth public abstract java.lang.Class<{javax.persistence.metamodel.Bindable%0}> getBindableJavaType()
+meth public abstract javax.persistence.metamodel.Bindable$BindableType getBindableType()
+
+CLSS public final static !enum javax.persistence.metamodel.Bindable$BindableType
+ outer javax.persistence.metamodel.Bindable
+fld public final static javax.persistence.metamodel.Bindable$BindableType ENTITY_TYPE
+fld public final static javax.persistence.metamodel.Bindable$BindableType PLURAL_ATTRIBUTE
+fld public final static javax.persistence.metamodel.Bindable$BindableType SINGULAR_ATTRIBUTE
+meth public static javax.persistence.metamodel.Bindable$BindableType valueOf(java.lang.String)
+meth public static javax.persistence.metamodel.Bindable$BindableType[] values()
+supr java.lang.Enum<javax.persistence.metamodel.Bindable$BindableType>
+
+CLSS public abstract interface javax.persistence.metamodel.CollectionAttribute<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.metamodel.PluralAttribute<{javax.persistence.metamodel.CollectionAttribute%0},java.util.Collection<{javax.persistence.metamodel.CollectionAttribute%1}>,{javax.persistence.metamodel.CollectionAttribute%1}>
+
+CLSS public abstract interface javax.persistence.metamodel.EmbeddableType<%0 extends java.lang.Object>
+intf javax.persistence.metamodel.ManagedType<{javax.persistence.metamodel.EmbeddableType%0}>
+
+CLSS public abstract interface javax.persistence.metamodel.EntityType<%0 extends java.lang.Object>
+intf javax.persistence.metamodel.Bindable<{javax.persistence.metamodel.EntityType%0}>
+intf javax.persistence.metamodel.IdentifiableType<{javax.persistence.metamodel.EntityType%0}>
+meth public abstract java.lang.String getName()
+
+CLSS public abstract interface javax.persistence.metamodel.IdentifiableType<%0 extends java.lang.Object>
+intf javax.persistence.metamodel.ManagedType<{javax.persistence.metamodel.IdentifiableType%0}>
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.metamodel.IdentifiableType%0},{%%0}> getId(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.metamodel.IdentifiableType%0},{%%0}> getVersion(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SingularAttribute<{javax.persistence.metamodel.IdentifiableType%0},{%%0}> getDeclaredId(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SingularAttribute<{javax.persistence.metamodel.IdentifiableType%0},{%%0}> getDeclaredVersion(java.lang.Class<{%%0}>)
+meth public abstract boolean hasSingleIdAttribute()
+meth public abstract boolean hasVersionAttribute()
+meth public abstract java.util.Set<javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.metamodel.IdentifiableType%0},?>> getIdClassAttributes()
+meth public abstract javax.persistence.metamodel.IdentifiableType<? super {javax.persistence.metamodel.IdentifiableType%0}> getSupertype()
+meth public abstract javax.persistence.metamodel.Type<?> getIdType()
+
+CLSS public abstract interface javax.persistence.metamodel.ListAttribute<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.metamodel.PluralAttribute<{javax.persistence.metamodel.ListAttribute%0},java.util.List<{javax.persistence.metamodel.ListAttribute%1}>,{javax.persistence.metamodel.ListAttribute%1}>
+
+CLSS public abstract interface javax.persistence.metamodel.ManagedType<%0 extends java.lang.Object>
+intf javax.persistence.metamodel.Type<{javax.persistence.metamodel.ManagedType%0}>
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.metamodel.MapAttribute<? super {javax.persistence.metamodel.ManagedType%0},{%%0},{%%1}> getMap(java.lang.String,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> javax.persistence.metamodel.MapAttribute<{javax.persistence.metamodel.ManagedType%0},{%%0},{%%1}> getDeclaredMap(java.lang.String,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.CollectionAttribute<? super {javax.persistence.metamodel.ManagedType%0},{%%0}> getCollection(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.CollectionAttribute<{javax.persistence.metamodel.ManagedType%0},{%%0}> getDeclaredCollection(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.ListAttribute<? super {javax.persistence.metamodel.ManagedType%0},{%%0}> getList(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.ListAttribute<{javax.persistence.metamodel.ManagedType%0},{%%0}> getDeclaredList(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SetAttribute<? super {javax.persistence.metamodel.ManagedType%0},{%%0}> getSet(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SetAttribute<{javax.persistence.metamodel.ManagedType%0},{%%0}> getDeclaredSet(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.metamodel.ManagedType%0},{%%0}> getSingularAttribute(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.SingularAttribute<{javax.persistence.metamodel.ManagedType%0},{%%0}> getDeclaredSingularAttribute(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract java.util.Set<javax.persistence.metamodel.Attribute<? super {javax.persistence.metamodel.ManagedType%0},?>> getAttributes()
+meth public abstract java.util.Set<javax.persistence.metamodel.Attribute<{javax.persistence.metamodel.ManagedType%0},?>> getDeclaredAttributes()
+meth public abstract java.util.Set<javax.persistence.metamodel.PluralAttribute<? super {javax.persistence.metamodel.ManagedType%0},?,?>> getPluralAttributes()
+meth public abstract java.util.Set<javax.persistence.metamodel.PluralAttribute<{javax.persistence.metamodel.ManagedType%0},?,?>> getDeclaredPluralAttributes()
+meth public abstract java.util.Set<javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.metamodel.ManagedType%0},?>> getSingularAttributes()
+meth public abstract java.util.Set<javax.persistence.metamodel.SingularAttribute<{javax.persistence.metamodel.ManagedType%0},?>> getDeclaredSingularAttributes()
+meth public abstract javax.persistence.metamodel.Attribute<? super {javax.persistence.metamodel.ManagedType%0},?> getAttribute(java.lang.String)
+meth public abstract javax.persistence.metamodel.Attribute<{javax.persistence.metamodel.ManagedType%0},?> getDeclaredAttribute(java.lang.String)
+meth public abstract javax.persistence.metamodel.CollectionAttribute<? super {javax.persistence.metamodel.ManagedType%0},?> getCollection(java.lang.String)
+meth public abstract javax.persistence.metamodel.CollectionAttribute<{javax.persistence.metamodel.ManagedType%0},?> getDeclaredCollection(java.lang.String)
+meth public abstract javax.persistence.metamodel.ListAttribute<? super {javax.persistence.metamodel.ManagedType%0},?> getList(java.lang.String)
+meth public abstract javax.persistence.metamodel.ListAttribute<{javax.persistence.metamodel.ManagedType%0},?> getDeclaredList(java.lang.String)
+meth public abstract javax.persistence.metamodel.MapAttribute<? super {javax.persistence.metamodel.ManagedType%0},?,?> getMap(java.lang.String)
+meth public abstract javax.persistence.metamodel.MapAttribute<{javax.persistence.metamodel.ManagedType%0},?,?> getDeclaredMap(java.lang.String)
+meth public abstract javax.persistence.metamodel.SetAttribute<? super {javax.persistence.metamodel.ManagedType%0},?> getSet(java.lang.String)
+meth public abstract javax.persistence.metamodel.SetAttribute<{javax.persistence.metamodel.ManagedType%0},?> getDeclaredSet(java.lang.String)
+meth public abstract javax.persistence.metamodel.SingularAttribute<? super {javax.persistence.metamodel.ManagedType%0},?> getSingularAttribute(java.lang.String)
+meth public abstract javax.persistence.metamodel.SingularAttribute<{javax.persistence.metamodel.ManagedType%0},?> getDeclaredSingularAttribute(java.lang.String)
+
+CLSS public abstract interface javax.persistence.metamodel.MapAttribute<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+intf javax.persistence.metamodel.PluralAttribute<{javax.persistence.metamodel.MapAttribute%0},java.util.Map<{javax.persistence.metamodel.MapAttribute%1},{javax.persistence.metamodel.MapAttribute%2}>,{javax.persistence.metamodel.MapAttribute%2}>
+meth public abstract java.lang.Class<{javax.persistence.metamodel.MapAttribute%1}> getKeyJavaType()
+meth public abstract javax.persistence.metamodel.Type<{javax.persistence.metamodel.MapAttribute%1}> getKeyType()
+
+CLSS public abstract interface javax.persistence.metamodel.MappedSuperclassType<%0 extends java.lang.Object>
+intf javax.persistence.metamodel.IdentifiableType<{javax.persistence.metamodel.MappedSuperclassType%0}>
+
+CLSS public abstract interface javax.persistence.metamodel.Metamodel
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.EmbeddableType<{%%0}> embeddable(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.EntityType<{%%0}> entity(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> javax.persistence.metamodel.ManagedType<{%%0}> managedType(java.lang.Class<{%%0}>)
+meth public abstract java.util.Set<javax.persistence.metamodel.EmbeddableType<?>> getEmbeddables()
+meth public abstract java.util.Set<javax.persistence.metamodel.EntityType<?>> getEntities()
+meth public abstract java.util.Set<javax.persistence.metamodel.ManagedType<?>> getManagedTypes()
+
+CLSS public abstract interface javax.persistence.metamodel.PluralAttribute<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+innr public final static !enum CollectionType
+intf javax.persistence.metamodel.Attribute<{javax.persistence.metamodel.PluralAttribute%0},{javax.persistence.metamodel.PluralAttribute%1}>
+intf javax.persistence.metamodel.Bindable<{javax.persistence.metamodel.PluralAttribute%2}>
+meth public abstract javax.persistence.metamodel.PluralAttribute$CollectionType getCollectionType()
+meth public abstract javax.persistence.metamodel.Type<{javax.persistence.metamodel.PluralAttribute%2}> getElementType()
+
+CLSS public final static !enum javax.persistence.metamodel.PluralAttribute$CollectionType
+ outer javax.persistence.metamodel.PluralAttribute
+fld public final static javax.persistence.metamodel.PluralAttribute$CollectionType COLLECTION
+fld public final static javax.persistence.metamodel.PluralAttribute$CollectionType LIST
+fld public final static javax.persistence.metamodel.PluralAttribute$CollectionType MAP
+fld public final static javax.persistence.metamodel.PluralAttribute$CollectionType SET
+meth public static javax.persistence.metamodel.PluralAttribute$CollectionType valueOf(java.lang.String)
+meth public static javax.persistence.metamodel.PluralAttribute$CollectionType[] values()
+supr java.lang.Enum<javax.persistence.metamodel.PluralAttribute$CollectionType>
+
+CLSS public abstract interface javax.persistence.metamodel.SetAttribute<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.metamodel.PluralAttribute<{javax.persistence.metamodel.SetAttribute%0},java.util.Set<{javax.persistence.metamodel.SetAttribute%1}>,{javax.persistence.metamodel.SetAttribute%1}>
+
+CLSS public abstract interface javax.persistence.metamodel.SingularAttribute<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf javax.persistence.metamodel.Attribute<{javax.persistence.metamodel.SingularAttribute%0},{javax.persistence.metamodel.SingularAttribute%1}>
+intf javax.persistence.metamodel.Bindable<{javax.persistence.metamodel.SingularAttribute%1}>
+meth public abstract boolean isId()
+meth public abstract boolean isOptional()
+meth public abstract boolean isVersion()
+meth public abstract javax.persistence.metamodel.Type<{javax.persistence.metamodel.SingularAttribute%1}> getType()
+
+CLSS public abstract interface !annotation javax.persistence.metamodel.StaticMetamodel
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?> value()
+
+CLSS public abstract interface javax.persistence.metamodel.Type<%0 extends java.lang.Object>
+innr public final static !enum PersistenceType
+meth public abstract java.lang.Class<{javax.persistence.metamodel.Type%0}> getJavaType()
+meth public abstract javax.persistence.metamodel.Type$PersistenceType getPersistenceType()
+
+CLSS public final static !enum javax.persistence.metamodel.Type$PersistenceType
+ outer javax.persistence.metamodel.Type
+fld public final static javax.persistence.metamodel.Type$PersistenceType BASIC
+fld public final static javax.persistence.metamodel.Type$PersistenceType EMBEDDABLE
+fld public final static javax.persistence.metamodel.Type$PersistenceType ENTITY
+fld public final static javax.persistence.metamodel.Type$PersistenceType MAPPED_SUPERCLASS
+meth public static javax.persistence.metamodel.Type$PersistenceType valueOf(java.lang.String)
+meth public static javax.persistence.metamodel.Type$PersistenceType[] values()
+supr java.lang.Enum<javax.persistence.metamodel.Type$PersistenceType>
+
+CLSS abstract interface javax.persistence.metamodel.package-info
+
+CLSS abstract interface javax.persistence.package-info
+
+CLSS public abstract interface javax.persistence.spi.ClassTransformer
+meth public abstract byte[] transform(java.lang.ClassLoader,java.lang.String,java.lang.Class<?>,java.security.ProtectionDomain,byte[]) throws java.lang.instrument.IllegalClassFormatException
+
+CLSS public final !enum javax.persistence.spi.LoadState
+fld public final static javax.persistence.spi.LoadState LOADED
+fld public final static javax.persistence.spi.LoadState NOT_LOADED
+fld public final static javax.persistence.spi.LoadState UNKNOWN
+meth public static javax.persistence.spi.LoadState valueOf(java.lang.String)
+meth public static javax.persistence.spi.LoadState[] values()
+supr java.lang.Enum<javax.persistence.spi.LoadState>
+
+CLSS public abstract interface javax.persistence.spi.PersistenceProvider
+meth public abstract boolean generateSchema(java.lang.String,java.util.Map)
+meth public abstract javax.persistence.EntityManagerFactory createContainerEntityManagerFactory(javax.persistence.spi.PersistenceUnitInfo,java.util.Map)
+meth public abstract javax.persistence.EntityManagerFactory createEntityManagerFactory(java.lang.String,java.util.Map)
+meth public abstract javax.persistence.spi.ProviderUtil getProviderUtil()
+meth public abstract void generateSchema(javax.persistence.spi.PersistenceUnitInfo,java.util.Map)
+
+CLSS public abstract interface javax.persistence.spi.PersistenceProviderResolver
+meth public abstract java.util.List<javax.persistence.spi.PersistenceProvider> getPersistenceProviders()
+meth public abstract void clearCachedProviders()
+
+CLSS public javax.persistence.spi.PersistenceProviderResolverHolder
+cons public init()
+meth public static javax.persistence.spi.PersistenceProviderResolver getPersistenceProviderResolver()
+meth public static void setPersistenceProviderResolver(javax.persistence.spi.PersistenceProviderResolver)
+supr java.lang.Object
+hfds singleton
+hcls DefaultPersistenceProviderResolver
+
+CLSS public abstract interface javax.persistence.spi.PersistenceUnitInfo
+meth public abstract boolean excludeUnlistedClasses()
+meth public abstract java.lang.ClassLoader getClassLoader()
+meth public abstract java.lang.ClassLoader getNewTempClassLoader()
+meth public abstract java.lang.String getPersistenceProviderClassName()
+meth public abstract java.lang.String getPersistenceUnitName()
+meth public abstract java.lang.String getPersistenceXMLSchemaVersion()
+meth public abstract java.net.URL getPersistenceUnitRootUrl()
+meth public abstract java.util.List<java.lang.String> getManagedClassNames()
+meth public abstract java.util.List<java.lang.String> getMappingFileNames()
+meth public abstract java.util.List<java.net.URL> getJarFileUrls()
+meth public abstract java.util.Properties getProperties()
+meth public abstract javax.persistence.SharedCacheMode getSharedCacheMode()
+meth public abstract javax.persistence.ValidationMode getValidationMode()
+meth public abstract javax.persistence.spi.PersistenceUnitTransactionType getTransactionType()
+meth public abstract javax.sql.DataSource getJtaDataSource()
+meth public abstract javax.sql.DataSource getNonJtaDataSource()
+meth public abstract void addTransformer(javax.persistence.spi.ClassTransformer)
+
+CLSS public final !enum javax.persistence.spi.PersistenceUnitTransactionType
+fld public final static javax.persistence.spi.PersistenceUnitTransactionType JTA
+fld public final static javax.persistence.spi.PersistenceUnitTransactionType RESOURCE_LOCAL
+meth public static javax.persistence.spi.PersistenceUnitTransactionType valueOf(java.lang.String)
+meth public static javax.persistence.spi.PersistenceUnitTransactionType[] values()
+supr java.lang.Enum<javax.persistence.spi.PersistenceUnitTransactionType>
+
+CLSS public abstract interface javax.persistence.spi.ProviderUtil
+meth public abstract javax.persistence.spi.LoadState isLoaded(java.lang.Object)
+meth public abstract javax.persistence.spi.LoadState isLoadedWithReference(java.lang.Object,java.lang.String)
+meth public abstract javax.persistence.spi.LoadState isLoadedWithoutReference(java.lang.Object,java.lang.String)
+
+CLSS abstract interface javax.persistence.spi.package-info
+
+CLSS public abstract interface javax.validation.BootstrapConfiguration
+meth public abstract boolean isExecutableValidationEnabled()
+meth public abstract java.lang.String getClockProviderClassName()
+meth public abstract java.lang.String getConstraintValidatorFactoryClassName()
+meth public abstract java.lang.String getDefaultProviderClassName()
+meth public abstract java.lang.String getMessageInterpolatorClassName()
+meth public abstract java.lang.String getParameterNameProviderClassName()
+meth public abstract java.lang.String getTraversableResolverClassName()
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getProperties()
+meth public abstract java.util.Set<java.lang.String> getConstraintMappingResourcePaths()
+meth public abstract java.util.Set<java.lang.String> getValueExtractorClassNames()
+meth public abstract java.util.Set<javax.validation.executable.ExecutableType> getDefaultValidatedExecutableTypes()
+
+CLSS public abstract interface javax.validation.ClockProvider
+meth public abstract java.time.Clock getClock()
+
+CLSS public abstract interface javax.validation.Configuration<%0 extends javax.validation.Configuration<{javax.validation.Configuration%0}>>
+meth public abstract javax.validation.BootstrapConfiguration getBootstrapConfiguration()
+meth public abstract javax.validation.ClockProvider getDefaultClockProvider()
+meth public abstract javax.validation.ConstraintValidatorFactory getDefaultConstraintValidatorFactory()
+meth public abstract javax.validation.MessageInterpolator getDefaultMessageInterpolator()
+meth public abstract javax.validation.ParameterNameProvider getDefaultParameterNameProvider()
+meth public abstract javax.validation.TraversableResolver getDefaultTraversableResolver()
+meth public abstract javax.validation.ValidatorFactory buildValidatorFactory()
+meth public abstract {javax.validation.Configuration%0} addMapping(java.io.InputStream)
+meth public abstract {javax.validation.Configuration%0} addProperty(java.lang.String,java.lang.String)
+meth public abstract {javax.validation.Configuration%0} addValueExtractor(javax.validation.valueextraction.ValueExtractor<?>)
+meth public abstract {javax.validation.Configuration%0} clockProvider(javax.validation.ClockProvider)
+meth public abstract {javax.validation.Configuration%0} constraintValidatorFactory(javax.validation.ConstraintValidatorFactory)
+meth public abstract {javax.validation.Configuration%0} ignoreXmlConfiguration()
+meth public abstract {javax.validation.Configuration%0} messageInterpolator(javax.validation.MessageInterpolator)
+meth public abstract {javax.validation.Configuration%0} parameterNameProvider(javax.validation.ParameterNameProvider)
+meth public abstract {javax.validation.Configuration%0} traversableResolver(javax.validation.TraversableResolver)
+
+CLSS public abstract interface !annotation javax.validation.Constraint
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy()
+
+CLSS public javax.validation.ConstraintDeclarationException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ValidationException
+
+CLSS public javax.validation.ConstraintDefinitionException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ValidationException
+
+CLSS public final !enum javax.validation.ConstraintTarget
+fld public final static javax.validation.ConstraintTarget IMPLICIT
+fld public final static javax.validation.ConstraintTarget PARAMETERS
+fld public final static javax.validation.ConstraintTarget RETURN_VALUE
+meth public static javax.validation.ConstraintTarget valueOf(java.lang.String)
+meth public static javax.validation.ConstraintTarget[] values()
+supr java.lang.Enum<javax.validation.ConstraintTarget>
+
+CLSS public abstract interface javax.validation.ConstraintValidator<%0 extends java.lang.annotation.Annotation, %1 extends java.lang.Object>
+meth public abstract boolean isValid({javax.validation.ConstraintValidator%1},javax.validation.ConstraintValidatorContext)
+meth public void initialize({javax.validation.ConstraintValidator%0})
+
+CLSS public abstract interface javax.validation.ConstraintValidatorContext
+innr public abstract interface static ConstraintViolationBuilder
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract java.lang.String getDefaultConstraintMessageTemplate()
+meth public abstract javax.validation.ClockProvider getClockProvider()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder buildConstraintViolationWithTemplate(java.lang.String)
+meth public abstract void disableDefaultConstraintViolation()
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+ outer javax.validation.ConstraintValidatorContext
+innr public abstract interface static ContainerElementNodeBuilderCustomizableContext
+innr public abstract interface static ContainerElementNodeBuilderDefinedContext
+innr public abstract interface static ContainerElementNodeContextBuilder
+innr public abstract interface static LeafNodeBuilderCustomizableContext
+innr public abstract interface static LeafNodeBuilderDefinedContext
+innr public abstract interface static LeafNodeContextBuilder
+innr public abstract interface static NodeBuilderCustomizableContext
+innr public abstract interface static NodeBuilderDefinedContext
+innr public abstract interface static NodeContextBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderDefinedContext addNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderDefinedContext addParameterNode(int)
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeContextBuilder inIterable()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderDefinedContext
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeContextBuilder
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderDefinedContext atIndex(java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderDefinedContext atKey(java.lang.Object)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext inContainer(java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeContextBuilder inIterable()
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderDefinedContext
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeContextBuilder
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderDefinedContext atIndex(java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderDefinedContext atKey(java.lang.Object)
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext inContainer(java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeContextBuilder inIterable()
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderDefinedContext
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+
+CLSS public abstract interface static javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeContextBuilder
+ outer javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder
+meth public abstract javax.validation.ConstraintValidatorContext addConstraintViolation()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$ContainerElementNodeBuilderCustomizableContext addContainerElementNode(java.lang.String,java.lang.Class<?>,java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$LeafNodeBuilderCustomizableContext addBeanNode()
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderCustomizableContext addPropertyNode(java.lang.String)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderDefinedContext atIndex(java.lang.Integer)
+meth public abstract javax.validation.ConstraintValidatorContext$ConstraintViolationBuilder$NodeBuilderDefinedContext atKey(java.lang.Object)
+
+CLSS public abstract interface javax.validation.ConstraintValidatorFactory
+meth public abstract <%0 extends javax.validation.ConstraintValidator<?,?>> {%%0} getInstance(java.lang.Class<{%%0}>)
+meth public abstract void releaseInstance(javax.validation.ConstraintValidator<?,?>)
+
+CLSS public abstract interface javax.validation.ConstraintViolation<%0 extends java.lang.Object>
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract java.lang.Class<{javax.validation.ConstraintViolation%0}> getRootBeanClass()
+meth public abstract java.lang.Object getExecutableReturnValue()
+meth public abstract java.lang.Object getInvalidValue()
+meth public abstract java.lang.Object getLeafBean()
+meth public abstract java.lang.Object[] getExecutableParameters()
+meth public abstract java.lang.String getMessage()
+meth public abstract java.lang.String getMessageTemplate()
+meth public abstract javax.validation.Path getPropertyPath()
+meth public abstract javax.validation.metadata.ConstraintDescriptor<?> getConstraintDescriptor()
+meth public abstract {javax.validation.ConstraintViolation%0} getRootBean()
+
+CLSS public javax.validation.ConstraintViolationException
+cons public init(java.lang.String,java.util.Set<? extends javax.validation.ConstraintViolation<?>>)
+cons public init(java.util.Set<? extends javax.validation.ConstraintViolation<?>>)
+meth public java.util.Set<javax.validation.ConstraintViolation<?>> getConstraintViolations()
+supr javax.validation.ValidationException
+hfds constraintViolations
+
+CLSS public final !enum javax.validation.ElementKind
+fld public final static javax.validation.ElementKind BEAN
+fld public final static javax.validation.ElementKind CONSTRUCTOR
+fld public final static javax.validation.ElementKind CONTAINER_ELEMENT
+fld public final static javax.validation.ElementKind CROSS_PARAMETER
+fld public final static javax.validation.ElementKind METHOD
+fld public final static javax.validation.ElementKind PARAMETER
+fld public final static javax.validation.ElementKind PROPERTY
+fld public final static javax.validation.ElementKind RETURN_VALUE
+meth public static javax.validation.ElementKind valueOf(java.lang.String)
+meth public static javax.validation.ElementKind[] values()
+supr java.lang.Enum<javax.validation.ElementKind>
+
+CLSS public javax.validation.GroupDefinitionException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ValidationException
+
+CLSS public abstract interface !annotation javax.validation.GroupSequence
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?>[] value()
+
+CLSS public abstract interface javax.validation.MessageInterpolator
+innr public abstract interface static Context
+meth public abstract java.lang.String interpolate(java.lang.String,javax.validation.MessageInterpolator$Context)
+meth public abstract java.lang.String interpolate(java.lang.String,javax.validation.MessageInterpolator$Context,java.util.Locale)
+
+CLSS public abstract interface static javax.validation.MessageInterpolator$Context
+ outer javax.validation.MessageInterpolator
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract java.lang.Object getValidatedValue()
+meth public abstract javax.validation.metadata.ConstraintDescriptor<?> getConstraintDescriptor()
+
+CLSS public javax.validation.NoProviderFoundException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ValidationException
+
+CLSS public abstract interface !annotation javax.validation.OverridesAttribute
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.OverridesAttribute$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int constraintIndex()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> constraint()
+
+CLSS public abstract interface static !annotation javax.validation.OverridesAttribute$List
+ outer javax.validation.OverridesAttribute
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.OverridesAttribute[] value()
+
+CLSS public abstract interface javax.validation.ParameterNameProvider
+meth public abstract java.util.List<java.lang.String> getParameterNames(java.lang.reflect.Constructor<?>)
+meth public abstract java.util.List<java.lang.String> getParameterNames(java.lang.reflect.Method)
+
+CLSS public abstract interface javax.validation.Path
+innr public abstract interface static BeanNode
+innr public abstract interface static ConstructorNode
+innr public abstract interface static ContainerElementNode
+innr public abstract interface static CrossParameterNode
+innr public abstract interface static MethodNode
+innr public abstract interface static Node
+innr public abstract interface static ParameterNode
+innr public abstract interface static PropertyNode
+innr public abstract interface static ReturnValueNode
+intf java.lang.Iterable<javax.validation.Path$Node>
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface static javax.validation.Path$BeanNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+meth public abstract java.lang.Class<?> getContainerClass()
+meth public abstract java.lang.Integer getTypeArgumentIndex()
+
+CLSS public abstract interface static javax.validation.Path$ConstructorNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+meth public abstract java.util.List<java.lang.Class<?>> getParameterTypes()
+
+CLSS public abstract interface static javax.validation.Path$ContainerElementNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+meth public abstract java.lang.Class<?> getContainerClass()
+meth public abstract java.lang.Integer getTypeArgumentIndex()
+
+CLSS public abstract interface static javax.validation.Path$CrossParameterNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+
+CLSS public abstract interface static javax.validation.Path$MethodNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+meth public abstract java.util.List<java.lang.Class<?>> getParameterTypes()
+
+CLSS public abstract interface static javax.validation.Path$Node
+ outer javax.validation.Path
+meth public abstract <%0 extends javax.validation.Path$Node> {%%0} as(java.lang.Class<{%%0}>)
+meth public abstract boolean isInIterable()
+meth public abstract java.lang.Integer getIndex()
+meth public abstract java.lang.Object getKey()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String toString()
+meth public abstract javax.validation.ElementKind getKind()
+
+CLSS public abstract interface static javax.validation.Path$ParameterNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+meth public abstract int getParameterIndex()
+
+CLSS public abstract interface static javax.validation.Path$PropertyNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+meth public abstract java.lang.Class<?> getContainerClass()
+meth public abstract java.lang.Integer getTypeArgumentIndex()
+
+CLSS public abstract interface static javax.validation.Path$ReturnValueNode
+ outer javax.validation.Path
+intf javax.validation.Path$Node
+
+CLSS public abstract interface javax.validation.Payload
+
+CLSS public abstract interface !annotation javax.validation.ReportAsSingleViolation
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface javax.validation.TraversableResolver
+meth public abstract boolean isCascadable(java.lang.Object,javax.validation.Path$Node,java.lang.Class<?>,javax.validation.Path,java.lang.annotation.ElementType)
+meth public abstract boolean isReachable(java.lang.Object,javax.validation.Path$Node,java.lang.Class<?>,javax.validation.Path,java.lang.annotation.ElementType)
+
+CLSS public javax.validation.UnexpectedTypeException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ConstraintDeclarationException
+
+CLSS public abstract interface !annotation javax.validation.Valid
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+
+CLSS public javax.validation.Validation
+cons public init()
+meth public static <%0 extends javax.validation.Configuration<{%%0}>, %1 extends javax.validation.spi.ValidationProvider<{%%0}>> javax.validation.bootstrap.ProviderSpecificBootstrap<{%%0}> byProvider(java.lang.Class<{%%1}>)
+meth public static javax.validation.ValidatorFactory buildDefaultValidatorFactory()
+meth public static javax.validation.bootstrap.GenericBootstrap byDefaultProvider()
+supr java.lang.Object
+hcls DefaultValidationProviderResolver,GenericBootstrapImpl,GetValidationProviderListAction,NewProviderInstance,ProviderSpecificBootstrapImpl
+
+CLSS public javax.validation.ValidationException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.RuntimeException
+
+CLSS public abstract interface javax.validation.ValidationProviderResolver
+meth public abstract java.util.List<javax.validation.spi.ValidationProvider<?>> getValidationProviders()
+
+CLSS public abstract interface javax.validation.Validator
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validate({%%0},java.lang.Class<?>[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validateProperty({%%0},java.lang.String,java.lang.Class<?>[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validateValue(java.lang.Class<{%%0}>,java.lang.String,java.lang.Object,java.lang.Class<?>[])
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract javax.validation.executable.ExecutableValidator forExecutables()
+meth public abstract javax.validation.metadata.BeanDescriptor getConstraintsForClass(java.lang.Class<?>)
+
+CLSS public abstract interface javax.validation.ValidatorContext
+meth public abstract javax.validation.Validator getValidator()
+meth public abstract javax.validation.ValidatorContext addValueExtractor(javax.validation.valueextraction.ValueExtractor<?>)
+meth public abstract javax.validation.ValidatorContext clockProvider(javax.validation.ClockProvider)
+meth public abstract javax.validation.ValidatorContext constraintValidatorFactory(javax.validation.ConstraintValidatorFactory)
+meth public abstract javax.validation.ValidatorContext messageInterpolator(javax.validation.MessageInterpolator)
+meth public abstract javax.validation.ValidatorContext parameterNameProvider(javax.validation.ParameterNameProvider)
+meth public abstract javax.validation.ValidatorContext traversableResolver(javax.validation.TraversableResolver)
+
+CLSS public abstract interface javax.validation.ValidatorFactory
+intf java.lang.AutoCloseable
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract javax.validation.ClockProvider getClockProvider()
+meth public abstract javax.validation.ConstraintValidatorFactory getConstraintValidatorFactory()
+meth public abstract javax.validation.MessageInterpolator getMessageInterpolator()
+meth public abstract javax.validation.ParameterNameProvider getParameterNameProvider()
+meth public abstract javax.validation.TraversableResolver getTraversableResolver()
+meth public abstract javax.validation.Validator getValidator()
+meth public abstract javax.validation.ValidatorContext usingContext()
+meth public abstract void close()
+
+CLSS public abstract interface javax.validation.bootstrap.GenericBootstrap
+meth public abstract javax.validation.Configuration<?> configure()
+meth public abstract javax.validation.bootstrap.GenericBootstrap providerResolver(javax.validation.ValidationProviderResolver)
+
+CLSS public abstract interface javax.validation.bootstrap.ProviderSpecificBootstrap<%0 extends javax.validation.Configuration<{javax.validation.bootstrap.ProviderSpecificBootstrap%0}>>
+meth public abstract javax.validation.bootstrap.ProviderSpecificBootstrap<{javax.validation.bootstrap.ProviderSpecificBootstrap%0}> providerResolver(javax.validation.ValidationProviderResolver)
+meth public abstract {javax.validation.bootstrap.ProviderSpecificBootstrap%0} configure()
+
+CLSS public abstract interface !annotation javax.validation.constraints.AssertFalse
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.AssertFalse$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.AssertFalse$List
+ outer javax.validation.constraints.AssertFalse
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.AssertFalse[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.AssertTrue
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.AssertTrue$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.AssertTrue$List
+ outer javax.validation.constraints.AssertTrue
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.AssertTrue[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.DecimalMax
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.DecimalMax$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean inclusive()
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.DecimalMax$List
+ outer javax.validation.constraints.DecimalMax
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.DecimalMax[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.DecimalMin
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.DecimalMin$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean inclusive()
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.DecimalMin$List
+ outer javax.validation.constraints.DecimalMin
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.DecimalMin[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Digits
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Digits$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract int fraction()
+meth public abstract int integer()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Digits$List
+ outer javax.validation.constraints.Digits
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Digits[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Email
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Email$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract !hasdefault java.lang.String regexp()
+meth public abstract !hasdefault javax.validation.constraints.Pattern$Flag[] flags()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Email$List
+ outer javax.validation.constraints.Email
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Email[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Future
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Future$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Future$List
+ outer javax.validation.constraints.Future
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Future[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.FutureOrPresent
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.FutureOrPresent$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.FutureOrPresent$List
+ outer javax.validation.constraints.FutureOrPresent
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.FutureOrPresent[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Max
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Max$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract long value()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Max$List
+ outer javax.validation.constraints.Max
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Max[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Min
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Min$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract long value()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Min$List
+ outer javax.validation.constraints.Min
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Min[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Negative
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Negative$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Negative$List
+ outer javax.validation.constraints.Negative
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Negative[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.NegativeOrZero
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.NegativeOrZero$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.NegativeOrZero$List
+ outer javax.validation.constraints.NegativeOrZero
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.NegativeOrZero[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.NotBlank
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.NotBlank$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.NotBlank$List
+ outer javax.validation.constraints.NotBlank
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.NotBlank[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.NotEmpty
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.NotEmpty$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.NotEmpty$List
+ outer javax.validation.constraints.NotEmpty
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.NotEmpty[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.NotNull
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.NotNull$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.NotNull$List
+ outer javax.validation.constraints.NotNull
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.NotNull[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Null
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Null$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Null$List
+ outer javax.validation.constraints.Null
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Null[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Past
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Past$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Past$List
+ outer javax.validation.constraints.Past
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Past[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.PastOrPresent
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.PastOrPresent$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.PastOrPresent$List
+ outer javax.validation.constraints.PastOrPresent
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.PastOrPresent[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Pattern
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Pattern$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+innr public final static !enum Flag
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+meth public abstract !hasdefault javax.validation.constraints.Pattern$Flag[] flags()
+meth public abstract java.lang.String regexp()
+
+CLSS public final static !enum javax.validation.constraints.Pattern$Flag
+ outer javax.validation.constraints.Pattern
+fld public final static javax.validation.constraints.Pattern$Flag CANON_EQ
+fld public final static javax.validation.constraints.Pattern$Flag CASE_INSENSITIVE
+fld public final static javax.validation.constraints.Pattern$Flag COMMENTS
+fld public final static javax.validation.constraints.Pattern$Flag DOTALL
+fld public final static javax.validation.constraints.Pattern$Flag MULTILINE
+fld public final static javax.validation.constraints.Pattern$Flag UNICODE_CASE
+fld public final static javax.validation.constraints.Pattern$Flag UNIX_LINES
+meth public int getValue()
+meth public static javax.validation.constraints.Pattern$Flag valueOf(java.lang.String)
+meth public static javax.validation.constraints.Pattern$Flag[] values()
+supr java.lang.Enum<javax.validation.constraints.Pattern$Flag>
+hfds value
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Pattern$List
+ outer javax.validation.constraints.Pattern
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Pattern[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Positive
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Positive$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Positive$List
+ outer javax.validation.constraints.Positive
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Positive[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.PositiveOrZero
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.PositiveOrZero$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.PositiveOrZero$List
+ outer javax.validation.constraints.PositiveOrZero
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.PositiveOrZero[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraints.Size
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.constraints.Size$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+ anno 0 javax.validation.Constraint(java.lang.Class<? extends javax.validation.ConstraintValidator<?,?>>[] validatedBy=[])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int max()
+meth public abstract !hasdefault int min()
+meth public abstract !hasdefault java.lang.Class<? extends javax.validation.Payload>[] payload()
+meth public abstract !hasdefault java.lang.Class<?>[] groups()
+meth public abstract !hasdefault java.lang.String message()
+
+CLSS public abstract interface static !annotation javax.validation.constraints.Size$List
+ outer javax.validation.constraints.Size
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraints.Size[] value()
+
+CLSS public abstract interface !annotation javax.validation.constraintvalidation.SupportedValidationTarget
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.constraintvalidation.ValidationTarget[] value()
+
+CLSS public final !enum javax.validation.constraintvalidation.ValidationTarget
+fld public final static javax.validation.constraintvalidation.ValidationTarget ANNOTATED_ELEMENT
+fld public final static javax.validation.constraintvalidation.ValidationTarget PARAMETERS
+meth public static javax.validation.constraintvalidation.ValidationTarget valueOf(java.lang.String)
+meth public static javax.validation.constraintvalidation.ValidationTarget[] values()
+supr java.lang.Enum<javax.validation.constraintvalidation.ValidationTarget>
+
+CLSS public final !enum javax.validation.executable.ExecutableType
+fld public final static javax.validation.executable.ExecutableType ALL
+fld public final static javax.validation.executable.ExecutableType CONSTRUCTORS
+fld public final static javax.validation.executable.ExecutableType GETTER_METHODS
+fld public final static javax.validation.executable.ExecutableType IMPLICIT
+fld public final static javax.validation.executable.ExecutableType NONE
+fld public final static javax.validation.executable.ExecutableType NON_GETTER_METHODS
+meth public static javax.validation.executable.ExecutableType valueOf(java.lang.String)
+meth public static javax.validation.executable.ExecutableType[] values()
+supr java.lang.Enum<javax.validation.executable.ExecutableType>
+
+CLSS public abstract interface javax.validation.executable.ExecutableValidator
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validateConstructorParameters(java.lang.reflect.Constructor<? extends {%%0}>,java.lang.Object[],java.lang.Class<?>[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validateConstructorReturnValue(java.lang.reflect.Constructor<? extends {%%0}>,{%%0},java.lang.Class<?>[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validateParameters({%%0},java.lang.reflect.Method,java.lang.Object[],java.lang.Class<?>[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.Set<javax.validation.ConstraintViolation<{%%0}>> validateReturnValue({%%0},java.lang.reflect.Method,java.lang.Object,java.lang.Class<?>[])
+
+CLSS public abstract interface !annotation javax.validation.executable.ValidateOnExecution
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, METHOD, TYPE, PACKAGE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.validation.executable.ExecutableType[] type()
+
+CLSS public abstract interface !annotation javax.validation.groups.ConvertGroup
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.validation.groups.ConvertGroup$List)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE])
+innr public abstract interface static !annotation List
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<?> from()
+meth public abstract java.lang.Class<?> to()
+
+CLSS public abstract interface static !annotation javax.validation.groups.ConvertGroup$List
+ outer javax.validation.groups.ConvertGroup
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract javax.validation.groups.ConvertGroup[] value()
+
+CLSS public abstract interface javax.validation.groups.Default
+
+CLSS public abstract interface javax.validation.metadata.BeanDescriptor
+intf javax.validation.metadata.ElementDescriptor
+meth public abstract !varargs java.util.Set<javax.validation.metadata.MethodDescriptor> getConstrainedMethods(javax.validation.metadata.MethodType,javax.validation.metadata.MethodType[])
+meth public abstract !varargs javax.validation.metadata.ConstructorDescriptor getConstraintsForConstructor(java.lang.Class<?>[])
+meth public abstract !varargs javax.validation.metadata.MethodDescriptor getConstraintsForMethod(java.lang.String,java.lang.Class<?>[])
+meth public abstract boolean isBeanConstrained()
+meth public abstract java.util.Set<javax.validation.metadata.ConstructorDescriptor> getConstrainedConstructors()
+meth public abstract java.util.Set<javax.validation.metadata.PropertyDescriptor> getConstrainedProperties()
+meth public abstract javax.validation.metadata.PropertyDescriptor getConstraintsForProperty(java.lang.String)
+
+CLSS public abstract interface javax.validation.metadata.CascadableDescriptor
+meth public abstract boolean isCascaded()
+meth public abstract java.util.Set<javax.validation.metadata.GroupConversionDescriptor> getGroupConversions()
+
+CLSS public abstract interface javax.validation.metadata.ConstraintDescriptor<%0 extends java.lang.annotation.Annotation>
+meth public abstract <%0 extends java.lang.Object> {%%0} unwrap(java.lang.Class<{%%0}>)
+meth public abstract boolean isReportAsSingleViolation()
+meth public abstract java.lang.String getMessageTemplate()
+meth public abstract java.util.List<java.lang.Class<? extends javax.validation.ConstraintValidator<{javax.validation.metadata.ConstraintDescriptor%0},?>>> getConstraintValidatorClasses()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getAttributes()
+meth public abstract java.util.Set<java.lang.Class<? extends javax.validation.Payload>> getPayload()
+meth public abstract java.util.Set<java.lang.Class<?>> getGroups()
+meth public abstract java.util.Set<javax.validation.metadata.ConstraintDescriptor<?>> getComposingConstraints()
+meth public abstract javax.validation.ConstraintTarget getValidationAppliesTo()
+meth public abstract javax.validation.metadata.ValidateUnwrappedValue getValueUnwrapping()
+meth public abstract {javax.validation.metadata.ConstraintDescriptor%0} getAnnotation()
+
+CLSS public abstract interface javax.validation.metadata.ConstructorDescriptor
+intf javax.validation.metadata.ExecutableDescriptor
+
+CLSS public abstract interface javax.validation.metadata.ContainerDescriptor
+meth public abstract java.util.Set<javax.validation.metadata.ContainerElementTypeDescriptor> getConstrainedContainerElementTypes()
+
+CLSS public abstract interface javax.validation.metadata.ContainerElementTypeDescriptor
+intf javax.validation.metadata.CascadableDescriptor
+intf javax.validation.metadata.ContainerDescriptor
+intf javax.validation.metadata.ElementDescriptor
+meth public abstract java.lang.Class<?> getContainerClass()
+meth public abstract java.lang.Integer getTypeArgumentIndex()
+
+CLSS public abstract interface javax.validation.metadata.CrossParameterDescriptor
+intf javax.validation.metadata.ElementDescriptor
+meth public abstract java.lang.Class<?> getElementClass()
+
+CLSS public abstract interface javax.validation.metadata.ElementDescriptor
+innr public abstract interface static ConstraintFinder
+meth public abstract boolean hasConstraints()
+meth public abstract java.lang.Class<?> getElementClass()
+meth public abstract java.util.Set<javax.validation.metadata.ConstraintDescriptor<?>> getConstraintDescriptors()
+meth public abstract javax.validation.metadata.ElementDescriptor$ConstraintFinder findConstraints()
+
+CLSS public abstract interface static javax.validation.metadata.ElementDescriptor$ConstraintFinder
+ outer javax.validation.metadata.ElementDescriptor
+meth public abstract !varargs javax.validation.metadata.ElementDescriptor$ConstraintFinder declaredOn(java.lang.annotation.ElementType[])
+meth public abstract !varargs javax.validation.metadata.ElementDescriptor$ConstraintFinder unorderedAndMatchingGroups(java.lang.Class<?>[])
+meth public abstract boolean hasConstraints()
+meth public abstract java.util.Set<javax.validation.metadata.ConstraintDescriptor<?>> getConstraintDescriptors()
+meth public abstract javax.validation.metadata.ElementDescriptor$ConstraintFinder lookingAt(javax.validation.metadata.Scope)
+
+CLSS public abstract interface javax.validation.metadata.ExecutableDescriptor
+intf javax.validation.metadata.ElementDescriptor
+meth public abstract boolean hasConstrainedParameters()
+meth public abstract boolean hasConstrainedReturnValue()
+meth public abstract boolean hasConstraints()
+meth public abstract java.lang.String getName()
+meth public abstract java.util.List<javax.validation.metadata.ParameterDescriptor> getParameterDescriptors()
+meth public abstract java.util.Set<javax.validation.metadata.ConstraintDescriptor<?>> getConstraintDescriptors()
+meth public abstract javax.validation.metadata.CrossParameterDescriptor getCrossParameterDescriptor()
+meth public abstract javax.validation.metadata.ElementDescriptor$ConstraintFinder findConstraints()
+meth public abstract javax.validation.metadata.ReturnValueDescriptor getReturnValueDescriptor()
+
+CLSS public abstract interface javax.validation.metadata.GroupConversionDescriptor
+meth public abstract java.lang.Class<?> getFrom()
+meth public abstract java.lang.Class<?> getTo()
+
+CLSS public abstract interface javax.validation.metadata.MethodDescriptor
+intf javax.validation.metadata.ExecutableDescriptor
+
+CLSS public final !enum javax.validation.metadata.MethodType
+fld public final static javax.validation.metadata.MethodType GETTER
+fld public final static javax.validation.metadata.MethodType NON_GETTER
+meth public static javax.validation.metadata.MethodType valueOf(java.lang.String)
+meth public static javax.validation.metadata.MethodType[] values()
+supr java.lang.Enum<javax.validation.metadata.MethodType>
+
+CLSS public abstract interface javax.validation.metadata.ParameterDescriptor
+intf javax.validation.metadata.CascadableDescriptor
+intf javax.validation.metadata.ContainerDescriptor
+intf javax.validation.metadata.ElementDescriptor
+meth public abstract int getIndex()
+meth public abstract java.lang.String getName()
+
+CLSS public abstract interface javax.validation.metadata.PropertyDescriptor
+intf javax.validation.metadata.CascadableDescriptor
+intf javax.validation.metadata.ContainerDescriptor
+intf javax.validation.metadata.ElementDescriptor
+meth public abstract java.lang.String getPropertyName()
+
+CLSS public abstract interface javax.validation.metadata.ReturnValueDescriptor
+intf javax.validation.metadata.CascadableDescriptor
+intf javax.validation.metadata.ContainerDescriptor
+intf javax.validation.metadata.ElementDescriptor
+
+CLSS public final !enum javax.validation.metadata.Scope
+fld public final static javax.validation.metadata.Scope HIERARCHY
+fld public final static javax.validation.metadata.Scope LOCAL_ELEMENT
+meth public static javax.validation.metadata.Scope valueOf(java.lang.String)
+meth public static javax.validation.metadata.Scope[] values()
+supr java.lang.Enum<javax.validation.metadata.Scope>
+
+CLSS public final !enum javax.validation.metadata.ValidateUnwrappedValue
+fld public final static javax.validation.metadata.ValidateUnwrappedValue DEFAULT
+fld public final static javax.validation.metadata.ValidateUnwrappedValue SKIP
+fld public final static javax.validation.metadata.ValidateUnwrappedValue UNWRAP
+meth public static javax.validation.metadata.ValidateUnwrappedValue valueOf(java.lang.String)
+meth public static javax.validation.metadata.ValidateUnwrappedValue[] values()
+supr java.lang.Enum<javax.validation.metadata.ValidateUnwrappedValue>
+
+CLSS public abstract interface javax.validation.spi.BootstrapState
+meth public abstract javax.validation.ValidationProviderResolver getDefaultValidationProviderResolver()
+meth public abstract javax.validation.ValidationProviderResolver getValidationProviderResolver()
+
+CLSS public abstract interface javax.validation.spi.ConfigurationState
+meth public abstract boolean isIgnoreXmlConfiguration()
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getProperties()
+meth public abstract java.util.Set<java.io.InputStream> getMappingStreams()
+meth public abstract java.util.Set<javax.validation.valueextraction.ValueExtractor<?>> getValueExtractors()
+meth public abstract javax.validation.ClockProvider getClockProvider()
+meth public abstract javax.validation.ConstraintValidatorFactory getConstraintValidatorFactory()
+meth public abstract javax.validation.MessageInterpolator getMessageInterpolator()
+meth public abstract javax.validation.ParameterNameProvider getParameterNameProvider()
+meth public abstract javax.validation.TraversableResolver getTraversableResolver()
+
+CLSS public abstract interface javax.validation.spi.ValidationProvider<%0 extends javax.validation.Configuration<{javax.validation.spi.ValidationProvider%0}>>
+meth public abstract javax.validation.Configuration<?> createGenericConfiguration(javax.validation.spi.BootstrapState)
+meth public abstract javax.validation.ValidatorFactory buildValidatorFactory(javax.validation.spi.ConfigurationState)
+meth public abstract {javax.validation.spi.ValidationProvider%0} createSpecializedConfiguration(javax.validation.spi.BootstrapState)
+
+CLSS public abstract interface !annotation javax.validation.valueextraction.ExtractedValue
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE_USE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<?> type()
+
+CLSS public abstract interface !annotation javax.validation.valueextraction.UnwrapByDefault
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface javax.validation.valueextraction.Unwrapping
+innr public abstract interface static Skip
+innr public abstract interface static Unwrap
+
+CLSS public abstract interface static javax.validation.valueextraction.Unwrapping$Skip
+ outer javax.validation.valueextraction.Unwrapping
+intf javax.validation.Payload
+
+CLSS public abstract interface static javax.validation.valueextraction.Unwrapping$Unwrap
+ outer javax.validation.valueextraction.Unwrapping
+intf javax.validation.Payload
+
+CLSS public abstract interface javax.validation.valueextraction.ValueExtractor<%0 extends java.lang.Object>
+innr public abstract interface static ValueReceiver
+meth public abstract void extractValues({javax.validation.valueextraction.ValueExtractor%0},javax.validation.valueextraction.ValueExtractor$ValueReceiver)
+
+CLSS public abstract interface static javax.validation.valueextraction.ValueExtractor$ValueReceiver
+ outer javax.validation.valueextraction.ValueExtractor
+meth public abstract void indexedValue(java.lang.String,int,java.lang.Object)
+meth public abstract void iterableValue(java.lang.String,java.lang.Object)
+meth public abstract void keyedValue(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract void value(java.lang.String,java.lang.Object)
+
+CLSS public javax.validation.valueextraction.ValueExtractorDeclarationException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ValidationException
+
+CLSS public javax.validation.valueextraction.ValueExtractorDefinitionException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.validation.ValidationException
 
 CLSS public abstract interface !annotation javax.ws.rs.ApplicationPath
  anno 0 java.lang.annotation.Documented()
@@ -1802,15 +5292,1902 @@ meth public abstract {javax.xml.bind.annotation.adapters.XmlAdapter%0} marshal({
 meth public abstract {javax.xml.bind.annotation.adapters.XmlAdapter%1} unmarshal({javax.xml.bind.annotation.adapters.XmlAdapter%0}) throws java.lang.Exception
 supr java.lang.Object
 
+CLSS public abstract interface javax.xml.namespace.NamespaceContext
+meth public abstract java.lang.String getNamespaceURI(java.lang.String)
+meth public abstract java.lang.String getPrefix(java.lang.String)
+meth public abstract java.util.Iterator getPrefixes(java.lang.String)
+
+CLSS public org.eclipse.persistence.jaxb.rs.MOXyJsonProvider
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/json", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/json", "*/*", "application/x-javascript"])
+ anno 0 javax.ws.rs.ext.Provider()
+cons public init()
+fld protected javax.ws.rs.ext.Providers providers
+ anno 0 javax.ws.rs.core.Context()
+intf javax.ws.rs.ext.MessageBodyReader<java.lang.Object>
+intf javax.ws.rs.ext.MessageBodyWriter<java.lang.Object>
+meth protected boolean supportsMediaType(javax.ws.rs.core.MediaType)
+meth protected java.util.Set<java.lang.Class<?>> getDomainClasses(java.lang.reflect.Type)
+meth protected javax.xml.bind.JAXBContext getJAXBContext(java.util.Set<java.lang.Class<?>>,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,?>) throws javax.xml.bind.JAXBException
+meth protected void preReadFrom(java.lang.Class<java.lang.Object>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,javax.xml.bind.Unmarshaller) throws javax.xml.bind.JAXBException
+meth protected void preWriteTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,javax.xml.bind.Marshaller) throws javax.xml.bind.JAXBException
+meth public boolean isFormattedOutput()
+meth public boolean isIncludeRoot()
+meth public boolean isMarshalEmptyCollections()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWrapperAsArrayName()
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public char getNamespaceSeparator()
+meth public java.lang.Class<?> getDomainClass(java.util.Set<java.lang.Class<?>>)
+meth public java.lang.Object readFrom(java.lang.Class<java.lang.Object>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public java.lang.String getAttributePrefix()
+meth public java.lang.String getValueWrapper()
+meth public java.util.Map<java.lang.String,java.lang.String> getNamespacePrefixMapper()
+meth public long getSize(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void setAttributePrefix(java.lang.String)
+meth public void setFormattedOutput(boolean)
+meth public void setIncludeRoot(boolean)
+meth public void setMarshalEmptyCollections(boolean)
+meth public void setNamespacePrefixMapper(java.util.Map<java.lang.String,java.lang.String>)
+meth public void setNamespaceSeparator(char)
+meth public void setValueWrapper(java.lang.String)
+meth public void setWrapperAsArrayName(boolean)
+meth public void writeTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr java.lang.Object
+hfds APPLICATION_XJAVASCRIPT,CHARSET,EMPTY_STRING_QNAME,JSON,PLUS_JSON,attributePrefix,contextCache,formattedOutput,includeRoot,marshalEmptyCollections,namespacePrefixMapper,namespaceSeperator,valueWrapper,wrapperAsArrayName
+
+CLSS public abstract interface org.glassfish.hk2.api.AOPProxyCtl
+fld public final static java.lang.String UNDERLYING_METHOD_NAME = "__getUnderlyingDescriptor"
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> __getUnderlyingDescriptor()
+
+CLSS public abstract interface org.glassfish.hk2.api.ActiveDescriptor<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.Descriptor
+intf org.glassfish.hk2.api.SingleCache<{org.glassfish.hk2.api.ActiveDescriptor%0}>
+meth public abstract boolean isReified()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> getScopeAnnotation()
+meth public abstract java.lang.Class<?> getImplementationClass()
+meth public abstract java.lang.Long getFactoryLocatorId()
+meth public abstract java.lang.Long getFactoryServiceId()
+meth public abstract java.lang.annotation.Annotation getScopeAsAnnotation()
+meth public abstract java.lang.reflect.Type getImplementationType()
+meth public abstract java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public abstract java.util.Set<java.lang.annotation.Annotation> getQualifierAnnotations()
+meth public abstract java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public abstract void dispose({org.glassfish.hk2.api.ActiveDescriptor%0})
+meth public abstract {org.glassfish.hk2.api.ActiveDescriptor%0} create(org.glassfish.hk2.api.ServiceHandle<?>)
+
+CLSS public abstract org.glassfish.hk2.api.AnnotationLiteral<%0 extends java.lang.annotation.Annotation>
+cons protected init()
+intf java.io.Serializable
+intf java.lang.annotation.Annotation
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+supr java.lang.Object
+hfds annotationType,members,serialVersionUID
+
+CLSS public abstract interface org.glassfish.hk2.api.ClassAnalyzer
+ anno 0 org.jvnet.hk2.annotations.Contract()
+fld public final static java.lang.String DEFAULT_IMPLEMENTATION_NAME = "default"
+meth public abstract <%0 extends java.lang.Object> java.lang.reflect.Constructor<{%%0}> getConstructor(java.lang.Class<{%%0}>) throws java.lang.NoSuchMethodException
+meth public abstract <%0 extends java.lang.Object> java.lang.reflect.Method getPostConstructMethod(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.lang.reflect.Method getPreDestroyMethod(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.Set<java.lang.reflect.Field> getFields(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.Set<java.lang.reflect.Method> getInitializerMethods(java.lang.Class<{%%0}>)
+
+CLSS public abstract interface org.glassfish.hk2.api.Context<%0 extends java.lang.Object>
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public abstract boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public abstract boolean isActive()
+meth public abstract boolean supportsNullCreation()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public abstract void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public abstract void shutdown()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.ContractIndicator
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Customize
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Customizer
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean failWhenMethodNotFound()
+meth public abstract !hasdefault java.lang.String[] name()
+meth public abstract java.lang.Class<?>[] value()
+
+CLSS public abstract interface org.glassfish.hk2.api.Descriptor
+meth public abstract int getRanking()
+meth public abstract int setRanking(int)
+meth public abstract java.lang.Boolean isProxiable()
+meth public abstract java.lang.Boolean isProxyForSameScope()
+meth public abstract java.lang.Long getLocatorId()
+meth public abstract java.lang.Long getServiceId()
+meth public abstract java.lang.String getClassAnalysisName()
+meth public abstract java.lang.String getImplementation()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getScope()
+meth public abstract java.util.Map<java.lang.String,java.util.List<java.lang.String>> getMetadata()
+meth public abstract java.util.Set<java.lang.String> getAdvertisedContracts()
+meth public abstract java.util.Set<java.lang.String> getQualifiers()
+meth public abstract org.glassfish.hk2.api.DescriptorType getDescriptorType()
+meth public abstract org.glassfish.hk2.api.DescriptorVisibility getDescriptorVisibility()
+meth public abstract org.glassfish.hk2.api.HK2Loader getLoader()
+
+CLSS public abstract interface org.glassfish.hk2.api.DescriptorFileFinder
+ anno 0 org.jvnet.hk2.annotations.Contract()
+fld public final static java.lang.String RESOURCE_BASE = "META-INF/hk2-locator/"
+meth public abstract java.util.List<java.io.InputStream> findDescriptorFiles() throws java.io.IOException
+
+CLSS public abstract interface org.glassfish.hk2.api.DescriptorFileFinderInformation
+meth public abstract java.util.List<java.lang.String> getDescriptorFileInformation()
+
+CLSS public final !enum org.glassfish.hk2.api.DescriptorType
+fld public final static org.glassfish.hk2.api.DescriptorType CLASS
+fld public final static org.glassfish.hk2.api.DescriptorType PROVIDE_METHOD
+meth public static org.glassfish.hk2.api.DescriptorType valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.DescriptorType[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.DescriptorType>
+
+CLSS public final !enum org.glassfish.hk2.api.DescriptorVisibility
+fld public final static org.glassfish.hk2.api.DescriptorVisibility LOCAL
+fld public final static org.glassfish.hk2.api.DescriptorVisibility NORMAL
+meth public static org.glassfish.hk2.api.DescriptorVisibility valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.DescriptorVisibility[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.DescriptorVisibility>
+
+CLSS public org.glassfish.hk2.api.DuplicateServiceException
+cons public init()
+cons public init(org.glassfish.hk2.api.Descriptor)
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.Descriptor getExistingDescriptor()
+supr org.glassfish.hk2.api.HK2RuntimeException
+hfds existingDescriptor,serialVersionUID
+
+CLSS public abstract interface org.glassfish.hk2.api.DynamicConfiguration
+meth public abstract !varargs void addIdempotentFilter(org.glassfish.hk2.api.Filter[])
+meth public abstract !varargs void registerTwoPhaseResources(org.glassfish.hk2.api.TwoPhaseResource[])
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,boolean)
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> bind(org.glassfish.hk2.api.Descriptor)
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> bind(org.glassfish.hk2.api.Descriptor,boolean)
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.FactoryDescriptors addActiveFactoryDescriptor(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>)
+meth public abstract org.glassfish.hk2.api.FactoryDescriptors bind(org.glassfish.hk2.api.FactoryDescriptors)
+meth public abstract org.glassfish.hk2.api.FactoryDescriptors bind(org.glassfish.hk2.api.FactoryDescriptors,boolean)
+meth public abstract void addUnbindFilter(org.glassfish.hk2.api.Filter)
+meth public abstract void commit()
+
+CLSS public abstract interface org.glassfish.hk2.api.DynamicConfigurationListener
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract void configurationChanged()
+
+CLSS public abstract interface org.glassfish.hk2.api.DynamicConfigurationService
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract org.glassfish.hk2.api.DynamicConfiguration createDynamicConfiguration()
+meth public abstract org.glassfish.hk2.api.Populator getPopulator()
+
+CLSS public abstract interface org.glassfish.hk2.api.ErrorInformation
+meth public abstract org.glassfish.hk2.api.Descriptor getDescriptor()
+meth public abstract org.glassfish.hk2.api.ErrorType getErrorType()
+meth public abstract org.glassfish.hk2.api.Injectee getInjectee()
+meth public abstract org.glassfish.hk2.api.MultiException getAssociatedException()
+
+CLSS public abstract interface org.glassfish.hk2.api.ErrorService
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract void onFailure(org.glassfish.hk2.api.ErrorInformation)
+
+CLSS public final !enum org.glassfish.hk2.api.ErrorType
+fld public final static org.glassfish.hk2.api.ErrorType DYNAMIC_CONFIGURATION_FAILURE
+fld public final static org.glassfish.hk2.api.ErrorType FAILURE_TO_REIFY
+fld public final static org.glassfish.hk2.api.ErrorType SERVICE_CREATION_FAILURE
+fld public final static org.glassfish.hk2.api.ErrorType SERVICE_DESTRUCTION_FAILURE
+fld public final static org.glassfish.hk2.api.ErrorType VALIDATE_FAILURE
+meth public static org.glassfish.hk2.api.ErrorType valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.ErrorType[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.ErrorType>
+
+CLSS public abstract interface org.glassfish.hk2.api.Factory<%0 extends java.lang.Object>
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract void dispose({org.glassfish.hk2.api.Factory%0})
+meth public abstract {org.glassfish.hk2.api.Factory%0} provide()
+
+CLSS public abstract interface org.glassfish.hk2.api.FactoryDescriptors
+meth public abstract org.glassfish.hk2.api.Descriptor getFactoryAsAFactory()
+meth public abstract org.glassfish.hk2.api.Descriptor getFactoryAsAService()
+
+CLSS public abstract interface org.glassfish.hk2.api.Filter
+meth public abstract boolean matches(org.glassfish.hk2.api.Descriptor)
+
+CLSS public org.glassfish.hk2.api.HK2Exception
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID
+
+CLSS public abstract interface org.glassfish.hk2.api.HK2Invocation
+meth public abstract java.lang.Object getUserData(java.lang.String)
+meth public abstract void setUserData(java.lang.String,java.lang.Object)
+
+CLSS public abstract interface org.glassfish.hk2.api.HK2Loader
+meth public abstract java.lang.Class<?> loadClass(java.lang.String)
+
+CLSS public org.glassfish.hk2.api.HK2RuntimeException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.RuntimeException
+hfds serialVersionUID
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Immediate
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.hk2.api.ImmediateController
+ anno 0 org.jvnet.hk2.annotations.Contract()
+innr public final static !enum ImmediateServiceState
+meth public abstract java.util.concurrent.Executor getExecutor()
+meth public abstract long getThreadInactivityTimeout()
+meth public abstract org.glassfish.hk2.api.ImmediateController$ImmediateServiceState getImmediateState()
+meth public abstract void setExecutor(java.util.concurrent.Executor)
+meth public abstract void setImmediateState(org.glassfish.hk2.api.ImmediateController$ImmediateServiceState)
+meth public abstract void setThreadInactivityTimeout(long)
+
+CLSS public final static !enum org.glassfish.hk2.api.ImmediateController$ImmediateServiceState
+ outer org.glassfish.hk2.api.ImmediateController
+fld public final static org.glassfish.hk2.api.ImmediateController$ImmediateServiceState RUNNING
+fld public final static org.glassfish.hk2.api.ImmediateController$ImmediateServiceState SUSPENDED
+meth public static org.glassfish.hk2.api.ImmediateController$ImmediateServiceState valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.ImmediateController$ImmediateServiceState[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.ImmediateController$ImmediateServiceState>
+
+CLSS public abstract interface org.glassfish.hk2.api.IndexedFilter
+intf org.glassfish.hk2.api.Filter
+meth public abstract java.lang.String getAdvertisedContract()
+meth public abstract java.lang.String getName()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.InheritableThread
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.hk2.api.Injectee
+meth public abstract boolean isOptional()
+meth public abstract boolean isSelf()
+meth public abstract int getPosition()
+meth public abstract java.lang.Class<?> getInjecteeClass()
+meth public abstract java.lang.reflect.AnnotatedElement getParent()
+meth public abstract java.lang.reflect.Type getRequiredType()
+meth public abstract java.util.Set<java.lang.annotation.Annotation> getRequiredQualifiers()
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> getInjecteeDescriptor()
+meth public abstract org.glassfish.hk2.api.Unqualified getUnqualified()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.InjectionPointIndicator
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.hk2.api.InjectionResolver<%0 extends java.lang.Object>
+ anno 0 org.jvnet.hk2.annotations.Contract()
+fld public final static java.lang.String SYSTEM_RESOLVER_NAME = "SystemInjectResolver"
+meth public abstract boolean isConstructorParameterIndicator()
+meth public abstract boolean isMethodParameterIndicator()
+meth public abstract java.lang.Object resolve(org.glassfish.hk2.api.Injectee,org.glassfish.hk2.api.ServiceHandle<?>)
+
+CLSS public abstract interface org.glassfish.hk2.api.InstanceLifecycleEvent
+meth public abstract java.lang.Object getLifecycleObject()
+meth public abstract java.util.Map<org.glassfish.hk2.api.Injectee,java.lang.Object> getKnownInjectees()
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> getActiveDescriptor()
+meth public abstract org.glassfish.hk2.api.InstanceLifecycleEventType getEventType()
+
+CLSS public final !enum org.glassfish.hk2.api.InstanceLifecycleEventType
+fld public final static org.glassfish.hk2.api.InstanceLifecycleEventType POST_PRODUCTION
+fld public final static org.glassfish.hk2.api.InstanceLifecycleEventType PRE_DESTRUCTION
+fld public final static org.glassfish.hk2.api.InstanceLifecycleEventType PRE_PRODUCTION
+meth public static org.glassfish.hk2.api.InstanceLifecycleEventType valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.InstanceLifecycleEventType[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.InstanceLifecycleEventType>
+
+CLSS public abstract interface org.glassfish.hk2.api.InstanceLifecycleListener
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract org.glassfish.hk2.api.Filter getFilter()
+meth public abstract void lifecycleEvent(org.glassfish.hk2.api.InstanceLifecycleEvent)
+
+CLSS public abstract interface org.glassfish.hk2.api.InstantiationData
+meth public abstract org.glassfish.hk2.api.Injectee getParentInjectee()
+
+CLSS public abstract interface org.glassfish.hk2.api.InstantiationService
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract org.glassfish.hk2.api.InstantiationData getInstantiationData()
+
+CLSS public abstract interface org.glassfish.hk2.api.InterceptionService
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract java.util.List<org.aopalliance.intercept.ConstructorInterceptor> getConstructorInterceptors(java.lang.reflect.Constructor<?>)
+meth public abstract java.util.List<org.aopalliance.intercept.MethodInterceptor> getMethodInterceptors(java.lang.reflect.Method)
+meth public abstract org.glassfish.hk2.api.Filter getDescriptorFilter()
+
+CLSS public abstract interface org.glassfish.hk2.api.IterableProvider<%0 extends java.lang.Object>
+intf java.lang.Iterable<{org.glassfish.hk2.api.IterableProvider%0}>
+intf javax.inject.Provider<{org.glassfish.hk2.api.IterableProvider%0}>
+meth public abstract !varargs org.glassfish.hk2.api.IterableProvider<{org.glassfish.hk2.api.IterableProvider%0}> qualifiedWith(java.lang.annotation.Annotation[])
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.IterableProvider<{%%0}> ofType(java.lang.reflect.Type)
+meth public abstract int getSize()
+meth public abstract java.lang.Iterable<org.glassfish.hk2.api.ServiceHandle<{org.glassfish.hk2.api.IterableProvider%0}>> handleIterator()
+meth public abstract org.glassfish.hk2.api.IterableProvider<{org.glassfish.hk2.api.IterableProvider%0}> named(java.lang.String)
+meth public abstract org.glassfish.hk2.api.ServiceHandle<{org.glassfish.hk2.api.IterableProvider%0}> getHandle()
+
+CLSS public abstract interface org.glassfish.hk2.api.JustInTimeInjectionResolver
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract boolean justInTimeResolution(org.glassfish.hk2.api.Injectee)
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Metadata
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface org.glassfish.hk2.api.MethodParameter
+meth public abstract int getParameterPosition()
+meth public abstract java.lang.Object getParameterValue()
+
+CLSS public org.glassfish.hk2.api.MultiException
+cons public init()
+cons public init(java.lang.Throwable)
+cons public init(java.lang.Throwable,boolean)
+cons public init(java.util.List<java.lang.Throwable>)
+meth public boolean getReportToErrorService()
+meth public java.lang.String getMessage()
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Throwable> getErrors()
+meth public void addError(java.lang.Throwable)
+meth public void printStackTrace(java.io.PrintStream)
+meth public void printStackTrace(java.io.PrintWriter)
+meth public void setReportToErrorService(boolean)
+supr org.glassfish.hk2.api.HK2RuntimeException
+hfds lock,reportToErrorService,serialVersionUID,throwables
+
+CLSS public final !enum org.glassfish.hk2.api.Operation
+fld public final static org.glassfish.hk2.api.Operation BIND
+fld public final static org.glassfish.hk2.api.Operation LOOKUP
+fld public final static org.glassfish.hk2.api.Operation UNBIND
+meth public static org.glassfish.hk2.api.Operation valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.Operation[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.Operation>
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.PerLookup
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+ anno 0 org.glassfish.hk2.api.Unproxiable()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.PerThread
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.hk2.api.Populator
+meth public abstract !varargs java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> populate(org.glassfish.hk2.api.DescriptorFileFinder,org.glassfish.hk2.api.PopulatorPostProcessor[]) throws java.io.IOException
+meth public abstract java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> populate() throws java.io.IOException
+
+CLSS public abstract interface org.glassfish.hk2.api.PopulatorPostProcessor
+meth public abstract org.glassfish.hk2.utilities.DescriptorImpl process(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.utilities.DescriptorImpl)
+
+CLSS public abstract interface org.glassfish.hk2.api.PostConstruct
+meth public abstract void postConstruct()
+
+CLSS public abstract interface org.glassfish.hk2.api.PreDestroy
+meth public abstract void preDestroy()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Proxiable
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean proxyForSameScope()
+
+CLSS public abstract interface org.glassfish.hk2.api.ProxyCtl
+meth public abstract java.lang.Object __make()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.ProxyForSameScope
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean value()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Rank
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract int value()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Self
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, PARAMETER])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.hk2.api.ServiceHandle<%0 extends java.lang.Object>
+intf java.io.Closeable
+meth public abstract boolean isActive()
+meth public abstract java.lang.Object getServiceData()
+meth public abstract java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getSubHandles()
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<{org.glassfish.hk2.api.ServiceHandle%0}> getActiveDescriptor()
+meth public abstract void setServiceData(java.lang.Object)
+meth public abstract {org.glassfish.hk2.api.ServiceHandle%0} getService()
+meth public void close()
+meth public void destroy()
+ anno 0 java.lang.Deprecated()
+
+CLSS public abstract interface org.glassfish.hk2.api.ServiceLocator
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.hk2.api.ServiceHandle<{%%0}>> getAllServiceHandles(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.List<{%%0}> getAllServices(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.List<{%%0}> getAllServices(java.lang.annotation.Annotation,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.List<{%%0}> getAllServices(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.Class<{%%0}>,java.lang.String,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.reflect.Type,java.lang.String,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.Class<{%%0}>,java.lang.String,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.reflect.Type,java.lang.String,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public abstract !varargs java.lang.Object assistedInject(java.lang.Object,java.lang.reflect.Method,org.glassfish.hk2.api.MethodParameter[])
+meth public abstract !varargs java.lang.Object assistedInject(java.lang.Object,java.lang.reflect.Method,org.glassfish.hk2.api.ServiceHandle<?>,org.glassfish.hk2.api.MethodParameter[])
+meth public abstract !varargs java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getAllServiceHandles(java.lang.annotation.Annotation,java.lang.annotation.Annotation[])
+meth public abstract !varargs java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getAllServiceHandles(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.Injectee)
+meth public abstract <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>,java.lang.String)
+meth public abstract <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>,java.lang.String)
+meth public abstract <%0 extends java.lang.Object> {%%0} getService(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+ anno 0 java.lang.Deprecated()
+meth public abstract <%0 extends java.lang.Object> {%%0} getService(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>,org.glassfish.hk2.api.Injectee)
+meth public abstract boolean getNeutralContextClassLoader()
+meth public abstract java.lang.String getDefaultClassAnalyzerName()
+meth public abstract java.lang.String getName()
+meth public abstract java.util.List<?> getAllServices(org.glassfish.hk2.api.Filter)
+meth public abstract java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> getDescriptors(org.glassfish.hk2.api.Filter)
+meth public abstract java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getAllServiceHandles(org.glassfish.hk2.api.Filter)
+meth public abstract long getLocatorId()
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> getBestDescriptor(org.glassfish.hk2.api.Filter)
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> getInjecteeDescriptor(org.glassfish.hk2.api.Injectee)
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> reifyDescriptor(org.glassfish.hk2.api.Descriptor)
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> reifyDescriptor(org.glassfish.hk2.api.Descriptor,org.glassfish.hk2.api.Injectee)
+meth public abstract org.glassfish.hk2.api.ServiceLocator getParent()
+meth public abstract org.glassfish.hk2.api.ServiceLocatorState getState()
+meth public abstract org.glassfish.hk2.api.Unqualified getDefaultUnqualified()
+meth public abstract void inject(java.lang.Object)
+meth public abstract void inject(java.lang.Object,java.lang.String)
+meth public abstract void postConstruct(java.lang.Object)
+meth public abstract void postConstruct(java.lang.Object,java.lang.String)
+meth public abstract void preDestroy(java.lang.Object)
+meth public abstract void preDestroy(java.lang.Object,java.lang.String)
+meth public abstract void setDefaultClassAnalyzerName(java.lang.String)
+meth public abstract void setDefaultUnqualified(org.glassfish.hk2.api.Unqualified)
+meth public abstract void setNeutralContextClassLoader(boolean)
+meth public abstract void shutdown()
+
+CLSS public abstract org.glassfish.hk2.api.ServiceLocatorFactory
+cons public init()
+innr public final static !enum CreatePolicy
+meth public abstract org.glassfish.hk2.api.ServiceLocator create(java.lang.String)
+meth public abstract org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator)
+meth public abstract org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.extension.ServiceLocatorGenerator)
+meth public abstract org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.extension.ServiceLocatorGenerator,org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy)
+meth public abstract org.glassfish.hk2.api.ServiceLocator find(java.lang.String)
+meth public abstract void addListener(org.glassfish.hk2.api.ServiceLocatorListener)
+meth public abstract void destroy(java.lang.String)
+meth public abstract void destroy(org.glassfish.hk2.api.ServiceLocator)
+meth public abstract void removeListener(org.glassfish.hk2.api.ServiceLocatorListener)
+meth public static org.glassfish.hk2.api.ServiceLocatorFactory getInstance()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public final static !enum org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy
+ outer org.glassfish.hk2.api.ServiceLocatorFactory
+fld public final static org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy DESTROY
+fld public final static org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy ERROR
+fld public final static org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy RETURN
+meth public static org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy>
+
+CLSS public abstract interface org.glassfish.hk2.api.ServiceLocatorListener
+meth public abstract void initialize(java.util.Set<org.glassfish.hk2.api.ServiceLocator>)
+meth public abstract void locatorAdded(org.glassfish.hk2.api.ServiceLocator)
+meth public abstract void locatorDestroyed(org.glassfish.hk2.api.ServiceLocator)
+
+CLSS public final !enum org.glassfish.hk2.api.ServiceLocatorState
+fld public final static org.glassfish.hk2.api.ServiceLocatorState RUNNING
+fld public final static org.glassfish.hk2.api.ServiceLocatorState SHUTDOWN
+meth public static org.glassfish.hk2.api.ServiceLocatorState valueOf(java.lang.String)
+meth public static org.glassfish.hk2.api.ServiceLocatorState[] values()
+supr java.lang.Enum<org.glassfish.hk2.api.ServiceLocatorState>
+
+CLSS public abstract interface org.glassfish.hk2.api.SingleCache<%0 extends java.lang.Object>
+meth public abstract boolean isCacheSet()
+meth public abstract void releaseCache()
+meth public abstract void setCache({org.glassfish.hk2.api.SingleCache%0})
+meth public abstract {org.glassfish.hk2.api.SingleCache%0} getCache()
+
+CLSS public abstract interface org.glassfish.hk2.api.TwoPhaseResource
+meth public abstract void activateDynamicConfiguration(org.glassfish.hk2.api.TwoPhaseTransactionData)
+meth public abstract void prepareDynamicConfiguration(org.glassfish.hk2.api.TwoPhaseTransactionData)
+meth public abstract void rollbackDynamicConfiguration(org.glassfish.hk2.api.TwoPhaseTransactionData)
+
+CLSS public abstract interface org.glassfish.hk2.api.TwoPhaseTransactionData
+meth public abstract java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> getAllAddedDescriptors()
+meth public abstract java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> getAllRemovedDescriptors()
+
+CLSS public abstract org.glassfish.hk2.api.TypeLiteral<%0 extends java.lang.Object>
+cons protected init()
+meth public boolean equals(java.lang.Object)
+meth public final java.lang.Class<{org.glassfish.hk2.api.TypeLiteral%0}> getRawType()
+meth public final java.lang.reflect.Type getType()
+meth public final java.lang.reflect.Type[] getParameterTypes()
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public static java.lang.Class<?> getRawType(java.lang.reflect.Type)
+supr java.lang.Object
+hfds rawType,type
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Unproxiable
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Unqualified
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends java.lang.annotation.Annotation>[] value()
+
+CLSS public org.glassfish.hk2.api.UnsatisfiedDependencyException
+cons public init()
+cons public init(org.glassfish.hk2.api.Injectee)
+meth public org.glassfish.hk2.api.Injectee getInjectee()
+supr org.glassfish.hk2.api.HK2RuntimeException
+hfds injectionPoint,serialVersionUID
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.UseProxy
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean value()
+
+CLSS public abstract interface org.glassfish.hk2.api.ValidationInformation
+meth public abstract java.lang.StackTraceElement getCaller()
+meth public abstract org.glassfish.hk2.api.ActiveDescriptor<?> getCandidate()
+meth public abstract org.glassfish.hk2.api.Filter getFilter()
+meth public abstract org.glassfish.hk2.api.Injectee getInjectee()
+meth public abstract org.glassfish.hk2.api.Operation getOperation()
+
+CLSS public abstract interface org.glassfish.hk2.api.ValidationService
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract org.glassfish.hk2.api.Filter getLookupFilter()
+meth public abstract org.glassfish.hk2.api.Validator getValidator()
+
+CLSS public abstract interface org.glassfish.hk2.api.Validator
+meth public abstract boolean validate(org.glassfish.hk2.api.ValidationInformation)
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.Visibility
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract org.glassfish.hk2.api.DescriptorVisibility value()
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.messaging.MessageReceiver
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Qualifier()
+fld public final static java.lang.String EVENT_RECEIVER_TYPES = "org.glassfish.hk2.messaging.messageReceiverTypes"
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<?>[] value()
+ anno 0 org.glassfish.hk2.api.Metadata(java.lang.String value="org.glassfish.hk2.messaging.messageReceiverTypes")
+
+CLSS public abstract interface !annotation org.glassfish.hk2.api.messaging.SubscribeTo
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PARAMETER])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.hk2.api.messaging.Topic<%0 extends java.lang.Object>
+meth public abstract !varargs org.glassfish.hk2.api.messaging.Topic<{org.glassfish.hk2.api.messaging.Topic%0}> qualifiedWith(java.lang.annotation.Annotation[])
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.api.messaging.Topic<{%%0}> ofType(java.lang.reflect.Type)
+meth public abstract java.lang.reflect.Type getTopicType()
+meth public abstract java.util.Set<java.lang.annotation.Annotation> getTopicQualifiers()
+meth public abstract org.glassfish.hk2.api.messaging.Topic<{org.glassfish.hk2.api.messaging.Topic%0}> named(java.lang.String)
+meth public abstract void publish({org.glassfish.hk2.api.messaging.Topic%0})
+
+CLSS public abstract interface org.glassfish.hk2.api.messaging.TopicDistributionService
+ anno 0 org.jvnet.hk2.annotations.Contract()
+fld public final static java.lang.String HK2_DEFAULT_TOPIC_DISTRIBUTOR = "HK2TopicDistributionService"
+meth public abstract void distributeMessage(org.glassfish.hk2.api.messaging.Topic<?>,java.lang.Object)
+
+CLSS public abstract interface org.glassfish.hk2.extension.ServiceLocatorGenerator
+meth public abstract org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator)
+
+CLSS public org.glassfish.hk2.internal.ActiveDescriptorBuilderImpl
+cons public init(java.lang.Class<?>)
+intf org.glassfish.hk2.utilities.ActiveDescriptorBuilder
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> build()
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> buildFactory()
+ anno 0 java.lang.Deprecated()
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> buildProvideMethod()
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder analyzeWith(java.lang.String)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder andLoadWith(org.glassfish.hk2.api.HK2Loader)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder asType(java.lang.reflect.Type)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder has(java.lang.String,java.lang.String)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder has(java.lang.String,java.util.List<java.lang.String>)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder in(java.lang.annotation.Annotation)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder localOnly()
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder named(java.lang.String)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder ofRank(int)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxy()
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxy(boolean)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxyForSameScope()
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxyForSameScope(boolean)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder qualifiedBy(java.lang.annotation.Annotation)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder to(java.lang.reflect.Type)
+meth public org.glassfish.hk2.utilities.ActiveDescriptorBuilder visibility(org.glassfish.hk2.api.DescriptorVisibility)
+supr java.lang.Object
+hfds classAnalysisName,contracts,implementation,implementationType,loader,metadatas,name,proxy,proxyForSameScope,qualifiers,rank,scope,scopeAnnotation,visibility
+hcls BuiltActiveDescriptor
+
+CLSS public org.glassfish.hk2.internal.ConstantActiveDescriptor<%0 extends java.lang.Object>
+cons public init()
+cons public init({org.glassfish.hk2.internal.ConstantActiveDescriptor%0},java.util.Set<java.lang.reflect.Type>,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.String,java.util.Set<java.lang.annotation.Annotation>,org.glassfish.hk2.api.DescriptorVisibility,java.lang.Boolean,java.lang.Boolean,java.lang.String,java.util.Map<java.lang.String,java.util.List<java.lang.String>>,int)
+meth public boolean isCacheSet()
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.lang.String getImplementation()
+meth public java.lang.reflect.Type getImplementationType()
+meth public {org.glassfish.hk2.internal.ConstantActiveDescriptor%0} create(org.glassfish.hk2.api.ServiceHandle<?>)
+meth public {org.glassfish.hk2.internal.ConstantActiveDescriptor%0} getCache()
+supr org.glassfish.hk2.utilities.AbstractActiveDescriptor<{org.glassfish.hk2.internal.ConstantActiveDescriptor%0}>
+hfds serialVersionUID,theOne
+
+CLSS public org.glassfish.hk2.internal.DescriptorBuilderImpl
+cons public init()
+cons public init(java.lang.String,boolean)
+intf org.glassfish.hk2.utilities.DescriptorBuilder
+meth public org.glassfish.hk2.api.FactoryDescriptors buildFactory()
+meth public org.glassfish.hk2.api.FactoryDescriptors buildFactory(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public org.glassfish.hk2.api.FactoryDescriptors buildFactory(java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder analyzeWith(java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder andLoadWith(org.glassfish.hk2.api.HK2Loader)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder has(java.lang.String,java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder has(java.lang.String,java.util.List<java.lang.String>)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder in(java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder localOnly()
+meth public org.glassfish.hk2.utilities.DescriptorBuilder named(java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder ofRank(int)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder proxy()
+meth public org.glassfish.hk2.utilities.DescriptorBuilder proxy(boolean)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder proxyForSameScope()
+meth public org.glassfish.hk2.utilities.DescriptorBuilder proxyForSameScope(boolean)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder qualifiedBy(java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder qualifiedBy(java.lang.annotation.Annotation)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder to(java.lang.Class<?>)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder to(java.lang.String)
+meth public org.glassfish.hk2.utilities.DescriptorBuilder visibility(org.glassfish.hk2.api.DescriptorVisibility)
+meth public org.glassfish.hk2.utilities.DescriptorImpl build()
+supr java.lang.Object
+hfds analysisName,contracts,implementation,loader,metadatas,name,proxy,proxyForSameScope,qualifiers,rank,scope,visibility
+
+CLSS public org.glassfish.hk2.internal.HandleAndService
+cons public init(org.glassfish.hk2.api.ServiceHandle<?>,java.lang.Object)
+meth public java.lang.Object getService()
+meth public org.glassfish.hk2.api.ServiceHandle<?> getHandle()
+supr java.lang.Object
+hfds handle,service
+
+CLSS public org.glassfish.hk2.internal.ImmediateHelper
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+intf java.lang.Runnable
+intf org.glassfish.hk2.api.DynamicConfigurationListener
+intf org.glassfish.hk2.api.ErrorService
+intf org.glassfish.hk2.api.ImmediateController
+intf org.glassfish.hk2.api.ValidationService
+intf org.glassfish.hk2.api.Validator
+meth public boolean validate(org.glassfish.hk2.api.ValidationInformation)
+meth public java.util.concurrent.Executor getExecutor()
+meth public long getThreadInactivityTimeout()
+meth public org.glassfish.hk2.api.Filter getLookupFilter()
+meth public org.glassfish.hk2.api.ImmediateController$ImmediateServiceState getImmediateState()
+meth public org.glassfish.hk2.api.Validator getValidator()
+meth public void configurationChanged()
+meth public void onFailure(org.glassfish.hk2.api.ErrorInformation)
+meth public void run()
+meth public void setExecutor(java.util.concurrent.Executor)
+meth public void setImmediateState(org.glassfish.hk2.api.ImmediateController$ImmediateServiceState)
+meth public void setThreadInactivityTimeout(long)
+supr java.lang.Object
+hfds DEFAULT_EXECUTOR,THREAD_FACTORY,currentExecutor,currentState,decayTime,firstTime,immediateContext,locator,outstandingJob,queueLock,threadAvailable,tidsWithWork,waitingForWork
+hcls ImmediateThread,ImmediateThreadFactory
+
+CLSS public org.glassfish.hk2.internal.ImmediateLocalLocatorFilter
+cons public init(long)
+intf org.glassfish.hk2.api.Filter
+meth public boolean matches(org.glassfish.hk2.api.Descriptor)
+supr java.lang.Object
+hfds locatorId
+
+CLSS public org.glassfish.hk2.internal.IndexedFilterImpl
+cons public init(java.lang.String,java.lang.String)
+intf org.glassfish.hk2.api.IndexedFilter
+meth public boolean matches(org.glassfish.hk2.api.Descriptor)
+meth public java.lang.String getAdvertisedContract()
+meth public java.lang.String getName()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds contract,name
+
+CLSS public org.glassfish.hk2.internal.InheritableThreadContext
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+cons public init()
+intf org.glassfish.hk2.api.Context<org.glassfish.hk2.api.InheritableThread>
+meth public <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public boolean isActive()
+meth public boolean supportsNullCreation()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void shutdown()
+supr java.lang.Object
+hfds LOG_THREAD_DESTRUCTION,threadMap
+hcls InheritableContextThreadWrapper
+
+CLSS public org.glassfish.hk2.internal.PerThreadContext
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+cons public init()
+intf org.glassfish.hk2.api.Context<org.glassfish.hk2.api.PerThread>
+meth public <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public boolean isActive()
+meth public boolean supportsNullCreation()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void shutdown()
+supr java.lang.Object
+hfds LOG_THREAD_DESTRUCTION,threadMap
+hcls PerContextThreadWrapper
+
+CLSS public org.glassfish.hk2.internal.ServiceLocatorFactoryImpl
+cons public init()
+meth public org.glassfish.hk2.api.ServiceLocator create(java.lang.String)
+meth public org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator)
+meth public org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.extension.ServiceLocatorGenerator)
+meth public org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.extension.ServiceLocatorGenerator,org.glassfish.hk2.api.ServiceLocatorFactory$CreatePolicy)
+meth public org.glassfish.hk2.api.ServiceLocator find(java.lang.String)
+meth public void addListener(org.glassfish.hk2.api.ServiceLocatorListener)
+meth public void destroy(java.lang.String)
+meth public void destroy(org.glassfish.hk2.api.ServiceLocator)
+meth public void removeListener(org.glassfish.hk2.api.ServiceLocatorListener)
+supr org.glassfish.hk2.api.ServiceLocatorFactory
+hfds DEBUG_SERVICE_LOCATOR_LIFECYCLE,DEBUG_SERVICE_LOCATOR_PROPERTY,GENERATED_NAME_PREFIX,listeners,lock,name_count,sLock,serviceLocators
+hcls DefaultGeneratorInitializer
+
+CLSS public org.glassfish.hk2.internal.SpecificFilterImpl
+cons public init(java.lang.String,java.lang.String,long,long)
+intf org.glassfish.hk2.api.IndexedFilter
+meth public boolean matches(org.glassfish.hk2.api.Descriptor)
+meth public java.lang.String getAdvertisedContract()
+meth public java.lang.String getName()
+supr java.lang.Object
+hfds contract,id,locatorId,name
+
+CLSS public org.glassfish.hk2.internal.StarFilter
+cons public init()
+intf org.glassfish.hk2.api.Filter
+meth public boolean matches(org.glassfish.hk2.api.Descriptor)
+meth public static org.glassfish.hk2.internal.StarFilter getDescriptorFilter()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public org.glassfish.hk2.osgiresourcelocator.Activator
+cons public init()
+intf org.osgi.framework.BundleActivator
+meth public void start(org.osgi.framework.BundleContext) throws java.lang.Exception
+meth public void stop(org.osgi.framework.BundleContext) throws java.lang.Exception
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.hk2.osgiresourcelocator.ResourceFinder
+cons public init()
+meth public static java.net.URL findEntry(java.lang.String)
+meth public static java.util.List<java.net.URL> findEntries(java.lang.String)
+meth public static void initialize(org.glassfish.hk2.osgiresourcelocator.ResourceFinder)
+meth public static void reset()
+supr java.lang.Object
+hfds _me
+
+CLSS public org.glassfish.hk2.osgiresourcelocator.ResourceFinderImpl
+cons public init()
+supr org.glassfish.hk2.osgiresourcelocator.ResourceFinder
+hfds bundleContext
+
+CLSS public abstract org.glassfish.hk2.osgiresourcelocator.ServiceLoader
+innr public abstract interface static ProviderFactory
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<? extends {%%0}> lookupProviderInstances(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<? extends {%%0}> lookupProviderInstances(java.lang.Class<{%%0}>,org.glassfish.hk2.osgiresourcelocator.ServiceLoader$ProviderFactory<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<java.lang.Class> lookupProviderClasses(java.lang.Class<{%%0}>)
+meth public static void initialize(org.glassfish.hk2.osgiresourcelocator.ServiceLoader)
+meth public static void reset()
+supr java.lang.Object
+hfds _me
+
+CLSS public abstract interface static org.glassfish.hk2.osgiresourcelocator.ServiceLoader$ProviderFactory<%0 extends java.lang.Object>
+ outer org.glassfish.hk2.osgiresourcelocator.ServiceLoader
+meth public abstract {org.glassfish.hk2.osgiresourcelocator.ServiceLoader$ProviderFactory%0} make(java.lang.Class,java.lang.Class<{org.glassfish.hk2.osgiresourcelocator.ServiceLoader$ProviderFactory%0}>) throws java.lang.Exception
+
+CLSS public final org.glassfish.hk2.osgiresourcelocator.ServiceLoaderImpl
+cons public init()
+meth public void trackBundles()
+supr org.glassfish.hk2.osgiresourcelocator.ServiceLoader
+hfds bundleContext,bundleTracker,providersList,rwLock
+hcls BundleTracker,DefaultFactory,ProvidersList,ProvidersPerBundle
+
+CLSS public abstract org.glassfish.hk2.utilities.AbstractActiveDescriptor<%0 extends java.lang.Object>
+cons protected init(java.util.Set<java.lang.reflect.Type>,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.String,java.util.Set<java.lang.annotation.Annotation>,org.glassfish.hk2.api.DescriptorType,org.glassfish.hk2.api.DescriptorVisibility,int,java.lang.Boolean,java.lang.Boolean,java.lang.String,java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+cons protected init(org.glassfish.hk2.api.Descriptor)
+cons public init()
+intf org.glassfish.hk2.api.ActiveDescriptor<{org.glassfish.hk2.utilities.AbstractActiveDescriptor%0}>
+meth public boolean equals(java.lang.Object)
+meth public boolean isCacheSet()
+meth public boolean isReified()
+meth public boolean removeContractType(java.lang.reflect.Type)
+meth public boolean removeQualifierAnnotation(java.lang.annotation.Annotation)
+meth public int hashCode()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScopeAnnotation()
+meth public java.lang.Long getFactoryLocatorId()
+meth public java.lang.Long getFactoryServiceId()
+meth public java.lang.annotation.Annotation getScopeAsAnnotation()
+meth public java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public java.util.Set<java.lang.annotation.Annotation> getQualifierAnnotations()
+meth public java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public void addContractType(java.lang.reflect.Type)
+meth public void addQualifierAnnotation(java.lang.annotation.Annotation)
+meth public void dispose({org.glassfish.hk2.utilities.AbstractActiveDescriptor%0})
+meth public void releaseCache()
+meth public void setCache({org.glassfish.hk2.utilities.AbstractActiveDescriptor%0})
+meth public void setFactoryId(java.lang.Long,java.lang.Long)
+meth public void setImplementationType(java.lang.reflect.Type)
+meth public void setName(java.lang.String)
+meth public void setReified(boolean)
+meth public void setScopeAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public void setScopeAsAnnotation(java.lang.annotation.Annotation)
+meth public {org.glassfish.hk2.utilities.AbstractActiveDescriptor%0} getCache()
+supr org.glassfish.hk2.utilities.DescriptorImpl
+hfds EMPTY_QUALIFIER_SET,advertisedContracts,cacheSet,cachedValue,factoryLocatorId,factoryServiceId,isReified,qualifiers,rLock,rwLock,scope,scopeAnnotation,serialVersionUID,wLock
+
+CLSS public abstract interface org.glassfish.hk2.utilities.ActiveDescriptorBuilder
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> build()
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> buildFactory()
+ anno 0 java.lang.Deprecated()
+meth public abstract <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> buildProvideMethod()
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder analyzeWith(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder andLoadWith(org.glassfish.hk2.api.HK2Loader)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder asType(java.lang.reflect.Type)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder has(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder has(java.lang.String,java.util.List<java.lang.String>)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder in(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder localOnly()
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder named(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder ofRank(int)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxy()
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxy(boolean)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxyForSameScope()
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder proxyForSameScope(boolean)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder qualifiedBy(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder to(java.lang.reflect.Type)
+meth public abstract org.glassfish.hk2.utilities.ActiveDescriptorBuilder visibility(org.glassfish.hk2.api.DescriptorVisibility)
+
+CLSS public org.glassfish.hk2.utilities.AliasDescriptor<%0 extends java.lang.Object>
+cons public init()
+cons public init(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.ActiveDescriptor<{org.glassfish.hk2.utilities.AliasDescriptor%0}>,java.lang.String,java.lang.String)
+fld public final static java.lang.String ALIAS_FREE_DESCRIPTOR = "FreeDescriptor"
+fld public final static java.lang.String ALIAS_METADATA_MARKER = "__AliasOf"
+meth public boolean equals(java.lang.Object)
+meth public boolean isReified()
+meth public int hashCode()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScopeAnnotation()
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.lang.String getImplementation()
+meth public java.lang.reflect.Type getImplementationType()
+meth public java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public java.util.Set<java.lang.String> getQualifiers()
+meth public java.util.Set<java.lang.annotation.Annotation> getQualifierAnnotations()
+meth public java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public org.glassfish.hk2.api.ActiveDescriptor<{org.glassfish.hk2.utilities.AliasDescriptor%0}> getDescriptor()
+meth public void dispose({org.glassfish.hk2.utilities.AliasDescriptor%0})
+meth public {org.glassfish.hk2.utilities.AliasDescriptor%0} create(org.glassfish.hk2.api.ServiceHandle<?>)
+supr org.glassfish.hk2.utilities.AbstractActiveDescriptor<{org.glassfish.hk2.utilities.AliasDescriptor%0}>
+hfds EMPTY_ANNOTATION_SET,EMPTY_CONTRACT_SET,contract,descriptor,initialized,locator,qualifierNames,qualifiers,serialVersionUID
+
+CLSS public abstract interface org.glassfish.hk2.utilities.Binder
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract void bind(org.glassfish.hk2.api.DynamicConfiguration)
+
+CLSS public org.glassfish.hk2.utilities.BuilderHelper
+cons public init()
+fld public final static java.lang.String NAME_KEY = "name"
+fld public final static java.lang.String QUALIFIER_KEY = "qualifier"
+fld public final static java.lang.String TOKEN_SEPARATOR = ";"
+meth public !varargs static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> createConstantDescriptor({%%0},java.lang.String,java.lang.reflect.Type[])
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> createConstantServiceHandle({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.AbstractActiveDescriptor<{%%0}> createConstantDescriptor({%%0})
+meth public static boolean filterMatches(org.glassfish.hk2.api.Descriptor,org.glassfish.hk2.api.Filter)
+meth public static int getRank(java.lang.Class<?>)
+meth public static org.glassfish.hk2.api.Filter allFilter()
+meth public static org.glassfish.hk2.api.IndexedFilter createContractFilter(java.lang.String)
+meth public static org.glassfish.hk2.api.IndexedFilter createDescriptorFilter(org.glassfish.hk2.api.Descriptor)
+meth public static org.glassfish.hk2.api.IndexedFilter createDescriptorFilter(org.glassfish.hk2.api.Descriptor,boolean)
+meth public static org.glassfish.hk2.api.IndexedFilter createNameAndContractFilter(java.lang.String,java.lang.String)
+meth public static org.glassfish.hk2.api.IndexedFilter createNameFilter(java.lang.String)
+meth public static org.glassfish.hk2.api.IndexedFilter createSpecificDescriptorFilter(org.glassfish.hk2.api.Descriptor)
+meth public static org.glassfish.hk2.api.IndexedFilter createTokenizedFilter(java.lang.String)
+meth public static org.glassfish.hk2.utilities.ActiveDescriptorBuilder activeLink(java.lang.Class<?>)
+meth public static org.glassfish.hk2.utilities.DescriptorBuilder link(java.lang.Class<?>)
+meth public static org.glassfish.hk2.utilities.DescriptorBuilder link(java.lang.Class<?>,boolean)
+meth public static org.glassfish.hk2.utilities.DescriptorBuilder link(java.lang.String)
+meth public static org.glassfish.hk2.utilities.DescriptorBuilder link(java.lang.String,boolean)
+meth public static org.glassfish.hk2.utilities.DescriptorImpl createDescriptorFromClass(java.lang.Class<?>)
+meth public static org.glassfish.hk2.utilities.DescriptorImpl deepCopyDescriptor(org.glassfish.hk2.api.Descriptor)
+meth public static void getMetadataValues(java.lang.annotation.Annotation,java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+supr java.lang.Object
+
+CLSS public org.glassfish.hk2.utilities.ClassLoaderPostProcessor
+cons public init(java.lang.ClassLoader)
+cons public init(java.lang.ClassLoader,boolean)
+intf org.glassfish.hk2.api.PopulatorPostProcessor
+meth public org.glassfish.hk2.utilities.DescriptorImpl process(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.utilities.DescriptorImpl)
+supr java.lang.Object
+hfds force,loader
+
+CLSS public org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder
+cons public !varargs init(java.lang.ClassLoader,java.lang.String[])
+cons public init()
+cons public init(java.lang.ClassLoader)
+intf org.glassfish.hk2.api.DescriptorFileFinder
+intf org.glassfish.hk2.api.DescriptorFileFinderInformation
+meth public java.lang.String toString()
+meth public java.util.List<java.io.InputStream> findDescriptorFiles() throws java.io.IOException
+meth public java.util.List<java.lang.String> getDescriptorFileInformation()
+supr java.lang.Object
+hfds DEBUG_DESCRIPTOR_FINDER,DEBUG_DESCRIPTOR_FINDER_PROPERTY,DEFAULT_NAME,classLoader,identifiers,names
+
+CLSS public org.glassfish.hk2.utilities.ContextualInput<%0 extends java.lang.Object>
+cons public init(org.glassfish.hk2.api.ActiveDescriptor<{org.glassfish.hk2.utilities.ContextualInput%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.ActiveDescriptor<{org.glassfish.hk2.utilities.ContextualInput%0}> getDescriptor()
+meth public org.glassfish.hk2.api.ServiceHandle<?> getRoot()
+supr java.lang.Object
+hfds descriptor,root
+
+CLSS public abstract interface org.glassfish.hk2.utilities.DescriptorBuilder
+meth public abstract org.glassfish.hk2.api.FactoryDescriptors buildFactory()
+meth public abstract org.glassfish.hk2.api.FactoryDescriptors buildFactory(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public abstract org.glassfish.hk2.api.FactoryDescriptors buildFactory(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder analyzeWith(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder andLoadWith(org.glassfish.hk2.api.HK2Loader)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder has(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder has(java.lang.String,java.util.List<java.lang.String>)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder in(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder localOnly()
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder named(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder ofRank(int)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder proxy()
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder proxy(boolean)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder proxyForSameScope()
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder proxyForSameScope(boolean)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder qualifiedBy(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder qualifiedBy(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder to(java.lang.Class<?>)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder to(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.DescriptorBuilder visibility(org.glassfish.hk2.api.DescriptorVisibility)
+meth public abstract org.glassfish.hk2.utilities.DescriptorImpl build()
+
+CLSS public org.glassfish.hk2.utilities.DescriptorImpl
+cons public init()
+cons public init(java.util.Set<java.lang.String>,java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.util.List<java.lang.String>>,java.util.Set<java.lang.String>,org.glassfish.hk2.api.DescriptorType,org.glassfish.hk2.api.DescriptorVisibility,org.glassfish.hk2.api.HK2Loader,int,java.lang.Boolean,java.lang.Boolean,java.lang.String,java.lang.Long,java.lang.Long)
+cons public init(org.glassfish.hk2.api.Descriptor)
+intf java.io.Externalizable
+intf org.glassfish.hk2.api.Descriptor
+meth public boolean equals(java.lang.Object)
+meth public boolean readObject(java.io.BufferedReader) throws java.io.IOException
+meth public boolean removeAdvertisedContract(java.lang.String)
+meth public boolean removeAllMetadata(java.lang.String)
+meth public boolean removeMetadata(java.lang.String,java.lang.String)
+meth public boolean removeQualifier(java.lang.String)
+meth public int getRanking()
+meth public int hashCode()
+meth public int setRanking(int)
+meth public java.lang.Boolean isProxiable()
+meth public java.lang.Boolean isProxyForSameScope()
+meth public java.lang.Long getLocatorId()
+meth public java.lang.Long getServiceId()
+meth public java.lang.String getClassAnalysisName()
+meth public java.lang.String getImplementation()
+meth public java.lang.String getName()
+meth public java.lang.String getScope()
+meth public java.lang.String toString()
+meth public java.util.Map<java.lang.String,java.util.List<java.lang.String>> getMetadata()
+meth public java.util.Set<java.lang.String> getAdvertisedContracts()
+meth public java.util.Set<java.lang.String> getQualifiers()
+meth public org.glassfish.hk2.api.DescriptorType getDescriptorType()
+meth public org.glassfish.hk2.api.DescriptorVisibility getDescriptorVisibility()
+meth public org.glassfish.hk2.api.HK2Loader getLoader()
+meth public static boolean descriptorEquals(org.glassfish.hk2.api.Descriptor,org.glassfish.hk2.api.Descriptor)
+meth public static void pretty(java.lang.StringBuffer,org.glassfish.hk2.api.Descriptor)
+meth public void addAdvertisedContract(java.lang.String)
+meth public void addMetadata(java.lang.String,java.lang.String)
+meth public void addMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+meth public void addQualifier(java.lang.String)
+meth public void clearMetadata()
+meth public void readExternal(java.io.ObjectInput) throws java.io.IOException,java.lang.ClassNotFoundException
+meth public void setClassAnalysisName(java.lang.String)
+meth public void setDescriptorType(org.glassfish.hk2.api.DescriptorType)
+meth public void setDescriptorVisibility(org.glassfish.hk2.api.DescriptorVisibility)
+meth public void setImplementation(java.lang.String)
+meth public void setLoader(org.glassfish.hk2.api.HK2Loader)
+meth public void setLocatorId(java.lang.Long)
+meth public void setMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+meth public void setName(java.lang.String)
+meth public void setProxiable(java.lang.Boolean)
+meth public void setProxyForSameScope(java.lang.Boolean)
+meth public void setScope(java.lang.String)
+meth public void setServiceId(java.lang.Long)
+meth public void writeExternal(java.io.ObjectOutput) throws java.io.IOException
+meth public void writeObject(java.io.PrintWriter) throws java.io.IOException
+supr java.lang.Object
+hfds ANALYSIS_KEY,CONTRACT_KEY,EMPTY_CONTRACTS_SET,EMPTY_METADATAS_MAP,EMPTY_QUALIFIER_SET,END_START,END_START_CHAR,LOCAL_DT,METADATA_KEY,NAME_KEY,NOT_IN_CONTRACTS_DIRECTIVE,NOT_IN_CONTRACTS_DIRECTIVE_CHAR,PROVIDE_METHOD_DT,PROXIABLE_KEY,PROXY_FOR_SAME_SCOPE_KEY,QUALIFIER_KEY,RANKING_KEY,SCOPE_KEY,SINGLETON_DIRECTIVE,SINGLETON_DIRECTIVE_CHAR,START_START,TYPE_KEY,VISIBILITY_KEY,analysisName,contracts,descriptorType,descriptorVisibility,id,implementation,loader,locatorId,metadatas,name,proxiable,proxyForSameScope,qualifiers,rank,scope,serialVersionUID
+
+CLSS public org.glassfish.hk2.utilities.DuplicatePostProcessor
+ anno 0 org.glassfish.hk2.api.PerLookup()
+cons public init()
+cons public init(org.glassfish.hk2.utilities.DuplicatePostProcessorMode)
+intf org.glassfish.hk2.api.PopulatorPostProcessor
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.utilities.DescriptorImpl process(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.utilities.DescriptorImpl)
+meth public org.glassfish.hk2.utilities.DuplicatePostProcessorMode getMode()
+supr java.lang.Object
+hfds implOnlyDupSet,mode,strictDupSet
+hcls ImplOnlyKey
+
+CLSS public final !enum org.glassfish.hk2.utilities.DuplicatePostProcessorMode
+fld public final static org.glassfish.hk2.utilities.DuplicatePostProcessorMode IMPLEMENTATION_ONLY
+fld public final static org.glassfish.hk2.utilities.DuplicatePostProcessorMode STRICT
+meth public static org.glassfish.hk2.utilities.DuplicatePostProcessorMode valueOf(java.lang.String)
+meth public static org.glassfish.hk2.utilities.DuplicatePostProcessorMode[] values()
+supr java.lang.Enum<org.glassfish.hk2.utilities.DuplicatePostProcessorMode>
+
+CLSS public org.glassfish.hk2.utilities.EnableLookupExceptionsModule
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public org.glassfish.hk2.utilities.FactoryDescriptorsImpl
+cons public init(org.glassfish.hk2.api.Descriptor,org.glassfish.hk2.api.Descriptor)
+intf org.glassfish.hk2.api.FactoryDescriptors
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.Descriptor getFactoryAsAFactory()
+meth public org.glassfish.hk2.api.Descriptor getFactoryAsAService()
+supr java.lang.Object
+hfds asProvideMethod,asService
+
+CLSS public abstract interface !annotation org.glassfish.hk2.utilities.GreedyDefaultImplementation
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?> value()
+
+CLSS public org.glassfish.hk2.utilities.GreedyResolver
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+intf org.glassfish.hk2.api.JustInTimeInjectionResolver
+meth public boolean justInTimeResolution(org.glassfish.hk2.api.Injectee)
+supr java.lang.Object
+hfds locator
+
+CLSS public org.glassfish.hk2.utilities.HK2LoaderImpl
+cons public init()
+cons public init(java.lang.ClassLoader)
+intf org.glassfish.hk2.api.HK2Loader
+meth public java.lang.Class<?> loadClass(java.lang.String)
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds loader
+
+CLSS public org.glassfish.hk2.utilities.ImmediateContext
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+intf org.glassfish.hk2.api.Context<org.glassfish.hk2.api.Immediate>
+meth public <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public boolean isActive()
+meth public boolean supportsNullCreation()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public org.glassfish.hk2.api.Filter getValidationFilter()
+meth public void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void doWork()
+meth public void shutdown()
+supr java.lang.Object
+hfds creating,currentImmediateServices,locator,validationFilter
+
+CLSS public abstract interface org.glassfish.hk2.utilities.ImmediateErrorHandler
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract void postConstructFailed(org.glassfish.hk2.api.ActiveDescriptor<?>,java.lang.Throwable)
+meth public abstract void preDestroyFailed(org.glassfish.hk2.api.ActiveDescriptor<?>,java.lang.Throwable)
+
+CLSS public org.glassfish.hk2.utilities.ImmediateScopeModule
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public org.glassfish.hk2.utilities.InheritableThreadScopeModule
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public org.glassfish.hk2.utilities.InjecteeImpl
+cons public init()
+cons public init(java.lang.reflect.Type)
+cons public init(org.glassfish.hk2.api.Injectee)
+intf org.glassfish.hk2.api.Injectee
+meth public boolean isOptional()
+meth public boolean isSelf()
+meth public int getPosition()
+meth public java.lang.Class<?> getInjecteeClass()
+meth public java.lang.String toString()
+meth public java.lang.reflect.AnnotatedElement getParent()
+meth public java.lang.reflect.Type getRequiredType()
+meth public java.util.Set<java.lang.annotation.Annotation> getRequiredQualifiers()
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> getInjecteeDescriptor()
+meth public org.glassfish.hk2.api.Unqualified getUnqualified()
+meth public void setInjecteeDescriptor(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void setOptional(boolean)
+meth public void setParent(java.lang.reflect.AnnotatedElement)
+meth public void setPosition(int)
+meth public void setRequiredQualifiers(java.util.Set<java.lang.annotation.Annotation>)
+meth public void setRequiredType(java.lang.reflect.Type)
+meth public void setSelf(boolean)
+meth public void setUnqualified(org.glassfish.hk2.api.Unqualified)
+supr java.lang.Object
+hfds injecteeDescriptor,isOptional,isSelf,pClass,parent,position,qualifiers,requiredType,unqualified
+
+CLSS public org.glassfish.hk2.utilities.MethodParameterImpl
+cons public init(int,java.lang.Object)
+intf org.glassfish.hk2.api.MethodParameter
+meth public int getParameterPosition()
+meth public java.lang.Object getParameterValue()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds index,value
+
+CLSS public org.glassfish.hk2.utilities.NamedImpl
+cons public init(java.lang.String)
+intf javax.inject.Named
+meth public java.lang.String toString()
+meth public java.lang.String value()
+supr org.glassfish.hk2.api.AnnotationLiteral<javax.inject.Named>
+hfds name,serialVersionUID
+
+CLSS public org.glassfish.hk2.utilities.OrFilter
+cons public !varargs init(org.glassfish.hk2.api.Filter[])
+intf org.glassfish.hk2.api.Filter
+meth public boolean matches(org.glassfish.hk2.api.Descriptor)
+supr java.lang.Object
+hfds allFilters
+
+CLSS public org.glassfish.hk2.utilities.PerThreadScopeModule
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public org.glassfish.hk2.utilities.RethrowErrorService
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.hk2.api.ErrorService
+meth public void onFailure(org.glassfish.hk2.api.ErrorInformation)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.hk2.utilities.ServiceLocatorUtilities
+cons public init()
+meth public !varargs static <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addOneConstant(org.glassfish.hk2.api.ServiceLocator,java.lang.Object,java.lang.String,java.lang.reflect.Type[])
+meth public !varargs static <%0 extends java.lang.Object> {%%0} findOrCreateService(org.glassfish.hk2.api.ServiceLocator,java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs static java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> addClasses(org.glassfish.hk2.api.ServiceLocator,boolean,java.lang.Class<?>[])
+meth public !varargs static java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> addClasses(org.glassfish.hk2.api.ServiceLocator,java.lang.Class<?>[])
+meth public !varargs static java.util.List<org.glassfish.hk2.api.FactoryDescriptors> addFactoryConstants(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Factory<?>[])
+meth public !varargs static java.util.List<org.glassfish.hk2.api.FactoryDescriptors> addFactoryDescriptors(org.glassfish.hk2.api.ServiceLocator,boolean,org.glassfish.hk2.api.FactoryDescriptors[])
+meth public !varargs static java.util.List<org.glassfish.hk2.api.FactoryDescriptors> addFactoryDescriptors(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.FactoryDescriptors[])
+meth public !varargs static org.glassfish.hk2.api.ServiceLocator bind(java.lang.String,org.glassfish.hk2.utilities.Binder[])
+meth public !varargs static org.glassfish.hk2.api.ServiceLocator bind(org.glassfish.hk2.utilities.Binder[])
+meth public !varargs static void bind(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.utilities.Binder[])
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addOneConstant(org.glassfish.hk2.api.ServiceLocator,java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addOneDescriptor(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Descriptor)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addOneDescriptor(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Descriptor,boolean)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> findOneDescriptor(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Descriptor)
+meth public static <%0 extends java.lang.Object> {%%0} getService(org.glassfish.hk2.api.ServiceLocator,java.lang.String)
+meth public static <%0 extends java.lang.Object> {%%0} getService(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Descriptor)
+meth public static java.lang.String getOneMetadataField(org.glassfish.hk2.api.Descriptor,java.lang.String)
+meth public static java.lang.String getOneMetadataField(org.glassfish.hk2.api.ServiceHandle<?>,java.lang.String)
+meth public static javax.inject.Singleton getSingletonAnnotation()
+meth public static org.glassfish.hk2.api.DynamicConfiguration createDynamicConfiguration(org.glassfish.hk2.api.ServiceLocator)
+meth public static org.glassfish.hk2.api.Immediate getImmediateAnnotation()
+meth public static org.glassfish.hk2.api.ImmediateController enableImmediateScopeSuspended(org.glassfish.hk2.api.ServiceLocator)
+meth public static org.glassfish.hk2.api.InheritableThread getInheritableThreadAnnotation()
+meth public static org.glassfish.hk2.api.PerLookup getPerLookupAnnotation()
+meth public static org.glassfish.hk2.api.PerThread getPerThreadAnnotation()
+meth public static org.glassfish.hk2.api.ServiceLocator createAndPopulateServiceLocator()
+meth public static org.glassfish.hk2.api.ServiceLocator createAndPopulateServiceLocator(java.lang.String)
+meth public static void dumpAllDescriptors(org.glassfish.hk2.api.ServiceLocator)
+meth public static void dumpAllDescriptors(org.glassfish.hk2.api.ServiceLocator,java.io.PrintStream)
+meth public static void enableGreedyResolution(org.glassfish.hk2.api.ServiceLocator)
+meth public static void enableImmediateScope(org.glassfish.hk2.api.ServiceLocator)
+meth public static void enableInheritableThreadScope(org.glassfish.hk2.api.ServiceLocator)
+meth public static void enableLookupExceptions(org.glassfish.hk2.api.ServiceLocator)
+meth public static void enablePerThreadScope(org.glassfish.hk2.api.ServiceLocator)
+meth public static void enableTopicDistribution(org.glassfish.hk2.api.ServiceLocator)
+meth public static void removeFilter(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Filter)
+meth public static void removeFilter(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Filter,boolean)
+meth public static void removeOneDescriptor(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Descriptor)
+meth public static void removeOneDescriptor(org.glassfish.hk2.api.ServiceLocator,org.glassfish.hk2.api.Descriptor,boolean)
+supr java.lang.Object
+hfds DEFAULT_LOCATOR_NAME,IMMEDIATE,INHERITABLE_THREAD,PER_LOOKUP,PER_THREAD,SINGLETON
+hcls AliasFilter,ImmediateImpl,InheritableThreadImpl,PerLookupImpl,PerThreadImpl,SingletonImpl
+
+CLSS public abstract interface !annotation org.glassfish.hk2.utilities.Stub
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+innr public final static !enum Type
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault org.glassfish.hk2.utilities.Stub$Type value()
+
+CLSS public final static !enum org.glassfish.hk2.utilities.Stub$Type
+ outer org.glassfish.hk2.utilities.Stub
+fld public final static org.glassfish.hk2.utilities.Stub$Type EXCEPTIONS
+fld public final static org.glassfish.hk2.utilities.Stub$Type VALUES
+meth public static org.glassfish.hk2.utilities.Stub$Type valueOf(java.lang.String)
+meth public static org.glassfish.hk2.utilities.Stub$Type[] values()
+supr java.lang.Enum<org.glassfish.hk2.utilities.Stub$Type>
+
+CLSS public org.glassfish.hk2.utilities.UnqualifiedImpl
+cons public !varargs init(java.lang.Class<? extends java.lang.annotation.Annotation>[])
+intf org.glassfish.hk2.api.Unqualified
+meth public java.lang.Class<? extends java.lang.annotation.Annotation>[] value()
+meth public java.lang.String toString()
+supr org.glassfish.hk2.api.AnnotationLiteral<org.glassfish.hk2.api.Unqualified>
+hfds serialVersionUID,value
+
+CLSS public abstract org.glassfish.hk2.utilities.binding.AbstractBinder
+cons public init()
+intf org.glassfish.hk2.api.DynamicConfiguration
+intf org.glassfish.hk2.utilities.Binder
+meth protected abstract void configure()
+meth public !varargs final void install(org.glassfish.hk2.utilities.Binder[])
+meth public !varargs void addIdempotentFilter(org.glassfish.hk2.api.Filter[])
+meth public !varargs void registerTwoPhaseResources(org.glassfish.hk2.api.TwoPhaseResource[])
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,boolean)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> bind(org.glassfish.hk2.api.Descriptor)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> bind(org.glassfish.hk2.api.Descriptor,boolean)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.FactoryDescriptors addActiveFactoryDescriptor(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{%%0}> bind({%%0})
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bind(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bindAsContract(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bindAsContract(java.lang.reflect.Type)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bindAsContract(org.glassfish.hk2.api.TypeLiteral<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bindFactory(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bindFactory(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> bindFactory(org.glassfish.hk2.api.Factory<{%%0}>)
+meth public org.glassfish.hk2.api.FactoryDescriptors bind(org.glassfish.hk2.api.FactoryDescriptors)
+meth public org.glassfish.hk2.api.FactoryDescriptors bind(org.glassfish.hk2.api.FactoryDescriptors,boolean)
+meth public void addUnbindFilter(org.glassfish.hk2.api.Filter)
+meth public void bind(org.glassfish.hk2.api.DynamicConfiguration)
+meth public void commit()
+supr java.lang.Object
+hfds configuration,currentBuilder,defaultLoader
+
+CLSS public abstract interface org.glassfish.hk2.utilities.binding.BindingBuilder<%0 extends java.lang.Object>
+
+CLSS public org.glassfish.hk2.utilities.binding.BindingBuilderFactory
+cons public init()
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{%%0}> newBinder({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> newBinder(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> newFactoryBinder(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> newFactoryBinder(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{%%0}> newFactoryBinder(org.glassfish.hk2.api.Factory<{%%0}>)
+meth public static void addBinding(org.glassfish.hk2.utilities.binding.BindingBuilder<?>,org.glassfish.hk2.api.DynamicConfiguration)
+meth public static void addBinding(org.glassfish.hk2.utilities.binding.BindingBuilder<?>,org.glassfish.hk2.api.DynamicConfiguration,org.glassfish.hk2.api.HK2Loader)
+supr java.lang.Object
+
+CLSS public abstract interface org.glassfish.hk2.utilities.binding.NamedBindingBuilder<%0 extends java.lang.Object>
+intf org.glassfish.hk2.utilities.binding.BindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}>
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> asType(java.lang.reflect.Type)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> loadedBy(org.glassfish.hk2.api.HK2Loader)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> proxy(boolean)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> qualifiedBy(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> to(java.lang.Class<? super {org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}>)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> to(org.glassfish.hk2.api.TypeLiteral<?>)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> withMetadata(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> withMetadata(java.lang.String,java.util.List<java.lang.String>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.NamedBindingBuilder%0}> in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public abstract void ranked(int)
+
+CLSS public abstract interface org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<%0 extends java.lang.Object>
+intf org.glassfish.hk2.utilities.binding.BindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}>
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> analyzeWith(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> loadedBy(org.glassfish.hk2.api.HK2Loader)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> proxy(boolean)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> proxyForSameScope(boolean)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> qualifiedBy(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> to(java.lang.Class<? super {org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> to(org.glassfish.hk2.api.TypeLiteral<?>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> withMetadata(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> withMetadata(java.lang.String,java.util.List<java.lang.String>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedBindingBuilder%0}> named(java.lang.String)
+meth public abstract void ranked(int)
+
+CLSS public abstract interface org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<%0 extends java.lang.Object>
+intf org.glassfish.hk2.utilities.binding.BindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}>
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> analyzeWith(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> loadedBy(org.glassfish.hk2.api.HK2Loader)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> proxy(boolean)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> qualifiedBy(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> to(java.lang.Class<? super {org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> to(org.glassfish.hk2.api.TypeLiteral<?>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> withMetadata(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder%0}> withMetadata(java.lang.String,java.util.List<java.lang.String>)
+meth public abstract void ranked(int)
+
+CLSS public abstract interface org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<%0 extends java.lang.Object>
+intf org.glassfish.hk2.utilities.binding.BindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}>
+meth public abstract org.glassfish.hk2.utilities.binding.NamedBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> named(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public abstract org.glassfish.hk2.utilities.binding.ScopedBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> in(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> analyzeWith(java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> asType(java.lang.reflect.Type)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> loadedBy(org.glassfish.hk2.api.HK2Loader)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> proxy(boolean)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> proxyForSameScope(boolean)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> qualifiedBy(java.lang.annotation.Annotation)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> to(java.lang.Class<? super {org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}>)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> to(java.lang.reflect.Type)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> to(org.glassfish.hk2.api.TypeLiteral<?>)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> withMetadata(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.hk2.utilities.binding.ServiceBindingBuilder<{org.glassfish.hk2.utilities.binding.ServiceBindingBuilder%0}> withMetadata(java.lang.String,java.util.List<java.lang.String>)
+meth public abstract void ranked(int)
+
+CLSS public org.glassfish.hk2.utilities.cache.Cache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.Cache%0},{org.glassfish.hk2.utilities.cache.Cache%1}>)
+cons public init(org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.Cache%0},{org.glassfish.hk2.utilities.cache.Cache%1}>,org.glassfish.hk2.utilities.cache.Cache$CycleHandler<{org.glassfish.hk2.utilities.cache.Cache%0}>)
+innr public abstract interface static CycleHandler
+intf org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.Cache%0},{org.glassfish.hk2.utilities.cache.Cache%1}>
+meth public boolean containsKey({org.glassfish.hk2.utilities.cache.Cache%0})
+meth public int size()
+meth public void clear()
+meth public void remove({org.glassfish.hk2.utilities.cache.Cache%0})
+meth public {org.glassfish.hk2.utilities.cache.Cache%1} compute({org.glassfish.hk2.utilities.cache.Cache%0})
+supr java.lang.Object
+hfds EMPTY_HANDLER,cache,computable,cycleHandler
+hcls OriginThreadAwareFuture
+
+CLSS public abstract interface static org.glassfish.hk2.utilities.cache.Cache$CycleHandler<%0 extends java.lang.Object>
+ outer org.glassfish.hk2.utilities.cache.Cache
+meth public abstract void handleCycle({org.glassfish.hk2.utilities.cache.Cache$CycleHandler%0})
+
+CLSS public abstract interface org.glassfish.hk2.utilities.cache.CacheEntry
+meth public abstract void removeFromCache()
+
+CLSS public abstract interface org.glassfish.hk2.utilities.cache.CacheKeyFilter<%0 extends java.lang.Object>
+meth public abstract boolean matches({org.glassfish.hk2.utilities.cache.CacheKeyFilter%0})
+
+CLSS public org.glassfish.hk2.utilities.cache.CacheUtilities
+cons public init()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.hk2.utilities.cache.WeakCARCache<{%%0},{%%1}> createWeakCARCache(org.glassfish.hk2.utilities.cache.Computable<{%%0},{%%1}>,int,boolean)
+supr java.lang.Object
+
+CLSS public abstract interface org.glassfish.hk2.utilities.cache.Computable<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract {org.glassfish.hk2.utilities.cache.Computable%1} compute({org.glassfish.hk2.utilities.cache.Computable%0})
+
+CLSS public org.glassfish.hk2.utilities.cache.ComputationErrorException
+cons public init()
+cons public init(java.lang.Object)
+fld public java.lang.Object computation
+meth public java.lang.Object getComputation()
+supr java.lang.RuntimeException
+hfds serialVersionUID
+
+CLSS public abstract interface org.glassfish.hk2.utilities.cache.HybridCacheEntry<%0 extends java.lang.Object>
+intf org.glassfish.hk2.utilities.cache.CacheEntry
+meth public abstract boolean dropMe()
+meth public abstract {org.glassfish.hk2.utilities.cache.HybridCacheEntry%0} getValue()
+
+CLSS public abstract org.glassfish.hk2.utilities.cache.LRUCache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+meth public abstract int getMaxCacheSize()
+meth public abstract org.glassfish.hk2.utilities.cache.CacheEntry put({org.glassfish.hk2.utilities.cache.LRUCache%0},{org.glassfish.hk2.utilities.cache.LRUCache%1})
+meth public abstract void releaseCache()
+meth public abstract void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.cache.LRUCache%0}>)
+meth public abstract {org.glassfish.hk2.utilities.cache.LRUCache%1} get({org.glassfish.hk2.utilities.cache.LRUCache%0})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.hk2.utilities.cache.LRUCache<{%%0},{%%1}> createCache(int)
+supr java.lang.Object
+
+CLSS public org.glassfish.hk2.utilities.cache.LRUHybridCache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(int,org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.LRUHybridCache%0},org.glassfish.hk2.utilities.cache.HybridCacheEntry<{org.glassfish.hk2.utilities.cache.LRUHybridCache%1}>>)
+cons public init(int,org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.LRUHybridCache%0},org.glassfish.hk2.utilities.cache.HybridCacheEntry<{org.glassfish.hk2.utilities.cache.LRUHybridCache%1}>>,org.glassfish.hk2.utilities.cache.LRUHybridCache$CycleHandler<{org.glassfish.hk2.utilities.cache.LRUHybridCache%0}>)
+innr public abstract interface static CycleHandler
+intf org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.LRUHybridCache%0},org.glassfish.hk2.utilities.cache.HybridCacheEntry<{org.glassfish.hk2.utilities.cache.LRUHybridCache%1}>>
+meth public boolean containsKey({org.glassfish.hk2.utilities.cache.LRUHybridCache%0})
+meth public int getMaximumCacheSize()
+meth public int size()
+meth public org.glassfish.hk2.utilities.cache.HybridCacheEntry<{org.glassfish.hk2.utilities.cache.LRUHybridCache%1}> compute({org.glassfish.hk2.utilities.cache.LRUHybridCache%0})
+meth public org.glassfish.hk2.utilities.cache.HybridCacheEntry<{org.glassfish.hk2.utilities.cache.LRUHybridCache%1}> createCacheEntry({org.glassfish.hk2.utilities.cache.LRUHybridCache%0},{org.glassfish.hk2.utilities.cache.LRUHybridCache%1},boolean)
+meth public void clear()
+meth public void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.cache.LRUHybridCache%0}>)
+meth public void remove({org.glassfish.hk2.utilities.cache.LRUHybridCache%0})
+supr java.lang.Object
+hfds COMPARATOR,EMPTY_CYCLE_HANDLER,cache,computable,cycleHandler,maxCacheSize,prunningLock
+hcls CacheEntryImplComparator,HybridCacheEntryImpl,OriginThreadAwareFuture
+
+CLSS public abstract interface static org.glassfish.hk2.utilities.cache.LRUHybridCache$CycleHandler<%0 extends java.lang.Object>
+ outer org.glassfish.hk2.utilities.cache.LRUHybridCache
+meth public abstract void handleCycle({org.glassfish.hk2.utilities.cache.LRUHybridCache$CycleHandler%0})
+
+CLSS public abstract interface org.glassfish.hk2.utilities.cache.WeakCARCache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract boolean remove({org.glassfish.hk2.utilities.cache.WeakCARCache%0})
+meth public abstract double getHitRate()
+meth public abstract int getB1Size()
+meth public abstract int getB2Size()
+meth public abstract int getKeySize()
+meth public abstract int getMaxSize()
+meth public abstract int getP()
+meth public abstract int getT1Size()
+meth public abstract int getT2Size()
+meth public abstract int getValueSize()
+meth public abstract java.lang.String dumpAllLists()
+meth public abstract org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.WeakCARCache%0},{org.glassfish.hk2.utilities.cache.WeakCARCache%1}> getComputable()
+meth public abstract void clear()
+meth public abstract void clearStaleReferences()
+meth public abstract void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.cache.WeakCARCache%0}>)
+meth public abstract {org.glassfish.hk2.utilities.cache.WeakCARCache%1} compute({org.glassfish.hk2.utilities.cache.WeakCARCache%0})
+
+CLSS public org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(int)
+meth public int getMaxCacheSize()
+meth public org.glassfish.hk2.utilities.cache.CacheEntry put({org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%0},{org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%1})
+meth public void releaseCache()
+meth public void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%0}>)
+meth public {org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%1} get({org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%0})
+supr org.glassfish.hk2.utilities.cache.LRUCache<{org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%0},{org.glassfish.hk2.utilities.cache.internal.LRUCacheCheapRead%1}>
+hfds COMPARATOR,cache,maxCacheSize,prunningLock
+hcls CacheEntryImpl,CacheEntryImplComparator
+
+CLSS public org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%0},{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%1}>,int,boolean)
+intf org.glassfish.hk2.utilities.cache.WeakCARCache<{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%0},{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%1}>
+meth public boolean remove({org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%0})
+meth public double getHitRate()
+meth public int getB1Size()
+meth public int getB2Size()
+meth public int getKeySize()
+meth public int getMaxSize()
+meth public int getP()
+meth public int getT1Size()
+meth public int getT2Size()
+meth public int getValueSize()
+meth public java.lang.String dumpAllLists()
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.utilities.cache.Computable<{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%0},{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%1}> getComputable()
+meth public void clear()
+meth public void clearStaleReferences()
+meth public void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%0}>)
+meth public {org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%1} compute({org.glassfish.hk2.utilities.cache.internal.WeakCARCacheImpl%0})
+supr java.lang.Object
+hfds b1,b2,computable,hits,maxSize,p,t1,t2,tries
+hcls CarValue
+
+CLSS public org.glassfish.hk2.utilities.general.GeneralUtilities
+cons public init()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.hk2.utilities.general.WeakHashClock<{%%0},{%%1}> getWeakHashClock(boolean)
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.utilities.general.WeakHashLRU<{%%0}> getWeakHashLRU(boolean)
+meth public static boolean safeEquals(java.lang.Object,java.lang.Object)
+meth public static java.lang.Class<?> loadClass(java.lang.ClassLoader,java.lang.String)
+meth public static java.lang.String prettyPrintBytes(byte[])
+supr java.lang.Object
+
+CLSS public org.glassfish.hk2.utilities.general.Hk2ThreadLocal<%0 extends java.lang.Object>
+cons public init()
+meth protected {org.glassfish.hk2.utilities.general.Hk2ThreadLocal%0} initialValue()
+meth public int getSize()
+meth public void remove()
+meth public void removeAll()
+meth public void set({org.glassfish.hk2.utilities.general.Hk2ThreadLocal%0})
+meth public {org.glassfish.hk2.utilities.general.Hk2ThreadLocal%0} get()
+supr java.lang.Object
+hfds NULL,locals,queue
+hcls Key
+
+CLSS public org.glassfish.hk2.utilities.general.IndentingXMLStreamWriter
+cons public init(javax.xml.stream.XMLStreamWriter)
+intf javax.xml.stream.XMLStreamWriter
+meth public int getIndentStep()
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public javax.xml.namespace.NamespaceContext getNamespaceContext()
+meth public void close() throws javax.xml.stream.XMLStreamException
+meth public void flush() throws javax.xml.stream.XMLStreamException
+meth public void setDefaultNamespace(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void setIndentStep(int)
+meth public void setIndentStep(java.lang.String)
+meth public void setNamespaceContext(javax.xml.namespace.NamespaceContext) throws javax.xml.stream.XMLStreamException
+meth public void setPrefix(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeAttribute(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeAttribute(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeCData(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeCharacters(char[],int,int) throws javax.xml.stream.XMLStreamException
+meth public void writeCharacters(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeComment(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeDTD(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeDefaultNamespace(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEmptyElement(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEmptyElement(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEmptyElement(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEndDocument() throws javax.xml.stream.XMLStreamException
+meth public void writeEndElement() throws javax.xml.stream.XMLStreamException
+meth public void writeEntityRef(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeNamespace(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeProcessingInstruction(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeProcessingInstruction(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartDocument() throws javax.xml.stream.XMLStreamException
+meth public void writeStartDocument(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartDocument(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartElement(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartElement(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartElement(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+supr java.lang.Object
+hfds SEEN_DATA,SEEN_ELEMENT,SEEN_NOTHING,depth,indentStep,state,stateStack
+
+CLSS public org.glassfish.hk2.utilities.general.ThreadSpecificObject<%0 extends java.lang.Object>
+cons public init({org.glassfish.hk2.utilities.general.ThreadSpecificObject%0})
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public long getThreadIdentifier()
+meth public {org.glassfish.hk2.utilities.general.ThreadSpecificObject%0} getIncomingObject()
+supr java.lang.Object
+hfds hash,incoming,tid
+
+CLSS public org.glassfish.hk2.utilities.general.ValidatorUtilities
+cons public init()
+meth public static javax.validation.Validator getValidator()
+supr java.lang.Object
+hfds TRAVERSABLE_RESOLVER,validator
+
+CLSS public abstract interface org.glassfish.hk2.utilities.general.WeakHashClock<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract boolean hasWeakKeys()
+meth public abstract int size()
+meth public abstract java.util.Map$Entry<{org.glassfish.hk2.utilities.general.WeakHashClock%0},{org.glassfish.hk2.utilities.general.WeakHashClock%1}> next()
+meth public abstract void clear()
+meth public abstract void clearStaleReferences()
+meth public abstract void put({org.glassfish.hk2.utilities.general.WeakHashClock%0},{org.glassfish.hk2.utilities.general.WeakHashClock%1})
+meth public abstract void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.general.WeakHashClock%0}>)
+meth public abstract {org.glassfish.hk2.utilities.general.WeakHashClock%1} get({org.glassfish.hk2.utilities.general.WeakHashClock%0})
+meth public abstract {org.glassfish.hk2.utilities.general.WeakHashClock%1} remove({org.glassfish.hk2.utilities.general.WeakHashClock%0})
+
+CLSS public abstract interface org.glassfish.hk2.utilities.general.WeakHashLRU<%0 extends java.lang.Object>
+meth public abstract boolean contains({org.glassfish.hk2.utilities.general.WeakHashLRU%0})
+meth public abstract boolean remove({org.glassfish.hk2.utilities.general.WeakHashLRU%0})
+meth public abstract int size()
+meth public abstract void add({org.glassfish.hk2.utilities.general.WeakHashLRU%0})
+meth public abstract void clear()
+meth public abstract void clearStaleReferences()
+meth public abstract void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.general.WeakHashLRU%0}>)
+meth public abstract {org.glassfish.hk2.utilities.general.WeakHashLRU%0} remove()
+
+CLSS public org.glassfish.hk2.utilities.general.internal.DoubleNode<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init({org.glassfish.hk2.utilities.general.internal.DoubleNode%0},{org.glassfish.hk2.utilities.general.internal.DoubleNode%1},java.lang.ref.ReferenceQueue<? super {org.glassfish.hk2.utilities.general.internal.DoubleNode%0}>)
+meth public java.lang.ref.WeakReference<{org.glassfish.hk2.utilities.general.internal.DoubleNode%0}> getWeakKey()
+meth public org.glassfish.hk2.utilities.general.internal.DoubleNode<{org.glassfish.hk2.utilities.general.internal.DoubleNode%0},{org.glassfish.hk2.utilities.general.internal.DoubleNode%1}> getNext()
+meth public org.glassfish.hk2.utilities.general.internal.DoubleNode<{org.glassfish.hk2.utilities.general.internal.DoubleNode%0},{org.glassfish.hk2.utilities.general.internal.DoubleNode%1}> getPrevious()
+meth public void setHardenedKey({org.glassfish.hk2.utilities.general.internal.DoubleNode%0})
+meth public void setNext(org.glassfish.hk2.utilities.general.internal.DoubleNode<{org.glassfish.hk2.utilities.general.internal.DoubleNode%0},{org.glassfish.hk2.utilities.general.internal.DoubleNode%1}>)
+meth public void setPrevious(org.glassfish.hk2.utilities.general.internal.DoubleNode<{org.glassfish.hk2.utilities.general.internal.DoubleNode%0},{org.glassfish.hk2.utilities.general.internal.DoubleNode%1}>)
+meth public {org.glassfish.hk2.utilities.general.internal.DoubleNode%0} getHardenedKey()
+meth public {org.glassfish.hk2.utilities.general.internal.DoubleNode%1} getValue()
+supr java.lang.Object
+hfds hardenedKey,next,previous,value,weakKey
+
+CLSS public org.glassfish.hk2.utilities.general.internal.MessageInterpolatorImpl
+cons public init()
+fld public final static java.lang.String DEFAULT_VALIDATION_MESSAGES = "org.hibernate.validator.ValidationMessages"
+fld public final static java.lang.String USER_VALIDATION_MESSAGES = "ValidationMessages"
+intf javax.validation.MessageInterpolator
+meth public java.lang.String interpolate(java.lang.String,javax.validation.MessageInterpolator$Context)
+meth public java.lang.String interpolate(java.lang.String,javax.validation.MessageInterpolator$Context,java.util.Locale)
+supr java.lang.Object
+hfds MESSAGE_PARAMETER_PATTERN,cacheMessages,defaultLocale,resolvedMessages
+hcls ContextResourceBundle,LocalisedMessage
+
+CLSS public org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(boolean)
+intf org.glassfish.hk2.utilities.general.WeakHashClock<{org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%0},{org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%1}>
+meth public boolean hasWeakKeys()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Map$Entry<{org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%0},{org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%1}> next()
+meth public void clear()
+meth public void clearStaleReferences()
+meth public void put({org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%0},{org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%1})
+meth public void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%0}>)
+meth public {org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%1} get({org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%0})
+meth public {org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%1} remove({org.glassfish.hk2.utilities.general.internal.WeakHashClockImpl%0})
+supr java.lang.Object
+hfds byKey,byKeyNotWeak,dot,head,isWeak,myQueue,tail
+
+CLSS public org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl<%0 extends java.lang.Object>
+cons public init(boolean)
+intf org.glassfish.hk2.utilities.general.WeakHashLRU<{org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl%0}>
+meth public boolean contains({org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl%0})
+meth public boolean remove({org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl%0})
+meth public int size()
+meth public java.lang.String toString()
+meth public void add({org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl%0})
+meth public void clear()
+meth public void clearStaleReferences()
+meth public void releaseMatching(org.glassfish.hk2.utilities.cache.CacheKeyFilter<{org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl%0}>)
+meth public {org.glassfish.hk2.utilities.general.internal.WeakHashLRUImpl%0} remove()
+supr java.lang.Object
+hfds VALUE,byKey,byKeyNotWeak,isWeak,lru,mru,myQueue
+
+CLSS public org.glassfish.hk2.utilities.reflection.BeanReflectionHelper
+cons public init()
+meth public static java.beans.PropertyChangeEvent[] getChangeEvents(org.glassfish.hk2.utilities.reflection.ClassReflectionHelper,java.lang.Object,java.lang.Object)
+meth public static java.lang.String getBeanPropertyNameFromGetter(java.lang.reflect.Method)
+meth public static java.util.Map<java.lang.String,java.lang.Object> convertJavaBeanToBeanLikeMap(org.glassfish.hk2.utilities.reflection.ClassReflectionHelper,java.lang.Object)
+supr java.lang.Object
+hfds GET,IS
+
+CLSS public abstract interface org.glassfish.hk2.utilities.reflection.ClassReflectionHelper
+meth public abstract int size()
+meth public abstract java.lang.reflect.Method findPostConstruct(java.lang.Class<?>,java.lang.Class<?>)
+meth public abstract java.lang.reflect.Method findPreDestroy(java.lang.Class<?>,java.lang.Class<?>)
+meth public abstract java.util.Set<java.lang.reflect.Field> getAllFields(java.lang.Class<?>)
+meth public abstract java.util.Set<org.glassfish.hk2.utilities.reflection.MethodWrapper> getAllMethods(java.lang.Class<?>)
+meth public abstract org.glassfish.hk2.utilities.reflection.MethodWrapper createMethodWrapper(java.lang.reflect.Method)
+meth public abstract void clean(java.lang.Class<?>)
+meth public abstract void dispose()
+
+CLSS public org.glassfish.hk2.utilities.reflection.Constants
+cons public init()
+fld public final static java.lang.String SYSTEM_LOADER_NAME = "SystemLoader"
+fld public final static java.util.HashMap<java.lang.Class<?>,java.lang.Class<?>> PRIMITIVE_MAP
+supr java.lang.Object
+
+CLSS public org.glassfish.hk2.utilities.reflection.GenericArrayTypeImpl
+cons public init(java.lang.reflect.Type)
+intf java.lang.reflect.GenericArrayType
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public java.lang.reflect.Type getGenericComponentType()
+supr java.lang.Object
+hfds genericComponentType
+
+CLSS public org.glassfish.hk2.utilities.reflection.Logger
+meth public static org.glassfish.hk2.utilities.reflection.Logger getLogger()
+meth public static void printThrowable(java.lang.Throwable)
+meth public void debug(java.lang.String)
+meth public void debug(java.lang.String,java.lang.String,java.lang.Throwable)
+meth public void debug(java.lang.String,java.lang.Throwable)
+meth public void warning(java.lang.String)
+meth public void warning(java.lang.String,java.lang.Throwable)
+supr java.lang.Object
+hfds HK2_LOGGER_NAME,INSTANCE,STDOUT_DEBUG,jdkLogger
+
+CLSS public abstract interface org.glassfish.hk2.utilities.reflection.MethodWrapper
+meth public abstract java.lang.reflect.Method getMethod()
+
+CLSS public org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl
+cons public !varargs init(java.lang.reflect.Type,java.lang.reflect.Type[])
+intf java.lang.reflect.ParameterizedType
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public java.lang.reflect.Type getOwnerType()
+meth public java.lang.reflect.Type getRawType()
+meth public java.lang.reflect.Type[] getActualTypeArguments()
+supr java.lang.Object
+hfds actualTypeArguments,rawType
+
+CLSS public org.glassfish.hk2.utilities.reflection.Pretty
+cons public init()
+meth public static java.lang.String array(java.lang.Object[])
+meth public static java.lang.String clazz(java.lang.Class<?>)
+meth public static java.lang.String collection(java.util.Collection<?>)
+meth public static java.lang.String constructor(java.lang.reflect.Constructor<?>)
+meth public static java.lang.String field(java.lang.reflect.Field)
+meth public static java.lang.String method(java.lang.reflect.Method)
+meth public static java.lang.String pType(java.lang.reflect.ParameterizedType)
+meth public static java.lang.String type(java.lang.reflect.Type)
+supr java.lang.Object
+hfds CONSTRUCTOR_NAME,DOT,NULL_STRING
+
+CLSS public final org.glassfish.hk2.utilities.reflection.ReflectionHelper
+cons public init()
+meth public static <%0 extends java.lang.Object> {%%0} cast(java.lang.Object)
+meth public static boolean annotationContainsAll(java.util.Set<java.lang.annotation.Annotation>,java.util.Set<java.lang.annotation.Annotation>)
+meth public static boolean isAnnotationAQualifier(java.lang.annotation.Annotation)
+meth public static boolean isPrivate(java.lang.reflect.Member)
+meth public static boolean isStatic(java.lang.reflect.Member)
+meth public static boolean removeAllMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>,java.lang.String)
+meth public static boolean removeMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>,java.lang.String,java.lang.String)
+meth public static java.lang.Class<?> getRawClass(java.lang.reflect.Type)
+meth public static java.lang.Class<?> translatePrimitiveType(java.lang.Class<?>)
+meth public static java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[],boolean) throws java.lang.Throwable
+meth public static java.lang.Object makeMe(java.lang.reflect.Constructor<?>,java.lang.Object[],boolean) throws java.lang.Throwable
+meth public static java.lang.String getName(java.lang.Class<?>)
+meth public static java.lang.String getNameFromAllQualifiers(java.util.Set<java.lang.annotation.Annotation>,java.lang.reflect.AnnotatedElement)
+meth public static java.lang.String writeMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+meth public static java.lang.String writeSet(java.util.Set<?>)
+meth public static java.lang.String writeSet(java.util.Set<?>,java.lang.Object)
+meth public static java.lang.annotation.Annotation getScopeAnnotationFromClass(java.lang.Class<?>)
+meth public static java.lang.annotation.Annotation getScopeAnnotationFromObject(java.lang.Object)
+meth public static java.lang.annotation.Annotation getScopeFromClass(java.lang.Class<?>,java.lang.annotation.Annotation)
+meth public static java.lang.annotation.Annotation getScopeFromObject(java.lang.Object,java.lang.annotation.Annotation)
+meth public static java.lang.reflect.Type getFirstTypeArgument(java.lang.reflect.Type)
+meth public static java.lang.reflect.Type resolveField(java.lang.Class<?>,java.lang.reflect.Field)
+meth public static java.lang.reflect.Type resolveKnownType(java.lang.reflect.TypeVariable<?>,java.lang.reflect.ParameterizedType,java.lang.Class<?>)
+meth public static java.lang.reflect.Type resolveMember(java.lang.Class<?>,java.lang.reflect.Type,java.lang.Class<?>)
+meth public static java.util.Map<java.lang.String,java.util.List<java.lang.String>> deepCopyMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+meth public static java.util.Set<java.lang.String> getContractsFromClass(java.lang.Class<?>,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static java.util.Set<java.lang.String> getQualifiersFromClass(java.lang.Class<?>)
+meth public static java.util.Set<java.lang.annotation.Annotation> getQualifierAnnotations(java.lang.reflect.AnnotatedElement)
+meth public static java.util.Set<java.lang.annotation.Annotation> getQualifiersFromObject(java.lang.Object)
+meth public static java.util.Set<java.lang.reflect.Type> getAdvertisedTypesFromClass(java.lang.reflect.Type,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static java.util.Set<java.lang.reflect.Type> getAdvertisedTypesFromObject(java.lang.Object,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static java.util.Set<java.lang.reflect.Type> getAllTypes(java.lang.reflect.Type)
+meth public static java.util.Set<java.lang.reflect.Type> getTypeClosure(java.lang.reflect.Type,java.util.Set<java.lang.String>)
+meth public static org.glassfish.hk2.utilities.reflection.MethodWrapper createMethodWrapper(java.lang.reflect.Method)
+meth public static void addMetadata(java.util.Map<java.lang.String,java.util.List<java.lang.String>>,java.lang.String,java.lang.String)
+meth public static void parseServiceMetadataString(java.lang.String,java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+meth public static void readMetadataMap(java.lang.String,java.util.Map<java.lang.String,java.util.List<java.lang.String>>) throws java.io.IOException
+meth public static void readSet(java.lang.String,java.util.Collection<java.lang.String>) throws java.io.IOException
+meth public static void setField(java.lang.reflect.Field,java.lang.Object,java.lang.Object) throws java.lang.Throwable
+supr java.lang.Object
+hfds COMMA_STRING,EQUALS_STRING,ESCAPE_CHARACTERS,ILLEGAL_CHARACTERS,QUOTE_STRING,REPLACE_CHARACTERS
+
+CLSS public org.glassfish.hk2.utilities.reflection.ScopeInfo
+cons public init(java.lang.annotation.Annotation,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getAnnoType()
+meth public java.lang.annotation.Annotation getScope()
+supr java.lang.Object
+hfds annoType,scope
+
+CLSS public org.glassfish.hk2.utilities.reflection.TypeChecker
+cons public init()
+meth public static boolean isRawTypeSafe(java.lang.reflect.Type,java.lang.reflect.Type)
+supr java.lang.Object
+
+CLSS public org.glassfish.hk2.utilities.reflection.internal.ClassReflectionHelperImpl
+cons public init()
+intf org.glassfish.hk2.utilities.reflection.ClassReflectionHelper
+meth public int size()
+meth public java.lang.String toString()
+meth public java.lang.reflect.Method findPostConstruct(java.lang.Class<?>,java.lang.Class<?>)
+meth public java.lang.reflect.Method findPreDestroy(java.lang.Class<?>,java.lang.Class<?>)
+meth public java.util.Set<java.lang.reflect.Field> getAllFields(java.lang.Class<?>)
+meth public java.util.Set<org.glassfish.hk2.utilities.reflection.MethodWrapper> getAllMethods(java.lang.Class<?>)
+meth public org.glassfish.hk2.utilities.reflection.MethodWrapper createMethodWrapper(java.lang.reflect.Method)
+meth public void clean(java.lang.Class<?>)
+meth public void dispose()
+supr java.lang.Object
+hfds MAX_CACHE_SIZE,fieldCache,methodCache,postConstructCache,preDestroyCache
+hcls LifecycleKey
+
+CLSS public org.glassfish.hk2.utilities.reflection.internal.ClassReflectionHelperUtilities
+cons public init()
+supr java.lang.Object
+hfds CONVENTION_POST_CONSTRUCT,CONVENTION_PRE_DESTROY,OBJECT_FIELDS,OBJECT_METHODS
+
+CLSS public org.glassfish.hk2.utilities.reflection.internal.MethodWrapperImpl
+cons public init(java.lang.reflect.Method)
+intf org.glassfish.hk2.utilities.reflection.MethodWrapper
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public java.lang.reflect.Method getMethod()
+supr java.lang.Object
+hfds hashCode,method
+
 CLSS public abstract interface !annotation org.glassfish.jersey.Beta
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, TYPE, CONSTRUCTOR, METHOD, FIELD, PACKAGE])
 intf java.lang.annotation.Annotation
 
+CLSS public final org.glassfish.jersey.CommonProperties
+fld public final static java.lang.String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jersey.config.allowSystemPropertiesProvider"
+fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE = "jersey.config.disableAutoDiscovery"
+fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE_CLIENT = "jersey.config.client.disableAutoDiscovery"
+fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE_SERVER = "jersey.config.server.disableAutoDiscovery"
+fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE = "jersey.config.disableJsonProcessing"
+fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE_CLIENT = "jersey.config.client.disableJsonProcessing"
+fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE_SERVER = "jersey.config.server.disableJsonProcessing"
+fld public final static java.lang.String METAINF_SERVICES_LOOKUP_DISABLE = "jersey.config.disableMetainfServicesLookup"
+fld public final static java.lang.String METAINF_SERVICES_LOOKUP_DISABLE_CLIENT = "jersey.config.client.disableMetainfServicesLookup"
+fld public final static java.lang.String METAINF_SERVICES_LOOKUP_DISABLE_SERVER = "jersey.config.server.disableMetainfServicesLookup"
+fld public final static java.lang.String MOXY_JSON_FEATURE_DISABLE = "jersey.config.disableMoxyJson"
+fld public final static java.lang.String MOXY_JSON_FEATURE_DISABLE_CLIENT = "jersey.config.client.disableMoxyJson"
+fld public final static java.lang.String MOXY_JSON_FEATURE_DISABLE_SERVER = "jersey.config.server.disableMoxyJson"
+fld public final static java.lang.String OUTBOUND_CONTENT_LENGTH_BUFFER = "jersey.config.contentLength.buffer"
+fld public final static java.lang.String OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT = "jersey.config.client.contentLength.buffer"
+fld public final static java.lang.String OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER = "jersey.config.server.contentLength.buffer"
+fld public final static java.lang.String PROVIDER_DEFAULT_DISABLE = "jersey.config.disableDefaultProvider"
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,{%%0})
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,{%%0})
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,{%%0},java.lang.Class<{%%0}>)
+meth public static java.lang.Object getValue(java.util.Map<java.lang.String,?>,java.lang.String,java.lang.Class<?>)
+supr java.lang.Object
+hfds LEGACY_FALLBACK_MAP
+
 CLSS public abstract interface org.glassfish.jersey.ExtendedConfig
 intf javax.ws.rs.core.Configuration
 meth public abstract boolean isProperty(java.lang.String)
+
+CLSS public final org.glassfish.jersey.ExternalProperties
+fld public final static java.lang.String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts"
+fld public final static java.lang.String HTTP_PROXY_HOST = "http.proxyHost"
+fld public final static java.lang.String HTTP_PROXY_PORT = "http.proxyPort"
+supr java.lang.Object
 
 CLSS public org.glassfish.jersey.InjectionManagerProvider
 cons public init()
@@ -1818,6 +7195,64 @@ meth public static org.glassfish.jersey.internal.inject.InjectionManager getInje
 meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.ext.ReaderInterceptorContext)
 meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.ext.WriterInterceptorContext)
 supr java.lang.Object
+
+CLSS public org.glassfish.jersey.JerseyPriorities
+fld public final static int POST_ENTITY_CODER = 4100
+supr java.lang.Object
+
+CLSS public final !enum org.glassfish.jersey.Severity
+fld public final static org.glassfish.jersey.Severity FATAL
+fld public final static org.glassfish.jersey.Severity HINT
+fld public final static org.glassfish.jersey.Severity WARNING
+meth public static org.glassfish.jersey.Severity valueOf(java.lang.String)
+meth public static org.glassfish.jersey.Severity[] values()
+supr java.lang.Enum<org.glassfish.jersey.Severity>
+
+CLSS public final org.glassfish.jersey.SslConfigurator
+fld public final static java.lang.String KEY_MANAGER_FACTORY_ALGORITHM = "ssl.keyManagerFactory.algorithm"
+fld public final static java.lang.String KEY_MANAGER_FACTORY_PROVIDER = "ssl.keyManagerFactory.provider"
+fld public final static java.lang.String KEY_STORE_FILE = "javax.net.ssl.keyStore"
+fld public final static java.lang.String KEY_STORE_PASSWORD = "javax.net.ssl.keyStorePassword"
+fld public final static java.lang.String KEY_STORE_PROVIDER = "javax.net.ssl.keyStoreProvider"
+fld public final static java.lang.String KEY_STORE_TYPE = "javax.net.ssl.keyStoreType"
+fld public final static java.lang.String TRUST_MANAGER_FACTORY_ALGORITHM = "ssl.trustManagerFactory.algorithm"
+fld public final static java.lang.String TRUST_MANAGER_FACTORY_PROVIDER = "ssl.trustManagerFactory.provider"
+fld public final static java.lang.String TRUST_STORE_FILE = "javax.net.ssl.trustStore"
+fld public final static java.lang.String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword"
+fld public final static java.lang.String TRUST_STORE_PROVIDER = "javax.net.ssl.trustStoreProvider"
+fld public final static java.lang.String TRUST_STORE_TYPE = "javax.net.ssl.trustStoreType"
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public javax.net.ssl.SSLContext createSSLContext()
+meth public org.glassfish.jersey.SslConfigurator copy()
+meth public org.glassfish.jersey.SslConfigurator keyManagerFactoryAlgorithm(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator keyManagerFactoryProvider(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator keyPassword(char[])
+meth public org.glassfish.jersey.SslConfigurator keyPassword(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator keyStore(java.security.KeyStore)
+meth public org.glassfish.jersey.SslConfigurator keyStoreBytes(byte[])
+meth public org.glassfish.jersey.SslConfigurator keyStoreFile(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator keyStorePassword(char[])
+meth public org.glassfish.jersey.SslConfigurator keyStorePassword(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator keyStoreProvider(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator keyStoreType(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator retrieve()
+meth public org.glassfish.jersey.SslConfigurator retrieve(java.util.Properties)
+meth public org.glassfish.jersey.SslConfigurator securityProtocol(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator trustManagerFactoryAlgorithm(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator trustManagerFactoryProvider(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator trustStore(java.security.KeyStore)
+meth public org.glassfish.jersey.SslConfigurator trustStoreBytes(byte[])
+meth public org.glassfish.jersey.SslConfigurator trustStoreFile(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator trustStorePassword(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator trustStoreProvider(java.lang.String)
+meth public org.glassfish.jersey.SslConfigurator trustStoreType(java.lang.String)
+meth public static javax.net.ssl.SSLContext getDefaultContext()
+meth public static javax.net.ssl.SSLContext getDefaultContext(boolean)
+meth public static org.glassfish.jersey.SslConfigurator newInstance()
+meth public static org.glassfish.jersey.SslConfigurator newInstance(boolean)
+supr java.lang.Object
+hfds DEFAULT_CONFIG_NO_PROPS,LOGGER,keyManagerFactoryAlgorithm,keyManagerFactoryProvider,keyPass,keyStore,keyStoreBytes,keyStoreFile,keyStorePass,keyStoreProvider,keyStoreType,securityProtocol,trustManagerFactoryAlgorithm,trustManagerFactoryProvider,trustStore,trustStoreBytes,trustStoreFile,trustStorePass,trustStoreProvider,trustStoreType
 
 CLSS public abstract org.glassfish.jersey.client.AbstractRxInvoker<%0 extends java.lang.Object>
 cons public init(javax.ws.rs.client.SyncInvoker,java.util.concurrent.ExecutorService)
@@ -2423,6 +7858,284 @@ meth public abstract {org.glassfish.jersey.client.inject.ParameterUpdater%1} upd
 CLSS public abstract interface org.glassfish.jersey.client.inject.ParameterUpdaterProvider
 meth public abstract org.glassfish.jersey.client.inject.ParameterUpdater<?,?> get(org.glassfish.jersey.model.Parameter)
 
+CLSS public org.glassfish.jersey.client.internal.ClientResponseProcessingException
+cons public init(org.glassfish.jersey.client.ClientResponse,java.lang.Throwable)
+meth public org.glassfish.jersey.client.ClientResponse getClientResponse()
+supr javax.ws.rs.ProcessingException
+hfds clientResponse,serialVersionUID
+
+CLSS public org.glassfish.jersey.client.internal.HttpUrlConnector
+cons public init(javax.ws.rs.client.Client,org.glassfish.jersey.client.HttpUrlConnectorProvider$ConnectionFactory,int,boolean,boolean)
+intf org.glassfish.jersey.client.spi.Connector
+meth protected void secureConnection(org.glassfish.jersey.client.JerseyClient,java.net.HttpURLConnection)
+meth public java.lang.String getName()
+meth public java.util.concurrent.Future<?> apply(org.glassfish.jersey.client.ClientRequest,org.glassfish.jersey.client.spi.AsyncConnectorCallback)
+meth public org.glassfish.jersey.client.ClientResponse apply(org.glassfish.jersey.client.ClientRequest)
+meth public void close()
+supr java.lang.Object
+hfds ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY,DEFAULT_SSL_SOCKET_FACTORY,LOGGER,chunkSize,connectionFactory,connectorExtension,fixLengthStreaming,isRestrictedHeaderPropertySet,restrictedHeaderSet,restrictedHeaders,setMethodWorkaround,sslSocketFactory
+
+CLSS public final org.glassfish.jersey.client.internal.LocalizationMessages
+cons public init()
+meth public static java.lang.String AUTHENTICATION_CREDENTIALS_MISSING_BASIC()
+meth public static java.lang.String AUTHENTICATION_CREDENTIALS_MISSING_DIGEST()
+meth public static java.lang.String AUTHENTICATION_CREDENTIALS_NOT_PROVIDED_BASIC()
+meth public static java.lang.String AUTHENTICATION_CREDENTIALS_REQUEST_PASSWORD_UNSUPPORTED()
+meth public static java.lang.String CHUNKED_INPUT_CLOSED()
+meth public static java.lang.String CHUNKED_INPUT_MEDIA_TYPE_NULL()
+meth public static java.lang.String CHUNKED_INPUT_STREAM_CLOSING_ERROR()
+meth public static java.lang.String CLIENT_INSTANCE_CLOSED()
+meth public static java.lang.String CLIENT_INVOCATION_LINK_NULL()
+meth public static java.lang.String CLIENT_RESPONSE_RESOLVED_URI_NOT_ABSOLUTE()
+meth public static java.lang.String CLIENT_RESPONSE_RESOLVED_URI_NULL()
+meth public static java.lang.String CLIENT_RESPONSE_STATUS_NULL()
+meth public static java.lang.String CLIENT_RX_PROVIDER_NOT_REGISTERED(java.lang.Object)
+meth public static java.lang.String CLIENT_RX_PROVIDER_NULL()
+meth public static java.lang.String CLIENT_TARGET_LINK_NULL()
+meth public static java.lang.String CLIENT_URI_BUILDER_NULL()
+meth public static java.lang.String CLIENT_URI_NULL()
+meth public static java.lang.String CLIENT_URI_TEMPLATE_NULL()
+meth public static java.lang.String COLLECTION_UPDATER_TYPE_UNSUPPORTED()
+meth public static java.lang.String DIGEST_FILTER_QOP_UNSUPPORTED(java.lang.Object)
+meth public static java.lang.String ERROR_CLOSING_OUTPUT_STREAM()
+meth public static java.lang.String ERROR_COMMITTING_OUTPUT_STREAM()
+meth public static java.lang.String ERROR_DIGEST_FILTER_GENERATOR()
+meth public static java.lang.String ERROR_HTTP_METHOD_ENTITY_NOT_NULL(java.lang.Object)
+meth public static java.lang.String ERROR_HTTP_METHOD_ENTITY_NULL(java.lang.Object)
+meth public static java.lang.String ERROR_LISTENER_CLOSE(java.lang.Object)
+meth public static java.lang.String ERROR_LISTENER_INIT(java.lang.Object)
+meth public static java.lang.String ERROR_PARAMETER_TYPE_PROCESSING(java.lang.Object)
+meth public static java.lang.String ERROR_REQUEST_CANCELLED()
+meth public static java.lang.String ERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_REQUEST(java.lang.Object)
+meth public static java.lang.String ERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_RESPONSE(java.lang.Object)
+meth public static java.lang.String ERROR_SHUTDOWNHOOK_CLOSE(java.lang.Object)
+meth public static java.lang.String EXCEPTION_SUPPRESSED()
+meth public static java.lang.String HTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY()
+meth public static java.lang.String IGNORED_ASYNC_THREADPOOL_SIZE(java.lang.Object)
+meth public static java.lang.String NEGATIVE_CHUNK_SIZE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String NEGATIVE_INPUT_PARAMETER(java.lang.Object)
+meth public static java.lang.String NULL_CONNECTOR_PROVIDER()
+meth public static java.lang.String NULL_EXECUTOR_SERVICE()
+meth public static java.lang.String NULL_INPUT_PARAMETER(java.lang.Object)
+meth public static java.lang.String NULL_INVOCATION_BUILDER()
+meth public static java.lang.String NULL_KEYSTORE()
+meth public static java.lang.String NULL_KEYSTORE_PASWORD()
+meth public static java.lang.String NULL_SCHEDULED_EXECUTOR_SERVICE()
+meth public static java.lang.String NULL_SSL_CONTEXT()
+meth public static java.lang.String NULL_TRUSTSTORE()
+meth public static java.lang.String POSTINVOCATION_INTERCEPTOR_EXCEPTION()
+meth public static java.lang.String POSTINVOCATION_INTERCEPTOR_MULTIPLE_RESOLVES()
+meth public static java.lang.String POSTINVOCATION_INTERCEPTOR_RESOLVE()
+meth public static java.lang.String PREINVOCATION_INTERCEPTOR_ABORT_WITH()
+meth public static java.lang.String PREINVOCATION_INTERCEPTOR_EXCEPTION()
+meth public static java.lang.String PREINVOCATION_INTERCEPTOR_MULTIPLE_ABORTIONS()
+meth public static java.lang.String REQUEST_ENTITY_ALREADY_WRITTEN()
+meth public static java.lang.String REQUEST_ENTITY_WRITER_NULL()
+meth public static java.lang.String RESPONSE_TO_EXCEPTION_CONVERSION_FAILED()
+meth public static java.lang.String RESPONSE_TYPE_IS_NULL()
+meth public static java.lang.String RESTRICTED_HEADER_POSSIBLY_IGNORED(java.lang.Object)
+meth public static java.lang.String RESTRICTED_HEADER_PROPERTY_SETTING_FALSE(java.lang.Object)
+meth public static java.lang.String RESTRICTED_HEADER_PROPERTY_SETTING_TRUE(java.lang.Object)
+meth public static java.lang.String UNEXPECTED_ERROR_RESPONSE_PROCESSING()
+meth public static java.lang.String USE_ENCODING_IGNORED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String USING_FIXED_ASYNC_THREADPOOL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableAUTHENTICATION_CREDENTIALS_MISSING_BASIC()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableAUTHENTICATION_CREDENTIALS_MISSING_DIGEST()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableAUTHENTICATION_CREDENTIALS_NOT_PROVIDED_BASIC()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableAUTHENTICATION_CREDENTIALS_REQUEST_PASSWORD_UNSUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCHUNKED_INPUT_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCHUNKED_INPUT_MEDIA_TYPE_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCHUNKED_INPUT_STREAM_CLOSING_ERROR()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_INSTANCE_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_INVOCATION_LINK_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_RESPONSE_RESOLVED_URI_NOT_ABSOLUTE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_RESPONSE_RESOLVED_URI_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_RESPONSE_STATUS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_RX_PROVIDER_NOT_REGISTERED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_RX_PROVIDER_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_TARGET_LINK_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_URI_BUILDER_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_URI_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLIENT_URI_TEMPLATE_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOLLECTION_UPDATER_TYPE_UNSUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableDIGEST_FILTER_QOP_UNSUPPORTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_CLOSING_OUTPUT_STREAM()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_COMMITTING_OUTPUT_STREAM()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_DIGEST_FILTER_GENERATOR()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_HTTP_METHOD_ENTITY_NOT_NULL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_HTTP_METHOD_ENTITY_NULL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_LISTENER_CLOSE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_LISTENER_INIT(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PARAMETER_TYPE_PROCESSING(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_REQUEST_CANCELLED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_REQUEST(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_RESPONSE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_SHUTDOWNHOOK_CLOSE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableEXCEPTION_SUPPRESSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTPURLCONNECTION_REPLACES_GET_WITH_ENTITY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableIGNORED_ASYNC_THREADPOOL_SIZE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNEGATIVE_CHUNK_SIZE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNEGATIVE_INPUT_PARAMETER(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_CONNECTOR_PROVIDER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_EXECUTOR_SERVICE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_INPUT_PARAMETER(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_INVOCATION_BUILDER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_KEYSTORE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_KEYSTORE_PASWORD()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_SCHEDULED_EXECUTOR_SERVICE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_SSL_CONTEXT()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNULL_TRUSTSTORE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePOSTINVOCATION_INTERCEPTOR_EXCEPTION()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePOSTINVOCATION_INTERCEPTOR_MULTIPLE_RESOLVES()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePOSTINVOCATION_INTERCEPTOR_RESOLVE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePREINVOCATION_INTERCEPTOR_ABORT_WITH()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePREINVOCATION_INTERCEPTOR_EXCEPTION()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePREINVOCATION_INTERCEPTOR_MULTIPLE_ABORTIONS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREQUEST_ENTITY_ALREADY_WRITTEN()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREQUEST_ENTITY_WRITER_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESPONSE_TO_EXCEPTION_CONVERSION_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESPONSE_TYPE_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESTRICTED_HEADER_POSSIBLY_IGNORED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESTRICTED_HEADER_PROPERTY_SETTING_FALSE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESTRICTED_HEADER_PROPERTY_SETTING_TRUE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUNEXPECTED_ERROR_RESPONSE_PROCESSING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUSE_ENCODING_IGNORED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUSING_FIXED_ASYNC_THREADPOOL(java.lang.Object)
+supr java.lang.Object
+hfds BUNDLE_NAME,LOCALIZER,MESSAGE_FACTORY
+hcls BundleSupplier
+
+CLSS public org.glassfish.jersey.client.internal.inject.ParameterUpdaterConfigurator
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.client.internal.jdkconnector.LocalizationMessages
+cons public init()
+meth public static java.lang.String ASYNC_OPERATION_NOT_SUPPORTED()
+meth public static java.lang.String BUFFER_INCORRECT_LENGTH()
+meth public static java.lang.String CLOSED_BY_CLIENT_WHILE_RECEIVING()
+meth public static java.lang.String CLOSED_BY_CLIENT_WHILE_RECEIVING_BODY()
+meth public static java.lang.String CLOSED_BY_CLIENT_WHILE_SENDING()
+meth public static java.lang.String CLOSED_WHILE_RECEIVING_BODY()
+meth public static java.lang.String CLOSED_WHILE_RECEIVING_RESPONSE()
+meth public static java.lang.String CLOSED_WHILE_SENDING_REQUEST()
+meth public static java.lang.String CONNECTION_CHANGING_STATE(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String CONNECTION_CLOSED()
+meth public static java.lang.String CONNECTION_TIMEOUT()
+meth public static java.lang.String CONNECTOR_CONFIGURATION(java.lang.Object)
+meth public static java.lang.String HTTP_BODY_SIZE_OVERFLOW()
+meth public static java.lang.String HTTP_CHUNK_ENCODING_PREFIX_OVERFLOW()
+meth public static java.lang.String HTTP_CONNECTION_ESTABLISHING_ILLEGAL_STATE(java.lang.Object)
+meth public static java.lang.String HTTP_CONNECTION_NOT_IDLE(java.lang.Object)
+meth public static java.lang.String HTTP_INITIAL_LINE_OVERFLOW()
+meth public static java.lang.String HTTP_INVALID_CHUNK_SIZE_HEX_VALUE(java.lang.Object)
+meth public static java.lang.String HTTP_INVALID_CONTENT_LENGTH()
+meth public static java.lang.String HTTP_NEGATIVE_CONTENT_LENGTH()
+meth public static java.lang.String HTTP_PACKET_HEADER_OVERFLOW()
+meth public static java.lang.String HTTP_REQUEST_BODY_SIZE_NOT_AVAILABLE()
+meth public static java.lang.String HTTP_REQUEST_NO_BODY()
+meth public static java.lang.String HTTP_REQUEST_NO_BUFFERED_BODY()
+meth public static java.lang.String HTTP_TRAILER_HEADER_OVERFLOW()
+meth public static java.lang.String HTTP_UNEXPECTED_CHUNK_HEADER()
+meth public static java.lang.String NEGATIVE_CHUNK_SIZE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String PROXY_407_TWICE()
+meth public static java.lang.String PROXY_CONNECT_FAIL(java.lang.Object)
+meth public static java.lang.String PROXY_FAIL_AUTH_HEADER()
+meth public static java.lang.String PROXY_MISSING_AUTH_HEADER()
+meth public static java.lang.String PROXY_PASSWORD_MISSING()
+meth public static java.lang.String PROXY_QOP_NO_SUPPORTED(java.lang.Object)
+meth public static java.lang.String PROXY_UNSUPPORTED_SCHEME(java.lang.Object)
+meth public static java.lang.String PROXY_USER_NAME_MISSING()
+meth public static java.lang.String READ_LISTENER_SET_ONLY_ONCE()
+meth public static java.lang.String REDIRECT_ERROR_DETERMINING_LOCATION()
+meth public static java.lang.String REDIRECT_INFINITE_LOOP()
+meth public static java.lang.String REDIRECT_LIMIT_REACHED(java.lang.Object)
+meth public static java.lang.String REDIRECT_NO_LOCATION()
+meth public static java.lang.String SSL_SESSION_CLOSED()
+meth public static java.lang.String STREAM_CLOSED()
+meth public static java.lang.String STREAM_CLOSED_FOR_INPUT()
+meth public static java.lang.String SYNC_OPERATION_NOT_SUPPORTED()
+meth public static java.lang.String THREAD_POOL_CORE_SIZE_TOO_SMALL()
+meth public static java.lang.String THREAD_POOL_MAX_SIZE_TOO_SMALL()
+meth public static java.lang.String TIMEOUT_RECEIVING_RESPONSE()
+meth public static java.lang.String TIMEOUT_RECEIVING_RESPONSE_BODY()
+meth public static java.lang.String TRANSPORT_CONNECTION_NOT_CLOSED()
+meth public static java.lang.String TRANSPORT_EXECUTOR_CLOSED()
+meth public static java.lang.String TRANSPORT_EXECUTOR_QUEUE_LIMIT_REACHED()
+meth public static java.lang.String TRANSPORT_SET_CLASS_LOADER_FAILED()
+meth public static java.lang.String UNEXPECTED_DATA_IN_BUFFER()
+meth public static java.lang.String WRITE_LISTENER_SET_ONLY_ONCE()
+meth public static java.lang.String WRITE_WHEN_NOT_READY()
+meth public static java.lang.String WRITING_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableASYNC_OPERATION_NOT_SUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableBUFFER_INCORRECT_LENGTH()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLOSED_BY_CLIENT_WHILE_RECEIVING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLOSED_BY_CLIENT_WHILE_RECEIVING_BODY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLOSED_BY_CLIENT_WHILE_SENDING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLOSED_WHILE_RECEIVING_BODY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLOSED_WHILE_RECEIVING_RESPONSE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCLOSED_WHILE_SENDING_REQUEST()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONNECTION_CHANGING_STATE(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONNECTION_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONNECTION_TIMEOUT()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONNECTOR_CONFIGURATION(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_BODY_SIZE_OVERFLOW()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_CHUNK_ENCODING_PREFIX_OVERFLOW()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_CONNECTION_ESTABLISHING_ILLEGAL_STATE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_CONNECTION_NOT_IDLE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_INITIAL_LINE_OVERFLOW()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_INVALID_CHUNK_SIZE_HEX_VALUE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_INVALID_CONTENT_LENGTH()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_NEGATIVE_CONTENT_LENGTH()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_PACKET_HEADER_OVERFLOW()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_REQUEST_BODY_SIZE_NOT_AVAILABLE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_REQUEST_NO_BODY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_REQUEST_NO_BUFFERED_BODY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_TRAILER_HEADER_OVERFLOW()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_UNEXPECTED_CHUNK_HEADER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNEGATIVE_CHUNK_SIZE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_407_TWICE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_CONNECT_FAIL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_FAIL_AUTH_HEADER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_MISSING_AUTH_HEADER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_PASSWORD_MISSING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_QOP_NO_SUPPORTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_UNSUPPORTED_SCHEME(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROXY_USER_NAME_MISSING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREAD_LISTENER_SET_ONLY_ONCE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREDIRECT_ERROR_DETERMINING_LOCATION()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREDIRECT_INFINITE_LOOP()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREDIRECT_LIMIT_REACHED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableREDIRECT_NO_LOCATION()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_SESSION_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSTREAM_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSTREAM_CLOSED_FOR_INPUT()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSYNC_OPERATION_NOT_SUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTHREAD_POOL_CORE_SIZE_TOO_SMALL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTHREAD_POOL_MAX_SIZE_TOO_SMALL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTIMEOUT_RECEIVING_RESPONSE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTIMEOUT_RECEIVING_RESPONSE_BODY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTRANSPORT_CONNECTION_NOT_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTRANSPORT_EXECUTOR_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTRANSPORT_EXECUTOR_QUEUE_LIMIT_REACHED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTRANSPORT_SET_CLASS_LOADER_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUNEXPECTED_DATA_IN_BUFFER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWRITE_LISTENER_SET_ONLY_ONCE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWRITE_WHEN_NOT_READY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWRITING_FAILED()
+supr java.lang.Object
+hfds BUNDLE_NAME,LOCALIZER,MESSAGE_FACTORY
+hcls BundleSupplier
+
+CLSS public org.glassfish.jersey.client.internal.routing.ClientResponseMediaTypeDeterminer
+cons public init(org.glassfish.jersey.message.MessageBodyWorkers)
+meth public void setResponseMediaTypeIfNotSet(javax.ws.rs.core.Response,javax.ws.rs.core.Configuration)
+supr org.glassfish.jersey.internal.routing.ContentTypeDeterminer
+hfds ABORTED_ROUTING
+hcls AbortedRouting
+
 CLSS public abstract interface org.glassfish.jersey.client.spi.AsyncConnectorCallback
 meth public abstract void failure(java.lang.Throwable)
 meth public abstract void response(org.glassfish.jersey.client.ClientResponse)
@@ -2504,6 +8217,240 @@ CLSS public abstract interface org.glassfish.jersey.client.spi.PreInvocationInte
  anno 0 org.glassfish.jersey.spi.Contract()
 meth public abstract void beforeRequest(javax.ws.rs.client.ClientRequestContext)
 
+CLSS public org.glassfish.jersey.inject.hk2.ContextInjectionResolverImpl
+ anno 0 javax.inject.Singleton()
+cons public init()
+innr public final static Binder
+intf org.glassfish.hk2.api.InjectionResolver<javax.ws.rs.core.Context>
+intf org.glassfish.jersey.internal.inject.ContextInjectionResolver
+meth public boolean isConstructorParameterIndicator()
+meth public boolean isMethodParameterIndicator()
+meth public java.lang.Class<javax.ws.rs.core.Context> getAnnotation()
+meth public java.lang.Object resolve(org.glassfish.hk2.api.Injectee,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public java.lang.Object resolve(org.glassfish.jersey.internal.inject.Injectee)
+supr java.lang.Object
+hfds descriptorCache,foreignRequestScopedComponents,foreignRequestScopedInjecteeCache,serviceLocator
+hcls CacheKey,DescriptorOverridingInjectee,RequiredTypeOverridingInjectee
+
+CLSS public final static org.glassfish.jersey.inject.hk2.ContextInjectionResolverImpl$Binder
+ outer org.glassfish.jersey.inject.hk2.ContextInjectionResolverImpl
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public org.glassfish.jersey.inject.hk2.DelayedHk2InjectionManager
+intf org.glassfish.jersey.internal.inject.InjectionManager
+meth public !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getAllInstances(java.lang.reflect.Type)
+meth public <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.String)
+meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.reflect.Type)
+meth public boolean isRegistrable(java.lang.Class<?>)
+meth public java.lang.Object getInstance(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public org.glassfish.hk2.api.ServiceLocator getServiceLocator()
+meth public org.glassfish.jersey.internal.inject.ForeignDescriptor createForeignDescriptor(org.glassfish.jersey.internal.inject.Binding)
+meth public void completeRegistration()
+meth public void inject(java.lang.Object)
+meth public void inject(java.lang.Object,java.lang.String)
+meth public void preDestroy(java.lang.Object)
+meth public void register(java.lang.Iterable<org.glassfish.jersey.internal.inject.Binding>)
+meth public void register(java.lang.Object)
+meth public void register(org.glassfish.jersey.internal.inject.Binder)
+meth public void register(org.glassfish.jersey.internal.inject.Binding)
+meth public void shutdown()
+supr java.lang.Object
+hfds bindings,completed,providers
+
+CLSS public org.glassfish.jersey.inject.hk2.Hk2BootstrapBinder
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+hfds serviceLocator
+
+CLSS public org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory
+ anno 0 javax.annotation.Priority(int value=10)
+cons public init()
+fld public final static java.lang.String HK2_INJECTION_MANAGER_STRATEGY = "org.glassfish.jersey.hk2.injection.manager.strategy"
+intf org.glassfish.jersey.internal.inject.InjectionManagerFactory
+meth public org.glassfish.jersey.internal.inject.InjectionManager create(java.lang.Object)
+meth public static boolean isImmediateStrategy()
+supr java.lang.Object
+hcls Hk2InjectionManagerStrategy
+
+CLSS public abstract org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory<%0 extends java.lang.Object>
+cons public init(javax.inject.Provider<org.glassfish.jersey.internal.util.collection.Ref<{org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory%0}>>)
+intf org.glassfish.hk2.api.Factory<{org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory%0}>
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.Factory<org.glassfish.jersey.internal.util.collection.Ref<{%%0}>> referenceFactory()
+meth public static <%0 extends java.lang.Object> org.glassfish.hk2.api.Factory<org.glassfish.jersey.internal.util.collection.Ref<{%%0}>> referenceFactory({%%0})
+meth public void dispose({org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory%0})
+meth public {org.glassfish.jersey.inject.hk2.Hk2ReferencingFactory%0} provide()
+supr java.lang.Object
+hfds referenceFactory
+hcls EmptyReferenceFactory,InitializedReferenceFactory
+
+CLSS public org.glassfish.jersey.inject.hk2.Hk2RequestScope
+cons public init()
+innr public final static Instance
+meth public org.glassfish.jersey.process.internal.RequestContext createContext()
+supr org.glassfish.jersey.process.internal.RequestScope
+
+CLSS public final static org.glassfish.jersey.inject.hk2.Hk2RequestScope$Instance
+ outer org.glassfish.jersey.inject.hk2.Hk2RequestScope
+intf org.glassfish.jersey.process.internal.RequestContext
+meth public <%0 extends java.lang.Object> void remove(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public <%0 extends java.lang.Object> {%%0} get(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public <%0 extends java.lang.Object> {%%0} put(org.glassfish.jersey.internal.inject.ForeignDescriptor,{%%0})
+meth public boolean contains(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public java.lang.String toString()
+meth public org.glassfish.jersey.inject.hk2.Hk2RequestScope$Instance getReference()
+meth public void release()
+supr java.lang.Object
+hfds id,logger,referenceCounter,store
+
+CLSS public org.glassfish.jersey.inject.hk2.ImmediateHk2InjectionManager
+intf org.glassfish.jersey.internal.inject.InjectionManager
+meth public !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getAllInstances(java.lang.reflect.Type)
+meth public <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.String)
+meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.reflect.Type)
+meth public boolean isRegistrable(java.lang.Class<?>)
+meth public java.lang.Object getInstance(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public org.glassfish.hk2.api.ServiceLocator getServiceLocator()
+meth public org.glassfish.jersey.internal.inject.ForeignDescriptor createForeignDescriptor(org.glassfish.jersey.internal.inject.Binding)
+meth public void completeRegistration()
+meth public void inject(java.lang.Object)
+meth public void inject(java.lang.Object,java.lang.String)
+meth public void preDestroy(java.lang.Object)
+meth public void register(java.lang.Iterable<org.glassfish.jersey.internal.inject.Binding>)
+meth public void register(java.lang.Object)
+meth public void register(org.glassfish.jersey.internal.inject.Binder)
+meth public void register(org.glassfish.jersey.internal.inject.Binding)
+meth public void shutdown()
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.inject.hk2.InjectionResolverWrapper<%0 extends java.lang.annotation.Annotation>
+ anno 0 javax.inject.Singleton()
+intf org.glassfish.hk2.api.InjectionResolver<{org.glassfish.jersey.inject.hk2.InjectionResolverWrapper%0}>
+meth public boolean isConstructorParameterIndicator()
+meth public boolean isMethodParameterIndicator()
+meth public java.lang.Object resolve(org.glassfish.hk2.api.Injectee,org.glassfish.hk2.api.ServiceHandle)
+supr java.lang.Object
+hfds jerseyResolver
+
+CLSS public org.glassfish.jersey.inject.hk2.InstanceSupplierFactoryBridge<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.Factory<{org.glassfish.jersey.inject.hk2.InstanceSupplierFactoryBridge%0}>
+meth public void dispose({org.glassfish.jersey.inject.hk2.InstanceSupplierFactoryBridge%0})
+meth public {org.glassfish.jersey.inject.hk2.InstanceSupplierFactoryBridge%0} provide()
+supr java.lang.Object
+hfds disposable,supplier
+
+CLSS public final org.glassfish.jersey.inject.hk2.JerseyClassAnalyzer
+ anno 0 javax.inject.Named(java.lang.String value="JerseyClassAnalyzer")
+ anno 0 javax.inject.Singleton()
+fld public final static java.lang.String NAME = "JerseyClassAnalyzer"
+innr public final static Binder
+intf org.glassfish.hk2.api.ClassAnalyzer
+meth public <%0 extends java.lang.Object> java.lang.reflect.Constructor<{%%0}> getConstructor(java.lang.Class<{%%0}>) throws java.lang.NoSuchMethodException
+meth public <%0 extends java.lang.Object> java.lang.reflect.Method getPostConstructMethod(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.lang.reflect.Method getPreDestroyMethod(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.Set<java.lang.reflect.Field> getFields(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.Set<java.lang.reflect.Method> getInitializerMethods(java.lang.Class<{%%0}>)
+supr java.lang.Object
+hfds defaultAnalyzer,resolverAnnotations
+
+CLSS public final static org.glassfish.jersey.inject.hk2.JerseyClassAnalyzer$Binder
+ outer org.glassfish.jersey.inject.hk2.JerseyClassAnalyzer
+cons public init(org.glassfish.hk2.api.ServiceLocator)
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+hfds serviceLocator
+
+CLSS public final org.glassfish.jersey.inject.hk2.JerseyErrorService
+cons public init()
+innr public final static Binder
+intf org.glassfish.hk2.api.ErrorService
+meth public void onFailure(org.glassfish.hk2.api.ErrorInformation)
+supr java.lang.Object
+
+CLSS public final static org.glassfish.jersey.inject.hk2.JerseyErrorService$Binder
+ outer org.glassfish.jersey.inject.hk2.JerseyErrorService
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public final org.glassfish.jersey.inject.hk2.LocalizationMessages
+cons public init()
+meth public static java.lang.String HK_2_CLEARING_CACHE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String HK_2_FAILURE_OUTSIDE_ERROR_SCOPE()
+meth public static java.lang.String HK_2_PROVIDER_NOT_REGISTRABLE(java.lang.Object)
+meth public static java.lang.String HK_2_REIFICATION_ERROR(java.lang.Object,java.lang.Object)
+meth public static java.lang.String HK_2_UNKNOWN_ERROR(java.lang.Object)
+meth public static java.lang.String HK_2_UNKNOWN_PARENT_INJECTION_MANAGER(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHK_2_CLEARING_CACHE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHK_2_FAILURE_OUTSIDE_ERROR_SCOPE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHK_2_PROVIDER_NOT_REGISTRABLE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHK_2_REIFICATION_ERROR(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHK_2_UNKNOWN_ERROR(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHK_2_UNKNOWN_PARENT_INJECTION_MANAGER(java.lang.Object)
+supr java.lang.Object
+hfds BUNDLE_NAME,LOCALIZER,MESSAGE_FACTORY
+hcls BundleSupplier
+
+CLSS public org.glassfish.jersey.inject.hk2.RequestContext
+ anno 0 javax.inject.Singleton()
+cons public init(org.glassfish.jersey.process.internal.RequestScope)
+ anno 0 javax.inject.Inject()
+innr public static Binder
+intf org.glassfish.hk2.api.Context<org.glassfish.jersey.process.internal.RequestScoped>
+meth public <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public boolean isActive()
+meth public boolean supportsNullCreation()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void shutdown()
+supr java.lang.Object
+hfds requestScope
+
+CLSS public static org.glassfish.jersey.inject.hk2.RequestContext$Binder
+ outer org.glassfish.jersey.inject.hk2.RequestContext
+cons public init()
+meth protected void configure()
+supr org.glassfish.hk2.utilities.binding.AbstractBinder
+
+CLSS public org.glassfish.jersey.inject.hk2.SupplierFactoryBridge<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.Factory<{org.glassfish.jersey.inject.hk2.SupplierFactoryBridge%0}>
+meth public void dispose({org.glassfish.jersey.inject.hk2.SupplierFactoryBridge%0})
+meth public {org.glassfish.jersey.inject.hk2.SupplierFactoryBridge%0} provide()
+supr java.lang.Object
+hfds beanName,beanType,disposable,disposableSuppliers,locator
+
+CLSS public abstract org.glassfish.jersey.internal.AbstractRuntimeDelegate
+cons protected init(java.util.Set<org.glassfish.jersey.spi.HeaderDelegateProvider>)
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.RuntimeDelegate$HeaderDelegate<{%%0}> createHeaderDelegate(java.lang.Class<{%%0}>)
+meth public javax.ws.rs.core.Link$Builder createLinkBuilder()
+meth public javax.ws.rs.core.Response$ResponseBuilder createResponseBuilder()
+meth public javax.ws.rs.core.UriBuilder createUriBuilder()
+meth public javax.ws.rs.core.Variant$VariantListBuilder createVariantListBuilder()
+supr javax.ws.rs.ext.RuntimeDelegate
+hfds hps,map
+
+CLSS public abstract org.glassfish.jersey.internal.AbstractServiceFinderConfigurator<%0 extends java.lang.Object>
+cons protected init(java.lang.Class<{org.glassfish.jersey.internal.AbstractServiceFinderConfigurator%0}>,javax.ws.rs.RuntimeType)
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth protected java.util.List<java.lang.Class<{org.glassfish.jersey.internal.AbstractServiceFinderConfigurator%0}>> loadImplementations(java.util.Map<java.lang.String,java.lang.Object>)
+supr java.lang.Object
+hfds contract,runtimeType
+
+CLSS public org.glassfish.jersey.internal.AutoDiscoverableConfigurator
+cons public init(javax.ws.rs.RuntimeType)
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr org.glassfish.jersey.internal.AbstractServiceFinderConfigurator<org.glassfish.jersey.internal.spi.AutoDiscoverable>
+
 CLSS public org.glassfish.jersey.internal.BootstrapBag
 cons public init()
 meth protected static void requireNonNull(java.lang.Object,java.lang.reflect.Type)
@@ -2524,10 +8471,1069 @@ meth public void setRequestScope(org.glassfish.jersey.process.internal.RequestSc
 supr java.lang.Object
 hfds autoDiscoverables,configuration,contextResolvers,exceptionMappers,managedObjectsFinalizer,messageBodyWorkers,requestScope
 
+CLSS public abstract interface org.glassfish.jersey.internal.BootstrapConfigurator
+meth public abstract void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+
+CLSS public org.glassfish.jersey.internal.ContextResolverFactory
+innr public static ContextResolversConfigurator
+intf org.glassfish.jersey.spi.ContextResolvers
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ContextResolver<{%%0}> resolve(java.lang.reflect.Type,javax.ws.rs.core.MediaType)
+supr java.lang.Object
+hfds NULL_CONTEXT_RESOLVER,cache,resolver
+hcls ContextResolverAdapter,NullContextResolverAdapter
+
+CLSS public static org.glassfish.jersey.internal.ContextResolverFactory$ContextResolversConfigurator
+ outer org.glassfish.jersey.internal.ContextResolverFactory
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+hfds contextResolverFactory
+
+CLSS public org.glassfish.jersey.internal.Errors
+innr public static ErrorMessage
+innr public static ErrorMessagesException
+meth public static <%0 extends java.lang.Object> {%%0} process(java.util.concurrent.Callable<{%%0}>) throws java.lang.Exception
+meth public static <%0 extends java.lang.Object> {%%0} process(org.glassfish.jersey.internal.util.Producer<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} processWithException(org.glassfish.jersey.internal.util.Producer<{%%0}>)
+meth public static boolean fatalIssuesFound()
+meth public static boolean logErrors(boolean)
+meth public static java.util.List<org.glassfish.jersey.internal.Errors$ErrorMessage> getErrorMessages()
+meth public static java.util.List<org.glassfish.jersey.internal.Errors$ErrorMessage> getErrorMessages(boolean)
+meth public static void error(java.lang.Object,java.lang.String,org.glassfish.jersey.Severity)
+meth public static void error(java.lang.String,org.glassfish.jersey.Severity)
+meth public static void fatal(java.lang.Object,java.lang.String)
+meth public static void hint(java.lang.Object,java.lang.String)
+meth public static void mark()
+meth public static void process(java.lang.Runnable)
+meth public static void processWithException(java.lang.Runnable)
+meth public static void reset()
+meth public static void unmark()
+meth public static void warning(java.lang.Object,java.lang.String)
+supr java.lang.Object
+hfds LOGGER,errors,issues,mark,stack
+
+CLSS public static org.glassfish.jersey.internal.Errors$ErrorMessage
+ outer org.glassfish.jersey.internal.Errors
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.Object getSource()
+meth public java.lang.String getMessage()
+meth public org.glassfish.jersey.Severity getSeverity()
+supr java.lang.Object
+hfds message,severity,source
+
+CLSS public static org.glassfish.jersey.internal.Errors$ErrorMessagesException
+ outer org.glassfish.jersey.internal.Errors
+meth public java.util.List<org.glassfish.jersey.internal.Errors$ErrorMessage> getMessages()
+supr java.lang.RuntimeException
+hfds messages
+
+CLSS public org.glassfish.jersey.internal.ExceptionMapperFactory
+cons public init(org.glassfish.jersey.internal.inject.InjectionManager)
+innr public static ExceptionMappersConfigurator
+intf org.glassfish.jersey.spi.ExceptionMappers
+meth public <%0 extends java.lang.Throwable> javax.ws.rs.ext.ExceptionMapper<{%%0}> find(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Throwable> javax.ws.rs.ext.ExceptionMapper<{%%0}> findMapping({%%0})
+supr java.lang.Object
+hfds LOGGER,exceptionMapperTypes
+hcls ExceptionMapperType
+
+CLSS public static org.glassfish.jersey.internal.ExceptionMapperFactory$ExceptionMappersConfigurator
+ outer org.glassfish.jersey.internal.ExceptionMapperFactory
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+hfds exceptionMapperFactory
+
+CLSS public org.glassfish.jersey.internal.InternalProperties
+fld public final static java.lang.String JSON_FEATURE = "jersey.config.jsonFeature"
+fld public final static java.lang.String JSON_FEATURE_CLIENT = "jersey.config.client.jsonFeature"
+fld public final static java.lang.String JSON_FEATURE_SERVER = "jersey.config.server.jsonFeature"
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.JaxrsProviders
+cons public init()
+innr public static ProvidersConfigurator
+intf javax.ws.rs.ext.Providers
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ContextResolver<{%%0}> getContextResolver(java.lang.Class<{%%0}>,javax.ws.rs.core.MediaType)
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyReader<{%%0}> getMessageBodyReader(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyWriter<{%%0}> getMessageBodyWriter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public <%0 extends java.lang.Throwable> javax.ws.rs.ext.ExceptionMapper<{%%0}> getExceptionMapper(java.lang.Class<{%%0}>)
+supr java.lang.Object
+hfds mappers,resolvers,workers
+
+CLSS public static org.glassfish.jersey.internal.JaxrsProviders$ProvidersConfigurator
+ outer org.glassfish.jersey.internal.JaxrsProviders
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.internal.LocalizationMessages
+cons public init()
+meth public static java.lang.String AUTODISCOVERABLE_CONFIGURATION_FAILED(java.lang.Object)
+meth public static java.lang.String CACHE_CONTROL_IS_NULL()
+meth public static java.lang.String COMMITTING_STREAM_ALREADY_INITIALIZED()
+meth public static java.lang.String COMMITTING_STREAM_BUFFERING_ILLEGAL_STATE()
+meth public static java.lang.String COMPONENT_CANNOT_BE_NULL()
+meth public static java.lang.String COMPONENT_CLASS_CANNOT_BE_NULL()
+meth public static java.lang.String COMPONENT_CONTRACTS_EMPTY_OR_NULL(java.lang.Object)
+meth public static java.lang.String COMPONENT_TYPE_ALREADY_REGISTERED(java.lang.Object)
+meth public static java.lang.String CONFIGURATION_NOT_MODIFIABLE()
+meth public static java.lang.String CONTRACT_NOT_ASSIGNABLE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String CONTRACT_NOT_SUPPORTED(java.lang.Object,java.lang.Object)
+meth public static java.lang.String COOKIE_IS_NULL()
+meth public static java.lang.String DATE_IS_NULL()
+meth public static java.lang.String DEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(java.lang.Object,java.lang.Object)
+meth public static java.lang.String DEPENDENT_CLASS_OF_PROVIDER_FORMAT_ERROR(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String DEPENDENT_CLASS_OF_PROVIDER_NOT_FOUND(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ENTITY_TAG_IS_NULL()
+meth public static java.lang.String ERRORS_AND_WARNINGS_DETECTED(java.lang.Object)
+meth public static java.lang.String ERROR_CAUGHT_WHILE_LOADING_SPI_PROVIDERS()
+meth public static java.lang.String ERROR_ENTITY_PROVIDER_BASICTYPES_CHARACTER_MORECHARS()
+meth public static java.lang.String ERROR_ENTITY_PROVIDER_BASICTYPES_CONSTRUCTOR(java.lang.Object)
+meth public static java.lang.String ERROR_ENTITY_PROVIDER_BASICTYPES_UNKWNOWN(java.lang.Object)
+meth public static java.lang.String ERROR_ENTITY_STREAM_CLOSED()
+meth public static java.lang.String ERROR_FINDING_EXCEPTION_MAPPER_TYPE(java.lang.Object)
+meth public static java.lang.String ERROR_INTERCEPTOR_READER_PROCEED()
+meth public static java.lang.String ERROR_INTERCEPTOR_WRITER_PROCEED()
+meth public static java.lang.String ERROR_MBR_ISREADABLE(java.lang.Object)
+meth public static java.lang.String ERROR_MBW_ISWRITABLE(java.lang.Object)
+meth public static java.lang.String ERROR_MSG(java.lang.Object)
+meth public static java.lang.String ERROR_NEWCOOKIE_EXPIRES(java.lang.Object)
+meth public static java.lang.String ERROR_NOTFOUND_MESSAGEBODYREADER(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_NOTFOUND_MESSAGEBODYWRITER(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_PARAMETER_INVALID_CHAR_VALUE(java.lang.Object)
+meth public static java.lang.String ERROR_PARSING_ENTITY_TAG(java.lang.Object)
+meth public static java.lang.String ERROR_PROVIDER_AND_RESOURCE_CONSTRAINED_TO_IGNORED(java.lang.Object)
+meth public static java.lang.String ERROR_PROVIDER_CONSTRAINED_TO_IGNORED(java.lang.Object)
+meth public static java.lang.String ERROR_PROVIDER_CONSTRAINED_TO_WRONG_PACKAGE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_PROVIDER_CONSTRAINED_TO_WRONG_RUNTIME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_PROVIDER_REGISTERED_WRONG_RUNTIME(java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_READING_ENTITY_FROM_INPUT_STREAM()
+meth public static java.lang.String ERROR_READING_ENTITY_MISSING()
+meth public static java.lang.String ERROR_RESOLVING_GENERIC_TYPE_VALUE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_FEATURE_CONTEXT(java.lang.Object)
+meth public static java.lang.String ERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_FEATURE_READER_INTERCEPTOR_CONTEXT(java.lang.Object)
+meth public static java.lang.String ERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_FEATURE_WRITER_INTERCEPTOR_CONTEXT(java.lang.Object)
+meth public static java.lang.String ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_AFTER_NAME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_PART_OF_NAME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_START_NAME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_TEMPLATE_PARSER_INVALID_SYNTAX(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String ERROR_TEMPLATE_PARSER_INVALID_SYNTAX_TERMINATED(java.lang.Object)
+meth public static java.lang.String ERROR_TEMPLATE_PARSER_NAME_MORE_THAN_ONCE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String EXCEPTION_CAUGHT_WHILE_LOADING_SPI_PROVIDERS()
+meth public static java.lang.String EXCEPTION_MAPPER_SUPPORTED_TYPE_UNKNOWN(java.lang.Object)
+meth public static java.lang.String FEATURE_CONSTRAINED_TO_IGNORED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String FEATURE_HAS_ALREADY_BEEN_PROCESSED(java.lang.Object)
+meth public static java.lang.String HINTS_DETECTED(java.lang.Object)
+meth public static java.lang.String HINT_MSG(java.lang.Object)
+meth public static java.lang.String HTTP_HEADER_COMMENTS_NOT_ALLOWED()
+meth public static java.lang.String HTTP_HEADER_END_OF_HEADER()
+meth public static java.lang.String HTTP_HEADER_NO_CHARS_BETWEEN_SEPARATORS(java.lang.Object,java.lang.Object)
+meth public static java.lang.String HTTP_HEADER_NO_END_SEPARATOR(java.lang.Object)
+meth public static java.lang.String HTTP_HEADER_UNBALANCED_COMMENTS()
+meth public static java.lang.String HTTP_HEADER_UNBALANCED_QUOTED()
+meth public static java.lang.String HTTP_HEADER_WHITESPACE_NOT_ALLOWED()
+meth public static java.lang.String IGNORED_EXECUTOR_PROVIDERS(java.lang.Object,java.lang.Object)
+meth public static java.lang.String IGNORED_SCHEDULER_PROVIDERS(java.lang.Object,java.lang.Object)
+meth public static java.lang.String ILLEGAL_CONFIG_SYNTAX()
+meth public static java.lang.String ILLEGAL_INITIAL_CAPACITY(java.lang.Object)
+meth public static java.lang.String ILLEGAL_LOAD_FACTOR(java.lang.Object)
+meth public static java.lang.String ILLEGAL_PROVIDER_CLASS_NAME(java.lang.Object)
+meth public static java.lang.String INJECTION_ERROR_LOCAL_CLASS_NOT_SUPPORTED(java.lang.Object)
+meth public static java.lang.String INJECTION_ERROR_NONSTATIC_MEMBER_CLASS_NOT_SUPPORTED(java.lang.Object)
+meth public static java.lang.String INJECTION_ERROR_SUITABLE_CONSTRUCTOR_NOT_FOUND(java.lang.Object)
+meth public static java.lang.String INJECTION_MANAGER_FACTORY_NOT_FOUND()
+meth public static java.lang.String INJECTION_MANAGER_NOT_PROVIDED()
+meth public static java.lang.String INJECTION_MANAGER_STRATEGY_NOT_SUPPORTED(java.lang.Object)
+meth public static java.lang.String INPUT_STREAM_CLOSED()
+meth public static java.lang.String INVALID_HOST()
+meth public static java.lang.String INVALID_PORT()
+meth public static java.lang.String INVALID_SPI_CLASSES(java.lang.Object,java.lang.Object)
+meth public static java.lang.String LINK_IS_NULL()
+meth public static java.lang.String LOCALE_IS_NULL()
+meth public static java.lang.String MATRIX_PARAM_NULL()
+meth public static java.lang.String MBR_TRYING_TO_CLOSE_STREAM(java.lang.Object)
+meth public static java.lang.String MBW_TRYING_TO_CLOSE_STREAM(java.lang.Object)
+meth public static java.lang.String MEDIA_TYPE_IS_NULL()
+meth public static java.lang.String MESSAGE_CONTENT_BUFFERING_FAILED()
+meth public static java.lang.String MESSAGE_CONTENT_BUFFER_RESET_FAILED()
+meth public static java.lang.String MESSAGE_CONTENT_INPUT_STREAM_CLOSE_FAILED()
+meth public static java.lang.String METHOD_NOT_GETTER_NOR_SETTER()
+meth public static java.lang.String METHOD_PARAMETER_CANNOT_BE_NULL(java.lang.Object)
+meth public static java.lang.String MULTIPLE_MATCHING_CONSTRUCTORS_FOUND(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String NEW_COOKIE_IS_NULL()
+meth public static java.lang.String NOT_SUPPORTED_ON_OUTBOUND_MESSAGE()
+meth public static java.lang.String NO_CONTAINER_AVAILABLE()
+meth public static java.lang.String NO_ERROR_PROCESSING_IN_SCOPE()
+meth public static java.lang.String OSGI_REGISTRY_ERROR_OPENING_RESOURCE_STREAM(java.lang.Object)
+meth public static java.lang.String OSGI_REGISTRY_ERROR_PROCESSING_RESOURCE_STREAM(java.lang.Object)
+meth public static java.lang.String OUTPUT_STREAM_CLOSED()
+meth public static java.lang.String OVERRIDING_METHOD_CANNOT_BE_FOUND(java.lang.Object,java.lang.Object)
+meth public static java.lang.String PARAM_CREATION_FACTORY_NOT_FOUND(java.lang.Object)
+meth public static java.lang.String PARAM_NULL(java.lang.Object)
+meth public static java.lang.String PROPERTIES_HELPER_DEPRECATED_PROPERTY_NAME(java.lang.Object,java.lang.Object)
+meth public static java.lang.String PROPERTIES_HELPER_GET_VALUE_NO_TRANSFORM(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String PROVIDER_CLASS_COULD_NOT_BE_LOADED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String PROVIDER_COULD_NOT_BE_CREATED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String PROVIDER_NOT_FOUND(java.lang.Object,java.lang.Object)
+meth public static java.lang.String QUERY_PARAM_NULL()
+meth public static java.lang.String RESPONSE_CLOSED()
+meth public static java.lang.String SLOW_SUBSCRIBER(java.lang.Object)
+meth public static java.lang.String SOME_HEADERS_NOT_SENT(java.lang.Object,java.lang.Object)
+meth public static java.lang.String SSL_CTX_ALGORITHM_NOT_SUPPORTED()
+meth public static java.lang.String SSL_CTX_INIT_FAILED()
+meth public static java.lang.String SSL_KMF_ALGORITHM_NOT_SUPPORTED()
+meth public static java.lang.String SSL_KMF_INIT_FAILED()
+meth public static java.lang.String SSL_KMF_NO_PASSWORD_FOR_BYTE_BASED_KS()
+meth public static java.lang.String SSL_KMF_NO_PASSWORD_FOR_PROVIDER_BASED_KS()
+meth public static java.lang.String SSL_KMF_NO_PASSWORD_SET(java.lang.Object)
+meth public static java.lang.String SSL_KMF_PROVIDER_NOT_REGISTERED()
+meth public static java.lang.String SSL_KMF_UNRECOVERABLE_KEY()
+meth public static java.lang.String SSL_KS_CERT_LOAD_ERROR()
+meth public static java.lang.String SSL_KS_FILE_NOT_FOUND(java.lang.Object)
+meth public static java.lang.String SSL_KS_IMPL_NOT_FOUND()
+meth public static java.lang.String SSL_KS_INTEGRITY_ALGORITHM_NOT_FOUND()
+meth public static java.lang.String SSL_KS_LOAD_ERROR(java.lang.Object)
+meth public static java.lang.String SSL_KS_PROVIDERS_NOT_REGISTERED()
+meth public static java.lang.String SSL_TMF_ALGORITHM_NOT_SUPPORTED()
+meth public static java.lang.String SSL_TMF_INIT_FAILED()
+meth public static java.lang.String SSL_TMF_PROVIDER_NOT_REGISTERED()
+meth public static java.lang.String SSL_TS_CERT_LOAD_ERROR()
+meth public static java.lang.String SSL_TS_FILE_NOT_FOUND(java.lang.Object)
+meth public static java.lang.String SSL_TS_IMPL_NOT_FOUND()
+meth public static java.lang.String SSL_TS_INTEGRITY_ALGORITHM_NOT_FOUND()
+meth public static java.lang.String SSL_TS_LOAD_ERROR(java.lang.Object)
+meth public static java.lang.String SSL_TS_PROVIDERS_NOT_REGISTERED()
+meth public static java.lang.String STREAM_PROVIDER_NULL()
+meth public static java.lang.String STRING_IS_NULL()
+meth public static java.lang.String SYSTEM_PROPERTIES_WARNING()
+meth public static java.lang.String TEMPLATE_PARAM_NULL()
+meth public static java.lang.String THREAD_POOL_EXECUTOR_PROVIDER_CLOSED()
+meth public static java.lang.String TOO_MANY_HEADER_VALUES(java.lang.Object,java.lang.Object)
+meth public static java.lang.String TYPE_TO_CLASS_CONVERSION_NOT_SUPPORTED(java.lang.Object)
+meth public static java.lang.String UNABLE_TO_PARSE_HEADER_VALUE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String UNHANDLED_EXCEPTION_DETECTED(java.lang.Object)
+meth public static java.lang.String UNKNOWN_DESCRIPTOR_TYPE(java.lang.Object)
+meth public static java.lang.String UNKNOWN_SUBSCRIBER()
+meth public static java.lang.String URI_BUILDER_ANNOTATEDELEMENT_PATH_ANNOTATION_MISSING(java.lang.Object)
+meth public static java.lang.String URI_BUILDER_CLASS_PATH_ANNOTATION_MISSING(java.lang.Object)
+meth public static java.lang.String URI_BUILDER_METHODNAME_NOT_SPECIFIED(java.lang.Object,java.lang.Object)
+meth public static java.lang.String URI_BUILDER_SCHEMA_PART_OPAQUE()
+meth public static java.lang.String URI_BUILDER_SCHEME_PART_NULL()
+meth public static java.lang.String URI_BUILDER_SCHEME_PART_UNEXPECTED_COMPONENT(java.lang.Object,java.lang.Object)
+meth public static java.lang.String URI_BUILDER_URI_PART_FRAGMENT(java.lang.Object,java.lang.Object)
+meth public static java.lang.String URI_COMPONENT_ENCODED_OCTET_INVALID_DIGIT(java.lang.Object,java.lang.Object)
+meth public static java.lang.String URI_COMPONENT_ENCODED_OCTET_MALFORMED(java.lang.Object)
+meth public static java.lang.String URI_COMPONENT_INVALID_CHARACTER(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static java.lang.String URI_IS_NULL()
+meth public static java.lang.String URI_PARSER_COMPONENT_DELIMITER(java.lang.Object,java.lang.Object)
+meth public static java.lang.String URI_PARSER_NOT_EXECUTED()
+meth public static java.lang.String URI_PARSER_SCHEME_EXPECTED(java.lang.Object,java.lang.Object)
+meth public static java.lang.String USING_EXECUTOR_PROVIDER(java.lang.Object,java.lang.Object)
+meth public static java.lang.String USING_SCHEDULER_PROVIDER(java.lang.Object,java.lang.Object)
+meth public static java.lang.String WARNINGS_DETECTED(java.lang.Object)
+meth public static java.lang.String WARNING_MSG(java.lang.Object)
+meth public static java.lang.String WARNING_PROPERTIES()
+meth public static java.lang.String WARNING_PROVIDER_CONSTRAINED_TO_WRONG_PACKAGE(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableAUTODISCOVERABLE_CONFIGURATION_FAILED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCACHE_CONTROL_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOMMITTING_STREAM_ALREADY_INITIALIZED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOMMITTING_STREAM_BUFFERING_ILLEGAL_STATE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOMPONENT_CANNOT_BE_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOMPONENT_CLASS_CANNOT_BE_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOMPONENT_CONTRACTS_EMPTY_OR_NULL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOMPONENT_TYPE_ALREADY_REGISTERED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONFIGURATION_NOT_MODIFIABLE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONTRACT_NOT_ASSIGNABLE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCONTRACT_NOT_SUPPORTED(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableCOOKIE_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableDATE_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableDEPENDENT_CLASS_OF_DEFAULT_PROVIDER_NOT_FOUND(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableDEPENDENT_CLASS_OF_PROVIDER_FORMAT_ERROR(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableDEPENDENT_CLASS_OF_PROVIDER_NOT_FOUND(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableENTITY_TAG_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERRORS_AND_WARNINGS_DETECTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_CAUGHT_WHILE_LOADING_SPI_PROVIDERS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_ENTITY_PROVIDER_BASICTYPES_CHARACTER_MORECHARS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_ENTITY_PROVIDER_BASICTYPES_CONSTRUCTOR(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_ENTITY_PROVIDER_BASICTYPES_UNKWNOWN(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_ENTITY_STREAM_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_FINDING_EXCEPTION_MAPPER_TYPE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_INTERCEPTOR_READER_PROCEED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_INTERCEPTOR_WRITER_PROCEED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_MBR_ISREADABLE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_MBW_ISWRITABLE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_MSG(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_NEWCOOKIE_EXPIRES(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_NOTFOUND_MESSAGEBODYREADER(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_NOTFOUND_MESSAGEBODYWRITER(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PARAMETER_INVALID_CHAR_VALUE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PARSING_ENTITY_TAG(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PROVIDER_AND_RESOURCE_CONSTRAINED_TO_IGNORED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PROVIDER_CONSTRAINED_TO_IGNORED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PROVIDER_CONSTRAINED_TO_WRONG_PACKAGE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PROVIDER_CONSTRAINED_TO_WRONG_RUNTIME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_PROVIDER_REGISTERED_WRONG_RUNTIME(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_READING_ENTITY_FROM_INPUT_STREAM()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_READING_ENTITY_MISSING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_RESOLVING_GENERIC_TYPE_VALUE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_FEATURE_CONTEXT(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_FEATURE_READER_INTERCEPTOR_CONTEXT(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_SERVICE_LOCATOR_PROVIDER_INSTANCE_FEATURE_WRITER_INTERCEPTOR_CONTEXT(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_AFTER_NAME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_PART_OF_NAME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_TEMPLATE_PARSER_ILLEGAL_CHAR_START_NAME(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_TEMPLATE_PARSER_INVALID_SYNTAX(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_TEMPLATE_PARSER_INVALID_SYNTAX_TERMINATED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableERROR_TEMPLATE_PARSER_NAME_MORE_THAN_ONCE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableEXCEPTION_CAUGHT_WHILE_LOADING_SPI_PROVIDERS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableEXCEPTION_MAPPER_SUPPORTED_TYPE_UNKNOWN(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableFEATURE_CONSTRAINED_TO_IGNORED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableFEATURE_HAS_ALREADY_BEEN_PROCESSED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHINTS_DETECTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHINT_MSG(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_COMMENTS_NOT_ALLOWED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_END_OF_HEADER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_NO_CHARS_BETWEEN_SEPARATORS(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_NO_END_SEPARATOR(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_UNBALANCED_COMMENTS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_UNBALANCED_QUOTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHTTP_HEADER_WHITESPACE_NOT_ALLOWED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableIGNORED_EXECUTOR_PROVIDERS(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableIGNORED_SCHEDULER_PROVIDERS(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableILLEGAL_CONFIG_SYNTAX()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableILLEGAL_INITIAL_CAPACITY(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableILLEGAL_LOAD_FACTOR(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableILLEGAL_PROVIDER_CLASS_NAME(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINJECTION_ERROR_LOCAL_CLASS_NOT_SUPPORTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINJECTION_ERROR_NONSTATIC_MEMBER_CLASS_NOT_SUPPORTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINJECTION_ERROR_SUITABLE_CONSTRUCTOR_NOT_FOUND(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINJECTION_MANAGER_FACTORY_NOT_FOUND()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINJECTION_MANAGER_NOT_PROVIDED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINJECTION_MANAGER_STRATEGY_NOT_SUPPORTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINPUT_STREAM_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINVALID_HOST()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINVALID_PORT()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINVALID_SPI_CLASSES(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableLINK_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableLOCALE_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMATRIX_PARAM_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMBR_TRYING_TO_CLOSE_STREAM(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMBW_TRYING_TO_CLOSE_STREAM(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMEDIA_TYPE_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMESSAGE_CONTENT_BUFFERING_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMESSAGE_CONTENT_BUFFER_RESET_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMESSAGE_CONTENT_INPUT_STREAM_CLOSE_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMETHOD_NOT_GETTER_NOR_SETTER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMETHOD_PARAMETER_CANNOT_BE_NULL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableMULTIPLE_MATCHING_CONSTRUCTORS_FOUND(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNEW_COOKIE_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNOT_SUPPORTED_ON_OUTBOUND_MESSAGE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNO_CONTAINER_AVAILABLE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNO_ERROR_PROCESSING_IN_SCOPE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableOSGI_REGISTRY_ERROR_OPENING_RESOURCE_STREAM(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableOSGI_REGISTRY_ERROR_PROCESSING_RESOURCE_STREAM(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableOUTPUT_STREAM_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableOVERRIDING_METHOD_CANNOT_BE_FOUND(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePARAM_CREATION_FACTORY_NOT_FOUND(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePARAM_NULL(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROPERTIES_HELPER_DEPRECATED_PROPERTY_NAME(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROPERTIES_HELPER_GET_VALUE_NO_TRANSFORM(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROVIDER_CLASS_COULD_NOT_BE_LOADED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROVIDER_COULD_NOT_BE_CREATED(java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePROVIDER_NOT_FOUND(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableQUERY_PARAM_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESPONSE_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSLOW_SUBSCRIBER(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSOME_HEADERS_NOT_SENT(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_CTX_ALGORITHM_NOT_SUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_CTX_INIT_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_ALGORITHM_NOT_SUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_INIT_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_NO_PASSWORD_FOR_BYTE_BASED_KS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_NO_PASSWORD_FOR_PROVIDER_BASED_KS()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_NO_PASSWORD_SET(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_PROVIDER_NOT_REGISTERED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KMF_UNRECOVERABLE_KEY()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KS_CERT_LOAD_ERROR()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KS_FILE_NOT_FOUND(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KS_IMPL_NOT_FOUND()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KS_INTEGRITY_ALGORITHM_NOT_FOUND()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KS_LOAD_ERROR(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_KS_PROVIDERS_NOT_REGISTERED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TMF_ALGORITHM_NOT_SUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TMF_INIT_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TMF_PROVIDER_NOT_REGISTERED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TS_CERT_LOAD_ERROR()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TS_FILE_NOT_FOUND(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TS_IMPL_NOT_FOUND()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TS_INTEGRITY_ALGORITHM_NOT_FOUND()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TS_LOAD_ERROR(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSSL_TS_PROVIDERS_NOT_REGISTERED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSTREAM_PROVIDER_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSTRING_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSYSTEM_PROPERTIES_WARNING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTEMPLATE_PARAM_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTHREAD_POOL_EXECUTOR_PROVIDER_CLOSED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTOO_MANY_HEADER_VALUES(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableTYPE_TO_CLASS_CONVERSION_NOT_SUPPORTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUNABLE_TO_PARSE_HEADER_VALUE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUNHANDLED_EXCEPTION_DETECTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUNKNOWN_DESCRIPTOR_TYPE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUNKNOWN_SUBSCRIBER()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_ANNOTATEDELEMENT_PATH_ANNOTATION_MISSING(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_CLASS_PATH_ANNOTATION_MISSING(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_METHODNAME_NOT_SPECIFIED(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_SCHEMA_PART_OPAQUE()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_SCHEME_PART_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_SCHEME_PART_UNEXPECTED_COMPONENT(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_BUILDER_URI_PART_FRAGMENT(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_COMPONENT_ENCODED_OCTET_INVALID_DIGIT(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_COMPONENT_ENCODED_OCTET_MALFORMED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_COMPONENT_INVALID_CHARACTER(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_IS_NULL()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_PARSER_COMPONENT_DELIMITER(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_PARSER_NOT_EXECUTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableURI_PARSER_SCHEME_EXPECTED(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUSING_EXECUTOR_PROVIDER(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableUSING_SCHEDULER_PROVIDER(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWARNINGS_DETECTED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWARNING_MSG(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWARNING_PROPERTIES()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableWARNING_PROVIDER_CONSTRAINED_TO_WRONG_PACKAGE(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+supr java.lang.Object
+hfds BUNDLE_NAME,LOCALIZER,MESSAGE_FACTORY
+hcls BundleSupplier
+
+CLSS public final org.glassfish.jersey.internal.MapPropertiesDelegate
+cons public init()
+cons public init(java.util.Map<java.lang.String,java.lang.Object>)
+cons public init(org.glassfish.jersey.internal.PropertiesDelegate)
+intf org.glassfish.jersey.internal.PropertiesDelegate
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.util.Collection<java.lang.String> getPropertyNames()
+meth public void removeProperty(java.lang.String)
+meth public void setProperty(java.lang.String,java.lang.Object)
+supr java.lang.Object
+hfds store
+
+CLSS public final org.glassfish.jersey.internal.OsgiRegistry
+intf org.osgi.framework.SynchronousBundleListener
+meth public java.lang.Class<?> classForNameWithException(java.lang.String) throws java.lang.ClassNotFoundException
+meth public java.util.Enumeration<java.net.URL> getPackageResources(java.lang.String,java.lang.ClassLoader,boolean)
+meth public java.util.ResourceBundle getResourceBundle(java.lang.String)
+meth public static boolean isPackageLevelEntry(java.lang.String,java.lang.String)
+meth public static java.lang.String bundleEntryPathToClassName(java.lang.String,java.lang.String)
+meth public static java.lang.String normalizedPackagePath(java.lang.String)
+meth public static org.glassfish.jersey.internal.OsgiRegistry getInstance()
+meth public void bundleChanged(org.osgi.framework.BundleEvent)
+supr java.lang.Object
+hfds CoreBundleSymbolicNAME,LOGGER,WEB_INF_CLASSES,bundleContext,classToBundleMapping,factories,instance,lock
+hcls BundleSpiProvidersLoader,OsgiServiceFinder
+
+CLSS public abstract interface org.glassfish.jersey.internal.PropertiesDelegate
+meth public abstract java.lang.Object getProperty(java.lang.String)
+meth public abstract java.util.Collection<java.lang.String> getPropertyNames()
+meth public abstract void removeProperty(java.lang.String)
+meth public abstract void setProperty(java.lang.String,java.lang.Object)
+
 CLSS public abstract interface org.glassfish.jersey.internal.PropertiesResolver
 meth public abstract <%0 extends java.lang.Object> {%%0} resolveProperty(java.lang.String,java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} resolveProperty(java.lang.String,{%%0})
 meth public static org.glassfish.jersey.internal.PropertiesResolver create(javax.ws.rs.core.Configuration,org.glassfish.jersey.internal.PropertiesDelegate)
+
+CLSS public org.glassfish.jersey.internal.RuntimeDelegateDecorator
+cons public init()
+meth public static javax.ws.rs.ext.RuntimeDelegate configured(javax.ws.rs.core.Configuration)
+supr java.lang.Object
+hcls ConfigurableRuntimeDelegate
+
+CLSS public org.glassfish.jersey.internal.RuntimeDelegateImpl
+cons public init()
+meth public <%0 extends java.lang.Object> {%%0} createEndpoint(javax.ws.rs.core.Application,java.lang.Class<{%%0}>)
+supr org.glassfish.jersey.internal.AbstractRuntimeDelegate
+
+CLSS public org.glassfish.jersey.internal.ServiceConfigurationError
+cons public init(java.lang.String)
+cons public init(java.lang.Throwable)
+supr java.lang.Error
+hfds serialVersionUID
+
+CLSS public final org.glassfish.jersey.internal.ServiceFinder<%0 extends java.lang.Object>
+innr public abstract static ServiceIteratorProvider
+innr public final static DefaultServiceIteratorProvider
+intf java.lang.Iterable<{org.glassfish.jersey.internal.ServiceFinder%0}>
+meth public java.lang.Class<{org.glassfish.jersey.internal.ServiceFinder%0}>[] toClassArray()
+meth public java.util.Iterator<{org.glassfish.jersey.internal.ServiceFinder%0}> iterator()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.ServiceFinder<{%%0}> find(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.ServiceFinder<{%%0}> find(java.lang.Class<{%%0}>,boolean)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.ServiceFinder<{%%0}> find(java.lang.Class<{%%0}>,java.lang.ClassLoader)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.ServiceFinder<{%%0}> find(java.lang.Class<{%%0}>,java.lang.ClassLoader,boolean)
+meth public static org.glassfish.jersey.internal.ServiceFinder<?> find(java.lang.String)
+meth public static void setIteratorProvider(org.glassfish.jersey.internal.ServiceFinder$ServiceIteratorProvider)
+meth public {org.glassfish.jersey.internal.ServiceFinder%0}[] toArray()
+supr java.lang.Object
+hfds LOGGER,PREFIX,classLoader,ignoreOnClassNotFound,serviceClass,serviceName
+hcls AbstractLazyIterator,LazyClassIterator,LazyObjectIterator
+
+CLSS public final static org.glassfish.jersey.internal.ServiceFinder$DefaultServiceIteratorProvider
+ outer org.glassfish.jersey.internal.ServiceFinder
+cons public init()
+meth public <%0 extends java.lang.Object> java.util.Iterator<java.lang.Class<{%%0}>> createClassIterator(java.lang.Class<{%%0}>,java.lang.String,java.lang.ClassLoader,boolean)
+meth public <%0 extends java.lang.Object> java.util.Iterator<{%%0}> createIterator(java.lang.Class<{%%0}>,java.lang.String,java.lang.ClassLoader,boolean)
+supr org.glassfish.jersey.internal.ServiceFinder$ServiceIteratorProvider
+
+CLSS public abstract static org.glassfish.jersey.internal.ServiceFinder$ServiceIteratorProvider
+ outer org.glassfish.jersey.internal.ServiceFinder
+cons public init()
+meth public abstract <%0 extends java.lang.Object> java.util.Iterator<java.lang.Class<{%%0}>> createClassIterator(java.lang.Class<{%%0}>,java.lang.String,java.lang.ClassLoader,boolean)
+meth public abstract <%0 extends java.lang.Object> java.util.Iterator<{%%0}> createIterator(java.lang.Class<{%%0}>,java.lang.String,java.lang.ClassLoader,boolean)
+supr java.lang.Object
+hfds sip,sipLock
+
+CLSS public org.glassfish.jersey.internal.ServiceFinderBinder<%0 extends java.lang.Object>
+cons public init(java.lang.Class<{org.glassfish.jersey.internal.ServiceFinderBinder%0}>,java.util.Map<java.lang.String,java.lang.Object>,javax.ws.rs.RuntimeType)
+meth protected void configure()
+supr org.glassfish.jersey.internal.inject.AbstractBinder
+hfds applicationProperties,contract,runtimeType
+
+CLSS public final org.glassfish.jersey.internal.Version
+meth public static java.lang.String getBuildId()
+meth public static java.lang.String getVersion()
+supr java.lang.Object
+hfds buildId,version
+
+CLSS public org.glassfish.jersey.internal.config.ExternalPropertiesAutoDiscoverable
+ anno 0 javax.annotation.Priority(int value=2000)
+ anno 0 javax.ws.rs.ConstrainedTo(javax.ws.rs.RuntimeType value=CLIENT)
+cons public init()
+intf org.glassfish.jersey.internal.spi.AutoDiscoverable
+meth public void configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory
+cons public init()
+meth public static boolean configure(javax.ws.rs.core.Configurable)
+supr java.lang.Object
+hfds EXTERNAL_CONFIGURATION_PROVIDERS
+hcls ConfigComparator
+
+CLSS public org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFeature
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.internal.guava.AbstractFuture<%0 extends java.lang.Object>
+intf org.glassfish.jersey.internal.guava.ListenableFuture<{org.glassfish.jersey.internal.guava.AbstractFuture%0}>
+meth public boolean cancel(boolean)
+meth public boolean isCancelled()
+meth public boolean isDone()
+meth public void addListener(java.lang.Runnable,java.util.concurrent.Executor)
+meth public {org.glassfish.jersey.internal.guava.AbstractFuture%0} get() throws java.lang.InterruptedException,java.util.concurrent.ExecutionException
+meth public {org.glassfish.jersey.internal.guava.AbstractFuture%0} get(long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException,java.util.concurrent.ExecutionException,java.util.concurrent.TimeoutException
+supr java.lang.Object
+hfds executionList,sync
+hcls Sync
+
+CLSS public abstract org.glassfish.jersey.internal.guava.AbstractIterator<%0 extends java.lang.Object>
+meth protected abstract {org.glassfish.jersey.internal.guava.AbstractIterator%0} computeNext()
+meth public final boolean hasNext()
+meth public final {org.glassfish.jersey.internal.guava.AbstractIterator%0} next()
+supr org.glassfish.jersey.internal.guava.UnmodifiableIterator<{org.glassfish.jersey.internal.guava.AbstractIterator%0}>
+hfds next,state
+hcls State
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.Cache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract void put({org.glassfish.jersey.internal.guava.Cache%0},{org.glassfish.jersey.internal.guava.Cache%1})
+meth public abstract {org.glassfish.jersey.internal.guava.Cache%1} getIfPresent(java.lang.Object)
+
+CLSS public final org.glassfish.jersey.internal.guava.CacheBuilder<%0 extends java.lang.Object, %1 extends java.lang.Object>
+fld public final static org.glassfish.jersey.internal.guava.Ticker NULL_TICKER
+meth public <%0 extends {org.glassfish.jersey.internal.guava.CacheBuilder%0}, %1 extends {org.glassfish.jersey.internal.guava.CacheBuilder%1}> org.glassfish.jersey.internal.guava.Cache<{%%0},{%%1}> build()
+meth public <%0 extends {org.glassfish.jersey.internal.guava.CacheBuilder%0}, %1 extends {org.glassfish.jersey.internal.guava.CacheBuilder%1}> org.glassfish.jersey.internal.guava.LoadingCache<{%%0},{%%1}> build(org.glassfish.jersey.internal.guava.CacheLoader<? super {%%0},{%%1}>)
+meth public java.lang.String toString()
+meth public org.glassfish.jersey.internal.guava.CacheBuilder<{org.glassfish.jersey.internal.guava.CacheBuilder%0},{org.glassfish.jersey.internal.guava.CacheBuilder%1}> expireAfterAccess(long,java.util.concurrent.TimeUnit)
+meth public org.glassfish.jersey.internal.guava.CacheBuilder<{org.glassfish.jersey.internal.guava.CacheBuilder%0},{org.glassfish.jersey.internal.guava.CacheBuilder%1}> maximumSize(long)
+meth public static org.glassfish.jersey.internal.guava.CacheBuilder<java.lang.Object,java.lang.Object> newBuilder()
+supr java.lang.Object
+hfds DEFAULT_CONCURRENCY_LEVEL,DEFAULT_EXPIRATION_NANOS,DEFAULT_INITIAL_CAPACITY,DEFAULT_REFRESH_NANOS,UNSET_INT,concurrencyLevel,expireAfterAccessNanos,expireAfterWriteNanos,initialCapacity,maximumSize,maximumWeight,refreshNanos
+
+CLSS public abstract org.glassfish.jersey.internal.guava.CacheLoader<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons protected init()
+innr public final static InvalidCacheLoadException
+meth public abstract {org.glassfish.jersey.internal.guava.CacheLoader%1} load({org.glassfish.jersey.internal.guava.CacheLoader%0}) throws java.lang.Exception
+meth public org.glassfish.jersey.internal.guava.ListenableFuture<{org.glassfish.jersey.internal.guava.CacheLoader%1}> reload({org.glassfish.jersey.internal.guava.CacheLoader%0},{org.glassfish.jersey.internal.guava.CacheLoader%1}) throws java.lang.Exception
+supr java.lang.Object
+
+CLSS public final static org.glassfish.jersey.internal.guava.CacheLoader$InvalidCacheLoadException
+ outer org.glassfish.jersey.internal.guava.CacheLoader
+cons public init(java.lang.String)
+supr java.lang.RuntimeException
+
+CLSS public abstract org.glassfish.jersey.internal.guava.Equivalence<%0 extends java.lang.Object>
+cons public init()
+meth protected abstract boolean doEquivalent({org.glassfish.jersey.internal.guava.Equivalence%0},{org.glassfish.jersey.internal.guava.Equivalence%0})
+meth protected abstract int doHash({org.glassfish.jersey.internal.guava.Equivalence%0})
+meth public final boolean equivalent({org.glassfish.jersey.internal.guava.Equivalence%0},{org.glassfish.jersey.internal.guava.Equivalence%0})
+meth public final int hash({org.glassfish.jersey.internal.guava.Equivalence%0})
+meth public static org.glassfish.jersey.internal.guava.Equivalence<java.lang.Object> equals()
+meth public static org.glassfish.jersey.internal.guava.Equivalence<java.lang.Object> identity()
+supr java.lang.Object
+hcls Equals,Identity
+
+CLSS public org.glassfish.jersey.internal.guava.ExecutionError
+cons public init(java.lang.Error)
+supr java.lang.Error
+hfds serialVersionUID
+
+CLSS public abstract org.glassfish.jersey.internal.guava.ForwardingCollection<%0 extends java.lang.Object>
+intf java.util.Collection<{org.glassfish.jersey.internal.guava.ForwardingCollection%0}>
+meth protected abstract java.util.Collection<{org.glassfish.jersey.internal.guava.ForwardingCollection%0}> delegate()
+meth public <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
+meth public boolean add({org.glassfish.jersey.internal.guava.ForwardingCollection%0})
+meth public boolean addAll(java.util.Collection<? extends {org.glassfish.jersey.internal.guava.ForwardingCollection%0}>)
+meth public boolean contains(java.lang.Object)
+meth public boolean containsAll(java.util.Collection<?>)
+meth public boolean isEmpty()
+meth public boolean remove(java.lang.Object)
+meth public boolean removeAll(java.util.Collection<?>)
+meth public boolean retainAll(java.util.Collection<?>)
+meth public int size()
+meth public java.lang.Object[] toArray()
+meth public java.lang.String toString()
+meth public java.util.Iterator<{org.glassfish.jersey.internal.guava.ForwardingCollection%0}> iterator()
+meth public void clear()
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.internal.guava.ForwardingMapEntry<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf java.util.Map$Entry<{org.glassfish.jersey.internal.guava.ForwardingMapEntry%0},{org.glassfish.jersey.internal.guava.ForwardingMapEntry%1}>
+meth protected abstract java.util.Map$Entry<{org.glassfish.jersey.internal.guava.ForwardingMapEntry%0},{org.glassfish.jersey.internal.guava.ForwardingMapEntry%1}> delegate()
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public {org.glassfish.jersey.internal.guava.ForwardingMapEntry%0} getKey()
+meth public {org.glassfish.jersey.internal.guava.ForwardingMapEntry%1} getValue()
+meth public {org.glassfish.jersey.internal.guava.ForwardingMapEntry%1} setValue({org.glassfish.jersey.internal.guava.ForwardingMapEntry%1})
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.internal.guava.ForwardingSet<%0 extends java.lang.Object>
+intf java.util.Set<{org.glassfish.jersey.internal.guava.ForwardingSet%0}>
+meth protected abstract java.util.Set<{org.glassfish.jersey.internal.guava.ForwardingSet%0}> delegate()
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+supr org.glassfish.jersey.internal.guava.ForwardingCollection<{org.glassfish.jersey.internal.guava.ForwardingSet%0}>
+
+CLSS public abstract org.glassfish.jersey.internal.guava.ForwardingSortedSet<%0 extends java.lang.Object>
+intf java.util.SortedSet<{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}>
+meth protected abstract java.util.SortedSet<{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}> delegate()
+meth public java.util.Comparator<? super {org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}> comparator()
+meth public java.util.SortedSet<{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}> headSet({org.glassfish.jersey.internal.guava.ForwardingSortedSet%0})
+meth public java.util.SortedSet<{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}> subSet({org.glassfish.jersey.internal.guava.ForwardingSortedSet%0},{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0})
+meth public java.util.SortedSet<{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}> tailSet({org.glassfish.jersey.internal.guava.ForwardingSortedSet%0})
+meth public {org.glassfish.jersey.internal.guava.ForwardingSortedSet%0} first()
+meth public {org.glassfish.jersey.internal.guava.ForwardingSortedSet%0} last()
+supr org.glassfish.jersey.internal.guava.ForwardingSet<{org.glassfish.jersey.internal.guava.ForwardingSortedSet%0}>
+
+CLSS public final org.glassfish.jersey.internal.guava.Futures
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.jersey.internal.guava.ListenableFuture<{%%1}> transform(org.glassfish.jersey.internal.guava.ListenableFuture<{%%0}>,java.util.function.Function<? super {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.ListenableFuture<{%%0}> immediateFailedFuture(java.lang.Throwable)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.ListenableFuture<{%%0}> immediateFuture({%%0})
+supr java.lang.Object
+hcls ChainingListenableFuture,ImmediateFailedFuture,ImmediateFuture,ImmediateSuccessfulFuture
+
+CLSS public org.glassfish.jersey.internal.guava.HashBasedTable<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+intf java.io.Serializable
+meth public boolean contains(java.lang.Object,java.lang.Object)
+meth public boolean containsColumn(java.lang.Object)
+meth public boolean containsRow(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Map<{org.glassfish.jersey.internal.guava.HashBasedTable%0},java.util.Map<{org.glassfish.jersey.internal.guava.HashBasedTable%1},{org.glassfish.jersey.internal.guava.HashBasedTable%2}>> rowMap()
+meth public java.util.Map<{org.glassfish.jersey.internal.guava.HashBasedTable%0},{org.glassfish.jersey.internal.guava.HashBasedTable%2}> column({org.glassfish.jersey.internal.guava.HashBasedTable%1})
+meth public java.util.Map<{org.glassfish.jersey.internal.guava.HashBasedTable%1},java.util.Map<{org.glassfish.jersey.internal.guava.HashBasedTable%0},{org.glassfish.jersey.internal.guava.HashBasedTable%2}>> columnMap()
+meth public java.util.Map<{org.glassfish.jersey.internal.guava.HashBasedTable%1},{org.glassfish.jersey.internal.guava.HashBasedTable%2}> row({org.glassfish.jersey.internal.guava.HashBasedTable%0})
+meth public java.util.Set<org.glassfish.jersey.internal.guava.Table$Cell<{org.glassfish.jersey.internal.guava.HashBasedTable%0},{org.glassfish.jersey.internal.guava.HashBasedTable%1},{org.glassfish.jersey.internal.guava.HashBasedTable%2}>> cellSet()
+meth public java.util.Set<{org.glassfish.jersey.internal.guava.HashBasedTable%0}> rowKeySet()
+meth public java.util.Set<{org.glassfish.jersey.internal.guava.HashBasedTable%1}> columnKeySet()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> org.glassfish.jersey.internal.guava.HashBasedTable<{%%0},{%%1},{%%2}> create()
+meth public void clear()
+meth public void putAll(org.glassfish.jersey.internal.guava.Table<? extends {org.glassfish.jersey.internal.guava.HashBasedTable%0},? extends {org.glassfish.jersey.internal.guava.HashBasedTable%1},? extends {org.glassfish.jersey.internal.guava.HashBasedTable%2}>)
+meth public {org.glassfish.jersey.internal.guava.HashBasedTable%2} get(java.lang.Object,java.lang.Object)
+meth public {org.glassfish.jersey.internal.guava.HashBasedTable%2} put({org.glassfish.jersey.internal.guava.HashBasedTable%0},{org.glassfish.jersey.internal.guava.HashBasedTable%1},{org.glassfish.jersey.internal.guava.HashBasedTable%2})
+meth public {org.glassfish.jersey.internal.guava.HashBasedTable%2} remove(java.lang.Object,java.lang.Object)
+supr java.lang.Object<{org.glassfish.jersey.internal.guava.HashBasedTable%0},{org.glassfish.jersey.internal.guava.HashBasedTable%1},{org.glassfish.jersey.internal.guava.HashBasedTable%2}>
+hfds serialVersionUID
+hcls Factory
+
+CLSS public final org.glassfish.jersey.internal.guava.HashMultimap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf org.glassfish.jersey.internal.guava.SetMultimap<{org.glassfish.jersey.internal.guava.HashMultimap%0},{org.glassfish.jersey.internal.guava.HashMultimap%1}>
+meth public boolean containsEntry(java.lang.Object,java.lang.Object)
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public boolean put({org.glassfish.jersey.internal.guava.HashMultimap%0},{org.glassfish.jersey.internal.guava.HashMultimap%1})
+meth public boolean putAll({org.glassfish.jersey.internal.guava.HashMultimap%0},java.lang.Iterable<? extends {org.glassfish.jersey.internal.guava.HashMultimap%1}>)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Collection<{org.glassfish.jersey.internal.guava.HashMultimap%1}> values()
+meth public java.util.Map<{org.glassfish.jersey.internal.guava.HashMultimap%0},java.util.Collection<{org.glassfish.jersey.internal.guava.HashMultimap%1}>> asMap()
+meth public java.util.Set<java.util.Map$Entry<{org.glassfish.jersey.internal.guava.HashMultimap%0},{org.glassfish.jersey.internal.guava.HashMultimap%1}>> entries()
+meth public java.util.Set<{org.glassfish.jersey.internal.guava.HashMultimap%0}> keySet()
+meth public java.util.Set<{org.glassfish.jersey.internal.guava.HashMultimap%1}> get({org.glassfish.jersey.internal.guava.HashMultimap%0})
+meth public java.util.Set<{org.glassfish.jersey.internal.guava.HashMultimap%1}> removeAll(java.lang.Object)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.jersey.internal.guava.HashMultimap<{%%0},{%%1}> create()
+meth public void clear()
+supr java.lang.Object<{org.glassfish.jersey.internal.guava.HashMultimap%0},{org.glassfish.jersey.internal.guava.HashMultimap%1}>
+hfds DEFAULT_VALUES_PER_KEY,expectedValuesPerKey,serialVersionUID
+
+CLSS public final org.glassfish.jersey.internal.guava.InetAddresses
+meth public static boolean isMappedIPv4Address(java.lang.String)
+meth public static boolean isUriInetAddress(java.lang.String)
+supr java.lang.Object
+hfds IPV4_PART_COUNT,IPV6_PART_COUNT
+
+CLSS public final org.glassfish.jersey.internal.guava.Iterators
+meth public !varargs static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.UnmodifiableIterator<{%%0}> forArray({%%0}[])
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Iterator<{%%1}> transform(java.util.Iterator<{%%0}>,java.util.function.Function<? super {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object> boolean addAll(java.util.Collection<{%%0}>,java.util.Iterator<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> boolean all(java.util.Iterator<{%%0}>,java.util.function.Predicate<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> boolean removeIf(java.util.Iterator<{%%0}>,java.util.function.Predicate<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.PeekingIterator<{%%0}> peekingIterator(java.util.Iterator<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.UnmodifiableIterator<{%%0}> emptyIterator()
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.UnmodifiableIterator<{%%0}> singletonIterator({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.UnmodifiableIterator<{%%0}> unmodifiableIterator(java.util.Iterator<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} getNext(java.util.Iterator<? extends {%%0}>,{%%0})
+meth public static boolean elementsEqual(java.util.Iterator<?>,java.util.Iterator<?>)
+meth public static boolean removeAll(java.util.Iterator<?>,java.util.Collection<?>)
+meth public static int size(java.util.Iterator<?>)
+supr java.lang.Object
+hfds EMPTY_LIST_ITERATOR,EMPTY_MODIFIABLE_ITERATOR
+hcls PeekingImpl
+
+CLSS public org.glassfish.jersey.internal.guava.Joiner
+innr public final static MapJoiner
+meth public org.glassfish.jersey.internal.guava.Joiner$MapJoiner withKeyValueSeparator()
+meth public static org.glassfish.jersey.internal.guava.Joiner on()
+supr java.lang.Object
+hfds separator
+
+CLSS public final static org.glassfish.jersey.internal.guava.Joiner$MapJoiner
+ outer org.glassfish.jersey.internal.guava.Joiner
+meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Iterator<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
+meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
+meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Iterator<? extends java.util.Map$Entry<?,?>>)
+meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Map<?,?>)
+supr java.lang.Object
+hfds joiner,keyValueSeparator
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.ListMultimap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf org.glassfish.jersey.internal.guava.Multimap<{org.glassfish.jersey.internal.guava.ListMultimap%0},{org.glassfish.jersey.internal.guava.ListMultimap%1}>
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract java.util.List<{org.glassfish.jersey.internal.guava.ListMultimap%1}> get({org.glassfish.jersey.internal.guava.ListMultimap%0})
+meth public abstract java.util.List<{org.glassfish.jersey.internal.guava.ListMultimap%1}> removeAll(java.lang.Object)
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.ListMultimap%0},java.util.Collection<{org.glassfish.jersey.internal.guava.ListMultimap%1}>> asMap()
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.ListenableFuture<%0 extends java.lang.Object>
+intf java.util.concurrent.Future<{org.glassfish.jersey.internal.guava.ListenableFuture%0}>
+meth public abstract void addListener(java.lang.Runnable,java.util.concurrent.Executor)
+
+CLSS public final org.glassfish.jersey.internal.guava.Lists
+meth public static <%0 extends java.lang.Object> java.util.ArrayList<{%%0}> newArrayList(java.lang.Iterable<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.ArrayList<{%%0}> newArrayList(java.util.Iterator<? extends {%%0}>)
+supr java.lang.Object
+hcls ReverseList
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.LoadingCache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf java.util.function.Function<{org.glassfish.jersey.internal.guava.LoadingCache%0},{org.glassfish.jersey.internal.guava.LoadingCache%1}>
+intf org.glassfish.jersey.internal.guava.Cache<{org.glassfish.jersey.internal.guava.LoadingCache%0},{org.glassfish.jersey.internal.guava.LoadingCache%1}>
+meth public abstract {org.glassfish.jersey.internal.guava.LoadingCache%1} apply({org.glassfish.jersey.internal.guava.LoadingCache%0})
+ anno 0 java.lang.Deprecated()
+meth public abstract {org.glassfish.jersey.internal.guava.LoadingCache%1} get({org.glassfish.jersey.internal.guava.LoadingCache%0}) throws java.util.concurrent.ExecutionException
+
+CLSS public final org.glassfish.jersey.internal.guava.MapMaker
+cons public init()
+meth public java.lang.String toString()
+supr java.lang.Object<java.lang.Object,java.lang.Object>
+hfds DEFAULT_CONCURRENCY_LEVEL,DEFAULT_EXPIRATION_NANOS,DEFAULT_INITIAL_CAPACITY,UNSET_INT,concurrencyLevel,expireAfterAccessNanos,expireAfterWriteNanos,initialCapacity,maximumSize
+hcls RemovalCause,RemovalListener,RemovalNotification
+
+CLSS public final org.glassfish.jersey.internal.guava.Maps
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.HashMap<{%%0},{%%1}> newHashMapWithExpectedSize(int)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> immutableEntry({%%0},{%%1})
+supr java.lang.Object
+hfds STANDARD_JOINER
+hcls AsMapView,EntryFunction,EntrySet,ImprovedAbstractMap,KeySet,Values
+
+CLSS public final org.glassfish.jersey.internal.guava.MoreExecutors
+meth public static java.util.concurrent.Executor directExecutor()
+supr java.lang.Object
+hcls DirectExecutor
+
+CLSS public final org.glassfish.jersey.internal.guava.MoreObjects
+innr public final static ToStringHelper
+meth public static org.glassfish.jersey.internal.guava.MoreObjects$ToStringHelper toStringHelper(java.lang.Object)
+supr java.lang.Object
+
+CLSS public final static org.glassfish.jersey.internal.guava.MoreObjects$ToStringHelper
+ outer org.glassfish.jersey.internal.guava.MoreObjects
+meth public java.lang.String toString()
+meth public org.glassfish.jersey.internal.guava.MoreObjects$ToStringHelper add(java.lang.String,int)
+meth public org.glassfish.jersey.internal.guava.MoreObjects$ToStringHelper add(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.internal.guava.MoreObjects$ToStringHelper add(java.lang.String,long)
+supr java.lang.Object
+hfds className,holderHead,holderTail,omitNullValues
+hcls ValueHolder
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.Multimap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract boolean containsEntry(java.lang.Object,java.lang.Object)
+meth public abstract boolean containsKey(java.lang.Object)
+meth public abstract boolean containsValue(java.lang.Object)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean put({org.glassfish.jersey.internal.guava.Multimap%0},{org.glassfish.jersey.internal.guava.Multimap%1})
+meth public abstract boolean putAll({org.glassfish.jersey.internal.guava.Multimap%0},java.lang.Iterable<? extends {org.glassfish.jersey.internal.guava.Multimap%1}>)
+meth public abstract boolean remove(java.lang.Object,java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.util.Collection<java.util.Map$Entry<{org.glassfish.jersey.internal.guava.Multimap%0},{org.glassfish.jersey.internal.guava.Multimap%1}>> entries()
+meth public abstract java.util.Collection<{org.glassfish.jersey.internal.guava.Multimap%1}> get({org.glassfish.jersey.internal.guava.Multimap%0})
+meth public abstract java.util.Collection<{org.glassfish.jersey.internal.guava.Multimap%1}> removeAll(java.lang.Object)
+meth public abstract java.util.Collection<{org.glassfish.jersey.internal.guava.Multimap%1}> values()
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.Multimap%0},java.util.Collection<{org.glassfish.jersey.internal.guava.Multimap%1}>> asMap()
+meth public abstract java.util.Set<{org.glassfish.jersey.internal.guava.Multimap%0}> keySet()
+meth public abstract void clear()
+
+CLSS public final org.glassfish.jersey.internal.guava.Multimaps
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.jersey.internal.guava.ListMultimap<{%%0},{%%1}> newListMultimap(java.util.Map<{%%0},java.util.Collection<{%%1}>>,java.util.function.Supplier<? extends java.util.List<{%%1}>>)
+supr java.lang.Object
+hcls CustomListMultimap,Entries
+
+CLSS public abstract org.glassfish.jersey.internal.guava.Ordering<%0 extends java.lang.Object>
+intf java.util.Comparator<{org.glassfish.jersey.internal.guava.Ordering%0}>
+meth public <%0 extends {org.glassfish.jersey.internal.guava.Ordering%0}> org.glassfish.jersey.internal.guava.Ordering<{%%0}> reverse()
+meth public abstract int compare({org.glassfish.jersey.internal.guava.Ordering%0},{org.glassfish.jersey.internal.guava.Ordering%0})
+meth public static <%0 extends java.lang.Comparable> org.glassfish.jersey.internal.guava.Ordering<{%%0}> natural()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.Ordering<{%%0}> from(java.util.Comparator<{%%0}>)
+supr java.lang.Object
+hfds LEFT_IS_GREATER,RIGHT_IS_GREATER
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.PeekingIterator<%0 extends java.lang.Object>
+intf java.util.Iterator<{org.glassfish.jersey.internal.guava.PeekingIterator%0}>
+meth public abstract void remove()
+meth public abstract {org.glassfish.jersey.internal.guava.PeekingIterator%0} next()
+meth public abstract {org.glassfish.jersey.internal.guava.PeekingIterator%0} peek()
+
+CLSS public final org.glassfish.jersey.internal.guava.Preconditions
+meth public !varargs static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object[])
+meth public !varargs static void checkArgument(boolean,java.lang.String,java.lang.Object[])
+meth public !varargs static void checkState(boolean,java.lang.String,java.lang.Object[])
+meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0})
+meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.Object)
+meth public static int checkElementIndex(int,int)
+meth public static int checkPositionIndex(int,int)
+meth public static void checkArgument(boolean)
+meth public static void checkArgument(boolean,java.lang.Object)
+meth public static void checkPositionIndexes(int,int,int)
+meth public static void checkState(boolean)
+meth public static void checkState(boolean,java.lang.Object)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.internal.guava.Predicates
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.function.Predicate<{%%0}> compose(java.util.function.Predicate<{%%1}>,java.util.function.Function<{%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> alwaysTrue()
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> equalTo({%%0})
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> in(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> not(java.util.function.Predicate<{%%0}>)
+supr java.lang.Object
+hfds COMMA_JOINER
+hcls CompositionPredicate,InPredicate,IsEqualToPredicate,NotPredicate,ObjectPredicate
+
+CLSS public final org.glassfish.jersey.internal.guava.Primitives
+meth public static <%0 extends java.lang.Object> java.lang.Class<{%%0}> wrap(java.lang.Class<{%%0}>)
+supr java.lang.Object
+hfds PRIMITIVE_TO_WRAPPER_TYPE
+
+CLSS public !enum org.glassfish.jersey.internal.guava.RemovalCause
+fld public final static org.glassfish.jersey.internal.guava.RemovalCause COLLECTED
+fld public final static org.glassfish.jersey.internal.guava.RemovalCause EXPIRED
+fld public final static org.glassfish.jersey.internal.guava.RemovalCause EXPLICIT
+fld public final static org.glassfish.jersey.internal.guava.RemovalCause REPLACED
+fld public final static org.glassfish.jersey.internal.guava.RemovalCause SIZE
+meth public static org.glassfish.jersey.internal.guava.RemovalCause valueOf(java.lang.String)
+meth public static org.glassfish.jersey.internal.guava.RemovalCause[] values()
+supr java.lang.Enum<org.glassfish.jersey.internal.guava.RemovalCause>
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.SetMultimap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf org.glassfish.jersey.internal.guava.Multimap<{org.glassfish.jersey.internal.guava.SetMultimap%0},{org.glassfish.jersey.internal.guava.SetMultimap%1}>
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.SetMultimap%0},java.util.Collection<{org.glassfish.jersey.internal.guava.SetMultimap%1}>> asMap()
+meth public abstract java.util.Set<java.util.Map$Entry<{org.glassfish.jersey.internal.guava.SetMultimap%0},{org.glassfish.jersey.internal.guava.SetMultimap%1}>> entries()
+meth public abstract java.util.Set<{org.glassfish.jersey.internal.guava.SetMultimap%1}> get({org.glassfish.jersey.internal.guava.SetMultimap%0})
+meth public abstract java.util.Set<{org.glassfish.jersey.internal.guava.SetMultimap%1}> removeAll(java.lang.Object)
+
+CLSS public final org.glassfish.jersey.internal.guava.Sets
+meth public static <%0 extends java.lang.Object> java.util.HashSet<{%%0}> newHashSet()
+meth public static <%0 extends java.lang.Object> java.util.HashSet<{%%0}> newHashSetWithExpectedSize(int)
+meth public static <%0 extends java.lang.Object> java.util.NavigableSet<{%%0}> unmodifiableNavigableSet(java.util.NavigableSet<{%%0}>)
+supr java.lang.Object
+hcls ImprovedAbstractSet,UnmodifiableNavigableSet
+
+CLSS public final org.glassfish.jersey.internal.guava.SettableFuture<%0 extends java.lang.Object>
+meth public boolean set({org.glassfish.jersey.internal.guava.SettableFuture%0})
+meth public boolean setException(java.lang.Throwable)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.guava.SettableFuture<{%%0}> create()
+supr org.glassfish.jersey.internal.guava.AbstractFuture<{org.glassfish.jersey.internal.guava.SettableFuture%0}>
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.SortedSetMultimap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+intf org.glassfish.jersey.internal.guava.SetMultimap<{org.glassfish.jersey.internal.guava.SortedSetMultimap%0},{org.glassfish.jersey.internal.guava.SortedSetMultimap%1}>
+meth public abstract java.util.Comparator<? super {org.glassfish.jersey.internal.guava.SortedSetMultimap%1}> valueComparator()
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.SortedSetMultimap%0},java.util.Collection<{org.glassfish.jersey.internal.guava.SortedSetMultimap%1}>> asMap()
+meth public abstract java.util.SortedSet<{org.glassfish.jersey.internal.guava.SortedSetMultimap%1}> get({org.glassfish.jersey.internal.guava.SortedSetMultimap%0})
+meth public abstract java.util.SortedSet<{org.glassfish.jersey.internal.guava.SortedSetMultimap%1}> removeAll(java.lang.Object)
+
+CLSS public final org.glassfish.jersey.internal.guava.Stopwatch
+meth public java.lang.String toString()
+meth public org.glassfish.jersey.internal.guava.Stopwatch start()
+meth public static org.glassfish.jersey.internal.guava.Stopwatch createUnstarted()
+supr java.lang.Object
+hfds isRunning,startTick,ticker
+
+CLSS public abstract interface org.glassfish.jersey.internal.guava.Table<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+innr public abstract interface static Cell
+meth public abstract boolean contains(java.lang.Object,java.lang.Object)
+meth public abstract boolean containsColumn(java.lang.Object)
+meth public abstract boolean containsRow(java.lang.Object)
+meth public abstract boolean containsValue(java.lang.Object)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.Table%0},java.util.Map<{org.glassfish.jersey.internal.guava.Table%1},{org.glassfish.jersey.internal.guava.Table%2}>> rowMap()
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.Table%0},{org.glassfish.jersey.internal.guava.Table%2}> column({org.glassfish.jersey.internal.guava.Table%1})
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.Table%1},java.util.Map<{org.glassfish.jersey.internal.guava.Table%0},{org.glassfish.jersey.internal.guava.Table%2}>> columnMap()
+meth public abstract java.util.Map<{org.glassfish.jersey.internal.guava.Table%1},{org.glassfish.jersey.internal.guava.Table%2}> row({org.glassfish.jersey.internal.guava.Table%0})
+meth public abstract java.util.Set<org.glassfish.jersey.internal.guava.Table$Cell<{org.glassfish.jersey.internal.guava.Table%0},{org.glassfish.jersey.internal.guava.Table%1},{org.glassfish.jersey.internal.guava.Table%2}>> cellSet()
+meth public abstract java.util.Set<{org.glassfish.jersey.internal.guava.Table%0}> rowKeySet()
+meth public abstract java.util.Set<{org.glassfish.jersey.internal.guava.Table%1}> columnKeySet()
+meth public abstract void clear()
+meth public abstract void putAll(org.glassfish.jersey.internal.guava.Table<? extends {org.glassfish.jersey.internal.guava.Table%0},? extends {org.glassfish.jersey.internal.guava.Table%1},? extends {org.glassfish.jersey.internal.guava.Table%2}>)
+meth public abstract {org.glassfish.jersey.internal.guava.Table%2} get(java.lang.Object,java.lang.Object)
+meth public abstract {org.glassfish.jersey.internal.guava.Table%2} put({org.glassfish.jersey.internal.guava.Table%0},{org.glassfish.jersey.internal.guava.Table%1},{org.glassfish.jersey.internal.guava.Table%2})
+meth public abstract {org.glassfish.jersey.internal.guava.Table%2} remove(java.lang.Object,java.lang.Object)
+
+CLSS public abstract interface static org.glassfish.jersey.internal.guava.Table$Cell<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
+ outer org.glassfish.jersey.internal.guava.Table
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract {org.glassfish.jersey.internal.guava.Table$Cell%0} getRowKey()
+meth public abstract {org.glassfish.jersey.internal.guava.Table$Cell%1} getColumnKey()
+meth public abstract {org.glassfish.jersey.internal.guava.Table$Cell%2} getValue()
+
+CLSS public final org.glassfish.jersey.internal.guava.Tables
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> org.glassfish.jersey.internal.guava.Table$Cell<{%%0},{%%1},{%%2}> immutableCell({%%0},{%%1},{%%2})
+supr java.lang.Object
+hcls AbstractCell,ImmutableCell,TransposeTable
+
+CLSS public final org.glassfish.jersey.internal.guava.ThreadFactoryBuilder
+cons public init()
+meth public java.util.concurrent.ThreadFactory build()
+meth public org.glassfish.jersey.internal.guava.ThreadFactoryBuilder setDaemon(boolean)
+meth public org.glassfish.jersey.internal.guava.ThreadFactoryBuilder setNameFormat(java.lang.String)
+meth public org.glassfish.jersey.internal.guava.ThreadFactoryBuilder setThreadFactory(java.util.concurrent.ThreadFactory)
+meth public org.glassfish.jersey.internal.guava.ThreadFactoryBuilder setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
+supr java.lang.Object
+hfds backingThreadFactory,daemon,nameFormat,priority,uncaughtExceptionHandler
+
+CLSS public abstract org.glassfish.jersey.internal.guava.Ticker
+meth public abstract long read()
+meth public static org.glassfish.jersey.internal.guava.Ticker systemTicker()
+supr java.lang.Object
+hfds SYSTEM_TICKER
+
+CLSS public org.glassfish.jersey.internal.guava.TreeMultimap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public boolean containsEntry(java.lang.Object,java.lang.Object)
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public boolean put({org.glassfish.jersey.internal.guava.TreeMultimap%0},{org.glassfish.jersey.internal.guava.TreeMultimap%1})
+meth public boolean putAll({org.glassfish.jersey.internal.guava.TreeMultimap%0},java.lang.Iterable<? extends {org.glassfish.jersey.internal.guava.TreeMultimap%1}>)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Collection<{org.glassfish.jersey.internal.guava.TreeMultimap%1}> values()
+meth public java.util.Comparator<? super {org.glassfish.jersey.internal.guava.TreeMultimap%1}> valueComparator()
+meth public java.util.NavigableMap<{org.glassfish.jersey.internal.guava.TreeMultimap%0},java.util.Collection<{org.glassfish.jersey.internal.guava.TreeMultimap%1}>> asMap()
+meth public java.util.NavigableSet<{org.glassfish.jersey.internal.guava.TreeMultimap%0}> keySet()
+meth public java.util.NavigableSet<{org.glassfish.jersey.internal.guava.TreeMultimap%1}> get({org.glassfish.jersey.internal.guava.TreeMultimap%0})
+meth public java.util.Set<java.util.Map$Entry<{org.glassfish.jersey.internal.guava.TreeMultimap%0},{org.glassfish.jersey.internal.guava.TreeMultimap%1}>> entries()
+meth public java.util.SortedSet<{org.glassfish.jersey.internal.guava.TreeMultimap%1}> removeAll(java.lang.Object)
+meth public static <%0 extends java.lang.Comparable, %1 extends java.lang.Comparable> org.glassfish.jersey.internal.guava.TreeMultimap<{%%0},{%%1}> create()
+meth public void clear()
+supr java.lang.Object<{org.glassfish.jersey.internal.guava.TreeMultimap%0},{org.glassfish.jersey.internal.guava.TreeMultimap%1}>
+hfds keyComparator,serialVersionUID,valueComparator
+
+CLSS public org.glassfish.jersey.internal.guava.UncheckedExecutionException
+cons public init(java.lang.Throwable)
+supr java.lang.RuntimeException
+hfds serialVersionUID
+
+CLSS public abstract org.glassfish.jersey.internal.guava.UnmodifiableIterator<%0 extends java.lang.Object>
+intf java.util.Iterator<{org.glassfish.jersey.internal.guava.UnmodifiableIterator%0}>
+meth public final void remove()
+ anno 0 java.lang.Deprecated()
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.internal.guava.UnmodifiableListIterator<%0 extends java.lang.Object>
+intf java.util.ListIterator<{org.glassfish.jersey.internal.guava.UnmodifiableListIterator%0}>
+meth public final void add({org.glassfish.jersey.internal.guava.UnmodifiableListIterator%0})
+ anno 0 java.lang.Deprecated()
+meth public final void set({org.glassfish.jersey.internal.guava.UnmodifiableListIterator%0})
+ anno 0 java.lang.Deprecated()
+supr org.glassfish.jersey.internal.guava.UnmodifiableIterator<{org.glassfish.jersey.internal.guava.UnmodifiableListIterator%0}>
+
+CLSS public abstract org.glassfish.jersey.internal.inject.AbstractBinder
+cons public init()
+intf org.glassfish.jersey.internal.inject.Binder
+meth protected abstract void configure()
+meth protected final <%0 extends java.lang.Object> javax.inject.Provider<{%%0}> createManagedInstanceProvider(java.lang.Class<{%%0}>)
+meth public !varargs final void install(org.glassfish.jersey.internal.inject.AbstractBinder[])
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> bind(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> bindAsContract(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> bindAsContract(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.InstanceBinding<{%%0}> bind({%%0})
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.SupplierClassBinding<{%%0}> bindFactory(java.lang.Class<? extends java.util.function.Supplier<{%%0}>>)
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.SupplierClassBinding<{%%0}> bindFactory(java.lang.Class<? extends java.util.function.Supplier<{%%0}>>,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.SupplierInstanceBinding<{%%0}> bindFactory(java.util.function.Supplier<{%%0}>)
+meth public <%0 extends org.glassfish.jersey.internal.inject.InjectionResolver> org.glassfish.jersey.internal.inject.InjectionResolverBinding<{%%0}> bind({%%0})
+meth public java.util.Collection<org.glassfish.jersey.internal.inject.Binding> getBindings()
+meth public org.glassfish.jersey.internal.inject.Binding bind(org.glassfish.jersey.internal.inject.Binding)
+meth public org.glassfish.jersey.internal.inject.ClassBinding<java.lang.Object> bindAsContract(java.lang.reflect.Type)
+supr java.lang.Object
+hfds configured,injectionManager,installed,internalBindings
+
+CLSS public org.glassfish.jersey.internal.inject.AliasBinding
+meth public java.lang.Class<?> getContract()
+meth public java.util.Optional<java.lang.String> getScope()
+meth public java.util.OptionalInt getRank()
+meth public java.util.Set<java.lang.annotation.Annotation> getQualifiers()
+meth public org.glassfish.jersey.internal.inject.AliasBinding in(java.lang.String)
+meth public org.glassfish.jersey.internal.inject.AliasBinding qualifiedBy(java.lang.annotation.Annotation)
+meth public org.glassfish.jersey.internal.inject.AliasBinding ranked(int)
+supr java.lang.Object
+hfds contract,qualifiers,rank,scope
 
 CLSS public abstract org.glassfish.jersey.internal.inject.AnnotationLiteral<%0 extends java.lang.annotation.Annotation>
 cons protected init()
@@ -2539,13 +9545,1528 @@ meth public java.lang.Class<? extends java.lang.annotation.Annotation> annotatio
 supr java.lang.Object
 hfds annotationType,members,serialVersionUID
 
+CLSS public abstract interface org.glassfish.jersey.internal.inject.Binder
+meth public abstract java.util.Collection<org.glassfish.jersey.internal.inject.Binding> getBindings()
+
+CLSS public abstract org.glassfish.jersey.internal.inject.Binding<%0 extends java.lang.Object, %1 extends org.glassfish.jersey.internal.inject.Binding>
+cons public init()
+meth public java.lang.Boolean isProxiable()
+meth public java.lang.Boolean isProxiedForSameScope()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public java.lang.Class<{org.glassfish.jersey.internal.inject.Binding%0}> getImplementationType()
+meth public java.lang.Integer getRank()
+meth public java.lang.String getAnalyzer()
+meth public java.lang.String getName()
+meth public java.util.Set<java.lang.annotation.Annotation> getQualifiers()
+meth public java.util.Set<java.lang.reflect.Type> getContracts()
+meth public java.util.Set<org.glassfish.jersey.internal.inject.AliasBinding> getAliases()
+meth public org.glassfish.jersey.internal.inject.AliasBinding addAlias(java.lang.Class<?>)
+meth public void ranked(int)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} analyzeWith(java.lang.String)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} in(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} named(java.lang.String)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} proxy(boolean)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} proxyForSameScope(boolean)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} qualifiedBy(java.lang.annotation.Annotation)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} to(java.lang.Class<? super {org.glassfish.jersey.internal.inject.Binding%0}>)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} to(java.lang.reflect.Type)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} to(java.util.Collection<java.lang.Class<? super {org.glassfish.jersey.internal.inject.Binding%0}>>)
+meth public {org.glassfish.jersey.internal.inject.Binding%1} to(javax.ws.rs.core.GenericType<?>)
+supr java.lang.Object
+hfds aliases,analyzer,contracts,implementationType,name,proxiable,proxyForSameScope,qualifiers,ranked,scope
+
+CLSS public final org.glassfish.jersey.internal.inject.Bindings
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> service(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> service(javax.ws.rs.core.GenericType<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> serviceAsContract(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> serviceAsContract(java.lang.reflect.Type)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.ClassBinding<{%%0}> serviceAsContract(javax.ws.rs.core.GenericType<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.InstanceBinding<{%%0}> service({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.InstanceBinding<{%%0}> serviceAsContract({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.SupplierClassBinding<{%%0}> supplier(java.lang.Class<? extends java.util.function.Supplier<{%%0}>>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.SupplierClassBinding<{%%0}> supplier(java.lang.Class<? extends java.util.function.Supplier<{%%0}>>,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.inject.SupplierInstanceBinding<{%%0}> supplier(java.util.function.Supplier<{%%0}>)
+meth public static <%0 extends org.glassfish.jersey.internal.inject.InjectionResolver> org.glassfish.jersey.internal.inject.InjectionResolverBinding<{%%0}> injectionResolver({%%0})
+meth public static java.util.Collection<org.glassfish.jersey.internal.inject.Binding> getBindings(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.inject.Binder)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.inject.ClassBinding<%0 extends java.lang.Object>
+meth public java.lang.Class<{org.glassfish.jersey.internal.inject.ClassBinding%0}> getService()
+supr org.glassfish.jersey.internal.inject.Binding<{org.glassfish.jersey.internal.inject.ClassBinding%0},org.glassfish.jersey.internal.inject.ClassBinding<{org.glassfish.jersey.internal.inject.ClassBinding%0}>>
+hfds service
+
+CLSS public org.glassfish.jersey.internal.inject.CompositeBinder
+meth public !varargs static org.glassfish.jersey.internal.inject.AbstractBinder wrap(org.glassfish.jersey.internal.inject.Binder[])
+meth public static org.glassfish.jersey.internal.inject.AbstractBinder wrap(java.util.Collection<org.glassfish.jersey.internal.inject.Binder>)
+meth public void configure()
+supr org.glassfish.jersey.internal.inject.AbstractBinder
+hfds installed
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.ContextInjectionResolver
+intf org.glassfish.jersey.internal.inject.InjectionResolver<javax.ws.rs.core.Context>
+
+CLSS public abstract interface !annotation org.glassfish.jersey.internal.inject.Custom
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 javax.inject.Qualifier()
+intf java.lang.annotation.Annotation
+
+CLSS public final org.glassfish.jersey.internal.inject.CustomAnnotationLiteral
+fld public final static org.glassfish.jersey.internal.inject.Custom INSTANCE
+intf org.glassfish.jersey.internal.inject.Custom
+supr org.glassfish.jersey.internal.inject.AnnotationLiteral<org.glassfish.jersey.internal.inject.Custom>
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.DisposableSupplier<%0 extends java.lang.Object>
+intf java.util.function.Supplier<{org.glassfish.jersey.internal.inject.DisposableSupplier%0}>
+meth public abstract void dispose({org.glassfish.jersey.internal.inject.DisposableSupplier%0})
+
+CLSS public org.glassfish.jersey.internal.inject.ExtractorException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.ws.rs.ProcessingException
+hfds serialVersionUID
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.ForeignDescriptor
+meth public abstract java.lang.Object get()
+meth public abstract void dispose(java.lang.Object)
+meth public static org.glassfish.jersey.internal.inject.ForeignDescriptor wrap(java.lang.Object)
+meth public static org.glassfish.jersey.internal.inject.ForeignDescriptor wrap(java.lang.Object,java.util.function.Consumer<java.lang.Object>)
+
+CLSS public org.glassfish.jersey.internal.inject.ForeignDescriptorImpl
+cons public init(java.lang.Object)
+cons public init(java.lang.Object,java.util.function.Consumer<java.lang.Object>)
+intf org.glassfish.jersey.internal.inject.ForeignDescriptor
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.Object get()
+meth public void dispose(java.lang.Object)
+supr java.lang.Object
+hfds NOOP_DISPOSE_INSTANCE,disposeInstance,foreignDescriptor
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.ForeignRequestScopeBridge
+meth public abstract java.util.Set<java.lang.Class<?>> getRequestScopedComponents()
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.Injectee
+meth public abstract boolean isFactory()
+meth public abstract boolean isOptional()
+meth public abstract boolean isProvider()
+meth public abstract int getPosition()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> getParentClassScope()
+meth public abstract java.lang.Class<?> getInjecteeClass()
+meth public abstract java.lang.reflect.AnnotatedElement getParent()
+meth public abstract java.lang.reflect.Type getRequiredType()
+meth public abstract java.util.Set<java.lang.annotation.Annotation> getRequiredQualifiers()
+meth public abstract org.glassfish.jersey.internal.inject.ForeignDescriptor getInjecteeDescriptor()
+
+CLSS public org.glassfish.jersey.internal.inject.InjecteeImpl
+cons public init()
+intf org.glassfish.jersey.internal.inject.Injectee
+meth public boolean equals(java.lang.Object)
+meth public boolean isFactory()
+meth public boolean isOptional()
+meth public boolean isProvider()
+meth public int getPosition()
+meth public int hashCode()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getParentClassScope()
+meth public java.lang.Class<?> getInjecteeClass()
+meth public java.lang.String toString()
+meth public java.lang.reflect.AnnotatedElement getParent()
+meth public java.lang.reflect.Type getRequiredType()
+meth public java.util.Set<java.lang.annotation.Annotation> getRequiredQualifiers()
+meth public org.glassfish.jersey.internal.inject.ForeignDescriptor getInjecteeDescriptor()
+meth public void setFactory(boolean)
+meth public void setInjecteeClass(java.lang.Class<?>)
+meth public void setInjecteeDescriptor(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public void setOptional(boolean)
+meth public void setParent(java.lang.reflect.AnnotatedElement)
+meth public void setParentClassScope(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public void setPosition(int)
+meth public void setProvider(boolean)
+meth public void setRequiredQualifiers(java.util.Set<java.lang.annotation.Annotation>)
+meth public void setRequiredType(java.lang.reflect.Type)
+supr java.lang.Object
+hfds injecteeClass,injecteeDescriptor,isFactory,isOptional,isProvider,parent,parentClassScope,position,qualifiers,requiredType
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.InjectionManager
+meth public abstract !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public abstract !varargs <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public abstract <%0 extends java.lang.Object> java.util.List<{%%0}> getAllInstances(java.lang.reflect.Type)
+meth public abstract <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.String)
+meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(java.lang.reflect.Type)
+meth public abstract boolean isRegistrable(java.lang.Class<?>)
+meth public abstract java.lang.Object getInstance(org.glassfish.jersey.internal.inject.ForeignDescriptor)
+meth public abstract org.glassfish.jersey.internal.inject.ForeignDescriptor createForeignDescriptor(org.glassfish.jersey.internal.inject.Binding)
+meth public abstract void completeRegistration()
+meth public abstract void inject(java.lang.Object)
+meth public abstract void inject(java.lang.Object,java.lang.String)
+meth public abstract void preDestroy(java.lang.Object)
+meth public abstract void register(java.lang.Iterable<org.glassfish.jersey.internal.inject.Binding>)
+meth public abstract void register(java.lang.Object)
+meth public abstract void register(org.glassfish.jersey.internal.inject.Binder)
+meth public abstract void register(org.glassfish.jersey.internal.inject.Binding)
+meth public abstract void shutdown()
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.InjectionManagerFactory
+meth public abstract org.glassfish.jersey.internal.inject.InjectionManager create(java.lang.Object)
+meth public org.glassfish.jersey.internal.inject.InjectionManager create()
+
 CLSS public abstract interface org.glassfish.jersey.internal.inject.InjectionManagerSupplier
 meth public abstract org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.InjectionResolver<%0 extends java.lang.annotation.Annotation>
+meth public abstract boolean isConstructorParameterIndicator()
+meth public abstract boolean isMethodParameterIndicator()
+meth public abstract java.lang.Class<{org.glassfish.jersey.internal.inject.InjectionResolver%0}> getAnnotation()
+meth public abstract java.lang.Object resolve(org.glassfish.jersey.internal.inject.Injectee)
+
+CLSS public org.glassfish.jersey.internal.inject.InjectionResolverBinding<%0 extends org.glassfish.jersey.internal.inject.InjectionResolver>
+meth public {org.glassfish.jersey.internal.inject.InjectionResolverBinding%0} getResolver()
+supr org.glassfish.jersey.internal.inject.Binding<{org.glassfish.jersey.internal.inject.InjectionResolverBinding%0},org.glassfish.jersey.internal.inject.InjectionResolverBinding<{org.glassfish.jersey.internal.inject.InjectionResolverBinding%0}>>
+hfds resolver
+
+CLSS public org.glassfish.jersey.internal.inject.Injections
+cons public init()
+meth public static <%0 extends java.lang.Object> {%%0} getOrCreate(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static org.glassfish.jersey.internal.inject.InjectionManager createInjectionManager()
+meth public static org.glassfish.jersey.internal.inject.InjectionManager createInjectionManager(java.lang.Object)
+meth public static org.glassfish.jersey.internal.inject.InjectionManager createInjectionManager(org.glassfish.jersey.internal.inject.Binder)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.inject.InstanceBinding<%0 extends java.lang.Object>
+meth public {org.glassfish.jersey.internal.inject.InstanceBinding%0} getService()
+supr org.glassfish.jersey.internal.inject.Binding<{org.glassfish.jersey.internal.inject.InstanceBinding%0},org.glassfish.jersey.internal.inject.InstanceBinding<{org.glassfish.jersey.internal.inject.InstanceBinding%0}>>
+hfds service
+
+CLSS public org.glassfish.jersey.internal.inject.ParamConverterConfigurator
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.inject.ParamConverterFactory
+ anno 0 javax.inject.Singleton()
+cons public init(java.util.Set<javax.ws.rs.ext.ParamConverterProvider>,java.util.Set<javax.ws.rs.ext.ParamConverterProvider>)
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+hfds converterProviders
+
+CLSS public org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+innr public static AggregatedProvider
+innr public static CharacterProvider
+innr public static DateProvider
+innr public static OptionalProvider
+innr public static StringConstructor
+innr public static TypeFromString
+innr public static TypeFromStringEnum
+innr public static TypeValueOf
+supr java.lang.Object
+hcls AbstractStringReader
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$AggregatedProvider
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+hfds providers
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$CharacterProvider
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$DateProvider
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$OptionalProvider
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init(org.glassfish.jersey.internal.inject.ParamConverters$AggregatedProvider)
+ anno 0 javax.inject.Inject()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+hfds aggregated
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$StringConstructor
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$TypeFromString
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$TypeFromStringEnum
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr org.glassfish.jersey.internal.inject.ParamConverters$TypeFromString
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$TypeValueOf
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+
+CLSS public abstract interface !annotation org.glassfish.jersey.internal.inject.PerLookup
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.glassfish.jersey.internal.inject.PerThread
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public final org.glassfish.jersey.internal.inject.PrimitiveMapper
+fld public final static java.util.Map<java.lang.Class,java.lang.Class> primitiveToClassMap
+fld public final static java.util.Map<java.lang.Class,java.lang.Object> primitiveToDefaultValueMap
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.inject.ProviderBinder
+cons public init(org.glassfish.jersey.internal.inject.InjectionManager)
+meth public !varargs void bindClasses(java.lang.Class<?>[])
+meth public static <%0 extends java.lang.Object> void bindProvider(java.lang.Class<{%%0}>,org.glassfish.jersey.model.ContractProvider,org.glassfish.jersey.internal.inject.InjectionManager)
+meth public static void bindProvider(java.lang.Object,org.glassfish.jersey.model.ContractProvider,org.glassfish.jersey.internal.inject.InjectionManager)
+meth public static void bindProviders(org.glassfish.jersey.model.internal.ComponentBag,javax.ws.rs.RuntimeType,java.util.Set<java.lang.Class<?>>,org.glassfish.jersey.internal.inject.InjectionManager)
+ anno 0 java.lang.Deprecated()
+meth public static void bindProviders(org.glassfish.jersey.model.internal.ComponentBag,javax.ws.rs.RuntimeType,java.util.Set<java.lang.Class<?>>,org.glassfish.jersey.internal.inject.InjectionManager,java.util.Collection<org.glassfish.jersey.spi.ComponentProvider>)
+meth public static void bindProviders(org.glassfish.jersey.model.internal.ComponentBag,org.glassfish.jersey.internal.inject.InjectionManager)
+meth public void bindClasses(java.lang.Iterable<java.lang.Class<?>>)
+meth public void bindClasses(java.util.Collection<java.lang.Class<?>>)
+meth public void bindClasses(java.util.Collection<java.lang.Class<?>>,boolean)
+meth public void bindInstances(java.lang.Iterable<java.lang.Object>)
+meth public void bindInstances(java.util.Collection<java.lang.Object>)
+supr java.lang.Object
+hfds injectionManager
+
+CLSS public final org.glassfish.jersey.internal.inject.Providers
+meth public !varargs static void ensureContract(java.lang.Class<?>,java.lang.Class<?>[])
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<org.glassfish.jersey.model.internal.RankedProvider<{%%0}>> getAllRankedProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> getAllProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> getAllProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>,java.util.Comparator<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> getAllProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>,org.glassfish.jersey.model.internal.RankedComparator<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> getAllRankedSortedProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> mergeAndSortRankedProviders(org.glassfish.jersey.model.internal.RankedComparator<{%%0}>,java.lang.Iterable<java.lang.Iterable<org.glassfish.jersey.model.internal.RankedProvider<{%%0}>>>)
+meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> sortRankedProviders(org.glassfish.jersey.model.internal.RankedComparator<{%%0}>,java.lang.Iterable<org.glassfish.jersey.model.internal.RankedProvider<{%%0}>>)
+meth public static <%0 extends java.lang.Object> java.util.Collection<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> getCustomProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> getProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.lang.Class<{%%0}>)
+meth public static boolean checkProviderRuntime(java.lang.Class<?>,org.glassfish.jersey.model.ContractProvider,javax.ws.rs.RuntimeType,boolean,boolean)
+meth public static boolean isJaxRsProvider(java.lang.Class<?>)
+meth public static boolean isProvider(java.lang.Class<?>)
+meth public static boolean isSupportedContract(java.lang.Class<?>)
+meth public static java.util.Set<java.lang.Class<?>> getProviderContracts(java.lang.Class<?>)
+supr java.lang.Object
+hfds EXTERNAL_PROVIDER_INTERFACE_WHITELIST,JAX_RS_PROVIDER_INTERFACE_WHITELIST,LOGGER
+hcls ProviderRuntime
+
+CLSS public abstract org.glassfish.jersey.internal.inject.ReferencingFactory<%0 extends java.lang.Object>
+cons public init(javax.inject.Provider<org.glassfish.jersey.internal.util.collection.Ref<{org.glassfish.jersey.internal.inject.ReferencingFactory%0}>>)
+intf java.util.function.Supplier<{org.glassfish.jersey.internal.inject.ReferencingFactory%0}>
+meth public static <%0 extends java.lang.Object> java.util.function.Supplier<org.glassfish.jersey.internal.util.collection.Ref<{%%0}>> referenceFactory()
+meth public static <%0 extends java.lang.Object> java.util.function.Supplier<org.glassfish.jersey.internal.util.collection.Ref<{%%0}>> referenceFactory({%%0})
+meth public {org.glassfish.jersey.internal.inject.ReferencingFactory%0} get()
+supr java.lang.Object
+hfds referenceFactory
+hcls EmptyReferenceFactory,InitializedReferenceFactory
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.ServiceHolder<%0 extends java.lang.Object>
+meth public abstract int getRank()
+meth public abstract java.lang.Class<{org.glassfish.jersey.internal.inject.ServiceHolder%0}> getImplementationClass()
+meth public abstract java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public abstract {org.glassfish.jersey.internal.inject.ServiceHolder%0} getInstance()
+
+CLSS public org.glassfish.jersey.internal.inject.ServiceHolderImpl<%0 extends java.lang.Object>
+cons public init({org.glassfish.jersey.internal.inject.ServiceHolderImpl%0},java.lang.Class<{org.glassfish.jersey.internal.inject.ServiceHolderImpl%0}>,java.util.Set<java.lang.reflect.Type>,int)
+cons public init({org.glassfish.jersey.internal.inject.ServiceHolderImpl%0},java.util.Set<java.lang.reflect.Type>)
+intf org.glassfish.jersey.internal.inject.ServiceHolder<{org.glassfish.jersey.internal.inject.ServiceHolderImpl%0}>
+meth public boolean equals(java.lang.Object)
+meth public int getRank()
+meth public int hashCode()
+meth public java.lang.Class<{org.glassfish.jersey.internal.inject.ServiceHolderImpl%0}> getImplementationClass()
+meth public java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public {org.glassfish.jersey.internal.inject.ServiceHolderImpl%0} getInstance()
+supr java.lang.Object
+hfds contractTypes,implementationClass,rank,service
+
+CLSS public org.glassfish.jersey.internal.inject.SupplierClassBinding<%0 extends java.lang.Object>
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getSupplierScope()
+meth public java.lang.Class<? extends java.util.function.Supplier<{org.glassfish.jersey.internal.inject.SupplierClassBinding%0}>> getSupplierClass()
+supr org.glassfish.jersey.internal.inject.Binding<java.util.function.Supplier<{org.glassfish.jersey.internal.inject.SupplierClassBinding%0}>,org.glassfish.jersey.internal.inject.SupplierClassBinding<{org.glassfish.jersey.internal.inject.SupplierClassBinding%0}>>
+hfds supplierClass,supplierScope
+
+CLSS public org.glassfish.jersey.internal.inject.SupplierInstanceBinding<%0 extends java.lang.Object>
+meth public java.util.function.Supplier<{org.glassfish.jersey.internal.inject.SupplierInstanceBinding%0}> getSupplier()
+supr org.glassfish.jersey.internal.inject.Binding<java.util.function.Supplier<{org.glassfish.jersey.internal.inject.SupplierInstanceBinding%0}>,org.glassfish.jersey.internal.inject.SupplierInstanceBinding<{org.glassfish.jersey.internal.inject.SupplierInstanceBinding%0}>>
+hfds supplier
+
+CLSS public org.glassfish.jersey.internal.inject.UpdaterException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.ws.rs.ProcessingException
+hfds serialVersionUID
+
+CLSS public final org.glassfish.jersey.internal.jsr166.Flow
+innr public abstract interface static Processor
+innr public abstract interface static Publisher
+innr public abstract interface static Subscriber
+innr public abstract interface static Subscription
+meth public static int defaultBufferSize()
+supr java.lang.Object
+hfds DEFAULT_BUFFER_SIZE
+
+CLSS public abstract interface static org.glassfish.jersey.internal.jsr166.Flow$Processor<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ outer org.glassfish.jersey.internal.jsr166.Flow
+intf org.glassfish.jersey.internal.jsr166.Flow$Publisher<{org.glassfish.jersey.internal.jsr166.Flow$Processor%1}>
+intf org.glassfish.jersey.internal.jsr166.Flow$Subscriber<{org.glassfish.jersey.internal.jsr166.Flow$Processor%0}>
+
+CLSS public abstract interface static org.glassfish.jersey.internal.jsr166.Flow$Publisher<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.internal.jsr166.Flow
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void subscribe(org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.Flow$Publisher%0}>)
+
+CLSS public abstract interface static org.glassfish.jersey.internal.jsr166.Flow$Subscriber<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.internal.jsr166.Flow
+meth public abstract void onComplete()
+meth public abstract void onError(java.lang.Throwable)
+meth public abstract void onNext({org.glassfish.jersey.internal.jsr166.Flow$Subscriber%0})
+meth public abstract void onSubscribe(org.glassfish.jersey.internal.jsr166.Flow$Subscription)
+
+CLSS public abstract interface static org.glassfish.jersey.internal.jsr166.Flow$Subscription
+ outer org.glassfish.jersey.internal.jsr166.Flow
+meth public abstract void cancel()
+meth public abstract void request(long)
+
+CLSS public abstract interface org.glassfish.jersey.internal.jsr166.JerseyFlowSubscriber<%0 extends java.lang.Object>
+intf org.glassfish.jersey.internal.jsr166.Flow$Subscriber<{org.glassfish.jersey.internal.jsr166.JerseyFlowSubscriber%0}>
+
+CLSS public org.glassfish.jersey.internal.jsr166.SubmissionPublisher<%0 extends java.lang.Object>
+cons public init()
+cons public init(java.util.concurrent.Executor,int)
+cons public init(java.util.concurrent.Executor,int,java.util.function.BiConsumer<? super org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>,? super java.lang.Throwable>)
+intf java.lang.AutoCloseable
+intf org.glassfish.jersey.internal.jsr166.Flow$Publisher<{org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>
+intf org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher<{org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>
+meth public boolean hasSubscribers()
+meth public boolean isClosed()
+meth public boolean isSubscribed(org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>)
+meth public int estimateMaximumLag()
+meth public int getMaxBufferCapacity()
+meth public int getNumberOfSubscribers()
+meth public int offer({org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0},java.util.function.BiPredicate<org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>,? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>)
+meth public int offer({org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0},long,java.util.concurrent.TimeUnit,java.util.function.BiPredicate<org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>,? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>)
+meth public int submit({org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0})
+meth public java.lang.Throwable getClosedException()
+meth public java.util.List<org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>> getSubscribers()
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> consume(java.util.function.Consumer<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>)
+meth public java.util.concurrent.Executor getExecutor()
+meth public long estimateMinimumDemand()
+meth public void close()
+meth public void closeExceptionally(java.lang.Throwable)
+meth public void subscribe(org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmissionPublisher%0}>)
+supr java.lang.Object
+hfds ASYNC_POOL,BUFFER_CAPACITY_LIMIT,clients,closed,closedException,executor,maxBufferCapacity,onNextHandler
+hcls BufferedSubscription,ConsumerSubscriber,ConsumerTask,ThreadPerTaskExecutor
+
+CLSS public org.glassfish.jersey.internal.jsr166.SubmissionPublisherFactory
+cons public init()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher<{%%0}> createSubmissionPublisher()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher<{%%0}> createSubmissionPublisher(java.util.concurrent.Executor,int)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher<{%%0}> createSubmissionPublisher(java.util.concurrent.Executor,int,java.util.function.BiConsumer<? super org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {%%0}>,? super java.lang.Throwable>)
+supr java.lang.Object
+
+CLSS public abstract interface org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher<%0 extends java.lang.Object>
+intf java.lang.AutoCloseable
+intf org.glassfish.jersey.internal.jsr166.Flow$Publisher<{org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>
+meth public abstract int estimateMaximumLag()
+meth public abstract int getMaxBufferCapacity()
+meth public abstract int offer({org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0},java.util.function.BiPredicate<org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>,? super {org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>)
+meth public abstract int offer({org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0},long,java.util.concurrent.TimeUnit,java.util.function.BiPredicate<org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>,? super {org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>)
+meth public abstract int submit({org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0})
+meth public abstract java.lang.Throwable getClosedException()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> consume(java.util.function.Consumer<? super {org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>)
+meth public abstract long estimateMinimumDemand()
+meth public abstract void close()
+meth public abstract void closeExceptionally(java.lang.Throwable)
+meth public abstract void subscribe(org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.jsr166.SubmittableFlowPublisher%0}>)
+
+CLSS abstract interface org.glassfish.jersey.internal.jsr166.package-info
+
+CLSS public abstract interface org.glassfish.jersey.internal.l10n.Localizable
+fld public final static java.lang.String NOT_LOCALIZABLE = "\u0000"
+meth public abstract java.lang.Object[] getArguments()
+meth public abstract java.lang.String getKey()
+meth public abstract java.lang.String getResourceBundleName()
+meth public abstract java.util.ResourceBundle getResourceBundle(java.util.Locale)
+
+CLSS public final org.glassfish.jersey.internal.l10n.LocalizableMessage
+cons public !varargs init(java.lang.String,java.lang.String,java.lang.Object[])
+ anno 0 java.lang.Deprecated()
+cons public !varargs init(java.lang.String,org.glassfish.jersey.internal.l10n.LocalizableMessageFactory$ResourceBundleSupplier,java.lang.String,java.lang.Object[])
+intf org.glassfish.jersey.internal.l10n.Localizable
+meth public java.lang.Object[] getArguments()
+meth public java.lang.String getKey()
+meth public java.lang.String getResourceBundleName()
+meth public java.util.ResourceBundle getResourceBundle(java.util.Locale)
+supr java.lang.Object
+hfds _args,_bundlename,_key,_rbSupplier
+
+CLSS public org.glassfish.jersey.internal.l10n.LocalizableMessageFactory
+cons public init(java.lang.String)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.String,org.glassfish.jersey.internal.l10n.LocalizableMessageFactory$ResourceBundleSupplier)
+innr public abstract interface static ResourceBundleSupplier
+meth public !varargs org.glassfish.jersey.internal.l10n.Localizable getMessage(java.lang.String,java.lang.Object[])
+supr java.lang.Object
+hfds _bundlename,_rbSupplier
+
+CLSS public abstract interface static org.glassfish.jersey.internal.l10n.LocalizableMessageFactory$ResourceBundleSupplier
+ outer org.glassfish.jersey.internal.l10n.LocalizableMessageFactory
+meth public abstract java.util.ResourceBundle getResourceBundle(java.util.Locale)
+
+CLSS public org.glassfish.jersey.internal.l10n.Localizer
+cons public init()
+cons public init(java.util.Locale)
+meth public java.lang.String localize(org.glassfish.jersey.internal.l10n.Localizable)
+meth public java.util.Locale getLocale()
+supr java.lang.Object
+hfds _locale,_resourceBundles
+
+CLSS public final org.glassfish.jersey.internal.routing.CombinedMediaType
+fld public final static java.util.Comparator<org.glassfish.jersey.internal.routing.CombinedMediaType> COMPARATOR
+fld public final static org.glassfish.jersey.internal.routing.CombinedMediaType NO_MATCH
+innr public static EffectiveMediaType
+meth public java.lang.String toString()
+meth public javax.ws.rs.core.MediaType getCombinedType()
+meth public static org.glassfish.jersey.internal.routing.CombinedMediaType create(javax.ws.rs.core.MediaType,org.glassfish.jersey.internal.routing.CombinedMediaType$EffectiveMediaType)
+supr java.lang.Object
+hfds combinedType,d,q,qs
+
+CLSS public static org.glassfish.jersey.internal.routing.CombinedMediaType$EffectiveMediaType
+ outer org.glassfish.jersey.internal.routing.CombinedMediaType
+cons public init(java.lang.String)
+cons public init(javax.ws.rs.core.MediaType)
+cons public init(javax.ws.rs.core.MediaType,boolean)
+meth public boolean equals(java.lang.Object)
+meth public boolean isDerived()
+meth public boolean isWildcardSubType()
+meth public boolean isWildcardType()
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public javax.ws.rs.core.MediaType getMediaType()
+supr java.lang.Object
+hfds derived,mediaType
+
+CLSS public org.glassfish.jersey.internal.routing.ContentTypeDeterminer
+cons protected init(org.glassfish.jersey.message.MessageBodyWorkers)
+fld protected org.glassfish.jersey.message.MessageBodyWorkers workers
+meth protected javax.ws.rs.core.MediaType determineResponseMediaType(java.lang.Class<?>,java.lang.reflect.Type,org.glassfish.jersey.internal.routing.RequestSpecificConsumesProducesAcceptor<?>,java.util.List<org.glassfish.jersey.message.internal.AcceptableMediaType>,java.util.List<javax.ws.rs.core.MediaType>,java.lang.annotation.Annotation[])
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.internal.routing.RequestSpecificConsumesProducesAcceptor<%0 extends java.lang.Object>
+cons public init(org.glassfish.jersey.internal.routing.CombinedMediaType,org.glassfish.jersey.internal.routing.CombinedMediaType,boolean,{org.glassfish.jersey.internal.routing.RequestSpecificConsumesProducesAcceptor%0})
+intf java.lang.Comparable
+meth public boolean producesFromProviders()
+meth public int compareTo(java.lang.Object)
+meth public java.lang.String toString()
+meth public org.glassfish.jersey.internal.routing.CombinedMediaType getConsumes()
+meth public org.glassfish.jersey.internal.routing.CombinedMediaType getProduces()
+meth public {org.glassfish.jersey.internal.routing.RequestSpecificConsumesProducesAcceptor%0} getMethodRouting()
+supr java.lang.Object
+hfds consumes,methodRouting,produces,producesFromProviders
+
+CLSS public org.glassfish.jersey.internal.sonar.SonarJerseyCommon
+cons public init()
+meth public java.lang.String common()
+meth public java.lang.String e2e()
+meth public java.lang.String integrationServerJvm()
+meth public java.lang.String integrationTestJvm()
+meth public java.lang.String unitTest()
+supr java.lang.Object
+
+CLSS public abstract interface org.glassfish.jersey.internal.spi.AutoDiscoverable
+fld public final static int DEFAULT_PRIORITY = 2000
+meth public abstract void configure(javax.ws.rs.core.FeatureContext)
+
+CLSS public abstract interface org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable
+intf org.glassfish.jersey.internal.spi.AutoDiscoverable
+
+CLSS public org.glassfish.jersey.internal.util.Closing
+cons public init(java.io.InputStream)
+meth public static org.glassfish.jersey.internal.util.Closing with(java.io.InputStream)
+meth public void invoke(org.glassfish.jersey.internal.util.Closure<java.io.InputStream>) throws java.io.IOException
+supr java.lang.Object
+hfds in
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.Closure<%0 extends java.lang.Object>
+meth public abstract void invoke({org.glassfish.jersey.internal.util.Closure%0})
+
+CLSS public final org.glassfish.jersey.internal.util.ExceptionUtils
+meth public static <%0 extends java.lang.Exception> void conditionallyReThrow({%%0},boolean,java.util.logging.Logger,java.lang.String,java.util.logging.Level) throws {%%0}
+meth public static java.lang.String exceptionStackTraceAsString(java.lang.Throwable)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.internal.util.ExtendedLogger
+cons public init(java.util.logging.Logger,java.util.logging.Level)
+meth public !varargs void debugLog(java.lang.String,java.lang.Object[])
+meth public boolean equals(java.lang.Object)
+meth public boolean getUseParentHandlers()
+meth public boolean isDebugLoggable()
+meth public boolean isLoggable(java.util.logging.Level)
+meth public int hashCode()
+meth public java.lang.String getName()
+meth public java.lang.String getResourceBundleName()
+meth public java.lang.String toString()
+meth public java.util.ResourceBundle getResourceBundle()
+meth public java.util.logging.Filter getFilter()
+meth public java.util.logging.Handler[] getHandlers()
+meth public java.util.logging.Level getDebugLevel()
+meth public java.util.logging.Level getLevel()
+meth public java.util.logging.Logger getParent()
+meth public void addHandler(java.util.logging.Handler)
+meth public void config(java.lang.String)
+meth public void debugLog(java.lang.String)
+meth public void entering(java.lang.String,java.lang.String)
+meth public void entering(java.lang.String,java.lang.String,java.lang.Object)
+meth public void entering(java.lang.String,java.lang.String,java.lang.Object[])
+meth public void exiting(java.lang.String,java.lang.String)
+meth public void exiting(java.lang.String,java.lang.String,java.lang.Object)
+meth public void fine(java.lang.String)
+meth public void finer(java.lang.String)
+meth public void finest(java.lang.String)
+meth public void info(java.lang.String)
+meth public void log(java.util.logging.Level,java.lang.String)
+meth public void log(java.util.logging.Level,java.lang.String,java.lang.Object)
+meth public void log(java.util.logging.Level,java.lang.String,java.lang.Object[])
+meth public void log(java.util.logging.Level,java.lang.String,java.lang.Throwable)
+meth public void log(java.util.logging.LogRecord)
+meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String)
+meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.Object)
+meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.Object[])
+meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.Throwable)
+meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Object)
+meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Object[])
+meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Throwable)
+meth public void removeHandler(java.util.logging.Handler)
+meth public void setFilter(java.util.logging.Filter)
+meth public void setLevel(java.util.logging.Level)
+meth public void setParent(java.util.logging.Logger)
+meth public void setUseParentHandlers(boolean)
+meth public void severe(java.lang.String)
+meth public void throwing(java.lang.String,java.lang.String,java.lang.Throwable)
+meth public void warning(java.lang.String)
+supr java.lang.Object
+hfds debugLevel,logger
+
+CLSS public org.glassfish.jersey.internal.util.JdkVersion
+intf java.lang.Comparable<org.glassfish.jersey.internal.util.JdkVersion>
+meth public boolean isUnsafeSupported()
+meth public int compareTo(java.lang.String)
+meth public int compareTo(org.glassfish.jersey.internal.util.JdkVersion)
+meth public int getMaintenance()
+meth public int getMajor()
+meth public int getMinor()
+meth public int getUpdate()
+meth public java.lang.String toString()
+meth public static org.glassfish.jersey.internal.util.JdkVersion getJdkVersion()
+meth public static org.glassfish.jersey.internal.util.JdkVersion parseVersion(java.lang.String)
+supr java.lang.Object
+hfds IS_UNSAFE_SUPPORTED,JDK_VERSION,UNKNOWN_VERSION,maintenance,major,minor,update
+
+CLSS public org.glassfish.jersey.internal.util.JerseyPublisher<%0 extends java.lang.Object>
+cons public init()
+cons public init(int)
+cons public init(java.util.concurrent.Executor)
+cons public init(java.util.concurrent.Executor,int,org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy)
+cons public init(java.util.concurrent.Executor,org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy)
+cons public init(org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy)
+innr public final static !enum PublisherStrategy
+innr public static SubscriberWrapper
+intf org.glassfish.jersey.internal.jsr166.Flow$Publisher<{org.glassfish.jersey.internal.util.JerseyPublisher%0}>
+meth public int estimateMaximumLag()
+meth public int getMaxBufferCapacity()
+meth public int publish({org.glassfish.jersey.internal.util.JerseyPublisher%0})
+meth public java.lang.Throwable getClosedException()
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> consume(java.util.function.Consumer<? super {org.glassfish.jersey.internal.util.JerseyPublisher%0}>)
+meth public long estimateMinimumDemand()
+meth public void close()
+meth public void closeExceptionally(java.lang.Throwable)
+meth public void subscribe(org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.util.JerseyPublisher%0}>)
+supr java.lang.Object
+hfds DEFAULT_BUFFER_CAPACITY,strategy,submissionPublisher
+
+CLSS public final static !enum org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy
+ outer org.glassfish.jersey.internal.util.JerseyPublisher
+fld public final static org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy BEST_EFFORT
+fld public final static org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy BLOCKING
+meth public static org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy valueOf(java.lang.String)
+meth public static org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy[] values()
+supr java.lang.Enum<org.glassfish.jersey.internal.util.JerseyPublisher$PublisherStrategy>
+
+CLSS public static org.glassfish.jersey.internal.util.JerseyPublisher$SubscriberWrapper<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.internal.util.JerseyPublisher
+cons public init(org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.util.JerseyPublisher$SubscriberWrapper%0}>)
+intf org.glassfish.jersey.internal.jsr166.Flow$Subscriber<{org.glassfish.jersey.internal.util.JerseyPublisher$SubscriberWrapper%0}>
+meth public org.glassfish.jersey.internal.jsr166.Flow$Subscriber<? super {org.glassfish.jersey.internal.util.JerseyPublisher$SubscriberWrapper%0}> getWrappedSubscriber()
+meth public org.glassfish.jersey.internal.jsr166.Flow$Subscription getSubscription()
+meth public void onComplete()
+meth public void onError(java.lang.Throwable)
+meth public void onNext({org.glassfish.jersey.internal.util.JerseyPublisher$SubscriberWrapper%0})
+meth public void onSubscribe(org.glassfish.jersey.internal.jsr166.Flow$Subscription)
+supr java.lang.Object
+hfds subscriber,subscription
+
+CLSS public org.glassfish.jersey.internal.util.LazyUid
+cons public init()
+intf java.io.Serializable
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public java.lang.String value()
+supr java.lang.Object
+hfds serialVersionUID,uid
+
+CLSS public org.glassfish.jersey.internal.util.Pretty
+meth public static java.lang.String array(java.lang.Object[])
+meth public static java.lang.String clazz(java.lang.Class<?>)
+meth public static java.lang.String collection(java.util.Collection<?>)
+meth public static java.lang.String constructor(java.lang.reflect.Constructor<?>)
+meth public static java.lang.String field(java.lang.reflect.Field)
+meth public static java.lang.String method(java.lang.reflect.Method)
+meth public static java.lang.String pType(java.lang.reflect.ParameterizedType)
+meth public static java.lang.String type(java.lang.reflect.Type)
+supr java.lang.Object
+hfds CONSTRUCTOR_NAME,DOT,NULL_STRING
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.Producer<%0 extends java.lang.Object>
+intf java.util.concurrent.Callable<{org.glassfish.jersey.internal.util.Producer%0}>
+meth public abstract {org.glassfish.jersey.internal.util.Producer%0} call()
 
 CLSS public abstract interface !annotation org.glassfish.jersey.internal.util.PropertiesClass
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
+
+CLSS public final org.glassfish.jersey.internal.util.PropertiesHelper
+meth public static <%0 extends java.lang.Object> {%%0} convertValue(java.lang.Object,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,java.lang.String>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,{%%0},java.lang.Class<{%%0}>,java.util.Map<java.lang.String,java.lang.String>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,{%%0},java.util.Map<java.lang.String,java.lang.String>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,java.lang.String>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,{%%0},java.lang.Class<{%%0}>,java.util.Map<java.lang.String,java.lang.String>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,{%%0},java.util.Map<java.lang.String,java.lang.String>)
+meth public static boolean isMetaInfServicesEnabled(java.util.Map<java.lang.String,java.lang.Object>,javax.ws.rs.RuntimeType)
+meth public static boolean isProperty(java.lang.Object)
+meth public static boolean isProperty(java.util.Map<java.lang.String,java.lang.Object>,java.lang.String)
+meth public static java.lang.String getPropertyNameForRuntime(java.lang.String,javax.ws.rs.RuntimeType)
+meth public static java.security.PrivilegedAction<java.lang.String> getSystemProperty(java.lang.String)
+meth public static java.security.PrivilegedAction<java.lang.String> getSystemProperty(java.lang.String,java.lang.String)
+meth public static java.security.PrivilegedAction<java.util.Properties> getSystemProperties()
+supr java.lang.Object
+hfds LOGGER,METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT
+
+CLSS public abstract interface !annotation org.glassfish.jersey.internal.util.Property
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.glassfish.jersey.internal.util.PropertyAlias
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD])
+intf java.lang.annotation.Annotation
+
+CLSS public final org.glassfish.jersey.internal.util.ReflectionHelper
+innr public static DeclaringClassInterfacePair
+meth public !varargs static java.security.PrivilegedAction<java.lang.reflect.Constructor<?>> getDeclaredConstructorPA(java.lang.Class<?>,java.lang.Class<?>[])
+meth public static <%0 extends java.lang.Object> java.lang.Class<{%%0}> erasure(java.lang.reflect.Type)
+meth public static <%0 extends java.lang.Object> java.security.PrivilegedAction<java.lang.Class<{%%0}>> classForNamePA(java.lang.String)
+meth public static <%0 extends java.lang.Object> java.security.PrivilegedAction<java.lang.Class<{%%0}>> classForNamePA(java.lang.String,java.lang.ClassLoader)
+meth public static <%0 extends java.lang.Object> java.security.PrivilegedExceptionAction<java.lang.Class<{%%0}>> classForNameWithExceptionPEA(java.lang.String) throws java.lang.ClassNotFoundException
+meth public static <%0 extends java.lang.Object> java.security.PrivilegedExceptionAction<java.lang.Class<{%%0}>> classForNameWithExceptionPEA(java.lang.String,java.lang.ClassLoader) throws java.lang.ClassNotFoundException
+meth public static boolean isArray(java.lang.reflect.Type)
+meth public static boolean isArrayOfType(java.lang.reflect.Type,java.lang.Class<?>)
+meth public static boolean isGetter(java.lang.reflect.Method)
+meth public static boolean isJaxbAvailable()
+meth public static boolean isPrimitive(java.lang.reflect.Type)
+meth public static boolean isSetter(java.lang.reflect.Method)
+meth public static boolean isSubClassOf(java.lang.reflect.Type,java.lang.reflect.Type)
+meth public static boolean isXmlTransformAvailable()
+meth public static java.io.InputStream getResourceAsStream(java.lang.ClassLoader,java.lang.Class<?>,java.lang.String)
+meth public static java.lang.Class<?> getArrayForComponentType(java.lang.Class<?>)
+meth public static java.lang.Class<?> getDeclaringClass(java.lang.reflect.AccessibleObject)
+meth public static java.lang.Class<?> getRawClass(java.lang.reflect.Type)
+meth public static java.lang.Class<?> theMostSpecificTypeOf(java.util.Set<java.lang.reflect.Type>)
+meth public static java.lang.Class[] getParameterizedClassArguments(org.glassfish.jersey.internal.util.ReflectionHelper$DeclaringClassInterfacePair)
+meth public static java.lang.String getPropertyName(java.lang.reflect.Method)
+meth public static java.lang.String methodInstanceToString(java.lang.Object,java.lang.reflect.Method)
+meth public static java.lang.String objectToString(java.lang.Object)
+meth public static java.lang.reflect.Method findOverridingMethodOnClass(java.lang.Class<?>,java.lang.reflect.Method)
+meth public static java.lang.reflect.Type getArrayComponentType(java.lang.reflect.Type)
+meth public static java.lang.reflect.Type getTypeArgument(java.lang.reflect.Type,int)
+meth public static java.lang.reflect.Type[] getParameterizedTypeArguments(org.glassfish.jersey.internal.util.ReflectionHelper$DeclaringClassInterfacePair)
+meth public static java.lang.reflect.Type[] getTypeArguments(java.lang.reflect.Type)
+meth public static java.security.PrivilegedAction setAccessibleMethodPA(java.lang.reflect.Method)
+meth public static java.security.PrivilegedAction setContextClassLoaderPA(java.lang.ClassLoader)
+meth public static java.security.PrivilegedAction<java.lang.ClassLoader> getClassLoaderPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.ClassLoader> getContextClassLoaderPA()
+meth public static java.security.PrivilegedAction<java.lang.reflect.Constructor<?>[]> getDeclaredConstructorsPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Constructor> getStringConstructorPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Field[]> getAllFieldsPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Field[]> getDeclaredFieldsPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Method> findMethodOnClassPA(java.lang.Class<?>,java.lang.reflect.Method)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Method> getFromStringStringMethodPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Method> getValueOfStringMethodPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.lang.reflect.Method[]> getMethodsPA(java.lang.Class<?>)
+meth public static java.security.PrivilegedAction<java.util.Collection<? extends java.lang.reflect.Method>> getDeclaredMethodsPA(java.lang.Class<?>)
+meth public static java.util.Collection<java.lang.Class<? extends java.lang.annotation.Annotation>> getAnnotationTypes(java.lang.reflect.AnnotatedElement,java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static java.util.List<java.lang.Class<?>> getGenericTypeArgumentClasses(java.lang.reflect.Type)
+meth public static java.util.List<org.glassfish.jersey.internal.util.collection.ClassTypePair> getTypeArgumentAndClass(java.lang.reflect.Type)
+meth public static javax.ws.rs.core.GenericType genericTypeFor(java.lang.Object)
+meth public static org.glassfish.jersey.internal.OsgiRegistry getOsgiRegistryInstance()
+meth public static org.glassfish.jersey.internal.util.ReflectionHelper$DeclaringClassInterfacePair getClass(java.lang.Class<?>,java.lang.Class<?>)
+meth public static org.glassfish.jersey.internal.util.collection.ClassTypePair resolveGenericType(java.lang.Class,java.lang.Class,java.lang.Class,java.lang.reflect.Type)
+meth public static org.glassfish.jersey.internal.util.collection.ClassTypePair resolveTypeVariable(java.lang.Class<?>,java.lang.Class<?>,java.lang.reflect.TypeVariable)
+supr java.lang.Object
+hfds LOGGER,NoOpPrivilegedACTION,bundleReferenceClass,eraser
+
+CLSS public static org.glassfish.jersey.internal.util.ReflectionHelper$DeclaringClassInterfacePair
+ outer org.glassfish.jersey.internal.util.ReflectionHelper
+fld public final java.lang.Class<?> concreteClass
+fld public final java.lang.Class<?> declaringClass
+fld public final java.lang.reflect.Type genericInterface
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.internal.util.SaxHelper
+meth public static boolean isXdkDocumentBuilderFactory(javax.xml.parsers.DocumentBuilderFactory)
+meth public static boolean isXdkParserFactory(javax.xml.parsers.SAXParserFactory)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.util.SimpleNamespaceResolver
+cons public init(java.lang.String,java.lang.String)
+intf javax.xml.namespace.NamespaceContext
+meth public java.lang.String getNamespaceURI(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String)
+meth public java.util.Iterator getPrefixes(java.lang.String)
+supr java.lang.Object
+hfds nsURI,prefix
+
+CLSS public final org.glassfish.jersey.internal.util.Tokenizer
+fld public final static java.lang.String COMMON_DELIMITERS = " ,;\n"
+meth public static java.lang.String[] tokenize(java.lang.String)
+meth public static java.lang.String[] tokenize(java.lang.String,java.lang.String)
+meth public static java.lang.String[] tokenize(java.lang.String[])
+meth public static java.lang.String[] tokenize(java.lang.String[],java.lang.String)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.internal.util.collection.ByteBufferInputStream
+cons public init()
+meth public boolean put(java.nio.ByteBuffer) throws java.lang.InterruptedException
+meth public int available() throws java.io.IOException
+meth public int read() throws java.io.IOException
+meth public int read(byte[],int,int) throws java.io.IOException
+meth public int tryRead() throws java.io.IOException
+meth public int tryRead(byte[]) throws java.io.IOException
+meth public int tryRead(byte[],int,int) throws java.io.IOException
+meth public void close() throws java.io.IOException
+meth public void closeQueue()
+meth public void closeQueue(java.lang.Throwable)
+supr org.glassfish.jersey.internal.util.collection.NonBlockingInputStream
+hfds EOF,buffers,closed,current,eof,queueStatus
+
+CLSS public org.glassfish.jersey.internal.util.collection.Cache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(java.util.function.Function<{org.glassfish.jersey.internal.util.collection.Cache%0},{org.glassfish.jersey.internal.util.collection.Cache%1}>)
+cons public init(java.util.function.Function<{org.glassfish.jersey.internal.util.collection.Cache%0},{org.glassfish.jersey.internal.util.collection.Cache%1}>,org.glassfish.jersey.internal.util.collection.Cache$CycleHandler<{org.glassfish.jersey.internal.util.collection.Cache%0}>)
+innr public abstract interface static CycleHandler
+intf java.util.function.Function<{org.glassfish.jersey.internal.util.collection.Cache%0},{org.glassfish.jersey.internal.util.collection.Cache%1}>
+meth public boolean containsKey({org.glassfish.jersey.internal.util.collection.Cache%0})
+meth public int size()
+meth public void clear()
+meth public void remove({org.glassfish.jersey.internal.util.collection.Cache%0})
+meth public {org.glassfish.jersey.internal.util.collection.Cache%1} apply({org.glassfish.jersey.internal.util.collection.Cache%0})
+supr java.lang.Object
+hfds EMPTY_HANDLER,cache,computable,cycleHandler
+hcls OriginThreadAwareFuture
+
+CLSS public abstract interface static org.glassfish.jersey.internal.util.collection.Cache$CycleHandler<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.internal.util.collection.Cache
+meth public abstract void handleCycle({org.glassfish.jersey.internal.util.collection.Cache$CycleHandler%0})
+
+CLSS public final org.glassfish.jersey.internal.util.collection.ClassTypePair
+meth public java.lang.Class<?> rawClass()
+meth public java.lang.reflect.Type type()
+meth public static org.glassfish.jersey.internal.util.collection.ClassTypePair of(java.lang.Class<?>)
+meth public static org.glassfish.jersey.internal.util.collection.ClassTypePair of(java.lang.Class<?>,java.lang.reflect.Type)
+supr java.lang.Object
+hfds rawClass,type
+
+CLSS public final org.glassfish.jersey.internal.util.collection.DataStructures
+cons public init()
+fld public final static int DEFAULT_CONCURENCY_LEVEL
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.concurrent.ConcurrentMap<{%%0},{%%1}> createConcurrentMap()
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.concurrent.ConcurrentMap<{%%0},{%%1}> createConcurrentMap(int)
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.concurrent.ConcurrentMap<{%%0},{%%1}> createConcurrentMap(int,float,int)
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.concurrent.ConcurrentMap<{%%0},{%%1}> createConcurrentMap(java.util.Map<? extends {%%0},? extends {%%1}>)
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Object> java.util.concurrent.BlockingQueue<{%%0}> createLinkedTransferQueue()
+ anno 0 java.lang.Deprecated()
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.util.collection.ImmutableCollectors
+cons public init()
+meth public static <%0 extends java.lang.Object> java.util.stream.Collector<{%%0},java.util.List<{%%0}>,java.util.List<{%%0}>> toImmutableList()
+meth public static <%0 extends java.lang.Object> java.util.stream.Collector<{%%0},java.util.Set<{%%0}>,java.util.Set<{%%0}>> toImmutableLinkedSet()
+meth public static <%0 extends java.lang.Object> java.util.stream.Collector<{%%0},java.util.Set<{%%0}>,java.util.Set<{%%0}>> toImmutableSet()
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(javax.ws.rs.core.MultivaluedMap<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>)
+intf javax.ws.rs.core.MultivaluedMap<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>
+meth public !varargs void addAll({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}[])
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public boolean equalsIgnoreValueOrder(javax.ws.rs.core.MultivaluedMap<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>)
+meth public boolean isEmpty()
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Collection<java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>> values()
+meth public java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}> get(java.lang.Object)
+meth public java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}> put({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>)
+meth public java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}> remove(java.lang.Object)
+meth public java.util.Set<java.util.Map$Entry<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>>> entrySet()
+meth public java.util.Set<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0}> keySet()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap<{%%0},{%%1}> empty()
+meth public void add({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1})
+meth public void addAll({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>)
+meth public void addFirst({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1})
+meth public void clear()
+meth public void putAll(java.util.Map<? extends {org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},? extends java.util.List<{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1}>>)
+meth public void putSingle({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0},{org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1})
+meth public {org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%1} getFirst({org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap%0})
+supr java.lang.Object
+hfds delegate
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.KeyComparator<%0 extends java.lang.Object>
+intf java.io.Serializable
+meth public abstract boolean equals({org.glassfish.jersey.internal.util.collection.KeyComparator%0},{org.glassfish.jersey.internal.util.collection.KeyComparator%0})
+meth public abstract int hash({org.glassfish.jersey.internal.util.collection.KeyComparator%0})
+
+CLSS public org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(int,float,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0}>)
+cons public init(int,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0}>)
+cons public init(java.util.Map<? extends {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0},? extends {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1}>,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0}>)
+cons public init(org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0}>)
+intf java.io.Serializable
+intf java.lang.Cloneable
+intf java.util.Map<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1}>
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean isEmpty()
+meth public int getModCount()
+meth public int size()
+meth public java.lang.Object clone()
+meth public java.util.Set<java.util.Map$Entry<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1}>> entrySet()
+meth public void clear()
+meth public void putAll(java.util.Map<? extends {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0},? extends {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1}>)
+meth public {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1} get(java.lang.Object)
+meth public {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1} put({org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1})
+meth public {org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1} remove(java.lang.Object)
+supr java.util.AbstractMap<{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap%1}>
+hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,NULL_KEY,entrySet,keyComparator,loadFactor,modCount,serialVersionUID,size,table,threshold
+hcls Entry,EntryIterator,EntrySet,HashIterator,KeyIterator,ValueIterator
+
+CLSS public org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(int,float,boolean,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0}>)
+cons public init(int,float,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0}>)
+cons public init(int,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0}>)
+cons public init(java.util.Map<? extends {org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0},? extends {org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%1}>,org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0}>)
+cons public init(org.glassfish.jersey.internal.util.collection.KeyComparator<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0}>)
+intf java.util.Map<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%1}>
+meth protected boolean removeEldestEntry(java.util.Map$Entry<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%1}>)
+meth public boolean containsValue(java.lang.Object)
+meth public void clear()
+meth public {org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%1} get(java.lang.Object)
+supr org.glassfish.jersey.internal.util.collection.KeyComparatorHashMap<{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%0},{org.glassfish.jersey.internal.util.collection.KeyComparatorLinkedHashMap%1}>
+hfds accessOrder,header,serialVersionUID
+hcls Entry,EntryIterator,KeyIterator,LinkedHashIterator,ValueIterator
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.LazyUnsafeValue<%0 extends java.lang.Object, %1 extends java.lang.Throwable>
+intf org.glassfish.jersey.internal.util.collection.UnsafeValue<{org.glassfish.jersey.internal.util.collection.LazyUnsafeValue%0},{org.glassfish.jersey.internal.util.collection.LazyUnsafeValue%1}>
+meth public abstract boolean isInitialized()
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.LazyValue<%0 extends java.lang.Object>
+intf org.glassfish.jersey.internal.util.collection.Value<{org.glassfish.jersey.internal.util.collection.LazyValue%0}>
+meth public abstract boolean isInitialized()
+
+CLSS public org.glassfish.jersey.internal.util.collection.MultivaluedStringMap
+cons public init()
+cons public init(int)
+cons public init(int,float)
+cons public init(javax.ws.rs.core.MultivaluedMap<? extends java.lang.String,? extends java.lang.String>)
+meth protected void addFirstNull(java.util.List<java.lang.String>)
+meth protected void addNull(java.util.List<java.lang.String>)
+meth public final <%0 extends java.lang.Object> {%%0} getFirst(java.lang.String,java.lang.Class<{%%0}>)
+meth public final <%0 extends java.lang.Object> {%%0} getFirst(java.lang.String,{%%0})
+supr javax.ws.rs.core.MultivaluedHashMap<java.lang.String,java.lang.String>
+hfds serialVersionUID
+
+CLSS public abstract org.glassfish.jersey.internal.util.collection.NonBlockingInputStream
+cons public init()
+fld public final static int NOTHING = -2147483648
+meth public abstract int tryRead() throws java.io.IOException
+meth public abstract int tryRead(byte[]) throws java.io.IOException
+meth public abstract int tryRead(byte[],int,int) throws java.io.IOException
+meth public int available() throws java.io.IOException
+supr java.io.InputStream
+
+CLSS public org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+cons public init(int)
+cons public init(int,float)
+cons public init(javax.ws.rs.core.MultivaluedMap<? extends {org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap%0},? extends {org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap%1}>)
+meth protected void addFirstNull(java.util.List<{org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap%1}>)
+meth protected void addNull(java.util.List<{org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap%1}>)
+supr javax.ws.rs.core.MultivaluedHashMap<{org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap%0},{org.glassfish.jersey.internal.util.collection.NullableMultivaluedHashMap%1}>
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.Ref<%0 extends java.lang.Object>
+intf org.glassfish.jersey.internal.util.collection.Settable<{org.glassfish.jersey.internal.util.collection.Ref%0}>
+intf org.glassfish.jersey.internal.util.collection.Value<{org.glassfish.jersey.internal.util.collection.Ref%0}>
+
+CLSS public final org.glassfish.jersey.internal.util.collection.Refs
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Ref<{%%0}> emptyRef()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Ref<{%%0}> immutableRef({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Ref<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Ref<{%%0}> threadSafe()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Ref<{%%0}> threadSafe({%%0})
+supr java.lang.Object
+hcls DefaultRefImpl,ImmutableRefImpl,ThreadSafeRefImpl
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.Settable<%0 extends java.lang.Object>
+meth public abstract void set({org.glassfish.jersey.internal.util.collection.Settable%0})
+
+CLSS public org.glassfish.jersey.internal.util.collection.StringIgnoreCaseKeyComparator
+cons public init()
+fld public final static org.glassfish.jersey.internal.util.collection.StringIgnoreCaseKeyComparator SINGLETON
+intf org.glassfish.jersey.internal.util.collection.KeyComparator<java.lang.String>
+meth public boolean equals(java.lang.String,java.lang.String)
+meth public int hash(java.lang.String)
+supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public org.glassfish.jersey.internal.util.collection.StringKeyIgnoreCaseMultivaluedMap<%0 extends java.lang.Object>
+cons public init()
+supr javax.ws.rs.core.AbstractMultivaluedMap<java.lang.String,{org.glassfish.jersey.internal.util.collection.StringKeyIgnoreCaseMultivaluedMap%0}>
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.TransferQueue<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated()
+intf java.util.concurrent.BlockingQueue<{org.glassfish.jersey.internal.util.collection.TransferQueue%0}>
+meth public abstract boolean hasWaitingConsumer()
+meth public abstract boolean tryTransfer({org.glassfish.jersey.internal.util.collection.TransferQueue%0})
+meth public abstract boolean tryTransfer({org.glassfish.jersey.internal.util.collection.TransferQueue%0},long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
+meth public abstract int getWaitingConsumerCount()
+meth public abstract void transfer({org.glassfish.jersey.internal.util.collection.TransferQueue%0}) throws java.lang.InterruptedException
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.UnsafeValue<%0 extends java.lang.Object, %1 extends java.lang.Throwable>
+meth public abstract {org.glassfish.jersey.internal.util.collection.UnsafeValue%0} get() throws {org.glassfish.jersey.internal.util.collection.UnsafeValue%1}
+
+CLSS public abstract interface org.glassfish.jersey.internal.util.collection.Value<%0 extends java.lang.Object>
+meth public abstract {org.glassfish.jersey.internal.util.collection.Value%0} get()
+
+CLSS public final org.glassfish.jersey.internal.util.collection.Values
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Throwable> org.glassfish.jersey.internal.util.collection.LazyUnsafeValue<{%%0},{%%1}> lazy(org.glassfish.jersey.internal.util.collection.UnsafeValue<{%%0},{%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Throwable> org.glassfish.jersey.internal.util.collection.UnsafeValue<{%%0},{%%1}> emptyUnsafe()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Throwable> org.glassfish.jersey.internal.util.collection.UnsafeValue<{%%0},{%%1}> throwing({%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Throwable> org.glassfish.jersey.internal.util.collection.UnsafeValue<{%%0},{%%1}> unsafe({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.LazyValue<{%%0}> lazy(org.glassfish.jersey.internal.util.collection.Value<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Value<{%%0}> eager(org.glassfish.jersey.internal.util.collection.Value<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Value<{%%0}> empty()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.internal.util.collection.Value<{%%0}> of({%%0})
+supr java.lang.Object
+hfds EMPTY,EMPTY_UNSAFE
+hcls EagerValue,ExceptionValue,InstanceUnsafeValue,InstanceValue,LazyUnsafeValueImpl,LazyValueImpl
+
+CLSS public org.glassfish.jersey.internal.util.collection.Views
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> java.util.Map<{%%0},{%%1}> mapView(java.util.Map<{%%0},{%%2}>,java.util.function.Function<{%%2},{%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.List<{%%0}> listView(java.util.List<{%%1}>,java.util.function.Function<{%%1},{%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> setDiffView(java.util.Set<? extends {%%0}>,java.util.Set<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> setUnionView(java.util.Set<? extends {%%0}>,java.util.Set<? extends {%%0}>)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.logging.LoggingFeature
+cons public init()
+cons public init(java.util.logging.Logger)
+cons public init(java.util.logging.Logger,java.lang.Integer)
+cons public init(java.util.logging.Logger,java.util.logging.Level,org.glassfish.jersey.logging.LoggingFeature$Verbosity,java.lang.Integer)
+cons public init(java.util.logging.Logger,org.glassfish.jersey.logging.LoggingFeature$Verbosity)
+cons public init(org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder)
+fld public final static int DEFAULT_MAX_ENTITY_SIZE = 8192
+fld public final static java.lang.String DEFAULT_LOGGER_LEVEL
+fld public final static java.lang.String DEFAULT_LOGGER_NAME
+fld public final static java.lang.String DEFAULT_SEPARATOR = "\n"
+fld public final static java.lang.String LOGGING_FEATURE_LOGGER_LEVEL = "jersey.config.logging.logger.level"
+fld public final static java.lang.String LOGGING_FEATURE_LOGGER_LEVEL_CLIENT = "jersey.config.client.logging.logger.level"
+fld public final static java.lang.String LOGGING_FEATURE_LOGGER_LEVEL_SERVER = "jersey.config.server.logging.logger.level"
+fld public final static java.lang.String LOGGING_FEATURE_LOGGER_NAME = "jersey.config.logging.logger.name"
+fld public final static java.lang.String LOGGING_FEATURE_LOGGER_NAME_CLIENT = "jersey.config.client.logging.logger.name"
+fld public final static java.lang.String LOGGING_FEATURE_LOGGER_NAME_SERVER = "jersey.config.server.logging.logger.name"
+fld public final static java.lang.String LOGGING_FEATURE_MAX_ENTITY_SIZE = "jersey.config.logging.entity.maxSize"
+fld public final static java.lang.String LOGGING_FEATURE_MAX_ENTITY_SIZE_CLIENT = "jersey.config.client.logging.entity.maxSize"
+fld public final static java.lang.String LOGGING_FEATURE_MAX_ENTITY_SIZE_SERVER = "jersey.config.server.logging.entity.maxSize"
+fld public final static java.lang.String LOGGING_FEATURE_SEPARATOR = "jersey.config.logging.separator"
+fld public final static java.lang.String LOGGING_FEATURE_SEPARATOR_CLIENT = "jersey.config.client.logging.separator"
+fld public final static java.lang.String LOGGING_FEATURE_SEPARATOR_SERVER = "jersey.config.server.logging.separator"
+fld public final static java.lang.String LOGGING_FEATURE_VERBOSITY = "jersey.config.logging.verbosity"
+fld public final static java.lang.String LOGGING_FEATURE_VERBOSITY_CLIENT = "jersey.config.client.logging.verbosity"
+fld public final static java.lang.String LOGGING_FEATURE_VERBOSITY_SERVER = "jersey.config.server.logging.verbosity"
+fld public final static org.glassfish.jersey.logging.LoggingFeature$Verbosity DEFAULT_VERBOSITY
+innr public final static !enum Verbosity
+innr public static LoggingFeatureBuilder
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+meth public static org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder builder()
+supr java.lang.Object
+hfds LOGGER_LEVEL_POSTFIX,LOGGER_NAME_POSTFIX,LOGGING_FEATURE_CLIENT_PREFIX,LOGGING_FEATURE_COMMON_PREFIX,LOGGING_FEATURE_SERVER_PREFIX,MAX_ENTITY_POSTFIX,SEPARATOR_POSTFIX,VERBOSITY_POSTFIX,builder
+
+CLSS public static org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder
+ outer org.glassfish.jersey.logging.LoggingFeature
+cons public init()
+meth public org.glassfish.jersey.logging.LoggingFeature build()
+meth public org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder level(java.util.logging.Level)
+meth public org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder maxEntitySize(java.lang.Integer)
+meth public org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder separator(java.lang.String)
+meth public org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder verbosity(org.glassfish.jersey.logging.LoggingFeature$Verbosity)
+meth public org.glassfish.jersey.logging.LoggingFeature$LoggingFeatureBuilder withLogger(java.util.logging.Logger)
+supr java.lang.Object
+hfds filterLogger,level,maxEntitySize,separator,verbosity
+
+CLSS public final static !enum org.glassfish.jersey.logging.LoggingFeature$Verbosity
+ outer org.glassfish.jersey.logging.LoggingFeature
+fld public final static org.glassfish.jersey.logging.LoggingFeature$Verbosity HEADERS_ONLY
+fld public final static org.glassfish.jersey.logging.LoggingFeature$Verbosity PAYLOAD_ANY
+fld public final static org.glassfish.jersey.logging.LoggingFeature$Verbosity PAYLOAD_TEXT
+meth public static org.glassfish.jersey.logging.LoggingFeature$Verbosity valueOf(java.lang.String)
+meth public static org.glassfish.jersey.logging.LoggingFeature$Verbosity[] values()
+supr java.lang.Enum<org.glassfish.jersey.logging.LoggingFeature$Verbosity>
+
+CLSS public final org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable
+ anno 0 javax.annotation.Priority(int value=2000)
+cons public init()
+intf org.glassfish.jersey.internal.spi.AutoDiscoverable
+meth public void configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.message.AbstractEntityProviderModel<%0 extends java.lang.Object>
+meth public boolean isCustom()
+meth public java.lang.Class<?> providedType()
+meth public java.util.List<javax.ws.rs.core.MediaType> declaredTypes()
+meth public {org.glassfish.jersey.message.AbstractEntityProviderModel%0} provider()
+supr java.lang.Object
+hfds custom,declaredTypes,providedType,provider
+
+CLSS public org.glassfish.jersey.message.DeflateEncoder
+ anno 0 javax.annotation.Priority(int value=4000)
+cons public init(javax.ws.rs.core.Configuration)
+ anno 0 javax.inject.Inject()
+meth public java.io.InputStream decode(java.lang.String,java.io.InputStream) throws java.io.IOException
+meth public java.io.OutputStream encode(java.lang.String,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.spi.ContentEncoder
+hfds config
+
+CLSS public org.glassfish.jersey.message.GZipEncoder
+ anno 0 javax.annotation.Priority(int value=4000)
+cons public init()
+meth public java.io.InputStream decode(java.lang.String,java.io.InputStream) throws java.io.IOException
+meth public java.io.OutputStream encode(java.lang.String,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.spi.ContentEncoder
+
+CLSS public abstract interface org.glassfish.jersey.message.MessageBodyWorkers
+meth public abstract <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyReader<{%%0}> getMessageBodyReader(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public abstract <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyReader<{%%0}> getMessageBodyReader(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,org.glassfish.jersey.internal.PropertiesDelegate)
+meth public abstract <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyWriter<{%%0}> getMessageBodyWriter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public abstract <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyWriter<{%%0}> getMessageBodyWriter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,org.glassfish.jersey.internal.PropertiesDelegate)
+meth public abstract java.io.OutputStream writeTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,org.glassfish.jersey.internal.PropertiesDelegate,java.io.OutputStream,java.lang.Iterable<javax.ws.rs.ext.WriterInterceptor>) throws java.io.IOException
+meth public abstract java.lang.Object readFrom(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,org.glassfish.jersey.internal.PropertiesDelegate,java.io.InputStream,java.lang.Iterable<javax.ws.rs.ext.ReaderInterceptor>,boolean) throws java.io.IOException
+meth public abstract java.lang.String readersToString(java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyReader>>)
+meth public abstract java.lang.String writersToString(java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyWriter>>)
+meth public abstract java.util.List<javax.ws.rs.core.MediaType> getMessageBodyReaderMediaTypes(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public abstract java.util.List<javax.ws.rs.core.MediaType> getMessageBodyReaderMediaTypesByType(java.lang.Class<?>)
+meth public abstract java.util.List<javax.ws.rs.core.MediaType> getMessageBodyWriterMediaTypes(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public abstract java.util.List<javax.ws.rs.core.MediaType> getMessageBodyWriterMediaTypesByType(java.lang.Class<?>)
+meth public abstract java.util.List<javax.ws.rs.ext.MessageBodyReader> getMessageBodyReadersForType(java.lang.Class<?>)
+meth public abstract java.util.List<javax.ws.rs.ext.MessageBodyWriter> getMessageBodyWritersForType(java.lang.Class<?>)
+meth public abstract java.util.List<org.glassfish.jersey.message.ReaderModel> getReaderModelsForType(java.lang.Class<?>)
+meth public abstract java.util.List<org.glassfish.jersey.message.WriterModel> getWritersModelsForType(java.lang.Class<?>)
+meth public abstract java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyReader>> getReaders(javax.ws.rs.core.MediaType)
+meth public abstract java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyWriter>> getWriters(javax.ws.rs.core.MediaType)
+meth public abstract javax.ws.rs.core.MediaType getMessageBodyWriterMediaType(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],java.util.List<javax.ws.rs.core.MediaType>)
+
+CLSS public final org.glassfish.jersey.message.MessageProperties
+fld public final static int IO_DEFAULT_BUFFER_SIZE = 8192
+fld public final static java.lang.String DEFLATE_WITHOUT_ZLIB = "jersey.config.deflate.nozlib"
+fld public final static java.lang.String IO_BUFFER_SIZE = "jersey.config.io.bufferSize"
+fld public final static java.lang.String JAXB_PROCESS_XML_ROOT_ELEMENT = "jersey.config.jaxb.collections.processXmlRootElement"
+fld public final static java.lang.String LEGACY_WORKERS_ORDERING = "jersey.config.workers.legacyOrdering"
+fld public final static java.lang.String XML_FORMAT_OUTPUT = "jersey.config.xml.formatOutput"
+fld public final static java.lang.String XML_SECURITY_DISABLE = "jersey.config.xml.security.disable"
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.message.MessageUtils
+meth public static java.nio.charset.Charset getCharset(javax.ws.rs.core.MediaType)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.message.ReaderModel
+cons public init(javax.ws.rs.ext.MessageBodyReader,java.util.List<javax.ws.rs.core.MediaType>,java.lang.Boolean)
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+supr org.glassfish.jersey.message.AbstractEntityProviderModel<javax.ws.rs.ext.MessageBodyReader>
+
+CLSS public final org.glassfish.jersey.message.WriterModel
+cons public init(javax.ws.rs.ext.MessageBodyWriter,java.util.List<javax.ws.rs.core.MediaType>,java.lang.Boolean)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+supr org.glassfish.jersey.message.AbstractEntityProviderModel<javax.ws.rs.ext.MessageBodyWriter>
+
+CLSS public abstract interface !annotation org.glassfish.jersey.message.XmlHeader
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public abstract org.glassfish.jersey.message.internal.AbstractFormProvider<%0 extends java.lang.Object>
+cons public init()
+meth public <%0 extends javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>> void writeTo({%%0},javax.ws.rs.core.MediaType,java.io.OutputStream) throws java.io.IOException
+meth public <%0 extends javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>> {%%0} readFrom({%%0},javax.ws.rs.core.MediaType,boolean,java.io.InputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<{org.glassfish.jersey.message.internal.AbstractFormProvider%0}>
+
+CLSS public abstract org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<%0 extends java.lang.Object>
+cons public init()
+fld public final static java.nio.charset.Charset UTF8
+intf javax.ws.rs.ext.MessageBodyReader<{org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider%0}>
+intf javax.ws.rs.ext.MessageBodyWriter<{org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider%0}>
+meth public long getSize({org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider%0},java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public static java.lang.String readFromAsString(java.io.InputStream,javax.ws.rs.core.MediaType) throws java.io.IOException
+meth public static java.nio.charset.Charset getCharset(javax.ws.rs.core.MediaType)
+meth public static void writeTo(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
+meth public static void writeTo(java.io.Reader,java.io.Writer) throws java.io.IOException
+meth public static void writeToAsString(java.lang.String,java.io.OutputStream,javax.ws.rs.core.MediaType) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.AcceptableLanguageTag
+cons public init(java.lang.String) throws java.text.ParseException
+cons public init(java.lang.String,java.lang.String)
+cons public init(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+intf org.glassfish.jersey.message.internal.Qualified
+meth public boolean equals(java.lang.Object)
+meth public int getQuality()
+meth public int hashCode()
+supr org.glassfish.jersey.message.internal.LanguageTag
+hfds quality
+
+CLSS public org.glassfish.jersey.message.internal.AcceptableMediaType
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,java.lang.String,int,java.util.Map<java.lang.String,java.lang.String>)
+fld public final static java.util.Comparator<org.glassfish.jersey.message.internal.AcceptableMediaType> COMPARATOR
+intf org.glassfish.jersey.message.internal.Qualified
+meth public boolean equals(java.lang.Object)
+meth public int getQuality()
+meth public int hashCode()
+meth public static org.glassfish.jersey.message.internal.AcceptableMediaType valueOf(javax.ws.rs.core.MediaType) throws java.text.ParseException
+meth public static org.glassfish.jersey.message.internal.AcceptableMediaType valueOf(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+supr javax.ws.rs.core.MediaType
+hfds q
+
+CLSS public org.glassfish.jersey.message.internal.AcceptableToken
+cons public init(java.lang.String) throws java.text.ParseException
+cons public init(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+fld protected int quality
+intf org.glassfish.jersey.message.internal.Qualified
+meth public int getQuality()
+supr org.glassfish.jersey.message.internal.Token
+
+CLSS public final org.glassfish.jersey.message.internal.ByteArrayProvider
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/octet-stream", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/octet-stream", "*/*"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public byte[] readFrom(java.lang.Class<byte[]>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public long getSize(byte[],java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void writeTo(byte[],java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<byte[]>
+
+CLSS public final org.glassfish.jersey.message.internal.CacheControlProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<javax.ws.rs.core.CacheControl>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(javax.ws.rs.core.CacheControl)
+meth public javax.ws.rs.core.CacheControl fromString(java.lang.String)
+supr java.lang.Object
+hfds COMMA_SEPARATED_LIST,WHITESPACE
+
+CLSS public final org.glassfish.jersey.message.internal.CommittingOutputStream
+cons public init()
+fld public final static int DEFAULT_BUFFER_SIZE = 8192
+meth public boolean isClosed()
+meth public boolean isCommitted()
+meth public void close() throws java.io.IOException
+meth public void commit() throws java.io.IOException
+meth public void enableBuffering(int)
+meth public void flush() throws java.io.IOException
+meth public void setStreamProvider(org.glassfish.jersey.message.internal.OutboundMessageContext$StreamProvider)
+meth public void write(byte[]) throws java.io.IOException
+meth public void write(byte[],int,int) throws java.io.IOException
+meth public void write(int) throws java.io.IOException
+supr java.io.OutputStream
+hfds COMMITTING_STREAM_BUFFERING_ILLEGAL_STATE,LOGGER,NULL_STREAM_PROVIDER,STREAM_PROVIDER_NULL,adaptedOutput,buffer,bufferSize,directWrite,isClosed,isCommitted,streamProvider
+
+CLSS public abstract interface org.glassfish.jersey.message.internal.CompletableReader<%0 extends java.lang.Object>
+meth public abstract {org.glassfish.jersey.message.internal.CompletableReader%0} complete({org.glassfish.jersey.message.internal.CompletableReader%0})
+
+CLSS public org.glassfish.jersey.message.internal.CookieProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<javax.ws.rs.core.Cookie>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(javax.ws.rs.core.Cookie)
+meth public javax.ws.rs.core.Cookie fromString(java.lang.String)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.CookiesParser
+meth public static java.util.Map<java.lang.String,javax.ws.rs.core.Cookie> parseCookies(java.lang.String)
+meth public static javax.ws.rs.core.Cookie parseCookie(java.lang.String)
+meth public static javax.ws.rs.core.NewCookie parseNewCookie(java.lang.String)
+supr java.lang.Object
+hfds LOGGER
+hcls MutableCookie,MutableNewCookie
+
+CLSS public org.glassfish.jersey.message.internal.DataSourceProvider
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/octet-stream", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/octet-stream", "*/*"])
+cons public init()
+innr public static ByteArrayDataSource
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public javax.activation.DataSource readFrom(java.lang.Class<javax.activation.DataSource>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public void writeTo(javax.activation.DataSource,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<javax.activation.DataSource>
+
+CLSS public static org.glassfish.jersey.message.internal.DataSourceProvider$ByteArrayDataSource
+ outer org.glassfish.jersey.message.internal.DataSourceProvider
+cons public init(java.io.InputStream,java.lang.String) throws java.io.IOException
+intf javax.activation.DataSource
+meth public java.io.InputStream getInputStream() throws java.io.IOException
+meth public java.io.OutputStream getOutputStream() throws java.io.IOException
+meth public java.lang.String getContentType()
+meth public java.lang.String getName()
+meth public void setName(java.lang.String)
+supr java.lang.Object
+hfds data,len,name,type
+hcls DSByteArrayOutputStream
+
+CLSS public org.glassfish.jersey.message.internal.DateProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<java.util.Date>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(java.util.Date)
+meth public java.util.Date fromString(java.lang.String)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.EntityInputStream
+cons public init(java.io.InputStream)
+meth public boolean isClosed()
+meth public boolean isEmpty()
+meth public boolean markSupported()
+meth public final java.io.InputStream getWrappedStream()
+meth public final void setWrappedStream(java.io.InputStream)
+meth public int available() throws java.io.IOException
+meth public int read() throws java.io.IOException
+meth public int read(byte[]) throws java.io.IOException
+meth public int read(byte[],int,int) throws java.io.IOException
+meth public long skip(long) throws java.io.IOException
+meth public static org.glassfish.jersey.message.internal.EntityInputStream create(java.io.InputStream)
+meth public void close()
+meth public void ensureNotClosed()
+meth public void mark(int)
+meth public void reset()
+supr java.io.InputStream
+hfds closed,input
+
+CLSS public org.glassfish.jersey.message.internal.EntityTagProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<javax.ws.rs.core.EntityTag>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(javax.ws.rs.core.EntityTag)
+meth public javax.ws.rs.core.EntityTag fromString(java.lang.String)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.message.internal.FileProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/octet-stream", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/octet-stream", "*/*"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public java.io.File readFrom(java.lang.Class<java.io.File>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public long getSize(java.io.File,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void writeTo(java.io.File,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<java.io.File>
+
+CLSS public final org.glassfish.jersey.message.internal.FormMultivaluedMapProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/x-www-form-urlencoded"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/x-www-form-urlencoded"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> readFrom(java.lang.Class<javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public void writeTo(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractFormProvider<javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>>
+hfds mapType
+
+CLSS public final org.glassfish.jersey.message.internal.FormProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/x-www-form-urlencoded", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/x-www-form-urlencoded", "*/*"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public javax.ws.rs.core.Form readFrom(java.lang.Class<javax.ws.rs.core.Form>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public void writeTo(javax.ws.rs.core.Form,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractFormProvider<javax.ws.rs.core.Form>
+
+CLSS public final org.glassfish.jersey.message.internal.HeaderUtils
+meth public static <%0 extends java.lang.Object> javax.ws.rs.core.MultivaluedMap<java.lang.String,{%%0}> empty()
+meth public static java.lang.String asHeaderString(java.util.List<java.lang.Object>,javax.ws.rs.ext.RuntimeDelegate)
+meth public static java.lang.String asString(java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public static java.lang.String asString(java.lang.Object,javax.ws.rs.core.Configuration)
+meth public static java.util.List<java.lang.String> asStringList(java.util.List<java.lang.Object>)
+ anno 0 java.lang.Deprecated()
+meth public static java.util.List<java.lang.String> asStringList(java.util.List<java.lang.Object>,javax.ws.rs.core.Configuration)
+meth public static java.util.Map<java.lang.String,java.lang.String> asStringHeadersSingleValue(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+ anno 0 java.lang.Deprecated()
+meth public static java.util.Map<java.lang.String,java.lang.String> asStringHeadersSingleValue(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,javax.ws.rs.core.Configuration)
+meth public static javax.ws.rs.core.AbstractMultivaluedMap<java.lang.String,java.lang.Object> createOutbound()
+meth public static javax.ws.rs.core.AbstractMultivaluedMap<java.lang.String,java.lang.String> createInbound()
+meth public static javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> asStringHeaders(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+ anno 0 java.lang.Deprecated()
+meth public static javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> asStringHeaders(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,javax.ws.rs.core.Configuration)
+meth public static javax.ws.rs.core.NewCookie getPreferredCookie(javax.ws.rs.core.NewCookie,javax.ws.rs.core.NewCookie)
+meth public static void checkHeaderChanges(java.util.Map<java.lang.String,java.lang.String>,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static void checkHeaderChanges(java.util.Map<java.lang.String,java.lang.String>,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.lang.String,javax.ws.rs.core.Configuration)
+supr java.lang.Object
+hfds LOGGER
+
+CLSS public org.glassfish.jersey.message.internal.HeaderValueException
+cons public init(java.lang.String,java.lang.Throwable,org.glassfish.jersey.message.internal.HeaderValueException$Context)
+cons public init(java.lang.String,org.glassfish.jersey.message.internal.HeaderValueException$Context)
+innr public final static !enum Context
+meth public org.glassfish.jersey.message.internal.HeaderValueException$Context getContext()
+supr javax.ws.rs.ProcessingException
+hfds context,serialVersionUID
+
+CLSS public final static !enum org.glassfish.jersey.message.internal.HeaderValueException$Context
+ outer org.glassfish.jersey.message.internal.HeaderValueException
+fld public final static org.glassfish.jersey.message.internal.HeaderValueException$Context INBOUND
+fld public final static org.glassfish.jersey.message.internal.HeaderValueException$Context OUTBOUND
+meth public static org.glassfish.jersey.message.internal.HeaderValueException$Context valueOf(java.lang.String)
+meth public static org.glassfish.jersey.message.internal.HeaderValueException$Context[] values()
+supr java.lang.Enum<org.glassfish.jersey.message.internal.HeaderValueException$Context>
+
+CLSS public final org.glassfish.jersey.message.internal.HttpDateFormat
+meth public static java.text.SimpleDateFormat getPreferredDateFormat()
+meth public static java.util.Date readDate(java.lang.String) throws java.text.ParseException
+supr java.lang.Object
+hfds ANSI_C_ASCTIME_DATE_FORMAT_PATTERN,GMT_TIME_ZONE,RFC1036_DATE_FORMAT_PATTERN,RFC1123_DATE_FORMAT_PATTERN,dateFormats
+
+CLSS public abstract org.glassfish.jersey.message.internal.HttpHeaderReader
+cons public init()
+innr public final static !enum Event
+meth protected abstract java.lang.CharSequence nextSeparatedString(char,char) throws java.text.ParseException
+meth protected abstract org.glassfish.jersey.message.internal.HttpHeaderReader$Event getEvent()
+meth protected abstract org.glassfish.jersey.message.internal.HttpHeaderReader$Event next(boolean,boolean) throws java.text.ParseException
+meth public abstract boolean hasNext()
+meth public abstract boolean hasNextSeparator(char,boolean)
+meth public abstract int getIndex()
+meth public abstract java.lang.CharSequence getEventValue()
+meth public abstract java.lang.CharSequence getRemainder()
+meth public abstract org.glassfish.jersey.message.internal.HttpHeaderReader$Event next() throws java.text.ParseException
+meth public abstract org.glassfish.jersey.message.internal.HttpHeaderReader$Event next(boolean) throws java.text.ParseException
+meth public final java.lang.CharSequence nextQuotedString() throws java.text.ParseException
+meth public final java.lang.CharSequence nextToken() throws java.text.ParseException
+meth public final java.lang.CharSequence nextTokenOrQuotedString() throws java.text.ParseException
+meth public final void nextSeparator(char) throws java.text.ParseException
+meth public static int readQualityFactor(java.lang.CharSequence) throws java.text.ParseException
+meth public static int readQualityFactorParameter(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+meth public static java.util.Date readDate(java.lang.String) throws java.text.ParseException
+meth public static java.util.List<java.lang.String> readStringList(java.lang.String) throws java.text.ParseException
+meth public static java.util.List<javax.ws.rs.core.MediaType> readMediaTypes(java.util.List<javax.ws.rs.core.MediaType>,java.lang.String) throws java.text.ParseException
+meth public static java.util.List<org.glassfish.jersey.message.internal.AcceptableLanguageTag> readAcceptLanguage(java.lang.String) throws java.text.ParseException
+meth public static java.util.List<org.glassfish.jersey.message.internal.AcceptableMediaType> readAcceptMediaType(java.lang.String) throws java.text.ParseException
+meth public static java.util.List<org.glassfish.jersey.message.internal.AcceptableMediaType> readAcceptMediaType(java.lang.String,java.util.List<org.glassfish.jersey.message.internal.QualitySourceMediaType>) throws java.text.ParseException
+meth public static java.util.List<org.glassfish.jersey.message.internal.AcceptableToken> readAcceptToken(java.lang.String) throws java.text.ParseException
+meth public static java.util.List<org.glassfish.jersey.message.internal.QualitySourceMediaType> readQualitySourceMediaType(java.lang.String) throws java.text.ParseException
+meth public static java.util.List<org.glassfish.jersey.message.internal.QualitySourceMediaType> readQualitySourceMediaType(java.lang.String[]) throws java.text.ParseException
+meth public static java.util.Map<java.lang.String,java.lang.String> readParameters(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+meth public static java.util.Map<java.lang.String,java.lang.String> readParameters(org.glassfish.jersey.message.internal.HttpHeaderReader,boolean) throws java.text.ParseException
+meth public static java.util.Map<java.lang.String,javax.ws.rs.core.Cookie> readCookies(java.lang.String)
+meth public static java.util.Set<org.glassfish.jersey.message.internal.MatchingEntityTag> readMatchingEntityTag(java.lang.String) throws java.text.ParseException
+meth public static javax.ws.rs.core.Cookie readCookie(java.lang.String)
+meth public static javax.ws.rs.core.NewCookie readNewCookie(java.lang.String)
+meth public static org.glassfish.jersey.message.internal.HttpHeaderReader newInstance(java.lang.String)
+meth public static org.glassfish.jersey.message.internal.HttpHeaderReader newInstance(java.lang.String,boolean)
+supr java.lang.Object
+hfds ACCEPTABLE_MEDIA_TYPE_CREATOR,ACCEPTABLE_TOKEN_CREATOR,LANGUAGE_CREATOR,MATCHING_ENTITY_TAG_CREATOR,MEDIA_TYPE_CREATOR,QUALITY_SOURCE_MEDIA_TYPE_CREATOR
+hcls ListElementCreator
+
+CLSS public final static !enum org.glassfish.jersey.message.internal.HttpHeaderReader$Event
+ outer org.glassfish.jersey.message.internal.HttpHeaderReader
+fld public final static org.glassfish.jersey.message.internal.HttpHeaderReader$Event Comment
+fld public final static org.glassfish.jersey.message.internal.HttpHeaderReader$Event Control
+fld public final static org.glassfish.jersey.message.internal.HttpHeaderReader$Event QuotedString
+fld public final static org.glassfish.jersey.message.internal.HttpHeaderReader$Event Separator
+fld public final static org.glassfish.jersey.message.internal.HttpHeaderReader$Event Token
+meth public static org.glassfish.jersey.message.internal.HttpHeaderReader$Event valueOf(java.lang.String)
+meth public static org.glassfish.jersey.message.internal.HttpHeaderReader$Event[] values()
+supr java.lang.Enum<org.glassfish.jersey.message.internal.HttpHeaderReader$Event>
 
 CLSS public abstract org.glassfish.jersey.message.internal.InboundMessageContext
 cons public init()
@@ -2599,6 +11120,327 @@ supr java.lang.Object
 hfds EMPTY,EMPTY_ANNOTATIONS,WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST,configuration,entityContent,headers,translateNce,workers
 hcls EntityContent
 
+CLSS public final org.glassfish.jersey.message.internal.InputStreamProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/octet-stream", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/octet-stream", "*/*"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public java.io.InputStream readFrom(java.lang.Class<java.io.InputStream>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public long getSize(java.io.InputStream,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void writeTo(java.io.InputStream,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<java.io.InputStream>
+
+CLSS public final org.glassfish.jersey.message.internal.JerseyLink
+innr public static Builder
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getRel()
+meth public java.lang.String getTitle()
+meth public java.lang.String getType()
+meth public java.lang.String toString()
+meth public java.net.URI getUri()
+meth public java.util.List<java.lang.String> getRels()
+meth public java.util.Map<java.lang.String,java.lang.String> getParams()
+meth public javax.ws.rs.core.UriBuilder getUriBuilder()
+supr javax.ws.rs.core.Link
+hfds params,uri
+
+CLSS public static org.glassfish.jersey.message.internal.JerseyLink$Builder
+ outer org.glassfish.jersey.message.internal.JerseyLink
+cons public init()
+intf javax.ws.rs.core.Link$Builder
+meth public !varargs javax.ws.rs.core.Link buildRelativized(java.net.URI,java.lang.Object[])
+meth public !varargs org.glassfish.jersey.message.internal.JerseyLink build(java.lang.Object[])
+meth public javax.ws.rs.core.Link$Builder baseUri(java.lang.String)
+meth public javax.ws.rs.core.Link$Builder baseUri(java.net.URI)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder link(java.lang.String)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder link(javax.ws.rs.core.Link)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder param(java.lang.String,java.lang.String)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder rel(java.lang.String)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder title(java.lang.String)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder type(java.lang.String)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder uri(java.lang.String)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder uri(java.net.URI)
+meth public org.glassfish.jersey.message.internal.JerseyLink$Builder uriBuilder(javax.ws.rs.core.UriBuilder)
+supr java.lang.Object
+hfds baseUri,params,uriBuilder
+
+CLSS public org.glassfish.jersey.message.internal.LanguageTag
+cons protected init()
+cons public init(java.lang.String) throws java.text.ParseException
+cons public init(java.lang.String,java.lang.String)
+cons public init(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+meth protected final void parse(java.lang.String) throws java.text.ParseException
+meth public boolean equals(java.lang.Object)
+meth public final boolean isCompatible(java.util.Locale)
+meth public final java.lang.String getPrimaryTag()
+meth public final java.lang.String getSubTags()
+meth public final java.lang.String getTag()
+meth public final java.util.Locale getAsLocale()
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public static org.glassfish.jersey.message.internal.LanguageTag valueOf(java.lang.String)
+supr java.lang.Object
+hfds primaryTag,subTags,tag
+
+CLSS public org.glassfish.jersey.message.internal.LinkProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<javax.ws.rs.core.Link>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(javax.ws.rs.core.Link)
+meth public javax.ws.rs.core.Link fromString(java.lang.String)
+supr java.lang.Object
+hfds LOGGER
+
+CLSS public org.glassfish.jersey.message.internal.LocaleProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<java.util.Locale>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(java.util.Locale)
+meth public java.util.Locale fromString(java.lang.String)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.MatchingEntityTag
+cons public init(java.lang.String)
+cons public init(java.lang.String,boolean)
+fld public final static java.util.Set<org.glassfish.jersey.message.internal.MatchingEntityTag> ANY_MATCH
+meth public static org.glassfish.jersey.message.internal.MatchingEntityTag valueOf(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+supr javax.ws.rs.core.EntityTag
+
+CLSS public org.glassfish.jersey.message.internal.MediaTypeProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<javax.ws.rs.core.MediaType>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(javax.ws.rs.core.MediaType)
+meth public javax.ws.rs.core.MediaType fromString(java.lang.String)
+meth public static javax.ws.rs.core.MediaType valueOf(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+supr java.lang.Object
+hfds MEDIA_TYPE_IS_NULL
+
+CLSS public final org.glassfish.jersey.message.internal.MediaTypes
+fld public final static java.util.Comparator<java.util.List<? extends javax.ws.rs.core.MediaType>> MEDIA_TYPE_LIST_COMPARATOR
+fld public final static java.util.Comparator<javax.ws.rs.core.MediaType> PARTIAL_ORDER_COMPARATOR
+fld public final static java.util.List<javax.ws.rs.core.MediaType> WILDCARD_QS_TYPE_SINGLETON_LIST
+fld public final static java.util.List<javax.ws.rs.core.MediaType> WILDCARD_TYPE_SINGLETON_LIST
+fld public final static javax.ws.rs.core.MediaType WADL_TYPE
+fld public final static org.glassfish.jersey.message.internal.AcceptableMediaType WILDCARD_ACCEPTABLE_TYPE
+fld public final static org.glassfish.jersey.message.internal.QualitySourceMediaType WILDCARD_QS_TYPE
+meth public static boolean intersect(java.util.List<? extends javax.ws.rs.core.MediaType>,java.util.List<? extends javax.ws.rs.core.MediaType>)
+meth public static boolean isWildcard(javax.ws.rs.core.MediaType)
+meth public static boolean typeEqual(javax.ws.rs.core.MediaType,javax.ws.rs.core.MediaType)
+meth public static int getQuality(javax.ws.rs.core.MediaType)
+meth public static java.lang.String convertToString(java.lang.Iterable<javax.ws.rs.core.MediaType>)
+meth public static java.util.List<javax.ws.rs.core.MediaType> createFrom(java.lang.String[])
+meth public static java.util.List<javax.ws.rs.core.MediaType> createFrom(javax.ws.rs.Consumes)
+meth public static java.util.List<javax.ws.rs.core.MediaType> createFrom(javax.ws.rs.Produces)
+meth public static java.util.List<javax.ws.rs.core.MediaType> createQualitySourceMediaTypes(javax.ws.rs.Produces)
+meth public static java.util.List<org.glassfish.jersey.message.internal.QualitySourceMediaType> createQualitySourceMediaTypes(java.lang.String[])
+meth public static javax.ws.rs.core.MediaType getTypeWildCart(javax.ws.rs.core.MediaType)
+meth public static javax.ws.rs.core.MediaType mostSpecific(javax.ws.rs.core.MediaType,javax.ws.rs.core.MediaType)
+meth public static javax.ws.rs.core.MediaType stripQualityParams(javax.ws.rs.core.MediaType)
+supr java.lang.Object
+hfds QUALITY_PARAM_FILTERING_PREDICATE,WILDCARD_SUBTYPE_CACHE
+
+CLSS public org.glassfish.jersey.message.internal.MessageBodyFactory
+cons public init(javax.ws.rs.core.Configuration)
+fld public final static org.glassfish.jersey.internal.util.collection.KeyComparator<javax.ws.rs.core.MediaType> MEDIA_TYPE_KEY_COMPARATOR
+innr public static MessageBodyWorkersConfigurator
+intf org.glassfish.jersey.message.MessageBodyWorkers
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyReader<{%%0}> getMessageBodyReader(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyReader<{%%0}> getMessageBodyReader(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,org.glassfish.jersey.internal.PropertiesDelegate)
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyWriter<{%%0}> getMessageBodyWriter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.MessageBodyWriter<{%%0}> getMessageBodyWriter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,org.glassfish.jersey.internal.PropertiesDelegate)
+meth public java.io.OutputStream writeTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,org.glassfish.jersey.internal.PropertiesDelegate,java.io.OutputStream,java.lang.Iterable<javax.ws.rs.ext.WriterInterceptor>) throws java.io.IOException
+meth public java.lang.Object readFrom(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,org.glassfish.jersey.internal.PropertiesDelegate,java.io.InputStream,java.lang.Iterable<javax.ws.rs.ext.ReaderInterceptor>,boolean) throws java.io.IOException
+meth public java.lang.String readersToString(java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyReader>>)
+meth public java.lang.String writersToString(java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyWriter>>)
+meth public java.util.List<javax.ws.rs.core.MediaType> getMessageBodyReaderMediaTypes(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public java.util.List<javax.ws.rs.core.MediaType> getMessageBodyReaderMediaTypesByType(java.lang.Class<?>)
+meth public java.util.List<javax.ws.rs.core.MediaType> getMessageBodyWriterMediaTypes(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public java.util.List<javax.ws.rs.core.MediaType> getMessageBodyWriterMediaTypesByType(java.lang.Class<?>)
+meth public java.util.List<javax.ws.rs.ext.MessageBodyReader> getMessageBodyReadersForType(java.lang.Class<?>)
+meth public java.util.List<javax.ws.rs.ext.MessageBodyWriter> getMessageBodyWritersForType(java.lang.Class<?>)
+meth public java.util.List<org.glassfish.jersey.message.ReaderModel> getReaderModelsForType(java.lang.Class<?>)
+meth public java.util.List<org.glassfish.jersey.message.WriterModel> getWritersModelsForType(java.lang.Class<?>)
+meth public java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyReader>> getReaders(javax.ws.rs.core.MediaType)
+meth public java.util.Map<javax.ws.rs.core.MediaType,java.util.List<javax.ws.rs.ext.MessageBodyWriter>> getWriters(javax.ws.rs.core.MediaType)
+meth public javax.ws.rs.core.MediaType getMessageBodyWriterMediaType(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],java.util.List<javax.ws.rs.core.MediaType>)
+meth public static boolean isReadable(javax.ws.rs.ext.MessageBodyReader<?>,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public static boolean isWriteable(javax.ws.rs.ext.MessageBodyWriter<?>,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void initialize(org.glassfish.jersey.internal.inject.InjectionManager)
+supr java.lang.Object
+hfds CLASS_BY_NAME_COMPARATOR,LOGGER,LOOKUP_CACHE_INITIAL_CAPACITY,LOOKUP_CACHE_LOAD_FACTOR,MODEL_TO_READER,MODEL_TO_WRITER,WORKER_BY_TYPE_COMPARATOR,injectionManager,legacyProviderOrdering,mbrLookupCache,mbrTypeLookupCache,mbwLookupCache,mbwTypeLookupCache,readers,readersCache,typeToMediaTypeReadersCache,typeToMediaTypeWritersCache,writers,writersCache
+hcls DeclarationDistanceComparator,LegacyWorkerComparator,ModelLookupKey,WorkerComparator
+
+CLSS public static org.glassfish.jersey.message.internal.MessageBodyFactory$MessageBodyWorkersConfigurator
+ outer org.glassfish.jersey.message.internal.MessageBodyFactory
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+hfds messageBodyFactory
+
+CLSS public org.glassfish.jersey.message.internal.MessageBodyProcessingException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.ws.rs.ProcessingException
+hfds serialVersionUID
+
+CLSS public org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.ws.rs.ProcessingException
+hfds serialVersionUID
+
+CLSS public final org.glassfish.jersey.message.internal.MessagingBinders
+innr public static HeaderDelegateProviders
+innr public static MessageBodyProviders
+supr java.lang.Object
+hfds LOGGER
+hcls EnabledProvidersBinder
+
+CLSS public static org.glassfish.jersey.message.internal.MessagingBinders$HeaderDelegateProviders
+ outer org.glassfish.jersey.message.internal.MessagingBinders
+cons public init()
+meth protected void configure()
+meth public java.util.Set<org.glassfish.jersey.spi.HeaderDelegateProvider> getHeaderDelegateProviders()
+supr org.glassfish.jersey.internal.inject.AbstractBinder
+hfds providers
+
+CLSS public static org.glassfish.jersey.message.internal.MessagingBinders$MessageBodyProviders
+ outer org.glassfish.jersey.message.internal.MessagingBinders
+cons public init(java.util.Map<java.lang.String,java.lang.Object>,javax.ws.rs.RuntimeType)
+meth protected void configure()
+supr org.glassfish.jersey.internal.inject.AbstractBinder
+hfds applicationProperties,runtimeType
+
+CLSS public final !enum org.glassfish.jersey.message.internal.MsgTraceEvent
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBR_FIND
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBR_NOT_READABLE
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBR_READ_FROM
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBR_SELECTED
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBR_SKIPPED
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBW_FIND
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBW_NOT_WRITEABLE
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBW_SELECTED
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBW_SKIPPED
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent MBW_WRITE_TO
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent RI_AFTER
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent RI_BEFORE
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent RI_SUMMARY
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent WI_AFTER
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent WI_BEFORE
+fld public final static org.glassfish.jersey.message.internal.MsgTraceEvent WI_SUMMARY
+intf org.glassfish.jersey.message.internal.TracingLogger$Event
+meth public java.lang.String category()
+meth public java.lang.String messageFormat()
+meth public org.glassfish.jersey.message.internal.TracingLogger$Level level()
+meth public static org.glassfish.jersey.message.internal.MsgTraceEvent valueOf(java.lang.String)
+meth public static org.glassfish.jersey.message.internal.MsgTraceEvent[] values()
+supr java.lang.Enum<org.glassfish.jersey.message.internal.MsgTraceEvent>
+hfds category,level,messageFormat
+
+CLSS public org.glassfish.jersey.message.internal.NewCookieProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<javax.ws.rs.core.NewCookie>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(javax.ws.rs.core.NewCookie)
+meth public javax.ws.rs.core.NewCookie fromString(java.lang.String)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.NullOutputStream
+cons public init()
+meth public void close() throws java.io.IOException
+meth public void flush() throws java.io.IOException
+meth public void write(byte[],int,int) throws java.io.IOException
+meth public void write(int) throws java.io.IOException
+supr java.io.OutputStream
+hfds isClosed
+
+CLSS public org.glassfish.jersey.message.internal.OutboundJaxrsResponse
+cons public init(javax.ws.rs.core.Response$StatusType,org.glassfish.jersey.message.internal.OutboundMessageContext)
+innr public static Builder
+meth public <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public <%0 extends java.lang.Object> {%%0} readEntity(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} readEntity(javax.ws.rs.core.GenericType<{%%0}>,java.lang.annotation.Annotation[])
+meth public boolean bufferEntity()
+meth public boolean hasEntity()
+meth public boolean hasLink(java.lang.String)
+meth public int getLength()
+meth public int getStatus()
+meth public java.lang.Object getEntity()
+meth public java.lang.String getHeaderString(java.lang.String)
+meth public java.lang.String toString()
+meth public java.net.URI getLocation()
+meth public java.util.Date getDate()
+meth public java.util.Date getLastModified()
+meth public java.util.Locale getLanguage()
+meth public java.util.Map<java.lang.String,javax.ws.rs.core.NewCookie> getCookies()
+meth public java.util.Set<java.lang.String> getAllowedMethods()
+meth public java.util.Set<javax.ws.rs.core.Link> getLinks()
+meth public javax.ws.rs.core.EntityTag getEntityTag()
+meth public javax.ws.rs.core.Link getLink(java.lang.String)
+meth public javax.ws.rs.core.Link$Builder getLinkBuilder(java.lang.String)
+meth public javax.ws.rs.core.MediaType getMediaType()
+meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object> getMetadata()
+meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> getStringHeaders()
+meth public javax.ws.rs.core.Response$StatusType getStatusInfo()
+meth public org.glassfish.jersey.message.internal.OutboundMessageContext getContext()
+meth public static org.glassfish.jersey.message.internal.OutboundJaxrsResponse from(javax.ws.rs.core.Response)
+ anno 0 java.lang.Deprecated()
+meth public static org.glassfish.jersey.message.internal.OutboundJaxrsResponse from(javax.ws.rs.core.Response,javax.ws.rs.core.Configuration)
+meth public void close()
+supr javax.ws.rs.core.Response
+hfds buffered,closed,context,status
+
+CLSS public static org.glassfish.jersey.message.internal.OutboundJaxrsResponse$Builder
+ outer org.glassfish.jersey.message.internal.OutboundJaxrsResponse
+cons public init(org.glassfish.jersey.message.internal.OutboundMessageContext)
+meth public !varargs javax.ws.rs.core.Response$ResponseBuilder allow(java.lang.String[])
+meth public !varargs javax.ws.rs.core.Response$ResponseBuilder cookie(javax.ws.rs.core.NewCookie[])
+meth public !varargs javax.ws.rs.core.Response$ResponseBuilder links(javax.ws.rs.core.Link[])
+meth public !varargs javax.ws.rs.core.Response$ResponseBuilder variants(javax.ws.rs.core.Variant[])
+meth public javax.ws.rs.core.Response build()
+meth public javax.ws.rs.core.Response$ResponseBuilder allow(java.util.Set<java.lang.String>)
+meth public javax.ws.rs.core.Response$ResponseBuilder cacheControl(javax.ws.rs.core.CacheControl)
+meth public javax.ws.rs.core.Response$ResponseBuilder clone()
+meth public javax.ws.rs.core.Response$ResponseBuilder contentLocation(java.net.URI)
+meth public javax.ws.rs.core.Response$ResponseBuilder encoding(java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder entity(java.lang.Object)
+meth public javax.ws.rs.core.Response$ResponseBuilder entity(java.lang.Object,java.lang.annotation.Annotation[])
+meth public javax.ws.rs.core.Response$ResponseBuilder expires(java.util.Date)
+meth public javax.ws.rs.core.Response$ResponseBuilder header(java.lang.String,java.lang.Object)
+meth public javax.ws.rs.core.Response$ResponseBuilder language(java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder language(java.util.Locale)
+meth public javax.ws.rs.core.Response$ResponseBuilder lastModified(java.util.Date)
+meth public javax.ws.rs.core.Response$ResponseBuilder link(java.lang.String,java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder link(java.net.URI,java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder location(java.net.URI)
+meth public javax.ws.rs.core.Response$ResponseBuilder replaceAll(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+meth public javax.ws.rs.core.Response$ResponseBuilder status(int)
+meth public javax.ws.rs.core.Response$ResponseBuilder status(int,java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder status(javax.ws.rs.core.Response$StatusType)
+meth public javax.ws.rs.core.Response$ResponseBuilder tag(java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder tag(javax.ws.rs.core.EntityTag)
+meth public javax.ws.rs.core.Response$ResponseBuilder type(java.lang.String)
+meth public javax.ws.rs.core.Response$ResponseBuilder type(javax.ws.rs.core.MediaType)
+meth public javax.ws.rs.core.Response$ResponseBuilder variant(javax.ws.rs.core.Variant)
+meth public javax.ws.rs.core.Response$ResponseBuilder variants(java.util.List<javax.ws.rs.core.Variant>)
+meth public static void clearBaseUri()
+meth public static void setBaseUri(java.net.URI)
+supr javax.ws.rs.core.Response$ResponseBuilder
+hfds baseUriThreadLocal,context,status
+
 CLSS public org.glassfish.jersey.message.internal.OutboundMessageContext
 cons public init()
  anno 0 java.lang.Deprecated()
@@ -2649,12 +11491,3321 @@ meth public void setStreamProvider(org.glassfish.jersey.message.internal.Outboun
 supr java.lang.Object
 hfds EMPTY_ANNOTATIONS,WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST,committingOutputStream,configuration,entity,entityAnnotations,entityStream,entityType,headers
 
+CLSS public abstract interface static org.glassfish.jersey.message.internal.OutboundMessageContext$StreamProvider
+ outer org.glassfish.jersey.message.internal.OutboundMessageContext
+meth public abstract java.io.OutputStream getOutputStream(int) throws java.io.IOException
+
+CLSS public org.glassfish.jersey.message.internal.ParameterizedHeader
+cons public init(java.lang.String) throws java.text.ParseException
+cons public init(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+meth public java.lang.String getValue()
+meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
+supr java.lang.Object
+hfds parameters,value
+
+CLSS public abstract interface org.glassfish.jersey.message.internal.Qualified
+meth public abstract int getQuality()
+
+CLSS public final org.glassfish.jersey.message.internal.Quality
+fld public final static int DEFAULT = 1000
+fld public final static int MAXIMUM = 1000
+fld public final static int MINIMUM = 0
+fld public final static java.lang.String QUALITY_PARAMETER_NAME = "q"
+fld public final static java.lang.String QUALITY_SOURCE_PARAMETER_NAME = "qs"
+fld public final static java.util.Comparator<java.lang.Integer> QUALITY_VALUE_COMPARATOR
+fld public final static java.util.Comparator<org.glassfish.jersey.message.internal.Qualified> QUALIFIED_COMPARATOR
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.QualitySourceMediaType
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,java.lang.String,int,java.util.Map<java.lang.String,java.lang.String>)
+fld public final static java.util.Comparator<org.glassfish.jersey.message.internal.QualitySourceMediaType> COMPARATOR
+intf org.glassfish.jersey.message.internal.Qualified
+meth public boolean equals(java.lang.Object)
+meth public int getQuality()
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public static int getQualitySource(javax.ws.rs.core.MediaType)
+meth public static org.glassfish.jersey.message.internal.QualitySourceMediaType valueOf(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+supr javax.ws.rs.core.MediaType
+hfds qs
+
+CLSS public final org.glassfish.jersey.message.internal.ReaderInterceptorExecutor
+intf javax.ws.rs.ext.InterceptorContext
+intf javax.ws.rs.ext.ReaderInterceptorContext
+intf org.glassfish.jersey.internal.PropertiesDelegate
+intf org.glassfish.jersey.internal.inject.InjectionManagerSupplier
+meth protected final org.glassfish.jersey.message.internal.TracingLogger getTracingLogger()
+meth protected final void clearLastTracedInterceptor()
+meth protected final void traceAfter(javax.ws.rs.ext.ReaderInterceptor,org.glassfish.jersey.message.internal.TracingLogger$Event)
+meth protected final void traceBefore(javax.ws.rs.ext.ReaderInterceptor,org.glassfish.jersey.message.internal.TracingLogger$Event)
+meth public java.io.InputStream getInputStream()
+meth public java.lang.Class getType()
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.lang.Object proceed() throws java.io.IOException
+meth public java.lang.annotation.Annotation[] getAnnotations()
+meth public java.lang.reflect.Type getGenericType()
+meth public java.util.Collection<java.lang.String> getPropertyNames()
+meth public javax.ws.rs.core.MediaType getMediaType()
+meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> getHeaders()
+meth public org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
+meth public static java.io.InputStream closeableInputStream(java.io.InputStream)
+meth public void removeProperty(java.lang.String)
+meth public void setAnnotations(java.lang.annotation.Annotation[])
+meth public void setGenericType(java.lang.reflect.Type)
+meth public void setInputStream(java.io.InputStream)
+meth public void setMediaType(javax.ws.rs.core.MediaType)
+meth public void setProperty(java.lang.String,java.lang.Object)
+meth public void setType(java.lang.Class)
+supr java.lang.Object<javax.ws.rs.ext.ReaderInterceptor>
+hfds LOGGER,headers,injectionManager,inputStream,interceptors,processedCount,translateNce,workers
+hcls TerminalReaderInterceptor,UnCloseableInputStream
+
+CLSS public final org.glassfish.jersey.message.internal.ReaderProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["text/plain", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["text/plain", "*/*"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public java.io.Reader readFrom(java.lang.Class<java.io.Reader>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public void writeTo(java.io.Reader,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<java.io.Reader>
+
+CLSS public final org.glassfish.jersey.message.internal.ReaderWriter
+fld public final static int BUFFER_SIZE
+fld public final static java.nio.charset.Charset UTF8
+meth public static java.lang.String readFromAsString(java.io.InputStream,javax.ws.rs.core.MediaType) throws java.io.IOException
+meth public static java.lang.String readFromAsString(java.io.Reader) throws java.io.IOException
+meth public static java.nio.charset.Charset getCharset(javax.ws.rs.core.MediaType)
+meth public static void safelyClose(java.io.Closeable)
+meth public static void writeTo(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
+meth public static void writeTo(java.io.Reader,java.io.Writer) throws java.io.IOException
+meth public static void writeToAsString(java.lang.String,java.io.OutputStream,javax.ws.rs.core.MediaType) throws java.io.IOException
+supr java.lang.Object
+hfds LOGGER
+
+CLSS public final org.glassfish.jersey.message.internal.RenderedImageProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["image/*", "application/octet-stream"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["image/*"])
+cons public init()
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public java.awt.image.RenderedImage readFrom(java.lang.Class<java.awt.image.RenderedImage>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public void writeTo(java.awt.image.RenderedImage,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider<java.awt.image.RenderedImage>
+hfds IMAGE_MEDIA_TYPE
+
+CLSS public final org.glassfish.jersey.message.internal.SourceProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+innr public final static DomSourceReader
+innr public final static SaxSourceReader
+innr public final static SourceWriter
+innr public final static StreamSourceReader
+supr java.lang.Object
+
+CLSS public final static org.glassfish.jersey.message.internal.SourceProvider$DomSourceReader
+ outer org.glassfish.jersey.message.internal.SourceProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+cons public init(javax.inject.Provider<javax.xml.parsers.DocumentBuilderFactory>)
+ anno 1 javax.ws.rs.core.Context()
+intf javax.ws.rs.ext.MessageBodyReader<javax.xml.transform.dom.DOMSource>
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public javax.xml.transform.dom.DOMSource readFrom(java.lang.Class<javax.xml.transform.dom.DOMSource>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+supr java.lang.Object
+hfds dbf
+
+CLSS public final static org.glassfish.jersey.message.internal.SourceProvider$SaxSourceReader
+ outer org.glassfish.jersey.message.internal.SourceProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+cons public init(javax.inject.Provider<javax.xml.parsers.SAXParserFactory>)
+ anno 1 javax.ws.rs.core.Context()
+intf javax.ws.rs.ext.MessageBodyReader<javax.xml.transform.sax.SAXSource>
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public javax.xml.transform.sax.SAXSource readFrom(java.lang.Class<javax.xml.transform.sax.SAXSource>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+supr java.lang.Object
+hfds spf
+
+CLSS public final static org.glassfish.jersey.message.internal.SourceProvider$SourceWriter
+ outer org.glassfish.jersey.message.internal.SourceProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+cons public init(javax.inject.Provider<javax.xml.parsers.SAXParserFactory>,javax.inject.Provider<javax.xml.transform.TransformerFactory>)
+ anno 1 javax.ws.rs.core.Context()
+ anno 2 javax.ws.rs.core.Context()
+intf javax.ws.rs.ext.MessageBodyWriter<javax.xml.transform.Source>
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public long getSize(javax.xml.transform.Source,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void writeTo(javax.xml.transform.Source,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr java.lang.Object
+hfds saxParserFactory,transformerFactory
+
+CLSS public final static org.glassfish.jersey.message.internal.SourceProvider$StreamSourceReader
+ outer org.glassfish.jersey.message.internal.SourceProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/xml", "text/xml", "*/*"])
+cons public init()
+intf javax.ws.rs.ext.MessageBodyReader<javax.xml.transform.stream.StreamSource>
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public javax.xml.transform.stream.StreamSource readFrom(java.lang.Class<javax.xml.transform.stream.StreamSource>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.message.internal.Statuses
+meth public static javax.ws.rs.core.Response$StatusType from(int)
+meth public static javax.ws.rs.core.Response$StatusType from(int,java.lang.String)
+meth public static javax.ws.rs.core.Response$StatusType from(javax.ws.rs.core.Response$StatusType,java.lang.String)
+supr java.lang.Object
+hcls StatusImpl
+
+CLSS public final org.glassfish.jersey.message.internal.StreamingOutputProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/octet-stream", "*/*"])
+cons public init()
+intf javax.ws.rs.ext.MessageBodyWriter<javax.ws.rs.core.StreamingOutput>
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public long getSize(javax.ws.rs.core.StreamingOutput,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void writeTo(javax.ws.rs.core.StreamingOutput,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.StringBuilderUtils
+meth public static void appendEscapingQuotes(java.lang.StringBuilder,java.lang.String)
+meth public static void appendQuoted(java.lang.StringBuilder,java.lang.String)
+meth public static void appendQuotedIfNonToken(java.lang.StringBuilder,java.lang.String)
+meth public static void appendQuotedIfWhitespace(java.lang.StringBuilder,java.lang.String)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.StringHeaderProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<java.lang.String>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String fromString(java.lang.String)
+meth public java.lang.String toString(java.lang.String)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.Token
+cons protected init()
+cons public init(java.lang.String) throws java.text.ParseException
+cons public init(org.glassfish.jersey.message.internal.HttpHeaderReader) throws java.text.ParseException
+fld protected java.lang.String token
+meth public final boolean isCompatible(java.lang.String)
+meth public java.lang.String getToken()
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.message.internal.TracingAwarePropertiesDelegate
+cons public init(org.glassfish.jersey.internal.PropertiesDelegate)
+intf org.glassfish.jersey.internal.PropertiesDelegate
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.util.Collection<java.lang.String> getPropertyNames()
+meth public void removeProperty(java.lang.String)
+meth public void setProperty(java.lang.String,java.lang.Object)
+supr java.lang.Object
+hfds propertiesDelegate,tracingLogger
+
+CLSS public abstract org.glassfish.jersey.message.internal.TracingLogger
+cons public init()
+fld public final static java.lang.String HEADER_ACCEPT = "X-Jersey-Tracing-Accept"
+fld public final static java.lang.String HEADER_LOGGER = "X-Jersey-Tracing-Logger"
+fld public final static java.lang.String HEADER_THRESHOLD = "X-Jersey-Tracing-Threshold"
+fld public final static java.lang.String PROPERTY_NAME
+fld public final static org.glassfish.jersey.message.internal.TracingLogger$Level DEFAULT_LEVEL
+innr public abstract interface static Event
+innr public final static !enum Level
+meth public abstract !varargs void log(org.glassfish.jersey.message.internal.TracingLogger$Event,java.lang.Object[])
+meth public abstract !varargs void logDuration(org.glassfish.jersey.message.internal.TracingLogger$Event,long,java.lang.Object[])
+meth public abstract boolean isLogEnabled(org.glassfish.jersey.message.internal.TracingLogger$Event)
+meth public abstract long timestamp(org.glassfish.jersey.message.internal.TracingLogger$Event)
+meth public abstract void flush(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+meth public static org.glassfish.jersey.message.internal.TracingLogger create(org.glassfish.jersey.message.internal.TracingLogger$Level,java.lang.String)
+meth public static org.glassfish.jersey.message.internal.TracingLogger empty()
+meth public static org.glassfish.jersey.message.internal.TracingLogger getInstance(org.glassfish.jersey.internal.PropertiesDelegate)
+supr java.lang.Object
+hfds DEFAULT_LOGGER_NAME_SUFFIX,EMPTY,HEADER_RESPONSE_FORMAT,HEADER_TRACING_PREFIX,TRACING_LOGGER_NAME_PREFIX
+hcls TracingLoggerImpl
+
+CLSS public abstract interface static org.glassfish.jersey.message.internal.TracingLogger$Event
+ outer org.glassfish.jersey.message.internal.TracingLogger
+meth public abstract java.lang.String category()
+meth public abstract java.lang.String messageFormat()
+meth public abstract java.lang.String name()
+meth public abstract org.glassfish.jersey.message.internal.TracingLogger$Level level()
+
+CLSS public final static !enum org.glassfish.jersey.message.internal.TracingLogger$Level
+ outer org.glassfish.jersey.message.internal.TracingLogger
+fld public final static org.glassfish.jersey.message.internal.TracingLogger$Level SUMMARY
+fld public final static org.glassfish.jersey.message.internal.TracingLogger$Level TRACE
+fld public final static org.glassfish.jersey.message.internal.TracingLogger$Level VERBOSE
+meth public static org.glassfish.jersey.message.internal.TracingLogger$Level valueOf(java.lang.String)
+meth public static org.glassfish.jersey.message.internal.TracingLogger$Level[] values()
+supr java.lang.Enum<org.glassfish.jersey.message.internal.TracingLogger$Level>
+
+CLSS public org.glassfish.jersey.message.internal.UriProvider
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf org.glassfish.jersey.spi.HeaderDelegateProvider<java.net.URI>
+meth public boolean supports(java.lang.Class<?>)
+meth public java.lang.String toString(java.net.URI)
+meth public java.net.URI fromString(java.lang.String)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.message.internal.Utils
+meth public static java.io.File createTempFile() throws java.io.IOException
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.message.internal.VariantListBuilder
+cons public init()
+meth public !varargs org.glassfish.jersey.message.internal.VariantListBuilder encodings(java.lang.String[])
+meth public !varargs org.glassfish.jersey.message.internal.VariantListBuilder languages(java.util.Locale[])
+meth public !varargs org.glassfish.jersey.message.internal.VariantListBuilder mediaTypes(javax.ws.rs.core.MediaType[])
+meth public java.util.List<javax.ws.rs.core.Variant> build()
+meth public org.glassfish.jersey.message.internal.VariantListBuilder add()
+supr javax.ws.rs.core.Variant$VariantListBuilder
+hfds encodings,languages,mediaTypes,variants
+
+CLSS public final org.glassfish.jersey.message.internal.VariantSelector
+meth public static java.util.List<javax.ws.rs.core.Variant> selectVariants(org.glassfish.jersey.message.internal.InboundMessageContext,java.util.List<javax.ws.rs.core.Variant>,org.glassfish.jersey.internal.util.collection.Ref<java.lang.String>)
+meth public static javax.ws.rs.core.Variant selectVariant(org.glassfish.jersey.message.internal.InboundMessageContext,java.util.List<javax.ws.rs.core.Variant>,org.glassfish.jersey.internal.util.collection.Ref<java.lang.String>)
+supr java.lang.Object
+hfds CHARSET_DC,ENCODING_DC,LANGUAGE_TAG_DC,MEDIA_TYPE_DC
+hcls DimensionChecker,VariantHolder
+
+CLSS public final org.glassfish.jersey.message.internal.WriterInterceptorExecutor
+cons public init(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,org.glassfish.jersey.internal.PropertiesDelegate,java.io.OutputStream,org.glassfish.jersey.message.MessageBodyWorkers,java.lang.Iterable<javax.ws.rs.ext.WriterInterceptor>,org.glassfish.jersey.internal.inject.InjectionManager)
+intf javax.ws.rs.ext.InterceptorContext
+intf javax.ws.rs.ext.WriterInterceptorContext
+intf org.glassfish.jersey.internal.PropertiesDelegate
+intf org.glassfish.jersey.internal.inject.InjectionManagerSupplier
+meth protected final org.glassfish.jersey.message.internal.TracingLogger getTracingLogger()
+meth protected final void clearLastTracedInterceptor()
+meth protected final void traceAfter(javax.ws.rs.ext.WriterInterceptor,org.glassfish.jersey.message.internal.TracingLogger$Event)
+meth protected final void traceBefore(javax.ws.rs.ext.WriterInterceptor,org.glassfish.jersey.message.internal.TracingLogger$Event)
+meth public java.io.OutputStream getOutputStream()
+meth public java.lang.Class getType()
+meth public java.lang.Object getEntity()
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.lang.annotation.Annotation[] getAnnotations()
+meth public java.lang.reflect.Type getGenericType()
+meth public java.util.Collection<java.lang.String> getPropertyNames()
+meth public javax.ws.rs.core.MediaType getMediaType()
+meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object> getHeaders()
+meth public org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
+meth public void proceed() throws java.io.IOException
+meth public void removeProperty(java.lang.String)
+meth public void setAnnotations(java.lang.annotation.Annotation[])
+meth public void setEntity(java.lang.Object)
+meth public void setGenericType(java.lang.reflect.Type)
+meth public void setMediaType(javax.ws.rs.core.MediaType)
+meth public void setOutputStream(java.io.OutputStream)
+meth public void setProperty(java.lang.String,java.lang.Object)
+meth public void setType(java.lang.Class)
+supr java.lang.Object<javax.ws.rs.ext.WriterInterceptor>
+hfds LOGGER,entity,headers,injectionManager,iterator,outputStream,processedCount
+hcls TerminalWriterInterceptor,UnCloseableOutputStream
+
+CLSS public org.glassfish.jersey.model.AnnotatedMethod
+cons public init(java.lang.reflect.Method)
+intf java.lang.reflect.AnnotatedElement
+meth public <%0 extends java.lang.annotation.Annotation> java.util.List<{%%0}> getMetaMethodAnnotations(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public boolean isAnnotationPresent(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public java.lang.Class<?>[] getParameterTypes()
+meth public java.lang.String toString()
+meth public java.lang.annotation.Annotation[] getAnnotations()
+meth public java.lang.annotation.Annotation[] getDeclaredAnnotations()
+meth public java.lang.annotation.Annotation[][] getParameterAnnotations()
+meth public java.lang.reflect.Method getDeclaredMethod()
+meth public java.lang.reflect.Method getMethod()
+meth public java.lang.reflect.TypeVariable<java.lang.reflect.Method>[] getTypeParameters()
+meth public java.lang.reflect.Type[] getGenericParameterTypes()
+supr java.lang.Object
+hfds METHOD_ANNOTATIONS,METHOD_META_ANNOTATIONS,PARAMETER_ANNOTATIONS,am,m,methodAnnotations,parameterAnnotations
+
+CLSS public final org.glassfish.jersey.model.ContractProvider
+fld public final static int NO_PRIORITY = -1
+innr public final static Builder
+intf org.glassfish.jersey.model.NameBound
+intf org.glassfish.jersey.model.Scoped
+meth public boolean isNameBound()
+meth public int getPriority(java.lang.Class<?>)
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.util.Map<java.lang.Class<?>,java.lang.Integer> getContractMap()
+meth public java.util.Set<java.lang.Class<? extends java.lang.annotation.Annotation>> getNameBindings()
+meth public java.util.Set<java.lang.Class<?>> getContracts()
+meth public static org.glassfish.jersey.model.ContractProvider$Builder builder(java.lang.Class<?>)
+meth public static org.glassfish.jersey.model.ContractProvider$Builder builder(org.glassfish.jersey.model.ContractProvider)
+supr java.lang.Object
+hfds contracts,defaultPriority,implementationClass,nameBindings,scope
+
+CLSS public final static org.glassfish.jersey.model.ContractProvider$Builder
+ outer org.glassfish.jersey.model.ContractProvider
+meth public int getDefaultPriority()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public java.util.Map<java.lang.Class<?>,java.lang.Integer> getContracts()
+meth public java.util.Set<java.lang.Class<? extends java.lang.annotation.Annotation>> getNameBindings()
+meth public org.glassfish.jersey.model.ContractProvider build()
+meth public org.glassfish.jersey.model.ContractProvider$Builder addContract(java.lang.Class<?>)
+meth public org.glassfish.jersey.model.ContractProvider$Builder addContract(java.lang.Class<?>,int)
+meth public org.glassfish.jersey.model.ContractProvider$Builder addContracts(java.util.Collection<java.lang.Class<?>>)
+meth public org.glassfish.jersey.model.ContractProvider$Builder addContracts(java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.model.ContractProvider$Builder addNameBinding(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public org.glassfish.jersey.model.ContractProvider$Builder defaultPriority(int)
+meth public org.glassfish.jersey.model.ContractProvider$Builder scope(java.lang.Class<? extends java.lang.annotation.Annotation>)
+supr java.lang.Object
+hfds EMPTY_MODEL,contracts,defaultPriority,implementationClass,nameBindings,scope
+
+CLSS public abstract interface org.glassfish.jersey.model.NameBound
+meth public abstract boolean isNameBound()
+meth public abstract java.util.Collection<java.lang.Class<? extends java.lang.annotation.Annotation>> getNameBindings()
+
+CLSS public org.glassfish.jersey.model.Parameter
+cons protected init(java.lang.annotation.Annotation[],java.lang.annotation.Annotation,org.glassfish.jersey.model.Parameter$Source,java.lang.String,java.lang.Class<?>,java.lang.reflect.Type,boolean,java.lang.String)
+innr public abstract interface static ParamAnnotationHelper
+innr public abstract interface static ParamCreationFactory
+innr public final static !enum Source
+innr public static ParameterService
+intf java.lang.reflect.AnnotatedElement
+meth protected static <%0 extends org.glassfish.jersey.model.Parameter> java.util.List<{%%0}> createList(java.lang.Class,java.lang.Class,java.lang.reflect.Constructor<?>,boolean,java.lang.Class<?>)
+meth protected static <%0 extends org.glassfish.jersey.model.Parameter> java.util.List<{%%0}> createList(java.lang.Class,java.lang.Class,java.lang.reflect.Method,boolean,java.lang.Class)
+meth protected static <%0 extends org.glassfish.jersey.model.Parameter> {%%0} create(java.lang.Class,java.lang.Class,boolean,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],java.lang.Class<?>)
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public boolean equals(java.lang.Object)
+meth public boolean hasDefaultValue()
+meth public boolean isAnnotationPresent(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public boolean isEncoded()
+meth public boolean isQualified()
+meth public int hashCode()
+meth public java.lang.Class<?> getRawType()
+meth public java.lang.String getDefaultValue()
+meth public java.lang.String getSourceName()
+meth public java.lang.String toString()
+meth public java.lang.annotation.Annotation getSourceAnnotation()
+meth public java.lang.annotation.Annotation[] getAnnotations()
+meth public java.lang.annotation.Annotation[] getDeclaredAnnotations()
+meth public java.lang.reflect.Type getType()
+meth public org.glassfish.jersey.model.Parameter$Source getSource()
+meth public static <%0 extends org.glassfish.jersey.model.Parameter> java.util.List<{%%0}> create(java.lang.Class,java.lang.Class,java.lang.reflect.Method,boolean)
+meth public static <%0 extends org.glassfish.jersey.model.Parameter> {%%0} create(java.lang.Class,java.lang.Class,boolean,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+hfds ANNOTATION_HELPER_MAP,LOGGER,PARAM_CREATION_FACTORIES,annotations,defaultValue,encoded,rawType,source,sourceAnnotation,sourceName,type
+
+CLSS public abstract interface static org.glassfish.jersey.model.Parameter$ParamAnnotationHelper<%0 extends java.lang.annotation.Annotation>
+ outer org.glassfish.jersey.model.Parameter
+meth public abstract java.lang.String getValueOf({org.glassfish.jersey.model.Parameter$ParamAnnotationHelper%0})
+meth public abstract org.glassfish.jersey.model.Parameter$Source getSource()
+
+CLSS public abstract interface static org.glassfish.jersey.model.Parameter$ParamCreationFactory<%0 extends org.glassfish.jersey.model.Parameter>
+ outer org.glassfish.jersey.model.Parameter
+meth public abstract boolean isFor(java.lang.Class<?>)
+meth public abstract {org.glassfish.jersey.model.Parameter$ParamCreationFactory%0} createBeanParameter(java.lang.annotation.Annotation[],java.lang.annotation.Annotation,org.glassfish.jersey.model.Parameter$Source,java.lang.String,java.lang.Class<?>,java.lang.reflect.Type,boolean,java.lang.String)
+meth public abstract {org.glassfish.jersey.model.Parameter$ParamCreationFactory%0} createParameter(java.lang.annotation.Annotation[],java.lang.annotation.Annotation,org.glassfish.jersey.model.Parameter$Source,java.lang.String,java.lang.Class<?>,java.lang.reflect.Type,boolean,java.lang.String)
+
+CLSS public static org.glassfish.jersey.model.Parameter$ParameterService
+ outer org.glassfish.jersey.model.Parameter
+cons public init()
+intf org.glassfish.jersey.model.internal.spi.ParameterServiceProvider
+meth public java.util.Map<java.lang.Class,org.glassfish.jersey.model.Parameter$ParamAnnotationHelper> getParameterAnnotationHelperMap()
+meth public org.glassfish.jersey.model.Parameter$ParamCreationFactory<org.glassfish.jersey.model.Parameter> getParameterCreationFactory()
+supr java.lang.Object
+
+CLSS public final static !enum org.glassfish.jersey.model.Parameter$Source
+ outer org.glassfish.jersey.model.Parameter
+fld public final static org.glassfish.jersey.model.Parameter$Source BEAN_PARAM
+fld public final static org.glassfish.jersey.model.Parameter$Source CONTEXT
+fld public final static org.glassfish.jersey.model.Parameter$Source COOKIE
+fld public final static org.glassfish.jersey.model.Parameter$Source ENTITY
+fld public final static org.glassfish.jersey.model.Parameter$Source FORM
+fld public final static org.glassfish.jersey.model.Parameter$Source HEADER
+fld public final static org.glassfish.jersey.model.Parameter$Source MATRIX
+fld public final static org.glassfish.jersey.model.Parameter$Source PATH
+fld public final static org.glassfish.jersey.model.Parameter$Source QUERY
+fld public final static org.glassfish.jersey.model.Parameter$Source SUSPENDED
+fld public final static org.glassfish.jersey.model.Parameter$Source UNKNOWN
+fld public final static org.glassfish.jersey.model.Parameter$Source URI
+meth public static org.glassfish.jersey.model.Parameter$Source valueOf(java.lang.String)
+meth public static org.glassfish.jersey.model.Parameter$Source[] values()
+supr java.lang.Enum<org.glassfish.jersey.model.Parameter$Source>
+
+CLSS public abstract interface org.glassfish.jersey.model.Scoped
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+
+CLSS public org.glassfish.jersey.model.internal.CommonConfig
+cons public init(javax.ws.rs.RuntimeType,java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider>)
+cons public init(org.glassfish.jersey.model.internal.CommonConfig)
+intf javax.ws.rs.core.FeatureContext
+intf org.glassfish.jersey.ExtendedConfig
+meth protected org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider> getModelEnhancer(java.lang.Class<?>)
+meth public !varargs org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Class<?>,java.lang.Class<?>[])
+meth public !varargs org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Object,java.lang.Class<?>[])
+meth public boolean equals(java.lang.Object)
+meth public boolean isEnabled(java.lang.Class<? extends javax.ws.rs.core.Feature>)
+meth public boolean isEnabled(javax.ws.rs.core.Feature)
+meth public boolean isProperty(java.lang.String)
+meth public boolean isRegistered(java.lang.Class<?>)
+meth public boolean isRegistered(java.lang.Object)
+meth public final org.glassfish.jersey.model.internal.ComponentBag getComponentBag()
+meth public int hashCode()
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.util.Collection<java.lang.String> getPropertyNames()
+meth public java.util.Map<java.lang.Class<?>,java.lang.Integer> getContracts(java.lang.Class<?>)
+meth public java.util.Map<java.lang.String,java.lang.Object> getProperties()
+meth public java.util.Set<java.lang.Class<?>> getClasses()
+meth public java.util.Set<java.lang.Object> getInstances()
+meth public javax.ws.rs.RuntimeType getRuntimeType()
+meth public org.glassfish.jersey.ExtendedConfig getConfiguration()
+meth public org.glassfish.jersey.model.internal.CommonConfig addProperties(java.util.Map<java.lang.String,?>)
+meth public org.glassfish.jersey.model.internal.CommonConfig loadFrom(javax.ws.rs.core.Configuration)
+meth public org.glassfish.jersey.model.internal.CommonConfig property(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Class<?>)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Class<?>,int)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Class<?>,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Object)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Object,int)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Object,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.model.internal.CommonConfig setProperties(java.util.Map<java.lang.String,?>)
+meth public void configureAutoDiscoverableProviders(org.glassfish.jersey.internal.inject.InjectionManager,java.util.Collection<org.glassfish.jersey.internal.spi.AutoDiscoverable>,boolean)
+meth public void configureMetaProviders(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.model.internal.ManagedObjectsFinalizer)
+supr java.lang.Object
+hfds CAST_TO_BINDER,LOGGER,componentBag,disableMetaProviderConfiguration,enabledFeatureClasses,enabledFeatures,immutablePropertiesView,immutablePropertyNames,newFeatureRegistrations,properties,type
+hcls FeatureRegistration
+
+CLSS public org.glassfish.jersey.model.internal.ComponentBag
+fld public final static java.util.function.BiPredicate<org.glassfish.jersey.model.ContractProvider,org.glassfish.jersey.internal.inject.InjectionManager> EXTERNAL_ONLY
+fld public final static java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider> BINDERS_ONLY
+fld public final static java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider> EXCLUDE_EMPTY
+fld public final static java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider> EXECUTOR_SERVICE_PROVIDER_ONLY
+fld public final static java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider> INCLUDE_ALL
+fld public final static java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider> SCHEDULED_EXECUTOR_SERVICE_PROVIDER_ONLY
+meth public boolean register(java.lang.Class<?>,int,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Class<?>,java.util.Map<java.lang.Class<?>,java.lang.Integer>,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Class<?>,java.util.Set<java.lang.Class<?>>,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Class<?>,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Object,int,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Object,java.util.Map<java.lang.Class<?>,java.lang.Integer>,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Object,java.util.Set<java.lang.Class<?>>,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public boolean register(java.lang.Object,org.glassfish.jersey.process.Inflector<org.glassfish.jersey.model.ContractProvider$Builder,org.glassfish.jersey.model.ContractProvider>)
+meth public java.util.Set<java.lang.Class<?>> getClasses()
+meth public java.util.Set<java.lang.Class<?>> getClasses(java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider>)
+meth public java.util.Set<java.lang.Class<?>> getRegistrations()
+meth public java.util.Set<java.lang.Object> getInstances()
+meth public java.util.Set<java.lang.Object> getInstances(java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider>)
+meth public org.glassfish.jersey.model.ContractProvider getModel(java.lang.Class<?>)
+meth public org.glassfish.jersey.model.internal.ComponentBag copy()
+meth public org.glassfish.jersey.model.internal.ComponentBag immutableCopy()
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> getFromBinders(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.model.internal.ComponentBag,java.util.function.Function<java.lang.Object,{%%0}>,java.util.function.Predicate<org.glassfish.jersey.internal.inject.Binding>)
+meth public static java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider> excludeMetaProviders(org.glassfish.jersey.internal.inject.InjectionManager)
+meth public static org.glassfish.jersey.model.ContractProvider modelFor(java.lang.Class<?>)
+meth public static org.glassfish.jersey.model.internal.ComponentBag newInstance(java.util.function.Predicate<org.glassfish.jersey.model.ContractProvider>)
+meth public void clear()
+supr java.lang.Object
+hfds AS_IS,CAST_TO_BINDER,EXCLUDE_META_PROVIDERS,classes,classesView,instances,instancesView,modelKeysView,models,registrationStrategy
+hcls ImmutableComponentBag
+
+CLSS public org.glassfish.jersey.model.internal.FeatureContextWrapper
+cons public init(javax.ws.rs.core.FeatureContext,org.glassfish.jersey.internal.inject.InjectionManager)
+intf javax.ws.rs.core.FeatureContext
+intf org.glassfish.jersey.internal.inject.InjectionManagerSupplier
+meth public !varargs javax.ws.rs.core.FeatureContext register(java.lang.Class<?>,java.lang.Class<?>[])
+meth public !varargs javax.ws.rs.core.FeatureContext register(java.lang.Object,java.lang.Class<?>[])
+meth public javax.ws.rs.core.Configuration getConfiguration()
+meth public javax.ws.rs.core.FeatureContext property(java.lang.String,java.lang.Object)
+meth public javax.ws.rs.core.FeatureContext register(java.lang.Class<?>)
+meth public javax.ws.rs.core.FeatureContext register(java.lang.Class<?>,int)
+meth public javax.ws.rs.core.FeatureContext register(java.lang.Class<?>,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public javax.ws.rs.core.FeatureContext register(java.lang.Object)
+meth public javax.ws.rs.core.FeatureContext register(java.lang.Object,int)
+meth public javax.ws.rs.core.FeatureContext register(java.lang.Object,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
+supr java.lang.Object
+hfds context,injectionManager
+
+CLSS public org.glassfish.jersey.model.internal.ImmutableCommonConfig
+cons public init(org.glassfish.jersey.model.internal.CommonConfig)
+cons public init(org.glassfish.jersey.model.internal.CommonConfig,java.lang.String)
+meth public !varargs org.glassfish.jersey.model.internal.ImmutableCommonConfig register(java.lang.Class<?>,java.lang.Class<?>[])
+meth public !varargs org.glassfish.jersey.model.internal.ImmutableCommonConfig register(java.lang.Object,java.lang.Class<?>[])
+meth public org.glassfish.jersey.model.internal.CommonConfig loadFrom(javax.ws.rs.core.Configuration)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Class<?>,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.model.internal.CommonConfig register(java.lang.Object,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.model.internal.ImmutableCommonConfig property(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.model.internal.ImmutableCommonConfig register(java.lang.Class<?>)
+meth public org.glassfish.jersey.model.internal.ImmutableCommonConfig register(java.lang.Class<?>,int)
+meth public org.glassfish.jersey.model.internal.ImmutableCommonConfig register(java.lang.Object)
+meth public org.glassfish.jersey.model.internal.ImmutableCommonConfig register(java.lang.Object,int)
+meth public org.glassfish.jersey.model.internal.ImmutableCommonConfig setProperties(java.util.Map<java.lang.String,?>)
+supr org.glassfish.jersey.model.internal.CommonConfig
+hfds errorMessage
+
+CLSS public org.glassfish.jersey.model.internal.ManagedObjectsFinalizer
+ anno 0 javax.inject.Singleton()
+cons public init(org.glassfish.jersey.internal.inject.InjectionManager)
+meth public void preDestroy()
+ anno 0 javax.annotation.PreDestroy()
+meth public void registerForPreDestroyCall(java.lang.Object)
+supr java.lang.Object
+hfds injectionManager,managedObjects
+
+CLSS public org.glassfish.jersey.model.internal.RankedComparator<%0 extends java.lang.Object>
+cons public init()
+cons public init(org.glassfish.jersey.model.internal.RankedComparator$Order)
+innr public final static !enum Order
+intf java.util.Comparator<org.glassfish.jersey.model.internal.RankedProvider<{org.glassfish.jersey.model.internal.RankedComparator%0}>>
+meth protected int getPriority(org.glassfish.jersey.model.internal.RankedProvider<{org.glassfish.jersey.model.internal.RankedComparator%0}>)
+meth public int compare(org.glassfish.jersey.model.internal.RankedProvider<{org.glassfish.jersey.model.internal.RankedComparator%0}>,org.glassfish.jersey.model.internal.RankedProvider<{org.glassfish.jersey.model.internal.RankedComparator%0}>)
+supr java.lang.Object
+hfds order
+
+CLSS public final static !enum org.glassfish.jersey.model.internal.RankedComparator$Order
+ outer org.glassfish.jersey.model.internal.RankedComparator
+fld public final static org.glassfish.jersey.model.internal.RankedComparator$Order ASCENDING
+fld public final static org.glassfish.jersey.model.internal.RankedComparator$Order DESCENDING
+meth public static org.glassfish.jersey.model.internal.RankedComparator$Order valueOf(java.lang.String)
+meth public static org.glassfish.jersey.model.internal.RankedComparator$Order[] values()
+supr java.lang.Enum<org.glassfish.jersey.model.internal.RankedComparator$Order>
+hfds ordering
+
+CLSS public org.glassfish.jersey.model.internal.RankedProvider<%0 extends java.lang.Object>
+cons public init({org.glassfish.jersey.model.internal.RankedProvider%0})
+cons public init({org.glassfish.jersey.model.internal.RankedProvider%0},int)
+cons public init({org.glassfish.jersey.model.internal.RankedProvider%0},int,java.util.Set<java.lang.reflect.Type>)
+meth public int getRank()
+meth public java.lang.String toString()
+meth public java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public {org.glassfish.jersey.model.internal.RankedProvider%0} getProvider()
+supr java.lang.Object
+hfds contractTypes,provider,rank
+
+CLSS public abstract interface org.glassfish.jersey.model.internal.spi.ParameterServiceProvider
+meth public abstract java.util.Map<java.lang.Class,org.glassfish.jersey.model.Parameter$ParamAnnotationHelper> getParameterAnnotationHelperMap()
+meth public abstract org.glassfish.jersey.model.Parameter$ParamCreationFactory<? extends org.glassfish.jersey.model.Parameter> getParameterCreationFactory()
+
+CLSS public final org.glassfish.jersey.moxy.internal.MoxyFilteringFeature
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+hcls Binder
+
+CLSS public final org.glassfish.jersey.moxy.json.MoxyJsonConfig
+cons public init()
+cons public init(boolean)
+meth public boolean isFormattedOutput()
+meth public boolean isIncludeRoot()
+meth public boolean isMarshalEmptyCollections()
+meth public char getNamespaceSeparator()
+meth public java.lang.String getAttributePrefix()
+meth public java.lang.String getValueWrapper()
+meth public java.util.Map<java.lang.String,java.lang.Object> getMarshallerProperties()
+meth public java.util.Map<java.lang.String,java.lang.Object> getUnmarshallerProperties()
+meth public java.util.Map<java.lang.String,java.lang.String> getNamespacePrefixMapper()
+meth public javax.ws.rs.ext.ContextResolver<org.glassfish.jersey.moxy.json.MoxyJsonConfig> resolver()
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig marshallerProperty(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig property(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setAttributePrefix(java.lang.String)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setFormattedOutput(boolean)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setIncludeRoot(boolean)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setMarshalEmptyCollections(boolean)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setMarshallerProperties(java.util.Map<java.lang.String,java.lang.Object>)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setNamespacePrefixMapper(java.util.Map<java.lang.String,java.lang.String>)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setNamespaceSeparator(char)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setUnmarshallerProperties(java.util.Map<java.lang.String,java.lang.Object>)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig setValueWrapper(java.lang.String)
+meth public org.glassfish.jersey.moxy.json.MoxyJsonConfig unmarshallerProperty(java.lang.String,java.lang.Object)
+supr java.lang.Object
+hfds marshallerProperties,unmarshallerProperties
+
+CLSS public org.glassfish.jersey.moxy.json.MoxyJsonFeature
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+hfds JSON_FEATURE
+
+CLSS public org.glassfish.jersey.moxy.json.internal.ConfigurableMoxyJsonProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/json", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/json", "*/*", "application/x-javascript"])
+cons public init()
+meth protected void preReadFrom(java.lang.Class<java.lang.Object>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,javax.xml.bind.Unmarshaller) throws javax.xml.bind.JAXBException
+meth protected void preWriteTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,javax.xml.bind.Marshaller) throws javax.xml.bind.JAXBException
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+supr org.eclipse.persistence.jaxb.rs.MOXyJsonProvider
+hfds MARSHALLER_PROPERTY_NAMES,UNMARSHALLER_PROPERTY_NAMES,config,globalConfig,providers
+
+CLSS public org.glassfish.jersey.moxy.json.internal.FilteringMoxyJsonProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["application/json", "*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["application/json", "*/*", "application/x-javascript"])
+cons public init()
+meth protected void preReadFrom(java.lang.Class<java.lang.Object>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,javax.xml.bind.Unmarshaller) throws javax.xml.bind.JAXBException
+meth protected void preWriteTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,javax.xml.bind.Marshaller) throws javax.xml.bind.JAXBException
+supr org.glassfish.jersey.moxy.json.internal.ConfigurableMoxyJsonProvider
+hfds provider
+
+CLSS public final org.glassfish.jersey.moxy.json.internal.MoxyJsonAutoDiscoverable
+ anno 0 javax.annotation.Priority(int value=1900)
+cons public init()
+intf org.glassfish.jersey.internal.spi.AutoDiscoverable
+meth public void configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.moxy.xml.MoxyXmlFeature
+cons public !varargs init(java.lang.Class<?>[])
+cons public !varargs init(java.util.Map<java.lang.String,java.lang.Object>,java.lang.ClassLoader,boolean,java.lang.Class[])
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+hfds classLoader,classes,oxmMappingLookup,properties
+
 CLSS public abstract interface org.glassfish.jersey.process.Inflector<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {org.glassfish.jersey.process.Inflector%1} apply({org.glassfish.jersey.process.Inflector%0})
+
+CLSS public org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler
+cons public init()
+cons public init(java.util.logging.Level)
+intf java.lang.Thread$UncaughtExceptionHandler
+meth public void uncaughtException(java.lang.Thread,java.lang.Throwable)
+supr java.lang.Object
+hfds LOGGER,logLevel
+
+CLSS public abstract org.glassfish.jersey.process.internal.AbstractChainableStage<%0 extends java.lang.Object>
+cons protected init()
+cons protected init(org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.AbstractChainableStage%0}>)
+intf org.glassfish.jersey.process.internal.ChainableStage<{org.glassfish.jersey.process.internal.AbstractChainableStage%0}>
+meth public final org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.AbstractChainableStage%0}> getDefaultNext()
+meth public final void setDefaultNext(org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.AbstractChainableStage%0}>)
+supr java.lang.Object
+hfds nextStage
+
+CLSS public abstract org.glassfish.jersey.process.internal.AbstractExecutorProvidersConfigurator
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth protected void registerExecutors(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.model.internal.ComponentBag,org.glassfish.jersey.spi.ExecutorServiceProvider,org.glassfish.jersey.spi.ScheduledExecutorServiceProvider,org.glassfish.jersey.model.internal.ManagedObjectsFinalizer)
+supr java.lang.Object
+hfds CAST_TO_EXECUTOR_PROVIDER,CAST_TO_SCHEDULED_EXECUTOR_PROVIDER
+
+CLSS public abstract interface org.glassfish.jersey.process.internal.ChainableStage<%0 extends java.lang.Object>
+intf org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.ChainableStage%0}>
+meth public abstract void setDefaultNext(org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.ChainableStage%0}>)
+
+CLSS public final org.glassfish.jersey.process.internal.ExecutorProviders
+meth public static void registerExecutorBindings(org.glassfish.jersey.internal.inject.InjectionManager)
+meth public static void registerExecutorBindings(org.glassfish.jersey.internal.inject.InjectionManager,java.util.List<org.glassfish.jersey.spi.ExecutorServiceProvider>,java.util.List<org.glassfish.jersey.spi.ScheduledExecutorServiceProvider>)
+supr java.lang.Object
+hfds LOGGER
+hcls ExecutorServiceSupplier,ScheduledExecutorServiceSupplier
+
+CLSS public abstract interface org.glassfish.jersey.process.internal.Inflecting<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract org.glassfish.jersey.process.Inflector<{org.glassfish.jersey.process.internal.Inflecting%0},{org.glassfish.jersey.process.internal.Inflecting%1}> inflector()
+
+CLSS public abstract interface org.glassfish.jersey.process.internal.RequestContext
+meth public abstract org.glassfish.jersey.process.internal.RequestContext getReference()
+meth public abstract void release()
+
+CLSS public abstract org.glassfish.jersey.process.internal.RequestScope
+cons public init()
+innr public static RequestScopeConfigurator
+meth protected void activate(org.glassfish.jersey.process.internal.RequestContext,org.glassfish.jersey.process.internal.RequestContext)
+meth protected void release(org.glassfish.jersey.process.internal.RequestContext)
+meth protected void resume(org.glassfish.jersey.process.internal.RequestContext)
+meth protected void suspend(org.glassfish.jersey.process.internal.RequestContext)
+meth public <%0 extends java.lang.Object> {%%0} runInScope(java.util.concurrent.Callable<{%%0}>) throws java.lang.Exception
+meth public <%0 extends java.lang.Object> {%%0} runInScope(org.glassfish.jersey.internal.util.Producer<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} runInScope(org.glassfish.jersey.process.internal.RequestContext,java.util.concurrent.Callable<{%%0}>) throws java.lang.Exception
+meth public <%0 extends java.lang.Object> {%%0} runInScope(org.glassfish.jersey.process.internal.RequestContext,org.glassfish.jersey.internal.util.Producer<{%%0}>)
+meth public abstract org.glassfish.jersey.process.internal.RequestContext createContext()
+meth public boolean isActive()
+meth public org.glassfish.jersey.process.internal.RequestContext current()
+meth public org.glassfish.jersey.process.internal.RequestContext referenceCurrent()
+meth public org.glassfish.jersey.process.internal.RequestContext suspendCurrent()
+meth public void runInScope(java.lang.Runnable)
+meth public void runInScope(org.glassfish.jersey.process.internal.RequestContext,java.lang.Runnable)
+meth public void shutdown()
+supr java.lang.Object
+hfds currentRequestContext,isActive,logger
+
+CLSS public static org.glassfish.jersey.process.internal.RequestScope$RequestScopeConfigurator
+ outer org.glassfish.jersey.process.internal.RequestScope
+cons public init()
+intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr java.lang.Object
+
+CLSS public abstract interface !annotation org.glassfish.jersey.process.internal.RequestScoped
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 javax.inject.Scope()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.jersey.process.internal.Stage<%0 extends java.lang.Object>
+innr public abstract interface static Builder
+innr public final static Continuation
+meth public abstract org.glassfish.jersey.process.internal.Stage$Continuation<{org.glassfish.jersey.process.internal.Stage%0}> apply({org.glassfish.jersey.process.internal.Stage%0})
+
+CLSS public abstract interface static org.glassfish.jersey.process.internal.Stage$Builder<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.process.internal.Stage
+meth public abstract org.glassfish.jersey.process.internal.Stage$Builder<{org.glassfish.jersey.process.internal.Stage$Builder%0}> to(java.util.function.Function<{org.glassfish.jersey.process.internal.Stage$Builder%0},{org.glassfish.jersey.process.internal.Stage$Builder%0}>)
+meth public abstract org.glassfish.jersey.process.internal.Stage$Builder<{org.glassfish.jersey.process.internal.Stage$Builder%0}> to(org.glassfish.jersey.process.internal.ChainableStage<{org.glassfish.jersey.process.internal.Stage$Builder%0}>)
+meth public abstract org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.Stage$Builder%0}> build()
+meth public abstract org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.Stage$Builder%0}> build(org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.Stage$Builder%0}>)
+
+CLSS public final static org.glassfish.jersey.process.internal.Stage$Continuation<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.process.internal.Stage
+meth public boolean hasNext()
+meth public org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.Stage$Continuation%0}> next()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.process.internal.Stage$Continuation<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.process.internal.Stage$Continuation<{%%0}> of({%%0},org.glassfish.jersey.process.internal.Stage<{%%0}>)
+meth public {org.glassfish.jersey.process.internal.Stage$Continuation%0} result()
+supr java.lang.Object
+hfds next,result
+
+CLSS public final org.glassfish.jersey.process.internal.Stages
+innr public static LinkedStage
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends org.glassfish.jersey.process.Inflector<{%%0},{%%1}>> {%%0} process({%%0},org.glassfish.jersey.process.internal.Stage<{%%0}>,org.glassfish.jersey.internal.util.collection.Ref<{%%2}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends org.glassfish.jersey.process.Inflector<{%%0},{%%1}>> {%%2} extractInflector(java.lang.Object)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> org.glassfish.jersey.process.internal.Stage<{%%0}> asStage(org.glassfish.jersey.process.Inflector<{%%0},{%%1}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.process.internal.ChainableStage<{%%0}> identity()
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.process.internal.Stage$Builder<{%%0}> chain(java.util.function.Function<{%%0},{%%0}>)
+meth public static <%0 extends java.lang.Object> org.glassfish.jersey.process.internal.Stage$Builder<{%%0}> chain(org.glassfish.jersey.process.internal.ChainableStage<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} process({%%0},org.glassfish.jersey.process.internal.Stage<{%%0}>)
+supr java.lang.Object
+hfds IDENTITY
+hcls InflectingStage,StageChainBuilder
+
+CLSS public static org.glassfish.jersey.process.internal.Stages$LinkedStage<%0 extends java.lang.Object>
+ outer org.glassfish.jersey.process.internal.Stages
+cons public init(java.util.function.Function<{org.glassfish.jersey.process.internal.Stages$LinkedStage%0},{org.glassfish.jersey.process.internal.Stages$LinkedStage%0}>)
+cons public init(java.util.function.Function<{org.glassfish.jersey.process.internal.Stages$LinkedStage%0},{org.glassfish.jersey.process.internal.Stages$LinkedStage%0}>,org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.Stages$LinkedStage%0}>)
+intf org.glassfish.jersey.process.internal.Stage<{org.glassfish.jersey.process.internal.Stages$LinkedStage%0}>
+meth public org.glassfish.jersey.process.internal.Stage$Continuation<{org.glassfish.jersey.process.internal.Stages$LinkedStage%0}> apply({org.glassfish.jersey.process.internal.Stages$LinkedStage%0})
+supr java.lang.Object
+hfds nextStage,transformation
+
+CLSS public org.glassfish.jersey.servlet.ServletContainer
+hfds LOGGER,containerListener,filterConfig,filterContextPath,filterUrlMappings,resourceConfig,serialVersionUID,staticContentPattern,webComponent
+
+CLSS public final org.glassfish.jersey.servlet.ServletProperties
+fld public final static java.lang.String FILTER_CONTEXT_PATH = "jersey.config.servlet.filter.contextPath"
+fld public final static java.lang.String FILTER_FORWARD_ON_404 = "jersey.config.servlet.filter.forwardOn404"
+fld public final static java.lang.String FILTER_STATIC_CONTENT_REGEX = "jersey.config.servlet.filter.staticContentRegex"
+fld public final static java.lang.String JAXRS_APPLICATION_CLASS = "javax.ws.rs.Application"
+fld public final static java.lang.String PROVIDER_WEB_APP = "jersey.config.servlet.provider.webapp"
+fld public final static java.lang.String QUERY_PARAMS_AS_FORM_PARAMS_DISABLED = "jersey.config.servlet.form.queryParams.disabled"
+fld public final static java.lang.String SERVICE_LOCATOR = "jersey.config.servlet.context.serviceLocator"
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.servlet.WebComponent
+cons public init(org.glassfish.jersey.servlet.WebConfig,org.glassfish.jersey.server.ResourceConfig) throws javax.servlet.ServletException
+meth public org.glassfish.jersey.internal.util.collection.Value<java.lang.Integer> service(java.net.URI,java.net.URI,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth public org.glassfish.jersey.server.ApplicationHandler getAppHandler()
+supr java.lang.Object
+hfds DEFAULT_ASYNC_DELEGATE,DEFAULT_REQUEST_SCOPE_INITIALIZER_PROVIDER,LOGGER,REQUEST_TYPE,RESPONSE_TYPE,appHandler,asyncExtensionDelegate,backgroundTaskScheduler,configSetStatusOverSendError,forwardOn404,queryParamsAsFormParams,requestResponseBindingExternalized,requestScopedInitializer,webConfig
+hcls HttpServletRequestReferencingFactory,HttpServletResponseReferencingFactory,WebComponentBinder
+
+CLSS public abstract interface org.glassfish.jersey.servlet.WebConfig
+innr public final static !enum ConfigType
+meth public abstract java.lang.String getInitParameter(java.lang.String)
+meth public abstract java.lang.String getName()
+meth public abstract java.util.Enumeration getInitParameterNames()
+meth public abstract javax.servlet.FilterConfig getFilterConfig()
+meth public abstract javax.servlet.ServletConfig getServletConfig()
+meth public abstract javax.servlet.ServletContext getServletContext()
+meth public abstract org.glassfish.jersey.servlet.WebConfig$ConfigType getConfigType()
+
+CLSS public final static !enum org.glassfish.jersey.servlet.WebConfig$ConfigType
+ outer org.glassfish.jersey.servlet.WebConfig
+fld public final static org.glassfish.jersey.servlet.WebConfig$ConfigType FilterConfig
+fld public final static org.glassfish.jersey.servlet.WebConfig$ConfigType ServletConfig
+meth public static org.glassfish.jersey.servlet.WebConfig$ConfigType valueOf(java.lang.String)
+meth public static org.glassfish.jersey.servlet.WebConfig$ConfigType[] values()
+supr java.lang.Enum<org.glassfish.jersey.servlet.WebConfig$ConfigType>
+
+CLSS public final org.glassfish.jersey.servlet.WebFilterConfig
+cons public init(javax.servlet.FilterConfig)
+intf org.glassfish.jersey.servlet.WebConfig
+meth public java.lang.String getInitParameter(java.lang.String)
+meth public java.lang.String getName()
+meth public java.util.Enumeration getInitParameterNames()
+meth public javax.servlet.FilterConfig getFilterConfig()
+meth public javax.servlet.ServletConfig getServletConfig()
+meth public javax.servlet.ServletContext getServletContext()
+meth public org.glassfish.jersey.servlet.WebConfig$ConfigType getConfigType()
+supr java.lang.Object
+hfds filterConfig
+
+CLSS public final org.glassfish.jersey.servlet.WebServletConfig
+cons public init(org.glassfish.jersey.servlet.ServletContainer)
+intf org.glassfish.jersey.servlet.WebConfig
+meth public java.lang.String getInitParameter(java.lang.String)
+meth public java.lang.String getName()
+meth public java.util.Enumeration getInitParameterNames()
+meth public javax.servlet.FilterConfig getFilterConfig()
+meth public javax.servlet.ServletConfig getServletConfig()
+meth public javax.servlet.ServletContext getServletContext()
+meth public org.glassfish.jersey.servlet.WebConfig$ConfigType getConfigType()
+supr java.lang.Object
+hfds servlet
+
+CLSS public final org.glassfish.jersey.servlet.internal.LocalizationMessages
+cons public init()
+meth public static java.lang.String ASYNC_PROCESSING_NOT_SUPPORTED()
+meth public static java.lang.String EXCEPTION_SENDING_ERROR_RESPONSE(java.lang.Object,java.lang.Object)
+meth public static java.lang.String FILTER_CONTEXT_PATH_MISSING()
+meth public static java.lang.String FORM_PARAM_CONSUMED(java.lang.Object)
+meth public static java.lang.String HEADER_VALUE_READ_FAILED()
+meth public static java.lang.String INIT_PARAM_REGEX_SYNTAX_INVALID(java.lang.Object,java.lang.Object)
+meth public static java.lang.String NO_THREAD_LOCAL_VALUE(java.lang.Object)
+meth public static java.lang.String PERSISTENCE_UNIT_NOT_CONFIGURED(java.lang.Object)
+meth public static java.lang.String RESOURCE_CONFIG_PARENT_CLASS_INVALID(java.lang.Object,java.lang.Object)
+meth public static java.lang.String RESOURCE_CONFIG_UNABLE_TO_LOAD(java.lang.Object)
+meth public static java.lang.String SERVLET_PATH_MISMATCH(java.lang.Object,java.lang.Object)
+meth public static java.lang.String SERVLET_REQUEST_SUSPEND_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableASYNC_PROCESSING_NOT_SUPPORTED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableEXCEPTION_SENDING_ERROR_RESPONSE(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableFILTER_CONTEXT_PATH_MISSING()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableFORM_PARAM_CONSUMED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableHEADER_VALUE_READ_FAILED()
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableINIT_PARAM_REGEX_SYNTAX_INVALID(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableNO_THREAD_LOCAL_VALUE(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizablePERSISTENCE_UNIT_NOT_CONFIGURED(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESOURCE_CONFIG_PARENT_CLASS_INVALID(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableRESOURCE_CONFIG_UNABLE_TO_LOAD(java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSERVLET_PATH_MISMATCH(java.lang.Object,java.lang.Object)
+meth public static org.glassfish.jersey.internal.l10n.Localizable localizableSERVLET_REQUEST_SUSPEND_FAILED()
+supr java.lang.Object
+hfds BUNDLE_NAME,LOCALIZER,MESSAGE_FACTORY
+hcls BundleSupplier
+
+CLSS public org.glassfish.jersey.servlet.internal.PersistenceUnitBinder
+cons public init(javax.servlet.ServletConfig)
+fld public final static java.lang.String PERSISTENCE_UNIT_PREFIX = "unit:"
+meth protected void configure()
+supr org.glassfish.jersey.internal.inject.AbstractBinder
+hfds servletConfig
+hcls PersistenceUnitInjectionResolver
+
+CLSS public org.glassfish.jersey.servlet.internal.ResponseWriter
+hfds LOGGER,asyncExt,configSetStatusOverSendError,requestTimeoutHandler,response,responseContext,useSetStatusOn404
+hcls NonCloseableOutputStreamWrapper
+
+CLSS public final org.glassfish.jersey.servlet.internal.ServletContainerProviderFactory
+meth public static org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider[] getAllServletContainerProviders()
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.servlet.internal.ThreadLocalInvoker<%0 extends java.lang.Object>
+cons public init()
+intf java.lang.reflect.InvocationHandler
+meth public java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
+meth public void set({org.glassfish.jersey.servlet.internal.ThreadLocalInvoker%0})
+meth public {org.glassfish.jersey.servlet.internal.ThreadLocalInvoker%0} get()
+supr java.lang.Object
+hfds threadLocalInstance
+
+CLSS public org.glassfish.jersey.servlet.internal.ThreadLocalNamedInvoker<%0 extends java.lang.Object>
+cons public init(java.lang.String)
+meth public java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
+supr org.glassfish.jersey.servlet.internal.ThreadLocalInvoker<{org.glassfish.jersey.servlet.internal.ThreadLocalNamedInvoker%0}>
+hfds name
+
+CLSS public final org.glassfish.jersey.servlet.internal.Utils
+meth public static java.util.Map<java.lang.String,java.lang.Object> getContextParams(javax.servlet.ServletContext)
+meth public static org.glassfish.jersey.server.ResourceConfig retrieve(javax.servlet.ServletContext,java.lang.String)
+meth public static void store(org.glassfish.jersey.server.ResourceConfig,javax.servlet.ServletContext,java.lang.String)
+supr java.lang.Object
+hfds RESOURCE_CONFIG
+
+CLSS public abstract interface org.glassfish.jersey.servlet.internal.spi.ExtendedServletContainerProvider
+intf org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider
+meth public abstract boolean bindsServletRequestResponse()
+meth public abstract org.glassfish.jersey.servlet.internal.spi.RequestScopedInitializerProvider getRequestScopedInitializerProvider()
+
+CLSS public org.glassfish.jersey.servlet.internal.spi.NoOpServletContainerProvider
+cons public init()
+fld public final java.lang.reflect.Type HTTP_SERVLET_REQUEST_TYPE
+fld public final java.lang.reflect.Type HTTP_SERVLET_RESPONSE_TYPE
+intf org.glassfish.jersey.servlet.internal.spi.ExtendedServletContainerProvider
+meth public boolean bindsServletRequestResponse()
+meth public org.glassfish.jersey.servlet.internal.spi.RequestScopedInitializerProvider getRequestScopedInitializerProvider()
+meth public void configure(org.glassfish.jersey.server.ResourceConfig) throws javax.servlet.ServletException
+meth public void onRegister(javax.servlet.ServletContext,java.util.Set<java.lang.String>) throws javax.servlet.ServletException
+meth public void postInit(javax.servlet.ServletContext,java.util.Set<java.lang.Class<?>>,java.util.Set<java.lang.String>)
+meth public void preInit(javax.servlet.ServletContext,java.util.Set<java.lang.Class<?>>) throws javax.servlet.ServletException
+supr java.lang.Object
+
+CLSS public abstract interface org.glassfish.jersey.servlet.internal.spi.RequestContextProvider
+meth public abstract javax.servlet.http.HttpServletRequest getHttpServletRequest()
+meth public abstract javax.servlet.http.HttpServletResponse getHttpServletResponse()
+
+CLSS public abstract interface org.glassfish.jersey.servlet.internal.spi.RequestScopedInitializerProvider
+meth public abstract org.glassfish.jersey.server.spi.RequestScopedInitializer get(org.glassfish.jersey.servlet.internal.spi.RequestContextProvider)
+
+CLSS public abstract interface org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider
+meth public abstract void configure(org.glassfish.jersey.server.ResourceConfig) throws javax.servlet.ServletException
+meth public abstract void onRegister(javax.servlet.ServletContext,java.util.Set<java.lang.String>) throws javax.servlet.ServletException
+meth public abstract void postInit(javax.servlet.ServletContext,java.util.Set<java.lang.Class<?>>,java.util.Set<java.lang.String>) throws javax.servlet.ServletException
+meth public abstract void preInit(javax.servlet.ServletContext,java.util.Set<java.lang.Class<?>>) throws javax.servlet.ServletException
+
+CLSS public abstract interface org.glassfish.jersey.servlet.spi.AsyncContextDelegate
+meth public abstract void complete()
+meth public abstract void suspend()
+
+CLSS public abstract interface org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider
+meth public abstract org.glassfish.jersey.servlet.spi.AsyncContextDelegate createDelegate(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+
+CLSS public abstract interface org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider
+meth public abstract java.util.List<java.lang.String> getFilterUrlMappings(javax.servlet.FilterConfig)
+
+CLSS public abstract org.glassfish.jersey.spi.AbstractThreadPoolProvider<%0 extends java.util.concurrent.ThreadPoolExecutor>
+cons protected init(java.lang.String)
+fld public final static int DEFAULT_TERMINATION_TIMEOUT = 5000
+intf java.lang.AutoCloseable
+meth protected abstract {org.glassfish.jersey.spi.AbstractThreadPoolProvider%0} createExecutor(int,java.util.concurrent.ThreadFactory,java.util.concurrent.RejectedExecutionHandler)
+meth protected final {org.glassfish.jersey.spi.AbstractThreadPoolProvider%0} getExecutor()
+meth protected int getCorePoolSize()
+meth protected int getTerminationTimeout()
+meth protected java.util.concurrent.RejectedExecutionHandler getRejectedExecutionHandler()
+meth protected java.util.concurrent.ThreadFactory getBackingThreadFactory()
+meth protected void onClose()
+meth public final boolean isClosed()
+meth public final void close()
+supr java.lang.Object
+hfds LOGGER,closed,lazyExecutorServiceProvider,name
+
+CLSS public abstract interface org.glassfish.jersey.spi.ComponentProvider
+meth public abstract boolean bind(java.lang.Class<?>,java.util.Set<java.lang.Class<?>>)
+meth public abstract void done()
+meth public abstract void initialize(org.glassfish.jersey.internal.inject.InjectionManager)
+meth public boolean bind(java.lang.Class<?>,org.glassfish.jersey.model.ContractProvider)
+
+CLSS public abstract org.glassfish.jersey.spi.ContentEncoder
+ anno 0 javax.annotation.Priority(int value=4000)
+ anno 0 org.glassfish.jersey.spi.Contract()
+cons protected !varargs init(java.lang.String[])
+intf javax.ws.rs.ext.ReaderInterceptor
+intf javax.ws.rs.ext.WriterInterceptor
+meth public abstract java.io.InputStream decode(java.lang.String,java.io.InputStream) throws java.io.IOException
+meth public abstract java.io.OutputStream encode(java.lang.String,java.io.OutputStream) throws java.io.IOException
+meth public final java.lang.Object aroundReadFrom(javax.ws.rs.ext.ReaderInterceptorContext) throws java.io.IOException
+meth public final java.util.Set<java.lang.String> getSupportedEncodings()
+meth public final void aroundWriteTo(javax.ws.rs.ext.WriterInterceptorContext) throws java.io.IOException
+supr java.lang.Object
+hfds supportedEncodings
+
+CLSS public abstract interface org.glassfish.jersey.spi.ContextResolvers
+meth public abstract <%0 extends java.lang.Object> javax.ws.rs.ext.ContextResolver<{%%0}> resolve(java.lang.reflect.Type,javax.ws.rs.core.MediaType)
 
 CLSS public abstract interface !annotation org.glassfish.jersey.spi.Contract
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
+
+CLSS public abstract interface org.glassfish.jersey.spi.ExceptionMappers
+meth public abstract <%0 extends java.lang.Throwable> javax.ws.rs.ext.ExceptionMapper<{%%0}> find(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Throwable> javax.ws.rs.ext.ExceptionMapper<{%%0}> findMapping({%%0})
+
+CLSS public abstract interface org.glassfish.jersey.spi.ExecutorServiceProvider
+ anno 0 org.glassfish.jersey.spi.Contract()
+meth public abstract java.util.concurrent.ExecutorService getExecutorService()
+meth public abstract void dispose(java.util.concurrent.ExecutorService)
+
+CLSS public abstract interface org.glassfish.jersey.spi.ExtendedExceptionMapper<%0 extends java.lang.Throwable>
+intf javax.ws.rs.ext.ExceptionMapper<{org.glassfish.jersey.spi.ExtendedExceptionMapper%0}>
+meth public abstract boolean isMappable({org.glassfish.jersey.spi.ExtendedExceptionMapper%0})
+
+CLSS public abstract interface org.glassfish.jersey.spi.ExternalConfigurationModel<%0 extends java.lang.Object>
+intf org.glassfish.jersey.ExtendedConfig
+meth public abstract <%0 extends java.lang.Object> java.util.Optional<{%%0}> getOptionalProperty(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} as(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract org.glassfish.jersey.spi.ExternalConfigurationModel mergeProperties(java.util.Map<java.lang.String,java.lang.Object>)
+meth public abstract {org.glassfish.jersey.spi.ExternalConfigurationModel%0} getConfig()
+
+CLSS public abstract interface org.glassfish.jersey.spi.ExternalConfigurationProvider
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getProperties()
+meth public abstract org.glassfish.jersey.spi.ExternalConfigurationModel getConfiguration()
+meth public abstract org.glassfish.jersey.spi.ExternalConfigurationModel merge(org.glassfish.jersey.spi.ExternalConfigurationModel)
+
+CLSS public abstract interface org.glassfish.jersey.spi.HeaderDelegateProvider<%0 extends java.lang.Object>
+ anno 0 org.glassfish.jersey.spi.Contract()
+intf javax.ws.rs.ext.RuntimeDelegate$HeaderDelegate<{org.glassfish.jersey.spi.HeaderDelegateProvider%0}>
+meth public abstract boolean supports(java.lang.Class<?>)
+
+CLSS public abstract interface org.glassfish.jersey.spi.ScheduledExecutorServiceProvider
+ anno 0 org.glassfish.jersey.spi.Contract()
+intf org.glassfish.jersey.spi.ExecutorServiceProvider
+meth public abstract java.util.concurrent.ScheduledExecutorService getExecutorService()
+
+CLSS public org.glassfish.jersey.spi.ScheduledThreadPoolExecutorProvider
+cons public init(java.lang.String)
+intf org.glassfish.jersey.spi.ScheduledExecutorServiceProvider
+meth protected java.util.concurrent.ScheduledThreadPoolExecutor createExecutor(int,java.util.concurrent.ThreadFactory,java.util.concurrent.RejectedExecutionHandler)
+meth public java.util.concurrent.ScheduledExecutorService getExecutorService()
+meth public void dispose(java.util.concurrent.ExecutorService)
+meth public void preDestroy()
+ anno 0 javax.annotation.PreDestroy()
+supr org.glassfish.jersey.spi.AbstractThreadPoolProvider<java.util.concurrent.ScheduledThreadPoolExecutor>
+
+CLSS public org.glassfish.jersey.spi.ThreadPoolExecutorProvider
+cons public init(java.lang.String)
+intf org.glassfish.jersey.spi.ExecutorServiceProvider
+meth protected final java.util.concurrent.ThreadPoolExecutor createExecutor(int,java.util.concurrent.ThreadFactory,java.util.concurrent.RejectedExecutionHandler)
+meth protected int getMaximumPoolSize()
+meth protected java.util.concurrent.BlockingQueue<java.lang.Runnable> getWorkQueue()
+meth protected java.util.concurrent.ThreadPoolExecutor createExecutor(int,int,long,java.util.concurrent.BlockingQueue<java.lang.Runnable>,java.util.concurrent.ThreadFactory,java.util.concurrent.RejectedExecutionHandler)
+meth protected long getKeepAliveTime()
+meth public java.util.concurrent.ExecutorService getExecutorService()
+meth public void dispose(java.util.concurrent.ExecutorService)
+meth public void preDestroy()
+ anno 0 javax.annotation.PreDestroy()
+supr org.glassfish.jersey.spi.AbstractThreadPoolProvider<java.util.concurrent.ThreadPoolExecutor>
+hfds CACHED_POOL_KEEP_ALIVE_DEFAULT_TIMEOUT
+
+CLSS public final !enum org.glassfish.jersey.uri.JerseyQueryParamStyle
+fld public final static org.glassfish.jersey.uri.JerseyQueryParamStyle ARRAY_PAIRS
+fld public final static org.glassfish.jersey.uri.JerseyQueryParamStyle COMMA_SEPARATED
+fld public final static org.glassfish.jersey.uri.JerseyQueryParamStyle MULTI_PAIRS
+meth public static org.glassfish.jersey.uri.JerseyQueryParamStyle valueOf(java.lang.String)
+meth public static org.glassfish.jersey.uri.JerseyQueryParamStyle[] values()
+supr java.lang.Enum<org.glassfish.jersey.uri.JerseyQueryParamStyle>
+
+CLSS public final org.glassfish.jersey.uri.PathPattern
+cons public init(java.lang.String)
+cons public init(java.lang.String,org.glassfish.jersey.uri.PathPattern$RightHandPath)
+cons public init(org.glassfish.jersey.uri.PathTemplate)
+cons public init(org.glassfish.jersey.uri.PathTemplate,org.glassfish.jersey.uri.PathPattern$RightHandPath)
+fld public final static java.util.Comparator<org.glassfish.jersey.uri.PathPattern> COMPARATOR
+fld public final static org.glassfish.jersey.uri.PathPattern EMPTY_PATTERN
+fld public final static org.glassfish.jersey.uri.PathPattern END_OF_PATH_PATTERN
+fld public final static org.glassfish.jersey.uri.PathPattern OPEN_ROOT_PATH_PATTERN
+innr public final static !enum RightHandPath
+meth public org.glassfish.jersey.uri.UriTemplate getTemplate()
+meth public static org.glassfish.jersey.uri.PathPattern asClosed(org.glassfish.jersey.uri.PathPattern)
+supr org.glassfish.jersey.uri.PatternWithGroups
+hfds template
+
+CLSS public final static !enum org.glassfish.jersey.uri.PathPattern$RightHandPath
+ outer org.glassfish.jersey.uri.PathPattern
+fld public final static org.glassfish.jersey.uri.PathPattern$RightHandPath capturingZeroOrMoreSegments
+fld public final static org.glassfish.jersey.uri.PathPattern$RightHandPath capturingZeroSegments
+meth public static org.glassfish.jersey.uri.PathPattern$RightHandPath valueOf(java.lang.String)
+meth public static org.glassfish.jersey.uri.PathPattern$RightHandPath[] values()
+supr java.lang.Enum<org.glassfish.jersey.uri.PathPattern$RightHandPath>
+hfds regex
+
+CLSS public final org.glassfish.jersey.uri.PathTemplate
+cons public init(java.lang.String)
+supr org.glassfish.jersey.uri.UriTemplate
+hcls PathTemplateParser
+
+CLSS public org.glassfish.jersey.uri.PatternWithGroups
+cons protected init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,int[])
+cons public init(java.util.regex.Pattern)
+cons public init(java.util.regex.Pattern,int[])
+fld public final static org.glassfish.jersey.uri.PatternWithGroups EMPTY
+meth public final boolean equals(java.lang.Object)
+meth public final boolean match(java.lang.CharSequence,java.util.List<java.lang.String>)
+meth public final boolean match(java.lang.CharSequence,java.util.List<java.lang.String>,java.util.Map<java.lang.String,java.lang.String>)
+meth public final int hashCode()
+meth public final int[] getGroupIndexes()
+meth public final java.lang.String getRegex()
+meth public final java.lang.String toString()
+meth public final java.util.regex.MatchResult match(java.lang.CharSequence)
+supr java.lang.Object
+hfds EMPTY_INT_ARRAY,EMPTY_STRING_MATCH_RESULT,groupIndexes,regex,regexPattern
+hcls EmptyStringMatchResult,GroupIndexMatchResult
+
+CLSS public org.glassfish.jersey.uri.UriComponent
+innr public final static !enum Type
+meth public static boolean isHexCharacter(char)
+meth public static boolean valid(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type)
+meth public static boolean valid(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type,boolean)
+meth public static java.lang.String contextualEncode(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type)
+meth public static java.lang.String contextualEncode(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type,boolean)
+meth public static java.lang.String decode(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type)
+meth public static java.lang.String encode(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type)
+meth public static java.lang.String encode(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type,boolean)
+meth public static java.lang.String encodeTemplateNames(java.lang.String)
+meth public static java.lang.String fullRelativeUri(java.net.URI)
+meth public static java.util.List<javax.ws.rs.core.PathSegment> decodePath(java.lang.String,boolean)
+meth public static java.util.List<javax.ws.rs.core.PathSegment> decodePath(java.net.URI,boolean)
+meth public static javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> decodeMatrix(java.lang.String,boolean)
+meth public static javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> decodeQuery(java.lang.String,boolean)
+meth public static javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> decodeQuery(java.lang.String,boolean,boolean)
+meth public static javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> decodeQuery(java.net.URI,boolean)
+meth public static void decodePathSegment(java.util.List<javax.ws.rs.core.PathSegment>,java.lang.String,boolean)
+meth public static void validate(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type)
+meth public static void validate(java.lang.String,org.glassfish.jersey.uri.UriComponent$Type,boolean)
+supr java.lang.Object
+hfds ENCODING_TABLES,HEX_DIGITS,HEX_TABLE,SCHEME,SUB_DELIMS,UNRESERVED,UTF_8_CHARSET
+hcls PathSegmentImpl
+
+CLSS public final static !enum org.glassfish.jersey.uri.UriComponent$Type
+ outer org.glassfish.jersey.uri.UriComponent
+fld public final static org.glassfish.jersey.uri.UriComponent$Type AUTHORITY
+fld public final static org.glassfish.jersey.uri.UriComponent$Type FRAGMENT
+fld public final static org.glassfish.jersey.uri.UriComponent$Type HOST
+fld public final static org.glassfish.jersey.uri.UriComponent$Type MATRIX_PARAM
+fld public final static org.glassfish.jersey.uri.UriComponent$Type PATH
+fld public final static org.glassfish.jersey.uri.UriComponent$Type PATH_SEGMENT
+fld public final static org.glassfish.jersey.uri.UriComponent$Type PORT
+fld public final static org.glassfish.jersey.uri.UriComponent$Type QUERY
+fld public final static org.glassfish.jersey.uri.UriComponent$Type QUERY_PARAM
+fld public final static org.glassfish.jersey.uri.UriComponent$Type QUERY_PARAM_SPACE_ENCODED
+fld public final static org.glassfish.jersey.uri.UriComponent$Type SCHEME
+fld public final static org.glassfish.jersey.uri.UriComponent$Type UNRESERVED
+fld public final static org.glassfish.jersey.uri.UriComponent$Type USER_INFO
+meth public static org.glassfish.jersey.uri.UriComponent$Type valueOf(java.lang.String)
+meth public static org.glassfish.jersey.uri.UriComponent$Type[] values()
+supr java.lang.Enum<org.glassfish.jersey.uri.UriComponent$Type>
+
+CLSS public org.glassfish.jersey.uri.UriTemplate
+cons protected init(org.glassfish.jersey.uri.internal.UriTemplateParser)
+cons public init(java.lang.String)
+fld public final static java.util.Comparator<org.glassfish.jersey.uri.UriTemplate> COMPARATOR
+fld public final static org.glassfish.jersey.uri.UriTemplate EMPTY
+meth public !varargs final java.lang.String createURI(java.lang.String[])
+meth public final boolean endsWithSlash()
+meth public final boolean equals(java.lang.Object)
+meth public final boolean isTemplateVariablePresent(java.lang.String)
+meth public final boolean match(java.lang.CharSequence,java.util.List<java.lang.String>)
+meth public final boolean match(java.lang.CharSequence,java.util.Map<java.lang.String,java.lang.String>)
+meth public final int getNumberOfExplicitCharacters()
+meth public final int getNumberOfExplicitRegexes()
+meth public final int getNumberOfRegexGroups()
+meth public final int getNumberOfTemplateVariables()
+meth public final int hashCode()
+meth public final java.lang.String createURI(java.lang.String[],int,int)
+meth public final java.lang.String createURI(java.util.Map<java.lang.String,java.lang.String>)
+meth public final java.lang.String getTemplate()
+meth public final java.lang.String toString()
+meth public final java.util.List<java.lang.String> getTemplateVariables()
+meth public final org.glassfish.jersey.uri.PatternWithGroups getPattern()
+meth public static java.lang.String createURI(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Object[],boolean,boolean)
+meth public static java.lang.String createURI(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,?>,boolean,boolean)
+meth public static java.lang.String createURIWithStringValues(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String[],boolean,boolean)
+meth public static java.lang.String createURIWithStringValues(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,?>,boolean,boolean)
+meth public static java.lang.String resolveTemplateValues(org.glassfish.jersey.uri.UriComponent$Type,java.lang.String,boolean,java.util.Map<java.lang.String,?>)
+meth public static java.net.URI normalize(java.lang.String)
+meth public static java.net.URI normalize(java.net.URI)
+meth public static java.net.URI relativize(java.net.URI,java.net.URI)
+meth public static java.net.URI resolve(java.net.URI,java.lang.String)
+meth public static java.net.URI resolve(java.net.URI,java.net.URI)
+supr java.lang.Object
+hfds EMPTY_VALUES,TEMPLATE_NAMES_PATTERN,endsWithSlash,normalizedTemplate,numOfCharacters,numOfExplicitRegexes,numOfRegexGroups,pattern,template,templateVariables
+hcls TemplateValueStrategy
+
+CLSS public org.glassfish.jersey.uri.internal.JerseyUriBuilder
+cons public init()
+meth public !varargs java.net.URI build(java.lang.Object[])
+meth public !varargs java.net.URI buildFromEncoded(java.lang.Object[])
+meth public !varargs org.glassfish.jersey.uri.internal.JerseyUriBuilder matrixParam(java.lang.String,java.lang.Object[])
+meth public !varargs org.glassfish.jersey.uri.internal.JerseyUriBuilder queryParam(java.lang.String,java.lang.Object[])
+meth public !varargs org.glassfish.jersey.uri.internal.JerseyUriBuilder replaceMatrixParam(java.lang.String,java.lang.Object[])
+meth public !varargs org.glassfish.jersey.uri.internal.JerseyUriBuilder replaceQueryParam(java.lang.String,java.lang.Object[])
+meth public !varargs org.glassfish.jersey.uri.internal.JerseyUriBuilder segment(java.lang.String[])
+meth public boolean isAbsolute()
+meth public java.lang.String toString()
+meth public java.lang.String toTemplate()
+meth public java.net.URI build(java.lang.Object[],boolean)
+meth public java.net.URI buildFromEncodedMap(java.util.Map<java.lang.String,?>)
+meth public java.net.URI buildFromMap(java.util.Map<java.lang.String,?>)
+meth public java.net.URI buildFromMap(java.util.Map<java.lang.String,?>,boolean)
+meth public javax.ws.rs.core.UriBuilder path(java.lang.Class)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder clone()
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder fragment(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder host(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder path(java.lang.Class,java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder path(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder path(java.lang.reflect.Method)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder port(int)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder replaceMatrix(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder replacePath(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder replaceQuery(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder resolveTemplate(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder resolveTemplate(java.lang.String,java.lang.Object,boolean)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder resolveTemplateFromEncoded(java.lang.String,java.lang.Object)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder resolveTemplates(java.util.Map<java.lang.String,java.lang.Object>)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder resolveTemplates(java.util.Map<java.lang.String,java.lang.Object>,boolean)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder resolveTemplatesFromEncoded(java.util.Map<java.lang.String,java.lang.Object>)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder scheme(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder schemeSpecificPart(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder setQueryParamStyle(org.glassfish.jersey.uri.JerseyQueryParamStyle)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder uri(java.lang.String)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder uri(java.net.URI)
+meth public org.glassfish.jersey.uri.internal.JerseyUriBuilder userInfo(java.lang.String)
+supr javax.ws.rs.core.UriBuilder
+hfds authority,fragment,host,matrixParams,path,port,query,queryParamStyle,queryParams,scheme,ssp,userInfo
+
+CLSS public org.glassfish.jersey.uri.internal.UriTemplateParser
+cons public init(java.lang.String)
+fld public final static java.util.regex.Pattern TEMPLATE_VALUE_PATTERN
+meth protected java.lang.String encodeLiteralCharacters(java.lang.String)
+meth public final int getNumberOfExplicitRegexes()
+meth public final int getNumberOfLiteralCharacters()
+meth public final int getNumberOfRegexGroups()
+meth public final int[] getGroupIndexes()
+meth public final java.lang.String getNormalizedTemplate()
+meth public final java.lang.String getTemplate()
+meth public final java.util.List<java.lang.Integer> getGroupCounts()
+meth public final java.util.List<java.lang.String> getNames()
+meth public final java.util.Map<java.lang.String,java.util.regex.Pattern> getNameToPattern()
+meth public final java.util.regex.Pattern getPattern()
+supr java.lang.Object
+hfds EMPTY_INT_ARRAY,HEX_TO_UPPERCASE_REGEX,RESERVED_REGEX_CHARACTERS,groupCounts,literalCharacters,literalCharactersBuffer,nameToPattern,names,normalizedTemplate,numOfExplicitRegexes,pattern,regex,skipGroup,template
+
+CLSS public abstract interface !annotation org.jvnet.hk2.annotations.Contract
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+ anno 0 org.glassfish.hk2.api.ContractIndicator()
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.jvnet.hk2.annotations.ContractsProvided
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?>[] value()
+
+CLSS public abstract interface !annotation org.jvnet.hk2.annotations.InhabitantAnnotation
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation org.jvnet.hk2.annotations.Optional
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, PARAMETER])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation org.jvnet.hk2.annotations.Service
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+ anno 0 org.jvnet.hk2.annotations.InhabitantAnnotation(java.lang.String value="default")
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String analyzer()
+meth public abstract !hasdefault java.lang.String metadata()
+meth public abstract !hasdefault java.lang.String name()
+
+CLSS public org.jvnet.hk2.component.MultiMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+cons public init(org.jvnet.hk2.component.MultiMap<{org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1}>)
+intf java.io.Serializable
+intf java.lang.Cloneable
+meth public boolean contains({org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1})
+meth public boolean containsKey({org.jvnet.hk2.component.MultiMap%0})
+meth public boolean equals(java.lang.Object)
+meth public boolean remove({org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1})
+meth public final java.util.List<{org.jvnet.hk2.component.MultiMap%1}> get({org.jvnet.hk2.component.MultiMap%0})
+meth public final void add({org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1})
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toCommaSeparatedString()
+meth public java.lang.String toString()
+meth public java.util.List<{org.jvnet.hk2.component.MultiMap%1}> remove({org.jvnet.hk2.component.MultiMap%0})
+meth public java.util.Set<java.util.Map$Entry<{org.jvnet.hk2.component.MultiMap%0},java.util.List<{org.jvnet.hk2.component.MultiMap%1}>>> entrySet()
+meth public java.util.Set<{org.jvnet.hk2.component.MultiMap%0}> keySet()
+meth public org.jvnet.hk2.component.MultiMap<{org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1}> clone() throws java.lang.CloneNotSupportedException
+meth public void mergeAll(org.jvnet.hk2.component.MultiMap<{org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1}>)
+meth public void set({org.jvnet.hk2.component.MultiMap%0},java.util.Collection<? extends {org.jvnet.hk2.component.MultiMap%1}>)
+meth public void set({org.jvnet.hk2.component.MultiMap%0},{org.jvnet.hk2.component.MultiMap%1})
+meth public {org.jvnet.hk2.component.MultiMap%1} getOne({org.jvnet.hk2.component.MultiMap%0})
+supr java.lang.Object
+hfds NEWLINE,serialVersionUID,store
+
+CLSS public org.jvnet.hk2.external.generator.ServiceLocatorGeneratorImpl
+cons public init()
+intf org.glassfish.hk2.extension.ServiceLocatorGenerator
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.ServiceLocator create(java.lang.String,org.glassfish.hk2.api.ServiceLocator)
+supr java.lang.Object
+
+CLSS public org.jvnet.hk2.external.runtime.Hk2LocatorUtilities
+cons public init()
+meth public static org.glassfish.hk2.api.Filter getNoInitialServicesFilter()
+supr java.lang.Object
+hfds NO_INITIAL_SERVICES_FILTER
+
+CLSS public abstract interface org.jvnet.hk2.external.runtime.ServiceLocatorRuntimeBean
+ anno 0 org.jvnet.hk2.annotations.Contract()
+meth public abstract int getNumberOfChildren()
+meth public abstract int getNumberOfDescriptors()
+meth public abstract int getReflectionCacheSize()
+meth public abstract int getServiceCacheMaximumSize()
+meth public abstract int getServiceCacheSize()
+meth public abstract void clearReflectionCache()
+meth public abstract void clearServiceCache()
+
+CLSS public org.jvnet.hk2.internal.AutoActiveDescriptor<%0 extends java.lang.Object>
+cons public init()
+cons public init(java.lang.Class<?>,org.jvnet.hk2.internal.Creator<{org.jvnet.hk2.internal.AutoActiveDescriptor%0}>,java.util.Set<java.lang.reflect.Type>,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.String,java.util.Set<java.lang.annotation.Annotation>,org.glassfish.hk2.api.DescriptorVisibility,int,java.lang.Boolean,java.lang.Boolean,java.lang.String,java.util.Map<java.lang.String,java.util.List<java.lang.String>>,org.glassfish.hk2.api.DescriptorType,java.lang.reflect.Type)
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.lang.reflect.Type getImplementationType()
+meth public java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public void dispose({org.jvnet.hk2.internal.AutoActiveDescriptor%0})
+meth public void setImplementationType(java.lang.reflect.Type)
+meth public {org.jvnet.hk2.internal.AutoActiveDescriptor%0} create(org.glassfish.hk2.api.ServiceHandle<?>)
+supr org.glassfish.hk2.utilities.AbstractActiveDescriptor<{org.jvnet.hk2.internal.AutoActiveDescriptor%0}>
+hfds creator,hk2Parent,implClass,implType,serialVersionUID
+
+CLSS public org.jvnet.hk2.internal.CacheKey
+cons public !varargs init(java.lang.reflect.Type,java.lang.String,org.glassfish.hk2.api.Unqualified,java.lang.annotation.Annotation[])
+meth public boolean equals(java.lang.Object)
+meth public boolean matchesRemovalName(java.lang.String)
+meth public int hashCode()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds hashCode,lookupType,name,qualifiers,removalName,unqualified
+
+CLSS public org.jvnet.hk2.internal.ClazzCreator<%0 extends java.lang.Object>
+intf org.jvnet.hk2.internal.Creator<{org.jvnet.hk2.internal.ClazzCreator%0}>
+meth public java.lang.String toString()
+meth public java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public void dispose({org.jvnet.hk2.internal.ClazzCreator%0})
+meth public {org.jvnet.hk2.internal.ClazzCreator%0} create(org.glassfish.hk2.api.ServiceHandle<?>,org.jvnet.hk2.internal.SystemDescriptor<?>)
+supr java.lang.Object
+hfds allInjectees,implClass,locator,myConstructor,myFields,myInitializers,postConstructMethod,preDestroyMethod,selfDescriptor
+hcls ResolutionInfo
+
+CLSS public abstract interface org.jvnet.hk2.internal.Closeable
+meth public abstract boolean close()
+meth public abstract boolean isClosed()
+
+CLSS public org.jvnet.hk2.internal.Collector
+cons public init()
+meth public boolean hasErrors()
+meth public void addMultiException(org.glassfish.hk2.api.MultiException)
+meth public void addThrowable(java.lang.Throwable)
+meth public void throwIfErrors()
+supr java.lang.Object
+hfds throwables
+
+CLSS public org.jvnet.hk2.internal.ConstantActiveDescriptor<%0 extends java.lang.Object>
+cons public init()
+cons public init({org.jvnet.hk2.internal.ConstantActiveDescriptor%0},java.util.Set<java.lang.reflect.Type>,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.String,java.util.Set<java.lang.annotation.Annotation>,org.glassfish.hk2.api.DescriptorVisibility,int,java.lang.Boolean,java.lang.Boolean,java.lang.String,long,java.util.Map<java.lang.String,java.util.List<java.lang.String>>)
+cons public init({org.jvnet.hk2.internal.ConstantActiveDescriptor%0},org.jvnet.hk2.internal.ServiceLocatorImpl)
+meth public boolean isCacheSet()
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.lang.Long getLocatorId()
+meth public java.lang.String getImplementation()
+meth public java.lang.reflect.Type getImplementationType()
+meth public void dispose({org.jvnet.hk2.internal.ConstantActiveDescriptor%0})
+meth public void setImplementationType(java.lang.reflect.Type)
+meth public {org.jvnet.hk2.internal.ConstantActiveDescriptor%0} create(org.glassfish.hk2.api.ServiceHandle<?>)
+meth public {org.jvnet.hk2.internal.ConstantActiveDescriptor%0} getCache()
+supr org.glassfish.hk2.utilities.AbstractActiveDescriptor<{org.jvnet.hk2.internal.ConstantActiveDescriptor%0}>
+hfds locatorId,serialVersionUID,theOne
+
+CLSS public abstract interface org.jvnet.hk2.internal.ConstructorAction
+meth public abstract java.lang.Object makeMe(java.lang.reflect.Constructor<?>,java.lang.Object[],boolean) throws java.lang.Throwable
+
+CLSS public org.jvnet.hk2.internal.ConstructorInterceptorHandler
+cons public init()
+meth public static java.lang.Object construct(java.lang.reflect.Constructor<?>,java.lang.Object[],boolean,java.util.List<org.aopalliance.intercept.ConstructorInterceptor>) throws java.lang.Throwable
+meth public static java.lang.Object construct(java.lang.reflect.Constructor<?>,java.lang.Object[],boolean,java.util.List<org.aopalliance.intercept.ConstructorInterceptor>,org.jvnet.hk2.internal.ConstructorAction) throws java.lang.Throwable
+supr java.lang.Object
+hfds DEFAULT_ACTION
+hcls ConstructorInvocationImpl
+
+CLSS public abstract interface org.jvnet.hk2.internal.Creator<%0 extends java.lang.Object>
+meth public abstract java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public abstract void dispose({org.jvnet.hk2.internal.Creator%0})
+meth public abstract {org.jvnet.hk2.internal.Creator%0} create(org.glassfish.hk2.api.ServiceHandle<?>,org.jvnet.hk2.internal.SystemDescriptor<?>)
+
+CLSS public org.jvnet.hk2.internal.DefaultClassAnalyzer
+ anno 0 javax.inject.Named(java.lang.String value="default")
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+cons public init(org.jvnet.hk2.internal.ServiceLocatorImpl)
+intf org.glassfish.hk2.api.ClassAnalyzer
+meth public <%0 extends java.lang.Object> java.lang.reflect.Constructor<{%%0}> getConstructor(java.lang.Class<{%%0}>) throws java.lang.NoSuchMethodException
+meth public <%0 extends java.lang.Object> java.lang.reflect.Method getPostConstructMethod(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.lang.reflect.Method getPreDestroyMethod(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.Set<java.lang.reflect.Field> getFields(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.Set<java.lang.reflect.Method> getInitializerMethods(java.lang.Class<{%%0}>)
+supr java.lang.Object
+hfds locator
+
+CLSS public org.jvnet.hk2.internal.DescriptorComparator
+cons public init()
+intf java.io.Serializable
+intf java.util.Comparator<org.glassfish.hk2.api.Descriptor>
+meth public int compare(org.glassfish.hk2.api.Descriptor,org.glassfish.hk2.api.Descriptor)
+supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public org.jvnet.hk2.internal.DynamicConfigurationImpl
+cons public init(org.jvnet.hk2.internal.ServiceLocatorImpl)
+intf org.glassfish.hk2.api.DynamicConfiguration
+meth public !varargs void addIdempotentFilter(org.glassfish.hk2.api.Filter[])
+meth public !varargs void registerTwoPhaseResources(org.glassfish.hk2.api.TwoPhaseResource[])
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> addActiveDescriptor(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,boolean)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> bind(org.glassfish.hk2.api.Descriptor)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ActiveDescriptor<{%%0}> bind(org.glassfish.hk2.api.Descriptor,boolean)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.FactoryDescriptors addActiveFactoryDescriptor(java.lang.Class<? extends org.glassfish.hk2.api.Factory<{%%0}>>)
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.FactoryDescriptors bind(org.glassfish.hk2.api.FactoryDescriptors)
+meth public org.glassfish.hk2.api.FactoryDescriptors bind(org.glassfish.hk2.api.FactoryDescriptors,boolean)
+meth public void addUnbindFilter(org.glassfish.hk2.api.Filter)
+meth public void commit()
+supr java.lang.Object
+hfds allDescriptors,allIdempotentFilters,allResources,allUnbindFilters,committed,locator,lock
+
+CLSS public org.jvnet.hk2.internal.DynamicConfigurationServiceImpl
+ anno 0 javax.inject.Singleton()
+intf org.glassfish.hk2.api.DynamicConfigurationService
+meth public org.glassfish.hk2.api.DynamicConfiguration createDynamicConfiguration()
+meth public org.glassfish.hk2.api.Populator getPopulator()
+supr java.lang.Object
+hfds locator,populator
+
+CLSS public org.jvnet.hk2.internal.ErrorInformationImpl
+intf org.glassfish.hk2.api.ErrorInformation
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.Descriptor getDescriptor()
+meth public org.glassfish.hk2.api.ErrorType getErrorType()
+meth public org.glassfish.hk2.api.Injectee getInjectee()
+meth public org.glassfish.hk2.api.MultiException getAssociatedException()
+supr java.lang.Object
+hfds descriptor,errorType,exception,injectee
+
+CLSS public org.jvnet.hk2.internal.ErrorResults
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds descriptor,injectee,me
+
+CLSS public org.jvnet.hk2.internal.FactoryCreator<%0 extends java.lang.Object>
+intf org.jvnet.hk2.internal.Creator<{org.jvnet.hk2.internal.FactoryCreator%0}>
+meth public java.lang.String toString()
+meth public java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public void dispose({org.jvnet.hk2.internal.FactoryCreator%0})
+meth public {org.jvnet.hk2.internal.FactoryCreator%0} create(org.glassfish.hk2.api.ServiceHandle<?>,org.jvnet.hk2.internal.SystemDescriptor<?>)
+supr java.lang.Object
+hfds MAP_VALUE,cycleFinder,factoryDescriptor,instantiationService,locator
+
+CLSS public org.jvnet.hk2.internal.ImmediateResults
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds timelessResults,validatedImmediateResults
+
+CLSS public org.jvnet.hk2.internal.IndexedListData
+cons public init()
+meth public boolean isEmpty()
+meth public int size()
+meth public java.util.Collection<org.jvnet.hk2.internal.SystemDescriptor<?>> getSortedList()
+meth public void addDescriptor(org.jvnet.hk2.internal.SystemDescriptor<?>)
+meth public void clear()
+meth public void removeDescriptor(org.jvnet.hk2.internal.SystemDescriptor<?>)
+meth public void unSort()
+supr java.lang.Object
+hfds sorted,unsortedList
+
+CLSS public org.jvnet.hk2.internal.InstanceLifecycleEventImpl
+intf org.glassfish.hk2.api.InstanceLifecycleEvent
+meth public java.lang.Object getLifecycleObject()
+meth public java.lang.String toString()
+meth public java.util.Map<org.glassfish.hk2.api.Injectee,java.lang.Object> getKnownInjectees()
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> getActiveDescriptor()
+meth public org.glassfish.hk2.api.InstanceLifecycleEventType getEventType()
+supr java.lang.Object
+hfds descriptor,eventType,knownInjectees,lifecycleObject
+
+CLSS public org.jvnet.hk2.internal.InstantiationServiceImpl
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+cons public init()
+intf org.glassfish.hk2.api.InstantiationService
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.InstantiationData getInstantiationData()
+meth public void popInjecteeParent()
+meth public void pushInjecteeParent(org.glassfish.hk2.api.Injectee)
+supr java.lang.Object
+hfds injecteeStack
+
+CLSS public org.jvnet.hk2.internal.IterableProviderImpl<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.IterableProvider<{org.jvnet.hk2.internal.IterableProviderImpl%0}>
+meth public !varargs org.glassfish.hk2.api.IterableProvider<{org.jvnet.hk2.internal.IterableProviderImpl%0}> qualifiedWith(java.lang.annotation.Annotation[])
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.IterableProvider<{%%0}> ofType(java.lang.reflect.Type)
+meth public int getSize()
+meth public java.lang.Iterable<org.glassfish.hk2.api.ServiceHandle<{org.jvnet.hk2.internal.IterableProviderImpl%0}>> handleIterator()
+meth public java.lang.String toString()
+meth public java.util.Iterator<{org.jvnet.hk2.internal.IterableProviderImpl%0}> iterator()
+meth public org.glassfish.hk2.api.IterableProvider<{org.jvnet.hk2.internal.IterableProviderImpl%0}> named(java.lang.String)
+meth public org.glassfish.hk2.api.ServiceHandle<{org.jvnet.hk2.internal.IterableProviderImpl%0}> getHandle()
+meth public {org.jvnet.hk2.internal.IterableProviderImpl%0} get()
+supr java.lang.Object
+hfds isIterable,locator,originalInjectee,requiredQualifiers,requiredType,unqualified
+hcls HandleIterable,MyHandleIterator,MyIterator
+
+CLSS public org.jvnet.hk2.internal.MethodInterceptorHandler
+hfds DEBUG_INTERCEPTION,interceptorLists,locator,underlyingDescriptor
+hcls MethodInvocationImpl
+
+CLSS public org.jvnet.hk2.internal.MethodInterceptorImpl
+hfds EQUALS_NAME,PROXY_MORE_METHOD_NAME,descriptor,locator,myInjectee,root
+
+CLSS public org.jvnet.hk2.internal.MethodInterceptorInvocationHandler
+cons public init(javassist.util.proxy.MethodHandler)
+intf java.lang.reflect.InvocationHandler
+meth public java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
+supr java.lang.Object
+hfds interceptor
+
+CLSS public org.jvnet.hk2.internal.NarrowResults
+cons public init()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds errors,goodResults,unnarrowedResults
+
+CLSS public org.jvnet.hk2.internal.OptionalActiveDescriptor<%0 extends java.lang.Object>
+cons public init()
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.lang.reflect.Type getImplementationType()
+meth public java.util.Optional<{org.jvnet.hk2.internal.OptionalActiveDescriptor%0}> create(org.glassfish.hk2.api.ServiceHandle<?>)
+supr org.glassfish.hk2.utilities.AbstractActiveDescriptor<java.util.Optional>
+hfds injectee,locator,requiredType
+
+CLSS public org.jvnet.hk2.internal.PerLocatorUtilities
+meth public java.lang.String getAutoAnalyzerName(java.lang.Class<?>)
+meth public org.glassfish.hk2.api.InjectionResolver<?> getInjectionResolver(org.jvnet.hk2.internal.ServiceLocatorImpl,org.glassfish.hk2.api.Injectee)
+meth public org.jvnet.hk2.internal.ProxyUtilities getProxyUtilities()
+meth public void releaseCaches()
+meth public void shutdown()
+supr java.lang.Object
+hfds hasInjectCache,parent,proxyUtilities,threadLocalAnnotationCache,threadLocalAutoAnalyzerNameCache
+
+CLSS public org.jvnet.hk2.internal.PerLookupContext
+cons public init()
+intf org.glassfish.hk2.api.Context<org.glassfish.hk2.api.PerLookup>
+meth public <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public boolean isActive()
+meth public boolean supportsNullCreation()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void shutdown()
+supr java.lang.Object
+
+CLSS public org.jvnet.hk2.internal.PopulatorImpl
+intf org.glassfish.hk2.api.Populator
+meth public !varargs java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> populate(org.glassfish.hk2.api.DescriptorFileFinder,org.glassfish.hk2.api.PopulatorPostProcessor[]) throws java.io.IOException
+meth public java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> populate() throws java.io.IOException
+supr java.lang.Object
+hfds dcs,serviceLocator
+
+CLSS public org.jvnet.hk2.internal.ProxyUtilities
+cons public init()
+meth public <%0 extends java.lang.Object> {%%0} generateProxy(java.lang.Class<?>,org.jvnet.hk2.internal.ServiceLocatorImpl,org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.jvnet.hk2.internal.ServiceHandleImpl<{%%0}>,org.glassfish.hk2.api.Injectee)
+meth public void releaseCache()
+supr java.lang.Object
+hfds proxyCreationLock,superClassToDelegator
+
+CLSS public org.jvnet.hk2.internal.ServiceHandleComparator
+cons public init()
+intf java.io.Serializable
+intf java.util.Comparator<org.glassfish.hk2.api.ServiceHandle<?>>
+meth public int compare(org.glassfish.hk2.api.ServiceHandle<?>,org.glassfish.hk2.api.ServiceHandle<?>)
+supr java.lang.Object
+hfds baseComparator,serialVersionUID
+
+CLSS public org.jvnet.hk2.internal.ServiceHandleImpl<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.ServiceHandle<{org.jvnet.hk2.internal.ServiceHandleImpl%0}>
+meth public boolean isActive()
+meth public java.lang.Object getServiceData()
+meth public java.lang.String toString()
+meth public java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getSubHandles()
+meth public org.glassfish.hk2.api.ActiveDescriptor<{org.jvnet.hk2.internal.ServiceHandleImpl%0}> getActiveDescriptor()
+meth public org.glassfish.hk2.api.Injectee getOriginalRequest()
+meth public void addSubHandle(org.jvnet.hk2.internal.ServiceHandleImpl<?>)
+meth public void close()
+meth public void popInjectee()
+meth public void pushInjectee(org.glassfish.hk2.api.Injectee)
+meth public void setServiceData(java.lang.Object)
+meth public {org.jvnet.hk2.internal.ServiceHandleImpl%0} getService()
+supr java.lang.Object
+hfds injectees,locator,lock,root,service,serviceData,serviceDestroyed,serviceSet,subHandles
+
+CLSS public org.jvnet.hk2.internal.ServiceLocatorImpl
+cons public init(java.lang.String,org.jvnet.hk2.internal.ServiceLocatorImpl)
+intf org.glassfish.hk2.api.ServiceLocator
+meth public !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.hk2.api.ServiceHandle<{%%0}>> getAllServiceHandles(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> java.util.List<{%%0}> getAllServices(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> java.util.List<{%%0}> getAllServices(java.lang.annotation.Annotation,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> java.util.List<{%%0}> getAllServices(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.Class<{%%0}>,java.lang.String,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.reflect.Type,java.lang.String,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.Class<{%%0}>,java.lang.String,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.reflect.Type,java.lang.String,java.lang.annotation.Annotation[])
+meth public !varargs <%0 extends java.lang.Object> {%%0} getService(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public !varargs java.lang.Object assistedInject(java.lang.Object,java.lang.reflect.Method,org.glassfish.hk2.api.MethodParameter[])
+meth public !varargs java.lang.Object assistedInject(java.lang.Object,java.lang.reflect.Method,org.glassfish.hk2.api.ServiceHandle<?>,org.glassfish.hk2.api.MethodParameter[])
+meth public !varargs java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getAllServiceHandles(java.lang.annotation.Annotation,java.lang.annotation.Annotation[])
+meth public !varargs java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getAllServiceHandles(java.lang.reflect.Type,java.lang.annotation.Annotation[])
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>)
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.ServiceHandle<{%%0}> getServiceHandle(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.Injectee)
+meth public <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>,java.lang.String)
+meth public <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>,java.lang.String)
+meth public <%0 extends java.lang.Object> {%%0} getService(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+ anno 0 java.lang.Deprecated()
+meth public <%0 extends java.lang.Object> {%%0} getService(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>,org.glassfish.hk2.api.Injectee)
+meth public boolean getNeutralContextClassLoader()
+meth public java.lang.String getDefaultClassAnalyzerName()
+meth public java.lang.String getName()
+meth public java.lang.String toString()
+meth public java.util.List<?> getAllServices(org.glassfish.hk2.api.Filter)
+meth public java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> getDescriptors(org.glassfish.hk2.api.Filter)
+meth public java.util.List<org.glassfish.hk2.api.ServiceHandle<?>> getAllServiceHandles(org.glassfish.hk2.api.Filter)
+meth public long getLocatorId()
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> getBestDescriptor(org.glassfish.hk2.api.Filter)
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> getInjecteeDescriptor(org.glassfish.hk2.api.Injectee)
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> reifyDescriptor(org.glassfish.hk2.api.Descriptor)
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> reifyDescriptor(org.glassfish.hk2.api.Descriptor,org.glassfish.hk2.api.Injectee)
+meth public org.glassfish.hk2.api.ServiceLocator getParent()
+meth public org.glassfish.hk2.api.ServiceLocatorState getState()
+meth public org.glassfish.hk2.api.Unqualified getDefaultUnqualified()
+meth public void inject(java.lang.Object)
+meth public void inject(java.lang.Object,java.lang.String)
+meth public void postConstruct(java.lang.Object)
+meth public void postConstruct(java.lang.Object,java.lang.String)
+meth public void preDestroy(java.lang.Object)
+meth public void preDestroy(java.lang.Object,java.lang.String)
+meth public void setDefaultClassAnalyzerName(java.lang.String)
+meth public void setDefaultUnqualified(org.glassfish.hk2.api.Unqualified)
+meth public void setNeutralContextClassLoader(boolean)
+meth public void shutdown()
+supr java.lang.Object
+hfds BIND_TRACING_PATTERN,BIND_TRACING_PATTERN_PROPERTY,BIND_TRACING_STACKS,BIND_TRACING_STACKS_PROPERTY,CACHE_SIZE,DESCRIPTOR_COMPARATOR,HANDLE_COMPARATOR,allDescriptors,allResolvers,allValidators,children,classAnalyzerLock,classAnalyzers,classReflectionHelper,configListeners,contextCache,currentLocatorId,defaultClassAnalyzer,defaultUnqualified,descriptorsByAdvertisedContract,descriptorsByName,errorHandlers,hasInterceptionServices,id,igashCache,igdCache,injecteeToResolverCache,interceptionServices,locatorName,neutralContextClassLoader,nextServiceId,parent,perLocatorUtilities,perLookupContext,rLock,readWriteLock,sLock,singletonContext,state,wLock
+hcls CheckConfigurationData,IgdCacheKey,IgdValue,UnqualifiedIndexedFilter
+
+CLSS public org.jvnet.hk2.internal.ServiceLocatorRuntimeImpl
+ anno 0 javax.inject.Singleton()
+ anno 0 org.glassfish.hk2.api.Visibility(org.glassfish.hk2.api.DescriptorVisibility value=LOCAL)
+intf org.jvnet.hk2.external.runtime.ServiceLocatorRuntimeBean
+meth public int getNumberOfChildren()
+meth public int getNumberOfDescriptors()
+meth public int getReflectionCacheSize()
+meth public int getServiceCacheMaximumSize()
+meth public int getServiceCacheSize()
+meth public void clearReflectionCache()
+meth public void clearServiceCache()
+supr java.lang.Object
+hfds locator
+
+CLSS public org.jvnet.hk2.internal.SingletonContext
+ anno 0 javax.inject.Singleton()
+intf org.glassfish.hk2.api.Context<javax.inject.Singleton>
+meth public <%0 extends java.lang.Object> {%%0} findOrCreate(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public boolean containsKey(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public boolean isActive()
+meth public boolean supportsNullCreation()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScope()
+meth public void destroyOne(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public void shutdown()
+supr java.lang.Object
+hfds generationNumber,locator,valueCache
+hcls GenerationComparator
+
+CLSS public org.jvnet.hk2.internal.SystemDescriptor<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.ActiveDescriptor<{org.jvnet.hk2.internal.SystemDescriptor%0}>
+intf org.jvnet.hk2.internal.Closeable
+meth public boolean close()
+meth public boolean equals(java.lang.Object)
+meth public boolean isCacheSet()
+meth public boolean isClosed()
+meth public boolean isReified()
+meth public int getRanking()
+meth public int hashCode()
+meth public int setRanking(int)
+meth public java.lang.Boolean isProxiable()
+meth public java.lang.Boolean isProxyForSameScope()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> getScopeAnnotation()
+meth public java.lang.Class<?> getImplementationClass()
+meth public java.lang.Long getFactoryLocatorId()
+meth public java.lang.Long getFactoryServiceId()
+meth public java.lang.Long getLocatorId()
+meth public java.lang.Long getServiceId()
+meth public java.lang.String getClassAnalysisName()
+meth public java.lang.String getImplementation()
+meth public java.lang.String getName()
+meth public java.lang.String getScope()
+meth public java.lang.String toString()
+meth public java.lang.annotation.Annotation getScopeAsAnnotation()
+meth public java.lang.reflect.Type getImplementationType()
+meth public java.util.List<org.glassfish.hk2.api.Injectee> getInjectees()
+meth public java.util.Map<java.lang.String,java.util.List<java.lang.String>> getMetadata()
+meth public java.util.Set<java.lang.String> getAdvertisedContracts()
+meth public java.util.Set<java.lang.String> getQualifiers()
+meth public java.util.Set<java.lang.annotation.Annotation> getQualifierAnnotations()
+meth public java.util.Set<java.lang.reflect.Type> getContractTypes()
+meth public org.glassfish.hk2.api.DescriptorType getDescriptorType()
+meth public org.glassfish.hk2.api.DescriptorVisibility getDescriptorVisibility()
+meth public org.glassfish.hk2.api.HK2Loader getLoader()
+meth public void dispose({org.jvnet.hk2.internal.SystemDescriptor%0})
+meth public void releaseCache()
+meth public void setCache({org.jvnet.hk2.internal.SystemDescriptor%0})
+meth public {org.jvnet.hk2.internal.SystemDescriptor%0} create(org.glassfish.hk2.api.ServiceHandle<?>)
+meth public {org.jvnet.hk2.internal.SystemDescriptor%0} getCache()
+supr java.lang.Object
+hfds activeDescriptor,baseDescriptor,cacheLock,cacheSet,cachedValue,closed,contracts,creator,factoryLocatorId,factoryServiceId,id,implClass,implType,instanceListeners,myLists,preAnalyzed,qualifiers,reified,reifying,scope,scopeAnnotation,sdLocator,singletonGeneration,validationServiceCache
+
+CLSS public org.jvnet.hk2.internal.SystemInjecteeImpl
+intf org.glassfish.hk2.api.Injectee
+meth public boolean equals(java.lang.Object)
+meth public boolean isOptional()
+meth public boolean isSelf()
+meth public int getPosition()
+meth public int hashCode()
+meth public java.lang.Class<?> getInjecteeClass()
+meth public java.lang.String toString()
+meth public java.lang.reflect.AnnotatedElement getParent()
+meth public java.lang.reflect.Type getRequiredType()
+meth public java.util.Set<java.lang.annotation.Annotation> getRequiredQualifiers()
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> getInjecteeDescriptor()
+meth public org.glassfish.hk2.api.Unqualified getUnqualified()
+supr java.lang.Object
+hfds injecteeDescriptor,isOptional,isSelf,pClass,parent,parentIdentifier,position,qualifiers,requiredType,unqualified
+
+CLSS public org.jvnet.hk2.internal.ThreeThirtyResolver
+ anno 0 javax.inject.Named(java.lang.String value="SystemInjectResolver")
+intf org.glassfish.hk2.api.InjectionResolver<javax.inject.Inject>
+meth public boolean isConstructorParameterIndicator()
+meth public boolean isMethodParameterIndicator()
+meth public java.lang.Object resolve(org.glassfish.hk2.api.Injectee,org.glassfish.hk2.api.ServiceHandle<?>)
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds locator
+
+CLSS public org.jvnet.hk2.internal.TopicImpl<%0 extends java.lang.Object>
+intf org.glassfish.hk2.api.messaging.Topic<{org.jvnet.hk2.internal.TopicImpl%0}>
+meth public !varargs org.glassfish.hk2.api.messaging.Topic<{org.jvnet.hk2.internal.TopicImpl%0}> qualifiedWith(java.lang.annotation.Annotation[])
+meth public <%0 extends java.lang.Object> org.glassfish.hk2.api.messaging.Topic<{%%0}> ofType(java.lang.reflect.Type)
+meth public java.lang.reflect.Type getTopicType()
+meth public java.util.Set<java.lang.annotation.Annotation> getTopicQualifiers()
+meth public org.glassfish.hk2.api.messaging.Topic<{org.jvnet.hk2.internal.TopicImpl%0}> named(java.lang.String)
+meth public void publish({org.jvnet.hk2.internal.TopicImpl%0})
+supr java.lang.Object
+hfds locator,requiredQualifiers,topicType
+
+CLSS public org.jvnet.hk2.internal.TwoPhaseTransactionDataImpl
+cons public init()
+intf org.glassfish.hk2.api.TwoPhaseTransactionData
+meth public java.lang.String toString()
+meth public java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> getAllAddedDescriptors()
+meth public java.util.List<org.glassfish.hk2.api.ActiveDescriptor<?>> getAllRemovedDescriptors()
+supr java.lang.Object
+hfds added,removed
+
+CLSS public org.jvnet.hk2.internal.Utilities
+cons public init()
+innr public abstract interface static Interceptors
+meth public !varargs static java.lang.Object justAssistedInject(java.lang.Object,java.lang.reflect.Method,org.jvnet.hk2.internal.ServiceLocatorImpl,org.glassfish.hk2.api.ServiceHandle<?>,org.glassfish.hk2.api.MethodParameter[])
+meth public static <%0 extends java.lang.Object> java.lang.reflect.Constructor<{%%0}> getConstructor(java.lang.Class<{%%0}>,org.glassfish.hk2.api.ClassAnalyzer,org.jvnet.hk2.internal.Collector)
+meth public static <%0 extends java.lang.Object> org.jvnet.hk2.internal.AutoActiveDescriptor<{%%0}> createAutoDescriptor(java.lang.Class<{%%0}>,org.jvnet.hk2.internal.ServiceLocatorImpl)
+meth public static <%0 extends java.lang.Object> org.jvnet.hk2.internal.AutoActiveDescriptor<{%%0}> createAutoFactoryDescriptor(java.lang.Class<{%%0}>,org.glassfish.hk2.api.ActiveDescriptor<?>,org.jvnet.hk2.internal.ServiceLocatorImpl)
+meth public static <%0 extends java.lang.Object> {%%0} createService(org.glassfish.hk2.api.ActiveDescriptor<{%%0}>,org.glassfish.hk2.api.Injectee,org.jvnet.hk2.internal.ServiceLocatorImpl,org.glassfish.hk2.api.ServiceHandle<{%%0}>,java.lang.Class<?>)
+meth public static <%0 extends java.lang.Object> {%%0} getFirstThingInList(java.util.List<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} justCreate(java.lang.Class<{%%0}>,org.jvnet.hk2.internal.ServiceLocatorImpl,java.lang.String)
+meth public static boolean isAbstract(java.lang.reflect.Member)
+meth public static boolean isFinal(java.lang.reflect.Member)
+meth public static boolean isProxiableScope(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static boolean isTypeSafe(java.lang.reflect.Type,java.lang.reflect.Type)
+meth public static boolean isUnproxiableScope(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public static boolean proxiesAvailable()
+meth public static java.lang.Class<? extends java.lang.annotation.Annotation> getInjectionResolverType(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public static java.lang.Class<? extends java.lang.annotation.Annotation> getScopeAnnotationType(java.lang.Class<?>,org.glassfish.hk2.api.Descriptor)
+meth public static java.lang.Class<?> getFactoryAwareImplementationClass(org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public static java.lang.Class<?> loadClass(java.lang.String,org.glassfish.hk2.api.Descriptor,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.Class<?> loadClass(java.lang.String,org.glassfish.hk2.api.Injectee)
+meth public static java.lang.Class<?> translatePrimitiveType(java.lang.Class<?>)
+meth public static java.lang.Class<?>[] getInterfacesForProxy(java.util.Set<java.lang.reflect.Type>)
+meth public static java.lang.String getDefaultNameFromMethod(java.lang.reflect.Method,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.reflect.Constructor<?> findProducerConstructor(java.lang.Class<?>,org.jvnet.hk2.internal.ServiceLocatorImpl,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.reflect.Method findPostConstruct(java.lang.Class<?>,org.jvnet.hk2.internal.ServiceLocatorImpl,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.reflect.Method findPreDestroy(java.lang.Class<?>,org.jvnet.hk2.internal.ServiceLocatorImpl,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.reflect.Method getFactoryProvideMethod(java.lang.Class<?>)
+meth public static java.lang.reflect.Method getPostConstruct(java.lang.Class<?>,org.glassfish.hk2.api.ClassAnalyzer,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.reflect.Method getPreDestroy(java.lang.Class<?>,org.glassfish.hk2.api.ClassAnalyzer,org.jvnet.hk2.internal.Collector)
+meth public static java.lang.reflect.Type getFactoryProductionType(java.lang.Class<?>)
+meth public static java.util.List<org.jvnet.hk2.internal.SystemInjecteeImpl> getConstructorInjectees(java.lang.reflect.Constructor<?>,org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public static java.util.List<org.jvnet.hk2.internal.SystemInjecteeImpl> getFieldInjectees(java.lang.Class<?>,java.lang.reflect.Field,org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public static java.util.List<org.jvnet.hk2.internal.SystemInjecteeImpl> getMethodInjectees(java.lang.Class<?>,java.lang.reflect.Method,org.glassfish.hk2.api.ActiveDescriptor<?>)
+meth public static java.util.List<org.jvnet.hk2.internal.SystemInjecteeImpl> getMethodInjectees(java.lang.Class<?>,java.lang.reflect.Method,org.glassfish.hk2.api.ActiveDescriptor<?>,java.util.Map<java.lang.Integer,org.glassfish.hk2.api.MethodParameter>)
+meth public static java.util.Set<java.lang.annotation.Annotation> fixAndCheckQualifiers(java.lang.annotation.Annotation[],java.lang.String)
+meth public static java.util.Set<java.lang.annotation.Annotation> getAllQualifiers(java.lang.reflect.AnnotatedElement,java.lang.String,org.jvnet.hk2.internal.Collector)
+meth public static java.util.Set<java.lang.reflect.Field> findInitializerFields(java.lang.Class<?>,org.jvnet.hk2.internal.ServiceLocatorImpl,org.jvnet.hk2.internal.Collector)
+meth public static java.util.Set<java.lang.reflect.Field> getInitFields(java.lang.Class<?>,org.glassfish.hk2.api.ClassAnalyzer,org.jvnet.hk2.internal.Collector)
+meth public static java.util.Set<java.lang.reflect.Method> findInitializerMethods(java.lang.Class<?>,org.jvnet.hk2.internal.ServiceLocatorImpl,org.jvnet.hk2.internal.Collector)
+meth public static java.util.Set<java.lang.reflect.Method> getInitMethods(java.lang.Class<?>,org.glassfish.hk2.api.ClassAnalyzer,org.jvnet.hk2.internal.Collector)
+meth public static org.glassfish.hk2.api.ActiveDescriptor<org.glassfish.hk2.api.InjectionResolver<javax.inject.Inject>> getThreeThirtyDescriptor(org.jvnet.hk2.internal.ServiceLocatorImpl)
+meth public static org.glassfish.hk2.api.ActiveDescriptor<org.glassfish.hk2.api.ServiceLocator> getLocatorDescriptor(org.glassfish.hk2.api.ServiceLocator)
+meth public static org.glassfish.hk2.api.ClassAnalyzer getClassAnalyzer(org.jvnet.hk2.internal.ServiceLocatorImpl,java.lang.String,org.jvnet.hk2.internal.Collector)
+meth public static org.glassfish.hk2.utilities.reflection.ScopeInfo getScopeAnnotationType(java.lang.reflect.AnnotatedElement,org.glassfish.hk2.api.Descriptor,org.jvnet.hk2.internal.Collector)
+meth public static void checkFactoryType(java.lang.Class<?>,org.jvnet.hk2.internal.Collector)
+meth public static void checkLookupType(java.lang.Class<?>)
+meth public static void handleErrors(org.jvnet.hk2.internal.NarrowResults,java.util.LinkedList<org.glassfish.hk2.api.ErrorService>)
+meth public static void justInject(java.lang.Object,org.jvnet.hk2.internal.ServiceLocatorImpl,java.lang.String)
+meth public static void justPostConstruct(java.lang.Object,org.jvnet.hk2.internal.ServiceLocatorImpl,java.lang.String)
+meth public static void justPreDestroy(java.lang.Object,org.jvnet.hk2.internal.ServiceLocatorImpl,java.lang.String)
+meth public static void validateSelfInjectees(org.glassfish.hk2.api.ActiveDescriptor<?>,java.util.List<org.jvnet.hk2.internal.SystemInjecteeImpl>,org.jvnet.hk2.internal.Collector)
+supr java.lang.Object
+hfds DEFAULT_ANNOTATION_INFORMATION,EMTPY_INTERCEPTORS,NOT_INTERCEPTED,PROVIDE_METHOD,USE_SOFT_REFERENCE,USE_SOFT_REFERENCE_PROPERTY,proxiesAvailable
+hcls AnnotationInformation
+
+CLSS public abstract interface static org.jvnet.hk2.internal.Utilities$Interceptors
+ outer org.jvnet.hk2.internal.Utilities
+meth public abstract java.util.List<org.aopalliance.intercept.ConstructorInterceptor> getConstructorInterceptors()
+meth public abstract java.util.Map<java.lang.reflect.Method,java.util.List<org.aopalliance.intercept.MethodInterceptor>> getMethodInterceptors()
+
+CLSS public org.jvnet.hk2.internal.ValidationInformationImpl
+cons public init(org.glassfish.hk2.api.Operation,org.glassfish.hk2.api.ActiveDescriptor<?>)
+cons public init(org.glassfish.hk2.api.Operation,org.glassfish.hk2.api.ActiveDescriptor<?>,org.glassfish.hk2.api.Injectee,org.glassfish.hk2.api.Filter)
+intf org.glassfish.hk2.api.ValidationInformation
+meth public java.lang.StackTraceElement getCaller()
+meth public java.lang.String toString()
+meth public org.glassfish.hk2.api.ActiveDescriptor<?> getCandidate()
+meth public org.glassfish.hk2.api.Filter getFilter()
+meth public org.glassfish.hk2.api.Injectee getInjectee()
+meth public org.glassfish.hk2.api.Operation getOperation()
+supr java.lang.Object
+hfds CHECK_METHOD,PACKAGES_TO_SKIP,SERVICE_LOCATOR_IMPL,SKIP_ME,VALIDATE_METHOD,candidate,filter,injectee,operation
+
+CLSS public abstract org.osgi.dto.DTO
+cons public init()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds MAX_LENGTH
+
+CLSS abstract interface org.osgi.dto.package-info
+
+CLSS public final org.osgi.framework.AdaptPermission
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,org.osgi.framework.Bundle,java.lang.String)
+fld public final static java.lang.String ADAPT = "adapt"
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.BasicPermission
+hfds ACTION_ADAPT,ACTION_ALL,ACTION_NONE,action_mask,actions,bundle,filter,properties,serialVersionUID
+
+CLSS public final org.osgi.framework.AdminPermission
+cons public init()
+cons public init(java.lang.String,java.lang.String)
+cons public init(org.osgi.framework.Bundle,java.lang.String)
+fld public final static java.lang.String CLASS = "class"
+fld public final static java.lang.String CONTEXT = "context"
+fld public final static java.lang.String EXECUTE = "execute"
+fld public final static java.lang.String EXTENSIONLIFECYCLE = "extensionLifecycle"
+fld public final static java.lang.String LIFECYCLE = "lifecycle"
+fld public final static java.lang.String LISTENER = "listener"
+fld public final static java.lang.String METADATA = "metadata"
+fld public final static java.lang.String RESOLVE = "resolve"
+fld public final static java.lang.String RESOURCE = "resource"
+fld public final static java.lang.String STARTLEVEL = "startlevel"
+fld public final static java.lang.String WEAVE = "weave"
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.BasicPermission
+hfds ACTION_ALL,ACTION_CLASS,ACTION_CONTEXT,ACTION_EXECUTE,ACTION_EXTENSIONLIFECYCLE,ACTION_LIFECYCLE,ACTION_LISTENER,ACTION_METADATA,ACTION_NONE,ACTION_RESOLVE,ACTION_RESOURCE,ACTION_STARTLEVEL,ACTION_WEAVE,action_mask,actions,bundle,filter,properties,recurse,serialVersionUID
+
+CLSS public abstract interface org.osgi.framework.AllServiceListener
+ anno 0 java.lang.FunctionalInterface()
+intf org.osgi.framework.ServiceListener
+
+CLSS public abstract interface org.osgi.framework.Bundle
+fld public final static int ACTIVE = 32
+fld public final static int INSTALLED = 2
+fld public final static int RESOLVED = 4
+fld public final static int SIGNERS_ALL = 1
+fld public final static int SIGNERS_TRUSTED = 2
+fld public final static int STARTING = 8
+fld public final static int START_ACTIVATION_POLICY = 2
+fld public final static int START_TRANSIENT = 1
+fld public final static int STOPPING = 16
+fld public final static int STOP_TRANSIENT = 1
+fld public final static int UNINSTALLED = 1
+intf java.lang.Comparable<org.osgi.framework.Bundle>
+meth public abstract <%0 extends java.lang.Object> {%%0} adapt(java.lang.Class<{%%0}>)
+meth public abstract boolean hasPermission(java.lang.Object)
+meth public abstract int getState()
+meth public abstract java.io.File getDataFile(java.lang.String)
+meth public abstract java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth public abstract java.lang.String getLocation()
+meth public abstract java.lang.String getSymbolicName()
+meth public abstract java.net.URL getEntry(java.lang.String)
+meth public abstract java.net.URL getResource(java.lang.String)
+meth public abstract java.util.Dictionary<java.lang.String,java.lang.String> getHeaders()
+meth public abstract java.util.Dictionary<java.lang.String,java.lang.String> getHeaders(java.lang.String)
+meth public abstract java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
+meth public abstract java.util.Enumeration<java.net.URL> findEntries(java.lang.String,java.lang.String,boolean)
+meth public abstract java.util.Enumeration<java.net.URL> getResources(java.lang.String) throws java.io.IOException
+meth public abstract java.util.Map<java.security.cert.X509Certificate,java.util.List<java.security.cert.X509Certificate>> getSignerCertificates(int)
+meth public abstract long getBundleId()
+meth public abstract long getLastModified()
+meth public abstract org.osgi.framework.BundleContext getBundleContext()
+meth public abstract org.osgi.framework.ServiceReference<?>[] getRegisteredServices()
+meth public abstract org.osgi.framework.ServiceReference<?>[] getServicesInUse()
+meth public abstract org.osgi.framework.Version getVersion()
+meth public abstract void start() throws org.osgi.framework.BundleException
+meth public abstract void start(int) throws org.osgi.framework.BundleException
+meth public abstract void stop() throws org.osgi.framework.BundleException
+meth public abstract void stop(int) throws org.osgi.framework.BundleException
+meth public abstract void uninstall() throws org.osgi.framework.BundleException
+meth public abstract void update() throws org.osgi.framework.BundleException
+meth public abstract void update(java.io.InputStream) throws org.osgi.framework.BundleException
+
+CLSS public abstract interface org.osgi.framework.BundleActivator
+meth public abstract void start(org.osgi.framework.BundleContext) throws java.lang.Exception
+meth public abstract void stop(org.osgi.framework.BundleContext) throws java.lang.Exception
+
+CLSS public abstract interface org.osgi.framework.BundleContext
+intf org.osgi.framework.BundleReference
+meth public abstract <%0 extends java.lang.Object> java.util.Collection<org.osgi.framework.ServiceReference<{%%0}>> getServiceReferences(java.lang.Class<{%%0}>,java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+meth public abstract <%0 extends java.lang.Object> org.osgi.framework.ServiceObjects<{%%0}> getServiceObjects(org.osgi.framework.ServiceReference<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> org.osgi.framework.ServiceReference<{%%0}> getServiceReference(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> org.osgi.framework.ServiceRegistration<{%%0}> registerService(java.lang.Class<{%%0}>,org.osgi.framework.ServiceFactory<{%%0}>,java.util.Dictionary<java.lang.String,?>)
+meth public abstract <%0 extends java.lang.Object> org.osgi.framework.ServiceRegistration<{%%0}> registerService(java.lang.Class<{%%0}>,{%%0},java.util.Dictionary<java.lang.String,?>)
+meth public abstract <%0 extends java.lang.Object> {%%0} getService(org.osgi.framework.ServiceReference<{%%0}>)
+meth public abstract boolean ungetService(org.osgi.framework.ServiceReference<?>)
+meth public abstract java.io.File getDataFile(java.lang.String)
+meth public abstract java.lang.String getProperty(java.lang.String)
+meth public abstract org.osgi.framework.Bundle getBundle()
+meth public abstract org.osgi.framework.Bundle getBundle(java.lang.String)
+meth public abstract org.osgi.framework.Bundle getBundle(long)
+meth public abstract org.osgi.framework.Bundle installBundle(java.lang.String) throws org.osgi.framework.BundleException
+meth public abstract org.osgi.framework.Bundle installBundle(java.lang.String,java.io.InputStream) throws org.osgi.framework.BundleException
+meth public abstract org.osgi.framework.Bundle[] getBundles()
+meth public abstract org.osgi.framework.Filter createFilter(java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+meth public abstract org.osgi.framework.ServiceReference<?> getServiceReference(java.lang.String)
+meth public abstract org.osgi.framework.ServiceReference<?>[] getAllServiceReferences(java.lang.String,java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+meth public abstract org.osgi.framework.ServiceReference<?>[] getServiceReferences(java.lang.String,java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+meth public abstract org.osgi.framework.ServiceRegistration<?> registerService(java.lang.String,java.lang.Object,java.util.Dictionary<java.lang.String,?>)
+meth public abstract org.osgi.framework.ServiceRegistration<?> registerService(java.lang.String[],java.lang.Object,java.util.Dictionary<java.lang.String,?>)
+meth public abstract void addBundleListener(org.osgi.framework.BundleListener)
+meth public abstract void addFrameworkListener(org.osgi.framework.FrameworkListener)
+meth public abstract void addServiceListener(org.osgi.framework.ServiceListener)
+meth public abstract void addServiceListener(org.osgi.framework.ServiceListener,java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+meth public abstract void removeBundleListener(org.osgi.framework.BundleListener)
+meth public abstract void removeFrameworkListener(org.osgi.framework.FrameworkListener)
+meth public abstract void removeServiceListener(org.osgi.framework.ServiceListener)
+
+CLSS public org.osgi.framework.BundleEvent
+cons public init(int,org.osgi.framework.Bundle)
+cons public init(int,org.osgi.framework.Bundle,org.osgi.framework.Bundle)
+fld public final static int INSTALLED = 1
+fld public final static int LAZY_ACTIVATION = 512
+fld public final static int RESOLVED = 32
+fld public final static int STARTED = 2
+fld public final static int STARTING = 128
+fld public final static int STOPPED = 4
+fld public final static int STOPPING = 256
+fld public final static int UNINSTALLED = 16
+fld public final static int UNRESOLVED = 64
+fld public final static int UPDATED = 8
+meth public int getType()
+meth public org.osgi.framework.Bundle getBundle()
+meth public org.osgi.framework.Bundle getOrigin()
+supr java.util.EventObject
+hfds bundle,origin,serialVersionUID,type
+
+CLSS public org.osgi.framework.BundleException
+cons public init(java.lang.String)
+cons public init(java.lang.String,int)
+cons public init(java.lang.String,int,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable)
+fld public final static int ACTIVATOR_ERROR = 5
+fld public final static int DUPLICATE_BUNDLE_ERROR = 9
+fld public final static int INVALID_OPERATION = 2
+fld public final static int MANIFEST_ERROR = 3
+fld public final static int NATIVECODE_ERROR = 8
+fld public final static int READ_ERROR = 11
+fld public final static int REJECTED_BY_HOOK = 12
+fld public final static int RESOLVE_ERROR = 4
+fld public final static int SECURITY_ERROR = 6
+fld public final static int START_TRANSIENT_ERROR = 10
+fld public final static int STATECHANGE_ERROR = 7
+fld public final static int UNSPECIFIED = 0
+fld public final static int UNSUPPORTED_OPERATION = 1
+meth public int getType()
+meth public java.lang.Throwable getCause()
+meth public java.lang.Throwable getNestedException()
+meth public java.lang.Throwable initCause(java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID,type
+
+CLSS public abstract interface org.osgi.framework.BundleListener
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.EventListener
+meth public abstract void bundleChanged(org.osgi.framework.BundleEvent)
+
+CLSS public final org.osgi.framework.BundlePermission
+cons public init(java.lang.String,java.lang.String)
+fld public final static java.lang.String FRAGMENT = "fragment"
+fld public final static java.lang.String HOST = "host"
+fld public final static java.lang.String PROVIDE = "provide"
+fld public final static java.lang.String REQUIRE = "require"
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.BasicPermission
+hfds ACTION_ALL,ACTION_FRAGMENT,ACTION_HOST,ACTION_NONE,ACTION_PROVIDE,ACTION_REQUIRE,action_mask,actions,serialVersionUID
+
+CLSS public abstract interface org.osgi.framework.BundleReference
+meth public abstract org.osgi.framework.Bundle getBundle()
+
+CLSS public final org.osgi.framework.CapabilityPermission
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,java.util.Map<java.lang.String,?>,org.osgi.framework.Bundle,java.lang.String)
+fld public final static java.lang.String PROVIDE = "provide"
+fld public final static java.lang.String REQUIRE = "require"
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.BasicPermission
+hfds ACTION_ALL,ACTION_NONE,ACTION_PROVIDE,ACTION_REQUIRE,action_mask,actions,attributes,bundle,filter,properties,serialVersionUID
+hcls Properties
+
+CLSS public abstract interface org.osgi.framework.Configurable
+meth public abstract java.lang.Object getConfigurationObject()
+
+CLSS public abstract interface org.osgi.framework.Constants
+fld public final static java.lang.String ACTIVATION_LAZY = "lazy"
+fld public final static java.lang.String BUNDLE_ACTIVATIONPOLICY = "Bundle-ActivationPolicy"
+fld public final static java.lang.String BUNDLE_ACTIVATOR = "Bundle-Activator"
+fld public final static java.lang.String BUNDLE_CATEGORY = "Bundle-Category"
+fld public final static java.lang.String BUNDLE_CLASSPATH = "Bundle-ClassPath"
+fld public final static java.lang.String BUNDLE_CONTACTADDRESS = "Bundle-ContactAddress"
+fld public final static java.lang.String BUNDLE_COPYRIGHT = "Bundle-Copyright"
+fld public final static java.lang.String BUNDLE_DESCRIPTION = "Bundle-Description"
+fld public final static java.lang.String BUNDLE_DEVELOPERS = "Bundle-Developers"
+fld public final static java.lang.String BUNDLE_DOCURL = "Bundle-DocURL"
+fld public final static java.lang.String BUNDLE_ICON = "Bundle-Icon"
+fld public final static java.lang.String BUNDLE_LICENSE = "Bundle-License"
+fld public final static java.lang.String BUNDLE_LOCALIZATION = "Bundle-Localization"
+fld public final static java.lang.String BUNDLE_LOCALIZATION_DEFAULT_BASENAME = "OSGI-INF/l10n/bundle"
+fld public final static java.lang.String BUNDLE_MANIFESTVERSION = "Bundle-ManifestVersion"
+fld public final static java.lang.String BUNDLE_NAME = "Bundle-Name"
+fld public final static java.lang.String BUNDLE_NATIVECODE = "Bundle-NativeCode"
+fld public final static java.lang.String BUNDLE_NATIVECODE_LANGUAGE = "language"
+fld public final static java.lang.String BUNDLE_NATIVECODE_OSNAME = "osname"
+fld public final static java.lang.String BUNDLE_NATIVECODE_OSVERSION = "osversion"
+fld public final static java.lang.String BUNDLE_NATIVECODE_PROCESSOR = "processor"
+fld public final static java.lang.String BUNDLE_REQUIREDEXECUTIONENVIRONMENT = "Bundle-RequiredExecutionEnvironment"
+fld public final static java.lang.String BUNDLE_SCM = "Bundle-SCM"
+fld public final static java.lang.String BUNDLE_SYMBOLICNAME = "Bundle-SymbolicName"
+fld public final static java.lang.String BUNDLE_SYMBOLICNAME_ATTRIBUTE = "bundle-symbolic-name"
+fld public final static java.lang.String BUNDLE_UPDATELOCATION = "Bundle-UpdateLocation"
+fld public final static java.lang.String BUNDLE_VENDOR = "Bundle-Vendor"
+fld public final static java.lang.String BUNDLE_VERSION = "Bundle-Version"
+fld public final static java.lang.String BUNDLE_VERSION_ATTRIBUTE = "bundle-version"
+fld public final static java.lang.String DYNAMICIMPORT_PACKAGE = "DynamicImport-Package"
+fld public final static java.lang.String EFFECTIVE_ACTIVE = "active"
+fld public final static java.lang.String EFFECTIVE_DIRECTIVE = "effective"
+fld public final static java.lang.String EFFECTIVE_RESOLVE = "resolve"
+fld public final static java.lang.String EXCLUDE_DIRECTIVE = "exclude"
+fld public final static java.lang.String EXPORT_PACKAGE = "Export-Package"
+fld public final static java.lang.String EXPORT_SERVICE = "Export-Service"
+fld public final static java.lang.String EXTENSION_BOOTCLASSPATH = "bootclasspath"
+fld public final static java.lang.String EXTENSION_BUNDLE_ACTIVATOR = "ExtensionBundle-Activator"
+fld public final static java.lang.String EXTENSION_DIRECTIVE = "extension"
+fld public final static java.lang.String EXTENSION_FRAMEWORK = "framework"
+fld public final static java.lang.String FILTER_DIRECTIVE = "filter"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_ALWAYS = "always"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_DIRECTIVE = "fragment-attachment"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_NEVER = "never"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_RESOLVETIME = "resolve-time"
+fld public final static java.lang.String FRAGMENT_HOST = "Fragment-Host"
+fld public final static java.lang.String FRAMEWORK_BEGINNING_STARTLEVEL = "org.osgi.framework.startlevel.beginning"
+fld public final static java.lang.String FRAMEWORK_BOOTDELEGATION = "org.osgi.framework.bootdelegation"
+fld public final static java.lang.String FRAMEWORK_BSNVERSION = "org.osgi.framework.bsnversion"
+fld public final static java.lang.String FRAMEWORK_BSNVERSION_MANAGED = "managed"
+fld public final static java.lang.String FRAMEWORK_BSNVERSION_MULTIPLE = "multiple"
+fld public final static java.lang.String FRAMEWORK_BSNVERSION_SINGLE = "single"
+fld public final static java.lang.String FRAMEWORK_BUNDLE_PARENT = "org.osgi.framework.bundle.parent"
+fld public final static java.lang.String FRAMEWORK_BUNDLE_PARENT_APP = "app"
+fld public final static java.lang.String FRAMEWORK_BUNDLE_PARENT_BOOT = "boot"
+fld public final static java.lang.String FRAMEWORK_BUNDLE_PARENT_EXT = "ext"
+fld public final static java.lang.String FRAMEWORK_BUNDLE_PARENT_FRAMEWORK = "framework"
+fld public final static java.lang.String FRAMEWORK_COMMAND_ABSPATH = "abspath"
+fld public final static java.lang.String FRAMEWORK_EXECPERMISSION = "org.osgi.framework.command.execpermission"
+fld public final static java.lang.String FRAMEWORK_EXECUTIONENVIRONMENT = "org.osgi.framework.executionenvironment"
+fld public final static java.lang.String FRAMEWORK_LANGUAGE = "org.osgi.framework.language"
+fld public final static java.lang.String FRAMEWORK_LIBRARY_EXTENSIONS = "org.osgi.framework.library.extensions"
+fld public final static java.lang.String FRAMEWORK_OS_NAME = "org.osgi.framework.os.name"
+fld public final static java.lang.String FRAMEWORK_OS_VERSION = "org.osgi.framework.os.version"
+fld public final static java.lang.String FRAMEWORK_PROCESSOR = "org.osgi.framework.processor"
+fld public final static java.lang.String FRAMEWORK_SECURITY = "org.osgi.framework.security"
+fld public final static java.lang.String FRAMEWORK_SECURITY_OSGI = "osgi"
+fld public final static java.lang.String FRAMEWORK_STORAGE = "org.osgi.framework.storage"
+fld public final static java.lang.String FRAMEWORK_STORAGE_CLEAN = "org.osgi.framework.storage.clean"
+fld public final static java.lang.String FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT = "onFirstInit"
+fld public final static java.lang.String FRAMEWORK_SYSTEMCAPABILITIES = "org.osgi.framework.system.capabilities"
+fld public final static java.lang.String FRAMEWORK_SYSTEMCAPABILITIES_EXTRA = "org.osgi.framework.system.capabilities.extra"
+fld public final static java.lang.String FRAMEWORK_SYSTEMPACKAGES = "org.osgi.framework.system.packages"
+fld public final static java.lang.String FRAMEWORK_SYSTEMPACKAGES_EXTRA = "org.osgi.framework.system.packages.extra"
+fld public final static java.lang.String FRAMEWORK_TRUST_REPOSITORIES = "org.osgi.framework.trust.repositories"
+fld public final static java.lang.String FRAMEWORK_UUID = "org.osgi.framework.uuid"
+fld public final static java.lang.String FRAMEWORK_VENDOR = "org.osgi.framework.vendor"
+fld public final static java.lang.String FRAMEWORK_VERSION = "org.osgi.framework.version"
+fld public final static java.lang.String FRAMEWORK_WINDOWSYSTEM = "org.osgi.framework.windowsystem"
+fld public final static java.lang.String IMPORT_PACKAGE = "Import-Package"
+fld public final static java.lang.String IMPORT_SERVICE = "Import-Service"
+fld public final static java.lang.String INCLUDE_DIRECTIVE = "include"
+fld public final static java.lang.String INTENT_ASYNC = "osgi.async"
+fld public final static java.lang.String INTENT_BASIC = "osgi.basic"
+fld public final static java.lang.String INTENT_CONFIDENTIAL = "osgi.confidential"
+fld public final static java.lang.String INTENT_PRIVATE = "osgi.private"
+fld public final static java.lang.String MANDATORY_DIRECTIVE = "mandatory"
+fld public final static java.lang.String OBJECTCLASS = "objectClass"
+fld public final static java.lang.String PACKAGE_SPECIFICATION_VERSION = "specification-version"
+fld public final static java.lang.String PROVIDE_CAPABILITY = "Provide-Capability"
+fld public final static java.lang.String REMOTE_CONFIGS_SUPPORTED = "remote.configs.supported"
+fld public final static java.lang.String REMOTE_INTENTS_SUPPORTED = "remote.intents.supported"
+fld public final static java.lang.String REQUIRE_BUNDLE = "Require-Bundle"
+fld public final static java.lang.String REQUIRE_CAPABILITY = "Require-Capability"
+fld public final static java.lang.String RESOLUTION_DIRECTIVE = "resolution"
+fld public final static java.lang.String RESOLUTION_MANDATORY = "mandatory"
+fld public final static java.lang.String RESOLUTION_OPTIONAL = "optional"
+fld public final static java.lang.String SCOPE_BUNDLE = "bundle"
+fld public final static java.lang.String SCOPE_PROTOTYPE = "prototype"
+fld public final static java.lang.String SCOPE_SINGLETON = "singleton"
+fld public final static java.lang.String SELECTION_FILTER_ATTRIBUTE = "selection-filter"
+fld public final static java.lang.String SERVICE_BUNDLEID = "service.bundleid"
+fld public final static java.lang.String SERVICE_CHANGECOUNT = "service.changecount"
+fld public final static java.lang.String SERVICE_DESCRIPTION = "service.description"
+fld public final static java.lang.String SERVICE_EXPORTED_CONFIGS = "service.exported.configs"
+fld public final static java.lang.String SERVICE_EXPORTED_INTENTS = "service.exported.intents"
+fld public final static java.lang.String SERVICE_EXPORTED_INTENTS_EXTRA = "service.exported.intents.extra"
+fld public final static java.lang.String SERVICE_EXPORTED_INTERFACES = "service.exported.interfaces"
+fld public final static java.lang.String SERVICE_ID = "service.id"
+fld public final static java.lang.String SERVICE_IMPORTED = "service.imported"
+fld public final static java.lang.String SERVICE_IMPORTED_CONFIGS = "service.imported.configs"
+fld public final static java.lang.String SERVICE_INTENTS = "service.intents"
+fld public final static java.lang.String SERVICE_PID = "service.pid"
+fld public final static java.lang.String SERVICE_RANKING = "service.ranking"
+fld public final static java.lang.String SERVICE_SCOPE = "service.scope"
+fld public final static java.lang.String SERVICE_VENDOR = "service.vendor"
+fld public final static java.lang.String SINGLETON_DIRECTIVE = "singleton"
+fld public final static java.lang.String SUPPORTS_BOOTCLASSPATH_EXTENSION = "org.osgi.supports.bootclasspath.extension"
+fld public final static java.lang.String SUPPORTS_FRAMEWORK_EXTENSION = "org.osgi.supports.framework.extension"
+fld public final static java.lang.String SUPPORTS_FRAMEWORK_FRAGMENT = "org.osgi.supports.framework.fragment"
+fld public final static java.lang.String SUPPORTS_FRAMEWORK_REQUIREBUNDLE = "org.osgi.supports.framework.requirebundle"
+fld public final static java.lang.String SYSTEM_BUNDLE_LOCATION = "System Bundle"
+fld public final static java.lang.String SYSTEM_BUNDLE_SYMBOLICNAME = "system.bundle"
+fld public final static java.lang.String USES_DIRECTIVE = "uses"
+fld public final static java.lang.String VERSION_ATTRIBUTE = "version"
+fld public final static java.lang.String VISIBILITY_DIRECTIVE = "visibility"
+fld public final static java.lang.String VISIBILITY_PRIVATE = "private"
+fld public final static java.lang.String VISIBILITY_REEXPORT = "reexport"
+fld public final static long SYSTEM_BUNDLE_ID = 0
+
+CLSS public abstract interface org.osgi.framework.Filter
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean match(java.util.Dictionary<java.lang.String,?>)
+meth public abstract boolean match(org.osgi.framework.ServiceReference<?>)
+meth public abstract boolean matchCase(java.util.Dictionary<java.lang.String,?>)
+meth public abstract boolean matches(java.util.Map<java.lang.String,?>)
+meth public abstract int hashCode()
+meth public abstract java.lang.String toString()
+
+CLSS public org.osgi.framework.FrameworkEvent
+cons public init(int,java.lang.Object)
+cons public init(int,org.osgi.framework.Bundle,java.lang.Throwable)
+fld public final static int ERROR = 2
+fld public final static int INFO = 32
+fld public final static int PACKAGES_REFRESHED = 4
+fld public final static int STARTED = 1
+fld public final static int STARTLEVEL_CHANGED = 8
+fld public final static int STOPPED = 64
+fld public final static int STOPPED_BOOTCLASSPATH_MODIFIED = 256
+fld public final static int STOPPED_SYSTEM_REFRESHED = 1024
+fld public final static int STOPPED_UPDATE = 128
+fld public final static int WAIT_TIMEDOUT = 512
+fld public final static int WARNING = 16
+meth public int getType()
+meth public java.lang.Throwable getThrowable()
+meth public org.osgi.framework.Bundle getBundle()
+supr java.util.EventObject
+hfds bundle,serialVersionUID,throwable,type
+
+CLSS public abstract interface org.osgi.framework.FrameworkListener
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.EventListener
+meth public abstract void frameworkEvent(org.osgi.framework.FrameworkEvent)
+
+CLSS public org.osgi.framework.FrameworkUtil
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Dictionary<{%%0},{%%1}> asDictionary(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> asMap(java.util.Dictionary<? extends {%%0},? extends {%%1}>)
+meth public static boolean matchDistinguishedNameChain(java.lang.String,java.util.List<java.lang.String>)
+meth public static java.util.Optional<org.osgi.framework.Bundle> getBundle(java.lang.ClassLoader)
+meth public static org.osgi.framework.Bundle getBundle(java.lang.Class<?>)
+meth public static org.osgi.framework.Filter createFilter(java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+supr java.lang.Object
+hfds helpers
+hcls DNChainMatching,DictionaryAsMap,MapAsDictionary
+
+CLSS public org.osgi.framework.InvalidSyntaxException
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,java.lang.String,java.lang.Throwable)
+meth public java.lang.String getFilter()
+meth public java.lang.Throwable getCause()
+meth public java.lang.Throwable initCause(java.lang.Throwable)
+supr java.lang.Exception
+hfds filter,serialVersionUID
+
+CLSS public final org.osgi.framework.PackagePermission
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,org.osgi.framework.Bundle,java.lang.String)
+fld public final static java.lang.String EXPORT = "export"
+fld public final static java.lang.String EXPORTONLY = "exportonly"
+fld public final static java.lang.String IMPORT = "import"
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.BasicPermission
+hfds ACTION_ALL,ACTION_EXPORT,ACTION_IMPORT,ACTION_NONE,action_mask,actions,bundle,filter,properties,serialVersionUID
+
+CLSS public abstract interface org.osgi.framework.PrototypeServiceFactory<%0 extends java.lang.Object>
+intf org.osgi.framework.ServiceFactory<{org.osgi.framework.PrototypeServiceFactory%0}>
+meth public abstract void ungetService(org.osgi.framework.Bundle,org.osgi.framework.ServiceRegistration<{org.osgi.framework.PrototypeServiceFactory%0}>,{org.osgi.framework.PrototypeServiceFactory%0})
+meth public abstract {org.osgi.framework.PrototypeServiceFactory%0} getService(org.osgi.framework.Bundle,org.osgi.framework.ServiceRegistration<{org.osgi.framework.PrototypeServiceFactory%0}>)
+
+CLSS public org.osgi.framework.ServiceEvent
+cons public init(int,org.osgi.framework.ServiceReference<?>)
+fld public final static int MODIFIED = 2
+fld public final static int MODIFIED_ENDMATCH = 8
+fld public final static int REGISTERED = 1
+fld public final static int UNREGISTERING = 4
+meth public int getType()
+meth public org.osgi.framework.ServiceReference<?> getServiceReference()
+supr java.util.EventObject
+hfds reference,serialVersionUID,type
+
+CLSS public org.osgi.framework.ServiceException
+cons public init(java.lang.String)
+cons public init(java.lang.String,int)
+cons public init(java.lang.String,int,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable)
+fld public final static int ASYNC_ERROR = 7
+fld public final static int FACTORY_ERROR = 2
+fld public final static int FACTORY_EXCEPTION = 3
+fld public final static int FACTORY_RECURSION = 6
+fld public final static int REMOTE = 5
+fld public final static int SUBCLASSED = 4
+fld public final static int UNREGISTERED = 1
+fld public final static int UNSPECIFIED = 0
+meth public int getType()
+supr java.lang.RuntimeException
+hfds serialVersionUID,type
+
+CLSS public abstract interface org.osgi.framework.ServiceFactory<%0 extends java.lang.Object>
+meth public abstract void ungetService(org.osgi.framework.Bundle,org.osgi.framework.ServiceRegistration<{org.osgi.framework.ServiceFactory%0}>,{org.osgi.framework.ServiceFactory%0})
+meth public abstract {org.osgi.framework.ServiceFactory%0} getService(org.osgi.framework.Bundle,org.osgi.framework.ServiceRegistration<{org.osgi.framework.ServiceFactory%0}>)
+
+CLSS public abstract interface org.osgi.framework.ServiceListener
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.EventListener
+meth public abstract void serviceChanged(org.osgi.framework.ServiceEvent)
+
+CLSS public abstract interface org.osgi.framework.ServiceObjects<%0 extends java.lang.Object>
+meth public abstract org.osgi.framework.ServiceReference<{org.osgi.framework.ServiceObjects%0}> getServiceReference()
+meth public abstract void ungetService({org.osgi.framework.ServiceObjects%0})
+meth public abstract {org.osgi.framework.ServiceObjects%0} getService()
+
+CLSS public final org.osgi.framework.ServicePermission
+cons public init(java.lang.String,java.lang.String)
+cons public init(org.osgi.framework.ServiceReference<?>,java.lang.String)
+fld public final static java.lang.String GET = "get"
+fld public final static java.lang.String REGISTER = "register"
+meth public boolean equals(java.lang.Object)
+meth public boolean implies(java.security.Permission)
+meth public int hashCode()
+meth public java.lang.String getActions()
+meth public java.security.PermissionCollection newPermissionCollection()
+supr java.security.BasicPermission
+hfds ACTION_ALL,ACTION_GET,ACTION_NONE,ACTION_REGISTER,action_mask,actions,filter,objectClass,prefix,properties,serialVersionUID,service,wildcard
+hcls Properties
+
+CLSS public abstract interface org.osgi.framework.ServiceReference<%0 extends java.lang.Object>
+intf java.lang.Comparable<java.lang.Object>
+intf org.osgi.framework.BundleReference
+meth public abstract <%0 extends java.lang.Object> {%%0} adapt(java.lang.Class<{%%0}>)
+meth public abstract boolean isAssignableTo(org.osgi.framework.Bundle,java.lang.String)
+meth public abstract int compareTo(java.lang.Object)
+meth public abstract java.lang.Object getProperty(java.lang.String)
+meth public abstract java.lang.String[] getPropertyKeys()
+meth public abstract java.util.Dictionary<java.lang.String,java.lang.Object> getProperties()
+meth public abstract org.osgi.framework.Bundle getBundle()
+meth public abstract org.osgi.framework.Bundle[] getUsingBundles()
+
+CLSS public abstract interface org.osgi.framework.ServiceRegistration<%0 extends java.lang.Object>
+meth public abstract org.osgi.framework.ServiceReference<{org.osgi.framework.ServiceRegistration%0}> getReference()
+meth public abstract void setProperties(java.util.Dictionary<java.lang.String,?>)
+meth public abstract void unregister()
+
+CLSS public abstract interface org.osgi.framework.SynchronousBundleListener
+ anno 0 java.lang.FunctionalInterface()
+intf org.osgi.framework.BundleListener
+
+CLSS public abstract interface org.osgi.framework.UnfilteredServiceListener
+ anno 0 java.lang.FunctionalInterface()
+intf org.osgi.framework.ServiceListener
+
+CLSS public org.osgi.framework.Version
+cons public init(int,int,int)
+cons public init(int,int,int,java.lang.String)
+cons public init(java.lang.String)
+fld public final static org.osgi.framework.Version emptyVersion
+intf java.lang.Comparable<org.osgi.framework.Version>
+meth public boolean equals(java.lang.Object)
+meth public int compareTo(org.osgi.framework.Version)
+meth public int getMajor()
+meth public int getMicro()
+meth public int getMinor()
+meth public int hashCode()
+meth public java.lang.String getQualifier()
+meth public java.lang.String toString()
+meth public static org.osgi.framework.Version parseVersion(java.lang.String)
+meth public static org.osgi.framework.Version valueOf(java.lang.String)
+supr java.lang.Object
+hfds SEPARATOR,hash,major,micro,minor,qualifier,versionString
+
+CLSS public org.osgi.framework.VersionRange
+cons public init(char,org.osgi.framework.Version,org.osgi.framework.Version,char)
+cons public init(java.lang.String)
+fld public final static char LEFT_CLOSED = '['
+fld public final static char LEFT_OPEN = '('
+fld public final static char RIGHT_CLOSED = ']'
+fld public final static char RIGHT_OPEN = ')'
+meth public !varargs org.osgi.framework.VersionRange intersection(org.osgi.framework.VersionRange[])
+meth public boolean equals(java.lang.Object)
+meth public boolean includes(org.osgi.framework.Version)
+meth public boolean isEmpty()
+meth public boolean isExact()
+meth public char getLeftType()
+meth public char getRightType()
+meth public int hashCode()
+meth public java.lang.String toFilterString(java.lang.String)
+meth public java.lang.String toString()
+meth public org.osgi.framework.Version getLeft()
+meth public org.osgi.framework.Version getRight()
+meth public static org.osgi.framework.VersionRange valueOf(java.lang.String)
+supr java.lang.Object
+hfds ENDPOINT_DELIMITER,LEFT_CLOSED_DELIMITER,LEFT_DELIMITERS,LEFT_OPEN_DELIMITER,RIGHT_CLOSED_DELIMITER,RIGHT_DELIMITERS,RIGHT_OPEN_DELIMITER,empty,hash,left,leftClosed,right,rightClosed,versionRangeString
+
+CLSS public abstract interface org.osgi.framework.connect.ConnectContent
+fld public final static java.lang.String TAG_OSGI_CONNECT = "osgi.connect"
+innr public abstract interface static ConnectEntry
+meth public abstract java.lang.Iterable<java.lang.String> getEntries() throws java.io.IOException
+meth public abstract java.util.Optional<java.lang.ClassLoader> getClassLoader()
+meth public abstract java.util.Optional<java.util.Map<java.lang.String,java.lang.String>> getHeaders()
+meth public abstract java.util.Optional<org.osgi.framework.connect.ConnectContent$ConnectEntry> getEntry(java.lang.String)
+meth public abstract void close() throws java.io.IOException
+meth public abstract void open() throws java.io.IOException
+
+CLSS public abstract interface static org.osgi.framework.connect.ConnectContent$ConnectEntry
+ outer org.osgi.framework.connect.ConnectContent
+meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
+meth public abstract java.lang.String getName()
+meth public abstract long getContentLength()
+meth public abstract long getLastModified()
+meth public byte[] getBytes() throws java.io.IOException
+
+CLSS public abstract interface org.osgi.framework.connect.ConnectFrameworkFactory
+meth public abstract org.osgi.framework.launch.Framework newFramework(java.util.Map<java.lang.String,java.lang.String>,org.osgi.framework.connect.ModuleConnector)
+
+CLSS public abstract interface org.osgi.framework.connect.ConnectModule
+meth public abstract org.osgi.framework.connect.ConnectContent getContent() throws java.io.IOException
+
+CLSS public abstract interface org.osgi.framework.connect.FrameworkUtilHelper
+meth public java.util.Optional<org.osgi.framework.Bundle> getBundle(java.lang.Class<?>)
+
+CLSS public abstract interface org.osgi.framework.connect.ModuleConnector
+meth public abstract java.util.Optional<org.osgi.framework.BundleActivator> newBundleActivator()
+meth public abstract java.util.Optional<org.osgi.framework.connect.ConnectModule> connect(java.lang.String) throws org.osgi.framework.BundleException
+meth public abstract void initialize(java.io.File,java.util.Map<java.lang.String,java.lang.String>)
+
+CLSS abstract interface org.osgi.framework.connect.package-info
+
+CLSS public org.osgi.framework.dto.BundleDTO
+cons public init()
+fld public int state
+fld public java.lang.String symbolicName
+fld public java.lang.String version
+fld public long id
+fld public long lastModified
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.framework.dto.FrameworkDTO
+cons public init()
+fld public java.util.List<org.osgi.framework.dto.BundleDTO> bundles
+fld public java.util.List<org.osgi.framework.dto.ServiceReferenceDTO> services
+fld public java.util.Map<java.lang.String,java.lang.Object> properties
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.framework.dto.ServiceReferenceDTO
+cons public init()
+fld public java.util.Map<java.lang.String,java.lang.Object> properties
+fld public long bundle
+fld public long id
+fld public long[] usingBundles
+supr org.osgi.dto.DTO
+
+CLSS abstract interface org.osgi.framework.dto.package-info
+
+CLSS public abstract interface org.osgi.framework.hooks.bundle.CollisionHook
+fld public final static int INSTALLING = 1
+fld public final static int UPDATING = 2
+meth public abstract void filterCollisions(int,org.osgi.framework.Bundle,java.util.Collection<org.osgi.framework.Bundle>)
+
+CLSS public abstract interface org.osgi.framework.hooks.bundle.EventHook
+meth public abstract void event(org.osgi.framework.BundleEvent,java.util.Collection<org.osgi.framework.BundleContext>)
+
+CLSS public abstract interface org.osgi.framework.hooks.bundle.FindHook
+meth public abstract void find(org.osgi.framework.BundleContext,java.util.Collection<org.osgi.framework.Bundle>)
+
+CLSS abstract interface org.osgi.framework.hooks.bundle.package-info
+
+CLSS public abstract interface org.osgi.framework.hooks.resolver.ResolverHook
+meth public abstract void end()
+meth public abstract void filterMatches(org.osgi.framework.wiring.BundleRequirement,java.util.Collection<org.osgi.framework.wiring.BundleCapability>)
+meth public abstract void filterResolvable(java.util.Collection<org.osgi.framework.wiring.BundleRevision>)
+meth public abstract void filterSingletonCollisions(org.osgi.framework.wiring.BundleCapability,java.util.Collection<org.osgi.framework.wiring.BundleCapability>)
+
+CLSS public abstract interface org.osgi.framework.hooks.resolver.ResolverHookFactory
+meth public abstract org.osgi.framework.hooks.resolver.ResolverHook begin(java.util.Collection<org.osgi.framework.wiring.BundleRevision>)
+
+CLSS abstract interface org.osgi.framework.hooks.resolver.package-info
+
+CLSS public abstract interface org.osgi.framework.hooks.service.EventHook
+meth public abstract void event(org.osgi.framework.ServiceEvent,java.util.Collection<org.osgi.framework.BundleContext>)
+
+CLSS public abstract interface org.osgi.framework.hooks.service.EventListenerHook
+meth public abstract void event(org.osgi.framework.ServiceEvent,java.util.Map<org.osgi.framework.BundleContext,java.util.Collection<org.osgi.framework.hooks.service.ListenerHook$ListenerInfo>>)
+
+CLSS public abstract interface org.osgi.framework.hooks.service.FindHook
+meth public abstract void find(org.osgi.framework.BundleContext,java.lang.String,java.lang.String,boolean,java.util.Collection<org.osgi.framework.ServiceReference<?>>)
+
+CLSS public abstract interface org.osgi.framework.hooks.service.ListenerHook
+innr public abstract interface static ListenerInfo
+meth public abstract void added(java.util.Collection<org.osgi.framework.hooks.service.ListenerHook$ListenerInfo>)
+meth public abstract void removed(java.util.Collection<org.osgi.framework.hooks.service.ListenerHook$ListenerInfo>)
+
+CLSS public abstract interface static org.osgi.framework.hooks.service.ListenerHook$ListenerInfo
+ outer org.osgi.framework.hooks.service.ListenerHook
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isRemoved()
+meth public abstract int hashCode()
+meth public abstract java.lang.String getFilter()
+meth public abstract org.osgi.framework.BundleContext getBundleContext()
+
+CLSS abstract interface org.osgi.framework.hooks.service.package-info
+
+CLSS public org.osgi.framework.hooks.weaving.WeavingException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+supr java.lang.RuntimeException
+hfds serialVersionUID
+
+CLSS public abstract interface org.osgi.framework.hooks.weaving.WeavingHook
+meth public abstract void weave(org.osgi.framework.hooks.weaving.WovenClass)
+
+CLSS public abstract interface org.osgi.framework.hooks.weaving.WovenClass
+fld public final static int DEFINED = 4
+fld public final static int DEFINE_FAILED = 16
+fld public final static int TRANSFORMED = 2
+fld public final static int TRANSFORMING = 1
+fld public final static int TRANSFORMING_FAILED = 8
+meth public abstract boolean isWeavingComplete()
+meth public abstract byte[] getBytes()
+meth public abstract int getState()
+meth public abstract java.lang.Class<?> getDefinedClass()
+meth public abstract java.lang.String getClassName()
+meth public abstract java.security.ProtectionDomain getProtectionDomain()
+meth public abstract java.util.List<java.lang.String> getDynamicImports()
+meth public abstract org.osgi.framework.wiring.BundleWiring getBundleWiring()
+meth public abstract void setBytes(byte[])
+
+CLSS public abstract interface org.osgi.framework.hooks.weaving.WovenClassListener
+meth public abstract void modified(org.osgi.framework.hooks.weaving.WovenClass)
+
+CLSS abstract interface org.osgi.framework.hooks.weaving.package-info
+
+CLSS public abstract interface org.osgi.framework.launch.Framework
+intf org.osgi.framework.Bundle
+meth public abstract !varargs void init(org.osgi.framework.FrameworkListener[]) throws org.osgi.framework.BundleException
+meth public abstract <%0 extends java.lang.Object> {%%0} adapt(java.lang.Class<{%%0}>)
+meth public abstract java.lang.String getLocation()
+meth public abstract java.lang.String getSymbolicName()
+meth public abstract java.net.URL getEntry(java.lang.String)
+meth public abstract java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
+meth public abstract java.util.Enumeration<java.net.URL> findEntries(java.lang.String,java.lang.String,boolean)
+meth public abstract long getBundleId()
+meth public abstract long getLastModified()
+meth public abstract org.osgi.framework.FrameworkEvent waitForStop(long) throws java.lang.InterruptedException
+meth public abstract void init() throws org.osgi.framework.BundleException
+meth public abstract void start() throws org.osgi.framework.BundleException
+meth public abstract void start(int) throws org.osgi.framework.BundleException
+meth public abstract void stop() throws org.osgi.framework.BundleException
+meth public abstract void stop(int) throws org.osgi.framework.BundleException
+meth public abstract void uninstall() throws org.osgi.framework.BundleException
+meth public abstract void update() throws org.osgi.framework.BundleException
+meth public abstract void update(java.io.InputStream) throws org.osgi.framework.BundleException
+
+CLSS public abstract interface org.osgi.framework.launch.FrameworkFactory
+meth public abstract org.osgi.framework.launch.Framework newFramework(java.util.Map<java.lang.String,java.lang.String>)
+
+CLSS abstract interface org.osgi.framework.launch.package-info
+
+CLSS public abstract org.osgi.framework.namespace.AbstractWiringNamespace
+fld public final static java.lang.String CAPABILITY_BUNDLE_VERSION_ATTRIBUTE = "bundle-version"
+fld public final static java.lang.String CAPABILITY_MANDATORY_DIRECTIVE = "mandatory"
+supr org.osgi.resource.Namespace
+
+CLSS public final org.osgi.framework.namespace.BundleNamespace
+fld public final static java.lang.String BUNDLE_NAMESPACE = "osgi.wiring.bundle"
+fld public final static java.lang.String CAPABILITY_FRAGMENT_ATTACHMENT_DIRECTIVE = "fragment-attachment"
+fld public final static java.lang.String CAPABILITY_SINGLETON_DIRECTIVE = "singleton"
+fld public final static java.lang.String REQUIREMENT_EXTENSION_DIRECTIVE = "extension"
+fld public final static java.lang.String REQUIREMENT_VISIBILITY_DIRECTIVE = "visibility"
+fld public final static java.lang.String VISIBILITY_PRIVATE = "private"
+fld public final static java.lang.String VISIBILITY_REEXPORT = "reexport"
+supr org.osgi.framework.namespace.AbstractWiringNamespace
+
+CLSS public final org.osgi.framework.namespace.ExecutionEnvironmentNamespace
+fld public final static java.lang.String CAPABILITY_VERSION_ATTRIBUTE = "version"
+fld public final static java.lang.String EXECUTION_ENVIRONMENT_NAMESPACE = "osgi.ee"
+supr org.osgi.resource.Namespace
+
+CLSS public final org.osgi.framework.namespace.HostNamespace
+fld public final static java.lang.String CAPABILITY_FRAGMENT_ATTACHMENT_DIRECTIVE = "fragment-attachment"
+fld public final static java.lang.String CAPABILITY_SINGLETON_DIRECTIVE = "singleton"
+fld public final static java.lang.String EXTENSION_BOOTCLASSPATH = "bootclasspath"
+fld public final static java.lang.String EXTENSION_FRAMEWORK = "framework"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_ALWAYS = "always"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_NEVER = "never"
+fld public final static java.lang.String FRAGMENT_ATTACHMENT_RESOLVETIME = "resolve-time"
+fld public final static java.lang.String HOST_NAMESPACE = "osgi.wiring.host"
+fld public final static java.lang.String REQUIREMENT_EXTENSION_DIRECTIVE = "extension"
+fld public final static java.lang.String REQUIREMENT_VISIBILITY_DIRECTIVE = "visibility"
+supr org.osgi.framework.namespace.AbstractWiringNamespace
+
+CLSS public final org.osgi.framework.namespace.IdentityNamespace
+fld public final static java.lang.String CAPABILITY_COPYRIGHT_ATTRIBUTE = "copyright"
+fld public final static java.lang.String CAPABILITY_DESCRIPTION_ATTRIBUTE = "description"
+fld public final static java.lang.String CAPABILITY_DOCUMENTATION_ATTRIBUTE = "documentation"
+fld public final static java.lang.String CAPABILITY_LICENSE_ATTRIBUTE = "license"
+fld public final static java.lang.String CAPABILITY_SINGLETON_DIRECTIVE = "singleton"
+fld public final static java.lang.String CAPABILITY_TAGS_ATTRIBUTE = "tags"
+fld public final static java.lang.String CAPABILITY_TYPE_ATTRIBUTE = "type"
+fld public final static java.lang.String CAPABILITY_VERSION_ATTRIBUTE = "version"
+fld public final static java.lang.String CLASSIFIER_JAVADOC = "javadoc"
+fld public final static java.lang.String CLASSIFIER_SOURCES = "sources"
+fld public final static java.lang.String IDENTITY_NAMESPACE = "osgi.identity"
+fld public final static java.lang.String REQUIREMENT_CLASSIFIER_DIRECTIVE = "classifier"
+fld public final static java.lang.String TYPE_BUNDLE = "osgi.bundle"
+fld public final static java.lang.String TYPE_FRAGMENT = "osgi.fragment"
+fld public final static java.lang.String TYPE_UNKNOWN = "unknown"
+supr org.osgi.resource.Namespace
+
+CLSS public final org.osgi.framework.namespace.NativeNamespace
+fld public final static java.lang.String CAPABILITY_LANGUAGE_ATTRIBUTE = "osgi.native.language"
+fld public final static java.lang.String CAPABILITY_OSNAME_ATTRIBUTE = "osgi.native.osname"
+fld public final static java.lang.String CAPABILITY_OSVERSION_ATTRIBUTE = "osgi.native.osversion"
+fld public final static java.lang.String CAPABILITY_PROCESSOR_ATTRIBUTE = "osgi.native.processor"
+fld public final static java.lang.String NATIVE_NAMESPACE = "osgi.native"
+supr org.osgi.resource.Namespace
+
+CLSS public final org.osgi.framework.namespace.PackageNamespace
+fld public final static java.lang.String CAPABILITY_BUNDLE_SYMBOLICNAME_ATTRIBUTE = "bundle-symbolic-name"
+fld public final static java.lang.String CAPABILITY_EXCLUDE_DIRECTIVE = "exclude"
+fld public final static java.lang.String CAPABILITY_INCLUDE_DIRECTIVE = "include"
+fld public final static java.lang.String CAPABILITY_VERSION_ATTRIBUTE = "version"
+fld public final static java.lang.String PACKAGE_NAMESPACE = "osgi.wiring.package"
+fld public final static java.lang.String RESOLUTION_DYNAMIC = "dynamic"
+supr org.osgi.framework.namespace.AbstractWiringNamespace
+
+CLSS abstract interface org.osgi.framework.namespace.package-info
+
+CLSS abstract interface org.osgi.framework.package-info
+
+CLSS public abstract interface org.osgi.framework.startlevel.BundleStartLevel
+intf org.osgi.framework.BundleReference
+meth public abstract boolean isActivationPolicyUsed()
+meth public abstract boolean isPersistentlyStarted()
+meth public abstract int getStartLevel()
+meth public abstract void setStartLevel(int)
+
+CLSS public abstract interface org.osgi.framework.startlevel.FrameworkStartLevel
+intf org.osgi.framework.BundleReference
+meth public abstract !varargs void setStartLevel(int,org.osgi.framework.FrameworkListener[])
+meth public abstract int getInitialBundleStartLevel()
+meth public abstract int getStartLevel()
+meth public abstract void setInitialBundleStartLevel(int)
+
+CLSS public org.osgi.framework.startlevel.dto.BundleStartLevelDTO
+cons public init()
+fld public boolean activationPolicyUsed
+fld public boolean persistentlyStarted
+fld public int startLevel
+fld public long bundle
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.framework.startlevel.dto.FrameworkStartLevelDTO
+cons public init()
+fld public int initialBundleStartLevel
+fld public int startLevel
+supr org.osgi.dto.DTO
+
+CLSS abstract interface org.osgi.framework.startlevel.dto.package-info
+
+CLSS abstract interface org.osgi.framework.startlevel.package-info
+
+CLSS public abstract interface org.osgi.framework.wiring.BundleCapability
+intf org.osgi.resource.Capability
+meth public abstract java.lang.String getNamespace()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getAttributes()
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getDirectives()
+meth public abstract org.osgi.framework.wiring.BundleRevision getResource()
+meth public abstract org.osgi.framework.wiring.BundleRevision getRevision()
+
+CLSS public abstract interface org.osgi.framework.wiring.BundleRequirement
+intf org.osgi.resource.Requirement
+meth public abstract boolean matches(org.osgi.framework.wiring.BundleCapability)
+meth public abstract java.lang.String getNamespace()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getAttributes()
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getDirectives()
+meth public abstract org.osgi.framework.wiring.BundleRevision getResource()
+meth public abstract org.osgi.framework.wiring.BundleRevision getRevision()
+
+CLSS public abstract interface org.osgi.framework.wiring.BundleRevision
+fld public final static int TYPE_FRAGMENT = 1
+fld public final static java.lang.String BUNDLE_NAMESPACE = "osgi.wiring.bundle"
+fld public final static java.lang.String HOST_NAMESPACE = "osgi.wiring.host"
+fld public final static java.lang.String PACKAGE_NAMESPACE = "osgi.wiring.package"
+intf org.osgi.framework.BundleReference
+intf org.osgi.resource.Resource
+meth public abstract int getTypes()
+meth public abstract java.lang.String getSymbolicName()
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleCapability> getDeclaredCapabilities(java.lang.String)
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleRequirement> getDeclaredRequirements(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Capability> getCapabilities(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Requirement> getRequirements(java.lang.String)
+meth public abstract org.osgi.framework.Version getVersion()
+meth public abstract org.osgi.framework.wiring.BundleWiring getWiring()
+
+CLSS public abstract interface org.osgi.framework.wiring.BundleRevisions
+intf org.osgi.framework.BundleReference
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleRevision> getRevisions()
+
+CLSS public abstract interface org.osgi.framework.wiring.BundleWire
+intf org.osgi.resource.Wire
+meth public abstract org.osgi.framework.wiring.BundleCapability getCapability()
+meth public abstract org.osgi.framework.wiring.BundleRequirement getRequirement()
+meth public abstract org.osgi.framework.wiring.BundleRevision getProvider()
+meth public abstract org.osgi.framework.wiring.BundleRevision getRequirer()
+meth public abstract org.osgi.framework.wiring.BundleWiring getProviderWiring()
+meth public abstract org.osgi.framework.wiring.BundleWiring getRequirerWiring()
+
+CLSS public abstract interface org.osgi.framework.wiring.BundleWiring
+fld public final static int FINDENTRIES_RECURSE = 1
+fld public final static int LISTRESOURCES_LOCAL = 2
+fld public final static int LISTRESOURCES_RECURSE = 1
+intf org.osgi.framework.BundleReference
+intf org.osgi.resource.Wiring
+meth public abstract boolean isCurrent()
+meth public abstract boolean isInUse()
+meth public abstract java.lang.ClassLoader getClassLoader()
+meth public abstract java.util.Collection<java.lang.String> listResources(java.lang.String,java.lang.String,int)
+meth public abstract java.util.List<java.net.URL> findEntries(java.lang.String,java.lang.String,int)
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleCapability> getCapabilities(java.lang.String)
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleRequirement> getRequirements(java.lang.String)
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleWire> getProvidedWires(java.lang.String)
+meth public abstract java.util.List<org.osgi.framework.wiring.BundleWire> getRequiredWires(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Capability> getResourceCapabilities(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Requirement> getResourceRequirements(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Wire> getProvidedResourceWires(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Wire> getRequiredResourceWires(java.lang.String)
+meth public abstract org.osgi.framework.wiring.BundleRevision getResource()
+meth public abstract org.osgi.framework.wiring.BundleRevision getRevision()
+
+CLSS public abstract interface org.osgi.framework.wiring.FrameworkWiring
+intf org.osgi.framework.BundleReference
+meth public abstract !varargs void refreshBundles(java.util.Collection<org.osgi.framework.Bundle>,org.osgi.framework.FrameworkListener[])
+meth public abstract boolean resolveBundles(java.util.Collection<org.osgi.framework.Bundle>)
+meth public abstract java.util.Collection<org.osgi.framework.Bundle> getDependencyClosure(java.util.Collection<org.osgi.framework.Bundle>)
+meth public abstract java.util.Collection<org.osgi.framework.Bundle> getRemovalPendingBundles()
+meth public abstract java.util.Collection<org.osgi.framework.wiring.BundleCapability> findProviders(org.osgi.resource.Requirement)
+
+CLSS public org.osgi.framework.wiring.dto.BundleRevisionDTO
+cons public init()
+fld public int type
+fld public java.lang.String symbolicName
+fld public java.lang.String version
+fld public long bundle
+supr org.osgi.resource.dto.ResourceDTO
+
+CLSS public org.osgi.framework.wiring.dto.BundleWireDTO
+cons public init()
+fld public int providerWiring
+fld public int requirerWiring
+supr org.osgi.resource.dto.WireDTO
+
+CLSS public org.osgi.framework.wiring.dto.BundleWiringDTO
+cons public init()
+fld public int root
+fld public java.util.Set<org.osgi.framework.wiring.dto.BundleRevisionDTO> resources
+fld public java.util.Set<org.osgi.framework.wiring.dto.BundleWiringDTO$NodeDTO> nodes
+fld public long bundle
+innr public static NodeDTO
+supr org.osgi.dto.DTO
+
+CLSS public static org.osgi.framework.wiring.dto.BundleWiringDTO$NodeDTO
+ outer org.osgi.framework.wiring.dto.BundleWiringDTO
+cons public init()
+fld public boolean current
+fld public boolean inUse
+supr org.osgi.resource.dto.WiringDTO
+
+CLSS public org.osgi.framework.wiring.dto.FrameworkWiringDTO
+cons public init()
+fld public java.util.Set<org.osgi.framework.wiring.dto.BundleRevisionDTO> resources
+fld public java.util.Set<org.osgi.framework.wiring.dto.BundleWiringDTO$NodeDTO> wirings
+supr org.osgi.dto.DTO
+
+CLSS abstract interface org.osgi.framework.wiring.dto.package-info
+
+CLSS abstract interface org.osgi.framework.wiring.package-info
+
+CLSS public abstract interface org.osgi.resource.Capability
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.String getNamespace()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getAttributes()
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getDirectives()
+meth public abstract org.osgi.resource.Resource getResource()
+
+CLSS public abstract org.osgi.resource.Namespace
+cons protected init()
+fld public final static java.lang.String CAPABILITY_EFFECTIVE_DIRECTIVE = "effective"
+fld public final static java.lang.String CAPABILITY_USES_DIRECTIVE = "uses"
+fld public final static java.lang.String CARDINALITY_MULTIPLE = "multiple"
+fld public final static java.lang.String CARDINALITY_SINGLE = "single"
+fld public final static java.lang.String EFFECTIVE_ACTIVE = "active"
+fld public final static java.lang.String EFFECTIVE_RESOLVE = "resolve"
+fld public final static java.lang.String REQUIREMENT_CARDINALITY_DIRECTIVE = "cardinality"
+fld public final static java.lang.String REQUIREMENT_EFFECTIVE_DIRECTIVE = "effective"
+fld public final static java.lang.String REQUIREMENT_FILTER_DIRECTIVE = "filter"
+fld public final static java.lang.String REQUIREMENT_RESOLUTION_DIRECTIVE = "resolution"
+fld public final static java.lang.String RESOLUTION_MANDATORY = "mandatory"
+fld public final static java.lang.String RESOLUTION_OPTIONAL = "optional"
+supr java.lang.Object
+
+CLSS public abstract interface org.osgi.resource.Requirement
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.String getNamespace()
+meth public abstract java.util.Map<java.lang.String,java.lang.Object> getAttributes()
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getDirectives()
+meth public abstract org.osgi.resource.Resource getResource()
+
+CLSS public abstract interface org.osgi.resource.Resource
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.util.List<org.osgi.resource.Capability> getCapabilities(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Requirement> getRequirements(java.lang.String)
+
+CLSS public abstract interface org.osgi.resource.Wire
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract org.osgi.resource.Capability getCapability()
+meth public abstract org.osgi.resource.Requirement getRequirement()
+meth public abstract org.osgi.resource.Resource getProvider()
+meth public abstract org.osgi.resource.Resource getRequirer()
+
+CLSS public abstract interface org.osgi.resource.Wiring
+meth public abstract java.util.List<org.osgi.resource.Capability> getResourceCapabilities(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Requirement> getResourceRequirements(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Wire> getProvidedResourceWires(java.lang.String)
+meth public abstract java.util.List<org.osgi.resource.Wire> getRequiredResourceWires(java.lang.String)
+meth public abstract org.osgi.resource.Resource getResource()
+
+CLSS public org.osgi.resource.dto.CapabilityDTO
+cons public init()
+fld public int id
+fld public int resource
+fld public java.lang.String namespace
+fld public java.util.Map<java.lang.String,java.lang.Object> attributes
+fld public java.util.Map<java.lang.String,java.lang.String> directives
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.resource.dto.CapabilityRefDTO
+cons public init()
+fld public int capability
+fld public int resource
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.resource.dto.RequirementDTO
+cons public init()
+fld public int id
+fld public int resource
+fld public java.lang.String namespace
+fld public java.util.Map<java.lang.String,java.lang.Object> attributes
+fld public java.util.Map<java.lang.String,java.lang.String> directives
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.resource.dto.RequirementRefDTO
+cons public init()
+fld public int requirement
+fld public int resource
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.resource.dto.ResourceDTO
+cons public init()
+fld public int id
+fld public java.util.List<org.osgi.resource.dto.CapabilityDTO> capabilities
+fld public java.util.List<org.osgi.resource.dto.RequirementDTO> requirements
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.resource.dto.WireDTO
+cons public init()
+fld public int provider
+fld public int requirer
+fld public org.osgi.resource.dto.CapabilityRefDTO capability
+fld public org.osgi.resource.dto.RequirementRefDTO requirement
+supr org.osgi.dto.DTO
+
+CLSS public org.osgi.resource.dto.WiringDTO
+cons public init()
+fld public int id
+fld public int resource
+fld public java.util.List<org.osgi.resource.dto.CapabilityRefDTO> capabilities
+fld public java.util.List<org.osgi.resource.dto.RequirementRefDTO> requirements
+fld public java.util.List<org.osgi.resource.dto.WireDTO> providedWires
+fld public java.util.List<org.osgi.resource.dto.WireDTO> requiredWires
+supr org.osgi.dto.DTO
+
+CLSS abstract interface org.osgi.resource.dto.package-info
+
+CLSS abstract interface org.osgi.resource.package-info
+
+CLSS public abstract interface org.osgi.service.condition.Condition
+fld public final static java.lang.String CONDITION_ID = "osgi.condition.id"
+fld public final static java.lang.String CONDITION_ID_TRUE = "true"
+fld public final static org.osgi.service.condition.Condition INSTANCE
+
+CLSS abstract interface org.osgi.service.condition.package-info
+
+CLSS public org.osgi.service.condpermadmin.BundleLocationCondition
+meth public static org.osgi.service.condpermadmin.Condition getCondition(org.osgi.framework.Bundle,org.osgi.service.condpermadmin.ConditionInfo)
+supr java.lang.Object
+hfds CONDITION_TYPE
+
+CLSS public org.osgi.service.condpermadmin.BundleSignerCondition
+meth public static org.osgi.service.condpermadmin.Condition getCondition(org.osgi.framework.Bundle,org.osgi.service.condpermadmin.ConditionInfo)
+supr java.lang.Object
+hfds CONDITION_TYPE
+
+CLSS public abstract interface org.osgi.service.condpermadmin.Condition
+fld public final static org.osgi.service.condpermadmin.Condition FALSE
+fld public final static org.osgi.service.condpermadmin.Condition TRUE
+meth public abstract boolean isMutable()
+meth public abstract boolean isPostponed()
+meth public abstract boolean isSatisfied()
+meth public abstract boolean isSatisfied(org.osgi.service.condpermadmin.Condition[],java.util.Dictionary<java.lang.Object,java.lang.Object>)
+
+CLSS public org.osgi.service.condpermadmin.ConditionInfo
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.String[])
+meth public boolean equals(java.lang.Object)
+meth public final java.lang.String getEncoded()
+meth public final java.lang.String getType()
+meth public final java.lang.String[] getArgs()
+meth public int hashCode()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds args,type
+
+CLSS public abstract interface org.osgi.service.condpermadmin.ConditionalPermissionAdmin
+meth public abstract java.security.AccessControlContext getAccessControlContext(java.lang.String[])
+meth public abstract java.util.Enumeration<org.osgi.service.condpermadmin.ConditionalPermissionInfo> getConditionalPermissionInfos()
+meth public abstract org.osgi.service.condpermadmin.ConditionalPermissionInfo addConditionalPermissionInfo(org.osgi.service.condpermadmin.ConditionInfo[],org.osgi.service.permissionadmin.PermissionInfo[])
+meth public abstract org.osgi.service.condpermadmin.ConditionalPermissionInfo getConditionalPermissionInfo(java.lang.String)
+meth public abstract org.osgi.service.condpermadmin.ConditionalPermissionInfo newConditionalPermissionInfo(java.lang.String)
+meth public abstract org.osgi.service.condpermadmin.ConditionalPermissionInfo newConditionalPermissionInfo(java.lang.String,org.osgi.service.condpermadmin.ConditionInfo[],org.osgi.service.permissionadmin.PermissionInfo[],java.lang.String)
+meth public abstract org.osgi.service.condpermadmin.ConditionalPermissionInfo setConditionalPermissionInfo(java.lang.String,org.osgi.service.condpermadmin.ConditionInfo[],org.osgi.service.permissionadmin.PermissionInfo[])
+meth public abstract org.osgi.service.condpermadmin.ConditionalPermissionUpdate newConditionalPermissionUpdate()
+
+CLSS public abstract interface org.osgi.service.condpermadmin.ConditionalPermissionInfo
+fld public final static java.lang.String ALLOW = "allow"
+fld public final static java.lang.String DENY = "deny"
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.String getAccessDecision()
+meth public abstract java.lang.String getEncoded()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String toString()
+meth public abstract org.osgi.service.condpermadmin.ConditionInfo[] getConditionInfos()
+meth public abstract org.osgi.service.permissionadmin.PermissionInfo[] getPermissionInfos()
+meth public abstract void delete()
+
+CLSS public abstract interface org.osgi.service.condpermadmin.ConditionalPermissionUpdate
+meth public abstract boolean commit()
+meth public abstract java.util.List<org.osgi.service.condpermadmin.ConditionalPermissionInfo> getConditionalPermissionInfos()
+
+CLSS abstract interface org.osgi.service.condpermadmin.package-info
+
+CLSS public abstract interface org.osgi.service.log.FormatterLogger
+intf org.osgi.service.log.Logger
+
+CLSS public abstract interface org.osgi.service.log.LogEntry
+meth public abstract int getLevel()
+ anno 0 java.lang.Deprecated()
+meth public abstract java.lang.StackTraceElement getLocation()
+meth public abstract java.lang.String getLoggerName()
+meth public abstract java.lang.String getMessage()
+meth public abstract java.lang.String getThreadInfo()
+meth public abstract java.lang.Throwable getException()
+meth public abstract long getSequence()
+meth public abstract long getTime()
+meth public abstract org.osgi.framework.Bundle getBundle()
+meth public abstract org.osgi.framework.ServiceReference<?> getServiceReference()
+meth public abstract org.osgi.service.log.LogLevel getLogLevel()
+
+CLSS public final !enum org.osgi.service.log.LogLevel
+fld public final static org.osgi.service.log.LogLevel AUDIT
+fld public final static org.osgi.service.log.LogLevel DEBUG
+fld public final static org.osgi.service.log.LogLevel ERROR
+fld public final static org.osgi.service.log.LogLevel INFO
+fld public final static org.osgi.service.log.LogLevel TRACE
+fld public final static org.osgi.service.log.LogLevel WARN
+meth public boolean implies(org.osgi.service.log.LogLevel)
+meth public static org.osgi.service.log.LogLevel valueOf(java.lang.String)
+meth public static org.osgi.service.log.LogLevel[] values()
+supr java.lang.Enum<org.osgi.service.log.LogLevel>
+
+CLSS public abstract interface org.osgi.service.log.LogListener
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.EventListener
+meth public abstract void logged(org.osgi.service.log.LogEntry)
+
+CLSS public abstract interface org.osgi.service.log.LogReaderService
+meth public abstract java.util.Enumeration<org.osgi.service.log.LogEntry> getLog()
+meth public abstract void addLogListener(org.osgi.service.log.LogListener)
+meth public abstract void removeLogListener(org.osgi.service.log.LogListener)
+
+CLSS public abstract interface org.osgi.service.log.LogService
+fld public final static int LOG_DEBUG = 4
+ anno 0 java.lang.Deprecated()
+fld public final static int LOG_ERROR = 1
+ anno 0 java.lang.Deprecated()
+fld public final static int LOG_INFO = 3
+ anno 0 java.lang.Deprecated()
+fld public final static int LOG_WARNING = 2
+ anno 0 java.lang.Deprecated()
+intf org.osgi.service.log.LoggerFactory
+meth public abstract void log(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public abstract void log(int,java.lang.String,java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
+meth public abstract void log(org.osgi.framework.ServiceReference<?>,int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public abstract void log(org.osgi.framework.ServiceReference<?>,int,java.lang.String,java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
+
+CLSS public abstract interface org.osgi.service.log.Logger
+fld public final static java.lang.String ROOT_LOGGER_NAME = "ROOT"
+meth public abstract !varargs void audit(java.lang.String,java.lang.Object[])
+meth public abstract !varargs void debug(java.lang.String,java.lang.Object[])
+meth public abstract !varargs void error(java.lang.String,java.lang.Object[])
+meth public abstract !varargs void info(java.lang.String,java.lang.Object[])
+meth public abstract !varargs void trace(java.lang.String,java.lang.Object[])
+meth public abstract !varargs void warn(java.lang.String,java.lang.Object[])
+meth public abstract <%0 extends java.lang.Exception> void debug(org.osgi.service.log.LoggerConsumer<{%%0}>) throws {%%0}
+meth public abstract <%0 extends java.lang.Exception> void error(org.osgi.service.log.LoggerConsumer<{%%0}>) throws {%%0}
+meth public abstract <%0 extends java.lang.Exception> void info(org.osgi.service.log.LoggerConsumer<{%%0}>) throws {%%0}
+meth public abstract <%0 extends java.lang.Exception> void trace(org.osgi.service.log.LoggerConsumer<{%%0}>) throws {%%0}
+meth public abstract <%0 extends java.lang.Exception> void warn(org.osgi.service.log.LoggerConsumer<{%%0}>) throws {%%0}
+meth public abstract boolean isDebugEnabled()
+meth public abstract boolean isErrorEnabled()
+meth public abstract boolean isInfoEnabled()
+meth public abstract boolean isTraceEnabled()
+meth public abstract boolean isWarnEnabled()
+meth public abstract java.lang.String getName()
+meth public abstract void audit(java.lang.String)
+meth public abstract void audit(java.lang.String,java.lang.Object)
+meth public abstract void audit(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract void debug(java.lang.String)
+meth public abstract void debug(java.lang.String,java.lang.Object)
+meth public abstract void debug(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract void error(java.lang.String)
+meth public abstract void error(java.lang.String,java.lang.Object)
+meth public abstract void error(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract void info(java.lang.String)
+meth public abstract void info(java.lang.String,java.lang.Object)
+meth public abstract void info(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract void trace(java.lang.String)
+meth public abstract void trace(java.lang.String,java.lang.Object)
+meth public abstract void trace(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract void warn(java.lang.String)
+meth public abstract void warn(java.lang.String,java.lang.Object)
+meth public abstract void warn(java.lang.String,java.lang.Object,java.lang.Object)
+
+CLSS public abstract interface org.osgi.service.log.LoggerConsumer<%0 extends java.lang.Exception>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void accept(org.osgi.service.log.Logger) throws {org.osgi.service.log.LoggerConsumer%0}
+
+CLSS public abstract interface org.osgi.service.log.LoggerFactory
+meth public abstract <%0 extends org.osgi.service.log.Logger> {%%0} getLogger(java.lang.Class<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends org.osgi.service.log.Logger> {%%0} getLogger(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends org.osgi.service.log.Logger> {%%0} getLogger(org.osgi.framework.Bundle,java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract org.osgi.service.log.Logger getLogger(java.lang.Class<?>)
+meth public abstract org.osgi.service.log.Logger getLogger(java.lang.String)
+
+CLSS public abstract interface org.osgi.service.log.admin.LoggerAdmin
+fld public final static java.lang.String LOG_SERVICE_ID = "osgi.log.service.id"
+meth public abstract org.osgi.service.log.admin.LoggerContext getLoggerContext(java.lang.String)
+
+CLSS public abstract interface org.osgi.service.log.admin.LoggerContext
+fld public final static java.lang.String LOGGER_CONTEXT_DEFAULT_LOGLEVEL = "org.osgi.service.log.admin.loglevel"
+fld public final static java.lang.String LOGGER_CONTEXT_PID = "org.osgi.service.log.admin"
+meth public abstract boolean isEmpty()
+meth public abstract java.lang.String getName()
+meth public abstract java.util.Map<java.lang.String,org.osgi.service.log.LogLevel> getLogLevels()
+meth public abstract org.osgi.service.log.LogLevel getEffectiveLogLevel(java.lang.String)
+meth public abstract void clear()
+meth public abstract void setLogLevels(java.util.Map<java.lang.String,org.osgi.service.log.LogLevel>)
+
+CLSS abstract interface org.osgi.service.log.admin.package-info
+
+CLSS abstract interface org.osgi.service.log.package-info
+
+CLSS public abstract interface org.osgi.service.packageadmin.ExportedPackage
+meth public abstract boolean isRemovalPending()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getSpecificationVersion()
+meth public abstract org.osgi.framework.Bundle getExportingBundle()
+meth public abstract org.osgi.framework.Bundle[] getImportingBundles()
+meth public abstract org.osgi.framework.Version getVersion()
+
+CLSS public abstract interface org.osgi.service.packageadmin.PackageAdmin
+fld public final static int BUNDLE_TYPE_FRAGMENT = 1
+meth public abstract boolean resolveBundles(org.osgi.framework.Bundle[])
+meth public abstract int getBundleType(org.osgi.framework.Bundle)
+meth public abstract org.osgi.framework.Bundle getBundle(java.lang.Class<?>)
+meth public abstract org.osgi.framework.Bundle[] getBundles(java.lang.String,java.lang.String)
+meth public abstract org.osgi.framework.Bundle[] getFragments(org.osgi.framework.Bundle)
+meth public abstract org.osgi.framework.Bundle[] getHosts(org.osgi.framework.Bundle)
+meth public abstract org.osgi.service.packageadmin.ExportedPackage getExportedPackage(java.lang.String)
+meth public abstract org.osgi.service.packageadmin.ExportedPackage[] getExportedPackages(java.lang.String)
+meth public abstract org.osgi.service.packageadmin.ExportedPackage[] getExportedPackages(org.osgi.framework.Bundle)
+meth public abstract org.osgi.service.packageadmin.RequiredBundle[] getRequiredBundles(java.lang.String)
+meth public abstract void refreshPackages(org.osgi.framework.Bundle[])
+
+CLSS public abstract interface org.osgi.service.packageadmin.RequiredBundle
+meth public abstract boolean isRemovalPending()
+meth public abstract java.lang.String getSymbolicName()
+meth public abstract org.osgi.framework.Bundle getBundle()
+meth public abstract org.osgi.framework.Bundle[] getRequiringBundles()
+meth public abstract org.osgi.framework.Version getVersion()
+
+CLSS abstract interface org.osgi.service.packageadmin.package-info
+
+CLSS public abstract interface org.osgi.service.permissionadmin.PermissionAdmin
+meth public abstract java.lang.String[] getLocations()
+meth public abstract org.osgi.service.permissionadmin.PermissionInfo[] getDefaultPermissions()
+meth public abstract org.osgi.service.permissionadmin.PermissionInfo[] getPermissions(java.lang.String)
+meth public abstract void setDefaultPermissions(org.osgi.service.permissionadmin.PermissionInfo[])
+meth public abstract void setPermissions(java.lang.String,org.osgi.service.permissionadmin.PermissionInfo[])
+
+CLSS public org.osgi.service.permissionadmin.PermissionInfo
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.String,java.lang.String)
+meth public boolean equals(java.lang.Object)
+meth public final java.lang.String getActions()
+meth public final java.lang.String getEncoded()
+meth public final java.lang.String getName()
+meth public final java.lang.String getType()
+meth public int hashCode()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds actions,name,type
+
+CLSS abstract interface org.osgi.service.permissionadmin.package-info
+
+CLSS public abstract interface org.osgi.service.resolver.HostedCapability
+intf org.osgi.resource.Capability
+meth public abstract org.osgi.resource.Capability getDeclaredCapability()
+meth public abstract org.osgi.resource.Resource getResource()
+
+CLSS public org.osgi.service.resolver.ResolutionException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable,java.util.Collection<org.osgi.resource.Requirement>)
+cons public init(java.lang.Throwable)
+meth public java.util.Collection<org.osgi.resource.Requirement> getUnresolvedRequirements()
+supr java.lang.Exception
+hfds serialVersionUID,unresolvedRequirements
+
+CLSS public abstract org.osgi.service.resolver.ResolveContext
+cons public init()
+meth public abstract boolean isEffective(org.osgi.resource.Requirement)
+meth public abstract int insertHostedCapability(java.util.List<org.osgi.resource.Capability>,org.osgi.service.resolver.HostedCapability)
+meth public abstract java.util.List<org.osgi.resource.Capability> findProviders(org.osgi.resource.Requirement)
+meth public abstract java.util.Map<org.osgi.resource.Resource,org.osgi.resource.Wiring> getWirings()
+meth public java.util.Collection<org.osgi.resource.Resource> findRelatedResources(org.osgi.resource.Resource)
+meth public java.util.Collection<org.osgi.resource.Resource> getMandatoryResources()
+meth public java.util.Collection<org.osgi.resource.Resource> getOptionalResources()
+meth public java.util.List<org.osgi.resource.Wire> getSubstitutionWires(org.osgi.resource.Wiring)
+meth public void onCancel(java.lang.Runnable)
+supr java.lang.Object
+
+CLSS public abstract interface org.osgi.service.resolver.Resolver
+meth public abstract java.util.Map<org.osgi.resource.Resource,java.util.List<org.osgi.resource.Wire>> resolve(org.osgi.service.resolver.ResolveContext) throws org.osgi.service.resolver.ResolutionException
+meth public abstract java.util.Map<org.osgi.resource.Resource,java.util.List<org.osgi.resource.Wire>> resolveDynamic(org.osgi.service.resolver.ResolveContext,org.osgi.resource.Wiring,org.osgi.resource.Requirement) throws org.osgi.service.resolver.ResolutionException
+
+CLSS abstract interface org.osgi.service.resolver.package-info
+
+CLSS public abstract interface org.osgi.service.startlevel.StartLevel
+meth public abstract boolean isBundleActivationPolicyUsed(org.osgi.framework.Bundle)
+meth public abstract boolean isBundlePersistentlyStarted(org.osgi.framework.Bundle)
+meth public abstract int getBundleStartLevel(org.osgi.framework.Bundle)
+meth public abstract int getInitialBundleStartLevel()
+meth public abstract int getStartLevel()
+meth public abstract void setBundleStartLevel(org.osgi.framework.Bundle,int)
+meth public abstract void setInitialBundleStartLevel(int)
+meth public abstract void setStartLevel(int)
+
+CLSS abstract interface org.osgi.service.startlevel.package-info
+
+CLSS public abstract org.osgi.service.url.AbstractURLStreamHandlerService
+cons public init()
+fld protected volatile org.osgi.service.url.URLStreamHandlerSetter realHandler
+intf org.osgi.service.url.URLStreamHandlerService
+meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
+meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public abstract java.net.URLConnection openConnection(java.net.URL) throws java.io.IOException
+meth public boolean equals(java.net.URL,java.net.URL)
+meth public boolean hostsEqual(java.net.URL,java.net.URL)
+meth public boolean sameFile(java.net.URL,java.net.URL)
+meth public int getDefaultPort()
+meth public int hashCode(java.net.URL)
+meth public java.lang.String toExternalForm(java.net.URL)
+meth public java.net.InetAddress getHostAddress(java.net.URL)
+meth public void parseURL(org.osgi.service.url.URLStreamHandlerSetter,java.net.URL,java.lang.String,int,int)
+supr java.net.URLStreamHandler
+
+CLSS public abstract interface org.osgi.service.url.URLConstants
+fld public final static java.lang.String URL_CONTENT_MIMETYPE = "url.content.mimetype"
+fld public final static java.lang.String URL_HANDLER_PROTOCOL = "url.handler.protocol"
+
+CLSS public abstract interface org.osgi.service.url.URLStreamHandlerService
+meth public abstract boolean equals(java.net.URL,java.net.URL)
+meth public abstract boolean hostsEqual(java.net.URL,java.net.URL)
+meth public abstract boolean sameFile(java.net.URL,java.net.URL)
+meth public abstract int getDefaultPort()
+meth public abstract int hashCode(java.net.URL)
+meth public abstract java.lang.String toExternalForm(java.net.URL)
+meth public abstract java.net.InetAddress getHostAddress(java.net.URL)
+meth public abstract java.net.URLConnection openConnection(java.net.URL) throws java.io.IOException
+meth public abstract void parseURL(org.osgi.service.url.URLStreamHandlerSetter,java.net.URL,java.lang.String,int,int)
+
+CLSS public abstract interface org.osgi.service.url.URLStreamHandlerSetter
+meth public abstract void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
+meth public abstract void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+
+CLSS abstract interface org.osgi.service.url.package-info
+
+CLSS public org.osgi.util.tracker.BundleTracker<%0 extends java.lang.Object>
+cons public init(org.osgi.framework.BundleContext,int,org.osgi.util.tracker.BundleTrackerCustomizer<{org.osgi.util.tracker.BundleTracker%0}>)
+fld protected final org.osgi.framework.BundleContext context
+intf org.osgi.util.tracker.BundleTrackerCustomizer<{org.osgi.util.tracker.BundleTracker%0}>
+meth public boolean isEmpty()
+meth public int getTrackingCount()
+meth public int size()
+meth public java.util.Map<org.osgi.framework.Bundle,{org.osgi.util.tracker.BundleTracker%0}> getTracked()
+meth public org.osgi.framework.Bundle[] getBundles()
+meth public void close()
+meth public void modifiedBundle(org.osgi.framework.Bundle,org.osgi.framework.BundleEvent,{org.osgi.util.tracker.BundleTracker%0})
+meth public void open()
+meth public void remove(org.osgi.framework.Bundle)
+meth public void removedBundle(org.osgi.framework.Bundle,org.osgi.framework.BundleEvent,{org.osgi.util.tracker.BundleTracker%0})
+meth public {org.osgi.util.tracker.BundleTracker%0} addingBundle(org.osgi.framework.Bundle,org.osgi.framework.BundleEvent)
+meth public {org.osgi.util.tracker.BundleTracker%0} getObject(org.osgi.framework.Bundle)
+supr java.lang.Object
+hfds DEBUG,customizer,mask,tracked
+hcls Tracked
+
+CLSS public abstract interface org.osgi.util.tracker.BundleTrackerCustomizer<%0 extends java.lang.Object>
+meth public abstract void modifiedBundle(org.osgi.framework.Bundle,org.osgi.framework.BundleEvent,{org.osgi.util.tracker.BundleTrackerCustomizer%0})
+meth public abstract void removedBundle(org.osgi.framework.Bundle,org.osgi.framework.BundleEvent,{org.osgi.util.tracker.BundleTrackerCustomizer%0})
+meth public abstract {org.osgi.util.tracker.BundleTrackerCustomizer%0} addingBundle(org.osgi.framework.Bundle,org.osgi.framework.BundleEvent)
+
+CLSS public org.osgi.util.tracker.ServiceTracker<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(org.osgi.framework.BundleContext,java.lang.Class<{org.osgi.util.tracker.ServiceTracker%0}>,org.osgi.util.tracker.ServiceTrackerCustomizer<{org.osgi.util.tracker.ServiceTracker%0},{org.osgi.util.tracker.ServiceTracker%1}>)
+cons public init(org.osgi.framework.BundleContext,java.lang.String,org.osgi.util.tracker.ServiceTrackerCustomizer<{org.osgi.util.tracker.ServiceTracker%0},{org.osgi.util.tracker.ServiceTracker%1}>)
+cons public init(org.osgi.framework.BundleContext,org.osgi.framework.Filter,org.osgi.util.tracker.ServiceTrackerCustomizer<{org.osgi.util.tracker.ServiceTracker%0},{org.osgi.util.tracker.ServiceTracker%1}>)
+cons public init(org.osgi.framework.BundleContext,org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>,org.osgi.util.tracker.ServiceTrackerCustomizer<{org.osgi.util.tracker.ServiceTracker%0},{org.osgi.util.tracker.ServiceTracker%1}>)
+fld protected final org.osgi.framework.BundleContext context
+fld protected final org.osgi.framework.Filter filter
+intf org.osgi.util.tracker.ServiceTrackerCustomizer<{org.osgi.util.tracker.ServiceTracker%0},{org.osgi.util.tracker.ServiceTracker%1}>
+meth public boolean isEmpty()
+meth public int getTrackingCount()
+meth public int size()
+meth public java.lang.Object[] getServices()
+meth public java.util.SortedMap<org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>,{org.osgi.util.tracker.ServiceTracker%1}> getTracked()
+meth public org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}> getServiceReference()
+meth public org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>[] getServiceReferences()
+meth public void close()
+meth public void modifiedService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>,{org.osgi.util.tracker.ServiceTracker%1})
+meth public void open()
+meth public void open(boolean)
+meth public void remove(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>)
+meth public void removedService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>,{org.osgi.util.tracker.ServiceTracker%1})
+meth public {org.osgi.util.tracker.ServiceTracker%1} addingService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>)
+meth public {org.osgi.util.tracker.ServiceTracker%1} getService()
+meth public {org.osgi.util.tracker.ServiceTracker%1} getService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTracker%0}>)
+meth public {org.osgi.util.tracker.ServiceTracker%1} waitForService(long) throws java.lang.InterruptedException
+meth public {org.osgi.util.tracker.ServiceTracker%1}[] getServices({org.osgi.util.tracker.ServiceTracker%1}[])
+supr java.lang.Object
+hfds DEBUG,cachedReference,cachedService,customizer,listenerFilter,trackClass,trackReference,tracked
+hcls AllTracked,Tracked
+
+CLSS public abstract interface org.osgi.util.tracker.ServiceTrackerCustomizer<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract void modifiedService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTrackerCustomizer%0}>,{org.osgi.util.tracker.ServiceTrackerCustomizer%1})
+meth public abstract void removedService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTrackerCustomizer%0}>,{org.osgi.util.tracker.ServiceTrackerCustomizer%1})
+meth public abstract {org.osgi.util.tracker.ServiceTrackerCustomizer%1} addingService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTrackerCustomizer%0}>)
+
+CLSS abstract interface org.osgi.util.tracker.package-info
 

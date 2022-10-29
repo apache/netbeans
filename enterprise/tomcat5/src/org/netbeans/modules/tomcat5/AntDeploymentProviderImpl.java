@@ -45,6 +45,7 @@ public class AntDeploymentProviderImpl implements AntDeploymentProvider {
         tm = (TomcatManager)dm;
     }
 
+    @Override
     public void writeDeploymentScript(OutputStream os, Object moduleType) throws IOException {
         String name = null;
         switch (tm.getTomcatVersion()) {
@@ -73,6 +74,7 @@ public class AntDeploymentProviderImpl implements AntDeploymentProvider {
         }
     }
 
+    @Override
     public File getDeploymentPropertiesFile() {
         TomcatProperties tp = tm.getTomcatProperties();
         File file = tp.getAntDeploymentPropertiesFile();

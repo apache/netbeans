@@ -19,12 +19,22 @@
 package org.netbeans.modules.editor.java;
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -35,23 +45,25 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
-
+import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTest;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
+import org.netbeans.api.java.source.gen.WhitespaceIgnoringDiff;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
+import static org.netbeans.junit.NbTestCase.assertFile;
 import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
-import org.netbeans.modules.java.source.TreeShims;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
+import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -60,6 +72,7 @@ import org.openide.filesystems.Repository;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
+import static java.nio.file.StandardCopyOption.*;
 
 /**
  *
@@ -270,31 +283,6 @@ public class GoToSupportTest extends NbTestCase {
                 fail("Should not be called.");
             }
         }, true);
-    }
-
-    public void testTooltipForInnerClasses() throws Exception {
-        String code = "package test; public class Test {enum EE {A} class CC {} EE a; CC c;}";
-        int[] offset = new int[] {82, 88};
-        String[] golden = new String[] {
-            "<html><body><base href=\"file:" + getWorkDirPath() + "/src/test/Test.java\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>static enum <b>EE</b><br>extends <a href='*1'>Enum</a>&lt;<a href='*2'>EE</a>&gt;</pre>",
-            "<html><body><base href=\"file:" + getWorkDirPath() + "/src/test/Test.java\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>class <b>CC</b><br>extends <a href='*1'>Object</a></pre>",
-        };
-        assertEquals(offset.length, golden.length);
-        for (int cntr = 0; cntr < offset.length; cntr++) {
-            String tooltip = performTest(code, offset[cntr] - 24, new OrigUiUtilsCaller() {
-                public void open(FileObject fo, int pos) {
-                    fail("Should not be called.");
-                }
-                public void beep() {
-                    fail("Should not be called.");
-                }
-                public void open(ClasspathInfo info, Element el) {
-                    fail("Should not be called.");
-                }
-            }, true);
-
-            assertEquals(golden[cntr], tooltip);
-        }
     }
 
     public void testGoToIntoAnnonymous() throws Exception {
@@ -1259,7 +1247,83 @@ public class GoToSupportTest extends NbTestCase {
         
         return null;
     }
+    
+    protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName, String sourceLevel, boolean external) throws Exception {
+        clearWorkDir();
+        FileUtil.refreshFor(getWorkDir());
 
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceDir = FileUtil.createFolder(wd, "src");
+        FileObject buildDir = FileUtil.createFolder(wd, "build");
+        FileObject cacheDir = FileUtil.createFolder(wd, "cache");
+        
+        File testSource = new File(getWorkDir(), "test/Test.java");
+        testSource.getParentFile().mkdirs();
+        copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/editor/javadocsnippet/data/" + source + ".java"), testSource);
+        FileObject testSourceFO = FileUtil.toFileObject(testSource);
+        
+        if(external) {
+            FileUtil.createFolder(sourceDir, "test");
+            copyFolder((new File(getDataDir(),"org/netbeans/modules/java/editor/javadocsnippet/data/snippet-files").toPath()),
+                    new File(getWorkDir(), "src/test/snippet-files").toPath());
+        }
+
+        SourceUtilsTestUtil.setSourceLevel(testSourceFO, sourceLevel);
+        SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
+        assertNotNull(testSourceFO);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        assertNotNull(testSourceDO);
+        EditorCookie ec = testSourceDO.getCookie(EditorCookie.class);
+        assertNotNull(ec);
+        final Document doc = ec.openDocument();
+        assertNotNull(doc);
+        doc.putProperty(Language.class, JavaTokenId.language());
+        doc.putProperty("mimeType", "text/x-java");
+        int textToInsertLength = textToInsert != null ? textToInsert.length() : 0;
+        if (textToInsertLength > 0)
+            doc.insertString(caretPos, textToInsert, null);
+        
+        String docText = GoToSupport.getGoToElementTooltip(doc, caretPos, false, null);
+        assertNotNull(goldenFileName);            
+
+        File output = new File(getWorkDir(), getName() + ".out2");
+        Writer out = new FileWriter(output);            
+        out.write(docText);
+        out.close();
+
+        
+        File goldenFile = getGoldenFile(goldenFileName);
+        File diffFile = new File(getWorkDir(), getName() + ".diff");
+
+        assertFile(output, goldenFile, diffFile, new WhitespaceIgnoringDiff());
+        
+        LifecycleManager.getDefault().saveAll();
+    }
+
+    public  void copyFolder(Path src, Path dest) throws IOException {
+        try (Stream<Path> stream = Files.walk(src)) {
+            stream.forEach(source -> copy(source, dest.resolve(src.relativize(source))));
+        }
+    }
+
+    private void copy(Path source, Path dest) {
+        try {
+            Files.copy(source, dest, REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    protected void copyToWorkDir(File resource, File toFile) throws IOException {
+        InputStream is = new FileInputStream(resource);
+        OutputStream outs = new FileOutputStream(toFile);
+        int read;
+        while ((read = is.read()) != (-1)) {
+            outs.write(read);
+        }
+        outs.close();
+        is.close();
+    }
     /**Copied from org.netbeans.api.project.
      * Create a scratch directory for tests.
      * Will be in /tmp or whatever, and will be empty.
@@ -1480,7 +1544,7 @@ public class GoToSupportTest extends NbTestCase {
                             parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                             Element e = el.resolve(parameter);
 
-                            assertTrue(TreeShims.isRecord(e));
+                            assertTrue(e.getKind() == ElementKind.RECORD);
                             assertEquals("test.Auxiliary", ((TypeElement) e).getQualifiedName().toString());
                             wasCalled[0] = true;
                         }
@@ -1516,6 +1580,416 @@ public class GoToSupportTest extends NbTestCase {
             //OK, no RELEASE_14, skip tests
             return false;
         }
+    }
+
+    public void testJavadocSnippetHighlightRecord() throws Exception {
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        
+        performTest("HighlightTag", 388, null, "javadocsnippet_highlightRecord.pass", this.sourceLevel, false);
+    }
+    
+    public void testHighlightUsingSubstring() throws Exception {
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");      
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        
+        performTest("HighlightTag", 1667, null, "javadocsnippet_highlightUsingSubstring.pass", this.sourceLevel, false);
+    }
+    
+    public void testHesthighlightUsingRegex() throws Exception {
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        
+        performTest("HighlightTag",2092, null, "javadocsnippet_highlightUsingRegex.pass", this.sourceLevel, false);
+    }
+ 
+    public void testHighlightUsingSubstringAndRegex() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 2604, null, "javadocsnippet_highlightUsingSubstringAndRegex.pass", this.sourceLevel, false);
+    }
+    
+    public void testHighlightUsingSubstringRegexAndType() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 4551, null, "javadocsnippet_highlightUsingSubstringRegexAndType.pass", this.sourceLevel, false);
+    }
+        
+    public void testHighlightUsingMultipleSnippetTagInOneJavaDocWithRegion() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 5333, null, "javadocsnippet_highlightUsingMultipleSnippetTagInOneJavaDocWithRegion.pass", this.sourceLevel, false);
+    }
+        
+    public void testHighlightUsingNestedRegions() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 6148, null, "javadocsnippet_highlightUsingNestedRegions.pass", this.sourceLevel, false);
+    }
+    
+    public void testHighlightUsingRegionsEndedWithDoubleColon() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 6840, null, "javadocsnippet_highlightUsingRegionsEndedWithDoubleColon.pass", this.sourceLevel, false);
+    }
+    
+    public void testNoMarkupTagPresent() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 7083, null, "javadocsnippet_noMarkupTagPresent.pass", this.sourceLevel, false);
+    }
+ 
+    public void testHighlightTagSubstringApplyToNextLine() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 7333, null, "javadocsnippet_highlightTagSubstringApplyToNextLine.pass", this.sourceLevel, false);
+    }
+ 
+    public void testHighlightTagRegexWithAllCharacterChange() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 7598, null, "javadocsnippet_highlightTagRegexWithAllCharacterChange.pass", this.sourceLevel, false);
+    }
+       
+    public void testHighlightTagRegexWithAllCharacterChangeUsingDot() throws Exception {
+        
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 7860, null, "javadocsnippet_highlightTagRegexWithAllCharacterChangeUsingDot.pass", this.sourceLevel, false);
+    }
+    
+    public void testSingleLine_Replace_Regex() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 1127, null, "javadocsnippet_SingleLine_Replace_Regex.pass", this.sourceLevel, false);
+    }
+
+    public void testSingleLine_Replace_RegexDotStar() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 1417, null, "javadocsnippet_SingleLine_Replace_RegexDotStar.pass", this.sourceLevel, false);
+    }
+
+    public void testSingleLine_Replace_RegexDot() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 1713, null, "javadocsnippet_SingleLine_Replace_RegexDot.pass", this.sourceLevel, false);
+    }
+
+    public void testSingleLine_Replace_Substring() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 2021, null, "javadocsnippet_SingleLine_Replace_Substring.pass", this.sourceLevel, false);
+    }
+
+    public void testSingleLine_MultipleReplaceAnnotation_Regex() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 2383, null, "javadocsnippet_SingleLine_MultipleReplaceAnnotation_Regex.pass", this.sourceLevel, false);
+    }
+
+    public void testSingleLine_MultipleReplaceAnnotation_Substring() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 2878, null, "javadocsnippet_SingleLine_MultipleReplaceAnnotation_Substring.pass", this.sourceLevel, false);
+    }
+
+    public void testSingleLine_ReplaceAnnotation_Regex_DoubleQuote() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 3221, null, "javadocsnippet_SingleLine_ReplaceAnnotation_Regex_DoubleQuote.pass", this.sourceLevel, false);
+    }
+
+    public void testRegion_ReplaceAnnotation_Regex() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 3732, null, "javadocsnippet_Region_ReplaceAnnotation_Regex.pass", this.sourceLevel, false);
+    }
+
+    public void testRegion_ReplaceAnnotation_RegexInnComment() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 4135, null, "javadocsnippet_Region_ReplaceAnnotation_RegexInnComment.pass", this.sourceLevel, false);
+    }
+
+    public void testNestedRegion_ReplaceAnnotation_Substring() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 4712, null, "javadocsnippet_NestedRegion_ReplaceAnnotation_Substring.pass", this.sourceLevel, false);
+    }
+
+    public void testNestedRegion_ReplaceAnnotation_Regex() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 5270, null, "javadocsnippet_NestedRegion_ReplaceAnnotation_Regex.pass", this.sourceLevel, false);
+    }
+
+    public void testNestedRegion_Highlight_And_replace() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 6597, null, "javadocsnippet_NestedRegion_Highlight_And_replace.pass", this.sourceLevel, false);
+    }
+
+    public void testHighlightAndReplace_cornercase() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 6926, null, "javadocsnippet_HighlightAndReplace_cornercase.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 1368, null, "javadocsnippet_LinkTag.pass", this.sourceLevel, false);
+
+    }
+
+    public void testLinkTag_With_RegexAndRegion() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 1809, null, "javadocsnippet_LinkTag_With_RegexAndRegion.pass", this.sourceLevel, false);
+
+    }
+
+    public void testLinkTag_AppliesToNextLine() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 2160, null, "javadocsnippet_LinkTag_AppliesToNextLine.pass", this.sourceLevel, false);
+
+    }
+
+    public void testLink_MultipleTag_OnSameLine() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 2547, null, "javadocsnippet_Link_MultipleTag_OnSameLine.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_With_RegionAttribute() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3230, null, "javadocsnippet_LinkTag_With_RegionAttribute.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3562, null, "javadocsnippet_LinkTag_Ref_ToThisClass_UsingHash.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3884, null, "javadocsnippet_LinkTag_FieldRef_ToThisClass_UsingHash.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_AlongWith_HighlightTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 4302, null, "javadocsnippet_LinkTag_AlongWith_HighlightTag.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 4705, null, "javadocsnippet_LinkTag_AlongWith_ReplaceTag.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 5163, null, "javadocsnippet_LinkTag_AlongWith_SubStringAndReplaceTag.pass", this.sourceLevel, false);
+    }
+
+    public void testLinkTag_EmptyReplacementValue() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 5568, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel, false);
+    }
+
+    public void testError_HighlightTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 2140, null, "javadocsnippet_TestError_HighlightTag.pass", this.sourceLevel, false);
+    }
+    
+    public void testError_ReplaceTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 3422, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel, false);
+    }
+    
+    public void testError_LinkTag() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4877, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel, false);
+    }
+    
+    public void testError_UnpairedRegion() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 5548, null, "javadocsnippet_TestError_UnpairedRegion.pass", this.sourceLevel, false);
+    }
+    
+    public void testError_NoRegionToEnd() throws Exception {
+        
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 5715, null, "javadocsnippet_TestError_NoRegionToEnd.pass", this.sourceLevel, false);
+    }
+
+    public void testErrorFileEmpty() throws Exception {
+
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("Errors", 5901, null, "javadocsnippet_file_empty.pass", this.sourceLevel, true);
+    }
+
+    public void testErrorFileInvalid() throws Exception {
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("Errors", 6140, null, "javadocsnippet_file_invalid.pass", this.sourceLevel, true);
+    }
+
+    public void testExternalSnippetFile() throws Exception {
+
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("Errors", 6440, null, "javadocsnippet_external_file.pass", this.sourceLevel, true);
+    }
+
+    public void testErrorRegionInvalid() throws Exception {
+
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("Errors", 6608, null, "javadocsnippet_region_invalid.pass", this.sourceLevel, true);
+    }
+
+    public void testExternalRegionValid() throws Exception {
+
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("Errors", 6888, null, "javadocsnippet_region_valid.pass", this.sourceLevel, true);
     }
 
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();

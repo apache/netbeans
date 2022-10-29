@@ -37,7 +37,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -68,9 +68,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.websvc.rest.MiscPrivateUtilities;
 import org.netbeans.modules.websvc.rest.WebXmlUpdater;
-import static org.netbeans.modules.websvc.rest.WebXmlUpdater.getRestServletAdaptorByName;
 import org.netbeans.modules.websvc.rest.model.api.RestConstants;
-import static org.netbeans.modules.websvc.rest.spi.RestSupport.REST_SERVLET_ADAPTOR;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileLock;
@@ -78,6 +76,9 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+
+import static org.netbeans.modules.websvc.rest.WebXmlUpdater.getRestServletAdaptorByName;
+import static org.netbeans.modules.websvc.rest.spi.RestSupport.REST_SERVLET_ADAPTOR;
 
 /**
  * The purpose of this class is to trim down RestSupport and WebRestSupport down and
@@ -142,9 +143,9 @@ public class MiscUtilities {
         try {
             lock = fo.lock();
             OutputStream os = fo.getOutputStream(lock);
-            writer = new BufferedWriter(new OutputStreamWriter(os, Charset.forName("UTF-8")));
+            writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
             InputStream is = RestSupport.class.getResourceAsStream("resources/" + name);
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String line;
             String lineSep = "\n";
             if (File.separatorChar == '\\') {
@@ -185,7 +186,7 @@ public class MiscUtilities {
         try {
             writer = new BufferedWriter(content);
             InputStream is = fo.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String line;
             String lineSep = "\n";
             if (File.separatorChar == '\\') {
@@ -209,7 +210,7 @@ public class MiscUtilities {
             FileLock lock = fo.lock();
             try {
                 OutputStream outputStream = fo.getOutputStream(lock);
-                writer = new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("UTF-8")));
+                writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
                 writer.write(buffer.toString());
             } finally {
                 if (lock != null) {
@@ -523,17 +524,7 @@ public class MiscUtilities {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if (Profile.JAVA_EE_6_WEB == profile ||
-                    Profile.JAVA_EE_6_FULL == profile ||
-                        Profile.JAVA_EE_7_WEB == profile ||
-                                Profile.JAVA_EE_7_FULL == profile ||
-                                    Profile.JAVA_EE_8_WEB == profile ||
-                                            Profile.JAVA_EE_8_FULL == profile ||
-                                                Profile.JAKARTA_EE_8_WEB == profile ||
-                                                    Profile.JAKARTA_EE_8_FULL == profile ||
-                                                    Profile.JAKARTA_EE_9_WEB == profile ||
-                                                        Profile.JAKARTA_EE_9_FULL == profile )
-            {
+            if (profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                 return true;
             }
         }

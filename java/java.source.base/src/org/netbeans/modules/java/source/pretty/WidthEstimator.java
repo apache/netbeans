@@ -210,7 +210,7 @@ System.err.println("Need width calc for "+tree);
 	open(prec, TreeInfo.ordPrec);
 	width += 12;
 	width(tree.expr, TreeInfo.ordPrec);
-	width(tree.clazz);
+	width(tree.pattern);
     }
 
     public void visitIndexed(JCArrayAccess tree) {

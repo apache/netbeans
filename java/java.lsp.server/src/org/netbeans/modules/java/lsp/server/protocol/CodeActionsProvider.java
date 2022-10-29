@@ -20,7 +20,10 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.sun.source.tree.LineMap;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -47,24 +50,42 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 public abstract class CodeActionsProvider {
 
     public static final String CODE_GENERATOR_KIND = "source.generate";
+    public static final String CODE_ACTIONS_PROVIDER_CLASS = "providerClass";
+    public static final String DATA = "data";
     protected static final String ERROR = "<error>"; //NOI18N
 
     public abstract List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception;
 
-    public abstract Set<String> getCommands();
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        return CompletableFuture.completedFuture(codeAction);
+    }
 
-    public abstract CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments);
+    public Set<String> getCommands() {
+        return Collections.emptySet();
+    }
+
+    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        return CompletableFuture.completedFuture(false);
+    }
+
+    protected CodeAction createCodeAction(String name, String kind, Object data, String command, Object... commandArgs) {
+        CodeAction action = new CodeAction(name);
+        action.setKind(kind);
+        if (command != null) {
+            action.setCommand(new Command(name, command, Arrays.asList(commandArgs)));
+        }
+        if (data != null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put(CODE_ACTIONS_PROVIDER_CLASS, getClass().getName());
+            map.put(DATA, data);
+            action.setData(map);
+        }
+        return action;
+    }
 
     protected static int getOffset(CompilationInfo info, Position pos) {
         LineMap lm = info.getCompilationUnit().getLineMap();
         return (int) lm.getPosition(pos.getLine() + 1, pos.getCharacter() + 1);
-    }
-
-    protected static CodeAction createCodeAction(String name, String kind, String command, Object... args) {
-        CodeAction action = new CodeAction(name);
-        action.setKind(kind);
-        action.setCommand(new Command(name, command, Arrays.asList(args)));
-        return action;
     }
 
     protected static String createLabel(CompilationInfo info, Element e) {
@@ -104,8 +125,10 @@ public abstract class CodeActionsProvider {
     protected static String createLabel(CompilationInfo info, VariableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
         sb.append(Utils.label(info, e, fqn));
-        sb.append(" : "); // NOI18N
-        sb.append(Utils.detail(info, e, fqn));
+        String detail = Utils.detail(info, e, fqn);
+        if (detail != null) {
+            sb.append(detail);
+        }
         return sb.toString();
     }
 
@@ -116,8 +139,10 @@ public abstract class CodeActionsProvider {
     protected static String createLabel(CompilationInfo info, ExecutableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
         sb.append(Utils.label(info, e, fqn));
-        sb.append(" : "); // NOI18N
-        sb.append(Utils.detail(info, e, fqn));
+        String detail = Utils.detail(info, e, fqn);
+        if (detail != null) {
+            sb.append(detail);
+        }
         return sb.toString();
     }
 
@@ -138,11 +163,11 @@ public abstract class CodeActionsProvider {
             this.signature = ElementHandleAccessor.getInstance().getJVMSignature(handle);
         }
 
-        ElementHandle toHandle() {
+        public ElementHandle toHandle() {
             return ElementHandleAccessor.getInstance().create(ElementKind.valueOf(kind), signature);
         }
 
-        Element resolve(CompilationInfo info) {
+        public Element resolve(CompilationInfo info) {
             return toHandle().resolve(info);
         }
 

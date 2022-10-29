@@ -63,7 +63,7 @@ public class DBSchemaFileList {
     }
 
     private void searchRoot(FileObject root, String rootDisplayName) {
-        Enumeration ch = root.getChildren(true);
+        Enumeration<? extends FileObject> ch = root.getChildren(true);
         while (ch.hasMoreElements()) {
             FileObject f = (FileObject) ch.nextElement();
             if (f.getExt().equals(DBSchemaManager.DBSCHEMA_EXT) && !f.isFolder()) {

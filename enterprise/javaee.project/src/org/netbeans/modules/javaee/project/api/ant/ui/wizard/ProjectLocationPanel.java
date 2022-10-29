@@ -512,7 +512,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     public static String decorateMessage(String message) {
         if (message != null) {
-            return "<html>" + message.replaceAll("<",  "&lt;").replaceAll(">",  "&gt;") + "</html>"; // NIO18N
+            return "<html>" + message.replace("<",  "&lt;").replace(">",  "&gt;") + "</html>"; // NIO18N
         }
         return null;
     }

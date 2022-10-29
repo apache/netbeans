@@ -52,10 +52,10 @@ import org.openide.util.Exceptions;
  */
 public final class EntityMethodController extends AbstractMethodController {
     
-    private final static int IDX_ABSTRACT_SCHEMA_NAME = 0;
-    private final static int IDX_PERSISTENCE_TYPE = 1;
-    private final static int IDX_LOCAL_HOME = 2;
-    private final static int IDX_HOME = 3;
+    private static final int IDX_ABSTRACT_SCHEMA_NAME = 0;
+    private static final int IDX_PERSISTENCE_TYPE = 1;
+    private static final int IDX_LOCAL_HOME = 2;
+    private static final int IDX_HOME = 3;
     
     private final MetadataModel<EjbJarMetadata> metadataModel;
     private final String ejbClass;

@@ -136,6 +136,11 @@ public class GtkLFCustoms extends LFCustoms {
             "NbSlideBar.GroupSeparator.Gap.Before", 7,
             "NbSlideBar.GroupSeparator.Gap.After", 2,
             "NbSlideBar.RestoreButton.Gap", 5,
+            
+            // Options Panel
+            OPTIONS_USE_UI_DEFAULT_COLORS, true,
+            OPTIONS_CATEGORIES_SEPARATOR_COLOR, UIManager.getColor("Separator.foreground"),
+            OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS, true,
         };
 
         //#108517 - turn off ctrl+page_up and ctrl+page_down mapping
@@ -202,6 +207,7 @@ public class GtkLFCustoms extends LFCustoms {
                 // special tree icons - only for property sheet
                 "Tree.gtk_expandedIcon", new GTKExpandedIcon(),
                 "Tree.gtk_collapsedIcon", new GTKCollapsedIcon(),
+                "Slider.paintValue", false
             };
         } else {
             Object[] result = new Object[] {
@@ -209,13 +215,14 @@ public class GtkLFCustoms extends LFCustoms {
                 // special tree icons - only for property sheet
                 "Tree.gtk_expandedIcon", new GTKExpandedIcon(),
                 "Tree.gtk_collapsedIcon", new GTKCollapsedIcon(),
+                "Slider.paintValue", false
             };
             return result;
         }
     }
     
     /** Temporary workaround for GTK L&F */
-    private static abstract class GTKIcon implements Icon {
+    private abstract static class GTKIcon implements Icon {
         private static final int SIZE = 11;
         @Override
         public int getIconWidth() {

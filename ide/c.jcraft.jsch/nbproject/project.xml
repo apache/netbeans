@@ -26,15 +26,45 @@
             <code-name-base>com.jcraft.jsch</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>bcprov</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
                     <code-name-base>com.jcraft.jzlib</code-name-base>
                     <compile-dependency/>
                     <run-dependency/>
                 </dependency>
+                <dependency>
+                    <code-name-base>libs.c.kohlschutter.junixsocket</code-name-base>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>3.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jna</code-name-base>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.11</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jna.platform</code-name-base>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.11</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>com.jcraft.jsch</package>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>com-jcraft-jsch.jar</runtime-relative-path>
-                <binary-origin>external/jsch-0.1.55.jar</binary-origin>
+                <binary-origin>external/jsch-0.1.72.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -20,7 +20,7 @@ package org.netbeans.modules.groovy.editor.test;
 
 import org.netbeans.modules.groovy.editor.api.parser.ApplyGroovyTransformation;
 
-// BEGIN:DisableTransformersStub
+// @start region="DisableTransformersStub"
 @ApplyGroovyTransformation(disable = ApplyGroovyTransformation.APPLY_PARSE, value = {
     "org.netbeans.modules.groovy.editor.test.DisabledGlobalAnnotation",
     "org.netbeans.modules.groovy.editor.api.parser.GroovyParserTest$TestingTransformation",
@@ -28,4 +28,4 @@ import org.netbeans.modules.groovy.editor.api.parser.ApplyGroovyTransformation;
 public class DisableTransformersStub {
     
 }
-// END:DisableTransformersStub
+// @end region="DisableTransformersStub"

@@ -1373,7 +1373,7 @@ public class FormUtils
 
     // -----
 
-    private static abstract class DefaultValueDeviation {
+    private abstract static class DefaultValueDeviation {
         protected Object[] values;
         DefaultValueDeviation(Object[] values) {
             this.values = values;

@@ -6,6 +6,6 @@ METHOD     childMethodSelf(self $param)    [PUBLIC]   \TypedProperties1\TypedPro
 METHOD     parentMethod()                  [PUBLIC]   \TypedProperties1\TypedPropertiesParent
 METHOD     testMethod()                    [PUBLIC]   \TypedProperties1\TypedPropertiesChild
 METHOD     traitMethod(self $param)        [PUBLIC]   \TypedProperties1\TypedPropertiesTrait
+VARIABLE   ?parent nullableParent          [PRIVATE]  \TypedProperties1\TypedPropertiesChild
+VARIABLE   ?self nullableSelf              [PRIVATE]  \TypedProperties1\TypedPropertiesChild
 VARIABLE   object parentField              [PROTECTE  \TypedProperties1\TypedPropertiesParent
-VARIABLE   parent nullableParent           [PRIVATE]  \TypedProperties1\TypedPropertiesChild
-VARIABLE   self nullableSelf               [PRIVATE]  \TypedProperties1\TypedPropertiesChild

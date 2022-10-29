@@ -35,16 +35,18 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  */
 public class CatchBlockImpl extends DeclarationScopeImpl implements JsFunction {
 
-    final private List<JsObject> parameters;
-    
+    private final List<JsObject> parameters;
+
     public CatchBlockImpl(DeclarationScope inFunction, Identifier exception, OffsetRange range, String mimeType) {
         super(inFunction, (JsObject)inFunction, new Identifier(getBlockName((JsObject)inFunction), OffsetRange.NONE),
                 range, mimeType, null); //NOI18N
-        this.parameters = new ArrayList<JsObject>();
-        ParameterObject param = new ParameterObject(this, exception, mimeType, null);
-        this.parameters.add(param);
+        this.parameters = new ArrayList<>();
+        if(exception != null) {
+            ParameterObject param = new ParameterObject(this, exception, mimeType, null);
+            this.parameters.add(param);
+            param.addOccurrence(exception.getOffsetRange());
+        }
         ((JsObjectImpl)inFunction).addProperty(this.getName(), this);
-        param.addOccurrence(exception.getOffsetRange());
     }
 
     private static String getBlockName(JsObject parent) {
@@ -54,7 +56,7 @@ public class CatchBlockImpl extends DeclarationScopeImpl implements JsFunction {
         }
         return "catch_" + index;
     }
-    
+
     @Override
     public Collection<? extends JsObject> getParameters() {
         return new ArrayList(this.parameters);

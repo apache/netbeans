@@ -6,14 +6,8 @@
         <token id='T_CONST' start='11' end='16'>
             <text>const</text>
         </token>
-        <token id='T_STRING' start='17' end='21'>
-            <text>some</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='21' end='22'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='22' end='24'>
-            <text>ns</text>
+        <token id='T_NAME_QUALIFIED' start='17' end='24'>
+            <text>some\ns</text>
         </token>
         <token id='T_NS_SEPARATOR' start='24' end='25'>
             <text>\</text>

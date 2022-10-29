@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -102,11 +103,26 @@ public final class URITranslator {
                 }
                 File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
                 cache.getParentFile().mkdirs();
-                try (OutputStream out = new FileOutputStream(cache)) {
-                    out.write(file.asBytes());
+                if (file.isFolder()) {
+                    if (cache.exists() && cache.isFile()) {
+                        if (!cache.delete()) {
+                            return uri;
+                        }
+                    }
+                    cache.mkdir();
                     return cache.toURI().toString();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                } else if (file.isData()) {
+                    try {
+                        if (cache.exists() && cache.isDirectory()) {
+                            FileUtil.toFileObject(cache).delete();
+                        }
+                        try (OutputStream out = new FileOutputStream(cache)) {
+                            out.write(file.asBytes());
+                            return cache.toURI().toString();
+                        }
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             }
             if (uriUri.getScheme().equals("nbfs")) {            // NOI18N
@@ -117,7 +133,7 @@ public final class URITranslator {
                 try {
                     String txt = file.asText("UTF-8");          // NOI18N
                     try (OutputStream os = file.getOutputStream()) {
-                        os.write(txt.getBytes("UTF-8"));        // NOI18N
+                        os.write(txt.getBytes(StandardCharsets.UTF_8));
                     }
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
@@ -162,7 +178,11 @@ public final class URITranslator {
         });
     }
 
-    private static File getCacheDir() {
+    /**
+     * Root of caches for NBLS server.
+     * @return cache root.
+     */
+    public static File getCacheDir() {
         return Places.getCacheSubfile("java-server");   // NOI18N
     }
 

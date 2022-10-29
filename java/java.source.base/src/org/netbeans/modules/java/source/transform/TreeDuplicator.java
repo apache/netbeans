@@ -25,6 +25,7 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -33,7 +34,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DeconstructionPatternTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -61,11 +65,14 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -80,6 +87,7 @@ import com.sun.source.tree.UsesTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.tools.javac.util.Context;
 import java.util.List;
 import org.netbeans.modules.java.source.builder.ASTService;
@@ -186,7 +194,9 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitCase(CaseTree tree, Void p) {
-        CaseTree n = make.Case(tree.getExpression(), tree.getStatements());
+        CaseTree n = tree.getCaseKind() == CaseTree.CaseKind.STATEMENT
+                ? make.Case(tree.getExpressions(), tree.getStatements())
+                : make.Case(tree.getExpressions(), tree.getBody());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
@@ -638,6 +648,78 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     @Override
     public Tree visitUses(UsesTree tree, Void p) {
         UsesTree n = make.Uses(tree.getServiceName());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitYield(YieldTree tree, Void p) {
+        YieldTree n = make.Yield(tree.getValue());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitBindingPattern(BindingPatternTree tree, Void p) {
+        BindingPatternTree n = make.BindingPattern(tree.getVariable());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitDefaultCaseLabel(DefaultCaseLabelTree tree, Void p) {
+        DefaultCaseLabelTree n = make.DefaultCaseLabel();
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitConstantCaseLabel(ConstantCaseLabelTree tree, Void p) {
+        ConstantCaseLabelTree n = make.ConstantCaseLabel(tree.getConstantExpression());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitPatternCaseLabel(PatternCaseLabelTree tree, Void p) {
+        PatternCaseLabelTree n = make.PatternCaseLabel(tree.getPattern(), tree.getGuard());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitDeconstructionPattern(DeconstructionPatternTree tree, Void p) {
+        DeconstructionPatternTree n = make.DeconstructionPattern(tree.getDeconstructor(), tree.getNestedPatterns(), tree.getVariable());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitParenthesizedPattern(ParenthesizedPatternTree tree, Void p) {
+        ParenthesizedPatternTree n = make.ParenthesizedPattern(tree.getPattern());
+        model.setType(n, model.getType(tree));
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitSwitchExpression(SwitchExpressionTree tree, Void p) {
+        SwitchExpressionTree n = make.SwitchExpression(tree.getExpression(), tree.getCases());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));

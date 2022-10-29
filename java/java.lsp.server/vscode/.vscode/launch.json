@@ -16,7 +16,10 @@
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "${defaultBuildTask}",
+			"env": {
+				"nbcode_userdir": "global"
+			}
 		},
 		{
 			"name": "Extension Tests",
@@ -26,12 +29,17 @@
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
+				"--extensions-dir", "{workspaceFolder}/out/test/vscode/exts",
+				"--user-data-dir", "{workspaceFolder}/out/test/vscode/user",
 				"${workspaceFolder}/out/test/ws"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/test/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "${defaultBuildTask}",
+			"env": {
+				"netbeans.extra.options": "-J-Dproject.limitScanRoot=${workspaceFolder}/out"
+			}
 		}
 	]
 }

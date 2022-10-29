@@ -188,7 +188,7 @@ public class TplCompletionProvider implements CompletionProvider {
             }
         }
     }
-    private static abstract class AbstractQuery extends AsyncCompletionQuery {
+    private abstract static class AbstractQuery extends AsyncCompletionQuery {
 
         @Override
         protected void preQueryUpdate(JTextComponent component) {

@@ -26,33 +26,61 @@ package org.netbeans.modules.glassfish.eecommon.api.config;
  */
 public final class EjbJarVersion extends J2EEBaseVersion {
 
-    /** Represents ejbjar version 2.0
+    /**
+     * Represents ejbjar version 2.0
      */
     public static final EjbJarVersion EJBJAR_2_0 = new EjbJarVersion(
-        "2.0", 2000,	// NOI18N
-        "1.3", 1300    // NOI18N
-        );
+            "2.0", 2000, // NOI18N
+            "1.3", 1300 // NOI18N
+    );
 
-    /** Represents ejbjar version 2.1
+    /**
+     * Represents ejbjar version 2.1
      */
     public static final EjbJarVersion EJBJAR_2_1 = new EjbJarVersion(
-        "2.1", 2101,	// NOI18N
-        "1.4", 1400    // NOI18N
-        );
+            "2.1", 2101, // NOI18N
+            "1.4", 1400 // NOI18N
+    );
 
-    /** Represents ejbjar version 3.0
+    /**
+     * Represents ejbjar version 3.0
      */
     public static final EjbJarVersion EJBJAR_3_0 = new EjbJarVersion(
-        "3.0", 3000,	// NOI18N
-        "5.0", 5000    // NOI18N
-        );
+            "3.0", 3000, // NOI18N
+            "5.0", 5000 // NOI18N
+    );
 
-    /** Represents ejbjar version 3.0
+    /**
+     * Represents ejbjar version 3.1
      */
     public static final EjbJarVersion EJBJAR_3_1 = new EjbJarVersion(
-        "3.1", 3100,	// NOI18N
-        "6.0", 6000    // NOI18N
-        );
+            "3.1", 3100, // NOI18N
+            "6.0", 6000 // NOI18N
+    );
+
+    /**
+     * Represents ejbjar version 3.2
+     */
+    public static final EjbJarVersion EJBJAR_3_2 = new EjbJarVersion(
+            "3.2", 3200, // NOI18N
+            "7.0", 7000 // NOI18N
+    );
+
+    /**
+     * Represents ejbjar version 3.2.6
+     */
+    public static final EjbJarVersion EJBJAR_3_2_6 = new EjbJarVersion(
+            "3.2.6", 3260, // NOI18N
+            "8.0", 8000 // NOI18N
+    );
+
+    /**
+     * Represents ejbjar version 4.0
+     */
+    public static final EjbJarVersion EJBJAR_4_0 = new EjbJarVersion(
+            "4.0", 4000, // NOI18N
+            "9.0", 9000 // NOI18N
+    );
     /** -----------------------------------------------------------------------
      *  Implementation
      */
@@ -70,6 +98,7 @@ public final class EjbJarVersion extends J2EEBaseVersion {
      *     than the version passed in as an argument.
      *  @throws ClassCastException if obj is not a EjbJarVersion object.
      */
+    @Override
     public int compareTo(Object obj) {
         EjbJarVersion target = (EjbJarVersion) obj;
         return numericCompare(target);
@@ -86,6 +115,12 @@ public final class EjbJarVersion extends J2EEBaseVersion {
             result = EJBJAR_3_0;
         } else if(EJBJAR_3_1.toString().equals(version)) {
             result = EJBJAR_3_1;
+        } else if(EJBJAR_3_2.toString().equals(version)) {
+            result = EJBJAR_3_2;
+        } else if(EJBJAR_3_2_6.toString().equals(version)) {
+            result = EJBJAR_3_2_6;
+        } else if(EJBJAR_4_0.toString().equals(version)) {
+            result = EJBJAR_4_0;
         }
 
         return result;

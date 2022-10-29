@@ -26,6 +26,8 @@ import org.netbeans.modules.gradle.execute.GradleDaemonExecutor;
 import org.netbeans.modules.gradle.execute.GradleExecutor;
 import org.netbeans.modules.gradle.execute.ProxyNonSelectableInputOutput;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -53,15 +55,19 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
+import org.gradle.util.GradleVersion;
 import org.netbeans.api.project.ProjectInformation;
 
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -213,7 +219,56 @@ public final class RunUtils {
         RunConfig ret = new RunConfig(project, action, displayName, flags, cmd, cfg);
         return ret;
     }
+    
+    /**
+     * Finds an action mapping for the given action and (optional) configuration. The configuration may be {@code null},
+     * which means the project's active configuration.
+     * 
+     * @param project the project
+     * @param action action name
+     * @param cfg optional configuration or {@code null}
+     * @return action mapping instance, or {@code null}, if the action is not defined for the project or is disabled.
+     * @since 2.28
+     */
+    public static ActionMapping findActionMapping(Project project, String action, GradleExecConfiguration cfg) {
+        return ActionToTaskUtils.getActiveMapping(action, project, cfg);
+    }
 
+    /**
+     * Create Gradle execution configuration (context). It applies the specified configuration
+     * (default / active, if the parameter is null). The RunConfig is further configured using the
+     * action mapping for the project action.
+     * 
+     * @param project The Gradle project
+     * @param action The name of the IDE action 
+     * @param displayName The display name of the output tab
+     * @param flags Execution flags.
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     * @param context action infocation context
+     * @param cfg the desired configuration, or {@code null}.
+     * @since 2.28
+     */
+    public static RunConfig createRunConfigForAction(Project project, String action, String displayName, Lookup context, 
+            GradleExecConfiguration cfg, Set<ExecFlag> flags, boolean allowDisabled, String... args) {
+        NbGradleProject gp = NbGradleProject.get(project);
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        return ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
+            ActionMapping mapping = ActionToTaskUtils.getActiveMapping(action, project, execCfg);
+            if (ActionMapping.isDisabled(mapping) && !allowDisabled) {
+                return null;
+            }
+            if (!ActionToTaskUtils.isActionEnabled(action, mapping, project, context) && !allowDisabled) {
+                return null;
+            }
+            String argLine = mapping.getArgs();
+            final StringWriter writer = new StringWriter();
+            PrintWriter out = new PrintWriter(writer);
+            final String[] evalArgs = RunUtils.evaluateActionArgs(project, action, argLine, Lookup.EMPTY);
+            return RunUtils.createRunConfig(project, action, displayName, Lookup.EMPTY, execCfg, flags, evalArgs);
+        });
+    }
+    
     /**
      * Create Gradle execution configuration (context). It applies the default
      * setting from the project and the Global Gradle configuration on the
@@ -243,6 +298,25 @@ public final class RunUtils {
     public static boolean cancelGradle(RunConfig config) {
         GradleExecutor exec = GRADLE_TASKS.get(config);
         return exec != null ? exec.cancel() : false;
+    }
+
+    /**
+     * Returns the GradleDistribution for the given project which is compatible
+     * with the JVM runtime, the IDE is running on
+     * .
+     * @param prj the project
+     * @return The project Gradle distribution or the current tooling
+     *         distribution if the runtime JVM is not supported by the project
+     *         specified distribution.
+     * @since 2.23
+     */
+    public static GradleDistribution getCompatibleGradleDistribution(Project prj) {
+        GradleDistributionProvider pvd = prj.getLookup().lookup(GradleDistributionProvider.class);
+        GradleDistribution ret = pvd != null ? pvd.getGradleDistribution() : GradleDistributionManager.get().defaultDistribution();
+        ret = ret != null ? ret : GradleDistributionManager.get().defaultDistribution();
+        ret = ret.isCompatibleWithSystemJava() ? ret : GradleDistributionManager.get().defaultDistribution();
+        return ret;
+
     }
 
     private static ExecutorTask executeGradleImpl(String runtimeName, final GradleExecutor exec, String initialOutput) {
@@ -318,7 +392,7 @@ public final class RunUtils {
      * </ol>
      * <div class="nonnormative">
      * Example of branding: 
-     * {@codesnippet org.netbeans.modules.gradle.api.execute.Bundle#trustDialgoBranding}
+     * {@snippet file="org/netbeans/modules/gradle/api/execute/TestBundle.properties" region="trustDialogBranding"}
      * This branding enables all supported options, and will make the "Trust Permanently" the default one.
      * </div>
      * 

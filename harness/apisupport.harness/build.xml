@@ -39,18 +39,18 @@
                 <pathelement location="${cluster}/tasks.jar"></pathelement>
             </classpath>
         </taskdef>
-        <echo file="build/binaries-list">81A03F76019C67362299C40E0BA13405F5467BFF org.ow2.asm:asm:9.2</echo>
+        <echo file="build/binaries-list">8E6300EF51C1D801A7ED62D07CD221ACA3A90640 org.ow2.asm:asm:9.3</echo>
         <TestDownload>
             <manifest dir="build">
                 <include name="binaries-list"/>
             </manifest>
         </TestDownload>
-        <delete file="build/asm-9.2.jar"/>
+        <delete file="build/asm-9.3.jar"/>
     </target>
 
     <target name="compile-jnlp-launcher" depends="init,compile">
         <mkdir dir="${build.dir}/jnlp-launcher-classes"/>
-        <nb-javac srcdir="jnlp-src" destdir="${build.dir}/jnlp-launcher-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6" target="1.6" includeantruntime="false">
+        <nb-javac srcdir="jnlp-src" destdir="${build.dir}/jnlp-launcher-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" release="8" includeantruntime="false">
             <classpath>
                 <path path="${jnlp.cp}"/>
             </classpath>

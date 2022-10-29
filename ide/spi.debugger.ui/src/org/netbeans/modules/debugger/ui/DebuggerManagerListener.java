@@ -457,7 +457,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                         }
                     }
                 }
-                final List<ComponentInfo> windowsToClose = new ArrayList<ComponentInfo>(openedWindows);
+                final List<ComponentInfo> windowsToClose = new ArrayList<>(openedWindows);
                 //windowsToClose.removeAll(retainOpened);
                 try {
                     SwingUtilities.invokeLater(new Runnable() {
@@ -482,15 +482,16 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                                     }
                                 }
                             }
-                            List<ComponentInfo> windowsToCloseCopy = (ArrayList<ComponentInfo>) ((ArrayList) windowsToClose).clone();
+                            List<ComponentInfo> windowsToCloseCopy = new ArrayList<>(windowsToClose);
                             for (ComponentInfo ci : windowsToCloseCopy) {
                                 Component c = ci.getComponent();
                                 if (retainOpenedComponents.contains(c)) {
                                     windowsToClose.remove(ci);
                                 }
                             }
-                            for (EngineComponentsProvider ecp : openedWindowsByProvider.keySet()) {
-                                List<? extends ComponentInfo> cis = openedWindowsByProvider.get(ecp);
+                            for (Map.Entry<EngineComponentsProvider, List<? extends ComponentInfo>> entry : openedWindowsByProvider.entrySet()) {
+                                EngineComponentsProvider ecp = entry.getKey();
+                                List<? extends ComponentInfo> cis = entry.getValue();
                                 List<ComponentInfo> closing = new ArrayList<ComponentInfo>(cis);
                                 closing.retainAll(windowsToClose);
                                 ecp.willCloseNotify(closing);

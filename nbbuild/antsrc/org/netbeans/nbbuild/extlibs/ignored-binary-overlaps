@@ -51,9 +51,5 @@ javacard/JCDK3.0.2_ConnectedEdition/lib/commons-httpclient-3.0.jar mobility/modu
 enterprise/modules/ext/aws-sdk/commons-logging-1.1.1.jar ide/modules/ext/commons-logging-1.1.1.jar
 enterprise/modules/ext/aws-sdk/commons-codec-1.3.jar javacard/JCDK3.0.2_ConnectedEdition/lib/commons-codec-1.3.jar
 
-# Java EE 7 endorsed API library defined to be used by user contains those jars
-enterprise/modules/ext/javaee7-endorsed/jaxws-api.jar java/modules/ext/jaxws22/api/jaxws-api.jar
-enterprise/modules/ext/javaee7-endorsed/jsr181-api.jar java/modules/ext/jaxws22/api/jsr181-api.jar
-
 # maven needs commons-lang internally
 ide/modules/org-apache-commons-lang.jar java/maven/lib/commons-lang-2.6.jar

@@ -216,7 +216,7 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
         return node.getLookup().lookup(EditorCookie.class);
     }
 
-    private static abstract class NodeToFileTask extends UserTask implements Runnable {
+    private abstract static class NodeToFileTask extends UserTask implements Runnable {
 
         private final Node node;
         private CssElementContext context;
@@ -285,7 +285,7 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
         protected abstract RefactoringUI createRefactoringUI(CssElementContext context);
     }
 
-    private static abstract class TextComponentTask extends UserTask implements Runnable {
+    private abstract static class TextComponentTask extends UserTask implements Runnable {
 
         private final Document document;
         private final int caretOffset;

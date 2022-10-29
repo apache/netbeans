@@ -127,7 +127,9 @@ public interface NIDebuggerProvider {
      * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
      * @return future that completes on the execution finish
      * @since 0.4
+     * @deprecated Use {@link #start(StartDebugParameters, Consumer)} and set {@link StartDebugParameters.Builder#processID(long)}.
      */
+    @Deprecated
     default CompletableFuture<Void> attach(String executablePath, long processId, String debugger, Consumer<DebuggerEngine> startedEngine) {
         CompletableFuture cf = new CompletableFuture();
         cf.completeExceptionally(new UnsupportedOperationException());

@@ -167,11 +167,12 @@ public class GradlePlainEscapeProcessor implements EscapeProcessor {
         private static final String BUILD_FAILED_MSG = "BUILD FAILED"; //NOI18N
         private static final String BUILD_SUCCESS_MSG = "BUILD SUCCESSFUL"; //NOI18N
         private static final String COD_INCUBATION_MSG = "Configuration on demand is an incubating feature."; //NOI18N
+        private static final String CONFIG_CACHE_MGS = "Configuration cache "; //NOI18N
         
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
             OutputType type = null;
-            if (line.startsWith(COD_INCUBATION_MSG)) {
+            if (line.startsWith(COD_INCUBATION_MSG) || line.startsWith(CONFIG_CACHE_MGS)) {
                 type = LOG_DEBUG;
             } else if (line.startsWith(BUILD_SUCCESS_MSG)) {
                 type = LOG_SUCCESS;

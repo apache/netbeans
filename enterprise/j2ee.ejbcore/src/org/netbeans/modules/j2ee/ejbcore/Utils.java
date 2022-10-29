@@ -22,10 +22,8 @@ package org.netbeans.modules.j2ee.ejbcore;
 import java.util.ArrayList;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
@@ -71,7 +69,7 @@ public class Utils {
         if (classpathEntries == null) {
             return "";
         }
-        StringBuffer classpath = new StringBuffer();
+        StringBuilder classpath = new StringBuilder();
         for (int i = 0; i < classpathEntries.length; i++) {
             classpath.append(classpathEntries[i].getAbsolutePath());
             if (i + 1 < classpathEntries.length) {
@@ -161,7 +159,9 @@ public class Utils {
         });
         if (methodModel[0] != null) {
             EjbMethodController ejbMethodController = EjbMethodController.createFromClass(ejbClassFO, ejbClassName[0]);
-            return ejbMethodController != null && ejbMethodController.hasLocal() && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
+            return ejbMethodController != null 
+                    && ejbMethodController.hasLocal() 
+                    && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
         }
         return false;
     }
@@ -204,7 +204,9 @@ public class Utils {
         });
         if (methodModel[0] != null) {
             EjbMethodController ejbMethodController = EjbMethodController.createFromClass(ejbClassFO, ejbClassName[0]);
-            return ejbMethodController != null && ejbMethodController.hasRemote() && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
+            return ejbMethodController != null 
+                    && ejbMethodController.hasRemote() 
+                    && !ejbMethodController.hasMethodInInterface(methodModel[0], ejbMethodController.getMethodTypeFromImpl(methodModel[0]), true);
         }
         return false;
     }
@@ -240,6 +242,7 @@ public class Utils {
         boolean isCallerFreeform = enterpriseProject.getClass().getName().equals("org.netbeans.modules.ant.freeform.FreeformProject");
 
         boolean isCallerEE6WebProject = isEE6WebProject(enterpriseProject);
+        boolean isCallerEE9WebProject = isEE9WebProject(enterpriseProject);
 
         List<Project> filteredResults = new ArrayList<Project>(allProjects.length);
         for (int i = 0; i < allProjects.length; i++) {
@@ -255,7 +258,8 @@ public class Utils {
                                 Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) ||
                                 Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) ||
                                 Profile.JAKARTA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) ||
-                                Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)))){
+                                Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile) ||
+                                Profile.JAKARTA_EE_9_1_WEB.equals(profile) || Profile.JAKARTA_EE_9_1_FULL.equals(profile)))){
                         isEJBModule = true;
                     }
             }
@@ -264,15 +268,19 @@ public class Utils {
             // If the caller project is a freeform project, include caller itself only
             // If the caller project is a Java EE 6 web project, include itself in the list
             if ((isEJBModule && !isCallerFreeform) ||
-                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isCallerEE6WebProject) ) ) {
+                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isCallerEE6WebProject || isCallerEE9WebProject) ) ) {
                 filteredResults.add(allProjects[i]);
             }
         }
-        return filteredResults.toArray(new Project[filteredResults.size()]);
+        return filteredResults.toArray(new Project[0]);
     }
 
     public static boolean isEE6WebProject(Project enterpriseProject) {
         return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb31LiteSupported();
+    }
+    
+    public static boolean isEE9WebProject(Project enterpriseProject) {
+        return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb40LiteSupported();
     }
 
     public static boolean isAppClient(Project project) {

@@ -400,7 +400,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
         if (obj == null) return;
 
         try {
-            EditorCookie editor = (EditorCookie) obj.getCookie(EditorCookie.class);
+            EditorCookie editor = obj.getCookie(EditorCookie.class);
             Document doc = editor.openDocument();
 
             if (data == null) {
@@ -417,7 +417,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
             // ignore, there will be missing file header
         }
 
-        SaveCookie cake = (SaveCookie) obj.getCookie(SaveCookie.class);
+        SaveCookie cake = obj.getCookie(SaveCookie.class);
         if (cake != null) cake.save();
     }
 

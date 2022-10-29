@@ -383,7 +383,7 @@ public final class TerminalSupportImpl {
         }
     }
     
-    private final static class NativeProcessListener implements ChangeListener, PropertyChangeListener {
+    private static final class NativeProcessListener implements ChangeListener, PropertyChangeListener {
 
         private final AtomicReference<NativeProcess> processRef;
         private final AtomicBoolean destroyed;

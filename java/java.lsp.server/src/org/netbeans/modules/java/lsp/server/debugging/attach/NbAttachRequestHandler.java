@@ -19,11 +19,14 @@
 package org.netbeans.modules.java.lsp.server.debugging.attach;
 
 import com.sun.jdi.connect.AttachingConnector;
+import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.Connector.Argument;
+import com.sun.jdi.connect.ListeningConnector;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,6 +46,7 @@ import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.AttachingDICookie;
 import org.netbeans.api.debugger.jpda.DebuggerStartException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.ListeningDICookie;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
@@ -50,6 +54,8 @@ import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -82,6 +88,7 @@ public final class NbAttachRequestHandler {
         }
     }
 
+    @NbBundle.Messages("MSG_UnknownNIPath=Unknown native image path. Please set `nativeImagePath`.")
     private CompletableFuture<Void> attachToNative(Map<String, Object> attachArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
         String processAndExe = (String) attachArguments.get("processId");   // NOI18N
@@ -92,18 +99,24 @@ public final class NbAttachRequestHandler {
         try {
             if (index > 0) {
                 processId = Long.parseLong(processAndExe.substring(0, index));
-                if (nativeImagePath.isEmpty()) {
+                if (nativeImagePath == null || nativeImagePath.isEmpty()) {
                     nativeImagePath = processAndExe.substring(index + 1);
                 }
             } else {
                 processId = Long.parseLong(processAndExe);
+                if (nativeImagePath == null) {
+                    ErrorUtilities.completeExceptionally(resultFuture,
+                            Bundle.MSG_UnknownNIPath(),
+                            ResponseErrorCode.ServerNotInitialized);
+                    return resultFuture;
+                }
             }
             String executable = nativeImagePath;
             RP.post(() -> attachNativeDebug(new File(executable), processId, miDebugger, context, resultFuture));
         } catch (NumberFormatException nfex) {
             ErrorUtilities.completeExceptionally(resultFuture,
                     nfex.getLocalizedMessage(),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
         }
         return resultFuture;
     }
@@ -114,7 +127,13 @@ public final class NbAttachRequestHandler {
         NIDebugger niDebugger;
         resultFuture.complete(null);
         try {
-            niDebugger = NIDebugRunner.attach(nativeImageFile, processId, miDebugger, null, engine -> {
+            StartDebugParameters startParams = StartDebugParameters.newBuilder(Collections.singletonList(nativeImageFile.getAbsolutePath()))
+                    .debugger(miDebugger)
+                    .debuggerDisplayObjects(false)
+                    .processID(processId)
+                    .workingDirectory(new File(System.getProperty("user.dir", ""))) // NOI18N
+                    .build();
+            niDebugger = NIDebugRunner.start(nativeImageFile, startParams, null, engine -> {
                 Session session = engine.lookupFirst(null, Session.class);
                 NbDebugSession debugSession = new NbDebugSession(session);
                 debugSessionRef.set(debugSession);
@@ -146,20 +165,20 @@ public final class NbAttachRequestHandler {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
         ConfigurationAttributes configurationAttributes = AttachConfigurations.get().findConfiguration(attachArguments);
         if (configurationAttributes != null) {
-            AttachingConnector connector = configurationAttributes.getConnector();
+            Connector connector = configurationAttributes.getConnector();
             RP.post(() -> attachTo(connector, attachArguments, context, resultFuture));
         } else {
             context.setDebugMode(true);
             String name = (String) attachArguments.get("name");     // NOI18N
             ErrorUtilities.completeExceptionally(resultFuture,
                     Bundle.MSG_InvalidConnector(name),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
         }
         return resultFuture;
     }
 
     @Messages({"# {0} - argument name", "# {1} - value", "MSG_ConnectorInvalidValue=Invalid value of {0}: {1}"})
-    private void attachTo(AttachingConnector connector, Map<String, Object> arguments, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
+    private void attachTo(Connector connector, Map<String, Object> arguments, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
         Map<String, Argument> args = connector.defaultArguments();
         for (String argName : arguments.keySet()) {
             String argNameTranslated = ATTR_CONFIG_TO_CONNECTOR.getOrDefault(argName, argName);
@@ -171,21 +190,27 @@ public final class NbAttachRequestHandler {
             if (!arg.isValid(value)) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     Bundle.MSG_ConnectorInvalidValue(argName, value),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return ;
             }
             arg.setValue(value);
         }
-        AttachingDICookie attachingCookie = AttachingDICookie.create(connector, args);
-        resultFuture.complete(null);
-        startAttaching(attachingCookie, context);
+        DebuggerInfo debuggerInfo;
+        if (connector instanceof AttachingConnector) {
+            AttachingDICookie attachingCookie = AttachingDICookie.create((AttachingConnector) connector, args);
+            resultFuture.complete(null);
+            debuggerInfo = DebuggerInfo.create(AttachingDICookie.ID, new Object [] { attachingCookie });
+        } else {
+            assert connector instanceof ListeningConnector : connector;
+            ListeningDICookie listeningCookie = ListeningDICookie.create((ListeningConnector) connector, args);
+            debuggerInfo = DebuggerInfo.create(ListeningDICookie.ID, new Object [] { listeningCookie });
+        }
+        startAttaching(debuggerInfo, context);
     }
 
     @Messages("MSG_FailedToAttach=Failed to attach.")
-    private void startAttaching(AttachingDICookie attachingCookie, DebugAdapterContext context) {
-        DebuggerEngine[] es = DebuggerManager.getDebuggerManager ().startDebugging(
-            DebuggerInfo.create(AttachingDICookie.ID, new Object [] { attachingCookie })
-        );
+    private void startAttaching(DebuggerInfo debuggerInfo, DebugAdapterContext context) {
+        DebuggerEngine[] es = DebuggerManager.getDebuggerManager ().startDebugging(debuggerInfo);
         if (es.length > 0) {
             JPDADebugger debugger = es[0].lookupFirst(null, JPDADebugger.class);
             if (debugger != null) {

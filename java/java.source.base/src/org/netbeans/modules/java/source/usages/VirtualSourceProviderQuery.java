@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.source.usages;
 
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import java.net.URISyntaxException;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import java.io.File;
@@ -34,6 +35,7 @@ import javax.tools.JavaFileObject;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.ForwardingPrefetchableJavaFileObject;
+import org.netbeans.modules.java.source.parsing.PrefetchableJavaFileObject;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -198,19 +200,27 @@ public final class VirtualSourceProviderQuery {
                     folder += '/';
                 }
                 res.add(new CompileTuple(
-                        new ForwardingPrefetchableJavaFileObject(
+                        new ForwardingPrefetchableJavaFileObjectImpl(
                         FileObjects.memoryFileObject(packageName,
                             baseName,new URI(rootURL + folder + baseName),
-                            System.currentTimeMillis(), content)) {
-                                @Override
-                                public JavaFileObject.Kind getKind() {
-                                    return JavaFileObject.Kind.SOURCE;
-                                }
-                            },
+                            System.currentTimeMillis(), content)),
                         indexable,true, this.currentProvider.index()));
             } catch (URISyntaxException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }                
+
+        @ClientCodeWrapper.Trusted
+        static class ForwardingPrefetchableJavaFileObjectImpl extends ForwardingPrefetchableJavaFileObject {
+
+            public ForwardingPrefetchableJavaFileObjectImpl(PrefetchableJavaFileObject pjfo) {
+                super(pjfo);
+            }
+
+            @Override
+            public JavaFileObject.Kind getKind() {
+                return JavaFileObject.Kind.SOURCE;
+            }
+        }
     }
 }

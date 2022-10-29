@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44
+#Version 1.48
 
 CLSS public java.lang.Object
 cons public init()
@@ -96,6 +96,7 @@ meth public org.netbeans.modules.j2ee.dd.api.webservices.Webservices getDDRoot(o
 meth public org.netbeans.modules.j2ee.dd.api.webservices.Webservices getDDRoot(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
 meth public org.netbeans.modules.j2ee.dd.api.webservices.Webservices getDDRootCopy(org.openide.filesystems.FileObject) throws java.io.IOException
 meth public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean)
+ anno 0 java.lang.Deprecated()
 meth public org.xml.sax.SAXParseException parse(org.openide.filesystems.FileObject) throws java.io.IOException,org.xml.sax.SAXException
 meth public static org.netbeans.modules.j2ee.dd.api.webservices.DDProvider getDefault()
 supr java.lang.Object

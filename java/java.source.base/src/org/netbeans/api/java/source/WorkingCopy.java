@@ -70,7 +70,6 @@ import com.sun.source.util.DocTrees;
 import java.util.Collection;
 import java.util.Comparator;
 
-import com.sun.tools.javac.parser.ParserFactory;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.NullUnknown;
@@ -82,7 +81,6 @@ import org.openide.util.Parameters;
 import static org.netbeans.api.java.source.ModificationResult.*;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.FileObjectFromTemplateCreator;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.builder.TreeFactory;
@@ -100,7 +98,8 @@ import org.netbeans.modules.java.source.save.ElementOverlay.FQNComputer;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
 import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
 import org.netbeans.modules.java.source.transform.TreeDuplicator;
-import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.impl.SourceAccessor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
@@ -865,10 +864,6 @@ public class WorkingCopy extends CompilationController {
                     Tree t;
                     if (translated != null) {
                         t = translate(translated);
-                    } else if (tree != null && tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                        t = visitSwitchExpression(tree, null);
-                    } else if (tree != null && tree.getKind().toString().equals("YIELD")) {
-                        t = visitYield(tree, null);
                     } else {
                         t = super.translate(tree);
                     }
@@ -890,14 +885,6 @@ public class WorkingCopy extends CompilationController {
                         }
                     }
                     return super.translate(tree);
-                }
-
-                public Tree visitSwitchExpression(Tree set, Object p) {
-                    return rewriteChildren(set);
-                }
-
-                public Tree visitYield(Tree set, Object p) {
-                  return set;
                 }
             };
             Context c = impl.getJavacTask().getContext();
@@ -1295,6 +1282,8 @@ public class WorkingCopy extends CompilationController {
         return creator.create(template, scratchFolder, name);
     }
 
+    boolean invalidateSourceAfter = false;
+
     List<Difference> getChanges(Map<?, int[]> tag2Span) throws IOException, BadLocationException {
         if (afterCommit)
             throw new IllegalStateException("The commit method can be called only once on a WorkingCopy instance");   //NOI18N
@@ -1335,7 +1324,14 @@ public class WorkingCopy extends CompilationController {
         result.addAll(processExternalCUs(tag2Span, syntheticTrees));
 
         overlay.clearElementsCache();
-        
+
+        if (invalidateSourceAfter) {
+            Source source = impl.getSnapshot() != null ? impl.getSnapshot().getSource() : null;
+            if (source != null) {
+                SourceAccessor.getINSTANCE().invalidate(source, true);
+            }
+        }
+
         return result;
     }
     

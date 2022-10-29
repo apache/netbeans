@@ -162,14 +162,14 @@ class SummaryCellRenderer implements ListCellRenderer {
             ListCellRenderer ren = getRenderer(value);
             if (ren == null) {
                 ren = new RevisionRenderer();
-                renderers.put(value, new SoftReference<ListCellRenderer>(ren));
+                renderers.put(value, new SoftReference<>(ren));
             }
             return ren.getListCellRendererComponent(list, value, index, selected, hasFocus);
         } else if (value instanceof AbstractSummaryView.EventItem) {
             ListCellRenderer ren = getRenderer(value);
             if (ren == null) {
                 ren = new EventRenderer();
-                renderers.put(value, new SoftReference<ListCellRenderer>(ren));
+                renderers.put(value, new SoftReference<>(ren));
             }
             return ren.getListCellRendererComponent(list, value, index, selected, hasFocus);
         } else if (value instanceof AbstractSummaryView.LoadingEventsItem) {
@@ -706,8 +706,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         }
 
         private String prepareText (String text) {
-            text = text.replaceAll("\n", "<br>"); //NOI18N
-            return "<html><body>" + text + "</body></html>"; //NOI18N
+            return "<html><body>" + text.replace("\n", "<br>") + "</body></html>"; //NOI18N
         }
         
     }

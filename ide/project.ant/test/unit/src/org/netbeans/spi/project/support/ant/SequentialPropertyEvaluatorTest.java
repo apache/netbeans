@@ -20,6 +20,7 @@
 package org.netbeans.spi.project.support.ant;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -197,7 +198,7 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
         assertEquals("no substitution", "zval", all.get("z"));
         // Yuck. But it failed once, so check it now.
         Properties p = new Properties();
-        p.load(new ByteArrayInputStream("project.mylib=../mylib\njavac.classpath=${project.mylib}/build/mylib.jar\nrun.classpath=${javac.classpath}:build/classes".getBytes("US-ASCII")));
+        p.load(new ByteArrayInputStream("project.mylib=../mylib\njavac.classpath=${project.mylib}/build/mylib.jar\nrun.classpath=${javac.classpath}:build/classes".getBytes(StandardCharsets.US_ASCII)));
         all = evaluateAll(Collections.<String,String>emptyMap(), Collections.singletonList(NbCollections.checkedMapByFilter(p, String.class, String.class, true)));
         assertNotNull("no circularity error", all);
         assertEquals("javac.classpath correctly substituted", "../mylib/build/mylib.jar", all.get("javac.classpath"));

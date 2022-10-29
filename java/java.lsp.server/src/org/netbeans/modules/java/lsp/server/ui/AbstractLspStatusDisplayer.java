@@ -19,9 +19,9 @@
 package org.netbeans.modules.java.lsp.server.ui;
 
 import javax.swing.event.ChangeListener;
-import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
+import org.netbeans.modules.java.lsp.server.protocol.UIContext;
 import org.openide.awt.StatusDisplayer;
 
 public abstract class AbstractLspStatusDisplayer extends StatusDisplayer {

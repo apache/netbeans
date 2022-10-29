@@ -26,9 +26,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import javax.swing.Action;
-import junit.framework.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.actions.OpenAction;
 import org.openide.filesystems.FileObject;
@@ -57,13 +57,13 @@ public class EarDataNodeTest extends NbTestCase {
     static {
         // XXX replace with MockServices
         System.setProperty("org.openide.util.Lookup", Lkp.class.getName());
-        Assert.assertEquals(Lkp.class, Lookup.getDefault().getClass());
+        assertEquals(Lkp.class, Lookup.getDefault().getClass());
     }
     
     public static final class Lkp extends ProxyLookup {
         private static Lkp DEFAULT;
         public Lkp() {
-            Assert.assertNull(DEFAULT);
+            assertNull(DEFAULT);
             DEFAULT = this;
             setLookup(new Object[0]);
         }
@@ -107,7 +107,7 @@ public class EarDataNodeTest extends NbTestCase {
         f.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(f);
         try {
-            Writer w = new OutputStreamWriter(os, "UTF-8");
+            Writer w = new OutputStreamWriter(os, StandardCharsets.UTF_8);
             w.write(contents);
             w.flush();
         } finally {

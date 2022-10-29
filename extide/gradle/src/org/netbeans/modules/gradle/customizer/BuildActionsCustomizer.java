@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.customizer;
 
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
-import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -59,7 +58,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages("TXT_CUSTOM=Custom...")
 public class BuildActionsCustomizer extends javax.swing.JPanel {
 
-    private final static String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
+    private static final String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
     private static final String CARD_DETAILS = "details"; //NOI18N
     private static final String CARD_DISABLED = "disabled"; //NOI18N
@@ -102,7 +101,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         actionRegistry = new CustomActionRegistrationSupport(project);
         lsActions.setCellRenderer(new MyListCellRenderer());
         tfLabel.getDocument().addDocumentListener(applyListener);
-        EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
+        EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         taArgs.setEditorKit(kit);
         taArgs.getDocument().putProperty(Document.StreamDescriptionProperty, project);
         taArgs.getDocument().addDocumentListener(applyListener);
@@ -127,6 +126,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         });
         cbConfiguration.setModel(configModel);
         cbConfiguration.addActionListener(this::configurationChanged);
+        btRemove.setEnabled(getSelectedMapping() != null);
     }
     
     private void configurationChanged(ActionEvent e) {
@@ -520,6 +520,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         autoApply = true;
         GradleExecConfiguration cfg = (GradleExecConfiguration)cbConfiguration.getSelectedItem();
         btnDisableAction.setEnabled(!cfg.isDefault());
+        btRemove.setEnabled(getSelectedMapping() != null);
     }
     
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
@@ -531,7 +532,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             // try to insert at the same position:
             List<String> items = new ArrayList<>();
             for (int i = 1; i < availableActionsModel.getSize(); i++) {
-                items.add((String)availableActionsModel.getElementAt(i));
+                items.add(availableActionsModel.getElementAt(i));
             }
             items.add(action);
             Collections.sort(items);

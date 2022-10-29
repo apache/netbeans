@@ -226,7 +226,7 @@ public class JavaEEServerModuleFactory implements PayaraModuleFactory {
         return addLibrary(name, CLASS_LIBRARY_TYPE, libraryList, docList, displayName, description);
     }
 
-    private synchronized static boolean addLibrary(
+    private static synchronized boolean addLibrary(
             String name, String libType, List<URL> libraryList,
             List<URL> docList, String displayName, String description) {
         LibraryManager lmgr = LibraryManager.getDefault();
@@ -346,7 +346,7 @@ public class JavaEEServerModuleFactory implements PayaraModuleFactory {
 
     static class InitializeLibrary implements PropertyChangeListener {
 
-        final private LibraryManager lmgr;
+        private final LibraryManager lmgr;
         private String name;
         private Map<String, List<URL>> content;
         private final String libType;

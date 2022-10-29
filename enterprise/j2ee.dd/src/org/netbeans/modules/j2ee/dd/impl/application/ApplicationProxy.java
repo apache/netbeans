@@ -71,7 +71,7 @@ public class ApplicationProxy implements Application {
                 new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -200,7 +200,7 @@ public class ApplicationProxy implements Application {
                 new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -392,20 +392,10 @@ public class ApplicationProxy implements Application {
 
     public void write(org.openide.filesystems.FileObject fo) throws java.io.IOException {
         if (app != null) {
-            try {
-                org.openide.filesystems.FileLock lock = fo.lock();
-                try {
-                    java.io.OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing=true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } 
-                finally {
-                    lock.releaseLock();
-                }
+            try (org.openide.filesystems.FileLock lock = fo.lock();
+                    java.io.OutputStream os = fo.getOutputStream(lock)) {
+                writing=true;
+                write(os);
             } catch (org.openide.filesystems.FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);

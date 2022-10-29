@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.9.0
+#Version 2.0.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -15,13 +15,57 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDiagnosticReporter
+cons public init()
+intf org.netbeans.spi.lsp.DiagnosticReporter
+meth public org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+supr java.lang.Object
+
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDialogDisplayer
 cons public init()
+meth public <%0 extends org.openide.NotifyDescriptor> java.util.concurrent.CompletableFuture<{%%0}> notifyFuture({%%0})
 meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public void notifyLater(org.openide.NotifyDescriptor)
 supr org.openide.DialogDisplayer
 hfds context
+
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext
+cons public init()
+intf org.openide.util.ContextGlobalProvider
+intf org.openide.util.Lookup$Provider
+meth public org.openide.util.Lookup createGlobalContext()
+meth public org.openide.util.Lookup getLookup()
+meth public static <%0 extends java.lang.Object> {%%0} withActionContext(org.openide.util.Lookup,java.util.concurrent.Callable<{%%0}>)
+supr java.lang.Object
+hcls ContextHolder
+
+CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspBrokenReferences
+cons protected init()
+intf org.netbeans.spi.project.ui.ProjectProblemsImplementation
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> showCustomizer(org.netbeans.api.project.Project)
+supr java.lang.Object
+hfds delegate
+
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer
+cons protected init()
+innr protected final View
+intf org.netbeans.spi.htmlui.HTMLViewerSpi<org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object>
+meth public <%0 extends java.lang.Object> {%%0} component(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Class<{%%0}>)
+meth public java.lang.Object createButton(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.String)
+meth public java.lang.String getId(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object)
+meth public org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View newView(org.netbeans.spi.htmlui.HTMLViewerSpi$Context)
+meth public void runLater(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Runnable)
+meth public void setEnabled(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,boolean)
+meth public void setText(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,java.lang.String)
+supr java.lang.Object
+hfds initial
+
+CLSS protected final org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View
+ outer org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer
+supr java.lang.Object
+hfds ctx,presenter,ui
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider
 cons protected init()
@@ -50,7 +94,7 @@ supr java.lang.Object
 CLSS public final static org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider$LspIO
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider
 supr java.lang.Object
-hfds closed,ctx,err,in,lookup,name,out
+hfds ctx,err,in,lookup,name,out
 hcls LspWriter
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspStatusDisplayer
@@ -85,24 +129,19 @@ supr java.lang.Object
 hfds lastCtx
 hcls StdErrContext
 
-CLSS public abstract org.netbeans.modules.java.lsp.server.ui.UIContext
-cons public init()
-meth protected abstract boolean isValid()
-meth protected abstract java.util.concurrent.CompletableFuture<org.eclipse.lsp4j.MessageActionItem> showMessageRequest(org.eclipse.lsp4j.ShowMessageRequestParams)
-meth protected abstract org.openide.awt.StatusDisplayer$Message showStatusMessage(org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams)
-meth protected abstract void logMessage(org.eclipse.lsp4j.MessageParams)
-meth protected abstract void showMessage(org.eclipse.lsp4j.MessageParams)
-meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find()
- anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find(org.openide.util.Lookup)
- anno 0 org.netbeans.api.annotations.common.NonNull()
-supr java.lang.Object
-hfds lastCtx
-hcls LogImpl
-
 CLSS public abstract interface org.netbeans.modules.progress.spi.ProgressEnvironment
 meth public abstract org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,boolean)
 meth public abstract org.netbeans.modules.progress.spi.Controller getController()
+
+CLSS public abstract interface org.netbeans.spi.htmlui.HTMLViewerSpi<%0 extends java.lang.Object, %1 extends java.lang.Object>
+innr public final static Context
+meth public abstract <%0 extends java.lang.Object> {%%0} component({org.netbeans.spi.htmlui.HTMLViewerSpi%0},java.lang.Class<{%%0}>)
+meth public abstract java.lang.String getId({org.netbeans.spi.htmlui.HTMLViewerSpi%0},{org.netbeans.spi.htmlui.HTMLViewerSpi%1})
+meth public abstract void runLater({org.netbeans.spi.htmlui.HTMLViewerSpi%0},java.lang.Runnable)
+meth public abstract void setEnabled({org.netbeans.spi.htmlui.HTMLViewerSpi%0},{org.netbeans.spi.htmlui.HTMLViewerSpi%1},boolean)
+meth public abstract void setText({org.netbeans.spi.htmlui.HTMLViewerSpi%0},{org.netbeans.spi.htmlui.HTMLViewerSpi%1},java.lang.String)
+meth public abstract {org.netbeans.spi.htmlui.HTMLViewerSpi%0} newView(org.netbeans.spi.htmlui.HTMLViewerSpi$Context)
+meth public abstract {org.netbeans.spi.htmlui.HTMLViewerSpi%1} createButton({org.netbeans.spi.htmlui.HTMLViewerSpi%0},java.lang.String)
 
 CLSS public abstract interface org.netbeans.spi.io.InputOutputProvider<%0 extends java.lang.Object, %1 extends java.io.PrintWriter, %2 extends java.lang.Object, %3 extends java.lang.Object>
 meth public abstract boolean isIOClosed({org.netbeans.spi.io.InputOutputProvider%0})
@@ -163,8 +202,21 @@ meth public abstract {org.netbeans.spi.io.InputOutputProvider%3} startFold({org.
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
+meth public abstract org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+
+CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showCustomizer(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract org.openide.DialogDisplayer
 cons protected init()
+meth public <%0 extends org.openide.NotifyDescriptor> java.util.concurrent.CompletableFuture<{%%0}> notifyFuture({%%0})
 meth public abstract java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public abstract java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor,java.awt.Frame)
@@ -189,4 +241,28 @@ meth public static org.openide.awt.StatusDisplayer getDefault()
 supr java.lang.Object
 hfds INSTANCE
 hcls Trivial
+
+CLSS public abstract interface org.openide.util.ContextGlobalProvider
+meth public abstract org.openide.util.Lookup createGlobalContext()
+
+CLSS public abstract org.openide.util.Lookup
+cons public init()
+fld public final static org.openide.util.Lookup EMPTY
+innr public abstract interface static Provider
+innr public abstract static Item
+innr public abstract static Result
+innr public final static Template
+meth public <%0 extends java.lang.Object> java.util.Collection<? extends {%%0}> lookupAll(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> org.openide.util.Lookup$Item<{%%0}> lookupItem(org.openide.util.Lookup$Template<{%%0}>)
+meth public <%0 extends java.lang.Object> org.openide.util.Lookup$Result<{%%0}> lookupResult(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> org.openide.util.Lookup$Result<{%%0}> lookup(org.openide.util.Lookup$Template<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} lookup(java.lang.Class<{%%0}>)
+meth public static org.openide.util.Lookup getDefault()
+supr java.lang.Object
+hfds LOG,defaultLookup,defaultLookupProvider
+hcls DefLookup,Empty
+
+CLSS public abstract interface static org.openide.util.Lookup$Provider
+ outer org.openide.util.Lookup
+meth public abstract org.openide.util.Lookup getLookup()
 

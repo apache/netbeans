@@ -23,9 +23,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -55,12 +53,7 @@ public class ExportDataDumper {
 
     public ExportDataDumper(FileOutputStream fw) {
         bos = new BufferedOutputStream(fw, BUFFER_SIZE);
-        try {
-            osw = new OutputStreamWriter(bos, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            numExceptions++;
-            Logger.getLogger(ExportDataDumper.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        osw = new OutputStreamWriter(bos, StandardCharsets.UTF_8);
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------

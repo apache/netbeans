@@ -524,7 +524,7 @@ public final class PropertyPatternPanel extends javax.swing.JPanel
                 String type = st.nextToken().trim();
                 l.add(type);
             }
-            TYPES = (String[]) l.toArray(new String[l.size()]);
+            TYPES = l.toArray(new String[l.size()]);
         }
         return TYPES;
     }

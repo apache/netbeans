@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
@@ -114,6 +113,7 @@ public class TokenFormatter {
         public boolean spaceAroundNullsafeObjectOp;
         public boolean spaceAroundDeclareEqual;
         public boolean spaceAroundUnionTypeSeparator;
+        public boolean spaceAroundIntersectionTypeSeparator;
         public boolean spaceAroundStringConcatOp;
         public boolean spaceAroundUnaryOps;
         public boolean spaceAroundBinaryOps;
@@ -273,6 +273,7 @@ public class TokenFormatter {
             spaceAroundNullsafeObjectOp = codeStyle.spaceAroundNullsafeObjectOps();
             spaceAroundDeclareEqual = codeStyle.spaceAroundDeclareEqual();
             spaceAroundUnionTypeSeparator = codeStyle.spaceAroundUnionTypeSeparator();
+            spaceAroundIntersectionTypeSeparator = codeStyle.spaceAroundIntersectionTypeSeparator();
             spaceAroundStringConcatOp = codeStyle.spaceAroundStringConcatOps();
             spaceAroundUnaryOps = codeStyle.spaceAroundUnaryOps();
             spaceAroundBinaryOps = codeStyle.spaceAroundBinaryOps();
@@ -1070,6 +1071,9 @@ public class TokenFormatter {
                                     case WHITESPACE_AROUND_UNION_TYPE_SEPARATOR:
                                         countSpaces = docOptions.spaceAroundUnionTypeSeparator ? 1 : 0;
                                         break;
+                                    case WHITESPACE_AROUND_INTERSECTION_TYPE_SEPARATOR:
+                                        countSpaces = docOptions.spaceAroundIntersectionTypeSeparator ? 1 : 0;
+                                        break;
                                     case WHITESPACE_AROUND_CONCAT_OP:
                                         countSpaces = docOptions.spaceAroundStringConcatOp ? 1 : 0;
                                         break;
@@ -1078,6 +1082,9 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_UNARY_OP:
                                         countSpaces = docOptions.spaceAroundUnaryOps ? 1 : countSpaces;
+                                        break;
+                                    case WHITESPACE_AROUND_TEXTUAL_OP:
+                                        countSpaces = 1;
                                         break;
                                     case WHITESPACE_BEFORE_BINARY_OP:
                                         if (docOptions.wrapAfterBinOps) {
@@ -1870,6 +1877,12 @@ public class TokenFormatter {
                                         countSpaces = 0;
                                         break;
                                     case WHITESPACE_AFTER_NAMED_ARGUMENT_SEPARATOR:
+                                        countSpaces = 1;
+                                        break;
+                                    case WHITESPACE_BEFORE_ENUM_BACKING_TYPE_SEPARATOR:
+                                        countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_AFTER_ENUM_BACKING_TYPE_SEPARATOR:
                                         countSpaces = 1;
                                         break;
                                     case WHITESPACE_BEFORE_RETURN_TYPE_SEPARATOR:

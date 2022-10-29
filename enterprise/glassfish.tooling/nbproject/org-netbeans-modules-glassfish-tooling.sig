@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20
+#Version 1.24
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -16,6 +16,12 @@ meth public abstract void close() throws java.lang.Exception
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -1083,12 +1089,16 @@ CLSS public org.netbeans.modules.glassfish.tooling.admin.ServerAdmin
 cons public init()
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
+ anno 0 java.lang.Deprecated()
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext)
+ anno 0 java.lang.Deprecated()
 meth public static java.util.concurrent.ExecutorService executor(int)
 meth public static void init(java.net.Authenticator)
 supr java.lang.Object
@@ -1395,6 +1405,12 @@ fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVer
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_5_1_0
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_1_0
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_0
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_1
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_2
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_3
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_4
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_5
 meth public boolean equals(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public java.lang.String toFullString()
@@ -1415,10 +1431,12 @@ meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion 
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.data.GlassFishVersion>
-hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public org.netbeans.modules.glassfish.tooling.data.IdeContext
+ anno 0 java.lang.Deprecated()
 cons public init()
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.glassfish.tooling.data.StartupArgs
@@ -1694,7 +1712,7 @@ meth public static java.net.URL getBuilderConfig(org.netbeans.modules.glassfish.
 meth public static org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 meth public static void destroyBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 supr java.lang.Object
-hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,builders,config
+hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,builders,config
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.ConfigUtils
 cons public init()
@@ -1749,6 +1767,8 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v8_0_0_web
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v9_0_0
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v9_0_0_web
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v9_1_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v9_1_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -1781,6 +1801,7 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_8
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v8_0_0
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v9_0_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v9_1_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version[] values()
@@ -1801,7 +1822,14 @@ CLSS public final !enum org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static char SEPARATOR = '.'
 fld public final static int length
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v11
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v12
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v13
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v14
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v15
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v16
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v17
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v18
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v19
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_1
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_2
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_3
@@ -1810,12 +1838,13 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_6
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_7
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_8
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v20
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform toValue(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform>
-hfds V11_STR,V16_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,stringValuesMap
+hfds V11_STR,V12_STR,V13_STR,V14_STR,V15_STR,V16_STR,V17_STR,V18_STR,V19_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,V20_STR,stringValuesMap
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.JavaSESet
 cons public init(java.util.List<java.lang.String>,java.lang.String)

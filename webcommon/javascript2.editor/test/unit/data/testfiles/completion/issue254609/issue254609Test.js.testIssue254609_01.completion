@@ -2,8 +2,6 @@ Code completion result for source line:
 n|;//test1
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-FIELD      name: DOMString                 [PUBLIC]   JS Platform
 FIELD      name: String                    [PUBLIC]   controllers.js
-FIELD      navigator: Navigator            [PUBLIC]   JS Platform
 KEYWORD    new                                        null
 KEYWORD    null                                       null

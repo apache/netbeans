@@ -25,10 +25,4 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
-    <fileset>
-        <file>extras/nbjavac.api/release/modules/ext/nb-javac-jdk-17-35-api.jar.external</file>
-        <file>extras/nbjavac.impl/release/modules/ext/nb-javac-jdk-17-35-impl.jar.external</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
 </licenseinfo>

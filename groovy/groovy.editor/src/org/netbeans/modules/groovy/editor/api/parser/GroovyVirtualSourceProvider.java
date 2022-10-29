@@ -54,6 +54,7 @@ import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.ResolveVisitor;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTRoot;
+import org.netbeans.modules.groovy.editor.compiler.GroovyIndexingTask;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -124,7 +125,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
 
     @SuppressWarnings("unchecked")
     static List<ClassNode> getClassNodes(File file) {
-        final List<ClassNode> resultList = new ArrayList<ClassNode>();
+        final List<ClassNode> resultList = new ArrayList<>();
         FileObject fo = FileUtil.toFileObject(file);
         if (fo != null) {
             Source source = Source.create(fo);
@@ -132,23 +133,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (GroovyLanguage.GROOVY_MIME_TYPE.equals(source.getMimeType())) {
                 try {
                     // FIXME can we move this out of task (?)
-                    ParserManager.parse(Collections.singleton(source), new UserTask() {
-                        @Override
-                        public void run(ResultIterator resultIterator) throws Exception {
-                            Parser.Result parseResult = resultIterator.getParserResult();
-                            if (parseResult != null) {
-                                GroovyParserResult result = ASTUtils.getParseResult(parseResult);
-
-                                ASTRoot astRootElement = result.getRootElement();
-                                if (astRootElement != null) {
-                                    ModuleNode moduleNode = astRootElement.getModuleNode();
-                                    if (moduleNode != null) {
-                                        resultList.addAll(moduleNode.getClasses());
-                                    }
-                                }
-                            }
-                        }
-                    });
+                    ParserManager.parse(Collections.singleton(source), new Task(resultList));
                 } catch (ParseException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -156,6 +141,31 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
         }
 
         return resultList;
+    }
+
+    static class Task extends UserTask implements GroovyIndexingTask {
+
+        private final List<ClassNode> resultList;
+
+        public Task(List<ClassNode> resultList) {
+            this.resultList = resultList;
+        }
+
+        @Override
+        public void run(ResultIterator resultIterator) throws Exception {
+            Parser.Result parseResult = resultIterator.getParserResult();
+            if (parseResult != null) {
+                GroovyParserResult result = ASTUtils.getParseResult(parseResult);
+
+                ASTRoot astRootElement = result.getRootElement();
+                if (astRootElement != null) {
+                    ModuleNode moduleNode = astRootElement.getModuleNode();
+                    if (moduleNode != null) {
+                        resultList.addAll(moduleNode.getClasses());
+                    }
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -689,7 +699,12 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (genericsType.isPlaceholder()) {
                 out.print(genericsType.getName());
             } else {
-                printTypeName(genericsType.getType(), out);
+                // Note: Groovy's GenericsType.toString() uses Set<String> to avoid
+                // recursion through placeholders; but the algorithm here differs, bcs
+                // placeholders bypass this recursive invocation at all. 
+                // If this simplified printing produces some errors, the algo should be
+                // tuned to be like the GenericsType.toString one.
+                printType(genericsType.getType(), out);
                 ClassNode[] upperBounds = genericsType.getUpperBounds();
                 ClassNode lowerBound = genericsType.getLowerBound();
                 if (upperBounds != null) {

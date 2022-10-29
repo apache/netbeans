@@ -1,0 +1,9 @@
+Code completion result for source line:
+c.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO constructor                     [PUBLIC]   classPrivateMembersOutside.js
+METHOD     getValue(): Counter.#initialSt  [PUBLIC]   classPrivateMembersOutside.js
+METHOD     increment(): undefined          [PUBLIC]   classPrivateMembersOutside.js
+METHOD     reset(): undefined              [PUBLIC]   classPrivateMembersOutside.js
+FIELD      name                            [PUBLIC]   classPrivateMembersOutside.js

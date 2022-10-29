@@ -22,7 +22,7 @@ package org.netbeans.modules.nativeexecution.spi.support;
  *
  * @author masha
  */
-abstract public interface PasswordProviderFactory {
+public abstract interface PasswordProviderFactory {
     /**
      * 
      * @param secretType

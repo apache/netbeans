@@ -23,6 +23,7 @@ import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  * Decorator for templating. The decorator will pre- or post-process the main file creation.

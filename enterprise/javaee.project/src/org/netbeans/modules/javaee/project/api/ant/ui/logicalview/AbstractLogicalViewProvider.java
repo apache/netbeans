@@ -414,7 +414,7 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
         return ProjectProblems.isBroken(project);
     }
     
-    abstract public String[] getBreakableProperties();
+    public abstract String[] getBreakableProperties();
 
     public String[] getPlatformProperties() {
         return new String[] {JAVA_PLATFORM};
@@ -479,7 +479,7 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
         return deployOnSaveSupported;
     }
 
-    abstract protected void setServerInstance(final Project project, final UpdateHelper helper, final String serverInstanceID);
+    protected abstract void setServerInstance(final Project project, final UpdateHelper helper, final String serverInstanceID);
 
     
     /** Filter node containin additional features for the J2SE physical

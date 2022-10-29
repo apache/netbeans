@@ -161,7 +161,7 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
             }
         }
         bs = new Breakpoint [bb.size ()];
-        return (Breakpoint[]) bb.toArray (bs);
+        return bb.toArray(bs);
     }
 }
 

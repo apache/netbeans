@@ -256,7 +256,7 @@ final class XMLSettingsSupport {
     
     
     // enlarged to not need do the test for negative byte values
-    private final static char[] HEXDIGITS = {'0', '1', '2', '3', '4', '5', '6', '7',
+    private static final char[] HEXDIGITS = {'0', '1', '2', '3', '4', '5', '6', '7',
                                              '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
                                              '0', '1', '2', '3', '4', '5', '6', '7'};
     
@@ -333,7 +333,7 @@ final class XMLSettingsSupport {
     }
     
     /** Settings parser. */
-    final static class SettingsRecognizer extends org.xml.sax.helpers.DefaultHandler {
+    static final class SettingsRecognizer extends org.xml.sax.helpers.DefaultHandler {
         
         private static final String ELM_SETTING = "settings"; // NOI18N
         private static final String ATR_SETTING_VERSION = "version"; // NOI18N
@@ -1143,7 +1143,7 @@ final class XMLSettingsSupport {
 
     }
     
-    final static class StopSAXException extends SAXException {
+    static final class StopSAXException extends SAXException {
         public StopSAXException() {
             super("Parser stopped"); // NOI18N
         }

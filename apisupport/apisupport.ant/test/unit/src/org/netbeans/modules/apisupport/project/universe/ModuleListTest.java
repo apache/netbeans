@@ -281,7 +281,6 @@ public class ModuleListTest extends TestBase {
 //        assertEquals("correct CP extensions (using runtime-relative-path)",
 //            ":" + file("nbbuild/netbeans/" + TestBase.CLUSTER_IDE + "/modules/ext/org-netbeans-tax.jar"),
 //            e.getClassPathExtensions());
-//        e = ml.getEntry("org.openide.util.enumerations");
 //        assertNotNull(e);
 //        assertTrue("this one is deprecated", e.isDeprecated());
 //        e = ml.getEntry("org.netbeans.modules.projectui");
@@ -354,9 +353,6 @@ public class ModuleListTest extends TestBase {
         e = ml.getEntry("org.openide.util");
         assertNotNull(e);
         assertFalse("binary API not deprecated", e.isDeprecated());
-        e = ml.getEntry("org.openide.util.enumerations");
-        assertNotNull(e);
-        assertTrue("this one is deprecated", e.isDeprecated());
         // From suite3, can find itself and netbeans.org modules in binary form.
         ml = ModuleList.getModuleList(file(standaloneSuite3, "dummy-project"));
         e = ml.getEntry("org.netbeans.examples.modules.dummy");

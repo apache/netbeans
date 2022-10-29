@@ -20,6 +20,61 @@
     under the License.
 
 -->
+## Version 15.0.301
+* Native image CE debugger works on aarch64
+* Organize Imports fixed for clashing star imports
+* Auto import of types in code completion
+* Added inline redundant variable hint
+* Improvements to Maven and Gradle projects to report project artifacts
+* Return all dependencies for Maven and Gradle projects
+* Support Maven and Gradle vulnerability audits in OCI a proxy to nvd.nist.gov
+* NetBeans should not auto-insert `\n\` in Groovy triple quoted strings 
+* nb-javac 19 support
+
+## Version 15.0
+* Open Type command added
+* Present project view files as tree leaves
+* Minor improvements in OCI ui and VSCode icon mapping
+
+## Version 14.0.301
+* Settings: `NetBeans:UserDir` is set to `Local` as default value. This means each instance of VSCode runs own VSNetBeans LS
+* Format Document and Format Selection added 
+* External formatters using Eclipse, Google and Spring added.
+* JavaDoc completion added
+* Groovy Go To Symbol added
+* Several refactorings added
+* Settings are Remote-SSH aware
+* Native Image debugging provided by GraalVM works now for GraalVM CE and EE
+* Number of bug fixes and improvements in Java, projects and databases support
+
+## Version 14.0
+* Workaround for VSCode 1.67 error which breaks Projects explorer icon
+* Remove HTML tags from project problem messages
+* Fixes for Gradle projects and LSP
+
+## Version 13.0.301
+* Added base code completion for Spock test framework
+  * Spock Block Names are offered inside methods if the class extends Spock Specification
+  * Parameter names are offered, if the parameters are defined in a method name that is annotated with @Unroll
+* Added Outline view for Groovy files
+* Significant improvements & bug fixes working with Gradle projects 
+* Info on project problems shown in VSCode 
+* Move refactoring updated to use rich form style
+* Oracle Cloud Explorer added
+* Database Explorer added for JDBC databases including wallet authentication style
+* Micronaut and JPA Entity classes supported together with Repository classes
+* GraalVM native image debugging fixes and improvements
+* Java Call Hierarchy added
+
+## Version 12.6.301
+* Project Explorer to display logical project structure, dependencies and project files introduced
+* Dedicated form for Change method parameters refactoring 
+* Organize Imports added, see `Netbeans > Java > Imports:` _settings_ for customizations
+* Setting `NetBeans: Userdir = global | local` added to run Language Server per workspace or globally for user
+* Run Configurations panel added to allow intuitive configuration of Run & Debug
+* Java Outline view provides all details for selected file
+* Numerous bug fixes and stability improvements in all areas
+
 ## Version 12.5.301
 * Number of refactorings added
 * Attach to Native Image launch config added for Native Image Debugger

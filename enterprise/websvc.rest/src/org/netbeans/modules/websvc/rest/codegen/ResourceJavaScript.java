@@ -47,7 +47,7 @@ import org.openide.util.Utilities;
 class ResourceJavaScript extends TokenReplacer {
     private static final String ENTITY_NAME_VAR = "entity_name";
     
-    final static String RJSSUPPORT = "rjsSupport";         // NOI18N
+    static final String RJSSUPPORT = "rjsSupport";         // NOI18N
 
     ResourceJavaScript( ClientStubsGenerator generator, Resource r, 
             FileObject jsFolder, Set<String> existingEntities) 

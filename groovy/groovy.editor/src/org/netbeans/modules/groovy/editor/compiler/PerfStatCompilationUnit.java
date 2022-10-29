@@ -101,14 +101,17 @@ public class PerfStatCompilationUnit extends CompilationUnit {
             modifiersField.setAccessible(true);
             modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
         } catch (ReflectiveOperationException | SecurityException ex) {
-            Exceptions.printStackTrace(ex);
+            if (PERFLOG.isLoggable(Level.FINER)) {
+                PERFLOG.log(Level.WARNING, "Unable to patch Groovy compiler for timimg. Use JDK 11.", ex);
+            }
         }
         doPhaseOperation = m;
         resolverVisitor = f;
     }
 
     private void overrideClassNodeResolver() {
-        if (!PERFLOG.isLoggable(Level.FINER)) {
+        // revolve visitor override does not work on JDK17
+        if (!PERFLOG.isLoggable(Level.FINER) || resolverVisitor == null) {
             return;
         }
         classNodeResolver = new NbClassNodeResolver() {

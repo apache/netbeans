@@ -32,7 +32,7 @@ import org.netbeans.modules.editor.errorstripe.privatespi.MarkProvider;
     private List<AnnotationMark> marks = Collections.emptyList();
 
     public void setMarks (List<AnnotationMark> marks) {
-        List old = this.marks;
+        List<AnnotationMark> old = this.marks;
         this.marks = marks;
         firePropertyChange(PROP_MARKS, old, marks);
     }

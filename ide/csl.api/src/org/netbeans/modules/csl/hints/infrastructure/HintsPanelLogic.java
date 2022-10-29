@@ -143,8 +143,9 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
     }
     
     synchronized void applyChanges() {
-        for (UserConfigurableRule hint : changes.keySet()) {
-            ModifiedPreferences mn = changes.get(hint);
+        for (Map.Entry<UserConfigurableRule, ModifiedPreferences> entry : changes.entrySet()) {
+            UserConfigurableRule hint = entry.getKey();
+            ModifiedPreferences mn = entry.getValue();
             mn.store(HintsSettings.getPreferences(manager, hint, HintsSettings.getCurrentProfileId()));            
         }
         
@@ -181,8 +182,9 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
      */
     boolean isChanged() {
         boolean isChanged = false;
-        for (UserConfigurableRule hint : changes.keySet()) {
-            ModifiedPreferences mn = changes.get(hint);
+        for (Map.Entry<UserConfigurableRule, ModifiedPreferences> entry : changes.entrySet()) {
+            UserConfigurableRule hint = entry.getKey();
+            ModifiedPreferences mn = entry.getValue();
 
             Boolean currentEnabled = mn.getBoolean(HintsSettings.ENABLED_KEY, hint.getDefaultEnabled());
             Boolean savedEnabled = HintsSettings.isEnabled(manager, hint);

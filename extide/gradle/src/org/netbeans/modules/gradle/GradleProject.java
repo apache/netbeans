@@ -20,14 +20,18 @@
 package org.netbeans.modules.gradle;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -38,39 +42,40 @@ import org.openide.util.lookup.InstanceContent;
  */
 public final class GradleProject implements Serializable, Lookup.Provider {
 
-    final Set<String> problems;
     final Quality quality;
     final long evaluationTime = System.currentTimeMillis();
     final Lookup lookup;
     final GradleBaseProject baseProject;
 
     @SuppressWarnings("rawtypes")
-    public GradleProject(Quality quality, Set<String> problems, Collection infos) {
+    public GradleProject(Quality quality, Set<GradleReport> problems, Collection infos) {
         this.quality = quality;
-        Set<String> probs = new LinkedHashSet<>();
-        for (String prob : problems) {
+        Set<GradleReport> probs = new LinkedHashSet<>();
+        for (GradleReport prob : problems) {
             if (prob != null) probs.add(prob);
         }
-        this.problems = probs;
         InstanceContent ic = new InstanceContent();
         for (Object i : infos) {
             ic.add(i);
         }
         lookup = new AbstractLookup(ic);
+
         baseProject = lookup.lookup(GradleBaseProject.class);
         assert baseProject != null : "GradleProject always shall have a GradleBaseProject in it's lookup!";
+        setProblems(baseProject, probs);
     }
 
-    private GradleProject(Quality quality, Set<String> problems, GradleProject origin) {
+    private GradleProject(Quality quality, GradleReport[] problems, GradleProject origin) {
         this.quality = quality;
-        Set<String> probs = new LinkedHashSet<>();
-        for (String prob : problems) {
+        Set<GradleReport> probs = new LinkedHashSet<>();
+        for (GradleReport prob : problems) {
             if (prob != null) probs.add(prob);
         }
-        this.problems = probs;
         lookup = origin.lookup;
         baseProject = lookup.lookup(GradleBaseProject.class);
         assert baseProject != null : "GradleProject always shall have a GradleBaseProject in it's lookup!";
+
+        setProblems(baseProject, probs);
     }
 
     @Override
@@ -78,8 +83,8 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         return lookup;
     }
 
-    public Set<String> getProblems() {
-        return Collections.unmodifiableSet(problems);
+    Set<GradleReport> getProblems() {
+        return baseProject.getProblems();
     }
 
     public Quality getQuality() {
@@ -99,14 +104,42 @@ public final class GradleProject implements Serializable, Lookup.Provider {
     public String toString() {
         return "GradleProject{" + "quality=" + quality + ", baseProject=" + baseProject + '}';
     }
-
-    public final GradleProject invalidate(String... reasons) {
+    
+    /**
+     * 
+     * @since 2.23
+     */
+    public final GradleProject invalidate(GradleReport... problems) {
         if (getQuality().worseThan(Quality.EVALUATED)) {
-            return this;
+            if (problems != null && problems.length > 0) {
+                return new GradleProject(getQuality(), problems, this);
+            } else {
+                return this;
+            }
         } else {
-            Set<String> p = new LinkedHashSet<>(Arrays.asList(reasons));
-            return new GradleProject(Quality.EVALUATED, p, this);
+            return new GradleProject(Quality.EVALUATED, problems, this);
         }
     }
 
+    public final GradleProject invalidate(String... reason) {
+        GradleFiles gf = new GradleFiles(baseProject.getProjectDir(), true);
+        Path scriptPath = gf.getBuildScript() != null ? gf.getBuildScript().toPath() : null;
+        List<GradleReport> reports = new ArrayList<>();
+        for (String s : reason) {
+            reports.add(createGradleReport(scriptPath, s));
+        }
+        return invalidate(reports.toArray(new GradleReport[reports.size()]));
+    }
+
+    private static void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems) {
+        NbGradleProjectImpl.ACCESSOR.setProblems(baseProject, problems);
+    }
+
+    public static GradleReport createGradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+        return NbGradleProjectImpl.ACCESSOR.createReport(errorClass, location, line, message, causedBy);
+    }
+
+    public static GradleReport createGradleReport(Path script, String message) {
+        return createGradleReport(null, Objects.toString(script), -1, message, null);
+    }
 }

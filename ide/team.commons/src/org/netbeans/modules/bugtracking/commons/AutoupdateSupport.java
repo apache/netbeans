@@ -36,7 +36,7 @@ import org.openide.util.NbBundle;
 public final class AutoupdateSupport {
 
     private static final String CHECK_UPDATES       = ".check_updates";         // NOI18N
-    private final static Logger LOG = Logger.getLogger(AutoupdateSupport.class.getName());
+    private static final Logger LOG = Logger.getLogger(AutoupdateSupport.class.getName());
     
     private Map<String, Long> lastChecks = null;
     private Set<String> loggedUrls;

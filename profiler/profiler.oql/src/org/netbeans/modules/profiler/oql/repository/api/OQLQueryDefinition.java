@@ -25,7 +25,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * Value object for OQL query definition<br/>
  * @author Jaroslav Bachorik
  */
-final public class OQLQueryDefinition {
+public final class OQLQueryDefinition {
     private final String name;
     private final String description;
     private final String content;

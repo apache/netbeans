@@ -559,7 +559,7 @@ public class BufferedCharSequence implements CharSequence {
             try {
                 istream = fo.getInputStream();
                 try {
-                    bstream = new BufferedInputStream(istream, bufferSize);
+                    bstream = new BufferedInputStream(istream, Math.max(1, bufferSize));
                 } catch (Throwable t) {
                     if (istream != null) {
                         istream.close();

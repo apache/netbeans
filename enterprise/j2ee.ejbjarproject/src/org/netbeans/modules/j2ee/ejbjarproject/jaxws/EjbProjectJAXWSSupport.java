@@ -166,6 +166,22 @@ public String addService(String name, String serviceImpl, String wsdlUrl, String
                 return JAVA_EE_VERSION_17;
             } else if (Profile.JAVA_EE_7_FULL.equals(ejbModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_17;
+            } else if (Profile.JAVA_EE_8_WEB.equals(ejbModule.getJ2eeProfile())) {
+                return JAVA_EE_VERSION_18;
+            } else if (Profile.JAVA_EE_8_FULL.equals(ejbModule.getJ2eeProfile())) {
+                return JAVA_EE_VERSION_18;
+            } else if (Profile.JAKARTA_EE_8_WEB.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_8;
+            } else if (Profile.JAKARTA_EE_8_FULL.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_8;
+            } else if (Profile.JAKARTA_EE_9_WEB.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_9;
+            } else if (Profile.JAKARTA_EE_9_FULL.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_9;
+            } else if (Profile.JAKARTA_EE_9_1_WEB.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_91;
+            } else if (Profile.JAKARTA_EE_9_1_FULL.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_91;
             } else if (Profile.JAVA_EE_5.equals(ejbModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }

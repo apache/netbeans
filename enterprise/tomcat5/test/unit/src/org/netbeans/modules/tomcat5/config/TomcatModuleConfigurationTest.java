@@ -108,7 +108,7 @@ public class TomcatModuleConfigurationTest extends TestBase {
 
             ResourceParams[] resourceParams = ctx.getResourceParams();
             assertEquals(res[i][0], resourceParams[i].getName());
-            Map<String,String> paramMap = new HashMap<String,String>();
+            Map<String,String> paramMap = new HashMap<>();
             for (Parameter param : resourceParams[i].getParameter()) {
                 paramMap.put(param.getName(), param.getValue());
             }
@@ -549,11 +549,8 @@ public class TomcatModuleConfigurationTest extends TestBase {
 
     private J2eeModule createJ2eeModule(String fileName, String content) throws Exception {
         File file = new File(getWorkDir(), fileName);
-        FileWriter writer = new FileWriter(file);
-        try {
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(content);
-        } finally {
-            writer.close();
         }
         J2eeModuleImpl j2eeModuleImpl = new J2eeModuleImpl(file);
         return J2eeModuleFactory.createJ2eeModule(j2eeModuleImpl);
@@ -567,14 +564,17 @@ public class TomcatModuleConfigurationTest extends TestBase {
             this.contextXml = contextXml;
         }
 
+        @Override
         public String getModuleVersion() {
             return J2eeModule.J2EE_14;
         }
 
+        @Override
         public J2eeModule.Type getModuleType() {
             return J2eeModule.Type.WAR;
         }
 
+        @Override
         public String getUrl() {
             return null;
         }
@@ -582,14 +582,17 @@ public class TomcatModuleConfigurationTest extends TestBase {
         public void setUrl(String url) {
         }
 
+        @Override
         public FileObject getArchive() throws IOException {
             return null;
         }
 
+        @Override
         public Iterator getArchiveContents() throws IOException {
             return null;
         }
 
+        @Override
         public FileObject getContentDirectory() throws IOException {
             return null;
         }
@@ -598,21 +601,26 @@ public class TomcatModuleConfigurationTest extends TestBase {
             return null;
         }
 
+        @Override
         public <T> MetadataModel<T> getMetadataModel(Class<T> type) {
             return null;
         }
 
+        @Override
         public File getResourceDirectory() {
             return null;
         }
 
+        @Override
         public File getDeploymentConfigurationFile(String name) {
             return contextXml;
         }
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
         }
 

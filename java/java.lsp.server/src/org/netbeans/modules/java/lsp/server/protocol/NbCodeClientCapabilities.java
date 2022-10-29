@@ -28,7 +28,8 @@ import org.eclipse.lsp4j.InitializeParams;
  * an object:
  * <code><pre>
  * "nbcodeCapabilities" : {
- *      "statusBarMessageSupport"? : boolean
+ *      "statusBarMessageSupport"? : boolean,
+ *      "showHtmlPageSupport"? : boolean
  *      ...
  * }
  * </pre></code>
@@ -39,7 +40,7 @@ public final class NbCodeClientCapabilities {
      * The LSP client official capabilities.
      */
     private ClientCapabilities clientCaps;
-    
+
     /**
      * Supports status bar messages:
      * <ul>
@@ -55,7 +56,20 @@ public final class NbCodeClientCapabilities {
      * </ul>
      */
     private Boolean testResultsSupport;
-    
+
+    /**
+     * Support displaying HTML pages:
+     * <ul>
+     * <li>window/showHtmlPage
+     * </ul>
+     */
+    private Boolean showHtmlPageSupport;
+
+    /**
+     * Asks for java support.
+     */
+    private Boolean wantsJavaSupport = Boolean.TRUE;
+
     /**
      * Asks for groovy support. Temporary option, will be removed.
      */
@@ -89,6 +103,30 @@ public final class NbCodeClientCapabilities {
         this.testResultsSupport = testResultsSupport;
     }
 
+    public Boolean getShowHtmlPageSupport() {
+        return showHtmlPageSupport;
+    }
+
+    public boolean hasShowHtmlPageSupport() {
+        return showHtmlPageSupport != null && showHtmlPageSupport.booleanValue();
+    }
+
+    public void setShowHtmlPageSupport(Boolean showHtmlPageSupport) {
+        this.showHtmlPageSupport = showHtmlPageSupport;
+    }
+
+    public Boolean getWantsJavaSupport() {
+        return wantsJavaSupport;
+    }
+
+    public void setWantsJavaSupport(Boolean enableJava) {
+        this.wantsJavaSupport = enableJava == null ? Boolean.TRUE : enableJava;
+    }
+
+    public boolean wantsJavaSupport() {
+        return wantsJavaSupport.booleanValue();
+    }
+
     public Boolean getWantsGroovySupport() {
         return wantsGroovySupport;
     }
@@ -108,7 +146,7 @@ public final class NbCodeClientCapabilities {
         this.clientCaps = caps;
         return this;
     }
-    
+
     public static NbCodeClientCapabilities get(InitializeParams initParams) {
         if (initParams == null) {
             return null;
@@ -125,9 +163,16 @@ public final class NbCodeClientCapabilities {
                 create().
                 fromJson((JsonElement)ext, InitializationExtendedCapabilities.class);
         return root == null ? null : root.getNbcodeCapabilities().withCapabilities(initParams.getCapabilities());
-                
+
     }
-    
+
+    public static NbCodeClientCapabilities find(UIContext ui) {
+        if (ui instanceof WorkspaceUIContext) {
+            return ((WorkspaceUIContext) ui).getNbCodeCapabilities();
+        }
+        return null;
+    }
+
     static final class InitializationExtendedCapabilities {
         private NbCodeClientCapabilities nbcodeCapabilities;
 

@@ -50,23 +50,6 @@ public class TestFrame extends javax.swing.JFrame {
     public TestFrame() {
         setDefaultCloseOperation (javax.swing.WindowConstants.EXIT_ON_CLOSE);
         initComponents();
-        /*
-        try {
-            
-            System.setProperty("os.version", new Float(3.5).toString());
-            Method m = Toolkit.class.getDeclaredMethod("setDesktopProperty",
-            new Class[] {String.class, Object.class});
-            m.setAccessible(true);
-            m.invoke(java.awt.Toolkit.getDefaultToolkit(),
-            new Object[]  {"win.xpstyle.themeActive", Boolean.FALSE });
- 
-            
-            UIManager.setLookAndFeel(new PseudoWin());
-//            UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-         */
         
         try {
 //            UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());

@@ -192,11 +192,11 @@ public class UpdateProjectImpl implements UpdateImplementation {
                             String fileText = XMLUtil.findText(library);
                             if (fileText.startsWith ("libs.")) {
                                 String libName = fileText.substring(6, fileText.indexOf(".classpath")); //NOI18N
-                                List/*<URL>*/ roots = LibraryManager.getDefault().getLibrary(libName).getContent("classpath"); //NOI18N
-                                ArrayList<FileObject> files = new ArrayList<FileObject>();
-                                ArrayList<FileObject> dirs = new ArrayList<FileObject>();
+                                List<URL> roots = LibraryManager.getDefault().getLibrary(libName).getContent("classpath"); //NOI18N
+                                List<FileObject> files = new ArrayList<>();
+                                List<FileObject> dirs  = new ArrayList<>();
                                 for (Iterator<URL> it = roots.iterator(); it.hasNext();) {
-                                    URL rootUrl = (URL) it.next();
+                                    URL rootUrl = it.next();
                                     FileObject root = org.openide.filesystems.URLMapper.findFileObject (rootUrl);
                                     if ("jar".equals(rootUrl.getProtocol())) {  //NOI18N
                                         root = FileUtil.getArchiveFile (root);

@@ -121,7 +121,7 @@ final class StaticWordLibrary extends WordLibrary {
         "rtdatioialn"
     };
     
-    final static WordLibrary DEFAULT = new StaticWordLibrary();
+    static final WordLibrary DEFAULT = new StaticWordLibrary();
 
     /**
      * Singleton class.

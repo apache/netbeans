@@ -72,7 +72,7 @@ public abstract class JavaSourceUtilImpl {
     @CheckForNull
     protected abstract ModuleInfoHandle getModuleInfoHandle(@NonNull Object javaSource) throws IOException;
 
-    public static abstract class ModuleInfoHandle {
+    public abstract static class ModuleInfoHandle {
         
         @CheckForNull
         public abstract String parseModuleName() throws IOException;

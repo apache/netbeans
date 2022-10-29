@@ -55,9 +55,9 @@ import org.openide.util.lookup.ServiceProvider;
 public class FileBasedFileSystem extends FileSystem {
     private static final Logger LOG = Logger.getLogger(FileBasedFileSystem.class.getName());
     private static volatile FileBasedFileSystem INSTANCE;
-    transient private RootObj<? extends FileObject> root;
-    transient private final StatusImpl status = new StatusImpl();
-    transient private static  int modificationInProgress;
+    private transient RootObj<? extends FileObject> root;
+    private final transient StatusImpl status = new StatusImpl();
+    private static transient  int modificationInProgress;
 
     public FileBasedFileSystem() {
         if (BaseUtilities.isWindows()) {
@@ -69,11 +69,11 @@ public class FileBasedFileSystem extends FileSystem {
         }
     }
    
-    public synchronized static boolean isModificationInProgress() {
+    public static synchronized boolean isModificationInProgress() {
         return modificationInProgress == 0 ? false : true;
     }
 
-    private synchronized static void setModificationInProgress(boolean started) {
+    private static synchronized void setModificationInProgress(boolean started) {
         if (started) {
             modificationInProgress++;
         } else {

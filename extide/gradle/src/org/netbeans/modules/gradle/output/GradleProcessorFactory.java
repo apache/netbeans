@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -57,7 +59,13 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     @Override
     public Set<? extends OutputProcessor> createOutputProcessors(RunConfig cfg) {
-        return new HashSet<>(Arrays.asList(URL_PROCESSOR, GRADLE_PROCESSOR, JAVAC_PROCESSOR, GROOVYC_PROCESSOR));
+        return new HashSet<>(Arrays.asList(
+                URL_PROCESSOR,
+                GRADLE_PROCESSOR,
+                JAVAC_PROCESSOR,
+                GROOVYC_PROCESSOR,
+                new WarningModeAllProcessor(cfg)
+        ));
     }
 
     static final class URLOutputProcessor implements OutputProcessor {
@@ -179,4 +187,32 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     }
 
+    static class WarningModeAllProcessor implements OutputProcessor {
+
+        private static Pattern WARNING_MODE_ALL = Pattern.compile("(.+ ')(\\-\\-warning\\-mode all)('.+)");
+        final RunConfig cfg;
+
+        public WarningModeAllProcessor(RunConfig cfg) {
+            this.cfg = cfg;
+        }
+
+        @Override
+        public boolean processLine(OutputDisplayer out, String line) {
+            Matcher m = WARNING_MODE_ALL.matcher(line);
+            if (m.matches()) {
+                out.print(m.group(1));
+                out.print(m.group(2), () -> {
+                    GradleCommandLine cmd = new GradleCommandLine(cfg.getCommandLine());
+                    cmd.addParameter(GradleCommandLine.Parameter.WARNING_MODE, "all");
+
+                    RunConfig warnAll = cfg.withCommandLine(cmd);
+                    RunUtils.executeGradle(warnAll, null);
+                });
+                out.print(m.group(3));
+                return true;
+            }
+            return false;
+        }
+
+    }
 }

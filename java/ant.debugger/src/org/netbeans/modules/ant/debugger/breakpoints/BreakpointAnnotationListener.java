@@ -99,13 +99,9 @@ implements PropertyChangeListener {
     }
     
     private void removeAnnotation (Breakpoint b) {
-        DebuggerBreakpointAnnotation annotation = (DebuggerBreakpointAnnotation) 
-            breakpointToAnnotation.remove (b);
+        DebuggerBreakpointAnnotation annotation = breakpointToAnnotation.remove(b);
         if (annotation == null) return;
         annotation.detach ();
-        b.removePropertyChangeListener (
-            Breakpoint.PROP_ENABLED, 
-            this
-        );
+        b.removePropertyChangeListener(Breakpoint.PROP_ENABLED, this);
     }
 }

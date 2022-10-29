@@ -60,9 +60,8 @@ public class AppClientProxy implements AppClient {
     
     public void setOriginal(AppClient app) {
         if (this.app != app) {
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                java.beans.PropertyChangeListener pcl =
-                        (java.beans.PropertyChangeListener) i.next();
+            for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
+                PropertyChangeListener pcl = i.next();
                 if (this.app != null) this.app.removePropertyChangeListener(pcl);
                 if (app != null) app.addPropertyChangeListener(pcl);
                 
@@ -84,8 +83,8 @@ public class AppClientProxy implements AppClient {
             java.beans.PropertyChangeEvent evt =
                     new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                ((PropertyChangeListener) i.next()).propertyChange(evt);
+            for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
+                i.next().propertyChange(evt);
             }
         }
     }
@@ -189,8 +188,8 @@ public class AppClientProxy implements AppClient {
             java.beans.PropertyChangeEvent evt =
                     new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                ((java.beans.PropertyChangeListener) i.next()).propertyChange(evt);
+            for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
+                i.next().propertyChange(evt);
             }
         }
     }
@@ -358,19 +357,10 @@ public class AppClientProxy implements AppClient {
     
     public void write(FileObject fo) throws java.io.IOException {
         if (app != null) {
-            try {
-                org.openide.filesystems.FileLock lock = fo.lock();
-                try {
-                    java.io.OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing=true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    lock.releaseLock();
-                }
+            try (org.openide.filesystems.FileLock lock = fo.lock();
+                    java.io.OutputStream os = fo.getOutputStream(lock)) {
+                writing=true;
+                write(os);
             } catch (FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);

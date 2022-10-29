@@ -621,7 +621,7 @@ public class HtmlHintsProvider implements HintsProvider {
 
     }
 
-    private static abstract class AbstractErrorChecksForMimetypeFix implements HintFix {
+    private abstract static class AbstractErrorChecksForMimetypeFix implements HintFix {
 
         protected Document doc;
         protected String mimeType;

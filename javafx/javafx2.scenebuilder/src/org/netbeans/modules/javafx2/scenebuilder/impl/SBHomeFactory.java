@@ -103,9 +103,9 @@ public class SBHomeFactory {
      * See Bundle.properties for OS specific definitions
      */
     private static final class HomeFactoryCommon implements HomeFactory {
-        final private List<String> WKIP;
-        final private List<String> LAUNCHER_PATH;
-        final private List<String> PROPERTIES_PATH;
+        private final List<String> WKIP;
+        private final List<String> LAUNCHER_PATH;
+        private final List<String> PROPERTIES_PATH;
         
         HomeFactoryCommon(List<String> WKIP, List<String> LAUNCHER_PATH, List<String> PROPERTIES_PATH) {
             Parameters.notNull("WKIP", WKIP); //NOI18N

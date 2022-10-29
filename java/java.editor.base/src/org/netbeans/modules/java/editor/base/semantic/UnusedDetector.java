@@ -25,14 +25,12 @@ import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -51,9 +51,21 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.source.ClassIndex;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -87,7 +99,7 @@ public class UnusedDetector {
 
     }
 
-    public static List<UnusedDescription> findUnused(CompilationInfo info) {
+    public static List<UnusedDescription> findUnused(CompilationInfo info, Callable<Boolean> cancel) {
         List<UnusedDescription> cached = (List<UnusedDescription>) info.getCachedValue(UnusedDetector.class);
         if (cached != null) {
             return cached;
@@ -101,25 +113,45 @@ public class UnusedDetector {
             TreePath declaration = e.getValue();
             Set<UseTypes> uses = uv.useTypes.getOrDefault(el, Collections.emptySet());
             boolean isPrivate = el.getModifiers().contains(Modifier.PRIVATE); //TODO: effectivelly private!
-            if (isLocalVariableClosure(el) || (el.getKind().isField() && isPrivate)) {
+            boolean isPkgPrivate = !isPrivate && !el.getModifiers().contains(Modifier.PUBLIC) && !el.getModifiers().contains(Modifier.PROTECTED);
+            if (isLocalVariableClosure(el)) {
+                boolean isWritten = uses.contains(UseTypes.WRITTEN);
+                boolean isRead = uses.contains(UseTypes.READ);
+                if (!isWritten && !isRead) {
+                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN_READ));
+                } else if (!isWritten) {
+                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN));
+                } else if (!isRead) {
+                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_READ));
+                }
+            } else if (el.getKind().isField() && (isPrivate || isPkgPrivate)) {
                 if (!isSerialSpecField(info, el)) {
                     boolean isWritten = uses.contains(UseTypes.WRITTEN);
                     boolean isRead = uses.contains(UseTypes.READ);
                     if (!isWritten && !isRead) {
-                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN_READ));
+                        if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                            result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN_READ));
+                        }
                     } else if (!isWritten) {
                         result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN));
                     } else if (!isRead) {
-                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_READ));
+                        if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                            result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_READ));
+                        }
                     }
                 }
-            } else if ((el.getKind() == ElementKind.CONSTRUCTOR || el.getKind() == ElementKind.METHOD) && isPrivate) {
-                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)) {
-                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
+            } else if ((el.getKind() == ElementKind.CONSTRUCTOR || el.getKind() == ElementKind.METHOD) && (isPrivate || isPkgPrivate)) {
+                if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)
+                        && !info.getElementUtilities().overridesMethod((ExecutableElement)el)) {
+                    if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
+                    }
                 }
-            } else if ((el.getKind().isClass() || el.getKind().isInterface()) && isPrivate) {
+            } else if ((el.getKind().isClass() || el.getKind().isInterface()) && (isPrivate || isPkgPrivate)) {
                 if (!uses.contains(UseTypes.USED)) {
-                    result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
+                    if (isPrivate || isUnusedInPkg(info, el, cancel)) {
+                        result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
+                    }
                 }
             }
         }
@@ -130,7 +162,7 @@ public class UnusedDetector {
     }
 
     /** Detects static final long SerialVersionUID
-     * @return true if element is final static long serialVersionUID
+     * @return true if element is static final long serialVersionUID
      */
     private static boolean isSerialSpecField(CompilationInfo info, Element el) {
         if (el.getModifiers().contains(Modifier.FINAL)
@@ -241,22 +273,112 @@ public class UnusedDetector {
 
     private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(
             ElementKind.LOCAL_VARIABLE, ElementKind.RESOURCE_VARIABLE,
-            ElementKind.EXCEPTION_PARAMETER);
-    private static final ElementKind BINDING_VARIABLE;
-
-    static {
-        ElementKind bindingVariable;
-        try {
-            LOCAL_VARIABLES.add(bindingVariable = ElementKind.valueOf(TreeShims.BINDING_VARIABLE));
-        } catch (IllegalArgumentException ex) {
-            bindingVariable = null;
-        }
-        BINDING_VARIABLE = bindingVariable;
-    }
+            ElementKind.EXCEPTION_PARAMETER, ElementKind.BINDING_VARIABLE);
 
     private static boolean isLocalVariableClosure(Element el) {
         return el.getKind() == ElementKind.PARAMETER ||
                LOCAL_VARIABLES.contains(el.getKind());
+    }
+
+    private static boolean isUnusedInPkg(CompilationInfo info, Element el, Callable<Boolean> cancel) {
+        TypeElement typeElement;
+        Set<? extends String> packageSet = Collections.singleton(info.getElements().getPackageOf(el).getQualifiedName().toString());
+        Set<ClassIndex.SearchKind> searchKinds;
+        Set<ClassIndex.SearchScopeType> scope = Collections.singleton(new ClassIndex.SearchScopeType() {
+            @Override
+            public Set<? extends String> getPackages() {
+                return packageSet;
+            }
+
+            @Override
+            public boolean isSources() {
+                return true;
+            }
+
+            @Override
+            public boolean isDependencies() {
+                return false;
+            }
+        });
+        switch (el.getKind()) {
+            case FIELD:
+                typeElement = info.getElementUtilities().enclosingTypeElement(el);
+                searchKinds = EnumSet.of(ClassIndex.SearchKind.FIELD_REFERENCES);
+                break;
+            case METHOD:
+            case CONSTRUCTOR:
+                typeElement = info.getElementUtilities().enclosingTypeElement(el);
+                searchKinds = EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES);
+                break;
+            case ANNOTATION_TYPE:
+            case CLASS:
+            case ENUM:
+            case INTERFACE:
+                List<? extends TypeElement> topLevelElements = info.getTopLevelElements();
+                if (topLevelElements.size() == 1 && topLevelElements.get(0) == el) {
+                    return false;
+                }
+                typeElement = (TypeElement) el;
+                searchKinds = EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES);
+                break;
+
+            default:
+                return true;
+        }
+        ElementHandle eh = ElementHandle.create(el);
+        Project prj = FileOwnerQuery.getOwner(info.getFileObject());
+        ClasspathInfo cpInfo;
+        if (prj != null) {
+            SourceGroup[] sourceGroups = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+            FileObject[] roots = new FileObject[sourceGroups.length];
+            for (int i = 0; i < sourceGroups.length; i++) {
+                SourceGroup sourceGroup = sourceGroups[i];
+                roots[i] = sourceGroup.getRootFolder();
+            }
+            cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(roots));
+        } else {
+            cpInfo = info.getClasspathInfo();
+        }
+        Set<FileObject> res = cpInfo.getClassIndex().getResources(ElementHandle.create(typeElement), searchKinds, scope);
+        if (res != null) {
+            for (FileObject fo : res) {
+                try {
+                    if (Boolean.TRUE.equals(cancel.call())) {
+                        return false;
+                    }
+                    if (fo != info.getFileObject()) {
+                        JavaSource js = JavaSource.forFileObject(fo);
+                        if (js == null) {
+                            return false;
+                        }
+                        AtomicBoolean found = new AtomicBoolean();
+                        js.runUserActionTask(cc -> {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            new ErrorAwareTreePathScanner<Void, Element>() {
+                                @Override
+                                public Void scan(Tree tree, Element p) {
+                                    if (!found.get() && tree != null) {
+                                        Element element = cc.getTrees().getElement(new TreePath(getCurrentPath(), tree));
+                                        if (element != null && eh.signatureEquals(element)) {
+                                            found.set(true);
+                                        }
+                                        super.scan(tree, p);
+                                    }
+                                    return null;
+                                }
+                            }.scan(new TreePath(cc.getCompilationUnit()), el);
+                        }, true);
+                        if (found.get()) {
+                            return false;
+                        }
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     private enum UseTypes {
@@ -306,8 +428,9 @@ public class UnusedDetector {
             }
 
             boolean isPrivate = el.getModifiers().contains(Modifier.PRIVATE); //TODO: effectivelly private!
+            boolean isPkgPrivate = !isPrivate && !el.getModifiers().contains(Modifier.PUBLIC) && !el.getModifiers().contains(Modifier.PROTECTED);
 
-            if (isLocalVariableClosure(el) || (el.getKind().isField() && isPrivate)) {
+            if (isLocalVariableClosure(el) || (el.getKind().isField() && (isPrivate | isPkgPrivate))) {
                 TreePath effectiveUse = getCurrentPath();
                 boolean isWrite = false;
                 boolean isRead = false;
@@ -354,7 +477,7 @@ public class UnusedDetector {
                 if (isRead) {
                     addUse(el, UseTypes.READ);
                 }
-            } else if (isPrivate) {
+            } else if (isPrivate | isPkgPrivate) {
                 if (el.getKind() != ElementKind.METHOD || recursionDetector != el)
                 addUse(el, UseTypes.USED);
             }
@@ -398,14 +521,6 @@ public class UnusedDetector {
             }
         }
 
-        @Override
-        public Void scan(Tree tree, Void p) {
-            if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
-                handleDeclaration(new TreePath(getCurrentPath(), tree));
-            }
-            return super.scan(tree, p);
-        }
-
         private void handleDeclaration(TreePath path) {
             Element el = info.getTrees().getElement(path);
 
@@ -437,7 +552,7 @@ public class UnusedDetector {
                 //it makes sense to no use it:
                 addUse(el, UseTypes.READ);
                 addUse(el, UseTypes.WRITTEN);
-            } else if (el.getKind() == BINDING_VARIABLE) {
+            } else if (el.getKind() == ElementKind.BINDING_VARIABLE) {
                 addUse(el, UseTypes.WRITTEN);
             } else if (el.getKind() == ElementKind.LOCAL_VARIABLE) {
                 Tree parent = path.getParentPath().getLeaf();
@@ -445,7 +560,7 @@ public class UnusedDetector {
                     ((EnhancedForLoopTree) parent).getVariable() == path.getLeaf()) {
                     addUse(el, UseTypes.WRITTEN);
                 }
-            } else if (TreeShims.isRecordComponent(Utilities.toRecordComponent(el).getKind())) {
+            } else if (Utilities.toRecordComponent(el).getKind() == ElementKind.RECORD_COMPONENT) {
                 addUse(el, UseTypes.READ);
                 addUse(el, UseTypes.WRITTEN);
             } else if (el.getKind().isField()) {

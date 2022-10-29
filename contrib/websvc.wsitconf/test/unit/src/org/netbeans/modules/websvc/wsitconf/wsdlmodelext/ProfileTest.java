@@ -75,7 +75,7 @@ public class ProfileTest extends NbTestCase {
             }
             for (int i=1; i<profiles.size(); i++) {
                 String profile = profiles.get(i);
-                String profFileName = profile.replaceAll(" ", "");
+                String profFileName = profile.replace(" ", "");
 
                 //default profile set
                 ProfilesModelHelper.getInstance(cfgV).setSecurityProfile(b, profile, false);

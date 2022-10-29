@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -59,6 +61,7 @@ import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -103,6 +106,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -474,9 +478,10 @@ final class VanillaCompileWorker extends CompileWorker {
 
             for (FileObject f : listed) {
                 String name = f.getNameExt();
-                if (name.endsWith(".class"))
+                if (name.endsWith(".class")) {
                     name = name.substring(0, name.length() - FileObjects.CLASS.length()) + FileObjects.SIG;
-                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
+                    copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
+                }
             }
         } else {
             if (target.isDirectory()) {
@@ -530,6 +535,8 @@ final class VanillaCompileWorker extends CompileWorker {
         Trees trees = Trees.instance(BasicJavacTask.instance(ctx));
         Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
+        Elements el = JavacElements.instance(ctx);
+        boolean hasMatchException = el.getTypeElement("java.lang.MatchException") != null;
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
             private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
@@ -581,7 +588,8 @@ final class VanillaCompileWorker extends CompileWorker {
                 } else {
                     scan(node.getInitializer(), null);
                 }
-                decl.sym.type = decl.type = error2Object(decl.type);
+                decl.type = error2Object(decl.type);
+                decl.sym.type = error2Object(decl.sym.type);
                 clearAnnotations(decl.sym.getMetadata());
                 return null;
             }
@@ -687,6 +695,11 @@ final class VanillaCompileWorker extends CompileWorker {
                 Symbol.ClassSymbol csym = clazz.sym;
                 if (isErroneousClass(csym)) {
                     //likely a duplicate of another class, don't touch:
+                    return null;
+                }
+                if (isOtherClass(csym)) {
+                    // Something went somewhere the csym.type is Type.Unknown,
+                    // do not go any further
                     return null;
                 }
                 currentClass = csym;
@@ -878,6 +891,18 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             @Override
+            public Void visitBindingPattern(BindingPatternTree node, Void p) {
+                errorFound |= !hasMatchException;
+                return super.visitBindingPattern(node, p);
+            }
+
+            @Override
+            public Void visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
+                errorFound |= !hasMatchException;
+                return super.visitDeconstructionPattern(node, p);
+            }
+
+            @Override
             public Void scan(Tree tree, Void p) {
                 if (tree != null && ExpressionTree.class.isAssignableFrom(tree.getClass())) {
                     errorFound |= isErroneous(trees.getTypeMirror(new TreePath(getCurrentPath(), tree))); //isErroneous - enough?
@@ -1048,8 +1073,13 @@ final class VanillaCompileWorker extends CompileWorker {
         }
         return isErroneousClass(((JCClassDecl) tree).sym);
     }
+
     private boolean isErroneousClass(Element el) {
         return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.ERROR);
+    }
+
+    private boolean isOtherClass(Element el) {
+        return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.OTHER);
     }
 
     public static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);

@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.JComponent;
@@ -51,6 +53,8 @@ import org.openide.util.Utilities;
  */
 @NbBundle.Messages("MicronautProject_DN=Micronaut Project")
 public class MicronautProjectWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
+
+    private static final Logger LOG = Logger.getLogger(MicronautProjectWizardIterator.class.getName());
 
     @TemplateRegistration(folder = "Project/Maven2", position = 300, displayName = "#MicronautProject_DN", description = "MicronautMavenProjectDescription.html", iconBase = "org/netbeans/modules/micronaut/resources/micronaut.png")
     public static class MavenMicronautProject extends MicronautProjectWizardIterator {
@@ -92,6 +96,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
     public Set instantiate(ProgressHandle handle) throws IOException {
         try {
             handle.start(4);
+            String projectName = (String) wiz.getProperty(PROJECT_NAME);
             File projFile = FileUtil.normalizeFile((File) wiz.getProperty(PROJECT_LOCATION));
             projFile.mkdirs();
             handle.progress(1);
@@ -105,7 +110,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
                     (Set<MicronautLaunchService.Feature>) wiz.getProperty(FEATURES));
             handle.progress(2);
             FileObject projDir = FileUtil.toFileObject(projFile);
-            unzip(stream, projDir);
+            unzip(stream, projDir, projectName + '/');
             handle.progress(3);
             ProjectManager.getDefault().clearNonProjectCache();
             Project prj = ProjectManager.getDefault().findProject(projDir);
@@ -207,17 +212,33 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
     public void removeChangeListener(ChangeListener l) {
     }
 
-    private static void unzip(InputStream stream, FileObject folder) throws IOException {
+    private static void unzip(InputStream stream, FileObject folder, String prefix) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(stream)) {
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
                 String entryName = zipEntry.getName();
+                if (entryName.startsWith(prefix)) {
+                    entryName = entryName.substring(prefix.length());
+                }
                 if (zipEntry.isDirectory()) {
                     FileUtil.createFolder(folder, entryName);
                 } else {
                     FileObject fo = FileUtil.createData(folder, entryName);
                     try (OutputStream out = fo.getOutputStream()) {
                         FileUtil.copy(zis, out);
+                        File backingFile = FileUtil.toFile(fo);
+                        if (backingFile != null) {
+                            // Workaround for limit of JDK API:
+                            // https://bugs.openjdk.java.net/browse/JDK-6194856
+                            // The alternative would be to use commons-compress
+                            // but at this time only these two elements need to
+                            // be executable
+                            if (entryName.equals("mvnw") || entryName.equals("gradlew")) {
+                                backingFile.setExecutable(true);
+                            }
+                        } else {
+                            LOG.log(Level.WARNING, "FileObject is not backed by file, can not adjust permissions: {0}", fo.getPath());
+                        }
                     }
                 }
             }

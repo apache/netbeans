@@ -40,7 +40,7 @@
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>com.sun.xml.bind:jaxb-impl:2.3.3:jar</value>
+            <value>com.sun.xml.bind:jaxb-impl:2.3.5:jar</value>
         </property>
     </properties>    
 </library>

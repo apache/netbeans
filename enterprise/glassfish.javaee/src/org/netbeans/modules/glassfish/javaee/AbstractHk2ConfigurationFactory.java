@@ -107,25 +107,28 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
                 ? instance.getVersion() : null;
         try {
             Hk2DeploymentManager evaluatedDm = null;
-            if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)){
-                        evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe91()
-                            .getDisconnectedDeploymentManager(instanceUrl);
-                    } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_6)){
-                        evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe9()
-                            .getDisconnectedDeploymentManager(instanceUrl);
-                    } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)){
-                        evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe8()
-                            .getDisconnectedDeploymentManager(instanceUrl);
-                    } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_5)){
-                        evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
-                            .getDisconnectedDeploymentManager(instanceUrl);
-                    } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)){
-                        evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe6()
-                            .getDisconnectedDeploymentManager(instanceUrl);
-                    } else {
-                        evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
-                            .getDisconnectedDeploymentManager(instanceUrl);
-                    }
+            if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe91()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe9()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe8()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe7()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe6()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            } else {
+                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
+                    .getDisconnectedDeploymentManager(instanceUrl);
+            }
             final Hk2DeploymentManager dm = hk2dm != null
                     ? hk2dm
                     : evaluatedDm;
@@ -143,6 +146,10 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
                         module, new Hk2Configuration(module, version), dm);
             } else if (version != null
                     && GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
+                retVal = new ModuleConfigurationImpl(
+                        module, new Hk2Configuration(module, version), dm);
+            } else if (version != null
+                    && GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
                 retVal = new ModuleConfigurationImpl(
                         module, new Hk2Configuration(module, version), dm);
             } else if (version != null

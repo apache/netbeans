@@ -194,9 +194,9 @@ public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLMo
         sb.append(id);
         sb.append("]</font> ");
         
-        text = text.replaceAll("&", "&amp;");
-        text = text.replaceAll("<", "&lt;");
-        text = text.replaceAll(">", "&gt;");
+        text = text.replace("&", "&amp;");
+        text = text.replace("<", "&lt;");
+        text = text.replace(">", "&gt;");
         sb.append(text);
         sb.append("</font>");
         sb.append("</html>");

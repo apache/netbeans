@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import javax.swing.JEditorPane;
@@ -86,7 +87,7 @@ public class PropertiesCustomEditor extends JPanel implements DocumentListener {
         Properties v = new Properties();
         boolean loaded = false;
         try {
-            v.load(new ByteArrayInputStream(editorPane.getText().getBytes("ISO-8859-1")));
+            v.load(new ByteArrayInputStream(editorPane.getText().getBytes(StandardCharsets.ISO_8859_1)));
             loaded = true;
         } catch (Exception x) { // IOException, IllegalArgumentException, maybe others
             Color c = UIManager.getColor("nb.errorForeground"); // NOI18N

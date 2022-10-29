@@ -29,7 +29,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -445,8 +445,7 @@ class Wadl2JavaHelper {
                 InputStreamReader is = null;
                 StringWriter writer = null;
                 try {
-                    is = new InputStreamReader(templateFo.getInputStream(), 
-                            Charset.forName("UTF-8"));          // NOI18N
+                    is = new InputStreamReader(templateFo.getInputStream(), StandardCharsets.UTF_8);
                     writer = new StringWriter();
                     char[] buffer = new char[1024];
                     int b;

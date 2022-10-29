@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.67.0
+#Version 1.72.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -934,6 +934,7 @@ CLSS public abstract interface org.eclipse.persistence.jpa.jpql.tools.spi.IMappi
 intf java.lang.Comparable<org.eclipse.persistence.jpa.jpql.tools.spi.IMapping>
 meth public abstract boolean hasAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public abstract boolean isCollection()
+meth public abstract boolean isEmbeddable()
 meth public abstract boolean isProperty()
 meth public abstract boolean isRelationship()
 meth public abstract boolean isTransient()
@@ -1063,6 +1064,7 @@ meth public abstract org.openide.filesystems.FileObject getLocation()
 
 CLSS public final org.netbeans.modules.j2ee.persistence.api.entity.generator.EntitiesFromDBGenerator
 cons public init(java.util.List<java.lang.String>,boolean,boolean,boolean,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$FetchType,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$CollectionType,java.lang.String,org.netbeans.api.project.SourceGroup,org.netbeans.api.db.explorer.DatabaseConnection,org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
+cons public init(java.util.List<java.lang.String>,boolean,boolean,boolean,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$FetchType,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$CollectionType,java.lang.String,org.netbeans.api.project.SourceGroup,org.netbeans.api.db.explorer.DatabaseConnection,org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit,org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGenerator)
 cons public init(java.util.List<java.lang.String>,boolean,java.lang.String,org.netbeans.api.project.SourceGroup,org.netbeans.api.db.explorer.DatabaseConnection,org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public java.util.Set<org.openide.filesystems.FileObject> generate(org.netbeans.api.progress.aggregate.ProgressContributor) throws java.io.IOException,java.sql.SQLException
 supr java.lang.Object
@@ -1314,6 +1316,7 @@ meth public int hashCode()
 meth public java.lang.String getMemberName()
 meth public java.lang.String getMemberType()
 meth public static java.lang.String fixRelationshipFieldName(java.lang.String,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$CollectionType)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String makeClassName(java.lang.String)
 meth public static java.lang.String makeFieldName(java.lang.String)
 meth public static java.lang.String makeRelationshipFieldName(java.lang.String,boolean)
@@ -1699,6 +1702,7 @@ cons public init(org.netbeans.modules.j2ee.persistence.spi.jpql.ManagedType,org.
 intf org.eclipse.persistence.jpa.jpql.tools.spi.IMapping
 meth public boolean hasAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public boolean isCollection()
+meth public boolean isEmbeddable()
 meth public boolean isProperty()
 meth public boolean isRelationship()
 meth public boolean isTransient()
@@ -2282,7 +2286,7 @@ meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void stateChanged(javax.swing.event.ChangeEvent)
 meth public void storeSettings(java.lang.Object)
 supr java.lang.Object
-hfds JAXBRequired,changeSupport,component,componentInitialized,isFinishable,project,providers,puRequired,wizardDescriptor
+hfds JAXBRequired,changeSupport,component,componentInitialized,isFinishable,isJPA,project,providers,puRequired,wizardDescriptor
 
 CLSS public abstract interface org.netbeans.modules.j2ee.persistence.wizard.fromdb.FacadeGenerator
 fld public final static java.lang.String FACADE_SUFFIX = "Facade"
@@ -3121,7 +3125,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message

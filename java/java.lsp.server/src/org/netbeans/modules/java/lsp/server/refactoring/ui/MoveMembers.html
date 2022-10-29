@@ -1,0 +1,95 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="refactoring.css">
+    <title>Refactor: Move Members...</title>
+</head>
+
+<body>
+    <div class="section">
+        <label>Move members from <span class="vscode-editor-font" data-bind="text: from"></span> to:</label>
+    </div>
+    <div class="section3">
+        <div class="flex vdivider2">
+            <div class="flex-equal">
+                <label>Project:</label>
+                <select data-bind="options: availableProjects, optionsText: 'name', value: selectedProject"></select>
+            </div>
+            <div class="flex-equal hdivider">
+                <label>Location:</label>
+                <select data-bind="options: availableRoots, optionsText: 'name', value: selectedRoot">
+                </select>
+            </div>
+        </div>
+        <div class="flex vdivider">
+            <div class="flex-equal">
+                <label>Package:</label>
+                <select data-bind="options: availablePackages, value: selectedPackage">
+                </select>
+            </div>
+            <div class="flex-equal hdivider">
+                <label>Class:</label>
+                <select data-bind="options: availableClasses, optionsText: 'label', value: selectedClass">
+                </select>
+            </div>
+        </div>
+        <div class="flex vdivider">
+            <div class="flex-equal">
+                <label>Visibility:</label>
+                <select data-bind="options: availableVisibilities, value: selectedVisibility">
+                </select>
+            </div>
+            <div class="flex-equal hdivider">
+                <label>JavaDoc:</label>
+                <select data-bind="options: availableJavaDoc, value: selectedJavaDoc">
+                </select>
+            </div>
+        </div>
+        <label>Members to be moved:</label>
+    </div>
+    <div class="flex-vscrollable section1 row-always-visible">
+        <nobr data-bind="foreach: members">
+            <div class="flex row">
+                <input type="checkbox" data-bind="checked: selected, attr: {id: 'member_' + $index()}">
+                <label class="checkbox-label vscode-editor-font" data-bind="text: label, attr: {for: 'member_' + $index()}"></label>
+            </div>
+        </nobr>
+    </div>
+    <div class="flex section">
+        <input type="checkbox" id="keep_original" data-bind="checked: keepMethodSelected">
+        <label class="checkbox-label" for="keep_original">Keep original method(s) and delegate to the moved method</label>
+    </div>
+    <div class="flex section-nested">
+        <input type="checkbox" id="deprecate_old" data-bind="checked: deprecateMethodSelected, enable: keepMethodSelected">
+        <label class="checkbox-label" for="deprecate_old">Deprecate the old method(s)</label>
+    </div>
+    <div class="flex section">
+        <button id="accept" hidden class="regular-button vscode-font align-right">Refactor</button>
+        <button id="reject" hidden class="regular-button vscode-font">Cancel</button>
+    </div>
+</body>
+</html>

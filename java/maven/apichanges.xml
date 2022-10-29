@@ -83,6 +83,33 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="lifecycle-white-list">
+            <api name="general"/>
+            <summary>LifecycleParticipants can be ignored</summary>
+            <version major="2" minor="156"/>
+            <date day="9" month="9" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                NetBeans warns if a project / plugin provides AbstractLifecycleParticipants that
+                can reconfigure the project after load. Now some harmless ones can be whitelisted
+                so they do not produce warning / project problem. See <a href="@TOP@/architecture-summary.html#layer-LifecycleParticipants">LifecycleParticipants</a>.
+            </description>
+        </change>
+        <change id="evaluated-project">
+            <api name="general"/>
+            <summary>Project model can be customized for specific action or usage</summary>
+            <version major="2" minor="155"/>
+            <date day="10" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Project state can be inspected with respect to an intended action to be run or used, and possible
+                customized properties or profiles. This allows clients to more precisely follow customizations in 
+                the project file and/or action mapping that would be applied when actually using project actions.
+            </description>
+            <class package="org.netbeans.modules.maven.api" name="NbMavenProject"/>
+        </change>
         <change id="plugin.conf.paths">
             <api name="general"/>
             <summary>Added helper method to get artifact paths from build plugin configurations.</summary>

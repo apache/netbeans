@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.13
+#Version 2.17
 
 CLSS public abstract interface !annotation groovy.beans.Bindable
  anno 0 java.lang.annotation.Documented()
@@ -7544,6 +7544,52 @@ supr java.lang.Object
 hfds colorScheme,commandSpec,err,executionExceptionHandler,executionResult,executionStrategy,exitCodeExceptionMapper,factory,interpreter,out,parameterExceptionHandler,tracer
 hcls AbbreviationMatcher,Assert,AutoHelpMixin,BuiltIn,ColoredStackTraceWriter,CosineSimilarity,DefaultFactory,DefaultHelpFactory,Interpreter,LookBehind,NoCompletionCandidates,NoDefaultProvider,NoVersionProvider,NullParameterConsumer,PositionalParametersSorter,TraceLevel,Tracer
 
+CLSS public abstract interface static !annotation groovyjarjarpicocli.CommandLine$Command
+ outer groovyjarjarpicocli.CommandLine
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, LOCAL_VARIABLE, FIELD, PACKAGE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean abbreviateSynopsis()
+meth public abstract !hasdefault boolean addMethodSubcommands()
+meth public abstract !hasdefault boolean helpCommand()
+meth public abstract !hasdefault boolean hidden()
+meth public abstract !hasdefault boolean mixinStandardHelpOptions()
+meth public abstract !hasdefault boolean showAtFileInUsageHelp()
+meth public abstract !hasdefault boolean showDefaultValues()
+meth public abstract !hasdefault boolean showEndOfOptionsDelimiterInUsageHelp()
+meth public abstract !hasdefault boolean sortOptions()
+meth public abstract !hasdefault boolean subcommandsRepeatable()
+meth public abstract !hasdefault boolean usageHelpAutoWidth()
+meth public abstract !hasdefault char requiredOptionMarker()
+meth public abstract !hasdefault int exitCodeOnExecutionException()
+meth public abstract !hasdefault int exitCodeOnInvalidInput()
+meth public abstract !hasdefault int exitCodeOnSuccess()
+meth public abstract !hasdefault int exitCodeOnUsageHelp()
+meth public abstract !hasdefault int exitCodeOnVersionHelp()
+meth public abstract !hasdefault int usageHelpWidth()
+meth public abstract !hasdefault java.lang.Class<? extends groovyjarjarpicocli.CommandLine$IDefaultValueProvider> defaultValueProvider()
+meth public abstract !hasdefault java.lang.Class<? extends groovyjarjarpicocli.CommandLine$IVersionProvider> versionProvider()
+meth public abstract !hasdefault java.lang.Class<?>[] subcommands()
+meth public abstract !hasdefault java.lang.String commandListHeading()
+meth public abstract !hasdefault java.lang.String descriptionHeading()
+meth public abstract !hasdefault java.lang.String exitCodeListHeading()
+meth public abstract !hasdefault java.lang.String footerHeading()
+meth public abstract !hasdefault java.lang.String headerHeading()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String optionListHeading()
+meth public abstract !hasdefault java.lang.String parameterListHeading()
+meth public abstract !hasdefault java.lang.String resourceBundle()
+meth public abstract !hasdefault java.lang.String separator()
+meth public abstract !hasdefault java.lang.String synopsisHeading()
+meth public abstract !hasdefault java.lang.String synopsisSubcommandLabel()
+meth public abstract !hasdefault java.lang.String[] aliases()
+meth public abstract !hasdefault java.lang.String[] customSynopsis()
+meth public abstract !hasdefault java.lang.String[] description()
+meth public abstract !hasdefault java.lang.String[] exitCodeList()
+meth public abstract !hasdefault java.lang.String[] footer()
+meth public abstract !hasdefault java.lang.String[] header()
+meth public abstract !hasdefault java.lang.String[] version()
+
 CLSS public abstract interface static groovyjarjarpicocli.CommandLine$IVersionProvider
  outer groovyjarjarpicocli.CommandLine
 meth public abstract java.lang.String[] getVersion() throws java.lang.Exception
@@ -10237,6 +10283,50 @@ meth public void setClassScope(org.codehaus.groovy.ast.ClassNode)
 meth public void setInStaticContext(boolean)
 supr java.lang.Object
 hfds classScope,declaredVariables,inStaticContext,parent,referencedClassVariables,referencedLocalVariables
+
+CLSS public abstract org.codehaus.groovy.ast.decompiled.AsmDecompiler
+cons public init()
+meth public static org.codehaus.groovy.ast.decompiled.ClassStub parseClass(java.net.URL) throws java.io.IOException
+supr java.lang.Object
+hcls AnnotationReader,DecompilingVisitor,StubCache
+
+CLSS public org.codehaus.groovy.ast.decompiled.AsmReferenceResolver
+cons public init(org.codehaus.groovy.control.ClassNodeResolver,org.codehaus.groovy.control.CompilationUnit)
+meth public java.lang.Class resolveJvmClass(java.lang.String)
+meth public org.codehaus.groovy.ast.ClassNode resolveClass(java.lang.String)
+meth public org.codehaus.groovy.ast.ClassNode resolveClassNullable(java.lang.String)
+meth public org.codehaus.groovy.ast.ClassNode resolveType(groovyjarjarasm.asm.Type)
+supr java.lang.Object
+hfds resolver,unit
+
+CLSS public org.codehaus.groovy.ast.decompiled.ClassStub
+cons public init(java.lang.String,int,java.lang.String,java.lang.String,java.lang.String[])
+supr java.lang.Object
+hfds accessModifiers,className,fields,innerClassModifiers,interfaceNames,methods,signature,superName
+
+CLSS public org.codehaus.groovy.ast.decompiled.DecompiledClassNode
+cons public init(org.codehaus.groovy.ast.decompiled.ClassStub,org.codehaus.groovy.ast.decompiled.AsmReferenceResolver)
+meth public boolean isResolved()
+meth public boolean isUsingGenerics()
+meth public java.lang.Class getTypeClass()
+meth public java.lang.String setName(java.lang.String)
+meth public java.util.List<org.codehaus.groovy.ast.AnnotationNode> getAnnotations()
+meth public java.util.List<org.codehaus.groovy.ast.AnnotationNode> getAnnotations(org.codehaus.groovy.ast.ClassNode)
+meth public java.util.List<org.codehaus.groovy.ast.ConstructorNode> getDeclaredConstructors()
+meth public java.util.List<org.codehaus.groovy.ast.FieldNode> getFields()
+meth public java.util.List<org.codehaus.groovy.ast.MethodNode> getDeclaredMethods(java.lang.String)
+meth public java.util.List<org.codehaus.groovy.ast.MethodNode> getMethods()
+meth public long getCompilationTimeStamp()
+meth public org.codehaus.groovy.ast.ClassNode getUnresolvedSuperClass(boolean)
+meth public org.codehaus.groovy.ast.ClassNode[] getInterfaces()
+meth public org.codehaus.groovy.ast.ClassNode[] getUnresolvedInterfaces(boolean)
+meth public org.codehaus.groovy.ast.FieldNode getDeclaredField(java.lang.String)
+meth public org.codehaus.groovy.ast.GenericsType[] getGenericsTypes()
+meth public void setGenericsPlaceHolder(boolean)
+meth public void setRedirect(org.codehaus.groovy.ast.ClassNode)
+meth public void setUsingGenerics(boolean)
+supr org.codehaus.groovy.ast.ClassNode
+hfds classData,membersInitialized,resolver,supersInitialized
 
 CLSS public org.codehaus.groovy.ast.expr.AnnotationConstantExpression
 cons public init(org.codehaus.groovy.ast.AnnotationNode)
@@ -25120,6 +25210,241 @@ meth public static void makePostfix(org.codehaus.groovy.syntax.CSTNode,boolean)
 meth public static void makePrefix(org.codehaus.groovy.syntax.CSTNode,boolean)
 supr java.lang.Object
 hfds DESCRIPTIONS,KEYWORDS,LOOKUP,TEXTS
+
+CLSS public org.codehaus.groovy.tools.Compiler
+cons public init()
+cons public init(org.codehaus.groovy.control.CompilerConfiguration)
+fld public final static org.codehaus.groovy.tools.Compiler DEFAULT
+meth public void compile(java.io.File)
+meth public void compile(java.io.File[])
+meth public void compile(java.lang.String,java.lang.String)
+meth public void compile(java.lang.String[])
+supr java.lang.Object
+hfds configuration
+
+CLSS public org.codehaus.groovy.tools.DgmConverter
+cons public init()
+intf groovyjarjarasm.asm.Opcodes
+meth protected static void loadParameters(org.codehaus.groovy.reflection.CachedMethod,int,groovyjarjarasm.asm.MethodVisitor)
+meth public static void main(java.lang.String[]) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public org.codehaus.groovy.tools.ErrorReporter
+cons public init(java.lang.Throwable)
+cons public init(java.lang.Throwable,boolean)
+meth protected void dispatch(java.lang.Throwable,boolean)
+meth protected void println(java.lang.String)
+meth protected void println(java.lang.StringBuffer)
+meth protected void report(java.lang.Exception,boolean)
+meth protected void report(java.lang.Throwable,boolean)
+meth protected void report(org.codehaus.groovy.GroovyExceptionInterface,boolean)
+meth protected void report(org.codehaus.groovy.control.CompilationFailedException,boolean)
+meth protected void stacktrace(java.lang.Throwable,boolean)
+meth public void write(java.io.PrintStream)
+meth public void write(java.io.PrintWriter)
+supr java.lang.Object
+hfds base,debug,output
+
+CLSS public org.codehaus.groovy.tools.FileSystemCompiler
+cons public init(org.codehaus.groovy.control.CompilerConfiguration)
+cons public init(org.codehaus.groovy.control.CompilerConfiguration,org.codehaus.groovy.control.CompilationUnit)
+innr public static CompilationOptions
+innr public static VersionProvider
+meth public static boolean validateFiles(java.lang.String[])
+meth public static groovyjarjarpicocli.CommandLine configureParser(org.codehaus.groovy.tools.FileSystemCompiler$CompilationOptions)
+meth public static int checkFiles(java.lang.String[])
+meth public static void commandLineCompile(java.lang.String[]) throws java.lang.Exception
+meth public static void commandLineCompile(java.lang.String[],boolean) throws java.lang.Exception
+meth public static void commandLineCompileWithErrorHandling(java.lang.String[],boolean)
+meth public static void deleteRecursive(java.io.File)
+meth public static void displayHelp()
+meth public static void displayHelp(java.io.PrintWriter)
+meth public static void displayVersion()
+meth public static void displayVersion(java.io.PrintWriter)
+meth public static void doCompilation(org.codehaus.groovy.control.CompilerConfiguration,org.codehaus.groovy.control.CompilationUnit,java.lang.String[]) throws java.lang.Exception
+meth public static void doCompilation(org.codehaus.groovy.control.CompilerConfiguration,org.codehaus.groovy.control.CompilationUnit,java.lang.String[],boolean) throws java.lang.Exception
+meth public static void main(java.lang.String[])
+meth public void compile(java.io.File[]) throws java.lang.Exception
+meth public void compile(java.lang.String[]) throws java.lang.Exception
+supr java.lang.Object
+hfds displayStackTraceOnError,unit
+
+CLSS public static org.codehaus.groovy.tools.FileSystemCompiler$CompilationOptions
+ outer org.codehaus.groovy.tools.FileSystemCompiler
+cons public init()
+meth public java.lang.String[] generateFileNames()
+meth public org.codehaus.groovy.control.CompilerConfiguration toCompilerConfiguration() throws java.io.IOException
+supr java.lang.Object
+hfds classpath,compileStatic,configScript,encoding,files,flags,helpRequested,indy,javacOptionsMap,jointCompilation,parameterMetadata,previewFeatures,printStack,scriptBaseClass,sourcepath,targetDir,temp,typeChecked,versionRequested
+
+CLSS public static org.codehaus.groovy.tools.FileSystemCompiler$VersionProvider
+ outer org.codehaus.groovy.tools.FileSystemCompiler
+cons public init()
+intf groovyjarjarpicocli.CommandLine$IVersionProvider
+meth public java.lang.String[] getVersion()
+supr java.lang.Object
+
+CLSS public org.codehaus.groovy.tools.GrapeMain
+cons public init()
+intf groovy.lang.GroovyObject
+intf java.lang.Runnable
+meth public !varargs static void main(java.lang.String[])
+meth public groovy.lang.MetaClass getMetaClass()
+meth public java.util.List<java.lang.String> getUnmatched()
+meth public void run()
+meth public void setMetaClass(groovy.lang.MetaClass)
+meth public void setUnmatched(java.util.List<java.lang.String>)
+supr java.lang.Object
+hfds debug,info,parser,properties,quiet,resolvers,unmatched,verbose,warn
+hcls HelpOptionsMixin,Install,ListCommand,Resolve,Uninstall,VersionProvider
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Install$_run_closure1
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.String)
+meth public java.lang.Object doCall(java.lang.String)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$ListCommand$_run_closure1
+cons public init(java.lang.Object,java.lang.Object,groovy.lang.Reference,groovy.lang.Reference)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Integer getModuleCount()
+meth public java.lang.Integer getVersionCount()
+meth public java.lang.Object call(java.lang.String,java.util.Map)
+meth public java.lang.Object doCall(java.lang.String,java.util.Map)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$ListCommand$_run_closure1$_closure2
+cons public init(java.lang.Object,java.lang.Object,groovy.lang.Reference,groovy.lang.Reference,groovy.lang.Reference)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Integer getModuleCount()
+meth public java.lang.Integer getVersionCount()
+meth public java.lang.Object call(java.lang.String,java.util.List<java.lang.String>)
+meth public java.lang.Object doCall(java.lang.String,java.util.List<java.lang.String>)
+meth public java.lang.String getGroupName()
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Resolve$_run_closure1
+cons public init(java.lang.Object,java.lang.Object,groovy.lang.Reference)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object doCall(java.lang.Object)
+meth public java.lang.Object getResults()
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Uninstall$_run_closure1
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.String,java.util.Map)
+meth public java.lang.Object doCall(java.lang.String,java.util.Map)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Uninstall$_run_closure1$_closure4
+cons public init(java.lang.Object,java.lang.Object,groovy.lang.Reference)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.String,java.util.List<java.lang.String>)
+meth public java.lang.Object doCall(java.lang.String,java.util.List<java.lang.String>)
+meth public java.lang.String getGroupName()
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Uninstall$_run_closure2
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.String,java.util.Map)
+meth public java.lang.Object doCall(java.lang.String,java.util.Map)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Uninstall$_run_closure2$_closure5
+cons public init(java.lang.Object,java.lang.Object,groovy.lang.Reference)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.String,java.util.List<java.lang.String>)
+meth public java.lang.Object doCall(java.lang.String,java.util.List<java.lang.String>)
+meth public java.lang.String getGroupName()
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$Uninstall$_run_closure3
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.String,java.util.Map)
+meth public java.lang.Object doCall(java.lang.String,java.util.Map)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$_init_closure3
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.Object,java.lang.Object)
+meth public java.lang.Object doCall(java.lang.Object,java.lang.Object)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$_main_closure1
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.Object,java.lang.Object)
+meth public java.lang.Object doCall(java.lang.Object,java.lang.Object)
+supr groovy.lang.Closure
+
+CLSS public final org.codehaus.groovy.tools.GrapeMain$_main_closure2
+cons public init(java.lang.Object,java.lang.Object)
+intf org.codehaus.groovy.runtime.GeneratedClosure
+meth public java.lang.Object call(java.lang.Object,java.lang.Object)
+meth public java.lang.Object doCall(java.lang.Object,java.lang.Object)
+supr groovy.lang.Closure
+
+CLSS public org.codehaus.groovy.tools.GrapeUtil
+cons public init()
+meth public static java.util.Map<java.lang.String,java.lang.Object> getIvyParts(java.lang.String)
+supr java.lang.Object
+
+CLSS public org.codehaus.groovy.tools.GroovyClass
+cons public init(java.lang.String,byte[])
+fld public final static org.codehaus.groovy.tools.GroovyClass[] EMPTY_ARRAY
+meth public byte[] getBytes()
+meth public java.lang.String getName()
+supr java.lang.Object
+hfds bytes,name
+
+CLSS public org.codehaus.groovy.tools.GroovyStarter
+cons public init()
+meth public static void main(java.lang.String[])
+meth public static void rootLoader(java.lang.String[])
+supr java.lang.Object
+
+CLSS public org.codehaus.groovy.tools.LoaderConfiguration
+cons public init()
+meth public java.lang.String getMainClass()
+meth public java.net.URL[] getClassPathUrls()
+meth public java.util.List<java.lang.String> getGrabUrls()
+meth public void addClassPath(java.lang.String)
+meth public void addFile(java.io.File)
+meth public void addFile(java.lang.String)
+meth public void configure(java.io.InputStream) throws java.io.IOException
+meth public void setMainClass(java.lang.String)
+meth public void setRequireMain(boolean)
+supr java.lang.Object
+hfds ALL_WILDCARD,CONFIGSCRIPT_PREFIX,GRAB_PREFIX,LOAD_PREFIX,MAIN_PREFIX,MATCH_ALL,MATCH_FILE_NAME,PROP_PREFIX,WILDCARD,classPath,configScripts,grabList,main,requireMain
+
+CLSS public org.codehaus.groovy.tools.RootLoader
+cons public init(java.net.URL[],java.lang.ClassLoader)
+cons public init(org.codehaus.groovy.tools.LoaderConfiguration)
+meth protected java.lang.Class findClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth protected java.lang.Class loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
+meth public java.net.URL getResource(java.lang.String)
+meth public void addURL(java.net.URL)
+supr java.net.URLClassLoader
+hfds EMPTY_URL_ARRAY,ORG_W3C_DOM_NODE,customClasses
+
+CLSS public org.codehaus.groovy.tools.StringHelper
+cons public init()
+meth public static java.lang.String[] tokenizeUnquoted(java.lang.String)
+supr java.lang.Object
+hfds DOUBLE_QUOTE,EMPTY_STRING_ARRAY,SINGLE_QUOTE,SPACE
+
+CLSS public abstract org.codehaus.groovy.tools.Utilities
+cons public init()
+meth public static boolean isJavaIdentifier(java.lang.String)
+meth public static java.lang.String eol()
+meth public static java.lang.String repeatString(java.lang.String,int)
+supr java.lang.Object
+hfds INVALID_JAVA_IDENTIFIERS,eol
 
 CLSS public org.codehaus.groovy.transform.ASTTestTransformation
 cons public init()

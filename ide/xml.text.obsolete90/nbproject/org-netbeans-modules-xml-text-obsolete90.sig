@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.13.0
+#Version 1.17.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -1029,6 +1029,7 @@ supr java.lang.Object
 hfds formatWriter
 
 CLSS public abstract org.netbeans.modules.editor.FormatterIndentEngine
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String EXPAND_TABS_PROP = "expandTabs"
 fld public final static java.lang.String SPACES_PER_TAB_PROP = "spacesPerTab"
@@ -1046,6 +1047,7 @@ meth public void setAcceptedMimeTypes(java.lang.String[])
 meth public void setExpandTabs(boolean)
 meth public void setSpacesPerTab(int)
 meth public void setValue(java.lang.String,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public void setValue(java.lang.String,java.lang.Object,java.lang.String)
 supr org.openide.text.IndentEngine
 hfds acceptedMimeTypes,formatter,serialPersistentFields,serialVersionUID

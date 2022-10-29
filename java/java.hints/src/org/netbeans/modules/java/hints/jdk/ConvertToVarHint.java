@@ -63,7 +63,7 @@ import org.netbeans.spi.java.hints.TriggerPatterns;
 public class ConvertToVarHint {
 
     // hint will be disabled for error codes present in SKIPPED_ERROR_CODES.
-    private final static String[] SKIPPED_ERROR_CODES = {
+    private static final String[] SKIPPED_ERROR_CODES = {
         "compiler.err.generic.array.creation" //NOI18N
     };
 
@@ -203,6 +203,8 @@ public class ConvertToVarHint {
                     }
                     break;
                 case LAMBDA_EXPRESSION:
+                    return false;
+                case MEMBER_REFERENCE:
                     return false;
                 default:
                     break;

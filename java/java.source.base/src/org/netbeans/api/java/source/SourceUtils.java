@@ -66,6 +66,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.Reader;
 import java.util.function.Predicate;
+import javax.lang.model.util.ElementScanner14;
 
 import javax.swing.SwingUtilities;
 import javax.swing.text.ChangedCharSetException;
@@ -102,7 +103,6 @@ import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.ModuleNames;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.ClassParser;
@@ -197,11 +197,7 @@ public class SourceUtils {
     
     public static TypeMirror getBound(WildcardType wildcardType) {
         Type.TypeVar bound = ((Type.WildcardType)wildcardType).bound;
-        try {
-            return bound != null ? bound.bound : null;
-        } catch (NoSuchFieldError err) {
-            return bound != null ? bound.getUpperBound() : null;
-        }
+        return bound != null ? bound.getUpperBound() : null;
     }
 
     /**
@@ -411,6 +407,7 @@ public class SourceUtils {
             if (info instanceof WorkingCopy) {
                 CompilationUnitTree nue = (CompilationUnitTree) ((WorkingCopy)info).resolveRewriteTarget(cut);
                 ((WorkingCopy)info).rewrite(info.getCompilationUnit(), GeneratorUtilities.get((WorkingCopy)info).addImports(nue, elementsToImport));
+                ((WorkingCopy)info).invalidateSourceAfter = true;
             } else {
                 final ElementHandle handle = ElementHandle.create(toImport);
                 SwingUtilities.invokeLater(new Runnable() {
@@ -654,7 +651,7 @@ public class SourceUtils {
         return null;
     }
 
-    private static abstract class Match {
+    private abstract static class Match {
 
         private final String name;
 
@@ -871,7 +868,7 @@ public class SourceUtils {
                 public void run(final CompilationController control) throws Exception {
                     if (control.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED).compareTo (JavaSource.Phase.ELEMENTS_RESOLVED)>=0) {
                         final List<TypeElement>  types = new ArrayList<>();
-                        final ElementScanner6<Void,Void> visitor = new ElementScanner6<Void, Void>() {
+                        final ElementScanner6<Void,Void> visitor = new ElementScanner14<Void, Void>() {
                             @Override
                             public Void visitType(TypeElement e, Void p) {
                                 if (e.getEnclosingElement().getKind() == ElementKind.PACKAGE
@@ -883,14 +880,6 @@ public class SourceUtils {
                                 }
                             }
 
-                            @Override
-                            public Void scan(Element e, Void p) {
-                                if (TreeShims.isRecordComponent(e)) {
-                                    return visitVariable((VariableElement) e, p);
-                                } else {
-                                    return super.scan(e, p);
-                                }
-                            }
                         };
                         visitor.scan(control.getTopLevelElements(), null);
                         for (TypeElement type : types) {

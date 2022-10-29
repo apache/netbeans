@@ -63,6 +63,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
@@ -125,6 +126,7 @@ import org.openide.util.Exceptions;
 import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Type;
@@ -147,7 +149,6 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
@@ -1049,6 +1050,67 @@ public class Utilities {
                 enclosingMethodElement.getKind() == ElementKind.CONSTRUCTOR);
     }
 
+    @SuppressWarnings("BoxedValueEquality")
+    public static boolean isReferencedIn(CompilationInfo info, TreePath variable, Iterable<? extends TreePath> in) {
+        final Trees trees = info.getTrees();
+        final Element e = trees.getElement(variable);
+
+        if (e == null) { //TODO: check also error
+            return false;
+        }
+
+        for (TreePath tp : in) {
+
+            if (e.equals(trees.getElement(tp))) {
+                return true;
+            }
+
+            boolean occurs = new ErrorAwareTreePathScanner<Boolean, Void>() {
+                private boolean found = false;
+                @Override
+                public Boolean scan(Tree tree, Void p) {
+                    if (found) {
+                        return true; // fast path
+                    }
+
+                    if (tree == null) {
+                        return false;
+                    }
+
+                    TreePath currentPath = new TreePath(getCurrentPath(), tree);
+                    Element currentElement = trees.getElement(currentPath);
+
+                    if (e.equals(currentElement)) {
+                        found = true;
+                        return true;
+                    }
+
+                    return super.scan(tree, p);
+                }
+
+                @Override
+                public Boolean reduce(Boolean r1, Boolean r2) {
+                    if (r1 == null) {
+                        return r2;
+                    }
+
+                    if (r2 == null) {
+                        return r1;
+                    }
+
+                    return r1 || r2;
+                }
+
+            }.scan(tp, null) == Boolean.TRUE;
+
+            if (occurs) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static Pair<List<? extends TypeMirror>, List<String>> resolveArguments(CompilationInfo info, TreePath invocation, List<? extends ExpressionTree> realArguments, Element target) {
         MethodArguments ma = resolveArguments(info, invocation, realArguments, target, null);
         
@@ -1751,7 +1813,7 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(7);
+    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(8);
     
     static {
         PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N
@@ -3178,21 +3240,25 @@ public class Utilities {
         List<CaseTree> newCases = new ArrayList<>();
         SWITCH_TYPE switchType = SWITCH_TYPE.TRADITIONAL_SWITCH;
         Tree typeCastTree = null;
+        ExpressionTree switchExpr;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
-        List<ExpressionTree> patterns = new ArrayList<>();
+
+        List<Tree> patterns = new ArrayList<>();
         Tree leftVariable = null;
-        boolean ruleSwitchFlag = st.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
+        boolean ruleSwitchFlag = st.getKind() == Kind.SWITCH_EXPRESSION;
         if (ruleSwitchFlag) {
-            cases = TreeShims.getCases(st);
+            switchExpr = ((SwitchExpressionTree) st).getExpression();
+            cases = ((SwitchExpressionTree) st).getCases();
             switchType = SWITCH_TYPE.RULE_SWITCH;
         } else {
+            switchExpr = ((SwitchTree) st).getExpression();
             cases = ((SwitchTree) st).getCases();
         }
         for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
-            patterns.addAll(TreeShims.getExpressions(ct));
+            patterns.addAll(ct.getLabels());
             List<StatementTree> statements;
             if (ct.getStatements() == null) {
                 statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
@@ -3279,9 +3345,9 @@ public class Utilities {
                         typeCastTree = ((JCTree.JCTypeCast)body).getType();
                         body = ((JCTree.JCTypeCast)body).getExpression();
                     }
-                newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
+                newCases.add(make.CasePatterns(patterns, make.ExpressionStatement((ExpressionTree) body)));
             } else {
-                newCases.add(make.Case(patterns, body));
+                newCases.add(make.CasePatterns(patterns, body));
             }
 
             patterns = new ArrayList<>();
@@ -3294,7 +3360,7 @@ public class Utilities {
         ExpressionTree et = null;
         switch (switchType) {
             case SWITCH_EXPRESSION:
-                et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+                et = (ExpressionTree) make.SwitchExpression(switchExpr, newCases);
                 if (typeCastTree != null) {
                     et = make.Parenthesized(et);
                     et = make.TypeCast(typeCastTree, et);
@@ -3306,10 +3372,10 @@ public class Utilities {
                 }
                 break;
             case RULE_SWITCH:
-                wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
+                wc.rewrite(st, make.SwitchExpression(switchExpr, newCases));
                 break;
             case TRADITIONAL_SWITCH:
-                wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));
+                wc.rewrite((SwitchTree) st, make.Switch(switchExpr, newCases));
                 break;
             default:
                 break;

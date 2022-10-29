@@ -33,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -52,6 +51,7 @@ import org.openide.util.Utilities;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author ads
@@ -60,8 +60,6 @@ import org.xml.sax.SAXException;
 public final class Utils {
     
     private static final String APPDATA_CMD = "cmd /c echo %AppData%"; // NOI18N
-    
-    public static final Charset UTF_8 = Charset.forName("UTF-8");     // NOI18N
     
     private Utils(){
     }
@@ -97,7 +95,7 @@ public final class Utils {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader( 
-                    new FileInputStream(file), UTF_8)); 
+                    new FileInputStream(file), UTF_8));
             return (JSONObject)JSONValue.parseWithException(reader);
         } catch (ParseException ex) {
             Logger.getLogger( Utils.class.getCanonicalName()).log(Level.FINE,

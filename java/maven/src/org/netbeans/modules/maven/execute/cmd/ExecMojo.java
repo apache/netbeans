@@ -19,9 +19,9 @@
 
 package org.netbeans.modules.maven.execute.cmd;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -70,12 +70,8 @@ public class ExecMojo extends ExecutionEventObject {
         if (exc != null) {
             String message = (String) exc.get("msg");
             if (message != null) {
-                try {
-                    byte[] bytes = Base64.decodeBase64(message.getBytes("UTF-8"));
-                    toRet.setErrorMessage(new String(bytes, "UTF-8"));
-                } catch (UnsupportedEncodingException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                byte[] bytes = Base64.decodeBase64(message.getBytes(StandardCharsets.UTF_8));
+                toRet.setErrorMessage(new String(bytes, StandardCharsets.UTF_8));
             }
         }
         JSONObject loc = (JSONObject) mojo.get("loc");

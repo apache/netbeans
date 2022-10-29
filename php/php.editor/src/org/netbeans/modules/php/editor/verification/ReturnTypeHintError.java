@@ -48,7 +48,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
- * Check "void" return type.
+ * Check "void" and "never" return type.
  *
  */
 public class ReturnTypeHintError extends HintErrorRule {
@@ -91,7 +91,7 @@ public class ReturnTypeHintError extends HintErrorRule {
         return getPhpVersion(file).compareTo(PhpVersion.PHP_71) >= 0;
     }
 
-    // support only "void"
+    // support only "void" and "never"
     // XXX support types?
     private void checkReturnType(Map<ASTNode, Set<ReturnStatement>> returnStatements, List<Hint> hints) {
         for (Entry<ASTNode, Set<ReturnStatement>> entry : returnStatements.entrySet()) {
@@ -115,13 +115,13 @@ public class ReturnTypeHintError extends HintErrorRule {
             if (returnType instanceof NamespaceName) {
                 NamespaceName namespaceName = (NamespaceName) returnType;
                 String name = CodeUtils.extractUnqualifiedName(namespaceName);
-                checkVoidReturnStatements(statements, name, hints);
+                checkVoidAndNeverReturnStatements(statements, name, hints);
             } else if (returnType instanceof NullableType) {
                 Expression type = ((NullableType) returnType).getType();
                 if (type instanceof NamespaceName) {
                     NamespaceName namespaceName = (NamespaceName) type;
                     String name = CodeUtils.extractUnqualifiedName(namespaceName);
-                    checkInvalidVoidReturnType(type, name, hints);
+                    checkInvalidVoidAndNeverReturnType(type, name, hints);
                 }
             }
 
@@ -129,30 +129,38 @@ public class ReturnTypeHintError extends HintErrorRule {
     }
 
     @NbBundle.Messages({
-        "ReturnTypeHintErrorVoidDesc=\"void\" cannot return anything"
+        "# {0} - type",
+        "ReturnTypeHintErrorVoidDesc=\"{0}\" cannot return anything"
     })
-    private void checkVoidReturnStatements(Set<ReturnStatement> statements, String name, List<Hint> hints) {
-        if (Type.VOID.equals(name)) {
+    private void checkVoidAndNeverReturnStatements(Set<ReturnStatement> statements, String name, List<Hint> hints) {
+        if (Type.VOID.equals(name) || isNeverType(name)) {
             // check empty return statement
             statements.forEach((statement) -> {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
                 Expression expression = statement.getExpression();
-                if (expression != null) {
-                    addHint(statement, Bundle.ReturnTypeHintErrorVoidDesc(), hints);
+                if (expression != null || isNeverType(name)) {
+                    addHint(statement, Bundle.ReturnTypeHintErrorVoidDesc(name), hints);
                 }
             });
         }
     }
 
     @NbBundle.Messages({
-        "ReturnTypeHintErrorInvalidVoidDesc=\"void\" cannot be used with \"?\""
+        "# {0} - type",
+        "ReturnTypeHintErrorInvalidVoidDesc=\"{0}\" cannot be used with \"?\""
     })
-    private void checkInvalidVoidReturnType(Expression returnType, String name, List<Hint> hints) {
-        if (Type.VOID.equals(name)) {
-            addHint(returnType, Bundle.ReturnTypeHintErrorInvalidVoidDesc(), hints);
+    private void checkInvalidVoidAndNeverReturnType(Expression returnType, String name, List<Hint> hints) {
+        if (Type.VOID.equals(name)
+                || isNeverType(name)) {
+            addHint(returnType, Bundle.ReturnTypeHintErrorInvalidVoidDesc(name), hints);
         }
+    }
+
+    private boolean isNeverType(String name) {
+        return getPhpVersion(fileObject).hasNeverType()
+                && Type.NEVER.equals(name);
     }
 
     private void addHint(ASTNode node, String description, List<Hint> hints) {
@@ -213,15 +221,11 @@ public class ReturnTypeHintError extends HintErrorRule {
             if (node != null) {
                 Set<ReturnStatement> returns = returnStatements.get(node);
                 if (returns == null) {
-                    HashSet<ReturnStatement> statements = new HashSet<>();
-                    if (returnStatement != null) {
-                        statements.add(returnStatement);
-                    }
-                    returnStatements.put(node, statements);
-                } else {
-                    if (returnStatement != null) {
-                        returns.add(returnStatement);
-                    }
+                    returns = new HashSet<>();
+                    returnStatements.put(node, returns);
+                }
+                if (returnStatement != null) {
+                    returns.add(returnStatement);
                 }
             }
         }

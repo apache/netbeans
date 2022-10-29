@@ -84,16 +84,42 @@ public class ConfigBuilderProvider {
             = new Config.Next(GlassFishVersion.GF_6_1_0,
                     ConfigBuilderProvider.class.getResource("GlassFishV6_1_0.xml"));
 
+    /** Library builder configuration since GlassFish 6.2.0. */
+    private static final Config.Next CONFIG_V6_2_0
+            = new Config.Next(GlassFishVersion.GF_6_2_0,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_0.xml"));
+    
     /** Library builder configuration since GlassFish 6.2.1. */
     private static final Config.Next CONFIG_V6_2_1
             = new Config.Next(GlassFishVersion.GF_6_2_1,
                     ConfigBuilderProvider.class.getResource("GlassFishV6_2_1.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.2. */
+    private static final Config.Next CONFIG_V6_2_2
+            = new Config.Next(GlassFishVersion.GF_6_2_2,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_2.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.3. */
+    private static final Config.Next CONFIG_V6_2_3
+            = new Config.Next(GlassFishVersion.GF_6_2_3,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_3.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.4. */
+    private static final Config.Next CONFIG_V6_2_4
+            = new Config.Next(GlassFishVersion.GF_6_2_4,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_4.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.5. */
+    private static final Config.Next CONFIG_V6_2_5
+            = new Config.Next(GlassFishVersion.GF_6_2_5,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_4.xml"));
 
     /** Library builder configuration for GlassFish cloud. */
     private static final Config config
             = new Config(CONFIG_V3, CONFIG_V4, CONFIG_V4_1, CONFIG_V5, 
                          CONFIG_V5_0_1, CONFIG_V5_1, CONFIG_V6, CONFIG_V6_1_0,
-                         CONFIG_V6_2_1);
+                         CONFIG_V6_2_0, CONFIG_V6_2_1, CONFIG_V6_2_2, 
+                         CONFIG_V6_2_3, CONFIG_V6_2_4, CONFIG_V6_2_5);
 
     /** Builders array for each server instance. */
     private static final Map<GlassFishServer, ConfigBuilder> builders

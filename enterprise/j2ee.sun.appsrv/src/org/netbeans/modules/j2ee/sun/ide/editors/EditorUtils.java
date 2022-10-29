@@ -34,7 +34,7 @@ public class EditorUtils {
     public EditorUtils() {
     }
 
-    static public boolean isValidInt0(String str){
+    public static boolean isValidInt0(String str){
         int val;
         //represents 0 - MAX_INT range
         try
@@ -52,7 +52,7 @@ public class EditorUtils {
         return true;
     }     
     
-    static public boolean isValidLong(String str){
+    public static boolean isValidLong(String str){
         //represents -ve , 0  +ve range represented by Long
         try
         {

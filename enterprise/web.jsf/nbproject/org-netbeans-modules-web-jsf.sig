@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.82.0
+#Version 1.86.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -61,6 +61,7 @@ meth public static org.netbeans.api.project.libraries.Library createMavenDepende
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.project.libraries.Library enhanceLibraryWithPomContent(org.netbeans.api.project.libraries.Library,java.util.List<java.net.URI>) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static void enhanceFileBody(org.openide.loaders.DataObject,java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()

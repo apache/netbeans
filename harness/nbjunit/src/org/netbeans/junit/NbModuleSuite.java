@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,13 +54,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.Protectable;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestResult;
+import org.junit.Assert;
 import org.netbeans.junit.internal.NbModuleLogHandler;
 
 /**
@@ -1282,7 +1283,7 @@ public class NbModuleSuite {
             byte[] bytes = new byte[4096];
             try {
                 for (int i; (i = is.read(bytes)) != -1;) {
-                    builder.append(new String(bytes, 0, i, "UTF-8"));
+                    builder.append(new String(bytes, 0, i, StandardCharsets.UTF_8));
                 }
             } finally {
                 if (close) {
@@ -1558,7 +1559,7 @@ public class NbModuleSuite {
                 }
             }
             FileOutputStream os = new FileOutputStream(file);
-            os.write(xml.getBytes("UTF-8"));
+            os.write(xml.getBytes(StandardCharsets.UTF_8));
             os.close();
         }
 

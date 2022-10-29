@@ -136,7 +136,7 @@ public class NativeTaskTest extends NativeExecutionBaseTestCase {
         assertEquals(threadsNum, counters.getCounter(CNT_EXECUTION_SUCCESS).get());
     }
 
-    private final static class Worker implements Runnable {
+    private static final class Worker implements Runnable {
 
         private final CountDownLatch start;
         private final CountDownLatch latch;

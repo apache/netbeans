@@ -244,14 +244,10 @@ public final class EarProjectGenerator {
                 FileObject fileBeingCopied = null;
                 if (null != appXml) {
                     // make a backup copy of the application.xml and its siblings
-                    Enumeration filesToBackup =
-                            appXml.getParent().getChildren(false);
-                    while (null != filesToBackup &&
-                            filesToBackup.hasMoreElements()) {
-                        fileBeingCopied =
-                                (FileObject) filesToBackup.nextElement();
-                        if (fileBeingCopied.isData() &&
-                                fileBeingCopied.canRead()) {
+                    Enumeration<? extends FileObject> filesToBackup = appXml.getParent().getChildren(false);
+                    while (null != filesToBackup && filesToBackup.hasMoreElements()) {
+                        fileBeingCopied = (FileObject) filesToBackup.nextElement();
+                        if (fileBeingCopied.isData() && fileBeingCopied.canRead()) {
                             try {
                                 FileUtil.copyFile(fileBeingCopied,
                                         appXml.getParent(),

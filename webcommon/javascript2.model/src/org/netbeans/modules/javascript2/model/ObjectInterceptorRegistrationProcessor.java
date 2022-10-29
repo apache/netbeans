@@ -41,7 +41,7 @@ public class ObjectInterceptorRegistrationProcessor extends LayerGeneratingProce
     public ObjectInterceptorRegistrationProcessor() {
         super();
     }
-    
+
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
         for (Element element : roundEnv.getElementsAnnotatedWith(ObjectInterceptor.Registration.class)) {

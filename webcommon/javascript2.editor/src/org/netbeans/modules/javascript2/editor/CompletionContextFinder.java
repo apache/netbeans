@@ -35,36 +35,56 @@ import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
  * @author Petr Pisl
  */
 public class CompletionContextFinder {
-   
+
     private static final List<JsTokenId> WHITESPACES_TOKENS = Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.EOL);
-    
+
     private static final List<JsTokenId> CHANGE_CONTEXT_TOKENS = Arrays.asList(
             JsTokenId.OPERATOR_SEMICOLON, JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY);
     private static final List<Object[]> OBJECT_PROPERTY_TOKENCHAINS = Arrays.asList(
         new Object[]{JsTokenId.OPERATOR_DOT},
-        new Object[]{JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER}
+        new Object[]{JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.OPERATOR_DOT, JsTokenId.PRIVATE_IDENTIFIER},
+        new Object[]{JsTokenId.OPERATOR_OPTIONAL_ACCESS},
+        new Object[]{JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.PRIVATE_IDENTIFIER}
     );
-    
+
     private static final List<Object[]> OBJECT_THIS_TOKENCHAINS = Arrays.asList(
         new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_DOT},
-        new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER}
+        new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_DOT, JsTokenId.PRIVATE_IDENTIFIER},
+        new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_OPTIONAL_ACCESS},
+        new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.KEYWORD_THIS, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.PRIVATE_IDENTIFIER}
     );
-    
+
     private static final List<Object[]> NUMBER_TOKENCHAINS = Arrays.asList(
         new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_DOT},
-        new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER}
+        new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_DOT, JsTokenId.PRIVATE_IDENTIFIER},
+        new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_OPTIONAL_ACCESS},
+        new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.NUMBER, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.PRIVATE_IDENTIFIER}
     );
-    
+
     private static final List<Object[]> STRING_TOKENCHAINS = Arrays.asList(
         new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_DOT},
-        new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER}
+        new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_DOT, JsTokenId.PRIVATE_IDENTIFIER},
+        new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_OPTIONAL_ACCESS},
+        new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.STRING_END, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.PRIVATE_IDENTIFIER}
     );
-    
+
     private static final List<Object[]> REGEXP_TOKENCHAINS = Arrays.asList(
         new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_DOT},
-        new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER}
+        new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_DOT, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_DOT, JsTokenId.PRIVATE_IDENTIFIER},
+        new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_OPTIONAL_ACCESS},
+        new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.IDENTIFIER},
+        new Object[]{JsTokenId.REGEXP_END, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.PRIVATE_IDENTIFIER}
     );
-       
+
     @NonNull
     static CompletionContext findCompletionContext(ParserResult info, int offset){
         TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
@@ -75,27 +95,27 @@ public class CompletionContextFinder {
         if (ts == null) {
             return CompletionContext.NONE;
         }
-        
+
         ts.move(offset);
-        
+
         if (!ts.moveNext() && !ts.movePrevious()){
             return CompletionContext.NONE;
         }
-               
+
         Token<? extends JsTokenId> token = ts.token();
         JsTokenId tokenId =token.id();
-        
+
         if (tokenId == JsTokenId.DOC_COMMENT) {
             return CompletionContext.DOCUMENTATION;
         }
-        
-        if (tokenId == JsTokenId.OPERATOR_DOT && ts.moveNext()) {
+
+        if ((tokenId == JsTokenId.OPERATOR_DOT || tokenId == JsTokenId.OPERATOR_OPTIONAL_ACCESS) && ts.moveNext()) {
             ts.movePrevious();
             ts.movePrevious();
             token = ts.token();
             tokenId =token.id();
         }
-        
+
         if (tokenId == JsTokenId.STRING || tokenId == JsTokenId.STRING_END) {
             token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.STRING, JsTokenId.STRING_BEGIN, JsTokenId.STRING_END));
             if (token == null) {
@@ -124,23 +144,23 @@ public class CompletionContextFinder {
             return CompletionContext.OBJECT_MEMBERS;
         }
 
-        if (acceptTokenChains(ts, NUMBER_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT)) {
+        if (acceptTokenChains(ts, NUMBER_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT && tokenId != JsTokenId.OPERATOR_OPTIONAL_ACCESS)) {
             return CompletionContext.NUMBER;
         }
-        
-        if (acceptTokenChains(ts, STRING_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT)) {
+
+        if (acceptTokenChains(ts, STRING_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT && tokenId != JsTokenId.OPERATOR_OPTIONAL_ACCESS)) {
             return CompletionContext.STRING;
         }
-        
-        if (acceptTokenChains(ts, REGEXP_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT)) {
+
+        if (acceptTokenChains(ts, REGEXP_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT && tokenId != JsTokenId.OPERATOR_OPTIONAL_ACCESS)) {
             return CompletionContext.REGEXP;
         }
-        
-        if (acceptTokenChains(ts, OBJECT_PROPERTY_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT)) {
+
+        if (acceptTokenChains(ts, OBJECT_PROPERTY_TOKENCHAINS, tokenId != JsTokenId.OPERATOR_DOT && tokenId != JsTokenId.OPERATOR_OPTIONAL_ACCESS)) {
             return CompletionContext.OBJECT_PROPERTY;
         }
-        
-        ts.move(offset); 
+
+        ts.move(offset);
         if (ts.moveNext()) {
             if (isCallArgumentContext(ts)) {
                 return CompletionContext.CALL_ARGUMENT;
@@ -152,8 +172,8 @@ public class CompletionContextFinder {
                 return CompletionContext.OBJECT_PROPERTY_NAME;
             }
         }
-        
-        ts.move(offset); 
+
+        ts.move(offset);
         if (!ts.moveNext()) {
             if (!ts.movePrevious()) {
                 return CompletionContext.GLOBAL;
@@ -163,7 +183,7 @@ public class CompletionContextFinder {
         if (tokenId == JsTokenId.EOL && ts.movePrevious()) {
             token = ts.token(); tokenId = token.id();
         }
-        if (tokenId == JsTokenId.IDENTIFIER || WHITESPACES_TOKENS.contains(tokenId)) {
+        if (tokenId == JsTokenId.IDENTIFIER || tokenId == JsTokenId.PRIVATE_IDENTIFIER || WHITESPACES_TOKENS.contains(tokenId)) {
             if (!ts.movePrevious()) {
                 return CompletionContext.GLOBAL;
             }
@@ -180,14 +200,14 @@ public class CompletionContextFinder {
         if (tokenId == JsTokenId.DOC_COMMENT) {
             return CompletionContext.DOCUMENTATION;
         }
-        
+
         return CompletionContext.EXPRESSION;
     }
-    
+
     protected static boolean isCallArgumentContext(TokenSequence<JsTokenId> ts) {
          if (ts.movePrevious()) {
             Token<? extends JsTokenId> token = LexUtilities.findPreviousNonWsNonComment(ts);
-            if (token != null 
+            if (token != null
                     && (token.id() == JsTokenId.BRACKET_LEFT_PAREN || token.id() == JsTokenId.OPERATOR_COMMA)) {
                 int balanceParen = token.id() == JsTokenId.BRACKET_LEFT_PAREN ? 0 : 1;
                 int balanceCurly = 0;
@@ -211,7 +231,7 @@ public class CompletionContextFinder {
                 if (balanceParen == 0 && balanceCurly == 0 && balanceBracket == 0) {
                     if (ts.movePrevious() && token.id() == JsTokenId.BRACKET_LEFT_PAREN) {
                         token = LexUtilities.findPreviousNonWsNonComment(ts);
-                        if (token.id() == JsTokenId.IDENTIFIER) {
+                        if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
                             return true;
                         }
                     }
@@ -220,24 +240,23 @@ public class CompletionContextFinder {
         }
         return false;
     }
-    
+
     protected static boolean isPropertyNameContext(TokenSequence<JsTokenId> ts) {
-        
+
         //find the begining of the object literal
-        Token<? extends JsTokenId> token = null;
         JsTokenId tokenId = ts.token().id();
-        
+
         if (tokenId == JsTokenId.OPERATOR_COMMA) {
             ts.movePrevious();
         }
         List<JsTokenId> listIds = Arrays.asList(JsTokenId.OPERATOR_COMMA, JsTokenId.OPERATOR_COLON, JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.OPERATOR_SEMICOLON);
         // find previous , or : or { or ;
-        token = LexUtilities.findPreviousToken(ts, listIds);
+        Token<? extends JsTokenId> token = LexUtilities.findPreviousToken(ts, listIds);
         tokenId = token.id();
         boolean commaFirst = false;
         if (tokenId == JsTokenId.OPERATOR_COMMA && ts.movePrevious()) {
             List<JsTokenId> checkParentList = new ArrayList(listIds);
-            List<JsTokenId> parentList = Arrays.asList(JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN, JsTokenId.BRACKET_RIGHT_CURLY); 
+            List<JsTokenId> parentList = Arrays.asList(JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN, JsTokenId.BRACKET_RIGHT_CURLY);
             checkParentList.addAll(parentList);
             token = LexUtilities.findPreviousToken(ts, checkParentList);
             tokenId = token.id();
@@ -254,7 +273,7 @@ public class CompletionContextFinder {
                     return true;
                 }
             }
-        } 
+        }
         if (tokenId == JsTokenId.BRACKET_LEFT_CURLY && ts.movePrevious()) {
             List<JsTokenId> emptyIds = Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.EOL, JsTokenId.BLOCK_COMMENT);
             // check whether it's the first property in the object literal definion
@@ -281,10 +300,10 @@ public class CompletionContextFinder {
                 }
             }
         }
-            
+
         return false;
     }
-    
+
     private static boolean acceptTokenChains(TokenSequence tokenSequence, List<Object[]> tokenIdChains, boolean movePrevious) {
         for (Object[] tokenIDChain : tokenIdChains){
             if (acceptTokenChain(tokenSequence, tokenIDChain, movePrevious)){
@@ -294,7 +313,7 @@ public class CompletionContextFinder {
 
         return false;
     }
-    
+
     private static boolean acceptTokenChain(TokenSequence tokenSequence, Object[] tokenIdChain, boolean movePrevious) {
         int orgTokenSequencePos = tokenSequence.offset();
         boolean accept = true;
@@ -325,9 +344,8 @@ public class CompletionContextFinder {
         tokenSequence.moveNext();
        return accept;
     }
-    
+
     private static void balanceBracketBack(TokenSequence<JsTokenId> ts) {
-        Token<? extends JsTokenId> token = ts.token();
         JsTokenId tokenId = ts.token().id();
         JsTokenId tokenIdOriginal = ts.token().id();
         List<JsTokenId> lookingFor;
@@ -340,7 +358,7 @@ public class CompletionContextFinder {
         }
         int balance = -1;
         while (balance != 0 && ts.movePrevious()) {
-            token = LexUtilities.findPreviousToken(ts, lookingFor);
+            Token<? extends JsTokenId> token = LexUtilities.findPreviousToken(ts, lookingFor);
             tokenId = token.id();
             if (lookingFor.contains(tokenIdOriginal)) {
                 balance --;

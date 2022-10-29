@@ -35,13 +35,13 @@ public final class JavadocModule extends ModuleInstall {
 
     private static Collection<TopComponent> floatingTopComponents;
 
-    public synchronized static void registerTopComponent(TopComponent tc) {
+    public static synchronized void registerTopComponent(TopComponent tc) {
         if (floatingTopComponents == null)
             floatingTopComponents = new LinkedList<>();
         floatingTopComponents.add(tc);
     }
     
-    public synchronized static void unregisterTopComponent(TopComponent tc) {
+    public static synchronized void unregisterTopComponent(TopComponent tc) {
         if (floatingTopComponents == null)
             return;
         floatingTopComponents.remove(tc);

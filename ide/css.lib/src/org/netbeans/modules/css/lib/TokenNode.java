@@ -83,6 +83,6 @@ public class TokenNode extends AbstractParseTreeNode {
     }
     
     private CharSequence escapeNL(CharSequence text) {
-        return text.toString().replaceAll("\n", "\\\\n");
+        return text.toString().replace("\n", "\\n");
     }
 }

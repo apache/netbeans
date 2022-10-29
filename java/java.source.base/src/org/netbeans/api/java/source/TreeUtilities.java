@@ -35,17 +35,14 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
-import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
-import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
@@ -72,26 +69,16 @@ import javax.tools.SimpleJavaFileObject;
 
 import com.sun.source.util.DocTrees;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.code.Kinds;
-import com.sun.tools.javac.comp.ArgumentAttr;
 import com.sun.tools.javac.comp.Attr;
-import com.sun.tools.javac.comp.Check.CheckContext;
-import com.sun.tools.javac.comp.DeferredAttr;
-import com.sun.tools.javac.comp.InferenceContext;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.Parser;
 import com.sun.tools.javac.parser.ParserFactory;
-import com.sun.tools.javac.parser.ScannerFactory;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Names;
-import com.sun.tools.javac.util.Warner;
 import java.lang.reflect.Method;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -100,20 +87,15 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.lexer.JavadocTokenId;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.lib.nbjavac.services.CancelService;
 import org.netbeans.lib.nbjavac.services.NBAttr;
-import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBResolve;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
-import org.netbeans.modules.java.source.matching.CopyFinder;
 import org.netbeans.modules.java.source.matching.CopyFinder.HackScope;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
 import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -121,19 +103,13 @@ import org.openide.util.Exceptions;
  */
 public final class TreeUtilities {
     
+    private static final Logger LOG = Logger.getLogger(TreeUtilities.class.getName());
+
     /**{@link Kind}s that are represented by {@link ClassTree}.
      * 
      * @since 0.67
      */
-    public static final Set<Kind> CLASS_TREE_KINDS = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
-    static {
-        Kind recKind = null;
-        try {
-            recKind = Kind.valueOf(TreeShims.RECORD);
-            CLASS_TREE_KINDS.add(recKind);
-        } catch (IllegalArgumentException ex) {
-        }
-    }
+    public static final Set<Kind> CLASS_TREE_KINDS = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE, Kind.RECORD);
     private final CompilationInfo info;
     private final CommentHandlerService handler;
     
@@ -170,7 +146,7 @@ public final class TreeUtilities {
     }
 
     /**
-     * Checks wheteher given variable tree represents an enum constant.
+     * Checks whether given variable tree represents an enum constant.
      */
     public boolean isEnumConstant(VariableTree tree) {
         return (((JCTree.JCModifiers) tree.getModifiers()).flags & Flags.ENUM) != 0;
@@ -185,7 +161,7 @@ public final class TreeUtilities {
     }
     
     /**
-     * Checks wheteher given compilation unit represents a package-info.
+     * Checks whether given compilation unit represents a package-info.
      * @since 2.23
     */
     public boolean isPackageInfo(CompilationUnitTree tree) {
@@ -193,11 +169,19 @@ public final class TreeUtilities {
     }
     
     /**
-     * Checks wheteher given compilation unit represents a module-info.
+     * Checks whether given compilation unit represents a module-info.
      * @since 2.23
      */
     public boolean isModuleInfo(CompilationUnitTree tree) {
         return TreeInfo.isModuleInfo((JCTree.JCCompilationUnit)tree);
+    }
+    
+    /**
+     * Checks whether given expression represents an expression statement.
+     * @since 2.56
+     */
+    public boolean isExpressionStatement(ExpressionTree tree) {
+        return TreeInfo.isExpressionStatement((JCTree.JCExpression)tree);
     }
     
     /**Returns whether or not the given tree is synthetic - generated by the parser.
@@ -913,9 +897,6 @@ public final class TreeUtilities {
             Env<AttrContext> env = getEnv(scope);
             if (tree instanceof JCExpression)
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
-            if (env.tree != null && env.tree.getKind() == Kind.VARIABLE && !VARIABLE_CAN_OWN_VARIABLES) {
-                env = env.next;
-            }
             return attr.attribStat((JCTree) tree,env);
         } finally {
             unenter(jti.getContext(), (JCCompilationUnit) cut, (JCTree) tree);
@@ -932,20 +913,8 @@ public final class TreeUtilities {
             Method m = Enter.class.getDeclaredMethod("unenter", JCCompilationUnit.class, JCTree.class);
             m.invoke(Enter.instance(ctx), cut, tree);
         } catch (Throwable t) {
-            t.printStackTrace();
+            LOG.log(Level.FINE, null, t);
         }
-    }
-
-    private static boolean VARIABLE_CAN_OWN_VARIABLES;
-    static {
-        boolean result;
-        try {
-            SourceVersion.valueOf("RELEASE_12");
-            result = true;
-        } catch (IllegalArgumentException ex) {
-            result = false;
-        }
-        VARIABLE_CAN_OWN_VARIABLES = result;
     }
 
     private static Scope attributeTreeTo(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, Tree to, final List<Diagnostic<? extends JavaFileObject>> errors) {
@@ -1440,10 +1409,9 @@ public final class TreeUtilities {
                 } else {
                     return target;
                 }
+            case YIELD:
+                return (Tree) ((JCTree.JCYield) leaf).target;
             default:
-                if (TreeShims.YIELD.equals(leaf.getKind().name())) {
-                    return TreeShims.getTarget(leaf);
-                }
                 throw new IllegalArgumentException("Unsupported kind: " + leaf.getKind());
         }
     }

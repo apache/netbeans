@@ -74,6 +74,8 @@ public class CustomizerDataSupport {
     private SpinnerNumberModel      shutdownPortModel;
     private SpinnerNumberModel      debugPortModel;
     private SpinnerNumberModel      deploymentTimeoutModel;
+    private SpinnerNumberModel      startupTimeoutModel;
+    private SpinnerNumberModel      shutdownTimeoutModel;
     private ButtonModel             driverDeploymentModel;
     
     // model dirty flags    
@@ -97,6 +99,8 @@ public class CustomizerDataSupport {
     private boolean debugPortModelFlag;
     private boolean deploymentTimeoutModelFlag;
     private boolean driverDeploymentModelFlag;
+    private boolean startupTimeoutModelFlag;
+    private boolean shutdownTimeoutModelFlag;
     
     private TomcatProperties tp;
     private TomcatManager tm;
@@ -117,14 +121,17 @@ public class CustomizerDataSupport {
         jvmModel = new DefaultComboBoxModel();
         loadJvmModel();
         jvmModel.addListDataListener(new ListDataListener() {
+            @Override
             public void contentsChanged(ListDataEvent e) {
                 jvmModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
             }
             
+            @Override
             public void intervalAdded(ListDataEvent e) {
             }
 
+            @Override
             public void intervalRemoved(ListDataEvent e) {
             }
         });
@@ -132,6 +139,7 @@ public class CustomizerDataSupport {
         // javaOptions
         javaOptsModel = createDocument(tp.getJavaOpts());
         javaOptsModel.addDocumentListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 javaOptsModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -147,6 +155,7 @@ public class CustomizerDataSupport {
         // usernameModel
         usernameModel = createDocument(tp.getUsername());
         usernameModel.addDocumentListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 usernameModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -156,6 +165,7 @@ public class CustomizerDataSupport {
         // passwordModel
         passwordModel = createDocument(tp.getPassword());
         passwordModel.addDocumentListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 passwordModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -165,6 +175,7 @@ public class CustomizerDataSupport {
         // sharedMemNameModel
         sharedMemNameModel = createDocument(tp.getSharedMem());
         sharedMemNameModel.addDocumentListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 sharedMemNameModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -174,6 +185,7 @@ public class CustomizerDataSupport {
         // scriptPathModel
         scriptPathModel = createDocument(tp.getScriptPath());
         scriptPathModel.addDocumentListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 scriptPathModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -183,6 +195,7 @@ public class CustomizerDataSupport {
         // secManagerModel
         secManagerModel = createToggleButtonModel(tp.getSecManager());
         secManagerModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 secManagerModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -192,6 +205,7 @@ public class CustomizerDataSupport {
         // customScriptModel
         customScriptModel = createToggleButtonModel(tp.getCustomScript());
         customScriptModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 customScriptModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -201,6 +215,7 @@ public class CustomizerDataSupport {
         // forceStopModel
         forceStopModel = createToggleButtonModel(tp.getForceStop());
         forceStopModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 forceStopModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -210,6 +225,7 @@ public class CustomizerDataSupport {
         // monitorModel
         monitorModel = createToggleButtonModel(tp.getMonitor());
         monitorModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 monitorModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -219,6 +235,7 @@ public class CustomizerDataSupport {
         // proxyModel
         proxyModel = createToggleButtonModel(tp.getProxyEnabled());
         proxyModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 proxyModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -231,6 +248,7 @@ public class CustomizerDataSupport {
         // sourceModel
         sourceModel = new CustomizerSupport.PathModel(tp.getSources());
         sourceModel.addListDataListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 sourceModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -240,6 +258,7 @@ public class CustomizerDataSupport {
         // javadocModel
         javadocModel = new CustomizerSupport.PathModel(tp.getJavadocs());
         javadocModel.addListDataListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 javadocModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -249,6 +268,7 @@ public class CustomizerDataSupport {
         // serverPortModel
         serverPortModel = new SpinnerNumberModel(tm.getServerPort(), 0, 65535, 1);
         serverPortModel.addChangeListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 serverPortModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -258,6 +278,7 @@ public class CustomizerDataSupport {
         // shutdownPortModel
         shutdownPortModel = new SpinnerNumberModel(tm.getShutdownPort(), 0, 65535, 1);
         shutdownPortModel.addChangeListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 shutdownPortModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -267,6 +288,7 @@ public class CustomizerDataSupport {
         // debugPortModel
         debugPortModel = new SpinnerNumberModel(tp.getDebugPort(), 0, 65535, 1);
         debugPortModel.addChangeListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 debugPortModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -279,6 +301,7 @@ public class CustomizerDataSupport {
         socketModel = new JToggleButton.ToggleButtonModel();
         socketModel.setGroup(debugButtonGroup);
         socketModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 socketModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -289,6 +312,7 @@ public class CustomizerDataSupport {
         sharedMemModel = new JToggleButton.ToggleButtonModel();
         sharedMemModel.setGroup(debugButtonGroup);
         sharedMemModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 sharedMemModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -301,6 +325,7 @@ public class CustomizerDataSupport {
         // deploymentTimeoutModel
         deploymentTimeoutModel = new SpinnerNumberModel(tp.getDeploymentTimeout(), 1, Integer.MAX_VALUE, 1);
         deploymentTimeoutModel.addChangeListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 deploymentTimeoutModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
@@ -310,8 +335,29 @@ public class CustomizerDataSupport {
         // driverDeploymentModel
         driverDeploymentModel = createToggleButtonModel(tp.getDriverDeployment());
         driverDeploymentModel.addItemListener(new ModelChangeAdapter() {
+            @Override
             public void modelChanged() {
                 driverDeploymentModelFlag = true;
+                store(); // This is just temporary until the server manager has OK and Cancel buttons
+            }
+        });
+        
+        // startupTimeoutModel
+        startupTimeoutModel = new SpinnerNumberModel(tp.getStartupTimeout(), 1, Integer.MAX_VALUE, 1);
+        startupTimeoutModel.addChangeListener(new ModelChangeAdapter() {
+            @Override
+            public void modelChanged() {
+                startupTimeoutModelFlag = true;
+                store(); // This is just temporary until the server manager has OK and Cancel buttons
+            }
+        });
+        
+        // shutdownTimeoutModel
+        shutdownTimeoutModel = new SpinnerNumberModel(tp.getShutdownTimeout(), 1, Integer.MAX_VALUE, 1);
+        shutdownTimeoutModel.addChangeListener(new ModelChangeAdapter() {
+            @Override
+            public void modelChanged() {
+                shutdownTimeoutModelFlag = true;
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
             }
         });
@@ -444,6 +490,14 @@ public class CustomizerDataSupport {
         return deploymentTimeoutModel;
     }
     
+    public SpinnerNumberModel getStartupTimeoutModel() {
+        return startupTimeoutModel;
+    }
+    
+    public SpinnerNumberModel getShutdownTimeoutModel() {
+        return shutdownTimeoutModel;
+    }
+    
     public ButtonModel getDriverDeploymentModel() {
         return driverDeploymentModel;
     }
@@ -554,6 +608,16 @@ public class CustomizerDataSupport {
             tp.setDriverDeployment(driverDeploymentModel.isSelected());
             driverDeploymentModelFlag = false;
         }
+        
+        if (startupTimeoutModelFlag) {
+            tp.setStartupTimeout((Integer)startupTimeoutModel.getValue());
+            startupTimeoutModelFlag = false;
+        }
+        
+        if (shutdownTimeoutModelFlag) {
+            tp.setShutdownTimeout((Integer)shutdownTimeoutModel.getValue());
+            shutdownTimeoutModelFlag = false;
+        }
     }
     
     /** Create a Document initialized by the specified text parameter, which may be null */
@@ -597,34 +661,42 @@ public class CustomizerDataSupport {
         
         public abstract void modelChanged();
         
+        @Override
         public void contentsChanged(ListDataEvent e) {
             modelChanged();
         }
 
+        @Override
         public void intervalAdded(ListDataEvent e) {
             modelChanged();
         }
 
+        @Override
         public void intervalRemoved(ListDataEvent e) {
             modelChanged();
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             modelChanged();
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             modelChanged();
         }
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             modelChanged();
         }
 
+        @Override
         public void itemStateChanged(ItemEvent e) {
             modelChanged();
         }
 
+        @Override
         public void stateChanged(javax.swing.event.ChangeEvent e) {
             modelChanged();
         }
@@ -646,10 +718,12 @@ public class CustomizerDataSupport {
             return (String)platform.getProperties().get(TomcatProperties.PLAT_PROP_ANT_NAME);
         }
         
+        @Override
         public String toString() {
             return platform.getDisplayName();
         }
         
+        @Override
         public int compareTo(Object o) {
             return toString().compareTo(o.toString());
         }

@@ -29,7 +29,7 @@ import org.openide.util.Lookup;
  */
 public interface LiveResultsWindowContributor {
 
-    public static abstract class Adapter implements LiveResultsWindowContributor {
+    public abstract static class Adapter implements LiveResultsWindowContributor {
 
         @Override
         public void addToCpuResults(LiveFlatProfilePanel cpuPanel, ProfilerToolbar toolbar, ProfilerClient client, Lookup.Provider project) {

@@ -92,7 +92,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
      * Get the default index builder instance.
      * It will start parsing asynch.
      */
-    public synchronized static IndexBuilder getDefault() {
+    public static synchronized IndexBuilder getDefault() {
         if (INSTANCE != null) {
             return INSTANCE;
         }
@@ -268,7 +268,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
         return title != null? title.trim(): title;
     }
 
-    private synchronized static void scheduleTask() {
+    private static synchronized void scheduleTask() {
         if (task == null) {
             task = new RequestProcessor(IndexBuilder.class).create(getDefault()); // NOI18N
         }

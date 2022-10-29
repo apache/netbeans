@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+~ JBoss, Home of Professional Open Source
+~ Copyright 2020, Red Hat, Inc., and individual contributors
+~ by the @authors tag. See the copyright.txt in the distribution for a
+~ full listing of individual contributors.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~ http://www.apache.org/licenses/LICENSE-2.0
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
+           elementFormDefault="qualified"
+           targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+           version="3.0">
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[[
+         Jakarta Contexts and Dependency Injection (CDI) defines
+         a set of complementary services that help improve the structure
+         of application code. beans.xml is used to enable CDI services
+         for the current bean archive as well as to enable named
+         interceptors, decorators and alternatives for the current bean
+         archive.
+
+
+         This is the XML Schema for the beans.xml deployment
+         descriptor for CDI 3.0.  The deployment descriptor must be named
+         "META-INF/beans.xml" or "WEB-INF/beans.xml" in a war file.
+         All application deployment descriptors may indicate
+         the application schema by using the Java EE namespace:
+
+         https://jakarta.ee/xml/ns/jakartaee
+
+         and may indicate the version of the schema by
+         using the version element as shown below:
+
+         <beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+         https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"
+         version="3.0">
+            ...
+         </beans>
+
+        The deployment descriptor may indicate the published version of
+        the schema using the xsi:schemaLocation attribute for the Java EE
+        namespace with the following location:
+
+        https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd
+
+     ]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="beans">
+    <xs:annotation>
+      <xs:documentation>
+        Bean classes of enabled beans must be
+        deployed in bean archives. A library jar, EJB jar,
+        application client jar or rar archive is a bean archive if
+        it has a file named beans.xml in the META-INF directory. The
+        WEB-INF/classes directory of a war is a bean archive if
+        there is a file named beans.xml in the WEB-INF directory of
+        the war. A directory in the JVM classpath is a bean archive
+        if it has a file named beans.xml in the META-INF directory.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all >
+        <xs:element ref="jakartaee:interceptors" minOccurs="0"/>
+        <xs:element ref="jakartaee:decorators" minOccurs="0" />
+        <xs:element ref="jakartaee:alternatives" minOccurs="0" />
+        <xs:element ref="jakartaee:scan" minOccurs="0" />
+        <xs:element ref="jakartaee:trim" minOccurs="0"/>
+      </xs:all>
+      <xs:attribute name="version" default="3.0">
+        <xs:annotation>
+          <xs:documentation>
+            The version of CDI this beans.xml is for. If the version is "3.0" (or
+            later), then the attribute bean-discovery-mode must be added.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:pattern value="\.?[0-9]+(\.[0-9]+)*"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="bean-discovery-mode" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            It is strongly recommended you use "annotated".
+
+            If the bean discovery mode is "all", then all types in this
+            archive will be considered. If the bean discovery mode is
+            "annotated", then only those types with bean defining annotations will be
+            considered. If the bean discovery mode is "none", then no
+            types will be considered.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="annotated">
+              <xs:annotation>
+                <xs:documentation>
+                  Only those types with bean defining annotations will be
+                  considered.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="all">
+              <xs:annotation>
+                <xs:documentation>
+                  All types in this archive will be considered.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="none">
+              <xs:annotation>
+                <xs:documentation>
+                  This archive will be ignored.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="scan">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[The <scan> element allows exclusion of classes and packages from consideration. Various filters may be applied, and may be conditionally activated.]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="exclude">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[The exclude filter allows exclusion of classes and packages through the use of Ant-style glob matches. For example, <exclude name="com.acme.**"> would exclude all classes and subpackages of com.acme.]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+              <xs:element name="if-class-available">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[Activates the filter only if the class specified can be loaded.]]>
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[If the named class can be loaded then, then the filter will be activated.]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="if-class-not-available">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[Activates the filter only if the class specified cannot be loaded.]]>
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[If the named class cannot be loaded then, then the filter will be activated.]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="if-system-property">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[If both name and value are specified, then the named system property must be set, and have the specified value for the filter to be activated. If only the name is specified, then the named system property must be set for the filter to be activated.]]>
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[The name of the system property that must be set for the filter to be active.]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="value" type="xs:string" use="optional">
+                    <xs:annotation>
+                      <xs:documentation>
+                        <![CDATA[Optional. The value that the system property must have for the filter to be active.]]>
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+            <xs:attribute name="name" use="required">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[The name of the class or package to exclude. Ant-style glob matches are supported. For example, <exclude name="com.acme.**"> would exclude all classes and subpackages of com.acme.]]>
+                </xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="([a-zA-Z_$][a-zA-Z\d_$]*\.)*([a-zA-Z_$][a-zA-Z\d_$]*|\*|\*\*)"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="interceptors">
+    <xs:annotation>
+      <xs:documentation>
+        By default, a bean archive has no enabled
+        interceptors bound via interceptor bindings. An interceptor
+        must be explicitly enabled by listing its class under the
+        &lt;interceptors&gt; element of the beans.xml file of the
+        bean archive. The order of the interceptor declarations
+        determines the interceptor ordering. Interceptors which
+        occur earlier in the list are called first. If the same
+        class is listed twice under the &lt;interceptors&gt;
+        element, the container automatically detects the problem and
+        treats it as a deployment problem.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="class" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              Each child &lt;class&gt; element
+              must specify the name of an interceptor class. If
+              there is no class with the specified name, or if
+              the class with the specified name is not an
+              interceptor class, the container automatically
+              detects the problem and treats it as a deployment
+              problem.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="decorators">
+    <xs:annotation>
+      <xs:documentation>
+        By default, a bean archive has no enabled
+        decorators. A decorator must be explicitly enabled by
+        listing its bean class under the &lt;decorators&gt; element
+        of the beans.xml file of the bean archive. The order of the
+        decorator declarations determines the decorator ordering.
+        Decorators which occur earlier in the list are called first.
+        If the same class is listed twice under the
+        &lt;decorators&gt; element, the container automatically
+        detects the problem and treats it as a deployment problem.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="class" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              Each child &lt;class&gt; element
+              must specify the name of a decorator class. If
+              there is no class with the specified name, or if
+              the class with the specified name is not a
+              decorator class, the container automatically
+              detects the problem and treats it as a deployment
+              problem.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="alternatives">
+    <xs:annotation>
+      <xs:documentation>
+        An alternative is a bean that must be
+        explicitly declared in the beans.xml file if it should be
+        available for lookup, injection or EL resolution. By
+        default, a bean archive has no selected alternatives. An
+        alternative must be explicitly declared using the
+        &lt;alternatives&gt; element of the beans.xml file of the
+        bean archive. The &lt;alternatives&gt; element contains a
+        list of bean classes and stereotypes. An alternative is
+        selected for the bean archive if either: the alternative is
+        a managed bean or session bean and the bean class of the
+        bean is listed, or the alternative is a producer method,
+        field or resource, and the bean class that declares the
+        method or field is listed, or any @Alternative stereotype of
+        the alternative is listed.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="class" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              Each child &lt;class&gt; element
+              must specify the name of an alternative bean class.
+              If there is no class with the specified name, or if
+              the class with the specified name is not an
+              alternative bean class, the container automatically
+              detects the problem and treats it as a deployment
+              problem. If the same class is listed twice under
+              the &lt;alternatives&gt; element, the container
+              automatically detects the problem and treats it as
+              a deployment problem.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="stereotype" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              Each child &lt;stereotype&gt;
+              element must specify the name of an @Alternative
+              stereotype annotation. If there is no annotation
+              with the specified name, or the annotation is not
+              an @Alternative stereotype, the container
+              automatically detects the problem and treats it as
+              a deployment problem. If the same stereotype is
+              listed twice under the &lt;alternatives&gt;
+              element, the container automatically detects the
+              problem and treats it as a deployment problem.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="trim" type="xs:string" fixed="">
+    <xs:annotation>
+      <xs:documentation>
+        If an explicit bean archive contains the &lt;trim/&lt; element in its beans.xml file, types that don’t have
+        either a bean defining annotation (as defined in Bean defining annotations) or any scope annotation,
+        are removed from the set of discovered types.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+</xs:schema>

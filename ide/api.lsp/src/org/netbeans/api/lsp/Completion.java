@@ -232,7 +232,7 @@ public final class Completion {
     /**
      * Computes and collects completions for a document at a given offset. Example
      * usage can be illustrated by:
-     * {@codesnippet CompletionTest#testCompletionCollect}
+     * {@snippet file="org/netbeans/api/lsp/CompletionTest.java" region="testCompletionCollect"}
      *
      * @param doc a text document
      * @param offset an offset inside the text document

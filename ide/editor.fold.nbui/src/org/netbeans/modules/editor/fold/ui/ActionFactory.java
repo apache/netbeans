@@ -301,7 +301,7 @@ final class ActionFactory {
     }
 
 
-    static abstract class LocalBaseAction extends BaseAction {
+    abstract static class LocalBaseAction extends BaseAction {
         public LocalBaseAction() {
             super();
         }

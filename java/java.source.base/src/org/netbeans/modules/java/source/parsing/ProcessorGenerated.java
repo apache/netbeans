@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -260,7 +261,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
     private StringBuilder readFile(final File file) {        
         StringBuilder sb = new StringBuilder();
         try {
-            final Reader in = new InputStreamReader (new FileInputStream (file),"UTF-8");   //NOI18N
+            final Reader in = new InputStreamReader (new FileInputStream (file), StandardCharsets.UTF_8);
             try {
                 char[] buffer = new char[1024];
                 int len;
@@ -288,7 +289,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
     }
     
     private void writeFile (@NonNull final File file, @NonNull final StringBuilder data) throws IOException {        
-        final Writer out = new OutputStreamWriter(new FileOutputStream(file),"UTF-8");    //NOI18N
+        final Writer out = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
         try {
             out.write(data.toString());
         } finally {

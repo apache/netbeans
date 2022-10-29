@@ -66,6 +66,8 @@ public class ModelHandle2 {
     private final POMModel model;
     private final List<ModelOperation<POMModel>> pomOperations = new ArrayList<ModelOperation<POMModel>>();
     private final Map<String, ActionToGoalMapping> mappings;
+    private final List<String> allActions;
+    
     private List<Configuration> configurations;
     private boolean modConfig = false;
     private Configuration active;
@@ -87,8 +89,9 @@ public class ModelHandle2 {
                                         Map<String, ActionToGoalMapping> mapp, 
                                         List<Configuration> configs,
                                         Configuration active,
+                                        List<String> allActions,
                                         MavenProjectPropsImpl auxProps) {
-            return new ModelHandle2(model, proj, mapp, configs, active, auxProps);
+            return new ModelHandle2(model, proj, mapp, configs, active, allActions, auxProps);
         }
         
          public void assign() {
@@ -96,6 +99,11 @@ public class ModelHandle2 {
                  CustomizerProviderImpl.ACCESSOR2 = this;
              }
          }
+
+        @Override
+        public List<String> getAllActions(ModelHandle2 handle) {
+            return handle.getAllActions();
+        }
 
         @Override
         public TreeMap<String, String> getModifiedAuxProps(ModelHandle2 handle, boolean shared) {
@@ -111,18 +119,16 @@ public class ModelHandle2 {
         public boolean isModified(ModelHandle2 handle, ActionToGoalMapping mapp) {
             return handle.modifiedMappings.contains(mapp);
         }
-
-    
     }    
 
-    private ModelHandle2(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp, List<Configuration> configs, Configuration active, MavenProjectPropsImpl auxProps) {
+    private ModelHandle2(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp, List<Configuration> configs, Configuration active, List<String> allActions, MavenProjectPropsImpl auxProps) {
         project = proj;
         this.mappings = mapp;
         configurations = configs;
         this.active = active;
         auxiliaryProps = auxProps;
         this.model = model;
-        
+        this.allActions = allActions;
     }
     
     /**
@@ -358,6 +364,10 @@ public class ModelHandle2 {
         CustomizerProviderImpl.writeNbActionsModel(project, mapping, M2Configuration.getFileNameExt(cfg.getId()));
     }    
     
+    List<String> getAllActions() {
+        return allActions;
+    }
+    
     
 /**
      * a javabean wrapper for configurations within the project customizer
@@ -480,7 +490,6 @@ public class ModelHandle2 {
         public String toString() {
             return getDisplayName();
         }
-        
         
     }    
     

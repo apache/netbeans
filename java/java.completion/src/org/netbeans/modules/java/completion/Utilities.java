@@ -208,8 +208,8 @@ public final class Utilities {
         return showDeprecatedMembers;
     }
 
-    static private final AtomicReference<Collection<String>> excludeRef = new AtomicReference<>();
-    static private final AtomicReference<Collection<String>> includeRef = new AtomicReference<>();
+    private static final AtomicReference<Collection<String>> excludeRef = new AtomicReference<>();
+    private static final AtomicReference<Collection<String>> includeRef = new AtomicReference<>();
 
     private static void updateExcluder(AtomicReference<Collection<String>> existing, String updated) {
         Collection<String> nue = new LinkedList<>();

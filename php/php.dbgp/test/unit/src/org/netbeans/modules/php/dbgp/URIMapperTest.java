@@ -34,7 +34,7 @@ import org.openide.util.Pair;
  */
 public class URIMapperTest extends NbTestCase {
 
-    final private URIMapper oneToOneMapper = URIMapper.createOneToOne();
+    private final URIMapper oneToOneMapper = URIMapper.createOneToOne();
     private URIMapper basesMapper;
     private URIMapper[] allMappers;
     private URI webServerURIBase;

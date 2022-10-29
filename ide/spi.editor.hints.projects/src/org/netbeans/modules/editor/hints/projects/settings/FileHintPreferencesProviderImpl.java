@@ -18,11 +18,15 @@
  */
 package org.netbeans.modules.editor.hints.projects.settings;
 
+import java.awt.Toolkit;
 import java.util.prefs.Preferences;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.hints.settings.friend.FileHintPreferencesProvider;
 import org.netbeans.spi.editor.hints.projects.ProjectSettings;
+import org.netbeans.spi.project.ui.CustomizerProvider;
+import org.netbeans.spi.project.ui.CustomizerProvider2;
+import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -44,6 +48,33 @@ public class FileHintPreferencesProviderImpl implements FileHintPreferencesProvi
         if (settings == null || !settings.getUseProjectSettings()) return null;
         
         return settings.getProjectSettings(mimeType);
+    }
+
+    @Override
+    public boolean openFilePreferences(FileObject file, String mimeType, String hintId) {
+        Project prj = FileOwnerQuery.getOwner(file);
+
+        if (prj == null) return false;
+
+        ProjectSettings settings = prj.getLookup().lookup(ProjectSettings.class);
+
+        if (settings == null || !settings.getUseProjectSettings()) return false;
+
+        CustomizerProvider2 customizer2 = prj.getLookup().lookup(CustomizerProvider2.class);
+
+        if (customizer2 != null) {
+            customizer2.showCustomizer("editor.hints", null);
+        } else {
+            CustomizerProvider customizer = prj.getLookup().lookup(CustomizerProvider.class);
+
+            if (customizer != null) {
+                customizer.showCustomizer();
+            } else {
+                Toolkit.getDefaultToolkit().beep();
+            }
+        }
+
+        return true;
     }
 
 }

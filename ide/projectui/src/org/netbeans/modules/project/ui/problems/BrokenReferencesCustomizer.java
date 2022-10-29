@@ -89,7 +89,7 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
         fix = new javax.swing.JButton();
         descriptionLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        description = new javax.swing.JTextArea();
+        description = new javax.swing.JTextPane();
 
         setPreferredSize(new java.awt.Dimension(550, 350));
         setLayout(new java.awt.GridBagLayout());
@@ -146,8 +146,6 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
         descriptionLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(BrokenReferencesCustomizer.class, "ACSD_BrokenLinksCustomizer_Description")); // NOI18N
 
         description.setEditable(false);
-        description.setLineWrap(true);
-        description.setWrapStyleWord(true);
         jScrollPane2.setViewportView(description);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -249,7 +247,16 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
         if (value instanceof BrokenReferencesModel.ProblemReference) {
             final BrokenReferencesModel.ProblemReference reference = (BrokenReferencesModel.ProblemReference) value;
             if (!reference.resolved) {
-                description.setText(reference.problem.getDescription());                
+                String s = reference.problem.getDescription();
+                // attempt to autodetect HTML tags in the description, switch content type appropriately.
+                if (s.contains("/>") || (s.contains("<") && s.contains(">"))) {
+                    description.setContentType("text/html");
+                } else {
+                    description.setContentType("text/plain");
+                }
+                description.setText(s);       
+                // avoid possible scroll down/left if the text does not fit in the default window
+                description.getCaret().setDot(0);
                 fix.setEnabled(reference.problem.isResolvable());
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {
                    public void run() {
@@ -272,13 +279,14 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea description;
+    private javax.swing.JTextPane description;
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JList errorList;
     private javax.swing.JLabel errorListLabel;
     private javax.swing.JButton fix;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 
     private static final @StaticResource String BROKEN_REF = "org/netbeans/modules/project/ui/resources/broken-reference.gif";

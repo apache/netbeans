@@ -102,7 +102,7 @@ public class MethodCompletion extends BaseCompletion {
         }
 
         // 2.2  static/instance method on class or object
-        if (!context.isBehindDot() && context.context.before1 != null) {
+        if (!context.isBehindDot() && context.context.before1 != null && context.location != CaretLocation.INSIDE_METHOD) {
             return false;
         }
 

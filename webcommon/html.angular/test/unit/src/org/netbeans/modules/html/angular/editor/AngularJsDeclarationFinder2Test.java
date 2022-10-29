@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.DeclarationFinder;
@@ -55,7 +54,7 @@ public class AngularJsDeclarationFinder2Test extends JsCodeCompletionBase {
         super(testName);
     }
 
-    static private boolean isSetup = false;
+    private static boolean isSetup = false;
     
     @Override
     protected void setUp() throws Exception {

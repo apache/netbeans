@@ -124,6 +124,8 @@ public class TomcatProperties {
             NbBundle.getMessage(TomcatProperties.class, "LBL_DefaultDisplayName");
     private static final boolean DEF_VALUE_DRIVER_DEPLOYMENT = true;
     private static final int     DEF_VALUE_DEPLOYMENT_TIMEOUT = 120;
+    private static final int     DEF_VALUE_STARTUP_TIMEOUT = 120;
+    private static final int     DEF_VALUE_SHUTDOWN_TIMEOUT = 120;
     
     private TomcatManager tm;
     private InstanceProperties ip;
@@ -204,17 +206,15 @@ public class TomcatProperties {
 //                org.openide.ErrorManager.getDefault ().log (nef.getLocalizedMessage ());
 //            }
 //        }
-        ip.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
-                if (PROP_SERVER_PORT.equals(name) || PROP_USERNAME.equals(name) 
+        ip.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+            String name = evt.getPropertyName();
+            if (PROP_SERVER_PORT.equals(name) || PROP_USERNAME.equals(name) 
                     || PROP_PASSWORD.equals(name)) {
-                    // update Ant deployment properties file if it exists
-                    try {
-                        storeAntDeploymentProperties(getAntDeploymentPropertiesFile(), false);
-                    } catch(IOException ioe) {
-                        Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, ioe);
-                    }
+                // update Ant deployment properties file if it exists
+                try {
+                    storeAntDeploymentProperties(getAntDeploymentPropertiesFile(), false);
+                } catch(IOException ioe) {
+                    Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, ioe);
                 }
             }
         });
@@ -236,16 +236,9 @@ public class TomcatProperties {
         antProps.setProperty("tomcat.username", getUsername());         // NOI18N
         file.createNewFile();
         FileObject fo = FileUtil.toFileObject(file);
-        FileLock lock = fo.lock();
-        try {
-            OutputStream os = fo.getOutputStream(lock);
-            try {
-                antProps.store(os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            lock.releaseLock();
+        try (FileLock lock = fo.lock();
+                OutputStream os = fo.getOutputStream(lock)) {
+            antProps.store(os);
         }
     }
     
@@ -594,6 +587,44 @@ public class TomcatProperties {
         ip.setProperty(InstanceProperties.DEPLOYMENT_TIMEOUT, Integer.toString(timeout));
     }
     
+    public int getStartupTimeout() {
+        String val = ip.getProperty(InstanceProperties.STARTUP_TIMEOUT);
+        if (val != null) {
+            try {
+                int timeout = Integer.parseInt(val);
+                if (timeout >= 1) {
+                    return timeout;
+                }
+            } catch (NumberFormatException nfe) {
+                Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, nfe);
+            }
+        }
+        return DEF_VALUE_STARTUP_TIMEOUT;
+    }
+    
+    public void setStartupTimeout(int timeout) {
+        ip.setProperty(InstanceProperties.STARTUP_TIMEOUT, Integer.toString(timeout));
+    }
+    
+    public int getShutdownTimeout() {
+        String val = ip.getProperty(InstanceProperties.SHUTDOWN_TIMEOUT);
+        if (val != null) {
+            try {
+                int timeout = Integer.parseInt(val);
+                if (timeout >= 1) {
+                    return timeout;
+                }
+            } catch (NumberFormatException nfe) {
+                Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, nfe);
+            }
+        }
+        return DEF_VALUE_SHUTDOWN_TIMEOUT;
+    }
+    
+    public void setShutdownTimeout(int timeout) {
+        ip.setProperty(InstanceProperties.SHUTDOWN_TIMEOUT, Integer.toString(timeout));
+    }
+    
     public boolean getDriverDeployment() {
         String val = ip.getProperty(PROP_DRIVER_DEPLOYMENT);
         return val != null ? Boolean.valueOf(val)
@@ -621,7 +652,7 @@ public class TomcatProperties {
         };
         
         // tomcat libs
-        List<URL> retValue = new ArrayList<URL>();
+        List<URL> retValue = new ArrayList<>();
         retValue.addAll(listUrls(new File(homeDir, tm.libFolder()), nbFilter));
 
         // TOMEE as webapp
@@ -712,7 +743,7 @@ public class TomcatProperties {
     }
     
     public void setOpenContextLogOnRun(boolean val) {
-        ip.setProperty(PROP_OPEN_LOG, Boolean.valueOf(val).toString());
+        ip.setProperty(PROP_OPEN_LOG, Boolean.toString(val));
     }
     
     public boolean getOpenContextLogOnRun() {
@@ -819,18 +850,16 @@ public class TomcatProperties {
     // private helper methods -------------------------------------------------
     
     private static List<URL> listUrls(final File folder, final String[] filter) {
-        File[] jars = folder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                if (!name.endsWith(".jar") || !dir.equals(folder)) {
+        File[] jars = folder.listFiles( (File dir, String name) -> {
+            if (!name.endsWith(".jar") || !dir.equals(folder)) {
+                return false;
+            }
+            for (int i = 0; i < filter.length; i++) {
+                if (name.indexOf(filter[i]) != -1) {
                     return false;
                 }
-                for (int i = 0; i < filter.length; i++) {
-                    if (name.indexOf(filter[i]) != -1) {
-                        return false;
-                    }
-                }
-                return true;
             }
+            return true;
         });
         if (jars == null) {
             return Collections.emptyList();

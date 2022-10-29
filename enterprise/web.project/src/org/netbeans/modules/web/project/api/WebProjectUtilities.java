@@ -54,6 +54,7 @@ import org.w3c.dom.Element;
 
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -835,7 +836,10 @@ public class WebProjectUtilities {
 
     public static void upgradeJ2EEProfile(WebProject project){
         if (Profile.JAVA_EE_6_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())){
+                Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
+                Profile.JAVA_EE_8_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
+                Profile.JAKARTA_EE_8_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
+                Profile.JAKARTA_EE_9_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())){
             //check the J2EE 6/7 Full profile specific functionality
             Boolean isFullRequired = Boolean.FALSE;
             try{
@@ -893,7 +897,7 @@ public class WebProjectUtilities {
         // read the config from resource first
         StringBuilder sb = new StringBuilder();
         String lineSep = System.getProperty("line.separator"); // NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         try {
             String line = br.readLine();
             while (line != null) {

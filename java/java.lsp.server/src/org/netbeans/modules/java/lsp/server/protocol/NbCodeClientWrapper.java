@@ -19,25 +19,34 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.ConfigurationParams;
+import org.eclipse.lsp4j.LogTraceParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RegistrationParams;
-import org.eclipse.lsp4j.SemanticHighlightingParams;
+import org.eclipse.lsp4j.ShowDocumentParams;
+import org.eclipse.lsp4j.ShowDocumentResult;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.UnregistrationParams;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 
 /**
  * Convenience wrapper that binds language client's remote proxy together with
  * other useful methods. Will be sent out as THE client by the server core code.
- * 
+ *
  * @author sdedic
  */
 class NbCodeClientWrapper implements NbCodeLanguageClient {
@@ -66,6 +75,16 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     }
 
     @Override
+    public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+        return remote.showHtmlPage(params);
+    }
+
+    @Override
+    public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+        return remote.execInHtmlPage(params);
+    }
+
+    @Override
     public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
         return remote.showQuickPick(params);
     }
@@ -73,6 +92,11 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
         return remote.showInputBox(params);
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+        return remote.showMultiStepInput(params);
     }
 
     @Override
@@ -116,6 +140,11 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     }
 
     @Override
+    public CompletableFuture<ShowDocumentResult> showDocument(ShowDocumentParams params) {
+        return remote.showDocument(params);
+    }
+
+    @Override
     public void logMessage(MessageParams message) {
         remote.logMessage(message);
     }
@@ -128,11 +157,6 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
         return remote.configuration(configurationParams);
-    }
-
-    @Override
-    public void semanticHighlighting(SemanticHighlightingParams params) {
-        remote.semanticHighlighting(params);
     }
 
     @Override
@@ -159,4 +183,29 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public void disposeTextEditorDecoration(String params) {
         remote.disposeTextEditorDecoration(params);
     }
+
+    @Override
+    public void logTrace(LogTraceParams params) {
+        remote.logTrace(params);
+    }
+
+    @Override
+    public CompletableFuture<Void> refreshSemanticTokens() {
+        return remote.refreshSemanticTokens();
+    }
+
+    @Override
+    public CompletableFuture<Void> refreshCodeLenses() {
+        return remote.refreshCodeLenses();
+    }
+    
+    public void notifyNodeChange(NodeChangedParams params) {
+        remote.notifyNodeChange(params);
+    }
+    
+    @Override
+    public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+        return remote.configurationUpdate(params);
+    }
+    
 }

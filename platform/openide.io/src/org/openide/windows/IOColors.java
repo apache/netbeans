@@ -124,12 +124,12 @@ public abstract class IOColors {
      * @param type output type to get color for
      * @return current color for specified output
      */
-    abstract protected Color getColor(OutputType type);
+    protected abstract Color getColor(OutputType type);
 
     /**
      * Sets specified color for output
      * @param type output type to set color for
      * @param color new color for specified output type
      */
-    abstract protected void setColor(OutputType type, Color color);
+    protected abstract void setColor(OutputType type, Color color);
 }

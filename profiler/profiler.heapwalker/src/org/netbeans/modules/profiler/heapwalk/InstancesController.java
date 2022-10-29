@@ -40,15 +40,15 @@ public class InstancesController extends AbstractTopLevelController implements F
         //~ Instance fields ------------------------------------------------------------------------------------------------------
 
         private final long instanceID;
-        private final List expandedFields;
+        private final List<TreePath> expandedFields;
         private final TreePath selectedField;
-        private final List expandedReferences;
+        private final List<TreePath> expandedReferences;
         private final TreePath selectedReference;
 
         //~ Constructors ---------------------------------------------------------------------------------------------------------
 
-        public Configuration(long instanceID, List expandedFields, TreePath selectedField,
-                             List expandedReferences, TreePath selectedReference) {
+        public Configuration(long instanceID, List<TreePath> expandedFields, TreePath selectedField,
+                             List<TreePath> expandedReferences, TreePath selectedReference) {
             this.instanceID = instanceID;
             this.expandedFields = expandedFields;
             this.selectedField = selectedField;
@@ -62,7 +62,7 @@ public class InstancesController extends AbstractTopLevelController implements F
             return instanceID;
         }
         
-        public List getExpandedFields() {
+        public List<TreePath> getExpandedFields() {
             return expandedFields;
         }
         
@@ -143,9 +143,9 @@ public class InstancesController extends AbstractTopLevelController implements F
     public Configuration getCurrentConfiguration() {
         // Selected instance
         long selectedInstanceID = -1;
-        List expandedFields = null;
+        List<TreePath> expandedFields = null;
         TreePath selectedField = null;
-        List expandedReferences = null;
+        List<TreePath> expandedReferences = null;
         TreePath selectedReference = null;
         Instance selectedInstance = getSelectedInstance();
 

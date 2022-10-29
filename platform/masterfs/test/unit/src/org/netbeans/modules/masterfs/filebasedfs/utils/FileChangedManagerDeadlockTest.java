@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static junit.framework.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.netbeans.junit.MockServices;
@@ -32,6 +31,8 @@ import org.netbeans.modules.masterfs.watcher.Watcher;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -74,7 +75,7 @@ public class FileChangedManagerDeadlockTest {
         assertTrue("Priority IO should be finished", priorityIO.finished.get());
     }
 
-    private static abstract class IORunnable implements Runnable {
+    private abstract static class IORunnable implements Runnable {
 
         protected Semaphore semaphore;
         final AtomicBoolean finished = new AtomicBoolean(false);

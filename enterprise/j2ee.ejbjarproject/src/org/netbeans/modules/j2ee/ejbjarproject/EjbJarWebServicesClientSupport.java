@@ -166,7 +166,7 @@ public class EjbJarWebServicesClientSupport implements WebServicesClientSupportI
             
             if(newWscJars) {
                 StringBuffer newClasspathBuf = new StringBuffer(256);
-                for(Iterator iter = wscJars.iterator(); iter.hasNext(); ) {
+                for(Iterator<String> iter = wscJars.iterator(); iter.hasNext(); ) {
                     newClasspathBuf.append(iter.next().toString());
                     if(iter.hasNext()) {
                         newClasspathBuf.append(":"); // NOI18N
@@ -572,7 +572,7 @@ public class EjbJarWebServicesClientSupport implements WebServicesClientSupportI
         "donotunwrap", // - portable // NOI18N
     };
     
-    private static final List allClientFeatures = Arrays.asList(WSCOMPILE_CLIENT_FEATURES);
+    private static final List<String> allClientFeatures = Arrays.asList(WSCOMPILE_CLIENT_FEATURES);
     
     private static final String [] WSCOMPILE_KEY_CLIENT_FEATURES = {
         "wsi",
@@ -587,9 +587,9 @@ public class EjbJarWebServicesClientSupport implements WebServicesClientSupportI
         "searchschema",
     };
     
-    private static final List importantClientFeatures = Arrays.asList(WSCOMPILE_KEY_CLIENT_FEATURES);
+    private static final List<String> importantClientFeatures = Arrays.asList(WSCOMPILE_KEY_CLIENT_FEATURES);
     
-    public List getServiceClients() {
+    public List<WsCompileClientEditorSupport.ServiceSettings> getServiceClients() {
         List<WsCompileClientEditorSupport.ServiceSettings> serviceNames = new ArrayList<WsCompileClientEditorSupport.ServiceSettings>();
         
         Element data = helper.getPrimaryConfigurationData(true);

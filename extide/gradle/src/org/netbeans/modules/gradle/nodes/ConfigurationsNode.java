@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle.nodes;
 
 import org.netbeans.modules.gradle.ActionProviderImpl;
@@ -37,8 +36,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import javax.swing.AbstractAction;
@@ -48,8 +47,10 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.openide.actions.PropertiesAction;
 import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -60,8 +61,12 @@ import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.nodes.PropertySupport;
+import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -94,7 +99,7 @@ public class ConfigurationsNode extends AbstractNode {
     })
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ConfigurationsNode(NbGradleProjectImpl project) {
-        super(Children.create(new ConfigurationsChildren(project), true), Lookups.singleton(project));
+        super(Children.create(new ConfigurationsChildren(project), false), Lookups.singleton(project));
         this.project = project;
         setName("configurations"); //NOI18N
         setDisplayName(Bundle.LBL_ConfigurationsNode());
@@ -108,7 +113,7 @@ public class ConfigurationsNode extends AbstractNode {
     public Image getIcon(int type) {
         GradleProject gp = project.getGradleProject();
         Image ret = ImageUtilities.loadImage(LIBRARIES_ICON);
-        if (gp.getQuality().worseThan(Quality.FULL) || !gp.getBaseProject().isResolved()) {
+        if (gp.getQuality().worseThan(Quality.FULL) || needsResolve()) {
             Image warn = ImageUtilities.loadImage(WARNING_BADGE);
             ret = ImageUtilities.mergeImages(ret, warn, 8, 0);
         }
@@ -122,7 +127,7 @@ public class ConfigurationsNode extends AbstractNode {
 
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[] {
+        return new Action[]{
             downloadSourcesAction,
             downloadJavadocAction
         };
@@ -134,8 +139,12 @@ public class ConfigurationsNode extends AbstractNode {
     })
     @Override
     public String getShortDescription() {
-        GradleProject gp = project.getGradleProject();
-        return gp.getBaseProject().isResolved() ? Bundle.HINT_ConfigurationsNode() : Bundle.HINT_ConfigurationsNodeUnresolved();
+        return !needsResolve() ? Bundle.HINT_ConfigurationsNode() : Bundle.HINT_ConfigurationsNodeUnresolved();
+    }
+
+    private boolean needsResolve() {
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+        return !gbp.isResolved() && !gbp.hasPlugins("java-platform"); //NOI18N
     }
 
     private static class ConfigurationsChildren extends ChildFactory.Detachable<GradleConfiguration> implements PreferenceChangeListener, PropertyChangeListener {
@@ -148,24 +157,7 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         protected Node createNodeForKey(GradleConfiguration conf) {
-            Children ch = conf.isEmpty() ? Children.LEAF : Children.create(new ConfigurationChildren(project, conf.getName()), true);
-            AbstractNode ret = new AbstractNode(ch);
-            ret.setName(conf.getName());
-            ret.setShortDescription(conf.getDescription());
-            StringBuilder displayName = new StringBuilder(conf.getName());
-            if (!conf.getExtendsFrom().isEmpty()) {
-                displayName.append(" [");
-                String separator = "";
-                for (GradleConfiguration ext : conf.getExtendsFrom()) {
-                    displayName.append(separator);
-                    displayName.append(ext.getName());
-                    separator = ", ";
-                }
-                displayName.append(']');
-            }
-            ret.setDisplayName(displayName.toString());
-            ret.setIconBaseWithExtension(LIBRARIES_ICON);
-            return ret;
+            return new ConfigurationNode(project, conf);
         }
 
         @Override
@@ -204,23 +196,23 @@ public class ConfigurationsNode extends AbstractNode {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             refresh(false);
-    }
+        }
 
     }
 
     private static class ConfigurationChildren extends ChildFactory.Detachable<GradleDependency> implements PropertyChangeListener {
 
-        private final NbGradleProjectImpl project;
+        private final Project project;
         private final String configuration;
 
-        public ConfigurationChildren(NbGradleProjectImpl project, String configuration) {
+        public ConfigurationChildren(Project project, String configuration) {
             this.project = project;
             this.configuration = configuration;
         }
 
         @NbBundle.Messages({
             "LBL_LocalDependenciesNode=Local Files",
-        })
+            "HINT_NotResolvableConfiguration=This dependency is not resolved here as its configuration can't be resolved.",})
         @Override
         protected Node[] createNodesForKey(GradleDependency key) {
             ArrayList<Node> ret = new ArrayList<>(1);
@@ -272,11 +264,15 @@ public class ConfigurationsNode extends AbstractNode {
                     break;
                 }
                 case UNRESOLVED: {
+                    GradleConfiguration conf = GradleBaseProject.get(project).getConfigurations().get(configuration);
                     GradleDependency.UnresolvedDependency dep = (GradleDependency.UnresolvedDependency) key;
 
                     AbstractNode node = new AbstractNode(Children.LEAF);
                     node.setName(dep.getId());
                     node.setIconBaseWithExtension(UNRESOLVED_ICON);
+                    if (!conf.isCanBeResolved()) {
+                        node.setShortDescription(Bundle.HINT_NotResolvableConfiguration());
+                    }
                     ret.add(node);
                     break;
                 }
@@ -287,9 +283,8 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         protected boolean createKeys(List<GradleDependency> list) {
-            GradleProject gp = project.getGradleProject();
             ArrayList<GradleDependency> ret = new ArrayList<>();
-            GradleConfiguration conf = gp.getBaseProject().getConfigurations().get(configuration);
+            GradleConfiguration conf = GradleBaseProject.get(project).getConfigurations().get(configuration);
             // We can get null here in some extreme cases, e.g. when the project is being deleted
             if (conf != null) {
                 ret.addAll(conf.getUnresolved());
@@ -313,7 +308,6 @@ public class ConfigurationsNode extends AbstractNode {
         @Override
         protected void addNotify() {
             NbGradleProject.addPropertyChangeListener(project, this);
-
         }
 
         @Override
@@ -325,11 +319,11 @@ public class ConfigurationsNode extends AbstractNode {
 
     private static class ModuleFilterNode extends FilterNode implements ChangeListener {
 
-        private final NbGradleProjectImpl project;
+        private final Project project;
         private final GradleDependency.ModuleDependency module;
         private final DataObject mainJar;
 
-        public ModuleFilterNode(NbGradleProjectImpl project, GradleDependency.ModuleDependency module, DataObject mainJar) {
+        public ModuleFilterNode(Project project, GradleDependency.ModuleDependency module, DataObject mainJar) {
             super(mainJar.getNodeDelegate().cloneNode());
             this.project = project;
             this.module = module;
@@ -419,12 +413,7 @@ public class ConfigurationsNode extends AbstractNode {
                     ret.add(fo);
                 }
             }
-            ret.sort(new Comparator<FileObject>() {
-                @Override
-                public int compare(FileObject o1, FileObject o2) {
-                    return o1.getNameExt().compareTo(o2.getNameExt());
-                }
-            });
+            ret.sort((FileObject o1, FileObject o2) -> o1.getNameExt().compareTo(o2.getNameExt()));
             keys.addAll(ret);
             return true;
         }
@@ -440,7 +429,59 @@ public class ConfigurationsNode extends AbstractNode {
             return null;
         }
 
+    }
 
+    private static class ConfigurationNode extends AbstractNode {
+
+        public ConfigurationNode(Project project, GradleConfiguration conf) {
+            super(conf.isEmpty() ? Children.LEAF : Children.create(new ConfigurationChildren(project, conf.getName()), false), Lookups.fixed(project, conf));
+            setName(conf.getName());
+            setShortDescription(conf.getDescription());
+            StringBuilder displayName = new StringBuilder(conf.getName());
+            if (!conf.getExtendsFrom().isEmpty()) {
+                displayName.append(" [").append(extendsFrom(conf)).append(']');
+            }
+            setDisplayName(displayName.toString());
+            setIconBaseWithExtension(LIBRARIES_ICON);
+        }
+
+        @Override
+        @Messages({
+            "LBL_name=Name",
+            "LBL_canBeConsumed=Can be Consumed",
+            "LBL_canBeResolved=Can be Resolved",
+            "LBL_extendsFrom=Extends From",
+            "LBL_transitive=Transitive",
+            "LBL_attributes=Attributes",
+        })
+        protected final Sheet createSheet() {
+            Sheet sheet = Sheet.createDefault();
+            Sheet.Set set = Sheet.createPropertiesSet();
+            GradleConfiguration conf = getLookup().lookup(GradleConfiguration.class);
+
+            set.put(PropertySupport.readOnly("name", String.class, conf::getName).withDisplayName(Bundle.LBL_name()));                            //NOI18N
+            set.put(PropertySupport.readOnly("canBeConsumed", Boolean.class, conf::isCanBeConsumed).withDisplayName(Bundle.LBL_canBeConsumed())); //NOI18N
+            set.put(PropertySupport.readOnly("canBeResolved", Boolean.class, conf::isCanBeResolved).withDisplayName(Bundle.LBL_canBeResolved())); //NOI18N
+            set.put(PropertySupport.readOnly("extendsFrom", String.class, () -> extendsFrom(conf)).withDisplayName(Bundle.LBL_extendsFrom()));    //NOI18N
+            set.put(PropertySupport.readOnly("transitive", Boolean.class, conf::isTransitive).withDisplayName(Bundle.LBL_transitive()));          //NOI18N
+            sheet.put(set);
+
+            Sheet.Set attrs = new Sheet.Set();
+            attrs.setName("attributes"); //NOI18N
+            attrs.setDisplayName(Bundle.LBL_attributes());
+            for (Map.Entry<String, String> entry : conf.getAttributes().entrySet()) {
+                attrs.put(PropertySupport.readOnly(entry.getKey(), String.class, entry::getValue));
+            }
+            sheet.put(attrs);
+            return sheet;
+        }
+
+        @Override
+        public Action[] getActions(boolean context) {
+            return new Action[] {
+                SystemAction.get(PropertiesAction.class),
+            };
+        }
     }
 
     private static class LocalFileFilterNode extends FilterNode {
@@ -520,5 +561,16 @@ public class ConfigurationsNode extends AbstractNode {
             return javadoc != null;
         }
 
+    }
+
+    private static String extendsFrom(GradleConfiguration conf) {
+        StringBuilder ret = new StringBuilder();
+        String separator = "";
+        for (GradleConfiguration ext : conf.getExtendsFrom()) {
+            ret.append(separator);
+            ret.append(ext.getName());
+            separator = ", ";
+        }
+        return ret.toString();
     }
 }

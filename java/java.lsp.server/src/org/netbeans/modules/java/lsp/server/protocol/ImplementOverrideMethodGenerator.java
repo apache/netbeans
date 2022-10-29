@@ -19,14 +19,16 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.lang.model.SourceVersion;
@@ -35,12 +37,9 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
@@ -49,6 +48,8 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -61,14 +62,12 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 70)
 public final class ImplementOverrideMethodGenerator extends CodeActionsProvider {
 
-    public static final String GENERATE_IMPLEMENT_METHOD =  "java.generate.implementMethod";
-    public static final String GENERATE_OVERRIDE_METHOD =  "java.generate.overrideMethod";
+    private static final String URI =  "uri";
+    private static final String OFFSET =  "offset";
+    private static final String IS_IMPLEMET =  "isImplement";
+    private static final String METHODS =  "methods";
 
-    private final Set<String> commands = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GENERATE_IMPLEMENT_METHOD, GENERATE_OVERRIDE_METHOD)));
     private final Gson gson = new Gson();
-
-    public ImplementOverrideMethodGenerator() {
-    }
 
     @Override
     @NbBundle.Messages({
@@ -108,7 +107,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 implementMethods.add(new QuickPickItem(createLabel(info, method), enclosingTypeName, null, mustImplement, new ElementData(method)));
             }
             if (!implementMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, GENERATE_IMPLEMENT_METHOD, uri, offset, implementMethods));
+                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         if (typeElement.getKind().isClass() || typeElement.getKind().isInterface()) {
@@ -124,15 +123,10 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 overrideMethods.add(item);
             }
             if (!overrideMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, GENERATE_OVERRIDE_METHOD, uri, offset, overrideMethods));
+                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         return result;
-    }
-
-    @Override
-    public Set<String> getCommands() {
-        return commands;
     }
 
     @Override
@@ -140,50 +134,65 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
         "DN_SelectImplementMethod=Select methods to implement",
         "DN_SelectOverrideMethod=Select methods to override",
     })
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (arguments.size() > 2) {
-            String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
-            int offset = gson.fromJson(gson.toJson(arguments.get(1)), Integer.class);
-            List<QuickPickItem> methods = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem[].class));
-            String text = command == GENERATE_IMPLEMENT_METHOD ? Bundle.DN_SelectImplementMethod() : Bundle.DN_SelectOverrideMethod();
-            boolean isImplement = command == GENERATE_IMPLEMENT_METHOD;
-            client.showQuickPick(new ShowQuickPickParams(text, true, methods)).thenAccept(selected -> {
-                if (selected != null && !selected.isEmpty()) {
-                    generate(client, uri, offset, isImplement, selected);
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        try {
+            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
+            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
+            boolean isImplement = ((JsonObject) data).getAsJsonPrimitive(IS_IMPLEMET).getAsBoolean();
+            List<QuickPickItem> methods = Arrays.asList(gson.fromJson(((JsonObject) data).get(METHODS), QuickPickItem[].class));
+            String title = isImplement ? Bundle.DN_GenerateImplementMethod(): Bundle.DN_GenerateOverrideMethod();
+            String text = isImplement ? Bundle.DN_SelectImplementMethod() : Bundle.DN_SelectOverrideMethod();
+            client.showQuickPick(new ShowQuickPickParams(title, text, true, methods)).thenAccept(selected -> {
+                try {
+                    if (selected != null && !selected.isEmpty()) {
+                        WorkspaceEdit edit = generate(uri, offset, isImplement, selected);
+                        if (edit != null) {
+                            codeAction.setEdit(edit);
+                        }
+                    }
+                    future.complete(codeAction);
+                } catch (IOException | IllegalArgumentException ex) {
+                    future.completeExceptionally(ex);
                 }
             });
-        } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+        } catch(JsonSyntaxException ex) {
+            future.completeExceptionally(ex);
         }
-        return CompletableFuture.completedFuture(true);
+        return future;
     }
 
-    private void generate(NbCodeLanguageClient client, String uri, int offset, boolean isImplement, List<QuickPickItem> methods) {
-        try {
-            FileObject file = Utils.fromUri(uri);
-            JavaSource js = JavaSource.forFileObject(file);
-            if (js == null) {
-                throw new IOException("Cannot get JavaSource for: " + uri);
-            }
-            List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
-                wc.toPhase(JavaSource.Phase.RESOLVED);
-                TreePath tp = wc.getTreeUtilities().pathFor(offset);
-                tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
-                if (tp != null) {
-                    List<ExecutableElement> selectedMethods = methods.stream().map(item -> {
-                        ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
-                        return (ExecutableElement)data.resolve(wc);
-                    }).collect(Collectors.toList());
-                    if (isImplement) {
-                        GeneratorUtils.generateAbstractMethodImplementations(wc, tp, selectedMethods, -1);
-                    } else {
-                        GeneratorUtils.generateMethodOverrides(wc, tp, selectedMethods, -1);
-                    }
-                }
-            });
-            client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
-        } catch (IOException | IllegalArgumentException ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+    private WorkspaceEdit generate(String uri, int offset, boolean isImplement, List<QuickPickItem> methods) throws IOException, IllegalArgumentException {
+        FileObject file = Utils.fromUri(uri);
+        JavaSource js = JavaSource.forFileObject(file);
+        if (js == null) {
+            throw new IOException("Cannot get JavaSource for: " + uri);
         }
+        List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
+            wc.toPhase(JavaSource.Phase.RESOLVED);
+            TreePath tp = wc.getTreeUtilities().pathFor(offset);
+            tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
+            if (tp != null) {
+                List<ExecutableElement> selectedMethods = methods.stream().map(item -> {
+                    ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
+                    return (ExecutableElement)data.resolve(wc);
+                }).collect(Collectors.toList());
+                if (isImplement) {
+                    GeneratorUtils.generateAbstractMethodImplementations(wc, tp, selectedMethods, -1);
+                } else {
+                    GeneratorUtils.generateMethodOverrides(wc, tp, selectedMethods, -1);
+                }
+            }
+        });
+        return edits == null ? null : new WorkspaceEdit(Collections.singletonMap(uri, edits));
+    }
+
+    private static Map<String, Object> data(String uri, int offset, boolean isImplement, List<QuickPickItem> methods) {
+        Map<String, Object> data = new HashMap<>();
+        data.put(URI, uri);
+        data.put(OFFSET, offset);
+        data.put(IS_IMPLEMET, isImplement);
+        data.put(METHODS, methods);
+        return data;
     }
 }

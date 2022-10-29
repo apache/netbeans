@@ -26,6 +26,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import org.gradle.tooling.ProjectConnection;
 import org.junit.After;
@@ -146,9 +147,13 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
         volatile Semaphore block = new Semaphore(20);
         Queue<PropertyChangeEvent> all = new ArrayBlockingQueue<>(20);
         Semaphore processing = new Semaphore(0);
+        volatile Future projectLoadState;
         
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+            if (prjImpl != null) {
+                projectLoadState = prjImpl.loadOwnProject0("Test reload", true, false, Quality.EVALUATED, false, false);
+            }
             processing.release();
             try {
                 block.acquire();
@@ -195,6 +200,8 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
         assertEquals(NbGradleProject.PROP_PROJECT_INFO, projL.e.getPropertyName());
     }
     
+    volatile NbGradleProjectImpl prjImpl;
+    
     /**
      * Checks that ProjectInfo events are processed before completion of the load future
      */
@@ -205,15 +212,16 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
         assertTrue(ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
         
         ngp.addPropertyChangeListener(projL);
-        NbGradleProjectImpl prjImpl = prj.getLookup().lookup(NbGradleProjectImpl.class);
+        prjImpl = prj.getLookup().lookup(NbGradleProjectImpl.class);
         
         // block the dispatch
         projL.block.drainPermits();
         CompletableFuture<GradleProject> f = prjImpl.loadOwnProject0("Test reload", true, true, Quality.FULL, false, true);
         assertFalse(f.isDone());
         projL.processing.acquire();
-        // still not done, since blocked inside the listener
-        assertFalse(f.isDone());
+        // when listener comes, the future must be completed, otherwise the listener that can request project features
+        // could block
+        assertTrue(projL.projectLoadState.isDone());
         projL.block.release();
         // finally wait
         GradleProject p = f.get();

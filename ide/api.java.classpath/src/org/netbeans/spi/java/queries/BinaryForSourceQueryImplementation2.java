@@ -31,7 +31,7 @@ import org.netbeans.modules.java.classpath.QueriesAccessor;
  * to specify whether {@link #computePreferBinaries(java.lang.Object) binaries are preferred}
  * - e.g. copied instead of obtaining them by compiling the sources.
  * The typical implementation of the query looks like:
- * {@codesnippet org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery}
+ * {@snippet file="org/netbeans/api/java/queries/BinaryForSourceQuery2Test.java" region="SampleQuery"}
  * 
  * @param <Result> any type this implementation wants to use as a result
  * @see BinaryForSourceQuery

@@ -21,9 +21,11 @@ package org.netbeans.modules.maven.htmlui;
 import java.io.ByteArrayInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class MacUtilitiesTest {
@@ -40,7 +42,7 @@ public class MacUtilitiesTest {
 "iPhone 8 Plus (11.2) + Apple Watch Series 3 - 42mm (4.2) [76199641-279E-411E-8751-EA504D6B4DA3] (Simulator)\n" +
 "";
         List<Device> result = new ArrayList<>();
-        MacUtilities.parseDevices(result, new ByteArrayInputStream(output.getBytes("UTF-8")));
+        MacUtilities.parseDevices(result, new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8)));
         assertEquals("Found three devices", 3, result.size());
         assertEquals("mymac", result.get(0).getName());
         assertEquals("iPhone 6s Plus (11.2)", result.get(1).getName());

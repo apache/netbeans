@@ -259,7 +259,7 @@ public final class ServerUtilities {
      * @param gfRoot the name of the directory to check against.
      * @return true if the directory appears to be the root of a TP2 installation.
      */    
-    static public boolean isTP2(String gfRoot) {
+    public static boolean isTP2(String gfRoot) {
         return ServerUtilities.getJarName(gfRoot, ServerUtilities.GF_JAR_MATCHER).getName().indexOf("-tp-2-") > -1; // NOI18N
     }
   

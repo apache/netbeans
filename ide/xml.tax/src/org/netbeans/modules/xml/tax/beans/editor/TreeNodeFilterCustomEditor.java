@@ -44,7 +44,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     
     /** */
-    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap();
+    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap<>();
 
 
     //
@@ -149,7 +149,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         short acceptPolicy = acceptRadioButton.isSelected() ?
             TreeNodeFilter.ACCEPT_TYPES :
             TreeNodeFilter.REJECT_TYPES;
-        Class[] nodeTypes = (Class[])nodeTypesList.toArray (new Class[0]);
+        Class[] nodeTypes = nodeTypesList.toArray(new Class[0]);
 
         return new TreeNodeFilter (nodeTypes, acceptPolicy);
     }
@@ -383,7 +383,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 	/**
 	 */
         public Object getValueAt (int row, int column) {
-            Object retVal = new Item (new NamedClass ((Class)nodeTypesList.get (row)));
+            Object retVal = new Item (new NamedClass (nodeTypesList.get (row)));
 
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("<-- getValue: row    = " + row); // NOI18N
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("<-- getValue: column = " + column); // NOI18N
@@ -468,7 +468,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         /**
          */
         public String toString () {
-            String name = (String)publicNodeTypeNamesMap.get (clazz);
+            String name = publicNodeTypeNamesMap.get (clazz);
 
             if ( name == null ) {
                 name = clazz.getName();
@@ -616,7 +616,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
         /** */
         private Item (NamedClass clazz) {
-            this (clazz, new TreeSet (new NamedClassComparator()), new String());
+            this (clazz, new TreeSet<Item>(new NamedClassComparator()), new String());
         }
 
         /** */

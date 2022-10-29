@@ -104,6 +104,7 @@ public final class GradleSettings {
 
     public static final String PROP_OPT_OFFLINE = "offline";
     public static final String PROP_OPT_NO_REBUILD = "noRebuild";
+    public static final String PROP_OPT_USE_CONFIG_CACHE = "useConfigCache";
     public static final String PROP_OPT_CONFIGURE_ON_DEMAND = "configureOnDemand";
 
     public static final String PROP_SKIP_TEST = "skipTest";
@@ -270,6 +271,14 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_OPT_NO_REBUILD, false);
     }
 
+    public void setUseConfigCache(boolean b) {
+        getPreferences().putBoolean(PROP_OPT_USE_CONFIG_CACHE, b);        
+    }
+    
+    public boolean getUseConfigCache() {
+        return getPreferences().getBoolean(PROP_OPT_USE_CONFIG_CACHE, false);        
+    }
+    
     public void setConfigureOnDemand(boolean b) {
         getPreferences().putBoolean(PROP_OPT_CONFIGURE_ON_DEMAND, b);
     }

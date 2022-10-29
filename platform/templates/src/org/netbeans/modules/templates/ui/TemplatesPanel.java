@@ -93,6 +93,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 import org.openide.util.actions.NodeAction;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.PasteType;
@@ -109,7 +110,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
     private static TemplateTreeView view;
     private static final RequestProcessor rp = new RequestProcessor("Templates", 1);
     
-    static private FileObject templatesRoot;
+    private static FileObject templatesRoot;
     private static Node templatesRootNode = null;
     
     private static final String TEMPLATE_DISPLAY_NAME_ATTRIBUTE = "displayName"; // NOI18N
@@ -1168,7 +1169,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         }
     }
 
-    static private DataObject getDOFromNode (Node n) {
+    private static DataObject getDOFromNode (Node n) {
         DataObject dobj = n.getLookup ().lookup (DataObject.class);
         if (dobj == null) {
             throw new NullPointerException("DataObject can not be found for node " + n);
@@ -1176,7 +1177,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         return dobj;
     }
     
-    static private DataFolder getTargetFolder (Node [] nodes) {
+    private static DataFolder getTargetFolder (Node [] nodes) {
         DataFolder folder;
         if (nodes == null || nodes.length == 0) {
             folder = DataFolder.findFolder (getTemplatesRoot ());
@@ -1262,7 +1263,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         chooser.setApproveButtonText(BTN_TemplatesPanel_JFileChooser_AddButtonName());
         chooser.setFileHidingEnabled (false);
         chooser.setMultiSelectionEnabled (false);
-        int result = chooser.showOpenDialog (null);
+        int result = chooser.showOpenDialog (Utilities.findDialogParent());
         if (JFileChooser.APPROVE_OPTION == result) {
             final File f = chooser.getSelectedFile ();
             assert f != null;
@@ -1648,7 +1649,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         }
         
         /** Copy from AbstractLookup.SimpleItem */
-        private final static class SimpleItem<T> extends Pair<T> {
+        private static final class SimpleItem<T> extends Pair<T> {
             private T obj;
 
             /** Create an item.

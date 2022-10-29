@@ -84,6 +84,34 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="GroovyElement.outer">
+        <api name="groovy-parsing"/>
+        <summary>Adding offset range for GroovyElement</summary>
+        <version major="1" minor="86"/>
+        <date day="27" month="6" year="2022"/>
+        <author login="ppisl"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+            <p>
+                GroovyElement has setOffsetRange method and it's able to remember it.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.groovy.editor.api.elements" name="GroovyElement"/>
+    </change>
+    <change id="LexUtilities.LineDocument.methods">
+        <api name="groovy-parsing"/>
+        <summary>Variants of the exisitng methods taking LineDocument as argument added.</summary>
+        <version major="1" minor="85"/>
+        <date day="18" month="5" year="2022"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+            <p>
+                Variants of the exisitng methods taking LineDocument as argument added.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.groovy.editor.api.lexer" name="LexUtilities"/>
+    </change>    
     <change id="ASTPath.outer">
         <api name="groovy-parsing"/>
         <summary>Alternative construction for path more suitable for expressions, API to resolve types</summary>

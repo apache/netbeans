@@ -66,6 +66,7 @@ import javax.tools.JavaFileObject;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -73,7 +74,6 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
-import org.netbeans.modules.java.source.TreeShims;
 
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -276,7 +276,7 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
-        return delegate.CaseMultiplePatterns(patterns, body);
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), body);
     }
     
     /**
@@ -288,7 +288,22 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
-        return delegate.CaseMultiplePatterns(patterns, statements);
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), statements);
+    }
+
+    private List<? extends CaseLabelTree> toCaseLabelTrees(List<? extends Tree> patterns) {
+        return patterns.stream().map(p -> {
+            if (p instanceof CaseLabelTree) {
+                return (CaseLabelTree) p;
+            }
+            if (p instanceof ExpressionTree) {
+                return delegate.ConstantCaseLabel((ExpressionTree) p);
+            }
+            if (p instanceof PatternTree) {
+                return delegate.PatternCaseLabel((PatternTree) p, null);
+            }
+            throw new IllegalArgumentException("Invalid pattern kind: " + p.getKind()); //NOI18N
+        }).collect(Collectors.toList());
     }
     
     /**
@@ -1261,6 +1276,19 @@ public final class TreeMaker {
      */
     public Tree BindingPattern(VariableTree vt) {
         return delegate.BindingPattern(vt);
+    }
+
+      /**
+     * Creates a new Tree for a given DeconstructionPatternTree
+     * @param deconstructor deconstructor of record pattern
+     * @param nested list of nested patterns
+     * @param vt the variable of record pattern
+     * @see com.sun.source.tree.DeconstructionPatternTree
+     * @return the newly created RecordPatternTree
+     * @since 19
+     */
+    public DeconstructionPatternTree RecordPattern(ExpressionTree deconstructor, List<PatternTree> nested, VariableTree vt) {
+        return delegate.DeconstructionPattern(deconstructor, nested, vt);
     }
 
     /**
@@ -2908,9 +2936,7 @@ public final class TreeMaker {
         // todo (#pf): Shouldn't here be check that names are not the same?
         // i.e. node label == aLabel? -- every case branch has to check itself
         // This will improve performance, no change was done by API user.
-        Tree.Kind kind = TreeShims.isRecord(node) ? Kind.CLASS : node.getKind();
-       
-        switch (kind) {
+        switch (node.getKind()) {
             case BREAK: {
                 BreakTree t = (BreakTree) node;
                 N clone = (N) Break(
@@ -2921,7 +2947,8 @@ public final class TreeMaker {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
-            case INTERFACE: {
+            case INTERFACE:
+            case RECORD: {
                 ClassTree t = (ClassTree) node;
                 // copy all the members, for constructor change their name
                 // too!
@@ -3358,6 +3385,25 @@ public final class TreeMaker {
         mapComments((BlockTree) body, bodyText, copy, handler, positions[0]);
         new TreePosCleaner().scan(body, null);
         return (BlockTree) body;
+    }
+
+    /**
+     * Creates a new ExpressionTree for provided <tt>bodyText</tt>.
+     * 
+     * @param   lambda    figures out the scope for attribution.
+     * @param   bodyText  text which will be used for lambda body creation.
+     * @return  a new tree for <tt>bodyText</tt>.
+     * @since 2.54
+     */
+    public ExpressionTree createLambdaExpression(LambdaExpressionTree lambda, String bodyText) {
+        SourcePositions[] positions = new SourcePositions[1];
+        final TreeUtilities treeUtils = copy.getTreeUtilities();
+        ExpressionTree body = treeUtils.parseExpression(bodyText, positions);
+        Scope scope = copy.getTrees().getScope(TreePath.getPath(copy.getCompilationUnit(), lambda));
+        treeUtils.attributeTree(body, scope);
+//        mapComments((BlockTree) body, bodyText, copy, handler, positions[0]);
+        new TreePosCleaner().scan(body, null);
+        return (ExpressionTree) body;
     }
 
     /**

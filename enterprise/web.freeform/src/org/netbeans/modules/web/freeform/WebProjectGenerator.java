@@ -85,7 +85,7 @@ public class WebProjectGenerator {
             foldersEl = doc.createElementNS(Util.NAMESPACE, "folders"); // NOI18N
             XMLUtil.appendChildElement(data, foldersEl, rootElementsOrder);
         } else {
-            List l = XMLUtil.findSubElements(foldersEl);
+            List<Element> l = XMLUtil.findSubElements(foldersEl);
             for (int i = 0; i < l.size(); i++) {
                 Element e = (Element) l.get(i);
                 Element te = XMLUtil.findElement(e, "type", Util.NAMESPACE);
@@ -106,7 +106,7 @@ public class WebProjectGenerator {
             itemsEl = doc.createElementNS(Util.NAMESPACE, "items"); // NOI18N
             XMLUtil.appendChildElement(viewEl, itemsEl, viewElementsOrder);
         } else {
-            List l = XMLUtil.findSubElements(itemsEl);
+            List<Element> l = XMLUtil.findSubElements(itemsEl);
             for (int i = 0; i < l.size(); i++) {
                 Element e = (Element) l.get(i);
                 if (e.hasAttribute("style")) {
@@ -196,9 +196,9 @@ public class WebProjectGenerator {
         while (it.hasNext()) {
             Element wmEl = it.next();
             WebModule wm = new WebModule();
-            Iterator it2 = XMLUtil.findSubElements(wmEl).iterator();
+            Iterator<Element> it2 = XMLUtil.findSubElements(wmEl).iterator();
             while (it2.hasNext()) {
-                Element el = (Element)it2.next();
+                Element el = it2.next();
                 if (el.getLocalName().equals("doc-root")) { // NOI18N
                     wm.docRoot = XMLUtil.findText(el);
                     continue;

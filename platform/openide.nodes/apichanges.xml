@@ -25,6 +25,30 @@
 <apidef name="nodes">Nodes API</apidef>
 </apidefs>
 <changes>
+    <change id="PropertySupport.FunctionalProperty">
+        <api name="nodes"/>
+        <summary>Adding static methods to PropertySupport to allow easy creation
+            of properties using functional interfaces.
+        </summary>
+        <version major="7" minor="62"/>
+        <date day="26" month="5" year="2022"/>
+        <author login="lkishalmi"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"/>
+        <description>
+            <a href="@TOP@/org/openide/nodes/PropertySupport.html">PropertySupport</a>
+            received a bunch of static methods (<code>readWrite</code>, <code>readOnly</code>, and
+            <code>writeOnly</code> to allow easy property creation with <code>Supplier</code> and
+            <code>Provider</code> functional interfaces.
+            <pre>
+                Sheet.Set set = ...
+                SomeObject obj = getLookup().lookup(SomeObject.class);
+
+                set.put(PropertySupport.readWrite("name", String.class, obj::getName, obj::setName));
+                set.put(PropertySupport.readOnly("size", Long.class, obj::getSize));
+            </pre>
+        </description>
+        <class package="org.openide.nodes" name="DestroyableNodesFactory"/>
+    </change>
     <change id="ChildFactory.DestroyableNodes">
         <api name="nodes"/>
         <summary>Adding ChildFactory.Detachable to allow ChildFactory implementations to

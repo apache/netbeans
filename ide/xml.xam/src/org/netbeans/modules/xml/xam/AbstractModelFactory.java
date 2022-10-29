@@ -157,7 +157,7 @@ public abstract class AbstractModelFactory<M extends Model> {
         }
     }
     
-    private synchronized static List<AbstractModel> getAllModels() {
+    private static synchronized List<AbstractModel> getAllModels() {
         List<AbstractModel> models = new ArrayList<AbstractModel>();
         List<WeakReference<AbstractModelFactory>> mfactories = 
             new ArrayList<WeakReference<AbstractModelFactory>>(factories);

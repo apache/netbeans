@@ -1,0 +1,4 @@
+    abstract public function testAbstractWithBody() {
+                             --------------------
+HINT:Abstract method "testAbstractWithBody" can not contain body
+FIX:Remove body of the method: testAbstractWithBody

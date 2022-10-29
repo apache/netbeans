@@ -155,12 +155,14 @@ public class ServerSelectionHelper {
         // If <No Server> option was selected, show all supported profiles except Java EE 7 profiles
         if (ExecutionChecker.DEV_NULL.equals(serverInstance)) {
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.add(Profile.JAKARTA_EE_9_1_WEB);
                 profiles.add(Profile.JAKARTA_EE_9_WEB);
                 profiles.add(Profile.JAKARTA_EE_8_WEB);
                 profiles.add(Profile.JAVA_EE_8_WEB);
                 profiles.add(Profile.JAVA_EE_7_WEB);
                 profiles.add(Profile.JAVA_EE_6_WEB);
             } else {
+                profiles.add(Profile.JAKARTA_EE_9_1_FULL);
                 profiles.add(Profile.JAKARTA_EE_9_FULL);
                 profiles.add(Profile.JAKARTA_EE_8_FULL);
                 profiles.add(Profile.JAVA_EE_8_FULL);
@@ -179,21 +181,19 @@ public class ServerSelectionHelper {
             }
 
             // We don't support J2EE 1.3 and J2EE 1.4 anymore
-            if (profiles.contains(Profile.J2EE_13)) {
-                profiles.remove(Profile.J2EE_13);
-            }
-            if (profiles.contains(Profile.J2EE_14)) {
-                profiles.remove(Profile.J2EE_14);
-            }
+            profiles.remove(Profile.J2EE_13);
+            profiles.remove(Profile.J2EE_14);
 
             // We want to have Java EE 6 Full profile for all project types except Web project
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.remove(Profile.JAKARTA_EE_9_1_FULL);
                 profiles.remove(Profile.JAKARTA_EE_9_FULL);
                 profiles.remove(Profile.JAKARTA_EE_8_FULL);
                 profiles.remove(Profile.JAVA_EE_8_FULL);
                 profiles.remove(Profile.JAVA_EE_7_FULL);
                 profiles.remove(Profile.JAVA_EE_6_FULL);
             } else {
+                profiles.remove(Profile.JAKARTA_EE_9_1_WEB);
                 profiles.remove(Profile.JAKARTA_EE_9_WEB);
                 profiles.remove(Profile.JAKARTA_EE_8_WEB);
                 profiles.remove(Profile.JAVA_EE_8_WEB);

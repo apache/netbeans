@@ -527,7 +527,7 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, RECORD, DECLARATION], 0:14-0:18",
                     "[PUBLIC, CLASS], 0:19-0:25",
                     "[PUBLIC, RECORD_COMPONENT, DECLARATION], 0:26-0:27",
-                    "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:6-1:7",
+                    "[PACKAGE_PRIVATE, CLASS, UNUSED, DECLARATION], 1:6-1:7",
                     "[PUBLIC, CLASS], 2:11-2:17",
                     "[PUBLIC, METHOD, DECLARATION], 2:18-2:19",
                     "[PUBLIC, RECORD], 2:20-2:24",
@@ -591,7 +591,7 @@ public class DetectorTest extends TestBase {
                 "[PACKAGE_PRIVATE, CLASS, DECLARATION], 0:13-0:17",
                 "[KEYWORD], 1:0-1:3",
                 "[KEYWORD], 1:4-1:10",
-                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
+                "[PACKAGE_PRIVATE, CLASS, UNUSED, DECLARATION], 1:17-1:22",
                 "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
     }
 
@@ -618,9 +618,9 @@ public class DetectorTest extends TestBase {
 
     public void testSwitchPattern() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip tests
+            //OK, no RELEASE_19, skip tests
             return;
         }
         enablePreview();
@@ -630,7 +630,7 @@ public class DetectorTest extends TestBase {
                 + "    void m1() {\n"
                 + "        Object obj = \"test\";\n"
                 + "        switch (obj) {\n"
-                + "            case String s && s.equals(strColor) -> System.out.println(\"same\");\n"
+                + "            case String s when s.equals(strColor) -> System.out.println(\"same\");\n"
                 + "            case default -> System.out.println(\"default\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -638,18 +638,55 @@ public class DetectorTest extends TestBase {
                 "[PUBLIC, CLASS, DECLARATION], 0:13-0:30\n"
                 + "[PUBLIC, CLASS], 1:4-1:10\n"
                 + "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:19\n"
-                + "[PACKAGE_PRIVATE, METHOD, DECLARATION], 2:9-2:11\n"
+                + "[PACKAGE_PRIVATE, METHOD, UNUSED, DECLARATION], 2:9-2:11\n"
                 + "[PUBLIC, CLASS], 3:8-3:14\n"
                 + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
                 + "[LOCAL_VARIABLE], 4:16-4:19\n"
-                + "[PUBLIC, CLASS], 5:17-5:23\n"
-                + "[LOCAL_VARIABLE, DECLARATION], 5:24-5:25\n"
-                + "[LOCAL_VARIABLE], 5:29-5:30\n"
-                + "[PUBLIC, METHOD], 5:31-5:37\n"
-                + "[PACKAGE_PRIVATE, FIELD], 5:38-5:46\n"
-                + "[PUBLIC, CLASS], 5:51-5:57\n"
-                + "[STATIC, PUBLIC, FIELD], 5:58-5:61\n"
-                + "[PUBLIC, METHOD], 5:62-5:69\n"
+                + "[KEYWORD], 5:26-5:30\n"
+                + "[LOCAL_VARIABLE], 5:31-5:32\n"
+                + "[PUBLIC, METHOD], 5:33-5:39\n"
+                + "[PACKAGE_PRIVATE, FIELD], 5:40-5:48\n"
+                + "[PUBLIC, CLASS], 5:53-5:59\n"
+                + "[STATIC, PUBLIC, FIELD], 5:60-5:63\n"
+                + "[PUBLIC, METHOD], 5:64-5:71\n"
+                + "[PUBLIC, CLASS], 6:28-6:34\n"
+                + "[STATIC, PUBLIC, FIELD], 6:35-6:38\n"
+                + "[PUBLIC, METHOD], 6:39-6:46\n");
+    }
+
+    public void testRecordPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_19, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("TestRecordPattern.java",
+                "public class TestRecordPattern {\n"
+                + "    record Person(int name, int a){}\n"
+                + "    void m1() {\n"
+                + "        Person obj = new Person(1,2);\n"
+                + "        switch (obj) {\n"
+                + "            case Person(int x, int y) when x > 0 -> System.out.println(\"x greater than 0\");\n"
+                + "            case default -> System.out.println(\"default\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}",
+                "[PUBLIC, CLASS, DECLARATION], 0:13-0:30\n"
+                + "[KEYWORD], 1:4-1:10\n"
+                + "[STATIC, PACKAGE_PRIVATE, RECORD, DECLARATION], 1:11-1:17\n"
+                + "[PUBLIC, RECORD_COMPONENT, DECLARATION], 1:22-1:26\n"
+                + "[PUBLIC, RECORD_COMPONENT, DECLARATION], 1:32-1:33\n"
+                + "[PACKAGE_PRIVATE, METHOD, UNUSED, DECLARATION], 2:9-2:11\n"
+                + "[STATIC, PACKAGE_PRIVATE, RECORD], 3:8-3:14\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
+                + "[PACKAGE_PRIVATE, CONSTRUCTOR], 3:25-3:31\n"
+                + "[LOCAL_VARIABLE], 4:16-4:19\n"
+                + "[KEYWORD], 5:38-5:42\n"
+                + "[PUBLIC, CLASS], 5:52-5:58\n"
+                + "[STATIC, PUBLIC, FIELD], 5:59-5:62\n"
+                + "[PUBLIC, METHOD], 5:63-5:70\n"
                 + "[PUBLIC, CLASS], 6:28-6:34\n"
                 + "[STATIC, PUBLIC, FIELD], 6:35-6:38\n"
                 + "[PUBLIC, METHOD], 6:39-6:46\n");
@@ -691,11 +728,11 @@ public class DetectorTest extends TestBase {
                     "}\n",
                     "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
                     "[PUBLIC, CLASS], 1:4-1:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 1:11-1:13",
                     "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
                     "[UNINDENTED_TEXT_BLOCK], 3:13-3:29",
                     "[PUBLIC, CLASS], 5:4-5:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 5:11-5:13",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 5:11-5:13",
                     "[UNINDENTED_TEXT_BLOCK], 6:16-6:27",
                     "[UNINDENTED_TEXT_BLOCK], 7:16-7:29");
     }
@@ -739,7 +776,7 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, CLASS], 1:36-1:42",
                     "[PARAMETER, UNUSED, DECLARATION], 1:43-1:47",
                     "[PUBLIC, CLASS], 1:54-1:60",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:61-1:65",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 1:61-1:65",
                     "[PACKAGE_PRIVATE, CONSTRUCTOR], 2:19-2:25");
     }
 
@@ -857,7 +894,7 @@ public class DetectorTest extends TestBase {
                     "}\n",
                     "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
                     "[PUBLIC, CLASS], 1:4-1:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 1:11-1:13",
                     "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
                     "[UNINDENTED_TEXT_BLOCK], 6:13-6:29");
     }

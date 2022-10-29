@@ -100,11 +100,8 @@ public class TomcatUsersTest extends NbTestCase {
     
     private File createTomcatUsersXml(String fileName, String content) throws Exception {
         File file = new File(getWorkDir(), fileName);
-        FileWriter writer = new FileWriter(file);
-        try {
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(content);
-        } finally {
-            writer.close();
         }
         return file;
     }

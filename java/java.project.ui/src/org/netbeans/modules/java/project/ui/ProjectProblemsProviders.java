@@ -603,7 +603,7 @@ public class ProjectProblemsProviders {
 
 
     //<editor-fold defaultstate="collapsed" desc="Resolver implementations">
-    private static abstract class BaseResolver implements ProjectProblemResolver {
+    private abstract static class BaseResolver implements ProjectProblemResolver {
 
         protected final RefType type;
         protected final String id;
@@ -815,7 +815,7 @@ public class ProjectProblemsProviders {
         }
     }
 
-    private static abstract class ReferenceResolver extends BaseResolver {
+    private abstract static class ReferenceResolver extends BaseResolver {
 
         static File lastSelectedFile;
 
@@ -886,7 +886,7 @@ public class ProjectProblemsProviders {
             if (lastSelectedFile != null) {
                 chooser.setSelectedFile(lastSelectedFile);
             }
-            int option = chooser.showOpenDialog(null);
+            int option = chooser.showOpenDialog(Utilities.findDialogParent());
             if (option == JFileChooser.APPROVE_OPTION) {
                 updateReference(chooser.getSelectedFile());
                 lastSelectedFile = chooser.getSelectedFile();
@@ -928,7 +928,7 @@ public class ProjectProblemsProviders {
             if (lastSelectedFile != null) {
                 chooser.setSelectedFile(lastSelectedFile);
             }
-            int option = chooser.showOpenDialog(null);
+            int option = chooser.showOpenDialog(Utilities.findDialogParent());
             if (option == JFileChooser.APPROVE_OPTION) {
                 updateReference(chooser.getSelectedFile());
                 lastSelectedFile = chooser.getSelectedFile();

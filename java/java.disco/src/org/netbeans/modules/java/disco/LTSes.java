@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.disco;
 
-import io.foojay.api.discoclient.pkg.TermOfSupport;
+import eu.hansolo.jdktools.TermOfSupport;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -40,8 +40,7 @@ public class LTSes {
             case NONE:
             case NOT_FOUND:
             default:
-                ui = "";
-                break;
+                return value.toString();
         }
         return String.format("%s (%s)", value, ui);
     }

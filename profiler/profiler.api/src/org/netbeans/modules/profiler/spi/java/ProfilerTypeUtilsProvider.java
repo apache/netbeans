@@ -34,12 +34,12 @@ public abstract class ProfilerTypeUtilsProvider {
      * @param className A fully qualified class name
      * @return Returns a resolved class or NULL
      */
-    abstract public SourceClassInfo resolveClass(String className);
+    public abstract SourceClassInfo resolveClass(String className);
     
     /**
      * @return Returns a list of all main classes present in the project
      */
-    abstract public Collection<SourceClassInfo> getMainClasses();
+    public abstract Collection<SourceClassInfo> getMainClasses();
     
     /**
      * 
@@ -47,7 +47,7 @@ public abstract class ProfilerTypeUtilsProvider {
      * @param scope A {@linkplain SourcePackageInfo.Scope} - SOURCE or DEPENDENCIES
      * @return Returns a list of project's packages
      */
-    abstract public Collection<SourcePackageInfo> getPackages(boolean subprojects, SourcePackageInfo.Scope scope);
+    public abstract Collection<SourcePackageInfo> getPackages(boolean subprojects, SourcePackageInfo.Scope scope);
     
     /**
      * Case insensitive regexp class search

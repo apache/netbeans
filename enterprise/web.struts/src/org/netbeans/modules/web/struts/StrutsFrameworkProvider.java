@@ -111,9 +111,9 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
         return sb.toString();
     }
 
-    public java.io.File[] getConfigurationFiles(org.netbeans.modules.web.api.webmodule.WebModule wm) {
+    public File[] getConfigurationFiles(org.netbeans.modules.web.api.webmodule.WebModule wm) {
         FileObject webinf = wm.getWebInf();
-        List files = new ArrayList();
+        List<File> files = new ArrayList<>();
         // The JavaEE 5 introduce web modules without deployment descriptor. 
         // In such wm can not be struts used. 
         FileObject dd = wm.getDeploymentDescriptor();
@@ -157,7 +157,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
             if (resource != null){
                 String name = resource.getAttributeValue("parameter");
                 if (name != null) {
-                    name = name.replaceAll("/", ".");
+                    name = name.replace("/", ".");
                     panel.setAppResource(name);
                 }
             }
@@ -366,7 +366,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
             //copy Welcome.jsp
             if (canCreateNewFile(wm.getDocumentBase(), "welcomeStruts.jsp")) { //NOI18N
                 content = readResource (this.getClass().getClassLoader().getResourceAsStream(RESOURCE_FOLDER + "welcome.jsp"), "UTF-8"); //NOI18N
-                content = content.replaceAll("__ENCODING__", FileEncodingQuery.getDefaultEncoding().name());
+                content = content.replace("__ENCODING__", FileEncodingQuery.getDefaultEncoding().name());
                 target = FileUtil.createData(wm.getDocumentBase(), "welcomeStruts.jsp");//NOI18N
                 createFile(target, content, "UTF-8"); //NOI18N
                 File indexJsp = new File(FileUtil.toFile(wm.getDocumentBase()), "index.jsp");  //NOI18N

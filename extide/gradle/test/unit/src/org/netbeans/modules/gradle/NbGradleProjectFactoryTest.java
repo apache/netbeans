@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
@@ -129,9 +130,31 @@ public class NbGradleProjectFactoryTest extends AbstractGradleProjectTestCase {
         }
         FileObject app = FileUtil.createFolder(parentPrj, "app");
         FileObject gradle = FileUtil.createData(app, "build.gradle");
-
+        assertProjectsRecognized(parentPrj, app);
+    }
+    
+    private void assertProjectsRecognized(FileObject parentPrj, FileObject app) {
         assertTrue("Parent Gradle recognized", NbGradleProjectFactory.isProjectCheck(parentPrj, false));
         assertTrue("Child Gradle recognized", NbGradleProjectFactory.isProjectCheck(app, false));
+        NbGradleProjectFactory factoryInstance = new NbGradleProjectFactory();
+        assertEquals("Gradle project type of main project", NbGradleProject.GRADLE_PROJECT_TYPE, factoryInstance.isProject2(parentPrj).getProjectType());
+        assertEquals("Gradle project type of subproject", NbGradleProject.GRADLE_PROJECT_TYPE, factoryInstance.isProject2(app).getProjectType());
+    }
+    
+    /**
+     * Checks that project with just settings.gradle and no build.gradle is recognized as a project.
+     */
+    public void testNoBuildFileProject() throws Exception {
+        FileObject parentPrj = root;
+        FileObject settings = FileUtil.createData(parentPrj, "settings.gradle");
+        try (OutputStream os = settings.getOutputStream()) {
+            os.write(("\n"
+                    + "rootProject.name = 'example'\n"
+                    + "include('app')\n"
+            ).getBytes(StandardCharsets.UTF_8));
+        }
+        FileObject app = FileUtil.createFolder(parentPrj, "app");
+        assertProjectsRecognized(parentPrj, app);
     }
 
 }

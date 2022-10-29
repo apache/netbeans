@@ -42,6 +42,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -95,20 +96,20 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
      * @deprecated does not handle XML attributes
      */
     @Deprecated
-    public final static String ATTR_NAME = "filesystem"; // NOI18N
+    public static final String ATTR_NAME = "filesystem"; // NOI18N
 
     /** Extension of special file in each folder where attributes are saved.
      * @deprecated does not handle XML attributes
      */
     @Deprecated
-    public final static String ATTR_EXT = "attributes"; // NOI18N
+    public static final String ATTR_EXT = "attributes"; // NOI18N
 
     /** Name with extension of special file in each folder where attributes are saved.
      * @deprecated does not handle XML attributes
      */
     @Deprecated
-    public final static String ATTR_NAME_EXT = ATTR_NAME + '.' + ATTR_EXT;
-    private final static String ATTR_NAME_EXT_XML = System.getProperty(
+    public static final String ATTR_NAME_EXT = ATTR_NAME + '.' + ATTR_EXT;
+    private static final String ATTR_NAME_EXT_XML = System.getProperty(
             "org.openide.filesystems.DefaultAttributes.ATTR_NAME_EXT_XML", ".nbattrs"
         ); // NOI18N
 
@@ -119,7 +120,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
      * - org.openide.loaders.CompilerSupport
      * - org.netbeans.core.ExJarFileSystem
      */
-    private final static String READONLY_ATTRIBUTES = "readOnlyAttrs"; //NOI18N
+    private static final String READONLY_ATTRIBUTES = "readOnlyAttrs"; //NOI18N
 
     // <?xml version="1.0"?>
     // <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
@@ -710,7 +711,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
     * @param pbStream is pushback input stream; tests 4 bytes and then returns them back
     * @return true if the file has serialized form
     */
-    static private final boolean isSerialized(PushbackInputStream pbStream)
+    private static final boolean isSerialized(PushbackInputStream pbStream)
     throws IOException {
         int[] serialPattern = { '\u00AC', '\u00ED', '\u0000', '\u0005' }; //NOI18N patern for serialized objects
         byte[] checkedArray = new byte[serialPattern.length];
@@ -775,7 +776,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
     /** Table that hold mapping between files and attributes.
     * Hold mapping of type (String, Map (String, Object))
     */
-    final static class Table extends HashMap implements Externalizable {
+    static final class Table extends HashMap implements Externalizable {
         static final long serialVersionUID = 2353458763249746934L;
 
         /** name of folder we belong to */
@@ -882,12 +883,12 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
         /** Enum of attributes for one file.
         */
         public Enumeration<String> attrs(String fileName) {
-            Map m = (Map) get(fileName);
+            Map<String, Map> m = (Map) get(fileName);
 
             if (m == null) {
                 return Enumerations.empty();
             } else {
-                HashSet<String> s = new HashSet<>(m.keySet());
+                Set<String> s = new HashSet<>(m.keySet());
 
                 return Collections.enumeration(s);
             }
@@ -1035,7 +1036,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          */
         public void writeToXML(PrintWriter pw) /*throws IOException */ {
             // list of names
-            Iterator<String> it = new TreeSet(keySet()).iterator();
+            Iterator<String> it = new TreeSet<>(keySet()).iterator();
             XMLMapAttr.writeHeading(pw);
 
             while (it.hasNext()) {
@@ -1156,7 +1157,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
      * - protected  void characters(char[] ch, int start, int length) throws SAXException {}
      * - protected  void  internalStartElement(String elemName, HashMap mapMandatory,HashMap mapAllowed) throws SAXException {}
      */
-    static abstract class ElementHandler {
+    abstract static class ElementHandler {
         private static final String[] EMPTY = {  };
         private int mandatAttrCount;
 

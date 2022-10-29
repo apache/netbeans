@@ -20,8 +20,8 @@ package org.netbeans.api.java.source.support;
 
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.util.TreePathScanner;
-import org.netbeans.modules.java.source.TreeShims;
 
 /**
  *
@@ -36,7 +36,12 @@ public class ErrorAwareTreePathScanner<R,P> extends TreePathScanner<R,P> {
 
     @Override
     public R visitCase(CaseTree node, P p) {
-        scan(TreeShims.getLabels(node), p);
-        return super.visitCase(node, p);
+        R r = scan(node.getLabels(), p);
+        if (node.getCaseKind() == CaseKind.STATEMENT) {
+            r = reduce(scan(node.getStatements(), p), r);
+        } else {
+            r = reduce(scan(node.getBody(), p), r);
+        }
+        return r;
     }
 }

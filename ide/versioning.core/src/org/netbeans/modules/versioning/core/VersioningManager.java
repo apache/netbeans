@@ -637,7 +637,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
         }
     }
 
-    public synchronized static void statusListener(VCSAnnotationListener listener, boolean add) {
+    public static synchronized void statusListener(VCSAnnotationListener listener, boolean add) {
         WeakSet<VCSAnnotationListener> newSet = new WeakSet<VCSAnnotationListener>(statusListeners);
         if (add) {
             newSet.add(listener);

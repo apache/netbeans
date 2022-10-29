@@ -55,7 +55,7 @@ import org.openide.util.WeakListeners;
 @ProjectServiceProvider(service = {GradleDistributionProvider.class, WatchedResourceProvider.class}, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
 public class GradleDistributionProviderImpl implements GradleDistributionProvider, WatchedResourceProvider {
 
-    private final static Logger LOGGER = Logger.getLogger(GradleDistributionProviderImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GradleDistributionProviderImpl.class.getName());
 
     private static final List<String> AFFECTING_PROPS = Arrays.asList(
             PROP_GRADLE_USER_HOME,
@@ -80,7 +80,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
     public GradleDistributionProviderImpl(Project project) {
         this.project = (NbGradleProjectImpl) project;
         pcl = (evt) -> {
-            if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
+            if (NbGradleProject.PROP_RESOURCES.equals(evt.getPropertyName())) {
                 URI uri = (URI) evt.getNewValue();
                 if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(GradleFiles.WRAPPER_PROPERTIES)) {
                     URI newDistURI = getWrapperDistributionURI();
@@ -99,7 +99,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
         if (dist == null) {
             GradleSettings settings = GradleSettings.getDefault();
 
-            GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
+            GradleDistributionManager mgr = GradleDistributionManager.get();
 
             if (settings.isWrapperPreferred()) {
                 try {

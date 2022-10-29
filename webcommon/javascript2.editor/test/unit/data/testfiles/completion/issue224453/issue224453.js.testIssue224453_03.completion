@@ -3,8 +3,8 @@ $scope.specification.i|d + "/v/" + view);
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      id                              [PUBLIC]   <font color=#999999>issue224453.js</font>
-METHOD     is(value1: String, value2: Str  [PUBLIC,   JS Platform
-METHOD     isExtensible(obj: Object): Boo  [PUBLIC,   JS Platform
-METHOD     isFrozen(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     isSealed(obj: Object): Boolean  [PUBLIC,   JS Platform
+METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
+METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
+METHOD     isFrozen(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     isSealed(o: Object): Boolean    [PUBLIC,   JS Platform

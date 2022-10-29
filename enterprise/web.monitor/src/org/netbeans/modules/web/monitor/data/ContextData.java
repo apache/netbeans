@@ -43,8 +43,8 @@ public class ContextData extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; //NOI18N
-    static public final String CONTEXTATTRIBUTES =
+    public static final String PARAM = "Param"; //NOI18N
+    public static final String CONTEXTATTRIBUTES =
 	"ContextAttributes"; //NOI18N
 
     public ContextData() {
@@ -134,12 +134,12 @@ public class ContextData extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	ContextData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	ContextData.comparators.remove(c);
     }
     //

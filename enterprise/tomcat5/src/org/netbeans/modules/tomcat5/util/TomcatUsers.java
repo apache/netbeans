@@ -109,11 +109,8 @@ public class TomcatUsers {
         if (fo == null) {
             throw new IOException(NbBundle.getMessage(TomcatUsers.class, "MSG_FileNotFound", tomcatUsersFile.getPath()));
         }
-        OutputStream os = fo.getOutputStream();
-        try {
+        try (OutputStream os = fo.getOutputStream()){
             XMLUtil.write(doc, os, "UTF-8"); // NOI18N
-        } finally {
-            os.close();
         }
     }
     

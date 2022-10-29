@@ -30,6 +30,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -45,10 +46,15 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
     }
 
     @Override
+    @NbBundle.Messages({
+        "ERR_ProjectNotTrusted=Gradle execution is not trusted on this project."
+    })
     public GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args) {
         LOGGER.info("Load aiming " +aim + " for "+ project);
         GradleCommandLine cmd = new GradleCommandLine(args);
         AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd, descriptionOpt);
+        LOGGER.log(Level.FINER, "Load context: project = {0}, prev = {1}, aim = {2}, args = {3}", new Object[] { 
+            project, ctx.previous, aim, cmd});
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
         if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
@@ -74,7 +80,7 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     } else {
                         ret = ctx.getPrevious();
                         if (ret != null) {
-                            ret = ret.invalidate("Gradle execution is not trusted on this project.");
+                            ret = ret.invalidate(Bundle.ERR_ProjectNotTrusted());
                         }
                         LOGGER.log(Level.FINER, "Execution not allowed, invalidated {0}", ret);
                     }
@@ -82,9 +88,12 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     ret = loader.load();
                     LOGGER.log(Level.FINER, "Loaded with loader {0} -> {1}", new Object[] { loader, ret });
                 }
-                if (ret != null) {
+                if ((ret != null) && ret.getQuality().atLeast(aim)) {
+                    // We have the quality we are looking for, let's be happy with that
                     break;
                 }
+            } else {
+                LOGGER.log(Level.FINER, "Loaded disabled: {0}", loader);
             }
         }
         if (ret == null) {

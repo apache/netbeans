@@ -1,0 +1,58 @@
+<testresult testFile='newInInitializersWithPropertyError.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='825'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='826' end='827'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='832' end='838'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='839' end='844'>
+            <text>$prop</text>
+        </token>
+        <token id='T_EQUAL' start='845' end='846'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='847' end='850'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='851' end='859'>
+            <text>stdClass</text>
+        </token>
+        <token id='T_SEMICOLON' start='859' end='860'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='861' end='862'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='863' end='863'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='863'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='846'/>
+            <ExpressionStatement start='847' end='860'>
+                <ClassInstanceCreation start='847' end='859' anonymous='false'>
+                    <ClassName start='851' end='859'>
+                        <NamespaceName start='851' end='859' isCurrent='false' isGlobal='false'>
+                            <Identifier start='851' end='859' name='stdClass'/>
+                        </NamespaceName>
+                    </ClassName>
+                    <Parameters>
+                    </Parameters>
+                </ClassInstanceCreation>
+            </ExpressionStatement>
+            <ASTError start='0' end='860'/>
+        </Statements>
+    </Program>
+</testresult>

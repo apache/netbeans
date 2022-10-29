@@ -42,6 +42,9 @@ import java.util.Vector;
  * both after the invocation of the expression and invocation of the method.
  * 
  * @author Martin Entlicher
+ *
+ * WARNING: Do not change any of the primitive auto-boxing. It could potentially
+ * break the tests. We expressly want it done as part of testing.
  */
 public class EvaluatorApp extends BaseClass {
 

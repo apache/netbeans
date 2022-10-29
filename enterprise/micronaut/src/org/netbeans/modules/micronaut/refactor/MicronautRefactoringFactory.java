@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -38,7 +41,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
 import org.netbeans.modules.micronaut.MicronautConfigUtilities;
-import org.netbeans.modules.micronaut.completion.MicronautConfigCompletionItem;
+import org.netbeans.modules.micronaut.completion.MicronautConfigCompletionProvider;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.Scope;
@@ -134,13 +137,13 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                                     if (info == null) {
                                         info = getInfo();
                                     }
-                                    if (info.className != null && info.methodName != null && info.methodName.startsWith("set")) {
+                                    if (info.className != null && info.propertyName != null) {
                                         for (ConfigurationMetadataGroup group : MicronautConfigProperties.getGroups(project).values()) {
                                             ConfigurationMetadataSource source = group.getSources().get(info.className);
                                             if (source != null) {
                                                 for (ConfigurationMetadataProperty property : source.getProperties().values()) {
-                                                    String name = "set" + property.getName().replaceAll("-", "");
-                                                    if (name.equalsIgnoreCase(info.methodName)) {
+                                                    String name = property.getName().replace("-", "");
+                                                    if (name.equalsIgnoreCase(info.propertyName)) {
                                                         for (FileObject configFile : configFiles) {
                                                             MicronautConfigUtilities.collectUsages(configFile, property.getId(), usage -> {
                                                                 refactoringElements.add(refactoring, new WhereUsedRefactoringElement(usage.getFileObject(), usage.getStartOffset(), usage.getEndOffset(), usage.getText()));
@@ -169,9 +172,26 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                 source.runUserActionTask(controller -> {
                     controller.toPhase(JavaSource.Phase.RESOLVED);
                     Element el = handle.resolveElement(controller);
-                    if (el != null && el.getKind() == ElementKind.METHOD && el.getModifiers().contains(Modifier.PUBLIC)) {
-                        info.methodName = el.getSimpleName().toString();
-                        info.className = ((TypeElement)((ExecutableElement)el).getEnclosingElement()).getQualifiedName().toString();
+                    if (el != null) {
+                        if (el.getKind() == ElementKind.METHOD) {
+                            if (el.getModifiers().contains(Modifier.PUBLIC) && el.getSimpleName().toString().startsWith("set")) {
+                                info.propertyName = el.getSimpleName().toString().substring(3);
+                                info.className = ((TypeElement) el.getEnclosingElement()).getQualifiedName().toString();
+                            }
+                        } else if (el.getKind().isField()) {
+                            TypeElement typeElement = controller.getElements().getTypeElement("io.micronaut.context.annotation.Property");
+                            for (AnnotationMirror annotationMirror : el.getAnnotationMirrors()) {
+                                if (typeElement == annotationMirror.getAnnotationType().asElement()) {
+                                    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
+                                        if ("name".contentEquals(entry.getKey().getSimpleName())) {
+                                            info.propertyName = (String) entry.getValue().getValue();
+                                            info.className = ((TypeElement) el.getEnclosingElement()).getQualifiedName().toString();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }, true);
             }
@@ -180,7 +200,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
 
         private static class Info {
             private String className;
-            private String methodName;
+            private String propertyName;
         }
     }
 
@@ -210,7 +230,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
             if (idx < 0) {
                 sb.append(text);
             } else {
-                sb.append(MicronautConfigCompletionItem.PROPERTY_NAME_COLOR).append("<b>");
+                sb.append(MicronautConfigCompletionProvider.PROPERTY_NAME_COLOR).append("<b>");
                 sb.append(text.substring(0, idx));
                 sb.append("</b></font>");
                 sb.append(text.substring(idx));
@@ -237,7 +257,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
             try {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
-                    EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getCookie(EditorCookie.Observable.class);
+                    EditorCookie.Observable obs = dobj.getCookie(EditorCookie.Observable.class);
                     if (obs != null && obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
                         return new PositionBounds(supp.createPositionRef(startOffset, Position.Bias.Forward), supp.createPositionRef(Math.max(startOffset, endOffset), Position.Bias.Forward));

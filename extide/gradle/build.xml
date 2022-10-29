@@ -23,10 +23,28 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.gradle</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${nbantext.jar}"/>
-
     <property name="test-unit-sys-prop.test.data.dir" location="test/data"/>
     <property name="tooling" value="netbeans-gradle-tooling"/>
+    <property name="gradle.version" value="7.4" />
+
+    <target name="-process.release.files" depends="projectized.-process.release.files">
+        <unzip src="external/gradle-${gradle.version}-bin.zip" dest="external">
+            <patternset>
+                <include name="gradle-${gradle.version}/lib/gradle-wrapper-${gradle.version}.jar"/>
+            </patternset>
+            <globmapper from="*" to="gradle-wrapper-${gradle.version}-wrapper.jar"/>
+        </unzip>
+
+        <unzip src="external/gradle-wrapper-${gradle.version}-wrapper.jar" dest="external">
+            <patternset>
+                <include name="gradle-wrapper.jar"/>
+            </patternset>
+            <globmapper from="*" to="gradle-wrapper-${gradle.version}.jar"/>
+        </unzip>
+
+        <delete file="external/gradle-wrapper-${gradle.version}-wrapper.jar" />
+    </target>
+
     <available property="have.gradle.wrapper" file="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
 
     <target name="-uptodate-tooling">
@@ -34,8 +52,9 @@
             <srcfiles dir="${tooling}/src/main"/>
         </uptodate>
     </target>
+
     <target name="-copy-gradle-wrapper" depends="projectized-common.-release.files" unless="have.gradle.wrapper">
-        <copy file="external/gradle-wrapper-4.10.2.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
+        <copy file="external/gradle-wrapper-${gradle.version}.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
     </target>
 
     <target name="build-tooling-lib" depends="-download.release.files,-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
@@ -47,6 +66,7 @@
         <copy file="${tooling}/build/libs/${tooling}.jar" todir="build/tooling" overwrite="true"/>
         <copy file="${tooling}/src/main/resources/nb-tooling.gradle" todir="build/tooling" overwrite="true"/>
     </target>
+
     <target name="package-project-templates">
         <local name="templates.dir"/>
         <property name="templates.dir" location="build/classes-generated/org/netbeans/modules/gradle/templates"/>
@@ -58,7 +78,7 @@
         <delete dir="${tooling}/build"/>
         <delete file="${test.dist.dir}/extralibs/netbeans-gradle-tooling.jar"/>
     </target>
-    <target name="compile" depends="build-tooling-lib, projectized-common.compile"/>
 
+    <target name="compile" depends="build-tooling-lib, projectized-common.compile"/>
 </project>
 

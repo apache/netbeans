@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.121
+#Version 1.126
 
 CLSS public abstract interface java.io.Serializable
 
@@ -25,6 +25,8 @@ supr java.lang.RuntimeException
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
+meth public java.util.Spliterator<{java.lang.Iterable%0}> spliterator()
+meth public void forEach(java.util.function.Consumer<? super {java.lang.Iterable%0}>)
 
 CLSS public java.lang.Object
 cons public init()
@@ -1175,13 +1177,14 @@ CLSS public org.netbeans.lib.profiler.heap.HeapFactory
 cons public init()
 meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.io.File) throws java.io.IOException
 meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.io.File,int) throws java.io.IOException
+meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.nio.ByteBuffer,int) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public final org.netbeans.lib.profiler.heap.HeapProgress
 fld public final static int PROGRESS_MAX = 1000
 meth public static javax.swing.BoundedRangeModel getProgress()
 supr java.lang.Object
-hfds progressThreadLocal
+hfds listener,progressThreadLocal
 hcls ModelInfo
 
 CLSS public abstract interface org.netbeans.lib.profiler.heap.HeapSummary

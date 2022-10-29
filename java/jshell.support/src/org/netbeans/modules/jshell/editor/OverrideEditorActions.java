@@ -214,7 +214,7 @@ public class OverrideEditorActions {
      * They delegate to some action for the standard implementation, and
      * divert under certain conditions (i.e. caret in the editable area etc)
      */
-    public static abstract class DelegatingAction extends BaseAction {
+    public abstract static class DelegatingAction extends BaseAction {
         /**
          * Action ID to delegate, by default the action ID itself
          */

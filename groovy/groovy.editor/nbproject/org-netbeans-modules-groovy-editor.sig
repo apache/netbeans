@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.79
+#Version 1.86
 
 CLSS public abstract interface java.io.Serializable
 
@@ -526,6 +526,7 @@ CLSS public org.netbeans.modules.groovy.editor.api.AstPath
 cons public init()
 cons public init(org.codehaus.groovy.ast.ASTNode,int,int)
 cons public init(org.codehaus.groovy.ast.ASTNode,int,org.netbeans.editor.BaseDocument)
+cons public init(org.codehaus.groovy.ast.ASTNode,int,org.netbeans.editor.BaseDocument,boolean)
 cons public init(org.codehaus.groovy.ast.ASTNode,org.codehaus.groovy.ast.ASTNode)
 intf java.lang.Iterable<org.codehaus.groovy.ast.ASTNode>
 meth public boolean find(org.codehaus.groovy.ast.ASTNode,org.codehaus.groovy.ast.ASTNode)
@@ -563,6 +564,7 @@ meth public static org.codehaus.groovy.ast.ASTNode findCurrentNode(org.netbeans.
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.groovy.editor.api.GroovyIndex
+meth protected static boolean matchCamelCase(java.lang.String,java.lang.String,boolean)
 meth public java.util.Set<org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass> getAllClasses()
 meth public java.util.Set<org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass> getClasses(java.lang.String,org.netbeans.modules.parsing.spi.indexing.support.QuerySupport$Kind)
 meth public java.util.Set<org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass> getClassesFromPackage(java.lang.String)
@@ -575,7 +577,7 @@ meth public java.util.Set<org.netbeans.modules.groovy.editor.api.elements.index.
 meth public static org.netbeans.modules.groovy.editor.api.GroovyIndex get(java.util.Collection<org.openide.filesystems.FileObject>)
 meth public static void setClusterUrl(java.lang.String)
 supr java.lang.Object
-hfds CLUSTER_URL,EMPTY,LOG,clusterUrl,querySupport
+hfds CLUSTER_URL,EMPTY,LOG,cachedCamelCasePattern,cachedInsensitive,cachedPrefix,clusterUrl,querySupport
 
 CLSS public org.netbeans.modules.groovy.editor.api.GroovyIndexer
 cons public init()
@@ -583,13 +585,13 @@ innr public final static Factory
 meth protected void index(org.netbeans.modules.parsing.spi.indexing.Indexable,org.netbeans.modules.parsing.spi.Parser$Result,org.netbeans.modules.parsing.spi.indexing.Context)
 meth public org.openide.filesystems.FileObject getPreindexedDb()
 supr org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer
-hfds CASE_INSENSITIVE_CLASS_NAME,CLASS_ATTRS,CLASS_NAME,CONSTRUCTOR,FIELD_NAME,FQN_NAME,IN,LOG,METHOD_NAME,filesIndexed,indexerFirstRun,indexerRunTime,preindexedDb
+hfds CASE_INSENSITIVE_CLASS_NAME,CLASS_ATTRS,CLASS_NAME,CLASS_OFFSET,CONSTRUCTOR,FIELD_NAME,FQN_NAME,IN,LOG,METHOD_NAME,filesIndexed,indexerFirstRun,indexerRunTime,preindexedDb
 hcls TreeAnalyzer
 
 CLSS public final static org.netbeans.modules.groovy.editor.api.GroovyIndexer$Factory
  outer org.netbeans.modules.groovy.editor.api.GroovyIndexer
 cons public init()
-fld public final static int VERSION = 8
+fld public final static int VERSION = 9
 fld public final static java.lang.String NAME = "groovy"
 meth public boolean scanStarted(org.netbeans.modules.parsing.spi.indexing.Context)
 meth public int getIndexVersion()
@@ -680,7 +682,7 @@ meth public void visitUnaryPlusExpression(org.codehaus.groovy.ast.expr.UnaryPlus
 meth public void visitVariableExpression(org.codehaus.groovy.ast.expr.VariableExpression)
 meth public void visitWhileLoop(org.codehaus.groovy.ast.stmt.WhileStatement)
 supr org.codehaus.groovy.ast.ClassCodeVisitorSupport
-hfds LOG,column,line,path,sourceUnit
+hfds LOG,column,line,outermost,path,sourceUnit
 
 CLSS public org.netbeans.modules.groovy.editor.api.StructureAnalyzer
 cons public init()
@@ -707,7 +709,9 @@ fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretL
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_CLOSURE
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_COMMENT
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_CONSTRUCTOR_CALL
+fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_IMPORT
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_METHOD
+fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_PACKAGE
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_PARAMETERS
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_STRING
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation OUTSIDE_CLASSES
@@ -734,6 +738,7 @@ supr java.lang.Object
 hfds LOG,impl
 
 CLSS public abstract org.netbeans.modules.groovy.editor.api.completion.CompletionItem
+cons protected init(org.netbeans.modules.groovy.editor.api.elements.GroovyElement,int)
 fld protected final org.netbeans.modules.groovy.editor.api.elements.GroovyElement element
 innr public static ConstructorItem
 innr public static DynamicFieldItem
@@ -748,6 +753,7 @@ innr public static NewVarItem
 innr public static PackageItem
 innr public static TypeItem
 meth public boolean equals(java.lang.Object)
+meth public int getSortPrioOverride()
 meth public int hashCode()
 meth public java.lang.String getName()
 meth public java.lang.String toString()
@@ -759,7 +765,7 @@ meth public static org.netbeans.modules.groovy.editor.api.completion.CompletionI
 meth public static org.netbeans.modules.groovy.editor.api.completion.CompletionItem forJavaMethod(java.lang.String,java.lang.String,java.util.List<java.lang.String>,java.lang.String,java.util.Set<javax.lang.model.element.Modifier>,int,boolean,boolean)
 meth public static org.netbeans.modules.groovy.editor.api.completion.CompletionItem forJavaMethod(java.lang.String,java.lang.String,java.util.List<java.lang.String>,javax.lang.model.type.TypeMirror,java.util.Set<javax.lang.model.element.Modifier>,int,boolean,boolean)
 supr org.netbeans.modules.csl.spi.DefaultCompletionProposal
-hfds LOG,groovyIcon,javaIcon,newConstructorIcon
+hfds LOG,groovyIcon,javaIcon,newConstructorIcon,sortOverride
 hcls DynamicMethodItem,JavaMethodItem
 
 CLSS public static org.netbeans.modules.groovy.editor.api.completion.CompletionItem$ConstructorItem
@@ -1024,6 +1030,7 @@ fld public final int lexOffset
 fld public final org.netbeans.editor.BaseDocument doc
 fld public java.util.Set<org.netbeans.modules.groovy.editor.completion.AccessLevel> access
 fld public org.codehaus.groovy.ast.ClassNode declaringClass
+fld public org.codehaus.groovy.ast.ClassNode rawDseclaringClass
 fld public org.netbeans.modules.groovy.editor.api.AstPath path
 fld public org.netbeans.modules.groovy.editor.api.completion.CaretLocation location
 fld public org.netbeans.modules.groovy.editor.api.completion.util.CompletionSurrounding context
@@ -1031,6 +1038,8 @@ fld public org.netbeans.modules.groovy.editor.api.completion.util.DotCompletionC
 meth public boolean isBehindDot()
 meth public boolean isBehindImportStatement()
 meth public boolean isNameOnly()
+meth public boolean isStaticMembers()
+meth public int getAddSortOverride()
 meth public int getAnchor()
 meth public java.lang.String getPrefix()
 meth public java.lang.String getTypeName()
@@ -1038,11 +1047,13 @@ meth public org.codehaus.groovy.ast.ClassNode getSurroundingClass()
 meth public org.netbeans.modules.csl.spi.ParserResult getParserResult()
 meth public org.openide.filesystems.FileObject getSourceFile()
 meth public void init()
+meth public void setAddSortOverride(int)
 meth public void setAnchor(int)
+meth public void setDeclaringClass(org.codehaus.groovy.ast.ClassNode,boolean)
 meth public void setPrefix(java.lang.String)
 meth public void setTypeName(java.lang.String)
 supr java.lang.Object
-hfds anchor,nameOnly,parserResult,prefix,sourceFile,typeName
+hfds addSortOverride,anchor,nameOnly,parserResult,prefix,sourceFile,staticMembers,typeName
 
 CLSS public org.netbeans.modules.groovy.editor.api.completion.util.CompletionSurrounding
 cons public init(org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>,org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>)
@@ -1065,6 +1076,7 @@ meth public static boolean isFieldNameDefinition(org.netbeans.modules.groovy.edi
 meth public static boolean isVariableNameDefinition(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
 meth public static java.util.List<java.lang.String> getProperties(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
 meth public static java.util.List<org.codehaus.groovy.ast.ClassNode> getDeclaredClasses(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
+meth public static org.codehaus.groovy.ast.ASTNode getSurroundingClassMember(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
 meth public static org.codehaus.groovy.ast.ASTNode getSurroundingMethodOrClosure(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
 meth public static org.codehaus.groovy.ast.ClassNode getSurroundingClassNode(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
 meth public static org.codehaus.groovy.ast.ModuleNode getSurroundingModuleNode(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
@@ -1103,6 +1115,7 @@ cons public init(java.lang.String,java.lang.String)
 fld protected java.lang.String in
 fld protected java.lang.String name
 fld protected java.lang.String signature
+fld protected org.netbeans.modules.csl.api.OffsetRange offsetRange
 intf org.netbeans.modules.csl.api.ElementHandle
 meth public abstract org.netbeans.modules.csl.api.ElementKind getKind()
 meth public boolean signatureEquals(org.netbeans.modules.csl.api.ElementHandle)
@@ -1113,6 +1126,7 @@ meth public java.lang.String getSignature()
 meth public java.util.Set<org.netbeans.modules.csl.api.Modifier> getModifiers()
 meth public org.netbeans.modules.csl.api.OffsetRange getOffsetRange(org.netbeans.modules.csl.spi.ParserResult)
 meth public org.openide.filesystems.FileObject getFileObject()
+meth public void setOffsetRange(org.netbeans.modules.csl.api.OffsetRange)
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.groovy.editor.api.elements.KeywordElement
@@ -1151,6 +1165,7 @@ CLSS public final org.netbeans.modules.groovy.editor.api.elements.ast.ASTField
 cons public init(org.codehaus.groovy.ast.FieldNode,java.lang.String,boolean)
 meth public boolean isProperty()
 meth public java.lang.String getName()
+meth public java.lang.String getSignature()
 meth public java.lang.String getType()
 meth public java.util.Set<org.netbeans.modules.csl.api.Modifier> getModifiers()
 meth public org.netbeans.modules.csl.api.ElementKind getKind()
@@ -1546,6 +1561,8 @@ hfds LANGUAGE,fixedText,primaryCategory
 hcls GroovyHierarchy
 
 CLSS public final org.netbeans.modules.groovy.editor.api.lexer.LexUtilities
+meth public static boolean isBeginToken(org.netbeans.api.lexer.TokenId,org.netbeans.api.editor.document.LineDocument,int)
+meth public static boolean isBeginToken(org.netbeans.api.lexer.TokenId,org.netbeans.api.editor.document.LineDocument,org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>)
 meth public static boolean isBeginToken(org.netbeans.api.lexer.TokenId,org.netbeans.editor.BaseDocument,int)
 meth public static boolean isBeginToken(org.netbeans.api.lexer.TokenId,org.netbeans.editor.BaseDocument,org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>)
 meth public static boolean isCommentOnlyLine(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
@@ -1557,9 +1574,12 @@ meth public static int getBeginEndLineBalance(org.netbeans.editor.BaseDocument,i
 meth public static int getLineBalance(org.netbeans.editor.BaseDocument,int,org.netbeans.api.lexer.TokenId,org.netbeans.api.lexer.TokenId)
 meth public static int getTokenBalance(org.netbeans.editor.BaseDocument,org.netbeans.api.lexer.TokenId,org.netbeans.api.lexer.TokenId,int) throws javax.swing.text.BadLocationException
 meth public static org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> findPreviousNonWsNonComment(org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId>)
+meth public static org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getToken(org.netbeans.api.editor.document.LineDocument,int)
 meth public static org.netbeans.api.lexer.Token<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getToken(org.netbeans.editor.BaseDocument,int)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getGroovyTokenSequence(javax.swing.text.Document,int)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getGroovyTokenSequence(org.netbeans.api.lexer.TokenHierarchy<javax.swing.text.Document>,int)
+meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getPositionedSequence(org.netbeans.api.editor.document.LineDocument,int)
+meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getPositionedSequence(org.netbeans.api.editor.document.LineDocument,int,boolean)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getPositionedSequence(org.netbeans.editor.BaseDocument,int)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId> getPositionedSequence(org.netbeans.editor.BaseDocument,int,boolean)
 meth public static org.netbeans.editor.BaseDocument getDocument(org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult,boolean)
@@ -1642,8 +1662,8 @@ meth public void cancel()
 meth public void parse(org.netbeans.modules.parsing.api.Snapshot,org.netbeans.modules.parsing.api.Task,org.netbeans.modules.parsing.spi.SourceModificationEvent) throws org.netbeans.modules.parsing.spi.ParseException
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 supr org.netbeans.modules.parsing.spi.Parser
-hfds LOG,PARSING_COUNT,PARSING_TIME,cancelled,lastResult,maximumParsingTime
-hcls ParseErrorHandler
+hfds LOG,PARSING_COUNT,PARSING_TIME,STATIC_ERRORS,cancelled,lastResult,maximumParsingTime,phaseCounters
+hcls CU,ParseErrorHandler
 
 CLSS public final static org.netbeans.modules.groovy.editor.api.parser.GroovyParser$Context
  outer org.netbeans.modules.groovy.editor.api.parser.GroovyParser
@@ -1653,7 +1673,7 @@ meth public java.lang.String getSanitizedSource()
 meth public java.lang.String toString()
 meth public org.netbeans.modules.csl.api.OffsetRange getSanitizedRange()
 supr java.lang.Object
-hfds caretOffset,compilerCustomizers,customizerCtx,document,errorHandler,errorOffset,event,parserTask,sanitized,sanitizedContents,sanitizedRange,sanitizedSource,snapshot,source
+hfds caretOffset,compilerCustomizers,customizerCtx,document,errorHandler,errorOffset,event,parserTask,perfData,sanitized,sanitizedContents,sanitizedRange,sanitizedSource,snapshot,source
 
 CLSS public final static !enum org.netbeans.modules.groovy.editor.api.parser.GroovyParser$Sanitize
  outer org.netbeans.modules.groovy.editor.api.parser.GroovyParser
@@ -1673,6 +1693,9 @@ CLSS public org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult
 meth protected void invalidate()
 meth public java.lang.String getSanitizedContents()
 meth public java.util.List<? extends org.netbeans.modules.csl.api.Error> getDiagnostics()
+meth public org.codehaus.groovy.ast.ClassNode resolveClassName(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public org.codehaus.groovy.control.ErrorCollector getErrorCollector()
 meth public org.netbeans.modules.csl.api.OffsetRange getSanitizedRange()
 meth public org.netbeans.modules.groovy.editor.api.StructureAnalyzer$AnalysisResult getStructure()
@@ -1682,7 +1705,7 @@ meth public void setErrors(java.util.Collection<? extends org.netbeans.modules.c
 meth public void setStructure(org.netbeans.modules.groovy.editor.api.StructureAnalyzer$AnalysisResult)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.modules.csl.spi.ParserResult
-hfds analysisResult,errorCollector,errors,parser,rootElement,sanitized,sanitizedContents,sanitizedRange
+hfds analysisResult,errorCollector,errors,nbCollector,parser,rootElement,sanitized,sanitizedContents,sanitizedRange,unit
 
 CLSS public org.netbeans.modules.groovy.editor.api.parser.GroovyVirtualSourceProvider
 cons public init()
@@ -1691,7 +1714,7 @@ meth public boolean index()
 meth public java.util.Set<java.lang.String> getSupportedExtensions()
 meth public void translate(java.lang.Iterable<java.io.File>,java.io.File,org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider$Result)
 supr java.lang.Object
-hcls JavaStubGenerator
+hcls JavaStubGenerator,Task
 
 CLSS public abstract interface org.netbeans.modules.groovy.editor.spi.completion.CompletionProvider
 meth public abstract java.util.Map<org.netbeans.modules.groovy.editor.api.completion.FieldSignature,org.netbeans.modules.groovy.editor.api.completion.CompletionItem> getFields(org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext)
@@ -1733,6 +1756,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

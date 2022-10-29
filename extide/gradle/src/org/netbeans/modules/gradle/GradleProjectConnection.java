@@ -121,7 +121,7 @@ public final class GradleProjectConnection implements ProjectConnection {
             GradleConnector gconn = GradleConnector.newConnector();
             GradleDistributionProvider pvd = project.getLookup().lookup(GradleDistributionProvider.class);
             if (pvd != null) {
-                pvd.addChangeListener(WeakListeners.change(listener, null));
+                pvd.addChangeListener(WeakListeners.change(listener, pvd));
                 GradleDistribution dist = pvd.getGradleDistribution();
                 if (dist != null) {
                     conn = createConnection(dist, projectDir);

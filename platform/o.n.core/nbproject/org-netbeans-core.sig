@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.64
+#Version 3.68
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -883,7 +883,7 @@ meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setAsText(java.lang.String)
 meth public void setValue(java.lang.Object)
 supr java.lang.Object
-hfds AQUA,GTK,antialias,awtColorNames,awtColors,awtGenerate,gtkAA,hintsMap,superColor,support,swingColorNames,swingColors,systemColorNames,systemColors,systemGenerate
+hfds GTK,awtColorNames,awtColors,awtGenerate,gtkAA,superColor,support,swingColorNames,swingColors,systemColorNames,systemColors,systemGenerate
 hcls NbColorChooser,NbColorChooserPanel,SuperColor,SuperColorSelectionModel
 
 CLSS public org.netbeans.beaninfo.editors.DateEditor
@@ -1007,7 +1007,7 @@ meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setAsText(java.lang.String)
 meth public void setValue(java.lang.Object)
 supr java.lang.Object
-hfds antialias,font,fontName,fonts,gtkAA,sizes,styles,support
+hfds font,fontName,fonts,sizes,styles,support
 hcls FontPanel
 
 CLSS public org.netbeans.beaninfo.editors.HtmlBrowser

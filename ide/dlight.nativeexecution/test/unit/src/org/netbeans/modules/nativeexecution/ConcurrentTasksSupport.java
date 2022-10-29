@@ -29,7 +29,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  *
@@ -37,7 +37,7 @@ import junit.framework.Assert;
  */
 public final class ConcurrentTasksSupport {
 
-    final private static Logger log = Logger.getLogger(ConcurrentTasksSupport.class.getName());
+    private static final Logger log = Logger.getLogger(ConcurrentTasksSupport.class.getName());
     final int concurrentTasks;
     final ArrayList<TaskFactory> factories = new ArrayList<>();
     final CyclicBarrier startSignal;

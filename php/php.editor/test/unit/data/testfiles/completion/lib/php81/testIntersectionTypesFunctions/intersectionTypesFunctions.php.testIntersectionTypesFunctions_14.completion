@@ -1,0 +1,4 @@
+Code completion result for source line:
+$arrow = fn(Intersection1&Intersection2&\Test\Intersection3 $param1, Intersection1&Intersection2| $param): \Test\Intersection1&\Test\Intersection2&Intersection3 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Intersection2                   [PUBLIC]   Test

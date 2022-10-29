@@ -480,7 +480,6 @@ public class TomcatManager implements DeploymentManager {
     }
 
     public synchronized boolean isTomEEJaxRS() {
-        loadTomEEInfo();
         switch (tomEEType) {
             case TOMEE_PLUME:
             case TOMEE_PLUS:

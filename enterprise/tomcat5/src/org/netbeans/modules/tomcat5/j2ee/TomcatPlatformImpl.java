@@ -687,9 +687,9 @@ import org.openide.util.lookup.Lookups;
                 new EjbSupportImpl(manager), wsStack);
         if (manager.isTomEE()) {
             content.add(new JpaSupportImpl());
-        }
-        if (manager.isTomEEJaxRS()) {
-            content.add(new JaxRsStackSupportImpl(this));
+            if (manager.isTomEEJaxRS()) {
+                content.add(new JaxRsStackSupportImpl(this));
+            }
         }
 
         Lookup baseLookup = Lookups.fixed(content.toArray());

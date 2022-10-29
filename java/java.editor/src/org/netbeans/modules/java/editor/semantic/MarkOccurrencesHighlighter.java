@@ -31,8 +31,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.errorstripe.privatespi.Mark;
@@ -82,6 +86,11 @@ public class MarkOccurrencesHighlighter extends MarkOccurrencesHighlighterBase {
         if (!node.getBoolean(MarkOccurencesSettingsNames.ON_OFF, true)) {
             getHighlightsBag(doc).clear();
             OccurrencesMarkProvider.get(doc).setOccurrences(Collections.<Mark>emptySet());
+            return ;
+        }
+
+        TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(TokenHierarchy.get(doc), caretPosition);
+        if (javaDepth(ts.languagePath().mimePath()) != javaDepth(info.getSnapshot().getMimePath().getPath())) {
             return ;
         }
 
@@ -153,6 +162,17 @@ public class MarkOccurrencesHighlighter extends MarkOccurrencesHighlighterBase {
         getHighlightsBag(doc).setHighlights(obag);
         OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
         
+    }
+
+    private int javaDepth(String mimePath) {
+        int s = -1;
+        int depth = 0;
+        while ((s = mimePath.indexOf("text/x-java", s + 1)) != (-1)) {
+            if (s + 11 == mimePath.length() || mimePath.charAt(s + 11) == '/') {
+                depth++;
+            }
+        }
+        return depth;
     }
 
     static OffsetsBag getHighlightsBag(Document doc) {

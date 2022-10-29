@@ -45,6 +45,7 @@ import javax.swing.event.ChangeListener;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.api.java.lexer.JavaMultiLineStringTokenId;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationController;
@@ -448,7 +449,7 @@ public abstract class TestBase extends NbTestCase {
         public Lookup getLookup(MimePath mimePath) {
             if ("text/x-java".equals(mimePath.getPath())) {
                 if (JAVA == null) {
-                    JAVA = Lookups.fixed(new FactoryImpl(), JavaTokenId.language());
+                    JAVA = Lookups.fixed(new FactoryImpl(), JavaTokenId.language(), JavaMultiLineStringTokenId.language());
                 }
                 return JAVA;
             }

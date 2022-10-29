@@ -546,6 +546,10 @@
                         <test/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.lexer.nbbridge</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.masterfs</code-name-base>
                         <recursive/>
                     </test-dependency>

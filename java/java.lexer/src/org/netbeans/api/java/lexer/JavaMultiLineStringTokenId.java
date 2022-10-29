@@ -21,16 +21,12 @@ package org.netbeans.api.java.lexer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
-import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
-import org.netbeans.lib.java.lexer.JavaCharacterTokenId;
-import org.netbeans.lib.java.lexer.JavaLexer;
 import org.netbeans.lib.java.lexer.JavaMultiLineStringLexer;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -62,7 +58,7 @@ public enum JavaMultiLineStringTokenId implements TokenId {
 
         @Override
         protected String mimeType() {
-            return "text/x-java";
+            return "text/x-java-text-block";
         }
 
         @Override

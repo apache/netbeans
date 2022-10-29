@@ -50,6 +50,7 @@ import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomEEType;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomEEVersion;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomcatVersion;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /** 
  * Factory capable to create DeploymentManager that can deploy to Tomcat 5 and 6.
@@ -218,14 +219,17 @@ public final class TomcatFactory implements DeploymentFactory {
      */
     public static String getTomcatVersionString(File catalinaHome) throws IllegalStateException {
         File catalinaJar = new File(catalinaHome, "lib/catalina.jar"); // NOI18N
-        if (!catalinaJar.exists()) {
-            catalinaJar = new File(catalinaHome, "server/lib/catalina.jar"); // NOI18N
-        }
         File coyoteJar = new File(catalinaHome, "lib/tomcat-coyote.jar"); // NOI18N
+        if (!catalinaJar.exists()) {
+            // For Tomcat 5/5.5
+            catalinaJar = new File(catalinaHome, "server/lib/catalina.jar"); // NOI18N
+            coyoteJar = new File(catalinaHome, "server/lib/tomcat-coyote.jar"); // NOI18N
+        }
 
         try {
             URLClassLoader loader = new URLClassLoader(new URL[] {
-                catalinaJar.toURI().toURL(), coyoteJar.toURI().toURL() });
+                Utilities.toURI(catalinaJar).toURL(), Utilities.toURI(coyoteJar).toURL() });
+            
             Class serverInfo = loader.loadClass("org.apache.catalina.util.ServerInfo"); // NOI18N
             try {
                 Method method = serverInfo.getMethod("getServerNumber", new Class[] {}); // NOI18N
@@ -295,7 +299,9 @@ public final class TomcatFactory implements DeploymentFactory {
     }
 
     private static TomcatVersion getTomcatVersion(String version, TomcatVersion defaultVersion) throws IllegalStateException {
-        if (version.startsWith("5.5.")) { // NOI18N
+        if (version.startsWith("5.0.")) { // NOI18N
+            return TomcatVersion.TOMCAT_50;
+        } else if (version.startsWith("5.5.")) { // NOI18N
             return TomcatVersion.TOMCAT_55;
         } else if (version.startsWith("6.")) { // NOI18N
             return TomcatVersion.TOMCAT_60;

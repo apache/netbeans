@@ -29,13 +29,13 @@ import org.netbeans.spi.lexer.TokenFactory;
  *
  * @author lkishalmi
  */
-public abstract class AbstractAntlrLexer implements Lexer<AntlrTokenId> {
+public abstract class AbstractAntlrLexer<T extends org.antlr.v4.runtime.Lexer> implements Lexer<AntlrTokenId> {
 
     private final TokenFactory<AntlrTokenId> tokenFactory;
-    protected final org.antlr.v4.runtime.Lexer lexer;
+    protected final T lexer;
     private final LexerInputCharStream input;
 
-    public AbstractAntlrLexer(LexerRestartInfo<AntlrTokenId> info, org.antlr.v4.runtime.Lexer lexer) {
+    public AbstractAntlrLexer(LexerRestartInfo<AntlrTokenId> info, T lexer) {
         this.tokenFactory = info.tokenFactory();
         this.lexer = lexer;
         this.input = (LexerInputCharStream) lexer.getInputStream();
@@ -47,11 +47,6 @@ public abstract class AbstractAntlrLexer implements Lexer<AntlrTokenId> {
 
 
     @Override
-    public Object state() {
-        return new LexerState(lexer);
-    }
-
-    @Override
     public void release() {
     }
 
@@ -60,19 +55,19 @@ public abstract class AbstractAntlrLexer implements Lexer<AntlrTokenId> {
         return tokenFactory.createToken(id);
     }
 
-    private static class LexerState {
+    public static class LexerState<T extends org.antlr.v4.runtime.Lexer> {
         final int state;
         final int mode;
         final IntegerList modes;
 
-        LexerState(org.antlr.v4.runtime.Lexer lexer) {
+        public LexerState(T lexer) {
             this.state= lexer.getState();
 
             this.mode = lexer._mode;
             this.modes = new IntegerList(lexer._modeStack);
         }
 
-        public void restore(org.antlr.v4.runtime.Lexer lexer) {
+        public void restore(T lexer) {
             lexer.setState(state);
             lexer._modeStack.addAll(modes);
             lexer._mode = mode;

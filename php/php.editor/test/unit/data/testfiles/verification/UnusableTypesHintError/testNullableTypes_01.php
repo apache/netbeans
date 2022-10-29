@@ -23,6 +23,7 @@ class NullableTypes {
     private ?mixed $mixed;
     private ?null $null;
     private ?false $false;
+    private ?true $true;
 
     public function returnMixed(): ?mixed {
     }
@@ -33,6 +34,9 @@ class NullableTypes {
     public function returnFalse(): ?false {
     }
 
+    public function returnTrue(): ?true {
+    }
+
     public function parameterMixed(?mixed $mixed) {
     }
 
@@ -40,5 +44,8 @@ class NullableTypes {
     }
 
     public function parameterFalse(?false $false) {
+    }
+
+    public function parameterTrue(?true $true) {
     }
 }

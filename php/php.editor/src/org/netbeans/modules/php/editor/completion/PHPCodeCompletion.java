@@ -266,7 +266,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.PHP_NS_SEPARATOR,
             PHPTokenId.PHP_TYPE_BOOL, PHPTokenId.PHP_TYPE_FLOAT, PHPTokenId.PHP_TYPE_INT, PHPTokenId.PHP_TYPE_STRING, PHPTokenId.PHP_TYPE_VOID,
             PHPTokenId.PHP_TYPE_OBJECT, PHPTokenId.PHP_TYPE_MIXED, PHPTokenId.PHP_SELF, PHPTokenId.PHP_PARENT, PHPTokenId.PHP_STATIC,
-            PHPTokenId.PHP_NULL, PHPTokenId.PHP_FALSE, PHPTokenId.PHP_ARRAY, PHPTokenId.PHP_ITERABLE, PHPTokenId.PHP_CALLABLE,
+            PHPTokenId.PHP_NULL, PHPTokenId.PHP_FALSE, PHPTokenId.PHP_TRUE, PHPTokenId.PHP_ARRAY, PHPTokenId.PHP_ITERABLE, PHPTokenId.PHP_CALLABLE,
             PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
             PHPTokenId.PHP_COMMENT_START, PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END
     );
@@ -319,7 +319,6 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (CancelSupport.getDefault().isCancelled()) {
             return CodeCompletionResult.NONE;
         }
-
         CompletionContext context = CompletionContextFinder.findCompletionContext(info, caretOffset);
         LOGGER.log(Level.FINE, "CC context: {0}", context);
 
@@ -534,7 +533,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         typesForTypeName.addAll(Type.getSpecialTypesForType());
                     }
                     if (isNullableType(info, caretOffset)) {
-                        typesForTypeName.remove(Type.FALSE);
+                        // ?false, ?true is OK since PHP 8.2
                         typesForTypeName.remove(Type.NULL);
                     }
                     if (isUnionType(info, caretOffset)) {
@@ -555,7 +554,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         typesForReturnTypeName.add(Type.STATIC);
                     }
                     if (isNullableType(info, caretOffset)) {
-                        typesForReturnTypeName.remove(Type.FALSE);
+                        // ?false, ?true is OK since PHP 8.2
                         typesForReturnTypeName.remove(Type.NULL);
                         typesForReturnTypeName.remove(Type.VOID);
                         typesForReturnTypeName.remove(Type.NEVER);
@@ -1154,7 +1153,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 String prefix = doc.getText(start, 1);
                 if (CodeUtils.NULLABLE_TYPE_PREFIX.equals(prefix)) {
                     List<String> keywords = new ArrayList<>(Type.getTypesForEditor());
-                    keywords.remove(Type.FALSE);
+                    // ?false, ?true is OK since PHP 8.2
                     keywords.remove(Type.NULL);
                     autoCompleteKeywords(completionResult, request, keywords);
                 } else {
@@ -1301,7 +1300,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         if (isNullableType) {
-            keywords.remove(Type.FALSE);
+            // ?false, ?true is OK since PHP 8.2
             keywords.remove(Type.NULL);
         }
         if (isUnionType(info, caretOffset)) {
@@ -1350,6 +1349,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 PHPTokenId.PHP_ITERABLE,
                 PHPTokenId.PHP_SELF,
                 PHPTokenId.PHP_PARENT,
+                PHPTokenId.PHP_TRUE,
                 PHPTokenId.PHP_FALSE,
                 PHPTokenId.PHP_NULL,
                 PHPTokenId.PHP_STRING,

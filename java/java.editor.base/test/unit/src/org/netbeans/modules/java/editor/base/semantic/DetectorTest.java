@@ -1105,7 +1105,7 @@ public class DetectorTest extends TestBase {
                     "[LOCAL_VARIABLE, UNUSED, DECLARATION], 2:12-2:14",
                     "[ : Iterator<String>], 2:14-2:15",
                     "[PARAMETER], 2:17-2:18",
-                    "[ABSTRACT, PUBLIC, METHOD], 2:19-2:27]");
+                    "[ABSTRACT, PUBLIC, METHOD], 2:19-2:27");
     }
 
     private void performTest(String fileName) throws Exception {

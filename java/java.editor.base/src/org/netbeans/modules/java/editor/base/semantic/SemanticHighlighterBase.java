@@ -926,7 +926,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 int afterName = tl.offset();
                 TypeMirror type = info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), tree.getType()));
 
-                this.preText.put(new int[] {afterName, afterName + 1}, " : " + info.getTypeUtilities().getTypeName(type));
+                this.preText.put(afterName, " : " + info.getTypeUtilities().getTypeName(type));
             }
 
             scan(tree.getInitializer(), p);

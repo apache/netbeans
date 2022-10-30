@@ -110,28 +110,6 @@ matrix:
             - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*)
             - (cd java/java.lsp.server; ant test-vscode-ext)
 
-        - name: "GraalVM Tests (latest)"
-          jdk: openjdk8
-          env:
-            - GRAAL_VERSION="21.1.0"
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - travis_wait nbbuild/travis/scripting.sh
-
-        - name: "GraalVM Tests (LTS)"
-          jdk: openjdk8
-          env:
-            - GRAAL_VERSION="20.3.0"
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - travis_wait nbbuild/travis/scripting.sh
-
 #   exile: for tests which don't behave. Job should be kept short to be easily restartable
         - name: Test unreliable tests on Java 8
           jdk: openjdk8

@@ -57,6 +57,9 @@ env:
   # 'tests' label for building all tests
   test_tests: ${{ contains(github.event.pull_request.labels.*.name, 'tests') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
+  # 'GraalVM' label for tests requirering GraalVM
+  test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
   # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger build-tools job
   # see job condition (env vars don't work for job conditions https://github.com/actions/runner/issues/1189 )
 
@@ -1955,6 +1958,73 @@ jobs:
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/*.xml"
+
+
+  graalvm-test:
+    name: GraalVM ${{ matrix.graal }} Tests
+    # equals env.test_graalvm == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        graal: [ '20.3.0', '21.1.0' ]
+      fail-fast: false
+
+    steps:
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Setup GraalVM
+        run: |
+          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java8-linux-amd64-${{ matrix.graal }}.tar.gz
+          curl -L $URL | tar -xz
+          GRAALVM=`pwd`/graalvm-ce-java8-${{ matrix.graal }}
+          echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
+
+      - name: Setup GraalVM Languages
+        run: |
+          $JAVA_HOME/bin/gu install python
+          $JAVA_HOME/bin/gu install R
+          $JAVA_HOME/bin/gu install ruby
+
+      - name: platform/core.network
+        run: ant $OPTS -f platform/core.network test
+
+      - name: platform/api.scripting
+        run: ant $OPTS -f platform/api.scripting test
+
+      - name: ide/libs.graalsdk
+        run: ant $OPTS -f ide/libs.graalsdk test
+
+      - name: webcommon/libs.graaljs
+        run: ant $OPTS -f webcommon/libs.graaljs test
+
+      - name: profiler/profiler.oql
+        run: ant $OPTS -f profiler/profiler.oql test
+
+      - name: java/nashorn.execution
+        run: ant $OPTS -f java/nashorn.execution test
+
+      - name: java/debugger.jpda.truffle
+        run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early
@@ -1981,6 +2051,7 @@ jobs:
       - javafx-test
       - groovy-test
       - enterprise-test
+      - graalvm-test
 
     # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
     if: ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}

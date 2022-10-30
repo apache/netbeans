@@ -22,3 +22,4 @@ KEYWORD    mixed                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    string                                     null
+KEYWORD    true                                       null

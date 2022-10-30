@@ -120,4 +120,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/enumerations");
     }
 
+    public void testStandAloneTrueType() throws Exception {
+        performTest("structure/standAloneTrueType");
+    }
+
 }

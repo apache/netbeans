@@ -255,6 +255,7 @@ public class DetectorTest extends TestBase {
 
     public void testParameterNames() throws Exception {
         setShowPrependedText(true);
+        setInlineHints(true, false, false);
         performTest("Test.java",
                     "package test;" +
                     "public class Test {" +
@@ -764,6 +765,7 @@ public class DetectorTest extends TestBase {
 
     public void testInvalidParameterList() throws Exception {
         setShowPrependedText(true);
+        setInlineHints(true, false, false);
         performTest("Test.java",
                     "public class BugSemanticHighlighterBase {\n" +
                     "    private Object testMethod(final String arg1 final String arg2) {\n" +
@@ -782,6 +784,7 @@ public class DetectorTest extends TestBase {
 
     public void testChainTypes() throws Exception {
         setShowPrependedText(true);
+        setInlineHints(true, true, false);
         performTest("Test.java",
                     "package test;\n" +
                     "public class Test<T> {\n" +
@@ -834,6 +837,7 @@ public class DetectorTest extends TestBase {
 
     public void testChainTypes2() throws Exception {
         setShowPrependedText(true);
+        setInlineHints(true, true, false);
         performTest("Test.java",
                     "package test;\n" +
                     "public class Test<T> {\n" +
@@ -909,6 +913,7 @@ public class DetectorTest extends TestBase {
 
     public void testChainTypes3() throws Exception {
         setShowPrependedText(true);
+        setInlineHints(true, true, false);
         performTest("Test.java",
                     "package test;\n" +
                     "public class Test<T> {\n" +
@@ -992,6 +997,7 @@ public class DetectorTest extends TestBase {
 
     public void testChainTypes4() throws Exception {
         setShowPrependedText(true);
+        setInlineHints(true, true, false);
         performTest("Test.java",
                     "package test;\n" +
                     "public class Test<T> {\n" +
@@ -1091,6 +1097,7 @@ public class DetectorTest extends TestBase {
     public void testVar() throws Exception {
         setSourceLevel("11");
         setShowPrependedText(true);
+        setInlineHints(true, false, true);
         performTest("Var",
                     "public class Var {\n" +
                     "    private void test(java.util.List<String> l) {\n" +

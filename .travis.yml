@@ -69,19 +69,6 @@ matrix:
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
 
-        - name: Build the Visual Studio Code extension for Java
-          jdk: openjdk8
-          before_install:
-            - nvm install 16.13.2
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*)
-            - (cd java/java.lsp.server; ant test-vscode-ext)
-
 #   exile: for tests which don't behave. Job should be kept short to be easily restartable
         - name: Test unreliable tests on Java 8
           jdk: openjdk8

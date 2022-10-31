@@ -1817,6 +1817,70 @@ jobs:
           paths: "./*/*/build/test/*/results/*.xml"
 
 
+  versioning-test:
+    name: Versioning Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '8' ]
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+        
+      - name: Setup Env
+        run: echo "GIT_TEST_REPO=$HOME/git_test_repo" >> $GITHUB_ENV
+
+      - name: ide/versioning.core
+        run: ant $OPTS -f ide/versioning.core test-unit
+
+      - name: ide/versioning
+        run: ant $OPTS -f ide/versioning test-unit
+
+      - name: ide/versioning.core test-qa-functional
+        run: |
+          #Prepare git repo for tests
+          git init $GIT_TEST_REPO
+          # Prepare config file for ide/versioning.core module
+          touch ide/versioning.core/test/qa-functional/data/tck.properties
+          echo "test.root = $GIT_TEST_REPO" > ide/versioning.core/test/qa-functional/data/tck.properties
+          echo "test.vcs = org.netbeans.modules.versioning.DelegatingVCS" >> ide/versioning.core/test/qa-functional/data/tck.properties
+          # Run functional tests for ide/versioning.core module
+          ant $OPTS -f ide/versioning.core test-qa-functional
+        
+      - name: ide/versioning test-qa-functional
+        run: |
+          # Prepare config file for ide/versioning module
+          touch ide/versioning/test/qa-functional/data/tck.properties
+          echo "test.root = $GIT_TEST_REPO" > ide/versioning/test/qa-functional/data/tck.properties
+          echo "test.vcs = org.netbeans.modules.git.GitVCS" >> ide/versioning/test/qa-functional/data/tck.properties
+          # Run functional tests for ide/versioning module
+          ant $OPTS -f ide/versioning test-qa-functional
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
   php:
     name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }}
     needs: base-build
@@ -2051,6 +2115,7 @@ jobs:
       - javafx-test
       - groovy-test
       - enterprise-test
+      - versioning-test
       - graalvm-test
 
     # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job

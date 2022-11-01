@@ -294,7 +294,11 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
 
     static String checkForConstructor(String typeName, String methodName) {
         String constructorName = typeName;
-        int index = Math.max(constructorName.lastIndexOf('.'),
+        final int lastDot = constructorName.lastIndexOf('.');
+        if (methodName.equals(typeName.substring(lastDot + 1))) {
+            return "<init>";
+        }
+        int index = Math.max(lastDot,
                 constructorName.lastIndexOf('$'));
         if (index > 0) {
             constructorName = constructorName.substring(index + 1);

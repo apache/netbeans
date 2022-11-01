@@ -291,12 +291,12 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
         }
         return super.exec (event);
     }
-
+    private static final String CONSTRUCTOR = "<init>";
     static String checkForConstructor(String typeName, String methodName) {
         String constructorName = typeName;
         final int lastDot = constructorName.lastIndexOf('.');
         if (methodName.equals(typeName.substring(lastDot + 1))) {
-            return "<init>";
+            return CONSTRUCTOR;
         }
         int index = Math.max(lastDot,
                 constructorName.lastIndexOf('$'));
@@ -316,7 +316,7 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
             }
         }
         if (methodName.equals(constructorName)) {
-            return "<init>"; // Constructor
+            return CONSTRUCTOR; // Constructor
         } else {
             return methodName;
         }
@@ -353,7 +353,7 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
             String typeName = referenceType.name();
             String methodName = checkForConstructor(typeName, breakpoint.getMethodName());
             String outerArgsSignature = null;   // Signature of arguments from outer classes
-            if (methodName.equals("<init>")) {
+            if (methodName.equals(CONSTRUCTOR)) {
                 if (!ReferenceTypeWrapper.isStatic0(referenceType)) {
                     outerArgsSignature = findOuterArgsSignature(typeName, referenceType);
                 }

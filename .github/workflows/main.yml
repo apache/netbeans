@@ -1884,6 +1884,62 @@ jobs:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
+  mysql-db-test:
+    name: DB Tests with MySQL on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '8' ]
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+        
+      - name: Setup Env
+        run: |
+          echo "OPTS_TEST=-Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=test -Dtest-unit-sys-prop.mysql.host=127.0.0.1" >> $GITHUB_ENV
+          echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'test';\nFLUSH PRIVILEGES;\n" | mysql -h 127.0.0.1 --port 3306 -u root -ptest
+
+      - name: ide/db.metadata.model
+        run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+
+      - name: ide/db.mysql
+        run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.mysql test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
   php:
     name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }}
     needs: base-build
@@ -2164,6 +2220,7 @@ jobs:
       - groovy-test
       - enterprise-test
       - versioning-test
+      - mysql-db-test
       - graalvm-test
       - vscode-extension-test
 

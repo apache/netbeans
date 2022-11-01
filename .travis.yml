@@ -54,21 +54,6 @@ matrix:
             - chmod a+x nbbuild/travis/ant.sh
             - nbbuild/travis/ant.sh build -Dcluster.config=platform
 
-        - name: "Tests with mysql database"
-          jdk: openjdk8
-          services:
-            - mysql
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-            - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
-          before_script:
-            - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
-            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
-
 #   exile: for tests which don't behave. Job should be kept short to be easily restartable
         - name: Test unreliable tests on Java 8
           jdk: openjdk8

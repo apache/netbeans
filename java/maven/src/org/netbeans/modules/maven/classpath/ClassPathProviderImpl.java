@@ -712,7 +712,8 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
      * This selector chooses the annotation classpath, if it is not empty (has items, or is broken), or the regular
      * compile classpath if annotation path is empty. The selector reacts 
      */
-    private static class AnnotationPathSelector extends ClassPathSelector {
+    private static class AnnotationPathSelector extends ClassPathSelector
+            implements PropertyChangeListener {
         private final ClassPath annotationCP;
         private final Supplier<ClassPath> compileClassPath;
         
@@ -721,18 +722,15 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
             this.annotationCP = anno;
             this.compileClassPath = compile;
             
-            anno.addPropertyChangeListener(WeakListeners.propertyChange(
-                    e -> {
-                        active = null;
-                        support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
-                    }, ClassPath.PROP_ROOTS, anno
-            ));
-//            proj.getProjectWatcher().addPropertyChangeListener((e) -> {
-//                if (NbMavenProject.PROP_PROJECT.equals(e.getPropertyName())) {
-//                    active = null;
-//                    support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
-//                }
-//            });
+            anno.addPropertyChangeListener(WeakListeners.propertyChange(this, anno));
+            NbMavenProject watcher = proj.getProjectWatcher();
+            watcher.addPropertyChangeListener(WeakListeners.propertyChange(this, watcher));
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            active = null;
+            support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
         }
 
         @Override

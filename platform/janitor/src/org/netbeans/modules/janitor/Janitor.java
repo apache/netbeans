@@ -92,6 +92,7 @@ public class Janitor {
 
     public static final String PROP_JANITOR_ENABLED = "janitorEnabled"; //NOI18N
     public static final String PROP_UNUSED_DAYS = "UnusedDays"; //NOI18N
+    public static final String PROP_AUTO_REMOVE_ABANDONED_CACHE = "autoRemoveAbandonedCache";
 
     private static final String LOGFILE_NAME = "var/log/messages.log"; //NOI18N
     private static final String ALL_CHECKSUM_NAME = "lastModified/all-checksum.txt"; //NOI18N
@@ -100,7 +101,8 @@ public class Janitor {
 
     static final RequestProcessor JANITOR_RP = new RequestProcessor("janitor", 1); //NOI18N
     static final Map<ActionListener, Notification> CLEANUP_TASKS = new WeakHashMap<>();
-    static final Runnable SCAN_FOR_JUNK = () -> {
+
+    static void scanForJunk() {
         // Remove previously opened notifications
         CLEANUP_TASKS.values().forEach((nf) -> nf.clear());
         CLEANUP_TASKS.clear();
@@ -113,28 +115,31 @@ public class Janitor {
             Integer age = ver.second();
             long toFree = size(getUserDir(name)) + size(getCacheDir(name));
             toFree = toFree / (1_000_000) + 1;
-            ActionListener cleanupListener;
-            Notification nf;
             if (getUserDir(name) != null) {
-                cleanupListener = cleanupAction(name, Bundle.TXT_CONFIRM_CLEANUP(name));
-                nf = NotificationDisplayer.getDefault().notify(
+                ActionListener cleanupListener = cleanupAction(name, Bundle.TXT_CONFIRM_CLEANUP(name));
+                Notification nf = NotificationDisplayer.getDefault().notify(
                         Bundle.TIT_ABANDONED_USERDIR(name, age, toFree),
                         clean,
                         Bundle.DESC_ABANDONED_USERDIR(name, age, toFree),
                         cleanupListener);
 
+                CLEANUP_TASKS.put(cleanupListener, nf);
             } else {
-                cleanupListener = cleanupAction(name, Bundle.TXT_CONFIRM_CACHE_CLEANUP(name));
-                nf = NotificationDisplayer.getDefault().notify(
-                        Bundle.TIT_ABANDONED_CACHEDIR(name, toFree),
-                        clean,
-                        Bundle.DESC_ABANDONED_CACHEDIR(name, toFree),
-                        cleanupListener);
+                if (isAutoRemoveAbanconedCache()) {
+                    JANITOR_RP.post(() -> cleanup(name));
+                } else {
+                    ActionListener cleanupListener = cleanupAction(name, Bundle.TXT_CONFIRM_CACHE_CLEANUP(name));
+                    Notification nf = NotificationDisplayer.getDefault().notify(
+                            Bundle.TIT_ABANDONED_CACHEDIR(name, toFree),
+                            clean,
+                            Bundle.DESC_ABANDONED_CACHEDIR(name, toFree),
+                            cleanupListener);
+                    CLEANUP_TASKS.put(cleanupListener, nf);
+                }
             }
-            CLEANUP_TASKS.put(cleanupListener, nf);
-        }
-    };
-
+        }        
+    }
+    
     static ActionListener cleanupAction(String name, String label) {
         return new ActionListener() {
             @Override
@@ -149,13 +154,7 @@ public class Janitor {
                         null
                 );
                 if (DialogDescriptor.YES_OPTION == DialogDisplayer.getDefault().notify(descriptor)) {
-                    JANITOR_RP.post(() -> {
-                        try (ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_CLEANUP(name))){
-                            handle.start();
-                            deleteDir(getUserDir(name));
-                            deleteDir(getCacheDir(name));
-                        }
-                    });
+                    JANITOR_RP.post(() -> cleanup(name));
                 }
                 Janitor.setEnabled(panel.isEnabledOnStartup());
                 Notification nf = CLEANUP_TASKS.get(this);
@@ -166,6 +165,14 @@ public class Janitor {
         };
     }
 
+    static void cleanup(String name) {
+        try (ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_CLEANUP(name))){
+            handle.start();
+            deleteDir(getUserDir(name));
+            deleteDir(getCacheDir(name));
+        }        
+    }
+    
     public static final Preferences getPreferences() {
         return NbPreferences.forModule(Janitor.class);
     }
@@ -177,14 +184,14 @@ public class Janitor {
         public void run() {
             if (isEnabled()) {
                 // Starting delayed, not to interfere with other startup IO operations
-                JANITOR_RP.post(SCAN_FOR_JUNK, 60_000);
+                JANITOR_RP.post(Janitor::scanForJunk, 60_000);
             }
         }
 
     }
 
     static void runNow() {
-        JANITOR_RP.post(SCAN_FOR_JUNK);
+        JANITOR_RP.post(Janitor::scanForJunk);
     }
 
     static File getUserDir(String version) {
@@ -321,6 +328,14 @@ public class Janitor {
 
     static int getUnusedDays() {
         return getPreferences().getInt(PROP_UNUSED_DAYS, UNUSED_DAYS);
+    }
+
+    static boolean isAutoRemoveAbanconedCache() {
+        return getPreferences().getBoolean(PROP_AUTO_REMOVE_ABANDONED_CACHE, true);
+    }
+
+    static void setAutoRemoveAbanconedCache(boolean b) {
+        getPreferences().putBoolean(PROP_AUTO_REMOVE_ABANDONED_CACHE, b);
     }
 
 }

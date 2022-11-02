@@ -723,7 +723,8 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
             this.compileClassPath = compile;
             
             anno.addPropertyChangeListener(WeakListeners.propertyChange(this, anno));
-            proj.getProjectWatcher().addPropertyChangeListener(WeakListeners.propertyChange(this, anno));
+            NbMavenProject watcher = proj.getProjectWatcher();
+            watcher.addPropertyChangeListener(WeakListeners.propertyChange(this, watcher));
         }
 
         @Override

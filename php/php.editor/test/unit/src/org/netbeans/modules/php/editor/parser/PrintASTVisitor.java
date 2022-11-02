@@ -323,8 +323,15 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(ClassDeclaration classDeclaration) {
+        StringBuilder modifiers = new StringBuilder();
+        for (ClassDeclaration.Modifier modifier : classDeclaration.getModifiers().keySet()) {
+            if (modifiers.length() != 0) {
+                modifiers.append(" "); // NOI18N
+            }
+            modifiers.append(modifier.name());
+        }
         XMLPrintNode printNode = new XMLPrintNode(classDeclaration, "ClassDeclaration",
-                new String[]{"modifier", classDeclaration.getModifier().name()});
+                new String[]{"modifier", modifiers.toString()});
         if (classDeclaration.isAttributed()) {
             printNode.addChildrenGroup("Attributes", classDeclaration.getAttributes());
         }

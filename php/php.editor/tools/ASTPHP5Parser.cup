@@ -594,7 +594,9 @@ non terminal Expression additional_catch_class_name;
 non terminal FinallyClause additional_finally;
 non terminal FunctionDeclaration unticked_function_declaration_statement;
 non terminal Statement unticked_class_declaration_statement;
-non terminal ClassDeclaration.Modifier class_entry_type;
+non terminal Map<ClassDeclaration.Modifier, Set<OffsetRange>> class_entry_type;
+non terminal Map<ClassDeclaration.Modifier, Set<OffsetRange>> class_modifiers;
+non terminal ClassDeclaration.Modifier class_modifier;
 non terminal Expression extends_from;
 non terminal List implements_list;
 non terminal List interface_list;
@@ -1915,13 +1917,13 @@ T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEn
 ;
 
 unticked_class_declaration_statement ::=
-class_entry_type:modifier T_STRING:className
+class_entry_type:modifiers T_STRING:className
 extends_from:superClass implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
     Identifier classId = new Identifier(classNameleft, classNameright, className);
     Block block = new Block(blockStartleft, blockEndright, statementList);
-    ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, modifier, classId, superClass, interfaces, block);
+    ClassDeclaration classDeclaration = new ClassDeclaration(modifiersleft ,blockEndright, modifiers, classId, superClass, interfaces, block);
     RESULT = classDeclaration;
 :}
 
@@ -2067,20 +2069,57 @@ attributed_trait_statement:statement
 :}
 ;
 
-class_entry_type ::=
-T_CLASS
+class_modifiers ::=
+class_modifier:modifier
 {:
-    RESULT = ClassDeclaration.Modifier.NONE;
+    Map<ClassDeclaration.Modifier, Set<OffsetRange>> modifiers = new EnumMap<>(ClassDeclaration.Modifier.class);
+    Set<OffsetRange> offsetRanges = new HashSet<>();
+    offsetRanges.add(new OffsetRange(modifierleft, modifierright));
+    modifiers.put(modifier, offsetRanges);
+    RESULT = modifiers;
 :}
 
-| T_ABSTRACT T_CLASS
+| class_modifiers:modifiers class_modifier:modifier
+{:
+    Set<OffsetRange> offsetRanges = modifiers.get(modifier);
+    if (offsetRanges == null) {
+        offsetRanges = new HashSet<>();
+    }
+    offsetRanges.add(new OffsetRange(modifierleft, modifierright));
+    modifiers.put(modifier, offsetRanges);
+    RESULT = modifiers;
+:}
+;
+
+class_modifier ::=
+T_ABSTRACT
 {:
     RESULT = ClassDeclaration.Modifier.ABSTRACT;
 :}
 
-| T_FINAL T_CLASS
+| T_FINAL
 {:
     RESULT = ClassDeclaration.Modifier.FINAL;
+:}
+
+| T_READONLY
+{:
+    // PHP 8.2 gh-4725
+    RESULT = ClassDeclaration.Modifier.READONLY;
+:}
+;
+
+class_entry_type ::=
+T_CLASS
+{:
+    Map<ClassDeclaration.Modifier, Set<OffsetRange>> modifiers = new EnumMap<>(ClassDeclaration.Modifier.class);
+    modifiers.put(ClassDeclaration.Modifier.NONE, Collections.singleton(OffsetRange.NONE));
+    RESULT = modifiers;
+:}
+
+| class_modifiers:modifiers T_CLASS
+{:
+    RESULT = modifiers;
 :}
 ;
 

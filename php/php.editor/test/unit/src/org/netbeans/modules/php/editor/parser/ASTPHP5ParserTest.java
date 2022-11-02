@@ -1432,6 +1432,23 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/gh4684");
     }
 
+    // PHP 8.2 gh-4725
+    public void testReadonlyClass_01() throws Exception {
+        performTest("parser/php82/readonlyClass_01");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        performTest("parser/php82/readonlyTraitError_01");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        performTest("parser/php82/readonlyInterfaceError_01");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        performTest("parser/php82/readonlyEnumError_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

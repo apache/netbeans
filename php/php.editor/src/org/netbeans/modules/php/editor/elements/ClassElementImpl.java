@@ -282,6 +282,11 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
     }
 
     @Override
+    public boolean isReadonly() {
+        return getPhpModifiers().isReadonly();
+    }
+
+    @Override
     public boolean isAnonymous() {
         return CodeUtils.isSyntheticTypeName(getName());
     }

@@ -120,7 +120,13 @@ import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.code.ClassFinder;
+import org.netbeans.api.java.queries.SourceLevelQuery;
+import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
+import org.netbeans.modules.java.source.indexing.APTUtils;
+import org.netbeans.modules.java.source.indexing.FQN2Files;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.openide.filesystems.FileSystem;
 
 /** Utility class for viewing Javadoc comments as HTML.
  *
@@ -1434,8 +1440,8 @@ public class ElementJavadoc {
         String error = null;
         String text = null;
 
-        pckgName = pckgName.replaceAll("\\.", "\\\\");
-        FileObject snippetFile = classPath.findResource(pckgName + "\\snippet-files\\" + fileName);
+        pckgName = pckgName.replaceAll("\\.", "/");
+        FileObject snippetFile = classPath.findResource(pckgName + "/snippet-files/" + fileName);
         if (snippetFile == null || fileName.isEmpty()) {
             error = "error: snippet markup: File invalid";
             errorList.add(error);
@@ -1758,10 +1764,20 @@ public class ElementJavadoc {
 
     private static class JavaDocSnippetLinkTagFileObject extends SimpleJavaFileObject {
 
+        private static final URI fakeFileObjectURI;
+        static {
+            try {
+                FileSystem mfs = FileUtil.createMemoryFileSystem();
+                FileObject fakeFileObject = mfs.getRoot().createData("JavaDocSnippetLinkTagFileObject.java");
+                fakeFileObjectURI = fakeFileObject.toURI();
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
         private String text;
 
         public JavaDocSnippetLinkTagFileObject(String text) {
-            super(URI.create("myfo:/JavaDocSnippetLinkTag.java"), JavaFileObject.Kind.SOURCE); //NOI18N
+            super(fakeFileObjectURI, JavaFileObject.Kind.SOURCE); //NOI18N
             this.text = text;
         }
 
@@ -1772,17 +1788,7 @@ public class ElementJavadoc {
     }
     
     private void createSnippetMarkupLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        StringBuilder prjClsPath = new StringBuilder();
-        String prjSrcPath = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).toString();
-        prjClsPath.append(prjSrcPath);
-        
-        for(ClassPath.Entry cpe : cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE).entries()){
-            prjClsPath.append(";");
-            prjClsPath.append(cpe.getRoot().getFileSystem().getDisplayName());
-        }
-        List<String> opt = Arrays.asList("-cp",prjClsPath.toString());
-        JavacTask task = (JavacTask) compiler.getTask(null, null, null, opt, null, Arrays.asList(fileObject));
+        JavacTask task = JavacParser.createJavacTask(cpInfo, d -> {}, SourceLevelQuery.getSourceLevel(this.fileObject), Profile.DEFAULT, null, null, null, null, Collections.singletonList(fileObject));
 
         DocTrees docTrees = DocTrees.instance(task);//trees
         
@@ -1798,7 +1804,7 @@ public class ElementJavadoc {
                     for(DocTree dTree: body){
                         if(dTree instanceof LinkTree){
                             LinkTree linkTag = (LinkTree)dTree;
-                            appendReference(sb, linkTag.getReference(), body, path, doc, docTrees);
+                            appendReference(sb, linkTag.getReference(), linkTag.getLabel(), path, doc, docTrees);
                             break main;
                         }
                     }

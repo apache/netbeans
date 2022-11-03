@@ -77,6 +77,12 @@ jobs:
         with:
           java-version: ${{ matrix.java }} 
           distribution: 'zulu'
+          
+      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          submodules: false
 
       - name: Caching dependencies
         uses: actions/cache@v3
@@ -84,12 +90,6 @@ jobs:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
-          
-      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          submodules: false
 
       - name: Build NetBeans
         run: ant -quiet -Dcluster.config=release build-nozip
@@ -1651,8 +1651,8 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: micronaut
-        run: ant $OPTS -f enterprise/micronaut test
+      - name: enterprise/micronaut
+        run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 
       - name: spring.webmvc
         run: ant $OPTS -f enterprise/spring.webmvc test

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.languages.antlr.v3;
 
+import org.antlr.parser.antlr3.ANTLRv3Lexer;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
@@ -31,11 +32,11 @@ import org.netbeans.modules.languages.antlr.LexerInputCharStream;
  *
  * @author lkishalmi
  */
-public final class Antlr3Lexer extends AbstractAntlrLexer {
+public final class Antlr3Lexer extends AbstractAntlrLexer<ANTLRv3Lexer> {
 
 
     public Antlr3Lexer(LexerRestartInfo<AntlrTokenId> info) {
-        super(info, new org.antlr.parser.antlr3.ANTLRv3Lexer(new LexerInputCharStream(info.input())));
+        super(info, new ANTLRv3Lexer(new LexerInputCharStream(info.input())));
     }
 
     private org.antlr.v4.runtime.Token preFetchedToken = null;
@@ -141,4 +142,24 @@ public final class Antlr3Lexer extends AbstractAntlrLexer {
         }
     }
 
+    @Override
+    public Object state() {
+        return new State(lexer);
+    }
+
+    public static class State extends AbstractAntlrLexer.LexerState<ANTLRv3Lexer> {
+        final int currentRuleType;
+
+        public State(ANTLRv3Lexer lexer) {
+            super(lexer);
+            this.currentRuleType = lexer.getCurrentRuleType();
+        }
+
+        @Override
+        public void restore(ANTLRv3Lexer lexer) {
+            super.restore(lexer);
+            lexer.setCurrentRuleType(currentRuleType);
+        }
+
+    }
 }

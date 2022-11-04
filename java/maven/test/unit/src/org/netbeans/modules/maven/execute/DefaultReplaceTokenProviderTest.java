@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.maven.execute;
 
+import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -38,7 +38,8 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
 
     private FileObject d;
 
-    @Override protected void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
         clearWorkDir();
         d = FileUtil.toFileObject(getWorkDir());
     }
@@ -64,23 +65,65 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
         // XXX test src/main/java selections
         // XXX test selections across groups, or outside groups
         // XXX test single methods
-        
+
         //#213671
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.PACK_CLASSNAME));
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.CLASSNAME));
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.CLASSNAME_EXT));
-        
+
     }
-    
+
     public void testNgSingle() throws Exception {
         TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
                 + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
         TestFileUtils.writeFile(d, "src/test/java/p1/FirstNGTest.java", "package p1; class FirstNGTest {}");
         TestFileUtils.writeFile(d, "src/main/java/p1/First.java", "package p1; class First {}");
-        
+
         Project p = ProjectManager.getDefault().findProject(d);
         assertEquals("p1.FirstNGTest", ActionProviderImpl.replacements(p, ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(d.getFileObject("src/main/java/p1/First.java"))).get(DefaultReplaceTokenProvider.PACK_CLASSNAME));
 
+    }
+
+    public void testIntegration2Files() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "src/it/java/p1/ItTest.java",
+                "//license\n"
+                + "package p1;\n"
+                + "class ItTest {}");
+        TestFileUtils.writeFile(d, "src/it/java/p1/a/b/c/ItTestInlined.java",
+                "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //spabe between a and b is allowed
+
+        Project p = ProjectManager.getDefault().findProject(d);
+
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        Map<String, String> replacements = instance.createReplacements(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, 
+                Lookups.fixed(
+                        d.getFileObject("src/it/java/p1/ItTest.java"),
+                        d.getFileObject("src/it/java/p1/a/b/c/ItTestInlined.java"))
+        );
+
+        final String packageClassName = replacements.get("packageClassName");
+        assertTrue(packageClassName.contains("p1.ItTest"));
+        assertTrue(packageClassName.contains("p1.a.b.c.ItTestInlined"));
+    }
+    
+    public void testIntegrationPackage() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "src/it/java/p1/a/b/c/ItTestInlined.java",
+                "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //spabe between a and b is allowed
+
+        Project p = ProjectManager.getDefault().findProject(d);
+
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        Map<String, String> replacements = instance.createReplacements(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, 
+                Lookups.fixed(
+                        d.getFileObject("src/it/java/p1/a/b/c/"))
+        );
+
+        final String packageClassName = replacements.get("packageClassName");
+        assertTrue(packageClassName.contains("p1.a.b.c.**"));
     }
 
 }

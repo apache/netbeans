@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import static java.util.stream.Collectors.joining;
+import java.util.stream.Stream;
 import javax.swing.ActionMap;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -215,8 +217,16 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                 HashSet<String> test = new HashSet<String>();
                 addSelectedFiles(false, fos, test);
                 addSelectedFiles(true, fos, test);
-                String files2test = test.toString().replace(" ", "");
-                packClassname.append(files2test.substring(1, files2test.length() - 1));
+                
+                final Stream<String> foundTests = test.isEmpty()
+                        ? TestsWithoutKnowingRootSourceFolder.find(fos)
+                        : test.stream();
+
+                packClassname.append(foundTests
+                        .map(String::trim)
+                        .collect(joining(","))
+                );
+
             }
         }
         if (packClassname.length() > 0) { //#213671

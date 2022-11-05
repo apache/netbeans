@@ -234,17 +234,6 @@ matrix:
           script:
             - travis_wait nbbuild/travis/scripting.sh
 
-#   exile: for tests which don't behave. Job should be kept short to be easily restartable
-        - name: Test unreliable tests on Java 8
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - travis_retry ant $OPTS -f java/java.lsp.server test
-
 after_failure:
   - nbbuild/travis/print-junit-report.sh
   - sleep 3

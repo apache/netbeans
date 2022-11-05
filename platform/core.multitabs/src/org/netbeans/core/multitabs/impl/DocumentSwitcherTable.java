@@ -49,6 +49,7 @@ import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabbedContainer;
 import org.netbeans.swing.tabcontrol.event.TabActionEvent;
 import org.openide.awt.CloseButtonFactory;
+import org.openide.windows.TopComponent;
 
 /**
  * Slightly enhanced switcher table which adds close button to selected item
@@ -196,14 +197,34 @@ class DocumentSwitcherTable extends SwitcherTable {
         for ( TabData tab : tabs ) {  
             ProjectProxy projectForTab = projectSupport.getProjectForTab( tab );
             if (( project == null && projectForTab == null ) || ( projectForTab != null && projectForTab.equals( project ))) {
-                int tabIndex = controller.getTabModel().indexOf( tab );
-                TabActionEvent tae = new TabActionEvent( this, TabbedContainer.COMMAND_CLOSE, tabIndex );
-                controller.postActionEvent( tae );
+                Component tabComponent = tab.getComponent();
+                if (tabComponent instanceof TopComponent) {
+                    TopComponent curTC = (TopComponent) tabComponent;
+                    /* As in o.n.core.windows.actions.ActionUtils.closeAll(Iterable<TopComponent>).
+                    We have to be a little more general here since, theoretically, there could be
+                    tab components that do not extend from TopComponent. */
+                    if(!isClosingEnabled(curTC)) {
+                        continue;
+                    }
+                    curTC.putClientProperty("inCloseAll", Boolean.TRUE);
+                    if (!curTC.close()) {
+                        break;
+                    }
+                } else {
+                    int tabIndex = controller.getTabModel().indexOf( tab );
+                    TabActionEvent tae = new TabActionEvent( this, TabbedContainer.COMMAND_CLOSE, tabIndex );
+                    controller.postActionEvent( tae );
+                }
             } else {
                 numOfOtherTabs++;
             }
         }
         return numOfOtherTabs == 0;
+    }
+
+    // Copied from o.n.core.windows.Switches.isClosingEnabled (in private package).
+    private static boolean isClosingEnabled( TopComponent tc ) {
+        return !Boolean.TRUE.equals(tc.getClientProperty(TopComponent.PROP_CLOSING_DISABLED));
     }
     
     private JButton createCloseButton() {

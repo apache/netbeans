@@ -1046,14 +1046,14 @@ jobs:
 
 
   harness-modules-test:
-    name: Test Harness Modules on Linux/JDK ${{ matrix.java }}
+    name: Harness, NB and Ergonomics on Linux/JDK ${{ matrix.java }}
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '8' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -1089,6 +1089,21 @@ jobs:
 
       - name: ergonomics/ide.ergonomics
         run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
+
+      - name: nb/deadlock.detector
+        run: ant $OPTS -f nb/deadlock.detector test
+
+      - name: nb/ide.branding
+        run: ant $OPTS -f nb/ide.branding test
+
+      - name: nb/o.n.upgrader
+        run: ant $OPTS -f nb/o.n.upgrader test
+
+#      - name: nb/updatecenters
+#        run: ant $OPTS -f nb/updatecenters test
+
+      - name: nb/welcome
+        run: ant $OPTS -f nb/welcome test
         
       - name: Create Test Summary
         uses: test-summary/action@v1

@@ -64,20 +64,6 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS build
             - nbbuild/travis/ant.sh $OPTS test -Dtest.includes=NoTestsJustBuild
 
-        - name: Test nb modules
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - ant $OPTS -f nb/deadlock.detector test
-            - ant $OPTS -f nb/ide.branding test
-            - ant $OPTS -f nb/o.n.upgrader test
-            #- ant $OPTS -f nb/updatecenters test
-            - ant $OPTS -f nb/welcome test
-
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
           env:

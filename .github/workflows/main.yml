@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11', '17' ]
+        java: [ '11', '17', '19' ]
       fail-fast: false
     steps:
         
@@ -92,7 +92,7 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: Build NetBeans
-        run: ant -quiet -Dcluster.config=release build-nozip
+        run: ant -Dcluster.config=release build-nozip
 
       - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}

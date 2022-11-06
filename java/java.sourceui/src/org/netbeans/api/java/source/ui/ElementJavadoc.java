@@ -101,7 +101,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -112,19 +111,14 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.xml.XMLUtil;
 
-import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import javax.tools.ToolProvider;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
-import com.sun.tools.javac.code.ClassFinder;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
-import org.netbeans.modules.java.source.indexing.APTUtils;
-import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.filesystems.FileSystem;
 

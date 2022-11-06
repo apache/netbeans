@@ -1248,6 +1248,10 @@ jobs:
         if: env.test_java == 'true' && success()
         run: ant $OPTS $OPTS_11 -f java/java.completion test
 
+      - name: java.editor
+        if: env.test_java == 'true' && success()
+        run: ant $OPTs $OPTS_11 -f java/java.editor test-unit
+
       - name: java/java.source
         run: ant $OPTS $OPTS_11 -f java/java.source test-unit
 

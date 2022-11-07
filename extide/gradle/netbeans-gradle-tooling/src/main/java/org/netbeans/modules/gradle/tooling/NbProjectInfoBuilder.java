@@ -85,12 +85,7 @@ import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.initialization.IncludedBuild;
-import org.gradle.api.internal.plugins.PluginManagerInternal;
-import org.gradle.api.internal.plugins.PluginRegistry;
-import org.gradle.api.internal.project.ProjectInternal;
-import org.gradle.api.internal.provider.PropertyInternal;
 import org.gradle.api.internal.provider.ProviderInternal;
-import org.gradle.api.internal.provider.ValueSupplier.ExecutionTimeValue;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.plugins.ExtensionAware;
@@ -183,14 +178,34 @@ class NbProjectInfoBuilder {
 
     final Project project;
     final VersionNumber gradleVersion;
+    final GradleInternalAdapter adapter;
+
+    public static final class ValueAndType {
+        final Class type;
+        final Optional<Object> value;
+
+        public ValueAndType(Class type, Object value) {
+            this.type = type;
+            this.value = Optional.of(value);
+        }
+
+        public ValueAndType(Class type) {
+            this.type = type;
+            this.value = Optional.empty();
+        }
+    }
 
     NbProjectInfoBuilder(Project project) {
         this.project = project;
         this.gradleVersion = VersionNumber.parse(project.getGradle().getGradleVersion());
+        // checked that version 7.6.0 > 7.6.0-rc-1 in the VersionNumber order
+        this.adapter = sinceGradleOrDefault("7.6.0-rc-1", () -> new GradleInternalAdapter.Gradle76(project), () -> new GradleInternalAdapter(project));
     }
+    
+    private NbProjectInfoModel model = new NbProjectInfoModel();
 
     public NbProjectInfo buildAll() {
-        NbProjectInfoModel model = new NbProjectInfoModel();
+        adapter.setModel(model);
         runAndRegisterPerf(model, "meta", this::detectProjectMetadata);
         detectProps(model);
         detectLicense(model);
@@ -217,7 +232,7 @@ class NbProjectInfoBuilder {
         storeGlobalTypes(model);
         return model;
     }
-
+    
     @SuppressWarnings("null")
     private void detectDistributions(NbProjectInfoModel model) {
         if (project.getPlugins().hasPlugin("distribution")) {
@@ -365,29 +380,15 @@ class NbProjectInfoBuilder {
      * @param model 
      */
     private void detectAdditionalPlugins(NbProjectInfoModel model) {
-        final PluginManagerInternal pmi;
-        PluginRegistry reg;
-        if (project.getPluginManager() instanceof PluginManagerInternal) {
-            pmi = (PluginManagerInternal)project.getPluginManager();
-        } else {
+        if (!adapter.hasPluginManager()) {
             return;
-        }
-        if (project instanceof ProjectInternal) {
-            reg = ((ProjectInternal)project).getServices().get(PluginRegistry.class);
-        } else {
-            reg = null;
         }
         LOG.lifecycle("Detecting additional plugins");
         final Set<String> plugins = new LinkedHashSet<>();
         
         project.getPlugins().matching((Plugin p) -> {
             for (Class c = p.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
-                Class fc = c;
-                // with Gradle 7.1+, plugins can be better enumerated. Prior to 7.1 I can only get IDs for registry-supplied plugins.
-                Optional<PluginId> id = sinceGradleOrDefault("7.1", () -> pmi.findPluginIdForClass(fc), Optional::empty); // NOI18N
-                if (!id.isPresent() && reg != null) {
-                    id = reg.findPluginForClass(c);
-                }
+                Optional<PluginId> id = adapter.findPluginId(c);
                 if (id.isPresent()) {
                     LOG.info("Plugin: {} -> {}", id.get(), p);
                     plugins.add(id.get().getId());
@@ -537,14 +538,7 @@ class NbProjectInfoBuilder {
     }
     
     private boolean isMutableType(Object potentialValue) {
-        if (potentialValue instanceof PropertyInternal) {
-            return true;
-        } else if ((potentialValue instanceof NamedDomainObjectContainer) && (potentialValue instanceof HasPublicType)) {
-            return true;
-        } else if (potentialValue instanceof Iterable || potentialValue instanceof Map) {
-            return true;
-        }
-        return false;
+        return adapter.isMutableType(potentialValue);
     }
     
     private void inspectObjectAndValues0(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
@@ -640,24 +634,15 @@ class NbProjectInfoBuilder {
                 // Provider must NOT be asked for a value, otherwise it might run a Task in order to compute
                 // the value.
                 try {
+                    value = mclazz.getProperty(object, propName);
                     if (Provider.class.isAssignableFrom(t)) {
-                        Object potentialValue = mclazz.getProperty(object, propName);
-                        if (potentialValue instanceof ProviderInternal) {
-                            ProviderInternal provided = (ProviderInternal) potentialValue;
-                            t = provided.getType();
-                            ExecutionTimeValue etv;
-                            etv = provided.calculateExecutionTimeValue();
-                            if (etv.isFixedValue()) {
-                                value = etv.getFixedValue();
-                            }
-                        } else {
-                            value = potentialValue;
-                            if (value != null) {
-                                t = value.getClass();
+                        ValueAndType vt = adapter.findPropertyValueInternal(propName, value);
+                        if (vt != null) {
+                            t = vt.type;
+                            if (vt.value.isPresent()) {
+                                value = vt.value.get();
                             }
                         }
-                    } else {
-                        value = mclazz.getProperty(object, propName);
                     }
                 } catch (RuntimeException ex) {
                     // just ignore - the property value cannot be obtained
@@ -1611,7 +1596,7 @@ class NbProjectInfoBuilder {
                 .collect(Collectors.toSet());
     }
     
-    private interface ExceptionCallable<T, E extends Throwable> {
+    interface ExceptionCallable<T, E extends Throwable> {
         public T call() throws E;
     }
 

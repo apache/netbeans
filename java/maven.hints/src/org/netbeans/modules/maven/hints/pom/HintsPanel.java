@@ -71,21 +71,12 @@ final class HintsPanel extends javax.swing.JPanel implements TreeCellRenderer  {
         
         DefaultTreeModel mdl = new DefaultTreeModel(new DefaultMutableTreeNode());
         errorTree.setModel( mdl );
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                final TreeModel m = RulesManager.getHintsTreeModel();
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        errorTree.setModel( m );
-                    }
-                });
-            }
+        RequestProcessor.getDefault().post(() -> {
+            final TreeModel m = RulesManager.getHintsTreeModel();
+            SwingUtilities.invokeLater(() -> {
+                errorTree.setModel( m );
+            });
         });
-        
-        
     }
     
     /** This method is called from within the constructor to
@@ -115,8 +106,7 @@ final class HintsPanel extends javax.swing.JPanel implements TreeCellRenderer  {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
         setLayout(new java.awt.GridBagLayout());
 
-        jSplitPane1.setBorder(null);
-        jSplitPane1.setDividerLocation(320);
+        jSplitPane1.setDividerLocation(260);
         jSplitPane1.setOpaque(false);
 
         treePanel.setOpaque(false);
@@ -132,7 +122,6 @@ final class HintsPanel extends javax.swing.JPanel implements TreeCellRenderer  {
 
         detailsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 6, 0, 0));
         detailsPanel.setOpaque(false);
-        detailsPanel.setLayout(new java.awt.GridBagLayout());
 
         optionsPanel.setOpaque(false);
         optionsPanel.setLayout(new java.awt.GridBagLayout());
@@ -182,16 +171,6 @@ final class HintsPanel extends javax.swing.JPanel implements TreeCellRenderer  {
         gridBagConstraints.insets = new java.awt.Insets(8, 0, 0, 0);
         optionsPanel.add(customizerPanel, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.7;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
-        detailsPanel.add(optionsPanel, gridBagConstraints);
-
         descriptionPanel.setOpaque(false);
         descriptionPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -217,13 +196,21 @@ final class HintsPanel extends javax.swing.JPanel implements TreeCellRenderer  {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         descriptionPanel.add(descriptionLabel, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
-        detailsPanel.add(descriptionPanel, gridBagConstraints);
+        javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
+        detailsPanel.setLayout(detailsPanelLayout);
+        detailsPanelLayout.setHorizontalGroup(
+            detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+            .addComponent(optionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        detailsPanelLayout.setVerticalGroup(
+            detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(detailsPanelLayout.createSequentialGroup()
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addGap(1, 1, 1))
+        );
 
         jSplitPane1.setRightComponent(detailsPanel);
 

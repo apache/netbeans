@@ -54,7 +54,7 @@
   <SubComponents>
     <Container class="javax.swing.JSplitPane" name="jSplitPane1">
       <Properties>
-        <Property name="dividerLocation" type="int" value="320"/>
+        <Property name="dividerLocation" type="int" value="260"/>
         <Property name="opaque" type="boolean" value="false"/>
       </Properties>
       <Constraints>
@@ -118,7 +118,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="descriptionPanel" pref="189" max="32767" attributes="0"/>
+                  <Component id="descriptionPanel" pref="249" max="32767" attributes="0"/>
                   <Component id="optionsPanel" alignment="1" pref="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
@@ -126,8 +126,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="optionsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="descriptionPanel" pref="219" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Component id="descriptionPanel" pref="213" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                   </Group>
               </Group>

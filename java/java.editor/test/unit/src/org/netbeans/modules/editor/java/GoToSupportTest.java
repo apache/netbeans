@@ -1262,7 +1262,7 @@ public class GoToSupportTest extends NbTestCase {
         copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/editor/javadocsnippet/data/" + source + ".java"), testSource);
         FileObject testSourceFO = FileUtil.toFileObject(testSource);
         
-        if(external) {
+        if (external) {
             FileUtil.createFolder(sourceDir, "test");
             copyFolder((new File(getDataDir(),"org/netbeans/modules/java/editor/javadocsnippet/data/snippet-files").toPath()),
                     new File(getWorkDir(), "src/test/snippet-files").toPath());
@@ -1359,7 +1359,6 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testRecords1() throws Exception {
-        if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1396,7 +1395,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords2() throws Exception {
-        if (!hasRecords()) return ;
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1431,7 +1429,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords3() throws Exception {
-        if (!hasRecords()) return ;
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1466,7 +1463,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords4() throws Exception {
-        if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1515,7 +1511,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords5() throws Exception {
-        if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1572,25 +1567,12 @@ public class GoToSupportTest extends NbTestCase {
         }
     }
 
-    private static boolean hasRecords() {
-        try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
-            return true;
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip tests
-            return false;
-        }
-    }
-
     public void testJavadocSnippetHighlightRecord() throws Exception {
-        if (!hasRecords()) {
-            return;
-        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         
-        performTest("HighlightTag", 388, null, "javadocsnippet_highlightRecord.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 1196, null, "javadocsnippet_highlightRecord.pass", this.sourceLevel, false);
     }
     
     public void testHighlightUsingSubstring() throws Exception {
@@ -1934,10 +1916,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testErrorFileEmpty() throws Exception {
-
-        if (!hasRecords()) {
-            return;
-        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1946,9 +1924,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testErrorFileInvalid() throws Exception {
-        if (!hasRecords()) {
-            return;
-        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1957,10 +1932,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testExternalSnippetFile() throws Exception {
-
-        if (!hasRecords()) {
-            return;
-        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1969,10 +1940,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testErrorRegionInvalid() throws Exception {
-
-        if (!hasRecords()) {
-            return;
-        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1981,10 +1948,6 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testExternalRegionValid() throws Exception {
-
-        if (!hasRecords()) {
-            return;
-        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;

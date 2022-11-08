@@ -136,4 +136,36 @@ public class PHP82CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("trueType", "    public function testUnionType(true|string $true): string|tru^e {");
     }
 
+    public void testReadonlyClasses_01() throws Exception {
+        checkCompletion("readonlyClasses", "readon^ly class ReadonlyClass {");
+    }
+
+    public void testReadonlyClasses_02() throws Exception {
+        checkCompletion("readonlyClasses", "readonl^y final class ReadonlyFinalClass {");
+    }
+
+    public void testReadonlyClasses_03() throws Exception {
+        checkCompletion("readonlyClasses", "final read^only class FinalReadonlyClass {");
+    }
+
+    public void testReadonlyClasses_04() throws Exception {
+        checkCompletion("readonlyClasses", "rea^donly abstract class ReadonlyAbstractClass {");
+    }
+
+    public void testReadonlyClasses_05() throws Exception {
+        checkCompletion("readonlyClasses", "abstract reado^nly class AbstractReadonlyClass {");
+    }
+
+    public void testReadonlyClassesTyping01() throws Exception {
+        checkCompletion("readonlyClassesTyping01", "readon^");
+    }
+
+    public void testReadonlyClassesTyping02() throws Exception {
+        checkCompletion("readonlyClassesTyping02", "final readon^");
+    }
+
+    public void testReadonlyClassesTyping03() throws Exception {
+        checkCompletion("readonlyClassesTyping03", "abstract readon^");
+    }
+
 }

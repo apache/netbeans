@@ -1083,4 +1083,14 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE_INDENTED);
         reformatFileContents("testfiles/formatting/php81/enumerationsBP_04.php", options);
     }
+
+    public void testReadonlyClasses_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php82/readonlyClasses_01a.php", options);
+    }
+
+    public void testReadonlyClasses_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php82/readonlyClasses_01b.php", options);
+    }
 }

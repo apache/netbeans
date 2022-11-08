@@ -57,4 +57,56 @@ public class ModifiersCheckHintErrorTest extends PHPHintsTestBase {
         checkHints(new ModifiersCheckHintError(), "testReadonlyProperties_01.php");
     }
 
+    public void testClassModifiers_01() throws Exception {
+        checkHints(new ModifiersCheckHintError(), "testClassModifiers_01.php");
+    }
+
+    public void testClassModifiersFix_01a() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "abstract final class Abstra^ctFinalClass {}", "Remove modifier: abstract");
+    }
+
+    public void testClassModifiersFix_01b() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "abstract final class Abstra^ctFinalClass {}", "Remove modifier: final");
+    }
+
+    public void testClassModifiersFix_02a() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "final abstract class FinalAbstrac^tClass {}", "Remove modifier: abstract");
+    }
+
+    public void testClassModifiersFix_02b() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "final abstract class FinalAbstrac^tClass {}", "Remove modifier: final");
+    }
+
+    public void testClassModifiersFix_03() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "readonly read^only class DuplicatedReadonlyClass {}", "Remove modifier: readonly");
+    }
+
+    public void testClassModifiersFix_04() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "final fi^nal class DuplicatedFinalClass {}", "Remove modifier: final");
+    }
+
+    public void testClassModifiersFix_05() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "abstract abst^ract class DuplicatedAbstractClass {}", "Remove modifier: abstract");
+    }
+
+    public void testClassModifiersFix_06a() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "final readonly fin^al readonly class DuplicatedModifiersClass {}", "Remove modifier: final");
+    }
+
+    public void testClassModifiersFix_06b() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testClassModifiersFix.php", "final readonly final rea^donly class DuplicatedModifiersClass {}", "Remove modifier: readonly");
+    }
+
+    public void testReadonlyClasses_01() throws Exception {
+        checkHints(new ModifiersCheckHintError(), "testReadonlyClasses_01.php");
+    }
+
+    public void testReadonlyClassesFix_01() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testReadonlyClassesFix.php", "readonly class Readonly^ChildClass extends NonReadonlyParentClass implements Iface {}", "Remove modifier: readonly");
+    }
+
+    public void testReadonlyClassesFix_02() throws Exception {
+        applyHint(new ModifiersCheckHintError(), "testReadonlyClassesFix.php", "class NonReadonlyChildC^lass extends ReadonlyParentClass {}", "Add modifier: readonly");
+    }
+
 }

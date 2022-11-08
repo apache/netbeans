@@ -1,0 +1,35 @@
+    public $field;
+            -----
+HINT:Readonly property "$field" must have type
+    public static $staticField;
+                   -----------
+HINT:Static property "$staticField" cannot be readonly
+    public static int $staticIntField;
+                       --------------
+HINT:Static property "$staticIntField" cannot be readonly
+        private $field
+                 -----
+HINT:Readonly property "$field" must have type
+readonly class ReadonlyChildClass extends NonReadonlyParentClass implements Iface {}
+               ------------------
+HINT:Readonly class "ReadonlyChildClass" cannot extends non-readonly class "NonReadonlyParentClass"
+FIX:Remove modifier: readonly
+class NonReadonlyChildClass extends ReadonlyParentClass {}
+      ---------------------
+HINT:Non-readonly class "NonReadonlyChildClass" cannot extend readonly class "ReadonlyParentClass"
+FIX:Add modifier: readonly
+#[AllowDynamicProperties]
+  ----------------------
+HINT:Cannot apply "#[AllowDynamicProperties]" to readonly class "ReadonlyClass"
+#[AllowDynamicProperties]
+  ----------------------
+HINT:Cannot apply "#[AllowDynamicProperties]" to readonly class "ReadonlyFinalClass"
+#[AllowDynamicProperties]
+  ----------------------
+HINT:Cannot apply "#[AllowDynamicProperties]" to readonly class "FinalReadonlyClass"
+#[AllowDynamicProperties]
+  ----------------------
+HINT:Cannot apply "#[AllowDynamicProperties]" to readonly class "ReadonlyAbstractClass"
+#[AllowDynamicProperties]
+  ----------------------
+HINT:Cannot apply "#[AllowDynamicProperties]" to readonly class "AbstractReadonlyClass"

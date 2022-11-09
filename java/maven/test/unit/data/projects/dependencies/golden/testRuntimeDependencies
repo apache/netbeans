@@ -1,9 +1,9 @@
 [ ] nbtest.grp:test-app:12.6[jar] / compilation
  +-- [ ] nbtest.grp:annotation:12.6[jar] / compilation
- +-- [ ] nbtest.grp:test-lib:13[jar] / compilation
- |    +-- [ ] nbtest.grp:annotation:12.6[jar] / compilation
- |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
- |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
  +-- [ ] nbtest.grp:test-lib4:12.6[jar] / runtime
+ +-- [ ] nbtest.grp:test-lib:13[jar] / compilation
+ |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    +-- [ ] nbtest.grp:annotation:12.6[jar] / compilation
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
  +-- [ ] org.slf4j:slf4j-jdk14:1.7.36[jar] / runtime
  |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / runtime

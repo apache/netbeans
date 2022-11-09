@@ -40,7 +40,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
@@ -57,6 +56,9 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages("TXT_CUSTOM=Custom...")
 public class BuildActionsCustomizer extends javax.swing.JPanel {
+
+    //TODO: Move this one to GradleCommandLine in NetBeans 17
+    public static final String GRADLE_PROJECT_PROPERTY = "gradle-project"; //NOI18N
 
     private static final String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
@@ -103,7 +105,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         tfLabel.getDocument().addDocumentListener(applyListener);
         EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         taArgs.setEditorKit(kit);
-        taArgs.getDocument().putProperty(Document.StreamDescriptionProperty, project);
+        taArgs.getDocument().putProperty(GRADLE_PROJECT_PROPERTY, project);
         taArgs.getDocument().addDocumentListener(applyListener);
         initDefaultModels();
         comboReady = true;

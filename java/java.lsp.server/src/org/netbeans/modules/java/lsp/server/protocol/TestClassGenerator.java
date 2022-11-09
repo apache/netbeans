@@ -24,7 +24,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -62,7 +62,7 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -93,6 +93,9 @@ public final class TestClassGenerator extends CodeActionsProvider {
         info.toPhase(JavaSource.Phase.RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
         TreePath tp = info.getTreeUtilities().pathFor(offset);
+        if (!TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
+            return Collections.emptyList();
+        }
         ClassTree cls = (ClassTree) tp.getLeaf();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
         int startPos = (int) sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
@@ -114,7 +117,7 @@ public final class TestClassGenerator extends CodeActionsProvider {
         if (root == null) {
             return Collections.emptyList();
         }
-        Map<Object, List<String>> validCombinations = getValidCombinations(info, null);
+        Map<Object, List<String>> validCombinations = getValidCombinations(info);
         if (validCombinations == null || validCombinations.isEmpty()) {
             return Collections.emptyList();
         }
@@ -136,12 +139,18 @@ public final class TestClassGenerator extends CodeActionsProvider {
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         try {
-            if (arguments.size() >= 2) {
+            if (arguments.size() > 2) {
                 String uri = ((JsonPrimitive) arguments.get(0)).getAsString();
                 FileObject fileObject = Utils.fromUri(uri);
+                if (fileObject == null) {
+                    throw new IllegalArgumentException(String.format("Cannot resolve source file from uri: %s", uri));
+                }
                 String testingFramework = ((JsonPrimitive) arguments.get(1)).getAsString();
                 String targetUri = ((JsonPrimitive) arguments.get(2)).getAsString();
                 FileObject targetFolder = Utils.fromUri(targetUri);
+                if (targetFolder == null) {
+                    throw new IllegalArgumentException(String.format("Cannot resolve target folder from uri: %s", targetUri));
+                }
                 Collection<? extends Lookup.Item<TestCreatorProvider>> providers = Lookup.getDefault().lookupResult(TestCreatorProvider.class).allItems();
                 for (final Lookup.Item<TestCreatorProvider> provider : providers) {
                     if (provider.getDisplayName().equals(testingFramework)) {
@@ -185,7 +194,7 @@ public final class TestClassGenerator extends CodeActionsProvider {
 	return text;
     }
 
-    private static Map<Object, List<String>> getValidCombinations(CompilationInfo info, String methodName) {
+    private static Map<Object, List<String>> getValidCombinations(CompilationInfo info) {
 	List<String> testingFrameworks = getTestingFrameworks(info.getFileObject());
 	if (testingFrameworks.isEmpty()) {
 	    return null;
@@ -196,44 +205,19 @@ public final class TestClassGenerator extends CodeActionsProvider {
 	    List<String> framework2Add = new ArrayList<>();
 	    for (String framework : testingFrameworks) {
 		String preffiledName = getPreffiledName(info.getFileObject(), framework);
-		preffiledName = preffiledName.replace(".", "/").concat(".java");
-		String path = targetFolderPath.concat("/").concat(preffiledName);
+		preffiledName = preffiledName.replace('.', File.separatorChar).concat(".java");
+		String path = targetFolderPath.concat(File.separator).concat(preffiledName);
 		File f = new File(path);
 		FileObject fo = FileUtil.toFileObject(f);
-		if(methodName == null) {
-		    if (fo == null) {
-			framework2Add.add(framework);
-		    }
-		} else {
-		    try {
-			String testMethodName = getTestMethodName(methodName);
-			if (fo != null && !fo.asText().replace("\n", "").trim().contains(testMethodName.concat("("))) {
-			    framework2Add.add(framework);
-			}
-		    } catch (IOException ex) {
-			Exceptions.printStackTrace(ex);
-		    }
-		}
+                if (fo == null) {
+                    framework2Add.add(framework);
+                }
 	    }
 	    if (!framework2Add.isEmpty()) {
 		validCombinations.put(location, framework2Add);
 	    }
 	}
 	return validCombinations;
-    }
-
-    private static String getTestMethodName(String methodName) {
-	return "test" + capitalizeFirstLetter(methodName);
-    }
-
-    private static String capitalizeFirstLetter(String str) {
-        if (str == null || str.length() <= 0) {
-            return str;
-        }
-
-        char chars[] = str.toCharArray();
-        chars[0] = Character.toUpperCase(chars[0]);
-        return new String(chars);
     }
 
     private static List<String> getTestingFrameworks(FileObject fileObject) {
@@ -288,6 +272,9 @@ public final class TestClassGenerator extends CodeActionsProvider {
 	}
 	if (selectedLocation instanceof SourceGroup) {
 	    return ((SourceGroup) selectedLocation).getRootFolder();
+	}
+        if (selectedLocation instanceof URL) {
+	    return URLMapper.findFileObject((URL) selectedLocation);
 	}
 	assert selectedLocation instanceof FileObject;
 	return (FileObject) selectedLocation;

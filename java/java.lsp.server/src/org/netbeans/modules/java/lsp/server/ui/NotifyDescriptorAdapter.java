@@ -286,6 +286,7 @@ class NotifyDescriptorAdapter {
     }
     
     public CompletableFuture<Object> clientNotifyLater() {
+        LOG.log(Level.FINE, "notifyLater with context: {0}", this.client);
         return clientNotifyCompletion().thenApply(d -> d.getValue()).exceptionally(t -> {
             if (t instanceof CompletionException) {
                 t = t.getCause();

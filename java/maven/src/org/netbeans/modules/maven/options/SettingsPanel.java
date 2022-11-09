@@ -245,7 +245,8 @@ public class SettingsPanel extends javax.swing.JPanel {
             "--check-plugin-updates", //NOI18N
             "--no-plugin-updates", //NOI18N
             "--update-snapshots", //NOI18N
-            "--no-plugin-registry" //NOI18N
+            "--no-plugin-registry", //NOI18N
+            "--no-transfer-progress" //NOI18N
         };
 
 
@@ -263,7 +264,8 @@ public class SettingsPanel extends javax.swing.JPanel {
             org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FORCE_UPTODATE_CHECK"),
             org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SUPPRESS_UPTODATE_CHECK"),
             org.openide.util.NbBundle.getMessage(SettingsPanel.class, "FORCES_A_CHECK"),
-            org.openide.util.NbBundle.getMessage(SettingsPanel.class, "DON'T_USE_PLUGIN-REGISTRY")
+            org.openide.util.NbBundle.getMessage(SettingsPanel.class, "DON'T_USE_PLUGIN-REGISTRY"),
+            org.openide.util.NbBundle.getMessage(SettingsPanel.class, "NO_TRANSFER_PROGRESS")
         };
     }
 

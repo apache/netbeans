@@ -619,6 +619,11 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     }
 
     @Override
+    public boolean isReadonly() {
+        return getPhpModifiers().isReadonly();
+    }
+
+    @Override
     public boolean isAnonymous() {
         return CodeUtils.isSyntheticTypeName(getName());
     }

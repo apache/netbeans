@@ -75,6 +75,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         return new File(destDir);
     }
     protected @Override void setUp() throws Exception {
+        // this property could be eventually initialized by NB module system, as MavenCacheDisabler i @OnStart, but that's unreliable.
+        System.setProperty("maven.defaultProjectBuilder.disableGlobalModelCache", "true");
+        
         clearWorkDir();
         
         // This is needed, otherwose the core window's startup code will redirect
@@ -128,7 +131,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
             }
         };
         ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(prg));
-        primeLatch.await(20, TimeUnit.SECONDS);
+        primeLatch.await(300, TimeUnit.SECONDS);
     }
     
     public void testCompileDependencies() throws Exception {

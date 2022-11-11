@@ -36,6 +36,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg;
@@ -106,6 +107,18 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
                 return;
             }
             checkConstantDeclaration(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ConstantVariable node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // e.g.
+            // const CONSTANT = new Example();
+            // CONSTANT->field;
+            createError(node);
             super.visit(node);
         }
 

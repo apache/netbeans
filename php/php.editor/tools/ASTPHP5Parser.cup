@@ -5128,6 +5128,20 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
     RESULT = parser.createDispatch(ASTPHP5Parser.Access.NULLSAFE, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
 
+// PHP 8.1: New in initializers
+// const C = new Example();
+// C->field;
+// C->method();
+| class_name:className T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.NON_STATIC, new ConstantVariable(className), memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+| class_name:className T_NULLSAFE_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.NULLSAFE, new ConstantVariable(className), memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
 //| base_variable_with_function_calls:var T_PAAMAYIM_NEKUDOTAYIM object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 | function_call:var T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:

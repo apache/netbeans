@@ -390,6 +390,13 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ConstantVariable node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ConstantVariable");
+        printNode.addChild(node.getName());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(ContinueStatement node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "ContinueStatement");
         printNode.addChild(node.getExpression());

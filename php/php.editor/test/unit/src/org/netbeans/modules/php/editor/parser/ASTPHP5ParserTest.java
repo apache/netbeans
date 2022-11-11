@@ -1335,6 +1335,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/newInInitializers_01");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        performTest("parser/php81/newInInitializers_02");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         performTest("parser/php81/newInInitializersWithClassConstantError");
     }

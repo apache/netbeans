@@ -21,6 +21,7 @@ package org.netbeans.modules.css.lib.api.properties;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Pattern;
 import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.openide.util.Lookup;
@@ -186,14 +187,42 @@ public abstract class TokenAcceptor {
 
     public static class HashColor extends TokenAcceptor {
 
+        private static final Pattern COLOR_PATTERN = Pattern.compile("#[0-9a-fA-F]{3,8}");
+
         public HashColor(String id) {
             super(id);
         }
 
         @Override
         public boolean accepts(Token token) {
-            int len = token.image().length();
-            return token.tokenId() == CssTokenId.HASH && (len == 4 || len == 7); //three of six hex digits after hash sign are allowed
+            if(token.tokenId() != CssTokenId.HASH) {
+                return false;
+            }
+            CharSequence cs = token.image();
+            // Variants:
+            // #RGB
+            // #RRGGBB
+            // #RGBA
+            // #RRGGBBAA
+            int len = cs.length();
+            if(len != 4 && len != 7 && len != 5 && len != 9) {
+                return false;
+            }
+            if (cs.charAt(0) != '#') {
+                return false;
+            }
+            for (int i = 1; i < len; i++) {
+                if (!hexChar(cs.charAt(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static boolean hexChar(int val) {
+            return (val >= '0' && val <= '9')
+                    || ( val >= 'a' && val <= 'f')
+                    || (val >= 'A' && val <= 'F');
         }
     }
 

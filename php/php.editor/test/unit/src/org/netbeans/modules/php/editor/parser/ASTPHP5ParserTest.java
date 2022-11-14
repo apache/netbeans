@@ -1453,6 +1453,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php82/readonlyEnumError_01");
     }
 
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        performTest("parser/php82/fetchPropertiesInConstExpressions_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -637,7 +637,7 @@ non terminal VariableBase base_variable;
 non terminal VariableBase base_variable_without_reference_variable;
 non terminal List dynamic_class_name_variable_properties;
 non terminal Pair<VariableBase, ASTPHP5Parser.Access> dynamic_class_name_variable_property;
-non terminal StaticConstantAccess static_class_constant;
+non terminal VariableBase static_class_constant;
 non terminal Expression static_reference_constant;
 non terminal Expression static_array_creation_with_access;
 non terminal Expression static_constant_array_access;
@@ -4784,6 +4784,49 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM static_class_constant_array_access:c
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant
 {:
     RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
+:}
+
+// GH-4725 PHP 8.2: Fetch properties of enums in const expressions
+// https://wiki.php.net/rfc/fetch_property_in_const_expressions
+// e.g.
+// enum E {
+//     case Foo;
+// }
+// const C1 = E::Foo->name;
+// const C2 = E::Foo;
+// const C3 = C2->name;
+| class_name:className T_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new ConstantVariable(className),new Variable(varNameleft, varNameright, varName.getName()), false);
+:}
+
+| class_name:className T_NULLSAFE_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new ConstantVariable(className),new Variable(varNameleft, varNameright, varName.getName()), true);
+:}
+
+| static_class_constant:constant T_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(constantleft, varNameright, constant,
+            new Variable(varNameleft, varNameright, varName.getName()), false);
+:}
+
+| static_class_constant:constant T_NULLSAFE_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(constantleft, varNameright, constant,
+            new Variable(varNameleft, varNameright, varName.getName()), true);
+:}
+
+| static_class_constant:constant T_OBJECT_OPERATOR T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    RESULT = new FieldAccess(constantleft, endright, constant,
+            new ReflectionVariable(startleft, endright, expr), false);
+:}
+
+| static_class_constant:constant T_NULLSAFE_OBJECT_OPERATOR T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    RESULT = new FieldAccess(constantleft, endright, constant,
+            new ReflectionVariable(startleft, endright, expr), true);
 :}
 ;
 

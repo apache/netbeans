@@ -168,4 +168,48 @@ public class PHP82CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("readonlyClassesTyping03", "abstract readon^");
     }
 
+    public void testFetchPropertiesInConstExpressions_01a() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    const C1 = [self::Case->^value => self::Case];");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01b() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    const C1 = [self::Case->va^lue => self::Case];");
+    }
+
+    public void testFetchPropertiesInConstExpressions_02() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    const C2 = [self::Case?->val^ue => self::Case];");
+    }
+
+    public void testFetchPropertiesInConstExpressions_03() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "const NAME = E::Case->na^me;");
+    }
+
+    public void testFetchPropertiesInConstExpressions_04() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "const VALUE_NULLSAFE = E::Case?->valu^e;");
+    }
+
+    public void testFetchPropertiesInConstExpressions_05() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    const VALUE = E::Case->va^lue;");
+    }
+
+    public void testFetchPropertiesInConstExpressions_06() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    const NAME_NULLSAFE = E::Case?->nam^e;");
+    }
+
+    public void testFetchPropertiesInConstExpressions_07() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    public string $name = E::Case->na^me;");
+    }
+
+    public void testFetchPropertiesInConstExpressions_08() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    $valueNullsafe = E::Case?->va^lue,");
+    }
+
+    public void testFetchPropertiesInConstExpressions_09() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    static $staticName = E::Case->na^me;");
+    }
+
+    public void testFetchPropertiesInConstExpressions_10() throws Exception {
+        checkCompletion("fetchPropertiesInConstExpressions", "    case VALUE = E::Case->valu^e;");
+    }
+
 }

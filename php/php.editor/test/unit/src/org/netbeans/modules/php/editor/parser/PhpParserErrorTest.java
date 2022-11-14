@@ -1367,6 +1367,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php82/readonlyClass_01.php");
     }
 
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        checkErrors("testfiles/parser/php82/fetchPropertiesInConstExpressions_01.php");
+    }
+
     public void testReadonlyTraitError_01() throws Exception {
         checkErrors("testfiles/parser/php82/readonlyTraitError_01.php");
     }

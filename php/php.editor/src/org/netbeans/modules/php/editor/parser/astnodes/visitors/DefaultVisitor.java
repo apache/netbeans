@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable;
@@ -273,6 +274,11 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(Comment comment) {
+    }
+
+    @Override
+    public void visit(ConstantVariable constantVariable) {
+        scan(constantVariable.getName());
     }
 
     @Override

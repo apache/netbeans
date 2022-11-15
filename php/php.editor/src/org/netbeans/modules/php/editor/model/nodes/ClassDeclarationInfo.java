@@ -107,7 +107,11 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
                 case READONLY:
                     phpModifiers.add(PhpModifiers.READONLY);
                     break;
+                case NONE:
+                    // no-op
+                    break;
                 default:
+                    assert false : "Handle " + modifier + " modifier"; // NOI18N
                     break;
             }
         }

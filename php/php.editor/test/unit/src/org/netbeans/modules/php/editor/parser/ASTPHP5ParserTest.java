@@ -1335,6 +1335,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/newInInitializers_01");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        performTest("parser/php81/newInInitializers_02");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         performTest("parser/php81/newInInitializersWithClassConstantError");
     }
@@ -1447,6 +1451,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testReadonlyEnumError_01() throws Exception {
         performTest("parser/php82/readonlyEnumError_01");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        performTest("parser/php82/fetchPropertiesInConstExpressions_01");
     }
 
     @Override

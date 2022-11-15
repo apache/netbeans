@@ -1492,8 +1492,15 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         for (InterfaceElement backedEnum : enums) {
                             accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(backedEnum, backedEnum));
                         }
+                        if (!staticContext && "name".startsWith(request.prefix)) { // NOI18N
+                            // All Cases have a read-only property, name
+                            // see: https://www.php.net/manual/en/language.enumerations.basics.php
+                            // e.g. E::Case->name;
+                            completionResult.add(PHPCompletionItem.AdditionalFieldItem.getItem("name", Type.STRING, enumElement.getFullyQualifiedName().toString(), request)); // NOI18N
+                        }
                         if (!staticContext
-                                && !backingTypeName.isEmpty()) {
+                                && !backingTypeName.isEmpty()
+                                && "value".startsWith(request.prefix)) { // NOI18N
                             completionResult.add(PHPCompletionItem.AdditionalFieldItem.getItem("value", backingTypeName, enumElement.getFullyQualifiedName().toString(), request)); // NOI18N
                         }
                     }

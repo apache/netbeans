@@ -78,6 +78,7 @@ import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
@@ -119,6 +120,7 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -179,6 +181,10 @@ public final class Server {
                         return new SemanticTokensParams(new TextDocumentIdentifier(""));
                     }
                 });
+            })
+            .setExceptionHandler((t) -> {
+                LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
+                return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
             })
             .create();
     }
@@ -255,6 +261,9 @@ public final class Server {
                         Lookups.executeWith(ll, () -> {
                             try {
                                 delegate.consume(msg);
+                            } catch (RuntimeException | Error e) {
+                                LOG.log(Level.WARNING, "Error occurred during message dispatch", e);
+                                throw e;
                             } finally {
                                 // cancel while the OperationContext is still active.
                                 if (ftoCancel != null) {

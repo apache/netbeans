@@ -25,7 +25,10 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -140,8 +143,14 @@ import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
+import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
+import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
+import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
+import org.eclipse.lsp4j.jsonrpc.json.StreamMessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.services.ServiceEndpoints;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -328,7 +337,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -405,7 +414,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -513,7 +522,7 @@ public class ServerTest extends NbTestCase {
         OpenCloseHook hook = new OpenCloseHook();
         TextDocumentServiceImpl.HOOK_NOTIFICATION = hook::accept;
 
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -589,7 +598,7 @@ public class ServerTest extends NbTestCase {
         OpenCloseHook hook = new OpenCloseHook();
         TextDocumentServiceImpl.HOOK_NOTIFICATION = hook::accept;
 
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -625,7 +634,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -732,7 +741,7 @@ public class ServerTest extends NbTestCase {
         }
         file2SourceLevel.put(FileUtil.toFileObject(src.getParentFile()), "17");
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -875,7 +884,7 @@ public class ServerTest extends NbTestCase {
         }
         FileUtil.refreshFor(getWorkDir());
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -959,7 +968,7 @@ public class ServerTest extends NbTestCase {
         }
         FileUtil.refreshFor(getWorkDir());
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1024,7 +1033,7 @@ public class ServerTest extends NbTestCase {
         }
         FileUtil.refreshFor(getWorkDir());
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1088,7 +1097,7 @@ public class ServerTest extends NbTestCase {
                     "}");
         }
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1131,7 +1140,7 @@ public class ServerTest extends NbTestCase {
     }
 
     public void testFindDebugAttachConfigurations() throws Exception {
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -1190,7 +1199,7 @@ public class ServerTest extends NbTestCase {
 
         List<Diagnostic>[] diags = new List[1];
         boolean[] indexingComplete = new boolean[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1258,7 +1267,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1308,7 +1317,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1368,7 +1377,7 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1503,7 +1512,7 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1589,14 +1598,14 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void showStatusBarMessage(ShowStatusMessageParams params) {
                 if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
                     indexingComplete.countDown();
                 }
             }
-
+        
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -1661,7 +1670,7 @@ public class ServerTest extends NbTestCase {
                     "}\n");
         }
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1766,7 +1775,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1826,7 +1835,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1954,7 +1963,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2040,7 +2049,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2127,7 +2136,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2217,7 +2226,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2304,7 +2313,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2392,7 +2401,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2501,7 +2510,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2605,7 +2614,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2709,7 +2718,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2816,7 +2825,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2893,7 +2902,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         AtomicReference<Object> data = new AtomicReference<>();
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2950,7 +2959,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3051,7 +3060,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         AtomicReference<Object> data = new AtomicReference<>();
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3125,7 +3134,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
@@ -3187,7 +3196,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3246,7 +3255,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         AtomicReference<Object> data = new AtomicReference<>();
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3332,7 +3341,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3391,7 +3400,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3456,7 +3465,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3590,7 +3599,7 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3674,7 +3683,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -3789,7 +3798,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -3895,7 +3904,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4016,7 +4025,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4153,7 +4162,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4251,7 +4260,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4334,6 +4343,20 @@ public class ServerTest extends NbTestCase {
             }
         }
     }
+    
+    private Launcher<LanguageServer> createClientLauncherWithLogging(LanguageClient client, InputStream input, OutputStream output) {
+        return new LSPLauncher.Builder<LanguageServer>() 
+            .setLocalService(client)
+            .setExceptionHandler((t) -> {
+                System.err.println("Error during dispatch at client: ");
+                t.printStackTrace();
+                return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
+            })
+            .traceMessages(new PrintWriter(System.out))
+            .setRemoteInterface(LanguageServer.class)
+            .setInput(input)
+            .setOutput(output).create();
+    }
 
     public void testChangeMethodParameters() throws Exception {
         File src = new File(getWorkDir(), "a/Foo.java");
@@ -4363,7 +4386,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4461,7 +4484,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4541,7 +4564,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4625,7 +4648,7 @@ public class ServerTest extends NbTestCase {
         }
 
         List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4704,7 +4727,7 @@ public class ServerTest extends NbTestCase {
         }
         Map<String, List<Integer>> publishedDiagnostics = new HashMap<>();
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4773,7 +4796,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4845,7 +4868,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -4908,7 +4931,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4971,7 +4994,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -5404,7 +5427,7 @@ public class ServerTest extends NbTestCase {
         
         Lookup d = Lookup.getDefault();
         IOProvider prov = IOProvider.getDefault();
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(lc, client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(lc, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initP = new InitializeParams();
@@ -5445,7 +5468,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -5492,7 +5515,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();

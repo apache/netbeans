@@ -3,4 +3,4 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/indexer/Bundle.prop
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module-Specification-Version: 2.60
 OpenIDE-Module: org.netbeans.modules.maven.indexer/2
-
+OpenIDE-Module-Java-Dependencies: Java > 11

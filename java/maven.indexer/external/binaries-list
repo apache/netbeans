@@ -20,3 +20,6 @@
 5A44DF2CB26FA1E0E64BE53FE474C7F1D5A3E634 org.apache.lucene:lucene-queryparser:8.11.1
 E50AF506F271A3F7246DA054A2569B42FF73ABB2 org.apache.lucene:lucene-analyzers-common:8.11.1
 479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+858C6CC78E1F08A885B1613E1D817C829DF70A6E com.fasterxml.jackson.core:jackson-annotations:2.13.4
+0CF934C681294B97EF6D80082FAEEFBE1EDADF56 com.fasterxml.jackson.core:jackson-core:2.13.4
+325C06BDFEB628CFB80EBAAF1A26CC1EB558A585 com.fasterxml.jackson.core:jackson-databind:2.13.4.2

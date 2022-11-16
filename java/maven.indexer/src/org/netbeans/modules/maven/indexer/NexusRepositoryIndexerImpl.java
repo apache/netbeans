@@ -84,6 +84,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.util.FileUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.maven.centralsearch.MavenCentralClassesQuery;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.indexer.api.NBArtifactInfo;
 import org.netbeans.modules.maven.indexer.api.NBGroupInfo;
@@ -162,6 +163,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
      * For remote repo download and indexing tasks.
      */
     private static final RequestProcessor RP_REMOTE = new RequestProcessor("maven-remote-indexing");
+
+    private final MavenCentralClassesQuery centralSearch = new MavenCentralClassesQuery();
 
     @Override
     public boolean handlesRepository(RepositoryInfo repo) {
@@ -435,7 +438,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 try {
                     BooleanQuery.setMaxClauseCount(max);
                     response = searcher.searchIteratorPaged(isr, contexts);
-                    LOGGER.log(Level.FINE, "passed on {0} clauses processing {1} with {2} hits", new Object[] {max, q, response.getTotalHitsCount()});
+                    LOGGER.log(Level.INFO, "passed on {0} clauses processing {1} with {2} hits", new Object[] {max, q, response.getTotalHitsCount()});
                     return response;
                 } catch (BooleanQuery.TooManyClauses exc) {
                     LOGGER.log(Level.FINE, "TooManyClauses on {0} clauses processing {1}", new Object[] {max, q});
@@ -1127,10 +1130,43 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
 
     @Override
     public ResultImplementation<NBVersionInfo> findVersionsByClass(final String className, List<RepositoryInfo> repos) {
-        ResultImpl<NBVersionInfo> result = new ResultImpl<>((ResultImpl<NBVersionInfo> result1) -> {
-            findVersionsByClass(className, result1, result1.getSkipped(), false);
-        });
-        return findVersionsByClass(className, result, repos, true);
+
+        Optional<RepositoryInfo> central = repos.stream().filter(centralSearch::handlesRepository).findFirst();
+
+        // maven central provides no class names in the index -> use web service
+        if (central.isPresent()) {
+            long delta = System.currentTimeMillis();
+            // non blocking -> ask service first
+            ResultImplementation<NBVersionInfo> mavenCentralResults = centralSearch.findVersionsByClass(className, Collections.singletonList(central.get()));
+
+            List<RepositoryInfo> otherRepos = new ArrayList<>(repos);
+            otherRepos.remove(central.get());
+            
+            // blocking -> get other results in the meantime and merge afterwards
+            ResultImpl otherResults = (ResultImpl) findVersionsByClass(className, otherRepos);
+            ResultImpl mergedResults = mergeResults(otherResults, mavenCentralResults);
+            LOGGER.info("findVersionsByClass delta = "+(System.currentTimeMillis()-delta));
+            return mergedResults;
+        } else {
+            ResultImpl<NBVersionInfo> result = new ResultImpl<>((ResultImpl<NBVersionInfo> result1) -> {
+                findVersionsByClass(className, result1, result1.getSkipped(), false);
+            });
+            return findVersionsByClass(className, result, repos, true);
+        }
+    }
+
+    private static <T> ResultImpl<T> mergeResults(ResultImpl<T> mergedResults, ResultImplementation<T> resultsToAdd) {
+        List<T> r1 = mergedResults.getResults();
+        List<T> r2 = resultsToAdd.getResults();
+
+        List<T> merged = new ArrayList<>(r2.size()+r1.size());
+        merged.addAll(r1);
+        merged.addAll(r2);
+
+        mergedResults.setResults(merged);
+        mergedResults.addReturnedResultCount(r2.size());
+        mergedResults.addTotalResultCount(r2.size());
+        return mergedResults;
     }
     
     private ResultImplementation<NBVersionInfo> findVersionsByClass(final String className, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {

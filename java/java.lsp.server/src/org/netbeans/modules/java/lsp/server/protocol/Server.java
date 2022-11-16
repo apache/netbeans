@@ -1088,10 +1088,17 @@ public final class Server {
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
         boolean b = caps != null && caps.wantsGroovySupport();
         try {
-            Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
+            Class<?> clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
             Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);
             m.setAccessible(true);
             m.invoke(null, b);
+        } catch (ClassNotFoundException ex) {
+            // java.lang.ClassNotFoundException is expected when Groovy support is not activated / enabled. Do not log, if the
+            // client wants groovy disabled, which is obviuously true in this case :)
+            if (b && !groovyClassWarningLogged) {
+                groovyClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Groovy indexing: Groovy support is not enabled");
+            }
         } catch (ReflectiveOperationException ex) {
             if (!groovyClassWarningLogged) {
                 groovyClassWarningLogged = true;

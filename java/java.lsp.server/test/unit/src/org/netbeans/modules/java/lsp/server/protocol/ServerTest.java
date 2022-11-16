@@ -143,14 +143,9 @@ import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
-import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
-import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
-import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
-import org.eclipse.lsp4j.jsonrpc.json.StreamMessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.lsp4j.jsonrpc.services.ServiceEndpoints;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -213,7 +208,8 @@ import org.openide.windows.IOProvider;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class ServerTest extends NbTestCase {
-
+    static final boolean ENABLE_MESSAGE_LOGGING = Boolean.getBoolean(ServerTest.class.getName() + ".traceMessages");
+    
     private final Gson gson = new Gson();
     private Socket client;
     private Thread serverThread;
@@ -4345,17 +4341,20 @@ public class ServerTest extends NbTestCase {
     }
     
     private Launcher<LanguageServer> createClientLauncherWithLogging(LanguageClient client, InputStream input, OutputStream output) {
-        return new LSPLauncher.Builder<LanguageServer>() 
+        Launcher.Builder<LanguageServer> builder = new LSPLauncher.Builder<LanguageServer>() 
             .setLocalService(client)
             .setExceptionHandler((t) -> {
                 System.err.println("Error during dispatch at client: ");
                 t.printStackTrace();
                 return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
             })
-            .traceMessages(new PrintWriter(System.out))
             .setRemoteInterface(LanguageServer.class)
             .setInput(input)
-            .setOutput(output).create();
+            .setOutput(output);
+        if (ENABLE_MESSAGE_LOGGING) {
+            builder = builder.traceMessages(new PrintWriter(System.out));
+        }
+        return builder.create();
     }
 
     public void testChangeMethodParameters() throws Exception {

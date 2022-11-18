@@ -29,7 +29,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class LookupProviders {
 
-    @LookupProvider.Registration(projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
+    @LookupProvider.Registration(projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
     public static LookupProvider createJavaBaseProvider() {
         return new LookupProvider() {
             @Override
@@ -39,18 +39,6 @@ public class LookupProviders {
                         new JDPAProcessorFactory()
                 );
             }
-        };
-    }
-
-    @LookupProvider.Registration(projectTypes = {
-        @LookupProvider.Registration.ProjectType(id = NbGradleProject.GRADLE_PLUGIN_TYPE + "/com.github.lkishalmi.gatling"),
-        @LookupProvider.Registration.ProjectType(id = NbGradleProject.GRADLE_PLUGIN_TYPE + "/io.gatling.gradle")
-    })
-    public static LookupProvider createGatlingProvider() {
-        return (baseContext) -> {
-            return Lookups.fixed(
-                    new JDPAProcessorFactory()
-            );
         };
     }
 }

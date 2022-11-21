@@ -65,18 +65,22 @@ import org.apache.maven.index.expr.StringSearchExpression;
 import org.apache.maven.index.updater.IndexUpdateRequest;
 import org.apache.maven.index.updater.IndexUpdater;
 import org.apache.maven.index.updater.ResourceFetcher;
-import org.apache.maven.index.updater.WagonHelper;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.crypto.DefaultSettingsDecryptionRequest;
 import org.apache.maven.settings.crypto.SettingsDecrypter;
 import org.apache.maven.settings.crypto.SettingsDecryptionResult;
+import org.apache.maven.wagon.ConnectionException;
 import org.apache.maven.wagon.ResourceDoesNotExistException;
 import org.apache.maven.wagon.Wagon;
+import org.apache.maven.wagon.WagonException;
+import org.apache.maven.wagon.authentication.AuthenticationException;
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
+import org.apache.maven.wagon.authorization.AuthorizationException;
 import org.apache.maven.wagon.events.TransferListener;
 import org.apache.maven.wagon.providers.http.HttpWagon;
 import org.apache.maven.wagon.proxy.ProxyInfo;
+import org.apache.maven.wagon.repository.Repository;
 import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
@@ -127,13 +131,6 @@ import org.netbeans.modules.maven.indexer.spi.RepositoryIndexQueryProvider;
 public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementation, RepositoryIndexQueryProvider,
         BaseQueries, ChecksumQueries, ArchetypeQueries, DependencyInfoQueries,
         ClassesQuery, ClassUsageQuery, GenericFindQuery, ContextLoadedQuery {
-
-    static {
-        // XXX patch for LUCENE-10431
-        // should be removed as soon migration from EOL lucene 8 to lucene 9+ is possible
-        // currently blocked by JDK 8 language level requirement of NB
-        MultiTermQuery.secretInit(); // <- remove source file from repo too
-    }
 
     private static final Logger LOGGER = Logger.getLogger(NexusRepositoryIndexerImpl.class.getName());
 
@@ -537,9 +534,14 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     Path tmpStorage = Files.createTempDirectory("index-extraction");
                     ResourceFetcher fetcher = createFetcher(wagon, listener, wagonAuth, wagonProxy);
                     listener.setFetcher(fetcher);
+
                     IndexUpdateRequest iur = new IndexUpdateRequest(indexingContext, fetcher);
                     iur.setIndexTempDir(tmpStorage.toFile());
-                    
+
+                    // Thread count for maven-indexer remote index extraction, lucene will create one additional merge
+                    // thread per extractor. 4 seems to be the sweetspot.
+                    iur.setThreads(Math.min(4, Math.max(Runtime.getRuntime().availableProcessors() - 1, 1)));
+
                     NotifyingIndexCreator nic = null;
                     for (IndexCreator ic : indexingContext.getIndexCreators()) {
                         if (ic instanceof NotifyingIndexCreator) {
@@ -1687,25 +1689,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         
     }
     
-    private WagonHelper.WagonFetcher createFetcher(final Wagon wagon, TransferListener listener, AuthenticationInfo authenticationInfo, ProxyInfo proxyInfo) {
-        if(isDiag()) {
-            return new WagonHelper.WagonFetcher(wagon, listener, authenticationInfo, proxyInfo) {
-                @Override
-                public InputStream retrieve(String name) throws IOException, FileNotFoundException {
-                    String id = wagon.getRepository().getId();
-                    if(name.contains("properties") && System.getProperty("maven.diag.index.properties." + id) != null) { // NOI18N
-                        LOGGER.log(Level.INFO, "maven indexer will use local properties file: {0}", System.getProperty("maven.diag.index.properties." + id)); // NOI18N
-                        return new FileInputStream(new File(System.getProperty("maven.diag.index.properties." + id))); // NOI18N
-                    } else if(name.contains(".gz") && System.getProperty("maven.diag.index.gz." + id) != null) { // NOI18N
-                        LOGGER.log(Level.INFO, "maven indexer will use gz file: {0}", System.getProperty("maven.diag.index.gz." + id)); // NOI18N
-                        return new FileInputStream(new File(System.getProperty("maven.diag.index.gz." + id))); // NOI18N
-                    }
-                    return super.retrieve(name);
-                }
-            };
-        } else {
-            return new WagonHelper.WagonFetcher(wagon, listener, authenticationInfo, proxyInfo);
-        }
+    private ResourceFetcher createFetcher(final Wagon wagon, TransferListener listener, AuthenticationInfo authenticationInfo, ProxyInfo proxyInfo) {
+        return new WagonFetcher(wagon, listener, authenticationInfo, proxyInfo);
     }
 
     private File getIndexDirectory(final RepositoryInfo info) {
@@ -1737,6 +1722,122 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         }
     }
 
+    // somewhat based on maven-indexer impl (in WagonHelper) prior to removal in maven-indexer 7.0.0
+    private static class WagonFetcher implements ResourceFetcher {
+
+        private final TransferListener listener;
+        private final AuthenticationInfo authenticationInfo;
+        private final ProxyInfo proxyInfo;
+        private final Wagon wagon;
+
+        public WagonFetcher(Wagon wagon, TransferListener listener, AuthenticationInfo authenticationInfo, ProxyInfo proxyInfo) {
+            Objects.requireNonNull(wagon);
+            Objects.requireNonNull(listener);
+            this.wagon = wagon;
+            this.listener = listener;
+            this.authenticationInfo = authenticationInfo;
+            this.proxyInfo = proxyInfo;
+        }
+
+        @Override
+        public void connect(String id, String url) throws IOException {
+            Repository repository = new Repository(id, url);
+
+            try {
+                wagon.addTransferListener(listener);
+
+                if (authenticationInfo != null) {
+                    if (proxyInfo != null) {
+                        wagon.connect(repository, authenticationInfo, proxyInfo);
+                    } else {
+                        wagon.connect(repository, authenticationInfo);
+                    }
+                } else {
+                    if (proxyInfo != null) {
+                        wagon.connect(repository, proxyInfo);
+                    } else {
+                        wagon.connect(repository);
+                    }
+                }
+            } catch (AuthenticationException ex) {
+                String msg = "Authentication exception connecting to " + repository;
+                logError(msg, ex);
+                throw new IOException(msg, ex);
+            } catch (WagonException ex) {
+                String msg = "Wagon exception connecting to " + repository;
+                logError(msg, ex);
+                throw new IOException(msg, ex);
+            }
+        }
+
+        @Override
+        public void disconnect() throws IOException {
+            if (wagon != null) {
+                try {
+                    wagon.disconnect();
+                } catch (ConnectionException ex) {
+                    throw new IOException(ex.toString(), ex);
+                }
+            }
+        }
+
+        @Override
+        public InputStream retrieve(String name) throws IOException, FileNotFoundException {
+
+            if (isDiag()) {
+                String id = wagon.getRepository().getId();
+                if(name.endsWith(".properties") && System.getProperty("maven.diag.index.properties." + id) != null) { // NOI18N
+                    LOGGER.log(Level.INFO, "maven indexer will use local properties file: {0}", System.getProperty("maven.diag.index.properties." + id)); // NOI18N
+                    return new FileInputStream(new File(System.getProperty("maven.diag.index.properties." + id))); // NOI18N
+                } else if(name.endsWith(".gz") && System.getProperty("maven.diag.index.gz." + id) != null) { // NOI18N
+                    LOGGER.log(Level.INFO, "maven indexer will use gz file: {0}", System.getProperty("maven.diag.index.gz." + id)); // NOI18N
+                    return new FileInputStream(new File(System.getProperty("maven.diag.index.gz." + id))); // NOI18N
+                }
+            }
+
+            File target = Files.createTempFile(Places.getCacheDirectory().toPath(), name, "tmp").toFile();
+            target.deleteOnExit();
+
+            retrieve(name, target);
+
+            return new FileInputStream(target) {
+                @Override public void close() throws IOException {
+                    super.close();
+                    target.delete();
+                }
+            };
+        }
+
+        public void retrieve(String name, File targetFile) throws IOException, FileNotFoundException {
+            try {
+                wagon.get(name, targetFile);
+            } catch (AuthorizationException e) {
+                targetFile.delete();
+                String msg = "Authorization exception retrieving " + name;
+                logError(msg, e);
+                throw new IOException(msg, e);
+            } catch (ResourceDoesNotExistException e) {
+                targetFile.delete();
+                String msg = "Resource " + name + " does not exist";
+                logError(msg, e);
+                FileNotFoundException fileNotFoundException = new FileNotFoundException(msg);
+                fileNotFoundException.initCause(e);
+                throw fileNotFoundException;
+            } catch (WagonException e) {
+                targetFile.delete();
+                String msg = "Transfer for " + name + " failed";
+                logError(msg, e);
+                throw new IOException(msg + "; " + e.getMessage(), e);
+            }
+        }
+
+        private void logError(String msg, Exception ex) {
+            if (listener != null) {
+                listener.debug(msg + "; " + ex.getMessage());
+            }
+        }
+    }
+
     private static void cleanupDir(Path path) throws IOException {
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
             @Override
@@ -1753,7 +1854,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         });
     }
 
-    private long getFreeSpaceInMB(Path path) {
+    private static long getFreeSpaceInMB(Path path) {
         try {
             return Files.getFileStore(path).getUsableSpace() / (1024 * 1024);
         } catch (IOException ignore) {

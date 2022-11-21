@@ -159,7 +159,7 @@ public final class MavenSettings  {
         //import from older versions
         String defOpts = getPreferences().get(PROP_DEFAULT_OPTIONS, null);
         if (defOpts == null) {
-            defOpts = "";
+            defOpts = getDefaultOptions();
             //only when not already set by user or by previous import
             String debug = getPreferences().get(PROP_DEBUG, null);
             if (debug != null) {
@@ -223,7 +223,7 @@ public final class MavenSettings  {
     }
 
     public String getDefaultOptions() {
-        return getPreferences().get(PROP_DEFAULT_OPTIONS, ""); //NOI18N
+        return getPreferences().get(PROP_DEFAULT_OPTIONS, "--no-transfer-progress"); //NOI18N
     }
 
     public void setDefaultOptions(String options) {

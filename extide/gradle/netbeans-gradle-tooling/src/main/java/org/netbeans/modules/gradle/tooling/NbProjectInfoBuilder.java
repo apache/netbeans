@@ -1615,8 +1615,10 @@ class NbProjectInfoBuilder {
                 sneakyThrow(t);
                 return null;
             }
-        } else {
+        } else if (def != null) {
             return def.get();
+        } else {
+            return null;
         }
     }
     

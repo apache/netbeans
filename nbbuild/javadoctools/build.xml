@@ -33,12 +33,12 @@
     <target name="build-javadoc" depends="-jdk-init,-load-build-properties,init-tasks,set-buildnumber" description="Builds Javadoc documentation for modules; on branches pass e.g. -Djavadoc.web.root=http://bits.netbeans.org/6.7/javadoc">
         <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}" modules="${config.javadoc.all}"/>
         <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
-        
+
         <property name="export.interfaces" location="${netbeans.javadoc.dir}/../ModulesExportedInterfaces"/>
         <property name="export.apichanges" location="${netbeans.javadoc.dir}/../APIChanges"/>
         <mkdir dir="${export.interfaces}"/>
         <mkdir dir="${export.apichanges}"/>
-        
+
         <property name="javadoc.fail.on.error" value="true"/>
         <subant-junit target="javadoc" failonerror="${javadoc.fail.on.error}" report="${nb_all}/nbbuild/build/build-all-javadoc.xml">
             <buildpath path="${modules.sorted}"/>
@@ -80,43 +80,50 @@
             </zipfileset>
         </zip>
     </target>
-    
+
     <target name="generate-xml" depends="init">
         <echo file="${export.apichanges}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
             &lt;changes&gt;
         </echo>
-        
+
         <echo file="${export.apichanges}/footer.gen">
             &lt;/changes&gt;
         </echo>
-        
+
         <concat destfile="${netbeans.javadoc.dir}/apichanges.xml">
             <fileset dir="${export.apichanges}" includes="header.gen"/>
             <fileset dir="${export.apichanges}" includes="*" excludes="*.gen"/>
             <fileset dir="${export.apichanges}" includes="footer.gen"/>
         </concat>
-        
+
         <echo file="${export.interfaces}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
             &lt;apis&gt;
         </echo>
-        
+
         <echo file="${export.interfaces}/footer.gen">
             &lt;/apis&gt;
         </echo>
-        
+
         <concat destfile="${netbeans.javadoc.dir}/modules.xml">
             <fileset dir="${export.interfaces}" includes="header.gen"/>
             <fileset dir="${export.interfaces}" includes="*" excludes="*.gen"/>
             <fileset dir="${export.interfaces}" includes="footer.gen"/>
         </concat>
-        
-        <taskdef name="javadoc-index" classname="org.netbeans.nbbuild.JavadocIndex" classpath="${nbantext.jar}"/>
+
+        <taskdef name="javadoc-index" classname="org.netbeans.nbbuild.JavadocIndex">
+            <classpath>
+                <pathelement location="${nbantext.jar}"/>
+                <fileset dir="${nb_all}/nbbuild/external">
+                    <include name="jsoup*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
         <javadoc-index target="${netbeans.javadoc.dir}/allclasses.xml">
             <packageslist dir="${netbeans.javadoc.dir}">
                 <include name="**/allclasses-noframe.html"/>
             </packageslist>
         </javadoc-index>
-        
+
         <!-- we concat all xml into one big xml file alldatas.xml -->
         <echo file="${export.interfaces}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
             &lt;alldata&gt;
@@ -135,10 +142,10 @@
                 <linecontainsregexp negate="true">
                     <regexp pattern="&lt;\?xml version"/>
                 </linecontainsregexp>
-            </filterchain>  
+            </filterchain>
         </concat>
     </target>
-    
+
     <target name="generate-html" depends="init">
         <!-- reformulate dev version from json to more human version -->
         <condition property="json.uversion" value="${json.version}" else="Development Version">
@@ -152,7 +159,7 @@
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
-        
+
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="export2apichanges.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="changes-since-year" expression="${previous.release.year}"/>
@@ -180,7 +187,7 @@
         <condition property="javadoc.style.sheet.exists">
             <available file="${netbeans.javadoc.dir}/org-openide-util/javadoc.css"/>
         </condition>
-        
+
         <fail unless="javadoc.style.sheet.exists">
             The org-openide-util/javadoc.css has to exist as we are referring to
             it from master module Javadoc pages. If it does not anymore, update
@@ -188,18 +195,18 @@
         </fail>
 <!--
         <style in="${netbeans.javadoc.dir}/allclasses.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="export2allclasses.xsl"/>
-        
+
         <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="export2allmodules.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
         </style>
--->        
+-->
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
-        
+
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
              <param name="maturity" expression="${json.maturity}" />
@@ -213,8 +220,8 @@
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
-        
-        <!-- at the end generate the index.html so people know where to start -->      
+
+        <!-- at the end generate the index.html so people know where to start -->
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="export2index.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
@@ -226,23 +233,29 @@
         <replace dir="${netbeans.javadoc.dir}">
             <include name="*.html"/>
             <replacefilter token="@JDK@" value="${javaapidocurl}"/>
-            &replaces;   
+            &replaces;
             <replacefilter token="http://root/" value="."/>
             <replacefilter token="$${javadoc.web.root}" value="."/>
         </replace>
-        
+
         <echo message="Javadoc index has been generated to ${netbeans.javadoc.dir}/index.html"/>
     </target>
-    
+
     <target name="check-broken-links" depends="init" unless="javadoc.skip.brokenlinks.check">
         <taskdef name="checklinks" classname="org.netbeans.nbbuild.CheckLinks" classpath="${nbantext.jar}"/>
         <property name="javadoc.check.forbidden.links" value="true"/>
-        <checklinks basedir="${netbeans.javadoc.dir}" checkexternal="${javadoc.check.external.links}" checkforbidden="${javadoc.check.forbidden.links}" checkspaces="false" report="${netbeans.javadoc.dir}/checklinks-errors.xml">
+        <!-- -->
+        <property name="javadoc.externallinks" location="${nb_all}/nbbuild/build/javadoclinks"/>
+        <mkdir dir="${javadoc.externallinks}"/>
+        <delete file="${javadoc.externallinks}*.txt" failonerror="false"/>
+        <!-- -->
+        <checklinks basedir="${netbeans.javadoc.dir}" checkexternal="${javadoc.check.external.links}" checkforbidden="${javadoc.check.forbidden.links}" checkspaces="false" report="${netbeans.javadoc.dir}/checklinks-errors.xml" externallinkslist="${javadoc.externallinks}">
             <include name="*/overview-summary.html"/>
             <include name="*/apichanges.html"/>
             <include name="*/architecture-summary.html"/>
             <include name="*/**/package-summary.html"/>
-            <include name="*/**/doc-files/**/*.html"/>
+           <!-- <include name="*/**/doc-files/**/*.html"/> -->
+            <include name="*/**/*.html"/>
             <include name="*.html"/>
             &disallowed-links;
         </checklinks>

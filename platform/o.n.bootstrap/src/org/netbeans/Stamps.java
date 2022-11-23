@@ -55,6 +55,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.openide.modules.Places;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -337,6 +338,15 @@ public final class Stamps {
             sb.append("branding=").append(NbBundle.getBranding()).append('\n');
             sb.append("java.version=").append(System.getProperty("java.version")).append('\n');
             sb.append("java.vm.version=").append(System.getProperty("java.vm.version")).append('\n');
+            if (BaseUtilities.isWindows()) {
+              /* NETBEANS-1914: On Windows (but not on Linux or MacOS), the cache directory has been
+              observed to contain absolute paths to the NetBeans install directory (netbeans.home).
+              This can cause errors on startup if said directory is later moved. As a workaround,
+              include the netbeans.home path among the values that will cause the cache to be
+              invalidated if changed. (A better solution would be to get rid of the absolute paths;
+              but after some investigation, I could not figure out how to do this.) */
+              sb.append("netbeans.home=").append(home == null ? "" : home).append('\n');
+            }
                     
             File checkSum = new File(Places.getCacheDirectory(), "lastModified/all-checksum.txt");
             if (!compareAndUpdateFile(checkSum, sb.toString(), result)) {

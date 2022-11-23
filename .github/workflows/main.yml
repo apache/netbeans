@@ -57,6 +57,9 @@ env:
   # 'tests' label for building all tests
   test_tests: ${{ contains(github.event.pull_request.labels.*.name, 'tests') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
+  # 'LSP' label for enabling Language Server Protocol tests
+  test_lsp: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
   # 'GraalVM' label for tests requirering GraalVM
   test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -2083,6 +2086,47 @@ jobs:
           paths: "./*/*/build/test/*/results/*.xml"
 
 
+  lsp-test:
+    name: LSP tests on Linux/JDK ${{ matrix.java }}
+    # equals env.test_lsp == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '8' ]
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: java/java.lsp.server
+        run: ant $OPTS -f java/java.lsp.server test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
   graalvm-test:
     name: GraalVM ${{ matrix.graal }} Tests
     # equals env.test_graalvm == 'true'
@@ -2220,6 +2264,7 @@ jobs:
       - groovy-test
       - enterprise-test
       - versioning-test
+      - lsp-test
       - mysql-db-test
       - graalvm-test
       - vscode-extension-test

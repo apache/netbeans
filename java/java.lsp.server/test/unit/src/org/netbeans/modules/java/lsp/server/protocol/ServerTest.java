@@ -177,6 +177,7 @@ import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -221,6 +222,7 @@ public class ServerTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+        ParameterNameProviderImpl.DISABLE_PARAMETER_NAMES_LOADING = true;
         super.setUp();
         clearWorkDir();
         ServerSocket srv = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
@@ -1360,6 +1362,7 @@ public class ServerTest extends NbTestCase {
     }
 
     public void testAdvancedCompletion1() throws Exception {
+        String javaVersion = System.getProperty("java.specification.version");
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
         try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
@@ -1427,7 +1430,11 @@ public class ServerTest extends NbTestCase {
             Optional<CompletionItem> substringItem = completion.getRight().getItems().stream().filter(ci -> ci.getLabel().startsWith("substring(") && ci.getLabel().contains(",")).findAny();
             assertTrue(substringItem.isPresent());
             assertEquals(InsertTextFormat.Snippet, substringItem.get().getInsertTextFormat());
-            assertEquals("substring(${1:i}, ${2:i1})$0", substringItem.get().getInsertText());
+            if ("1.8".equals(javaVersion)) {
+                assertEquals("substring(${1:arg0}, ${2:arg1})$0", substringItem.get().getInsertText());
+            } else {
+                assertEquals("substring(${1:beginIndex}, ${2:endIndex})$0", substringItem.get().getInsertText());
+            }
         }
 
         {
@@ -3047,6 +3054,7 @@ public class ServerTest extends NbTestCase {
     }
 
     public void testSourceActionConstructor() throws Exception {
+        String javaVersion = System.getProperty("java.specification.version");
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
         String code = "public class Test extends Exception {\n" +
@@ -3098,16 +3106,29 @@ public class ServerTest extends NbTestCase {
         assertEquals(new Range(new Position(2, 0),
                                new Position(2, 0)),
                      fileChanges.get(0).getRange());
-        assertEquals("\n" +
-                     "    public Test(String f1) {\n" +
-                     "        this.f1 = f1;\n" +
-                     "    }\n" +
-                     "\n" +
-                     "    public Test(String f1, String string) {\n" +
-                     "        super(string);\n" +
-                     "        this.f1 = f1;\n" +
-                     "    }\n",
-                     fileChanges.get(0).getNewText());
+        if ("1.8".equals(javaVersion)) {
+            assertEquals("\n" +
+                         "    public Test(String f1) {\n" +
+                         "        this.f1 = f1;\n" +
+                         "    }\n" +
+                         "\n" +
+                         "    public Test(String f1, String arg0) {\n" +
+                         "        super(arg0);\n" +
+                         "        this.f1 = f1;\n" +
+                         "    }\n",
+                         fileChanges.get(0).getNewText());
+        } else {
+            assertEquals("\n" +
+                         "    public Test(String f1) {\n" +
+                         "        this.f1 = f1;\n" +
+                         "    }\n" +
+                         "\n" +
+                         "    public Test(String f1, String message) {\n" +
+                         "        super(message);\n" +
+                         "        this.f1 = f1;\n" +
+                         "    }\n",
+                         fileChanges.get(0).getNewText());
+        }
     }
 
     public void testSourceActionEqualsHashCode() throws Exception {

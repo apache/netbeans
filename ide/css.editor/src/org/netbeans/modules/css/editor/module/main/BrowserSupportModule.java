@@ -66,7 +66,12 @@ public class BrowserSupportModule extends CssEditorModule implements CssModule {
 
     @Override
     public PropertyDefinition getPropertyDefinition(String propertyName) {
-        return parser.getVendorSpecificProperties().get(propertyName);
+        PropertyDefinition pd = parser.getVendorSpecificProperties().get(propertyName);
+        if (pd != null || propertyName == null) {
+            return pd;
+        } else {
+            return parser.getVendorSpecificProperties().get(propertyName.toLowerCase());
+        }
     }
 
     @Override

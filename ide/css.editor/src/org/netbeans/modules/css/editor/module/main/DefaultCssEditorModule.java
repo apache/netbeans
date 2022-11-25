@@ -36,7 +36,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -189,7 +188,12 @@ public class DefaultCssEditorModule extends CssEditorModule {
 
     @Override
     public PropertyDefinition getPropertyDefinition(String propertyName) {
-        return getProperties().get(propertyName);
+        PropertyDefinition pd = getProperties().get(propertyName);
+        if (pd != null || propertyName == null) {
+            return pd;
+        } else {
+            return getProperties().get(propertyName.toLowerCase());
+        }
     }
 
     @Override

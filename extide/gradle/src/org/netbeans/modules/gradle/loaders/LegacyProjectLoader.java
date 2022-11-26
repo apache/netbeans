@@ -20,7 +20,6 @@ package org.netbeans.modules.gradle.loaders;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,7 +80,6 @@ import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.gradle.loaders.Bundle.*;
-import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -474,20 +472,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             offline.addFlag(GradleCommandLine.Flag.OFFLINE);
         }
 
-        File javaHome = null;
-        GradleJavaPlatformProvider jvmProvider = projectImpl.getLookup().lookup(GradleJavaPlatformProvider.class);
-        try {
-            if (jvmProvider != null) {
-                javaHome = jvmProvider.getJavaHome();
-                LOG.log(Level.FINE, "Using JAVA_HOME=''{0}'' for project info load for: {1}", new Object[]{javaHome, projectImpl});
-            }
-        } catch (FileNotFoundException ex) {
-            LOG.log(Level.WARNING, "JAVA_HOME for project " + projectImpl + " not found.", ex);
-        }
-
         if (goOnline == GoOnline.NEVER || goOnline == GoOnline.ON_DEMAND) {
             BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, offline, token, pl);
-            action.setJavaHome(javaHome);
             wasOnline.set(!offline.hasFlag(GradleCommandLine.Flag.OFFLINE));
             try {
                 ret = runInfoAction(action);
@@ -505,7 +491,6 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         }
         
         BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);
-        action.setJavaHome(javaHome);
         wasOnline.set(true);
         return runInfoAction(action);
     }

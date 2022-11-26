@@ -65,6 +65,9 @@
         <file name="org-netbeans-modules-maven-hints-pom-UseReleaseOptionHint.instance">
             <attr name="position" intvalue="1200"/>
         </file>
+        <file name="org-netbeans-modules-maven-hints-pom-UpdateDependencyHint.instance">
+            <attr name="position" intvalue="1300"/>
+        </file>
     </folder>
 
             

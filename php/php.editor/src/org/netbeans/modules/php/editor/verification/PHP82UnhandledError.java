@@ -32,6 +32,9 @@ import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Statement;
+import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -94,6 +97,26 @@ public final class PHP82UnhandledError extends UnhandledErrorRule {
                 createError(node.getModifiers().get(ClassDeclaration.Modifier.READONLY).iterator().next());
             }
             super.visit(node);
+        }
+
+        @Override
+        public void visit(TraitDeclaration traitDeclaration) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // e.g.
+            // trait T {
+            //     const CONSTANT = "CONSTANT";
+            // }
+            for (Statement statement : traitDeclaration.getBody().getStatements()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (statement instanceof ConstantDeclaration) {
+                    createError(statement);
+                }
+            }
+            super.visit(traitDeclaration);
         }
 
         private void createError(ASTNode node) {

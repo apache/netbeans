@@ -26,3 +26,9 @@ HINT:"case" can only be in enums
     case D = 1;
     -----------
 HINT:"case" can only be in enums
+    case X;
+    -------
+HINT:"case" can only be in enums
+    case Y = 1;
+    -----------
+HINT:"case" can only be in enums

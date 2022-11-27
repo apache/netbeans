@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,20 +17,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.lexer;
+trait ExampleTrait {
 
-public class PHP82FeaturesTest extends PHPLexerTestBase {
+    const IMPLICIT_PUBLIC = 'implicit public';
+    public const PUBLIC = 'public';
+    protected const PROTECTED = 'protected';
+    private const PRIVATE = 'private';
 
-    public PHP82FeaturesTest(String testName) {
-        super(testName);
+    public function method(): void {
+        echo ExampleTrait::IMPLICIT_PUBLIC . PHP_EOL;
+        echo self::PUBLIC . PHP_EOL;
+        echo static::PRIVATE . PHP_EOL;
+        echo $this::PROTECTED . PHP_EOL;
     }
-
-    public void testReadonlyClasses_01() throws Exception {
-        performTest("lexer/php82/readonlyClasses_01");
-    }
-
-    public void testConstantsInTraits_01() throws Exception {
-        performTest("lexer/php82/constantsInTraits_01");
-    }
-
 }
+
+trait ExampleTrait2 {
+    use ExampleTrait;
+
+    #[TestAttribute(test: "test")]
+    const IMPLICIT_PUBLIC2 = 'implicit public';
+    public const PUBLIC2 = 'public';
+    protected const PROTECTED2 = 'protected';
+    /**
+     * const
+     */
+    private const PRIVATE2 = 'private';
+}
+
+echo ExampleTrait::PUBLIC . PHP_EOL;
+echo (new ExampleTrait)::PUBLIC . PHP_EOL;

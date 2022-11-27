@@ -46,6 +46,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
+import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -200,6 +201,17 @@ public class IncorrectEnumHintError extends HintErrorRule {
             scan(node.getSuperClass());
             scan(node.getInterfaes());
             checkEnumCases(node.getBody().getStatements());
+        }
+
+        @Override
+        public void visit(TraitDeclaration traitDeclaration) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            scan(traitDeclaration.getAttributes());
+            scan(traitDeclaration.getName());
+            scan(traitDeclaration.getBody());
+            checkEnumCases(traitDeclaration.getBody().getStatements());
         }
 
         private void checkEnumCases(List<Statement> statements) {

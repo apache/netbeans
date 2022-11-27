@@ -1383,4 +1383,8 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php82/readonlyEnumError_01.php");
     }
 
+    public void testConstantsInTraits_01() throws Exception {
+        checkErrors("testfiles/parser/php82/constantsInTraits_01.php");
+    }
+
 }

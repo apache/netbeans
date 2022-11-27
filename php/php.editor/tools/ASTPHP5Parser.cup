@@ -2028,22 +2028,9 @@ trait_statement_list:list trait_statement:traitStatement
 ;
 
 attributed_trait_statement ::=
-variable_modifiers:modifier optional_class_type_without_static:fieldType class_variable_declaration:decList T_SEMICOLON:end
+attributed_class_statement:statement
 {:
-    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
-    RESULT = fieldsDeclaration;
-:}
-
-| method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionId
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
-optional_return_type:returnType
-method_body:body
-{:
-    int methodStart = modifier == null ? startleft : modifierleft;
-    modifier = modifier == null ? ASTPHP5Parser.PUBLIC : modifier;
-    FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, functionId, paramList, returnType, body, isReference.booleanValue());
-    MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, modifier.intValue(), functionDeclaration, true);
-    RESULT = methodDeclaration;
+    RESULT = statement;
 :}
 ;
 

@@ -154,7 +154,7 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         if (sourceSetNames != null) {
             for (String name : sourceSetNames) {
                 Set<File> dirs = (Set<File>) info.get("sourceset_" + name + "_output_classes");
-                sourceSetOutputs.addAll(dirs);
+                sourceSetOutputs.addAll(dirs != null ? dirs : Collections.emptySet());
                 sourceSetOutputs.add((File) info.get("sourceset_" + name + "_output_resources"));
             }
         }

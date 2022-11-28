@@ -49,6 +49,13 @@
             <folder name="Plugins">
                 <folder name="io.micronaut.application">
                     <folder name="Lookup">
+                        <file name="micronaut-project-actions.shadow">
+                            <attr name="originalFile" stringvalue="Projects/org-netbeans-modules-gradle/Plugins/org.graalvm.buildtools.native/Lookup/micronaut-project-actions.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="org.graalvm.buildtools.native">
+                    <folder name="Lookup">
                         <file name="micronaut-project-actions.instance">
                             <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
                             <attr name="instanceCreate" methodvalue="org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider.forProjectLayer"/>

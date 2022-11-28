@@ -330,11 +330,16 @@ class NbProjectInfoBuilder {
     }
     
     private String dependenciesAsString(Task t, TaskDependency td) {
-        Set<? extends Task> deps = td.getDependencies(t);
-        if (deps.isEmpty()) {
+        try {
+            Set<? extends Task> deps = td.getDependencies(t);
+            if (deps.isEmpty()) {
+                return "";
+            }
+            return deps.stream().map(Task::getPath).collect(Collectors.joining(","));
+        } catch (LinkageError | RuntimeException ex) {
+            LOG.warn("Error getting dependencies for task {}: {}", t.getName(), ex.getLocalizedMessage(), ex);
             return "";
         }
-        return deps.stream().map(Task::getPath).collect(Collectors.joining(","));
     }
     
     private void detectConfigurationArtifacts(NbProjectInfoModel model) {

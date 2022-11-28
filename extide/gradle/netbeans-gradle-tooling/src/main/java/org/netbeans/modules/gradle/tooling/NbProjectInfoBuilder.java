@@ -508,13 +508,7 @@ class NbProjectInfoBuilder {
             return false;
         }
         String n = c.getName();
-        if (n.indexOf('.') == -1) {
-            return true;
-        } else if (n.startsWith("java.lang.")) {
-            return true;
-        }
-        
-        return false;
+        return c.isPrimitive() || n.startsWith("java.lang.");
     }
     
     /**

@@ -81,7 +81,7 @@
 					"id": "run-config",
 					"name": "Run Configuration",
 					"contextualTitle": "Run Configuration",
-					"when": "runConfigurationInitialized"
+					"when": "runConfigurationInitialized && config.netbeans.javaSupport.enabled"
 				}
 			]
 		},

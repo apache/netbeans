@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.TraitElement;
+import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
@@ -108,7 +109,20 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
 
     @Override
     public Collection<? extends ClassConstantElement> getInheritedConstants() {
-        return Collections.EMPTY_SET;
+        // show items in Navigator Window
+        // [GH-4725] PHP 8.2 Support: Constatns in Traits
+        Set<ClassConstantElement> allConstants = new HashSet<>();
+        IndexScope indexScope = ModelUtils.getIndexScope(this);
+        ElementQuery.Index index = indexScope.getIndex();
+        Set<TraitScope> traits = new HashSet<>(getTraits());
+        for (TraitScope trait : traits) {
+            // do not filter private constants (private constants are available)
+            Set<TypeConstantElement> indexedConstants = index.getAllTypeConstants(trait);
+            for (TypeConstantElement constant : indexedConstants) {
+                allConstants.add(new ClassConstantElementImpl(trait, constant));
+            }
+        }
+        return allConstants;
     }
 
     @Override
@@ -139,6 +153,10 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
         }
         for (FieldElement fieldElement : getDeclaredFields()) {
             fieldElement.addSelfToIndex(indexDocument);
+        }
+        // [GH-4725] PHP 8.2 Support: Constants in Traits
+        for (ClassConstantElement constantElement : getDeclaredConstants()) {
+            constantElement.addSelfToIndex(indexDocument);
         }
     }
 
@@ -193,7 +211,7 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
 
     @Override
     public Collection<QualifiedName> getUsedTraits() {
-        return usedTraits;
+        return Collections.unmodifiableCollection(usedTraits);
     }
 
     @Override
@@ -254,7 +272,7 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         Collection<? extends TraitScope> traits = getTraits();
-        if (traits.size() > 0) {
+        if (!traits.isEmpty()) {
             sb.append(" uses "); //NOI18N
             for (TraitScope traitScope : traits) {
                 sb.append(traitScope.getName()).append(" ");

@@ -229,6 +229,13 @@ public class SettingsPanel extends javax.swing.JPanel {
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
+
+        DefaultComboBoxModel mdl = new DefaultComboBoxModel<>(NetworkProxySettings.values());
+        if (!NetworkProxySettings.allowProxyOverride()) {
+            mdl.removeElement(NetworkProxySettings.OVERRIDE);
+        }
+        cbNetworkProxy.setModel(mdl);
+        cbNetworkProxy.addActionListener(listener);
     }
 
     /** XXX update for M3 from {@link org.apache.maven.cli.CLIManager#CLIManager} */
@@ -397,6 +404,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         comJdkHome = new javax.swing.JComboBox();
         comManageJdks = new javax.swing.JButton();
         cbPreferWrapper = new javax.swing.JCheckBox();
+        cbNetworkProxy = new javax.swing.JComboBox<>();
+        lbNetworkSettings = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCategory = new javax.swing.JList();
         lblCategory = new javax.swing.JLabel();
@@ -516,7 +525,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(comSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(218, Short.MAX_VALUE))
+                .addContainerGap(379, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlDependencies, "dependencies");
@@ -576,7 +585,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbDisableIndex)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(290, Short.MAX_VALUE))
+                .addContainerGap(450, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlIndex, "index");
@@ -632,7 +641,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(lblDirectory)
                     .addComponent(txtDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDirectory))
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addContainerGap(332, Short.MAX_VALUE))
         );
 
         pnlCards.add(plnExperimental, "experimental");
@@ -690,10 +699,16 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbPreferWrapper, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbPreferWrapper.text")); // NOI18N
 
+        lbNetworkSettings.setLabelFor(cbNetworkProxy);
+        org.openide.awt.Mnemonics.setLocalizedText(lbNetworkSettings, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbNetworkSettings.text")); // NOI18N
+
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
         pnlExecution.setLayout(pnlExecutionLayout);
         pnlExecutionLayout.setHorizontalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                .addGap(119, 119, 119)
+                .addComponent(lblExternalVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -717,15 +732,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                                     .addComponent(btnGoals))
                                 .addGap(18, 18, 18))
                             .addComponent(cbSkipTests, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 55, Short.MAX_VALUE))
+                        .addGap(58, 58, 58))
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlExecutionLayout.createSequentialGroup()
-                                .addComponent(lblOptions)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtOptions)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnOptions))
                             .addGroup(pnlExecutionLayout.createSequentialGroup()
                                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblCommandLine)
@@ -739,11 +748,20 @@ public class SettingsPanel extends javax.swing.JPanel {
                                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                                         .addComponent(comJdkHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comManageJdks)))))
+                                        .addComponent(comManageJdks))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlExecutionLayout.createSequentialGroup()
+                                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                        .addComponent(lbNetworkSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbNetworkProxy, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlExecutionLayout.createSequentialGroup()
+                                        .addComponent(lblOptions)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtOptions)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnOptions)))
                         .addContainerGap())))
-            .addGroup(pnlExecutionLayout.createSequentialGroup()
-                .addGap(119, 119, 119)
-                .addComponent(lblExternalVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlExecutionLayout.setVerticalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -766,6 +784,12 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(lblOptions)
                     .addComponent(txtOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnOptions))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbNetworkProxy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlExecutionLayout.createSequentialGroup()
+                        .addComponent(lbNetworkSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbSkipTests)
                 .addGap(18, 18, 18)
@@ -781,7 +805,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(lblOutputTab)
                     .addComponent(rbOutputTabName)
                     .addComponent(rbOutputTabId))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(cbOutputTabShowConfig)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbCollapseSuccessFolds)
@@ -826,7 +850,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(lblCategory)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlCards, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -935,6 +959,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbAlwaysShow;
     private javax.swing.JCheckBox cbCollapseSuccessFolds;
     private javax.swing.JCheckBox cbDisableIndex;
+    private javax.swing.JComboBox<NetworkProxySettings> cbNetworkProxy;
     private javax.swing.JCheckBox cbOutputTabShowConfig;
     private javax.swing.JCheckBox cbPreferWrapper;
     private javax.swing.JComboBox cbProjectNodeNameMode;
@@ -955,6 +980,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbNetworkSettings;
     private javax.swing.JLabel lblBinaries;
     private javax.swing.JLabel lblCategory;
     private javax.swing.JLabel lblCommandLine;
@@ -1157,6 +1183,8 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         }
         
+         cbNetworkProxy.setSelectedItem(MavenSettings.getDefault().getNetworkProxy());
+        
         changed = false;  //#163955 - do not fire change events on load
     }
     
@@ -1283,6 +1311,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 isChanged |= (projectNodeNamePattern == null ? !cbProjectNodeNameMode.getSelectedItem().toString().isEmpty() : !projectNodeNamePattern.equals(cbProjectNodeNameMode.getSelectedItem().toString()));
             }
         }
+        isChanged |= MavenSettings.getDefault().getNetworkProxy() != cbNetworkProxy.getSelectedItem();
         changed = isChanged;
     }
 

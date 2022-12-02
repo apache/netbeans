@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.57
+#Version 6.58
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1660,6 +1660,7 @@ meth public static int arrayHashCode(java.lang.Object[])
 meth public static int getOperatingSystem()
 meth public static int showJFileChooser(javax.swing.JFileChooser,java.awt.Component,java.lang.String)
  anno 0 java.lang.Deprecated()
+meth public static java.awt.Component findDialogParent()
 meth public static java.awt.Component getFocusTraversableComponent(java.awt.Component)
 meth public static java.awt.Cursor createCustomCursor(java.awt.Component,java.awt.Image,java.lang.String)
 meth public static java.awt.Cursor createProgressCursor(java.awt.Component)

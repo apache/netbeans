@@ -55,7 +55,12 @@ import org.openide.util.Lookup;
  *
  * @author sdedic
  */
-@ProjectServiceProvider(projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/io.micronaut.application", service=ProjectArtifactsImplementation.class)
+@ProjectServiceProvider(service=ProjectArtifactsImplementation.class,
+        projectType = {
+            NbGradleProject.GRADLE_PLUGIN_TYPE + "/io.micronaut.application",
+            NbGradleProject.GRADLE_PLUGIN_TYPE + "/org.graalvm.buildtools.native"
+        }
+)
 public class MicronautGradleArtifactsImpl implements ProjectArtifactsImplementation<MicronautGradleArtifactsImpl.R>{
     private static final String EXTENSION_GRAAL_VM_NATIVE = "graalVmNative";
     private static final String TASK_NATIVE_COMPILE = "nativeCompile";

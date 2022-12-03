@@ -14,6 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 
+# doc: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes#configuration-options
 changelog:
 
   exclude:
@@ -21,17 +22,10 @@ changelog:
     labels:
       - 'Release process'
       - 'ci:no-build'
-      
+  
+  # order matters since this works like a filter, a PR will show up only once.
+  # try to keep similar categories together since this is also the rendering order.
   categories:
-
-    - title: 'API Changes'
-      labels:
-        - 'API Change'
-
-    - title: 'UI Changes'
-      labels:
-        - 'UI'
-        - 'Look and Feel'
 
     - title: 'Gradle'
       labels:
@@ -41,9 +35,22 @@ changelog:
       labels:
         - 'Maven'
 
+    - title: 'Ant'
+      labels:
+        - 'Ant'
+
     - title: 'Java'
       labels:
         - 'Java'
+        - 'JavaDoc'
+
+    - title: 'JavaFX'
+      labels:
+        - 'JavaFX'
+
+    - title: 'Groovy'
+      labels:
+        - 'Groovy'
 
     - title: 'PHP'
       labels:
@@ -65,16 +72,45 @@ changelog:
         - 'JavaScript'
         - 'TypeScript'
         - 'HTML'
+        - 'CSS'
+        - 'CSL'
+
+    - title: 'Versioning'
+      labels:
+        - 'git'
+        - 'subversion'
+        - 'mercurial'
+
+    - title: 'Editor'
+      labels:
+        - 'Editor'
+        - 'ANTLR'
+        - 'Docker'
+
+    - title: 'UI Changes'
+      labels:
+        - 'UI'
+        - 'Look and Feel'
 
     - title: 'Platform'
       labels:
         - 'Platform'
 
+    - title: 'Language Server Protocol'
+      labels:
+        - 'LSP'
+
+    - title: 'VSCode Extension'
+      labels:
+        - 'VSCode Extension'
+
     - title: 'Maintanance'
       labels:
         - 'Code cleanup'
         - 'Upgrade Library'
-      
+        - 'dependencies'
+        - 'CI'
+
     - title: Other Changes
       labels:
         - "*"

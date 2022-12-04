@@ -107,7 +107,7 @@ abstract class Lookup implements ContextProvider {
         
         @Override
         public <T> List<? extends T> lookup(String folder, Class<T> service) {
-            List<T> l = new ArrayList<T>();
+            List<T> l = new ArrayList<>();
             for (Object s : services) {
                 if (service.isInstance(s)) {
                     l.add(service.cast(s));

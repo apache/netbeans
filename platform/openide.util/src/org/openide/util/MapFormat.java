@@ -66,7 +66,7 @@ public class MapFormat extends Format {
     private String rdel = "}"; // NOI18N
 
     /** Used formatting map */
-    private Map<String, Object> argmap;
+    private Map<String, ?> argmap;
 
     /** Offsets to {} expressions */
     private int[] offsets;
@@ -88,7 +88,7 @@ public class MapFormat extends Format {
     * For common work use  <code>format(pattern, arguments) </code>.
     * @param arguments keys and values to use in the format
     */
-    public MapFormat(Map arguments) {
+    public MapFormat(Map<String, ?> arguments) {
         super();
         setMap(arguments);
     }
@@ -407,7 +407,7 @@ public class MapFormat extends Format {
     *
     * @param map the argument map
     */
-    public void setMap(Map map) {
+    public void setMap(Map<String, ?> map) {
         argmap = map;
     }
 

@@ -1037,6 +1037,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
             switch (e.getKind()) {
                 case CLASS:
                 case INTERFACE:
+                case RECORD:
                 case ENUM:
                 case ANNOTATION_TYPE:
                     if(parent == null) {

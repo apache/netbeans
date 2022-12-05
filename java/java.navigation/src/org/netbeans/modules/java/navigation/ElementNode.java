@@ -686,6 +686,7 @@ public class ElementNode extends AbstractNode implements Iterable<ElementNode> {
                         return 3;
                     case CLASS:
                     case INTERFACE:
+                    case RECORD:
                     case ENUM:
                     case ANNOTATION_TYPE:
                     case MODULE:

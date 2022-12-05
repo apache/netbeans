@@ -1561,6 +1561,7 @@ public class Utilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     tpes = ((TypeElement) target).getTypeParameters();
                     break;
                 case METHOD:

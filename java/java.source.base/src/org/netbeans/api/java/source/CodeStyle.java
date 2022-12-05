@@ -1343,6 +1343,7 @@ public final class CodeStyle {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     kind = ElementKind.CLASS;
                     modifiers = ((ClassTree)tree).getModifiers().getFlags();
                     break;

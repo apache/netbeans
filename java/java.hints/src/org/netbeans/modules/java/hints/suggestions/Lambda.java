@@ -452,6 +452,7 @@ public class Lambda {
                     case CLASS:
                     case ANNOTATION_TYPE:
                     case INTERFACE:
+                    case RECORD:
                         types.put(e.getSimpleName(), e);
                         break;
 
@@ -502,6 +503,7 @@ public class Lambda {
                                 case ANNOTATION_TYPE:
                                 case CLASS:
                                 case INTERFACE:
+                                case RECORD:
                                 case ENUM:
                                     rewrite = (other = types.get(e.getSimpleName())) != null;
                                     statRef = true;

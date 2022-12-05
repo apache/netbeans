@@ -508,10 +508,6 @@
                 <package>org.netbeans.spi.java.hints.matching</package>
                 <package>org.netbeans.spi.java.hints.support</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/byte-buddy-1.10.6.jar</runtime-relative-path>
-                <binary-origin>external/byte-buddy-1.10.6.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

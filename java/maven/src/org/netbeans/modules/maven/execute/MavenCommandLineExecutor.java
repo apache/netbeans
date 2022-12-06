@@ -238,10 +238,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
         MavenProxySupport mps = clonedConfig.getProject().getLookup().lookup(MavenProxySupport.class);
         if (mps != null) {
-            MavenProxySupport.ProxyResult res;
             boolean ok = false;
             try {
-                res = mps.checkProxySettings().get();
+                MavenProxySupport.ProxyResult res = mps.checkProxySettings().get();
                 
                 if (res != null) {
                     res.configure(clonedConfig);

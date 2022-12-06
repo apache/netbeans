@@ -36,38 +36,35 @@ public enum NetworkProxySettings {
     /**
      * Do not verify proxy settings.
      */
-    IGNORE,
+    IGNORE(Bundle.PROXY_IGNORE()),
     /**
      * Display a notice that proxy settings mismatch.
      */
-    NOTICE,
+    NOTICE(Bundle.PROXY_NOTICE()),
     /**
      * Update user's gradle.properties file.
      */
-    UPDATE,
+    UPDATE(Bundle.PROXY_UPDATE()),
     /**
      * Ask the user for confirmation.
      */
-    ASK,
+    ASK(Bundle.PROXY_ASK()),
     /**
      * Automatically override on execution, but do not change gradle.properties.
      */
-    OVERRIDE;
+    OVERRIDE(Bundle.PROXY_OVERRIDE());
+    
+    private String displayName;
     
     public String toString() {
-        switch (this) {
-            case IGNORE: return Bundle.PROXY_IGNORE();
-            case NOTICE: return Bundle.PROXY_NOTICE();
-            case UPDATE: return Bundle.PROXY_UPDATE();
-            case ASK: return Bundle.PROXY_ASK();
-            case OVERRIDE: return Bundle.PROXY_OVERRIDE();
-            
-            default:
-                return name();
-        }
+        return displayName;
     }
 
     private static final String BRANDING_API_OVERRIDE_ENABLED = "org.netbeans.modules.maven.api.execute.NetworkProxySettings.allowOverride"; // NOI18N
+    
+    private NetworkProxySettings(String dispName) {
+        
+    }
     
     /**
      * Determines if override is a valid option.

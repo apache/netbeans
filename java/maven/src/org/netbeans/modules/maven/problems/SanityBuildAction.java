@@ -21,7 +21,6 @@ package org.netbeans.modules.maven.problems;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -113,9 +112,15 @@ public class SanityBuildAction implements ProjectProblemResolver {
                         ProxyResult res;
                         try {
                             res = mps.checkProxySettings().get();
+                            if (res.getStatus() == MavenProxySupport.Status.ABORT) {
+                                ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_SanityBuildCancalled());
+                                publicResult.complete(r);
+                                return;
+                            }
                         } catch (ExecutionException ex) {
                             ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_ProxyUpdateFailed(ex.getLocalizedMessage()));
                             publicResult.complete(r);
+                            return;
                         } catch (InterruptedException ex) {
                             ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_SanityBuildCancalled());
                             publicResult.complete(r);

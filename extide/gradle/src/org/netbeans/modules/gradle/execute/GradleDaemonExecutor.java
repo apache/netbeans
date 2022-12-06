@@ -283,7 +283,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         String javaHome = null;
         if (platformProvider != null) {
             try {
-                buildLauncher.setJavaHome(platformProvider.getJavaHome());
                 javaHome = platformProvider.getJavaHome().getCanonicalPath();
             } catch (IOException ex) {
                 io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));

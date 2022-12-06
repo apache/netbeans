@@ -702,7 +702,13 @@ public class MavenProxySupport {
                     return CompletableFuture.completedFuture(createResult(Status.OVERRIDE));
                     
                 case UPDATE:
-                    return CompletableFuture.completedFuture(createResult(Status.UNKNOWN));
+                    try {
+                        result = createResult(Status.RECONFIGURED);
+                        result.updateMavenProxy();
+                    } catch (IOException ex) {
+                        result = createResult(ex);
+                    }
+                    return CompletableFuture.completedFuture(result);
                     
                 case ASK:
                     if (result != null) {

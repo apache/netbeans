@@ -63,7 +63,7 @@ public enum NetworkProxySettings {
     private static final String BRANDING_API_OVERRIDE_ENABLED = "org.netbeans.modules.maven.api.execute.NetworkProxySettings.allowOverride"; // NOI18N
     
     private NetworkProxySettings(String dispName) {
-        
+        this.displayName = dispName;
     }
     
     /**

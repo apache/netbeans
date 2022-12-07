@@ -236,7 +236,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         int executionresult = -10;
         final InputOutput ioput = getInputOutput();
 
-        MavenProxySupport mps = clonedConfig.getProject().getLookup().lookup(MavenProxySupport.class);
+        // TODO: maybe global instance for project-less operation ?
+        MavenProxySupport mps = (clonedConfig.getProject() == null) ? null : clonedConfig.getProject().getLookup().lookup(MavenProxySupport.class);
         if (mps != null) {
             boolean ok = false;
             try {

@@ -106,6 +106,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     private boolean inStackTrace = false;
     private boolean addMojoFold = false;
     private boolean addProjectFold = false;
+    private boolean foldsBroken;
     private URL[] mavencoreurls;
 
     public CommandLineOutputHandler(InputOutput io, Project proj, ProgressHandle hand, RunConfig config, boolean createVisitorContext) {
@@ -340,11 +341,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                     //however there's no other way to have the proper line marked as beginning of a section (as the event comes first)
                     //without this, the last line of previous output would be marked as beginning of the fold.
                     if (addMojoFold && line.startsWith("[INFO] ---")) {     //NOI18N
-                        currentTreeNode.startFold(inputOutput);
+                        foldsBroken |= currentTreeNode.startFold(inputOutput);
                         addMojoFold = false;
                     }
                     if (addProjectFold && line.startsWith("[INFO] Building")) {
-                        currentTreeNode.startFold(inputOutput);
+                        foldsBroken |= currentTreeNode.startFold(inputOutput);
                         addProjectFold = false;
                     }
                     line = nextLine != null ? nextLine : readLine();
@@ -535,6 +536,9 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     }
 
     private void trimTree(ExecutionEventObject obj) {
+        if (foldsBroken) {
+            return;
+        }
         ExecutionEventObject start = currentTreeNode.getStartEvent();
         while (!matchingEvents(obj.type, start.type)) { //#229877
             ExecutionEventObject innerEnd = createEndForStart(start);

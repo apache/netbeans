@@ -388,6 +388,10 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         List<Dependency> deps = mp.getRuntimeDependencies();
         String fileNameMapping = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_EAR, "fileNameMapping", "ear", null); //NOI18N
         if (fileNameMapping == null) {
+            // EAR maven plugin property was renamed from fileNameMapping to outputFileNameMapping in version 3.0.0
+            fileNameMapping = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_EAR, "outputFileNameMapping", "ear", null); //NOI18N
+        }
+        if (fileNameMapping == null) {
             fileNameMapping = "standard"; //NOI18N
         }
 

@@ -213,4 +213,8 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testEnumerations() throws Exception {
         checkSemantic("testfiles/semantic/enumerations.php");
     }
+
+    public void testConstantsInTraits() throws Exception {
+        checkSemantic("testfiles/semantic/constantsInTraits.php");
+    }
 }

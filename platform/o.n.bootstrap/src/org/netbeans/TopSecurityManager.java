@@ -284,6 +284,7 @@ public class TopSecurityManager extends TrackingHooks {
         wl.add("net.bytebuddy.dynamic.loading.ClassInjector$UsingUnsafe$Dispatcher$CreationAction"); // NOI18N
         wl.add("com.oracle.truffle.api.library.LibraryFactory"); // NOI18N
         wl.add("com.oracle.truffle.api.nodes.NodeFieldAccessor$AbstractUnsafeNodeFieldAccessor"); // NOI18N
+        wl.add("com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper$1"); // NOI18N
         return wl;
     }
     private static boolean isDangerous(String caller, String accessTo) {

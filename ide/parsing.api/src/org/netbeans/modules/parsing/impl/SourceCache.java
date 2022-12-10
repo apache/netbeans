@@ -357,6 +357,10 @@ retry:  while (true) {
         }
     }
 
+    public Iterable<Embedding> getExistingEmbeddings () {
+        return this.embeddings;
+    }
+
     //@GuardedBy(this)
     private final Set<SchedulerTask> upToDateEmbeddingProviders = new HashSet<> ();
 

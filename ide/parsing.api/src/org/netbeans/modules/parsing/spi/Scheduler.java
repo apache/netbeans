@@ -164,7 +164,7 @@ public abstract class Scheduler {
                 cache.scheduleTasks (Scheduler.this.getClass ());
                 if (event instanceof CursorMovedSchedulerEvent) {
                     int offset = ((CursorMovedSchedulerEvent) event).getCaretOffset();
-                    for (Embedding e : cache.getAllEmbeddings()) {
+                    for (Embedding e : cache.getExistingEmbeddings()) {
                         if (e.containsOriginalOffset(offset)) {
                             SourceCache embeddedCache = cache.getCache(e);
                             embeddedCache.scheduleTasks(Scheduler.this.getClass ());

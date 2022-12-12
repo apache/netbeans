@@ -50,7 +50,9 @@ import org.openide.windows.OutputListener;
  * @author mkleint
  */
 public final class OutputUtils {
-    public static final Pattern linePattern = Pattern.compile("(?:\\[catch\\])?\\sat (.*)\\((?:Native Method|(.*)\\.java\\:(\\d+))\\)"); //NOI18N
+
+    // example: '[WARN]  	at java.base/java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)'
+    public static final Pattern linePattern = Pattern.compile("(?:\\[\\w+\\])?\\s*(?:\\[catch\\]\\s)?at\\s(.*)\\((?:Native Method|(.*)\\.java\\:(\\d+))\\)"); //NOI18N
  
     private static final Map<Project, StacktraceOutputListener> projectStacktraceListeners = new WeakHashMap<>();
     private static final Map<FileObject, StacktraceOutputListener> fileStacktraceListeners = new WeakHashMap<>();
@@ -115,13 +117,10 @@ public final class OutputUtils {
         return null;
     }
     
-    /**
-     * 
-     * @param line
-     * @param classPath
-     * @return 
-     */
     private static StacktraceAttributes matchStackTraceLine(String line) {
+        if (!line.endsWith(")")) {
+            return null; // fast path -> not a stack trace
+        }
         Matcher match = linePattern.matcher(line);
         if (match.matches() && match.groupCount() == 3) {
             String method = match.group(1);

@@ -77,21 +77,19 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
 
     @Override public boolean checkRunConfig(RunConfig config) {
         String actionName = config.getActionName();
-        for (Map.Entry<? extends String,? extends String> entry : config.getProperties().entrySet()) {
-            if ("exec.executable".equals(entry.getKey())) { //NOI18N
-                // check for "java" and replace it with absolute path to
-                // project j2seplaform's java.exe
-                if ("java".equals(entry.getValue())) { //NOI18N
-                    //TODO somehow use the config.getMavenProject() call rather than looking up the
-                    // ActiveJ2SEPlatformProvider from lookup. The loaded project can be different from the executed one.
-                    ActiveJ2SEPlatformProvider plat = config.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
-                    assert plat != null;
-                    FileObject fo = plat.getJavaPlatform().findTool(entry.getValue());
-                    if (fo != null) {
-                        File fl = FileUtil.toFile(fo);
-                        config.setProperty("exec.executable", fl.getAbsolutePath()); //NOI18N
-                    }
-                }
+
+        // check for "java" and replace it with absolute path to
+        // project j2seplaform's java.exe
+        String tool = config.getProperties().get("exec.executable"); //NOI18N
+        if ("java".equals(tool)) { //NOI18N
+            //TODO somehow use the config.getMavenProject() call rather than looking up the
+            // ActiveJ2SEPlatformProvider from lookup. The loaded project can be different from the executed one.
+            ActiveJ2SEPlatformProvider plat = config.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
+            assert plat != null;
+            FileObject fo = plat.getJavaPlatform().findTool(tool);
+            if (fo != null) {
+                File fl = FileUtil.toFile(fo);
+                config.setProperty("exec.executable", fl.getAbsolutePath()); //NOI18N
             }
         }
 

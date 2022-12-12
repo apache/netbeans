@@ -193,7 +193,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
             if (urls == null) {
                 exec.setClasspathURLs(coreurls);
             } else {
-                List<URL> newones = new ArrayList<URL>();
+                List<URL> newones = new ArrayList<>(urls.length + coreurls.length);
                 newones.addAll(Arrays.asList(urls));
                 newones.addAll(Arrays.asList(coreurls));
                 exec.setClasspathURLs(newones.toArray(new URL[0]));
@@ -365,7 +365,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                     line = nextLine != null ? nextLine : readLine();
                 }
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(CommandLineOutputHandler.class.getName()).log(java.util.logging.Level.FINE, null, ex);
+                LOG.log(java.util.logging.Level.FINE, null, ex);
             } finally {
                 if (contextImpl == null) {
                     CommandLineOutputHandler.this.processEnd(getEventId(PRJ_EXECUTE, null), stdOut);
@@ -618,7 +618,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
 
     private static final Map<ExecutionEvent.Type, ExecutionEvent.Type> END_TO_START_Mappings;
     static {
-        END_TO_START_Mappings = new EnumMap<ExecutionEvent.Type, ExecutionEvent.Type>(ExecutionEvent.Type.class);
+        END_TO_START_Mappings = new EnumMap<>(ExecutionEvent.Type.class);
         END_TO_START_Mappings.put(ExecutionEvent.Type.ForkFailed, ExecutionEvent.Type.ForkStarted);
         END_TO_START_Mappings.put(ExecutionEvent.Type.ForkSucceeded, ExecutionEvent.Type.ForkStarted);
         END_TO_START_Mappings.put(ExecutionEvent.Type.ForkedProjectFailed, ExecutionEvent.Type.ForkedProjectStarted);

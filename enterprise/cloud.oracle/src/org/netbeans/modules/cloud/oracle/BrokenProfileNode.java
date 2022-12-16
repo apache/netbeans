@@ -18,50 +18,27 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import org.openide.util.NbBundle;
-import org.openide.util.WeakListeners;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
 
 /**
- *
- * @author Jan Horvath
+ * Represents a profile that can't connect to its tenancy. 
  */
-public class TenancyNode extends OCINode implements PropertyChangeListener {
+public class BrokenProfileNode extends AbstractNode {
     
     private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
+    private static final String BADGE_ICON = "org/netbeans/modules/cloud/oracle/resources/error-badge.svg"; // NOI18N
     
-    private final OCISessionInitiator session;
+    private final TenancyInstance instance;
     
-    public TenancyNode(OCIItem tenancy, String disp, OCISessionInitiator session) {
-        super(tenancy, session);
-        this.session = session;
-        setName(tenancy.getName()); 
-        setDisplayName(disp);
+    public BrokenProfileNode(TenancyInstance instance) {
+        super(Children.LEAF);
+        this.instance = instance;
+        setName(instance.profile.getId()); 
+        setDisplayName(instance.getDisplayName());
         setIconBaseWithExtension(ORCL_ICON);
-        setShortDescription(tenancy.getDescription());
-        OCIManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OCIManager.getDefault()));
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent e) {
-        if (OCIManager.PROP_ACTIVE_PROFILE.equals(e.getPropertyName())) {
-            fireDisplayNameChange(null, null);
-        }
-    }
-
-    @NbBundle.Messages({
-        "HTML_EmphasizeName=<b>{0}</b>"
-    })
-    @Override
-    public String getHtmlDisplayName() {
-        if (OCIManager.getDefault().getActiveProfile() == session) {
-            return Bundle.HTML_EmphasizeName(getDisplayName());
-        } else {
-            return null;
-        }
     }
     
     @Override
@@ -75,7 +52,6 @@ public class TenancyNode extends OCINode implements PropertyChangeListener {
     }
     
     private Image badgeIcon(Image origImg) {
-        return origImg;
+        return ImageUtilities.mergeImages(origImg, ImageUtilities.loadImage(BADGE_ICON), 8, 8);
     }
-    
 }

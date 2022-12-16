@@ -86,17 +86,17 @@ public final class TomcatFactory implements DeploymentFactory {
     public static final String TOMCAT_URI_HOME_PREFIX = "home=";    // NOI18N
     public static final String TOMCAT_URI_BASE_PREFIX = ":base=";   // NOI18N
 
-    private static final Pattern TOMEE_JAR_PATTERN = Pattern.compile("tomee-common-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    static final Pattern TOMEE_JAR_PATTERN = Pattern.compile("tomee-common-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
     
-    private static final Pattern TOMEE_WEBPROFILE_JAR_PATTERN = Pattern.compile("openejb-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    static final Pattern TOMEE_WEBPROFILE_JAR_PATTERN = Pattern.compile("openejb-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
     
-    private static final Pattern TOMEE_JAXRS_JAR_PATTERN = Pattern.compile("jettison-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    static final Pattern TOMEE_JAXRS_JAR_PATTERN = Pattern.compile("jettison-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
     
-    private static final Pattern TOMEE_MICROPROFILE_JAR_PATTERN = Pattern.compile("microprofile-config-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    static final Pattern TOMEE_MICROPROFILE_JAR_PATTERN = Pattern.compile("microprofile-config-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
     
-    private static final Pattern TOMEE_PLUS_JAR_PATTERN = Pattern.compile("activemq-protobuf-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    static final Pattern TOMEE_PLUS_JAR_PATTERN = Pattern.compile("activemq-protobuf-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
     
-    private static final Pattern TOMEE_PLUME_JAR_PATTERN = Pattern.compile("eclipselink-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    static final Pattern TOMEE_PLUME_JAR_PATTERN = Pattern.compile("eclipselink-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
     
     private static final String GENERIC_DISCONNECTED_URI_PREFIX = "tomcat-any:"; // NOI18N
     private static final String GENERIC_DISCONNECTED_URI =

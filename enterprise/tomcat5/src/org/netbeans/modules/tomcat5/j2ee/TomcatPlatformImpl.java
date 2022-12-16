@@ -542,49 +542,25 @@ import org.openide.util.lookup.Lookups;
     
     @Override
     public Set<String> getSupportedJavaPlatformVersions() {
-        Set<String> versions = new HashSet<String>(14);
+        Set<String> versions = new HashSet<>(16);
 
         // TomEE has different supported Java versions
         if (manager.isTomEE()) {
             switch (manager.getTomEEVersion()) {
                 case TOMEE_90:
-                    versions.add("11"); // NOI18N
-                    versions.add("12"); // NOI18N
-                    versions.add("13"); // NOI18N
-                    versions.add("14"); // NOI18N
-                    versions.add("15"); // NOI18N
-                    versions.add("16"); // NOI18N
-                    versions.add("17"); // NOI18N
-                    versions.add("18"); // NOI18N
-                    versions.add("19"); // NOI18N
-                    versions.add("20"); // NOI18N
+                    versions = versionRange(11, 21);
                     break;
                 case TOMEE_80:
-                    versions.add("1.8"); // NOI18N
-                    versions.add("9"); // NOI18N
-                    versions.add("10"); // NOI18N
-                    versions.add("11"); // NOI18N
-                    versions.add("12"); // NOI18N
-                    versions.add("13"); // NOI18N
-                    versions.add("14"); // NOI18N
-                    versions.add("15"); // NOI18N
-                    versions.add("16"); // NOI18N
-                    versions.add("17"); // NOI18N
-                    versions.add("18"); // NOI18N
-                    versions.add("19"); // NOI18N
-                    versions.add("20"); // NOI18N
+                    versions = versionRange(8, 21);
                     break;
                 case TOMEE_71:
                 case TOMEE_70:
-                    versions.add("1.7"); // NOI18N
-                    versions.add("1.8"); // NOI18N
+                   versions = versionRange(7, 8);
                     break;
                 case TOMEE_17:
                 case TOMEE_16:
                 case TOMEE_15:
-                    versions.add("1.6"); // NOI18N
-                    versions.add("1.7"); // NOI18N
-                    versions.add("1.8"); // NOI18N
+                    versions = versionRange(6, 8);
                     break;
                 default:
                     break;
@@ -592,79 +568,24 @@ import org.openide.util.lookup.Lookups;
         } else {
             switch (manager.getTomcatVersion()) {
                 case TOMCAT_101:
-                    versions.add("11"); // NOI18N
-                    versions.add("12"); // NOI18N
-                    versions.add("13"); // NOI18N
-                    versions.add("14"); // NOI18N
-                    versions.add("15"); // NOI18N
-                    versions.add("16"); // NOI18N
-                    versions.add("17"); // NOI18N
-                    versions.add("18"); // NOI18N
-                    versions.add("19"); // NOI18N
-                    versions.add("20"); // NOI18N
+                    versions = versionRange(11, 21);
                     break;
                 case TOMCAT_100:
                 case TOMCAT_90:
-                    versions.add("1.8"); // NOI18N
-                    versions.add("9"); // NOI18N
-                    versions.add("10"); // NOI18N
-                    versions.add("11"); // NOI18N
-                    versions.add("12"); // NOI18N
-                    versions.add("13"); // NOI18N
-                    versions.add("14"); // NOI18N
-                    versions.add("15"); // NOI18N
-                    versions.add("16"); // NOI18N
-                    versions.add("17"); // NOI18N
-                    versions.add("18"); // NOI18N
-                    versions.add("19"); // NOI18N
-                    versions.add("20"); // NOI18N
+                    versions = versionRange(8, 21);
                     break;
                 case TOMCAT_80:
-                    versions.add("1.7"); // NOI18N
-                    versions.add("1.8"); // NOI18N
-                    versions.add("9"); // NOI18N
-                    versions.add("10"); // NOI18N
-                    versions.add("11"); // NOI18N
-                    versions.add("12"); // NOI18N
-                    versions.add("13"); // NOI18N
-                    versions.add("14"); // NOI18N
-                    versions.add("15"); // NOI18N
-                    versions.add("16"); // NOI18N
-                    versions.add("17"); // NOI18N
-                    versions.add("18"); // NOI18N
-                    versions.add("19"); // NOI18N
-                    versions.add("20"); // NOI18N
+                    versions = versionRange(7, 21);
                     break;
                 case TOMCAT_70:
-                    versions.add("1.6"); // NOI18N
-                    versions.add("1.7"); // NOI18N
-                    versions.add("1.8"); // NOI18N
-                    versions.add("9"); // NOI18N
-                    versions.add("10"); // NOI18N
-                    versions.add("11"); // NOI18N
-                    versions.add("12"); // NOI18N
-                    versions.add("13"); // NOI18N
-                    versions.add("14"); // NOI18N
-                    versions.add("15"); // NOI18N
-                    versions.add("16"); // NOI18N
-                    versions.add("17"); // NOI18N
-                    versions.add("18"); // NOI18N
-                    versions.add("19"); // NOI18N
-                    versions.add("20"); // NOI18N
+                    versions = versionRange(6, 21);
                     break;
                 case TOMCAT_60:
-                    versions.add("1.5"); // NOI18N
-                    versions.add("1.6"); // NOI18N
-                    versions.add("1.7"); // NOI18N
-                    versions.add("1.8"); // NOI18N
+                    versions = versionRange(5, 8);
                     break;
                 case TOMCAT_55:
                 case TOMCAT_50:
-                    versions.add("1.4"); // NOI18N
-                    versions.add("1.5"); // NOI18N
-                    versions.add("1.6"); // NOI18N
-                    versions.add("1.7"); // NOI18N
-                    versions.add("1.8"); // NOI18N
+                    versions = versionRange(4, 8);
                     break;
                 default:
                     break;
@@ -704,4 +625,21 @@ import org.openide.util.lookup.Lookups;
         lib.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_JAVADOC, tp.getJavadocs());
         lib.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_SRC, tp.getSources());        
     }
+    
+    /**
+     * Create Set containing desired java versions. e.g.
+     * <pre>{@code
+     *  Set<String> versions = versionRange(8, 11)
+     * }</pre>
+     * This Set will contain ["1.8", "9", "10", "11"]
+     * @param min minimum Java version {@code inclusive}
+     * @param max maximum Java version {@code inclusive}
+     * @return {@code Set<String>} of desired Java versions
+     */
+    private static Set<String> versionRange(int min, int max) {
+        return IntStream.range(min, max+1)
+                    .mapToObj((int v) ->  v > 8 ? Integer.toString(v) : "1." + v)
+                    .collect(Collectors.toSet());
+    }
+    
 }

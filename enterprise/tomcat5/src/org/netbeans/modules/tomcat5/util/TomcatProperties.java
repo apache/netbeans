@@ -261,6 +261,10 @@ public class TomcatProperties {
         String prefix;
         String serverID;
         switch (tm.getTomcatVersion()) {
+            case TOMCAT_110:
+                prefix = "tomcat110"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_110;
+                break;
             case TOMCAT_101:
                 prefix = "tomcat101"; // NIO18N
                 serverID = TomcatFactory.SERVER_ID_101;
@@ -733,6 +737,7 @@ public class TomcatProperties {
                     String eeDocs;
                     switch (tm.getTomcatVersion()) {
 //                      TODO: Add support for Jakarta EE 10
+//                      case TOMCAT_110:
 //                      case TOMCAT_101:
 //                           eeDocs = "docs/jakartaee10-doc-api.jar";
 //                           break;

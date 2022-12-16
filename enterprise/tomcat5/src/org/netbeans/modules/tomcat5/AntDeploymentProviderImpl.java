@@ -49,6 +49,7 @@ public class AntDeploymentProviderImpl implements AntDeploymentProvider {
     public void writeDeploymentScript(OutputStream os, Object moduleType) throws IOException {
         String name = null;
         switch (tm.getTomcatVersion()) {
+            case TOMCAT_110:
             case TOMCAT_101:
             case TOMCAT_100:
             case TOMCAT_90:

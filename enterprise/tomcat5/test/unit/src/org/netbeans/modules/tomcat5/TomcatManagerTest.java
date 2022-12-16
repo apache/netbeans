@@ -78,6 +78,7 @@ public class TomcatManagerTest extends TestBase {
     public void testIsHigherThanTomcat70() {
         TomcatManager.TomcatVersion tomcatVersion = TomcatManager.TomcatVersion.TOMCAT_70;
         
+        assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_110));
         assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_101));
         assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_100));
         assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_90));

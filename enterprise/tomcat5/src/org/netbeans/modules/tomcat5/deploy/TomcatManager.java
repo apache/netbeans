@@ -73,7 +73,8 @@ public class TomcatManager implements DeploymentManager {
 
     public enum TomcatVersion {
         TOMCAT_50(50), TOMCAT_55(55), TOMCAT_60(60), TOMCAT_70(70), 
-        TOMCAT_80(80), TOMCAT_90(90), TOMCAT_100(100), TOMCAT_101(101);
+        TOMCAT_80(80), TOMCAT_90(90), TOMCAT_100(100), TOMCAT_101(101),
+        TOMCAT_110(110);
         
         TomcatVersion(int version) { this.version = version; }
         private final int version;
@@ -259,6 +260,8 @@ public class TomcatManager implements DeploymentManager {
      */
     public String getUri () {
         switch (tomcatVersion) {
+            case TOMCAT_110:
+                return TomcatFactory.TOMCAT_URI_PREFIX_110 + uri;
             case TOMCAT_101:
                 return TomcatFactory.TOMCAT_URI_PREFIX_101 + uri;
             case TOMCAT_100:
@@ -440,6 +443,10 @@ public class TomcatManager implements DeploymentManager {
    
     public boolean isAboveTomcat70() {
         return tomcatVersion .isAtLeast(TomcatVersion.TOMCAT_70);
+    }
+    
+    public boolean isTomcat110() {
+        return tomcatVersion == TomcatVersion.TOMCAT_110;
     }
     
     public boolean isTomcat101() {

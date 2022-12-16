@@ -70,6 +70,7 @@ public class TomcatUsersTest extends NbTestCase {
         assertTrue(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_90, file, "tomcat7"));
         assertTrue(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_100, file, "tomcat7"));
         assertTrue(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_101, file, "tomcat7"));
+        assertTrue(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_110, file, "tomcat7"));
     }
     
     public void testCreateUser() throws Exception {
@@ -90,6 +91,7 @@ public class TomcatUsersTest extends NbTestCase {
         assertTrue(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_60, file, "new"));
         
         file = createTomcatUsersXml("tomcat-users3.xml", CONTENT3);
+        assertFalse(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_110, file, "ide"));
         assertFalse(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_101, file, "ide"));
         TomcatUsers.createUser(file, "tomcat6", "tomcat", TomcatVersion.TOMCAT_101);
         assertTrue(TomcatUsers.hasManagerRole(TomcatVersion.TOMCAT_101, file, "tomcat7"));

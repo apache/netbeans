@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
@@ -456,7 +458,7 @@ import org.openide.util.lookup.Lookups;
 
     @Override
     public Set<Profile> getSupportedProfiles() {
-        Set<Profile> profiles = new HashSet<Profile>(10);
+        Set<Profile> profiles = new HashSet<>(10);
 
         if (manager.isTomEE()) {
             // Only TomEE versions 8/9 of type Plus/PluME support full profile
@@ -503,6 +505,10 @@ import org.openide.util.lookup.Lookups;
             }
         } else {
             switch (manager.getTomcatVersion()) {
+//                case TOMCAT_110:
+//                    TODO: Add suport for Jakarta EE 10
+//                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+//                    break;
 //                case TOMCAT_101:
 //                    TODO: Add suport for Jakarta EE 10
 //                    profiles.add(Profile.JAKARTA_EE_10_WEB);
@@ -567,6 +573,9 @@ import org.openide.util.lookup.Lookups;
             }
         } else {
             switch (manager.getTomcatVersion()) {
+                case TOMCAT_110:
+                    versions = versionRange(11, 21);
+                    break;
                 case TOMCAT_101:
                     versions = versionRange(11, 21);
                     break;

@@ -186,7 +186,7 @@ class NbProjectInfoBuilder {
 
         public ValueAndType(Class type, Object value) {
             this.type = type;
-            this.value = Optional.of(value);
+            this.value = Optional.ofNullable(value);
         }
 
         public ValueAndType(Class type) {
@@ -290,7 +290,7 @@ class NbProjectInfoBuilder {
         Map<String, Object> taskProperties = new HashMap<>();
         Map<String, String> taskPropertyTypes = new HashMap<>();
         
-        Map<String, Task> taskList = project.getTasks().getAsMap();
+        Map<String, Task> taskList = new HashMap<>(project.getTasks().getAsMap());
         for (String s : taskList.keySet()) {
             Task task = taskList.get(s);
             Class taskClass = task.getClass();
@@ -307,7 +307,7 @@ class NbProjectInfoBuilder {
     private void detectTaskDependencies(NbProjectInfoModel model) {
         Map<String, Object> tasks = new HashMap<>();
         
-        Map<String, Task> taskList = project.getTasks().getAsMap();
+        Map<String, Task> taskList = new HashMap<>(project.getTasks().getAsMap());
         for (String s : taskList.keySet()) {
             Task task = taskList.get(s);
             Map<String, String> taskInfo = new HashMap<>();
@@ -684,7 +684,7 @@ class NbProjectInfoBuilder {
                     }
 
                     NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
-                    Map<String, ?> m = nc.getAsMap();
+                    Map<String, ?> m = new HashMap<>(nc.getAsMap());
                     List<String> ss = new ArrayList<>(m.keySet());
                     propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, String.join(";;", ss));
                     for (String k : m.keySet()) {
@@ -1000,14 +1000,12 @@ class NbProjectInfoBuilder {
 
                             List<String> compilerArgs;
 
-                            try {
-                                compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
-                            } catch (Throwable ex) {
-                                try {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
-                                } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
-                                }
+                            compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
+                            if (compilerArgs == null) {
+                                compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
+                            }
+                            if (compilerArgs == null) {
+                                compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
                         }

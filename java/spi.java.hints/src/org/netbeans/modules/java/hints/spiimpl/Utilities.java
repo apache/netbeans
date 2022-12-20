@@ -447,7 +447,7 @@ public class Utilities {
                             Element currentElement = trees.getElement(getCurrentPath());
 
                             if (!isError(currentElement)) {
-                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getPackageElement(node.toString()) == null) {
+                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getAllPackageElements(node.toString()).isEmpty()) {
                                     ((JCFieldAccess) node).sym = symtab.errSymbol;
                                     ((JCFieldAccess) node).type = symtab.errType;
                                 } else {
@@ -462,7 +462,7 @@ public class Utilities {
                             Element currentElement = trees.getElement(getCurrentPath());
 
                             if (!isError(currentElement)) {
-                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getPackageElement(node.toString()) == null) {
+                                if (currentElement.getKind() == ElementKind.PACKAGE && el.getAllPackageElements(node.toString()).isEmpty()) {
                                     ((JCIdent) node).sym = symtab.errSymbol;
                                     ((JCIdent) node).type = symtab.errType;
                                 } else {

@@ -1335,8 +1335,9 @@ jobs:
       - name: java.source.queriesimpl
         run: ant $OPTS -f java/java.source.queriesimpl test
 
-#      - name: java.sourceui
-#        run: ant $OPTS -f java/java.sourceui test
+      - name: java.sourceui
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.sourceui test
 
       - name: java.testrunner
         run: ant $OPTS -f java/java.testrunner test

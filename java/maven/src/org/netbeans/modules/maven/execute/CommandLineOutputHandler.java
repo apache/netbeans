@@ -78,16 +78,25 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     private static final RequestProcessor PROCESSOR = new RequestProcessor("Maven ComandLine Output Redirection", Integer.getInteger("maven.concurrent.builds", 16) * 2); //NOI18N
     private static final Logger LOG = Logger.getLogger(CommandLineOutputHandler.class.getName());
     private InputOutput inputOutput;
-    private static final Pattern linePattern = Pattern.compile("\\[(DEBUG|INFO|WARNING|ERROR|FATAL)\\] (.*)"); // NOI18N
+
+    /*
+     * example: '[WARN] [stderr] Exception in thread "main" java.lang.UnsupportedOperationException'
+     * @see Output#mapLevel for details
+     */
+    private static final Pattern linePattern = Pattern.compile("(\\[(DEBUG|TRACE|INFO|WARN|WARNING|ERROR|FATAL)\\]\\s)?(?:\\[(?:stderr|stdout)\\]\\s)?(.*)"); // NOI18N
+
     public static final Pattern startPatternM2 = Pattern.compile("\\[INFO\\] \\[([\\w]*):([\\w]*)[ ]?.*\\]"); // NOI18N
     public static final Pattern startPatternM3 = Pattern.compile("\\[INFO\\] --- (\\S+):\\S+:(\\S+)(?: [(]\\S+[)])? @ \\S+ ---"); // ExecutionEventLogger.mojoStarted NOI18N
+
     private static final Pattern mavenSomethingPlugin = Pattern.compile("maven-(.+)-plugin"); // NOI18N
     private static final Pattern somethingMavenPlugin = Pattern.compile("(.+)-maven-plugin"); // NOI18N
+
     /** @see org.apache.maven.cli.ExecutionEventLogger#logReactorSummary */
     static final Pattern reactorFailure = Pattern.compile("\\[INFO\\] (.+) [.]* FAILURE \\[.+\\]"); // NOI18N
-    private static final Pattern stackTraceElement = OutputUtils.linePattern;
-    
     public static final Pattern reactorSummaryLine = Pattern.compile("(.+) [.]* (FAILURE|SUCCESS) (\\[.+\\])?"); // NOI18N
+
+    private static final Pattern stackTraceElement = OutputUtils.linePattern;
+
     private OutputWriter stdOut;
     private String currentProject;
     private String currentTag;
@@ -319,15 +328,20 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                     }
                     Matcher lineMatcher = linePattern.matcher(line);
                     if (lineMatcher.matches()) {
-                        Level level = Level.valueOf(lineMatcher.group(1));
-                        String text = lineMatcher.group(2);
-                        updateFoldForException(text);
-                        processLine(MavenSettings.getDefault().isShowLoggingLevel() ? line : text, stdOut, level);
+                        String level_group = lineMatcher.group(1);
+                        Level level = mapLevel(lineMatcher.group(2));
+                        String msg = lineMatcher.group(3);
+                        updateFoldForException(msg);
+                        if (MavenSettings.getDefault().isShowLoggingLevel() && level_group != null) {
+                            processLine(level_group + msg, stdOut, level);
+                        } else {
+                            processLine(msg, stdOut, level);
+                        }
                         if (level == Level.INFO && contextImpl == null) { //only perform for maven 2.x now
-                            checkProgress(text);
+                            checkProgress(msg);
                         }
                     } else {
-                        // oh well..
+                        // shouldn't happen since linePattern should match everything
                         updateFoldForException(line);
                         processLine(line, stdOut, Level.INFO);
                     }
@@ -367,6 +381,24 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
             }
         }
 
+        // mvnd uses standard SLF4J levels while mvn prints WARN as WARNING
+        // see MavenSimpleLogger#renderLevel(int) in the maven repo
+        private Level mapLevel(String string) {
+            if (string == null) {
+                return Level.INFO;
+            } else if ("WARN".equals(string)) {
+                return Level.WARNING;
+            } else if ("TRACE".equals(string)) {
+                return Level.DEBUG; // where is trace?
+            } else {
+                try {
+                    return Level.valueOf(string);
+                } catch (IllegalArgumentException ex) {
+                    return Level.INFO;
+                }
+            }
+        }
+
         private ExecutionEventObject parseExecEvent(String line) {
             String jsonContent = line.substring(INFO_NETBEANS_EXEC_EVENT.length());
             try {
@@ -390,7 +422,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
          * or is another text, and update folds accordingly.
          */
         private void updateFoldForException(String line) {
-            if (stackTraceElement.matcher(line).find()) {
+            if (line.endsWith(")") && stackTraceElement.matcher(line).matches()) {
                 inStackTrace = true;
                 if (!currentTreeNode.hasInnerOutputFold()) {
                     currentTreeNode.startInnerOutputFold(inputOutput);

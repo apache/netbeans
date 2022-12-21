@@ -20,13 +20,13 @@ package org.netbeans.modules.java.source;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.awt.EventQueue;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -261,10 +261,21 @@ public class JavadocHelper {
                     try {
                         String charset = null;
                         for (;;) {
-                            try (Reader reader = charset == null?
+                            try (BufferedReader reader = new BufferedReader(charset == null ?
                                     new InputStreamReader(this.openStream()) :
-                                    new InputStreamReader(this.openStream(), charset)){
+                                    new InputStreamReader(this.openStream(), charset))) {
                                 if (urls.size() > 1) {
+                                    reader.mark(256);
+                                    String line = reader.readLine();
+                                    if (line.contains("<!DOCTYPE") && line.contains("HTML>")) {
+                                        index = 2;
+                                        if (jdocRoot != null) {
+                                            jdocCache.put(jdocRoot,index);
+                                        }
+                                        break;
+                                    } else {
+                                        reader.reset();
+                                    }
                                     final HTMLEditorKit.Parser parser = new ParserDelegator();
                                     final int[] state = {-1};
                                     try {
@@ -936,10 +947,6 @@ binRoots:   for (URL binary : binaries) {
 
         FragmentBuilder(@NonNull ElementKind kind) {
             int size = FILTERS.size();
-            // JDK-8046068 changed the constructor format from "Name" to "<init>"
-            if (kind == ElementKind.CONSTRUCTOR) {
-                size *= 2;
-            }
             this.sbs = new StringBuilder[size];
             for (int i = 0; i < sbs.length; i++) {
                 sbs[i] = new StringBuilder();
@@ -948,24 +955,18 @@ binRoots:   for (URL binary : binaries) {
         
         @NonNull
         FragmentBuilder constructor(@NonNull final CharSequence text) {
-            CharSequence constructor = text;
-            for (int i = 0; i < sbs.length;) {
-                for (int j = 0; j < FILTERS.size(); j++) {
-                    sbs[i].append(FILTERS.get(j).convert(constructor));
-                    i++;
-                }
-                constructor = "<init>";
+            for (int i = 0; i < sbs.length; i++) {
+                // JDK-8046068 changed the constructor format from "Name" to "<init>"
+                CharSequence constructor = i >= 2 ? "<init>" : text;
+                sbs[i].append(FILTERS.get(i).convert(constructor));
             }
             return this;
         }
 
         @NonNull
         FragmentBuilder append(@NonNull final CharSequence text) {
-            for (int i = 0; i < sbs.length;) {
-                for (int j = 0; j < FILTERS.size(); j++) {
-                    sbs[i].append(FILTERS.get(j).convert(text));
-                    i++;
-                }
+            for (int i = 0; i < sbs.length; i++) {
+                sbs[i].append(FILTERS.get(i).convert(text));
             }
             return this;
         }

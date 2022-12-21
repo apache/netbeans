@@ -91,7 +91,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17', '19' ]
+        java: [ '11', '17', '20-ea' ]
       fail-fast: false
     steps:
         
@@ -115,7 +115,7 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: Setup Gradle Daemon to run on JDK 11
-        if: ${{ matrix.java > 18 }}
+        if: ${{ matrix.java == '20-ea' }}
         run: |
           mkdir -p ~/.gradle
           #uses a preinstalled JDK 11 from the runner
@@ -159,7 +159,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8', '11', '17', '19' ]
+        java: [ '8', '11', '17', '20-ea' ]
       fail-fast: false
     steps:
 
@@ -170,7 +170,6 @@ jobs:
           distribution: ${{ env.default_java_distribution }}
 
       - name: Setup Xvfb
-        if: ${{ matrix.java != '20-ea' }}  # see #4299
         run: |
           echo "DISPLAY=:99.0" >> $GITHUB_ENV
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &

@@ -30,8 +30,7 @@
         <javac srcdir="mavensrc" destdir="build/mavenclasses" 
             debug="${build.compiler.debug}" 
             deprecation="${build.compiler.deprecation}" 
-            source="1.7"
-            target="1.7"
+            release="8"
             includeantruntime="false">
             <classpath>
                 <fileset dir="${maven.embedder.dir}/maven/lib">

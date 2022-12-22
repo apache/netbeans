@@ -21,7 +21,7 @@ package org.openide.util;
 
 import java.io.File;
 import java.net.URI;
-import static java.util.Locale.US;
+import java.util.Locale;
 import org.netbeans.junit.NbTestCase;
 import static org.openide.util.BaseUtilities.*;
 import static java.lang.Boolean.*;
@@ -34,7 +34,7 @@ import java.text.BreakIterator;
 public class BaseUtilitiesTest extends NbTestCase {
     
     private String originalOsName;
-    private final BreakIterator breakIterator = BreakIterator.getCharacterInstance(US);
+    private final BreakIterator breakIterator = BreakIterator.getCharacterInstance(Locale.US);
 
     public BaseUtilitiesTest(String name) {
         super(name);
@@ -62,7 +62,7 @@ public class BaseUtilitiesTest extends NbTestCase {
     public void testGetOperatingSystemFreebsd () {
         System.setProperty ("os.name", "FreeBSD");
         assertEquals ("System.getProperty (os.name) returns FreeBSD", "FreeBSD", System.getProperty ("os.name"));
-        assertEquals ("System.getProperty (os.name) returns freebsd", "freebsd", System.getProperty ("os.name").toLowerCase (US));
+        assertEquals ("System.getProperty (os.name) returns freebsd", "freebsd", System.getProperty ("os.name").toLowerCase (Locale.US));
         assertEquals ("FreeBSD recognized as OS_FREEBSD", BaseUtilities.OS_FREEBSD, BaseUtilities.getOperatingSystem ());
     }
 
@@ -103,7 +103,6 @@ public class BaseUtilitiesTest extends NbTestCase {
         assertFalse ("freebsd is not isWindows", BaseUtilities.isWindows ());
         assertTrue ("freebsd isUnix", BaseUtilities.isUnix ());
     }
-    
     //--------------------------------------------------------------------------
     public void test_IsJavaIdentifier_returnsTrue_whenGivenJavaIdentifier()
             throws Exception {

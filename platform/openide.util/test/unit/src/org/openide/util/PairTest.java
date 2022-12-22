@@ -18,22 +18,21 @@
  */
 package org.openide.util;
 
-import org.netbeans.junit.NbTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
 
 /**
  *
  * @author Tomas Zezula, Lukasz Bownik
  */
-public class PairTest extends NbTestCase {
-
-    //--------------------------------------------------------------------------
-    public PairTest(final String name) {
-
-        super(name);
-    }
+public class PairTest {
 
     //-------------------------------------------------------------------------- 
-    public void test_pairEquality() {
+    @Test
+    public void pairEquality() {
 
         Pair<Integer, Integer> pair11a = Pair.of(1, 1);
         Pair<Integer, Integer> pair11b = Pair.of(1, 1);
@@ -74,6 +73,7 @@ public class PairTest extends NbTestCase {
     }
 
     //-------------------------------------------------------------------------- 
+    @Test
     public void test_pairInequality() {
 
         Pair<Integer, Integer> pair11a = Pair.of(1, 1);
@@ -97,7 +97,8 @@ public class PairTest extends NbTestCase {
     }
 
     //--------------------------------------------------------------------------
-    public void test_pair_toString() {
+    @Test
+    public void toStringMethod() {
         
         assertEquals("Pair[1,1]", Pair.of(1, 1).toString());
         assertEquals("Pair[1,2]", Pair.of(1, 2).toString());

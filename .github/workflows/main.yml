@@ -1207,20 +1207,14 @@ jobs:
 
 
   java-modules-test:
-    name: Java Modules on Linux/JDK ${{ matrix.java }} (some on 11)
+    name: Java Modules on Linux/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 100
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
 
       - name: Set up JDK ${{ matrix.java }} 
         uses: actions/setup-java@v3
@@ -1391,36 +1385,12 @@ jobs:
       - name: xml.jaxb
         run: ant $OPTS -f java/xml.jaxb test
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
-
-      - name: Set up opts
-        run: echo "OPTS_11=-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true" >> $GITHUB_ENV
-
       - name: java.lexer
         run: ant $OPTS -f java/java.lexer test
 
-      - name: java.completion
-        if: env.test_java == 'true' && success()
-        run: ant $OPTS $OPTS_11 -f java/java.completion test
-
-      - name: java.editor
-        if: env.test_java == 'true' && success()
-        run: .github/retry.sh ant $OPTs $OPTS_11 -f java/java.editor test-unit
-
-      - name: java.source
-        run: ant $OPTS $OPTS_11 -f java/java.source test-unit
-
-      - name: java.source.base
-        if: env.test_java == 'true' && success()
-        run: .github/retry.sh ant $OPTS $OPTS_11 -f java/java.source.base test
-
       - name: refactoring.java
         if: env.test_java == 'true' && success()
-        run: ant $OPTS $OPTS_11 -f java/refactoring.java test-unit
+        run: ant $OPTS -f java/refactoring.java test-unit
 
       - name: form
         if: env.test_java == 'true' && success()

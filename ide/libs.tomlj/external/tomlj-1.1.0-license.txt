@@ -1,5 +1,5 @@
 Name: TOML parser in Java
-Version: 1.0.0
+Version: 1.1.0
 Description: A parser for Tom's Obvious, Minimal Language (TOML).
 License: Apache-2.0
 Origin: Apache Software Foundation

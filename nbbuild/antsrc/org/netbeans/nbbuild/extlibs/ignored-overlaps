@@ -70,11 +70,11 @@ enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.strut
 extide/gradle/external/gradle-7.4-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.55.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/commons-compress-1.21.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/libs.tomlj/external/tomlj-1.0.0.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
+extide/gradle/external/gradle-7.4-bin.zip java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
 extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.8.6-bin.zip
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
@@ -104,9 +104,6 @@ ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.24.0.jar java/java.lsp.ser
 # Derby jar is used when run tests, so we can ignore the duplicates
 ide/db/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
 ide/derby/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
-
-# Antlr4 is used internally in two unrelated modules:
-ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
 
 # Only used as testdata (not redistributed) and modules should be testable independed of each other
 webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip are identical

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.languages.toml;
 
-import java.lang.reflect.Field;
 import org.antlr.v4.runtime.misc.IntegerStack;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
@@ -41,31 +40,43 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
     public TomlLexer(LexerRestartInfo<TomlTokenId> info) {
         this.tokenFactory = info.tokenFactory();
         this.input = new LexerInputCharStream(info.input());
-        this.lexer = new org.tomlj.internal.TomlLexer(input);
-        if (info.state() != null) {
-            ((LexerState) info.state()).restore(lexer);
+        try {
+            this.lexer = new org.tomlj.internal.TomlLexer(input);
+            if (info.state() != null) {
+                ((LexerState) info.state()).restore(lexer);
+            }
+            input.markToken();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            throw ex;
         }
     }
 
+    private org.antlr.v4.runtime.Token preFetchedToken = null;
+
     @Override
-    public Token<TomlTokenId> nextToken() {
-        org.antlr.v4.runtime.Token nextToken = lexer.nextToken();
-        if (nextToken.getType() == EOF) {
-            return null;
+    public org.netbeans.api.lexer.Token<TomlTokenId> nextToken() {
+        org.antlr.v4.runtime.Token nextToken;
+        if (preFetchedToken != null) {
+            nextToken = preFetchedToken;
+            lexer.getInputStream().seek(preFetchedToken.getStopIndex() + 1);
+            preFetchedToken = null;
+        } else {
+            nextToken = lexer.nextToken();
         }
-        switch (nextToken.getType()) {
-            case TripleQuotationMark:
-            case TripleApostrophe:
-                return token(ML_STRING_START);
+        int tokenType = nextToken.getType();
+        switch (tokenType) {
+            case EOF:
+                return null;
 
             case StringChar:
+                return collate(StringChar, STRING);
+                
+            case TripleQuotationMark:
+            case TripleApostrophe:
             case QuotationMark:
             case Apostrophe:
-                return token(STRING);
-
-            case MLBasicStringEnd:
-            case MLLiteralStringEnd:
-                return token(ML_STRING_END);
+                return token(STRING_QUOTE);
 
             case Comma:
             case ArrayStart:
@@ -93,6 +104,7 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
                 return token(TomlTokenId.WHITESPACE);
             case Error:
                 return token(ERROR);
+
             case DecimalInteger:
             case HexInteger:
             case OctalInteger:
@@ -115,13 +127,21 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
             case Z:
             case TimeDelimiter:
             case DateDigits:
-            case DateComma:
                 return token(DATE);
             default:
                 return token(ERROR);
         }
     }
 
+    protected org.netbeans.api.lexer.Token<TomlTokenId> collate(int tokenType, TomlTokenId tokenId) {
+        preFetchedToken = lexer.nextToken();
+        while (preFetchedToken.getType() == tokenType) {
+            preFetchedToken = lexer.nextToken();
+        }
+        lexer.getInputStream().seek(preFetchedToken.getStartIndex());
+        return token(tokenId);
+    }
+    
     @Override
     public Object state() {
         return new LexerState(lexer);
@@ -137,9 +157,6 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
     }
 
     private static class LexerState {
-        private static Field ARRAY_DEPTH;
-        private static Field ARRAY_DEPTH_STACK;
-
         final int state;
         final int mode;
         final IntegerStack modes;
@@ -147,30 +164,13 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
         final int arrayDepth;
         final IntegerStack arrayDepthStack;
 
-        static {
-            try {
-                // Hack accessing private state parts of TomlLexer
-                // See: https://github.com/tomlj/tomlj/pull/42
-                ARRAY_DEPTH = org.tomlj.internal.TomlLexer.class.getDeclaredField("arrayDepth");
-                ARRAY_DEPTH.setAccessible(true);
-                ARRAY_DEPTH_STACK = org.tomlj.internal.TomlLexer.class.getDeclaredField("arrayDepthStack");
-                ARRAY_DEPTH_STACK.setAccessible(true);
-            } catch (ReflectiveOperationException ex) {
-            }
-        }
-
         LexerState(org.tomlj.internal.TomlLexer lexer) {
             this.state= lexer.getState();
 
             this.mode = lexer._mode;
             this.modes = new IntegerStack(lexer._modeStack);
-
-            try {
-                this.arrayDepth = ARRAY_DEPTH.getInt(lexer);
-                this.arrayDepthStack = new IntegerStack((IntegerStack)ARRAY_DEPTH_STACK.get(lexer));
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.arrayDepth = lexer.arrayDepth;
+            this.arrayDepthStack = new IntegerStack(lexer.arrayDepthStack);
         }
 
         public void restore(org.tomlj.internal.TomlLexer lexer) {
@@ -178,12 +178,8 @@ public final class TomlLexer implements Lexer<TomlTokenId> {
             lexer._modeStack.addAll(modes);
             lexer._mode = mode;
 
-            try {
-                ARRAY_DEPTH.setInt(lexer, arrayDepth);
-                ((IntegerStack) ARRAY_DEPTH_STACK.get(lexer)).addAll(arrayDepthStack);
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
+            lexer.arrayDepth = arrayDepth;
+            lexer.arrayDepthStack.addAll(arrayDepthStack);
         }
 
         @Override

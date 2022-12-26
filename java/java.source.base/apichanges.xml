@@ -25,6 +25,19 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="SourceUtils.getFile">
+        <api name="javasource_base" />
+        <summary>Hint file names to SourceUtils.getFile</summary>
+        <version major="1" minor="2.60"/>
+        <date day="26" month="12" year="2022"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            It is possible to hint <code>SourceUtils.getFile</code> list
+            of file names to searh for.
+        </description>
+        <class name="SourceUtils" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeUtilities.isClassFile">
         <api name="javasource_base" />
         <summary>Adding TreeUtilities.isExpressionStatement(ExpressionTree)</summary>

@@ -93,6 +93,19 @@ public final class FolderBasedController extends OptionsPanelController implemen
         return new FolderBasedController("MarkOccurrences/", "netbeans.optionsDialog.editor.markOccurences", false);
     }
 
+    @OptionsPanelController.SubRegistration(
+	id="InlineHints",
+        displayName="#CTL_InlineHints_DisplayName",
+        location=OptionsDisplayer.EDITOR,
+        keywords="#KW_InlineHints",
+        keywordsCategory="Editor/InlineHints",
+        position=500
+//        toolTip="#CTL_MarkOccurences_ToolTip"
+    )
+    public static OptionsPanelController inlineHints() {
+        return new FolderBasedController("InlineHints/", "netbeans.optionsDialog.editor.inlineHints", false);
+    }
+
     public static OptionsPanelController create (Map args) {
         FolderBasedController folderBasedController = new FolderBasedController(
                 (String) args.get (OPTIONS_SUB_FOLDER),

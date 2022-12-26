@@ -32,15 +32,12 @@ import javax.swing.text.Position.Bias;
 import javax.swing.text.View;
 import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 
-/**
- * TODO
- */
+
 public final class PrependedTextView extends EditorView {
 
     private final AttributeSet attributes;
     private final EditorView delegate;
     private final TextLayout prependedTextLayout;
-    private final double leftShift;
     private final double prependedTextWidth;
 
     public PrependedTextView(DocumentViewOp op, AttributeSet attributes, EditorView delegate) {
@@ -49,10 +46,13 @@ public final class PrependedTextView extends EditorView {
         this.delegate = delegate;
         Font font = ViewUtils.getFont(attributes, op.getDefaultHintFont());
         prependedTextLayout = op.createTextLayout((String) attributes.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND), font);
-        Rectangle2D textBounds = prependedTextLayout.getBounds(); //TODO: allocation!
+        // Advance represents the width of the full string, including leading
+        // and trailing spaces
+        float width = prependedTextLayout.getAdvance();
+        // The prependTextWidth is rounded to full char widths, so that layout
+        // is not destroyed too much
         double em = op.getDefaultCharWidth();
-        leftShift = em / 2;
-        prependedTextWidth = Math.ceil(textBounds.getWidth() + em);
+        prependedTextWidth = Math.ceil(width / em) * em;
     }
 
     @Override
@@ -93,7 +93,7 @@ public final class PrependedTextView extends EditorView {
         }
 
         g.setColor(Color.gray);
-        span.setRect(span.getX() + leftShift, span.getY(), prependedTextWidth - 2 * leftShift, span.getHeight());
+        span.setRect(span.getX(), span.getY(), prependedTextWidth, span.getHeight());
         HighlightsViewUtils.paintTextLayout(g, span, prependedTextLayout, getDocumentView());
     }
 

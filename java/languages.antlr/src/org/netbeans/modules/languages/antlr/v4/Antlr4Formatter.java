@@ -119,6 +119,11 @@ public class Antlr4Formatter implements Formatter {
                 tstart = token.getStartIndex();
                 tstop = token.getStopIndex();
             }
+
+            if ((cstart == cend) && (cstart == doc.getLength())) {
+                // Pressed enter at the end of the file
+                context.modifyIndent(cstart, inRule ? indentSize : 0);
+            }
         } catch (BadLocationException ex) {}
     }
 

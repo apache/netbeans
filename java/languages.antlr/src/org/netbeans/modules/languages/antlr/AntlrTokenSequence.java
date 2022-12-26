@@ -85,7 +85,7 @@ public final class AntlrTokenSequence {
                 }
                 
             } else {
-                previous((t) -> t.getStartIndex() > offset);
+                previous((t) -> t.getStartIndex() < offset);
             }
         }
         

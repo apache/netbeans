@@ -91,7 +91,7 @@ is the proper place.
             <author login="sdedic"/>
             <compatibility semantic="compatible" addition="yes"/>
             <description>
-                Tasks declared by other projects are marked as 'external'. Tasjs can report their declaring project's path.
+                Tasks declared by other projects are marked as 'external'. Tasks can report their declaring project's path.
             </description>
             <class package="org.netbeans.modules.gradle.api" name="GradleTask"/>
         </change>

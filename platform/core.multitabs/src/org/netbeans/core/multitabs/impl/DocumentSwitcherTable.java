@@ -27,6 +27,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultButtonModel;
 import javax.swing.Icon;
@@ -47,6 +49,7 @@ import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabbedContainer;
 import org.netbeans.swing.tabcontrol.event.TabActionEvent;
 import org.openide.awt.CloseButtonFactory;
+import org.openide.windows.TopComponent;
 
 /**
  * Slightly enhanced switcher table which adds close button to selected item
@@ -77,10 +80,8 @@ class DocumentSwitcherTable extends SwitcherTable {
     }
 
     @Override
-    public SwitcherTableItem getSelectedItem() {
+    public Item getSelectedItem() {
         Item res = ( Item ) getValueAt(getSelectedRow(), getSelectedColumn());
-        if( null != res && res.isSeparator )
-            return null; //don't hide the popup when a project separator is selected
         return res;
     }
 
@@ -90,7 +91,7 @@ class DocumentSwitcherTable extends SwitcherTable {
 
         boolean selected = row == getSelectedRow() &&
                 column == getSelectedColumn() && item != null;
-        boolean separator = null != item && item.isSeparator;
+        boolean separator = null != item && item.isSeparator();
 
         ITEM_BORDER.color = null;
         Component renComponent = super.prepareRenderer( renderer, row, column );
@@ -105,10 +106,10 @@ class DocumentSwitcherTable extends SwitcherTable {
                 lbl.setBorder( ITEM_BORDER );
             }
         }
-        if( selected && !separator ) {
+        if( selected ) {
             JPanel res = new JPanel( new BorderLayout(5, 0) );
             res.add( renComponent, BorderLayout.CENTER );
-            if( TabDataRenderer.isClosable( item.getTabData() ) ) {
+            if( separator || TabDataRenderer.isClosable( item.getTabData() )) {
                 res.add( btnClose, BorderLayout.EAST );
             }
             res.setBackground( renComponent.getBackground() );
@@ -127,15 +128,20 @@ class DocumentSwitcherTable extends SwitcherTable {
     private int lastCol = -1;
     private boolean inCloseButtonRect = false;
 
+    /**
+     * 
+     * @return True if popup window should be closed. (e.g. when no more 
+     * tabs are left opened)
+     */
     boolean onMouseEvent( MouseEvent e ) {
         Point p = e.getPoint();
         p = SwingUtilities.convertPoint((Component) e.getSource(), p, this);
         int selRow = getSelectedRow();
         int selCol = getSelectedColumn();
-        if( selRow < 0 || selCol < 0 )
+        if ( selRow < 0 || selCol < 0 )
             return false;
         Rectangle rect = getCellRect( selRow, selCol, false );
-        if( rect.contains( p ) ) {
+        if ( rect.contains( p ) ) {
             Dimension size = btnClose.getPreferredSize();
             int x = rect.x+rect.width-size.width;
             int y = rect.y + (rect.height-size.height)/2;
@@ -143,15 +149,18 @@ class DocumentSwitcherTable extends SwitcherTable {
             boolean inButton = btnRect.contains( p );
             boolean mustRepaint = inCloseButtonRect != inButton;
             inCloseButtonRect = inButton;
-            if( inButton ) {
-                if( e.getID() == MouseEvent.MOUSE_PRESSED ) {
+            if ( inButton ) {
+                if ( e.getID() == MouseEvent.MOUSE_PRESSED ) {
                     Item item = ( Item ) getModel().getValueAt( selRow, selCol );
                     TabData tab = item.getTabData();
+                    int tabSize = controller.getTabModel().size();
                     int tabIndex = controller.getTabModel().indexOf( tab );
                     if( tabIndex >= 0 ) {
                         TabActionEvent tae = new TabActionEvent( this, TabbedContainer.COMMAND_CLOSE, tabIndex );
                         controller.postActionEvent( tae );
-                        return true;
+                        return tabSize == 1;
+                    } else if ( item.isSeparator() ) {
+                        return closeSelectedDocumentList();
                     }
                 }
             }
@@ -174,7 +183,50 @@ class DocumentSwitcherTable extends SwitcherTable {
         }
         return null;
     }
+    /**
+     * Method closes tabs in selected document list
+     * 
+     * @return True if there are no more tabs left opened in other projects
+     */
+    boolean closeSelectedDocumentList() {
+        List<TabData> tabs = new ArrayList<>(controller.getTabModel().getTabs());
+        Item item = ( Item ) getModel().getValueAt( getSelectedRow(), getSelectedColumn());
+        ProjectProxy project = item.getProject();
+        ProjectSupport projectSupport = ProjectSupport.getDefault();
+        int numOfOtherTabs = 0;
+        for ( TabData tab : tabs ) {  
+            ProjectProxy projectForTab = projectSupport.getProjectForTab( tab );
+            if (( project == null && projectForTab == null ) || ( projectForTab != null && projectForTab.equals( project ))) {
+                Component tabComponent = tab.getComponent();
+                if (tabComponent instanceof TopComponent) {
+                    TopComponent curTC = (TopComponent) tabComponent;
+                    /* As in o.n.core.windows.actions.ActionUtils.closeAll(Iterable<TopComponent>).
+                    We have to be a little more general here since, theoretically, there could be
+                    tab components that do not extend from TopComponent. */
+                    if(!isClosingEnabled(curTC)) {
+                        continue;
+                    }
+                    curTC.putClientProperty("inCloseAll", Boolean.TRUE);
+                    if (!curTC.close()) {
+                        break;
+                    }
+                } else {
+                    int tabIndex = controller.getTabModel().indexOf( tab );
+                    TabActionEvent tae = new TabActionEvent( this, TabbedContainer.COMMAND_CLOSE, tabIndex );
+                    controller.postActionEvent( tae );
+                }
+            } else {
+                numOfOtherTabs++;
+            }
+        }
+        return numOfOtherTabs == 0;
+    }
 
+    // Copied from o.n.core.windows.Switches.isClosingEnabled (in private package).
+    private static boolean isClosingEnabled( TopComponent tc ) {
+        return !Boolean.TRUE.equals(tc.getClientProperty(TopComponent.PROP_CLOSING_DISABLED));
+    }
+    
     private JButton createCloseButton() {
         JButton res = CloseButtonFactory.createBigCloseButton();
         res.setModel( new DefaultButtonModel() {
@@ -222,6 +274,10 @@ class DocumentSwitcherTable extends SwitcherTable {
 
         public TabData getTabData() {
             return tabData;
+        }
+        
+        public boolean isSeparator() {
+            return isSeparator;
         }
 
         @Override

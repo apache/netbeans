@@ -298,9 +298,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     function checkConflict(): void {
         let conf = workspace.getConfiguration();
         if (conf.get("netbeans.conflict.check") && conf.get("netbeans.javaSupport.enabled")) {
-            const id = 'redhat.java';
-            let e = vscode.extensions.getExtension(id);
-            if (e && workspace.name) {
+            if (vscode.extensions.getExtension('redhat.java')) {
                 if (vscode.extensions.getExtension('oracle-labs-graalvm.gcn')) {
                     conf.update("netbeans.javaSupport.enabled", false, true);
                 } else {

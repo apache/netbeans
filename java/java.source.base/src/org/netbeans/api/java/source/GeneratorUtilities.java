@@ -133,7 +133,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
-import static javax.lang.model.type.TypeKind.VOID;
 
 /**
  *
@@ -1346,6 +1345,7 @@ public final class GeneratorUtilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     if (currentToImportElement.getEnclosingElement().getKind() == ElementKind.PACKAGE)
                         el = currentToImportElement.getEnclosingElement();
                     break;

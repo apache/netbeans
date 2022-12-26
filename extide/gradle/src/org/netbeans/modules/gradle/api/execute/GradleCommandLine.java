@@ -60,6 +60,7 @@ import org.openide.util.Utilities;
  */
 public final class GradleCommandLine implements Serializable {
 
+    private static final String GRADLE_PROJECT_PROPERTY = "gradle-project"; //NOI18N
     private static final Logger LOGGER = Logger.getLogger(GradleCommandLine.class.getName());
     private static final String PROP_JVMARGS = "org.gradle.jvmargs"; // NOI18N
     /**

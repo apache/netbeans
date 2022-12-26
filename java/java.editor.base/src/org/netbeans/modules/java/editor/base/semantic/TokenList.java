@@ -361,8 +361,12 @@ public class TokenList {
         });
     }
 
-    public int offset() {
+    public int originalOffset() {
         return ts != null ? ts.offset() : -1;
+    }
+
+    public int embeddedOffset() {
+        return ts != null ? info.getSnapshot().getEmbeddedOffset(ts.offset()) : -1;
     }
 
     public int index() {

@@ -40,6 +40,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
+import java.util.prefs.Preferences;
 import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import java.util.stream.Collectors;
@@ -67,6 +68,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 
@@ -314,7 +316,11 @@ public abstract class TestBase extends NbTestCase {
 
         l.await();
 
-        assertEquals(Arrays.asList(expected),
+        assertEquals(highlights.stream()
+                               .map(h -> h.getHighlightTestData())
+                               .map(e -> "\"" + e + "\",")
+                               .collect(Collectors.joining("\n")),
+                     Arrays.asList(expected),
                      highlights.stream()
                                .map(h -> h.getHighlightTestData())
                                .collect(Collectors.toList()));
@@ -370,6 +376,13 @@ public abstract class TestBase extends NbTestCase {
 
     protected final void setShowPrependedText(boolean showPrependedText) {
         this.showPrependedText = showPrependedText;
+    }
+
+    protected final void setInlineHints(boolean parameterNames, boolean chainedTypes, boolean varType) {
+        Preferences preferences = NbPreferences.root().node("/org/netbeans/modules/java/editor/InlineHints/default");
+        preferences.putBoolean(SemanticHighlighterBase.JAVA_INLINE_HINT_PARAMETER_NAME, parameterNames);
+        preferences.putBoolean(SemanticHighlighterBase.JAVA_INLINE_HINT_CHAINED_TYPES, chainedTypes);
+        preferences.putBoolean(SemanticHighlighterBase.JAVA_INLINE_HINT_VAR_TYPE, varType);
     }
 
     final class ErrorDescriptionSetterImpl implements SemanticHighlighterBase.ErrorDescriptionSetter {

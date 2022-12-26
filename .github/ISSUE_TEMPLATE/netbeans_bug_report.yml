@@ -28,7 +28,7 @@ body:
       multiple: false
       options:
         - "Apache NetBeans 15"
-        # - "Apache NetBeans 16 release candidate"
+        - "Apache NetBeans 16 release candidate"
         - "Apache NetBeans latest daily build"
     validations:
       required: true
@@ -64,12 +64,10 @@ body:
       multiple: false
       options:
         - "No / Don't know"
+        - "Apache NetBeans 15"
         - "Apache NetBeans 14"
         - "Apache NetBeans 13"
-        - "Apache NetBeans 12.6"
-        - "Apache NetBeans 12.5"
-        - "Apache NetBeans 12.4"
-        - "Apache NetBeans 12.3 or earlier"
+        - "Apache NetBeans 12.6 or earlier"
     validations:
       required: true
   - type: input

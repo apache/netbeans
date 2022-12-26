@@ -239,6 +239,17 @@ final class DocRenderer {
         private static final Pattern DESC_HEADER_PATTERN = Pattern.compile("(\r?\n)*(.*?((\r?\n){2,}|\\.\\s*\r?\n)|.*)", Pattern.DOTALL); // NOI18N
         private static final Pattern INLINE_INHERITDOC_PATTERN = Pattern.compile("\\{@inheritdoc *\\}", Pattern.CASE_INSENSITIVE); // NOI18N
         private static final ArrayList<String> LINK_TAGS = new ArrayList<>();
+        // see: https://pear.php.net/package/PhpDocumentor/docs/latest/phpDocumentor/tutorial_tags.inlineinheritdoc.pkg.html
+        // phpdocumentor separates a doc comment into a header and description.
+        // only description is replaced.
+        // e.g.
+        // /**
+        //  * Header.
+        //  * Description.
+        //  */
+        // /** {@inheritdoc} */ -> /** Description. */
+        private static final boolean INHERITDOC_FOR_PHPDOCUMENTOR = Boolean.getBoolean("nb.php.editor.inheritDocForPhpdocumentor"); // NOI18N
+        static volatile boolean UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER = false; // for unit tests
 
         static {
             LINK_TAGS.add("@link"); // NOI18N
@@ -633,12 +644,15 @@ final class DocRenderer {
             if (description == null) {
                 return parentDescription;
             }
-            if (description != null && hasInlineInheritdoc(description)) {
+            if (hasInlineInheritdoc(description)) {
                 if (parentDescription != null && !parentDescription.trim().isEmpty()) {
                     if (INLINE_INHERITDOC_PATTERN.matcher(description.trim()).matches()) {
                         return parentDescription;
                     }
-                    String inheritdoc = removeDescriptionHeader(parentDescription);
+                    String inheritdoc = parentDescription;
+                    if (INHERITDOC_FOR_PHPDOCUMENTOR || UNIT_TEST_INHERITDOC_FOR_PHPDOCUMENTER) {
+                        inheritdoc = removeDescriptionHeader(parentDescription);
+                    }
                     return replaceInlineInheritdoc(description, inheritdoc);
                 }
             }
@@ -811,6 +825,12 @@ final class DocRenderer {
             } else if (indexedElement instanceof InterfaceElement) {
                 InterfaceElement interfaceElement = (InterfaceElement) indexedElement;
                 inheritedElements.addAll(getAllInheritedInterfaces(interfaceElement));
+            } else if (indexedElement instanceof FieldElement) {
+                FieldElement fieldElement = (FieldElement) indexedElement;
+                inheritedElements.addAll(getAllOverriddenFields(fieldElement));
+            } else if (indexedElement instanceof TypeConstantElement) {
+                TypeConstantElement constElement = (TypeConstantElement) indexedElement;
+                inheritedElements.addAll(getAllOverriddenConstants(constElement));
             }
             return inheritedElements;
         }
@@ -973,6 +993,62 @@ final class DocRenderer {
                 return Collections.emptySet();
             }
             return index.getInheritedMethods(type);
+        }
+
+        private static List<FieldElement> getAllOverriddenFields(FieldElement field) {
+            List<FieldElement> fields = new ArrayList<>();
+            getOverriddenFields(field, fields);
+            return fields;
+        }
+
+        private static void getOverriddenFields(FieldElement field, List<FieldElement> fields) {
+            Set<FieldElement> overriddenFields = getOverriddenFields(field);
+            fields.addAll(overriddenFields);
+            for (FieldElement overriddenField : overriddenFields) {
+                getOverriddenFields(overriddenField, fields);
+            }
+        }
+
+        private static Set<FieldElement> getOverriddenFields(FieldElement field) {
+            ElementFilter fieldNameFilter = ElementFilter.forName(NameKind.exact(field.getName()));
+            return fieldNameFilter.filter(getInheritedFields(field));
+        }
+
+        private static Set<FieldElement> getInheritedFields(FieldElement field) {
+            Index index = getIndex(field);
+            TypeElement type = field.getType();
+            if (type == null) {
+                return Collections.emptySet();
+            }
+            return index.getInheritedFields(type);
+        }
+
+        private static List<TypeConstantElement> getAllOverriddenConstants(TypeConstantElement constant) {
+            List<TypeConstantElement> constants = new ArrayList<>();
+            getOverriddenConstants(constant, constants);
+            return constants;
+        }
+
+        private static void getOverriddenConstants(TypeConstantElement constant, List<TypeConstantElement> constants) {
+            Set<TypeConstantElement> overriddenConstants = getOverriddenConstants(constant);
+            constants.addAll(overriddenConstants);
+            for (TypeConstantElement overriddenConstant : overriddenConstants) {
+                getOverriddenConstants(overriddenConstant, constants);
+            }
+        }
+
+        private static Set<TypeConstantElement> getOverriddenConstants(TypeConstantElement constant) {
+            ElementFilter constantNameFilter = ElementFilter.forName(NameKind.exact(constant.getName()));
+            return constantNameFilter.filter(getInheritedConstants(constant));
+        }
+
+        private static Set<TypeConstantElement> getInheritedConstants(TypeConstantElement constant) {
+            Index index = getIndex(constant);
+            TypeElement type = constant.getType();
+            if (type == null) {
+                return Collections.emptySet();
+            }
+            return index.getInheritedTypeConstants(type);
         }
 
         @CheckForNull

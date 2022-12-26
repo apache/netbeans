@@ -78,17 +78,25 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     private static final RequestProcessor PROCESSOR = new RequestProcessor("Maven ComandLine Output Redirection", Integer.getInteger("maven.concurrent.builds", 16) * 2); //NOI18N
     private static final Logger LOG = Logger.getLogger(CommandLineOutputHandler.class.getName());
     private InputOutput inputOutput;
-    /*test*/ static final Pattern DOWNLOAD = Pattern.compile("^(\\d+(/\\d*)? ?(M|K|b|KB|B|\\?)\\s*)+$"); //NOI18N
-    private static final Pattern linePattern = Pattern.compile("\\[(DEBUG|INFO|WARNING|ERROR|FATAL)\\] (.*)"); // NOI18N
+
+    /*
+     * example: '[WARN] [stderr] Exception in thread "main" java.lang.UnsupportedOperationException'
+     * @see Output#mapLevel for details
+     */
+    private static final Pattern linePattern = Pattern.compile("(\\[(DEBUG|TRACE|INFO|WARN|WARNING|ERROR|FATAL)\\]\\s)?(?:\\[(?:stderr|stdout)\\]\\s)?(.*)"); // NOI18N
+
     public static final Pattern startPatternM2 = Pattern.compile("\\[INFO\\] \\[([\\w]*):([\\w]*)[ ]?.*\\]"); // NOI18N
     public static final Pattern startPatternM3 = Pattern.compile("\\[INFO\\] --- (\\S+):\\S+:(\\S+)(?: [(]\\S+[)])? @ \\S+ ---"); // ExecutionEventLogger.mojoStarted NOI18N
+
     private static final Pattern mavenSomethingPlugin = Pattern.compile("maven-(.+)-plugin"); // NOI18N
     private static final Pattern somethingMavenPlugin = Pattern.compile("(.+)-maven-plugin"); // NOI18N
+
     /** @see org.apache.maven.cli.ExecutionEventLogger#logReactorSummary */
     static final Pattern reactorFailure = Pattern.compile("\\[INFO\\] (.+) [.]* FAILURE \\[.+\\]"); // NOI18N
-    private static final Pattern stackTraceElement = OutputUtils.linePattern;
-    
     public static final Pattern reactorSummaryLine = Pattern.compile("(.+) [.]* (FAILURE|SUCCESS) (\\[.+\\])?"); // NOI18N
+
+    private static final Pattern stackTraceElement = OutputUtils.linePattern;
+
     private OutputWriter stdOut;
     private String currentProject;
     private String currentTag;
@@ -107,6 +115,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     private boolean inStackTrace = false;
     private boolean addMojoFold = false;
     private boolean addProjectFold = false;
+    private boolean foldsBroken;
     private URL[] mavencoreurls;
 
     public CommandLineOutputHandler(InputOutput io, Project proj, ProgressHandle hand, RunConfig config, boolean createVisitorContext) {
@@ -314,31 +323,27 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                         checkSleepiness();
                     }
                     
-                    boolean isDownloadProgress = false;
                     if(line.length() > 0 && line.charAt(line.length() - 1) == '\r') {
-                        // issue #252514
-                        if (DOWNLOAD.matcher(line).matches()) {
-                            isDownloadProgress = true;
-                        } else {
-                            line = line.substring(0, line.length() - 1);
-                        }
+                        line = line.substring(0, line.length() - 1);
                     }
-                    if(!isDownloadProgress) {
-                        Matcher match = linePattern.matcher(line);
-                        if (match.matches()) {
-                            String levelS = match.group(1);
-                            Level level = Level.valueOf(levelS);
-                            String text = match.group(2);
-                            updateFoldForException(text);
-                            processLine(MavenSettings.getDefault().isShowLoggingLevel() ? line : text, stdOut, level);
-                            if (level == Level.INFO && contextImpl == null) { //only perform for maven 2.x now
-                                checkProgress(text);
-                            }
+                    Matcher lineMatcher = linePattern.matcher(line);
+                    if (lineMatcher.matches()) {
+                        String level_group = lineMatcher.group(1);
+                        Level level = mapLevel(lineMatcher.group(2));
+                        String msg = lineMatcher.group(3);
+                        updateFoldForException(msg);
+                        if (MavenSettings.getDefault().isShowLoggingLevel() && level_group != null) {
+                            processLine(level_group + msg, stdOut, level);
                         } else {
-                            // oh well..
-                            updateFoldForException(line);
-                            processLine(line, stdOut, Level.INFO);
+                            processLine(msg, stdOut, level);
                         }
+                        if (level == Level.INFO && contextImpl == null) { //only perform for maven 2.x now
+                            checkProgress(msg);
+                        }
+                    } else {
+                        // shouldn't happen since linePattern should match everything
+                        updateFoldForException(line);
+                        processLine(line, stdOut, Level.INFO);
                     }
                     if (contextImpl == null && firstFailure == null) {
                         Matcher match = reactorFailure.matcher(line);
@@ -350,11 +355,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                     //however there's no other way to have the proper line marked as beginning of a section (as the event comes first)
                     //without this, the last line of previous output would be marked as beginning of the fold.
                     if (addMojoFold && line.startsWith("[INFO] ---")) {     //NOI18N
-                        currentTreeNode.startFold(inputOutput);
+                        foldsBroken |= currentTreeNode.startFold(inputOutput);
                         addMojoFold = false;
                     }
                     if (addProjectFold && line.startsWith("[INFO] Building")) {
-                        currentTreeNode.startFold(inputOutput);
+                        foldsBroken |= currentTreeNode.startFold(inputOutput);
                         addProjectFold = false;
                     }
                     line = nextLine != null ? nextLine : readLine();
@@ -372,6 +377,24 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                     str.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                }
+            }
+        }
+
+        // mvnd uses standard SLF4J levels while mvn prints WARN as WARNING
+        // see MavenSimpleLogger#renderLevel(int) in the maven repo
+        private Level mapLevel(String string) {
+            if (string == null) {
+                return Level.INFO;
+            } else if ("WARN".equals(string)) {
+                return Level.WARNING;
+            } else if ("TRACE".equals(string)) {
+                return Level.DEBUG; // where is trace?
+            } else {
+                try {
+                    return Level.valueOf(string);
+                } catch (IllegalArgumentException ex) {
+                    return Level.INFO;
                 }
             }
         }
@@ -399,7 +422,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
          * or is another text, and update folds accordingly.
          */
         private void updateFoldForException(String line) {
-            if (stackTraceElement.matcher(line).find()) {
+            if (line.endsWith(")") && stackTraceElement.matcher(line).matches()) {
                 inStackTrace = true;
                 if (!currentTreeNode.hasInnerOutputFold()) {
                     currentTreeNode.startInnerOutputFold(inputOutput);
@@ -545,6 +568,9 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     }
 
     private void trimTree(ExecutionEventObject obj) {
+        if (foldsBroken) {
+            return;
+        }
         ExecutionEventObject start = currentTreeNode.getStartEvent();
         while (!matchingEvents(obj.type, start.type)) { //#229877
             ExecutionEventObject innerEnd = createEndForStart(start);

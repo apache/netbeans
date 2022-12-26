@@ -1,0 +1,9 @@
+<proxies>
+    <proxy>
+        <id>netbeans-default-proxy</id>
+        <active>true</active>
+        <protocol>http</protocol>
+        <host>${proxyHost}</host>
+        <port>${proxyPort}</port>
+    </proxy>
+</proxies>

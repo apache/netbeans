@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.libs.antlr4.runtime
+OpenIDE-Module: org.netbeans.libs.antlr4.runtime/2
 OpenIDE-Module-Implementation-Version: 1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/antlr4/runtime/Bundle.properties
 AutoUpdate-Show-In-Client: false

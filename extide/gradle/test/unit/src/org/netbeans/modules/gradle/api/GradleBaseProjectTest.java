@@ -247,6 +247,11 @@ public class GradleBaseProjectTest extends AbstractGradleProjectTestCase {
         return p;
     }
     
+    public void testOldGradle611ProjectLoads() throws Exception {
+        Project p = makeProjectWithWrapper("projects/oldgradle/basic", "6.1.1");
+        assertProjectLoadedWithNoProblems(p, "6.1.1");
+    }
+
     public void testOldGradle683ProjectLoads() throws Exception {
         Project p = makeProjectWithWrapper("projects/oldgradle/basic", "6.8.3");
         assertProjectLoadedWithNoProblems(p, "6.8.3");

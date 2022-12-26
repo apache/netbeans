@@ -537,7 +537,7 @@ public final class Startup {
           // Modify default font size to the font size passed as a command-line parameter
             if(uiFontSize>0) {
                 Integer customFontSize = new Integer (uiFontSize);
-                UIManager.put ("customFontSize", customFontSize);
+                UIManager.put (LFCustoms.CUSTOM_FONT_SIZE, customFontSize);
             }
             Startup.uiClass = uiClass;
             Startup.themeURL = themeURL;

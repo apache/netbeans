@@ -78,6 +78,7 @@ import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
@@ -119,6 +120,7 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -179,6 +181,10 @@ public final class Server {
                         return new SemanticTokensParams(new TextDocumentIdentifier(""));
                     }
                 });
+            })
+            .setExceptionHandler((t) -> {
+                LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
+                return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
             })
             .create();
     }
@@ -255,6 +261,9 @@ public final class Server {
                         Lookups.executeWith(ll, () -> {
                             try {
                                 delegate.consume(msg);
+                            } catch (RuntimeException | Error e) {
+                                LOG.log(Level.WARNING, "Error occurred during message dispatch", e);
+                                throw e;
                             } finally {
                                 // cancel while the OperationContext is still active.
                                 if (ftoCancel != null) {
@@ -1079,10 +1088,17 @@ public final class Server {
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
         boolean b = caps != null && caps.wantsGroovySupport();
         try {
-            Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
+            Class<?> clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
             Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);
             m.setAccessible(true);
             m.invoke(null, b);
+        } catch (ClassNotFoundException ex) {
+            // java.lang.ClassNotFoundException is expected when Groovy support is not activated / enabled. Do not log, if the
+            // client wants groovy disabled, which is obviuously true in this case :)
+            if (b && !groovyClassWarningLogged) {
+                groovyClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Groovy indexing: Groovy support is not enabled");
+            }
         } catch (ReflectiveOperationException ex) {
             if (!groovyClassWarningLogged) {
                 groovyClassWarningLogged = true;

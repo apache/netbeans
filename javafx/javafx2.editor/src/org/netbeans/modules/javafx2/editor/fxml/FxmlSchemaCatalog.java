@@ -54,7 +54,7 @@ public class FxmlSchemaCatalog implements CatalogReader, CatalogDescriptor2, Ent
     private Map<String, String> publicIdMap;
     
     public FxmlSchemaCatalog() {
-        Map m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         m.put(FXML_INSTANCE_URI, FXML_INSTANCE_LOCAL);
         m.put(FXML_INSTANCE_URI2, FXML_INSTANCE_LOCAL);
         m.put(JavaFXEditorUtils.FXML_FX_NAMESPACE_CURRENT, FXML_INSTANCE_LOCAL);

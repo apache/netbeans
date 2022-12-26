@@ -380,7 +380,7 @@ public class UtilitiesTest extends TestBase {
         String golden = "case $expr: foo bar; $stmts$; ";
         assertEquals(golden.replaceAll("[ \n\r]+", " "), result.toString().replaceAll("[ \n\r]+", " "));
         assertDiagnostics(errors, "19-19:compiler.err.expected");
-        assertPositions(result, positions[0], code, "$expr", "$stmts$", "$stmts$;", "case $expr: foo bar $stmts$;", "foo", "foo bar ");
+        assertPositions(result, positions[0], code, "$expr", "$expr", "$stmts$", "$stmts$;", "case $expr: foo bar $stmts$;", "foo", "foo bar ");
     }
 
     public void testLambdaPattern() throws Exception {

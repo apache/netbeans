@@ -75,6 +75,7 @@ import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
+import org.netbeans.modules.gradle.execute.GradleNetworkProxySupport;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
@@ -326,6 +327,11 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         Throwable th = ex;
         while (th != null) {
             problems.add(GradleProject.createGradleReport(null, th.getMessage()));
+            ex = th;
+            th = th.getCause();
+            if (ex == th) {
+                break;
+            }
         }
         return problems;
     }
@@ -454,6 +460,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return ret;
     }
 
+    @NbBundle.Messages({
+        "ERR_UserAbort=Project analysis aborted by the user."
+    })
     private static NbProjectInfo retrieveProjectInfo(NbGradleProjectImpl projectImpl, GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl, AtomicBoolean wasOnline) throws GradleConnectionException, IllegalStateException {
         NbProjectInfo ret;
 
@@ -489,8 +498,26 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 }
             }
         }
+
+        BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);        
+        // since we're going online, check the network settings:
+        GradleNetworkProxySupport support = projectImpl.getLookup().lookup(GradleNetworkProxySupport.class);
+        if (support != null) {
+            try {
+                GradleNetworkProxySupport.ProxyResult result = support.checkProxySettings().get();
+                switch (result.getStatus()) {
+                    case ABORT:
+                        LOG.log(Level.FINE, "User cancelled the project load");
+                        throw new IllegalStateException(Bundle.ERR_UserAbort());
+                }
+                action = result.configure(action);
+            } catch (InterruptedException ex) {
+                throw new IllegalStateException(ex);
+            } catch (ExecutionException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
         
-        BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);
         wasOnline.set(true);
         return runInfoAction(action);
     }

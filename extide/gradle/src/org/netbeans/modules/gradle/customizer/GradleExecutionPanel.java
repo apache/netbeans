@@ -18,29 +18,43 @@
  */
 package org.netbeans.modules.gradle.customizer;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.util.Collections;
+import java.util.Set;
+import java.util.prefs.Preferences;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ComboBoxUI;
+import javax.swing.plaf.UIResource;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.util.NbBundle;
-import org.openide.util.NbBundle.Messages;
 
 import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.TrustLevel.*;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
+import org.netbeans.spi.project.AuxiliaryProperties;
+import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author lkishalmi
  */
-@Messages({
-    "GRADLE_TRUST_MSG=<html><p>Executing Gradle can be potentially un-safe as it "
-            + "allows arbitrary code execution.</p><p></p>"
-            + "<p>By trusting this project, and with that all its subprojects, "
-            + "you entitle NetBeans to invoke Gradle to load project details "
-            + "without further confirmation.</p><p></p>"
-            + "<p>Invoking any build related actions, would mark this project "
-            + "automatically trusted.</p>",
-})
 public class GradleExecutionPanel extends javax.swing.JPanel {
+    public static final String HINT_JDK_PLATFORM = "hint.jdkPlatform"; //NOI18N
     
     enum TrustLevel {
         PERMANENT,
@@ -55,35 +69,137 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     }
 
     Project project;
+    JavaRuntimeManager runtimeManager;
+    ChangeListener runtimeChangeListener = (evt) -> managedRuntimeSetup();
+    boolean readOnly = true;
 
     /**
      * Creates new form GradleExecutionPanel
      */
+    @Messages({
+        "NO_RUNTIME_SUPPORT_HINT=Runtime Change is not Supported",
+        "NO_RUNTIME_MANAGEMENT_HINT=Runtime Management is not Supported",
+    })
     public GradleExecutionPanel() {
         initComponents();
-        lbTrustTerms.setText(Bundle.GRADLE_TRUST_MSG());
+        runtimeManager = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+        if (runtimeManager == null) {
+            cbRuntime.setToolTipText(Bundle.NO_RUNTIME_SUPPORT_HINT());
+            btManageRuntimes.setToolTipText(Bundle.NO_RUNTIME_SUPPORT_HINT());
+        } else {
+            runtimeManager.addChangeListener(WeakListeners.change(runtimeChangeListener, runtimeManager));
+            managedRuntimeSetup();
+            if (!runtimeManager.manageRuntimesAction().isPresent()) {
+                btManageRuntimes.setToolTipText(Bundle.NO_RUNTIME_MANAGEMENT_HINT());
+            }
+        }
+
     }
 
     public GradleExecutionPanel(Project project) {
         this();
         this.project = project;
         GradleBaseProject gbp = GradleBaseProject.get(project);
-        if (gbp != null) {
-            lbReadOnly.setVisible(!gbp.isRoot());
-            lbTrustLevel.setEnabled(gbp.isRoot());
-            cbTrustLevel.setEnabled(gbp.isRoot());
-            lbTrustTerms.setEnabled(gbp.isRoot());
-            
-            cbTrustLevel.setModel(new DefaultComboBoxModel<>(TrustLevel.values()));
+        readOnly = (gbp != null) && !gbp.isRoot();
 
-            if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
-                cbTrustLevel.setSelectedItem(PERMANENT);
-            } else if (ProjectTrust.getDefault().isTrusted(project)) {
-                cbTrustLevel.setSelectedItem(TEMPORARY);
-            } else {
-                cbTrustLevel.setSelectedItem(NONE);
+        lbReadOnly.setVisible(readOnly);
+        lbTrustLevel.setEnabled(!readOnly);
+        cbTrustLevel.setEnabled(!readOnly);
+        lbTrustTerms.setEnabled(!readOnly);
+
+        cbTrustLevel.setModel(new DefaultComboBoxModel<>(TrustLevel.values()));
+
+        if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
+            cbTrustLevel.setSelectedItem(PERMANENT);
+            setJavaSettingsEnabled(!readOnly);
+        } else if (ProjectTrust.getDefault().isTrusted(project)) {
+            cbTrustLevel.setSelectedItem(TEMPORARY);
+            setJavaSettingsEnabled(!readOnly);
+        } else {
+            cbTrustLevel.setSelectedItem(NONE);
+            setJavaSettingsEnabled(false);
+        }
+
+        cbRuntime.setRenderer(new RuntimeRenderer());
+        selectRuntime(runtimeId(project));
+
+        setupCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD, true);
+        setupCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS, false);
+    }
+
+    private String runtimeId(Project project) {
+        Project root = ProjectUtils.rootOf(project);
+        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+        String id = aux.get(HINT_JDK_PLATFORM, true);
+        return id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
+    }
+
+    private void selectRuntime(String id) {
+        ComboBoxModel<JavaRuntime> model = cbRuntime.getModel();
+        if (id == null) {
+            model.setSelectedItem(null);
+            return;
+        }
+
+        int index = -1;
+        for (int i = 0; i < model.getSize(); i++) {
+            JavaRuntime rt = model.getElementAt(i);
+            if (rt.getId().equals(id)) {
+                index = i;
+                break;
             }
         }
+        if (index > -1) {
+            model.setSelectedItem(model.getElementAt(index));
+        } else {
+            JavaRuntime broken = JavaRuntimeManager.createJavaRuntime(id, null);
+            model.setSelectedItem(broken);
+            cbRuntime.setForeground(Color.red);
+        }
+    }
+    
+    @Messages({
+        "# {0} - the name of the setting property",
+        "COMPILE_DISABLED_HINT=<html>This option is currently specificly controlled"
+        + " through your Gradle project (most likely through "
+        + "<b>gradle.properties</b>) by <br/> <b>netbeans.{0}</b> property."
+    })
+    private void setupCheckBox(JCheckBox check, String property, boolean defaultValue) {
+        Project root = ProjectUtils.rootOf(project);
+        GradleBaseProject gbp = GradleBaseProject.get(root);
+        if (gbp != null) {
+            if (gbp.getNetBeansProperty(property) != null) {
+                check.setEnabled(!readOnly);
+                check.setSelected(Boolean.parseBoolean(gbp.getNetBeansProperty(property)));
+                check.setToolTipText(Bundle.COMPILE_DISABLED_HINT(property));
+            } else {
+                Preferences prefs = NbGradleProject.getPreferences(root, false);
+                check.setSelected(prefs.getBoolean(property, defaultValue));
+            }
+        }
+    }
+
+    private void managedRuntimeSetup() {
+        int selected = cbRuntime.getSelectedIndex();
+        JavaRuntime runtime = selected != -1 ? cbRuntime.getModel().getElementAt(selected) : null;
+        Set<JavaRuntime> availabeRuntimes = runtimeManager != null ? runtimeManager.getAvailableRuntimes() : Collections.emptySet();
+        DefaultComboBoxModel<JavaRuntime> model = new DefaultComboBoxModel<>(availabeRuntimes.toArray(new JavaRuntime[0]));
+        cbRuntime.setModel(model);
+        selectRuntime(runtime != null ? runtime.getId() : null);
+    }
+
+    private void setJavaSettingsEnabled(boolean b) {
+        boolean enableRuntime = b && (runtimeManager != null);
+
+        lbRuntime.setEnabled(enableRuntime);
+        cbRuntime.setEnabled(enableRuntime);
+        btManageRuntimes.setEnabled(enableRuntime && runtimeManager.manageRuntimesAction().isPresent());
+
+        cbAugmentedBuild.setEnabled(b);
+        lbAugmentedBuild.setEnabled(b);
+
+        cbIncludeOpenProjects.setEnabled(b);
+        lbIncludeOpenProjects.setEnabled(b);
     }
 
     /**
@@ -95,82 +211,240 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lbTrustTerms = new javax.swing.JLabel();
-        lbReadOnly = new javax.swing.JLabel();
-        cbTrustLevel = new javax.swing.JComboBox<>();
         lbTrustLevel = new javax.swing.JLabel();
+        cbTrustLevel = new javax.swing.JComboBox<>();
+        lbTrustTerms = new javax.swing.JLabel();
+        lbRuntime = new javax.swing.JLabel();
+        cbRuntime = new javax.swing.JComboBox<>();
+        btManageRuntimes = new javax.swing.JButton();
+        cbAugmentedBuild = new javax.swing.JCheckBox();
+        lbAugmentedBuild = new javax.swing.JLabel();
+        cbIncludeOpenProjects = new javax.swing.JCheckBox();
+        lbIncludeOpenProjects = new javax.swing.JLabel();
+        lbReadOnly = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
+        org.openide.awt.Mnemonics.setLocalizedText(lbTrustLevel, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustLevel.text")); // NOI18N
+
+        cbTrustLevel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTrustLevelActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbTrustTerms, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustTerms.text")); // NOI18N
         lbTrustTerms.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        lbRuntime.setLabelFor(cbRuntime);
+        org.openide.awt.Mnemonics.setLocalizedText(lbRuntime, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbRuntime.text")); // NOI18N
+
+        cbRuntime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRuntimeActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(btManageRuntimes, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.btManageRuntimes.text")); // NOI18N
+        btManageRuntimes.setActionCommand(org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.btManageRuntimes.actionCommand")); // NOI18N
+        btManageRuntimes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btManageRuntimesActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbAugmentedBuild, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.cbAugmentedBuild.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbAugmentedBuild, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbAugmentedBuild.text")); // NOI18N
+        lbAugmentedBuild.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbIncludeOpenProjects, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.cbIncludeOpenProjects.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbIncludeOpenProjects, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbIncludeOpenProjects.text")); // NOI18N
+        lbIncludeOpenProjects.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         lbReadOnly.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/gradle/resources/info.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lbReadOnly, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbReadOnly.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbTrustLevel, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustLevel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbReadOnly)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btManageRuntimes))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbTrustLevel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbTrustLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lbTrustTerms, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(lbTrustTerms, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(cbAugmentedBuild, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbIncludeOpenProjects)
+                            .addComponent(lbReadOnly))
+                        .addContainerGap())))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cbRuntime, cbTrustLevel});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(5, 5, 5)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbTrustLevel))
+                    .addComponent(lbTrustLevel)
+                    .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbTrustTerms, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbTrustTerms, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbRuntime)
+                    .addComponent(btManageRuntimes))
+                .addGap(18, 18, 18)
+                .addComponent(cbAugmentedBuild)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbIncludeOpenProjects)
+                .addGap(8, 8, 8)
+                .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbReadOnly)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btManageRuntimesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btManageRuntimesActionPerformed
+        if ((runtimeManager != null) && runtimeManager.manageRuntimesAction().isPresent()) {
+            runtimeManager.manageRuntimesAction().get().run();
+        }
+    }//GEN-LAST:event_btManageRuntimesActionPerformed
+
+    private void cbTrustLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTrustLevelActionPerformed
+        setJavaSettingsEnabled(!readOnly && (cbTrustLevel.getSelectedItem() != TrustLevel.NONE));
+    }//GEN-LAST:event_cbTrustLevelActionPerformed
+
+    private void cbRuntimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRuntimeActionPerformed
+        JavaRuntime rt = (JavaRuntime) cbRuntime.getSelectedItem();
+        String fore = (rt != null) && rt.isBroken() ? "nb.errorForeground" : "ComboBox.foreground"; //NOI18N
+        cbRuntime.setForeground(UIManager.getColor(fore));
+    }//GEN-LAST:event_cbRuntimeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btManageRuntimes;
+    private javax.swing.JCheckBox cbAugmentedBuild;
+    private javax.swing.JCheckBox cbIncludeOpenProjects;
+    private javax.swing.JComboBox<JavaRuntime> cbRuntime;
     private javax.swing.JComboBox<TrustLevel> cbTrustLevel;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lbAugmentedBuild;
+    private javax.swing.JLabel lbIncludeOpenProjects;
     private javax.swing.JLabel lbReadOnly;
+    private javax.swing.JLabel lbRuntime;
     private javax.swing.JLabel lbTrustLevel;
     private javax.swing.JLabel lbTrustTerms;
     // End of variables declaration//GEN-END:variables
 
+    private void saveTrustLevel(Project project) {
+        TrustLevel v = (TrustLevel)cbTrustLevel.getSelectedItem();
+        if (v == null) {
+            v = NONE;
+        }
+        switch (v) {
+            case NONE:
+                ProjectTrust.getDefault().distrustProject(project);
+                break;
+
+            case PERMANENT:
+                ProjectTrust.getDefault().trustProject(project, true);
+                break;
+
+            case TEMPORARY:
+                if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
+                    ProjectTrust.getDefault().distrustProject(project);
+                }
+                ProjectTrust.getDefault().trustProject(project, false);
+                break;
+        }
+    }
+
+    private void saveJavaRuntime(Project project) {
+        Project root = ProjectUtils.rootOf(project);
+        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+        JavaRuntime rt = (JavaRuntime) cbRuntime.getSelectedItem();
+        String id = (rt != null) && (rt.getId() != JavaRuntimeManager.DEFAULT_RUNTIME_ID) ? rt.getId() : null;
+        aux.put(HINT_JDK_PLATFORM, id, true);
+    }
+
+    private void saveCheckBox(JCheckBox check, String property) {
+        GradleBaseProject gbp = project != null ? GradleBaseProject.get(project) : null;
+        if ((gbp != null) && (gbp.getNetBeansProperty(property) == null)) {
+            Preferences prefs = NbGradleProject.getPreferences(project, false);
+            prefs.putBoolean(property, check.isSelected());
+        }
+    }
+
     void save() {
         if (project != null) {
-            TrustLevel v = (TrustLevel)cbTrustLevel.getSelectedItem();
-            if (v == null) {
-                v = NONE;
+            saveTrustLevel(project);
+            saveJavaRuntime(project);
+
+            saveCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD);
+            saveCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS);
+        }
+    }
+
+    private class RuntimeRenderer extends JLabel implements ListCellRenderer, UIResource {
+
+        @Override
+        @NbBundle.Messages({
+            "# {0} - runtimeId", 
+            "LBL_MissingRuntime=Missing Runtime: {0}"
+        })
+        public Component getListCellRendererComponent(JList list, Object value,
+                int index, boolean isSelected,
+                boolean cellHasFocus) {
+            setOpaque(true);
+            if (value instanceof JavaRuntime) {
+                JavaRuntime rt = (JavaRuntime)value;
+                setText(rt.getDisplayName());
+                if ( isSelected ) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+                if (rt.isBroken()) {
+                    setText(Bundle.LBL_MissingRuntime(value));
+                }
+            } else {
+                if (value == null) {
+                    setText("");
+                }
             }
-            switch (v) {
-                case NONE:
-                    ProjectTrust.getDefault().distrustProject(project);
-                    break;
-                    
-                case PERMANENT:
-                    ProjectTrust.getDefault().trustProject(project, true);
-                    break;
-                    
-                case TEMPORARY:
-                    if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
-                        ProjectTrust.getDefault().distrustProject(project);
-                    }
-                    ProjectTrust.getDefault().trustProject(project, false);
-                    break;
-            }
+            return this;
         }
     }
 }

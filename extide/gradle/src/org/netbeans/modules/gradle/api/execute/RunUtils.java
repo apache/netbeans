@@ -55,11 +55,10 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
-import org.gradle.util.GradleVersion;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectUtils;
 
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
@@ -67,7 +66,6 @@ import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
-import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -558,13 +556,14 @@ public final class RunUtils {
     }
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
-        GradleBaseProject gbp = GradleBaseProject.get(project);
+        Project root = ProjectUtils.rootOf(project);
+        GradleBaseProject gbp = GradleBaseProject.get(root);
         if (gbp != null) {
             String value = gbp.getNetBeansProperty(option);
             if (value != null) {
                 return Boolean.valueOf(value);
             } else {
-                return NbGradleProject.getPreferences(project, false).getBoolean(option, defaultValue);
+                return NbGradleProject.getPreferences(root, false).getBoolean(option, defaultValue);
             }
         }
         return false;

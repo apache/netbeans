@@ -20,8 +20,9 @@ package org.netbeans.modules.gradle.customizer;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -31,7 +32,6 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.UIResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -68,10 +68,10 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         
     }
 
-    Project project;
-    JavaRuntimeManager runtimeManager;
-    ChangeListener runtimeChangeListener = (evt) -> managedRuntimeSetup();
-    boolean readOnly = true;
+    private Project project;
+    private final JavaRuntimeManager runtimeManager;
+    private final ChangeListener runtimeChangeListener = (evt) -> managedRuntimeSetup();
+    private boolean readOnly = true;
 
     /**
      * Creates new form GradleExecutionPanel
@@ -182,8 +182,12 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     private void managedRuntimeSetup() {
         int selected = cbRuntime.getSelectedIndex();
         JavaRuntime runtime = selected != -1 ? cbRuntime.getModel().getElementAt(selected) : null;
-        Set<JavaRuntime> availabeRuntimes = runtimeManager != null ? runtimeManager.getAvailableRuntimes() : Collections.emptySet();
-        DefaultComboBoxModel<JavaRuntime> model = new DefaultComboBoxModel<>(availabeRuntimes.toArray(new JavaRuntime[0]));
+        Map<String, JavaRuntime> availabeRuntimes = runtimeManager != null ? runtimeManager.getAvailableRuntimes() : Collections.emptyMap();
+
+        JavaRuntime[] runtimes = availabeRuntimes.values().toArray(new JavaRuntime[0]);
+        Arrays.sort(runtimes);
+        
+        DefaultComboBoxModel<JavaRuntime> model = new DefaultComboBoxModel<>(runtimes);
         cbRuntime.setModel(model);
         selectRuntime(runtime != null ? runtime.getId() : null);
     }
@@ -393,7 +397,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         Project root = ProjectUtils.rootOf(project);
         AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
         JavaRuntime rt = (JavaRuntime) cbRuntime.getSelectedItem();
-        String id = (rt != null) && (rt.getId() != JavaRuntimeManager.DEFAULT_RUNTIME_ID) ? rt.getId() : null;
+        String id = (rt != null) && JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(rt.getId()) ? rt.getId() : null;
         aux.put(HINT_JDK_PLATFORM, id, true);
     }
 

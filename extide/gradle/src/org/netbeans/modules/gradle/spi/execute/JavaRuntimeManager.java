@@ -19,9 +19,9 @@
 package org.netbeans.modules.gradle.spi.execute;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -32,7 +32,7 @@ public interface JavaRuntimeManager {
 
     public static String DEFAULT_RUNTIME_ID = "default_platform"; //NOI18N
     
-    Set<JavaRuntime> getAvailableRuntimes();
+    Map<String, JavaRuntime> getAvailableRuntimes();
 
     default Optional<Runnable> manageRuntimesAction() {
         return Optional.empty();

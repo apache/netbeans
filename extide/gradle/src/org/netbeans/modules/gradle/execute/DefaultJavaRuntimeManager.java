@@ -20,7 +20,7 @@ package org.netbeans.modules.gradle.execute;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
@@ -34,10 +34,10 @@ public class DefaultJavaRuntimeManager implements JavaRuntimeManager {
 
     @Override
     @Messages("DEFAULT_JAVA_RUNTIME_NAME=Default")
-    public Set<JavaRuntime> getAvailableRuntimes() {
+    public Map<String, JavaRuntime> getAvailableRuntimes() {
         File javaHome = new File(System.getProperty("java.home")); //NOI18N
         JavaRuntime defaultRuntime = JavaRuntimeManager.createJavaRuntime(DEFAULT_RUNTIME_ID, Bundle.DEFAULT_JAVA_RUNTIME_NAME(), javaHome);
-        return Collections.singleton(defaultRuntime);
+        return Collections.singletonMap(DEFAULT_RUNTIME_ID, defaultRuntime);
     }
 
 }

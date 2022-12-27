@@ -37,8 +37,17 @@ public class JavaRunUtils {
 
     private JavaRunUtils() {}
 
+    /**
+     * It is unlikely that the compile on save feature would be implemented for
+     * Gradle, as Gradle's continuous build feature provides a compelling
+     * alternative.
+     *
+     * @return {@code false}
+     * @deprecated
+     */
+    @Deprecated
     public static boolean isCompileOnSaveEnabled(Project project) {
-        return isOptionEnabled(project, PROP_COMPILE_ON_SAVE, false);
+        return false;
     }
 
     /**

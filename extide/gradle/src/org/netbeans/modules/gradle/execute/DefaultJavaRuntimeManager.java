@@ -32,12 +32,23 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = JavaRuntimeManager.class)
 public class DefaultJavaRuntimeManager implements JavaRuntimeManager {
 
-    @Override
-    @Messages("DEFAULT_JAVA_RUNTIME_NAME=Default")
-    public Map<String, JavaRuntime> getAvailableRuntimes() {
+    private final Map<String, JavaRuntime> defaultRuntimes;
+    
+    @Messages({
+        "# {0} - The version of the Java Runtime",
+        "DEFAULT_JAVA_RUNTIME_NAME=Java {0} (Default)"
+    })
+    public DefaultJavaRuntimeManager() {
         File javaHome = new File(System.getProperty("java.home")); //NOI18N
-        JavaRuntime defaultRuntime = JavaRuntimeManager.createJavaRuntime(DEFAULT_RUNTIME_ID, Bundle.DEFAULT_JAVA_RUNTIME_NAME(), javaHome);
-        return Collections.singletonMap(DEFAULT_RUNTIME_ID, defaultRuntime);
+        String javaVersion = System.getProperty("java.specification.version"); //NOI18N
+        JavaRuntime defaultRuntime = JavaRuntimeManager.createJavaRuntime(DEFAULT_RUNTIME_ID, Bundle.DEFAULT_JAVA_RUNTIME_NAME(javaVersion), javaHome);
+        
+        defaultRuntimes = Collections.singletonMap(DEFAULT_RUNTIME_ID, defaultRuntime);
+    }
+
+    @Override
+    public Map<String, JavaRuntime> getAvailableRuntimes() {
+        return defaultRuntimes;
     }
 
 }

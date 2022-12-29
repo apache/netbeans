@@ -82,7 +82,7 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
                 + "The IDE will attempt to use Gradle {3} to gather the project information.<p>"
                 + "Possible solutions:"
                 + "<ul><li>Upgrade your Gradle version on your project"
-                + "<li>Select Java Platform {1} (or below), on Build&nbsp;>&nbsp;Compile settings, to avoid this problem!"
+                + "<li>Select Java Runtime {1} (or below), on Build&nbsp;>&nbsp;Gradle&nbsp;Execution settings, to avoid this problem!"
                 + "</ul>"
     })
     @Override

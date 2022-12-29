@@ -380,7 +380,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         Project root = ProjectUtils.rootOf(project);
         AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
         JavaRuntime rt = (JavaRuntime) cbRuntime.getSelectedItem();
-        String id = (rt != null) && JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(rt.getId()) ? rt.getId() : null;
+        String id = (rt != null) && !JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(rt.getId()) ? rt.getId() : null;
         aux.put(HINT_JDK_PLATFORM, id, true);
     }
 

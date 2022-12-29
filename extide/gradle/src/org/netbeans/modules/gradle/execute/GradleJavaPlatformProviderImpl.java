@@ -20,17 +20,12 @@ package org.netbeans.modules.gradle.execute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.HINT_JDK_PLATFORM;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
-import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
 import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
-import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectServiceProvider;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -45,19 +40,12 @@ public final class GradleJavaPlatformProviderImpl implements GradleJavaPlatformP
         this.project = project;
     }
 
-    private String runtimeId() {
-        Project root = ProjectUtils.rootOf(project);
-        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
-        String id = aux.get(HINT_JDK_PLATFORM, true);
-        return id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
-    }
-
     @Override
     public File getJavaHome() throws FileNotFoundException {
-        JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
-        Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
-        JavaRuntime rt = runtimes.get(runtimeId());
-
-        return rt != null ? rt.getJavaHome() : null;
+        JavaRuntime rt = RunUtils.getActiveRuntime(project);
+        if (rt.isBroken()) {
+            throw new FileNotFoundException("Could not found runtime for: " + rt.getId());
+        }
+        return rt.getJavaHome();
     }
 }

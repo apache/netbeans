@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.gradle.customizer;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,40 +120,24 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         }
 
         cbRuntime.setRenderer(new RuntimeRenderer());
-        selectRuntime(runtimeId(project));
+        selectRuntime(RunUtils.getActiveRuntime(project));
 
         setupCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD, true);
         setupCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS, false);
     }
 
-    private String runtimeId(Project project) {
-        Project root = ProjectUtils.rootOf(project);
-        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
-        String id = aux.get(HINT_JDK_PLATFORM, true);
-        return id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
-    }
-
-    private void selectRuntime(String id) {
+    private void selectRuntime(JavaRuntime selected) {
         ComboBoxModel<JavaRuntime> model = cbRuntime.getModel();
-        if (id == null) {
-            model.setSelectedItem(null);
-            return;
-        }
-
-        int index = -1;
-        for (int i = 0; i < model.getSize(); i++) {
-            JavaRuntime rt = model.getElementAt(i);
-            if (rt.getId().equals(id)) {
-                index = i;
-                break;
-            }
-        }
-        if (index > -1) {
-            model.setSelectedItem(model.getElementAt(index));
+        if (selected == null || selected.isBroken()) {
+            model.setSelectedItem(selected);
         } else {
-            JavaRuntime broken = JavaRuntimeManager.createJavaRuntime(id, null);
-            model.setSelectedItem(broken);
-            cbRuntime.setForeground(Color.red);
+            for (int i = 0; i < model.getSize(); i++) {
+                JavaRuntime rt = model.getElementAt(i);
+                if (rt.equals(selected)) {
+                    model.setSelectedItem(model.getElementAt(i));
+                    break;
+                }
+            }
         }
     }
     
@@ -189,7 +172,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         
         DefaultComboBoxModel<JavaRuntime> model = new DefaultComboBoxModel<>(runtimes);
         cbRuntime.setModel(model);
-        selectRuntime(runtime != null ? runtime.getId() : null);
+        selectRuntime(runtime);
     }
 
     private void setJavaSettingsEnabled(boolean b) {

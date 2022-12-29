@@ -63,11 +63,15 @@ import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.HINT_JDK_PLATFORM;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
+import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
@@ -669,6 +673,20 @@ public final class RunUtils {
     @Deprecated
     public static Pair getActivePlatform(Project project) {
         return getActivePlatform("deprecated"); //NOI18N
+    }
+
+    public static JavaRuntime getActiveRuntime(Project project) {
+        Project root = ProjectUtils.rootOf(project);
+        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+        String id = aux.get(HINT_JDK_PLATFORM, true);
+        id = id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
+
+        JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+        Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
+        if (runtimes.containsKey(id)) {
+            return runtimes.get(id);
+        }
+        return JavaRuntimeManager.createJavaRuntime(id, null);
     }
 
     static GradleCommandLine getIncludedOpenProjects(Project project) {

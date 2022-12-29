@@ -160,6 +160,10 @@ public class SourceUtils {
                 ts = ts.embedded();
             }
         }
+        if (found != null) {
+            //reset the token position, so that caller can call moveNext()/movePrevious()
+            found.move(offset);
+        }
         return found;
     }
     

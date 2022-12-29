@@ -481,8 +481,8 @@ jobs:
       - name: ide/html.custom
         run: ant $OPTS -f ide/html.custom test
 
-#      - name: ide/html.editor
-#        run: ant $OPTS -f ide/html.editor test
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor test
 
 #      - name: ide/html.lexer
 #        run: ant $OPTS -f ide/html.lexer test

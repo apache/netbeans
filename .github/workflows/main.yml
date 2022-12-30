@@ -1896,6 +1896,9 @@ jobs:
       - name: spring.webmvc
         run: ant $OPTS -f enterprise/spring.webmvc test
 
+      - name: tomcat5
+        run: ant $OPTS -f enterprise/tomcat5 test
+
       - name: websvc.editor.hints
         run: ant $OPTS -f enterprise/websvc.editor.hints test
 

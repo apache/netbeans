@@ -5,7 +5,7 @@
             http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style type="text/css">
-            Q:lang(en){ 
+            Q:lang(en){
                 /*
                         my own
                       comment
@@ -16,7 +16,9 @@
             }
         </style>
         <style type="text/css">
-            .error {color:red;}
+            .error {
+                color:red;
+            }
         </style>
     </head>
     <body>

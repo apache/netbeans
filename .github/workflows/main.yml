@@ -550,6 +550,9 @@ jobs:
       - name: ide/o.openidex.util
         run: ant $OPTS -f ide/o.openidex.util test
 
+      - name: ide/options.editor
+        run: ant $OPTS -f ide/options.editor test
+
 #      - name: ide/parsing.api
 #        run: ant $OPTS -f ide/parsing.api test
 

@@ -26,6 +26,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -45,6 +46,7 @@ import com.sun.tools.javac.code.Kinds.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.RecordComponent;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.SymbolMetadata;
 import com.sun.tools.javac.code.Symtab;
@@ -67,6 +69,7 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
@@ -342,6 +345,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     return;
                 }
                 dropMethodsAndErrors(jtFin.getContext(), env.toplevel, dc);
+                log.nerrors = 0;
             });
             final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
                 @Override
@@ -718,6 +722,10 @@ final class VanillaCompileWorker extends CompileWorker {
                     ct.supertype_field = error2Object(ct.supertype_field);
                 }
                 clearAnnotations(clazz.sym.getMetadata());
+                for (RecordComponent rc : clazz.sym.getRecordComponents()) {
+                    rc.type = error2Object(rc.type);
+                    scan(rc.accessorMeth, p);
+                }
                 for (JCTree def : clazz.defs) {
                     boolean errorClass = isErroneousClass(def);
                     if (errorClass) {
@@ -891,6 +899,13 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             @Override
+            public Void visitMemberReference(MemberReferenceTree node, Void p) {
+                JCMemberReference ref = (JCMemberReference) node;
+                ref.target = error2Object(ref.target);
+                return super.visitMemberReference(node, p);
+            }
+
+            @Override
             public Void visitBindingPattern(BindingPatternTree node, Void p) {
                 errorFound |= !hasMatchException;
                 return super.visitBindingPattern(node, p);
@@ -978,6 +993,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     return null;
 
                 if (isErroneous(t)) {
+                    errorFound = true;
                     return syms.objectType;
                 }
 

@@ -333,10 +333,10 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             }
             StringBuilder result = new StringBuilder();
             while (st.hasMoreTokens()) {
-                result.append("/").append(URLEncoder.encode(st.nextToken(), StandardCharsets.UTF_8)); // NOI18N
+                result.append("/").append(URLEncoder.encode(st.nextToken(), StandardCharsets.UTF_8.name()));
             }
             return result.toString();
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e); // this should never happen
         }
     }
@@ -358,7 +358,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
         }
         // http://www.netbeans.org/issues/show_bug.cgi?id=167139
         URL url = tmpContextXml.toURI().toURL();
-        String ret = URLEncoder.encode(url.toString(), StandardCharsets.UTF_8); // NOI18N
+        String ret = URLEncoder.encode(url.toString(), StandardCharsets.UTF_8.name());
         return ret;
     }
     

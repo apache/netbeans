@@ -305,17 +305,32 @@ public final class ElementOpen {
      * @since 1.58
      */
     public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
-        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean(), true);
+      return getLocation(cpInfo, el, resourceName, new String[0]);
+    }
+
+    /**
+     * Gets location of the {@link Element} corresponding to the given {@link ElementHandle}.
+     *
+     * @param cpInfo ClasspathInfo which should be used for the search
+     * @param el ElementHandle to search
+     * @param resourceName optional resource name to search
+     * @param names suggested names of the source file to seek for
+     * @return location of the given element
+     *
+     * @since 1.67
+     */
+    public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, String... names) {
+        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean(), true, names);
         return future.thenApply(openInfo -> {
-            if (openInfo != null && openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
+            if (openInfo != null && openInfo[0] != null) {
                 FileObject file = (FileObject) openInfo[0];
                 int start = (int) openInfo[3];
                 if (start < 0) {
-                    start = (int) openInfo[1];
+                    start = Math.max(0, (int) openInfo[1]);
                 }
                 int end = (int) openInfo[4];
                 if (end < 0) {
-                    end = (int) openInfo[2];
+                    end = Math.max(0, (int) openInfo[2]);
                 }
                 return new Location(file, start, end);
             }
@@ -371,8 +386,8 @@ public final class ElementOpen {
         return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
     }
 
-    static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel, boolean acquire) {
-        Object[] openInfo = getOpenInfo(cpInfo, el, null, cancel);
+    static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel, boolean acquire, String... names) {
+        Object[] openInfo = getOpenInfo(cpInfo, el, names, cancel);
         if (openInfo != null) {
             return CompletableFuture.completedFuture(openInfo);
         }

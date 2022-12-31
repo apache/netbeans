@@ -198,7 +198,7 @@ public class GoToSupport {
                 });
                 if (target[0] != null && target[0].success) {
                     if (target[0].offsetToOpen < 0) {
-                        CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(target[0].cpInfo, target[0].elementToOpen, target[0].resourceName);
+                        CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(target[0].cpInfo, target[0].elementToOpen, target[0].resourceName, target[0].fileName);
                         return future.thenApply(location -> {
                             return location != null ? HyperlinkLocationProvider.createHyperlinkLocation(location.getFileObject(), location.getStartOffset(), location.getEndOffset()) : null;
                         });

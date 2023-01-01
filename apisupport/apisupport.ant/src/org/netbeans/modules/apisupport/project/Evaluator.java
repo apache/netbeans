@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -423,9 +424,15 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             buildDefaults.put(CP, "${module.classpath}:${cp.extra}"); // NOI18N
             buildDefaults.put(RUN_CP, "${module.run.classpath}:${cp.extra}:${build.classes.dir}"); // NOI18N
             if (type == NbModuleType.NETBEANS_ORG && "true".equals(projectProperties.getProperties().get("requires.nb.javac"))) {
-                ModuleEntry javacapi = ml.getEntry("org.netbeans.libs.javacapi");
-                if (javacapi != null) {
-                    buildDefaults.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, javacapi.getClassPathExtensions());
+                ModuleEntry javacLibrary = ml.getEntry("org.netbeans.libs.javacapi");
+                if (javacLibrary != null) {
+                    List<String> bootstrapAPIs = new ArrayList<>();
+                    for (String ext : javacLibrary.getClassPathExtensions().split(Pattern.quote(File.pathSeparator))) {
+                        if (ext.endsWith("-api.jar")) {
+                            bootstrapAPIs.add(ext);
+                        }
+                    }
+                    buildDefaults.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, bootstrapAPIs.stream().collect(Collectors.joining(File.pathSeparator)));
                 }
             }
             

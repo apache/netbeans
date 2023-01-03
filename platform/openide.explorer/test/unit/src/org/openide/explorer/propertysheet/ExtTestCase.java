@@ -857,6 +857,7 @@ public class ExtTestCase extends NbTestCase {
             }
         }
         
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {

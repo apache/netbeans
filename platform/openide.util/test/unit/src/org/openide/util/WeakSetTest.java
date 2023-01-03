@@ -137,6 +137,7 @@ public class WeakSetTest extends NbTestCase {
                     return it.next ();
                 }
 
+                @Override
                 public void remove() {
                     it.remove();
                 }

@@ -681,7 +681,8 @@ public class NewPropertyPanelTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -993,7 +994,8 @@ public class NewPropertyPanelTest extends NbTestCase {
         
         public TagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -1006,15 +1008,18 @@ public class NewPropertyPanelTest extends NbTestCase {
                 env.setState(env.STATE_VALID);
             }
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
-        
+
+        @Override
         public Component getCustomEditor() {
             return new JColorChooser();
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
             if (env != null) {
@@ -1052,21 +1057,25 @@ public class NewPropertyPanelTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             System.err.println(" BasicEditor.setValue: " + newValue);
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
 
         private Component custom;
+        @Override
         public Component getCustomEditor() {
             if (custom == null) {
                 custom = new BasicCustomEditor(this);
@@ -1096,7 +1105,8 @@ public class NewPropertyPanelTest extends NbTestCase {
                 throw pve;
             }
         }
-        
+
+        @Override
         public void setAsText(String s) {
             System.err.println(" BasicEditor.setAsText: " + s);
             if ("invalidValue".equals(s)) {

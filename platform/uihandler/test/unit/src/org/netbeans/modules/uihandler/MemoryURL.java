@@ -100,11 +100,13 @@ public class MemoryURL extends URLStreamHandler {
             }
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
             connect();
             return values;
         }
 
+        @Override
         public OutputStream getOutputStream() throws IOException {
             if (out == null) {
                 out = new ByteArrayOutputStream();
@@ -112,6 +114,7 @@ public class MemoryURL extends URLStreamHandler {
             return out;
         }
 
+        @Override
         public void setRequestProperty(String key, String value) {
             super.setRequestProperty(key, value);
             params.put(key.toLowerCase(), value);

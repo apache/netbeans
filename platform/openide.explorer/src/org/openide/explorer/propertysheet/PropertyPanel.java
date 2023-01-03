@@ -287,6 +287,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         PropertyPanelBridge.register(this, new BridgeAccessor(this));
     }
 
+    @Override
     public void setBackground(Color c) {
         if (inner != null) {
             inner.setBackground(c);
@@ -295,6 +296,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         super.setBackground(c);
     }
 
+    @Override
     public void setForeground(Color c) {
         if (inner != null) {
             inner.setForeground(c);
@@ -525,21 +527,25 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         }
     }
 
+    @Override
     public void doLayout() {
         layout();
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void layout() {
         if (inner != null) {
             inner.setBounds(0, 0, getWidth(), getHeight());
         }
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension result;
 
@@ -609,6 +615,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to catch changes in those client properties that are
      * relevant to PropertyPanel */
+    @Override
     protected void firePropertyChange(String nm, Object old, Object nue) {
         if (
             ("flat".equals(nm) || "radioButtonMax".equals(nm) || "suppressCustomEditor".equals(nm) ||
@@ -650,6 +657,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to return false in cases that the preferences specify a
      * read-only state */
+    @Override
     public boolean isFocusable() {
         return super.isFocusable() && isEnabled() && ((preferences & PREF_READ_ONLY) == 0);
     }
@@ -658,6 +666,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * nothing in a read only state, since some custom property editors (File
      * chooser) are capable of receiving focus even if they are disabled,
      * effectively making focus disappear */
+    @Override
     public void requestFocus() {
         //Do this because even if everything is disabled, JFileChooser's UI
         //*does* supply some focusable components
@@ -683,6 +692,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         }
     }
 
+    @Override
     protected void processFocusEvent(FocusEvent fe) {
         super.processFocusEvent(fe);
 
@@ -704,6 +714,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     }
 
     /** Overridden to install the inner component that will display the property*/
+    @Override
     public void addNotify() {
         attachToModel();
 
@@ -720,6 +731,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to dispose the component that actually displays the property
      * and any state information associated with it */
+    @Override
     public void removeNotify() {
         super.removeNotify();
         detachFromModel();
@@ -1040,6 +1052,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * all panel components gets disabled when enabled parameter is set false
      * @param enabled flag defining the action.
      */
+    @Override
     public void setEnabled(boolean enabled) {
         // bugfix# 10171, explicitly disable components inside the custom editor
         super.setEnabled(enabled);
@@ -1103,6 +1116,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to provide information from the embedded property renderer
      * if not in custom editor mode */
+    @Override
     public String toString() {
         if ((preferences & PREF_CUSTOM_EDITOR) != 0) {
             //custom editor mode, not much useful to say here
@@ -1141,6 +1155,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * setOpaque(true).
      * @see http://www.netbeans.org/issues/show_bug.cgi?id=43024
      */
+    @Override
     public void paint(Graphics g) {
         if (isGtk) {
             //Presumably we can get this fixed for JDK 1.5.1
@@ -1164,6 +1179,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     }
 
     ////////////////// Accessibility support ///////////////////////////////////
+    @Override
     public javax.accessibility.AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {
             accessibleContext = new AccessiblePropertyPanel();
@@ -1194,6 +1210,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
             return pd.getCustomEditorAction();
         }
 
+        @Override
         public boolean isEnabled() {
             Action wrapped = getWrapped();
 
@@ -1219,10 +1236,12 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         AccessiblePropertyPanel() {
         }
 
+        @Override
         public javax.accessibility.AccessibleRole getAccessibleRole() {
             return javax.accessibility.AccessibleRole.PANEL;
         }
 
+        @Override
         public String getAccessibleName() {
             String name = super.getAccessibleName();
 
@@ -1234,6 +1253,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
             return name;
         }
 
+        @Override
         public String getAccessibleDescription() {
             String description = super.getAccessibleDescription();
 

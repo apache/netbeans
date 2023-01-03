@@ -124,6 +124,7 @@ public class ListPane extends JList {
      * JList components are always opaque.
      * @return true
      */
+    @Override
     public boolean isOpaque() {
         return true;
     }
@@ -162,6 +163,7 @@ public class ListPane extends JList {
      * @see JComponent#scrollRectToVisible
      * @see #getVisibleRect
      */
+    @Override
     public void ensureIndexIsVisible(int index) {
         Point first = indexToLocation(index);
 
@@ -179,6 +181,7 @@ public class ListPane extends JList {
      * @param location The JList relative coordinates of the cell
      * @return The index of the cell at location, or -1.
      */
+    @Override
     public int locationToIndex(Point location) {
         int x = location.x / fixedCellWidth;
 
@@ -204,6 +207,7 @@ public class ListPane extends JList {
      * @param index The index of the JList cell.
      * @return The origin of the index'th cell.
      */
+    @Override
     public Point indexToLocation(int index) {
         if (index >= getModel().getSize()) {
             return null;
@@ -223,6 +227,7 @@ public class ListPane extends JList {
      * @param index2 end index of the JList cell.
      * @return The bounds of the index'th cell.
      */
+    @Override
     public Rectangle getCellBounds(int index1, int index2) {
         /*
         int minIndex = Math.min(index1, index2);
@@ -269,6 +274,7 @@ public class ListPane extends JList {
      *
      * @see #getPreferredScrollableViewportSize
      */
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         Insets insets = getInsets();
         int w = insets.left + insets.right + (visibleColumnCount * fixedCellWidth);
@@ -290,6 +296,7 @@ public class ListPane extends JList {
      * @return The distance to scroll to expose the next or previous row.
      * @see Scrollable#getScrollableUnitIncrement
      */
+    @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
         if (orientation == SwingConstants.HORIZONTAL) {
             return 1;
@@ -338,6 +345,7 @@ public class ListPane extends JList {
      * @return The visibleRect.height or visibleRect.width per the orientation.
      * @see Scrollable#getScrollableUnitIncrement
      */
+    @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
         return (orientation == SwingConstants.VERTICAL) ? visibleRect.height : visibleRect.width;
     }
@@ -350,6 +358,7 @@ public class ListPane extends JList {
      * @return False - don't track the viewports width.
      * @see Scrollable#getScrollableTracksViewportWidth
      */
+    @Override
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
@@ -362,6 +371,7 @@ public class ListPane extends JList {
      * @return False - don't track the viewports width.
      * @see Scrollable#getScrollableTracksViewportWidth
      */
+    @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
@@ -408,6 +418,7 @@ public class ListPane extends JList {
      *
      * @see #paintBackground
      */
+    @Override
     protected void paintComponent(Graphics g) {
         updateLayoutState();
 
@@ -484,6 +495,7 @@ public class ListPane extends JList {
      *
      * @return The total size of the
      */
+    @Override
     public Dimension getPreferredSize() {
         Insets insets = getInsets();
 
@@ -514,6 +526,7 @@ public class ListPane extends JList {
     /**
      * @return the size of one cell
      */
+    @Override
     public Dimension getMinimumSize() {
         return new Dimension(fixedCellWidth, fixedCellHeight);
     }
@@ -595,14 +608,17 @@ public class ListPane extends JList {
         super.removeSelectionInterval(index0, index1);
     }
 
+    @Override
     public void setSelectionInterval(int anchor, int lead) {
         //        super.setSelectionInterval(anchor, lead);
     }
 
+    @Override
     public void addSelectionInterval(int anchor, int lead) {
         //        super.addSelectionInterval(anchor, lead);
     }
 
+    @Override
     public void removeSelectionInterval(int index0, int index1) {
         //        super.removeSelectionInterval(index0, index1);
     }
@@ -627,6 +643,7 @@ public class ListPane extends JList {
         }
 
         // ==== Mouse methods =====
+        @Override
         public void mousePressed(MouseEvent e) {
             updateSelection(locationToIndex(e.getPoint()), e);
 

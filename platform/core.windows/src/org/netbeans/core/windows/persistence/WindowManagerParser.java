@@ -990,7 +990,8 @@ public class WindowManagerParser {
             winMgrConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("windowmanager".equals(qname)) { // NOI18N
                 handleWindowManager(attrs);
@@ -1032,6 +1033,7 @@ public class WindowManagerParser {
             }
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }

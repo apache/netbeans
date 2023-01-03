@@ -1028,7 +1028,8 @@ class ModeParser {
             modeConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("mode".equals(qname)) { // NOI18N
                 handleMode(attrs);
@@ -1069,7 +1070,8 @@ class ModeParser {
                 //Parse version < 2.0
             }
         }
-        
+
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }

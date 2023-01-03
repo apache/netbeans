@@ -363,6 +363,7 @@ public class JarClassLoaderTest extends NbTestCase {
                 controlSemaphore.acquire();
             }
 
+            @Override
             public void run() {
                 controlSemaphore.release(); // we're about to start blocking
                 try {

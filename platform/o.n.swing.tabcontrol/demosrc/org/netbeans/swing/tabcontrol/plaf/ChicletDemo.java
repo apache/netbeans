@@ -38,6 +38,7 @@ public class ChicletDemo {
         }
 
 
+        @Override
         public void paint(Graphics g) {
             super.paint(g);
             ColorUtil.setupAntialiasing(g);

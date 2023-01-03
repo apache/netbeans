@@ -343,9 +343,9 @@ public class ProcedureNode extends BaseNode {
                         function = true;
                     case Procedure:
                         query = "SELECT routine_schema,routine_definition,dtd_identifier,is_deterministic,sql_data_access,routine_comment," // NOI18N
-                              + "(SELECT GROUP_CONCAT(CONCAT(" + (function ? "" : "parameter_mode,' ',") + "parameter_name,' ',dtd_identifier))" // NOI18N
+                              + "IFNULL((SELECT GROUP_CONCAT(CONCAT(" + (function ? "" : "parameter_mode,' ',") + "parameter_name,' ',dtd_identifier))" // NOI18N
                               + " FROM information_schema.parameters" // NOI18N
-                              + " WHERE specific_name=routine_name AND ordinal_position>0 ORDER BY ordinal_position) AS routine_params" // NOI18N
+                              + " WHERE specific_name=routine_name AND ordinal_position>0 ORDER BY ordinal_position), '') AS routine_params" // NOI18N
                               + " FROM information_schema.routines" // NOI18N
                               + " WHERE routine_name='" + escapedName + "';"; // NOI18N
                         try (Statement stat = connection.getJDBCConnection().createStatement(); 

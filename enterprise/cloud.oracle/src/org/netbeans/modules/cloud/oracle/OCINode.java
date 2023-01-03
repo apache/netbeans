@@ -80,13 +80,8 @@ public class OCINode extends AbstractNode {
     public Action[] getActions(boolean context) {
         List<Action> result = new ArrayList<>();
         
-        String path = item.getKey().getPath();
-        int slash = path.indexOf('/');
-        String provider = slash > 0 ? path.substring(0, path.indexOf("/")) : "Oracle";
-        
-        
         List<? extends Action> commonActions = actionsForPath(
-                String.format("Cloud/%s/Common/Actions", provider), getLookup());
+                "Cloud/Oracle/Common/Actions", getLookup());
         for (Action commonAction : commonActions) {
             if (commonAction.isEnabled()) {
                 result.add(commonAction);

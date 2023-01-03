@@ -18,23 +18,20 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.openide.nodes.Node;
+import com.oracle.bmc.Region;
+import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
+import org.openide.util.Lookup;
 
 /**
- *
- * @author Jan Horvath
+ * An abstract interface that allows to initialize the BMC client. Currently
+ * implemented by {@link OCIProfile}s, but could be suitable for different
+ * authentication schemes.
+ * 
+ * @author sdedic
  */
-@FunctionalInterface
-public interface NodeProvider<T extends OCIItem> {
-    
-    public Node apply(T t);
-    
-    public interface SessionAware<T extends OCIItem> extends NodeProvider<T> {
-        public default Node apply(T t) {
-            return apply(t, OCIManager.getDefault().getActiveSession());
-        }
-
-        public Node apply(T t, OCISessionInitiator session);
-    }
+public interface OCISessionInitiator extends Lookup.Provider {
+    public BasicAuthenticationDetailsProvider getAuthenticationProvider();
+    public <T> T newClient(Class<T> clientClass);
+    public String getTenantId();
+    public Region getRegion();
 }

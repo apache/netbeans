@@ -82,7 +82,7 @@ public class RunFileADMAction implements ActionListener{
                 ErrorUtils.processError(exc, Bundle.MSG_CreatingAuditFailed(projectDisplayName));
             }
         } else {
-            if (OCIManager.getDefault().getConfigProvider() == null
+            if (OCIManager.getDefault().getActiveSession()== null
                     || OCIManager.getDefault().getTenancy().equals(Optional.empty())) {
                 DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_ProjectAuditInfo()));
             } else {

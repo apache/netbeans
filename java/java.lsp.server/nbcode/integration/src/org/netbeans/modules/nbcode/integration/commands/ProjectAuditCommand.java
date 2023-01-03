@@ -21,6 +21,8 @@ package org.netbeans.modules.nbcode.integration.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,6 +37,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.adm.AuditOptions;
 import org.netbeans.modules.cloud.oracle.adm.ProjectVulnerability;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
@@ -125,7 +129,24 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         boolean forceAudit = options.has("force") && options.get("force").getAsBoolean();
         String preferredName = options.has("auditName") ? options.get("auditName").getAsString() : null;
         
-        return v.findKnowledgeBase(knowledgeBase).
+        final OCIProfile auditWithProfile;
+        
+        if (options.has("profile")) {
+            String id = options.get("profile").getAsString();
+            Path path;
+            
+            if (options.has("configPath")) {
+                path = Paths.get(options.get("configPath").getAsString());
+            } else {
+                path = null;
+            }
+            
+            auditWithProfile = OCIManager.forConfig(path, id);
+        } else {
+            auditWithProfile = OCIManager.getDefault().getActiveProfile();
+        }
+        
+        return OCIManager.usingSession(auditWithProfile, () -> v.findKnowledgeBase(knowledgeBase).
                 exceptionally(th -> {
                     DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.ERR_KnowledgeBaseSearchFailed(fn, th.getMessage()),
                             NotifyDescriptor.ERROR_MESSAGE));
@@ -138,17 +159,17 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             
             switch (command) {
                 case COMMAND_EXECUTE_AUDIT:
-                    exec = v.runProjectAudit(kb, AuditOptions.makeNewAudit().setAuditName(preferredName));
+                    exec = v.runProjectAudit(kb, AuditOptions.makeNewAudit().useSession(auditWithProfile).setAuditName(preferredName));
                     break;
                 case COMMAND_LOAD_AUDIT: {
-                    exec = v.runProjectAudit(kb, new AuditOptions().setRunIfNotExists(forceAudit).setAuditName(preferredName));
+                    exec = v.runProjectAudit(kb, new AuditOptions().useSession(auditWithProfile).setRunIfNotExists(forceAudit).setAuditName(preferredName));
                 }
                 default:
                     return CompletableFuture.completedFuture(null);
                     
             }
             return (CompletableFuture<Object>)(CompletableFuture)exec;
-        });
+        }));
     } 
 
     @Override

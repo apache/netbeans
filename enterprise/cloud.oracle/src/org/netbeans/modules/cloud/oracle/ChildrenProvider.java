@@ -25,9 +25,28 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  *
  * @author Jan Horvath
  */
-@FunctionalInterface
 public interface ChildrenProvider<T extends OCIItem, U extends OCIItem> {
 
     public List<U> apply(T t);
     
+    /**
+     * Session / profile-aware child factory. Accepts the active session (profile) as a parameter to
+     * find child items. 
+     * @param <T>
+     * @param <U> 
+     */
+    public interface SessionAware<T extends OCIItem, U extends OCIItem> extends ChildrenProvider<T, U> {
+        public default List<U> apply(T t) {
+            return apply(t, OCIManager.getDefault().getActiveSession());
+        }
+        
+        /**
+         * Finds children of item t. Use `session' to initialize BMC clients that communicate
+         * with OCI.
+         * @param t parent item
+         * @param session authenticator factory
+         * @return list of children.
+         */
+        public List<U> apply(T t, OCISessionInitiator session);
+    }
 }

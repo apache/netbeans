@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.cloud.oracle.adm;
 
+import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
+
 /**
  *
  * @author sdedic
@@ -26,6 +29,7 @@ public class AuditOptions {
     private boolean forceAuditExecution;
     private boolean runIfNotExists;
     private String auditName;
+    private OCISessionInitiator session;
     
     public static AuditOptions makeNewAudit() {
         return new AuditOptions().setForceAuditExecution(true).setRunIfNotExists(true);
@@ -56,5 +60,14 @@ public class AuditOptions {
     public AuditOptions setAuditName(String auditName) {
         this.auditName = auditName;
         return this;
+    }
+    
+    public AuditOptions useSession(OCISessionInitiator session) {
+        this.session = session;
+        return this;
+    }
+
+    public OCISessionInitiator getSession() {
+        return session != null ? session : OCIManager.getDefault().getActiveSession();
     }
 }

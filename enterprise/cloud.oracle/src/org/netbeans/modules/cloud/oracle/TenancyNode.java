@@ -22,6 +22,7 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -41,6 +42,7 @@ public class TenancyNode extends OCINode implements PropertyChangeListener {
         setName(tenancy.getName()); 
         setDisplayName(disp);
         setIconBaseWithExtension(ORCL_ICON);
+        // home region will be set as a description
         setShortDescription(tenancy.getDescription());
         OCIManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OCIManager.getDefault()));
     }
@@ -77,5 +79,14 @@ public class TenancyNode extends OCINode implements PropertyChangeListener {
     private Image badgeIcon(Image origImg) {
         return origImg;
     }
-    
+
+    @Override
+    public boolean canDestroy() {
+        return OCIManager.getDefault().getConnectedProfiles().contains(session);
+    }
+
+    @Override
+    public void destroy() throws IOException {
+        OCIManager.getDefault().removeConnectedProfile((OCIProfile)session);
+    }
 }

@@ -100,7 +100,7 @@ public class OCINode extends AbstractNode {
         return result.toArray(new Action[0]); // NOI18N
     }
     
-    private static final List<? extends Action> actionsForPath(String path, Lookup lkp) {
+    public static final List<? extends Action> actionsForPath(String path, Lookup lkp) {
         List<? extends Action> actions = Utilities.actionsForPath(path);
         List<Action> ret = new ArrayList<>(actions.size());
         for (Action a : actions) {

@@ -19,9 +19,13 @@
 package org.netbeans.modules.cloud.oracle;
 
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
+import org.openide.util.lookup.Lookups;
 
 /**
  * Represents a profile that can't connect to its tenancy. 
@@ -34,11 +38,24 @@ public class BrokenProfileNode extends AbstractNode {
     private final TenancyInstance instance;
     
     public BrokenProfileNode(TenancyInstance instance) {
-        super(Children.LEAF);
+        super(Children.LEAF, Lookups.fixed(instance.profile));
         this.instance = instance;
         setName(instance.profile.getId()); 
         setDisplayName(instance.getDisplayName());
         setIconBaseWithExtension(ORCL_ICON);
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        List<? extends Action> commonActions = OCINode.actionsForPath(
+                "Cloud/Oracle/BrokenProfile/Actions", getLookup());
+        List<Action> result = new ArrayList<>();
+        for (Action commonAction : commonActions) {
+            if (commonAction.isEnabled()) {
+                result.add(commonAction);
+            }
+        }
+        return result.toArray(new Action[result.size()]);
     }
     
     @Override

@@ -251,13 +251,20 @@ public final class OCIManager {
         if (current.contains(profile)) {
             return;
         }
+        boolean fireActive = current.isEmpty();
         InstanceProperties p = InstancePropertiesManager.getInstance().createProperties("cloud.oracle.com.ociprofiles");
         if (!getDefaultConfigPath().equals(profile.getConfigPath())) {
             p.putString(KEY_CONFIG_PATH, profile.getConfigPath().toString());
         }
         // always store ID, at least something has to be stored for the properties to materialize.
         p.putString(KEY_PROFILE_ID, profile.getId());
-        listeners.firePropertyChange("connectedProfiles", null, null);
+        listeners.firePropertyChange(PROP_CONNECTED_PROFILES, null, null);
+        synchronized (this) {
+            if (activeProfile != null && activeProfile != profile) {
+                return;
+            }
+        }
+        listeners.firePropertyChange(PROP_ACTIVE_PROFILE, null, null);
     }
     
     public void removeConnectedProfile(OCIProfile profile) {
@@ -268,7 +275,7 @@ public final class OCIManager {
             if (cfgPath == null) {
                 cfgPath = getDefaultConfigPath().toString();
             }
-            if (!profile.getConfigPath().equals(cfgPath)) {
+            if (!profile.getConfigPath().toString().equals(cfgPath)) {
                 continue;
             }
             if (profName == null) {
@@ -278,7 +285,7 @@ public final class OCIManager {
                 OCIProfile resetToProfile = null;
                 
                 synchronized (this) {
-                    OCIConfig cfg = new OCIConfig(profile.getConfigPath(), profile.getId());
+                    OCIConfig cfg = new OCIConfig(profile.getConfigPath(), OCIProfile.DEFAULT_ID.equals(profile.getId()) ? null : profile.getId());
                     if (profiles.remove(cfg) == null) {
                         return;
                     }
@@ -383,7 +390,6 @@ public final class OCIManager {
             return;
         }
         OCIProfile oldProfile;
-        
         synchronized (this) {
             if (profile == null) {
                 if (activeProfile == null) {
@@ -391,7 +397,7 @@ public final class OCIManager {
                 }
                 profile = forProfile(null);
             }
-            if (Objects.equals(profile, activeProfile)) {
+            if (profile == activeProfile) {
                 return;
             }
             oldProfile = activeProfile;

@@ -22,7 +22,6 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -104,13 +103,13 @@ public class ConnectProfilePanel extends javax.swing.JPanel{
     }
 
     @NbBundle.Messages({
-        "# {0} profile name",
-        "# {1} region",
-        "LBL_DefaultConfigProfile={0} - {1}",
-        "# {0} profile name",
-        "# {1} region",
+        "# {0} tenancy name",
+        "# {1} profile name",
+        "LBL_DefaultConfigProfile={0} ({1})",
+        "# {0} tenancy name",
+        "# {1} profile",
         "# {2} custom config filename",
-        "LBL_CustomConfigProfile={2}: {0} - {1}"
+        "LBL_CustomConfigProfile={2}: {0} ({1})"
     })
     static class R extends DefaultListCellRenderer {
 
@@ -123,12 +122,15 @@ public class ConnectProfilePanel extends javax.swing.JPanel{
             }
             JLabel l = (JLabel)c;
             l.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/cloud/oracle/resources/tenancy.svg", false));
+            // note: the tenancy data should have been fetched before setProfiles() is called to validate
+            // tenancy presence
             if (p.isDefaultConfig()) {
-                l.setText(Bundle.LBL_DefaultConfigProfile(p.getId(), p.getConfigProvider().getRegion().getRegionId()));
+                l.setText(Bundle.LBL_DefaultConfigProfile(p.getTenancyData().getName(), p.getId()));
             } else {
-                l.setText(Bundle.LBL_CustomConfigProfile(p.getId(), p.getConfigProvider().getRegion().getRegionId(), p.getConfigPath().getFileName()));
+                l.setText(Bundle.LBL_CustomConfigProfile(p.getTenancyData().getName(), p.getId(), p.getConfigPath().getFileName().toString()));
                 l.setToolTipText(p.getConfigPath().toString());
             }
+            l.setToolTipText(p.getTenancy().get().getDescription());
             return c;
         }
     }

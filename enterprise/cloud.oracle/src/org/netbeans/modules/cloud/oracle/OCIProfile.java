@@ -147,7 +147,30 @@ public final class OCIProfile implements OCISessionInitiator {
     public String getTenantId() {
         return configProvider == null ? null : configProvider.getTenantId();
     }
-
+    
+    public Tenancy getTenancyData() {
+        if (configProvider == null) {
+            return null;
+        }
+        synchronized (this) {
+            if (tenancyOpt != null || initError != null) {
+                return tenancyOpt;
+            }
+        }
+        try (final Identity identityClient = new IdentityClient(configProvider)) {
+            identityClient.setRegion(configProvider.getRegion());
+            GetTenancyRequest gtr = GetTenancyRequest.builder().tenancyId(configProvider.getTenantId()).build();
+            GetTenancyResponse response = identityClient.getTenancy(gtr);
+            Tenancy tenancy = response.getTenancy();
+            synchronized (this) {
+                return tenancyOpt = tenancy;
+            }
+        } catch (Throwable t) {
+            initError = new IOException(t);
+        }
+        return null;
+    }
+    
     /**
      * Retrieves information about Tenancy configured in ~/.oci
      *
@@ -167,21 +190,9 @@ public final class OCIProfile implements OCISessionInitiator {
             } else if (tenancyOpt != null) {
                 return Optional.of(createTenancyItem(tenancyOpt));
             }
+            Tenancy t = getTenancyData();
+            return t == null ? Optional.empty() : Optional.of(createTenancyItem(t));
         }
-        try (final Identity identityClient = new IdentityClient(configProvider)) {
-            identityClient.setRegion(configProvider.getRegion());
-            GetTenancyRequest gtr = GetTenancyRequest.builder().tenancyId(configProvider.getTenantId()).build();
-            GetTenancyResponse response = identityClient.getTenancy(gtr);
-            Tenancy tenancy = response.getTenancy();
-            TenancyItem item = createTenancyItem(tenancy);
-            synchronized (this) {
-                tenancyOpt = tenancy;
-            }
-            return Optional.of(item);
-        } catch (Throwable t) {
-            initError = new IOException(t);
-        }
-        return Optional.empty();
     }
     
     /**

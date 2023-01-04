@@ -31,6 +31,8 @@ import javax.swing.DefaultListCellRenderer;
 class IndexListCellRenderer extends DefaultListCellRenderer {
 
     static final long serialVersionUID =543071118545614229L;
+
+    @Override
     public Component getListCellRendererComponent( JList list,
             Object value,
             int index,

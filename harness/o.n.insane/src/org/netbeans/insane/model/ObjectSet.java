@@ -108,6 +108,7 @@ class ObjectSet {
                 return ret;
             }
             
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }

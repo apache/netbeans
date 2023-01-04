@@ -390,10 +390,13 @@ public class SearchPanel extends javax.swing.JPanel {
         loadingLabel = new javax.swing.JLabel();
         homePageLabel = new javax.swing.JLabel();
         homePageLinkLabel = new javax.swing.JLabel() {
+            @Override
             public Dimension getMinimumSize() {
                 Dimension dim = super.getMinimumSize();
                 return new Dimension(0, dim.height);
             }
+
+            @Override
             public Dimension getMaximumSize() {
                 return getPreferredSize();
             }
@@ -429,12 +432,17 @@ public class SearchPanel extends javax.swing.JPanel {
 
         homePageLinkLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         homePageLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 homePageLinkLabelMouseClicked(evt);
             }
+
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 homePageLinkLabelMouseEntered(evt);
             }
+
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 homePageLinkLabelMouseExited(evt);
             }

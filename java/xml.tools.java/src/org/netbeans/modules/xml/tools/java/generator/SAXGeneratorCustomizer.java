@@ -71,10 +71,12 @@ public class SAXGeneratorCustomizer extends javax.swing.JPanel implements Custom
     private boolean not (boolean expr) {
         return ! expr;
     }
-    
+
+    @Override
     public void addPropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
-    
+
+    @Override
     public void removePropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
     

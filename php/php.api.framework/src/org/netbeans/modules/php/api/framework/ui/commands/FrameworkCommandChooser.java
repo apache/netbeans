@@ -513,6 +513,7 @@ public final class FrameworkCommandChooser extends JPanel {
         taskFieldPanel.setLayout(new java.awt.BorderLayout());
 
         taskField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 taskFieldKeyPressed(evt);
             }
@@ -543,6 +544,7 @@ public final class FrameworkCommandChooser extends JPanel {
         matchingTaskList.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         matchingTaskList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         matchingTaskList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 matchingTaskListMouseClicked(evt);
             }

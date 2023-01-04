@@ -1075,6 +1075,8 @@ public final class ProxyFileManager implements JavaFileManager {
             }
         }
     }
+
+    @Override
     public boolean contains(Location l, FileObject f) {
         return true;
     }

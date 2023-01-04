@@ -37,6 +37,7 @@ class LookTreeCellEditor extends DefaultTreeCellEditor {
         super(tree, r);
     }
 
+    @Override
     public boolean isCellEditable(EventObject ev) {
         if (!super.isCellEditable(ev)) {
             return false;
@@ -45,7 +46,8 @@ class LookTreeCellEditor extends DefaultTreeCellEditor {
         return n.getLook().canRename(n.getData(), n.getLookup());
         // XXX is it better to override JTree.isPathEditable?
     }
-    
+
+    @Override
     protected TreeCellEditor createTreeCellEditor() {
         JTextField tf = new JTextField();
         Ed ed = new Ed(tf);
@@ -59,6 +61,7 @@ class LookTreeCellEditor extends DefaultTreeCellEditor {
             super(tf);
         }
 
+        @Override
         public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
             LookTreeNode n = (LookTreeNode)value;
             delegate.setValue(n.getLook().getName(n.getData(), n.getLookup() ));

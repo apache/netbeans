@@ -62,7 +62,8 @@ public class TitledMenuSeparator extends JPanel {
             }
         }
     }
-    
+
+    @Override
     public void doLayout() {
         super.doLayout();
         Component c = getComponent(1);
@@ -75,6 +76,7 @@ public class TitledMenuSeparator extends JPanel {
         c.setBounds(b);
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension d = getComponent(0).getPreferredSize();
         d.width += 25;

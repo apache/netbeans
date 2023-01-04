@@ -204,7 +204,8 @@ public abstract class PanelView extends javax.swing.JPanel {
      /* Initializes the component.
       * We need to register for ExplorerManager events here
       */
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         

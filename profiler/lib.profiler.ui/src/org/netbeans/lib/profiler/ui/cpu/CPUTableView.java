@@ -345,7 +345,8 @@ abstract class CPUTableView extends CPUView {
     
     
     private class CPUTableModel extends AbstractTableModel {
-        
+
+        @Override
         public String getColumnName(int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -367,6 +368,7 @@ abstract class CPUTableView extends CPUView {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -413,7 +415,8 @@ abstract class CPUTableView extends CPUView {
 
             return null;
         }
-        
+
+        @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -424,6 +427,7 @@ abstract class CPUTableView extends CPUView {
             }
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             if (selection == null) columnIndex++;
             

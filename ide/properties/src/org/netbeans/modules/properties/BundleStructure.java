@@ -573,6 +573,7 @@ public class BundleStructure {
      */
     protected synchronized void buildKeySet() {
         List<String> keyList = new ArrayList<String>() {
+            @Override
             public boolean equals(Object obj) {
                 if (!(obj instanceof ArrayList)) {
                     return false;

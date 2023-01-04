@@ -40,6 +40,7 @@ public class ComponentMorpher extends JComponent implements ComponentListener, A
     private class MorpherThread extends Thread {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             setupMorphing();
 
@@ -91,12 +92,14 @@ public class ComponentMorpher extends JComponent implements ComponentListener, A
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public AccessibleContext getAccessibleContext() {
         if (accessibleContext == null)
             accessibleContext = new AccessibleComponentMorpher();
         return accessibleContext;
     }
-    
+
+    @Override
     public void setBorder(Border border) {
         super.setBorder(border);
         setClientPreferredSize(currentComponent.getPreferredSize());
@@ -266,7 +269,8 @@ public class ComponentMorpher extends JComponent implements ComponentListener, A
     
     
     protected class AccessibleComponentMorpher extends AccessibleJComponent {
-        
+
+        @Override
         public AccessibleRole getAccessibleRole() {
             return AccessibleRole.PUSH_BUTTON;
         }

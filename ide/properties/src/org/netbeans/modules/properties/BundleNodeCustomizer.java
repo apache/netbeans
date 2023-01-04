@@ -129,6 +129,7 @@ public class BundleNodeCustomizer extends JPanel {
             }
         });
         nameText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 nameTextFocusLost(evt);
             }
@@ -150,6 +151,7 @@ public class BundleNodeCustomizer extends JPanel {
         add(localesLabel, gridBagConstraints);
 
         localesList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
             public Component getListCellRendererComponent(
                 JList list,
                 Object value,            // value to display

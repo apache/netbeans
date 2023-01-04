@@ -105,6 +105,7 @@ public class JavaNetRepositoryErrorCustomizer extends javax.swing.JPanel {
         taSelected.setColumns(20);
         taSelected.setRows(5);
         taSelected.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyReleased(KeyEvent evt) {
                 taSelectedKeyReleased(evt);
             }

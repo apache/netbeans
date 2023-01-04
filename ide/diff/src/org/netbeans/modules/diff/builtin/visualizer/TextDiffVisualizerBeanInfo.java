@@ -39,6 +39,7 @@ public class TextDiffVisualizerBeanInfo extends SimpleBeanInfo {
      * properties of this bean.  May return null if the
      * information should be obtained by automatic analysis.
      */
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         return new BeanDescriptor(TextDiffVisualizer.class);
     }
@@ -56,6 +57,7 @@ public class TextDiffVisualizerBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         PropertyDescriptor[] desc;
         try {
@@ -81,6 +83,7 @@ public class TextDiffVisualizerBeanInfo extends SimpleBeanInfo {
      * 		returned by getPropertyDescriptors.
      * <P>	Returns -1 if there is no default property.
      */
+    @Override
     public int getDefaultPropertyIndex() {
         return 0;
     }
@@ -106,6 +109,7 @@ public class TextDiffVisualizerBeanInfo extends SimpleBeanInfo {
      * @return  An image object representing the requested icon.  May
      *    return null if no suitable icon is available.
      */
+    @Override
     public java.awt.Image getIcon(int iconKind) {
         switch (iconKind) {
             case ICON_COLOR_16x16:

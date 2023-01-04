@@ -80,7 +80,8 @@ public class TextArea extends JTextArea {
     // --- Change support ------------------------------------------------------
     
     private boolean changeListener;
-    
+
+    @Override
     public void setText(String t) {
         if (showsHint() && !Objects.equals(t, hint)) hideHint();
         
@@ -115,8 +116,9 @@ public class TextArea extends JTextArea {
     public boolean showsHint() {
         return showsHint;
     }
-    
-    
+
+
+    @Override
     protected void processFocusEvent(FocusEvent e) {
         if (isFocusOwner()) hideHint(); else showHint();
         super.processFocusEvent(e);
@@ -142,7 +144,8 @@ public class TextArea extends JTextArea {
     
     
     // --- Popup menu support --------------------------------------------------
-    
+
+    @Override
     protected void processMouseEvent(MouseEvent e) {
         super.processMouseEvent(e);
         if (e.isPopupTrigger() && isEnabled()) showPopup(e);
@@ -156,6 +159,7 @@ public class TextArea extends JTextArea {
         JPopupMenu popup = new JPopupMenu();
         
         JMenuItem miCut = new JMenuItem(BUNDLE().getString("TextArea_Cut")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent ae) {
                 super.fireActionPerformed(ae);
                 cut();
@@ -166,6 +170,7 @@ public class TextArea extends JTextArea {
         popup.add(miCut);
         
         JMenuItem miCopy = new JMenuItem(BUNDLE().getString("TextArea_Copy")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent ae) {
                 super.fireActionPerformed(ae);
                 copy();
@@ -176,6 +181,7 @@ public class TextArea extends JTextArea {
         popup.add(miCopy);
         
         JMenuItem miPaste = new JMenuItem(BUNDLE().getString("TextArea_Paste")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent ae) {
                 super.fireActionPerformed(ae);
                 hideHint();
@@ -199,6 +205,7 @@ public class TextArea extends JTextArea {
         
         if (editable) {
             JMenuItem miDelete = new JMenuItem(BUNDLE().getString("TextArea_Delete")) { // NOI18N
+                @Override
                 protected void fireActionPerformed(ActionEvent ae) {
                     super.fireActionPerformed(ae);
                     try {
@@ -215,6 +222,7 @@ public class TextArea extends JTextArea {
         popup.addSeparator();
         
         JMenuItem miSelect = new JMenuItem(BUNDLE().getString("TextArea_SelectAll")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent ae) {
                 super.fireActionPerformed(ae);
                 selectAll();
@@ -233,7 +241,8 @@ public class TextArea extends JTextArea {
     
     
     // --- Resize support ------------------------------------------------------
-    
+
+    @Override
     protected void processKeyEvent(KeyEvent e) {
         if (e.isControlDown() && e.getID() == KeyEvent.KEY_RELEASED) {
             int keyCode = e.getKeyCode();
@@ -257,21 +266,25 @@ public class TextArea extends JTextArea {
         JMenu menu = new JMenu(BUNDLE().getString("TextArea_Resize")); // NOI18N
                         
         JMenuItem horizPlus = new JMenuItem(BUNDLE().getString("TextArea_HorizPlus")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent e) { changeSize(false, true); }
         };
         horizPlus.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.CTRL_MASK));
         menu.add(horizPlus);
         JMenuItem horizMinus = new JMenuItem(BUNDLE().getString("TextArea_HorizMinus")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent e) { changeSize(false, false); }
         };
         horizMinus.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_MASK));
         menu.add(horizMinus);
         JMenuItem vertPlus = new JMenuItem(BUNDLE().getString("TextArea_VertPlus")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent e) { changeSize(true, true); }
         };
         vertPlus.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
         menu.add(vertPlus);
         JMenuItem vertMinus = new JMenuItem(BUNDLE().getString("TextArea_VertMinus")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent e) { changeSize(true, false); }
         };
         vertMinus.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
@@ -280,6 +293,7 @@ public class TextArea extends JTextArea {
         menu.addSeparator();
 
         JMenuItem reset = new JMenuItem(BUNDLE().getString("TextArea_DefaultSize")) { // NOI18N
+            @Override
             protected void fireActionPerformed(ActionEvent e) { resetSize(); }
         };
         reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0, KeyEvent.CTRL_MASK));

@@ -78,7 +78,8 @@ public abstract class ImplementationProvider {
         public Action[] getGlyphGutterActions(JTextComponent target) {
             return EditorImplementation.getDefault().getGlyphGutterActions(target);
         }
-        
+
+        @Override
         public boolean activateComponent(JTextComponent c) {
             return EditorImplementation.getDefault().activateComponent(c);
         }

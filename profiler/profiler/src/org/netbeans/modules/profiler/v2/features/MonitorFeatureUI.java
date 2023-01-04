@@ -120,10 +120,13 @@ abstract class MonitorFeatureUI extends FeatureUI {
         toolbar.addSpace(2);
         
         JToggleButton cpuView = new JToggleButton(Icons.getIcon(ProfilerIcons.CPU)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 monitorView.setupCPUView(isSelected());
             }
+
+            @Override
             protected void fireItemStateChanged(ItemEvent event) {
                 super.fireItemStateChanged(event);
                 storeFlag(CPU_GRAPH_FLAG, isSelected() ? null : Boolean.FALSE.toString());
@@ -139,10 +142,13 @@ abstract class MonitorFeatureUI extends FeatureUI {
         toolbar.add(cpuView);
         
         JToggleButton memoryView = new JToggleButton(Icons.getIcon(ProfilerIcons.MEMORY)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 monitorView.setupMemoryView(isSelected());
             }
+
+            @Override
             protected void fireItemStateChanged(ItemEvent event) {
                 super.fireItemStateChanged(event);
                 storeFlag(MEM_GRAPH_FLAG, isSelected() ? null : Boolean.FALSE.toString());
@@ -158,10 +164,13 @@ abstract class MonitorFeatureUI extends FeatureUI {
         toolbar.add(memoryView);
         
         JToggleButton gcView = new JToggleButton(Icons.getIcon(ProfilerIcons.RUN_GC)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 monitorView.setupGCView(isSelected());
             }
+
+            @Override
             protected void fireItemStateChanged(ItemEvent event) {
                 super.fireItemStateChanged(event);
                 storeFlag(GC_GRAPH_FLAG, isSelected() ? null : Boolean.FALSE.toString());
@@ -177,10 +186,13 @@ abstract class MonitorFeatureUI extends FeatureUI {
         toolbar.add(gcView);
         
         JToggleButton threadsView = new JToggleButton(Icons.getIcon(ProfilerIcons.WINDOW_THREADS)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 monitorView.setupThreadsView(isSelected());
             }
+
+            @Override
             protected void fireItemStateChanged(ItemEvent event) {
                 super.fireItemStateChanged(event);
                 storeFlag(THCL_GRAPH_FLAG, isSelected() ? null : Boolean.FALSE.toString());

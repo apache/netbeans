@@ -463,6 +463,7 @@ public class CmpRelationshipsForm extends javax.swing.JPanel {
 
         /**
          */
+        @Override
         public Component getComponentBefore(Container focusCycleRoot, Component c) {
             for (int i = getIndex(c); i > 0 && i < compList.length;) {
                 c = compList[--i];
@@ -475,6 +476,7 @@ public class CmpRelationshipsForm extends javax.swing.JPanel {
 
         /**
          */
+        @Override
         public Component getComponentAfter(Container focusCycleRoot, Component c) {
             for (int i = getIndex(c) + 1; i > 0 && i < compList.length; i++) {
                 c = compList[i];

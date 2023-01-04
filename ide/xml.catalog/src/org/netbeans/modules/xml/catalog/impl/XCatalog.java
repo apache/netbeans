@@ -389,6 +389,7 @@ public final class XCatalog extends AbstractCatalog
         /** 
           * The start of an element. Parse attributes.
           */
+        @Override
         public void startElement(String ns, String local, String qName, Attributes attrList) throws SAXException {
             
             try {

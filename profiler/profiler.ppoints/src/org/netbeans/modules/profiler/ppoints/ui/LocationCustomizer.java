@@ -83,6 +83,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
     private static class HTMLButton extends JButton {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void setEnabled(boolean enabled) {
             setForeground(enabled ? SystemColor.textText : SystemColor.textInactiveText);
             super.setEnabled(enabled);
@@ -92,6 +93,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
         //      super("<html><center>" + text.replaceAll("\\n", "<br>") + "</center></html>"); // NOI18N
         //      getAccessibleContext().setAccessibleName(text);
         //    }
+        @Override
         public void setText(String value) {
             super.setText("<html><center><nobr>" + value.replace("\\n", "<br>") + "</nobr></center></html>"); // NOI18N
             getAccessibleContext().setAccessibleName(value);
@@ -345,10 +347,12 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
 
         // fileTextField
         fileTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -378,6 +382,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
 
         // fromEditorSeparator
         fromEditorSeparator = new JSeparator(SwingConstants.VERTICAL) {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -493,6 +498,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
 
         // Placeholder for lineOffsetRadio and lineOffsetSpinner
         lineSettingsContainer.add(new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0)) {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(lineOffsetRadio.getPreferredSize().width + lineOffsetSpinner.getPreferredSize().width,
                                          Math.max(lineOffsetRadio.getPreferredSize().height,

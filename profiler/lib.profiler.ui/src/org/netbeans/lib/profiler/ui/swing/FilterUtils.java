@@ -170,6 +170,7 @@ public final class FilterUtils {
                         if (color.getValue().trim().isEmpty()) continue;
                         Icon icon = color.getColor() == null ? null : color.getIcon(12, 12);
                         popup.add(new JMenuItem(color.getName(), icon) {
+                            @Override
                             protected void fireActionPerformed(ActionEvent event) {
                                 String current = getFilterString(combo);
                                 if (current == null) current = ""; // NOI18N
@@ -197,6 +198,7 @@ public final class FilterUtils {
         final TextFilter currentFilter = new TextFilter();
         
         final JButton filter = new JButton(ACTION_FILTER, Icons.getIcon(GeneralIcons.FILTER)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 final JButton _this = this;
@@ -238,6 +240,7 @@ public final class FilterUtils {
         toolbar.add(Box.createHorizontalStrut(1));
         
         final JToggleButton matchCase = new JToggleButton(Icons.getIcon(GeneralIcons.MATCH_CASE)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 if (isEnabled()) SwingUtilities.invokeLater(new Runnable() {
@@ -254,18 +257,21 @@ public final class FilterUtils {
         PopupButton filterType = new PopupButton(Icons.getIcon(GeneralIcons.FILTER_CONTAINS)) {
             protected void populatePopup(JPopupMenu popup) {
                 popup.add(new JMenuItem(FILTER_CONTAINS, Icons.getIcon(GeneralIcons.FILTER_CONTAINS)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterImpl(TextFilter.TYPE_INCLUSIVE, getIcon(), getText());
                     }
                 });
                 popup.add(new JMenuItem(FILTER_NOT_CONTAINS, Icons.getIcon(GeneralIcons.FILTER_NOT_CONTAINS)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterImpl(TextFilter.TYPE_EXCLUSIVE, getIcon(), getText());
                     }
                 });
                 popup.add(new JMenuItem(FILTER_REGEXP, Icons.getIcon(GeneralIcons.FILTER_REG_EXP)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterImpl(TextFilter.TYPE_REGEXP, getIcon(), getText());
@@ -310,10 +316,12 @@ public final class FilterUtils {
         });
         
         final JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
             public void setVisible(boolean visible) {
                 super.setVisible(visible);
                 if (!visible) table.requestFocusInWindow();
             }
+            @Override
             public boolean requestFocusInWindow() {
                 if (textC != null) textC.selectAll();
                 return combo.requestFocusInWindow();

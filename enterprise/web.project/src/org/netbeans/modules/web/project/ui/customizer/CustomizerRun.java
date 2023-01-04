@@ -132,6 +132,7 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
         org.openide.awt.Mnemonics.setLocalizedText(jLabelContextPath, NbBundle.getMessage(CustomizerRun.class, "LBL_CustomizeRun_ContextPath_JLabel")); // NOI18N
 
         jTextFieldContextPath.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextFieldContextPathKeyReleased(evt);
             }

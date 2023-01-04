@@ -154,6 +154,7 @@ public class ProjectTestRestServicesAction extends AbstractAction implements Pre
 
     /** Needs to override getValue in order to force refresh
      */
+    @Override
     public Object getValue(String key) {
         init();
         if (needsRefresh) {
@@ -164,6 +165,7 @@ public class ProjectTestRestServicesAction extends AbstractAction implements Pre
 
     /** Needs to override isEnabled in order to force refresh
      */
+    @Override
     public boolean isEnabled() {
         init();
         if (needsRefresh) {

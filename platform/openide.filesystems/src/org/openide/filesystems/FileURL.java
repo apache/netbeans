@@ -104,6 +104,7 @@ class FileURL extends URLConnection {
     /*
     * @return InputStream or given FileObject.
     */
+    @Override
     public InputStream getInputStream() throws IOException, UnknownServiceException {
         connect();
 
@@ -126,6 +127,7 @@ class FileURL extends URLConnection {
     /*
     * @return OutputStream for given FileObject.
     */
+    @Override
     public OutputStream getOutputStream() throws IOException, UnknownServiceException {
         connect();
 
@@ -144,6 +146,7 @@ class FileURL extends URLConnection {
     /*
     * @return length of FileObject.
     */
+    @Override
     public int getContentLength() {
         try {
             connect();
@@ -158,6 +161,7 @@ class FileURL extends URLConnection {
     * @param name the header name. Only <code>content-type</code> is guaranteed to be present.
     * @return the value (i.e., MIME type)
     */
+    @Override
     public String getHeaderField(String name) {
         if (name.equalsIgnoreCase("content-type")) { // NOI18N
 
@@ -190,6 +194,7 @@ class FileURL extends URLConnection {
     // #13038: URLClassPath is going to check this.
     // Better not return AllPermission!
     // SocketPermission on localhost might also work.
+    @Override
     public Permission getPermission() throws IOException {
         // Note this is normally called by URLClassPath with an unconnected
         // URLConnection, so the fo will probably be null anyway.
@@ -233,6 +238,7 @@ class FileURL extends URLConnection {
         }
 
         /** overriden */
+        @Override
         public void close() throws IOException {
             flock.releaseLock();
             super.close();
@@ -302,6 +308,7 @@ class FileURL extends URLConnection {
             return reader.read();
         }
 
+        @Override
         public int read(byte[] b, int off, int len) throws IOException {
             char[] ch = new char[len];
             int r = reader.read(ch, 0, len);
@@ -312,18 +319,22 @@ class FileURL extends URLConnection {
             return r;
         }
 
+        @Override
         public long skip(long skip) throws IOException {
             return reader.skip(skip);
         }
 
+        @Override
         public void close() throws IOException {
             reader.close();
         }
 
+        @Override
         public void reset() throws IOException {
             reader.reset();
         }
 
+        @Override
         public boolean markSupported() {
             return false;
         }

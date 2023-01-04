@@ -50,6 +50,7 @@ public class CordovaNotFound extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(CordovaNotFound.class, "CordovaNotFound.jLabel2.text")); // NOI18N
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
             }

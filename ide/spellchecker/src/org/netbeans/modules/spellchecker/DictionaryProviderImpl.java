@@ -320,7 +320,8 @@ public class DictionaryProviderImpl implements DictionaryProvider {
         public boolean hasNext() {
             return (current != null);
         }
-        
+
+        @Override
         public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }

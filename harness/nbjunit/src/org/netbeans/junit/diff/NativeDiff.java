@@ -121,6 +121,7 @@ public class NativeDiff implements Diff {
             this.os = redirect;
         }
         
+        @Override
         public void run() {
             try
             {

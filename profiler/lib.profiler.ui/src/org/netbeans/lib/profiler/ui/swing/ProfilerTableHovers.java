@@ -231,6 +231,7 @@ final class ProfilerTableHovers {
             renderer.move(0, 0);
             
             if (crp == null) crp = new CellRendererPane() {
+                @Override
                 public void paintComponent(Graphics g, Component c, Container p, int x, int y, int w, int h, boolean v) {
                     super.paintComponent(g, c, p, x, y, w, h, v);
                     remove(c); // Prevent leaking ProfilerTreeTable.ProfilerTreeTableTree and transitively all the UI/models
@@ -254,6 +255,7 @@ final class ProfilerTableHovers {
         final int imageH = img.getHeight(null);
         
         JPanel l = new JPanel(null) {
+            @Override
             protected void paintComponent(Graphics g) {
                 if (left) g.drawImage(img, 1, 1, 1 + popupW, 1 + popupH, 0, 0, popupW, popupH, null);
                 else      g.drawImage(img, 0, 1, 0 + popupW, 1 + popupH, imageW - popupW, 0, imageW, imageH, null);
@@ -388,6 +390,7 @@ final class ProfilerTableHovers {
         }
         
         // MouseAdapter
+        @Override
         public void mouseMoved(MouseEvent e) {
             // Do not display popup when a modifier is pressed (can't read all keys)
 //            if (e.getModifiers() != 0) return;
@@ -396,7 +399,8 @@ final class ProfilerTableHovers {
             
             updatePopups(e.getPoint(), false);
         }
-        
+
+        @Override
         public void mouseDragged(MouseEvent e) {
 //            if (e.getModifiers() != 0) return;
             
@@ -404,7 +408,8 @@ final class ProfilerTableHovers {
             
             updatePopups(e.getPoint(), false);
         }
-        
+
+        @Override
         public void mouseExited(MouseEvent e) {
             hidePopups();
             currentScreenPoint = null;
@@ -473,7 +478,10 @@ final class ProfilerTableHovers {
 //        public void mouseDragged(MouseEvent e) { hidePopups(); }
 //        public void mousePressed(MouseEvent e) { hidePopups(); }
 //        public void mouseReleased(MouseEvent e) { hidePopups(); }
+        @Override
         public void mousePressed(MouseEvent e) { updatePopups(e.getPoint(), true); }
+
+        @Override
         public void mouseReleased(MouseEvent e) { updatePopups(e.getPoint(), true); }
         
 //        // TableModelListener

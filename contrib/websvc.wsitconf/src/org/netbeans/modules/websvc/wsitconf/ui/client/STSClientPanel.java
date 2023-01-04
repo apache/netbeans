@@ -354,6 +354,7 @@ public class STSClientPanel extends SectionInnerPanel {
         shareTokenChBox = new javax.swing.JCheckBox();
 
         addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
             }

@@ -139,6 +139,7 @@ public abstract class SecurityMappingTableModel extends AbstractTableModel {
         return numColumns;
     }
 
+    @Override
     public abstract String getColumnName(int column);
 
     /** SecurityMappingTableModel methods

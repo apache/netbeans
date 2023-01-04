@@ -60,7 +60,8 @@ public final class FastJar {
             this.b = b;
             this.len = b.getFilePointer()+len;
         }
-    
+
+        @Override
         public int read (byte[] data, int offset, int size) throws IOException {
             int rem = available();
             if (rem == 0) {
@@ -84,11 +85,13 @@ public final class FastJar {
                 return b.readByte();
             }
         }
-        
+
+        @Override
         public int available () throws IOException {
              return (int) (len - this.b.getFilePointer());
         }
-        
+
+        @Override
         public void close () throws IOException {
             b.close ();
         }

@@ -46,6 +46,7 @@ public class ColorPicker extends javax.swing.JFrame {
         colorPreview1 = new examples.colorpicker.ColorPreview();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }

@@ -34,6 +34,7 @@ public class NoJavadocException extends Exception {
     }
 
     /** Overrides toString() method */
+    @Override
     public String toString(){
         return NbBundle.getMessage(NoJavadocException.class, "MSG_NoDoc" ); // NOI18N
     }

@@ -395,7 +395,8 @@ final class InsaneConverter {
     private void parse(InputStream source) throws Exception {
         class Handler extends DefaultHandler {
             private int depth = 0;
-            
+
+            @Override
             public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
                 if (depth == 0) {
                     if (! "insane".equals(qName)) throw new SAXException("format");
@@ -419,8 +420,9 @@ final class InsaneConverter {
                 }
                 depth++;
             }
-            
 
+
+            @Override
             public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
                 depth--;
             }

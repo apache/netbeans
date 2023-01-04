@@ -136,6 +136,7 @@ public class      ComboBoxTableCellEditor
         //show the combobox if the mouse clicks at the panel
         this.editor.addMouseListener (new MouseAdapter ()
             {
+                @Override
                 public final void mousePressed (MouseEvent evt)
                 {
                     eventEditorMousePressed ();
@@ -210,6 +211,7 @@ public class      ComboBoxTableCellEditor
      *  @interfaceMethod javax.swing.table.TableCellEditor
      *********************************************************************/
 
+    @Override
     public final Component getTableCellEditorComponent (JTable  table,
                                                         Object  value,
                                                         boolean selected,
@@ -272,6 +274,7 @@ public class      ComboBoxTableCellEditor
      *  @interfaceMethod javax.swing.table.TableCellEditor
      *********************************************************************/
 
+    @Override
 	public boolean isCellEditable (EventObject evt)
 	{
 
@@ -294,6 +297,7 @@ public class      ComboBoxTableCellEditor
 
 	}
 
+    @Override
     public Object getCellEditorValue ()
     {
 

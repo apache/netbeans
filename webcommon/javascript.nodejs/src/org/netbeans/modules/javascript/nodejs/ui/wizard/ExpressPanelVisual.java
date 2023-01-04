@@ -131,9 +131,12 @@ public final class ExpressPanelVisual extends JPanel implements PreferenceChange
 
         Mnemonics.setLocalizedText(optionsLabel, NbBundle.getMessage(ExpressPanelVisual.class, "ExpressPanelVisual.optionsLabel.text")); // NOI18N
         optionsLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 optionsLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
             }

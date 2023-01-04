@@ -115,7 +115,8 @@ public class DDChangeEvent extends java.util.EventObject {
     public int getType () {
         return type;
     }
-    
+
+    @Override
     public String toString () {
         return "DDChangeEvent "+getSource ()+" of type "+type; // NOI18N
     }

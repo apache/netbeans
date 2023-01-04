@@ -43,18 +43,21 @@ public class TreeAttlistDeclAttributeListEditor extends PropertyEditorSupport {
 
     /**
      */
+    @Override
     public void setAsText (String text) throws IllegalArgumentException {
       // can not be set as text
     }
 
     /**
      */
+    @Override
     public boolean supportsCustomEditor () {
         return true;
     }
 
     /**
      */
+    @Override
     public Component getCustomEditor () {
         TreeAttlistDeclAttributeListCustomizer comp = new TreeAttlistDeclAttributeListCustomizer();
         comp.setObject (getValue());
@@ -64,12 +67,14 @@ public class TreeAttlistDeclAttributeListEditor extends PropertyEditorSupport {
 
     /**
      */
+    @Override
     public boolean isPaintable () {
       return false;
     }
 
     /**
      */
+    @Override
     public String getAsText () {
         return Util.THIS.getString ("NAME_pe_attributes");
     }

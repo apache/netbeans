@@ -38,7 +38,8 @@ public final class ResizablePopup {
     static final String HELP_COOKIE = "help"; // NOI18N
     
     private static final WindowListener windowListener = new WindowAdapter() {
-        
+
+        @Override
         public void windowClosing(WindowEvent windowEvent) {
             cleanup(windowEvent.getWindow());
         }
@@ -70,6 +71,7 @@ public final class ResizablePopup {
         {
             private static final long serialVersionUID = -2488334519927160789L;
 
+            @Override
             public void setVisible(boolean visible) {
                 boolean wasVisible = isVisible();
                 if (wasVisible && !visible) {

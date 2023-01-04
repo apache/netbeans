@@ -305,7 +305,8 @@ public class HeapFragmentWalkerUI extends JPanel {
                 }
             });
     }
-    
+
+    @Override
     public void requestFocus() {
         if (summaryControllerPresenter == null) super.requestFocus();
         else summaryControllerPresenter.requestFocus();

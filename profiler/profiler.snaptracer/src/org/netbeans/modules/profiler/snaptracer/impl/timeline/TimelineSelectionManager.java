@@ -433,6 +433,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
 
     private class MouseListener extends MouseAdapter implements MouseMotionListener {
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -450,6 +451,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
             
         }
 
+        @Override
         public void mouseReleased(final MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -469,6 +471,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
             
         }
 
+        @Override
         public void mouseClicked(final MouseEvent e) {
             if (!enabled || !SwingUtilities.isLeftMouseButton(e)) return;
             SwingUtilities.invokeLater(new Runnable() {
@@ -480,6 +483,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
             
         }
 
+        @Override
         public void mouseEntered(final MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -491,6 +495,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
             
         }
 
+        @Override
         public void mouseExited(final MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -508,6 +513,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
             
         }
 
+        @Override
         public void mouseDragged(final MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -521,6 +527,7 @@ class TimelineSelectionManager implements ChartSelectionModel {
 
         }
 
+        @Override
         public void mouseMoved(final MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {

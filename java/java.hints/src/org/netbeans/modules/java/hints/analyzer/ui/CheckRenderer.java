@@ -147,6 +147,7 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
         }
         
         /** No one may add mouse listeners, not even Swing! */
+        @Override
         public void addMouseListener(MouseListener l) { }
         /**
          * Set the new state to either SELECTED, NOT_SELECTED or
@@ -156,6 +157,8 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
         /** Return the current state, which is determined by the
          * selection status of the model. */
         public State getState() { return model.getState(); }
+
+        @Override
         public void setSelected(boolean b) {
             if (b) {
                 setState(State.SELECTED);

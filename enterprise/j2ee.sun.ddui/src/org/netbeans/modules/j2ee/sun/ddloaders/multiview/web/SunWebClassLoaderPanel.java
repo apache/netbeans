@@ -114,6 +114,7 @@ public class SunWebClassLoaderPanel extends BaseSectionNodeInnerPanel {
         add(jLblExtraClassPath, gridBagConstraints);
 
         jTxtExtraClassPath.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtExtraClassPathKeyReleased(evt);
             }
@@ -136,6 +137,7 @@ public class SunWebClassLoaderPanel extends BaseSectionNodeInnerPanel {
         add(jLblDynamicReloadInterval, gridBagConstraints);
 
         jTxtDynamicReloadInterval.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtDynamicReloadIntervalKeyReleased(evt);
             }

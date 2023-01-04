@@ -187,6 +187,7 @@ abstract class ObjectsFeatureUI extends FeatureUI {
         lrLabel = new GrayLabel(Bundle.ObjectsFeatureUI_liveResults());
 
         lrPauseButton = new JToggleButton(Icons.getIcon(GeneralIcons.PAUSE)) {
+            @Override
             protected void fireItemStateChanged(ItemEvent event) {
                 boolean paused = isSelected();
                 updater.setPaused(paused);
@@ -198,6 +199,7 @@ abstract class ObjectsFeatureUI extends FeatureUI {
         lrPauseButton.setEnabled(false);
 
         lrRefreshButton = new JButton(Icons.getIcon(GeneralIcons.UPDATE_NOW)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 refreshResults();
             }
@@ -206,6 +208,7 @@ abstract class ObjectsFeatureUI extends FeatureUI {
         
         Icon icon = Icons.getIcon(ProfilerIcons.DELTA_RESULTS);
         lrDeltasButton = new JToggleButton(icon) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 if (!memoryView.setDiffView(isSelected())) setSelected(false);
                 setToolTipText(isSelected() ? Bundle.ObjectsFeatureUI_showAbsolute() :

@@ -38,8 +38,8 @@ public class PropertiesTableModel extends AbstractTableModel {
     private HgPropertiesNode[] nodes;
     private String[] columns;
     
-    private static final Map<String, String[]> columnLabels = new HashMap<String, String[]>(2); 
-    
+    private static final Map<String, String[]> columnLabels = new HashMap<String, String[]>(2);
+
     {
         ResourceBundle loc = NbBundle.getBundle(PropertiesTableModel.class);    
         columnLabels.put(COLUMN_NAME_NAME, new String[] {loc.getString("CTL_PropertiesTable_Column_Name"), loc.getString("CTL_PropertiesTable_Column_Name")}); // NOI18N
@@ -76,6 +76,7 @@ public class PropertiesTableModel extends AbstractTableModel {
         return nodes.length;
     }
 
+    @Override
     public String getColumnName(int column) {
         return columnLabels.get(columns[column])[0];
     }

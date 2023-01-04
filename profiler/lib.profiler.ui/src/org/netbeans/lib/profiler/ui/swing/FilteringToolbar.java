@@ -53,6 +53,7 @@ public abstract class FilteringToolbar extends InvisibleToolbar {
             setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
 
         filterButton = new JToggleButton(Icons.getIcon(GeneralIcons.FILTER)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 if (isSelected()) showFilter(); else hideFilter();
             }
@@ -101,7 +102,10 @@ public abstract class FilteringToolbar extends InvisibleToolbar {
             private void changed() { filterChanged(f.getText().trim()); }
         });
         f.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyPressed(KeyEvent e) { if (esc(e)) hideFilter(); }
+
+            @Override
             public void keyReleased(KeyEvent e) { esc(e); }
             private boolean esc(KeyEvent e) {
                 boolean esc = e.getKeyCode() == KeyEvent.VK_ESCAPE;

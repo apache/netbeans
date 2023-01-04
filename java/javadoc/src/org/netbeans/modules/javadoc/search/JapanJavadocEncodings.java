@@ -32,16 +32,19 @@ public final class JapanJavadocEncodings extends PropertyEditorSupport {
     private static final String[] tags = { "JISAutoDetect", "SJIS", "EUC-JP", "ISO-2022-JP", "UTF-8"};     //NOI18N
 
     /** @return names of the supported encodings */
+    @Override
     public String[] getTags() {
         return tags;
     }
 
     /** @return text for the current value */
+    @Override
     public String getAsText () {
         return ((String)getValue());
     }
 
     /** @param text A text for the current value. */
+    @Override
     public void setAsText (String text) {
         setValue( text );
     }

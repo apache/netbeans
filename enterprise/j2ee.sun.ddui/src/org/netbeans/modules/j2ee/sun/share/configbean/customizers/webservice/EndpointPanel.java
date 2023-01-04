@@ -414,6 +414,7 @@ public class EndpointPanel extends BaseSectionNodeInnerPanel {
         add(jLblRealm, gridBagConstraints);
 
         jTxtRealm.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtRealmKeyReleased(evt);
             }

@@ -218,12 +218,14 @@ public class ImageDetailProvider extends DetailsProvider.Basic {
 
         private class MouseHandler extends MouseAdapter {
 
+            @Override
             public void mousePressed(final MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     showPopup(e);
                 }
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     showPopup(e);
@@ -243,6 +245,7 @@ public class ImageDetailProvider extends DetailsProvider.Basic {
                 return;
             }
             JMenuItem showItem = new JMenuItem(Bundle.ImageDetailProvider_Action_Show()) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     openNewWindow();
                 }

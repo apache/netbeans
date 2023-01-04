@@ -30,7 +30,8 @@ public enum PerceivedType {
     SYSTEM,
     IMAGE,
     COMPRESSED;
-    
+
+    @Override
     public String toString() {
         switch (this) {
             case TEXT: 

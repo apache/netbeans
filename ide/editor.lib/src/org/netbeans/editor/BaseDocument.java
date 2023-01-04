@@ -1040,6 +1040,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
         }
     }
 
+    @Override
     public void replace(int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
         // Always acquire atomic lock (it simplifies processing and improves readability)
         atomicLockImpl();

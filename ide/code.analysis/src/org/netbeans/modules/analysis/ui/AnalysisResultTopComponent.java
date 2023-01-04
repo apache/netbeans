@@ -224,6 +224,7 @@ public final class AnalysisResultTopComponent extends TopComponent implements Ex
 
         jSplitPane1.setBorder(null);
         jSplitPane1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 jSplitPane1ComponentResized(evt);
             }

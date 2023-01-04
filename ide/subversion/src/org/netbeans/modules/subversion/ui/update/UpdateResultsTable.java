@@ -390,7 +390,8 @@ class UpdateResultsTable implements MouseListener, ListSelectionListener, Ancest
     private class SyncTableCellRenderer extends DefaultTableCellRenderer {
         
         private FilePathCellRenderer pathRenderer = new FilePathCellRenderer();
-        
+
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component renderer;
             int modelColumnIndex = table.convertColumnIndexToModel(column);

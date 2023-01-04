@@ -103,6 +103,7 @@ final class DropGlassPane extends JPanel {
 
     /** Unset drop line if setVisible to false.
      * @param boolean aFlag new state */
+    @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
 
@@ -167,6 +168,7 @@ final class DropGlassPane extends JPanel {
 
     /** Paint drop line on glass pane.
      * @param Graphics g Obtained graphics */
+    @Override
     public void paint(Graphics g) {
         if (line != null) {
         

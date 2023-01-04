@@ -361,6 +361,7 @@ public class DTDDoclet {
         /**
          * @param obj accepts String, StringBuffer or RefList instances.
          */
+        @Override
         public boolean add(Object obj) {
             if (obj instanceof StringBuffer || obj instanceof RefList || obj instanceof String) {
                 return super.add(obj);
@@ -399,7 +400,8 @@ public class DTDDoclet {
             return append("</" + tag + ">"); // NOI18N
         }
 
-        
+
+        @Override
         public String toString() {
             Iterator it = iterator();
             StringBuffer buf = new StringBuffer();

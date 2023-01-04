@@ -140,11 +140,12 @@ public class ClassPath {
     
     private static class JarLRUCache extends LinkedHashMap {
         private static final int MAX_CAPACITY = 100;
-        
+
         private JarLRUCache() {  
             super(10, 0.75f, true); 
         }
-        
+
+        @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
             if (size()>MAX_CAPACITY) {
                 try {

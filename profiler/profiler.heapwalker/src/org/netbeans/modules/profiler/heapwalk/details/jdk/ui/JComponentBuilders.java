@@ -179,7 +179,10 @@ final class JComponentBuilders {
         
         protected Box createInstanceImpl() {
             return new Box(BoxLayout.X_AXIS) {
+                @Override
                 public void layout() {}
+
+                @Override
                 public void setLayout(LayoutManager l) {}
             };
         }
@@ -282,7 +285,8 @@ final class JComponentBuilders {
             
             separatorSize = DimensionBuilder.fromField(instance, "separatorSize", heap);
         }
-        
+
+        @Override
         protected JSeparator createInstanceImpl() {
             return separatorSize == null ? new JToolBar.Separator() :
                     new JToolBar.Separator(separatorSize.createInstance());
@@ -295,7 +299,8 @@ final class JComponentBuilders {
         JPopupMenuSeparatorBuilder(Instance instance, Heap heap) {
             super(instance, heap);
         }
-        
+
+        @Override
         protected JSeparator createInstanceImpl() {
             return new JPopupMenu.Separator();
         }

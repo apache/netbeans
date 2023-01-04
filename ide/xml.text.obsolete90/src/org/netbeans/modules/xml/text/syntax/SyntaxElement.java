@@ -212,7 +212,8 @@ public abstract class SyntaxElement implements org.netbeans.modules.xml.text.api
         public Error( XMLSyntaxSupport support, TokenItem from, int to ) {
             super( support, from, to );
         }
-        
+
+        @Override
         public String toString() {
             return "Error" + super.toString();                                  // NOI18N
         }

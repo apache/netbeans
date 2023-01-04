@@ -96,6 +96,7 @@ public final class OpenAction extends AbstractAction {
         }
     }
 
+    @Override
     public boolean isEnabled () {
           return true;
     }

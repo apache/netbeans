@@ -225,13 +225,15 @@ public final class PopupUtil  {
             }
 
         }
-        
+
+        @Override
         public void componentResized(ComponentEvent evt) {
             if (popupWindow != null) {
                 resizePopup();
             }
         }
-        
+
+        @Override
         public void componentMoved(ComponentEvent evt) {
             if (popupWindow!= null) {
                 resizePopup();

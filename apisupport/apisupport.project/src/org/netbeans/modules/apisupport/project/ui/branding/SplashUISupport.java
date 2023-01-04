@@ -162,6 +162,8 @@ class SplashUISupport {
             setOverwriteMode(false);
             this.deleg = deleg;
         }
+
+        @Override
         public Object stringToValue(String string) throws java.text.ParseException {
             Object retval = deleg.stringToValue(string);
             int i = ((Number)retval).intValue();
@@ -170,7 +172,8 @@ class SplashUISupport {
             }
             return retval;
         }
-        
+
+        @Override
         public String valueToString(Object value) throws java.text.ParseException {
             return deleg.valueToString(value);
         }
@@ -180,6 +183,8 @@ class SplashUISupport {
         BoundsFormatter() {
             setOverwriteMode(false);
         }
+
+        @Override
         public Object stringToValue(String string) throws java.text.ParseException {
             if (string == null) {
                 return super.stringToValue(string);
@@ -191,7 +196,8 @@ class SplashUISupport {
                 }
             }
         }
-        
+
+        @Override
         public String valueToString(Object value) throws java.text.ParseException {
             if (value == null) {
                 return super.valueToString(value);
@@ -350,8 +356,11 @@ class SplashUISupport {
             public Object getItem() {
                 return value;
             }
-            
+
+            @Override
             public void setBackground(Color c) {}
+
+            @Override
             public void setForeground(Color c) {}
             
             public void selectAll() {}
@@ -371,7 +380,8 @@ class SplashUISupport {
                         ));
                 setOpaque(true);
             }
-            
+
+            @Override
             public void paint(Graphics g) {
                 Graphics2D g2d = (Graphics2D)g;
                 if (!isEnabled()) {
@@ -399,6 +409,7 @@ class SplashUISupport {
                 g.setColor(oldColor);
             }
             
+            @Override
             public void setEnabled(boolean enabled) {
                 setBackground(enabled ?
                     SystemColor.text : SystemColor.control

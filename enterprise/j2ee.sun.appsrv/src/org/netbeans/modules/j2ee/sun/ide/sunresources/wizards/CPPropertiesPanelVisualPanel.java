@@ -121,6 +121,7 @@ public class CPPropertiesPanelVisualPanel extends javax.swing.JPanel implements 
             }
         });
         classNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 classNameFieldKeyReleased(evt);
             }
@@ -161,6 +162,7 @@ public class CPPropertiesPanelVisualPanel extends javax.swing.JPanel implements 
             }
         });
         descField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 descFieldKeyReleased(evt);
             }

@@ -364,6 +364,7 @@ class DominatorTree {
             maxSize = size;
         }
 
+        @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
             return size() > maxSize;
         }

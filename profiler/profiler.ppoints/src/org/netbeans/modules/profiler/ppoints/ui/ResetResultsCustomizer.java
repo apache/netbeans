@@ -212,12 +212,14 @@ public class ResetResultsCustomizer extends ValidityAwarePanel implements Docume
         add(firstLineCaptionSpacer, constraints);
         // nameTextField
         nameTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return (ResetResultsCustomizer.this.getParent() instanceof JViewport) ? getMinimumSize()
                                                                                           : new Dimension(400,
                                                                                                           super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
@@ -249,6 +251,7 @@ public class ResetResultsCustomizer extends ValidityAwarePanel implements Docume
 
         // locationHeaderSeparator
         locationHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

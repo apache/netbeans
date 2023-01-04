@@ -74,19 +74,23 @@ public class LabelRenderer extends JLabel {
 
     // --- Implementation ------------------------------------------------------
 
+    @Override
     public Insets getInsets() {
         return insets;
     }
 
+    @Override
     public Insets getInsets(Insets insets) {
         return this.insets;
     }
 
+    @Override
     public void setLocation(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    @Override
     public Dimension getPreferredSize() {
         if (preferredSize == null) preferredSize = new Dimension(DIRTY, DIRTY);
 
@@ -104,6 +108,7 @@ public class LabelRenderer extends JLabel {
         return preferredSize;
     }
 
+    @Override
     public void setUI(LabelUI ui) {
         super.setUI(UI);
     }
@@ -117,6 +122,7 @@ public class LabelRenderer extends JLabel {
     protected void prePaint(Graphics g, int x, int y) {}
     protected void postPaint(Graphics g, int x, int y) {}
 
+    @Override
     public void paint(Graphics g) {
         Graphics cg = getComponentGraphics(g);
 
@@ -138,17 +144,20 @@ public class LabelRenderer extends JLabel {
     // --- Peformance tweaks ---------------------------------------------------
 
     // Overridden for performance reasons.
+    @Override
     public void setText(String text) {
         this.text = text;
         resetPreferredSize(true, false);
     }
 
     // Overridden for performance reasons.
+    @Override
     public String getText() {
         return text;
     }
 
     // Overridden for performance reasons.
+    @Override
     public void setIcon(Icon icon) {
         int oldIconWidth = iconWidth;
         iconWidth = icon == null ? 0 : icon.getIconWidth();
@@ -158,41 +167,49 @@ public class LabelRenderer extends JLabel {
     }
 
     // Overridden for performance reasons.
+    @Override
     public Icon getIcon() {
         return icon;
     }
 
     // Overridden for performance reasons.
+    @Override
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
 
     // Overridden for performance reasons.
+    @Override
     public Color getForeground() {
         return foreground;
     }
 
     // Overridden for performance reasons.
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     // Overridden for performance reasons.
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
     // Overridden for performance reasons.
+    @Override
     public int getDisplayedMnemonicIndex() {
         return -1;
     }
 
     // Overridden for performance reasons.
+    @Override
     public FontMetrics getFontMetrics(Font font) {
         return fontMetrics;
     }
 
     // Overridden for performance reasons.
+    @Override
     public void setFont(Font font) {
         super.setFont(font);
         fontMetrics = super.getFontMetrics(font);
@@ -200,70 +217,90 @@ public class LabelRenderer extends JLabel {
     }
 
     // Overridden for performance reasons.
+    @Override
     public int getIconTextGap() {
         return iconTextGap;
     }
 
 
     // Overridden for performance reasons.
+    @Override
     public void setIconTextGap(int iconTextGap) {
         this.iconTextGap = iconTextGap;
         resetPreferredSize(true, false);
     }
 
     // Overridden for performance reasons.
+    @Override
     public void validate() {}
 
     // Overridden for performance reasons.
+    @Override
     public void revalidate() {}
 
     // Overridden for performance reasons.
+    @Override
     public void repaint(long tm, int x, int y, int width, int height) {}
 
     // Overridden for performance reasons.
+    @Override
     public void repaint(Rectangle r) {}
 
     // Overridden for performance reasons.
+    @Override
     public void repaint() {}
 
     // Overridden for performance reasons.
+    @Override
     public void setDisplayedMnemonic(int key) {}
 
     // Overridden for performance reasons.
+    @Override
     public void setDisplayedMnemonic(char aChar) {}
 
     // Overridden for performance reasons.
+    @Override
     public void setDisplayedMnemonicIndex(int index) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, char oldValue, char newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, short oldValue, short newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, int oldValue, int newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, long oldValue, long newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, float oldValue, float newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, double oldValue, double newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
 
 
     private static class LabelRendererUI extends BasicLabelUI {
+        @Override
         protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
             super.paintEnabledText(l, g, s, textX, textY);
         }

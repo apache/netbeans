@@ -59,6 +59,7 @@ class WriterOutputStream extends OutputStream {
         }
     }
 
+    @Override
     public void write(final byte[] b, int off, int len) throws IOException {
         while (len > 0) {
             final int c = Math.min(len, decoderIn.remaining());

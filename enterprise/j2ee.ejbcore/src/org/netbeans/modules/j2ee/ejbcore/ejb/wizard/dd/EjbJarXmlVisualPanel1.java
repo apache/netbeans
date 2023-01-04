@@ -86,6 +86,7 @@ public final class EjbJarXmlVisualPanel1 extends JPanel {
     }
     
     private class FileObjectListCellRenderer extends DefaultListCellRenderer {
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof FileObject) {
                 FileObject fileObject = (FileObject) value;

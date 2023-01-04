@@ -64,6 +64,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             try {
                 doActivate(activateCode);
@@ -190,6 +191,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
             return ret;
         }
 
+        @Override
         public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
@@ -230,6 +232,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             if (preemptExit && connectionOpen) {
                 profilerServer.sendSimpleCmdToClient(Command.SHUTDOWN_INITIATED);
@@ -259,6 +262,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             synchronized (execInSeparateThreadLock) {
                 while (true) {
@@ -667,6 +671,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
         return resp.isOK();
     }
 
+    @Override
     public void run() {
         if (connectToClient()) {
             while (!profilerInterfaceInitialized) {
@@ -1356,6 +1361,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
                     this.setName(PROFILER_SPECIAL_EXEC_THREAD_NAME + " 4"); // NOI18N
                 }
 
+                @Override
                 public void run() {
                     synchronized (targetAppRunningLock) {
                         startTargetApp = true;
@@ -1413,6 +1419,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
                         methodGroupCmd = cmd;
                     }
 
+                    @Override
                     public void run() {
                         try {
                             ProfilerInterface.instrumentMethods(methodGroupCmd);

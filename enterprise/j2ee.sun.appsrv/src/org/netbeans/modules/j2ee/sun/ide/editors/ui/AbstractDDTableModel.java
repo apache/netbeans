@@ -72,6 +72,7 @@ implements DDTableModel {
 	return data.size ();
     }
 
+    @Override
     public Class getColumnClass (int col) {
 	return String.class;
     }
@@ -97,6 +98,7 @@ implements DDTableModel {
     protected abstract void setValueAt (String strVal, Object rowElement, 
 					int col);
 
+    @Override
     public void setValueAt (Object value, int row, int col) {
         String strVal = (String) value;
 

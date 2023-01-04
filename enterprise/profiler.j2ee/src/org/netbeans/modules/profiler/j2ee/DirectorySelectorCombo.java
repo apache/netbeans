@@ -171,6 +171,7 @@ public class DirectorySelectorCombo extends javax.swing.JPanel {
             }
         });
         fileMRU.addKeyListener(new java.awt.event.KeyAdapter() {
+          @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 fileMRUKeyPressed(evt);
             }

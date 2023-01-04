@@ -83,6 +83,7 @@ public abstract class DataView extends JPanel {
     
     public void notifyOnFocus(final Runnable handler) {
         getResultsComponent().addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent e) { handler.run(); }
         });
     }

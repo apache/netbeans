@@ -60,11 +60,13 @@ public abstract class BeanTableModel extends AbstractTableModel {
 	}
 
 
+	@Override
 	public String getColumnName(int column) {
 		return getColumnNames()[column];
 	}
 
 
+	@Override
 	public boolean isCellEditable(int row, int column) {
 		return false;
 	}

@@ -243,7 +243,8 @@ public class ModeStructureSnapshot {
             
             return false;
         }
-        
+
+        @Override
         public String toString() {
             return super.toString() + "[orientation=" // NOI18N
                 + (orientation == Constants.HORIZONTAL ? "horizontal" : "vertical") // NOI18N
@@ -279,8 +280,9 @@ public class ModeStructureSnapshot {
             this.openedTopComponents = mode.getOpenedTopComponents().toArray(new TopComponent[0]);
             this.resizeWeight = resizeWeight;
         }
-        
-        
+
+
+        @Override
         public boolean originatorEquals(ElementSnapshot o) {
             if(!super.originatorEquals(o)) {
                 return false;
@@ -361,7 +363,8 @@ public class ModeStructureSnapshot {
         public boolean hasVisibleDescendant() {
             return isVisibleInSplit();
         }
-        
+
+        @Override
         public String toString() {
             return super.toString() + "[name=" + mode.getName() + ", permanent=" + mode.isPermanent() // NOI18N
                 + ", constraints=" + Arrays.asList(mode.getConstraints()) + "]"; // NOI18N
@@ -425,7 +428,8 @@ public class ModeStructureSnapshot {
         public boolean hasVisibleDescendant() {
             return isVisibleInSplit();
         }
-        
+
+        @Override
         public String toString() {
             return super.toString() + "\n" + editorAreaSnapshot; // NOI18N
         }

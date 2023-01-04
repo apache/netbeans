@@ -142,6 +142,7 @@ public class ListCompletionView extends JList {
     }
 
     /** Force the list to ignore the visible-row-count property */
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         return getPreferredSize();
     }

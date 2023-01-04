@@ -112,12 +112,14 @@ public class FormI18nStringEditor extends PropertyEditorSupport implements FormA
 
     /** Overrides superclass method.
      * @return null as we don't support this feature */
+    @Override
     public String[] getTags() {
         return null;
     }
 
     /** Sets as text. Overrides superclass method to be dummy -> don't throw
      * <code>IllegalArgumentException</code> . */
+    @Override
     public void setAsText(String text) {
         setValue(text);
     }
@@ -130,6 +132,7 @@ public class FormI18nStringEditor extends PropertyEditorSupport implements FormA
 
     /** Overrides superclass method. 
      * @return text for the current value */
+    @Override
     public String getAsText() {
         Object value = getValue();
         if (value instanceof String || value == null) {
@@ -149,6 +152,7 @@ public class FormI18nStringEditor extends PropertyEditorSupport implements FormA
      * <p>
      * <b>java.text.MessageFormat.format(<identifier name>getString("<key name>"), new Object[] {<code set in Parameters and Comments panel>})</b>
      */
+    @Override
     public String getJavaInitializationString() {
         Object value = getValue();
         // the value should always be FormI18nString, but for the case it is not...
@@ -196,6 +200,7 @@ public class FormI18nStringEditor extends PropertyEditorSupport implements FormA
 
     /** Overrides superclass method.
      * @return <code>ResourceBundlePanel</code> fed with <code>FormI18nString</code> value. */
+    @Override
     public Component getCustomEditor() {
         FormI18nString formI18nString;
         Object value = getValue();
@@ -228,12 +233,14 @@ public class FormI18nStringEditor extends PropertyEditorSupport implements FormA
 
     /** Overrides superclass method. 
      * @return true since we support this feature */
+    @Override
     public boolean supportsCustomEditor() {
         return true;
     }
 
     /** Overrides superclass method.
      * @param value sets the new value for this editor */
+    @Override
     public void setValue(Object object) {
         if (object instanceof String && getValue() instanceof FormI18nString) {
             FormI18nString i18nString = new FormI18nString((FormI18nString)getValue());

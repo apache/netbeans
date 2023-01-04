@@ -252,11 +252,13 @@ public class BlameCommand extends SvnCommand {
                 values = null;
             }
         }
-                
+
+        @Override
         public void error(SAXParseException e) throws SAXException {
             throw e;
         }
 
+        @Override
         public void fatalError(SAXParseException e) throws SAXException {
             throw e;
         }

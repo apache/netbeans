@@ -34,6 +34,7 @@ public class Int0Editor extends PropertyEditorSupport implements EnhancedPropert
 	
     }
 
+    @Override
     public String getAsText () {
         if (curValue==null || curValue.equals("")) {// NOI18N
             curValue = prev;
@@ -51,7 +52,8 @@ public class Int0Editor extends PropertyEditorSupport implements EnhancedPropert
         else 
             return NbBundle.getMessage(Int0Editor.class, "MSG_RangeForInt0");      
     }
-    
+
+    @Override
     public void setAsText (String string) throws IllegalArgumentException {
         prev = curValue;
         if((string==null)||(string.equals(""))) {// NOI18N
@@ -67,7 +69,8 @@ public class Int0Editor extends PropertyEditorSupport implements EnhancedPropert
         else 
             curValue = prev;
     }
-    
+
+    @Override
     public void setValue (Object v) {
         if(!(v.equals(""))){ // NOI18N
            prev = (String)v;
@@ -76,6 +79,7 @@ public class Int0Editor extends PropertyEditorSupport implements EnhancedPropert
     
     }
 
+    @Override
     public Object getValue () {
        return curValue;
     }

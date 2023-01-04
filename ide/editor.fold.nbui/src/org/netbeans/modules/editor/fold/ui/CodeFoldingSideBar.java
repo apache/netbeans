@@ -1476,11 +1476,13 @@ public final class CodeFoldingSideBar extends JComponent implements Accessible {
         public void mouseMoved(MouseEvent e) {
             refreshIfMouseOutside(e.getPoint());
         }
-        
+
+        @Override
         public void mouseEntered(MouseEvent e) {
             refreshIfMouseOutside(e.getPoint());
         }
-        
+
+        @Override
         public void mouseExited(MouseEvent e) {
             mousePoint = NO_MOUSE_POINT;
             refresh();

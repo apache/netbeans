@@ -41,10 +41,12 @@ public class FlatToolBar extends JToolBar {
     public static class FlatMarginBorder extends AbstractBorder {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return getBorderInsets(c, new Insets(0, 0, 0, 0));
         }
 
+        @Override
         public Insets getBorderInsets(Component c, Insets insets) {
             Insets margin = null;
 
@@ -92,10 +94,12 @@ public class FlatToolBar extends JToolBar {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return getBorderInsets(c, new Insets(0, 0, 0, 0));
         }
 
+        @Override
         public Insets getBorderInsets(Component c, Insets insets) {
             // leave room for default visual
             insets.top = 2;
@@ -104,6 +108,7 @@ public class FlatToolBar extends JToolBar {
             return insets;
         }
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
             AbstractButton b = (AbstractButton) c;
             ButtonModel model = b.getModel();
@@ -149,6 +154,7 @@ public class FlatToolBar extends JToolBar {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         protected void setBorderToRollover(Component c) {
             if (c instanceof AbstractButton) {
                 AbstractButton b = (AbstractButton) c;
@@ -215,6 +221,7 @@ public class FlatToolBar extends JToolBar {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     protected void addImpl(Component comp, Object constraints, int index) {
         if (comp instanceof AbstractButton) {
             AbstractButton ab = (AbstractButton) comp;
@@ -230,6 +237,7 @@ public class FlatToolBar extends JToolBar {
         super.addImpl(comp, constraints, index);
     }
 
+    @Override
     protected JButton createActionComponent(Action a) {
         JButton b = super.createActionComponent(a);
 

@@ -53,6 +53,7 @@ final class ShareableInputSource extends InputSource {
         this.bufferSize = bufferSize;
     }
 
+    @Override
     public InputStream getByteStream() {
         InputStream in = peer.getByteStream();
         if (initialized[1] == false && in != null) {
@@ -63,6 +64,7 @@ final class ShareableInputSource extends InputSource {
         return stream;
     }
 
+    @Override
     public Reader getCharacterStream() {
         Reader in = peer.getCharacterStream();
         if (initialized[0] == false && in != null) {
@@ -93,15 +95,18 @@ final class ShareableInputSource extends InputSource {
         if (initialized[1]) stream.internalClose();
         if (initialized[0]) reader.internalClose();        
     }
-    
+
+    @Override
     public String getEncoding() {
         return peer.getEncoding();
     }
 
+    @Override
     public String getSystemId() {
         return peer.getSystemId();
     }
 
+    @Override
     public String getPublicId() {
         return peer.getPublicId();
     }
@@ -110,7 +115,8 @@ final class ShareableInputSource extends InputSource {
         public ByteStream(InputStream peer, int buffer) {
             super(peer, buffer);
         }
-        
+
+        @Override
         public void close() throws IOException {
             // nothing, we are shared
         }
@@ -124,7 +130,8 @@ final class ShareableInputSource extends InputSource {
         public CharacterStream(Reader peer, int buffer) {
             super(peer, buffer);
         }
-        
+
+        @Override
         public void close() throws IOException {
             // nothing, we are shared
         }

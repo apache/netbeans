@@ -135,14 +135,18 @@ public class ImportModulePanel extends javax.swing.JPanel {
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 listMouseReleased(evt);
             }
         });
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 updatePreview(evt);
             }
+
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 listKeyReleased(evt);
                 updatePreview(evt);

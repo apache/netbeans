@@ -274,6 +274,7 @@ final class ArrayValueView extends DetailsProvider.View implements Scrollable, E
     
     private static JButton htmlButton(final String text, final boolean enabled, final Runnable handler) {
         JButton b = new JButton() {
+            @Override
             public void setEnabled(boolean b) {
                 setText(!b ? text : "<html><nobr><a href='#'>" + text + "</a></nobr></html>"); // NOI18N
                 setCursor(!b ? Cursor.getDefaultCursor() : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

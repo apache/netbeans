@@ -529,6 +529,7 @@ public final class DependenciesPanel extends JPanel {
         resultsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         resultsList.setMinimumSize(new Dimension(100, 50));
         resultsList.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 resultsListMouseClicked(evt);
             }

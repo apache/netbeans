@@ -167,10 +167,12 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
 
         paramTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{}, columnNames) {
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnCanEdit[columnIndex];
             }

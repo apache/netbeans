@@ -226,6 +226,7 @@ final class GuardedReader extends Reader {
             
         }
 
+        @Override
         public void close() throws IOException {
             super.close();
             this.stream.close();

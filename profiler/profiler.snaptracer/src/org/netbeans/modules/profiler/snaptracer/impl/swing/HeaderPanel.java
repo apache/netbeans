@@ -64,10 +64,12 @@ public class HeaderPanel extends JPanel {
         return clientContainer;
     }
 
+    @Override
     public boolean isOptimizedDrawingEnabled() {
         return clientContainer == null;
     }
-    
+
+    @Override
     protected void processMouseEvent(MouseEvent e) {
         if (processMouseEvents()) header.processMouseEvent(e);
         if (!e.isConsumed()) super.processMouseEvent(e);
@@ -102,7 +104,10 @@ public class HeaderPanel extends JPanel {
 
         JScrollPane scroll = new JScrollPane(impl, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
                                                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER) {
+            @Override
             public Dimension getPreferredSize() { return header.getPreferredSize(); }
+
+            @Override
             public void reshape(int x, int y, int width, int height) {
                 header.setPreferredSize(new Dimension(width, height));
                 super.reshape(x, y, width, height);
@@ -117,6 +122,8 @@ public class HeaderPanel extends JPanel {
 
     private static class Header extends JTableHeader {
         Header(TableColumnModel model) { super(model); };
+
+        @Override
         public void processMouseEvent(MouseEvent e) { super.processMouseEvent(e); }
     }
 

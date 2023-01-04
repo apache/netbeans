@@ -95,6 +95,7 @@ public class BarChart extends JComponent implements ComponentListener, AncestorL
         this.accessibleContext = accessibleContext;
     }
 
+    @Override
     public AccessibleContext getAccessibleContext() {
         return accessibleContext;
     }
@@ -122,6 +123,7 @@ public class BarChart extends JComponent implements ComponentListener, AncestorL
         return fillPaint;
     }
 
+    @Override
     public void setFont(Font font) {
         if (!getFont().equals(font)) {
             super.setFont(font);
@@ -351,6 +353,7 @@ public class BarChart extends JComponent implements ComponentListener, AncestorL
     // ---------------------------------------------------------------------------
 
     // --- Internal implementation -----------------------------------------------
+    @Override
     public void paintComponent(Graphics g) {
         // super.paintComponent
         super.paintComponent(g);

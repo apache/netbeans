@@ -83,7 +83,8 @@ class HTMLDocView extends JEditorPane {
             }
         });
     }
-    
+
+    @Override
     protected EditorKit createDefaultEditorKit() {
         // it is extremelly slow to init it
         if (htmlKit == null){

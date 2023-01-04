@@ -52,7 +52,8 @@ public class NbiTreeTable extends JTable {
         
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
-    
+
+    @Override
     public void updateUI() {
         super.updateUI();
         
@@ -60,7 +61,8 @@ public class NbiTreeTable extends JTable {
             treeRenderer.updateUI();
         }
     }
-    
+
+    @Override
     public void setRowHeight(int height) {
         super.setRowHeight(height);
         
@@ -68,7 +70,8 @@ public class NbiTreeTable extends JTable {
             treeRenderer.setRowHeight(height);
         }
     }
-    
+
+    @Override
     public NbiTreeTableModel getModel() {
         return model;
     }
@@ -93,7 +96,8 @@ public class NbiTreeTable extends JTable {
     public void setTreeColumnCellRenderer(NbiTreeTableColumnCellRenderer renderer) {
         treeRenderer.setTreeColumnCellRenderer(renderer);
     }
-    
+
+    @Override
     protected void processMouseEvent(MouseEvent event) {
         int column = columnAtPoint(event.getPoint());
         int row = rowAtPoint(event.getPoint());
@@ -114,7 +118,8 @@ public class NbiTreeTable extends JTable {
         mousePressedEventConsumed = false;
         super.processMouseEvent(event);
     }
-    
+
+    @Override
     protected void processKeyEvent(KeyEvent event) {
         if (event.getID() == KeyEvent.KEY_RELEASED) {
             int row = getSelectedRow();

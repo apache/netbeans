@@ -194,7 +194,8 @@ public abstract class AbstractDesignEditor extends TopComponent implements Explo
                   new javax.swing.ImageIcon (
                       AbstractDesignEditor.this.getClass().getResource("/org/netbeans/modules/xml/multiview/resources/help.gif"))); //NOI18N
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return getContext() != null;
         }

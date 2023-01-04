@@ -161,6 +161,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @return  <tt>true</tt> if this list has no elements;
      *          <tt>false</tt> otherwise.
      */
+    @Override
     public boolean isEmpty() {
         return (elementData.length == gapLength);
     }
@@ -172,6 +173,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @return  <code>true</code> if the specified element is present;
      *		<code>false</code> otherwise.
      */
+    @Override
     public boolean contains(Object elem) {
         return indexOf(elem) >= 0;
     }
@@ -185,6 +187,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      *          list; returns <tt>-1</tt> if the object is not found.
      * @see     Object#equals(Object)
      */
+    @Override
     public int indexOf(Object elem) {
         if (elem == null) {
             int i = 0;
@@ -232,6 +235,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @return  the index of the last occurrence of the specified object in
      *          this list; returns -1 if the object is not found.
      */
+    @Override
     public int lastIndexOf(Object elem) {
         if (elem == null) {
             int i = elementData.length - 1;
@@ -397,6 +401,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @return an array containing all of the elements in this list
      * 	       in the correct order.
      */
+    @Override
     public Object[] toArray() {
         int size = size();
         Object[] result = new Object[size];
@@ -425,6 +430,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @throws ArrayStoreException if the runtime type of a is not a supertype
      *         of the runtime type of every element in this list.
      */
+    @Override
     public <T> T[] toArray(T[] a) {
         int size = size();
         if (a.length < size) {
@@ -465,6 +471,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @throws    IndexOutOfBoundsException if index out of range
      *		  <tt>(index &lt; 0 || index &gt;= size())</tt>.
      */
+    @Override
     public E set(int index, E element) {
         // rangeCheck(index) not necessary - would fail with AIOOBE anyway
         if (index >= gapStart) {
@@ -498,6 +505,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param element non-null element to be appended to this list.
      * @return <tt>true</tt> (as per the general contract of Collection.add).
      */
+    @Override
     public boolean add(E element) {
         int size = size();
         ensureCapacity(size + 1); // Increments modCount
@@ -515,6 +523,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @throws    IndexOutOfBoundsException if index is out of range
      *		  <tt>(index &lt; 0 || index &gt; size())</tt>.
      */
+    @Override
     public void add(int index, E element) {
         int size = size();
         if (index > size || index < 0) {
@@ -544,6 +553,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @return <tt>true</tt> if this list changed as a result of the call.
      * @throws    NullPointerException if the specified collection is null.
      */
+    @Override
     public boolean addAll(Collection<? extends E> c) {
         return addAll(size(), c);
     }
@@ -584,6 +594,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      *		  &lt; 0 || index &gt; size())</tt>.
      * @throws    NullPointerException if the specified Collection is null.
      */
+    @Override
     public boolean addAll(int index, Collection<? extends E> c) {
         return addArray(index, c.toArray());
     }
@@ -665,6 +676,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * Removes all of the elements from this list.  The list will
      * be empty after this call returns.
      */
+    @Override
     public void clear() {
         removeRange(0, size());
     }
@@ -679,6 +691,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @throws    IndexOutOfBoundsException if index out of range <tt>(index
      * 		  &lt; 0 || index &gt;= size())</tt>.
      */
+    @Override
     public E remove(int index) {
         int size = size();
         if (index >= size || index < 0) {
@@ -721,6 +734,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param fromIndex index of first element to be removed.
      * @param toIndex index after last element to be removed.
      */
+    @Override
     protected void removeRange(int fromIndex, int toIndex) {
         modCount++;
         if (fromIndex == toIndex) {
@@ -912,7 +926,8 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     private E[] allocateElementsArray(int capacity) {
         return (E[])new Object[capacity];
     }
-    
+
+    @Override
     public String toString() {
         return dumpElements(this);
     }

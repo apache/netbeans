@@ -242,7 +242,8 @@ public class FormBeanPropertiesPanelVisual extends javax.swing.JPanel implements
         public int getRowCount() {
             return model.size();
         }
-        
+
+        @Override
         public String getColumnName(int column) {
             switch (column) {
                 case 0:
@@ -253,13 +254,15 @@ public class FormBeanPropertiesPanelVisual extends javax.swing.JPanel implements
             return "";  //NOI18N
         }
 
+        @Override
         public Class getColumnClass(int columnIndex) {
             if (columnIndex == 2)
                 return Boolean.class;
             else
                 return String.class;
         }
-        
+
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return true;
         }
@@ -272,7 +275,8 @@ public class FormBeanPropertiesPanelVisual extends javax.swing.JPanel implements
             }
             return "";
         }
-        
+
+        @Override
         public void setValueAt(Object value, int row, int column) {
             FormBeanProperty item = getItem(row);
             switch (column) {

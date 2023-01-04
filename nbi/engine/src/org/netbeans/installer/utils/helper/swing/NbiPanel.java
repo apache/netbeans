@@ -78,6 +78,8 @@ public class NbiPanel extends JPanel {
         }
         return null;
     }
+
+    @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         

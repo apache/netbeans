@@ -75,6 +75,7 @@ public class ProfilerClient implements CommonConstants {
     private class SeparateCmdExecutionThread extends Thread {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             setName(PROFILER_SEPARATE_EXEC_THREAD_NAME);
 
@@ -158,6 +159,7 @@ public class ProfilerClient implements CommonConstants {
             }
         }
 
+        @Override
         public void run() {
             // Wait until we know that the connection is open
             synchronized (startedFlagLock) {
@@ -227,6 +229,7 @@ public class ProfilerClient implements CommonConstants {
 
                     // Get and save the latest results and the internal statistics before the target VM goes away
                     (new Thread() {
+                        @Override
                             public void run() {
                                 try {
                                     if (currentInstrTypeIsRecursiveCPUProfiling() || currentInstrTypeIsMemoryProfiling()) {

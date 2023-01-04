@@ -92,6 +92,7 @@ public class AddTableDlg extends javax.swing.JPanel {
             };
 
         MouseListener mouseListener = new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     returnStatus = RET_OK;

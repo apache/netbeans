@@ -74,6 +74,7 @@ public class JCheckTree extends JExtendedTree {
     private class CheckTreeUI extends BasicTreeUI {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         protected boolean isToggleEvent(MouseEvent event) {
             if (isOverCheckBox(event.getX(), event.getY())) {
                 return false;

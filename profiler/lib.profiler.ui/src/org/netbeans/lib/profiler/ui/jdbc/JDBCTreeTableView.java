@@ -338,6 +338,8 @@ abstract class JDBCTreeTableView extends JDBCView {
                     {
                         if (!searchCallerMethods) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchQueries = !searchQueries;
@@ -347,6 +349,8 @@ abstract class JDBCTreeTableView extends JDBCView {
                     {
                         if (!searchQueries) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchCallerMethods = !searchCallerMethods;

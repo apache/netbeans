@@ -113,6 +113,7 @@ public abstract class BaseBean implements Cloneable, Bean {
                 throw new NoSuchElementException();
         }
         
+        @Override
         public void remove()
         throws UnsupportedOperationException, IllegalStateException {
             throw new UnsupportedOperationException();

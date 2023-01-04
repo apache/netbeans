@@ -123,6 +123,7 @@ public class JAntiLabel extends JLabel {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void paintComponent(Graphics g) {
         if (g instanceof Graphics2D) {
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

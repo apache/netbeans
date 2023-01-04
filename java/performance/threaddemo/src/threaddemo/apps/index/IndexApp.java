@@ -66,6 +66,7 @@ public class IndexApp extends JFrame {
         getContentPane().add(new JScrollPane(new JTable(tableModel, columns)));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent ev) {
                 index.cancel();
             }

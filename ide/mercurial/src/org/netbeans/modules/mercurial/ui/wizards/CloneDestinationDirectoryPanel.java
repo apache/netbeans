@@ -41,7 +41,8 @@ public final class CloneDestinationDirectoryPanel extends JPanel implements Acti
         directoryField.setText(defaultWorkingDirectory().getPath());
         scanForProjectsCheckBox.setSelected(HgModuleConfig.getDefault().getShowCloneCompleted());
     }
-    
+
+    @Override
     public String getName() {
         if (destinationDirectoryPanel == null) {
             return null;

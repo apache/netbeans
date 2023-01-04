@@ -66,16 +66,19 @@ public class RoundBorder extends AbstractBorder {
     }
 
 
+    @Override
     public Insets getBorderInsets(Component c)       {
         return new Insets(inset, inset, inset, inset);
     }
 
+    @Override
     public Insets getBorderInsets(Component c, Insets insets) {
         insets.left = insets.top = insets.right = insets.bottom = inset;
         return insets;
     }
 
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         Graphics2D g2 = (Graphics2D)g;
 

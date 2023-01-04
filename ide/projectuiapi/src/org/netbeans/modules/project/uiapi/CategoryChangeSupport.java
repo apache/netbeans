@@ -31,8 +31,13 @@ import java.beans.PropertyChangeSupport;
 public class CategoryChangeSupport {
 
     public static final CategoryChangeSupport NULL_INSTANCE = new CategoryChangeSupport() {
+        @Override
         public void firePropertyChange(String pn, Object o, Object n) {}
+
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener l) {}
+
+        @Override
         void addPropertyChangeListener(PropertyChangeListener l) {}
     };
     

@@ -45,6 +45,7 @@ public class VcsAnnotateAction extends AbstractAction {
         putValue(Action.NAME, cumputeActionName());
     }
 
+    @Override
     public boolean isEnabled() {
         return activatedEditorCookie() != null;
     }

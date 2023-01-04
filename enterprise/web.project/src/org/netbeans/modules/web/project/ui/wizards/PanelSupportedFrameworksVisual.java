@@ -436,7 +436,8 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
     
     public static class FrameworksTableCellRenderer extends DefaultTableCellRenderer {
         private TableCellRenderer booleanRenderer;
-        
+
+        @Override
         public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column ) {
             if (value instanceof WebFrameworkProvider) {
                 WebFrameworkProvider item = (WebFrameworkProvider) value;
@@ -475,14 +476,16 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
         public int getRowCount() {
             return model.size();
         }
-        
+
+        @Override
         public Class getColumnClass(int columnIndex) {
             if (columnIndex == 0)
                 return Boolean.class;
             else
                 return WebFrameworkProvider.class;
         }
-        
+
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return (columnIndex == 0);
         }
@@ -495,7 +498,8 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
             }
             return "";
         }
-        
+
+        @Override
         public void setValueAt(Object value, int row, int column) {
             FrameworkModelItem item = getItem(row);
             switch (column) {

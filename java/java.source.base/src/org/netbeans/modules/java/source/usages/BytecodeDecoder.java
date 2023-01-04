@@ -398,7 +398,8 @@ public class BytecodeDecoder implements Iterator<byte[]>, Iterable<byte[]> {
         
         return currCode;        
     }
-        
+
+    @Override
     public void remove() {
         throw new UnsupportedOperationException( "Byte code is read only" );
     }

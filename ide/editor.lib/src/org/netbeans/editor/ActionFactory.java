@@ -2388,7 +2388,8 @@ public class ActionFactory {
         public CollapseFold(){
             super(BaseKit.collapseFoldAction);
         }
-        
+
+        @Override
         public void actionPerformed(ActionEvent evt, final JTextComponent target) {
             super.actionPerformed(evt, target);
         }
@@ -2402,6 +2403,7 @@ public class ActionFactory {
             super(BaseKit.expandFoldAction);
         }
 
+        @Override
         public void actionPerformed(ActionEvent evt, final JTextComponent target) {
             super.actionPerformed(evt, target);
         }
@@ -2416,6 +2418,7 @@ public class ActionFactory {
             super(BaseKit.collapseAllFoldsAction);
         }
 
+        @Override
         public void actionPerformed(ActionEvent evt, final JTextComponent target) {
             super.actionPerformed(evt, target);
         }
@@ -2430,6 +2433,7 @@ public class ActionFactory {
             super(BaseKit.expandAllFoldsAction);
         }
 
+        @Override
         public void actionPerformed(ActionEvent evt, final JTextComponent target) {
             super.actionPerformed(evt, target);
         }

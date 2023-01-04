@@ -36,6 +36,7 @@ public interface Occur {
             return v == 0 ? ZeroOne.ZERO : ZeroOne.ONE;
         }
 
+        @Override
         public String toString() {
             return this == ZeroOne.ZERO ? "0" : "1";
         }

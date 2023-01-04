@@ -136,6 +136,7 @@ public class RestartAction extends ControlAction {
             performActionImpl(instance);
         }
 
+        @Override
         public boolean isEnabled() {
             return enableImpl(instance);
         }

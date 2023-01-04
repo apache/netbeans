@@ -34,6 +34,8 @@ public interface AxisMarksComputer {
         new Iterator<AxisMark>() {
             public boolean hasNext() { return false; }
             public AxisMark next() { throw new NoSuchElementException(); }
+
+            @Override
             public void remove() { throw new IllegalStateException(); }
         };
 
@@ -76,6 +78,7 @@ public interface AxisMarksComputer {
 
 
     public abstract static class AbstractIterator implements Iterator<AxisMark> {
+        @Override
         public void remove() {
             throw new UnsupportedOperationException(
                       "AxisMarksComputer does not support remove()"); // NOI18N

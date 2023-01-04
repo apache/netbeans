@@ -238,6 +238,7 @@ final class Memory {
             this.maxSize = maxSize;
         }
 
+        @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
             return size() > maxSize;
         }

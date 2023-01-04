@@ -49,14 +49,17 @@ public class ClassFileParser implements JavaClassConstants {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Throwable getCause() {
             return e;
         }
 
+        @Override
         public String getMessage() {
             return e.getMessage();
         }
 
+        @Override
         public String toString() {
             return e.toString();
         }

@@ -406,7 +406,8 @@ public final class FoldUtilitiesImpl {
             nextFold = findNextCollapsedFold(nextFold, endOffset);
             return result;
         }
-        
+
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

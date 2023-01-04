@@ -127,6 +127,7 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
             }
         }
 
+        @Override
         public int getContentLength() {
             try {
                 this.connect();
@@ -137,6 +138,7 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
         }
 
 
+        @Override
         public InputStream getInputStream() throws IOException {
             this.connect();
             if (iStream == null) {
@@ -146,6 +148,7 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
         }
 
 
+        @Override
         public String getHeaderField (String name) {
             if ("content-type".equals(name)) {                  //NOI18N
                 try {

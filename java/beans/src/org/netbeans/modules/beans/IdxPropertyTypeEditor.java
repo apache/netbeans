@@ -82,6 +82,7 @@ public class IdxPropertyTypeEditor extends PropertyEditorSupport implements Enha
     * @return A fragment of Java code representing an initializer for the
     * current value.
     */
+    @Override
     public String getJavaInitializationString () {
         return getAsText();
     }
@@ -89,6 +90,7 @@ public class IdxPropertyTypeEditor extends PropertyEditorSupport implements Enha
     /**
     * @return The tag values for this property.
     */
+    @Override
     public String[] getTags () {
         return types;
     }

@@ -270,6 +270,7 @@ public class ServerLocationVisual extends javax.swing.JPanel {
         /**
          * This method is called when a user presses a key on the keyboard
          */
+        @Override
         public void keyTyped(KeyEvent event) {
             fireChangeEvent();
         }
@@ -277,6 +278,7 @@ public class ServerLocationVisual extends javax.swing.JPanel {
         /**
          * This method is called when a user releases a key on the keyboard
          */
+        @Override
         public void keyReleased(KeyEvent event) {
             fireChangeEvent();
         }
@@ -343,12 +345,17 @@ public class ServerLocationVisual extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(downloadLabel, org.openide.util.NbBundle.getMessage(ServerLocationVisual.class, "ServerLocationVisual.downloadLabel.text")); // NOI18N
         downloadLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 downloadLabelMouseClicked(evt);
             }
+
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 downloadLabelMouseEntered(evt);
             }
+
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 downloadLabelMouseExited(evt);
             }

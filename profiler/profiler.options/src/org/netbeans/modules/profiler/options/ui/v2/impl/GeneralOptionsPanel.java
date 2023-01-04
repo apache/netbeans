@@ -194,6 +194,7 @@ public final class GeneralOptionsPanel extends ProfilerOptionsPanel {
         add(manageCalibrationLabel, c);
         
         JButton manageCalibrationButton = new JButton() {
+            @Override
             protected void fireActionPerformed(final ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() { new RunCalibrationAction().actionPerformed(e); }
@@ -229,6 +230,7 @@ public final class GeneralOptionsPanel extends ProfilerOptionsPanel {
         add(resetDNSALabel, c);
         
         resetDNSAButton = new JButton() {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 ProfilerIDESettings.getInstance().clearDoNotShowAgainMap();

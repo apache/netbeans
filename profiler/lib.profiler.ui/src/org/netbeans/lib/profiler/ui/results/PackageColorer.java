@@ -105,6 +105,8 @@ public final class PackageColorer {
                 if (ret && COLORS != null) storeColors();
                 return ret;
             }
+
+            @Override
             public boolean remove(Object o) {
                 boolean ret = super.remove(o);
                 if (ret && COLORS != null) storeColors();

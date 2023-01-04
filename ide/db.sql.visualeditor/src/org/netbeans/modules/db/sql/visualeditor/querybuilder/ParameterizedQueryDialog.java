@@ -192,6 +192,7 @@ public class ParameterizedQueryDialog extends javax.swing.JPanel {
         // make sure to get the focus on keystroke. This will make sure
         // all the values entered by users are captured. Otherwise the
         // last cell value is not updated in the model.
+        @Override
         public boolean getSurrendersFocusOnKeystroke() {
             return true;
         }	
@@ -212,6 +213,7 @@ public class ParameterizedQueryDialog extends javax.swing.JPanel {
         //      Leave the selection state as it is, but move the anchor 
         //      index to the specified location.
         //
+        @Override
         public void changeSelection(int row,int col,boolean toggle,
                                     boolean expand) {
             // This method is called when the user tries to move to a 
@@ -357,6 +359,7 @@ public class ParameterizedQueryDialog extends javax.swing.JPanel {
             setColumnIdentifiers(columnNames);
         }
 
+        @Override
         public boolean isCellEditable(int row, int col) {
             if (col < 1)
                 return false;
@@ -379,6 +382,7 @@ public class ParameterizedQueryDialog extends javax.swing.JPanel {
             C.getClass();
             super.getComponent().addFocusListener(
                 new java.awt.event.FocusAdapter() {
+                    @Override
                     public void focusLost(java.awt.event.FocusEvent fe) {
                         lostFocus();
                     }

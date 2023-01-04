@@ -52,7 +52,8 @@ public class FilePathCellRenderer extends DefaultTableCellRenderer {
         }
         return text;
     }
-    
+
+    @Override
     protected void paintComponent(Graphics g) {
         setText(computeFitText(getText()));
         super.paintComponent(g);

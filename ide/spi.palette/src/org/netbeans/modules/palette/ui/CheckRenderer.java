@@ -92,7 +92,8 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
         }
         return this;
     }
-    
+
+    @Override
     public void paintComponent (Graphics g) {
         Dimension d_check = check == null ? new Dimension(0, 0) : check.getSize();
         Dimension d_label = stringDisplayer == null ? new Dimension(0,0) : 
@@ -117,7 +118,8 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
             g.translate (-d_check.width, -y_label);
         }
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         if (stringDisplayer != null) {
             stringDisplayer.setFont(getFont());
@@ -130,7 +132,8 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
             
         return new Dimension(d_check.width  + d_label.width, (d_check.height < d_label.height ? d_label.height : d_check.height));
     }
-    
+
+    @Override
     public void doLayout() {
         Dimension d_check = check == null ? new Dimension(0, 0) : check.getPreferredSize();
         Dimension d_label = stringDisplayer == null ? new Dimension (0,0) : stringDisplayer.getPreferredSize();

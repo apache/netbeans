@@ -89,6 +89,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void doLayout() {
         Dimension size  = getSize();
 	Dimension size1 = label1.getPreferredSize();
@@ -111,6 +112,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
         label3.setBounds(x, 0, size3.width, size.height);
     }
 
+    @Override
     public Dimension getPreferredSize() {
 	Dimension size = label1.getPreferredSize();
         if ("".equals(label1.getText())) size.width += label1.getIconTextGap(); // NOI18N
@@ -119,10 +121,12 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
         return size;
     }
 
+    @Override
     public Dimension getMaximumSize() {
 	return getPreferredSize();
     }
 
+    @Override
     public Dimension getMinimumSize() {
 	return getPreferredSize();
     }
@@ -135,6 +139,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
      * a <code>ColorUIResource</code>, the background becomes
      * <code>color</code>.
      */
+    @Override
     public void setBackground(Color color) {
         if (color instanceof ColorUIResource) {
             color = null;
@@ -207,6 +212,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
      * through. On the other hand, if <code>font</code> is non-null, and not
      * a <code>FontUIResource</code>, the font becomes <code>font</code>.
      */
+    @Override
     public void setFont(Font font) {
         if (font instanceof FontUIResource) {
             font = null;
@@ -221,6 +227,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
      * @return this component's font; if a font has not been set
      *         for this component, the font of its parent is returned
      */
+    @Override
     public Font getFont() {
         Font font = super.getFont();
 
@@ -369,6 +376,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
     /**
      * Paints the value. The background is filled based on selected.
      */
+    @Override
     public void paint(Graphics g) {
         Color bColor;
 
@@ -442,48 +450,63 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
     // --- Performance tweaks
 
     // Overridden for performance reasons.
+    @Override
     public Insets getInsets() { return ZERO_INSETS; }
     
     // Overridden for performance reasons.
+    @Override
     public void validate() { if (!isValid()) doLayout(); }
     
     // Overridden for performance reasons.
+    @Override
     public void revalidate() {}
 
     // Overridden for performance reasons.
+    @Override
     public void repaint(long tm, int x, int y, int width, int height) {}
 
     // Overridden for performance reasons.
+    @Override
     public void repaint(Rectangle r) {}
 
     // Overridden for performance reasons.
+    @Override
     public void repaint() {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, char oldValue, char newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, short oldValue, short newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, int oldValue, int newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, long oldValue, long newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, float oldValue, float newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, double oldValue, double newValue) {}
 
     // Overridden for performance reasons.
+    @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
     /// Overridden for performance reasons.
+    @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
 
     // ---
@@ -501,99 +524,125 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
 
 
         // Overridden for performance reasons.
+        @Override
         public void setText(String text) {
             this.text = text;
         }
 
         // Overridden for performance reasons.
+        @Override
         public String getText() {
             return text;
         }
 
         // Overridden for performance reasons.
+        @Override
         public void setForeground(Color foreground) {
             this.foreground = foreground;
         }
 
         // Overridden for performance reasons.
+        @Override
         public Color getForeground() {
             return foreground;
         }
 
         // Overridden for performance reasons.
+        @Override
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
 
         // Overridden for performance reasons.
+        @Override
         public boolean isEnabled() {
             return enabled;
         }
 
         // Overridden for performance reasons.
+        @Override
         public FontMetrics getFontMetrics(Font font) {
             if (fontMetrics == null) fontMetrics = super.getFontMetrics(font);
             return fontMetrics;
         }
 
         // Overridden for performance reasons.
+        @Override
         public void setFont(Font font) {
             fontMetrics = null;
             super.setFont(font);
         }
 
         // Overridden for performance reasons.
+        @Override
         public void validate() {}
 
         // Overridden for performance reasons.
+        @Override
         public void revalidate() {}
 
         // Overridden for performance reasons.
+        @Override
         public void repaint(long tm, int x, int y, int width, int height) {}
 
         // Overridden for performance reasons.
+        @Override
         public void repaint(Rectangle r) {}
 
         // Overridden for performance reasons.
+        @Override
         public void repaint() {}
 
         // Overridden for performance reasons.
+        @Override
         public void setDisplayedMnemonic(int key) {}
 
         // Overridden for performance reasons.
+        @Override
         public void setDisplayedMnemonic(char aChar) {}
 
         // Overridden for performance reasons.
+        @Override
         public void setDisplayedMnemonicIndex(int index) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, char oldValue, char newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, short oldValue, short newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, int oldValue, int newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, long oldValue, long newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, float oldValue, float newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, double oldValue, double newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
 
         // Overridden for performance reasons.
+        @Override
         public void paint(Graphics g) {
             Graphics componentGraphics = getComponentGraphics(g);
             Graphics co = (componentGraphics == null) ? null :

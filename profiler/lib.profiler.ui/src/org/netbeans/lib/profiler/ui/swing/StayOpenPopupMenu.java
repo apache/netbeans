@@ -155,8 +155,9 @@ public class StayOpenPopupMenu extends ProfilerPopupMenu {
         public void actionPerformed(ActionEvent event) {
             fireActionPerformed(event);
         }
-        
-        
+
+
+        @Override
         protected void processMouseEvent(MouseEvent e) {
             performAction(this, e);
             if (!e.isConsumed()) super.processMouseEvent(e);
@@ -191,8 +192,9 @@ public class StayOpenPopupMenu extends ProfilerPopupMenu {
         public void actionPerformed(ActionEvent event) {
             super.fireActionPerformed(event);
         }
-        
-        
+
+
+        @Override
         protected void processMouseEvent(MouseEvent e) {
             performAction(this, e);
             if (!e.isConsumed()) super.processMouseEvent(e);
@@ -227,8 +229,9 @@ public class StayOpenPopupMenu extends ProfilerPopupMenu {
         public void actionPerformed(ActionEvent event) {
             super.fireActionPerformed(event);
         }
-        
-        
+
+
+        @Override
         protected void processMouseEvent(MouseEvent e) {
             performAction(this, e);
             if (!e.isConsumed()) super.processMouseEvent(e);

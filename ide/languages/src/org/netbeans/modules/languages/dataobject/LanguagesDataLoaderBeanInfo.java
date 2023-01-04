@@ -35,6 +35,7 @@ import org.openide.util.NbBundle;
 
 public class LanguagesDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             return new BeanInfo[] {Introspector.getBeanInfo(MultiFileLoader.class)};
@@ -46,10 +47,12 @@ public class LanguagesDataLoaderBeanInfo extends SimpleBeanInfo {
     /** @param type Desired type of the icon
     * @return returns the Image loader's icon
     */
+    @Override
     public Image getIcon (final int type) {
         return ImageUtilities.loadImage ("org/netbeans/modules/languages/resources/defaultIcon.png"); // NOI18N
     }
-    
+
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         System.out.println("LanguagesDataLoaderBeanInfo.getPropertyDescriptors");
         try {
@@ -68,18 +71,22 @@ public class LanguagesDataLoaderBeanInfo extends SimpleBeanInfo {
 
     public static class ActionsEditor extends PropertyEditorSupport {
 
+        @Override
         public boolean supportsCustomEditor () {
             return true;
         }
 
+        @Override
         public Component getCustomEditor () {
             return new GLFFilesCustomEditor ();
         }
-        
+
+        @Override
         public String getAsText () {
             return "NBS files.";
         }
-        
+
+        @Override
         public void setAsText (String text) throws IllegalArgumentException {
             throw new IllegalArgumentException ();
         }

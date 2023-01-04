@@ -200,6 +200,7 @@ public class TriggeredTakeSnapshotCustomizer extends ValidityAwarePanel implemen
 
         // nameTextField
         nameTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return (TriggeredTakeSnapshotCustomizer.this.getParent() instanceof JViewport) ? getMinimumSize()
                                                                                                    : new Dimension(400,
@@ -207,6 +208,7 @@ public class TriggeredTakeSnapshotCustomizer extends ValidityAwarePanel implemen
                                                                                                                                                                                                                                        .getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
@@ -238,6 +240,7 @@ public class TriggeredTakeSnapshotCustomizer extends ValidityAwarePanel implemen
 
         // settingsHeaderSeparator
         settingsHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -290,6 +293,7 @@ public class TriggeredTakeSnapshotCustomizer extends ValidityAwarePanel implemen
 
         // triggerHeaderSeparator
         triggerHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

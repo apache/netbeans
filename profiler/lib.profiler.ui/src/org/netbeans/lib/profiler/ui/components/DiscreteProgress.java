@@ -70,14 +70,17 @@ public class DiscreteProgress extends JPanel {
         return activeUnits;
     }
 
+    @Override
     public Dimension getMaximumSize() {
         return getPreferredSize();
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }
 
+    @Override
     public Dimension getPreferredSize() {
         return new Dimension(((totalUnits * unitWidth) + totalUnits) - 1 + 4, unitHeight + 4);
     }
@@ -103,6 +106,7 @@ public class DiscreteProgress extends JPanel {
         testFrame.setVisible(true);
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         if (progressDelegate == null) {
             Insets insets = getInsets();

@@ -858,6 +858,7 @@ public abstract class Node {
 	 * TemplateText nodes in its body. This method handles either case.
 	 * @return The text string
 	 */
+	@Override
 	public String getText() {
 	    String ret = text;
 	    if ((ret == null) && (body != null)) {
@@ -1871,6 +1872,7 @@ public abstract class Node {
             return this.name;
         }
 
+		@Override
         public String getLocalName() {
             return this.localName;
         }
@@ -1900,10 +1902,13 @@ public abstract class Node {
 	 * Since this method is only for attributes that are not rtexpr,
 	 * we can assume the body of the jsp:attribute is a template text.
 	 */
+		@Override
 	public String getText() {
 
 	    class AttributeVisitor extends Visitor {
 		String attrValue = null;
+
+			@Override
 		public void visit(TemplateText txt) {
 		    attrValue = new String(txt.getText());
 		}

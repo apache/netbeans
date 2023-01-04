@@ -325,11 +325,14 @@ final class ObjectsFeature extends ProfilerFeature.Basic {
     public JPanel getSettingsUI() {
         if (settingsUI == null) {
             settingsUI = new JPanel(new GridBagLayout()) {
+                @Override
                 public void setVisible(boolean visible) {
                     if (visible && getComponentCount() == 0) populateSettingsUI();
                     super.setVisible(visible);
                     storeFlag(SETTINGS_FLAG, visible ? Boolean.TRUE.toString() : null);
                 }
+
+                @Override
                 public Dimension getPreferredSize() {
                     if (getComponentCount() == 0) return new Dimension();
                     else return super.getPreferredSize();
@@ -359,18 +362,22 @@ final class ObjectsFeature extends ProfilerFeature.Basic {
             protected void populatePopup(JPopupMenu popup) {
                 popup.add(new TitledMenuSeparator(Bundle.ObjectsFeature_samplingModes()));
                 popup.add(new JRadioButtonMenuItem(allClassesMode.getName(), currentMode == allClassesMode) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { setMode(allClassesMode); }
                 });
                 if (projectClassesMode != null) popup.add(new JRadioButtonMenuItem(projectClassesMode.getName(), currentMode == projectClassesMode) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { setMode(projectClassesMode); }
                 });
 
                 popup.add(new TitledMenuSeparator(Bundle.ObjectsFeature_instrModes()));
                 popup.add(new JRadioButtonMenuItem(selectedClassesMode.getName(), currentMode == selectedClassesMode) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { setMode(selectedClassesMode); }
                 });
                 
                 if (definedClassesMode != null) popup.add(new JRadioButtonMenuItem(definedClassesMode.getName(), currentMode == definedClassesMode) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { setMode(definedClassesMode); }
                 });
             }

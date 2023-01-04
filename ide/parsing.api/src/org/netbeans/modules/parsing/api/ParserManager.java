@@ -294,6 +294,7 @@ public final class ParserManager {
                 return cache.getSnapshot();
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException("Read only collection."); //NOI18N
             }

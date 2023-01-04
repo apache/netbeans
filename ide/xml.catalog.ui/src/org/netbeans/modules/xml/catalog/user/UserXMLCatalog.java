@@ -444,6 +444,8 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
         CatalogHandler() {
             values = new HashMap();
         }
+
+        @Override
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {
             if ("public".equals(rawName)) { //NOI18N
                 String val = atts.getValue("publicId"); //NOI18N

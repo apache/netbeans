@@ -130,6 +130,7 @@ public final class DataExport {
         l.setBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0));
 
         final JProgressBar p = new JProgressBar(0, progress.getSteps()) {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 d.width = Exporter.MAX_STEPS;
@@ -147,6 +148,7 @@ public final class DataExport {
         });
 
         final JButton b = new JButton() {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 SwingUtilities.getWindowAncestor(this).setVisible(false);
             }
@@ -195,6 +197,7 @@ public final class DataExport {
 
     private static JFileChooser createFileChooser() {
         JFileChooser chooser = new JFileChooser() {
+            @Override
             public void approveSelection() {
                 File file = getSelectedFile();
                 Filter filter = (Filter)getFileFilter();
@@ -211,6 +214,7 @@ public final class DataExport {
                 
                 final boolean[] ret = new boolean[1];
                 JButton yesB = new JButton("Yes") {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         ret[0] = true;
                         super.fireActionPerformed(e);

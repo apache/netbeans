@@ -399,7 +399,8 @@ public class FilesList implements Iterable<FileEntry> {
         public FilesListHandler(File root) {
             this.root = root;
         }
-        
+
+        @Override
         public void startElement(
                 final String uri,
                 final String localName,
@@ -436,7 +437,8 @@ public class FilesList implements Iterable<FileEntry> {
                 entryElement = false;
             }
         }
-        
+
+        @Override
         public void characters(
                 final char[] characters,
                 final int start,
@@ -451,7 +453,8 @@ public class FilesList implements Iterable<FileEntry> {
                 }
             }
         }
-        
+
+        @Override
         public void endElement(
                 final String uri,
                 final String localName,
@@ -575,7 +578,8 @@ public class FilesList implements Iterable<FileEntry> {
                 return entry;
             }
         }
-        
+
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("Remove is not supported for files list");
         }

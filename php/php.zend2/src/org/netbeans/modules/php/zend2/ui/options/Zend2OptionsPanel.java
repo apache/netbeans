@@ -166,9 +166,12 @@ public class Zend2OptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(downloadSkeletonLabel, NbBundle.getMessage(Zend2OptionsPanel.class, "Zend2OptionsPanel.downloadSkeletonLabel.text")); // NOI18N
         downloadSkeletonLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 downloadSkeletonLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 downloadSkeletonLabelMousePressed(evt);
             }

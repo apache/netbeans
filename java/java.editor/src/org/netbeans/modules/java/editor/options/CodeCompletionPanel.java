@@ -186,6 +186,7 @@ public class CodeCompletionPanel extends javax.swing.JPanel implements DocumentL
 
         javaCompletionExcluderDialogTextField.setText(org.openide.util.NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.javaCompletionExcluderDialogTextField.text")); // NOI18N
         javaCompletionExcluderDialogTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 javaCompletionExcluderDialogTextFieldKeyTyped(evt);
             }

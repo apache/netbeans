@@ -72,7 +72,8 @@ public class CustomizerWSServiceHost extends javax.swing.JPanel implements /*Web
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         
@@ -84,7 +85,8 @@ public class CustomizerWSServiceHost extends javax.swing.JPanel implements /*Web
         
         component.addPropertyChangeListener(WsCompileEditorSupport.PROP_FEATURES_CHANGED, this);
     }
-    
+
+    @Override
     public void removeNotify() {
         super.removeNotify();
         

@@ -370,7 +370,8 @@ final class ASTBrowserTopComponent extends TopComponent {
     }
 
     private static class Renderer extends DefaultTreeCellRenderer {
-        
+
+        @Override
         public Component getTreeCellRendererComponent (
             JTree       tree, 
             Object      value,

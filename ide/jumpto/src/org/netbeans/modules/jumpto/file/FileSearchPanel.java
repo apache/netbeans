@@ -375,6 +375,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
             }
         });
         fileNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 fileNameTextFieldKeyPressed(evt);
             }
@@ -402,6 +403,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
 
         resultList.setFont(new java.awt.Font("Monospaced", 0, getFontSize()));
         resultList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 resultListMouseReleased(evt);
             }

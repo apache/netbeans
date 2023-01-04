@@ -56,8 +56,9 @@ public class SmallButton extends JButton {
     public SmallButton(Action a) { super(a); }
 
     public SmallButton(String text, Icon icon) { super(text); setIcon(icon); }
-    
-    
+
+
+    @Override
     public void setIcon(Icon defaultIcon) {
         if (defaultIcon == null) {
             defaultIcon = NO_ICON;
@@ -65,7 +66,8 @@ public class SmallButton extends JButton {
         }
         super.setIcon(defaultIcon);
     }
-    
+
+    @Override
     public Insets getMargin() {
         Insets margin = super.getMargin();
         if (margin != null) {

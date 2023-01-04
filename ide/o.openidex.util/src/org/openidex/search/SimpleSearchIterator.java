@@ -237,6 +237,7 @@ class SimpleSearchIterator implements Iterator<FileObject> {
 
     /**
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

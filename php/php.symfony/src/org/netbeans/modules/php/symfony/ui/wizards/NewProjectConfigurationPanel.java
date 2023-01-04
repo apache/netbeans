@@ -248,9 +248,12 @@ public final class NewProjectConfigurationPanel extends JPanel implements Change
         Mnemonics.setLocalizedText(optionsLabel, NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.optionsLabel.text"));
         optionsLabel.setToolTipText(NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.optionsLabel.toolTipText")); // NOI18N
         optionsLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 optionsLabelMousePressed(evt);
             }

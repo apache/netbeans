@@ -137,6 +137,7 @@ public class ToggleProfilingPointAction extends AbstractAction implements AWTEve
             return ppFactory;
         }
 
+        @Override
         public void setVisible(boolean visible) {
             if (visible) {
                 if (size == null) {
@@ -231,6 +232,7 @@ public class ToggleProfilingPointAction extends AbstractAction implements AWTEve
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public boolean isEnabled() {
         return true;
     }
@@ -312,6 +314,7 @@ public class ToggleProfilingPointAction extends AbstractAction implements AWTEve
         if (ppSwitcher == null) {
             ppSwitcher = new ProfilingPointsSwitcher();
             ppSwitcher.addWindowListener(new WindowAdapter() {
+                @Override
                 public void windowDeactivated(WindowEvent event) {
                     ppSwitcher.setVisible(false);
                 }

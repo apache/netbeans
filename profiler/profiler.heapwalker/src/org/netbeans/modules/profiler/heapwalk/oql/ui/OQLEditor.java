@@ -110,6 +110,7 @@ public class OQLEditor extends JPanel {
             font = new Font(family, Font.PLAIN, size);
         } else {
             queryEditor = new JEditorPane() {
+                @Override
                 public void setText(String text) {
                     Document doc = getDocument();
                     if (doc != null) doc.removeDocumentListener(listener);
@@ -201,7 +202,8 @@ public class OQLEditor extends JPanel {
     public boolean isEditable() {
         return getEditor().isEditable();
     }
-    
+
+    @Override
     public Font getFont() {
         if (queryEditor == null) init();
         return font;

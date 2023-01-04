@@ -27,6 +27,7 @@ import javax.swing.text.*;
  */
 public class HTMLEditorKitEx extends HTMLEditorKit {
 
+    @Override
     public ViewFactory getViewFactory() {
         return new HTMLFactory() {
             @Override

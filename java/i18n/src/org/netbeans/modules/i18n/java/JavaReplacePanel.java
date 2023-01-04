@@ -314,6 +314,7 @@ public class JavaReplacePanel extends JPanel {
             }
         });
         identifierTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 identifierTextFieldFocusLost(evt);
             }
@@ -338,6 +339,7 @@ public class JavaReplacePanel extends JPanel {
 
         initTextField.setEditable(false);
         initTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 initTextFieldFocusGained(evt);
             }
@@ -362,6 +364,7 @@ public class JavaReplacePanel extends JPanel {
 
         fieldTextField.setEditable(false);
         fieldTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 fieldTextFieldFocusGained(evt);
             }

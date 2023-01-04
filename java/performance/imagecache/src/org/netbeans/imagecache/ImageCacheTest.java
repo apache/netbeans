@@ -97,6 +97,7 @@ public class ImageCacheTest extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }
@@ -232,7 +233,8 @@ public class ImageCacheTest extends javax.swing.JFrame {
         public ImagePanel (BufferedImage img) {
             this.img = img;
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             if (img != null) {
                 return new Dimension (img.getWidth(), img.getHeight());
@@ -240,7 +242,8 @@ public class ImageCacheTest extends javax.swing.JFrame {
                 return super.getPreferredSize();
             }
         }
-        
+
+        @Override
         public void paintComponent(Graphics g) {
             long time = perf.highResCounter();
             ((Graphics2D) g).drawRenderedImage(img, AffineTransform.getTranslateInstance(0,0));

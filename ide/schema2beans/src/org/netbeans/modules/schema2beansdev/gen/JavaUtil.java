@@ -902,10 +902,12 @@ public class JavaUtil {
             super(writer);
         }
 
+        @Override
         public void write(char[] cbuf) throws IOException {
             write(cbuf, 0, cbuf.length);
         }
 
+        @Override
         public void write(int c) throws IOException {
             write((char) c);
         }
@@ -919,6 +921,7 @@ public class JavaUtil {
             }
         }
 
+        @Override
         public void write(char ac[], int off, int len) throws IOException {
             int end = off+len;
             for (int k = off; k < end; k++) {
@@ -926,10 +929,12 @@ public class JavaUtil {
             }
         }
 
+        @Override
         public void write(String str) throws IOException {
             write(str.toCharArray(), 0, str.length());
         }
 
+        @Override
         public void write(String str, int off, int len) throws IOException {
             write(str.toCharArray(), off, len);
         }

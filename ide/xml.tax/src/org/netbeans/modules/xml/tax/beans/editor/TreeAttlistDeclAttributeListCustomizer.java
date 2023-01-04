@@ -192,6 +192,7 @@ public class TreeAttlistDeclAttributeListCustomizer extends JPanel implements Cu
 
 	/**
 	 */
+    @Override
         public void keyReleased (KeyEvent e) {
             //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("Event: " + e); // NOI18N
             if (e.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -238,6 +239,7 @@ public class TreeAttlistDeclAttributeListCustomizer extends JPanel implements Cu
         }
 
         /** Returns the class for a model. */
+        @Override
         public Class getColumnClass (int index) {
             return String.class;
         }
@@ -268,6 +270,7 @@ public class TreeAttlistDeclAttributeListCustomizer extends JPanel implements Cu
 
 	/**
 	 */
+    @Override
         public void setValueAt (Object val, int row, int column) {
             TreeAttlistDeclAttributeDef attr = (TreeAttlistDeclAttributeDef) peer.get (row);
             try {
@@ -281,6 +284,7 @@ public class TreeAttlistDeclAttributeListCustomizer extends JPanel implements Cu
 
 	/**
 	 */
+    @Override
         public String getColumnName (int column) {
             return column < getColumnCount() ? headerTitles[column] : "" ; // NOI18N
         }
@@ -288,6 +292,7 @@ public class TreeAttlistDeclAttributeListCustomizer extends JPanel implements Cu
         /** Returns true for all cells which are editable. For a 
          * a new cell is editable only name field.
          */
+        @Override
         public boolean isCellEditable (int rowIndex, int columnIndex) {
             return false;
         }

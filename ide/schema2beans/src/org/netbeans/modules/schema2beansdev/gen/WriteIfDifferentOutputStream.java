@@ -63,6 +63,8 @@ public class WriteIfDifferentOutputStream extends OutputStream {
 
     private byte[] writeBuf;
     private int lastLen = -1;
+
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         if (justWrite) {
             randFile.write(b, off, len);
@@ -105,6 +107,7 @@ public class WriteIfDifferentOutputStream extends OutputStream {
         return justWrite;
     }
 
+    @Override
     public void close() throws IOException {
         // Truncate it.
         //System.out.println("truncating to "+randFile.getFilePointer());

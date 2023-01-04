@@ -41,6 +41,7 @@ public class JExtendedComboBox extends JComboBox {
     private static class ExtendedComboListRenderer extends DefaultListCellRenderer {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                       boolean cellHasFocus) {
             if ((value != null) && value instanceof JSeparator) {
@@ -66,6 +67,7 @@ public class JExtendedComboBox extends JComboBox {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void setModel(ComboBoxModel aModel) {
         if (!(aModel instanceof DefaultComboBoxModel)) {
             throw new RuntimeException("Only DefaultComboBoxModel is supported for this component"); //NOI18N
@@ -75,6 +77,7 @@ public class JExtendedComboBox extends JComboBox {
         super.setModel(model);
     }
 
+    @Override
     public void firePopupMenuWillBecomeInvisible() {
         if (getSelectedItem() instanceof JSeparator) {
             closingWithSeparator = true;
@@ -83,6 +86,7 @@ public class JExtendedComboBox extends JComboBox {
         super.firePopupMenuWillBecomeInvisible();
     }
 
+    @Override
     protected void fireItemStateChanged(ItemEvent e) {
         switch (e.getStateChange()) {
             case ItemEvent.SELECTED:

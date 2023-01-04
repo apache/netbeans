@@ -251,6 +251,7 @@ public class ParamsPanel extends JPanel {
 
         codePane.setContentType("text/x-java");
         codePane.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 codePaneFocusLost(evt);
             }

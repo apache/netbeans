@@ -61,10 +61,13 @@ class CategoryDescriptor implements CategoryListener {
         this.category = category;
         this.settings = palettePanel.getSettings();
         wholePanel = new JPanel() {
+            @Override
             public void addNotify() {
                 super.addNotify();
                 CategoryDescriptor.this.category.addCategoryListener( CategoryDescriptor.this );
             }
+
+            @Override
             public void removeNotify() {
                 super.removeNotify();
                 CategoryDescriptor.this.category.removeCategoryListener( CategoryDescriptor.this );
@@ -101,6 +104,7 @@ class CategoryDescriptor implements CategoryListener {
 
     private MouseListener createMouseListener() {
         return new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent event) {
                 if (SwingUtilities.isRightMouseButton(event)) {
                     JComponent comp = (JComponent)event.getSource();

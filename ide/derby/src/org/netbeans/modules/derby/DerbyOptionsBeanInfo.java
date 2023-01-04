@@ -39,6 +39,7 @@ public class DerbyOptionsBeanInfo extends SimpleBeanInfo {
     public DerbyOptionsBeanInfo() {
     }
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
             PropertyDescriptor[] descriptors = new PropertyDescriptor[2];
@@ -54,7 +55,8 @@ public class DerbyOptionsBeanInfo extends SimpleBeanInfo {
             return new PropertyDescriptor[0];
         }
     }
-    
+
+    @Override
     public Image getIcon(int type)
     {
         Image image = null;
@@ -68,6 +70,7 @@ public class DerbyOptionsBeanInfo extends SimpleBeanInfo {
         return image != null ? image : super.getIcon(type);
     }
 
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor descriptor = new BeanDescriptor(DerbyOptions.class);
         descriptor.setName(NbBundle.getMessage(DerbyOptionsBeanInfo.class, "LBL_DerbyOptions"));

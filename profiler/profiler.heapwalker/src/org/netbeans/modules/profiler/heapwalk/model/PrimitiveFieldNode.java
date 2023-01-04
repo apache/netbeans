@@ -59,22 +59,27 @@ public class PrimitiveFieldNode extends AbstractHeapWalkerNode implements HeapWa
             return itemIndex;
         }
 
+        @Override
         public boolean isStatic() {
             return false;
         }
 
+        @Override
         protected String computeName() {
             return "[" + itemIndex + "]"; // NOI18N
         }
 
+        @Override
         protected String computeType() {
             return type;
         }
 
+        @Override
         protected String computeValue() {
             return value;
         }
-        
+
+        @Override
         public Object getNodeID() {
             return itemIndex;
         }

@@ -604,6 +604,7 @@ public class ClassNameList extends javax.swing.JPanel implements Runnable {
 
 
     public static class ExTable extends JTable {
+        @Override
         public String getToolTipText(MouseEvent ev) {
             return super.getToolTipText(ev);
         }

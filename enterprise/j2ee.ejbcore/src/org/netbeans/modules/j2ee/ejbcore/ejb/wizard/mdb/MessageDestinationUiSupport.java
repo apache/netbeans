@@ -323,6 +323,7 @@ public abstract class MessageDestinationUiSupport {
     // optional - create factory method for this class
     private static class MessageDestinationListCellRenderer extends DefaultListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                 boolean cellHasFocus) {
 

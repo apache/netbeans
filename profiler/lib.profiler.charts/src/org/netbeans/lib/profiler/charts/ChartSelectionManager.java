@@ -342,6 +342,7 @@ class ChartSelectionManager implements ChartSelectionModel {
 
     private class MouseListener extends MouseAdapter implements MouseMotionListener {
 
+        @Override
         public void mousePressed(MouseEvent e) {
             mousePanningBackup = chart.isMousePanningEnabled();
 
@@ -352,6 +353,7 @@ class ChartSelectionManager implements ChartSelectionModel {
             }
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             // Clear previous selection
             setSelectionBounds(null);
@@ -365,12 +367,14 @@ class ChartSelectionManager implements ChartSelectionModel {
                 setSelectionBounds(e.getX(), e.getY(), 0, 0);
         }
 
+        @Override
         public void mouseEntered(MouseEvent e) {
             inChart = true;
             mouseX = e.getX();
             mouseY = e.getY();
         }
 
+        @Override
         public void mouseExited(MouseEvent e) {
             inChart = false;
 
@@ -383,6 +387,7 @@ class ChartSelectionManager implements ChartSelectionModel {
             updateHighlightedItems();
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
             if (selectionMode == SELECTION_RECT) {
                 setSelectionBounds(selectionBounds.x, selectionBounds.y,
@@ -390,6 +395,7 @@ class ChartSelectionManager implements ChartSelectionModel {
             }
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {
             mouseX = e.getX();
             mouseY = e.getY();

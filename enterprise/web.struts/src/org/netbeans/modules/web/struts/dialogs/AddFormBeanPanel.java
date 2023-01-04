@@ -139,6 +139,7 @@ public class AddFormBeanPanel extends javax.swing.JPanel implements ValidatingPa
             }
         });
         jButtonBrowse.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentHidden(java.awt.event.ComponentEvent evt) {
                 jButtonBrowseComponentHidden(evt);
             }

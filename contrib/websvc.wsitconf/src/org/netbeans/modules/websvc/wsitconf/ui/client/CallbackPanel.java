@@ -594,6 +594,7 @@ public class CallbackPanel extends SectionInnerPanel {
         iterationField = new javax.swing.JFormattedTextField();
 
         addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
             }

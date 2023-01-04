@@ -272,6 +272,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
         dialog.getAccessibleContext().setAccessibleDescription(acsd);
         
         labelsPanel.labelsList.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount() == 2) {
                     dialog.setVisible(false);

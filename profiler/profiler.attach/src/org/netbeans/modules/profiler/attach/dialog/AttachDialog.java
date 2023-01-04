@@ -345,6 +345,7 @@ public class AttachDialog extends AttachWizard {
             ProfilerTableContainer processesContainer = new ProfilerTableContainer(processes, true, null);
             
             final JButton refresh = new JButton(Icons.getIcon(GeneralIcons.UPDATE_NOW)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     processesModel.refresh();
@@ -382,6 +383,7 @@ public class AttachDialog extends AttachWizard {
             });
             
             final JButton details = new JButton(Icons.getIcon(GeneralIcons.INFO)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     showDetails((RunningVM)processes.getSelectedValue(-1));
@@ -395,6 +397,8 @@ public class AttachDialog extends AttachWizard {
                         return selectedName == null || selectedName.equals(entry.getValue(0));
                     }
                 };
+
+                @Override
                 protected void fireItemStateChanged(ItemEvent event) {
                     super.fireItemStateChanged(event);
                     if (isSelected()) processes.addRowFilter(rowFilter);
@@ -813,7 +817,8 @@ public class AttachDialog extends AttachWizard {
         boolean isFirstRefresh() {
             return !refreshing && firstRefresh;
         }
-        
+
+        @Override
         public String getColumnName(int columnIndex) {
             if (columnIndex == 0) {
                 return Bundle.AttachDialog_ColumnName();
@@ -823,6 +828,7 @@ public class AttachDialog extends AttachWizard {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (columnIndex == 0) {
                 return String.class;

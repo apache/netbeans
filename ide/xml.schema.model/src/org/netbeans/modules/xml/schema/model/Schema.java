@@ -58,6 +58,8 @@ public interface Schema extends SchemaComponent, EmbeddableRoot {
             ALL(Type.ALL), RESTRICTION(Type.RESTRICTION), EXTENSION(Type.EXTENSION), SUBSTITUTION(Type.SUBSTITUTION), EMPTY(Type.EMPTY);
             private Derivation.Type value;
             Block(Derivation.Type v) { value = v; }
+
+			@Override
             public String toString() { return value.toString(); }
         }
 	Set<Block> getBlockDefault();
@@ -80,6 +82,8 @@ public interface Schema extends SchemaComponent, EmbeddableRoot {
             ALL(Type.ALL), RESTRICTION(Type.RESTRICTION), EXTENSION(Type.EXTENSION), LIST(Type.LIST), UNION(Type.UNION), EMPTY(Type.EMPTY);
             private Derivation.Type value;
             Final(Derivation.Type v) { value = v; }
+
+			@Override
             public String toString() { return value.toString(); }
         }
 	Set<Final> getFinalDefault();

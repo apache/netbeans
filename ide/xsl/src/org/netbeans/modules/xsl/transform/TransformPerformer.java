@@ -481,6 +481,7 @@ public class TransformPerformer {
         }
         
         // WindowAdapter  #31850 workaround
+        @Override
         public void windowClosed(WindowEvent e) {
             super.windowClosed(e);
             if (workaround31850) {

@@ -47,6 +47,7 @@ public class ImportDebuggerTypeBeanInfo extends SimpleBeanInfo {
         return new BeanInfo[] {new DebuggerTypeBeanInfo ()};
     }*/
 
+    @Override
     public BeanDescriptor getBeanDescriptor () {
         return descr;
     }
@@ -55,6 +56,7 @@ public class ImportDebuggerTypeBeanInfo extends SimpleBeanInfo {
     * Claim there are no icons available.  You can override
     * this if you want to provide icons for your bean.
     */
+    @Override
     public Image getIcon(int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) || (type == java.beans.BeanInfo.ICON_MONO_16x16)) {
             if (icon == null) {

@@ -384,7 +384,8 @@ public final class FoldOperationImpl {
             }
             return false;
         }
-        
+
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

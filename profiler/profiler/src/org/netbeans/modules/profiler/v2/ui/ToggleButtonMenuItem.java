@@ -91,6 +91,8 @@ public class ToggleButtonMenuItem extends StayOpenPopupMenu.Item {
                 if (UIUtils.isAquaLookAndFeel())
                     putClientProperty("JButton.buttonType", "textured"); // NOI18N
             }
+
+            @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (UIUtils.isOracleLookAndFeel()) {
@@ -110,6 +112,8 @@ public class ToggleButtonMenuItem extends StayOpenPopupMenu.Item {
                     setFloatable(false);
                     setBorderPainted(false);
                 }
+
+                @Override
                 public void setSize(int w, int h) {
                     super.setSize(w, h);
                     if (getComponentCount() > 0) getComponent(0).setBounds(0, 0, w, h);

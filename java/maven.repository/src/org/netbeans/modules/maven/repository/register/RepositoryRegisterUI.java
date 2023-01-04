@@ -81,6 +81,7 @@ public class RepositoryRegisterUI extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lblRepoId, org.openide.util.NbBundle.getMessage(RepositoryRegisterUI.class, "LBL_Repo_ID", new Object[] {})); // NOI18N
 
         txtRepoId.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtRepoIdKeyReleased(evt);
             }
@@ -90,6 +91,7 @@ public class RepositoryRegisterUI extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lblRepoName, org.openide.util.NbBundle.getMessage(RepositoryRegisterUI.class, "LBL_Repo_Name", new Object[] {})); // NOI18N
 
         txtRepoName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtRepoNameKeyReleased(evt);
             }
@@ -99,6 +101,7 @@ public class RepositoryRegisterUI extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lblRepoUrl, org.openide.util.NbBundle.getMessage(RepositoryRegisterUI.class, "LBL_Repo_URL", new Object[] {})); // NOI18N
 
         txtRepoUrl.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtRepoUrlKeyReleased(evt);
             }

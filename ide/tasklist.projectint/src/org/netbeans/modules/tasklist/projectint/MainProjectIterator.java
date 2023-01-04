@@ -52,6 +52,7 @@ class MainProjectIterator implements Iterator<FileObject> {
         return iterator.next();
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

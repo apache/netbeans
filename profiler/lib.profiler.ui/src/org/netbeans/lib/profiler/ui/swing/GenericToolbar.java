@@ -77,8 +77,9 @@ public class GenericToolbar extends JToolBar {
         
         if (UIUtils.isWindowsClassicLookAndFeel()) setRollover(true);
     }
-    
-    
+
+
+    @Override
     public void addSeparator() {
         if (!UIUtils.isMetalLookAndFeel()) {
             super.addSeparator();
@@ -87,10 +88,16 @@ public class GenericToolbar extends JToolBar {
             final int WDTH = separator.getPreferredSize().width;
             final Dimension SIZE = new Dimension(new JToolBar.Separator().getSeparatorSize().width, 12);
             JPanel panel = new JPanel(null) {
+                @Override
                 public Dimension getPreferredSize() { return SIZE; }
+
+                @Override
                 public Dimension getMaximumSize() { return SIZE; }
+
+                @Override
                 public Dimension getMinimumSize() { return SIZE; }
 
+                @Override
                 public void doLayout() {
                     int x = (getWidth() - WDTH) / 2;
                     int y = (getHeight()- SIZE.height) / 2;
@@ -102,7 +109,8 @@ public class GenericToolbar extends JToolBar {
             super.add(panel);
         }
     }
-    
+
+    @Override
     protected void addImpl(Component comp, Object constraints, int index) {
         if (UIUtils.isMetalLookAndFeel()) {
             if (comp instanceof AbstractButton && !(comp instanceof JCheckBox) && !(comp instanceof JRadioButton)) {
@@ -145,8 +153,9 @@ public class GenericToolbar extends JToolBar {
         
         super.addImpl(comp, constraints, index);
     }
-    
-    
+
+
+    @Override
     protected void paintComponent(Graphics g) {
         if (UIUtils.isGTKLookAndFeel() && getClientProperty("Toolbar.noGTKBorder") == Boolean.TRUE) return; // NOI18N
         super.paintComponent(g);
@@ -154,7 +163,8 @@ public class GenericToolbar extends JToolBar {
     
     
     private static int PREFERRED_HEIGHT = -1;
-    
+
+    @Override
     public Dimension getPreferredSize() {
         Dimension dim = super.getPreferredSize();
         if (PREFERRED_HEIGHT == -1) {
@@ -184,6 +194,7 @@ public class GenericToolbar extends JToolBar {
     }
     
     
+    @Override
     public void doLayout() {
         // #216443 - disabled/invisible/JLabel toolbar components
         //           break left/right arrow focus traversal

@@ -103,6 +103,7 @@ public class PhadhailViews {
         TreeModel model = new PhadhailTreeModel(root);
         JTree tree = new JTree(model) {
             // Could also use a custom TreeCellRenderer, but this is a bit simpler for now.
+            @Override
             public String convertValueToText(Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 Phadhail ph = (Phadhail)value;
                 return ph.getPath();
@@ -202,12 +203,14 @@ public class PhadhailViews {
             keys.put(KeyStroke.getKeyStroke("control v"), DefaultEditorKit.pasteAction);
             keys.put(KeyStroke.getKeyStroke("DELETE"), "delete");
         }
-        
+
+        @Override
         public void addNotify() {
             super.addNotify();
             ExplorerUtils.activateActions(manager, true);
         }
-        
+
+        @Override
         public void removeNotify() {
             ExplorerUtils.activateActions(manager, false);
             super.removeNotify();

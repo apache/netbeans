@@ -41,10 +41,12 @@ public abstract class InnerTableModel extends AbstractTableModel {
         this.columnWidths = columnWidths;
     }
 
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }
 
+    @Override
     public String getColumnName(int column) {
         return columnNames[column];
     }

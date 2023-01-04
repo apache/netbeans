@@ -103,12 +103,14 @@ public class JBDeploymentFactory implements DeploymentFactory {
             super(urls, parent);
         }
 
+        @Override
         protected PermissionCollection getPermissions(CodeSource codeSource) {
             Permissions p = new Permissions();
             p.add(new AllPermission());
             return p;
         }
 
+        @Override
        public Enumeration<URL> getResources(String name) throws IOException {
            // get rid of annoying warnings
            if (name.indexOf("jndi.properties") != -1) {// || name.indexOf("i18n_user.properties") != -1) { // NOI18N

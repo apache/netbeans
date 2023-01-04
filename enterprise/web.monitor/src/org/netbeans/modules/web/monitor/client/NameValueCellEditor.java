@@ -105,16 +105,19 @@ public class NameValueCellEditor extends DefaultCellEditor  {
 	this.type = type;
     }
 
-    
+
+	@Override
     protected void fireEditingStopped() {
 	super.fireEditingStopped();
     }
-    
+
+	@Override
     public Object getCellEditorValue() {
 	return NbBundle.getMessage(NameValueCellEditor.class, "MON_Edit_dots");
     }
- 
-    public Component getTableCellEditorComponent(JTable table, 
+
+	@Override
+    public Component getTableCellEditorComponent(JTable table,
 						 Object value,
 						 boolean isSelected,
 						 int row,

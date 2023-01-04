@@ -130,9 +130,12 @@ public class TreeCharacterReferenceCustomizer extends AbstractTreeCustomizer {
         });
 
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 nameFieldFocusLost(evt);
             }

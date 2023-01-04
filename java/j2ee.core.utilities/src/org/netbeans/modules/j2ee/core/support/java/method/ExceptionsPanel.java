@@ -61,11 +61,13 @@ public final class ExceptionsPanel extends javax.swing.JPanel {
 //        table.getColumnModel().getSelectionModel().addListSelectionListener(listSelectionListener);
 
         table.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 updateButtons();
             }
         });
         table.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyReleased(KeyEvent e) {
                 updateButtons();
             }
@@ -321,15 +323,18 @@ private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
             return result;
         }
-        
+
+        @Override
         public String getColumnName(int column) {
             return NbBundle.getMessage(ParametersPanel.class, "ExceptionsPanel.LBL_Exception");
         }
 
+        @Override
         public boolean isCellEditable(int row, int column) {
             return true;
         }
-        
+
+        @Override
         public void setValueAt(Object aValue, int row, int column) {
             exceptions.set(row, (String) aValue);
             fireTableCellUpdated(row, column);
@@ -338,6 +343,7 @@ private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         // JTable uses this method to determine the default renderer/editor for each cell.
         // If we didn't implement this method, then the last column would contain
         // text ("true"/"false"), rather than a check box.
+        @Override
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }

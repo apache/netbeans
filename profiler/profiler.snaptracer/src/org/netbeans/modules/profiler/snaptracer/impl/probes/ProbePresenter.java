@@ -84,6 +84,7 @@ public final class ProbePresenter extends JLabel {
     }
 
 
+    @Override
     public void reshape(int x, int y, int w, int h) {
         if (GRADIENT) gradientPaint = new LinearGradientPaint(0, 0, 0, h - 1,
                                                               FRACTIONS, COLORS);
@@ -91,6 +92,7 @@ public final class ProbePresenter extends JLabel {
     }
 
 
+    @Override
     protected void paintComponent(Graphics g) {
         int y = getHeight() - 1;
 

@@ -223,6 +223,7 @@ public final class Main extends JFrame {
         bPanel.add(refactorB);
         frame.getContentPane().add(bPanel, BorderLayout.SOUTH);
         frame.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent ev) {
                 model.removePhadhailListener(l);
                 frame.removeWindowListener(this);

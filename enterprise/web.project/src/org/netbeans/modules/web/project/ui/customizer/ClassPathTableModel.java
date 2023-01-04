@@ -56,6 +56,7 @@ public final class ClassPathTableModel extends AbstractTableModel implements Lis
         return model.getSize();
     }
 
+    @Override
     public String getColumnName(int column) {
         if (column == 0) {
             return NbBundle.getMessage(ClassPathTableModel.class, "LBL_CustomizeCompile_TableHeader_Name");
@@ -64,6 +65,7 @@ public final class ClassPathTableModel extends AbstractTableModel implements Lis
         }
     }
 
+    @Override
     public Class getColumnClass(int columnIndex) {
         if (columnIndex == 0) {
             return ClassPathSupport.Item.class;
@@ -72,6 +74,7 @@ public final class ClassPathTableModel extends AbstractTableModel implements Lis
         }
     }
 
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex != 0;
     }
@@ -85,6 +88,7 @@ public final class ClassPathTableModel extends AbstractTableModel implements Lis
         }
     }
 
+    @Override
     public void setValueAt(Object value, int row, int column) {
         if (column != 1 || !(value instanceof Boolean)) {
             return;

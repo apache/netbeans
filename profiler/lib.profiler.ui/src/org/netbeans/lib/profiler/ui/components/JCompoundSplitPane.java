@@ -44,10 +44,12 @@ public class JCompoundSplitPane extends JExtendedSplitPane {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void mouseEntered(MouseEvent e) {
             configureComponents();
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -61,6 +63,7 @@ public class JCompoundSplitPane extends JExtendedSplitPane {
                 });
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                     public void run() {

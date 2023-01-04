@@ -126,7 +126,8 @@ public class CustomZoomPanel extends JPanel {
     private static class WholeNumberDocument extends PlainDocument {
 
         /** Overrides superclass method. */
-        public void insertString(int offs, String str, AttributeSet a) 
+        @Override
+        public void insertString(int offs, String str, AttributeSet a)
         throws BadLocationException {
              char[] source = str.toCharArray();
              StringBuffer result = new StringBuffer();

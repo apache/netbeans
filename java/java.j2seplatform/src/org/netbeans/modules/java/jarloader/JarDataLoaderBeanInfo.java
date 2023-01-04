@@ -35,6 +35,7 @@ import org.openide.util.Utilities;
  */
 public final class JarDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             return new BeanInfo[] {Introspector.getBeanInfo(UniFileLoader.class)};
@@ -42,7 +43,8 @@ public final class JarDataLoaderBeanInfo extends SimpleBeanInfo {
             throw new AssertionError(ie);
         }
     }
-    
+
+    @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage("org/netbeans/modules/java/jarloader/jar.gif", true);
     }

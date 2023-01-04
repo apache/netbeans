@@ -73,6 +73,7 @@ public final class Preview extends Dialog implements Percent.Listener {
         myPrinter = new Printer();
         myKeyListener = new KeyAdapter() {
 
+            @Override
             public void keyPressed(KeyEvent event) {
                 char ch = event.getKeyChar();
                 int modifiers = event.getModifiers();
@@ -407,6 +408,7 @@ public final class Preview extends Dialog implements Percent.Listener {
             }
         });
         myScrollPane.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent event) {
                 if (event.getClickCount() != 2) {
                     return;
@@ -866,6 +868,7 @@ public final class Preview extends Dialog implements Percent.Listener {
             setPreferredSize(dimension);
         }
 
+        @Override
         public void addMouseWheelListener(MouseWheelListener listener) {
             if (myMouseWheelListeners == null) {
                 myMouseWheelListeners = new ArrayList<MouseWheelListener>();

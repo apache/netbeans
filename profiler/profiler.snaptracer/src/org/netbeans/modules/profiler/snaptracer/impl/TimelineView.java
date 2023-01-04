@@ -166,6 +166,7 @@ final class TimelineView {
         toolbar.addSeparator();
 
         selectAllButton = new JButton(Icons.getIcon(TracerIcons.SELECT_ALL)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() { support.selectAll(); }
@@ -176,6 +177,7 @@ final class TimelineView {
         toolbar.add(selectAllButton);
         
         clearTimestampSelectionButton = new JButton(Icons.getIcon(TracerIcons.MARK_CLEAR)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() { support.resetSelectedTimestamps(); }

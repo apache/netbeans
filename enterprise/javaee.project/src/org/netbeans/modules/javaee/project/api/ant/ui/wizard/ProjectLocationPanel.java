@@ -279,6 +279,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
 }//GEN-LAST:event_sharableProjectActionPerformed
     
     
+    @Override
     public void addNotify() {
         super.addNotify();
         //same problem as in 31086, initial focus on Cancel button

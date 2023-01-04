@@ -27,6 +27,7 @@ import org.netbeans.spi.project.libraries.support.LibrariesSupport;
 
 class LibraryRenderer extends DefaultListCellRenderer {
 
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         LibraryImplementation impl = (LibraryImplementation) value;
         return super.getListCellRendererComponent(list,

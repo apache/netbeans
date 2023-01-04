@@ -129,6 +129,7 @@ public class DebugAction extends ControlAction {
             performActionImpl(instance);
         }
 
+        @Override
         public boolean isEnabled() {
             return enableImpl(instance);
         }

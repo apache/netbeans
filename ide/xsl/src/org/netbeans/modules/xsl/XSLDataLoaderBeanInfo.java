@@ -42,6 +42,7 @@ public class XSLDataLoaderBeanInfo extends SimpleBeanInfo {
      * properties of this bean.  May return null if the
      * information should be obtained by automatic analysis.
      */
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor beanDescriptor = new BeanDescriptor  ( XSLDataLoader.class , null );
         beanDescriptor.setDisplayName ( NbBundle.getMessage(XSLDataLoaderBeanInfo.class, "NAME_XSLDataLoader") );                              
@@ -63,6 +64,7 @@ public class XSLDataLoaderBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         int PROPERTY_extensions = 0;
         PropertyDescriptor[] properties = new PropertyDescriptor[1];
@@ -88,6 +90,7 @@ public class XSLDataLoaderBeanInfo extends SimpleBeanInfo {
      * events fired by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
         return new EventSetDescriptor[0];
     }
@@ -99,6 +102,7 @@ public class XSLDataLoaderBeanInfo extends SimpleBeanInfo {
      * implemented by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public MethodDescriptor[] getMethodDescriptors() {
         return new MethodDescriptor[0];
     }
@@ -106,6 +110,7 @@ public class XSLDataLoaderBeanInfo extends SimpleBeanInfo {
     /** @param type Desired type of the icon
      * @return returns the Entity loader's icon
      */
+    @Override
     public Image getIcon(final int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
             (type == java.beans.BeanInfo.ICON_MONO_16x16)) {
@@ -116,6 +121,7 @@ public class XSLDataLoaderBeanInfo extends SimpleBeanInfo {
         }
     }
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             return new BeanInfo[] {

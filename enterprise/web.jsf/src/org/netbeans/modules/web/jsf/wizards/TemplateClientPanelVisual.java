@@ -123,6 +123,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
         jlTemplate.setText(bundle.getString("LBL_SelectTemplate")); // NOI18N
 
         jtfTemplate.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jtfTemplateKeyReleased(evt);
             }

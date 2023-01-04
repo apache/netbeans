@@ -71,7 +71,8 @@ public class CustomizerWSClientHost extends javax.swing.JPanel implements Proper
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         
@@ -85,7 +86,8 @@ public class CustomizerWSClientHost extends javax.swing.JPanel implements Proper
         component.addPropertyChangeListener(WsCompileClientEditorSupport.PROP_OPTIONS_CHANGED, this);
         
     }
-    
+
+    @Override
     public void removeNotify() {
         super.removeNotify();
         

@@ -253,6 +253,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
 
         selectClassTextField.setColumns(15);
         selectClassTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 selectClassTextFieldKeyTyped(evt);
             }

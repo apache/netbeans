@@ -56,6 +56,7 @@ public class CheckList extends JList {
             JComponent.WHEN_FOCUSED);
         addMouseListener(
             new MouseAdapter() {
+                @Override
                 public void mousePressed(MouseEvent e) {
                     JList list = (JList) e.getComponent();
                     

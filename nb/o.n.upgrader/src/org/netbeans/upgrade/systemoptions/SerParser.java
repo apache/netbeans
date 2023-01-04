@@ -419,6 +419,8 @@ public final class SerParser implements ObjectStreamConstants {
     }
     public static final class ObjFieldDesc extends FieldDesc {
         public boolean array;
+
+        @Override
         public String toString() {
             return "Field[name=" + name + ",type=" + type + (array ? "[]" : "") + "]"; // NOI18N
         }

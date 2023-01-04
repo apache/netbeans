@@ -65,6 +65,7 @@ public class MacroSavePanel extends javax.swing.JPanel {
         setMaximumSize( new Dimension( 400, 200 ) );
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension pref = super.getPreferredSize();
         Dimension max = getMaximumSize();

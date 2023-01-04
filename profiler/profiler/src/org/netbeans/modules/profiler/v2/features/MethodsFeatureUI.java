@@ -227,6 +227,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         lrLabel = new GrayLabel(Bundle.MethodsFeatureUI_liveResults());
             
         lrPauseButton = new JToggleButton(Icons.getIcon(GeneralIcons.PAUSE)) {
+            @Override
             protected void fireItemStateChanged(ItemEvent event) {
                 boolean paused = isSelected();
                 updater.setPaused(paused);
@@ -238,6 +239,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         lrPauseButton.setEnabled(false);
 
         lrRefreshButton = new JButton(Icons.getIcon(GeneralIcons.UPDATE_NOW)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 refreshResults();
             }
@@ -246,6 +248,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         
         Icon icon = Icons.getIcon(ProfilerIcons.DELTA_RESULTS);
         lrDeltasButton = new JToggleButton(icon) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 if (!cpuView.setDiffView(isSelected())) setSelected(false);
                 setToolTipText(isSelected() ? Bundle.MethodsFeatureUI_showAbsolute() :
@@ -258,6 +261,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         toggles = new JToggleButton[3];
         
         JToggleButton forwardCalls = new JToggleButton(Icons.getIcon(ProfilerIcons.NODE_FORWARD)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 cpuView.setView(isSelected(), toggles[1].isSelected(), toggles[2].isSelected());
@@ -273,6 +277,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         forwardCalls.setSelected(true);
         
         JToggleButton hotSpots = new JToggleButton(Icons.getIcon(ProfilerIcons.TAB_HOTSPOTS)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 cpuView.setView(toggles[0].isSelected(), isSelected(), toggles[2].isSelected());
@@ -288,6 +293,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         hotSpots.setSelected(false);
         
         JToggleButton reverseCalls = new JToggleButton(Icons.getIcon(ProfilerIcons.NODE_REVERSE)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 cpuView.setView(toggles[0].isSelected(), toggles[1].isSelected(), isSelected());

@@ -105,7 +105,8 @@ public class DiffPanel extends javax.swing.JPanel implements javax.swing.event.C
             filePanel2.setBackground(color); 
         }
     }
-        
+
+    @Override
     public void addNotify() {
         super.addNotify();
 

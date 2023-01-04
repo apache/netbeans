@@ -242,7 +242,8 @@ abstract class SampledTableView extends MemoryView {
     
     
     private class MemoryTableModel extends AbstractTableModel {
-        
+
+        @Override
         public String getColumnName(int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -258,6 +259,7 @@ abstract class SampledTableView extends MemoryView {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -297,6 +299,7 @@ abstract class SampledTableView extends MemoryView {
             return null;
         }
 
+        @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -306,6 +309,7 @@ abstract class SampledTableView extends MemoryView {
             }
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             if (selection == null) columnIndex++;
             

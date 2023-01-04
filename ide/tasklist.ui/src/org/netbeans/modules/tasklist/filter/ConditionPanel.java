@@ -206,6 +206,7 @@ final class ConditionPanel extends JPanel implements ActionListener, PropertyCha
         
         public ConditionCellRenderer () {}
 
+        @Override
         public Component getListCellRendererComponent(JList list,
             Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(
@@ -225,7 +226,8 @@ final class ConditionPanel extends JPanel implements ActionListener, PropertyCha
         private static final long serialVersionUID = 1;
 
         public PropertyCellRenderer () {}
-        
+
+        @Override
         public Component getListCellRendererComponent(JList list,
             Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(

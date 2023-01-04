@@ -151,6 +151,7 @@ public class TreeAttlistDeclCustomizer extends AbstractTreeCustomizer {
 
         elemNameField.setColumns(20);
         elemNameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 elemNameFieldFocusGained(evt);
             }

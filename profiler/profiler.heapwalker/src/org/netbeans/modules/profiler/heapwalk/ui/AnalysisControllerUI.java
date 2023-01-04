@@ -131,13 +131,15 @@ public class AnalysisControllerUI extends JPanel {
             setToolTipText(Bundle.AnalysisControllerUI_ControllerDescr());
             setIcon(ICON_INFO);
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width += 4;
             return d;
         }
-        
+
+        @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
         }
@@ -237,10 +239,12 @@ public class AnalysisControllerUI extends JPanel {
 
         // Top separator
         JSeparator separator = new JSeparator() {
+            @Override
             public Dimension getMaximumSize() {
                 return new Dimension(super.getMaximumSize().width, 1);
             }
 
+            @Override
             public Dimension getPreferredSize() {
                 return new Dimension(super.getPreferredSize().width, 1);
             }
@@ -285,6 +289,7 @@ public class AnalysisControllerUI extends JPanel {
 
         JScrollPane rulesContainerScrollPane = new JScrollPane(rulesContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                                                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension pref = super.getPreferredSize();
                 int height = Math.min(pref.height, 200);
@@ -292,6 +297,7 @@ public class AnalysisControllerUI extends JPanel {
                 return new Dimension(pref.width, height);
             }
 
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -330,6 +336,7 @@ public class AnalysisControllerUI extends JPanel {
 
         JScrollPane resultsContainerScrollPane = new JScrollPane(resultsContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                                                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension pref = super.getPreferredSize();
                 int height = Math.min(pref.height, 160);
@@ -337,6 +344,7 @@ public class AnalysisControllerUI extends JPanel {
                 return new Dimension(pref.width, height);
             }
 
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }

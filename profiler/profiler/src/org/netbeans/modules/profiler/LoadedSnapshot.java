@@ -620,6 +620,7 @@ public class LoadedSnapshot {
             id = new String(idarr);
             if (!ID.equals(id)) {
                 throw new IOException("Invalid header "+id) { // NOI18N
+                    @Override
                     public String getLocalizedMessage() {
                         return Bundle.MSG_NotNPSSSnapshot();
                     }
@@ -628,6 +629,7 @@ public class LoadedSnapshot {
             version = is.read();
             if (version > MAX_SUPPORTED_VERSION) {
                 throw new IOException("NPSS file version "+version+" is not supported") { // NOI18N
+                    @Override
                     public String getLocalizedMessage() {
                         return Bundle.MSG_UnsupportedSnapshotVersion();
                     }

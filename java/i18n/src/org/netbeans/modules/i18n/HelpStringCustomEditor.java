@@ -111,11 +111,13 @@ public class HelpStringCustomEditor extends JPanel {
 
         list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         list.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 listKeyPressed(evt);
             }
         });
         list.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listMouseClicked(evt);
             }
@@ -231,21 +233,25 @@ public class HelpStringCustomEditor extends JPanel {
         }
 
         /** sets new value */
+        @Override
         public void setAsText(String s) {
             if ( "null".equals( s ) && getValue() == null ) // NOI18N
                 return;
             setValue(s);
         }
 
+        @Override
         public String getJavaInitializationString () {
             String s = (String) getValue ();
             return "\"" + toAscii(s) + "\""; // NOI18N
         }
 
+        @Override
         public boolean supportsCustomEditor () {
             return customEd;
         }
 
+        @Override
         public abstract java.awt.Component getCustomEditor ();
 
         private static String toAscii(String str) {

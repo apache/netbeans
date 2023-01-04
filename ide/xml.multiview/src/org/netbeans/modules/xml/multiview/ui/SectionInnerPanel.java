@@ -81,7 +81,8 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
     public SectionInnerPanel(SectionView sectionView) {
         this.sectionView = sectionView;
     }
-    
+
+    @Override
     public synchronized void addFocusListener(FocusListener l) {
         super.addFocusListener(l);
         if (!localFocusListenerInitialized) {
@@ -342,7 +343,8 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
         public ValidateFocusListener(JTextComponent tc) {
             this.tc = tc;
         }
-        
+
+        @Override
         public void focusGained(FocusEvent evt) {
             activeListener = this;
             orgValue = tc.getText();
@@ -352,7 +354,8 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
                 viewIsBuggy = false;
             }
         }
-        
+
+        @Override
         public void focusLost(FocusEvent evt) {
             if (!closing) {
                 if (!flushData()) {
@@ -435,12 +438,14 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
             this.tc = tc;
             this.test = test;
         }
-        
+
+        @Override
         public void focusGained(FocusEvent evt) {
             orgValue = tc.getText();
             activeListener = this;
         }
-        
+
+        @Override
         public void focusLost(FocusEvent evt) {
             if (!closing) {
                 flushData();
@@ -476,12 +481,14 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
             this.comboBox = comboBox;
             this.test = test;
         }
-        
+
+        @Override
         public void focusGained(FocusEvent evt) {
             orgValue = comboBox.getSelectedItem();
             activeListener = this;
         }
-        
+
+        @Override
         public void focusLost(FocusEvent evt) {
             if (!closing) {
                 flushData();
@@ -512,12 +519,14 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
         public RadioButtonModifyFocusListener(JRadioButton radioButton) {
             this.radioButton = radioButton;
         }
-        
+
+        @Override
         public void focusGained(FocusEvent evt) {
             orgValue = radioButton.isSelected();
             activeListener = this;
         }
-        
+
+        @Override
         public void focusLost(FocusEvent evt) {
             if (!closing) {
                 flushData();
@@ -629,12 +638,14 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
         public CheckBoxModifyFocusListener(JCheckBox checkBox) {
             this.checkBox = checkBox;
         }
-        
+
+        @Override
         public void focusGained(FocusEvent evt) {
             orgValue = checkBox.isSelected();
             activeListener = this;
         }
-        
+
+        @Override
         public void focusLost(FocusEvent evt) {
             if (!closing) {
                 flushData();

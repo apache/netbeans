@@ -320,9 +320,12 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 nameFieldFocusLost(evt);
             }
@@ -440,9 +443,12 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         internValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 internValueFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 internValueFieldFocusLost(evt);
             }
@@ -479,6 +485,7 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         externPublicField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 externPublicFieldFocusLost(evt);
             }
@@ -511,6 +518,7 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         externSystemField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 externSystemFieldFocusLost(evt);
             }
@@ -548,6 +556,7 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         unparsedPublicField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 unparsedPublicFieldFocusLost(evt);
             }
@@ -579,6 +588,7 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         unparsedSystemField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 unparsedSystemFieldFocusLost(evt);
             }
@@ -612,6 +622,7 @@ public class TreeEntityDeclCustomizer extends AbstractTreeCustomizer {
         });
 
         unparsedNotationField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 unparsedNotationFieldFocusLost(evt);
             }

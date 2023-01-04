@@ -78,16 +78,19 @@ public class JTitledPanel extends JPanel {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return new Insets(1, 1, 1, 1);
         }
 
+        @Override
         public Insets getBorderInsets(Component c, Insets insets) {
             insets.left = insets.top = insets.right = insets.bottom = 1;
 
             return insets;
         }
 
+        @Override
         protected void paintLoweredBevel(Component c, Graphics g, int x, int y, int width, int height) {
             if (!c.isEnabled()) {
                 return;
@@ -111,6 +114,7 @@ public class JTitledPanel extends JPanel {
             g.setColor(oldColor);
         }
 
+        @Override
         protected void paintRaisedBevel(Component c, Graphics g, int x, int y, int width, int height) {
             if (!c.isEnabled()) {
                 return;
@@ -138,6 +142,7 @@ public class JTitledPanel extends JPanel {
     private class DoubleClickListener extends MouseAdapter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void mouseClicked(MouseEvent e) {
             if ((e.getModifiers() == InputEvent.BUTTON1_MASK) && (e.getClickCount() == 2)) {
                 if (isMaximized()) {
@@ -245,10 +250,12 @@ public class JTitledPanel extends JPanel {
                     }
                 });
             JTitledPanel.this.addComponentListener(new ComponentAdapter() {
+                @Override
                     public void componentShown(ComponentEvent e) {
                         setSelected(true);
                     }
 
+                @Override
                     public void componentHidden(ComponentEvent e) {
                         setSelected(false);
                     }
@@ -261,13 +268,15 @@ public class JTitledPanel extends JPanel {
                     }
                 });
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width += 20;
             return d;
         }
-        
+
+        @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
         }
@@ -343,10 +352,12 @@ public class JTitledPanel extends JPanel {
         return icon;
     }
 
+    @Override
     public void setLayout(LayoutManager mgr) {
         getContentPanel().setLayout(mgr);
     }
 
+    @Override
     public LayoutManager getLayout() {
         return getContentPanel().getLayout();
     }
@@ -359,6 +370,7 @@ public class JTitledPanel extends JPanel {
         return getState() == STATE_MINIMIZED;
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return new Dimension(0, titlePanel.getPreferredSize().height);
     }
@@ -391,26 +403,32 @@ public class JTitledPanel extends JPanel {
         return title;
     }
 
+    @Override
     public Component add(Component comp) {
         return getContentPanel().add(comp);
     }
 
+    @Override
     public Component add(Component comp, int index) {
         return getContentPanel().add(comp, index);
     }
 
+    @Override
     public void add(Component comp, Object constraints) {
         getContentPanel().add(comp, constraints);
     }
 
+    @Override
     public void add(Component comp, Object constraints, int index) {
         getContentPanel().add(comp, constraints, index);
     }
 
+    @Override
     public Component add(String name, Component comp) {
         return getContentPanel().add(name, comp);
     }
 
+    @Override
     public void add(PopupMenu popup) {
         getContentPanel().add(popup);
     }
@@ -459,14 +477,17 @@ public class JTitledPanel extends JPanel {
         fireActionPerformed();
     }
 
+    @Override
     public void remove(Component component) {
         getContentPanel().remove(component);
     }
 
+    @Override
     public void remove(MenuComponent component) {
         getContentPanel().remove(component);
     }
 
+    @Override
     public void remove(int index) {
         getContentPanel().remove(index);
     }
@@ -475,6 +496,7 @@ public class JTitledPanel extends JPanel {
         actionListeners.remove(listener);
     }
 
+    @Override
     public void removeAll() {
         getContentPanel().removeAll();
     }
@@ -525,6 +547,7 @@ public class JTitledPanel extends JPanel {
             gbc = new GridBagConstraints();
             gbc.insets = new Insets(0, 0, 0, 4);
             JLabel iconLabel = new JLabel(icon) {
+                @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -535,6 +558,7 @@ public class JTitledPanel extends JPanel {
         }
         
         JLabel titleLabel = new JLabel(title) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -559,6 +583,7 @@ public class JTitledPanel extends JPanel {
                 titlePanel.add(c, new GridBagConstraints());
 
         minimizePanelButton = new ImageIconButton(minimizePanelIcon) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -572,6 +597,7 @@ public class JTitledPanel extends JPanel {
         //if (showButtons) titlePanel.add(minimizePanelButton, new GridBagConstraints());
 
         maximizePanelButton = new ImageIconButton(maximizePanelIcon) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -585,6 +611,7 @@ public class JTitledPanel extends JPanel {
         //if (showButtons) titlePanel.add(maximizePanelButton, new GridBagConstraints());
 
         restorePanelButton = new ImageIconButton(restorePanelIcon) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -599,6 +626,7 @@ public class JTitledPanel extends JPanel {
         //if (showButtons) titlePanel.add(restorePanelButton, new GridBagConstraints());
         
         closePanelButton = new ImageIconButton(closePanelIcon) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }

@@ -40,6 +40,7 @@ public class ComponentMorpher2 extends JComponent {
     private class MorpherThread extends Thread {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             setupMorphing();
 
@@ -91,6 +92,7 @@ public class ComponentMorpher2 extends JComponent {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void setBorder(Border border) {
         super.setBorder(border);
         setClientPreferredSize(currentComponent.getPreferredSize());

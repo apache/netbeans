@@ -748,6 +748,7 @@ public class LongHashMap<K> //extends AbstractMap<K>
             return current = e;
         }
 
+        @Override
         public void remove() {
             if (current == null) {
                 throw new IllegalStateException();

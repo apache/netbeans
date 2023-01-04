@@ -88,6 +88,7 @@ public abstract class ResultsPanel extends JPanel {
         }
 
         cornerButton.addKeyListener(new KeyAdapter() {
+            @Override
                 public void keyPressed(final KeyEvent evt) {
                     if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
                         showColumnSelectionPopup(headerPopup, cornerButton);
@@ -96,6 +97,7 @@ public abstract class ResultsPanel extends JPanel {
             });
 
         cornerButton.addMouseListener(new MouseAdapter() {
+            @Override
                 public void mousePressed(MouseEvent mouseEvent) {
                     if (headerPopup.isVisible()) {
                         internalCornerButtonClick = true;
@@ -109,6 +111,7 @@ public abstract class ResultsPanel extends JPanel {
                     }
                 }
 
+            @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     if ((mouseEvent.getModifiers() == InputEvent.BUTTON1_MASK) && (!internalCornerButtonClick)) {
                         showColumnSelectionPopup(headerPopup, cornerButton);

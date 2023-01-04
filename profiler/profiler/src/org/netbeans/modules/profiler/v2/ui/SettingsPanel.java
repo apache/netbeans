@@ -46,8 +46,9 @@ public class SettingsPanel extends JPanel {
         
         add(Box.createVerticalStrut(defaultHeight()));
     }
-    
-    
+
+
+    @Override
     public void removeAll() {
         super.removeAll();
         add(Box.createVerticalStrut(defaultHeight()));

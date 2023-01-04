@@ -78,6 +78,7 @@ public class CertPassphraseDlg extends javax.swing.JPanel implements PromptPassw
 
         tfPassword.setText(null);
         tfPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfPasswordonPwdFocus(evt);
             }

@@ -68,7 +68,8 @@ public abstract class DetailsProvider {
         protected Basic(String... supportedClasses) {
             this.supportedClasses = supportedClasses;
         }
-        
+
+        @Override
         public final String[] getSupportedClasses() {
             return supportedClasses;
         }
@@ -112,7 +113,8 @@ public abstract class DetailsProvider {
         // [Worker Thread] Compute the view here, check Thread.interrupted(),
         // use SwingUtilities.invokeLater() to display the result
         protected abstract void computeView(Instance instance, Heap heap);
-        
+
+        @Override
         public final void addNotify() {
             super.addNotify();
             
@@ -126,7 +128,8 @@ public abstract class DetailsProvider {
         
         // [Event Dispatch Thread] Do any cleanup here if needed
         protected void removed() {}
-        
+
+        @Override
         public final void removeNotify() {
             workerTask.cancel();
             super.removeNotify();

@@ -109,6 +109,7 @@ public class RefreshAction extends NodeAction {
             performActionImpl(instance);
         }
 
+        @Override
         public boolean isEnabled() {
             return enableImpl(instance);
         }

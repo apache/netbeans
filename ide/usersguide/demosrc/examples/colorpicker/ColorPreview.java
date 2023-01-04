@@ -38,6 +38,7 @@ public class ColorPreview extends javax.swing.JPanel {
     /** Adds new property change listener to be registered with this bean.
      * @param l PropertyChangeListener to be registered with this bean.
      */
+    @Override
     public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
         propertyChangeSupport.addPropertyChangeListener( l );
     }
@@ -45,6 +46,7 @@ public class ColorPreview extends javax.swing.JPanel {
     /** Removes previously added property added listener.
      * @param l PropertyChangeListener to be unregistered from this bean.
      */
+    @Override
     public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
         propertyChangeSupport.removePropertyChangeListener( l );
     }

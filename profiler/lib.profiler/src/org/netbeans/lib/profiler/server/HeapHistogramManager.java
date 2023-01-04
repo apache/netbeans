@@ -494,6 +494,7 @@ class HeapHistogramManager {
             data = new byte[256];
         }
 
+        @Override
         public int read(byte[] b, int off, int len) throws IOException {
             int n = 0;
 

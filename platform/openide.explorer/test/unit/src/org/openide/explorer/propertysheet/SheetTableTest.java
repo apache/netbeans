@@ -287,7 +287,8 @@ public class SheetTableTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -601,15 +602,18 @@ public class SheetTableTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
@@ -620,7 +624,8 @@ public class SheetTableTest extends NbTestCase {
         
         public TagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -628,11 +633,13 @@ public class SheetTableTest extends NbTestCase {
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -707,7 +714,8 @@ public class SheetTableTest extends NbTestCase {
         
         public BadEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             //return new String[] {"a","b","c","d","Value"};
             return null;
@@ -717,15 +725,18 @@ public class SheetTableTest extends NbTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public Object getValue() {
             return Boolean.FALSE;
         }

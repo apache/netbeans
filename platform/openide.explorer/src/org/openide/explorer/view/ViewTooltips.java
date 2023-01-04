@@ -132,6 +132,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
         return --refcount;
     }
     
+    @Override
     public void mouseMoved(MouseEvent e) {
         Point p = e.getPoint();
         JComponent comp = (JComponent) e.getSource();
@@ -143,6 +144,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         hide();
     }

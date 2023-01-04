@@ -34,6 +34,7 @@ public class CellTipManager implements MouseListener, MouseMotionListener, Mouse
     private class MoveBeforeEnterListener extends MouseMotionAdapter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void mouseMoved(MouseEvent e) {
             initiateCellTip(e);
         }

@@ -130,8 +130,9 @@ public class DescriptionReader extends DefaultHandler {
         
         this.languageData = null;
     }
-    
-    public void startElement(String uri, String localName, String qname, 
+
+    @Override
+    public void startElement(String uri, String localName, String qname,
     Attributes attributes) throws SAXException {
         if (LANGUAGE_ELEM.equals(qname)) {
             // no info
@@ -197,6 +198,7 @@ public class DescriptionReader extends DefaultHandler {
     }
 
     /** End element. */
+    @Override
     public void endElement(String uri, String localName, String qname) {
         if (TOKEN_ID_ELEM.equals(qname)) {
             if (!processingHiddenTokenTypes) {
@@ -216,6 +218,7 @@ public class DescriptionReader extends DefaultHandler {
     }
     
     /** Characters in element */
+    @Override
     public void characters (char ch[], int start, int length) throws SAXException {
         if (id != null) {
             if (inCommentElement) {

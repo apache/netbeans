@@ -145,11 +145,13 @@ public class JavaBeansUtil {
             XMLUtil.printXML(out, obj.toString(), false);
 		}
 
+        @Override
         public void beginInnerNode() throws IOException {
             super.beginInnerNode();
             out.write("\n");
 		}
 
+        @Override
         public void endInnerNode() throws IOException {
             super.endInnerNode();
             out.write(indent);
@@ -192,6 +194,7 @@ public class JavaBeansUtil {
             out.write("</td>");
 		}
 
+        @Override
         public void beginInnerNode() throws IOException {
             super.beginInnerNode();
             // inner node - write a nested table
@@ -199,6 +202,7 @@ public class JavaBeansUtil {
             out.write("\n");
 		}
 
+        @Override
         public void endInnerNode() throws IOException {
             super.endInnerNode();
             out.write(indent);

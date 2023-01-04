@@ -74,7 +74,8 @@ public class DriverClassLoader extends URLClassLoader {
         }                                       
     }
 
-        
+
+    @Override
     protected PermissionCollection getPermissions(CodeSource codesource) {
         Permissions permissions = new Permissions();
         permissions.add(new AllPermission());

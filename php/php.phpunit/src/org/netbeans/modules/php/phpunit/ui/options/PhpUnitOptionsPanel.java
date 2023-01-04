@@ -216,9 +216,12 @@ public class PhpUnitOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(phpUnitLearnMoreLabel, NbBundle.getMessage(PhpUnitOptionsPanel.class, "PhpUnitOptionsPanel.phpUnitLearnMoreLabel.text")); // NOI18N
         phpUnitLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 phpUnitLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 phpUnitLearnMoreLabelMousePressed(evt);
             }
@@ -226,9 +229,12 @@ public class PhpUnitOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(skelGenLearnMoreLabel, NbBundle.getMessage(PhpUnitOptionsPanel.class, "PhpUnitOptionsPanel.skelGenLearnMoreLabel.text")); // NOI18N
         skelGenLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 skelGenLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 skelGenLearnMoreLabelMousePressed(evt);
             }

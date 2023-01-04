@@ -114,6 +114,7 @@ public abstract class TracerProbe {
          *
          * @return predefined ProbeStateHandler which obtains status notifications
          */
+        @Override
         public final synchronized ProbeStateHandler getStateHandler() {
             if (stateHandler == null) stateHandler = new ProbeStateHandler() {
                 public void probeAdded(IdeSnapshot snapshot) {

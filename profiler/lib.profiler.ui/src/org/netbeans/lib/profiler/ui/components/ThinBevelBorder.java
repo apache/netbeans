@@ -42,6 +42,7 @@ public class ThinBevelBorder extends BevelBorder {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     protected void paintLoweredBevel(Component c, Graphics g, int x, int y, int width, int height) {
         Color oldColor = g.getColor();
         int h = height;
@@ -61,6 +62,7 @@ public class ThinBevelBorder extends BevelBorder {
         g.setColor(oldColor);
     }
 
+    @Override
     protected void paintRaisedBevel(Component c, Graphics g, int x, int y, int width, int height) {
         Color oldColor = g.getColor();
         int h = height;

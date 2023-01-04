@@ -139,12 +139,14 @@ public class DropdownButton extends JPanel {
             public void actionPerformed(ActionEvent e) { displayPopup(); }
         });
     }
-    
+
+    @Override
     public boolean requestFocusInWindow() {
         return popup.isFocusable() ? popup.requestFocusInWindow() :
                                      button.requestFocusInWindow();
     }
-    
+
+    @Override
     public void setEnabled(boolean enabled) {
         if (button != null) {
             button.setEnabled(enabled);
@@ -152,7 +154,8 @@ public class DropdownButton extends JPanel {
             else exposePopup();
         }
     }
-    
+
+    @Override
     public boolean isEnabled() {
         return button == null ? false : button.isEnabled();
     }
@@ -173,8 +176,9 @@ public class DropdownButton extends JPanel {
     public boolean isPushed() {
         return pushed;
     }
-    
-    
+
+
+    @Override
     public void setToolTipText(String text) {
         button.setToolTipText(text);
     }
@@ -247,12 +251,14 @@ public class DropdownButton extends JPanel {
     protected void performAction() {
         // Implementation here
     }
-    
-    
+
+
+    @Override
     public void paint(Graphics g) {
         paintChildren(g);
     }
-    
+
+    @Override
     protected void paintChildren(Graphics g) {
         super.paintChildren(g);
         
@@ -327,22 +333,26 @@ public class DropdownButton extends JPanel {
         repaint();
         return true;
     }
-    
-    
+
+
+    @Override
     public Dimension getPreferredSize() {
         Dimension d = button.getPreferredSize();
         d.width += POPUP_EXTENT + POPUP_XWIDTH;
         return d;
     }
-    
+
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }
-    
+
+    @Override
     public Dimension getMaximumSize() {
         return getPreferredSize();
     }
-    
+
+    @Override
     public void doLayout() {
         for (Component c : getComponents())
             c.setBounds(0, 0, getWidth(), getHeight());
@@ -361,12 +371,17 @@ public class DropdownButton extends JPanel {
                 putClientProperty("JComponent.sizeVariant", "regular"); // NOI18N
             
             setModel(new DefaultButtonModel() {
+                @Override
                 public boolean isRollover() {
                     return super.isRollover() || (isEnabled() && (popup != null && popup.getModel().isRollover()));
                 }
+
+                @Override
                 public boolean isPressed() {
                     return pushed || super.isPressed();
                 }
+
+                @Override
                 public boolean isArmed() {
                     return pushed || super.isArmed();
                 }
@@ -454,6 +469,7 @@ public class DropdownButton extends JPanel {
             putClientProperty("MetalListener", new Object()); // NOI18N
             
             setModel(new DefaultButtonModel() {
+                @Override
                 public boolean isRollover() {
                     return super.isRollover() || pushed;
                 }
@@ -465,12 +481,14 @@ public class DropdownButton extends JPanel {
             getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), NO_ACTION);
             getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), NO_ACTION);
         }
-        
+
+        @Override
         protected void fireActionPerformed(ActionEvent e) {
             super.fireActionPerformed(e);
             displayPopup();
         }
-        
+
+        @Override
         protected void processEvent(AWTEvent e) {
             if (!(e instanceof MouseEvent)) processEventImpl(e);
             else processChildMouseEvent((MouseEvent)e);
@@ -483,16 +501,19 @@ public class DropdownButton extends JPanel {
                 else button.requestFocus();
             }
         }
-        
+
+        @Override
         public boolean hasFocus() {
             return isFocusable() ? super.hasFocus() : button.hasFocus();
             
         }
-        
+
+        @Override
         public boolean isFocusable() {
             return !button.isEnabled();
         }
-        
+
+        @Override
         public void paint(Graphics g) {
             if (pushed || !button.isEnabled() || container.getComponent(0) == this) {
                 Rectangle c = g.getClipBounds();
@@ -501,7 +522,8 @@ public class DropdownButton extends JPanel {
                 g.setClip(c);
             }
         }
-        
+
+        @Override
         public void repaint() {
             DropdownButton.this.repaint();
         }

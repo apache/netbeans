@@ -767,6 +767,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return new FSRootRE (root, f);
         }
 
+        @Override
         public void remove () {
             throw new UnsupportedOperationException ();
         }

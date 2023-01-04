@@ -72,6 +72,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     
     TableColumn createTableColumn(int columnIndex) {
         return new TableColumn(columnIndex) {
+            @Override
             public void setWidth(int width) {
                 if (getMaxWidth() == 0 && getWidth() == 0) {
                     TableColumn c = getPreviousVisibleColumn(this);
@@ -83,7 +84,8 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
             }                
         };
     }
-    
+
+    @Override
     public void addColumn(final TableColumn column) {
         super.addColumn(column);
         

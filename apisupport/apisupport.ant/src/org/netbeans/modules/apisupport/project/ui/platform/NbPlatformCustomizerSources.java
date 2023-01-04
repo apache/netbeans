@@ -61,13 +61,15 @@ public final class NbPlatformCustomizerSources extends JPanel {
         };
         updateEnabled();
     }
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         sourceList.addListSelectionListener(listListener);
         sourceList.getModel().addListDataListener(listListener);
     }
-    
+
+    @Override
     public void removeNotify() {
         sourceList.removeListSelectionListener(listListener);
         sourceList.getModel().removeListDataListener(listListener);

@@ -58,6 +58,7 @@ public class SectionPanel extends javax.swing.JPanel implements NodeSectionPanel
             ("/org/netbeans/modules/xml/multiview/resources/minus.gif"); // NOI18N 
     
     private FocusListener sectionFocusListener = new FocusAdapter() {
+        @Override
         public void focusGained(FocusEvent e) {
             setActive(true);
         }

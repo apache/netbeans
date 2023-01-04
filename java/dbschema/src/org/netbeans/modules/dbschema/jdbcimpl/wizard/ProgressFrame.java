@@ -59,7 +59,8 @@ public class ProgressFrame extends javax.swing.JFrame {
         setSize(380, 150);
         setLocation(dim.width/2 - 190, dim.height/2 - 80);
     }
-    
+
+    @Override
     public void dispose() {
         if (!finished) {
             progressHandle.finish();
@@ -171,10 +172,12 @@ public class ProgressFrame extends javax.swing.JFrame {
     }
     
     //========== property change support needed for progressbar ==========
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         propertySupport.addPropertyChangeListener (l);
     }
-    
+
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
         propertySupport.removePropertyChangeListener (l);
     }

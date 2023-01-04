@@ -63,6 +63,7 @@ public final class DetailsSupport {
     
     private static final LinkedHashMap<String, List<ProviderClassPair>> PROVIDERS_CACHE =
             new LinkedHashMap<String, List<ProviderClassPair>>(10000) {
+                @Override
                 protected boolean removeEldestEntry(Map.Entry eldest) {
                     return size() > 5000;
                 }

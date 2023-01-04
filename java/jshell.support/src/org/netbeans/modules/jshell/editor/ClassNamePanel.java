@@ -108,7 +108,8 @@ class ClassNamePanel extends javax.swing.JPanel implements DocumentListener {
     public void setNotifier(NotificationLineSupport support) {
         this.notifier = support;
     }
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         SwingUtilities.invokeLater(this::initDisplay);

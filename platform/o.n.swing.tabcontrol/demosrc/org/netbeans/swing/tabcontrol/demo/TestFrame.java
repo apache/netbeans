@@ -351,6 +351,7 @@ public class TestFrame extends javax.swing.JFrame {
     private void initComponents() {//GEN-BEGIN:initComponents
 
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }
@@ -420,12 +421,14 @@ public class TestFrame extends javax.swing.JFrame {
             this.r = r;
         }
 
+        @Override
         public synchronized void addInvalidComponent(
                 JComponent invalidComponent) {
             System.err.println("AddInvalidComponent " + invalidComponent);
             super.addInvalidComponent(invalidComponent);
         }
 
+        @Override
         public synchronized void addDirtyRegion(JComponent c, int x, int y,
                                                 int w, int h) {
             System.err.println("addDirtyRegion " + x + "," + y + "," + w + ","
@@ -435,11 +438,13 @@ public class TestFrame extends javax.swing.JFrame {
 //            Thread.dumpStack();
         }
 
+        @Override
         public void markCompletelyDirty(JComponent aComponent) {
             System.err.println("MarkCompletelyDirty " + aComponent);
             super.markCompletelyDirty(aComponent);
         }
 
+        @Override
         public void markCompletelyClean(JComponent aComponent) {
             super.markCompletelyClean(aComponent);
         }

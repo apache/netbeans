@@ -140,6 +140,7 @@ public class OQLQueryCustomizer {
 
         final JButton[] upDownButtons = new JButton[2];
         upDownButtons[0] = new JButton(ICON_UP) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 int index = parent.getIndex(node) - 1;
                 treeModel.removeNodeFromParent(node);
@@ -152,6 +153,7 @@ public class OQLQueryCustomizer {
         upDownButtons[0].getAccessibleContext().
                                         setAccessibleName(Bundle.OQLQueryCustomizer_UpButtonAccessName());
         upDownButtons[1] = new JButton(ICON_DOWN) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 int index = parent.getIndex(node) + 1;
                 treeModel.removeNodeFromParent(node);
@@ -318,6 +320,7 @@ public class OQLQueryCustomizer {
                 JPanel headerContainer1 = new JPanel(new GridBagLayout());
 
                 newRadio = new JRadioButton() {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { updateComponents(); }
                 };
                 Mnemonics.setLocalizedText(newRadio, Bundle.OQLQueryCustomizer_NewQueryRadioText());
@@ -331,6 +334,7 @@ public class OQLQueryCustomizer {
                 headerContainer1.add(newRadio, c);
 
                 newSeparator = new JSeparator(JSeparator.HORIZONTAL) {
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }
@@ -405,9 +409,12 @@ public class OQLQueryCustomizer {
             JScrollPane descriptionAreaScroll = new JScrollPane(descriptionArea,
                                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+                @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(250, super.getPreferredSize().height);
                 }
+
+                @Override
                 public Dimension getMinimumSize() {
                     return allowExisting ? getPreferredSize() : super.getMinimumSize();
                 }
@@ -428,6 +435,7 @@ public class OQLQueryCustomizer {
                 JPanel headerContainer2 = new JPanel(new GridBagLayout());
 
                 existingRadio = new JRadioButton() {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { updateComponents(); }
                 };
                 Mnemonics.setLocalizedText(existingRadio, Bundle.OQLQueryCustomizer_ExistingQueryRadioText());
@@ -440,6 +448,7 @@ public class OQLQueryCustomizer {
                 headerContainer2.add(existingRadio, c);
 
                 existingSeparator = new JSeparator(JSeparator.HORIZONTAL) {
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }

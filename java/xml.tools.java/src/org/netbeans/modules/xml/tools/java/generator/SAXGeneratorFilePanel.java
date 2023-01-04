@@ -93,11 +93,13 @@ public final class SAXGeneratorFilePanel extends SAXGeneratorAbstractPanel imple
         setName(NbBundle.getMessage(SAXGeneratorFilePanel.class, "SAXGeneratorFilePanel.Form.name")); // NOI18N
         setPreferredSize(new java.awt.Dimension(480, 350));
         addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentHidden(java.awt.event.ComponentEvent evt) {
                 formComponentHidden(evt);
             }
         });
         addContainerListener(new java.awt.event.ContainerAdapter() {
+            @Override
             public void componentRemoved(java.awt.event.ContainerEvent evt) {
                 formComponentRemoved(evt);
             }

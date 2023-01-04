@@ -107,6 +107,7 @@ public final class RunCalibrationAction extends AbstractAction {
         for (int i = 0; i < platforms.size(); i++)
             columnData[i] = new Object[] { platforms.get(i), null };
         final TableModel model = new DefaultTableModel(columnData, columnNames) {
+            @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
         
@@ -138,10 +139,12 @@ public final class RunCalibrationAction extends AbstractAction {
         label.setBorder(BorderFactory.createEmptyBorder(15, 10, 5, 10));
         
         final JButton calibrate = new JButton() {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { calibrate(table); }
         };
         Mnemonics.setLocalizedText(calibrate, Bundle.LBL_Calibrate());
         JButton platforms = new JButton() {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 JavaPlatform.showCustomizer();
                 refreshModel(table);
@@ -340,6 +343,7 @@ public final class RunCalibrationAction extends AbstractAction {
             setHorizontalAlignment(TRAILING);
         }
 
+        @Override
         protected void setValue(Object value) {
             if (value == null) {
                 setText(Bundle.LBL_NotCalibrated());

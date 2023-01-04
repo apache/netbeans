@@ -60,7 +60,8 @@ public interface ManagedBean extends FacesConfigElement, DescriptionGroup,
         Scope(String scope){
             this.scope = scope;
         }
-        
+
+        @Override
         public String toString(){
             return scope;
         }

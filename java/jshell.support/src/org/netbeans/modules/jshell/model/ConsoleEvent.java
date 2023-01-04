@@ -59,7 +59,8 @@ public final class ConsoleEvent extends EventObject {
         return affectedSections == null ?
                 Collections.singletonList(theSection) : affectedSections;
     }
-    
+
+    @Override
     public ConsoleModel getSource() {
         return (ConsoleModel)super.getSource();
     }

@@ -615,7 +615,8 @@ public class ResolveConflictsExecutor extends GitProgressSupport {
             }
             return n;
         }
-        
+
+        @Override
         public void close() throws IOException {
             super.close();
             if (fo != null) fo.refresh(true);

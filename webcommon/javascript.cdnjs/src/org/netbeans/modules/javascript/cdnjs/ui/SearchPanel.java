@@ -334,10 +334,13 @@ class SearchPanel extends javax.swing.JPanel {
         versionComboBox = new javax.swing.JComboBox<Library.Version>();
         homePageLabel = new javax.swing.JLabel();
         homePageLinkLabel = new javax.swing.JLabel() {
+            @Override
             public Dimension getMinimumSize() {
                 Dimension dim = super.getMinimumSize();
                 return new Dimension(0, dim.height);
             }
+
+            @Override
             public Dimension getMaximumSize() {
                 return getPreferredSize();
             }

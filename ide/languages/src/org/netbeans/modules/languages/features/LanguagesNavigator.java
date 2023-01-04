@@ -82,6 +82,7 @@ public class LanguagesNavigator implements NavigatorPanel {
     public JComponent getComponent () {
         if (panelUI == null) {
             tree = new JTree () {
+                @Override
                 public String getToolTipText (MouseEvent ev) {
                     TreePath path = tree.getPathForLocation 
                         (ev.getX (), ev.getY ());
@@ -245,6 +246,7 @@ public class LanguagesNavigator implements NavigatorPanel {
     
     static class Renderer extends DefaultTreeCellRenderer {
 
+        @Override
         public Component getTreeCellRendererComponent (
             JTree tree, Object value,
             boolean sel,

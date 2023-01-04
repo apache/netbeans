@@ -156,6 +156,7 @@ public class HintsControllerUI extends JTitledPanel {
 
         // findButton
         findButton = new JButton(Bundle.HintsControllerUI_FindButton()) {
+            @Override
             protected void fireActionPerformed(ActionEvent event) {
                 findButton.setEnabled(false);
                 int selectedValue = ((Number)spinner.getValue()).intValue();

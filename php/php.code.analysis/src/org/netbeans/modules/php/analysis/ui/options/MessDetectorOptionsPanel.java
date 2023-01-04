@@ -259,9 +259,12 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
 
         Mnemonics.setLocalizedText(messDetectorLearnMoreLabel, NbBundle.getMessage(MessDetectorOptionsPanel.class, "MessDetectorOptionsPanel.messDetectorLearnMoreLabel.text")); // NOI18N
         messDetectorLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 messDetectorLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 messDetectorLearnMoreLabelMousePressed(evt);
             }

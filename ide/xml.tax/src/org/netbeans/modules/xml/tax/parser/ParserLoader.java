@@ -101,6 +101,7 @@ public final class ParserLoader extends URLClassLoader {
      * library version.
      * ASSUMPTION parentLoader see bootstrap resources
      */
+    @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         Class<?> clazz = null;
         
@@ -145,6 +146,7 @@ public final class ParserLoader extends URLClassLoader {
      * Prefer isolated library when looking for resource.
      * ASSUMPTION parentLoader see bootstrap resources
      */
+    @Override
     public URL getResource(String name) {
         URL in = super.getResource(name);
         if (in == null) {
@@ -160,6 +162,7 @@ public final class ParserLoader extends URLClassLoader {
      * Prefer isolated library when looking for resource stream.
      * ASSUMPTION parentLoader see bootstrap resources
      */
+    @Override
     public InputStream getResourceAsStream(String name) {
         try {
             URL url = this.getResource(name);
@@ -178,6 +181,7 @@ public final class ParserLoader extends URLClassLoader {
      * It is defacto implementation of getResources() that is final.
      * //!!! this inplemetation does not isolate bootstrap resources
      */
+    @Override
     public Enumeration findResources(String name) throws IOException {
         Enumeration en1 = super.findResources(name);
         Enumeration en2 = parentLoader.getResources(name);

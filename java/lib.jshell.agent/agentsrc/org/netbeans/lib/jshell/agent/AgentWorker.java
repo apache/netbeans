@@ -391,6 +391,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
     
     private ClassLoader contextLoader;
     
+    @Override
     protected void clientCodeEnter() {
         LOG.log(Level.FINER, "Entering client code");
         this.contextLoader = Thread.currentThread().getContextClassLoader();
@@ -410,6 +411,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
      * to true and response code is produced in performExecute. Since ThreadDeath is thrown, 
      * the executing agent will not complete the synchronized block normally
      */
+    @Override
     protected void clientCodeLeave() throws InternalException {
         super.clientCodeLeave();
         LOG.log(Level.FINER, "Exiting client code");

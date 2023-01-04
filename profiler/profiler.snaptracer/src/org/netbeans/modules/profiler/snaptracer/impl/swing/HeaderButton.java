@@ -52,11 +52,14 @@ public class HeaderButton extends HeaderPanel {
         JPanel panel = super.getClientContainer();
         panel.setLayout(new BorderLayout());
         button = new JButton(text, icon) {
+            @Override
             protected void processMouseEvent(MouseEvent e) {
                 super.processMouseEvent(e);
                 if (!isEnabled()) return;
                 HeaderButton.this.processMouseEvent(e);
             }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 performAction(e);
             }
@@ -99,6 +102,7 @@ public class HeaderButton extends HeaderPanel {
         private static final Color PRESSED_FOREGROUND =
                 Utils.checkedColor(new Color(100, 100, 100, 70));
 
+        @Override
         protected void paintFocus(Graphics g, AbstractButton b, Rectangle viewRect,
                                   Rectangle textRect, Rectangle iconRect) {
             Graphics2D g2 = (Graphics2D)g;
@@ -107,6 +111,7 @@ public class HeaderButton extends HeaderPanel {
             g2.drawRect(2, 2, b.getWidth() - 5, b.getHeight() - 5);
         }
 
+        @Override
         protected void paintButtonPressed(Graphics g, AbstractButton b) {
             g.setColor(PRESSED_FOREGROUND);
             g.fillRect(0, 0, b.getWidth(), b.getHeight());

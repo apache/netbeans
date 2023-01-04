@@ -160,12 +160,15 @@ public class ToolBarDesignEditor extends AbstractDesignEditor {
         }
         // ...methods as before, but replace componentActivated and
         // componentDeactivated with e.g.:
-        
+
+        @Override
         public void addNotify() {
             //System.out.println("addNotify()");
             super.addNotify();
             ExplorerUtils.activateActions(manager, true);
         }
+
+        @Override
         public void removeNotify() {
             //System.out.println("removeNotify()");
             ExplorerUtils.activateActions(manager, false);

@@ -131,6 +131,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
         
         //Click to header - sorting
         attrTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
                 public void mouseClicked(MouseEvent e) {
                     TableColumnModel colModel = attrTable.getColumnModel();
                     int columnIndex = colModel.getColumnIndexAtX(e.getX());
@@ -398,6 +399,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
         
         /**
          */
+        @Override
         public void keyReleased (KeyEvent e) {
             //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("Event: " + e); // NOI18N
             if (e.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -450,6 +452,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
         }
         
         /** Returns the class for a model. */
+        @Override
         public Class getColumnClass (int index) {
             return String.class;
         }
@@ -534,6 +537,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
         
         /**
          */
+        @Override
         public void setValueAt (Object val, int row, int column) {
             TreeAttribute attr = (TreeAttribute) peer.get (row);
             try {
@@ -563,6 +567,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
         
         /**
          */
+        @Override
         public String getColumnName (int column) {
             switch (column) {
             case COL_NAME:
@@ -577,6 +582,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
         /** Returns true for all cells which are editable. For a
          * a new cell is editable only name field.
          */
+        @Override
         public boolean isCellEditable (int rowIndex, int columnIndex) {
             return true;
         }

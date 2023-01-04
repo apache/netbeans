@@ -205,12 +205,14 @@ public class TakeSnapshotCustomizer extends ValidityAwarePanel implements Docume
 
         // nameTextField
         nameTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return (TakeSnapshotCustomizer.this.getParent() instanceof JViewport) ? getMinimumSize()
                                                                                           : new Dimension(400,
                                                                                                           super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
@@ -242,6 +244,7 @@ public class TakeSnapshotCustomizer extends ValidityAwarePanel implements Docume
 
         // settingsHeaderSeparator
         settingsHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -294,6 +297,7 @@ public class TakeSnapshotCustomizer extends ValidityAwarePanel implements Docume
 
         // locationnHeaderSeparator
         locationHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

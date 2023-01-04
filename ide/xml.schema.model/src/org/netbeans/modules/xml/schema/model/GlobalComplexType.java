@@ -43,6 +43,8 @@ public interface GlobalComplexType extends ComplexType, GlobalType,
         ALL(Type.ALL), EXTENSION(Type.EXTENSION), RESTRICTION(Type.RESTRICTION), EMPTY(Type.EMPTY);
         private Type value;
         Block(Type v) { value = v; }
+
+        @Override
         public String toString() { return value.toString(); }
     }
     Set<Block> getBlock();
@@ -54,6 +56,8 @@ public interface GlobalComplexType extends ComplexType, GlobalType,
         ALL(Type.ALL), EXTENSION(Type.EXTENSION), RESTRICTION(Type.RESTRICTION), EMPTY(Type.EMPTY);
         private Type value;
         Final(Type v) { value = v; }
+
+        @Override
         public String toString() { return value.toString(); }
     }
     

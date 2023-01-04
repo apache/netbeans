@@ -269,21 +269,31 @@ public class OutputLogger {
      
     private static class NullLogger extends OutputLogger {
 
+        @Override
         public void closeLog() {
         }
 
+        @Override
         public void flushLog() {
         }
 
+        @Override
         public void output(List<String> list){
         }
 
+        @Override
         public void output(String msg){
         }
+
+        @Override
         public void outputInRed(String msg){
         }
+
+        @Override
         public void outputLink(final String sURL){
         }
+
+        @Override
         public void clearOutput(){
         }
     }

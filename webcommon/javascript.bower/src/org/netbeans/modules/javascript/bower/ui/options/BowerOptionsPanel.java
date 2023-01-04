@@ -156,9 +156,12 @@ public class BowerOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(installLabel, NbBundle.getMessage(BowerOptionsPanel.class, "BowerOptionsPanel.installLabel.text")); // NOI18N
         installLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 installLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 installLabelMouseEntered(evt);
             }

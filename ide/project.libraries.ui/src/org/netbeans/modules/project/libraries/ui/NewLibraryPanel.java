@@ -78,6 +78,7 @@ public class NewLibraryPanel extends javax.swing.JPanel {
         return this.name.getText();
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         this.name.selectAll();

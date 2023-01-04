@@ -119,15 +119,19 @@ public class TreeTextCustomizer extends AbstractTreeCustomizer {
         dataPanel.setLayout(new java.awt.BorderLayout());
 
         dataTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 dataTextAreaFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 dataTextAreaFocusLost(evt);
             }
         });
 
         dataTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 dataTextAreaKeyPressed(evt);
             }

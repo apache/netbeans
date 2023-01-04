@@ -132,12 +132,14 @@ public class StaticCredsPanel extends javax.swing.JPanel implements PanelEnabler
         org.openide.awt.Mnemonics.setLocalizedText(defaultUsernameLabel, org.openide.util.NbBundle.getMessage(StaticCredsPanel.class, "LBL_DefaultUsernameLabel")); // NOI18N
 
         defaultUsernameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 defaultUsernameTextFieldKeyReleased(evt);
             }
         });
 
         defaultPasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 defaultPasswordFieldKeyReleased(evt);
             }

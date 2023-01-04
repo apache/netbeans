@@ -106,45 +106,55 @@ public class BaseRenderer extends JComponent implements ProfilerRenderer {
     
     protected final Point location = new Point();
     protected final Dimension size = new Dimension();
-    
+
+    @Override
     public void move(int x, int y) {
         location.x = x;
         location.y = y;
     }
-    
+
+    @Override
     public Point getLocation() {
         return sharedPoint(location);
     }
-    
+
+    @Override
     public int getX() {
         return location.x;
     }
-    
+
+    @Override
     public int getY() {
         return location.y;
     }
-    
+
+    @Override
     public void setSize(int w, int h) {
         size.width = w;
         size.height = h;
     }
-    
+
+    @Override
     public Dimension getSize() {
         return sharedDimension(size);
     }
-    
+
+    @Override
     public int getWidth() {
         return size.width;
     }
-    
+
+    @Override
     public int getHeight() {
         return size.height;
     }
-    
+
+    @Override
     public Rectangle getBounds() {
         return sharedRectangle(location.x, location.y, size.width, size.height);
     }
-    
+
+    @Override
     public void reshape(int x, int y, int w, int h) {
         // ignore x, y: used only for move(x, y)
 //        location.x = x;
@@ -156,11 +166,13 @@ public class BaseRenderer extends JComponent implements ProfilerRenderer {
     // --- Margins / Borders ---------------------------------------------------
     
     private final Insets insets = new Insets(0, 0, 0, 0);
-    
+
+    @Override
     public Insets getInsets() {
         return insets;
     }
 
+    @Override
     public Insets getInsets(Insets insets) {
         return this.insets;
     }
@@ -171,76 +183,99 @@ public class BaseRenderer extends JComponent implements ProfilerRenderer {
     private boolean enabled = true;
     private Color foreground;
     private Color background;
-    
+
+    @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
+    @Override
     public boolean isVisible() {
         return visible;
     }
-    
+
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
-    
+
+    @Override
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
 
+    @Override
     public Color getForeground() {
         return foreground;
     }
-    
+
+    @Override
     public void setBackground(Color background) {
         this.background = background;
     }
 
+    @Override
     public Color getBackground() {
         return background;
     }
     
     // --- Painting / Layout ---------------------------------------------------
-    
+
+    @Override
     public void paint(Graphics g) {
         if (isOpaque()) {
             g.setColor(background);
             g.fillRect(location.x, location.y, size.width, size.height);
         }
     }
-    
+
+    @Override
     public void validate() {}
 
+    @Override
     public void revalidate() {}
 
+    @Override
     public void repaint(long tm, int x, int y, int width, int height) {}
 
+    @Override
     public void repaint(Rectangle r) {}
 
+    @Override
     public void repaint() {}
     
     // --- Events --------------------------------------------------------------
 
+    @Override
     public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, char oldValue, char newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, short oldValue, short newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, int oldValue, int newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, long oldValue, long newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, float oldValue, float newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, double oldValue, double newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
+    @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
     
     // --- Accessibility -------------------------------------------------------
@@ -249,15 +284,19 @@ public class BaseRenderer extends JComponent implements ProfilerRenderer {
     
     protected AccessibleContext createAccesibleContext() {
         return new JComponent.AccessibleJComponent() {
+            @Override
             public AccessibleRole getAccessibleRole() {
                 return AccessibleRole.LABEL;
             }
+
+            @Override
             public String getAccessibleName() {
                 return BaseRenderer.this.toString();
             }
         };
     }
-    
+
+    @Override
     public AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) accessibleContext = createAccesibleContext();
         return accessibleContext;

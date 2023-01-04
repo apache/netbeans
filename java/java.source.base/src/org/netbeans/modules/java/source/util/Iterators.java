@@ -107,6 +107,7 @@ public final class Iterators {
             return ret;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("Not supported operation.");
         }
@@ -191,7 +192,8 @@ public final class Iterators {
          * Not supported operation. Throws {@link UnsupportedOperationException}
          * @throws UnsupportedOperationException
          */
-        public void remove() throws UnsupportedOperationException {            
+        @Override
+        public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException ();
         }
 

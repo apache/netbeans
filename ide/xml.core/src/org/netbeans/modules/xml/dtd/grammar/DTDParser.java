@@ -215,11 +215,13 @@ public class DTDParser {
             if (name.startsWith("%")) return;  // NOI18N
             entities.add(name);
         }
-        
+
+        @Override
         public void notationDecl(String name, String publicId, String systemId) throws SAXException {
             notations.add(name);
         }
-        
+
+        @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             throw new Stop();
         }
@@ -234,7 +236,8 @@ public class DTDParser {
         Stop() {
             super("STOP");  //NOI18N
         }
-        
+
+        @Override
         public Throwable fillInStackTrace() {
             return this;
         }

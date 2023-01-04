@@ -190,6 +190,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @param n index of the header
          * @return the header value
          */
+        @Override
         public String getHeaderField(int n) {
             tryToConnect();
             if (connected)
@@ -202,6 +203,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @param n the index
          * @return the header name
          */
+        @Override
         public String getHeaderFieldKey(int n) {
             tryToConnect();
             if (connected)
@@ -214,6 +216,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @param key the header name
          * @return the value
          */
+        @Override
         public String getHeaderField(String key) {
             tryToConnect();
             if (connected)
@@ -226,6 +229,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @throws IOException for the usual reasons
          * @return a stream to the object
          */
+        @Override
         public InputStream getInputStream() throws IOException {
             connect();
             return real.getInputStream();
@@ -235,6 +239,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @throws IOException for the usual reasons
          * @return an output stream writing to it
          */
+        @Override
         public OutputStream getOutputStream() throws IOException {
             connect();
             return real.getOutputStream();
@@ -243,6 +248,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
         /** Get the type of the content.
          * @return the MIME type
          */
+        @Override
         public String getContentType() {
             tryToConnect();
             if (connected)
@@ -254,6 +260,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
         /** Get the length of content.
          * @return the length in bytes
          */
+        @Override
         public int getContentLength() {
             tryToConnect();
             if (connected)
@@ -350,6 +357,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @throws IOException for the usual reasons
          * @return a stream to the object
          */
+        @Override
         public InputStream getInputStream() throws IOException {
             connect();
             return stream;
@@ -359,6 +367,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
         /** Get the type of the content.
          * @return the MIME type
          */
+        @Override
         public String getContentType() {
             return "text/html"; // NOI18N
         }
@@ -366,6 +375,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
         /** Get the length of content.
          * @return the length in bytes
          */
+        @Override
         public int getContentLength() {
             tryToConnect();
             if (connected) {

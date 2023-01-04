@@ -55,7 +55,8 @@ public class UtilitiesActionsTest extends NbTestCase {
         implements org.openide.util.actions.Presenter.Popup {
             public JMenuItem item = new JMenuItem ("Ahoj");
             public int called;
-            
+
+            @Override
             protected CloneAction cloneAction () {
                 return new MyAction ();
             }

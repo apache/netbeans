@@ -358,6 +358,7 @@ public class ProfilingPointsWindowUI extends JPanel implements ActionListener, L
 
     private void createProfilingPointsTable() {
         profilingPointsTableModel = new AbstractTableModel() {
+            @Override
             public String getColumnName(int col) {
                 if (col == 0) {
                     return Bundle.ProfilingPointsWindowUI_ScopeColumnName();
@@ -379,6 +380,7 @@ public class ProfilingPointsWindowUI extends JPanel implements ActionListener, L
                 return 4;
             }
 
+            @Override
             public Class getColumnClass(int col) {
                 return ProfilingPoint.class;
             }

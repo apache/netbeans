@@ -58,21 +58,25 @@ public final class SectionSeparator extends JPanel {
         initComponents(text, font);
     }
 
+    @Override
     public void setForeground(Color foreground) {
         if (label == null) super.setForeground(foreground);
         else label.setForeground(foreground);
     }
 
+    @Override
     public Color getForeground() {
         if (label == null) return super.getForeground();
         else return label.getForeground();
     }
 
+    @Override
     public void setFont(Font font) {
         if (label == null) super.setFont(font);
         else label.setFont(font);
     }
 
+    @Override
     public Font getFont() {
         if (label == null) return super.getFont();
         else return label.getFont();

@@ -194,6 +194,7 @@ public class NbPlatformCustomizerHarness extends JPanel {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         JFileChooser jfc = new JFileChooser() {
             // Trick stolen from ProjectChooserAccessory.ProjectFileChooser:
+            @Override
             public void approveSelection() {
                 File dir = FileUtil.normalizeFile(getSelectedFile());
                 if (NbPlatform.isHarness(dir)) {

@@ -181,6 +181,7 @@ public class MockServices {
             this.services = services;
         }
 
+        @Override
         public URL getResource(String name) {
             Enumeration<URL> r;
             try {
@@ -191,6 +192,7 @@ public class MockServices {
             return r.hasMoreElements() ? r.nextElement() : null;
         }
 
+        @Override
         public Enumeration<URL> getResources(String name) throws IOException {
             if (name.equals("META-INF/services/org.openide.util.Lookup") || name.equals("META-INF/services/org.openide.util.Lookup$Provider")) {
                 // Lookup.getDefault checks for these, and we need to really mask it.
@@ -220,6 +222,8 @@ public class MockServices {
                             protected URLConnection openConnection(URL _u) throws IOException {
                                 return new URLConnection(_u) {
                                     public void connect() throws IOException {}
+
+                                    @Override
                                     public InputStream getInputStream() throws IOException {
                                         return new ByteArrayInputStream(baos.toByteArray());
                                     }

@@ -181,7 +181,8 @@ public class PropertiesTable implements AncestorListener, TableModelListener {
     }
 
     public class PropertiesTableCellRenderer extends DefaultTableCellRenderer {
-           
+
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
             int newLinePos;
             if (value instanceof String && (newLinePos = ((String) value).indexOf("\n")) > -1) { //NOI18N

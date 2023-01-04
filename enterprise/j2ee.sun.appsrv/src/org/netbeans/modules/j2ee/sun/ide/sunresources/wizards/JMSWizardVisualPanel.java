@@ -247,6 +247,7 @@ public class JMSWizardVisualPanel extends javax.swing.JPanel implements ChangeLi
             }
         });
         jndiNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jndiNameFieldKeyReleased(evt);
             }
@@ -281,6 +282,7 @@ public class JMSWizardVisualPanel extends javax.swing.JPanel implements ChangeLi
             }
         });
         descField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 descFieldKeyReleased(evt);
             }

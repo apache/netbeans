@@ -157,9 +157,12 @@ public final class SassOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(installSassLabel, NbBundle.getMessage(SassOptionsPanel.class, "SassOptionsPanel.installSassLabel.text")); // NOI18N
         installSassLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 installSassLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 installSassLabelMousePressed(evt);
             }

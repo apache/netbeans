@@ -50,7 +50,8 @@ public class CheckBoxRenderer extends JCheckBox implements ProfilerRenderer {
     public JComponent getComponent() {
         return this;
     }
-    
+
+    @Override
     public String toString() {
         return Boolean.toString(isSelected());
     }
@@ -100,45 +101,55 @@ public class CheckBoxRenderer extends JCheckBox implements ProfilerRenderer {
     
     protected final Point location = new Point();
     protected final Dimension size = new Dimension();
-    
+
+    @Override
     public void move(int x, int y) {
         location.x = x;
         location.y = y;
     }
-    
+
+    @Override
     public Point getLocation() {
         return sharedPoint(location);
     }
-    
+
+    @Override
     public int getX() {
         return location.x;
     }
-    
+
+    @Override
     public int getY() {
         return location.y;
     }
-    
+
+    @Override
     public void setSize(int w, int h) {
         size.width = w;
         size.height = h;
     }
-    
+
+    @Override
     public Dimension getSize() {
         return sharedDimension(size);
     }
-    
+
+    @Override
     public int getWidth() {
         return size.width;
     }
-    
+
+    @Override
     public int getHeight() {
         return size.height;
     }
-    
+
+    @Override
     public Rectangle getBounds() {
         return sharedRectangle(location.x, location.y, size.width, size.height);
     }
-    
+
+    @Override
     public void reshape(int x, int y, int w, int h) {
         // ignore x, y: used only for move(x, y)
 //        location.x = x;
@@ -150,11 +161,13 @@ public class CheckBoxRenderer extends JCheckBox implements ProfilerRenderer {
     // --- Insets --------------------------------------------------------------
     
     private final Insets insets = new Insets(0, 0, 0, 0);
-    
+
+    @Override
     public Insets getInsets() {
         return insets;
     }
 
+    @Override
     public Insets getInsets(Insets insets) {
         return this.insets;
     }
@@ -165,62 +178,83 @@ public class CheckBoxRenderer extends JCheckBox implements ProfilerRenderer {
     private Color background;
     private boolean enabled = true;
 
+    @Override
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
 
+    @Override
     public Color getForeground() {
         return foreground;
     }
-    
+
+    @Override
     public void setBackground(Color background) {
         this.background = background;
     }
 
+    @Override
     public Color getBackground() {
         return background;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
     
     // --- Painting / Layout ---------------------------------------------------
 
+    @Override
     public void validate() {}
 
+    @Override
     public void revalidate() {}
 
+    @Override
     public void repaint(long tm, int x, int y, int width, int height) {}
 
+    @Override
     public void repaint(Rectangle r) {}
 
+    @Override
     public void repaint() {}
 
+    @Override
     public void setDisplayedMnemonicIndex(int index) {}
     
     // --- Events --------------------------------------------------------------
 
+    @Override
     public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, char oldValue, char newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, short oldValue, short newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, int oldValue, int newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, long oldValue, long newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, float oldValue, float newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, double oldValue, double newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
+    @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
     
 }

@@ -45,7 +45,8 @@ public class Compositor extends AXIComponent {
         public String getName() {
             return toString();
         }
-        
+
+        @Override
         public String toString() {
             String retValue = super.toString();
             return retValue.substring(0,1) + retValue.substring(1).toLowerCase();

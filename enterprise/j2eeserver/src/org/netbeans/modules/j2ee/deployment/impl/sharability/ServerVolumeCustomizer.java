@@ -72,11 +72,13 @@ public class ServerVolumeCustomizer extends javax.swing.JPanel implements Custom
     }
 
 
+    @Override
     public void addNotify() {
         super.addNotify();
         this.addButton.requestFocus();
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.addButton.setEnabled(enabled);
@@ -464,6 +466,7 @@ public class ServerVolumeCustomizer extends javax.swing.JPanel implements Custom
     
     private static class ContentRenderer extends DefaultListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             String displayName = null;
             Color color = null;

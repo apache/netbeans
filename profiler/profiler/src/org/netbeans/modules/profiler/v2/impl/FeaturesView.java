@@ -77,6 +77,7 @@ public class FeaturesView extends JPanel {
         
         if (defaultView != null) {
             JScrollPane sp = new JScrollPane(defaultView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER) {
+                @Override
                 public Dimension getMinimumSize() { return getPreferredSize(); }
             };
             sp.getVerticalScrollBar().setUnitIncrement(20);
@@ -148,6 +149,7 @@ public class FeaturesView extends JPanel {
         
         JPanel results = feature.getResultsUI();
         JPanel xresults = new JPanel(new BorderLayout()) {
+            @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 if (hintLabel != null) {
@@ -172,6 +174,7 @@ public class FeaturesView extends JPanel {
         JPanel settings = feature.getSettingsUI();
         if (settings != null) {
             JPanel pan = new JPanel(new BorderLayout(0, 0)) {
+                @Override
                 public void setVisible(boolean visible) {
                     super.setVisible(visible);
                     for (Component c : getComponents()) c.setVisible(visible);
@@ -258,6 +261,7 @@ public class FeaturesView extends JPanel {
     
     private JTabbedPane createTabs() {
         JTabbedPane tp = new JTabbedPane(JTabbedPane.BOTTOM) {
+            @Override
             protected final void fireStateChanged() {
                 super.fireStateChanged();
                 fireViewOrIndexChanged();

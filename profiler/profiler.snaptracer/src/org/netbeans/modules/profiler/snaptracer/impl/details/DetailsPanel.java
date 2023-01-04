@@ -182,6 +182,8 @@ public final class DetailsPanel extends JPanel {
                 support.scrollChartToIndex(getSelectedRow());
         }
         public void keyTyped(KeyEvent e) {}
+
+        @Override
         public void mouseClicked(MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
                 support.scrollChartToIndex(getSelectedRow());
@@ -213,6 +215,7 @@ public final class DetailsPanel extends JPanel {
             });
         }
 
+        @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             paintVerticalLines(g);

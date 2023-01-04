@@ -249,11 +249,13 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
             private final class ThumbnailPropertyEditor extends PropertyEditorSupport {
                 /** Overrides superclass method.
                  * @return <code>true</code> */
+                @Override
                 public boolean isPaintable() {
                     return true;
                 }
                 
                 /** Patins thumbanil of the image. Overrides superclass method. */
+                @Override
                 public void paintValue(Graphics g, Rectangle r) {
                     ImageIcon icon = null;
                     
@@ -298,6 +300,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
 
                 /** Overrides superclass method.
                  * @return <code>null</code> */
+                @Override
                 public String getAsText() {
                     return null;
                 }

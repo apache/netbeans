@@ -102,6 +102,7 @@ final class MobilePlatformsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(androidSdkDownload, org.openide.util.NbBundle.getMessage(MobilePlatformsPanel.class, "MobilePlatformsPanel.androidSdkDownload.text")); // NOI18N
         androidSdkDownload.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 androidSdkDownloadMouseClicked(evt);
             }

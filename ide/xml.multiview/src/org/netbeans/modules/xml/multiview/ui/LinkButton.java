@@ -53,10 +53,13 @@ public class LinkButton extends JButton {
         button.setText(text);
 
         button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 button.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
                 button.setForeground(SectionVisualTheme.hyperlinkColorFocused);
             }
+
+            @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
                 button.setCursor(java.awt.Cursor.getDefaultCursor());
                 button.setForeground(SectionVisualTheme.hyperlinkColor);
@@ -64,6 +67,7 @@ public class LinkButton extends JButton {
         });
     }
 
+    @Override
     public void setText(String text) {
         super.setText(getFormatedLinkText(text));
     }

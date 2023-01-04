@@ -200,6 +200,7 @@ public class ClassPresenterPanel extends JPanel implements HeapFragmentWalker.St
         actionsDivider.setOpaque(false);
 
         actionsRenderer = new JButton() {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 if (heapFragmentWalker != null) {
                     BrowserUtils.performTask(new Runnable() {
@@ -209,19 +210,29 @@ public class ClassPresenterPanel extends JPanel implements HeapFragmentWalker.St
                     });
                 }
             }
+
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             public Dimension getMaximumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             public void setVisible(boolean visible) {
                 super.setVisible(visible);
                 actionsDivider.setVisible(visible);
             }
+
+            @Override
             public boolean isContentAreaFilled() {
                 return !UIUtils.isOracleLookAndFeel() ? false : isFocusOwner();
             }
+
+            @Override
             public boolean isOpaque() {
                 return !UIUtils.isOracleLookAndFeel() ? false : isFocusOwner();
             }

@@ -644,6 +644,7 @@ public class RuleEditorPanel extends JPanel {
         cancelFilterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/css/visual/resources/cancel.png"))); // NOI18N
         cancelFilterLabel.setText(org.openide.util.NbBundle.getMessage(RuleEditorPanel.class, "RuleEditorPanel.cancelFilterLabel.text")); // NOI18N
         cancelFilterLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cancelFilterLabelMouseClicked(evt);
             }

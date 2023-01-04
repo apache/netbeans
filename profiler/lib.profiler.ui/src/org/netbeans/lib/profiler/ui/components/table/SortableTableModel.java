@@ -52,6 +52,7 @@ public abstract class SortableTableModel extends AbstractTableModel {
          * If the user clicks to the sorting column (column defining the sort criterium and order), the sorting order is reversed.
          * If new sorting column is selected, the appropriate sorting order for column's datatype is set.
          */
+        @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getModifiers() == InputEvent.BUTTON1_MASK) {
                 int column = tableHeader.columnAtPoint(e.getPoint());
@@ -75,9 +76,11 @@ public abstract class SortableTableModel extends AbstractTableModel {
             }
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {
             int focusedColumn = tableHeader.columnAtPoint(e.getPoint());
 
@@ -90,6 +93,7 @@ public abstract class SortableTableModel extends AbstractTableModel {
         /*
          * Here the active header button is programatically pressed
          */
+        @Override
         public void mousePressed(MouseEvent e) {
             if ((e.getModifiers() == InputEvent.BUTTON1_MASK) && (tableHeader.getResizingColumn() == null)) {
                 headerRenderer.setPressedColumn(tableHeader.columnAtPoint(e.getPoint()));
@@ -100,6 +104,7 @@ public abstract class SortableTableModel extends AbstractTableModel {
         /*
          * Here the active header button is programatically released
          */
+        @Override
         public void mouseReleased(MouseEvent e) {
             if (e.getModifiers() == InputEvent.BUTTON1_MASK) {
                 headerRenderer.setPressedColumn(-1);

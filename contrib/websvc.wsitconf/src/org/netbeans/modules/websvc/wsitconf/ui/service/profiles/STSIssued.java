@@ -323,6 +323,7 @@ public class STSIssued extends ProfileBaseForm {
         org.openide.awt.Mnemonics.setLocalizedText(issuerAddressLabel, org.openide.util.NbBundle.getMessage(STSIssued.class, "LBL_IssuerAddress")); // NOI18N
 
         issuerAddressField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 issuerAddressFieldKeyReleased(evt);
             }
@@ -332,6 +333,7 @@ public class STSIssued extends ProfileBaseForm {
         org.openide.awt.Mnemonics.setLocalizedText(issuerMetadataLabel, org.openide.util.NbBundle.getMessage(STSIssued.class, "LBL_IssuerMetadataAddress")); // NOI18N
 
         issuerMetadataField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 issuerMetadataFieldKeyReleased(evt);
             }

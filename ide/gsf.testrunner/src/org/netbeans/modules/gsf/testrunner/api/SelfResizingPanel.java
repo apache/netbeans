@@ -69,6 +69,7 @@ public class SelfResizingPanel extends JPanel {
      *
      * @param  g  the <code>Graphics</code> context in which to paint
      */
+    @Override
     protected void paintChildren(java.awt.Graphics g) {
         
         /*

@@ -193,7 +193,8 @@ abstract class TablesSelector {
         }
         
         private class SelectedTablesModel extends AbstractTableModel {
-            
+
+            @Override
             public String getColumnName(int columnIndex) {
                 if (columnIndex == 0) {
                     return COLUMN_SELECTED;
@@ -203,6 +204,7 @@ abstract class TablesSelector {
                 return null;
             }
 
+            @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
                     return Boolean.class;
@@ -229,6 +231,7 @@ abstract class TablesSelector {
                 return null;
             }
 
+            @Override
             public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
                 if (Boolean.TRUE.equals(aValue)) {
                     if (selected.remove(tables[rowIndex])) doSelectionChanged(selected);
@@ -237,6 +240,7 @@ abstract class TablesSelector {
                 }
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex == 0;
             }

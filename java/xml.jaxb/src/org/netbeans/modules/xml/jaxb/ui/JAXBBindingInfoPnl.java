@@ -144,6 +144,7 @@ public class JAXBBindingInfoPnl extends javax.swing.JPanel
             }
         });
         txtSchemaName.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 JAXBBindingInfoPnl.this.focusLost(evt);
             }
@@ -170,6 +171,7 @@ public class JAXBBindingInfoPnl extends javax.swing.JPanel
         txtPrjName.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(JAXBBindingInfoPnl.class, "A11Y_Desc_txt_Project")); // NOI18N
 
         txtFilePath.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 JAXBBindingInfoPnl.this.focusLost(evt);
             }
@@ -223,6 +225,7 @@ public class JAXBBindingInfoPnl extends javax.swing.JPanel
         txtURL.setEditable(false);
         txtURL.setText(org.openide.util.NbBundle.getMessage(JAXBBindingInfoPnl.class, "LBL_URL_Filler")); // NOI18N
         txtURL.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 JAXBBindingInfoPnl.this.focusLost(evt);
             }

@@ -41,6 +41,7 @@ class EmptyScanningScope extends TaskScanningScope {
             throw new NoSuchElementException();
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

@@ -295,6 +295,7 @@ public class StatisticsPanel extends JPanel {
                 });
 
             addMouseListener(new MouseAdapter() {
+                @Override
                     public void mouseClicked(MouseEvent e) {
                         if (selectable) {
                             requestFocusInWindow();
@@ -302,6 +303,7 @@ public class StatisticsPanel extends JPanel {
                         }
                     }
 
+                @Override
                     public void mouseEntered(MouseEvent e) {
                         if (selectable) {
                             isMouseOver = true;
@@ -310,6 +312,7 @@ public class StatisticsPanel extends JPanel {
                         }
                     }
 
+                @Override
                     public void mouseExited(MouseEvent e) {
                         if (selectable) {
                             isMouseOver = false;
@@ -320,6 +323,7 @@ public class StatisticsPanel extends JPanel {
                 });
 
             addKeyListener(new KeyAdapter() {
+                @Override
                     public void keyPressed(KeyEvent e) {
                         if (selectable) {
                             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -332,6 +336,7 @@ public class StatisticsPanel extends JPanel {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void setText(String value) {
             this.originalText = value;
             updateText();
@@ -355,6 +360,7 @@ public class StatisticsPanel extends JPanel {
         private Color backgroundColor;
         private Color focusedBackgroundColor;
         private final MouseListener focusGrabber = new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 requestFocusInWindow();
             }
@@ -418,6 +424,7 @@ public class StatisticsPanel extends JPanel {
                 });
 
             addKeyListener(new KeyAdapter() {
+                @Override
                     public void keyPressed(KeyEvent e) {
                         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                             navigationBackPerformer.run();

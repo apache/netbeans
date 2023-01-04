@@ -83,11 +83,13 @@ public class SelectActionPopup extends JPanel implements FocusListener {
         jList1.setVisibleRowCount(declarations.size()
         );
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jList1KeyPressed(evt);
             }
         });
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
             }
@@ -149,6 +151,7 @@ public class SelectActionPopup extends JPanel implements FocusListener {
         private static final int DARKER_COLOR_COMPONENT = 5;
         private boolean selected;
 
+        @Override
         public Component getListCellRendererComponent(
                 JList list,
                 Object value,

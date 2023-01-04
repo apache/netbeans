@@ -51,10 +51,12 @@ public class ValidationMethodEditor extends PropertyEditorSupport implements Enh
         editorType = type;
    }
 
+    @Override
     public String getAsText () {
 	return curr_Sel;
     }
 
+    @Override
     public void setAsText (String string) throws IllegalArgumentException {
         if (! editorType.equals(TRANX_SUPPORT_TYPE)) {
             if ((string == null) || (string.equals(""))) { // NOI18N
@@ -68,6 +70,7 @@ public class ValidationMethodEditor extends PropertyEditorSupport implements Enh
         this.firePropertyChange();
     }
 
+    @Override
    public void setValue (Object val) {
        if (! (val instanceof String)) {
       	    throw new IllegalArgumentException ();
@@ -75,14 +78,17 @@ public class ValidationMethodEditor extends PropertyEditorSupport implements Enh
         curr_Sel = (String) val;
     }
 
+    @Override
     public Object getValue () {
         return curr_Sel;
     }
 
+    @Override
     public String getJavaInitializationString () {
 	return getAsText ();
     }
 
+    @Override
     public String[] getTags () {
         if(editorType.equals(TRANX_SUPPORT_TYPE)){
            return choicesTranx; 

@@ -216,11 +216,14 @@ final class SQLFeature extends ProfilerFeature.Basic {
     public JPanel getSettingsUI() {
         if (settingsUI == null) {
             settingsUI = new JPanel(new GridBagLayout()) {
+                @Override
                 public void setVisible(boolean visible) {
                     if (visible && getComponentCount() == 0) populateSettingsUI();
                     super.setVisible(visible);
                     storeFlag(SETTINGS_FLAG, visible ? Boolean.TRUE.toString() : null);
                 }
+
+                @Override
                 public Dimension getPreferredSize() {
                     if (getComponentCount() == 0) return new Dimension();
                     else return super.getPreferredSize();
@@ -248,9 +251,11 @@ final class SQLFeature extends ProfilerFeature.Basic {
         modeButton = new PopupButton(currentMode.getName()) {
             protected void populatePopup(JPopupMenu popup) {
                 popup.add(new JRadioButtonMenuItem(allQueriesMode.getName(), currentMode == allQueriesMode) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { setMode(allQueriesMode); }
                 });
                 popup.add(new JRadioButtonMenuItem(filteredQueriesMode.getName(), currentMode == filteredQueriesMode) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { setMode(filteredQueriesMode); }
                 });
             }

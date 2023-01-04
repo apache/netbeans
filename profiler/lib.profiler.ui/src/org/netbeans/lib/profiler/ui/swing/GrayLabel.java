@@ -44,13 +44,15 @@ public class GrayLabel extends JLabel {
     public GrayLabel(String text, int alignment) { super(text, alignment); }
     
     public GrayLabel(String text, Icon icon, int alignment) { super(text, icon, alignment); }
-    
-    
+
+
+    @Override
     public Color getForeground() {
         return UIUtils.getDisabledLineColor();
     }
-    
-    
+
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(true); // To workaround the 3D look on some LaFs
     }

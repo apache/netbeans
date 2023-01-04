@@ -74,18 +74,22 @@ public class MessageSecurityTableModel extends AbstractTableModel {
         return columnNames.length;
     }
 
+    @Override
     public Class getColumnClass(int columnIndex) {
         return String.class;
     }
 
+    @Override
     public String getColumnName(int column) {
         assert column < 0 || column > columnNames.length;
         return (column >= 0 && column < columnNames.length) ? columnNames[column] : "unknown";
     }
 
+    @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
     }
 
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return (columnIndex > 0);
     }

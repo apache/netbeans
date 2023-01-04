@@ -82,6 +82,7 @@ public final class JsfPopupAction extends SystemAction implements Presenter.Popu
         }
         
         /** Gets popup menu. Overrides superclass. Adds lazy menu items creation. */
+        @Override
         public JPopupMenu getPopupMenu() {
             JPopupMenu pm = super.getPopupMenu();
             pm.removeAll();

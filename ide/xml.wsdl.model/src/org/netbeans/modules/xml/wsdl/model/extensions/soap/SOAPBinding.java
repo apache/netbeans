@@ -41,6 +41,8 @@ public interface SOAPBinding extends SOAPComponent {
         Style(String tag) {
             this.tag = tag;
         }
+
+        @Override
         public String toString() {
             return tag;
         }

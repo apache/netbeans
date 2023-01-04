@@ -278,6 +278,7 @@ public final class ResultBar extends JComponent implements ActionListener{
     }
 
     //@Override JDK6
+    @Override
     public int getBaseline(int w, int h) {
         FontMetrics fm = getFontMetrics(getFont());
         return h - fm.getDescent() - ((h - fm.getHeight()) / 2);

@@ -180,6 +180,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void windowClosed(WindowEvent e) {
             if (dd.getValue() == getCustomizerButton()) {
                 updater.run();
@@ -191,6 +192,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
             updater = null;
         }
 
+        @Override
         public void windowOpened(WindowEvent e) {
             d.requestFocus();
         }

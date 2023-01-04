@@ -601,9 +601,12 @@ final class TracerOptionsPanel extends JPanel {
         probesDefaultsCombo = new JComboBox(new String[] { "first expanded",
                                                            "all expanded",
                                                            "all collapsed" }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -641,9 +644,12 @@ final class TracerOptionsPanel extends JPanel {
 
         Integer[] refreshRates = new Integer[] { -1, 100, 200, 500, 1000, 2000, 5000, 10000 };
         refreshCombo = new JComboBox(refreshRates)  {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -661,11 +667,14 @@ final class TracerOptionsPanel extends JPanel {
         add(refreshCombo, c);
 
         refreshCheckBox = new JCheckBox("Customizable in Tracer tab") {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 d.height = Math.min(d.height, refreshCombo.getPreferredSize().height);
                 return d;
             }
+
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -693,9 +702,12 @@ final class TracerOptionsPanel extends JPanel {
         zoomModeCombo = new JComboBox(new String[] {
                                           TracerOptions.FIXED_SCALE,
                                           TracerOptions.SCALE_TO_FIT }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -740,9 +752,12 @@ final class TracerOptionsPanel extends JPanel {
                                           TracerOptions.MOUSE_WHEEL_ZOOMS,
                                           TracerOptions.MOUSE_WHEEL_HSCROLLS,
                                           TracerOptions.MOUSE_WHEEL_VSCROLLS }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -797,6 +812,7 @@ final class TracerOptionsPanel extends JPanel {
         // minMaxValsCombo
         minMaxValsCombo = new JComboBox(new Boolean[] { Boolean.TRUE,
                                                         Boolean.FALSE }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -837,6 +853,7 @@ final class TracerOptionsPanel extends JPanel {
         // rowLegendCombo
         rowLegendCombo = new JComboBox(new Boolean[] { Boolean.TRUE,
                                                        Boolean.FALSE }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -877,6 +894,7 @@ final class TracerOptionsPanel extends JPanel {
         // rowsDecorationCombo
         rowsDecorationCombo = new JComboBox(new Boolean[] { Boolean.TRUE,
                                                             Boolean.FALSE }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -906,6 +924,7 @@ final class TracerOptionsPanel extends JPanel {
         // rowsSelectionCombo
         rowsSelectionCombo = new JComboBox(new String[] { "panel and chart",
                                                           "panel only" }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -946,9 +965,12 @@ final class TracerOptionsPanel extends JPanel {
         // timelineToolbarCombo
         timelineToolbarCombo = new JComboBox(new String[] { "always visible",
                                                             "show with timeline" }) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -979,9 +1001,12 @@ final class TracerOptionsPanel extends JPanel {
         selectionToolbarCombo = new JComboBox(new String[] { "always visible",
                                                              "show on selection",
                                                              "always hidden"}) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -1012,9 +1037,12 @@ final class TracerOptionsPanel extends JPanel {
         extraToolbarCombo = new JComboBox(new String[] { "always visible",
                                                           "show on data",
                                                           "always hidden"}) {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
+            @Override
             protected void selectedItemChanged() {
                 TracerOptionsPanel.this.update();
                 super.selectedItemChanged();
@@ -1070,10 +1098,13 @@ final class TracerOptionsPanel extends JPanel {
         connectionTypeList.setVisibleRowCount(connectionTypeListModel.getSize());
 
         connectionTypeList.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
             public void setSelectionInterval(int index0, int index1) {
                 super.setSelectionInterval(index0, index1);
                 viewsSettingsLayout.show(viewsSettingsContainer, connectionTypeListModel.get(getMinSelectionIndex()).toString());
             }
+
+            @Override
             public void removeSelectionInterval(int i1, int i2) {}
         });
         connectionTypeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1089,6 +1120,7 @@ final class TracerOptionsPanel extends JPanel {
         JScrollPane connectionTypeScroll = new JScrollPane(connectionTypeList,
                                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            @Override
             public Dimension getMinimumSize() { return getPreferredSize(); }
         };
         createBorder(connectionTypeScroll, BorderFactory.createEmptyBorder(0, 0, 0, 10));
@@ -1102,6 +1134,7 @@ final class TracerOptionsPanel extends JPanel {
         initiallyOpenedPanel.setOpaque(false);
         // initialProbesCheckBox
         initialProbesCheckBox = new JCheckBox("Probes") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1109,6 +1142,7 @@ final class TracerOptionsPanel extends JPanel {
         initiallyOpenedPanel.add(initialProbesCheckBox);
         // initialTimelineCheckBox
         initialTimelineCheckBox = new JCheckBox("Timeline") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1116,6 +1150,7 @@ final class TracerOptionsPanel extends JPanel {
         initiallyOpenedPanel.add(initialTimelineCheckBox);
         // initialDetailsCheckBox
         initialDetailsCheckBox = new JCheckBox("Details") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1129,6 +1164,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel.setOpaque(false);
         // initialProbesCheckBox
         onProbeAddedProbesCheckBox = new JCheckBox("Probes") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1136,6 +1172,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel.add(onProbeAddedProbesCheckBox);
         // initialTimelineCheckBox
         onProbeAddedTimelineCheckBox = new JCheckBox("Timeline") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1143,6 +1180,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel.add(onProbeAddedTimelineCheckBox);
         // initialDetailsCheckBox
         onProbeAddedDetailsCheckBox = new JCheckBox("Details") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1150,6 +1188,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel.add(onProbeAddedDetailsCheckBox);
         // onStartNothingCheckBox
         onProbeAddedNothingCheckBox = new JCheckBox("No change") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1163,6 +1202,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel2.setOpaque(false);
         // initialProbesCheckBox2
         onProbeAddedProbesCheckBox2 = new JCheckBox("Probes") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1170,6 +1210,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel2.add(onProbeAddedProbesCheckBox2);
         // initialTimelineCheckBox2
         onProbeAddedTimelineCheckBox2 = new JCheckBox("Timeline") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1177,6 +1218,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel2.add(onProbeAddedTimelineCheckBox2);
         // onProbeAddedDetailsCheckBox2
         onProbeAddedDetailsCheckBox2 = new JCheckBox("Details") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1184,6 +1226,7 @@ final class TracerOptionsPanel extends JPanel {
         onProbeAddedPanel2.add(onProbeAddedDetailsCheckBox2);
         // onProbeAddedNothingCheckBox2
         onProbeAddedNothingCheckBox2 = new JCheckBox("No change") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1201,6 +1244,7 @@ final class TracerOptionsPanel extends JPanel {
         onStartOpenedPanel.setOpaque(false);
         // initialProbesCheckBox
         onStartProbesCheckBox = new JCheckBox("Probes") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1208,6 +1252,7 @@ final class TracerOptionsPanel extends JPanel {
         onStartOpenedPanel.add(onStartProbesCheckBox);
         // initialTimelineCheckBox
         onStartTimelineCheckBox = new JCheckBox("Timeline") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1215,6 +1260,7 @@ final class TracerOptionsPanel extends JPanel {
         onStartOpenedPanel.add(onStartTimelineCheckBox);
         // initialDetailsCheckBox
         onStartDetailsCheckBox = new JCheckBox("Details") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1222,6 +1268,7 @@ final class TracerOptionsPanel extends JPanel {
         onStartOpenedPanel.add(onStartDetailsCheckBox);
         // onStartNothingCheckBox
         onStartNothingCheckBox = new JCheckBox("No change") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1235,6 +1282,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel.setOpaque(false);
         // initialProbesCheckBox
         onRowSelectedProbesCheckBox = new JCheckBox("Probes") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1242,6 +1290,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel.add(onRowSelectedProbesCheckBox);
         // initialTimelineCheckBox
         onRowSelectedTimelineCheckBox = new JCheckBox("Timeline") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1249,6 +1298,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel.add(onRowSelectedTimelineCheckBox);
         // initialDetailsCheckBox
         onRowSelectedDetailsCheckBox = new JCheckBox("Details") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1256,6 +1306,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel.add(onRowSelectedDetailsCheckBox);
         // onStartNothingCheckBox
         onRowSelectedNothingCheckBox = new JCheckBox("No change") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1269,6 +1320,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel2.setOpaque(false);
         // initialProbesCheckBox2
         onRowSelectedProbesCheckBox2 = new JCheckBox("Probes") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1276,6 +1328,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel2.add(onRowSelectedProbesCheckBox2);
         // initialTimelineCheckBox2
         onRowSelectedTimelineCheckBox2 = new JCheckBox("Timeline") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1283,6 +1336,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel2.add(onRowSelectedTimelineCheckBox2);
         // onProbeAddedDetailsCheckBox2
         onRowSelectedDetailsCheckBox2 = new JCheckBox("Details") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1290,6 +1344,7 @@ final class TracerOptionsPanel extends JPanel {
         onRowSelectedPanel2.add(onRowSelectedDetailsCheckBox2);
         // onProbeAddedNothingCheckBox2
         onRowSelectedNothingCheckBox2 = new JCheckBox("No change") {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 TracerOptionsPanel.this.update();
             }
@@ -1303,6 +1358,7 @@ final class TracerOptionsPanel extends JPanel {
 
         // clearSelectionsCheckBox
         clearSelectionsCheckBox = new JCheckBox("Clear selected rows when closing Details view") {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }

@@ -411,6 +411,7 @@ public class IdentityHashSet<E> extends AbstractSet<E> {
             return traversalTable[lastReturnedIndex];
         }
 
+        @Override
         public void remove() {
             if (lastReturnedIndex == -1) {
                 throw new IllegalStateException();

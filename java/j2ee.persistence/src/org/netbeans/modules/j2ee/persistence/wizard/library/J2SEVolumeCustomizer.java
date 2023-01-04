@@ -64,11 +64,13 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
         this.setName (NbBundle.getMessage(J2SEVolumeCustomizer.class,"TXT_"+volumeType));
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         this.addButton.requestFocus();
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.addButton.setEnabled(enabled);
@@ -463,7 +465,8 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
     private JButton addURLButton;
     
     private static class ContentRenderer extends DefaultListCellRenderer {
-                
+
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             String displayName = null;
             Color color = null;

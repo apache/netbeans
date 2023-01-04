@@ -280,9 +280,12 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
 
         Mnemonics.setLocalizedText(expressInstallLabel, NbBundle.getMessage(NodeJsOptionsPanel.class, "NodeJsOptionsPanel.expressInstallLabel.text")); // NOI18N
         expressInstallLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 expressInstallLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 expressInstallLabelMouseEntered(evt);
             }

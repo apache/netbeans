@@ -42,6 +42,7 @@ public final class Spacer extends JPanel {
     public static Spacer create() { return new Spacer(); }
 
 
+    @Override
     public Dimension getPreferredSize() { return DIMENSION_ZERO; }
 
     private Spacer() {

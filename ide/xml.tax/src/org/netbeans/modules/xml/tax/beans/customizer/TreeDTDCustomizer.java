@@ -166,6 +166,7 @@ public class TreeDTDCustomizer extends AbstractTreeCustomizer {
         });
 
         cbVersion.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbVersionFocusLost(evt);
             }
@@ -199,6 +200,7 @@ public class TreeDTDCustomizer extends AbstractTreeCustomizer {
         });
 
         cbEncoding.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbEncodingFocusLost(evt);
             }

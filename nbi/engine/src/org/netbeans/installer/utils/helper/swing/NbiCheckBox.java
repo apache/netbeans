@@ -36,7 +36,8 @@ public class NbiCheckBox extends JCheckBox {
         setText(DEFAULT_TEXT);
         setMnemonic(DEFAULT_MNEMONIC);
     }
-    
+
+    @Override
     public void setText(String text) {
         super.setText(StringUtils.stripMnemonic(text));
         

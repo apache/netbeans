@@ -58,6 +58,7 @@ public class JExtendedSpinner extends JSpinner {
         super();
         ((JSpinner.DefaultEditor) getEditor()).getTextField().setFont(UIManager.getFont("Label.font")); // NOI18N
         ((JSpinner.DefaultEditor) getEditor()).getTextField().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
                 public void keyPressed(final java.awt.event.KeyEvent e) {
                     if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
                         processKeyEvent(e);
@@ -71,6 +72,7 @@ public class JExtendedSpinner extends JSpinner {
         super(model);
         ((JSpinner.DefaultEditor) getEditor()).getTextField().setFont(UIManager.getFont("Label.font")); // NOI18N
         ((JSpinner.DefaultEditor) getEditor()).getTextField().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
                 public void keyPressed(final java.awt.event.KeyEvent e) {
                     if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
                         processKeyEvent(e);
@@ -82,6 +84,7 @@ public class JExtendedSpinner extends JSpinner {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void setModel(SpinnerModel model) {
         Font font = ((JSpinner.DefaultEditor) getEditor()).getTextField().getFont();
         String accessibleName = ((JSpinner.DefaultEditor) getEditor()).getTextField().getAccessibleContext().getAccessibleName();
@@ -102,8 +105,9 @@ public class JExtendedSpinner extends JSpinner {
              .setAccessibleDescription(getAccessibleContext().getAccessibleDescription());
         }
     }
-    
-    
+
+
+    @Override
     public Dimension getPreferredSize() {
         if (UIUtils.isWindowsClassicLookAndFeel()) {
             return new Dimension(super.getPreferredSize().width, getDefaultSpinnerHeight());
@@ -112,6 +116,7 @@ public class JExtendedSpinner extends JSpinner {
         }
     }
 
+    @Override
     public Dimension getMinimumSize() {
         if (UIUtils.isWindowsClassicLookAndFeel()) {
             return getPreferredSize();

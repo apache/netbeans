@@ -106,6 +106,7 @@ public class JFXDownloadModePanel extends javax.swing.JPanel {
                 false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }

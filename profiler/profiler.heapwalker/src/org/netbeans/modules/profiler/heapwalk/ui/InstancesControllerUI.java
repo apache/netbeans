@@ -64,13 +64,15 @@ public class InstancesControllerUI extends JPanel {
             setToolTipText(Bundle.InstancesControllerUI_ViewDescr());
             setIcon(BrowserUtils.ICON_INSTANCE);
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width += 4;
             return d;
         }
-        
+
+        @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
         }

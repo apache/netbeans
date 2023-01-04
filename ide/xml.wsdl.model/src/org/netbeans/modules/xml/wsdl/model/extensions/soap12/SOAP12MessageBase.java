@@ -38,6 +38,8 @@ public interface SOAP12MessageBase extends SOAP12Component {
         Use(String tag) {
             this.tag = tag;
         }
+
+        @Override
         public String toString() { return tag; }
         private String tag;
     }

@@ -87,11 +87,13 @@ public class SymfonyGoToViewActionPanel extends javax.swing.JPanel implements Fo
         viewsList.setSelectedIndex(0);
         viewsList.setVisibleRowCount(views.size());
         viewsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 viewsListMouseClicked(evt);
             }
         });
         viewsList.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 viewsListKeyPressed(evt);
             }

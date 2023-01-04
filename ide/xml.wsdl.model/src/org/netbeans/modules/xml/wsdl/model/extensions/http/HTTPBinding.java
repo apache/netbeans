@@ -35,6 +35,8 @@ public interface HTTPBinding extends HTTPComponent {
         Verb(String tag) {
             this.tag = tag;
         }
+
+        @Override
         public String toString() {
             return tag;
         }

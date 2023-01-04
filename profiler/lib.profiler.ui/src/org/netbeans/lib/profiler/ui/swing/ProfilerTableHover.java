@@ -321,6 +321,8 @@ class ProfilerTableHover {
         void deinstall() {
             table.removeMouseMotionListener(this);
         }
+
+        @Override
         public void mouseMoved(MouseEvent e) {
             // Do not display popup when a modifier is pressed (can't read all keys)
             if (e.getModifiers() != 0) return;
@@ -355,7 +357,8 @@ class ProfilerTableHover {
             
             setPreferredSize(getSize());
         }
-        
+
+        @Override
         protected void paintComponent(Graphics g) {
             Component x = table.getRenderer(renderer, row, column, false);
             getPainter().paintComponent(g, x, null, 1, 1, getWidth() - 2, getHeight() - 2, false);
@@ -401,6 +404,7 @@ class ProfilerTableHover {
     private static CellRendererPane PAINTER;
     private static CellRendererPane getPainter() {
         if (PAINTER == null) PAINTER = new CellRendererPane() {
+            @Override
             public void paintComponent(Graphics g, Component c, Container p, int x, int y, int w, int h, boolean shouldValidate) {
                 super.paintComponent(g, c, p, x, y, w, h, shouldValidate);
                 remove(c); // Prevent leaking ProfilerTreeTable.ProfilerTreeTableTree and transitively all the UI/models

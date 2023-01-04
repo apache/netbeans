@@ -31,6 +31,7 @@ import org.openide.util.Utilities;
 */
 public final class SunDescriptorDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (UniFileLoader.class) };
@@ -43,10 +44,12 @@ public final class SunDescriptorDataLoaderBeanInfo extends SimpleBeanInfo {
     /** @param type Desired type of the icon
     * @return returns the Java loader's icon
     */
+    @Override
     public Image getIcon(final int type) {
         return ImageUtilities.loadImage( "org/netbeans/modules/j2ee/sun/ddloaders/resources/DDDataIcon.gif"); // NOI18N
     }
-    
+
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         return new PropertyDescriptor[0];
     }

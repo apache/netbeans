@@ -264,10 +264,12 @@ public class TriggerCustomizer extends ValidityAwarePanel implements ActionListe
             Bundle.TriggerCustomizer_SurvgenCountKey(), 
             Bundle.TriggerCustomizer_ThreadsCountKey(),
             Bundle.TriggerCustomizer_LdClassCountKey()}) {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(Math.min(super.getPreferredSize().width, 200), super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

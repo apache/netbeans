@@ -48,6 +48,7 @@ public class NameAlreadyUsedException extends java.lang.Exception {
      * 
      * @return localized message describing the problem.
      */
+    @Override
     public String getMessage() {
         return NbBundle.getMessage(NameAlreadyUsedException.class,"MSG_nameAlreadyUsed",beanName,keyProperty,keyValue);
     }

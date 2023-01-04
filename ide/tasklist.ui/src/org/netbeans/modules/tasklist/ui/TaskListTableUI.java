@@ -57,6 +57,7 @@ class TaskListTableUI extends BasicTableUI {
      * 
      * (copy & paste from BasicTableUI)
      */
+    @Override
     public void paint(Graphics g, JComponent c) {
         Rectangle clip = g.getClipBounds();
 

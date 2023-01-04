@@ -48,7 +48,8 @@ public class SunResourceDataLoaderBeanInfo extends SimpleBeanInfo {
         }
     }
      */
-    
+
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             // I.e. MultiFileLoader.class or UniFileLoader.class.
@@ -58,7 +59,8 @@ public class SunResourceDataLoaderBeanInfo extends SimpleBeanInfo {
             return null;
         }
     }
-    
+
+    @Override
     public Image getIcon(int type) {
         if (type == BeanInfo.ICON_COLOR_16x16 || type == BeanInfo.ICON_MONO_16x16) {
             return ImageUtilities.loadImage("org/netbeans/modules/j2ee/sun/share/resources/sun-cluster_16_pad.gif", true); //NOI18N

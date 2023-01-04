@@ -141,6 +141,7 @@ public class DynamicCredsPanel extends javax.swing.JPanel implements PanelEnable
         org.openide.awt.Mnemonics.setLocalizedText(usernameHandlerLabel, org.openide.util.NbBundle.getMessage(DynamicCredsPanel.class, "LBL_UsernameCBHLabel")); // NOI18N
 
         usernameHandlerField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 usernameHandlerFieldKeyReleased(evt);
             }
@@ -149,6 +150,7 @@ public class DynamicCredsPanel extends javax.swing.JPanel implements PanelEnable
         org.openide.awt.Mnemonics.setLocalizedText(passwdHandlerLabel, org.openide.util.NbBundle.getMessage(DynamicCredsPanel.class, "LBL_PasswordCBHLabel")); // NOI18N
 
         passwdHandlerField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 passwdHandlerFieldKeyReleased(evt);
             }

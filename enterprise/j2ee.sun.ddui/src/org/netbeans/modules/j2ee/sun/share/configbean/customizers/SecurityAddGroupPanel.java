@@ -117,6 +117,7 @@ public class SecurityAddGroupPanel extends JPanel implements ListSelectionListen
         add(jLblGroupName, gridBagConstraints);
 
         jTxtGroupName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtGroupNameKeyReleased(evt);
             }

@@ -70,10 +70,12 @@ public class WizardPanel1UI extends ValidityAwarePanel implements HelpCtx.Provid
     private class PPointTypeTableModel extends AbstractTableModel {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return false;
         }
 
+        @Override
         public Class getColumnClass(int columnIndex) {
             if (columnIndex == 0) {
                 return Integer.class;
@@ -276,10 +278,12 @@ public class WizardPanel1UI extends ValidityAwarePanel implements HelpCtx.Provid
         JScrollPane ppointDescriptionAreaScroll = new JScrollPane(ppointDescriptionArea,
                                                                   JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                                                   JScrollPane.HORIZONTAL_SCROLLBAR_NEVER) {
+            @Override
             public Dimension getPreferredSize() {
                 return new Dimension(super.getPreferredSize().width, height);
             }
 
+            @Override
             public Dimension getMinimumSize() {
                 return new Dimension(super.getMinimumSize().width, height);
             }
@@ -301,10 +305,12 @@ public class WizardPanel1UI extends ValidityAwarePanel implements HelpCtx.Provid
         JPanel effectiveModesContainer = new JPanel(new GridBagLayout());
 
         ppointEffectiveCaptionLabel = new JLabel(Bundle.WizardPanel1UI_SupportedModesLabelText()) {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(super.getPreferredSize().width, mheight);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, mheight);
                 }

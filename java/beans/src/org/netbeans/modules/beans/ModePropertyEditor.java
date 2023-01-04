@@ -37,6 +37,7 @@ public class ModePropertyEditor extends PropertyEditorSupport {
         PropertyPattern.WRITE_ONLY };
 
     /** @return names of the supported member Acces types */
+    @Override
     public String[] getTags() {
         if (tags == null) {
             tags = new String[] {
@@ -49,6 +50,7 @@ public class ModePropertyEditor extends PropertyEditorSupport {
     }
 
     /** @return text for the current value */
+    @Override
     public String getAsText () {
         int value = ((Integer)getValue()).intValue();
 
@@ -60,6 +62,7 @@ public class ModePropertyEditor extends PropertyEditorSupport {
     }
 
     /** @param text A text for the current value. */
+    @Override
     public void setAsText (String text) {
         for (int i = 0; i < getTags().length ; i++)
             if (getTags()[i] == text) {

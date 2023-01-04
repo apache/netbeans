@@ -92,6 +92,7 @@ public class SizeRestrictedPanel extends JPanel {
      *          and then modified according to restrictions specified
      *          by the constructor's parameters
      */
+    @Override
     public Dimension getMaximumSize() {
         if (widthRestriction && heightRestriction) {    //both true
             return getPreferredSize();

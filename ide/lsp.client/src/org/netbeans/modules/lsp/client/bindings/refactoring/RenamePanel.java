@@ -64,12 +64,14 @@ public class RenamePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    @Override
     public void setName(String name) {
         this.name.setText(name);
         this.name.setSelectionStart(0);
         this.name.setSelectionEnd(name.length());
     }
 
+    @Override
     public String getName() {
         return this.name.getText();
     }

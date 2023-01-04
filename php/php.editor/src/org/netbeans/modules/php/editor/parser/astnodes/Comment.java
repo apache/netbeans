@@ -39,6 +39,7 @@ public class Comment extends ASTNode {
             text = textRepresentation;
         }
 
+        @Override
         public String toString() {
             return text;
         }

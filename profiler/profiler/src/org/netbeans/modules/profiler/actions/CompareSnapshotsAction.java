@@ -605,6 +605,7 @@ public class CompareSnapshotsAction extends AbstractAction {
             add(externalFileHintLabel, c);
 
             projectSnapshotsList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                                   boolean cellHasFocus) {
                         JLabel c = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -691,7 +692,8 @@ public class CompareSnapshotsAction extends AbstractAction {
                 });
 
             projectSnapshotsList.addMouseListener(new MouseAdapter() {
-                    public void mousePressed(MouseEvent e) {
+                @Override
+                        public void mousePressed(MouseEvent e) {
                         if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2)
                                 && (projectSnapshotsList.getSelectedValue() != null)) {
                             SwingUtilities.invokeLater(new Runnable() {

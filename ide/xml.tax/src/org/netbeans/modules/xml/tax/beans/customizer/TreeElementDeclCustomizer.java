@@ -150,6 +150,7 @@ public class TreeElementDeclCustomizer extends AbstractTreeCustomizer {
 
         nameField.setColumns(20);
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameFieldFocusGained(evt);
             }
@@ -176,6 +177,7 @@ public class TreeElementDeclCustomizer extends AbstractTreeCustomizer {
 
         contentField.setColumns(20);
         contentField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 contentFieldFocusGained(evt);
             }

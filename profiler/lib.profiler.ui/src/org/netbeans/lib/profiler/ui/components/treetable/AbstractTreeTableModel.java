@@ -89,16 +89,19 @@ public abstract class AbstractTreeTableModel extends DefaultTableModel implement
      * Returns the column class for column <code>column</code>. This is set
      * in the constructor.
      */
+    @Override
     public abstract Class getColumnClass(int column);
 
     /**
      * Returns the number of column names passed into the constructor.
      */
+    @Override
     public abstract int getColumnCount();
 
     /**
      * Returns the column name passed into the constructor.
      */
+    @Override
     public abstract String getColumnName(int column);
 
     public String getColumnToolTipText(int column) {

@@ -664,7 +664,8 @@ public class JShellOptions2 extends javax.swing.JPanel implements ItemListener {
         }
         disableUpdates = false;
     }
-    
+
+    @Override
     public void setEnabled(boolean enabled) {
         disableUpdates = true;
         checkEnable.setSelected(enabled);

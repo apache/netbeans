@@ -101,11 +101,13 @@ public class DeclarationPopup extends JPanel implements FocusListener {
         jList1.setVisibleRowCount(declarations.size()
         );
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jList1KeyPressed(evt);
             }
         });
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
             }

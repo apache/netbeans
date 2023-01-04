@@ -246,6 +246,7 @@ public class ResultsView extends JPanel {
     
     private JTabbedPane createTabs() {
         JTabbedPane tp = new JTabbedPane(JTabbedPane.BOTTOM) {
+            @Override
             protected final void fireStateChanged() {
                 super.fireStateChanged();
                 updateToolbar();

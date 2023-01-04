@@ -139,8 +139,9 @@ public abstract class ProfilerFeature {
         protected void notifyDeactivated() {}
         
         protected final boolean isActivated() { return isActive; }
-        
-        
+
+
+        @Override
         protected final void activatedInSession() {
             isActive = true;
             
@@ -154,7 +155,8 @@ public abstract class ProfilerFeature {
             };
             UIUtils.runInEventDispatchThread(notifier);
         }
-    
+
+        @Override
         protected final void deactivatedInSession() {
             isActive = false;
             

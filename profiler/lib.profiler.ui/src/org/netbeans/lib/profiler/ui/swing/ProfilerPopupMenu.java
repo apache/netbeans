@@ -47,12 +47,14 @@ public class ProfilerPopupMenu extends JPopupMenu {
     
     
     // --- Tweaking UI ---------------------------------------------------------
-    
+
+    @Override
     public JMenuItem add(JMenuItem menuItem) {
         if (forceBackground && !UIUtils.isOracleLookAndFeel()) menuItem.setOpaque(false);
         return super.add(menuItem);
     }
-    
+
+    @Override
     public void add(Component comp, Object constraints) {
         if (forceBackground && !UIUtils.isOracleLookAndFeel() && comp instanceof JComponent)
             ((JComponent)comp).setOpaque(false);
@@ -65,7 +67,8 @@ public class ProfilerPopupMenu extends JPopupMenu {
         if (!UIUtils.isNimbus() || !Boolean.TRUE.equals(UIManager.getBoolean("nb.dark.theme"))) // NOI18N
             this.forceBackground = force;
     }
-    
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         

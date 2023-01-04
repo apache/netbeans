@@ -47,6 +47,7 @@ public class LocalePropertyEditor extends PropertyEditorSupport {
 
     
     /** Sets value. Overrides superclass method. Overrides superclass method. */
+    @Override
     public void setValue(Object value) {
         if(!(value instanceof Locale))
             throw new IllegalArgumentException("I18N module: Bad class type of value:"+value.getClass().getName()); // NOI18N
@@ -59,11 +60,13 @@ public class LocalePropertyEditor extends PropertyEditorSupport {
     }
     
     /** Gets value. Overrides superclass method. Overrides superclass method. */
+    @Override
     public Object getValue() {
         return locale;
     }
     
     /** Gets string representation of value. Overrides superclass method. */
+    @Override
     public String getAsText() {
         if(locale == null)
             return super.getAsText(); // NOI18N
@@ -72,11 +75,13 @@ public class LocalePropertyEditor extends PropertyEditorSupport {
     }
     
     /** Sets as text. Overrides superclass method. */
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         setValue(createLocaleFromText(text));
     }
 
     /** Gets java initialization string. Overrides superclass method. */
+    @Override
     public String getJavaInitializationString() {
         if(locale == null)
             return super.getJavaInitializationString();
@@ -107,11 +112,13 @@ public class LocalePropertyEditor extends PropertyEditorSupport {
     
     /** Overrides superclass method.
      * @return true */
+    @Override
     public boolean supportsCustomEditor() {
         return true;
     }
     
     /** Gets custom editor. Overrides superclass method. */
+    @Override
     public Component getCustomEditor() {
         final LocalePanel localePanel = new LocalePanel(locale);
         

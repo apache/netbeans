@@ -107,6 +107,8 @@ abstract class AllocTreeTableView extends MemoryView {
                     {
                         if (!filterAllocations) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterObjects = !filterObjects;
@@ -117,6 +119,8 @@ abstract class AllocTreeTableView extends MemoryView {
                     {
                         if (!filterObjects) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterAllocations = !filterAllocations;
@@ -159,6 +163,8 @@ abstract class AllocTreeTableView extends MemoryView {
                     {
                         if (!searchAllocations) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchObjects = !searchObjects;
@@ -168,6 +174,8 @@ abstract class AllocTreeTableView extends MemoryView {
                     {
                         if (!searchObjects) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchAllocations = !searchAllocations;

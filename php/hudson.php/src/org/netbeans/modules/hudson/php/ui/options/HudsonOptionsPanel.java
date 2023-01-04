@@ -175,9 +175,12 @@ public class HudsonOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(buildXmlViewLabel, NbBundle.getMessage(HudsonOptionsPanel.class, "HudsonOptionsPanel.buildXmlViewLabel.text")); // NOI18N
         buildXmlViewLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 buildXmlViewLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 buildXmlViewLabelMousePressed(evt);
             }
@@ -195,9 +198,12 @@ public class HudsonOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(jobConfigDownloadLabel, NbBundle.getMessage(HudsonOptionsPanel.class, "HudsonOptionsPanel.jobConfigDownloadLabel.text")); // NOI18N
         jobConfigDownloadLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 jobConfigDownloadLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 jobConfigDownloadLabelMousePressed(evt);
             }
@@ -215,9 +221,12 @@ public class HudsonOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(phpUnitConfigViewLabel, NbBundle.getMessage(HudsonOptionsPanel.class, "HudsonOptionsPanel.phpUnitConfigViewLabel.text")); // NOI18N
         phpUnitConfigViewLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 phpUnitConfigViewLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 phpUnitConfigViewLabelMousePressed(evt);
             }
@@ -231,9 +240,12 @@ public class HudsonOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(learnMoreLabel, NbBundle.getMessage(HudsonOptionsPanel.class, "HudsonOptionsPanel.learnMoreLabel.text")); // NOI18N
         learnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }

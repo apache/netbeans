@@ -79,6 +79,7 @@ public final class ProfilingMonitor {
             }
         }
 
+        @Override
         public void run() {
             while (keepRunning) { // Main loop
 

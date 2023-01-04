@@ -147,9 +147,12 @@ class FindInQueryBar extends javax.swing.JPanel {
         closeButton.setFocusable(false);
         closeButton.setMargin(new java.awt.Insets(2, 1, 0, 1));
         closeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 closeButtonMouseExited(evt);
             }
+
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 closeButtonMouseEntered(evt);
             }

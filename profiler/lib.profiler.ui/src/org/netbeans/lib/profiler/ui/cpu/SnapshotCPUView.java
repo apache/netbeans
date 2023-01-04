@@ -260,6 +260,7 @@ public abstract class SnapshotCPUView extends JPanel {
         
             Icon icon = (Icon)compareAction.getValue(Action.SMALL_ICON);
             compareButton = new JToggleButton(icon) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     boolean sel = isSelected();
                     if (sel) {
@@ -289,6 +290,7 @@ public abstract class SnapshotCPUView extends JPanel {
         toggles = new JToggleButton[3];
         
         toggles[0] = new JToggleButton(Icons.getIcon(ProfilerIcons.NODE_FORWARD)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 setView(isSelected(), hotSpotsView.isVisible(), reverseCallsView.isVisible());
@@ -301,6 +303,7 @@ public abstract class SnapshotCPUView extends JPanel {
         toggles[0].setSelected(true);
         
         toggles[1] = new JToggleButton(Icons.getIcon(ProfilerIcons.TAB_HOTSPOTS)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 setView(forwardCallsView.isVisible(), isSelected(), reverseCallsView.isVisible());
@@ -313,6 +316,7 @@ public abstract class SnapshotCPUView extends JPanel {
         toggles[1].setSelected(false);
         
         toggles[2] = new JToggleButton(Icons.getIcon(ProfilerIcons.NODE_REVERSE)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 setView(forwardCallsView.isVisible(), hotSpotsView.isVisible(), isSelected());
@@ -444,6 +448,8 @@ public abstract class SnapshotCPUView extends JPanel {
         if (showSourceSupported()) {
             popup.add(new JMenuItem(CPUView.ACTION_GOTOSOURCE) {
                 { setEnabled(userValue != null && aggregation != CPUResultsSnapshot.PACKAGE_LEVEL_VIEW); setFont(getFont().deriveFont(Font.BOLD)); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) { showSource(userValue); }
             });
             popup.addSeparator();
@@ -451,11 +457,15 @@ public abstract class SnapshotCPUView extends JPanel {
         
         if (profileMethodSupported()) popup.add(new JMenuItem(CPUView.ACTION_PROFILE_METHOD) {
             { setEnabled(profileMethodEnabled() && userValue != null && aggregation == CPUResultsSnapshot.METHOD_LEVEL_VIEW && CPUTableView.isSelectable(userValue)); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileMethod(userValue); }
         });
         
         if (profileClassSupported()) popup.add(new JMenuItem(CPUView.ACTION_PROFILE_CLASS) {
             { setEnabled(userValue != null && aggregation != CPUResultsSnapshot.PACKAGE_LEVEL_VIEW); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileClass(userValue); }
         });
         
@@ -476,6 +486,8 @@ public abstract class SnapshotCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_HOTSPOTS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = hotSpotsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -488,6 +500,8 @@ public abstract class SnapshotCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_REVERSECALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTreeTable table = (ProfilerTreeTable)reverseCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString, true, true, createSearchHelper())) {
@@ -508,6 +522,8 @@ public abstract class SnapshotCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                                snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.addThread(thread.getThreadId(), true);
@@ -519,6 +535,8 @@ public abstract class SnapshotCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                                snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.removeThread(thread.getThreadId());
@@ -529,12 +547,14 @@ public abstract class SnapshotCPUView extends JPanel {
             popup.add(expand);
             
             expand.add(new JMenuItem(CPUView.EXPAND_PLAIN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandPlainPath(ttable.getSelectedRow(), 2);
                 }
             });
             
             expand.add(new JMenuItem(CPUView.EXPAND_TOPMOST_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandFirstPath(ttable.getSelectedRow());
                 }
@@ -543,12 +563,14 @@ public abstract class SnapshotCPUView extends JPanel {
             expand.addSeparator();
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_CHILDREN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseChildren(ttable.getSelectedRow());
                 }
             });
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_ALL_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseAll();
                 }
@@ -559,6 +581,8 @@ public abstract class SnapshotCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_FORWARDCALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = forwardCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -571,6 +595,8 @@ public abstract class SnapshotCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_REVERSECALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTreeTable table = (ProfilerTreeTable)reverseCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString, true, true, createSearchHelper())) {
@@ -587,6 +613,8 @@ public abstract class SnapshotCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_FORWARDCALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = forwardCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -599,6 +627,8 @@ public abstract class SnapshotCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_HOTSPOTS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = hotSpotsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -619,6 +649,8 @@ public abstract class SnapshotCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                               snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.addThread(thread.getThreadId(), true);
@@ -630,6 +662,8 @@ public abstract class SnapshotCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                               snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.removeThread(thread.getThreadId());
@@ -640,12 +674,14 @@ public abstract class SnapshotCPUView extends JPanel {
             popup.add(expand);
             
             expand.add(new JMenuItem(CPUView.EXPAND_PLAIN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandPlainPath(ttable.getSelectedRow(), 1);
                 }
             });
             
             expand.add(new JMenuItem(CPUView.EXPAND_TOPMOST_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandFirstPath(ttable.getSelectedRow());
                 }
@@ -654,12 +690,14 @@ public abstract class SnapshotCPUView extends JPanel {
             expand.addSeparator();
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_CHILDREN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseChildren(ttable.getSelectedRow());
                 }
             });
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_ALL_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseAll();
                 }
@@ -671,9 +709,11 @@ public abstract class SnapshotCPUView extends JPanel {
         
         popup.addSeparator();
         popup.add(new JMenuItem(FilterUtils.ACTION_FILTER) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateFilter(); }
         });
         popup.add(new JMenuItem(SearchUtils.ACTION_FIND) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateSearch(); }
         });
         

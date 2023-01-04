@@ -205,12 +205,14 @@ public class StopwatchCustomizer extends ValidityAwarePanel implements DocumentL
 
         // nameTextField
         nameTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return (StopwatchCustomizer.this.getParent() instanceof JViewport) ? getMinimumSize()
                                                                                        : new Dimension(400,
                                                                                                        super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
@@ -242,6 +244,7 @@ public class StopwatchCustomizer extends ValidityAwarePanel implements DocumentL
 
         // settingsHeaderSeparator
         settingsHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -331,6 +334,7 @@ public class StopwatchCustomizer extends ValidityAwarePanel implements DocumentL
 
         // locationBeginHeaderSeparator
         locationBeginHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -383,6 +387,7 @@ public class StopwatchCustomizer extends ValidityAwarePanel implements DocumentL
 
         // locationEndHeaderSeparator
         locationEndHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

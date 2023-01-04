@@ -776,14 +776,17 @@ public class ComponentsSelectionPanel extends ErrorMessagePanel {
             iconLabel = new NbiLabel();
             iconLabel.setFocusable(false);
             iconLabel.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(final MouseEvent event) {
                     cancelCellEditing();
                 }
-                
+
+                @Override
                 public void mousePressed(final MouseEvent event) {
                     cancelCellEditing();
                 }
-                
+
+                @Override
                 public void mouseReleased(final MouseEvent event) {
                     cancelCellEditing();
                 }
@@ -793,14 +796,17 @@ public class ComponentsSelectionPanel extends ErrorMessagePanel {
             titleLabel = new NbiLabel();
             titleLabel.setFocusable(false);
             titleLabel.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(final MouseEvent event) {
                     cancelCellEditing();
                 }
-                
+
+                @Override
                 public void mousePressed(final MouseEvent event) {
                     cancelCellEditing();
                 }
-                
+
+                @Override
                 public void mouseReleased(final MouseEvent event) {
                     cancelCellEditing();
                 }
@@ -811,14 +817,17 @@ public class ComponentsSelectionPanel extends ErrorMessagePanel {
             statusLabel.setForeground(Color.GRAY);
             statusLabel.setFocusable(false);
             statusLabel.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(final MouseEvent event) {
                     cancelCellEditing();
                 }
-                
+
+                @Override
                 public void mousePressed(final MouseEvent event) {
                     cancelCellEditing();
                 }
-                
+
+                @Override
                 public void mouseReleased(final MouseEvent event) {
                     cancelCellEditing();
                 }

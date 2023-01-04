@@ -535,7 +535,8 @@ public final class TreeUtilities {
                 this.pos = pos;
                 this.sourcePositions = sourcePositions;
             }
-            
+
+            @Override
             public Void scan(DocTree tree, TreePath p) {
                 if (tree != null) {
                     if (sourcePositions.getStartPosition(p.getCompilationUnit(), getCurrentPath().getDocComment(), tree) < pos && sourcePositions.getEndPosition(p.getCompilationUnit(), getCurrentPath().getDocComment(), tree) >= pos) {

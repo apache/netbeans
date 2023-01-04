@@ -211,6 +211,7 @@ public class CommonAttributeVisualPanel extends javax.swing.JPanel implements Ch
                 jTextField.setPreferredSize(new java.awt.Dimension(340, 21));
                 final int index = i;
                 jTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+                    @Override
                     public void keyReleased(java.awt.event.KeyEvent evt) {
                         jTextField1KeyReleased(evt, index);
                     }

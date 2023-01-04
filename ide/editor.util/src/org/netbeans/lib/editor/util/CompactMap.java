@@ -497,6 +497,7 @@ public class CompactMap<K,V> implements Map<K,V> {
             return new EntryIterator();
         }
 
+        @Override
         public boolean contains(Object o) {
             if (!(o instanceof Map.Entry))
                 return false;
@@ -517,6 +518,7 @@ public class CompactMap<K,V> implements Map<K,V> {
             return CompactMap.this.size();
         }
 
+        @Override
         public void clear() {
             CompactMap.this.clear();
         }

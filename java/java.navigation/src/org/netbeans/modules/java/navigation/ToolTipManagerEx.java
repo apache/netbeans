@@ -496,6 +496,7 @@ final class ToolTipManagerEx extends MouseAdapter implements MouseMotionListener
      *
      *  @param event  the event in question
      */
+    @Override
     public void mouseDragged(MouseEvent event) {
     }
 
@@ -506,6 +507,7 @@ final class ToolTipManagerEx extends MouseAdapter implements MouseMotionListener
      *
      *  @param event  the event in question
      */
+    @Override
     public void mouseMoved(MouseEvent event) {
         if (tipShowing) {
             checkForTipChange(event);

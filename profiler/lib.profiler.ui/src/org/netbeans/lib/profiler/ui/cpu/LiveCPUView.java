@@ -366,6 +366,8 @@ public abstract class LiveCPUView extends JPanel {
         if (showSourceSupported()) {
             popup.add(new JMenuItem(CPUView.ACTION_GOTOSOURCE) {
                 { setEnabled(userValue != null); setFont(getFont().deriveFont(Font.BOLD)); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) { showSource(userValue); }
             });
             popup.addSeparator();
@@ -373,11 +375,15 @@ public abstract class LiveCPUView extends JPanel {
         
         if (profileMethodSupported()) popup.add(new JMenuItem(CPUView.ACTION_PROFILE_METHOD) {
             { setEnabled(userValue != null && CPUTableView.isSelectable(userValue)); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileMethod(userValue); }
         });
         
         if (profileClassSupported()) popup.add(new JMenuItem(CPUView.ACTION_PROFILE_CLASS) {
             { setEnabled(userValue != null); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileClass(userValue); }
         });
         
@@ -398,6 +404,8 @@ public abstract class LiveCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_HOTSPOTS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = hotSpotsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -410,6 +418,8 @@ public abstract class LiveCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_REVERSECALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTreeTable table = (ProfilerTreeTable)reverseCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString, true, true, createSearchHelper())) {
@@ -430,6 +440,8 @@ public abstract class LiveCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                                snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.addThread(thread.getThreadId(), true);
@@ -441,6 +453,8 @@ public abstract class LiveCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                                snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.removeThread(thread.getThreadId());
@@ -451,12 +465,14 @@ public abstract class LiveCPUView extends JPanel {
             popup.add(expand);
             
             expand.add(new JMenuItem(CPUView.EXPAND_PLAIN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandPlainPath(ttable.getSelectedRow(), 2);
                 }
             });
             
             expand.add(new JMenuItem(CPUView.EXPAND_TOPMOST_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandFirstPath(ttable.getSelectedRow());
                 }
@@ -465,12 +481,14 @@ public abstract class LiveCPUView extends JPanel {
             expand.addSeparator();
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_CHILDREN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseChildren(ttable.getSelectedRow());
                 }
             });
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_ALL_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseAll();
                 }
@@ -481,6 +499,8 @@ public abstract class LiveCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_FORWARDCALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = forwardCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -493,6 +513,8 @@ public abstract class LiveCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_REVERSECALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTreeTable table = (ProfilerTreeTable)reverseCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString, true, true, createSearchHelper())) {
@@ -509,6 +531,8 @@ public abstract class LiveCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_FORWARDCALLS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = forwardCallsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -521,6 +545,8 @@ public abstract class LiveCPUView extends JPanel {
             
             popup.add(new JMenuItem(CPUView.FIND_IN_HOTSPOTS) {
                 { setEnabled(userValue != null); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ProfilerTable table = hotSpotsView.getResultsComponent();
                     if (SearchUtils.findString(table, searchString)) {
@@ -541,6 +567,8 @@ public abstract class LiveCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                                snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.addThread(thread.getThreadId(), true);
@@ -552,6 +580,8 @@ public abstract class LiveCPUView extends JPanel {
                     setEnabled(!mergedThreads && threadsSelector != null && value instanceof PrestimeCPUCCTNode &&
                                snapshot.getNThreads() > 1 && (selectedThreads == null || selectedThreads.size() > 1));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     PrestimeCPUCCTNode thread = (PrestimeCPUCCTNode)value;
                     threadsSelector.removeThread(thread.getThreadId());
@@ -562,12 +592,14 @@ public abstract class LiveCPUView extends JPanel {
             popup.add(expand);
             
             expand.add(new JMenuItem(CPUView.EXPAND_PLAIN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandPlainPath(ttable.getSelectedRow(), 1);
                 }
             });
             
             expand.add(new JMenuItem(CPUView.EXPAND_TOPMOST_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandFirstPath(ttable.getSelectedRow());
                 }
@@ -576,12 +608,14 @@ public abstract class LiveCPUView extends JPanel {
             expand.addSeparator();
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_CHILDREN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseChildren(ttable.getSelectedRow());
                 }
             });
             
             expand.add(new JMenuItem(CPUView.COLLAPSE_ALL_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseAll();
                 }
@@ -593,9 +627,11 @@ public abstract class LiveCPUView extends JPanel {
         
         popup.addSeparator();
         popup.add(new JMenuItem(FilterUtils.ACTION_FILTER) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateFilter(); }
         });
         popup.add(new JMenuItem(SearchUtils.ACTION_FIND) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateSearch(); }
         });
     }

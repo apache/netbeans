@@ -33,6 +33,7 @@ public final class LookTreePath extends TreePath {
         bottom = node;
     }
 
+    @Override
     public Object[] getPath() {
         int c = getPathCount();
         Object[] path = new Object[c];
@@ -43,7 +44,8 @@ public final class LookTreePath extends TreePath {
         }
         return path;
     }
-    
+
+    @Override
     public int getPathCount() {
         LookTreeNode n = bottom;
         int i = 0;
@@ -53,7 +55,8 @@ public final class LookTreePath extends TreePath {
         }
         return i;
     }
-    
+
+    @Override
     public Object getPathComponent(int x) {
         int c = getPathCount();
         LookTreeNode n = bottom;
@@ -62,24 +65,29 @@ public final class LookTreePath extends TreePath {
         }
         return n;
     }
-    
+
+    @Override
     public TreePath pathByAddingChild(Object child) {
         return new LookTreePath((LookTreeNode)child);
     }
-    
+
+    @Override
     public boolean equals(Object o) {
         return (o instanceof LookTreePath) &&
             ((LookTreePath)o).bottom == bottom;
     }
-    
+
+    @Override
     public int hashCode() {
         return bottom.hashCode();
     }
-    
+
+    @Override
     public Object getLastPathComponent() {
         return bottom;
     }
-    
+
+    @Override
     public TreePath getParentPath() {
         LookTreeNode p = bottom.getParent();
         if (p != null) {

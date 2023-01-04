@@ -395,10 +395,12 @@ public class SnapshotCustomizer extends ValidityAwarePanel implements ActionList
 
         // saveToFileField
         saveToFileField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

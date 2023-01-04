@@ -30,6 +30,7 @@ final class ReadWriteLockWrapper implements DuplexLock {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
     /** workaround needed in Tiger; see {@link #canRead} */
     private final ThreadLocal<Integer> reading = new ThreadLocal<Integer>() {
+        @Override
         protected Integer initialValue() {
             return 0;
         }

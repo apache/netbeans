@@ -107,14 +107,16 @@ abstract class FeatureMode {
             
             return addAll;
         }
-        
+
+        @Override
         public final boolean remove(Object selection) {
             assert SwingUtilities.isEventDispatchThread();
             _changing();
             if (super.remove(selection)) return _changed();
             else return false;
         }
-        
+
+        @Override
         public final boolean removeAll(Collection<?> selections) {
             boolean _trans = trans;
             beginTrans();
@@ -128,7 +130,8 @@ abstract class FeatureMode {
             
             return removeAll;
         }
-        
+
+        @Override
         public final boolean retainAll(Collection<?> selections) {
             boolean _trans = trans;
             beginTrans();
@@ -142,7 +145,8 @@ abstract class FeatureMode {
             
             return retainAll;
         }
-        
+
+        @Override
         public final void clear() {
             assert SwingUtilities.isEventDispatchThread();
             _changing();

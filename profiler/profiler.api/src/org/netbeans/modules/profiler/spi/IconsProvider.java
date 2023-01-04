@@ -69,6 +69,7 @@ public abstract class IconsProvider {
             synchronized (this) {
                 if (images == null) {
                     images = new HashMap<String, String>() {
+                        @Override
                         public String put(String key, String value) {
                             return super.put(key, getImagePath(value));
                         }

@@ -87,6 +87,7 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                 }
                 if (serverThread == null) {
                     serverThread = new Thread("HTTPServer") { // NOI18N
+                        @Override
                         public void run() {
                             try {
                                 server = buildServer();

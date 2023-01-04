@@ -38,6 +38,7 @@ public class LazyComboBox<E> extends JComboBox<E> {
     }
 
 
+    @Override
     public final void setModel(ComboBoxModel<E> model) {
         if (!(model instanceof LazyComboBoxModel))
             throw new IllegalArgumentException("Can only use private LazyComboBoxModel"); // NOI18N
@@ -48,10 +49,12 @@ public class LazyComboBox<E> extends JComboBox<E> {
         return (LazyComboBoxModel<E>)super.getModel();
     }
 
+    @Override
     public final int getSelectedIndex() {
         return _getModel().isPopulated() ? super.getSelectedIndex() : -1;
     }
-    
+
+    @Override
     public final void setSelectedItem(Object newSelected) {
         LazyComboBoxModel m = _getModel();
         Object oldSelected = m.getSelectedItem();
@@ -63,7 +66,8 @@ public class LazyComboBox<E> extends JComboBox<E> {
             selectionChanged();
         }
     }
-    
+
+    @Override
     protected void fireItemStateChanged(ItemEvent e) {
         super.fireItemStateChanged(e);
         if (e.getStateChange() == ItemEvent.SELECTED) selectionChanged();
@@ -83,7 +87,8 @@ public class LazyComboBox<E> extends JComboBox<E> {
             selectionChanged();
         }
     }
-    
+
+    @Override
     public final Dimension getPreferredSize() {
         Dimension d;
         if (getPrototypeDisplayValue() != null || _getModel().isPopulated()) d = super.getPreferredSize();
@@ -91,14 +96,16 @@ public class LazyComboBox<E> extends JComboBox<E> {
         if (getPreferredWidth() >= 0) d.width = Math.max(d.width, getPreferredWidth());
         return d;
     }
-    
+
+    @Override
     public final Dimension getMinimumSize() {
         Dimension d = getPreferredSize();
         if (getPreferredWidth() < 0) d.width = 0;
         else d.width = Math.max(0, getPreferredWidth());
         return d;
     }
-    
+
+    @Override
     public final Dimension getMaximumSize() {
         Dimension d = getPreferredSize();
         if (getPreferredWidth() < 0) d.width = Integer.MAX_VALUE;

@@ -130,6 +130,7 @@ public final class ResourcesCustomizer extends javax.swing.JPanel {
                 false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }

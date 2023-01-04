@@ -134,6 +134,7 @@ implements DDTableModel {
         return modelDelegate.getColumnCount();
     }
 
+    @Override
     public String getColumnName(int col) {
 	return modelDelegate.getColumnName(col);
     }
@@ -176,10 +177,12 @@ implements DDTableModel {
         return modelDelegate.getRowCount();
     }
 
+    @Override
     public Class getColumnClass (int col) {
 	return modelDelegate.getColumnClass(col);
     }
 
+    @Override
     public boolean isCellEditable(int row, int col) {
 	return modelDelegate.isCellEditable(getInd(row),col);
     }
@@ -194,6 +197,7 @@ implements DDTableModel {
 	setSortColumn(getSortColumn());
     }
 
+    @Override
     public void setValueAt (Object value, int row, int col) {
 	modelDelegate.setValueAt(value, getInd(row), col);
 	needsSorting = true;

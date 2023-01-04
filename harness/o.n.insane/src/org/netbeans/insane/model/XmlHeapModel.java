@@ -169,7 +169,8 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         
     private class Handler extends DefaultHandler {
         private int depth = 0;
-            
+
+        @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             if (depth == 0) {
                 if (! "insane".equals(qName)) throw new SAXException("format");
@@ -201,6 +202,7 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         }
             
 
+        @Override
         public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
             depth--;
         }

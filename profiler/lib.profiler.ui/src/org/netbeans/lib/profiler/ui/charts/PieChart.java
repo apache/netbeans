@@ -79,6 +79,7 @@ public class PieChart extends JComponent implements ComponentListener, ChartMode
         this.accessibleContext = accessibleContext;
     }
 
+    @Override
     public AccessibleContext getAccessibleContext() {
         return accessibleContext;
     }
@@ -242,6 +243,7 @@ public class PieChart extends JComponent implements ComponentListener, ChartMode
         frame.setVisible(true);
 
         pieChart.addMouseListener(new MouseAdapter() {
+            @Override
                 public void mouseClicked(MouseEvent e) {
                     int clickedItem = pieChart.getItemIndexAt(e.getX(), e.getY());
                     pieChart.toggleItemSelection(clickedItem);
@@ -249,6 +251,7 @@ public class PieChart extends JComponent implements ComponentListener, ChartMode
             });
 
         pieChart.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
                 public void mouseMoved(MouseEvent e) {
                     int focusedItem = pieChart.getItemIndexAt(e.getX(), e.getY());
 
@@ -265,6 +268,7 @@ public class PieChart extends JComponent implements ComponentListener, ChartMode
         pieChart.setModel(pieChartModel);
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         // super.paintComponent
         super.paintComponent(g);

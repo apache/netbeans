@@ -146,6 +146,7 @@ class SplashComponentPreview extends JLabel {
     /**
      * Defines the single line of text this component will display.
      */
+    @Override
     public void setText(final String text) {
         // run in AWT, there were problems with accessing font metrics
         // from now AWT thread
@@ -255,6 +256,7 @@ class SplashComponentPreview extends JLabel {
     /**
      * Override update to *not* erase the background before painting.
      */
+    @Override
     public void update(Graphics g) {
         paint(g);
     }
@@ -262,6 +264,7 @@ class SplashComponentPreview extends JLabel {
     /**
      * Renders this component to the given graphics.
      */
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         /*int width = image.getWidth(null);//BasicBrandingModel.SPLASH_WIDTH;
@@ -338,6 +341,7 @@ class SplashComponentPreview extends JLabel {
         return view;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         textDragItem.setEnabled(enabled);

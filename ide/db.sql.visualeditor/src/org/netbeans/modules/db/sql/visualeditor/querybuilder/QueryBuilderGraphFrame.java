@@ -278,6 +278,7 @@ public class QueryBuilderGraphFrame extends JPanel
     }
     
     class QBGFJPanel extends JPanel {
+        @Override
         protected void paintComponent(Graphics g) {
             if (DEBUG) {
                 System.out.println(" paintComponent() called _parseErrorMessage = " + _queryBuilder.getParseErrorMessage() + "\n" ); // NOI18N
@@ -476,11 +477,13 @@ public class QueryBuilderGraphFrame extends JPanel
     // (table node)
     
     class TableTitlePopupListener extends MouseAdapter {
-        
+
+        @Override
         public void mousePressed(MouseEvent e) {
             maybeShowPopup(e);
         }
-        
+
+        @Override
         public void mouseReleased(MouseEvent e) {
             maybeShowPopup(e);
         }
@@ -1931,7 +1934,8 @@ public class QueryBuilderGraphFrame extends JPanel
      * to detect when a Frame (graph node representing a table) is selected
      */
     private class FrameSelectionListener extends InternalFrameAdapter {
-        
+
+        @Override
         public void internalFrameActivated(InternalFrameEvent ife) {
             Object source = (Object)(ife.getSource());
             
@@ -1944,7 +1948,8 @@ public class QueryBuilderGraphFrame extends JPanel
                     (QueryBuilderInternalFrame)_desktopPane.getSelectedFrame();
             setActivatedNode( currentSelectedFrame ) ;
         }
-        
+
+        @Override
         public void internalFrameDeactivated(InternalFrameEvent ife) {
 //          _apifa.setEnabled(false);
 //          _acifa.setEnabled(false);
@@ -1956,7 +1961,8 @@ public class QueryBuilderGraphFrame extends JPanel
     // This listens for events from the desktopPane
     
     private class CompListener extends ComponentAdapter {
-        
+
+        @Override
         public void componentResized(ComponentEvent ce) {
             if ( _disableQBGF ) {
                 return;

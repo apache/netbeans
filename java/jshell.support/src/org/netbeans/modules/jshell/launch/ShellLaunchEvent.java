@@ -60,7 +60,8 @@ public final class ShellLaunchEvent extends EventObject {
     public ShellAgent       getAgent() {
         return agent;
     }
-    
+
+    @Override
     public JShellConnection getSource() {
         return (JShellConnection)super.getSource();
     }

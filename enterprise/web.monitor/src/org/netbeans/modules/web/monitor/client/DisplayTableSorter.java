@@ -174,7 +174,8 @@ public class DisplayTableSorter extends AbstractTableModel implements
 	}
         return model.getValueAt(index[aRow], aColumn); 
     }
-        
+
+    @Override
     public void setValueAt(Object aValue, int aRow, int aColumn) {
 	if(sort == DisplayTable.NEUTRAL) { 
 	    model.setValueAt(aValue, aRow, aColumn); 
@@ -190,16 +191,19 @@ public class DisplayTableSorter extends AbstractTableModel implements
     public int getColumnCount() {
         return (model == null) ? 0 : model.getColumnCount(); 
     }
-        
+
+    @Override
     public String getColumnName(int aColumn) {
         return model.getColumnName(aColumn); 
     }
 
+    @Override
     public Class getColumnClass(int aColumn) {
         return model.getColumnClass(aColumn); 
     }
-        
-    public boolean isCellEditable(int row, int column) { 
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
          return model.isCellEditable(row, column); 
     }
 

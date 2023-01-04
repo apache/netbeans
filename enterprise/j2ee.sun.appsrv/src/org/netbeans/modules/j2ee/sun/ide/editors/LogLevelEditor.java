@@ -42,11 +42,13 @@ public class LogLevelEditor extends PropertyEditorSupport implements EnhancedPro
     public LogLevelEditor() {
         curr_Sel = null;
     }
-    
+
+    @Override
     public String getAsText() {
         return curr_Sel;
     }
-    
+
+    @Override
     public void setAsText(String string) throws IllegalArgumentException {
         if((string==null)||(string.equals(""))) // NOI18N
             throw new IllegalArgumentException();
@@ -54,7 +56,8 @@ public class LogLevelEditor extends PropertyEditorSupport implements EnhancedPro
             curr_Sel = string;
         this.firePropertyChange();
     }
-    
+
+    @Override
     public void setValue(Object val) {
         if (! (val instanceof String)) {
             throw new IllegalArgumentException();
@@ -63,15 +66,18 @@ public class LogLevelEditor extends PropertyEditorSupport implements EnhancedPro
         curr_Sel = (String) val;
         super.setValue(curr_Sel);
     }
-    
+
+    @Override
     public Object getValue() {
         return curr_Sel;
     }
-    
+
+    @Override
     public String getJavaInitializationString() {
         return getAsText();
     }
-    
+
+    @Override
     public String[] getTags() {
         return choices;
     }

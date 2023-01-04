@@ -53,14 +53,17 @@ public class HTMLLabel extends JEditorPane implements HyperlinkListener {
         setEditable(false);
         setOpaque(false);
         setNavigationFilter(new NavigationFilter() {
+            @Override
                 public void moveDot(NavigationFilter.FilterBypass fb, int dot, Position.Bias bias) {
                     super.moveDot(fb, 0, bias);
                 }
 
+            @Override
                 public void setDot(NavigationFilter.FilterBypass fb, int dot, Position.Bias bias) {
                     super.setDot(fb, 0, bias);
                 }
 
+            @Override
                 public int getNextVisualPositionFrom(JTextComponent text, int pos, Position.Bias bias, int direction,
                                                      Position.Bias[] biasRet)
                                               throws BadLocationException {
@@ -74,7 +77,8 @@ public class HTMLLabel extends JEditorPane implements HyperlinkListener {
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
-    
+
+    @Override
     public void setOpaque(boolean o) {
         super.setOpaque(o);
         if (UIUtils.isNimbusLookAndFeel() && !o)
@@ -84,6 +88,7 @@ public class HTMLLabel extends JEditorPane implements HyperlinkListener {
     
     private String txt;
 
+    @Override
     public void setText(String value) {
         txt = value;
         
@@ -115,12 +120,14 @@ public class HTMLLabel extends JEditorPane implements HyperlinkListener {
         super.setText("<html><body " + bodyFlags + " style=\"font-size: " + font.getSize() //NOI18N
                       + "pt; font-family: " + font.getName() + ";\">" + value + "</body></html>"); //NOI18N
     }
-    
+
+    @Override
     public void setForeground(Color fg) {
         super.setForeground(fg);
         if (txt != null) setText(txt);
     }
-    
+
+    @Override
     public void setBackground(Color bg) {
         super.setBackground(bg);
 //        setBorder(getBorder());

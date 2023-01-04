@@ -750,6 +750,7 @@ public class EditableDisplayerTest extends NbTestCase {
         
         if (!match) {
             JFrame jf = new JFrame("assertPaintIdentically diff") {
+                @Override
                 public void paint(Graphics g) {
                     new ImageIcon(diff).paintIcon(this, g, 25, 25);
                     new ImageIcon(bia).paintIcon(this, g, 25, d.height+25);
@@ -875,7 +876,8 @@ public class EditableDisplayerTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -928,6 +930,7 @@ public class EditableDisplayerTest extends NbTestCase {
         //uncomment the code below for diagnosing painting problems
         //and seeing which pixel you'return really checking
         JFrame jf = new JFrame("assertPixelFromImage " + count + " (look for the yellow line)") {
+            @Override
             public void paint(Graphics g) {
                 new ImageIcon(bi).paintIcon(this, g, 25, 25);
                 g.setColor(Color.YELLOW);
@@ -987,6 +990,7 @@ public class EditableDisplayerTest extends NbTestCase {
         //uncomment the code below for diagnosing painting problems
         //and seeing which pixel you'return really checking
         JFrame jf = new JFrame("Assert pixel test " + count + " (look for the yellow line)") {
+            @Override
             public void paint(Graphics g) {
                 new ImageIcon(bi).paintIcon(this, g, 25, 25);
                 g.setColor(Color.YELLOW);
@@ -1227,15 +1231,18 @@ public class EditableDisplayerTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
@@ -1248,7 +1255,8 @@ public class EditableDisplayerTest extends NbTestCase {
         public TagsEditor(String[] tags) {
             this.tags = tags;
         }
-        
+
+        @Override
         public String[] getTags() {
             return tags;
         }
@@ -1256,11 +1264,13 @@ public class EditableDisplayerTest extends NbTestCase {
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -1398,12 +1408,14 @@ public class EditableDisplayerTest extends NbTestCase {
                 throw iae;
             }
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             myVal = newValue;
             firePropertyChange();
         }
-        
+
+        @Override
         public Object getValue() {
             return "Value";
         }
@@ -1432,25 +1444,30 @@ public class EditableDisplayerTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
-        
+
+        @Override
         public Component getCustomEditor() {
             JLabel result = new JLabel("Everything is exactly as it should be.  Relax.");
             result.putClientProperty("title","Don't panic");
             return result;
         }
-        
+
+        @Override
         public void setAsText(String s) {
             super.setValue(s);
             if (!"Value".equals(s) && !"VALUE".equals(s)) {
@@ -1490,7 +1507,8 @@ public class EditableDisplayerTest extends NbTestCase {
         public EditableNumProperty(String name, boolean isWriteable) {
             super(name, isWriteable, new String[]{"boo"});
         }
-        
+
+        @Override
         public PropertyEditor getPropertyEditor() {
             return new EditableDisplayerTest.EditableTagsEditor();
         }
@@ -1503,22 +1521,26 @@ public class EditableDisplayerTest extends NbTestCase {
         // Create new BasicEditor
         public NumberedTagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"zero","one","two","three","four","five","six","seven"};
         }
         
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             val = ((Integer) newValue).intValue();
             firePropertyChange();
         }
-        
+
+        @Override
         public String getAsText() {
             return getTags()[((Integer) getValue()).intValue()];
         }
-        
+
+        @Override
         public void setAsText(String txt) {
             String[] t = getTags();
             for (int i=0; i < t.length; i++) {
@@ -1530,11 +1552,13 @@ public class EditableDisplayerTest extends NbTestCase {
             IllegalArgumentException iae = new IllegalArgumentException(txt);
             Exceptions.attachMessage(iae, txt + " is not a valid value");
         }
-        
+
+        @Override
         public Object getValue() {
             return new Integer(val);
         }
-        
+
+        @Override
         public Component getCustomEditor() {
             return new JPanel();
         }
@@ -1548,21 +1572,27 @@ public class EditableDisplayerTest extends NbTestCase {
         public void attachEnv(PropertyEnv env) {
             env.getFeatureDescriptor().setValue("canEditAsText", Boolean.TRUE);
         }
+        @Override
         public void setAsText(String s) {
             setValue(s);
         }
+        @Override
         public void setValue(Object val) {
             this.val = val;
         }
+        @Override
         public Object getValue() {
             return val;
         }
+        @Override
         public String getAsText() {
             return val.toString();
         }
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
+        @Override
         public Component getCustomEditor() {
             return new JLabel("You called?");
         }

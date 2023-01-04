@@ -271,12 +271,17 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
             }
         });
         nameField.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyPressed(KeyEvent evt) {
                 nameFieldKeyPressed(evt);
             }
+
+            @Override
             public void keyReleased(KeyEvent evt) {
                 nameFieldKeyReleased(evt);
             }
+
+            @Override
             public void keyTyped(KeyEvent evt) {
                 nameFieldKeyTyped(evt);
             }
@@ -307,6 +312,7 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
         matchesList.setFont(new Font("Monospaced", 0, getFontSize()));
         matchesList.setVisibleRowCount(15);
         matchesList.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseReleased(MouseEvent evt) {
                 matchesListMouseReleased(evt);
             }

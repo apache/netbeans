@@ -130,6 +130,7 @@ public final class TransparentToolBar extends JPanel {
         Dimension maxDim = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
         final boolean customFiller = customFiller();
         Box.Filler filler = new Box.Filler(minDim, minDim, maxDim) {
+            @Override
             public Dimension getPreferredSize() {
                 if (customFiller) {
                     int currentWidth = TransparentToolBar.this.getSize().width;
@@ -140,6 +141,8 @@ public final class TransparentToolBar extends JPanel {
                     return super.getPreferredSize();
                 }
             }
+
+            @Override
             protected void paintComponent(Graphics g) {}
         };
         addItem(filler);
@@ -162,12 +165,14 @@ public final class TransparentToolBar extends JPanel {
 
         private static final String PROP_HOVERED = "BUTTON_HOVERED"; // NOI18N
 
+        @Override
         public void mouseEntered(MouseEvent e) {
             AbstractButton b = (AbstractButton) e.getSource();
             b.putClientProperty(PROP_HOVERED, Boolean.TRUE);
             refresh(b);
         }
 
+        @Override
         public void mouseExited(MouseEvent e) {
             AbstractButton b = (AbstractButton) e.getSource();
             b.putClientProperty(PROP_HOVERED, Boolean.FALSE);

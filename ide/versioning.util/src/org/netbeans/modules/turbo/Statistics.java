@@ -236,30 +236,39 @@ class Statistics {
 
     /** Logs nothing. */
     private static final class NOP extends Statistics {
+        @Override
         public void keyAdded(Object key) {
         }
 
+        @Override
         public void computeRemoved(Set keys) {
         }
 
+        @Override
         public void attributeRequest() {
         }
 
+        @Override
         public void memoryHit() {
         }
 
+        @Override
         public void backgroundThread() {
         }
 
+        @Override
         public void duplicate() {
         }
 
+        @Override
         public void queueSize(int size) {
         }
 
+        @Override
         public void providerHit() {
         }
 
+        @Override
         public void shutdown() {
         }
 

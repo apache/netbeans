@@ -215,6 +215,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
             }
         });
         packageComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 packageComboBoxKeyReleased(evt);
             }
@@ -231,6 +232,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
 
         org.openide.awt.Mnemonics.setLocalizedText(selectClassButton, org.openide.util.NbBundle.getMessage(ContainerItemSetupPanelVisual.class, "LBL_Select")); // NOI18N
         selectClassButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mouseClickHandler(evt);
             }
@@ -242,6 +244,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
         });
 
         representationClassTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 representationClassChanged(evt);
             }
@@ -251,12 +254,14 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
         org.openide.awt.Mnemonics.setLocalizedText(resourceNameLabel, org.openide.util.NbBundle.getMessage(ContainerItemSetupPanelVisual.class, "LBL_ResourceName")); // NOI18N
 
         resourceNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 resourceNameChanged(evt);
             }
         });
 
         classTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 classTextFieldKeyReleased(evt);
             }
@@ -266,6 +271,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
         org.openide.awt.Mnemonics.setLocalizedText(containerLabel, org.openide.util.NbBundle.getMessage(ContainerItemSetupPanelVisual.class, "LBL_ContainerClass")); // NOI18N
 
         containerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 containerClassNameChanged(evt);
             }
@@ -278,6 +284,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
         org.openide.awt.Mnemonics.setLocalizedText(contentClassLabel1, org.openide.util.NbBundle.getMessage(ContainerItemSetupPanelVisual.class, "LBL_ContainerRepresentationClass")); // NOI18N
 
         containerRepresentationClassTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 containerRepresentationClassChanged(evt);
             }
@@ -286,6 +293,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
         org.openide.awt.Mnemonics.setLocalizedText(selectClassButton1, org.openide.util.NbBundle.getMessage(ContainerItemSetupPanelVisual.class, "LBL_SelectContainerRepresentationClass")); // NOI18N
         selectClassButton1.setActionCommand(org.openide.util.NbBundle.getMessage(ContainerItemSetupPanelVisual.class, "LBL_Select")); // NOI18N
         selectClassButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 selectClassButtonMouseClickHandler(evt);
             }

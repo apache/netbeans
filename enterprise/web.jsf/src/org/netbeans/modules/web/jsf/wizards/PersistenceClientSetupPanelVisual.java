@@ -201,6 +201,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         customizeTemplatesLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.customizeTemplate")); // NOI18N
         customizeTemplatesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 customizeTemplatesLabelMouseClicked(evt);
             }

@@ -48,8 +48,9 @@ public class DisplayTableModel extends AbstractTableModel {
 	this.editable = editable;
 	this.editableNames = editableNames;
     }
-    
-    public String getColumnName(int col) { 
+
+    @Override
+    public String getColumnName(int col) {
 	return ""; // NOI18N
 	//return headers[col].toString(); 
     }
@@ -59,7 +60,9 @@ public class DisplayTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) { 
 	return data[row][col]; 
     }
-    public boolean isCellEditable(int row, int col) { 
+
+    @Override
+    public boolean isCellEditable(int row, int col) {
 	if(editable) {
 	    if(col == 0) return editableNames;
 	    if(col == 1) return true;
@@ -68,7 +71,8 @@ public class DisplayTableModel extends AbstractTableModel {
 	if(col == 2) return true; 
 	return false; 
     }
-    
+
+    @Override
     public void setValueAt(Object value, int row, int col) {
 	data[row][col] = value;
 	fireTableCellUpdated(row, col);

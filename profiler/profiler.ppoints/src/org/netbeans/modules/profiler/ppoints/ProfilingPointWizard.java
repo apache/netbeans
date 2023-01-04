@@ -86,6 +86,7 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
             return component;
         }
 
+        @Override
         public void hiding(boolean cancelled) {
             selectedPPFactoryIndex = ((WizardPanel1UI) getComponent()).getSelectedIndex();
 
@@ -100,6 +101,7 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
             }
         }
 
+        @Override
         public void showing() {
             selectedPPFactoryIndexRef = selectedPPFactoryIndex;
             ((WizardPanel1UI) getComponent()).setSelectedIndex(selectedPPFactoryIndex);
@@ -159,6 +161,7 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
             }
         }
 
+        @Override
         public void hiding(boolean cancelled) {
             if (!cancelled && profilingPoint != null && customizer != null) {
                 profilingPoint.setValues(customizer);
@@ -167,11 +170,13 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
             unregisterCustomizerListener();
         }
 
+        @Override
         public void notifyClosed(boolean cancelled) {
             releaseCurrentCustomizer();
             profilingPoint = null;
         }
 
+        @Override
         public void showing() {
             if ((customizer == null) || settingsChanged) {
                 releaseCurrentCustomizer();

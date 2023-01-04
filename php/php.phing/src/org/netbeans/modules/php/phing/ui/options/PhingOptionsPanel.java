@@ -152,9 +152,12 @@ public class PhingOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(learnMoreLabel, NbBundle.getMessage(PhingOptionsPanel.class, "PhingOptionsPanel.learnMoreLabel.text")); // NOI18N
         learnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }

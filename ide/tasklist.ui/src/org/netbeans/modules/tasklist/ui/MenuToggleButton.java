@@ -49,6 +49,7 @@ class MenuToggleButton extends JToggleButton {
         setFocusable( false );
         
         addMouseMotionListener( new MouseMotionAdapter() {
+            @Override
             public void mouseMoved( MouseEvent e ) {
                 mouseInArrowArea = isInArrowArea( e.getPoint() );
                 setRolloverIcon( mouseInArrowArea ? regIcon : lineIcon );
@@ -57,6 +58,7 @@ class MenuToggleButton extends JToggleButton {
         });
         
         addMouseListener( new MouseAdapter() {
+            @Override
             public void mousePressed( MouseEvent e ) {
                 if( isInArrowArea( e.getPoint() ) ) {
                     JPopupMenu popup = getPopupMenu();
@@ -65,12 +67,14 @@ class MenuToggleButton extends JToggleButton {
                 }
             }
 
+            @Override
             public void mouseEntered( MouseEvent e ) {
                 mouseInArrowArea = isInArrowArea( e.getPoint() );
                 setRolloverIcon( mouseInArrowArea ? regIcon : lineIcon );
                 setRolloverSelectedIcon( mouseInArrowArea ? regIcon : lineIcon );
             }
 
+            @Override
             public void mouseExited( MouseEvent e ) {
                 mouseInArrowArea = false;
                 setRolloverIcon( regIcon );
@@ -119,6 +123,7 @@ class MenuToggleButton extends JToggleButton {
     }
     
     private class Model extends JToggleButton.ToggleButtonModel {
+        @Override
         public void setPressed(boolean b) {
             if( mouseInArrowArea )
                 return;

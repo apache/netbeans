@@ -164,9 +164,12 @@ final class CodeceptionOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(learnMoreLabel, NbBundle.getMessage(CodeceptionOptionsPanel.class, "CodeceptionOptionsPanel.learnMoreLabel.text")); // NOI18N
         learnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }

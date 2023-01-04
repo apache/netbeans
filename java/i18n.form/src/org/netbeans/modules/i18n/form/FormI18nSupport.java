@@ -293,6 +293,7 @@ public class FormI18nSupport extends JavaI18nSupport {
             return properties[propIndex];
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

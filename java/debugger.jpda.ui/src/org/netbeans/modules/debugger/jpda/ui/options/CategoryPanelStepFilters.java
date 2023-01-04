@@ -84,6 +84,7 @@ class CategoryPanelStepFilters extends StorablePanel {
         filterClassesLabel = new javax.swing.JLabel();
         filterClassesScrollPane = new javax.swing.JScrollPane();
         filterClassesTable = new javax.swing.JTable() {
+            @Override
             public boolean getScrollableTracksViewportHeight() {
                 return false;
             }
@@ -123,6 +124,7 @@ class CategoryPanelStepFilters extends StorablePanel {
                 java.lang.Boolean.class, java.lang.String.class
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }

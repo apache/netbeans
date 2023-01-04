@@ -153,6 +153,7 @@ public class ThreadsPanel extends DataView {
         AppearanceController.getDefault().customizeThreadPanel(this);
         
         final AbstractTableModel threadsTableModel = new AbstractTableModel() {
+            @Override
             public String getColumnName(int columnIndex) {
                 if (columnIndex == 0) {
                     return BUNDLE().getString("COL_Selected"); // NOI18N
@@ -175,7 +176,8 @@ public class ThreadsPanel extends DataView {
                 }
                 return null;
             }
-            
+
+            @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
                     return Boolean.class;
@@ -219,14 +221,16 @@ public class ThreadsPanel extends DataView {
                 
                 return null;
             }
-            
+
+            @Override
             public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
                 if (columnIndex == 0) {
                     if (Boolean.FALSE.equals(aValue)) selected.remove(rowIndex);
                     else selected.add(rowIndex);
                 }
             }
-            
+
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex == 0;
             }
@@ -260,6 +264,7 @@ public class ThreadsPanel extends DataView {
                     final boolean sel = selected.contains(row);
                     popup.add(new JMenuItem(sel ? BUNDLE().getString("ACT_UnselectThread") :
                                                   BUNDLE().getString("ACT_SelectThread")) { // NOI18N
+                        @Override
                         protected void fireActionPerformed(ActionEvent e) {
                             if (sel) selected.remove(row);
                             else selected.add(row);
@@ -275,9 +280,11 @@ public class ThreadsPanel extends DataView {
                 popup.addSeparator();
                 
                 popup.add(new JMenuItem(FilterUtils.ACTION_FILTER) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { activateFilter(); }
                 });
                 popup.add(new JMenuItem(SearchUtils.ACTION_FIND) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { activateSearch(); }
                 });
             }
@@ -358,6 +365,7 @@ public class ThreadsPanel extends DataView {
         
         final Action zoomIn = viewManager.zoomInAction();
         zoomInAction = new JButton(zoomIn) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 Object newOffset = zoomIn.getValue(ViewManager.PROP_NEW_OFFSET);
@@ -367,6 +375,8 @@ public class ThreadsPanel extends DataView {
                 }
                 threadsTableModel.fireTableDataChanged();
             }
+
+            @Override
             public boolean isEnabled() {
                 return threadsTable.isShowing() && super.isEnabled();
             }
@@ -374,6 +384,7 @@ public class ThreadsPanel extends DataView {
         
         final Action zoomOut = viewManager.zoomOutAction();
         zoomOutAction = new JButton(zoomOut) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 Object newOffset = zoomOut.getValue(ViewManager.PROP_NEW_OFFSET);
@@ -383,12 +394,15 @@ public class ThreadsPanel extends DataView {
                 }
                 threadsTableModel.fireTableDataChanged();
             }
+
+            @Override
             public boolean isEnabled() {
                 return threadsTable.isShowing() && super.isEnabled();
             }
         };
         
         fitAction = new JToggleButton(viewManager.fitAction()) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 threadsTableModel.fireTableDataChanged();

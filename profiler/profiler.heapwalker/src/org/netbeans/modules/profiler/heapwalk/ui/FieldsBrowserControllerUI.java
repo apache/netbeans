@@ -118,6 +118,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
     private class FieldsListTableKeyListener extends KeyAdapter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void keyPressed(KeyEvent e) {
             if ((e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU)
                     || ((e.getKeyCode() == KeyEvent.VK_F10) && (e.getModifiers() == InputEvent.SHIFT_MASK))) {
@@ -140,18 +141,21 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
             else fieldsListTable.clearSelection();
         }
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             final int row = fieldsListTable.rowAtPoint(e.getPoint());
             updateSelection(row);
             if (e.isPopupTrigger()) showPopupMenu(row, e.getX(), e.getY());
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             int row = fieldsListTable.rowAtPoint(e.getPoint());
             updateSelection(row);
             if (e.isPopupTrigger()) showPopupMenu(row, e.getX(), e.getY());
         }
 
+        @Override
         public void mouseClicked(MouseEvent e) {
              if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                 int row = fieldsListTable.rowAtPoint(e.getPoint());
@@ -484,6 +488,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
         }
 
         cornerButton.addKeyListener(new KeyAdapter() {
+            @Override
                 public void keyPressed(final KeyEvent evt) {
                     if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
                         showColumnSelectionPopup(headerPopup, cornerButton);
@@ -492,6 +497,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
             });
 
         cornerButton.addMouseListener(new MouseAdapter() {
+            @Override
                 public void mousePressed(MouseEvent mouseEvent) {
                     if (headerPopup.isVisible()) {
                         internalCornerButtonClick = true;
@@ -505,6 +511,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
                     }
                 }
 
+            @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     if ((mouseEvent.getModifiers() == InputEvent.BUTTON1_MASK) && (!internalCornerButtonClick)) {
                         showColumnSelectionPopup(headerPopup, cornerButton);

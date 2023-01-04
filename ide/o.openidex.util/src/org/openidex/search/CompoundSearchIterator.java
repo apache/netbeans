@@ -112,6 +112,7 @@ class CompoundSearchIterator implements Iterator<FileObject> {
      * @exception  java.lang.UnsupportedOperationException
      *             always - this operation is not supported
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

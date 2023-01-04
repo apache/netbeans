@@ -85,20 +85,25 @@ public class CustomCodeEditor extends javax.swing.JPanel implements PropertyChan
         setLayout(new java.awt.GridBagLayout());
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }
         });
         addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
             }
         });
 
         codeEditorPane.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 codeEditorPaneFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 codeEditorPaneFocusLost(evt);
             }

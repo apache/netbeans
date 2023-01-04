@@ -81,6 +81,7 @@ public class StringMap extends java.util.HashMap {
         return o;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -115,6 +116,7 @@ public class StringMap extends java.util.HashMap {
         return false;
     }
 
+    @Override
     public int hashCode() {
         int h = 0;
         char[] chars = testChars;

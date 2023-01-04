@@ -54,6 +54,7 @@ public class Finder extends javax.swing.JDialog {
 
         setTitle("Find");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
             }

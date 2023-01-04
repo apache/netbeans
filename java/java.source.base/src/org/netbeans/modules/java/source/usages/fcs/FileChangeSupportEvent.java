@@ -56,7 +56,8 @@ public final class FileChangeSupportEvent extends EventObject {
     public FileObject getFileObject() {
         return FileUtil.toFileObject(path);
     }
-    
+
+    @Override
     public String toString() {
         return "FCSE[" + "CDM".charAt(type) + ":" + path + "]"; // NOI18N
     }

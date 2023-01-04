@@ -66,10 +66,12 @@ public class Schema2BeansRuntimeException extends RuntimeException implements Se
         genStackTrace();
     }
 
+    @Override
     public Throwable getCause() {
         return childThrowable;
     }
-    
+
+    @Override
     public String getMessage() {
         return message;
     }
@@ -86,14 +88,17 @@ public class Schema2BeansRuntimeException extends RuntimeException implements Se
         stackTrace = strWriter.toString();
    }
 
+    @Override
     public void printStackTrace(PrintStream s) {
         s.println(stackTrace);
     }
 
+    @Override
     public void printStackTrace(PrintWriter s) {
         s.println(stackTrace);
     }
 
+    @Override
     public void printStackTrace() {
         System.out.println(stackTrace);
     }

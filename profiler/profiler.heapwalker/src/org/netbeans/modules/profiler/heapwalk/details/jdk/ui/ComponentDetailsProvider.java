@@ -205,15 +205,18 @@ public final class ComponentDetailsProvider extends DetailsProvider.Basic {
         }
         
         private class MouseHandler extends MouseAdapter {
-            
+
+            @Override
             public void mousePressed(final MouseEvent e) {
                 if (e.isPopupTrigger()) showPopup(e);
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.isPopupTrigger()) showPopup(e);
             }
-            
+
+            @Override
             public void mouseMoved(MouseEvent e) {
                 Component at = e == null ? null :
                         componentAt(component, e.getX(), e.getY());
@@ -221,7 +224,8 @@ public final class ComponentDetailsProvider extends DetailsProvider.Basic {
                 hover = at;
                 hoverChanged();
             }
-            
+
+            @Override
             public void mouseExited(MouseEvent e) {
                 if (!enableInteraction) return;
                 mouseMoved(null);
@@ -278,6 +282,7 @@ public final class ComponentDetailsProvider extends DetailsProvider.Basic {
             if (!enableNewWindow || builder == null || component == null) return;
             
             JMenuItem test = new JMenuItem(Bundle.ComponentDetailsProvider_NewWindow()) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     openNewWindow();
                 }

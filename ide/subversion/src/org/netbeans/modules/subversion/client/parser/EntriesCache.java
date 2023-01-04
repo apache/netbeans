@@ -407,6 +407,7 @@ public class EntriesCache {
         private static final String NAME_ATTRIBUTE = "name";  // NOI18N
         private EntryAttributes entryAttributes;
 
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes elementAttributes) throws SAXException {
             if (ENTRY_ELEMENT_NAME.equals(qName)) {
                 Map<String, String> attributes = new HashMap<String, String>();
@@ -428,10 +429,12 @@ public class EntriesCache {
             }
         }
 
+        @Override
         public void error(SAXParseException e) throws SAXException {
             throw e;
         }
 
+        @Override
         public void fatalError(SAXParseException e) throws SAXException {
             throw e;
         }

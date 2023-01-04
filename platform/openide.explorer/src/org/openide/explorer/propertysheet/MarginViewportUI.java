@@ -68,6 +68,7 @@ class MarginViewportUI extends ViewportUI implements ComponentListener, Containe
         return new MarginViewportUI((JViewport) c);
     }
 
+    @Override
     public void installUI(JComponent c) {
         super.installUI(c);
 
@@ -114,6 +115,7 @@ class MarginViewportUI extends ViewportUI implements ComponentListener, Containe
         }
     }
 
+    @Override
     public void uninstallUI(JComponent vp) {
         JViewport jv = (JViewport) vp;
         Component[] c = jv.getComponents();
@@ -147,6 +149,7 @@ class MarginViewportUI extends ViewportUI implements ComponentListener, Containe
     }
 
     /** Overridden to draw "no properties" if necessary */
+    @Override
     public void paint(Graphics g, JComponent c) {
         Component view = ((JViewport) c).getView();
 
@@ -194,6 +197,7 @@ class MarginViewportUI extends ViewportUI implements ComponentListener, Containe
         return scratch;
     }
 
+    @Override
     public void update(Graphics g, JComponent c) {
         g.setColor(c.getBackground());
 

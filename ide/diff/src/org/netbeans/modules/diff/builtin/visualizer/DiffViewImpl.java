@@ -203,6 +203,7 @@ public class DiffViewImpl extends javax.swing.JPanel implements org.netbeans.api
         }
     }
 
+    @Override
     public boolean requestFocusInWindow() {
         return jEditorPane1.requestFocusInWindow();
     }
@@ -397,6 +398,7 @@ public class DiffViewImpl extends javax.swing.JPanel implements org.netbeans.api
         });
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
 
@@ -414,6 +416,7 @@ public class DiffViewImpl extends javax.swing.JPanel implements org.netbeans.api
         addChangeListeners();
     }
 
+    @Override
     public void doLayout() {
         super.doLayout();
         setCurrentLine(onLayoutLine, onLayoutLength);

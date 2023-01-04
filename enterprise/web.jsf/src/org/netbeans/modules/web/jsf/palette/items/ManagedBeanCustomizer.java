@@ -200,6 +200,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
 
         customizeTemplatesLabel.setText(org.openide.util.NbBundle.getMessage(ManagedBeanCustomizer.class, "ManagedBeanCustomizer.customizeTemplatesLabel.text")); // NOI18N
         customizeTemplatesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 customizeTemplatesLabelMouseClicked(evt);
             }

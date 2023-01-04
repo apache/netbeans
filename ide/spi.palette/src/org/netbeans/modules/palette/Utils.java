@@ -260,7 +260,8 @@ public final class Utils {
                 order.reorder( perm );
             }
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return (paletteNode.getCookie(Index.class) != null);
         }
@@ -280,7 +281,8 @@ public final class Utils {
         public void actionPerformed(ActionEvent event) {
             settings.setShowItemNames( !settings.getShowItemNames() );
         }
-        
+
+        @Override
         public Object getValue(String key) {
             if (Action.NAME.equals(key)) {
                 boolean showNames = settings.getShowItemNames();
@@ -308,7 +310,8 @@ public final class Utils {
                 BeanInfo.ICON_COLOR_32x32 : BeanInfo.ICON_COLOR_16x16;
             settings.setIconSize( newSize );
         }
-        
+
+        @Override
         public Object getValue(String key) {
             if (Action.NAME.equals(key)) {
                 String namePattern = getBundleString("CTL_IconSize"); // NOI18N
@@ -364,7 +367,8 @@ public final class Utils {
                 }
             }
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return categoryNode.canDestroy();
         }
@@ -398,7 +402,8 @@ public final class Utils {
                 }
             }
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return categoryNode.canRename();
         }
@@ -430,7 +435,8 @@ public final class Utils {
                 order.reorder( perm );
             }
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return (categoryNode.getCookie(Index.class) != null);
         }
@@ -463,7 +469,8 @@ public final class Utils {
                 }
             }
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return (getPasteType() != null);
         }
@@ -505,6 +512,7 @@ public final class Utils {
             }
         }
 
+        @Override
         public boolean isEnabled() {
             return itemNode.canCut();
         }
@@ -534,6 +542,7 @@ public final class Utils {
             }
         }
 
+        @Override
         public boolean isEnabled() {
             return itemNode.canCopy();
         }
@@ -568,7 +577,8 @@ public final class Utils {
                 }
             }
         }
-        
+
+        @Override
         public boolean isEnabled() {
             return itemNode.canDestroy();
         }

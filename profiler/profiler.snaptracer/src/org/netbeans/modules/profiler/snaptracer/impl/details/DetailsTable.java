@@ -58,21 +58,25 @@ final class DetailsTable extends JTable {
         getColumnModel().setColumnMargin(1);
         initRenderers();
     }
-    
 
+
+    @Override
     public void addColumn(TableColumn aColumn) {
         super.addColumn(aColumn);
         if (aColumn.getModelIndex() == 0 || aColumn.getModelIndex() == 1)
             updateColumns(true);
     }
 
+    @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);
         if (e.getType() == TableModelEvent.INSERT) updateColumns(false);
     }
 
+    @Override
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
+            @Override
             public String getToolTipText(MouseEvent e) {
                 int index = columnModel.getColumnIndexAtX(e.getPoint().x);
                 int realIndex = columnModel.getColumn(index).getModelIndex();

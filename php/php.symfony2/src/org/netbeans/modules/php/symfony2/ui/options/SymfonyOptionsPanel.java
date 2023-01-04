@@ -248,9 +248,12 @@ public class SymfonyOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(downloadLabel, NbBundle.getMessage(SymfonyOptionsPanel.class, "SymfonyOptionsPanel.downloadLabel.text")); // NOI18N
         downloadLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 downloadLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 downloadLabelMousePressed(evt);
             }

@@ -368,6 +368,7 @@ class PropertiesParser {
         /** Read one character from the stream and increases the position.
          * @return the character or -1 if the end of the stream has been reached
          */
+        @Override
         public int read() throws IOException {
             int character = peek();
             peekChar = -1;

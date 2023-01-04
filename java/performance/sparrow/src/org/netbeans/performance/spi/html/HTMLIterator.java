@@ -55,6 +55,7 @@ public class HTMLIterator implements Iterator  {
         return (HTML) getWrapped().next();
     }
 
+    @Override
     public void remove() {
         getWrapped().remove();
     }

@@ -114,6 +114,7 @@ public final class ContentPanel extends JPanel {
         pCentral = new javax.swing.JPanel();
         spTable = new javax.swing.JScrollPane();
         tModules = new JTable () {
+            @Override
             public Component prepareRenderer (TableCellRenderer renderer,
                 int rowIndex,
                 int vColIndex) {

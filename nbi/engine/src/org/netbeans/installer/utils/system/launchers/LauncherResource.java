@@ -55,6 +55,7 @@ public class LauncherResource {
             return 1L;
         }
 
+        @Override
         public String toString() {
             switch(this) {
                 case BUNDLED:

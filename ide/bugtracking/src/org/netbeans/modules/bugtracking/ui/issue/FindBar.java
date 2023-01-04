@@ -153,9 +153,12 @@ class FindBar extends javax.swing.JPanel {
             }
         });
         closeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 closeButtonMouseEntered(evt);
             }
+
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 closeButtonMouseExited(evt);
             }
@@ -194,9 +197,12 @@ class FindBar extends javax.swing.JPanel {
             }
         });
         findPreviousButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 findPreviousButtonMouseEntered(evt);
             }
+
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 findPreviousButtonMouseExited(evt);
             }
@@ -214,9 +220,12 @@ class FindBar extends javax.swing.JPanel {
             }
         });
         findNextButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 findNextButtonMouseEntered(evt);
             }
+
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 findNextButtonMouseExited(evt);
             }

@@ -80,6 +80,7 @@ public class SystemActionBridge extends AbstractAction {
         action.actionPerformed(e);
     }
 
+    @Override
     public boolean isEnabled() {
         return action.isEnabled();
     }

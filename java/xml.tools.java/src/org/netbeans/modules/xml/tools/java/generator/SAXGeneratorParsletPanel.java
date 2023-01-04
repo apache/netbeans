@@ -212,7 +212,8 @@ public final class SAXGeneratorParsletPanel extends SAXGeneratorAbstractPanel {
             getTableHeader().setReorderingAllowed(false);
            // setRowHeight(Util.getTextCellHeight(this));
         }
-        
+
+        @Override
         public TableCellEditor getCellEditor(int row, int column) {
             
             switch (column) {                
@@ -254,7 +255,8 @@ public final class SAXGeneratorParsletPanel extends SAXGeneratorAbstractPanel {
             
         /** Serial Version UID */
         private static final long serialVersionUID =3516749023312029787L;
-        
+
+        @Override
         public String getColumnName(int col) {
             return COLUMN_NAMES[col];
         }
@@ -310,6 +312,7 @@ public final class SAXGeneratorParsletPanel extends SAXGeneratorAbstractPanel {
         /**
           * @param value must be a String regardless column
           */
+        @Override
         public void setValueAt(Object value, int row, int col) {
 
 //            new RuntimeException("Setting Value to " + value).printStackTrace();
@@ -375,6 +378,7 @@ public final class SAXGeneratorParsletPanel extends SAXGeneratorAbstractPanel {
 
         }
 
+        @Override
         public boolean isCellEditable(int row, int col) {
             return col != ELEMENT_COLUMN;
         }

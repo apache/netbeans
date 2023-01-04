@@ -286,9 +286,12 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
 
         Mnemonics.setLocalizedText(codingStandardsFixerLearnMoreLabel, NbBundle.getMessage(CodingStandardsFixerOptionsPanel.class, "CodingStandardsFixerOptionsPanel.codingStandardsFixerLearnMoreLabel.text")); // NOI18N
         codingStandardsFixerLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 codingStandardsFixerLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 codingStandardsFixerLearnMoreLabelMousePressed(evt);
             }

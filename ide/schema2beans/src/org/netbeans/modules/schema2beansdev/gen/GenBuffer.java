@@ -145,6 +145,7 @@ public class GenBuffer extends Writer {
     /**
      * Append the parameter to the current buffer.
      */
+    @Override
     public void write(char[] str) throws IOException {
         beforeWriteHook();
         listOut[curOut].append(str);
@@ -178,6 +179,7 @@ public class GenBuffer extends Writer {
     /**
      * Append the parameter to the current buffer *as a character*.
      */
+    @Override
     public void write(int i) throws IOException {
         // A CharArrayWriter is used, because that was the only way I could
         // figure out how to convert an int into a String.
@@ -208,6 +210,7 @@ public class GenBuffer extends Writer {
     /**
      * write @param s to the current buffer
      */
+    @Override
     public void write(String s) throws IOException {
         beforeWriteHook();
         listOut[curOut].append(s);

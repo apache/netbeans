@@ -66,6 +66,7 @@ public class ProfilerTableContainer extends JPanel {
         this.table = table;
         
         tableScroll = new JScrollPane(table) {
+            @Override
             protected JViewport createViewport() {
                 if (getViewport() == null) return customViewport(table);
                 else return super.createViewport();
@@ -85,6 +86,7 @@ public class ProfilerTableContainer extends JPanel {
         final Set<Integer> scrollableColumns = table.getScrollableColumns();
         if (scrollableColumns != null && !scrollableColumns.isEmpty()) {
             scrollersPanel = new JPanel(null) {
+                @Override
                 public void doLayout() {
                     int height = getHeight();
                     if (height > 0) for (Component component : getComponents()) {
@@ -95,6 +97,8 @@ public class ProfilerTableContainer extends JPanel {
                         scroller.doLayout();
                     }
                 }
+
+                @Override
                 public Dimension getPreferredSize() {
                     Dimension d = super.getPreferredSize();
                     d.height = 0;
@@ -115,11 +119,15 @@ public class ProfilerTableContainer extends JPanel {
                     {
                         putClientProperty(PROP_COLUMN, column);
                     }
+
+                    @Override
                     public void setValue(int value) {
                         value = checkedValue(value);
                         super.setValue(value);
                         updateColumnOffset(value);
                     }
+
+                    @Override
                     public void setValues(int value, int extent, int min, int max) {
                         if (adjusting) return;
                         value = checkedValue(value);
@@ -128,20 +136,30 @@ public class ProfilerTableContainer extends JPanel {
                         super.setValues(value, extent, min, max);
                         updateColumnOffset(value);
                     }
+
+                    @Override
                     public void setValueIsAdjusting(boolean b) {
                         adjusting = b;
                         super.setValueIsAdjusting(b);
                         if (!adjusting) updateHorizontalScrollBars(table, column, false);
                     }
+
+                    @Override
                     public int getUnitIncrement() {
                         return 20;
                     }
+
+                    @Override
                     public int getUnitIncrement(int direction) {
                         return getUnitIncrement();
                     }
+
+                    @Override
                     public int getBlockIncrement() {
                         return (int)(getVisibleAmount() * 0.9f);
                     }
+
+                    @Override
                     public int getBlockIncrement(int direction) {
                         return getBlockIncrement();
                     }
@@ -189,10 +207,13 @@ public class ProfilerTableContainer extends JPanel {
             }
             
             cModel.addColumnChangeListener(new ColumnChangeAdapter() {
+                @Override
                 public void columnWidthChanged(int column, int oldWidth, int newWidth) {
                     if (table.isScrollableColumn(column))
                         updateHorizontalScrollBars(table, column, true);
                 }
+
+                @Override
                 public void columnPreferredWidthChanged(int column, int oldWidth, int newWidth) {
                     if (table.isScrollableColumn(column))
                         updateHorizontalScrollBars(table, column, false);
@@ -280,6 +301,8 @@ public class ProfilerTableContainer extends JPanel {
                     public void propertyChange(PropertyChangeEvent evt) { setBackground(table.getBackground()); }
                 });
             }
+
+            @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 

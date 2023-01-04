@@ -30,6 +30,7 @@ public class ProjectXMLCatalogReaderBeanInfo extends SimpleBeanInfo {
 
     public ProjectXMLCatalogReaderBeanInfo() {}
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         return new PropertyDescriptor[0];
     }

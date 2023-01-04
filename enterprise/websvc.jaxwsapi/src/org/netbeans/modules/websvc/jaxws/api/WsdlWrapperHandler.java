@@ -47,12 +47,14 @@ public class WsdlWrapperHandler extends DefaultHandler{
         prefixes = new HashMap<String, String>();
         bindings = new HashMap<String, BindingInfo>();
         ports = new HashMap<String, String>();
-    }    
+    }
 
+    @Override
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         if (!prefixes.containsKey(uri)) prefixes.put(uri,prefix);
     }
-    
+
+    @Override
     public void startElement(String uri, String localName, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException {
         if("portType".equals(localName)) { // NOI18N
             isPortType=true;
@@ -79,6 +81,7 @@ public class WsdlWrapperHandler extends DefaultHandler{
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if("binding".equals(localName) && WSDL_SOAP_URI.equals(uri)) { // NOI18N
             bindingInfo=null;
@@ -106,6 +109,7 @@ public class WsdlWrapperHandler extends DefaultHandler{
         return (prefixes == null) ? null : prefixes.get(tns);
     }
 
+    @Override
     public void endDocument() throws SAXException {
         // throw exception if service & binding & portType are missing 
         if (!isService && !isBinding && !isPortType) throw new SAXException("Missing wsdl elements (wsdl:service | wsdl:binding | wsdl:portType)"); //NOI18N

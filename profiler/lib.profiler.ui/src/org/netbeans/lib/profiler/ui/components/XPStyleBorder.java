@@ -98,10 +98,12 @@ public class XPStyleBorder extends AbstractBorder {
         return new XPStyleBorder(foreground, background, BORDER_STATE_FOCUSED);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return XPStyleBorder.getBorderInsets();
     }
 
+    @Override
     public boolean isBorderOpaque() {
         return false;
     }
@@ -158,6 +160,7 @@ public class XPStyleBorder extends AbstractBorder {
         return getBorderState() == XPStyleBorder.BORDER_STATE_SELECTED;
     }
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         if (!(g instanceof Graphics2D)) {
             return;

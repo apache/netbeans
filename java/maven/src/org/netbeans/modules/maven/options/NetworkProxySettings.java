@@ -55,7 +55,8 @@ public enum NetworkProxySettings {
     OVERRIDE(Bundle.PROXY_OVERRIDE());
     
     private String displayName;
-    
+
+    @Override
     public String toString() {
         return displayName;
     }

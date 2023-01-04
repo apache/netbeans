@@ -312,15 +312,18 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * Registers "close" popup menu, tooltip manager
      * and repaint on documet change manager.
      */
+    @Override
     public void addNotify() {
         super.addNotify();
 
 
         this.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 maybeShowPopup(e);
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
                 maybeShowPopup(e);
             }
@@ -507,6 +510,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * {@link #revalidate} that triggers new layouting
      * that consults prefered size.
      */
+    @Override
     public Dimension getPreferredSize() {
         Dimension dim = textComponent.getSize();
         dim.width = annotated ? getBarWidth() : 0;
@@ -605,6 +609,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
     /**
      * Presents commit message as tooltips.
      */
+    @Override
     public String getToolTipText (MouseEvent e) {
         if (editorUI == null)
             return null;
@@ -694,6 +699,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * It invokes {@link #paintView} that contains
      * actual business logic.
      */
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 

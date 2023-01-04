@@ -219,6 +219,7 @@ public class Registry {
                 return cIt.next().getDocument();
             }
 
+            @Override
             public void remove() {
                 cIt.remove();
             }

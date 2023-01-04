@@ -91,9 +91,12 @@ public class NewNette2ProjectPanel extends javax.swing.JPanel implements ChangeL
 
         org.openide.awt.Mnemonics.setLocalizedText(optionsLabel, org.openide.util.NbBundle.getMessage(NewNette2ProjectPanel.class, "NewNette2ProjectPanel.optionsLabel.text")); // NOI18N
         optionsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
             }
+
+            @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 optionsLabelMouseReleased(evt);
             }

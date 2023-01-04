@@ -57,13 +57,16 @@ public class ProxySocketFactory extends SocketFactory {
      * Creates probe socket that supports only
      * connect(SocketAddressm, int timeout).
      */
+    @Override
     public Socket createSocket() throws IOException {
         return new Socket() {
+            @Override
             public void connect(SocketAddress endpoint, int timeout) throws IOException {
                 Socket s = createSocket((InetSocketAddress)endpoint, timeout);
                 s.close();
             }
 
+            @Override
             public void bind(SocketAddress bindpoint) {
                 throw new UnsupportedOperationException();
             }
@@ -72,149 +75,186 @@ public class ProxySocketFactory extends SocketFactory {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized void close() {
             }
 
+            @Override
             public void connect(SocketAddress endpoint) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public SocketChannel getChannel() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public InetAddress getInetAddress() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public InputStream getInputStream() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean getKeepAlive() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public InetAddress getLocalAddress() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public int getLocalPort() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public SocketAddress getLocalSocketAddress() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean getOOBInline() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public OutputStream getOutputStream() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public int getPort() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized int getReceiveBufferSize() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public SocketAddress getRemoteSocketAddress() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean getReuseAddress() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized int getSendBufferSize() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public int getSoLinger() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized int getSoTimeout() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean getTcpNoDelay() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public int getTrafficClass() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean isBound() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean isClosed() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean isConnected() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean isInputShutdown() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public boolean isOutputShutdown() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void sendUrgentData(int data) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void setKeepAlive(boolean on) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void setOOBInline(boolean on) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized void setReceiveBufferSize(int size) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void setReuseAddress(boolean on) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized void setSendBufferSize(int size) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void setSoLinger(boolean on, int linger) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public synchronized void setSoTimeout(int timeout) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void setTcpNoDelay(boolean on) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void setTrafficClass(int tc) {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void shutdownInput() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public void shutdownOutput() {
                 throw new UnsupportedOperationException();
             }

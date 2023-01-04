@@ -75,7 +75,8 @@ public class ChannelUtil {
         if (buffer.remaining() == 0) flush();
         buffer.put((byte) b);
       }
-      
+
+      @Override
       public synchronized void write(byte[] b, int off, int len) throws IOException {
         if (b == null) throw new NullPointerException();
         if (off < 0 || off > b.length || (off + len > b.length)) throw new IndexOutOfBoundsException();
@@ -92,6 +93,7 @@ public class ChannelUtil {
       }
       
       // close may be invoked asynchroniously so synchronized modifer really need
+      @Override
       public synchronized void flush() throws IOException {
         final int written = this.channel.write((ByteBuffer) buffer.flip(), position);
         position += written;
@@ -100,6 +102,7 @@ public class ChannelUtil {
       }
       
       //on close() thread release channel in any case of exceptions
+      @Override
       public void close() throws IOException {
         try {
           if (!channel.isOpen()) return;

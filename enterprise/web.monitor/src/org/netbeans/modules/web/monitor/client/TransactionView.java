@@ -363,9 +363,12 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 	buttonPanel.add(timeAButton);
 	buttonPanel.add(alphaButton);
 	JPanel sep = new JPanel() { // PENDING proper insets should do the same spacing job
+		@Override
 		public float getAlignmentX() {
 		    return 0;
 		}
+
+		@Override
 		public float getAlignmentY() {
 		    return 0;
 		}

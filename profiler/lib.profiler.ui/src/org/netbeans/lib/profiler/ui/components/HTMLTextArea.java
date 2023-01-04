@@ -87,6 +87,7 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
             return false;
         }
 
+        @Override
         protected void emptyTag(Element elem) throws BadLocationException, IOException {
             if (isSupportedBreakFlowTag(elem.getAttributes())) {
                 writeLineSeparator();
@@ -97,12 +98,14 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
             }
         }
 
+        @Override
         protected void endTag(Element elem) throws IOException {
             if (isSupportedBreakFlowTag(elem.getAttributes())) {
                 writeLineSeparator();
             }
         }
 
+        @Override
         protected void startTag(Element elem) throws IOException, BadLocationException {
         }
     }
@@ -116,6 +119,7 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
     private class HTMLTextAreaTransferHandler extends TransferHandler {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void exportToClipboard(JComponent comp, Clipboard clip, int action) {
             try {
                 int selStart = getSelectionStart();
@@ -552,6 +556,7 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
         setBackground(UIUtils.getProfilerResultsBackground());
         
         addKeyListener(new KeyAdapter() {
+            @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_SPACE)
                     invokeSelectedLink();
@@ -574,18 +579,21 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
-    
+
+    @Override
     public EditorKit getEditorKitForContentType(String type) {
         // Always assumes "text/html" as this is a HTML displayer
         return new HTMLEditorKit();
     }
-    
+
+    @Override
     public void setOpaque(boolean o) {
         super.setOpaque(o);
         if (UIUtils.isNimbusLookAndFeel() && !o)
             setBackground(new Color(0, 0, 0, 0));
     }
 
+    @Override
     public void setForeground(Color color) {
         Color foreground = getForeground();
         if (foreground != null && foreground.equals(color)) return;
@@ -603,6 +611,7 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
         return showPopup;
     }
 
+    @Override
     public void setText(String value) {
         if (value == null) return;
 
@@ -634,10 +643,12 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
         forceSetText = false;
     }
 
+    @Override
     public String getText() {
         return pendingText != null ? pendingText : currentText;
     }
 
+    @Override
     public Dimension getMinimumSize() {
         if (pendingText != null) {
             forceSetText = true;
@@ -646,6 +657,7 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
         return super.getMinimumSize();
     }
 
+    @Override
     public Dimension getPreferredSize() {
         if (pendingText != null) {
             forceSetText = true;
@@ -654,6 +666,7 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
         return super.getPreferredSize();
     }
 
+    @Override
     public Dimension getMaximumSize() {
         if (pendingText != null) {
             forceSetText = true;
@@ -697,12 +710,14 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
     public URL getActiveLink() {
         return activeLink;
     }
-    
+
+    @Override
     protected void processMouseEvent(MouseEvent e) {
         if (e.isPopupTrigger()) showPopupMenu(e);
         super.processMouseEvent(e);
     }
-    
+
+    @Override
     protected void processKeyEvent(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_CONTEXT_MENU ||
@@ -761,6 +776,8 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
     protected JMenuItem createCutMenuItem() {
         return new JMenuItem(CUT_STRING) {
             { setEnabled(isEditable() && getSelectedText() != null); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { cut(); }
         };
     }
@@ -768,6 +785,8 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
     protected JMenuItem createCopyMenuItem() {
         return new JMenuItem(COPY_STRING) {
             { setEnabled(getSelectedText() != null); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { copy(); }
         };
     }
@@ -786,6 +805,8 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
                     setEnabled(false);
                 }
             }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { paste(); }
         };
     }
@@ -799,16 +820,20 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
                     setVisible(false);
                 }
             }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { deleteSelection(); }
         };
     }
     
     protected JMenuItem createSelectAllMenuItem() {
         return new JMenuItem(SELECT_ALL_STRING) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { selectAll(); }
         };
     }
-    
+
+    @Override
     public void paste() {
         try {
             replaceSelection(Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this)

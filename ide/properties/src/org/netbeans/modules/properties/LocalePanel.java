@@ -188,6 +188,7 @@ public class LocalePanel extends JPanel {
 
     
     /** Getter for <code>locale</code> property. */
+    @Override
     public Locale getLocale() {
         return locale;
     }
@@ -233,6 +234,7 @@ public class LocalePanel extends JPanel {
 
         languageCombo.setEditable(true);
         languageCombo.setRenderer(new NbBasicComboBoxRenderer() {
+            @Override
             public Component getListCellRendererComponent(
                 JList list,
                 Object value,            // value to display
@@ -264,6 +266,7 @@ public class LocalePanel extends JPanel {
 
         countryCombo.setEditable(true);
         countryCombo.setRenderer(new NbBasicComboBoxRenderer() {
+            @Override
             public Component getListCellRendererComponent(
                 JList list,
                 Object value,            // value to display
@@ -295,6 +298,7 @@ public class LocalePanel extends JPanel {
 
         variantCombo.setEditable(true);
         variantCombo.setRenderer(new NbBasicComboBoxRenderer() {
+            @Override
             public Component getListCellRendererComponent(
                 JList list,
                 Object value,            // value to display
@@ -326,6 +330,7 @@ public class LocalePanel extends JPanel {
 
         supportedList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         supportedList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
             public Component getListCellRendererComponent(
                 JList list,
                 Object value,            // value to display
@@ -359,6 +364,7 @@ public class LocalePanel extends JPanel {
         localeText.setEditable(false);
         localeText.selectAll();
         localeText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 localeTextFocusGained(evt);
             }
@@ -489,7 +495,8 @@ public class LocalePanel extends JPanel {
     // End of variables declaration//GEN-END:variables
 
     private abstract static class NbBasicComboBoxRenderer extends BasicComboBoxRenderer.UIResource {
-        
+
+        @Override
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
             // #93658: GTK needs name to render cell renderer "natively"
@@ -498,6 +505,7 @@ public class LocalePanel extends JPanel {
         }
         
         // #93658: GTK needs name to render cell renderer "natively"
+        @Override
         public String getName() {
             String name = super.getName();
             return name == null ? "ComboBox.renderer" : name;  // NOI18N

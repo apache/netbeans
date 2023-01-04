@@ -258,12 +258,14 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
 
         // nameTextField
         nameTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return (LoadGeneratorCustomizer.this.getParent() instanceof JViewport) ? getMinimumSize()
                                                                                            : new Dimension(400,
                                                                                                            super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
@@ -295,6 +297,7 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
 
         // settingsHeaderSeparator
         settingsHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -343,10 +346,12 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
 
         // scriptTextField
         scriptTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -459,6 +464,7 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
 
         // locationBeginHeaderSeparator
         locationBeginHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -511,6 +517,7 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
 
         // locationEndHeaderSeparator
         locationEndHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

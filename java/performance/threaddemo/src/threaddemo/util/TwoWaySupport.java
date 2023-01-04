@@ -430,6 +430,8 @@ public abstract class TwoWaySupport<DM, UMD, DMD> {
         public InvocationTargetExceptionNoStackTrace(Throwable problem) {
             super(problem);
         }
+
+        @Override
         public Throwable fillInStackTrace() {
             return this;
         }
@@ -755,9 +757,13 @@ public abstract class TwoWaySupport<DM, UMD, DMD> {
             assert value != null;
             this.value = value;
         }
+
+        @Override
         public DM get() {
             return value;
         }
+
+        @Override
         public void clear() {
             super.clear();
             value = null;

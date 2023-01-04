@@ -123,6 +123,7 @@ public class JExtendedTree extends JTree implements CellTipAware {
         return new Point(rendererRect.getLocation().x - 1, rendererRect.getLocation().y - 1);
     }
 
+    @Override
     public void processMouseEvent(MouseEvent e) {
         if (e instanceof MouseWheelEvent) {
             Component target = JExtendedTree.this.getParent();

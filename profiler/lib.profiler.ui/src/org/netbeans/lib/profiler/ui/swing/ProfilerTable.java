@@ -123,7 +123,8 @@ public class ProfilerTable extends JTable {
         setAutoCreateRowSorter(false);
         if (sortable) setRowSorter(createRowSorter());
     }
-    
+
+    @Override
     public void createDefaultColumnsFromModel() {
         TableModel m = getModel();
         if (m != null) {
@@ -174,7 +175,8 @@ public class ProfilerTable extends JTable {
             public void focusLost(FocusEvent e)   { ProfilerTable.this.focusLost(); }
         });
     }
-    
+
+    @Override
     public Color getBackground() {
         return isEnabled() ? super.getBackground() :
                UIManager.getColor("TextField.inactiveBackground"); // NOI18N
@@ -201,7 +203,8 @@ public class ProfilerTable extends JTable {
     public static TableCellRenderer createTableCellRenderer(ProfilerRenderer renderer) {
         return new ProfilerRendererWrapper(renderer);
     }
-    
+
+    @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component c = super.prepareRenderer(renderer, row, column);
         
@@ -244,7 +247,8 @@ public class ProfilerTable extends JTable {
         }
         return background;
     }
-    
+
+    @Override
     public Component prepareEditor(TableCellEditor editor, int row, int column) {
         Component c = super.prepareEditor(editor, row, column);
         
@@ -305,17 +309,20 @@ public class ProfilerTable extends JTable {
             
             implM = c instanceof Movable ? (Movable)c : null;
         }
-        
+
+        @Override
         public void setBounds(int x, int y, int w, int h) {
             super.setBounds(x, y, w, h);
             if (prefWidth > w) offset += marginOffset;
             impl.setSize(Math.max(w, prefWidth), h);
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             return impl.getPreferredSize();
         }
-        
+
+        @Override
         public void paint(Graphics g) {
             if (implM != null) {
                 implM.move(-offset, 0);
@@ -354,7 +361,8 @@ public class ProfilerTable extends JTable {
             isCustomRendering = false;
         }
     }
-    
+
+    @Override
     public boolean isFocusOwner() {
         return !isCustomRendering() && super.isFocusOwner();
     }
@@ -420,7 +428,8 @@ public class ProfilerTable extends JTable {
     private Object selection;
     private int fixedSelectionColumn = -1;
     private ListSelectionListener selectionListener;
-    
+
+    @Override
     public void setSelectionModel(ListSelectionModel newModel) {
         ListSelectionModel oldModel = getSelectionModel();
         if (oldModel != null && selectionListener != null)
@@ -481,6 +490,7 @@ public class ProfilerTable extends JTable {
             getColumnModel().setSelectionModel(new DefaultListSelectionModel());
         } else {
             getColumnModel().setSelectionModel(new DefaultListSelectionModel() {
+                @Override
                 public void setSelectionInterval(int index0, int index1) {
                     int index = convertColumnIndexToView(column);
                     super.setSelectionInterval(index, index);
@@ -550,7 +560,8 @@ public class ProfilerTable extends JTable {
                 values.add(getValueAt(row, col));
         return values;
     }
-    
+
+    @Override
     public void tableChanged(TableModelEvent e) {
         internal = true;
         try { super.tableChanged(e); }
@@ -592,7 +603,8 @@ public class ProfilerTable extends JTable {
     ProfilerColumnModel _getColumnModel() {
         return (ProfilerColumnModel)getColumnModel();
     }
-    
+
+    @Override
     protected TableColumnModel createDefaultColumnModel() {
         return new ProfilerColumnModel();
     }
@@ -759,7 +771,8 @@ public class ProfilerTable extends JTable {
     
     private final boolean hideableColums;
     private boolean scrolling;
-    
+
+    @Override
     protected void configureEnclosingScrollPane() {
         super.configureEnclosingScrollPane();
 
@@ -820,6 +833,8 @@ public class ProfilerTable extends JTable {
                     setEnabled(c.getModelIndex() != mainColumn);
 //                    setToolTipText(cModel.getColumnToolTip(c.getModelIndex()));
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     cModel.setColumnVisibility(c, isSelected(), ProfilerTable.this);
                 }
@@ -830,7 +845,8 @@ public class ProfilerTable extends JTable {
                                      source.getHeight() - 1);
         popup.show(source, p.x, p.y);
     }
-    
+
+    @Override
     public void doLayout() {
         ProfilerColumnModel cModel = _getColumnModel();
         JTableHeader header = getTableHeader();
@@ -993,6 +1009,7 @@ public class ProfilerTable extends JTable {
         JMenu copyItem = new JMenu(BUNDLE().getString("ProfilerTable_CopyMenu")); // NOI118N
         
         JMenuItem copyRowItem = new JMenuItem(BUNDLE().getString("ProfilerTable_CopyRowItem")) { // NOI118N
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 StringBuilder val = new StringBuilder();
                 List<TableColumn> columns = Collections.list(_getColumnModel().getColumns());
@@ -1015,6 +1032,7 @@ public class ProfilerTable extends JTable {
                 String columnName = column.getHeaderValue().toString();
                 if (columnName.toLowerCase().startsWith("<html>")) columnName = columnName.replaceAll("<[^>]*>", ""); // NOI118N
                 copyItem.add(new JMenuItem(MessageFormat.format(genericItemName, columnName)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         StringSelection s = new StringSelection(getStringValue(row, _col));
                         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
@@ -1039,7 +1057,8 @@ public class ProfilerTable extends JTable {
     public Object getUserValueForRow(int row) {
         return getValueForRow(row);
     }
-    
+
+    @Override
     protected void processMouseEvent(MouseEvent e) {
         // --- Resolve CellTips/MouseEvent incompatibilities -------------------
         //     TBD: doesn't work for heavyweight popups (RELEASED / CLICKED)
@@ -1110,7 +1129,8 @@ public class ProfilerTable extends JTable {
         
         if (generatedClick != null) processMouseEvent(generatedClick);
     }
-    
+
+    @Override
     protected void processKeyEvent(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_CONTEXT_MENU ||
@@ -1124,6 +1144,7 @@ public class ProfilerTable extends JTable {
     
     private void showPopupMenu(MouseEvent e) {
         JPopupMenu popup = new JPopupMenu() {
+            @Override
             public void setVisible(boolean visible) {
                 if (visible) popupShowing();
                 super.setVisible(visible);
@@ -1164,9 +1185,11 @@ public class ProfilerTable extends JTable {
     }
     
     // --- Header tweaks -------------------------------------------------------
-    
+
+    @Override
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
+            @Override
             public String getToolTipText(MouseEvent e) {
                 int index = columnAtPoint(e.getPoint());
                 if (index == -1) return null;
@@ -1175,11 +1198,15 @@ public class ProfilerTable extends JTable {
                 String toolTip = cModel.getColumnToolTip(column.getModelIndex());
                 return toolTip;
             }
+
+            @Override
             protected void processMouseEvent(MouseEvent e) {
                 if (hideableColums && UIUtils.isAquaLookAndFeel() && e.isPopupTrigger())
                     chooseColumns((Component)e.getSource(), e.getPoint());
                 super.processMouseEvent(e.getClickCount() > 1 ? clearClicks(e) : e);
             }
+
+            @Override
             public void setResizingColumn(TableColumn aColumn) {
                 _getColumnModel().setResizingColumn(aColumn);
                 super.setResizingColumn(aColumn);

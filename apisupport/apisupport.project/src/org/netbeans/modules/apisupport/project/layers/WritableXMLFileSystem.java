@@ -337,6 +337,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         }
         // We will change the layer file.
         return new ByteArrayOutputStream() {
+            @Override
             public void close() throws IOException {
                 super.close();
                 final byte[] contents = toByteArray();

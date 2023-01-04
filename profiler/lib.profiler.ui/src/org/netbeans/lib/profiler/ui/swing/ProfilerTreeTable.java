@@ -582,6 +582,8 @@ public class ProfilerTreeTable extends ProfilerTable {
                     public void run() { updateColumnsPreferredWidth(); }
                 });
             }
+
+            @Override
             protected void setSortKeysImpl(List newKeys) {
                 // TODO: Improve to not call createComparator(newKeys) here and from super
                 willBeSorted(Collections.unmodifiableList(newKeys));
@@ -791,6 +793,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         private SortedFilteredTreeModel treeModelImpl(TreeNode root, Comparator comparator, RowFilter filter) {
             return new SortedFilteredTreeModel(root, tree == null ? null : tree.getCellRenderer(), comparator, filter) {
+                @Override
                 protected void fireTreeStructureChanged(Object source, Object[] path,
                                         int[] childIndices,
                                         Object[] children) {
@@ -841,15 +844,18 @@ public class ProfilerTreeTable extends ProfilerTable {
         public int getColumnCount() {
             return treeTableModel.getColumnCount();
         }
-        
+
+        @Override
         public String getColumnName(int columnIndex) {
             return treeTableModel.getColumnName(columnIndex);
         }
-        
+
+        @Override
         public Class getColumnClass(int columnIndex) {
             return treeTableModel.getColumnClass(columnIndex);
         }
-        
+
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             TreeNode node = nodeForRow(rowIndex);
             return node == null ? false : treeTableModel.isCellEditable(node, columnIndex);
@@ -859,7 +865,8 @@ public class ProfilerTreeTable extends ProfilerTable {
             TreeNode node = nodeForRow(rowIndex);
             return node == null ? null : treeTableModel.getValueAt(node, columnIndex);
         }
-        
+
+        @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             TreeNode node = nodeForRow(rowIndex);
             if (node != null) treeTableModel.setValueAt(aValue, node, columnIndex);
@@ -902,17 +909,20 @@ public class ProfilerTreeTable extends ProfilerTable {
         RowFilter getFilter() {
             return filter;
         }
-        
+
+        @Override
         public Object getChild(Object parent, int index) {
             if (renderer == null || filter == null) return super.getChild(parent, index);
             return filteredChildren(parent).get(index);
         }
-        
+
+        @Override
         public int getIndexOfChild(Object parent, Object child) {
             if (renderer == null || filter == null) return super.getIndexOfChild(parent, child);
             return filteredChildren(parent).indexOf(child);
         }
-        
+
+        @Override
         public int getChildCount(Object parent) {
             if (renderer == null || filter == null) return super.getChildCount(parent);
             return filteredChildren(parent).size();
@@ -938,8 +948,9 @@ public class ProfilerTreeTable extends ProfilerTable {
             cache = null;
 //            if (cache != null) cache.remove(key);
         }
-        
-        
+
+
+        @Override
         protected void fireTreeStructureChanged(Object source, Object[] path,
                                                 int[] childIndices,
                                                 Object[] children) {
@@ -1031,13 +1042,15 @@ public class ProfilerTreeTable extends ProfilerTable {
         Comparator getComparator() {
             return comparator;
         }
-        
-        
+
+
+        @Override
         public Object getChild(Object parent, int index) {
             if (comparator == null) return super.getChild(parent, index);
             return super.getChild(parent, viewToModel(parent)[index]);
         }
-        
+
+        @Override
         public int getIndexOfChild(Object parent, Object child) {
             if (comparator == null) return super.getIndexOfChild(parent, child);
             
@@ -1048,15 +1061,17 @@ public class ProfilerTreeTable extends ProfilerTable {
             
             return -1;
         }
-        
-        
+
+
+        @Override
         protected void clearKey(TreePathKey key) {
             super.clearKey(key);
             viewToModel = null;
 //            if (viewToModel != null) viewToModel.remove(key);
         }
-        
-        
+
+
+        @Override
         protected void fireTreeStructureChanged(Object source, Object[] path,
                                                 int[] childIndices,
                                                 Object[] children) {
@@ -1345,7 +1360,8 @@ public class ProfilerTreeTable extends ProfilerTable {
             
             setLargeModel(true);
         }
-        
+
+        @Override
         public void setUI(TreeUI ui) {
             if (ui instanceof SynthTreeUI) {
 //                if (synthLikeUI == null) {
@@ -1376,11 +1392,14 @@ public class ProfilerTreeTable extends ProfilerTable {
 
         
         // Overridden for performance reasons.
+        @Override
         public void validate() {}
 
         // Overridden for performance reasons.
+        @Override
         public void revalidate() {}
-        
+
+        @Override
         public boolean hasFocus() {
             return currentFocused;
         }
@@ -1410,11 +1429,14 @@ public class ProfilerTreeTable extends ProfilerTable {
         }
         
         private final Dimension prefSize = new Dimension();
+
+        @Override
         public Dimension getPreferredSize() {
             prefSize.setSize(currentX + currentWidth, rowHeight);
             return prefSize;
         }
-        
+
+        @Override
         public void paint(Graphics g) {
             g.setColor(getBackground());
             int rectX = currentSelected || customRendering || !currentFirst ? 0 : currentX;
@@ -1437,8 +1459,9 @@ public class ProfilerTreeTable extends ProfilerTable {
             for (int i = 0; i < column; i++) x += columns.getColumn(i).getWidth();
             return x == 0;
         }
-        
-        
+
+
+        @Override
         public void setAnchorSelectionPath(TreePath newPath) {
             // TODO: should only be disabled for forgetPreviouslyExpanded?
         }
@@ -1446,11 +1469,13 @@ public class ProfilerTreeTable extends ProfilerTable {
         void setForgetPreviouslyExpanded(boolean forgetPreviouslyExpanded) {
             this.forgetPreviouslyExpanded = forgetPreviouslyExpanded;
         }
-        
+
+        @Override
         public boolean hasBeenExpanded(TreePath path) {
             return forgetPreviouslyExpanded ? false : super.hasBeenExpanded(path);
         }
-        
+
+        @Override
         public void fireTreeCollapsed(TreePath path) {
             super.fireTreeCollapsed(path);
             if (forgetPreviouslyExpanded) {
@@ -1462,7 +1487,8 @@ public class ProfilerTreeTable extends ProfilerTable {
                 });
             }
         }
-        
+
+        @Override
         protected void removeDescendantToggledPaths(Enumeration<TreePath> toRemove) {
 //            System.err.println(">>> REMOVING descendant toggled paths...");
 //            Thread.dumpStack();
@@ -1473,22 +1499,26 @@ public class ProfilerTreeTable extends ProfilerTable {
             clearToggledPaths();
             updateUI();
         }
-        
+
+        @Override
         public Enumeration<TreePath> getExpandedDescendants(TreePath parent) {
             return Boolean.TRUE.equals(getClientProperty(UIUtils.PROP_AUTO_EXPANDING)) ?
                    null : super.getExpandedDescendants(parent);
         }
-        
+
+        @Override
         public void expandPath(TreePath path) {
             if (changingModel) path = getSimilarPath(path);
             super.expandPath(path);
         }
-        
+
+        @Override
         public void setSelectionPath(TreePath path) {
             if (changingModel) path = getSimilarPath(path);
             super.setSelectionPath(path);
         }
-        
+
+        @Override
         public void setSelectionPaths(TreePath[] paths) {
             if (changingModel && paths != null) {
                 List<TreePath> similarPaths = new ArrayList();
@@ -1542,11 +1572,13 @@ public class ProfilerTreeTable extends ProfilerTable {
         boolean isChangingModel() {
             return changingModel;
         }
-        
+
+        @Override
         public String toString() {
             return getCellRenderer().toString();
         }
-        
+
+        @Override
         public AccessibleContext getAccessibleContext() {
             TreeCellRenderer renderer = getCellRenderer();
             return renderer instanceof Accessible ?
@@ -1575,6 +1607,7 @@ public class ProfilerTreeTable extends ProfilerTable {
             tree.setSize(50, 50);
             
             tree.setUI(new SynthTreeUI() {
+                @Override
                 protected void drawCentered(Component c, Graphics graphics, Icon icon,
                                         int x, int y) {
                     int w = icon.getIconWidth();
@@ -1614,16 +1647,20 @@ public class ProfilerTreeTable extends ProfilerTable {
         private boolean isSelected;
         
         void setSelected(boolean selected) { isSelected = selected; }
-        
+
+        @Override
         public Icon getExpandedIcon() { return isSelected ? ICONS[1] : ICONS[0]; }
-        
+
+        @Override
         public Icon getCollapsedIcon() { return isSelected ? ICONS[3] : ICONS[2]; }
-        
+
+        @Override
         protected void paintHorizontalPartOfLeg(Graphics g, Rectangle clipBounds,
                                         Insets insets, Rectangle bounds,
                                         TreePath path, int row, boolean isExpanded,
                                         boolean hasBeenExpanded, boolean isLeaf) {}
 
+        @Override
         protected void paintVerticalPartOfLeg(Graphics g, Rectangle clipBounds,
                                         Insets insets, TreePath path) {}
 

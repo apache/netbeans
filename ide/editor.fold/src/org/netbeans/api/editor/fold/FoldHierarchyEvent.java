@@ -154,6 +154,7 @@ public final class FoldHierarchyEvent extends java.util.EventObject {
         return affectedEndOffset;
     }
 
+    @Override
     public String toString() {
         return org.netbeans.modules.editor.fold.FoldUtilitiesImpl.foldHierarchyEventToString(this);
     }

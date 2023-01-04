@@ -40,6 +40,8 @@ public interface Derivation {
         Type(String s) {
             value = s;
         }
+
+        @Override
         public String toString() {
             return value;
         }

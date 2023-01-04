@@ -93,6 +93,7 @@ public abstract class XMLGenerateAction extends CookieAction {
             return new HelpCtx (GenerateDTDAction.class);
         }
 
+        @Override
         protected Class getOwnCookieClass () {
             return GenerateDTDSupport.class;
         }

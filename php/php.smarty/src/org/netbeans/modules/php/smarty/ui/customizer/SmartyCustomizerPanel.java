@@ -84,9 +84,12 @@ public class SmartyCustomizerPanel extends JPanel {
         Mnemonics.setLocalizedText(optionsLabel, NbBundle.getMessage(SmartyCustomizerPanel.class, "SmartyCustomizerPanel.optionsLabel.text")); // NOI18N
         optionsLabel.setToolTipText(NbBundle.getMessage(SmartyCustomizerPanel.class, "SmartyCustomizerPanel.optionsLabel.toolTipText")); // NOI18N
         optionsLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 optionsLabelMousePressed(evt);
             }

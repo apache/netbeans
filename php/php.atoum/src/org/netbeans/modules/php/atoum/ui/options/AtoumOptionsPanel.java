@@ -148,9 +148,12 @@ public class AtoumOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(learnMoreLabel, NbBundle.getMessage(AtoumOptionsPanel.class, "AtoumOptionsPanel.learnMoreLabel.text")); // NOI18N
         learnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }

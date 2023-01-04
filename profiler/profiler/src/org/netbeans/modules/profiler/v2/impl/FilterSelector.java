@@ -80,7 +80,8 @@ public abstract class FilterSelector {
         EXCLUDE_JAVA_FILTER,
         EXCLUDE_CUSTOM_FILTER,
         INCLUDE_CUSTOM_FILTER;
-        
+
+        @Override
         public String toString() {
             switch(this) {
                 case NO_FILTER:             return Bundle.FilterSelector_noFilter();
@@ -130,6 +131,7 @@ public abstract class FilterSelector {
             content.add(hint, BorderLayout.NORTH);
             
             ButtonGroup bg = new ButtonGroup() {
+                @Override
                 public void setSelected(ButtonModel m, boolean b) {
                     super.setSelected(m, b);
                     if (b && m.isSelected()) filterChanged(true);
@@ -186,6 +188,7 @@ public abstract class FilterSelector {
                             if (color.getValue().trim().isEmpty()) continue;
                             Icon icon = color.getColor() == null ? null : color.getIcon(12, 12);
                             popup.add(new JMenuItem(color.getName(), icon) {
+                                @Override
                                 protected void fireActionPerformed(ActionEvent event) {
                                     StringBuilder added = new StringBuilder();
                                     for (String f : color.getValues()) {

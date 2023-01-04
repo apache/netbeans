@@ -30,7 +30,8 @@ import java.awt.Component;
  * @author Maros Sandor
  */
 class CategoryRenderer extends DefaultListCellRenderer {
-    
+
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         setComponentOrientation(list.getComponentOrientation());
         if (isSelected) {

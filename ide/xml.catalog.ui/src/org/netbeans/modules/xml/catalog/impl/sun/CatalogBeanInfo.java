@@ -37,6 +37,7 @@ public class CatalogBeanInfo extends SimpleBeanInfo {
      * properties of this bean.  May return null if the
      * information should be obtained by automatic analysis.
      */
+    @Override
     public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor beanDescriptor = new BeanDescriptor  ( Catalog.class , CatalogCustomizer.class );
         beanDescriptor.setDisplayName (PROP_Catalog());
@@ -59,6 +60,7 @@ public class CatalogBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         int PROPERTY_displayName = 0;
         int PROPERTY_shortDescription = 1;
@@ -90,6 +92,7 @@ public class CatalogBeanInfo extends SimpleBeanInfo {
      * events fired by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[0];
     }
@@ -101,6 +104,7 @@ public class CatalogBeanInfo extends SimpleBeanInfo {
      * implemented by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public MethodDescriptor[] getMethodDescriptors() {
 	return new MethodDescriptor[0];
     }
@@ -126,6 +130,7 @@ public class CatalogBeanInfo extends SimpleBeanInfo {
      * @return  An image object representing the requested icon.  May
      *    return null if no suitable icon is available.
      */
+    @Override
     public Image getIcon (int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
             (type == java.beans.BeanInfo.ICON_MONO_16x16)) {

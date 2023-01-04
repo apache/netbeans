@@ -180,7 +180,8 @@ public class BrowseFolders extends JPanel implements ExplorerManager.Provider {
             this.bf = bf;
             this.options = options;
         }
-        
+
+        @Override
         public void mouseClicked(MouseEvent e) {
             int selRow = tree.getRowForLocation(e.getX(), e.getY());
 

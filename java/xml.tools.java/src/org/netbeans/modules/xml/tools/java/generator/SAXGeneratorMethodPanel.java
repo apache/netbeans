@@ -178,6 +178,7 @@ public final class SAXGeneratorMethodPanel extends SAXGeneratorAbstractPanel {
          * We need a cell editor that is initialized again and again to
          * that it contains fresh values.
          */
+        @Override
         public TableCellEditor getCellEditor(int row, int column) {
             if (column == TYPE_COLUMN) {                
                 ElementBindings.Entry entry = model.getElementBindings().getEntry(row);
@@ -204,7 +205,8 @@ public final class SAXGeneratorMethodPanel extends SAXGeneratorAbstractPanel {
 
         /** Serial Version UID */
         private static final long serialVersionUID =7287934953974099492L;
-        
+
+        @Override
         public String getColumnName(int col) {
             return COLUMN_NAMES[col];
         }
@@ -238,6 +240,7 @@ public final class SAXGeneratorMethodPanel extends SAXGeneratorAbstractPanel {
             }
         }
 
+        @Override
         public void setValueAt(Object value, int row, int col) {
             
             ElementBindings.Entry entry = model.getElementBindings().getEntry(row);
@@ -258,6 +261,7 @@ public final class SAXGeneratorMethodPanel extends SAXGeneratorAbstractPanel {
             }
         }
 
+        @Override
         public boolean isCellEditable(int row, int col) {
             return col != ELEMENT_COLUMN;
         }

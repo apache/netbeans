@@ -456,6 +456,7 @@ public class NavigatorContent extends AbstractXMLNavigatorContent implements Car
             ToolTipManager.sharedInstance().registerComponent(tree);
             
             MouseListener ml = new MouseAdapter() {
+                @Override
                 public void mousePressed(MouseEvent e) {
                     int selRow = tree.getRowForLocation(e.getX(), e.getY());
                     if(selRow != -1) {
@@ -515,6 +516,7 @@ public class NavigatorContent extends AbstractXMLNavigatorContent implements Car
             
             //add popup menu mouse listener
             MouseListener pmml = new MouseAdapter() {
+                @Override
                 public void mousePressed(MouseEvent e) {
                     if(e.getClickCount() == 1 && e.getModifiers() == MouseEvent.BUTTON3_MASK) {
                         //show popup
@@ -668,6 +670,7 @@ public class NavigatorContent extends AbstractXMLNavigatorContent implements Car
             }
             
             /** Overriden to calculate correct row height before first paint */
+            @Override
             public void paint(Graphics g) {
                 if (firstPaint) {
                     int height = g.getFontMetrics(getFont()).getHeight();

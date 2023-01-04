@@ -236,14 +236,16 @@ public abstract class AbstractMenuFactory implements MenuFactory {
             JComponent item = (JComponent) e.getChild();
             item.putClientProperty (KEY_CONTAINERCONTEXT, null);
         }
-        
+
+        @Override
         public void componentHidden(ComponentEvent e) {
             JMenu menu = (JMenu) e.getComponent();
             String containerContext = getContainerContext(menu);
             getEngine().notifyMenuHidden (containerContext, menu);
             depopulateMenu (containerContext, menu);
         }
-        
+
+        @Override
         public void componentShown(ComponentEvent e) {
             JMenu menu = (JMenu) e.getComponent();
             String containerCtx = getContainerContext(menu);

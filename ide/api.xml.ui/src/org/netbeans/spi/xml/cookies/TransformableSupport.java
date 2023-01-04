@@ -205,16 +205,18 @@ public final class TransformableSupport implements TransformableCookie {
     private static class ExceptionWriter extends PrintWriter {
         private int counter = 4;
         private Throwable t;
-         
+
         public ExceptionWriter(Throwable t) {
             super(new StringWriter());
             this.t = t;
         }
-        
+
+        @Override
         public void println(String s) {
             if (counter-- > 0) super.println(s);
         }
 
+        @Override
         public void println(Object o) {
             if (counter-- > 0) super.println(o);
         }

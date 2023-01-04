@@ -122,6 +122,7 @@ public abstract class FilterComponent implements CommonConstants {
             filterCombo.setToolTipText(FILTER_TOOLTIP);
         
             component = new JPanel(new BorderLayout()) {
+                @Override
                 public void setBounds(int x, int y, int w, int h) {
                     if (UIUtils.isAquaLookAndFeel()) w += 2;
                     super.setBounds(x, y, w, h);
@@ -253,6 +254,7 @@ public abstract class FilterComponent implements CommonConstants {
             for (int i = 0; i < filterTypeNames.size(); i++) {
                 final int type = filterTypes.get(i);
                 JMenuItem m = new JRadioButtonMenuItem(filterTypeNames.get(i)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         setFilterType(type);
                     }
@@ -285,6 +287,7 @@ public abstract class FilterComponent implements CommonConstants {
                 getEditorImpl().setItem(text);
             }
 
+            @Override
             public void setSelectedItem(final Object newObject) {
                 super.setSelectedItem(newObject);
 
@@ -302,11 +305,13 @@ public abstract class FilterComponent implements CommonConstants {
                 });
             }
 
+            @Override
             public Object getSelectedItem() {
                 Object selected = super.getSelectedItem();
                 return selected == null ? FILTER_EMPTY : selected;
             }
 
+            @Override
             public void addItem(Object anObject) {
                 String item = anObject == null ? null : anObject.toString();
                 if (item == null || item.isEmpty()) return;
@@ -341,9 +346,12 @@ public abstract class FilterComponent implements CommonConstants {
 
                 // Filter button ---------------------------------------------------
                 filterButton = new IconButton(Icons.getIcon(GeneralIcons.FILTER)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         showPopup();
                     }
+
+                    @Override
                     public String getToolTipText() {
                         int filterIndex = filterTypes.indexOf(filterType);
                         return filterIndex != -1 ? MessageFormat.format(FILTER_TYPE_TOOLTIP,
@@ -355,6 +363,7 @@ public abstract class FilterComponent implements CommonConstants {
 
                 // Confirm button --------------------------------------------------
                 confirmButton = new IconButton(Icons.getIcon(GeneralIcons.SET_FILTER)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         submitFilter();
                     }
@@ -364,6 +373,7 @@ public abstract class FilterComponent implements CommonConstants {
 
                 // Clear button ----------------------------------------------------
                 clearButton = new IconButton(Icons.getIcon(GeneralIcons.CLEAR_FILTER)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         clearFilter();
                     }
@@ -387,6 +397,7 @@ public abstract class FilterComponent implements CommonConstants {
                 tweakAppearance((JComponent)impl.getEditorComponent());
 
                 hintLabel = new JLabel() {
+                    @Override
                     protected void paintBorder(Graphics g) {}
                 };
                 hintLabel.setOpaque(false);
@@ -449,18 +460,21 @@ public abstract class FilterComponent implements CommonConstants {
                 }
             }
 
+            @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 if (!isFocusOwner() && getText().isEmpty())
                     hintLabel.paint(g);
             }
 
+            @Override
             public void setBounds(int x, int y, int w, int  h) {
                 int woffset = UIUtils.isAquaLookAndFeel() ? 14 : 0;
                 super.setBounds(x, y, w + woffset, h);
                 hintLabel.setBounds(x, y, w + woffset, h);
             }
 
+            @Override
             public void doLayout() {
                 Dimension d = filterButton.getPreferredSize();
                 filterButton.setBounds(0, 0, d.width, getHeight());
@@ -471,6 +485,7 @@ public abstract class FilterComponent implements CommonConstants {
                 buttonsPanel.setBounds(getWidth() - d.width  - xoffset, 0, d.width, getHeight());
             }
 
+            @Override
             public void processKeyEvent(KeyEvent e) {
                 super.processKeyEvent(e);
                 if (e.getID() != KeyEvent.KEY_PRESSED) return;
@@ -484,6 +499,7 @@ public abstract class FilterComponent implements CommonConstants {
                         (e.getModifiers() == InputEvent.SHIFT_MASK))) showPopup();
             }
 
+            @Override
             public boolean isOptimizedDrawingEnabled() {
                 return false;
             }

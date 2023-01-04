@@ -412,7 +412,8 @@ abstract class LivenessTableView extends MemoryView {
         private final int columns = 6 +
                 (selection == null ? 0 : 1) +
                 (includeTotalAllocs ? 1 : 0);
-        
+
+        @Override
         public String getColumnName(int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -436,6 +437,7 @@ abstract class LivenessTableView extends MemoryView {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -494,6 +496,7 @@ abstract class LivenessTableView extends MemoryView {
             return null;
         }
 
+        @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (selection == null) columnIndex++;
             
@@ -503,6 +506,7 @@ abstract class LivenessTableView extends MemoryView {
             }
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             if (selection == null) columnIndex++;
             

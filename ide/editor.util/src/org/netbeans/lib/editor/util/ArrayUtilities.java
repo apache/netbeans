@@ -241,12 +241,14 @@ public final class ArrayUtilities {
         public int size() {
             return array.length;
         }
-        
 
+
+        @Override
         public Object[] toArray() {
             return array.clone();
         }
-        
+
+        @Override
         public <T> T[] toArray(T[] a) {
             if (a.length < array.length) {
                 @SuppressWarnings("unchecked")

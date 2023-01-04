@@ -279,6 +279,7 @@ public class LiveReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
             UIUtils.makeTreeAutoExpandable(treeTable.getTree());
 
             treeTable.addMouseListener(new MouseAdapter() {
+                @Override
                     public void mousePressed(MouseEvent e) {
                         if (e.getModifiers() == InputEvent.BUTTON3_MASK) {
                             treePath = treeTable.getTree().getPathForRow(treeTable.rowAtPoint(e.getPoint()));
@@ -289,6 +290,7 @@ public class LiveReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                         }
                     }
 
+                @Override
                     public void mouseClicked(MouseEvent e) {
                         treePath = treeTable.getTree().getPathForRow(treeTable.rowAtPoint(e.getPoint()));
 

@@ -173,6 +173,7 @@ public final class MultiKeyBinding {
 	    return array.length;
 	}
 
+        @Override
 	public Object[] toArray() {
 	    return (Object[]) array.clone();
 	}
@@ -181,6 +182,7 @@ public final class MultiKeyBinding {
 	    return array[index];
 	}
 
+        @Override
         public int indexOf(Object o) {
             if (o == null) {
                 for (int i = 0; i < array.length; i++)
@@ -194,10 +196,12 @@ public final class MultiKeyBinding {
             return -1;
         }
 
+        @Override
         public boolean contains(Object o) {
             return indexOf(o) != -1;
         }
-        
+
+        @Override
         public boolean equals(Object o) {
             return (o instanceof UnmodifiableArrayList)
                 ? java.util.Arrays.equals(this.array, ((UnmodifiableArrayList)o).array)

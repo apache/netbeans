@@ -115,10 +115,12 @@ public class TimeComponentPanel extends javax.swing.JPanel implements PropertyCh
                 false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }

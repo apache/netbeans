@@ -156,9 +156,12 @@ public final class LessOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(installLessLabel, NbBundle.getMessage(LessOptionsPanel.class, "LessOptionsPanel.installLessLabel.text")); // NOI18N
         installLessLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 installLessLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 installLessLabelMousePressed(evt);
             }

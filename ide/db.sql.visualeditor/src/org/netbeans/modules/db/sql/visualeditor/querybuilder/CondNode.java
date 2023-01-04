@@ -197,7 +197,9 @@ public class CondNode extends AbstractNode
                            "LEFT OUTER",        // NOI18N
                            "RIGHT OUTER"        // NOI18N
                            /*, "FULL OUTER" */  // Dropped b/c Pointbase doesn't support it
-                           /*, "CROSS" */ }; 
+                           /*, "CROSS" */ };
+
+        @Override
         public String[] getTags() {
             return tags;
         }
@@ -205,6 +207,7 @@ public class CondNode extends AbstractNode
 
     public class ColumnPropertyEditor1 extends PropertyEditorSupport {
 
+        @Override
         public String[] getTags() {
             List<String> columnNames ;
             try {

@@ -62,6 +62,7 @@ public class QueryBuilderSqlCompletion extends DefaultStyledDocument {
     /**
      * Insert text that is matched by the sequence of keys typed in the QueryBuilderSqlTextArea
      **/
+    @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
         super.insertString( offs, str, a );
 

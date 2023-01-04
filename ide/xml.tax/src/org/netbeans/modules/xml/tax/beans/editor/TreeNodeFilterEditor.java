@@ -36,23 +36,27 @@ public class TreeNodeFilterEditor extends PropertyEditorSupport {
 
     /**
      */
+    @Override
     public void setAsText (String text) throws IllegalArgumentException {
     }
 
     /**
      */
+    @Override
     public String getAsText () {
         return Util.THIS.getString ("LBL_nodeFilter");
     }
 
     /**
      */
+    @Override
     public boolean supportsCustomEditor () {
         return getValue() != null;
     }
 
     /**
      */
+    @Override
     public Component getCustomEditor () {
         return new TreeNodeFilterCustomEditor ((TreeNodeFilter)getValue());
     }

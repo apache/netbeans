@@ -373,9 +373,12 @@ public class SiteTemplateWizard extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(clearCacheLabel, "CLEAR CACHE"); // NOI18N
         clearCacheLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 clearCacheLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 clearCacheLabelMousePressed(evt);
             }

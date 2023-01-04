@@ -533,7 +533,8 @@ final class TokensBrowserTopComponent extends TopComponent {
             }
             return sb.toString ();
         }
-        
+
+        @Override
         public Component getTreeCellRendererComponent (
             JTree       tree, 
             Object      value,

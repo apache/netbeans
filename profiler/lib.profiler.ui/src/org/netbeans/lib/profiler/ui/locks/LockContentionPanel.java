@@ -166,11 +166,14 @@ public abstract class LockContentionPanel extends DataView {
         toolbar.add(modeLabel);
         
         modeCombo = new JComboBox(new Object[] { MODE_THREADS, MODE_MONITORS }) {
+            @Override
             protected void fireActionEvent() {
                 super.fireActionEvent();
                 treeTable.clearSelection();
                 prepareResults();
             }
+
+            @Override
             public Dimension getMaximumSize() {
                 Dimension dim = getPreferredSize();
                 dim.width += 20;
@@ -178,6 +181,7 @@ public abstract class LockContentionPanel extends DataView {
             }
         };
         modeCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
             public Component getListCellRendererComponent(final JList list, final Object value, final int index,
                                                           final boolean isSelected, final boolean cellHasFocus) {
                 DefaultListCellRenderer dlcr =
@@ -210,6 +214,7 @@ public abstract class LockContentionPanel extends DataView {
                 popup.addSeparator();
                 
                 popup.add(new JMenuItem(SearchUtils.ACTION_FIND) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { activateSearch(); }
                 });
             }
@@ -350,6 +355,8 @@ public abstract class LockContentionPanel extends DataView {
                     {
                         if (!searchMonitors) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchThreads = !searchThreads;
@@ -359,6 +366,8 @@ public abstract class LockContentionPanel extends DataView {
                     {
                         if (!searchThreads) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchMonitors = !searchMonitors;

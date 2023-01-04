@@ -311,11 +311,13 @@ public abstract class BufferedCanvasComponent extends JComponent {
             invalidOffscreenArea.setBounds(invalidArea);
         else invalidOffscreenArea.add(invalidArea);
     }
-    
+
+    @Override
     public final void paint(Graphics g) {
         super.paint(g);
     }
-    
+
+    @Override
     protected final void paintComponent(Graphics g) {
         if (bufferType != BUFFER_NONE) { // Painting to an offscreen image
             
@@ -383,15 +385,18 @@ public abstract class BufferedCanvasComponent extends JComponent {
 
         invalidOffscreenArea.setBounds(0, 0, 0, 0);
     }
-    
+
+    @Override
     protected final void paintChildren(Graphics g) {
         super.paintChildren(g);
     }
-    
+
+    @Override
     protected final void paintBorder(Graphics g) {
         // Not implemented
     }
-    
+
+    @Override
     public final void update(Graphics g) {
         // Not implemented
     }
@@ -506,8 +511,9 @@ public abstract class BufferedCanvasComponent extends JComponent {
         // Return Volatile image state
         return ((VolatileImage)offscreenImage).validate(gConfiguration);
     }
-    
-    
+
+
+    @Override
     public final void reshape(int x, int y, int w, int h) {
         Rectangle oldBounds = getBounds();
         Rectangle newBounds = new Rectangle(x, y, w, h);
@@ -531,6 +537,7 @@ public abstract class BufferedCanvasComponent extends JComponent {
      * @param border the <code>Border</code> to set
      * @exception IllegalArgumentException this method is not implemented
      */
+    @Override
     public final void setBorder(Border border) {
         if (border != null)
             throw new IllegalArgumentException("setBorder() not supported"); // NOI18N
@@ -543,6 +550,7 @@ public abstract class BufferedCanvasComponent extends JComponent {
      * @return a <code>Rectange</code> of zero dimension and zero origin
      * @see #setBorder
      */
+    @Override
     public final Insets getInsets() {
         return ZERO_INSETS;
     }
@@ -559,6 +567,7 @@ public abstract class BufferedCanvasComponent extends JComponent {
      * @beaninfo
      *   expert: true
      */
+    @Override
     public final Insets getInsets(Insets insets) {
         insets.set(0, 0, 0, 0);
         return insets;
@@ -585,11 +594,13 @@ public abstract class BufferedCanvasComponent extends JComponent {
                 else BufferedCanvasComponent.this.hidden();
             }
         }
-        
+
+        @Override
         public void windowDeiconified(WindowEvent e) {
             BufferedCanvasComponent.this.windowDeiconified();
         }
-        
+
+        @Override
         public void windowIconified(WindowEvent e) {
             BufferedCanvasComponent.this.windowIconified();
         }

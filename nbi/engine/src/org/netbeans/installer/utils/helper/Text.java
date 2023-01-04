@@ -72,7 +72,8 @@ public class Text {
                     return "";
             }
         }
-        
+
+        @Override
         public String toString() {
             switch (this) {
                 case PLAIN_TEXT:

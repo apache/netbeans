@@ -1081,9 +1081,13 @@ final class JavaActions implements ActionProvider {
         final int[] line = new int[] {-1};
         class Handler extends DefaultHandler {
             private Locator locator;
+
+            @Override
             public void setDocumentLocator(Locator l) {
                 locator = l;
             }
+
+            @Override
             public void startElement(String uri, String localname, String qname, Attributes attr) throws SAXException {
                 if (line[0] == -1) {
                     if (localname.equals(elementLocalName) && match.equals(attr.getValue(elementAttributeName))) { // NOI18N

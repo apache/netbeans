@@ -48,6 +48,7 @@ public class CatalogEntryBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         int PROPERTY_publicID = 0;
         int PROPERTY_systemID = 1;
@@ -78,6 +79,7 @@ public class CatalogEntryBeanInfo extends SimpleBeanInfo {
      * events fired by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
         return new EventSetDescriptor[0];
     }
@@ -89,6 +91,7 @@ public class CatalogEntryBeanInfo extends SimpleBeanInfo {
      * implemented by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public MethodDescriptor[] getMethodDescriptors() {
         return new MethodDescriptor[0];
     }
@@ -114,6 +117,7 @@ public class CatalogEntryBeanInfo extends SimpleBeanInfo {
      * @return  An image object representing the requested icon.  May
      *    return null if no suitable icon is available.
      */
+    @Override
     public Image getIcon (int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
             (type == java.beans.BeanInfo.ICON_MONO_16x16)) {

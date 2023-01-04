@@ -175,7 +175,8 @@ public class PropertiesTable implements AncestorListener, TableModelListener {
     }
 
     public class PropertiesTableCellRenderer extends DefaultTableCellRenderer {
-           
+
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
             Component renderer =  super.getTableCellRendererComponent(table, value, hasFocus, hasFocus, rowIndex, columnIndex);
             if (renderer instanceof JComponent) {

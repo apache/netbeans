@@ -389,6 +389,8 @@ class ProfilerWindow extends ProfilerTopComponent {
                 setRepeats(false);
                 setInitialDelay(50);
             }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 updateFocus();
             }
@@ -602,6 +604,8 @@ class ProfilerWindow extends ProfilerTopComponent {
                 {
                     setEnabled(!session.inProgress());
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent event) {
                     configureAttachSettings(true);
                 }
@@ -838,14 +842,17 @@ class ProfilerWindow extends ProfilerTopComponent {
     public AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {
             accessibleContext = new JComponent.AccessibleJComponent() {
+                @Override
                 public AccessibleRole getAccessibleRole() {
                     return AccessibleRole.PANEL;
                 }
 
+                @Override
                 public String getAccessibleName() {
                     return Bundle.ProfilerWindow_accessName(getDisplayName());
                 }
 
+                @Override
                 public String getAccessibleDescription() {
                     ProfilerFeature selected = featuresView == null ? null :
                                     featuresView.getSelectedFeature();
@@ -877,7 +884,8 @@ class ProfilerWindow extends ProfilerTopComponent {
             updateVisibility(false);
             if (settings != null) settings.addComponentListener(this);
         }
-        
+
+        @Override
         protected void fireActionPerformed(ActionEvent e) {
             if (settings != null) {
                 settings.setVisible(isSelected());

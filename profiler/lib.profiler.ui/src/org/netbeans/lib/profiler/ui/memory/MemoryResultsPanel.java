@@ -190,6 +190,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
                 });
 
             table.addKeyListener(new KeyAdapter() {
+                @Override
                     public void keyPressed(KeyEvent e) {
                         if ((e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU)
                                 || ((e.getKeyCode() == KeyEvent.VK_F10) && (e.getModifiers() == InputEvent.SHIFT_MASK))) {
@@ -210,6 +211,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
                 });
 
             table.addMouseListener(new MouseAdapter() {
+                @Override
                     public void mousePressed(MouseEvent e) {
                         if (e.getModifiers() == InputEvent.BUTTON3_MASK) {
                             int line = table.rowAtPoint(e.getPoint());
@@ -220,6 +222,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
                         }
                     }
 
+                @Override
                     public void mouseClicked(MouseEvent e) {
                         clickedLine = table.rowAtPoint(e.getPoint());
 

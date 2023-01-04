@@ -752,11 +752,13 @@ public class XMLUtil {
         public Locator getDocumentLocator() {
             return resultLocator;
         }
-        
+
+        @Override
         public void setDocumentLocator(Locator locator) {
             this.locator = locator;  
         }
 
+        @Override
         public void startElement(String namespaceURI, String localName,
                                  String rawName, Attributes attrs) throws SAXException {
             if (resultLocator != null) {

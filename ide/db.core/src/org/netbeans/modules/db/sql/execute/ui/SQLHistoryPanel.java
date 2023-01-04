@@ -234,6 +234,7 @@ public class SQLHistoryPanel extends javax.swing.JPanel {
         insertSQLButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         sqlHistoryTable = new JTable() {
+            @Override
             public Component prepareRenderer(TableCellRenderer renderer,
                 int rowIndex, int vColIndex) {
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
@@ -292,6 +293,7 @@ public class SQLHistoryPanel extends javax.swing.JPanel {
         sqlHistoryTableColumn.setMaxWidth(dateColumnWidth);
         sqlHistoryTableColumn.setHeaderValue(NbBundle.getMessage(SQLHistoryPanel.class, "LBL_DateTableTitle"));
         sqlHistoryTableColumn.setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 if(value instanceof Date) {
                     value = dateTimeFormat.format((Date) value);

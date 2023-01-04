@@ -102,6 +102,7 @@ public class JExtendedTable extends JTable implements CellTipAware, MouseListene
         return ((userFindString != null) && (userFindString.trim().length() > 0));
     }
 
+    @Override
     public void setGridColor(Color gridColor) {
         super.setGridColor(gridColor);
 
@@ -247,7 +248,8 @@ public class JExtendedTable extends JTable implements CellTipAware, MouseListene
         mouseMoved(e);
         CellTipManager.sharedInstance().setEnabled(false);
     }
-    
+
+    @Override
     public void processMouseEvent(final MouseEvent e) {
         if (e instanceof MouseWheelEvent) {
             Component target = JExtendedTable.this.getParent();
@@ -373,7 +375,8 @@ public class JExtendedTable extends JTable implements CellTipAware, MouseListene
             });
 
         addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent e) {
+            @Override
+                    public void keyPressed(KeyEvent e) {
                     int rowCount = getRowCount();
 
                     switch (e.getKeyCode()) {

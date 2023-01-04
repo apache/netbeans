@@ -241,6 +241,7 @@ public class STSConfigServicePanel extends JPanel {
         contractLabel.setText(org.openide.util.NbBundle.getMessage(STSConfigServicePanel.class, "LBL_STSConfig_Contract")); // NOI18N
 
         contractTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 contractTextFieldKeyReleased(evt);
             }
@@ -256,6 +257,7 @@ public class STSConfigServicePanel extends JPanel {
         issuerLabel.setText(org.openide.util.NbBundle.getMessage(STSConfigServicePanel.class, "LBL_STSConfig_Issuer")); // NOI18N
 
         issuerField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 issuerFieldKeyReleased(evt);
             }
@@ -282,6 +284,7 @@ public class STSConfigServicePanel extends JPanel {
 
         lifeTimeTextField.setFormatterFactory(lifeTimeDff);
         lifeTimeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 lifeTimeTextFieldKeyReleased(evt);
             }

@@ -100,6 +100,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
      * TableModel wrapper, passes it through to the model after
      * fetching the right TreeTableNode for the given row.
      */
+    @Override
     public boolean isCellEditable(int row, int column) {
         return treeTableModel.isCellEditable(nodeForRow(row), column);
     }
@@ -107,6 +108,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
     /**
      * TableModel wrapper, passes it through to the model.
      */
+    @Override
     public Class getColumnClass(int column) {
         return treeTableModel.getColumnClass(column);
     }
@@ -121,6 +123,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
     /**
      * TableModel wrapper, passes it through to the model.
      */
+    @Override
     public String getColumnName(int column) {
         return treeTableModel.getColumnName(column);
     }
@@ -163,6 +166,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
      * TableModel wrapper, passes it through to the model after
      * fetching the right TreeTableNode for the given row.
      */
+    @Override
     public void setValueAt(Object value, int row, int column) {
         treeTableModel.setValueAt(value, nodeForRow(row), column);
     }

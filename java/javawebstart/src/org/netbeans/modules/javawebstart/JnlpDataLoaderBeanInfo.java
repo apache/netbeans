@@ -29,7 +29,8 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Utilities;
 
 public class JnlpDataLoaderBeanInfo extends SimpleBeanInfo {
-    
+
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             return new BeanInfo[] {Introspector.getBeanInfo(UniFileLoader.class)};
@@ -37,7 +38,8 @@ public class JnlpDataLoaderBeanInfo extends SimpleBeanInfo {
             throw new AssertionError(e);
         }
     }
-    
+
+    @Override
     public Image getIcon(int type) {
         if (type == BeanInfo.ICON_COLOR_16x16 || type == BeanInfo.ICON_MONO_16x16) {
             return ImageUtilities.loadImage("org/netbeans/modules/javawebstart/resources/jnlp.gif"); // NOI18N

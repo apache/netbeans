@@ -183,6 +183,7 @@ public class ImageViewer extends CloneableTopComponent {
      */
     private Component createImageView() {
         panel = new JPanel() {
+            @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(

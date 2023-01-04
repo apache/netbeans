@@ -205,6 +205,7 @@ public abstract class NetBeansProfiler extends Profiler {
             
             if (cancelHandler != null) {
                 JButton cancelButton = new JButton() {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         close();
                         cancelHandler.run();

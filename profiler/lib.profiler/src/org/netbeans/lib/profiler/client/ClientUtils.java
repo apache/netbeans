@@ -329,6 +329,7 @@ public class ClientUtils implements CommonConstants {
             return (code == APP);
         }
 
+        @Override
         public String getMessage() {
             if (super.getMessage() == null) {
                 return (code == VM) ? "Target JVM inactive" : "Target application inactive"; // NOI18N

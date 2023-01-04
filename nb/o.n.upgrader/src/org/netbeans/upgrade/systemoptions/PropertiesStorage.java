@@ -104,6 +104,7 @@ class PropertiesStorage  {
         final FileLock lock = fo.lock();
         final OutputStream os = fo.getOutputStream(lock);
         return new FilterOutputStream(os) {
+            @Override
             public void close() throws IOException {
                 super.close();
                 lock.releaseLock();

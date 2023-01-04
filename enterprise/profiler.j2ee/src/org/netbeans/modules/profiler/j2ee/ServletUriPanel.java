@@ -45,6 +45,7 @@ public class ServletUriPanel extends javax.swing.JPanel {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public java.awt.Dimension getPreferredSize() {
         return new java.awt.Dimension(super.getPreferredSize().width + 30, super.getPreferredSize().height);
     }

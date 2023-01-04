@@ -474,17 +474,40 @@ public final class VCSFilesystemInterceptor {
     }
 
     private static final DelegatingInterceptor nullDelegatingInterceptor = new DelegatingInterceptor() {
+        @Override
         public boolean beforeDelete() { return false; }
+
+        @Override
         public void doDelete() throws IOException {  }
+
+        @Override
         public void afterDelete() { }
+
+        @Override
         public boolean beforeMove() { return false; }
+
+        @Override
         public void doMove() throws IOException {  }
+
+        @Override
         public boolean beforeCreate() { return false; }
+
+        @Override
         public void doCreate() throws IOException {  }
+
+        @Override
         public void afterCreate() {  }
+
+        @Override
         public void beforeChange() {  }
+
+        @Override
         public void beforeEdit() { }
+
+        @Override
         public void afterChange() {  }
+
+        @Override
         public void afterMove() {  }
     };
 

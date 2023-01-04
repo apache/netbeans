@@ -120,6 +120,7 @@ public class MultiTargetChooserPanelGUI extends javax.swing.JPanel implements Ac
         setName( NbBundle.getBundle (MultiTargetChooserPanelGUI.class).getString ("LBL_JavaTargetChooserPanelGUI_Name")  ); // NOI18N
     }
             
+    @Override
     public void addNotify () {
         Dimension panel2Size = this.jPanel2.getPreferredSize();
         Dimension bottomPanelSize = this.bottomPanelContainer.getPreferredSize ();
@@ -543,7 +544,8 @@ public class MultiTargetChooserPanelGUI extends javax.swing.JPanel implements Ac
     private static final class GroupListCellRenderer extends DefaultListCellRenderer/*<SourceGroup>*/ {
         
         public GroupListCellRenderer() {}
-        
+
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             SourceGroup g = (SourceGroup) value;
             if (g != null) {

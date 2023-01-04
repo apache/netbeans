@@ -47,16 +47,19 @@ public class CImage extends BufferedImage {
        this.raster = raster;
     }
 
+    @Override
     public Raster getData() {
         return raster;
     }
 
+    @Override
     public Vector getSources() {
         System.err.println("GetSources...");
         Thread.dumpStack();
         return null;
-    }    
-    
+    }
+
+    @Override
     public ImageProducer getSource() {
         System.err.println("GET SOURCE");
         Thread.dumpStack();

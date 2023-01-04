@@ -213,17 +213,23 @@ public final class ZendOptionsPanel extends JPanel {
         learnMoreLabel.setLabelFor(this);
         Mnemonics.setLocalizedText(learnMoreLabel, NbBundle.getMessage(ZendOptionsPanel.class, "ZendOptionsPanel.learnMoreLabel.text")); // NOI18N
         learnMoreLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }
         });
         learnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }

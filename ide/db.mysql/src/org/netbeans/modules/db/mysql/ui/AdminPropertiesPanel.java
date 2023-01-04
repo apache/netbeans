@@ -218,6 +218,7 @@ public class AdminPropertiesPanel extends javax.swing.JPanel {
             }
         });
         txtAdmin.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtAdminFocusLost(evt);
             }
@@ -257,6 +258,7 @@ public class AdminPropertiesPanel extends javax.swing.JPanel {
             }
         });
         txtStart.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtStartFocusLost(evt);
             }
@@ -289,6 +291,7 @@ public class AdminPropertiesPanel extends javax.swing.JPanel {
             }
         });
         txtStop.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtStopFocusLost(evt);
             }

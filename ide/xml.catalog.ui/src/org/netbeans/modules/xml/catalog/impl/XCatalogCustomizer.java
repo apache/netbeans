@@ -73,6 +73,7 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
             }
         });
         locationTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 locationTextFieldFocusLost(evt);
             }
@@ -152,11 +153,13 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
         
         model = (XCatalog) peer;        
         locationTextField.setText(model.getSource());
-    }    
+    }
 
+    @Override
     public void addPropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
-    
+
+    @Override
     public void removePropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
     

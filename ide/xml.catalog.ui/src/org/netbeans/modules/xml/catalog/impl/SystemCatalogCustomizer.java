@@ -49,6 +49,7 @@ public class SystemCatalogCustomizer extends javax.swing.JPanel implements Custo
         java.awt.GridBagConstraints gridBagConstraints;
 
         jTextArea1 = new javax.swing.JTextArea(){
+            @Override
             public boolean isFocusTraversable(){
                 return false;
             }
@@ -85,10 +86,12 @@ public class SystemCatalogCustomizer extends javax.swing.JPanel implements Custo
 
     public void setObject(final java.lang.Object peer) {
     }
-    
+
+    @Override
     public void addPropertyChangeListener(final java.beans.PropertyChangeListener p1) {
     }
-    
+
+    @Override
     public void removePropertyChangeListener(final java.beans.PropertyChangeListener p1) {
     }
 }

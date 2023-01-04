@@ -487,6 +487,7 @@ public class FormatSelector {
         org.openide.awt.Mnemonics.setLocalizedText(formatLabel, org.openide.util.NbBundle.getMessage(FormatSelector.class, "LBL_FormatSelector_Format")); // NOI18N
 
         formatField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formatFieldFocusLost(evt);
             }

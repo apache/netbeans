@@ -514,6 +514,7 @@ private void primarySchemaCheckBoxActionPerformed(java.awt.event.ActionEvent evt
         public LocationView() {
             super();
             tree.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     // Invert the selection of the data node, if such a
                     // node was clicked on.

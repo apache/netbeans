@@ -32,6 +32,8 @@ public interface GlobalSimpleType extends SimpleType, GlobalType {
         ALL(Type.ALL), LIST(Type.LIST), UNION(Type.UNION), RESTRICTION(Type.RESTRICTION), EMPTY(Type.EMPTY);
         private Derivation.Type value;
         Final(Derivation.Type v) { value = v; }
+
+        @Override
         public String toString() { return value.toString(); }
     }
     

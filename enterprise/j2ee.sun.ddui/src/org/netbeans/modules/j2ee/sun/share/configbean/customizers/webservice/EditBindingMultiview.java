@@ -147,6 +147,7 @@ public class EditBindingMultiview extends JPanel implements TableModelListener {
         add(jLblProviderId, gridBagConstraints);
 
         jTxtProviderId.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtProviderIdKeyReleased(evt);
             }

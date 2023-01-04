@@ -69,6 +69,7 @@ public class JExtendedSplitPane extends JSplitPane {
     private class SplitPaneComponentListener extends ComponentAdapter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void componentHidden(ComponentEvent e) {
             computeDividerLocationWhenHidden(e.getComponent());
 
@@ -79,6 +80,7 @@ public class JExtendedSplitPane extends JSplitPane {
             updateVisibility();
         }
 
+        @Override
         public void componentShown(ComponentEvent e) {
             updateVisibility();
         }
@@ -138,15 +140,18 @@ public class JExtendedSplitPane extends JSplitPane {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void setBottomComponent(Component comp) {
         setRightComponent(comp);
     }
 
+    @Override
     public void setDividerSize(int newSize) {
         super.setDividerSize(newSize);
         dividerSize = newSize;
     }
 
+    @Override
     public void setLeftComponent(Component comp) { // Actually setTopComponent is implemented as setLeftComponent
 
         if (getLeftComponent() != null) {
@@ -162,6 +167,7 @@ public class JExtendedSplitPane extends JSplitPane {
         updateVisibility();
     }
 
+    @Override
     public void setRightComponent(Component comp) { // Actually setBottomComponent is implemented as setRightComponent
 
         if (getRightComponent() != null) {
@@ -177,6 +183,7 @@ public class JExtendedSplitPane extends JSplitPane {
         updateVisibility();
     }
 
+    @Override
     public void setTopComponent(Component comp) {
         setLeftComponent(comp);
     }

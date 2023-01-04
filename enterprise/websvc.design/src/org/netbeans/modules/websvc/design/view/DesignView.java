@@ -195,13 +195,15 @@ public class DesignView extends JPanel  implements Flushable {
         }
         return view;
     }
-    
+
+    @Override
     public void requestFocus() {
         super.requestFocus();
         // Ensure the graph widgets have the focus.
         getContent().requestFocus();
     }
-    
+
+    @Override
     public boolean requestFocusInWindow() {
         super.requestFocusInWindow();
         // Ensure the graph widgets have the focus.

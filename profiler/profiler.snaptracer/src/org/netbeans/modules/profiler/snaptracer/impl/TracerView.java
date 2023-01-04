@@ -87,20 +87,29 @@ public final class TracerView {
         
         // add the timeline component to the UI
         final JPanel container = new JPanel(null) {
+            @Override
             public void doLayout() {
                 Component[] components = getComponents();
                 for (Component component : components)
                     component.setBounds(0, 0, getWidth(), getHeight());
             }
+
+            @Override
             public Dimension getPreferredSize() {
                 return getComponent(getComponentCount() - 1).getPreferredSize();
             }
+
+            @Override
             public Dimension getMinimumSize() {
                 return getComponent(getComponentCount() - 1).getMinimumSize();
             }
+
+            @Override
             public Dimension getMaximumSize() {
                 return getComponent(getComponentCount() - 1).getMaximumSize();
             }
+
+            @Override
             public boolean isOptimizedDrawingEnabled() {
                 return false;
             }

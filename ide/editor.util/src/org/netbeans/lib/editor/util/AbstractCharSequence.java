@@ -99,7 +99,8 @@ public abstract class AbstractCharSequence implements CharSequence {
         public boolean equals(Object o) {
             return CharSequenceUtilities.equals(this, o);
         }
-        
+
+        @Override
         public CharSequence subSequence(int start, int end) {
             return new CharSubSequence.StringLike(this, start, end);
         }

@@ -65,7 +65,8 @@ public class NbiTreeTableColumnRenderer extends JTree implements TableCellRender
         
         return this;
     }
-    
+
+    @Override
     public void setBounds(int x, int y, int w, int h) {
         if (treeTable != null) {
             super.setBounds(x, 0, w, treeTable.getHeight());
@@ -73,7 +74,8 @@ public class NbiTreeTableColumnRenderer extends JTree implements TableCellRender
             super.setBounds(x, y, w, h);
         }
     }
-    
+
+    @Override
     public void paint(Graphics g) {
         g.translate(0, -visibleRow * getRowHeight());
         super.paint(g);

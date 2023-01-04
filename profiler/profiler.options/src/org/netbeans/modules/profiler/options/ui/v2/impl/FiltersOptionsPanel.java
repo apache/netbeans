@@ -345,7 +345,8 @@ public final class FiltersOptionsPanel extends ProfilerOptionsPanel {
     
     
     private class ColorsTableModel extends AbstractTableModel {
-        
+
+        @Override
         public String getColumnName(int column) {
             switch (column) {
                 case 0: return Bundle.FiltersOptionsPanel_ColumnFilter();
@@ -390,6 +391,8 @@ public final class FiltersOptionsPanel extends ProfilerOptionsPanel {
                     setIcon(customized.getIcon(16, 12));
                     setToolTipText(""); // NOI18N // register with ToolTipManager
                 }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     Color c = selectColor(this, customized.getColor());
                     if (c != null) {
@@ -397,6 +400,8 @@ public final class FiltersOptionsPanel extends ProfilerOptionsPanel {
                         repaint();
                     }
                 }
+
+                @Override
                 public String getToolTipText(MouseEvent e) {
                     Color col = customized.getColor();
                     return col == null ? Bundle.ColorCustomizer_DefaultColor() :
@@ -427,6 +432,8 @@ public final class FiltersOptionsPanel extends ProfilerOptionsPanel {
             
             JCheckBox colorC = new JCheckBox(Bundle.ColorCustomizer_Color(), customized.getColor() != null) {
                 private Color bkpC;
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     if (isSelected()) {
@@ -525,6 +532,7 @@ public final class FiltersOptionsPanel extends ProfilerOptionsPanel {
             JDialog dialog = JColorChooser.createDialog(comp, Bundle.ColorCustomizer_ColorCaption(), true, pane, ret, null);
 
             dialog.addComponentListener(new ComponentAdapter() {
+                @Override
                 public void componentHidden(ComponentEvent e) {
                     Window w = (Window)e.getComponent();
                     w.dispose();

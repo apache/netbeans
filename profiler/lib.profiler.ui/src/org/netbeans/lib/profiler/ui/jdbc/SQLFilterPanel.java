@@ -118,6 +118,7 @@ abstract class SQLFilterPanel extends JPanel {
         toolbar.add(Box.createHorizontalStrut(3));
         
         final JTextField filterF = new JTextField(20) {
+            @Override
             public Dimension getMaximumSize() {
                 Dimension dim = super.getMaximumSize();
                 dim.height = super.getPreferredSize().height;
@@ -138,12 +139,14 @@ abstract class SQLFilterPanel extends JPanel {
         toolbar.add(Box.createHorizontalStrut(10));
         
         applyB = new JButton(FILTER_BUTTON) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { apply(); }
         };
         String filterAccelerator = ActionsSupport.keyAcceleratorString(applyKey);
         applyB.setToolTipText(MessageFormat.format(FILTER_TOOLTIP, filterAccelerator));
         applyB.setOpaque(false);
         JPanel applyP = new JPanel(new BorderLayout()) {
+            @Override
             public Dimension getMaximumSize() { return getMinimumSize(); }
         };
         applyP.add(applyB, BorderLayout.CENTER);
@@ -168,6 +171,7 @@ abstract class SQLFilterPanel extends JPanel {
                     current.commands.retainAll(commands);
                     for (final String command : commands) {
                         JCheckBoxMenuItem i = new JCheckBoxMenuItem(command, !current.commands.contains(command)) {
+                            @Override
                             protected void fireActionPerformed(ActionEvent e) {
                                 if (!isSelected()) current.commands.add(command);
                                 else current.commands.remove(command);
@@ -219,6 +223,7 @@ abstract class SQLFilterPanel extends JPanel {
         PopupButton statements = new PopupButton(" " + STATEMENTS_DROPDOWN + " ") { // NOI18N
             protected void populatePopup(JPopupMenu popup) {
                 popup.add(new JCheckBoxMenuItem(STATEMENT_REGULAR, !current.statements.contains(JdbcCCTProvider.SQL_STATEMENT)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         if (!isSelected()) current.statements.add(JdbcCCTProvider.SQL_STATEMENT);
                         else current.statements.remove(JdbcCCTProvider.SQL_STATEMENT);
@@ -229,6 +234,7 @@ abstract class SQLFilterPanel extends JPanel {
                 });
                 
                 popup.add(new JCheckBoxMenuItem(STATEMENT_PREPARED, !current.statements.contains(JdbcCCTProvider.SQL_PREPARED_STATEMENT)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         if (!isSelected()) current.statements.add(JdbcCCTProvider.SQL_PREPARED_STATEMENT);
                         else current.statements.remove(JdbcCCTProvider.SQL_PREPARED_STATEMENT);
@@ -239,6 +245,7 @@ abstract class SQLFilterPanel extends JPanel {
                 });
                 
                 popup.add(new JCheckBoxMenuItem(STATEMENT_CALLABLE, !current.statements.contains(JdbcCCTProvider.SQL_CALLABLE_STATEMENT)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         if (!isSelected()) current.statements.add(JdbcCCTProvider.SQL_CALLABLE_STATEMENT);
                         else current.statements.remove(JdbcCCTProvider.SQL_CALLABLE_STATEMENT);

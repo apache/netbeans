@@ -182,11 +182,13 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
         
         model = (SAXGeneratorModel) peer;
         initView();
-    }    
-        
+    }
+
+    @Override
     public void addPropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
-    
+
+    @Override
     public void removePropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
 

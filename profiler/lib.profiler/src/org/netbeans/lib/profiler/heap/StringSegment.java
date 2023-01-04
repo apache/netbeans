@@ -125,6 +125,7 @@ class StringSegment extends TagBounds {
             super(SIZE,0.75f,true);
         }
 
+        @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
             if (size() > SIZE) {
                 return true;

@@ -721,7 +721,8 @@ public abstract class ClassInfo extends BaseClassInfo implements JavaClassConsta
             localsCPIdx = locals;
             stacksCPIdx = stacks;
         }
-        
+
+        @Override
         void writeFrame(byte[] ret, int offset) {
             ret[offset++] = (byte)255; // FULL_FRAME
             putU2(ret,offset,storedOffsetDelta); // offset_delta

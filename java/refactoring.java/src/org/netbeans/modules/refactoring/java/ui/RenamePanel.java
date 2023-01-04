@@ -308,6 +308,7 @@ public class RenamePanel extends JPanel implements CustomRefactoringPanel {
         nameField.setText(oldName);
         nameField.selectAll();
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 nameFieldFocusLost(evt);
             }

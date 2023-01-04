@@ -158,7 +158,8 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         HgModuleConfig.getDefault().getPreferences().addPreferenceChangeListener(this);
@@ -168,7 +169,8 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
         mercurial.addPropertyChangeListener(syncTable);
         reScheduleRefresh(0);   // the view does not listen for changes when it is not visible
     }
-    
+
+    @Override
     public void removeNotify() {
         HgModuleConfig.getDefault().getPreferences().removePreferenceChangeListener(this);
         mercurial.getFileStatusCache().removePropertyChangeListener(this);
@@ -622,11 +624,13 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
                 button.setMargin(new Insets(0, 3, 0, 3));
                 button.setBorderPainted(false);
                 button.addMouseListener(new MouseAdapter() {
+                    @Override
                     public void mouseEntered(MouseEvent e) {
                         button.setContentAreaFilled(true);
                         button.setBorderPainted(true);
                     }
-                    
+
+                    @Override
                     public void mouseExited(MouseEvent e) {
                         button.setContentAreaFilled(false);
                         button.setBorderPainted(false);

@@ -111,6 +111,7 @@ public class PasswordDlg extends javax.swing.JPanel implements PromptPasswordDia
 
         tfPassword.setText(null);
         tfPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfPasswordonPwdFocus(evt);
             }

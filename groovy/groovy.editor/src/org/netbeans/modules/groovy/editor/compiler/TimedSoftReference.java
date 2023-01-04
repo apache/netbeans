@@ -79,6 +79,7 @@ final class TimedSoftReference<T> extends SoftReference<T> implements Runnable {
         removeFunc.accept(this);
     }
 
+    @Override
     public T get() {
         synchronized (this) {
             if (o == null) {

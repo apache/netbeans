@@ -31,6 +31,8 @@ public class DerivationsImpl implements Derivation {
 
     public static class DerivationSet<E> extends HashSet<E> {
         public static final long serialVersionUID = 1L;
+
+        @Override
         public String toString() {
             StringBuffer sb = new StringBuffer();
             boolean first = true;

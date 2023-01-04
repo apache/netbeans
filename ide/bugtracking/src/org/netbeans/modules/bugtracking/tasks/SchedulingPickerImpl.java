@@ -110,6 +110,7 @@ public class SchedulingPickerImpl extends javax.swing.JPanel {
         popupButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/bugtracking/tasks/resources/arrow-down.png"))); // NOI18N
         popupButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
         popupButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 popupButtonMousePressed(evt);
             }

@@ -134,6 +134,7 @@ public class ClassesListControllerUI extends JTitledPanel {
     private class ClassesListTableKeyListener extends KeyAdapter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void keyPressed(KeyEvent e) {
             if ((e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU)
                     || ((e.getKeyCode() == KeyEvent.VK_F10) && (e.getModifiers() == InputEvent.SHIFT_MASK))) {
@@ -206,18 +207,21 @@ public class ClassesListControllerUI extends JTitledPanel {
             else classesListTable.clearSelection();
         }
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             final int row = classesListTable.rowAtPoint(e.getPoint());
             updateSelection(row);
             if (e.isPopupTrigger()) showPopupMenu(row, e.getX(), e.getY());
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             int row = classesListTable.rowAtPoint(e.getPoint());
             updateSelection(row);
             if (e.isPopupTrigger()) showPopupMenu(row, e.getX(), e.getY());
         }
 
+        @Override
         public void mouseClicked(MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                 int row = classesListTable.rowAtPoint(e.getPoint());
@@ -504,6 +508,7 @@ public class ClassesListControllerUI extends JTitledPanel {
         }
 
         cornerButton.addKeyListener(new KeyAdapter() {
+            @Override
                 public void keyPressed(final KeyEvent evt) {
                     if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
                         showColumnSelectionPopup(headerPopup, cornerButton);
@@ -512,6 +517,7 @@ public class ClassesListControllerUI extends JTitledPanel {
             });
 
         cornerButton.addMouseListener(new MouseAdapter() {
+            @Override
                 public void mousePressed(MouseEvent mouseEvent) {
                     if (headerPopup.isVisible()) {
                         internalCornerButtonClick = true;
@@ -525,6 +531,7 @@ public class ClassesListControllerUI extends JTitledPanel {
                     }
                 }
 
+            @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     if ((mouseEvent.getModifiers() == InputEvent.BUTTON1_MASK) && (!internalCornerButtonClick)) {
                         showColumnSelectionPopup(headerPopup, cornerButton);
@@ -638,6 +645,7 @@ public class ClassesListControllerUI extends JTitledPanel {
     protected Component[] getAdditionalControls() {
         if (l == null) {
             l = new JButton() {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     if (classesListController.isDiff()) {
                         classesListController.resetDiffAction();
@@ -645,15 +653,23 @@ public class ClassesListControllerUI extends JTitledPanel {
                         classesListController.compareAction();
                     }
                 }
+
+                @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
+
+                @Override
                 public Dimension getMaximumSize() {
                     return getPreferredSize();
                 }
+
+                @Override
                 public boolean isContentAreaFilled() {
                     return !UIUtils.isOracleLookAndFeel() ? false : isFocusOwner();
                 }
+
+                @Override
                 public boolean isOpaque() {
                     return !UIUtils.isOracleLookAndFeel() ? false : isFocusOwner();
                 }
@@ -675,11 +691,14 @@ public class ClassesListControllerUI extends JTitledPanel {
         
         if (p == null) {
             p = new JProgressBar() {
+                @Override
                 public Dimension getPreferredSize() {
                     Dimension d = l.getPreferredSize();
                     d.width = 130;
                     return d;
                 }
+
+                @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

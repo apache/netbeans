@@ -158,24 +158,30 @@ public final class LogRecords {
         public Parser(Handler c) {
             this.callback = c;
         }
-        
-        
+
+
+        @Override
         public void setDocumentLocator(Locator locator) {
         }
 
+        @Override
         public void startDocument() throws SAXException {
         }
 
+        @Override
         public void endDocument() throws SAXException {
             callback.flush();
         }
 
+        @Override
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
         }
 
+        @Override
         public void endPrefixMapping(String prefix) throws SAXException {
         }
 
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.log(Level.FINEST, "uri: {0} localName: {1} qName: {2} atts: {3}", new Object[] { uri, localName, qName, atts });
@@ -192,7 +198,8 @@ public final class LogRecords {
             }
             chars = new StringBuilder();
         }
-        
+
+        @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (current != null) {
                 String v = chars.toString();
@@ -337,20 +344,25 @@ public final class LogRecords {
             result.initCause(cause);
             return result;
         }
-        
+
+        @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
             chars.append(ch, start, length);
         }
 
+        @Override
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         }
 
+        @Override
         public void processingInstruction(String target, String data) throws SAXException {
         }
 
+        @Override
         public void skippedEntity(String name) throws SAXException {
         }
 
+        @Override
         public void fatalError(SAXParseException e) throws SAXException {
             if (fatalErrors++ > 1000) {
                 throw e;
@@ -392,11 +404,13 @@ public final class LogRecords {
             this.values = values;
             more = 0;
         }
-       
+
+        @Override
         public StackTraceElement[] getStackTrace() {
             return trace.toArray(new StackTraceElement[0]);
         }
 
+        @Override
         public String getMessage() {
             return message;
         }
@@ -409,6 +423,7 @@ public final class LogRecords {
          * org.netbeans.lib.uihandler.LogRecords$FakeException: NullPointerException ...
          * is not the best message - it's better to suppress FakeException
          */
+        @Override
         public String toString(){
             return message;
         }

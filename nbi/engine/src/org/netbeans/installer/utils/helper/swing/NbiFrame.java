@@ -138,9 +138,9 @@ public class NbiFrame extends JFrame {
         
         initComponents();
     }
-    
-    
-    
+
+
+    @Override
     public void setVisible(boolean visible) {
         final GraphicsDevice screen = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().

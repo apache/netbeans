@@ -126,7 +126,8 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
             mydivider.repaint();
         }
     }
-    
+
+    @Override
     public void setBorder(Border border) {
         super.setBorder(BorderFactory.createEmptyBorder());
     }
@@ -176,12 +177,14 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
             }
         }
 
+        @Override
         public String getToolTipText(MouseEvent event) {
             Point p = event.getPoint();
             DividerAction spot = getHotspotAt(p);
             return spot == null ? null : spot.getValue(Action.NAME).toString();
         }
-        
+
+        @Override
         protected void paintComponent(Graphics gr) {
             Graphics2D g = (Graphics2D) gr.create();
             Rectangle clip = g.getClipBounds();

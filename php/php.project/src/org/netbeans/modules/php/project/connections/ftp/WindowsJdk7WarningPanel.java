@@ -104,9 +104,12 @@ public final class WindowsJdk7WarningPanel extends JPanel {
         Mnemonics.setLocalizedText(infoLabel, NbBundle.getMessage(WindowsJdk7WarningPanel.class, "WindowsJdk7WarningPanel.infoLabel.text")); // NOI18N
         Mnemonics.setLocalizedText(issueLinkLabel, NbBundle.getMessage(WindowsJdk7WarningPanel.class, "WindowsJdk7WarningPanel.issueLinkLabel.text"));
         issueLinkLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 issueLinkLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 issueLinkLabelMousePressed(evt);
             }

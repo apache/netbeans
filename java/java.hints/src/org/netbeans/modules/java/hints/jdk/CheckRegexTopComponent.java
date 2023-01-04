@@ -228,6 +228,7 @@ public final class CheckRegexTopComponent extends TopComponent {
         regexTextArea.setRows(5);
         regexTextArea.setFocusAccelerator('g');
         regexTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 regexTextAreaKeyReleased(evt);
             }
@@ -274,6 +275,7 @@ public final class CheckRegexTopComponent extends TopComponent {
         exampleTextArea.setRows(5);
         exampleTextArea.setFocusAccelerator('x');
         exampleTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 exampleTextAreaKeyReleased(evt);
             }

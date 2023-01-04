@@ -172,6 +172,7 @@ public class DDTablePanel extends JPanel
 
 	if (allowEdit) {
 	    tab.addMouseListener(new MouseAdapter() {
+			@Override
 	        public void mouseClicked(MouseEvent me) {
 	            if (me.getClickCount() == 2) {
 		        int row = tab.rowAtPoint(me.getPoint());
@@ -256,6 +257,7 @@ public class DDTablePanel extends JPanel
 	    TableCellRenderer cellR = c.getHeaderRenderer ();
 	    
 	    DefaultTableCellRenderer label = new DefaultTableCellRenderer() {
+			@Override
                  public Component getTableCellRendererComponent (JTable table,
                                                                  Object value,
                          		                   boolean isSelected,
@@ -508,6 +510,7 @@ public class DDTablePanel extends JPanel
      */
     private void addMouseListenerToHeader(final SortableDDTableModel model) { 
         MouseAdapter listMouseListener = new MouseAdapter() {
+			@Override
             public void mouseClicked(MouseEvent e) {
                 TableColumnModel columnModel = tab.getColumnModel();
                 int viewColumn = columnModel.getColumnIndexAtX(e.getX()); 

@@ -51,6 +51,8 @@ public interface GlobalElement extends Element, ReferenceableSchemaComponent,
         EMPTY(Type.EMPTY);
         private Derivation.Type value;
         Final(Derivation.Type v) { value = v; }
+
+        @Override
         public String toString() { return value.toString(); }
     }
     

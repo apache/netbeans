@@ -319,6 +319,8 @@ abstract class CPUTreeTableView extends CPUView {
                     {
                         if (!filterCallerMethods) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterTopMethods = !filterTopMethods;
@@ -329,6 +331,8 @@ abstract class CPUTreeTableView extends CPUView {
                     {
                         if (!filterTopMethods) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterCallerMethods = !filterCallerMethods;
@@ -380,6 +384,8 @@ abstract class CPUTreeTableView extends CPUView {
                     {
                         if (!searchCallerMethods) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchTopMethods = !searchTopMethods;
@@ -389,6 +395,8 @@ abstract class CPUTreeTableView extends CPUView {
                     {
                         if (!searchTopMethods) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchCallerMethods = !searchCallerMethods;

@@ -233,7 +233,8 @@ public final class PersistenceProviderComboboxHelper {
         PersistenceProviderCellRenderer(Provider defaultProvider) {
             this.defaultProvider = defaultProvider;
         }
-        
+
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             
             if (isSelected) {

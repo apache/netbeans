@@ -36,7 +36,8 @@ public enum CatalogElement {
     delegateURI,
     nextCatalog,
     group;
-    
+
+    @Override
     public String toString(){
         if(name().equals("Public"))
             return "public";

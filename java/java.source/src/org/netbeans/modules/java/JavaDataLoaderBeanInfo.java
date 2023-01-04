@@ -32,6 +32,7 @@ import org.openide.util.ImageUtilities;
 */
 public final class JavaDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (MultiFileLoader.class) };
@@ -44,6 +45,7 @@ public final class JavaDataLoaderBeanInfo extends SimpleBeanInfo {
     /** @param type Desired type of the icon
     * @return returns the Java loader's icon
     */
+    @Override
     public Image getIcon(final int type) {
         if ((type == BeanInfo.ICON_COLOR_16x16) || (type == BeanInfo.ICON_MONO_16x16)) {
             return ImageUtilities.loadImage( "org/netbeans/modules/java/resources/class.png"); // NOI18N
@@ -52,8 +54,9 @@ public final class JavaDataLoaderBeanInfo extends SimpleBeanInfo {
             return ImageUtilities.loadImage( "org/netbeans/modules/java/resources/class32.gif"); // NOI18N
         }
     }
-    
-    
+
+
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         return new PropertyDescriptor[0];
     }

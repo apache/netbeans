@@ -45,6 +45,7 @@ public class HostPropertyEditor extends PropertyEditorSupport implements ExPrope
     }
 
     /** @return text for the current value */
+    @Override
     public String getAsText () {
         HttpServerSettings.HostProperty hp = (HttpServerSettings.HostProperty) getValue();
         if (hp == null) {
@@ -60,6 +61,7 @@ public class HostPropertyEditor extends PropertyEditorSupport implements ExPrope
     }
 
     /** @param text A text for the current value. */
+    @Override
     public void setAsText (String text) {
         if (anyhost ().equals (text)) {
             setValue (new HttpServerSettings.HostProperty ("", HttpServerSettings.ANYHOST));    // NOI18N
@@ -74,10 +76,12 @@ public class HostPropertyEditor extends PropertyEditorSupport implements ExPrope
         throw new IllegalArgumentException (text);
     }
 
+    @Override
     public boolean supportsCustomEditor () {
         return true;
     }
 
+    @Override
     public java.awt.Component getCustomEditor () {
         return new HostPropertyCustomEditor (this, env);
     }

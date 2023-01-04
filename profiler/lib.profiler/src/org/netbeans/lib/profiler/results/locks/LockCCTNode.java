@@ -35,12 +35,21 @@ public abstract class LockCCTNode extends CCTNode {
 //    public static final int SORT_BY_WAITS = 3;
     
     public static final LockCCTNode EMPTY = new LockCCTNode(null) {
+        @Override
         public LockCCTNode getChild(int index) { return null; }
+
+        @Override
         public LockCCTNode[] getChildren() { return new LockCCTNode[0]; }
+
+        @Override
         public int getIndexOfChild(Object child) { return -1; }
+
+        @Override
         public int getNChildren() { return 0; }
         public String getNodeName() { return ""; } // NOI18N
         public long getTime() { return 0; }
+
+        @Override
         public double getTimeInPerCent() { return 0; }
         public long getWaits() { return 0; }
     };

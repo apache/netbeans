@@ -581,7 +581,8 @@ public class DDRegistryParser implements Iterator {
 	return this.parser.current();
     }
     
-    public void remove() {
+    @Override
+	public void remove() {
 	throw new UnsupportedOperationException();
     }
     

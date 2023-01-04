@@ -182,11 +182,13 @@ implements ElementVisitor<Boolean,Void>, TypeVisitor<Boolean,Void> {
         return false;
     }
 
+    @Override
     public Boolean visit(Element arg0) {
         // no need for hint
         return false;
     }
 
+    @Override
     public Boolean visitModule(ModuleElement e, Void p) {
         return false;
     }
@@ -261,6 +263,7 @@ implements ElementVisitor<Boolean,Void>, TypeVisitor<Boolean,Void> {
         return false;
     }
 
+    @Override
     public Boolean visit(TypeMirror arg0) {
         return false;
     }

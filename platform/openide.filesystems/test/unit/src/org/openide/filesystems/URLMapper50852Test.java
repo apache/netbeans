@@ -137,7 +137,8 @@ public class URLMapper50852Test extends NbTestCase {
 
     private static class MyThread extends Thread {
         private boolean finished = false;
-        
+
+        @Override
         public void run() {
             super.run();
             URLMapper.findFileObject(testURL);

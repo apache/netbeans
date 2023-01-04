@@ -98,12 +98,16 @@ final class SupportPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(SupportPanel.class, "SupportPanel.jLabel2.text")); // NOI18N
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel2MouseEntered(evt);
             }
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 jLabel2MouseExited(evt);
             }
+
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabel2MousePressed(evt);
             }

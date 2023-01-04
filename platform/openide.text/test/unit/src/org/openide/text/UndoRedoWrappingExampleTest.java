@@ -200,6 +200,7 @@ public class UndoRedoWrappingExampleTest extends NbTestCase implements Cloneable
     }
     public java.io.OutputStream outputStream() throws java.io.IOException {
         class ContentStream extends java.io.ByteArrayOutputStream {
+            @Override
             public void close () throws java.io.IOException {
                 super.close ();
                 content = new String (toByteArray ());

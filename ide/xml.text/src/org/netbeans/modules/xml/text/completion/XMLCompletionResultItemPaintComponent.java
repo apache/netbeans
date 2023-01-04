@@ -70,7 +70,8 @@ public class XMLCompletionResultItemPaintComponent extends JPanel {
     public void setIcon(Icon icon) {
         this.icon = icon;
     }
-    
+
+    @Override
     public void paintComponent(Graphics g) {
         // clear background
         g.setColor(getBackground());
@@ -180,6 +181,7 @@ public class XMLCompletionResultItemPaintComponent extends JPanel {
         fontMetrics.stringWidth(s);
     }
 
+    @Override
     public void setFont(Font font) {
         super.setFont(font);
 
@@ -201,6 +203,7 @@ public class XMLCompletionResultItemPaintComponent extends JPanel {
         return drawFont;
     }
 
+    @Override
     public Dimension getPreferredSize() {
         draw(null);
         Insets i = getInsets();
@@ -218,7 +221,8 @@ public class XMLCompletionResultItemPaintComponent extends JPanel {
         public StringPaintComponent(Color c) {
             this.c = c;
         }
-        
+
+        @Override
         protected void draw(Graphics g){
             drawIcon(g, getIcon());
             drawString(g, str, c);

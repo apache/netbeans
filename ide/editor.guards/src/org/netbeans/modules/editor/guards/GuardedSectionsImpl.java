@@ -352,11 +352,13 @@ public final class GuardedSectionsImpl {
             }
         }
 
+        @Override
         public void close() throws IOException {
             super.close();
             this.stream.close();
         }
 
+        @Override
         public void flush() throws IOException {
             this.stream.flush();
         }

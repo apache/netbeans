@@ -108,6 +108,7 @@ public class Anagrams extends JFrame {
 
         setTitle("Anagrams");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }

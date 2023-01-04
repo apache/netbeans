@@ -46,6 +46,8 @@ public class WsdlNamespaceHandler extends DefaultHandler {
     public String getTargetNamespace() {
         return targetNamespace;
     }
+
+    @Override
     public void startElement(String uri, String localName, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException {
         if ("definitions".equals(localName)) { // NOI18N
             targetNamespace = attributes.getValue("targetNamespace");// NOI18N

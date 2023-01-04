@@ -181,6 +181,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
     private Action deleteA;
 
     private final AbstractTableModel snapshotsTableModel = new AbstractTableModel() {
+        @Override
         public String getColumnName(int columnIndex) {
             if (columnIndex == 0) {
                 return Bundle.SnapshotsWindowUI_colType();
@@ -190,6 +191,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (columnIndex == 0) {
                 return Integer.class;
@@ -216,6 +218,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
             return null;
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return false;
         }
@@ -434,6 +437,8 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
                 setToolTipText(action.getValue("BTN_TOOLTIP").toString()); // NOI18N
                 if (!UIUtils.isOracleLookAndFeel()) setOpaque(false);
             }
+
+            @Override
             public Dimension getMinimumSize() {
                 Dimension d = super.getMinimumSize();
                 d.width = 5;

@@ -404,6 +404,7 @@ public final class GrailsCommandChooser extends JPanel {
         matchingTaskList.setFont(new java.awt.Font("Monospaced", 0, 12));
         matchingTaskList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         matchingTaskList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 matchingTaskListMouseClicked(evt);
             }
@@ -414,6 +415,7 @@ public final class GrailsCommandChooser extends JPanel {
 
         rakeTaskField.setText(org.openide.util.NbBundle.getMessage(GrailsCommandChooser.class, "GrailsCommandChooser.rakeTaskField.text")); // NOI18N
         rakeTaskField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 rakeTaskFieldKeyPressed(evt);
             }

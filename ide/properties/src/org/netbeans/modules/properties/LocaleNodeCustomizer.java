@@ -197,6 +197,7 @@ public class LocaleNodeCustomizer extends JPanel {
         add(keyLabel, gridBagConstraints);
 
         keyList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
             public Component getListCellRendererComponent(
                 JList list,
                 Object value,            // value to display
@@ -264,6 +265,7 @@ public class LocaleNodeCustomizer extends JPanel {
         nameText.setEditable(false);
         nameText.selectAll();
         nameText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameTextFocusGained(evt);
             }

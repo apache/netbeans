@@ -244,9 +244,12 @@ public class CustomizerKarma extends JPanel {
 
         Mnemonics.setLocalizedText(coverageLearnMoreLabel, NbBundle.getMessage(CustomizerKarma.class, "CustomizerKarma.coverageLearnMoreLabel.text")); // NOI18N
         coverageLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 coverageLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 coverageLearnMoreLabelMousePressed(evt);
             }

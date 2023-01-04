@@ -63,9 +63,11 @@ public class NameValuePairsPropertyEditor extends java.beans.PropertyEditorSuppo
     }
     
     //Fix for bug# 5023038 - selecting the property replaces string with null
+    @Override
     public void setAsText(String string) throws IllegalArgumentException {
     }
-    
+
+    @Override
     public String getAsText() {
         return getPaintableString();
     }
@@ -76,7 +78,8 @@ public class NameValuePairsPropertyEditor extends java.beans.PropertyEditorSuppo
         bundle.getString("tipParamName"),          //NOI18N
         bundle.getString("tipParamValue")};         //NOI18N
         //bundle.getString("tipParamDescription")};  //NOI18N
-    
+
+    @Override
     public java.awt.Component getCustomEditor() {
         ParamModel model = null;
         model = new ParamModel(params);
@@ -86,11 +89,13 @@ public class NameValuePairsPropertyEditor extends java.beans.PropertyEditorSuppo
 //        org.openide.util.HelpCtx.setHelpIDString(panel, "AS_RTT_NameValueEditor"); //NOI18N
         return panel;
     }
-        
+
+    @Override
     public boolean isPaintable () {
         return true;
     }
-    
+
+    @Override
     public void paintValue (Graphics gfx, Rectangle box) {
         String s = getPaintableString();
         FontMetrics fm = gfx.getFontMetrics ();
@@ -110,11 +115,13 @@ public class NameValuePairsPropertyEditor extends java.beans.PropertyEditorSuppo
             });
         }
      }
-    
+
+    @Override
     public boolean supportsCustomEditor() {
         return true;
     }
 
+    @Override
     public void setValue(Object value) {
             if(value instanceof NameValuePair[]) {
             NameValuePair[] tmpValue = (NameValuePair[])value;
@@ -129,6 +136,7 @@ public class NameValuePairsPropertyEditor extends java.beans.PropertyEditorSuppo
             params = getNameValuePairs(value);
     }
 
+    @Override
     public Object getValue() {
         NameValuePair[] retVal = new NameValuePair[params.length];
         for (int i = 0; i < params.length; i++) {

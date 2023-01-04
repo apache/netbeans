@@ -284,8 +284,9 @@ public abstract class AbstractDataAggregation extends AbstractLogElement impleme
             }
             return o;
         }
-        
 
+
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("Cannot modify logged data");
         }

@@ -107,6 +107,7 @@ public abstract class AbstractAddMethodAction extends AbstractAction implements 
             }
     }
 
+    @Override
     public Object getValue(String key) {
         if (NAME.equals(key)) {
             return getName();

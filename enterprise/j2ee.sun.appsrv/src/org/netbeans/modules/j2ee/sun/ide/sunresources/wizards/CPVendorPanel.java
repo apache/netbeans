@@ -189,6 +189,7 @@ implements ChangeListener, DocumentListener, ListDataListener, WizardConstants {
             }
         });
         nameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 CPVendorPanel.this.nameFieldKeyReleased(evt);
             }

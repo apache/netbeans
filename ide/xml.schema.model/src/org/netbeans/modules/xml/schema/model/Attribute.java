@@ -43,6 +43,8 @@ public interface Attribute extends SchemaComponent {
             Use(String s) {
                 value = s;
             }
+
+        @Override
             public String toString() { return value; }
 	}
 }

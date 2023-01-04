@@ -60,12 +60,14 @@ public final class NbPlatformCustomizerJavadoc extends JPanel {
         updateEnabled();
     }
     
+    @Override
     public void addNotify() {
         super.addNotify();
         javadocList.addListSelectionListener(listListener);
         javadocList.getModel().addListDataListener(listListener);
     }
-    
+
+    @Override
     public void removeNotify() {
         javadocList.removeListSelectionListener(listListener);
         javadocList.getModel().removeListDataListener(listListener);

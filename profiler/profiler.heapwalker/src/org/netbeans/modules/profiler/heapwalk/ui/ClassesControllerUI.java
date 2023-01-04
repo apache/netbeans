@@ -63,13 +63,15 @@ public class ClassesControllerUI extends JPanel {
             setToolTipText(Bundle.ClassesControllerUI_ControllerDescr());
             setIcon(ICON_CLASS);
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width += 4;
             return d;
         }
-        
+
+        @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
         }

@@ -41,6 +41,7 @@ import org.openide.util.Utilities;
  */
 public final class PropertiesDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (MultiFileLoader.class) };
@@ -53,6 +54,7 @@ public final class PropertiesDataLoaderBeanInfo extends SimpleBeanInfo {
     /**
      * @return Returns an array of PropertyDescriptors
      * describing the editable properties supported by this bean. */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors () {
         try {
 
@@ -75,6 +77,7 @@ public final class PropertiesDataLoaderBeanInfo extends SimpleBeanInfo {
 
     /** @param type Desired type of the icon
      * @return returns the properties loader's icon */
+    @Override
     public Image getIcon(final int type) {
         if((type == BeanInfo.ICON_COLOR_16x16) || (type == BeanInfo.ICON_MONO_16x16)) {
             return ImageUtilities.loadImage("org/netbeans/modules/properties/propertiesObject.png"); // NOI18N

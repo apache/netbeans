@@ -148,7 +148,8 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         if (serialdata == null) return null;
         return new ByteArrayInputStream(serialdata);
     }
-    
+
+    @Override
     public org.xml.sax.InputSource resolveEntity(String publicId, String systemId)
     throws SAXException {
         if (INSTANCE_DTD_ID.equals(publicId)) {
@@ -157,7 +158,8 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
             return null; // i.e. follow advice of systemID
         }
     }
-    
+
+    @Override
     public void characters(char[] values, int start, int length) throws SAXException {
         if (header) return;
         String element = stack.peek();
@@ -167,7 +169,8 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
             chaos.write(values, start, length);
         }
     }
-    
+
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes attribs) throws SAXException {
         stack.push(qName);
         if (ELM_SETTING.equals(qName)) {
@@ -223,7 +226,8 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
             codeNameRelease = -1;
         }
     }
-    
+
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         //if (header) return;
         String element = stack.pop();

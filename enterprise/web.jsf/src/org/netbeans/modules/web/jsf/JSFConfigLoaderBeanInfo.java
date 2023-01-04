@@ -32,6 +32,7 @@ import org.openide.util.ImageUtilities;
  */
 public class JSFConfigLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo(UniFileLoader.class) };
@@ -44,6 +45,7 @@ public class JSFConfigLoaderBeanInfo extends SimpleBeanInfo {
     /** @param type Desired type of the icon
      * @return returns the Image loader's icon
      */
+    @Override
     public Image getIcon(final int type) {
         return ImageUtilities.loadImage("org/netbeans/modules/web/jsf/resources/JSFConfigIcon.png"); // NOI18N
     }

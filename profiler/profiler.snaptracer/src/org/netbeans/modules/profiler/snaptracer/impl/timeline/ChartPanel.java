@@ -368,6 +368,7 @@ final class ChartPanel extends JPanel {
             super();
             updateAction();
             addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isMiddleMouseButton(e))
                         actionPerformed(null);
@@ -421,6 +422,7 @@ final class ChartPanel extends JPanel {
             setToolTipText(toolTip);
         }
 
+        @Override
         protected void processMouseEvent(MouseEvent e) {
             if (isSelected()) {
                 e.consume();
@@ -431,6 +433,7 @@ final class ChartPanel extends JPanel {
             super.processMouseEvent(e);
         }
 
+        @Override
         protected void processKeyEvent(KeyEvent e) {
             if (isSelected()) {
                 e.consume();
@@ -441,6 +444,7 @@ final class ChartPanel extends JPanel {
             super.processKeyEvent(e);
         }
 
+        @Override
         protected final void fireActionPerformed(ActionEvent e) {
             if (action) performAction();
         }

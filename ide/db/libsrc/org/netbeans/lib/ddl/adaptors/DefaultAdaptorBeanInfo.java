@@ -35,6 +35,7 @@ public class DefaultAdaptorBeanInfo extends SimpleBeanInfo
     /** Descriptor of valid properties
     * @return array of properties
     */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors()
     {
         PropertyDescriptor[] desc = null;

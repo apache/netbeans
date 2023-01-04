@@ -150,6 +150,7 @@ public abstract class TracerPackage implements Positionable {
          *
          * @return predefined PackageStateHandler which obtains status notifications
          */
+        @Override
         public final synchronized PackageStateHandler getStateHandler() {
             if (stateHandler == null) stateHandler = new PackageStateHandler() {
                 public void probeAdded(TracerProbe probe, IdeSnapshot snapshot) {

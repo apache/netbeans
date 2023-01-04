@@ -61,7 +61,8 @@ public class MessageArea extends JLabel {
 	this ();
 	setText (text);
     }
-	
+
+	@Override
     public void addNotify () {
 	super.addNotify ();
 
@@ -248,11 +249,13 @@ public class MessageArea extends JLabel {
 	makeEntireMsg ();
     }
 
+	@Override
     public void setFont (Font f) {
 	super.setFont (f);
 	makeFontString (f, getForeground ());
     }
 
+	@Override
     public void setForeground (Color c) {
 	super.setForeground (c);
 	makeFontString (getFont (), c);
@@ -269,6 +272,7 @@ public class MessageArea extends JLabel {
 	}
     }
 
+	@Override
     public void setText (String s) {
 	msgs = s.replace ('\n', ' ');
 	makeMsgString ();

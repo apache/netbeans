@@ -126,6 +126,7 @@ public abstract class InfoPanel extends JPanel {
         stringText.setEditable(false);
         stringText.selectAll();
         stringText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 stringTextFocusGained(evt);
             }
@@ -149,6 +150,7 @@ public abstract class InfoPanel extends JPanel {
         foundInText.setEditable(false);
         foundInText.selectAll();
         foundInText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 foundInTextFocusGained(evt);
             }
@@ -174,6 +176,7 @@ public abstract class InfoPanel extends JPanel {
         componentText.setEditable(false);
         componentText.selectAll();
         componentText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 componentTextFocusGained(evt);
             }
@@ -199,6 +202,7 @@ public abstract class InfoPanel extends JPanel {
         propertyText.setEditable(false);
         propertyText.selectAll();
         propertyText.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 propertyTextFocusGained(evt);
             }

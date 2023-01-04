@@ -169,6 +169,7 @@ public abstract class Element implements Serializable {
          * Updates the element fields. This method is called after reparsing.
          * @param elem elemnet to merge with
          */
+        @Override
         void update(Element elem) {
             super.update(elem);
             this.value = ((Basic)elem).value;
@@ -177,6 +178,7 @@ public abstract class Element implements Serializable {
         /** Get a string representation of the element.
          * @return the string + bounds
          */
+        @Override
         public String toString() {
             return value + "   " + super.toString(); // NOI18N
         }
@@ -495,6 +497,7 @@ public abstract class Element implements Serializable {
         /** Get a value string of the element.
          * @return the string
          */
+        @Override
         public String toString() {
             return comment.toString() + "\n" + // NOI18N
                 ((key   == null) ? "" : key.toString()) + "\n" + // NOI18N
@@ -516,6 +519,7 @@ public abstract class Element implements Serializable {
             return comment;
         }
 
+        @Override
         void update(Element elem) {
             super.update(elem);
             if (this.key == null)

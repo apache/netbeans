@@ -223,6 +223,7 @@ final class CustomizerVersioning extends NbPropertyPanel.Single {
             }
         };
         publicPkgsTable.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 switchAction.actionPerformed(null);
             }

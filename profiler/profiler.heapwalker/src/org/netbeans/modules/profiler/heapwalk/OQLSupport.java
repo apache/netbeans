@@ -170,6 +170,7 @@ public final class OQLSupport {
 
         public OQLNode(T userObject) { super(userObject); }
 
+        @Override
         public final T getUserObject() { return (T)super.getUserObject(); }
 
         public String getDescription() { return null; }
@@ -190,6 +191,7 @@ public final class OQLSupport {
 
         public SpecialNode() { super(null); }
 
+        @Override
         public boolean supportsProperties() { return false; }
 
     }
@@ -203,21 +205,28 @@ public final class OQLSupport {
             super.insert(noQueries, 0);
         }
 
+        @Override
         public String toString() { return getUserObject().getName(); }
 
+        @Override
         public String getCaption() { return Bundle.OQLSupport_CategoryCaption(); }
 
+        @Override
         public String getDescription() { return getUserObject().getDescription(); }
 
+        @Override
         public boolean supportsProperties() { return false; }
 
+        @Override
         public boolean isLeaf() { return false; }
 
+        @Override
         public void insert(MutableTreeNode newChild, int childIndex) {
             super.insert(newChild, childIndex);
             if (isNodeChild(noQueries)) super.remove(0); // Doesn't update model!
         }
 
+        @Override
         public void remove(int childIndex) {
             super.remove(childIndex); // Doesn't update model!
             if (getChildCount() == 0) super.insert(noQueries, 0);
@@ -229,10 +238,13 @@ public final class OQLSupport {
 
         private CustomCategoryNode() { super(null); }
 
+        @Override
         public String toString() { return Bundle.OQLSupport_CustomCategoryName(); }
 
+        @Override
         public String getDescription() { return Bundle.OQLSupport_CustomCategoryDescr(); }
 
+        @Override
         public boolean isLeaf() { return false; }
 
     }
@@ -241,18 +253,25 @@ public final class OQLSupport {
 
         public OQLQueryNode(Query query) { super(query); }
 
+        @Override
         public boolean supportsOpen() { return true; }
 
+        @Override
         public boolean supportsDelete() { return isCustomQuery(); }
 
+        @Override
         public boolean isReadOnly() { return !isCustomQuery(); }
 
+        @Override
         public String toString() { return getUserObject().getName(); }
 
+        @Override
         public String getCaption() { return Bundle.OQLSupport_QueryCaption(); }
 
+        @Override
         public String getDescription() { return getUserObject().getDescription(); }
 
+        @Override
         public boolean isLeaf() { return true; }
 
         private boolean isCustomQuery() { return getParent() instanceof CustomCategoryNode; }
@@ -261,18 +280,23 @@ public final class OQLSupport {
 
     private static class RootNode extends SpecialNode {
 
+        @Override
         public String toString() { return ""; } // NOI18N
 
+        @Override
         public boolean isLeaf() { return false; }
 
     }
 
     private static class NoCustomQueriesNode extends SpecialNode {
 
+        @Override
         public String toString() { return Bundle.OQLSupport_NoCustomQueryName(); }
 
+        @Override
         public String getDescription() { return Bundle.OQLSupport_NoCustomQueryDescr(); }
 
+        @Override
         public boolean isLeaf() { return true; }
 
     }

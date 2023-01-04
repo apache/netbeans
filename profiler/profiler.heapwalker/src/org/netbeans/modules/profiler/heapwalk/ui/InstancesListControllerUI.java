@@ -108,6 +108,7 @@ public class InstancesListControllerUI extends JTitledPanel {
     private class InstancesListTableKeyListener extends KeyAdapter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void keyPressed(KeyEvent e) {
             if ((e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU)
                     || ((e.getKeyCode() == KeyEvent.VK_F10) && (e.getModifiers() == InputEvent.SHIFT_MASK))) {
@@ -132,6 +133,7 @@ public class InstancesListControllerUI extends JTitledPanel {
             else instancesListTable.clearSelection();
         }
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             final int row = instancesListTable.rowAtPoint(e.getPoint());
             updateSelection(row);
@@ -139,6 +141,7 @@ public class InstancesListControllerUI extends JTitledPanel {
                 showTablePopup(e.getComponent(), e.getX(), e.getY());
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             int row = instancesListTable.rowAtPoint(e.getPoint());
             updateSelection(row);
@@ -508,6 +511,7 @@ public class InstancesListControllerUI extends JTitledPanel {
         }
 
         cornerButton.addKeyListener(new KeyAdapter() {
+            @Override
                 public void keyPressed(final KeyEvent evt) {
                     if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
                         showColumnSelectionPopup(headerPopup, cornerButton);
@@ -516,6 +520,7 @@ public class InstancesListControllerUI extends JTitledPanel {
             });
 
         cornerButton.addMouseListener(new MouseAdapter() {
+            @Override
                 public void mousePressed(MouseEvent mouseEvent) {
                     if (headerPopup.isVisible()) {
                         internalCornerButtonClick = true;
@@ -529,6 +534,7 @@ public class InstancesListControllerUI extends JTitledPanel {
                     }
                 }
 
+            @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     if ((mouseEvent.getModifiers() == InputEvent.BUTTON1_MASK) && (!internalCornerButtonClick)) {
                         showColumnSelectionPopup(headerPopup, cornerButton);

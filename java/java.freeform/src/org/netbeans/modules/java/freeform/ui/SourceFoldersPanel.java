@@ -945,7 +945,8 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
         public int getColumnCount() {
             return isWizard ? 1 : 2;
         }
-        
+
+        @Override
         public String getColumnName(int column) {
             switch (column) {
                 case 0: return org.openide.util.NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_Package");
@@ -979,7 +980,8 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
                 return getItem(rowIndex, tests).label;
             }
         }
-        
+
+        @Override
         public boolean isCellEditable(int row, int column) {
             if (column == 1) {
                 return true;
@@ -987,11 +989,13 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
                 return false;
             }
         }
-        
+
+        @Override
         public Class getColumnClass(int column) {
             return String.class;
         }
-        
+
+        @Override
         public void setValueAt(Object val, int rowIndex, int columnIndex) {
             JavaProjectGenerator.SourceFolder sf = getItem(rowIndex, tests);
             sf.label = (String)val;
@@ -1002,8 +1006,9 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
         
     }
     
-    private class ToolTipRenderer extends DefaultTableCellRenderer { 
-        
+    private class ToolTipRenderer extends DefaultTableCellRenderer {
+
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (c instanceof JComponent) {
@@ -1071,6 +1076,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
                 this.projectConflict = projectConflict;
             }
 
+            @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 File f = (File) value;
                 String message = f.getAbsolutePath();

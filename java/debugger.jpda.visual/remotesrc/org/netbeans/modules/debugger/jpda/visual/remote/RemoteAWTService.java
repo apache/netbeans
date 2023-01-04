@@ -267,6 +267,7 @@ public class RemoteAWTService {
             super(tg, TG_AWT_Invocator.class.getName());
         }
 
+        @Override
         public void run() {
             Runnable accessLoop = awtAccessLoopRunnable;
             if (accessLoop != null) {

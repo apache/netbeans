@@ -83,6 +83,7 @@ public class SwingInterop extends JApplet {
     private Chart chart;
     private Pane browser;
 
+    @Override
     public void init() {
         tableModel = new SampleTableModel();
         // create javafx panel for charts
@@ -249,6 +250,7 @@ public class SwingInterop extends JApplet {
     private static class DecimalFormatRenderer extends DefaultTableCellRenderer {
         private static final DecimalFormat formatter = new DecimalFormat("#.0");
 
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             value = formatter.format((Number) value);
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

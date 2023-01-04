@@ -553,6 +553,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
         public OutputStream createOutputStream() throws IOException {
             final FileLock dataLock = lock();
             return new ByteArrayOutputStream() {
+                @Override
                 public void close() throws IOException {
                     try {
                         super.close();
@@ -567,6 +568,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
         public OutputStream createOutputStream(final FileLock dataLock, final boolean modify) throws IOException {
             testLock(dataLock);
             return new ByteArrayOutputStream() {
+                @Override
                 public void close() throws IOException {
                     super.close();
                     setData(dataLock, toByteArray(), modify);
@@ -580,6 +582,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
         public Writer createWriter() throws IOException {
             final FileLock dataLock = lock();
             return new StringWriter() {
+                @Override
                 public void close() throws IOException {
                     try {
                         super.close();
@@ -594,6 +597,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
         public Writer createWriter(final FileLock dataLock, final boolean modify) throws IOException {
             testLock(dataLock);
             return new StringWriter() {
+                @Override
                 public void close() throws IOException {
                     super.close();
                     setData(dataLock, toString(), modify);

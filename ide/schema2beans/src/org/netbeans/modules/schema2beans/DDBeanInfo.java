@@ -97,6 +97,7 @@ public class DDBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+	@Override
     public PropertyDescriptor[] getPropertyDescriptors() {
 	if (!propertiesInited) {
 	    // Avoid recursion here

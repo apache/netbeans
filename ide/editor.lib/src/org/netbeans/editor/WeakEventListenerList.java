@@ -55,6 +55,7 @@ public class WeakEventListenerList extends EventListenerList {
     /**
     * 
     */
+    @Override
     public synchronized Object[] getListenerList() {
         int tgtInd = 0;
         Object[] ret = new Object[listenerSize];
@@ -84,6 +85,7 @@ public class WeakEventListenerList extends EventListenerList {
         return ret;
     }
 
+    @Override
     public synchronized EventListener[] getListeners(Class t) {
         int tgtInd = 0;
         EventListener[] ret = (EventListener[])Array.newInstance(t, listenerSize);
@@ -120,6 +122,7 @@ public class WeakEventListenerList extends EventListenerList {
      * @param t the type of the listener to be added
      * @param l the listener to be added
      */
+    @Override
     public synchronized void add(Class t, EventListener l) {
         if (l==null) {
             // In an ideal world, we would do an assertion here
@@ -153,6 +156,7 @@ public class WeakEventListenerList extends EventListenerList {
      * @param t the type of the listener to be removed
      * @param l the listener to be removed
      */
+    @Override
     public synchronized void remove(Class t, EventListener l) {
         if (l ==null) {
             // In an ideal world, we would do an assertion here
@@ -212,6 +216,7 @@ public class WeakEventListenerList extends EventListenerList {
         }
     }
 
+    @Override
     public synchronized String toString() {
         StringBuffer sb = new StringBuffer("WeakEventListenerList: "); // NOI18N
         sb.append(listenerSize / 2);

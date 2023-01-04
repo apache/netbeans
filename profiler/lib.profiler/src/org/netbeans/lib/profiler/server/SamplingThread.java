@@ -56,6 +56,7 @@ abstract class SamplingThread extends Thread {
         }
     }
 
+    @Override
     public void run() {
         int adjustedSamplingInterval = samplingInterval;
         int upperBound = (samplingInterval * 5) / 4;

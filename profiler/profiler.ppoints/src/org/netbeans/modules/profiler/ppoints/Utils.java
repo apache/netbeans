@@ -77,6 +77,7 @@ public class Utils {
     private static class ProfilingPointPresenterListRenderer extends DefaultListCellRenderer {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                       boolean cellHasFocus) {
             JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -170,6 +171,7 @@ public class Utils {
         private static class Renderer extends DefaultListCellRenderer {
             //~ Methods ----------------------------------------------------------------------------------------------------------
 
+            @Override
             public void setFont(Font font) {
             }
 
@@ -185,6 +187,7 @@ public class Utils {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                       boolean cellHasFocus) {
             JLabel rendererOrig = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

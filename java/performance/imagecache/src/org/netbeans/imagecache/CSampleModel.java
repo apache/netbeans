@@ -50,10 +50,12 @@ public class CSampleModel extends SinglePixelPackedSampleModel {
         this.height = height;
     }
 
+    @Override
     public int getSampleSize(int band) {
         return 8;
     }
 
+    @Override
     public int[] getPixels(int x, int y, int w, int h,
                            int iArray[], DataBuffer data) {
         System.err.println("GetPixels: " + x + "," + y + "," + w + "," + h + " iArray: " + iArray + " data" + data);

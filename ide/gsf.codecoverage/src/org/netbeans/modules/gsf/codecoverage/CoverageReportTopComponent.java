@@ -198,6 +198,7 @@ final class CoverageReportTopComponent extends TopComponent {
         table.setModel(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 clicked(evt);
             }

@@ -43,7 +43,8 @@ class IdentifierKeyListener extends KeyAdapter{
     public IdentifierKeyListener(JTextField classText){
         this.classText = classText;
     }
-    
+
+    @Override
     public void keyTyped(KeyEvent e){
         char c = e.getKeyChar();
         String val = classText.getText() + String.valueOf(c);

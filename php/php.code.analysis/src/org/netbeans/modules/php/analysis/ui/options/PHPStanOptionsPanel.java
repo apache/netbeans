@@ -158,9 +158,12 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
 
         Mnemonics.setLocalizedText(phpStanLearnMoreLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLearnMoreLabel.text")); // NOI18N
         phpStanLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 phpStanLearnMoreLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 phpStanLearnMoreLabelMouseEntered(evt);
             }

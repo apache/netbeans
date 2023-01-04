@@ -41,7 +41,8 @@ public class AccessibleJFileChooser extends JFileChooser {
         super(currentDirectory);
         this.acsd = acsd;
     }
-    
+
+    @Override
     protected JDialog createDialog(Component parent) throws HeadlessException {
         JDialog dialog = super.createDialog(parent);
         dialog.getAccessibleContext().setAccessibleDescription(acsd);

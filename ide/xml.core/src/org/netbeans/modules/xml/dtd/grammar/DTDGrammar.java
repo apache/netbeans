@@ -475,6 +475,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             return name;
         }
 
+        @Override
         public boolean isEmptyElement() {
             return empty;
         }
@@ -551,6 +552,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             return data == null ? -1 : data.length();
         }
 
+        @Override
         public String getDisplayName() {
             return displayName;
         }

@@ -26,6 +26,7 @@ import org.openide.util.Utilities;
 
 public class DBschemaDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (DBschemaDataLoader.class.getSuperclass ()) };
@@ -37,6 +38,7 @@ public class DBschemaDataLoaderBeanInfo extends SimpleBeanInfo {
         }
     }
 
+    @Override
     public Image getIcon (int type) {
         if (type == BeanInfo.ICON_COLOR_16x16 || type == BeanInfo.ICON_MONO_16x16) {
             return ImageUtilities.loadImage("org/netbeans/modules/dbschema/jdbcimpl/DBschemaDataIcon.gif"); //NOI18N

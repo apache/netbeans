@@ -232,6 +232,7 @@ public class DisplayTable extends JTable {
      * Override the getter for the cell editors, so that customized
      * cell editors will show up.
      */
+	@Override
     public TableCellEditor getCellEditor(int row, int col) {
 	TableCellEditor ed = cellEditors[row][col];
 	if (ed == null) {
@@ -291,6 +292,7 @@ public class DisplayTable extends JTable {
 	return data;
     }
 
+	@Override
     public void setFont(Font f) {
 	fontChanged = true;
 	super.setFont(f);
@@ -299,6 +301,7 @@ public class DisplayTable extends JTable {
     /** 
      * When paint is first invoked, we set the rowheight based on the
      * size of the font. */
+	@Override
     public void paint(Graphics g) {
 	if (fontChanged) {
 	    Font f = getFont();

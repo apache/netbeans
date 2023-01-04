@@ -337,6 +337,7 @@ public abstract class InteractiveCanvasComponent extends TransformableCanvasComp
         private int lastMouseDragX;
         private int lastMouseDragY;
 
+        @Override
         public void mousePressed(MouseEvent e) {
             dragging = panningPossible() && e.getButton() == mousePanningButton;
             if (!dragging) return;
@@ -350,6 +351,7 @@ public abstract class InteractiveCanvasComponent extends TransformableCanvasComp
             if (!isOffsetAdjusting()) offsetAdjustingStarted();
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             dragging = false;
             if (mousePanningCursor != null) setCursor(Cursor.getDefaultCursor());
@@ -364,6 +366,7 @@ public abstract class InteractiveCanvasComponent extends TransformableCanvasComp
                 });
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
             if (!dragging) return;
 
@@ -389,6 +392,7 @@ public abstract class InteractiveCanvasComponent extends TransformableCanvasComp
             if (getOffsetY() != oldOffsetY) lastMouseDragY = mouseDragY;
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {}
     }
 

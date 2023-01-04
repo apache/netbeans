@@ -68,7 +68,8 @@ public class NodeDisplayPanel extends JPanel implements ExplorerManager.Provider
         }
         return pcs;
     }
-    
+
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         getProperChangeSupport().addPropertyChangeListener(l);
     }

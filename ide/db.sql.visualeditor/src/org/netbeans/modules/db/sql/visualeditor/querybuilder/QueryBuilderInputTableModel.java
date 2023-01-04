@@ -70,6 +70,7 @@ class QueryBuilderInputTableModel extends DefaultTableModel {
      * then the last column would contain text ("true"/"false"),
      * rather than a check box.
      */
+    @Override
     public Class getColumnClass(int c) {
         if ( getRowCount() == 0 ) return String.class;       // NOI18N
         if ( getValueAt(0,c) == null ) return String.class;      // NOI18N
@@ -80,6 +81,7 @@ class QueryBuilderInputTableModel extends DefaultTableModel {
     /*
      * Don't need to implement this method unless your table's editable.
      */
+    @Override
     public boolean isCellEditable(int row, int col) {
         //Note that the data/cell address is constant,
         //no matter where the cell appears onscreen.

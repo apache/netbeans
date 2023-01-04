@@ -168,6 +168,7 @@ public class CodeSetupPanel extends javax.swing.JPanel {
         Class[] types;
         boolean[] canEdit;
 
+        @Override
         public String getColumnName(int index) {
             return columnNames[index];
         }
@@ -208,6 +209,7 @@ public class CodeSetupPanel extends javax.swing.JPanel {
             return null;
         }
 
+        @Override
         public void setValueAt(Object value, int row, int column) {
             ParameterInfo info = inputParams.get(row);
 
@@ -224,10 +226,12 @@ public class CodeSetupPanel extends javax.swing.JPanel {
             }
         }
 
+        @Override
         public Class getColumnClass(int columnIndex) {
             return types[columnIndex];
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return canEdit[columnIndex];
         }

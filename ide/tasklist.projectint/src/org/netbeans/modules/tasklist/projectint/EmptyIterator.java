@@ -41,7 +41,8 @@ class EmptyIterator implements Iterator<FileObject> {
     public FileObject next() {
         throw new NoSuchElementException();
     }
-    
+
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

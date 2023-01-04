@@ -37,6 +37,7 @@ public class FixedHeightJTable extends JTable {
 
     private boolean firstPaint = true;
     
+    @Override
     public void setFont (Font f) {
         firstPaint = true;
         super.setFont(f);
@@ -48,6 +49,7 @@ public class FixedHeightJTable extends JTable {
         firstPaint = false;
     }
 
+    @Override
     public void paint (Graphics g) {
         if (firstPaint) {
             calcFixedHeight(g);

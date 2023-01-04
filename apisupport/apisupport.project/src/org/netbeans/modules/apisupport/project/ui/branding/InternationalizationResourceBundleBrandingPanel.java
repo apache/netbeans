@@ -147,6 +147,7 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
         localeComboBox = new javax.swing.JComboBox();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }

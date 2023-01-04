@@ -585,7 +585,8 @@ final class FixLineSyntaxState {
         FixLineSyntaxState getMaster() {
             return FixLineSyntaxState.this;
         }
-        
+
+        @Override
         public void undo() throws CannotUndoException {
             update(true);
             super.undo();
@@ -594,7 +595,8 @@ final class FixLineSyntaxState {
     }
     
     final class AfterLineUndo extends AbstractUndoableEdit {
-        
+
+        @Override
         public void redo() throws CannotRedoException {
             update(false);
             super.redo();

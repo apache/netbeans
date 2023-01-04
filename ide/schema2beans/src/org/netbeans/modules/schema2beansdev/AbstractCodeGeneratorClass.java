@@ -436,10 +436,12 @@ public abstract class AbstractCodeGeneratorClass {
             this.nameVar = nameVar;
         }
 
+        @Override
         public void preGenerate() throws IOException {
             jw.writeEol(nameVar+" = "+nameVar+".intern()");
         }
 
+        @Override
         public void preGenerateProp() throws IOException {
             if (curProp.name.equals(curProp.dtdName))
                 jw.beginIf(nameVar+" == "+curProp.constName);
@@ -447,10 +449,12 @@ public abstract class AbstractCodeGeneratorClass {
                 jw.beginIf(nameVar+" == "+curProp.constName+" || "+nameVar+" == \""+curProp.dtdName+"\"");
         }
 
+        @Override
         public void postGenerateProp() throws IOException {
             jw.endElse();
         }
 
+        @Override
         public void postGenerate() throws IOException {
             genInvalidName(nameVar);
         }
@@ -1503,6 +1507,7 @@ public abstract class AbstractCodeGeneratorClass {
                 return othersIterator.next();
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }

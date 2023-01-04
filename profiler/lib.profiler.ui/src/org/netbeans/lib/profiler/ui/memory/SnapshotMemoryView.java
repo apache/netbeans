@@ -152,6 +152,7 @@ public abstract class SnapshotMemoryView extends JPanel {
         
             Icon icon = (Icon)compareAction.getValue(Action.SMALL_ICON);
             compareButton = new JToggleButton(icon) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     boolean sel = isSelected();
                     if (sel) {
@@ -273,6 +274,8 @@ public abstract class SnapshotMemoryView extends JPanel {
         if (showSourceSupported()) {
             popup.add(new JMenuItem(MemoryView.ACTION_GOTOSOURCE) {
                 { setEnabled(userValue != null && aggregation != CPUResultsSnapshot.PACKAGE_LEVEL_VIEW); setFont(getFont().deriveFont(Font.BOLD)); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) { showSource(userValue); }
             });
             popup.addSeparator();
@@ -282,6 +285,8 @@ public abstract class SnapshotMemoryView extends JPanel {
             if (userValue == null || !Wildcards.ALLWILDCARD.equals(userValue.getMethodName())) {
                 popup.add(new JMenuItem(MemoryView.ACTION_PROFILE_METHOD) {
                     { setEnabled(userValue != null && isSelectable(userValue, true)); }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { profileMethod(userValue); }
                 });
             }
@@ -289,6 +294,8 @@ public abstract class SnapshotMemoryView extends JPanel {
         
         if (profileClassSupported()) popup.add(new JMenuItem(MemoryView.ACTION_PROFILE_CLASS) {
             { setEnabled(userValue != null && aggregation != CPUResultsSnapshot.PACKAGE_LEVEL_VIEW && isSelectable(userValue, false)); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileClass(userValue); }
         });
         
@@ -308,12 +315,14 @@ public abstract class SnapshotMemoryView extends JPanel {
             popup.add(expand);
 
             expand.add(new JMenuItem(MemoryView.EXPAND_PLAIN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandPlainPath(ttable.getSelectedRow(), 1);
                 }
             });
 
             expand.add(new JMenuItem(MemoryView.EXPAND_TOPMOST_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.expandFirstPath(ttable.getSelectedRow());
                 }
@@ -322,12 +331,14 @@ public abstract class SnapshotMemoryView extends JPanel {
             expand.addSeparator();
             
             expand.add(new JMenuItem(MemoryView.COLLAPSE_CHILDREN_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseChildren(ttable.getSelectedRow());
                 }
             });
             
             expand.add(new JMenuItem(MemoryView.COLLAPSE_ALL_ITEM) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     ttable.collapseAll();
                 }
@@ -340,9 +351,11 @@ public abstract class SnapshotMemoryView extends JPanel {
         popup.addSeparator();
         
         popup.add(new JMenuItem(FilterUtils.ACTION_FILTER) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateFilter(); }
         });
         popup.add(new JMenuItem(SearchUtils.ACTION_FIND) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateSearch(); }
         });
     }

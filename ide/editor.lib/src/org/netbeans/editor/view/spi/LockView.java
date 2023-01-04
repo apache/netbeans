@@ -102,7 +102,8 @@ public class LockView extends View {
         this.view = view;
 //        System.out.println("LockView instance created " + System.identityHashCode(this));
     }
-    
+
+    @Override
     public void setParent(View parent) {
     
         View origParent = getParent();
@@ -288,6 +289,7 @@ public class LockView extends View {
      * there are no attributes.  If an attribute is resolved
      * up the view hierarchy this is the end of the line.
      */
+    @Override
     public AttributeSet getAttributes() {
         return null;
     }
@@ -306,6 +308,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public float getMinimumSpan(int axis) {
         lock();
         try {
@@ -320,6 +323,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public float getMaximumSpan(int axis) {
         lock();
         try {
@@ -334,6 +338,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public void preferenceChanged(View child, boolean width, boolean height) {
         View parent = getParent();
         if (parent != null) {
@@ -341,6 +346,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public float getAlignment(int axis) {
         lock();
         try {
@@ -371,6 +377,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public int getViewCount() {
         return 1;
     }
@@ -381,14 +388,17 @@ public class LockView extends View {
      * @param n the number of the view to get
      * @return the view
      */
+    @Override
     public View getView(int n) {
         return view;
     }
 
+    @Override
     public int getViewIndex(int pos, Position.Bias b) {
         return 0;
     }
 
+    @Override
     public Shape getChildAllocation(int index, Shape a) {
         return a;
     }
@@ -407,6 +417,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public Shape modelToView(int p0, Position.Bias b0, int p1, Position.Bias b1, Shape a) throws BadLocationException {
         lock();
         try {
@@ -435,7 +446,8 @@ public class LockView extends View {
         }
     }
 
-    public int getNextVisualPositionFrom(int pos, Position.Bias b, Shape a, 
+    @Override
+    public int getNextVisualPositionFrom(int pos, Position.Bias b, Shape a,
     int direction, Position.Bias[] biasRet) throws BadLocationException {
 
         lock();
@@ -451,6 +463,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public void insertUpdate(DocumentEvent e, Shape a, ViewFactory f) {
         lock();
         try {
@@ -464,6 +477,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e, Shape a, ViewFactory f) {
         lock();
         try {
@@ -477,6 +491,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e, Shape a, ViewFactory f) {
         lock();
         try {
@@ -490,6 +505,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public String getToolTipText(float x, float y, Shape allocation) {
         lock();
         try {
@@ -503,10 +519,12 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public Document getDocument() {
         return doc;
     }
 
+    @Override
     public int getStartOffset() {
         if (view != null) {
             return view.getStartOffset();
@@ -515,6 +533,7 @@ public class LockView extends View {
         return (elem != null) ? elem.getStartOffset() : 0;
     }
 
+    @Override
     public int getEndOffset() {
         if (view != null) {
             return view.getEndOffset();
@@ -523,6 +542,7 @@ public class LockView extends View {
         return (elem != null) ? elem.getEndOffset() : 0;
     }
 
+    @Override
     public Element getElement() {
         if (view != null) {
             return view.getElement();
@@ -535,6 +555,7 @@ public class LockView extends View {
         throw new Error("Can't break lock view"); // NOI18N
     }
 
+    @Override
     public int getResizeWeight(int axis) {
         lock();
         try {
@@ -549,6 +570,7 @@ public class LockView extends View {
         }
     }
 
+    @Override
     public void setSize(float width, float height) {
         lock();
         try {

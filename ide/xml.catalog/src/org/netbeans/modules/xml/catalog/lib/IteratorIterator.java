@@ -49,6 +49,7 @@ public final class IteratorIterator implements Iterator {
     /**
      * Unsupported operation.
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException(); 
     }

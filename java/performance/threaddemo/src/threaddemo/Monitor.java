@@ -95,13 +95,15 @@ final class Monitor extends JPanel implements ActionListener {
         sub.add(gc);
         add(sub);
     }
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         t1.start();
         t2.schedule(task, 0L, DELAY_HEAP);
     }
-    
+
+    @Override
     public void removeNotify() {
         t1.stop();
         t2.cancel();

@@ -42,6 +42,7 @@ public class FindPanel extends javax.swing.JPanel {
         initComponents ();
         initAccessibility ();
         findCombo.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            @Override
              public void keyTyped(KeyEvent evt) {
                 if (evt.getKeyChar() == '\n') {
                     findButton.doClick(20);
@@ -210,6 +211,7 @@ public class FindPanel extends javax.swing.JPanel {
         add(cancelButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    @Override
     public boolean requestFocusInWindow() {
         return findCombo.requestFocusInWindow();
     }

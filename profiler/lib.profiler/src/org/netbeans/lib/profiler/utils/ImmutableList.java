@@ -49,6 +49,7 @@ public class ImmutableList implements Iterable {
             return get(counter++);
         }
 
+        @Override
         public void remove() {
             // do nothing
         }

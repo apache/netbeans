@@ -136,6 +136,7 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
 
         setTitle("MiniEdit");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }
@@ -146,11 +147,13 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
 
         jScrollPane1.setMinimumSize(new java.awt.Dimension(200, 200));
         fileTree.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 fileTreeKeyReleased(evt);
             }
         });
         fileTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 fileTreeMouseClicked(evt);
             }
@@ -787,7 +790,8 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
             super ("Untitled " + (newCount++));
             index = newCount;
         }
-        
+
+        @Override
         public String getName() {
             return "Untitled " + index;
         }

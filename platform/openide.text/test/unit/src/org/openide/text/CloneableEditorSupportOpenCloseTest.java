@@ -232,6 +232,7 @@ implements CloneableEditorSupport.Env {
         if (cannotBeModified != null) {
             final String notify = cannotBeModified;
             IOException e = new IOException () {
+                @Override
                 public String getLocalizedMessage () {
                     return notify;
                 }

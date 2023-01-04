@@ -61,7 +61,8 @@ class ProfilerRowSorter extends TableRowSorter {
     public boolean allowsThreeStateColumns() {
         return threeStateColumns;
     }
-    
+
+    @Override
     public void toggleSortOrder(int column) {
         // UNSORTED not allowed for sorting columns (default)
         if (!allowsThreeStateColumns()) {
@@ -91,7 +92,8 @@ class ProfilerRowSorter extends TableRowSorter {
         // Toggling from second sort order, switch to UNSORTED
         setSortColumn(column, SortOrder.UNSORTED);
     }
-    
+
+    @Override
     public void setSortKeys(List newKeys) {
         if (newKeys == null || newKeys.isEmpty()) {
             setSortKeysImpl(newKeys);

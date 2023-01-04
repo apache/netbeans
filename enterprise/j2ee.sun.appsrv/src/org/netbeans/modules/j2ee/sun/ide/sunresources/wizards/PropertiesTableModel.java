@@ -57,7 +57,8 @@ public class PropertiesTableModel extends javax.swing.table.AbstractTableModel {
         else
             return pair.getParamValue();
     }
-    
+
+    @Override
     public String getColumnName(int col) {
         if (0 == col) 
             return bundle.getString("COL_HEADER_NAME"); //NOI18N
@@ -65,11 +66,13 @@ public class PropertiesTableModel extends javax.swing.table.AbstractTableModel {
             return bundle.getString("COL_HEADER_VALUE"); //NOI18N
         throw new RuntimeException(bundle.getString("COL_HEADER_ERR_ERR_ERR")); //NOI18N
     }
-    
+
+    @Override
     public boolean isCellEditable(int row, int col) {
        return true;
     }
-    
+
+    @Override
     public void setValueAt(Object value, int row, int col) {
         if((row >=0) && (row < data.size())){
             NameValuePair property = (NameValuePair)data.elementAt(row);

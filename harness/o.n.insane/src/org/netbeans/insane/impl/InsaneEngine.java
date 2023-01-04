@@ -305,6 +305,7 @@ try {
             add(o);
         }
         
+        @Override
         public boolean isEmpty() {
             return offset >= size();
         }

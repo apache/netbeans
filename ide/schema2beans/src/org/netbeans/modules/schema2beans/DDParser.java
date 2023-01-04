@@ -580,7 +580,8 @@ public class DDParser implements Iterator {
     public Object current() {
 	return this.current;
     }
-    
+
+	@Override
     public void remove() {
 	throw new UnsupportedOperationException();
     }

@@ -334,6 +334,7 @@ class CompareSnapshotsHelper {
             add(compareRetainedHintLabel, c);
 
             projectSnapshotsList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                                   boolean cellHasFocus) {
                         JLabel c = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -365,6 +366,7 @@ class CompareSnapshotsHelper {
                 });
 
             projectSnapshotsList.addMouseListener(new MouseAdapter() {
+                @Override
                     public void mousePressed(MouseEvent e) {
                         if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2)
                                 && (projectSnapshotsList.getSelectedValue() != null)) {

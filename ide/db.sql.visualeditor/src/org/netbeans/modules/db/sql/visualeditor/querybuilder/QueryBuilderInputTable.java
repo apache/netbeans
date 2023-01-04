@@ -196,6 +196,7 @@ public class QueryBuilderInputTable extends JTable
         }
         private void addFocusListener(Component C) {
 	        super.getComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+                @Override
 	        public void focusLost(java.awt.event.FocusEvent fe) { lostFocus(); }
 	    });
         }
@@ -338,12 +339,14 @@ public class QueryBuilderInputTable extends JTable
 
     // Mouse listener -- bring up background menu
     class InputTablePopupListener extends MouseAdapter {
+        @Override
         public void mousePressed(MouseEvent e) {
             JTable source = (JTable)(e.getSource());
 
             maybeShowPopup(e);
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             mousePressed(e);
         }

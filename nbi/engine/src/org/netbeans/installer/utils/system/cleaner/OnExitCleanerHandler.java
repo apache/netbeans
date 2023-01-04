@@ -26,7 +26,8 @@ import java.io.File;
  * @author Dmitry Lipin
  */
 public abstract class OnExitCleanerHandler extends Thread {
-    
+
+    @Override
     public abstract void run() ;
 
     public abstract void removeDeleteOnExitFile(File file);

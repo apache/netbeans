@@ -84,6 +84,7 @@ public class KeySequenceInputPanel extends javax.swing.JPanel {
     /**
      * Makes it trying to be bigger
      */
+    @Override
     public Dimension getPreferredSize() {
         Dimension dim = super.getPreferredSize();
         
@@ -96,6 +97,7 @@ public class KeySequenceInputPanel extends javax.swing.JPanel {
     /**
      * We're redirecting our focus to proper component.
      */
+    @Override
     public void requestFocus() {
         keySequenceInputField.requestFocus();
     }
@@ -125,12 +127,17 @@ public class KeySequenceInputPanel extends javax.swing.JPanel {
         add(keySequenceLabel, gridBagConstraints);
 
         keySequenceInputField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 keySequenceInputFieldKeyTyped(evt);
             }
+
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 keySequenceInputFieldKeyPressed(evt);
             }
+
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 keySequenceInputFieldKeyReleased(evt);
             }

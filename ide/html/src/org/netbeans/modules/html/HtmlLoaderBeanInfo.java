@@ -33,6 +33,7 @@ import org.openide.util.Utilities;
 */
 public class HtmlLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (UniFileLoader.class) };
@@ -45,6 +46,7 @@ public class HtmlLoaderBeanInfo extends SimpleBeanInfo {
     /** @param type Desired type of the icon
     * @return returns the Image loader's icon
     */
+    @Override
     public Image getIcon(final int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
                 (type == java.beans.BeanInfo.ICON_MONO_16x16)) {

@@ -53,6 +53,7 @@ public class DisplayDialog extends javax.swing.JDialog {
 
         setTitle("Displayer");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
             }

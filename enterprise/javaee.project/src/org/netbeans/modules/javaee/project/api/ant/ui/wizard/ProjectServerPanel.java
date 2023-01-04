@@ -209,6 +209,7 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
         warningPlaceHolderPanel.setLayout(new java.awt.BorderLayout());
 
         jTextFieldContextPath.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextFieldContextPathKeyReleased(evt);
             }

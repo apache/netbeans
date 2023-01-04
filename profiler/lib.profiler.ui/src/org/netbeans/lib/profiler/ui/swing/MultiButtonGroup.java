@@ -32,6 +32,7 @@ public class MultiButtonGroup extends ButtonGroup {
         
     private final Set<ButtonModel> selected = new HashSet();
 
+    @Override
     public void setSelected(ButtonModel m, boolean b) {
         if (b == false) {
             for (ButtonModel model : selected) {
@@ -45,6 +46,7 @@ public class MultiButtonGroup extends ButtonGroup {
         }
     }
 
+    @Override
     public boolean isSelected(ButtonModel m) {
         return selected.contains(m);
     }

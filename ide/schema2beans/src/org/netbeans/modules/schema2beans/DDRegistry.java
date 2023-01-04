@@ -670,6 +670,7 @@ public class DDRegistry extends Object {
 	    return this.list.get(pos++);
 	}
 	
+	@Override
 	public void remove() {
 	    throw new UnsupportedOperationException();
 	}

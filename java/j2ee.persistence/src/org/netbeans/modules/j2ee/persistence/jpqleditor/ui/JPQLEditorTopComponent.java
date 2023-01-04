@@ -616,6 +616,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
         errorTextArea = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         resultsTable = new javax.swing.JTable() {
+            @Override
             public java.awt.Dimension getPreferredScrollableViewportSize()
             {
                 java.awt.Dimension size = super.getPreferredScrollableViewportSize();

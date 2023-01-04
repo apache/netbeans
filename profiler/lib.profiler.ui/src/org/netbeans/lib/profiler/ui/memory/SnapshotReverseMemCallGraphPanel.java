@@ -463,6 +463,7 @@ public class SnapshotReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                 });
 
             treeTable.addKeyListener(new KeyAdapter() {
+                @Override
                     public void keyPressed(KeyEvent e) {
                         if ((e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU)
                                 || ((e.getKeyCode() == KeyEvent.VK_F10) && (e.getModifiers() == InputEvent.SHIFT_MASK))) {
@@ -483,6 +484,7 @@ public class SnapshotReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                 });
 
             treeTable.addMouseListener(new MouseAdapter() {
+                @Override
                     public void mousePressed(MouseEvent e) {
                         if (e.getModifiers() == InputEvent.BUTTON3_MASK) {
                             treePath = treeTable.getTree().getPathForRow(treeTable.rowAtPoint(e.getPoint()));
@@ -493,6 +495,7 @@ public class SnapshotReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                         }
                     }
 
+                @Override
                     public void mouseClicked(MouseEvent e) {
                         treePath = treeTable.getTree().getPathForRow(treeTable.rowAtPoint(e.getPoint()));
 

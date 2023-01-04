@@ -61,13 +61,15 @@ public class SummaryControllerUI extends JPanel {
             setToolTipText(Bundle.SummaryControllerUI_ViewDescr());
             setIcon(ICON_INFO);
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width += 4;
             return d;
         }
-        
+
+        @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
         }

@@ -181,7 +181,8 @@ public class ViewLayoutQueue {
 	    super("Text-Layout"); // NOI18N
 	    setPriority(Thread.MIN_PRIORITY);
 	}
-	
+
+        @Override
         public void run() {
 	    Runnable task;
 	    do {
@@ -201,7 +202,8 @@ public class ViewLayoutQueue {
      * to be discovered.
      */
     private static class SynchronousQueue extends ViewLayoutQueue {
-        
+
+        @Override
         public void addTask(Runnable r) {
             r.run();
         }

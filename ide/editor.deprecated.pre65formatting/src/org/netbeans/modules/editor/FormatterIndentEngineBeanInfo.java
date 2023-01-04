@@ -51,6 +51,7 @@ public abstract class FormatterIndentEngineBeanInfo extends SimpleBeanInfo {
         this.iconPrefix = iconPrefix;
     }
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         if (propertyDescriptors == null) {
             String[] propNames = getPropertyNames();
@@ -194,6 +195,7 @@ public abstract class FormatterIndentEngineBeanInfo extends SimpleBeanInfo {
         return ImageUtilities.loadImage(iconResource);
     }
 
+    @Override
     public Image getIcon(int type) {
         if ((type == BeanInfo.ICON_COLOR_16x16) || (type == BeanInfo.ICON_MONO_16x16)) {
             if (icon == null) {

@@ -41,6 +41,8 @@ public interface SOAP12Binding extends SOAP12Component {
         Style(String tag) {
             this.tag = tag;
         }
+
+        @Override
         public String toString() {
             return tag;
         }

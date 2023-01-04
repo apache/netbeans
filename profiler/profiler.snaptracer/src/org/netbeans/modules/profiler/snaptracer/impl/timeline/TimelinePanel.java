@@ -152,6 +152,7 @@ public final class TimelinePanel extends JPanel {
         }
 
 
+        @Override
         public void mousePressed(MouseEvent e) {
             if (!SwingUtilities.isLeftMouseButton(e)) return;
             updateRowState(e, SwingUtilities.isLeftMouseButton(e));
@@ -160,6 +161,7 @@ public final class TimelinePanel extends JPanel {
             updateCursor();
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             if (!SwingUtilities.isLeftMouseButton(e)) return;
             chart.updateSelection(true, this);
@@ -178,11 +180,13 @@ public final class TimelinePanel extends JPanel {
             });
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {
             updateRowState(e, false);
             updateCursor();
         }
 
+        @Override
         public void mouseDragged(MouseEvent e){
             if (!SwingUtilities.isLeftMouseButton(e)) return;
             if (draggingRow != null) {

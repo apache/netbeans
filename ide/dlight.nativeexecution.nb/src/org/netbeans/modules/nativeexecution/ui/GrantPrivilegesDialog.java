@@ -71,6 +71,7 @@ public class GrantPrivilegesDialog extends javax.swing.JPanel implements GrantPr
 
         suPasswordField.setText(org.openide.util.NbBundle.getMessage(GrantPrivilegesDialog.class, "GrantPrivilegesDialog.suPasswordField.text")); // NOI18N
         suPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 hdlPasswordFieldFocus(evt);
             }

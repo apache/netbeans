@@ -43,11 +43,13 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
         buffer = new StringBuffer(111);
         context = new java.util.Stack<>();
     }
-    
+
+    @Override
     public void setDocumentLocator(Locator locator) {
     }
-    
-    
+
+
+    @Override
     public void startElement(String ns, String ln, String name, Attributes attrs) throws SAXException {
         dispatch(true);
         context.push(new Object[] {name, new org.xml.sax.helpers.AttributesImpl(attrs)});
@@ -61,7 +63,8 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
             handler.start_bind(attrs);
         }
     }
-    
+
+    @Override
     public void endElement(String ns, String ln, java.lang.String name) throws SAXException {
         dispatch(false);
         context.pop();
@@ -71,14 +74,17 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
             handler.end_bind();
         }
     }
-    
+
+    @Override
     public void characters(char[] chars, int start, int len) throws SAXException {
         buffer.append(chars, start, len);
     }
-    
+
+    @Override
     public void ignorableWhitespace(char[] chars, int start, int len) throws SAXException {
     }
-    
+
+    @Override
     public void processingInstruction(java.lang.String target, java.lang.String data) throws SAXException {
     }
     

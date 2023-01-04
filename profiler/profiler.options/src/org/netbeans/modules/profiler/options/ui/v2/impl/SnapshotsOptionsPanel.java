@@ -287,6 +287,7 @@ public final class SnapshotsOptionsPanel extends ProfilerOptionsPanel {
             Bundle.SnapshotsOptionsPanel_ItemSaveToProject(),
             Bundle.SnapshotsOptionsPanel_ItemSaveToTemp(),
             Bundle.SnapshotsOptionsPanel_ItemSaveToCustom() }) {
+            @Override
             public void setSelectedIndex(int index) {
                 super.setSelectedIndex(index);
                 boolean custom = index == 3;
@@ -320,6 +321,7 @@ public final class SnapshotsOptionsPanel extends ProfilerOptionsPanel {
         add(customOOMEField, c);
         
         customOOMEButton = new JButton() {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 SwingUtilities.invokeLater(new Runnable() {

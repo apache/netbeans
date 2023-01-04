@@ -82,6 +82,7 @@ public class DiffAction extends NodeAction {
             performAction(nodes);
         }
 
+        @Override
         public boolean isEnabled() {
             return DiffAction.this.enable(nodes);
         }

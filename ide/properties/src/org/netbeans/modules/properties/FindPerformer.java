@@ -309,6 +309,7 @@ public class FindPerformer extends javax.swing.AbstractAction
         );
         
         dialog.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosed(WindowEvent e) {
                 findDialog = null;
             }

@@ -338,6 +338,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         
         /**
          */
+        @Override
         public void keyReleased (KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_DELETE) {
                 tableModel.removeRow (table.getSelectedRow());
@@ -376,6 +377,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         }
 
         /** Returns the class for a model. */
+        @Override
         public Class getColumnClass (int index) {
             return Class.class;
         }
@@ -394,6 +396,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
 	/**
 	 */
+    @Override
         public void setValueAt (Object val, int row, int column) {
             if ( row >= nodeTypesList.size() ) {
                 // fixed ArrayIndexOutOfBounds on nodeTypesList.set (row, type);
@@ -433,6 +436,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
 	/**
 	 */
+    @Override
         public String getColumnName (int column) {
             return Util.THIS.getString ("LBL_nodeType");
         }
@@ -440,6 +444,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         /** Returns true for all cells which are editable. For a 
          * a new cell is editable only name field.
          */
+        @Override
         public boolean isCellEditable (int rowIndex, int columnIndex) {
             return true;
         }

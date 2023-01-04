@@ -57,6 +57,7 @@ public class DTDPanel extends AbstractPanel {
         // attach focus listener to editor directly
         Component editor = pidComboBox.getEditor().getEditorComponent();
         editor.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusLost(FocusEvent e) {
                 if (existsPID()) updatePossibilities();
             }
@@ -115,6 +116,7 @@ public class DTDPanel extends AbstractPanel {
             }
         });
         pidComboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 pidComboBoxFocusLost(evt);
             }
@@ -154,6 +156,7 @@ public class DTDPanel extends AbstractPanel {
             }
         });
         sidComboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 sidComboBoxFocusLost(evt);
             }

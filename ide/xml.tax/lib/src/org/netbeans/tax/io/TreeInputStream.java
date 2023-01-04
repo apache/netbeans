@@ -42,7 +42,8 @@ public class TreeInputStream extends InputStream {
     public TreeInputStream (TreeDocumentRoot doc) throws IOException {
         input = new ByteArrayInputStream (Convertors.treeToByteArray (doc));
     }
-    
+
+    @Override
     public void close () throws IOException {
         if (input == null) throw new IOException (Util.THIS.getString ("EXC_null_input"));
         input.close ();

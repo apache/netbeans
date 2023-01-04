@@ -210,7 +210,8 @@ public abstract class LibrarySupport {
         
         //context>key>propertyname>propertyvalue
         Map<String,Map<String,List<Map<String,String>>>> result = new HashMap<String,Map<String,List<Map<String,String>>>> ();
-        
+
+        @Override
         public void startElement (
             String uri, 
             String localName,
@@ -255,7 +256,8 @@ public abstract class LibrarySupport {
                 ErrorManager.getDefault ().notify (ex);
             }
         }
-        
+
+        @Override
         public InputSource resolveEntity (String pubid, String sysid) {
             return new InputSource (
                 new java.io.ByteArrayInputStream (new byte [0])

@@ -104,6 +104,7 @@ public class ProfilerXYTooltipOverlay extends ChartOverlay implements ActionList
         });
 
         chart.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
             public void mouseMoved(MouseEvent e) {
                 mousePosition = e.getPoint();
                 updateTooltip(chart);

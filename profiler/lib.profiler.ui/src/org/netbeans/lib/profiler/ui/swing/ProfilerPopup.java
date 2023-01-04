@@ -424,7 +424,8 @@ public final class ProfilerPopup {
                     break;
             }
         }
-        
+
+        @Override
         public void paint(Graphics g) {
             super.paint(g);
             
@@ -505,6 +506,7 @@ public final class ProfilerPopup {
                     final Window win = window;
                     final Component comp = window.getMostRecentFocusOwner();
                     d.addWindowListener(new WindowAdapter() {
+                        @Override
                         public void windowClosed(WindowEvent e) {
                             if (DEBUG) System.err.println(">>> BLOCKING DIALOG CLOSED " + getString(d)); // NOI18N
                             win.requestFocus();

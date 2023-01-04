@@ -370,6 +370,7 @@ final class ProfilerSessions {
             JRadioButton ref = new JExtendedRadioButton("XXX"); // NOI18N
             final int refHeight = ref.getPreferredSize().height;
             JPanel filler = new JPanel(null) {
+                @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(300, refHeight * 2);
                 }

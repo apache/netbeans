@@ -37,7 +37,8 @@ public class DbURLClassLoader extends URLClassLoader {
     public DbURLClassLoader(URL[] urls) {
         super(urls);
     }
-    
+
+    @Override
     protected PermissionCollection getPermissions(CodeSource codesource) {
         Permissions permissions = new Permissions();
         permissions.add(new AllPermission());

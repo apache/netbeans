@@ -544,6 +544,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
 
         remoteLink.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.remoteLink.text")); // NOI18N
         remoteLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 remoteLinkMouseClicked(evt);
             }

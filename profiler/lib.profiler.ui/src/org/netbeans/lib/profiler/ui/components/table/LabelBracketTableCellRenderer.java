@@ -50,6 +50,7 @@ public class LabelBracketTableCellRenderer extends EnhancedTableCellRenderer {
         setHorizontalAlignment(horizontalAlignment);
         label1 = new JLabel("", horizontalAlignment); //NOI18N
         label2 = new JLabel("", horizontalAlignment) { //NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     Dimension d = super.getPreferredSize();
 

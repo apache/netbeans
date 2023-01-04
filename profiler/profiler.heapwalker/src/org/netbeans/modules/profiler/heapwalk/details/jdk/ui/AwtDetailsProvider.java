@@ -142,6 +142,7 @@ public final class AwtDetailsProvider extends DetailsProvider.Basic {
         protected Component getComponent(ColorBuilder builder) {
             final Color color = builder.createInstance();
             JPanel panel = new JPanel(null) {
+                @Override
                 public void paint(Graphics g) {
                     g.setColor(color);
                     g.fillRect(0, 0, getWidth(), getHeight());

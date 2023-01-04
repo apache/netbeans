@@ -325,6 +325,7 @@ public final class ClassMethodSelector {
             // --- Views -------------------------------------------------------
             
             JTabbedPane p = new JTabbedPane() {
+                @Override
                 protected void fireStateChanged() {
                     super.fireStateChanged();
                     
@@ -448,11 +449,14 @@ public final class ClassMethodSelector {
             };
             final HintRenderer hintRenderer = new HintRenderer();
             fileList = new JList(filteredFiles) {
+                @Override
                 public Dimension getPreferredScrollableViewportSize() {
                     Dimension dim = super.getPreferredScrollableViewportSize();
                     dim.width = LIST_WIDTH;
                     return dim;
                 }
+
+                @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     
@@ -465,6 +469,7 @@ public final class ClassMethodSelector {
             fileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             filteredFiles.setSelectionModel(fileList.getSelectionModel());
             fileList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     DefaultListCellRenderer c = (DefaultListCellRenderer)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     FileObject file = (FileObject)value;
@@ -494,6 +499,7 @@ public final class ClassMethodSelector {
             Image addBadge = Icons.getImage(GeneralIcons.BADGE_ADD);
             Image addImage = ImageUtilities.mergeImages(baseIcon, addBadge, 0, 0);
             addFileB = new JButton(ImageUtilities.image2Icon(addImage)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     FileChooserBuilder b = new FileChooserBuilder(ClassMethodSelector.class);
@@ -528,6 +534,7 @@ public final class ClassMethodSelector {
             Image removeBadge = Icons.getImage(GeneralIcons.BADGE_REMOVE);
             Image removeImage = ImageUtilities.mergeImages(baseIcon, removeBadge, 0, 0);
             removeFileB = new JButton(ImageUtilities.image2Icon(removeImage)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     List<FileObject> files = fileList.getSelectedValuesList();
@@ -604,11 +611,14 @@ public final class ClassMethodSelector {
             };
             final HintRenderer hintRenderer = new HintRenderer();
             projectList = new JList(filteredProjects) {
+                @Override
                 public Dimension getPreferredScrollableViewportSize() {
                     Dimension dim = super.getPreferredScrollableViewportSize();
                     dim.width = LIST_WIDTH;
                     return dim;
                 }
+
+                @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     
@@ -621,6 +631,7 @@ public final class ClassMethodSelector {
             projectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             filteredProjects.setSelectionModel(projectList.getSelectionModel());
             projectList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     DefaultListCellRenderer c = (DefaultListCellRenderer)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     Lookup.Provider val = (Lookup.Provider)value;
@@ -756,11 +767,14 @@ public final class ClassMethodSelector {
             };
             final HintRenderer hintRenderer = new HintRenderer();
             packageList = new JList(filteredPackages) {
+                @Override
                 public Dimension getPreferredScrollableViewportSize() {
                     Dimension dim = super.getPreferredScrollableViewportSize();
                     dim.width = LIST_WIDTH;
                     return dim;
                 }
+
+                @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     
@@ -775,6 +789,7 @@ public final class ClassMethodSelector {
             packageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             filteredPackages.setSelectionModel(packageList.getSelectionModel());
             packageList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     DefaultListCellRenderer c = (DefaultListCellRenderer)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     SourcePackageInfo val = (SourcePackageInfo)value;
@@ -798,6 +813,7 @@ public final class ClassMethodSelector {
             };
             if (fromProject) {
                 packagesSourcesB = new JToggleButton(Icons.getIcon(LanguageIcons.CONSTRUCTORS)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         reload();
@@ -809,6 +825,7 @@ public final class ClassMethodSelector {
                 packagesSourcesB.setToolTipText(Bundle.ClassMethodSelector_showProjectPackages());
                 packagesSourcesB.setSelected(PREF.getBoolean("Profiler.CMS.packagesSourcesB", true)); // NOI18N
                 packagesDependenciesB = new JToggleButton(Icons.getIcon(LanguageIcons.JAR)) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         reload();
@@ -922,11 +939,14 @@ public final class ClassMethodSelector {
             };
             final HintRenderer hintRenderer = new HintRenderer();
             classesList = new JList(filteredClasses) {
+                @Override
                 public Dimension getPreferredScrollableViewportSize() {
                     Dimension dim = super.getPreferredScrollableViewportSize();
                     dim.width = LIST_WIDTH;
                     return dim;
                 }
+
+                @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     
@@ -942,6 +962,7 @@ public final class ClassMethodSelector {
                                          ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             filteredClasses.setSelectionModel(classesList.getSelectionModel());
             classesList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     DefaultListCellRenderer c = (DefaultListCellRenderer)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     SourceClassInfo val = (SourceClassInfo)value;
@@ -959,6 +980,7 @@ public final class ClassMethodSelector {
             JLabel classesLabel = new JLabel(Bundle.ClassMethodSelector_capClasses(), JLabel.LEADING);
             classesLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
             classesInnerB = new JToggleButton(Icons.getIcon(LanguageIcons.CLASS)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     reload();
@@ -971,11 +993,14 @@ public final class ClassMethodSelector {
             classesInnerB.setToolTipText(Bundle.ClassMethodSelector_showInnerClasses());
             classesInnerB.setSelected(PREF.getBoolean("Profiler.CMS.classesInnerB", true)); // NOI18N
             classesAnonymousB = new JToggleButton(Icons.getIcon(LanguageIcons.CLASS_ANONYMOUS)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     reload();
                     PREF.putBoolean("Profiler.CMS.classesAnonymousB", classesAnonymousB.isSelected()); // NOI18N
                 }
+
+                @Override
                 public void setEnabled(boolean enabled) {
                     super.setEnabled(enabled);
                     if (!isEnabled()) setSelected(false);
@@ -1087,11 +1112,14 @@ public final class ClassMethodSelector {
             };
             final HintRenderer hintRenderer = new HintRenderer();
             methodsList = new JList(filteredMethods) {
+                @Override
                 public Dimension getPreferredScrollableViewportSize() {
                     Dimension dim = super.getPreferredScrollableViewportSize();
                     dim.width = LIST_WIDTH;
                     return dim;
                 }
+
+                @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
 
@@ -1106,6 +1134,7 @@ public final class ClassMethodSelector {
             methodsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             filteredMethods.setSelectionModel(methodsList.getSelectionModel());
             methodsList.setCellRenderer(new DefaultListCellRenderer() {
+                @Override
                 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     DefaultListCellRenderer c = (DefaultListCellRenderer)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     SourceMethodInfo val = (SourceMethodInfo)value;
@@ -1123,6 +1152,7 @@ public final class ClassMethodSelector {
             JLabel methodsLabel = new JLabel(Bundle.ClassMethodSelector_capMethods(), JLabel.LEADING);
             methodsLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
             methodsInheritedB = new JToggleButton(Icons.getIcon(LanguageIcons.METHOD_INHERITED)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     reload();
@@ -1134,6 +1164,7 @@ public final class ClassMethodSelector {
             methodsInheritedB.setToolTipText(Bundle.ClassMethodSelector_showInheritedMethods());
             methodsInheritedB.setSelected(PREF.getBoolean("Profiler.CMS.methodsInheritedB", false));
             methodsNonPublicB = new JToggleButton(Icons.getIcon(LanguageIcons.METHOD_PRIVATE)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     reload();
@@ -1145,6 +1176,7 @@ public final class ClassMethodSelector {
             methodsNonPublicB.setToolTipText(Bundle.ClassMethodSelector_showNonPublicMethods());
             methodsNonPublicB.setSelected(PREF.getBoolean("Profiler.CMS.methodsNonPublicB", true));
             methodsStaticB = new JToggleButton(Icons.getIcon(LanguageIcons.METHOD_PUBLIC_STATIC)) {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) {
                     super.fireActionPerformed(e);
                     reload();

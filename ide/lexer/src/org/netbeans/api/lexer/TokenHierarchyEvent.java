@@ -129,7 +129,8 @@ public final class TokenHierarchyEvent extends java.util.EventObject {
     public int removedLength() {
         return info.removedLength();
     }
-    
+
+    @Override
     public String toString() {
         return "THEvent@" + Integer.toHexString(System.identityHashCode(this)) + "; " + info;
     }

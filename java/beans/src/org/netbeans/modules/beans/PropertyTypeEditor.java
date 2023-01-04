@@ -80,6 +80,7 @@ public class PropertyTypeEditor extends PropertyEditorSupport implements Enhance
     /**
     * @param v new value
     */
+    @Override
     public void setValue(Object v) {
 //        BeanUtils.beginTrans(false);
 //        try {
@@ -95,6 +96,7 @@ public class PropertyTypeEditor extends PropertyEditorSupport implements Enhance
     * @return A fragment of Java code representing an initializer for the
     * current value.
     */
+    @Override
     public String getJavaInitializationString () {
         return getAsText();
     }
@@ -102,6 +104,7 @@ public class PropertyTypeEditor extends PropertyEditorSupport implements Enhance
     /**
     * @return The tag values for this property.
     */
+    @Override
     public String[] getTags () {
         return types;
     }

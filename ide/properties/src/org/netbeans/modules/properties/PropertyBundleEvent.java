@@ -123,6 +123,7 @@ public class PropertyBundleEvent extends EventObject {
     /**
      * @return  full description (English only) of this event
      */
+    @Override
     public String toString() {
         try {
             String bundleName;

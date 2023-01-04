@@ -168,7 +168,8 @@ public class CustomizerPane extends JPanel
         //should only happen when closign teh customizer..
         panelCache.clear();
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         if (isPreferredSizeSet()) {
             return super.getPreferredSize();

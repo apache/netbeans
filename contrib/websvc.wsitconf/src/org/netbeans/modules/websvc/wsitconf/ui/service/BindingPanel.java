@@ -682,6 +682,7 @@ public class BindingPanel extends SectionInnerPanel {
         jSeparator5 = new javax.swing.JSeparator();
 
         addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
             }

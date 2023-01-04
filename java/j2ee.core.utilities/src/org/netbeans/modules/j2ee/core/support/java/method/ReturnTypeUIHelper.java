@@ -277,6 +277,7 @@ public final class ReturnTypeUIHelper {
         Component toListenOn = (combo.isEditable() ? combo.getEditor().getEditorComponent() : combo);
             
         toListenOn.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyPressed(final KeyEvent e) {
                 int keyCode = e.getKeyCode();
                 if (KeyEvent.VK_ENTER == keyCode) {

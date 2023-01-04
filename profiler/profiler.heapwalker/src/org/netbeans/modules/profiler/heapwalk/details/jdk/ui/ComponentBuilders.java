@@ -225,7 +225,8 @@ final class ComponentBuilders {
             component = isVisible() && trackChildren ?
                     ChildrenBuilder.fromField(instance, "component", heap) : null;
         }
-        
+
+        @Override
         protected void setupInstance(T instance) {
             super.setupInstance(instance);
             
@@ -238,7 +239,8 @@ final class ComponentBuilders {
                 }
             }
         }
-        
+
+        @Override
         protected T createInstanceImpl() {
             setPlaceholder();
             return (T)new PlaceholderPanel(className);
@@ -271,7 +273,8 @@ final class ComponentBuilders {
             
             flags = DetailsUtils.getIntFieldValue(instance, "flags", 0);
         }
-        
+
+        @Override
         protected void setupInstance(T instance) {
             super.setupInstance(instance);
             
@@ -289,7 +292,8 @@ final class ComponentBuilders {
             boolean opaque = (flags & opaque_mask) == opaque_mask;
             instance.setOpaque(opaque);
         }
-        
+
+        @Override
         protected T createInstanceImpl() {
             setPlaceholder();
             return (T)new PlaceholderPanel(className);

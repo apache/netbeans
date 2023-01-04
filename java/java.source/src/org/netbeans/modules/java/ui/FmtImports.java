@@ -525,6 +525,7 @@ public class FmtImports extends javax.swing.JPanel implements Runnable, ListSele
                         NbBundle.getMessage(FmtImports.class, "LBL_imp_Package"), //NOI18N
                         NbBundle.getMessage(FmtImports.class, "LBL_imp_WithSub") //NOI18N
                     }) {
+                @Override
                 public Class<?> getColumnClass(int columnIndex) {
                     return columnIndex == 0 ? String.class : Boolean.class;
                 }
@@ -535,9 +536,12 @@ public class FmtImports extends javax.swing.JPanel implements Runnable, ListSele
                     ? new String[] {NbBundle.getMessage(FmtImports.class, "LBL_imp_Static"), NbBundle.getMessage(FmtImports.class, "LBL_imp_Package")} //NOI18N
                     : new String[] {NbBundle.getMessage(FmtImports.class, "LBL_imp_Package")}; //NOI18N
             model = new DefaultTableModel(new Object[][] {}, colNames) {
+                @Override
                 public Class<?> getColumnClass(int columnIndex) {
                     return columnIndex == getColumnCount() - 1 ? String.class : Boolean.class;
                 }
+
+                @Override
                 public boolean isCellEditable(int row, int column) {
                     return allOtherImports != getValueAt(row, getColumnCount() - 1);
                 }                

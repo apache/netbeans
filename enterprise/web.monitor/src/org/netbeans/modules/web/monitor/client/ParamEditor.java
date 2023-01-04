@@ -83,6 +83,7 @@ public class ParamEditor extends javax.swing.JPanel {
 	return dialogOK; 
     }
 
+	@Override
     public String getName() {
 	return name; 
     }
@@ -279,6 +280,7 @@ public class ParamEditor extends javax.swing.JPanel {
 
 
     // Do we need this?
+	@Override
     public void repaint() {
 	super.repaint();
 	if (dialog != null && !repainting) {

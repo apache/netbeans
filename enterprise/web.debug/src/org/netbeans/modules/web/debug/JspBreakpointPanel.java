@@ -141,14 +141,18 @@ public class JspBreakpointPanel extends JPanel {
 
         tfLineNumber.setColumns(7);
         tfLineNumber.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfLineNumberFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfLineNumberFocusLost(evt);
             }
         });
         tfLineNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tfLineNumberKeyTyped(evt);
             }

@@ -46,6 +46,7 @@ public class SnippetPanel extends JPanel implements MouseListener, KeyListener, 
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(lineColor);
@@ -106,10 +107,12 @@ public class SnippetPanel extends JPanel implements MouseListener, KeyListener, 
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public Dimension getPreferredSize(JComponent c) {
             return preferredSize;
         }
 
+        @Override
         public void installUI(JComponent c) {
             plainPainter.setText(((Title)c).name);
             plainPainter.setIcon(collapsedIcon);
@@ -127,6 +130,7 @@ public class SnippetPanel extends JPanel implements MouseListener, KeyListener, 
                                           titlePreferredSize.height + TITLE_Y_OFFSET * 2);
         }
 
+        @Override
         public void paint(Graphics g, JComponent c) {
 
             Title title = (Title)c;
@@ -298,6 +302,7 @@ public class SnippetPanel extends JPanel implements MouseListener, KeyListener, 
     public void mouseReleased(MouseEvent e) {
     } // not used
 
+    @Override
     public void requestFocus() {
         if (title != null) {
             title.requestFocus();

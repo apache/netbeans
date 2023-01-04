@@ -708,7 +708,8 @@ public class Utilities {
     public enum DocumentTypesEnum {
         schema,
         wsdl;
-        
+
+        @Override
         public String toString(){
             if(name().equals("schema"))
                 return "xsd";

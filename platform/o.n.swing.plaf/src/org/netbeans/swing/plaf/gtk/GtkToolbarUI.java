@@ -47,7 +47,8 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
     public static ComponentUI createUI(JComponent c) {
         return new GtkToolbarUI();
     }
-    
+
+    @Override
     public void installUI( JComponent c ) {
         super.installUI(c);
         //c.setBorder(b);
@@ -55,13 +56,15 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
         c.addContainerListener(this);
         installButtonUIs (c);
     }
-    
+
+    @Override
     public void uninstallUI (JComponent c) {
         super.uninstallUI (c);
         c.setBorder (null);
         c.removeContainerListener(this);
     }
-    
+
+    @Override
     public void paint(Graphics g, JComponent c) {
         GradientPaint gp = new GradientPaint (0f, 0f, 
             UIManager.getColor("controlHighlight"), //NOI18N
@@ -71,12 +74,14 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
         Insets ins = c.getInsets();
         g.fillRect (ins.left, ins.top, c.getWidth() - (ins.left + ins.top), c.getHeight() - (ins.top + ins.bottom));
     }
-    
-    
+
+
+    @Override
     protected Border createRolloverBorder() {
         return BorderFactory.createEmptyBorder(2,2,2,2);
     }
-    
+
+    @Override
     protected Border createNonRolloverBorder() {
         return createRolloverBorder();
     }
@@ -84,7 +89,8 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
     private Border createNonRolloverToggleBorder() {
         return createRolloverBorder();
     }
-    
+
+    @Override
     protected void setBorderToRollover(Component c) {
         if (c instanceof AbstractButton) {
             ((AbstractButton) c).setBorderPainted(false);
@@ -96,7 +102,8 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
             ((JComponent) c).setOpaque(false);
         }
     }
-    
+
+    @Override
     protected void setBorderToNormal(Component c) {
         if (c instanceof AbstractButton) {
             ((AbstractButton) c).setBorderPainted(false);
@@ -107,7 +114,8 @@ public class GtkToolbarUI extends BasicToolBarUI implements ContainerListener {
             ((JComponent) c).setOpaque(false);
         }
     }
-    
+
+    @Override
     public void setFloating(boolean b, Point p) {
         //nobody wants this
     }

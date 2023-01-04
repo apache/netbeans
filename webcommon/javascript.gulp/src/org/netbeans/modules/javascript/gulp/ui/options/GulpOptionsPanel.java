@@ -142,9 +142,12 @@ public class GulpOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(installLabel, NbBundle.getMessage(GulpOptionsPanel.class, "GulpOptionsPanel.installLabel.text")); // NOI18N
         installLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 installLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 installLabelMouseEntered(evt);
             }

@@ -214,6 +214,7 @@ public abstract class CodeProfilingPoint extends ProfilingPoint {
                 .firePropertyChange(PROPERTY_LOCATION, oldLocation, location);
         }
 
+        @Override
         public Location getLocation() {
             return location;
         }

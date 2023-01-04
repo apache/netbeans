@@ -149,11 +149,13 @@ public class ImportClassPanel extends javax.swing.JPanel {
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 listMouseReleased(evt);
             }
         });
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 listKeyReleased(evt);
             }
@@ -363,7 +365,8 @@ public class ImportClassPanel extends javax.swing.JPanel {
             bgSelectionColor = list.getSelectionBackground();
             fgSelectionColor = list.getSelectionForeground();        
         }
-        
+
+        @Override
         public Component getListCellRendererComponent( JList list,
                                                        Object value,
                                                        int index,

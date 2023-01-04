@@ -473,6 +473,7 @@ public class JSPVariablesFilter implements TreeModelFilter {
                 return nextElement;
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }

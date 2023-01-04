@@ -114,6 +114,8 @@ abstract class LivenessTreeTableView extends MemoryView {
                     {
                         if (!filterAllocations) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterObjects = !filterObjects;
@@ -124,6 +126,8 @@ abstract class LivenessTreeTableView extends MemoryView {
                     {
                         if (!filterObjects) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         filterAllocations = !filterAllocations;
@@ -166,6 +170,8 @@ abstract class LivenessTreeTableView extends MemoryView {
                     {
                         if (!searchAllocations) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchObjects = !searchObjects;
@@ -175,6 +181,8 @@ abstract class LivenessTreeTableView extends MemoryView {
                     {
                         if (!searchObjects) setEnabled(false);
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         searchAllocations = !searchAllocations;

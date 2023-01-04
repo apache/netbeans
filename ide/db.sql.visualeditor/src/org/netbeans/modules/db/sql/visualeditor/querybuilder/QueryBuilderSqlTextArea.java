@@ -513,11 +513,13 @@ public class QueryBuilderSqlTextArea extends JEditorPane
         sqlTextListener(JPopupMenu popupMenu) {
             popup = popupMenu;
         }
-        
+
+        @Override
         public void mousePressed(MouseEvent e) {
             maybeShowPopup(e);
         }
-        
+
+        @Override
         public void mouseReleased(MouseEvent e) {
             mousePressed(e);
         }
@@ -598,6 +600,7 @@ public class QueryBuilderSqlTextArea extends JEditorPane
      * Sets the text of this TextComponent  to the specified text. Also records it
      * for possible reset later.
      */
+    @Override
     public void setText(String str) {
         
          if (DEBUG)

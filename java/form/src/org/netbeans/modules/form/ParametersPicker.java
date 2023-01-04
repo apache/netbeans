@@ -500,6 +500,7 @@ public class ParametersPicker extends javax.swing.JPanel {
         add(codeButton, gridBagConstraints);
 
         codeArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 codeAreaMouseClicked(evt);
             }

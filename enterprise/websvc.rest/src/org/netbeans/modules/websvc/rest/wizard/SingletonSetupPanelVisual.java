@@ -71,6 +71,7 @@ public class SingletonSetupPanelVisual extends javax.swing.JPanel
         initComponents();
         packageComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 fireChange();
             }
@@ -129,6 +130,7 @@ public class SingletonSetupPanelVisual extends javax.swing.JPanel
         org.openide.awt.Mnemonics.setLocalizedText(classLabel, bundle.getString("MSG_ClassName")); // NOI18N
 
         classTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 classTextFieldKeyReleased(evt);
             }
@@ -138,6 +140,7 @@ public class SingletonSetupPanelVisual extends javax.swing.JPanel
         org.openide.awt.Mnemonics.setLocalizedText(uriLabel, org.openide.util.NbBundle.getMessage(SingletonSetupPanelVisual.class, "LBL_UriTemplate")); // NOI18N
 
         uriTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 uriTextFieldKeyReleased(evt);
             }
@@ -170,6 +173,7 @@ public class SingletonSetupPanelVisual extends javax.swing.JPanel
             }
         });
         packageComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 packageComboBoxKeyReleased(evt);
             }
@@ -192,12 +196,14 @@ public class SingletonSetupPanelVisual extends javax.swing.JPanel
             }
         });
         selectClassButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mouseClickHandler(evt);
             }
         });
 
         contentClassTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 representationClassChanged(evt);
             }

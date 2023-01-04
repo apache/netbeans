@@ -205,7 +205,8 @@ final class ButtonBuilders {
             
             flat = DetailsUtils.getBooleanFieldValue(instance, "flat", false);
         }
-        
+
+        @Override
         protected JToggleButton createInstanceImpl() {
             JCheckBox checkBox = new JCheckBox();
             checkBox.setBorderPaintedFlat(flat);
@@ -219,7 +220,8 @@ final class ButtonBuilders {
         JRadioButtonBuilder(Instance instance, Heap heap) {
             super(instance, heap);
         }
-        
+
+        @Override
         protected JToggleButton createInstanceImpl() {
             return new JRadioButton();
         }
@@ -250,6 +252,7 @@ final class ButtonBuilders {
             super(instance, heap);
         }
         
+        @Override
         protected JMenuItem createInstanceImpl() {
             return new JCheckBoxMenuItem();
         }
@@ -261,7 +264,8 @@ final class ButtonBuilders {
         JRadioButtonMenuItemBuilder(Instance instance, Heap heap) {
             super(instance, heap);
         }
-        
+
+        @Override
         protected JMenuItem createInstanceImpl() {
             return new JRadioButtonMenuItem();
         }
@@ -273,11 +277,13 @@ final class ButtonBuilders {
         JMenuBuilder(Instance instance, Heap heap) {
             super(instance, heap);
         }
-        
+
+        @Override
         protected JMenuItem createInstanceImpl() {
             return new JMenu();
         }
-        
+
+        @Override
         protected Component createPresenterImpl(JMenuItem instance) {
             JMenuBar menuBar = new JMenuBar();
             menuBar.add(instance);

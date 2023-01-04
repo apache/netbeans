@@ -58,6 +58,7 @@ public abstract class EnhancedTableCellRenderer extends JPanel implements TableC
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public void setBorder(Border border) {
         super.setBorder(border);
         originalBorder = border;

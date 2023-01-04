@@ -142,7 +142,8 @@ public class MultiLineField extends JComponent implements Accessible {
 	useMonospacedFont = b;
     }
 
-    public void addNotify () {
+    @Override
+	public void addNotify () {
 	super.addNotify ();
 	
 	int ptSize = getFont ().getSize ();
@@ -246,15 +247,18 @@ public class MultiLineField extends JComponent implements Accessible {
 	stringsToDisplay = new String [numberLines];
 	v.copyInto (stringsToDisplay);
     }
- 
+
+	@Override
     public Dimension getPreferredSize () {
 	return preferredSize;
     }
 
+	@Override
     public Dimension getMinimumSize () {
 	return preferredSize;
     }
 
+	@Override
     public void setSize (Dimension d) {
 	if (d.width != totalWidth) {
 	    totalWidth = d.width;
@@ -266,6 +270,7 @@ public class MultiLineField extends JComponent implements Accessible {
 	super.setSize (d);
     }
 
+	@Override
     public void setBounds (Rectangle r) {
 	if (r.width != totalWidth) {
 	    totalWidth = r.width;
@@ -277,6 +282,7 @@ public class MultiLineField extends JComponent implements Accessible {
 	super.setBounds (r);
     }
 
+	@Override
     public void setBounds (int x, int y, int width, int height) {
 	if (width != totalWidth) {
 	    totalWidth = width;
@@ -288,6 +294,7 @@ public class MultiLineField extends JComponent implements Accessible {
 	super.setBounds (x, y, width, height);
     }
 
+	@Override
     public void paint (Graphics g) {
 	Dimension size = getSize ();
 	if (size.width != totalWidth) {
@@ -392,6 +399,7 @@ public class MultiLineField extends JComponent implements Accessible {
 	}
     }
 
+	@Override
     public AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {
             accessibleContext = new AccessibleMultiLineField();
@@ -399,8 +407,9 @@ public class MultiLineField extends JComponent implements Accessible {
         return accessibleContext;
     }
 
-    protected class AccessibleMultiLineField extends AccessibleJComponent { 
+    protected class AccessibleMultiLineField extends AccessibleJComponent {
 
+		@Override
 	public AccessibleRole getAccessibleRole () {
 	    return AccessibleRole.LABEL;
 	}

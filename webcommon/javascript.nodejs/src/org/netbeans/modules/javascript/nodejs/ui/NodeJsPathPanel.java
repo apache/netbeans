@@ -352,9 +352,12 @@ public final class NodeJsPathPanel extends JPanel {
 
         Mnemonics.setLocalizedText(nodeInstallLabel, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.nodeInstallLabel.text")); // NOI18N
         nodeInstallLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 nodeInstallLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 nodeInstallLabelMouseEntered(evt);
             }

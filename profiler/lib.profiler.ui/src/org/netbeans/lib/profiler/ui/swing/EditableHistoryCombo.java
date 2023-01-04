@@ -79,17 +79,19 @@ class EditableHistoryCombo extends JComboBox {
     private static class ComboHistoryModel extends DefaultComboBoxModel {
         
         private final int historySize;
-        
-        
+
+
         ComboHistoryModel(int historySize) {
             this.historySize = historySize;
         }
-        
-        
+
+
+        @Override
         public void addElement(Object item) {
             insertElementAt(item, 0);
         }
-        
+
+        @Override
         public void insertElementAt(Object item, int index) {
             int current = getIndexOf(item);
             if (current == index) return;

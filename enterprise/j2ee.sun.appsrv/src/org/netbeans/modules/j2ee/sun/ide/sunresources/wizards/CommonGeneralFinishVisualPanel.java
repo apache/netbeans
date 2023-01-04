@@ -202,6 +202,7 @@ public class CommonGeneralFinishVisualPanel extends javax.swing.JPanel implement
                 });
                  */
                 jTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+                    @Override
                     public void keyReleased(java.awt.event.KeyEvent evt) {
                         jTextField1KeyReleased(evt, index);
                     }

@@ -62,6 +62,7 @@ public class ProfilerInterface implements CommonConstants {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             RootClassLoadedCommand cmd = new RootClassLoadedCommand(new String[] { "*FAKE_CLASS_1*", "*FAKE_CLASS_2*" }, // NOI18N
                                                                     new int[] { 0, 0 }, null, new int[] { 0, 0 }, new int[2][], 2, new int[] { -1 });
@@ -89,6 +90,7 @@ public class ProfilerInterface implements CommonConstants {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             Monitors.enterServerState(CommonConstants.SERVER_INITIALIZING);
             // We take a serialClientOperationsLock, then turn class load hook on, to prevent possible class loads, that

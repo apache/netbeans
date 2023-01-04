@@ -203,6 +203,8 @@ final class EventLock implements RWLock {
             super(source, PaintEvent.PAINT, runnable, notifier, catchExceptions);
             this.m = m;
         }
+
+        @Override
         public String paramString() {
             return super.paramString() + ",lock=" + m; // NOI18N
         }

@@ -83,7 +83,8 @@ public final class TimedWeakReference<T> extends WeakReference<T> implements Run
             }
         }
     }
-    
+
+    @Override
     public synchronized T get() {
         if (o == null) {
             o = super.get();

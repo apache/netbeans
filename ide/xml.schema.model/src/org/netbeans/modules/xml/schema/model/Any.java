@@ -45,6 +45,8 @@ public interface Any {
                 ProcessContents(String s) {
                     value = s;
                 }
+
+		@Override
                 public String toString() {
                     return value;
                 }

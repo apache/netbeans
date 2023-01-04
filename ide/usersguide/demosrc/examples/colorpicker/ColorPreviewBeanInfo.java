@@ -74,6 +74,7 @@ public class ColorPreviewBeanInfo extends SimpleBeanInfo {
     /** This methods returns an array of property descriptors.
      * @return Array of PropertyDescriptor instances associated with this BeanInfo.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         return properties;
     }
@@ -81,6 +82,7 @@ public class ColorPreviewBeanInfo extends SimpleBeanInfo {
     /** This methods returns an array of event set descriptors.
      * @return Array of EventSetDescriptor instances associated with this BeanInfo.
      */
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
         return eventSets;
     }
@@ -92,6 +94,7 @@ public class ColorPreviewBeanInfo extends SimpleBeanInfo {
      * @param iconKind Type of icon.
      * @return Icon associated with this BeanInfo.
      */
+    @Override
     public java.awt.Image getIcon(int iconKind) {
 
         switch (iconKind) {

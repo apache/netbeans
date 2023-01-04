@@ -209,10 +209,13 @@ public abstract class ThreadsSelector extends PopupButton {
             controls.add(Box.createHorizontalStrut(3));
             
             final JCheckBox mergeThreads = new JCheckBox(MERGE_THREADS, mergeSelectedThreads) {
+                @Override
                 protected void fireItemStateChanged(ItemEvent e) {
                     mergeSelectedThreads = isSelected() && !displayAllThreads;
                     fireSelectionChanged();
                 }
+
+                @Override
                 public String getToolTipText() {
                     return isEnabled() ? super.getToolTipText() : MERGE_THREADS_TOOLTIP_DISABLED;
                 }
@@ -221,6 +224,7 @@ public abstract class ThreadsSelector extends PopupButton {
             
             final boolean[] resetterEvent = new boolean[1];
             final JCheckBox allThreads = new JCheckBox(ALL_THREADS, displayAllThreads) {
+                @Override
                 protected void fireItemStateChanged(ItemEvent e) {
                     if (resetterEvent[0]) return;
                     displayAllThreads = isSelected();
@@ -282,7 +286,8 @@ public abstract class ThreadsSelector extends PopupButton {
     
     
     private class SelectedThreadsModel extends AbstractTableModel {
-        
+
+        @Override
         public String getColumnName(int columnIndex) {
             if (columnIndex == 0) {
                 return COLUMN_SELECTED;
@@ -292,6 +297,7 @@ public abstract class ThreadsSelector extends PopupButton {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (columnIndex == 0) {
                 return Boolean.class;
@@ -318,7 +324,8 @@ public abstract class ThreadsSelector extends PopupButton {
             }
             return null;
         }
-        
+
+        @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (columnIndex == 0) {
                 int threadId = getSnapshot().getThreadIds()[rowIndex];
@@ -330,6 +337,7 @@ public abstract class ThreadsSelector extends PopupButton {
             }
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return columnIndex == 0;
         }

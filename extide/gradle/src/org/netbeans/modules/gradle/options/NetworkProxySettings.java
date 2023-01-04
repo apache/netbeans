@@ -53,7 +53,8 @@ public enum NetworkProxySettings {
      * Automatically override on execution, but do not change gradle.properties.
      */
     OVERRIDE;
-    
+
+    @Override
     public String toString() {
         switch (this) {
             case IGNORE: return Bundle.PROXY_IGNORE();

@@ -331,6 +331,7 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
         jTextVMOptions.setLineWrap(true);
         jTextVMOptions.setRows(5);
         jTextVMOptions.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextVMOptionsKeyPressed(evt);
             }
@@ -816,6 +817,7 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
         }
         
         // #93658: GTK needs name to render cell renderer "natively"
+        @Override
         public String getName() {
             String name = super.getName();
             return name == null ? "ComboBox.renderer" : name;  // NOI18N

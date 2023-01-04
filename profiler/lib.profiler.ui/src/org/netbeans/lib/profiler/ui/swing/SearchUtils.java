@@ -279,6 +279,7 @@ public final class SearchUtils {
         // NOTE: added below
         
         final JButton prev = new JButton(BTN_PREVIOUS, Icons.getIcon(GeneralIcons.FIND_PREVIOUS)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 SwingUtilities.invokeLater(new Runnable() {
@@ -305,6 +306,7 @@ public final class SearchUtils {
         if (!UIUtils.isAquaLookAndFeel()) toolbar.add(Box.createHorizontalStrut(2));
         
         final JButton next = new JButton(BTN_NEXT, Icons.getIcon(GeneralIcons.FIND_NEXT)) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 super.fireActionPerformed(e);
                 SwingUtilities.invokeLater(new Runnable() {
@@ -349,10 +351,13 @@ public final class SearchUtils {
         });
         
         final JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
             public void setVisible(boolean visible) {
                 super.setVisible(visible);
                 if (!visible) table.requestFocusInWindow();
             }
+
+            @Override
             public boolean requestFocusInWindow() {
                 if (textC != null) textC.selectAll();
                 return combo.requestFocusInWindow();

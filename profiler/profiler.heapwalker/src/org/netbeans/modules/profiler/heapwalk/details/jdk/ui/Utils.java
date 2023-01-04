@@ -139,7 +139,8 @@ final class Utils {
             label = new JLabel(BrowserUtils.getSimpleType(className), JLabel.CENTER);
             label.setOpaque(true);
         }
-        
+
+        @Override
         public void doLayout() {
             Dimension s = getSize();
             Dimension p = label.getPreferredSize();
@@ -149,7 +150,8 @@ final class Utils {
             
             label.setBounds(x, y, p.width, p.height);
         }
-        
+
+        @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(LINE);
@@ -165,16 +167,22 @@ final class Utils {
     }
     
     static final class JPopupMenuImpl extends JPopupMenu {
-        
+
+        @Override
         public void setVisible(boolean visible) {}
+
+        @Override
         public boolean isVisible() { return true; }
 
         // Workarounds for best apperance of JPopupMenu preview
+        @Override
         public Component add(Component comp) {
             if (comp instanceof JComponent)
                 ((JComponent)comp).setOpaque(false);
             return super.add(comp);
         }
+
+        @Override
         public void addNotify() {
             super.addNotify();
             SwingUtilities.invokeLater(new Runnable() {
@@ -244,6 +252,7 @@ final class Utils {
                             add(component, BorderLayout.CENTER);
                         } else {
                             glassPane = new JPanel(null) {
+                                @Override
                                 public Point getToolTipLocation(MouseEvent event) {
                                     Point p = event.getPoint();
                                     p.translate(15, 15);

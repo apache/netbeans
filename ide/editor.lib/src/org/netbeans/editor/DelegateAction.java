@@ -81,8 +81,9 @@ public class DelegateAction extends AbstractAction {
             delegate.actionPerformed(e);
         }
     }
-    
-    
+
+
+    @Override
     public Object getValue(String key) {
         if (delegate != null){
             return delegate.getValue(key);
@@ -90,8 +91,9 @@ public class DelegateAction extends AbstractAction {
             return super.getValue(key);
         }
     }
-    
-    
+
+
+    @Override
     public void putValue(String key, Object value) {
         if (delegate != null){
             delegate.putValue(key, value);

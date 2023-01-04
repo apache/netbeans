@@ -266,10 +266,12 @@ public class TimeCustomizer extends ValidityAwarePanel implements ActionListener
 
         // timeTakeAtField
         timeTakeAtField = new JTextField() {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(100, super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -300,10 +302,12 @@ public class TimeCustomizer extends ValidityAwarePanel implements ActionListener
 
         // timeTakeAtDateField
         timeTakeAtDateField = new JTextField() {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(100, super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -402,10 +406,12 @@ public class TimeCustomizer extends ValidityAwarePanel implements ActionListener
 
         // timeFrequencyCombo
         timeFrequencyCombo = new JComboBox(new Object[] { Bundle.TimeCustomizer_UnitsMinutes(), Bundle.TimeCustomizer_UnitsHours() }) {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(Math.min(super.getPreferredSize().width, 200), super.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

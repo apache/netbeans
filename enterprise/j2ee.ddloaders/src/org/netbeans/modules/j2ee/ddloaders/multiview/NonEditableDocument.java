@@ -51,10 +51,12 @@ public abstract class NonEditableDocument extends PlainDocument {
         }
     }
 
+    @Override
     public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
 
     }
 
+    @Override
     public void remove(int offs, int len) throws BadLocationException {
 
     }

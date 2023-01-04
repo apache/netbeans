@@ -149,6 +149,7 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
 //        revalidate();
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension d = super.getPreferredSize();
         Container parent = getParent();
@@ -164,6 +165,7 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         return editorPane;
     }
 
+    @Override
     public AccessibleContext getAccessibleContext() {
         return editorPane.getAccessibleContext();
     }

@@ -29,6 +29,7 @@ import org.netbeans.api.editor.settings.EditorStyleConstants;
 
 
 class CategoryRenderer extends DefaultListCellRenderer {
+	@Override
     public Component getListCellRendererComponent(
 	JList list,
 	Object value,

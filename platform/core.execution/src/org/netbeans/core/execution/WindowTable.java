@@ -48,7 +48,8 @@ final class WindowTable extends HashMap<Window,TaskThreadGroup> {
         super(16);
         windowMap = new HashMap<ThreadGroup,ArrayList<Window>>(16);
         winListener = new WindowAdapter() {
-                          public void windowClosed(WindowEvent ev) {
+            @Override
+            public void windowClosed(WindowEvent ev) {
                               Window win;
                               removeWindow(win = (Window)ev.getSource());
                               win.removeWindowListener(this);

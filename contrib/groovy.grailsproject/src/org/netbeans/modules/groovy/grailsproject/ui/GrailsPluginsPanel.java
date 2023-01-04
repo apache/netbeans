@@ -203,6 +203,7 @@ public class GrailsPluginsPanel extends javax.swing.JPanel {
         pluginBrowseButton = new javax.swing.JButton();
 
         installedPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 installedPanelComponentShown(evt);
             }
@@ -267,6 +268,7 @@ public class GrailsPluginsPanel extends javax.swing.JPanel {
         pluginsPanel.addTab(org.openide.util.NbBundle.getMessage(GrailsPluginsPanel.class, "GrailsPluginPanel.installed"), installedPanel); // NOI18N
 
         newPluginPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 newPluginPanelComponentShown(evt);
             }

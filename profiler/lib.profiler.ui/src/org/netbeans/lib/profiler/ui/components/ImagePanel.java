@@ -117,6 +117,7 @@ public class ImagePanel extends JPanel {
         }
     }
 
+    @Override
     protected void paintComponent(Graphics graphics) {
         graphics.setColor(getBackground());
         graphics.fillRect(0, 0, getWidth(), getHeight());

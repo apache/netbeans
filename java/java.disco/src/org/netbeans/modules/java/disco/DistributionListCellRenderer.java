@@ -29,6 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @UIType
 public class DistributionListCellRenderer extends DefaultListCellRenderer {
 
+    @Override
     public Component getListCellRendererComponent(JList list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value instanceof Distribution) {
             value = ((Distribution) value).getUiString();

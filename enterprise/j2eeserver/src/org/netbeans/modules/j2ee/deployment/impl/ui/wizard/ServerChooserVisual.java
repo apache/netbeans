@@ -213,6 +213,7 @@ public class ServerChooserVisual extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getBundle(ServerChooserVisual.class).getString("LBL_SCV_DisplayName")); // NOI18N
 
         displayNameEditField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 displayNameEditFieldKeyReleased(evt);
             }

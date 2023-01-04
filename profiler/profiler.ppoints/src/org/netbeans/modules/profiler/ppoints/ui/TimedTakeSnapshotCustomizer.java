@@ -191,6 +191,7 @@ public class TimedTakeSnapshotCustomizer extends ValidityAwarePanel implements D
 
         // nameTextField
         nameTextField = new JTextField("") { // NOI18N
+            @Override
                 public Dimension getPreferredSize() {
                     return (TimedTakeSnapshotCustomizer.this.getParent() instanceof JViewport) ? getMinimumSize()
                                                                                                : new Dimension(400,
@@ -198,6 +199,7 @@ public class TimedTakeSnapshotCustomizer extends ValidityAwarePanel implements D
                                                                                                                                                                                                                                        .getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, super.getPreferredSize().height);
                 }
@@ -229,6 +231,7 @@ public class TimedTakeSnapshotCustomizer extends ValidityAwarePanel implements D
 
         // settingsHeaderSeparator
         settingsHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -281,6 +284,7 @@ public class TimedTakeSnapshotCustomizer extends ValidityAwarePanel implements D
 
         // timeHeaderSeparator
         timeHeaderSeparator = new JSeparator() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }

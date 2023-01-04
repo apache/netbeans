@@ -118,6 +118,7 @@ public class SecurityEditPrincipalPanel extends JPanel {
         add(jLblPrincipalName, gridBagConstraints);
 
         jTxtPrincipalName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtPrincipalNameKeyReleased(evt);
             }
@@ -139,6 +140,7 @@ public class SecurityEditPrincipalPanel extends JPanel {
         add(jLblClassName, gridBagConstraints);
 
         jTxtClassName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtClassNameKeyReleased(evt);
             }

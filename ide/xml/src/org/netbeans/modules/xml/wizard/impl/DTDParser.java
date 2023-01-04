@@ -103,9 +103,11 @@ public final class DTDParser extends DefaultHandler implements DeclHandler {
     public void internalEntityDecl(String name, String value) throws SAXException {
     }
 
+    @Override
     public void notationDecl (String name, String publicId, String systemId) throws SAXException {
-    }                
+    }
 
+    @Override
     public void startElement (String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
         Util.THIS.debug("\tstopping parser!");                                  // NOI18N
         throw new Stop();
@@ -118,7 +120,8 @@ public final class DTDParser extends DefaultHandler implements DeclHandler {
         Stop() {
             super("STOP");                                                      //NOI18N
         }
-        
+
+        @Override
         public Throwable fillInStackTrace() {
             return this;
         }

@@ -147,6 +147,8 @@ public abstract class WSCompletionItem  implements CompletionItem {
             this.wsdlPath = wsdlPath;
             this.displayPath = displayPath;
         }
+
+        @Override
         protected ImageIcon getIcon(){
             if (icon == null) icon = ImageUtilities.loadImageIcon(FILE_ICON, false);
             return icon;      
@@ -183,6 +185,8 @@ public abstract class WSCompletionItem  implements CompletionItem {
             this.itemName=itemName;
             this.itemType=itemType;
         }
+
+        @Override
         protected ImageIcon getIcon(){
             if (icon == null) icon = ImageUtilities.loadImageIcon(ENUM_ICON, false);
             return icon;
@@ -197,7 +201,8 @@ public abstract class WSCompletionItem  implements CompletionItem {
             }
             return leftText;
         }
-        
+
+        @Override
         protected String getRightHtmlText() {
             return itemType;
         }       
@@ -208,6 +213,8 @@ public abstract class WSCompletionItem  implements CompletionItem {
         public CharSequence getInsertPrefix() {
             return itemName;
         }
+
+        @Override
         public int getSortPriority() {
             return 10;
         }

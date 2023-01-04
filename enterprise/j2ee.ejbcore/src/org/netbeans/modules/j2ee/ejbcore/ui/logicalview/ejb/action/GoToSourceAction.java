@@ -46,6 +46,7 @@ public class GoToSourceAction extends AbstractAction implements Presenter.Popup 
         openSourceDO(classDO);
     }
 
+    @Override
     public Object getValue(String key) {
         if (NAME.equals(key)) {
             return actionName;

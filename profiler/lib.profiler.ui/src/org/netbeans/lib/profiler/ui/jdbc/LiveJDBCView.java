@@ -262,12 +262,16 @@ public abstract class LiveJDBCView extends JPanel {
         if (JDBCTreeTableView.isSQL(node)) {
             popup.add(new JMenuItem(JDBCView.ACTION_VIEWSQLQUERY) {
                 { setFont(getFont().deriveFont(Font.BOLD)); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) { showQueryImpl((JDBCTreeTableView.SQLQueryNode)value); }
             });
             popup.addSeparator();
         } else if (showSourceSupported()) {
             popup.add(new JMenuItem(JDBCView.ACTION_GOTOSOURCE) {
                 { setEnabled(userValue != null); setFont(getFont().deriveFont(Font.BOLD)); }
+
+                @Override
                 protected void fireActionPerformed(ActionEvent e) { showSource(userValue); }
             });
             popup.addSeparator();
@@ -275,11 +279,15 @@ public abstract class LiveJDBCView extends JPanel {
         
         if (profileMethodSupported()) popup.add(new JMenuItem(JDBCView.ACTION_PROFILE_METHOD) {
             { setEnabled(userValue != null && JDBCTreeTableView.isSelectable(node)); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileMethod(userValue); }
         });
         
         if (profileClassSupported()) popup.add(new JMenuItem(JDBCView.ACTION_PROFILE_CLASS) {
             { setEnabled(userValue != null); }
+
+            @Override
             protected void fireActionPerformed(ActionEvent e) { profileClass(userValue); }
         });
         
@@ -298,12 +306,14 @@ public abstract class LiveJDBCView extends JPanel {
         popup.add(expand);
 
         expand.add(new JMenuItem(JDBCView.EXPAND_PLAIN_ITEM) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 ttable.expandPlainPath(ttable.getSelectedRow(), 1);
             }
         });
 
         expand.add(new JMenuItem(JDBCView.EXPAND_TOPMOST_ITEM) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 ttable.expandFirstPath(ttable.getSelectedRow());
             }
@@ -312,12 +322,14 @@ public abstract class LiveJDBCView extends JPanel {
         expand.addSeparator();
             
         expand.add(new JMenuItem(JDBCView.COLLAPSE_CHILDREN_ITEM) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 ttable.collapseChildren(ttable.getSelectedRow());
             }
         });
 
         expand.add(new JMenuItem(JDBCView.COLLAPSE_ALL_ITEM) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) {
                 ttable.collapseAll();
             }
@@ -328,9 +340,11 @@ public abstract class LiveJDBCView extends JPanel {
         
         popup.addSeparator();
         popup.add(new JMenuItem(FilterUtils.ACTION_FILTER) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateFilter(); }
         });
         popup.add(new JMenuItem(SearchUtils.ACTION_FIND) {
+            @Override
             protected void fireActionPerformed(ActionEvent e) { invoker.activateSearch(); }
         });
     }

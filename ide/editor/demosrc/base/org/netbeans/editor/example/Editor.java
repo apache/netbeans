@@ -89,10 +89,19 @@ public class Editor extends javax.swing.JFrame {
 	}
 
         // FileView implementation
+        @Override
 	public String getName( File f ) { return null; }
+
+        @Override
 	public String getDescription( File f ) { return null; }
+
+        @Override
 	public String getTypeDescription( File f ) { return null; }
+
+        @Override
 	public Boolean isTraversable( File f ) { return null; }
+
+        @Override
         public Icon getIcon( File f ) {
             if( f.isDirectory() ) return null;
             KitInfo ki = KitInfo.getKitInfoForFile( f );
@@ -190,7 +199,8 @@ public class Editor extends javax.swing.JFrame {
         createBackups = false;
         safeSave = true;
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         Dimension size = new Dimension( 640,480 );
         return size;

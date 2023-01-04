@@ -137,6 +137,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
         searchField = new javax.swing.JTextField();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }

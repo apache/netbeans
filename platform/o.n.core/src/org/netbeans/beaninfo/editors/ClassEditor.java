@@ -41,6 +41,7 @@ public class ClassEditor extends java.beans.PropertyEditorSupport {
      * @return A fragment of Java code representing an initializer for the
      *    current value.
      */
+    @Override
     public String getJavaInitializationString() {
         Class<?> clazz = (Class)getValue();
         if (clazz == null) return "null"; // NOI18N
@@ -55,6 +56,7 @@ public class ClassEditor extends java.beans.PropertyEditorSupport {
     * <p>   If a non-null value is returned, then the PropertyEditor should
     *       be prepared to parse that string back in setAsText().
     */
+    @Override
     public String getAsText() {
         Class<?> clazz = (Class)getValue();
         if (clazz == null) return "null"; // NOI18N
@@ -67,6 +69,7 @@ public class ClassEditor extends java.beans.PropertyEditorSupport {
     * as text.
     * @param text  The string to be parsed.
     */
+    @Override
     public void setAsText(String text) throws java.lang.IllegalArgumentException {
         try {
             ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);

@@ -110,6 +110,7 @@ public class ProfilerOptionsContainer extends ProfilerOptionsPanel {
         scrollIncrement = new JCheckBox("XXX").getPreferredSize().height; // NOI18N
         
         JList<ProfilerOptionsPanel> categoriesList = new JList<ProfilerOptionsPanel>(categoriesModel) {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension dim = super.getPreferredSize();
                 dim.width = Math.max(dim.width + 20, 140);
@@ -119,6 +120,7 @@ public class ProfilerOptionsContainer extends ProfilerOptionsPanel {
         categoriesList.setVisibleRowCount(0);
         categoriesList.setSelectionModel(categoriesSelection);
         categoriesList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 String panelName = " " + ((ProfilerOptionsPanel)value).getDisplayName() + " "; // NOI18N
                 return super.getListCellRendererComponent(list, panelName, index, isSelected, cellHasFocus);
@@ -202,11 +204,14 @@ public class ProfilerOptionsContainer extends ProfilerOptionsPanel {
     private class CategoriesSelectionModel extends DefaultListSelectionModel {
         
         CategoriesSelectionModel() { setSelectionMode(SINGLE_SELECTION); }
-        
+
+        @Override
         public void clearSelection() {}
-        
+
+        @Override
         public void removeSelectionInterval(int index0, int index1) {}
-        
+
+        @Override
         protected void fireValueChanged(int firstIndex, int lastIndex, boolean isAdjusting) {
             super.fireValueChanged(firstIndex, lastIndex, isAdjusting);
             if (!isAdjusting) panelSelected(getLeadSelectionIndex());

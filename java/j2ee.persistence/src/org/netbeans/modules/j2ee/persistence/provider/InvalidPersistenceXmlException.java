@@ -56,7 +56,8 @@ public class InvalidPersistenceXmlException extends Exception{
     public String getPath(){
         return path;
     }
-    
+
+    @Override
     public String toString(){
         return getClass().getName() + "[path: " + getPath() + "]";
     }

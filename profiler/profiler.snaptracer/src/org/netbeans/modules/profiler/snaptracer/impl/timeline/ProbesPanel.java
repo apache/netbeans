@@ -70,11 +70,14 @@ final class ProbesPanel extends JPanel {
         final TimelineChart chart = support.getChart();
 
         listPanel = new ListPanel(new VerticalTimelineLayout(chart)) {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 d.height = Utils.checkedInt(chart.getChartContext().getViewHeight());
                 return d;
             }
+
+            @Override
             protected void updateSelection() {
                 int count = getComponentCount();
                 for (int i = 0; i < count; i++)
@@ -84,6 +87,7 @@ final class ProbesPanel extends JPanel {
         };
 
         viewport = new JViewport() {
+            @Override
             public String getToolTipText(MouseEvent event) {
                 Point p = event.getPoint();
                 p.y += getViewPosition().y;
@@ -175,7 +179,8 @@ final class ProbesPanel extends JPanel {
         refreshButtons(chart.hasRows());
     }
 
-    
+
+    @Override
     public void setCursor(Cursor cursor) {
         viewport.setCursor(cursor);
     }

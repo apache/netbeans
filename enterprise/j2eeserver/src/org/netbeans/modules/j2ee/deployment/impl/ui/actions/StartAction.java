@@ -129,6 +129,7 @@ public class StartAction extends ControlAction {
             performActionImpl(instance);
         }
 
+        @Override
         public boolean isEnabled() {
             return enableImpl(instance);
         }

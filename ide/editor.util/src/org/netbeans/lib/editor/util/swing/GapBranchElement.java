@@ -161,6 +161,7 @@ public abstract class GapBranchElement implements Element {
             return childrenAdded;
         }
 
+        @Override
         public void undo() throws CannotUndoException {
             super.undo();
 
@@ -171,7 +172,8 @@ public abstract class GapBranchElement implements Element {
             childrenRemoved = childrenAdded;
             childrenAdded = tmp;
         }
-        
+
+        @Override
         public void redo() throws CannotRedoException {
             super.redo();
 

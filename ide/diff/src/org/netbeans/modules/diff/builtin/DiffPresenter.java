@@ -324,6 +324,7 @@ public class DiffPresenter extends javax.swing.JPanel {
      */
 
     /* Start lazy diff computation */
+    @Override
     public void addNotify() {
         super.addNotify();
         added = true;
@@ -331,6 +332,7 @@ public class DiffPresenter extends javax.swing.JPanel {
     }
 
     /* On close kill background task. */
+    @Override
     public void removeNotify() {
         super.removeNotify();
         computationTask.cancel();

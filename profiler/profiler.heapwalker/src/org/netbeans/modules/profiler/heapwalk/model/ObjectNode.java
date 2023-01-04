@@ -67,6 +67,7 @@ public class ObjectNode extends InstanceNode {
             return itemIndex;
         }
 
+        @Override
         protected String computeName() {
             String name = "[" + itemIndex + "]"; // NOI18N
 

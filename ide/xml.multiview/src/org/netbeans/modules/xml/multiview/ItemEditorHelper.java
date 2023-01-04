@@ -169,11 +169,13 @@ public class ItemEditorHelper implements Refreshable {
 
         boolean refreshing = false;
 
+        @Override
         public void remove(int offs, int len) throws BadLocationException {
             super.remove(offs, len);
             updateModel();
         }
 
+        @Override
         public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
             super.insertString(offs, str, a);
             updateModel();

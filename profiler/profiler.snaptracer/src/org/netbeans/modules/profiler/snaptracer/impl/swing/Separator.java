@@ -68,7 +68,8 @@ final class Separator extends JSeparator {
         super(orientation);
     }
 
-    
+
+    @Override
     public void setUI(SeparatorUI ui) {
         synchronized(this) {
             if (!separatorUIInitialized) {
@@ -85,6 +86,7 @@ final class Separator extends JSeparator {
         }
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }

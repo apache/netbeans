@@ -57,6 +57,7 @@ public abstract class TreeIterator<I, T> implements Iterator<I> {
         return retVal;
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException("Not supported yet."); // NOI18N
     }

@@ -216,7 +216,8 @@ final class ObjectsFeatureModes {
             JavaTypeFilter f = new JavaTypeFilter(s, JavaTypeFilter.TYPE_INCLUSIVE);
             settings.setInstrumentationFilter(f);
         }
-        
+
+        @Override
         void confirmSettings() {
             if (ui != null) {
                 assert SwingUtilities.isEventDispatchThread();
@@ -224,7 +225,8 @@ final class ObjectsFeatureModes {
                 saveSelection();
             }
         }
-        
+
+        @Override
         boolean pendingChanges() {
             if (ui != null) {
                 assert SwingUtilities.isEventDispatchThread();
@@ -233,7 +235,8 @@ final class ObjectsFeatureModes {
             }
             return false;
         }
-        
+
+        @Override
         boolean currentSettingsValid() {
             assert SwingUtilities.isEventDispatchThread();
             
@@ -301,8 +304,9 @@ final class ObjectsFeatureModes {
             
             if (refreshLink) refreshProjectsLink();
         }
-        
-        
+
+
+        @Override
         JComponent getUI() {
             if (ui == null) {
                 final ChangeListener projectsListener = new ChangeListener() {
@@ -324,15 +328,22 @@ final class ObjectsFeatureModes {
                 };
                 
                 editProjectLink = new JButton() {
+                    @Override
                     public void setText(String text) {
                         super.setText(Bundle.MethodsFeatureModes_editLink(text));
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         performEditProject();
                     }
+
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }
+
+                    @Override
                     public Dimension getMaximumSize() {
                         return getPreferredSize();
                     }
@@ -532,15 +543,22 @@ final class ObjectsFeatureModes {
                 selectionContent = new SettingsPanel();
 
                 editSelectionLink = new JButton() {
+                    @Override
                     public void setText(String text) {
                         super.setText(Bundle.ObjectsFeatureModes_editLink(text));
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         ClassMethodList.showClasses(getSession(), selection, SelectedClassesMode.this.ui);
                     }
+
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }
+
+                    @Override
                     public Dimension getMaximumSize() {
                         return getPreferredSize();
                     }
@@ -564,6 +582,7 @@ final class ObjectsFeatureModes {
 
                 boolean lifecycle = Boolean.parseBoolean(readFlag(LIFECYCLE_FLAG, Boolean.TRUE.toString()));
                 lifecycleCheckbox = new JCheckBox(Bundle.ObjectsFeatureModes_recordLifecycle(), lifecycle) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { super.fireActionPerformed(e); settingsChanged(); }
                 };
                 lifecycleCheckbox.setToolTipText(Bundle.ObjectsFeatureModes_profileAllObjectsToolTip());
@@ -579,6 +598,7 @@ final class ObjectsFeatureModes {
                 
                 boolean alloc = Boolean.parseBoolean(readFlag(ALLOCATIONS_FLAG, Boolean.TRUE.toString()));
                 outgoingCheckbox = new JCheckBox(Bundle.ObjectsFeatureModes_limitAllocations(), alloc) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         boolean selected = isSelected();
@@ -894,6 +914,7 @@ final class ObjectsFeatureModes {
 
                 boolean lifecycle = Boolean.parseBoolean(readFlag(LIFECYCLE_FLAG, Boolean.TRUE.toString()));
                 lifecycleCheckbox = new JCheckBox(Bundle.ObjectsFeatureModes_recordLifecycle(), lifecycle) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) { super.fireActionPerformed(e); settingsChanged(); }
                 };
                 lifecycleCheckbox.setToolTipText(Bundle.ObjectsFeatureModes_profileAllObjectsToolTip());
@@ -909,6 +930,7 @@ final class ObjectsFeatureModes {
                 
                 boolean alloc = Boolean.parseBoolean(readFlag(ALLOCATIONS_FLAG, Boolean.TRUE.toString()));
                 outgoingCheckbox = new JCheckBox(Bundle.ObjectsFeatureModes_limitAllocations(), alloc) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         boolean selected = isSelected();

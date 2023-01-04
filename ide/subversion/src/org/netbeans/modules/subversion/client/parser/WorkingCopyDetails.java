@@ -85,12 +85,17 @@ public class WorkingCopyDetails {
             } else if(version.equals(VERSION_14)) {
                 
                 return new WorkingCopyDetails(file, attributes, conflictDescriptor) {
+                    @Override
                     public boolean propertiesExist() throws IOException {
                         return getAttributes().containsKey("has-props");        // NOI18N
-                    }  
+                    }
+
+                    @Override
                     public boolean propertiesModified() throws IOException {
                         return getAttributes().containsKey("has-prop-mods");    // NOI18N
-                    }            
+                    }
+
+                    @Override
                     File getPropertiesFile() throws IOException {
                         if (propertiesFile == null) {
                             // unchanged properties have only the base file

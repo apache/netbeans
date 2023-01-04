@@ -52,10 +52,9 @@ public class ExtendedClassLoader extends URLClassLoader {
                 addURL(f.toURI().toURL());
             }
     }
-    
 
-    
 
+    @Override
     protected PermissionCollection getPermissions(CodeSource _cs) {
         Permissions p = new Permissions();
         p.add(new AllPermission());

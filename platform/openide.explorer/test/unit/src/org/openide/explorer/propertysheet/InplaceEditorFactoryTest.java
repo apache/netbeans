@@ -98,7 +98,8 @@ public class InplaceEditorFactoryTest extends NbTestCase {
         
         public TagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -106,11 +107,13 @@ public class InplaceEditorFactoryTest extends NbTestCase {
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }

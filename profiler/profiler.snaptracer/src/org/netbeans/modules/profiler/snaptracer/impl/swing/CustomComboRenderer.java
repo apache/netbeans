@@ -113,6 +113,7 @@ public abstract class CustomComboRenderer implements ListCellRenderer {
             this.lAlign = lAlign;
         }
 
+        @Override
         protected void setupRenderer(JLabel renderer, boolean popupVisible) {
             if (popupVisible || !lAlign) renderer.setHorizontalAlignment(SwingConstants.TRAILING);
             else renderer.setHorizontalAlignment(SwingConstants.LEADING);

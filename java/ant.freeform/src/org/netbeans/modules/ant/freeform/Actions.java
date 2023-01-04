@@ -578,7 +578,8 @@ public final class Actions implements ActionProvider {
         public void actionPerformed(ActionEvent e) {
             runConfiguredAction(null, p, actionEl, Lookup.EMPTY);
         }
-        
+
+        @Override
         public boolean isEnabled() {
             String script;
             Element scriptEl = XMLUtil.findElement(actionEl, "script", FreeformProjectType.NS_GENERAL); // NOI18N
@@ -590,7 +591,8 @@ public final class Actions implements ActionProvider {
             String scriptLocation = p.evaluator().evaluate(script);
             return p.helper().resolveFileObject(scriptLocation) != null;
         }
-        
+
+        @Override
         public Object getValue(String key) {
             if (key.equals(Action.NAME)) {
                 Element labelEl = XMLUtil.findElement(actionEl, "label", FreeformProjectType.NS_GENERAL); // NOI18N

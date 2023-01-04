@@ -82,6 +82,7 @@ public class ProfilerXYTooltipPainter extends JPanel {
     }
 
 
+    @Override
     protected void paintComponent(Graphics g) {
         g.setColor(BACKGROUND_COLOR);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -155,6 +156,7 @@ public class ProfilerXYTooltipPainter extends JPanel {
             add(itemUnits, constraints);
 
             JPanel valueSpacer = new JPanel(null) {
+                @Override
                 public Dimension getPreferredSize() { return ZERO; }
             };
             valueSpacer.setOpaque(false);
@@ -215,6 +217,7 @@ public class ProfilerXYTooltipPainter extends JPanel {
             add(maxItemUnits, constraints);
 
             JPanel extraValueSpacer = new JPanel(null) {
+                @Override
                 public Dimension getPreferredSize() { return ZERO; }
             };
             extraValueSpacer.setOpaque(false);

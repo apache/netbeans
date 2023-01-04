@@ -99,17 +99,20 @@ public class SwitcherTable extends JTable {
         // Calc row height here so that TableModel can adjust number of columns.
         calcRowHeight(getOffscreenGraphics());
     }
-    
+
+    @Override
     public void updateUI() {
         needCalcRowHeight = true;
         super.updateUI();
     }
-    
+
+    @Override
     public void setFont(Font f) {
         needCalcRowHeight = true;
         super.setFont(f);
     }
-    
+
+    @Override
     public Component prepareRenderer(
             TableCellRenderer renderer,
             int row,
@@ -169,28 +172,32 @@ public class SwitcherTable extends JTable {
         public int getIconHeight() { return 0; }
         public void paintIcon(Component c, Graphics g, int x, int y) {}
     }
-    
+
+    @Override
     public Color getForeground() {
         if (foreground == null) {
             foreground = UIManager.getColor("ComboBox.foreground");
         }
         return foreground != null ? foreground : super.getForeground();
     }
-    
+
+    @Override
     public Color getBackground() {
         if (background == null) {
             background = UIManager.getColor("ComboBox.background");
         }
         return background != null ? background : super.getBackground();
     }
-    
+
+    @Override
     public Color getSelectionForeground() {
         if (selForeground == null) {
             selForeground = UIManager.getColor("ComboBox.selectionForeground");
         }
         return selForeground != null ? selForeground : super.getSelectionForeground();
     }
-    
+
+    @Override
     public Color getSelectionBackground() {
         if (selBackground == null) {
             selBackground = UIManager.getColor("ComboBox.selectionBackground");
@@ -239,6 +246,7 @@ public class SwitcherTable extends JTable {
      * number of columns, and set up the preferred width for each column based
      * on the maximum width item & icon displayed in it
      */
+    @Override
     public Dimension getPreferredSize() {
         if (prefSize == null) {
             int cols = getColumnCount();
@@ -274,7 +282,8 @@ public class SwitcherTable extends JTable {
     public SwitcherTableItem getSelectedItem() {
         return (SwitcherTableItem) getValueAt(getSelectedRow(), getSelectedColumn());
     }
-    
+
+    @Override
     public void paint(Graphics g) {
         if (needCalcRowHeight) {
             calcRowHeight(g);

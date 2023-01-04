@@ -127,9 +127,12 @@ public class ConnectionErrMessage extends JPanel {
 
         optionsLabel.setText("<html><a href=\"#\">Options...</a></html>");
         optionsLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 optionsLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
             }
@@ -137,9 +140,12 @@ public class ConnectionErrMessage extends JPanel {
 
         learnMoreLabel.setText("<html><a href=\"#\">Learn more about Xdebug</a>");
         learnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent evt) {
                 learnMoreLabelMousePressed(evt);
             }
+
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 learnMoreLabelMouseEntered(evt);
             }

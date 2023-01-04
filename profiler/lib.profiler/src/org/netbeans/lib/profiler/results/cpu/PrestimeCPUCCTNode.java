@@ -60,29 +60,56 @@ public abstract class PrestimeCPUCCTNode extends CCTNode implements Cloneable {
     
     
     public static final PrestimeCPUCCTNode EMPTY = new PrestimeCPUCCTNode() {
+        @Override
         PrestimeCPUCCTNode createCopy() { return null; }
-        
+
+        @Override
         public PrestimeCPUCCTNode getChild(int index) { return null; }
+
+        @Override
         public PrestimeCPUCCTNode[] getChildren() { return new PrestimeCPUCCTNode[0]; }
+
+        @Override
         public int getIndexOfChild(Object child) { return -1; }
+
+        @Override
         public int getNChildren() { return 0; }
+
+        @Override
         public String getNodeName() { return ""; } // NOI18N
         public long getTime() { return 0; }
         public double getTimeInPerCent() { return 0; }
         public long getWaits() { return 0; }
 
+        @Override
         public int getMethodId() { return -1; }
+
+        @Override
         public int getNCalls() { return -1; }
+
+        @Override
         public long getSleepTime0() { return -1; }
+
+        @Override
         public int getThreadId() { return -1; }
+
+        @Override
         public long getTotalTime0() { return -1; }
         public float getTotalTime0InPerCent() { return -1; }
+
+        @Override
         public long getTotalTime1() { return -1; }
         public float getTotalTime1InPerCent() { return -1; }
+
+        @Override
         public long getWaitTime0() { return -1; }
+
+        @Override
         public void sortChildren(int sortBy, boolean sortOrder) {}
         public TreeNode getChildAt(int childIndex) { return null; }
         public int getChildCount() { return 0; }
+
+        @Override
         public CCTNode getParent() { return null; }
         public int getIndex(TreeNode node) { return -1; }
         public boolean getAllowsChildren() { return false; }

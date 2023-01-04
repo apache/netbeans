@@ -28,7 +28,8 @@ public enum DetailedStatus {
     UNINSTALLED_SUCCESSFULLY,
     UNINSTALLED_WITH_WARNINGS,
     FAILED_TO_UNINSTALL;
-    
+
+    @Override
     public String toString() {
         switch (this) {
             case INSTALLED_SUCCESSFULLY:

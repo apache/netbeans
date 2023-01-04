@@ -46,12 +46,14 @@ public final class SimpleSeparator extends JPanel implements SwingConstants {
     }
 
 
+    @Override
     public void setPreferredSize(Dimension preferredSize) {
         this.preferredSize.width = preferredSize.width;
         this.preferredSize.height = preferredSize.height;
     }
 
 
+    @Override
     public Dimension getMinimumSize() {
         Insets insets = getInsets();
         if (orientation == HORIZONTAL)
@@ -62,6 +64,7 @@ public final class SimpleSeparator extends JPanel implements SwingConstants {
                                  insets.top + insets.bottom);
     }
 
+    @Override
     public Dimension getMaximumSize() {
         Insets insets = getInsets();
         if (orientation == HORIZONTAL)
@@ -72,6 +75,7 @@ public final class SimpleSeparator extends JPanel implements SwingConstants {
                                  Integer.MAX_VALUE);
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Insets insets = getInsets();
         if (orientation == HORIZONTAL)
@@ -83,6 +87,7 @@ public final class SimpleSeparator extends JPanel implements SwingConstants {
     }
 
 
+    @Override
     public void paint(Graphics g) {
         g.setColor(new Color(192, 192, 192));
         Insets insets = getInsets();

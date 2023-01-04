@@ -140,6 +140,7 @@ final class TimelineAxis extends JPanel {
         });
 
         marks.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent e) {
                 pointerX = e.getX();
                 marks.setupTicks();
@@ -147,12 +148,14 @@ final class TimelineAxis extends JPanel {
                 axis.setVisible(false);
             }
 
+            @Override
             public void mouseExited(MouseEvent e) {
                 axis.setVisible(true);
                 marks.clearTicks();
                 marks.refreshHoverMark(-10);
             }
 
+            @Override
             public void mouseClicked(MouseEvent e) {
                 marks.handleAction();
                 marks.repaint();
@@ -180,10 +183,12 @@ final class TimelineAxis extends JPanel {
     }
 
 
+    @Override
     public boolean isOptimizedDrawingEnabled() {
         return false;
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
         size.height = preferredHeight;
@@ -191,9 +196,13 @@ final class TimelineAxis extends JPanel {
     }
 
 
+    @Override
     public void validate() {}
+
+    @Override
     public void doLayout() {}
 
+    @Override
     public void reshape(int x, int y, int width, int height) {
         super.reshape(x, y, width, height);
         painter.reshape(0, 0, width, height);
@@ -275,8 +284,11 @@ final class TimelineAxis extends JPanel {
 
             setOpaque(false);
         }
-        
+
+        @Override
         public void validate() {}
+
+        @Override
         public void doLayout() {}
 
 
@@ -367,6 +379,7 @@ final class TimelineAxis extends JPanel {
                                systemSelection.getGreen(),
                                systemSelection.getBlue(), 150);
 
+        @Override
         public void paint(Graphics g) {
             int height = getHeight();
             int width = getWidth();

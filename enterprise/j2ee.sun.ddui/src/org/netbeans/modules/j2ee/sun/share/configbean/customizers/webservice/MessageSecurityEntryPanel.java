@@ -139,6 +139,7 @@ public class MessageSecurityEntryPanel extends JPanel implements GenericTableDia
         add(jLblMethodName, gridBagConstraints);
 
         jTxtMethodName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtMethodNameKeyReleased(evt);
             }

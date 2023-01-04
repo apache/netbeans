@@ -41,6 +41,7 @@ public class ConnPoolBeanBeanInfo extends SimpleBeanInfo {
      * properties of this bean.  May return null if the
      * information should be obtained by automatic analysis.
      */
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor beanDescriptor = new BeanDescriptor  ( org.netbeans.modules.j2ee.sun.ide.sunresources.beans.ConnPoolBean.class , null );
         return beanDescriptor;     
@@ -58,6 +59,7 @@ public class ConnPoolBeanBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         int PROPERTY_allowNonComponentCallers = 0;
         int PROPERTY_connValidMethod = 1;
@@ -158,6 +160,7 @@ public class ConnPoolBeanBeanInfo extends SimpleBeanInfo {
      * events fired by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
         int EVENT_propertyChangeListener = 0;
         EventSetDescriptor[] eventSets = new EventSetDescriptor[1];
@@ -178,6 +181,7 @@ public class ConnPoolBeanBeanInfo extends SimpleBeanInfo {
      * implemented by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public MethodDescriptor[] getMethodDescriptors() {
         return new MethodDescriptor[0];
     }

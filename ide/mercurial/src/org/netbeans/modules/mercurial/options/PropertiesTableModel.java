@@ -76,6 +76,7 @@ public class PropertiesTableModel extends AbstractTableModel {
         return nodes.length;
     }
 
+    @Override
     public String getColumnName(int column) {
         return columnLabels.get(columns[column])[0];
     }

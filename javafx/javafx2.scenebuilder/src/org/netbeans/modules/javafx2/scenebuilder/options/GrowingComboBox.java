@@ -308,7 +308,8 @@ public class GrowingComboBox extends javax.swing.JPanel {
     public void setKeySelectionManager(KeySelectionManager aManager) {
         combo.setKeySelectionManager(aManager);
     }
-    
+
+    @Override
     public void setEnabled(boolean b) {
         combo.setEnabled(b);
     }
@@ -336,7 +337,8 @@ public class GrowingComboBox extends javax.swing.JPanel {
     public void removeActionListener(ActionListener l) {
         combo.removeActionListener(l);
     }
-    
+
+    @Override
     public void processKeyEvent(KeyEvent e) {
         combo.processKeyEvent(e);
     }

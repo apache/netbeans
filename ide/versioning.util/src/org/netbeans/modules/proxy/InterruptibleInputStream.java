@@ -35,11 +35,13 @@ public class InterruptibleInputStream extends FilterInputStream {
         super(in);
     }
 
+    @Override
     public int read() throws IOException {
         waitAvailable();
         return in.read();
     }
 
+    @Override
     public int read(byte b[], int off, int len) throws IOException {
         waitAvailable();
         return super.read(b, off, len);

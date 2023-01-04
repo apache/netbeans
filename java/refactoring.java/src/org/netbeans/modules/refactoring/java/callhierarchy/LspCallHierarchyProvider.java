@@ -192,6 +192,7 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
         public CancellableF() {
         }
 
+        @Override
         public boolean cancel(boolean mayInterruptIfRunning) {
             Cancellable c2 = this.c;
             if (mayInterruptIfRunning && c2 != null) {

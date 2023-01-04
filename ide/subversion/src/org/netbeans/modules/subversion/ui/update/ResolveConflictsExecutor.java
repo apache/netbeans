@@ -554,6 +554,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             return n;
         }
 
+        @Override
         public void close() throws IOException {
             super.close();
             if (fo != null) fo.refresh(true);

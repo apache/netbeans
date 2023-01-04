@@ -62,6 +62,7 @@ public class ProfilerRuntimeObjLiveness extends ProfilerRuntimeMemory {
 
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
+        @Override
         public void run() {
             while (!terminated) {
                 try {

@@ -55,6 +55,7 @@ public final class AdditionalContentTableModel extends AbstractTableModel implem
         return model.getSize();
     }
 
+    @Override
     public String getColumnName(int column) {
         if (column == 0) {
             return NbBundle.getMessage(AdditionalContentTableModel.class, "TXT_Archive_Item");
@@ -63,6 +64,7 @@ public final class AdditionalContentTableModel extends AbstractTableModel implem
         }
     }
 
+    @Override
     public Class getColumnClass(int columnIndex) {
         if (columnIndex == 0) {
             return ClassPathSupport.Item.class;
@@ -71,6 +73,7 @@ public final class AdditionalContentTableModel extends AbstractTableModel implem
         }
     }
 
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex != 0;
     }
@@ -83,6 +86,7 @@ public final class AdditionalContentTableModel extends AbstractTableModel implem
         }
     }
 
+    @Override
     public void setValueAt(Object value, int row, int column) {
         if (column != 1 || !(value instanceof String)) {
             return;

@@ -56,7 +56,8 @@ class PopupHandler extends MouseAdapter {
         actionMap = new ActionMap();
         actionMap.put("delete", new DeleteAction());
     }
-    
+
+    @Override
     public void mousePressed(MouseEvent ev) {
         if (ev.isPopupTrigger()) {
             int x = ev.getX();

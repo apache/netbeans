@@ -177,6 +177,7 @@ public class CustomizerDialog {
         }
 
         dialog.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosed(WindowEvent e) {
                 Preferences prefs = NbPreferences.forModule(org.netbeans.modules.project.uiapi.CustomizerDialog.class);
                 prefs.putInt(CUSTOMIZER_DIALOG_X, e.getWindow().getX());

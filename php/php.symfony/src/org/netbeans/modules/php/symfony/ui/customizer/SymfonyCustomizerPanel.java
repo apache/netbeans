@@ -64,9 +64,12 @@ public class SymfonyCustomizerPanel extends JPanel {
         Mnemonics.setLocalizedText(infoLabel, NbBundle.getMessage(SymfonyCustomizerPanel.class, "SymfonyCustomizerPanel.infoLabel.text")); // NOI18N
         Mnemonics.setLocalizedText(optionsLabel, NbBundle.getMessage(SymfonyCustomizerPanel.class, "SymfonyCustomizerPanel.optionsLabel.text")); // NOI18N
         optionsLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 optionsLabelMousePressed(evt);
             }

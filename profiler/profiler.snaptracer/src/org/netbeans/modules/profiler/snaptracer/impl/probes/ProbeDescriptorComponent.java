@@ -46,10 +46,13 @@ public final class ProbeDescriptorComponent extends JPanel {
         GridBagConstraints c;
 
         JCheckBox checkBox = new JCheckBox() {
+            @Override
             protected void fireActionPerformed(ActionEvent event) {
                 if (isSelected()) handler.descriptorSelected(p, descriptor);
                 else handler.descriptorUnselected(p, descriptor);
             }
+
+            @Override
             public void setEnabled(boolean enabled) {
                 super.setEnabled(enabled && descriptor.isProbeAvailable());
             }
@@ -67,6 +70,7 @@ public final class ProbeDescriptorComponent extends JPanel {
         add(checkBox, c);
 
         JLabel icon = new JLabel() {
+            @Override
             public void setEnabled(boolean enabled) {
                 super.setEnabled(enabled && descriptor.isProbeAvailable());
             }
@@ -85,6 +89,7 @@ public final class ProbeDescriptorComponent extends JPanel {
         add(icon, c);
 
         JLabel name = new JLabel(descriptor.getProbeName()) {
+            @Override
             public void setEnabled(boolean enabled) {
                 super.setEnabled(enabled && descriptor.isProbeAvailable());
             }
@@ -104,6 +109,7 @@ public final class ProbeDescriptorComponent extends JPanel {
         add(name, c);
 
         JLabel descr = new JLabel(descriptor.getProbeDescription()) {
+            @Override
             public void setEnabled(boolean enabled) {
                 super.setEnabled(enabled && descriptor.isProbeAvailable());
             }
@@ -121,6 +127,7 @@ public final class ProbeDescriptorComponent extends JPanel {
         add(descr, c);
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         Component[] components = getComponents();

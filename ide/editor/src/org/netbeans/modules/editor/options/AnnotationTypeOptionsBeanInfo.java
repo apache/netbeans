@@ -35,6 +35,7 @@ public class AnnotationTypeOptionsBeanInfo extends SimpleBeanInfo {
     * @return Returns an array of PropertyDescriptors
     * describing the editable properties supported by this bean.
     */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors () {
         PropertyDescriptor[] descriptors;
         

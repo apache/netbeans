@@ -230,7 +230,8 @@ public class AbstractToolbarFactory extends ToolbarFactory {
             String ctx = (String) tb.getClientProperty(KEY_CONTAINERCTX);
             jc.putClientProperty (KEY_CONTAINERCTX, ctx);
         }
-        
+
+        @Override
         public void componentHidden(ComponentEvent e) {
             JToolBar jtb = (JToolBar) e.getComponent();
             String ctx = (String) jtb.getClientProperty(KEY_CONTAINERCTX);
@@ -241,7 +242,8 @@ public class AbstractToolbarFactory extends ToolbarFactory {
             JComponent jc = (JComponent) e.getChild();
             jc.putClientProperty (KEY_CONTAINERCTX, null);
         }
-        
+
+        @Override
         public void componentShown(ComponentEvent e) {
             JToolBar jtb = (JToolBar) e.getComponent();
             String ctx = (String) jtb.getClientProperty(KEY_CONTAINERCTX);

@@ -59,7 +59,8 @@ public class NavigatorTreeCellRenderer extends DefaultTreeCellRenderer {
         renderer = HtmlRenderer.createRenderer();
         renderer.setHtml(true);
     }
-    
+
+    @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value,
             boolean sel, boolean expanded, boolean leaf, int row,
             boolean hasFocus) {

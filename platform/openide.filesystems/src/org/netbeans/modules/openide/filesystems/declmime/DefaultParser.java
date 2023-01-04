@@ -209,22 +209,27 @@ abstract class DefaultParser  extends DefaultHandler {
         throw sex;
     }
 
+    @Override
     public void error(SAXParseException exception) throws SAXException {
         throw exception;
     }
 
+    @Override
     public void fatalError(SAXParseException exception) throws SAXException {
         throw exception;
     }
 
+    @Override
     public void endDocument() throws SAXException {
         state = PARSED;
     }
 
+    @Override
     public void setDocumentLocator(Locator locator) {
         this.locator = locator;
     }
 
+    @Override
     public InputSource resolveEntity (String publicID, String systemID) {
         // Read nothing whatsoever.
         return new InputSource (new ByteArrayInputStream (new byte[] { }));

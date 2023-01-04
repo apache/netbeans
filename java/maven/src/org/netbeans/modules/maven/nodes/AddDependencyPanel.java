@@ -487,6 +487,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lblClassifier, NbBundle.getMessage(AddDependencyPanel.class, "AddDependencyPanel.lblClassifier.text")); // NOI18N
 
         searchPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 searchPanelComponentShown(evt);
             }

@@ -141,6 +141,7 @@ public final class TimelineSupport {
             public void run() {
                 cleanResizeHandler();
                 chartResizeHandler = new ComponentAdapter() {
+                    @Override
                     public void componentResized(ComponentEvent e) {
                         chart.setScale(chart.getWidth() / (double)range, 1);
                     }
@@ -476,6 +477,7 @@ public final class TimelineSupport {
                 return columnsCount + 1;
             }
 
+            @Override
             public String getColumnName(int columnIndex) {
                 if (columnIndex == 0) return "Time [ms]";
 
@@ -516,6 +518,7 @@ public final class TimelineSupport {
                 return columnsCount - 1;
             }
 
+            @Override
             public String getColumnName(int columnIndex) {
                 return detailsModel.getColumnName(columnIndex + 1);
             }

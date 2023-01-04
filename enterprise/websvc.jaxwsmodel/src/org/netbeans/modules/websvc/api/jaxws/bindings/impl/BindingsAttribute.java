@@ -48,7 +48,8 @@ public enum BindingsAttribute implements Attribute {
         this.type = type;
         this.subtype = subtype;
     }
-    
+
+    @Override
     public String toString() { return name; }
 
     public Class getType() {

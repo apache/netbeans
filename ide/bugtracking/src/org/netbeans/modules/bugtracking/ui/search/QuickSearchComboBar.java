@@ -200,6 +200,7 @@ public class QuickSearchComboBar extends javax.swing.JPanel {
         setName("Form"); // NOI18N
         setOpaque(false);
         addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
             }

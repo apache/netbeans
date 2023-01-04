@@ -33,6 +33,7 @@ public class DefaultPlatformImplBeanInfo extends SimpleBeanInfo {
     public DefaultPlatformImplBeanInfo () {
     }
 
+    @Override
     public Image getIcon(int iconKind) {
         if ((iconKind == BeanInfo.ICON_COLOR_16x16) || (iconKind == BeanInfo.ICON_MONO_16x16)) {
             return ImageUtilities.loadImage("org/netbeans/modules/java/j2seplatform/resources/platform.gif"); // NOI18N
@@ -42,6 +43,7 @@ public class DefaultPlatformImplBeanInfo extends SimpleBeanInfo {
     }
 
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
             PropertyDescriptor[] pds = new PropertyDescriptor[] {

@@ -91,6 +91,7 @@ public final class TokenIdSet<T extends TokenId> extends AbstractSet<T> {
         return (T[])new TokenId[size];
     }
 
+    @Override
     public boolean add(T id) {
         T origId = indexedIds[id.ordinal()];
         indexedIds[id.ordinal()] = id;
@@ -134,12 +135,14 @@ public final class TokenIdSet<T extends TokenId> extends AbstractSet<T> {
         return (ordinal >= 0 && ordinal < indexedIds.length && indexedIds[ordinal] == id);
     }
 
+    @Override
     public boolean contains(Object o) {
         return (o instanceof TokenId)
             ? containsTokenId((TokenId)o)
             : false;
     }
-    
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{\n");
         for (Iterator it = iterator(); it.hasNext();) {
@@ -183,7 +186,8 @@ public final class TokenIdSet<T extends TokenId> extends AbstractSet<T> {
             
             throw new NoSuchElementException();
         }
-        
+
+        @Override
         public void remove() {
             if (lastRetIndex >= 0) {
                 indexedIds[lastRetIndex] = null;

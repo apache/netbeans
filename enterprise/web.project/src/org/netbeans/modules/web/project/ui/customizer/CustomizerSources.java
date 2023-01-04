@@ -255,10 +255,12 @@ public class CustomizerSources extends javax.swing.JPanel implements HelpCtx.Pro
                 false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -338,10 +340,12 @@ public class CustomizerSources extends javax.swing.JPanel implements HelpCtx.Pro
                 false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }

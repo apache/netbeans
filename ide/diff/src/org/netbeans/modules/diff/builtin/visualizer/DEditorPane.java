@@ -33,6 +33,7 @@ public class DEditorPane extends JEditorPane {
 
     private List popupActions;
 
+    @Override
     protected void processMouseEvent(MouseEvent e) {
         if (e.isPopupTrigger() == false) {
             super.processMouseEvent(e);

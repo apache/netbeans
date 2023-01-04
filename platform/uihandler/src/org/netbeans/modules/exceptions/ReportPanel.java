@@ -90,6 +90,7 @@ public class ReportPanel extends javax.swing.JPanel implements Scrollable{
         jLabel6.setForeground(new java.awt.Color(0, 0, 255));
         jLabel6.setText(org.openide.util.NbBundle.getMessage(ReportPanel.class, "ReportPanel.jLabel6.text")); // NOI18N
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 registerClicked(evt);
             }

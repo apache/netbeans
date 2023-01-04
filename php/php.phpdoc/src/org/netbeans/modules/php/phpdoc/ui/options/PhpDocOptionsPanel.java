@@ -164,9 +164,12 @@ public final class PhpDocOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(installationLearnMoreLabel, NbBundle.getMessage(PhpDocOptionsPanel.class, "PhpDocOptionsPanel.installationLearnMoreLabel.text")); // NOI18N
         installationLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 installationLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 installationLearnMoreLabelMousePressed(evt);
             }

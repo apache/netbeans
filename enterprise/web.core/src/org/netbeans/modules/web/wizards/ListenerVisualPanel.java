@@ -185,6 +185,7 @@ public class ListenerVisualPanel extends javax.swing.JPanel {
             }
         });
         cb1.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cb1FocusGained(evt);
             }
@@ -207,6 +208,7 @@ public class ListenerVisualPanel extends javax.swing.JPanel {
             }
         });
         cb2.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cb2FocusGained(evt);
             }
@@ -229,6 +231,7 @@ public class ListenerVisualPanel extends javax.swing.JPanel {
             }
         });
         cb3.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cb3FocusGained(evt);
             }
@@ -251,6 +254,7 @@ public class ListenerVisualPanel extends javax.swing.JPanel {
             }
         });
         cb4.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cb4FocusGained(evt);
             }
@@ -268,6 +272,7 @@ public class ListenerVisualPanel extends javax.swing.JPanel {
         cb5.setToolTipText(org.openide.util.NbBundle.getBundle(ListenerVisualPanel.class).getString("TTT_requestListener_short")); // NOI18N
         cb5.setMargin(new java.awt.Insets(0, 2, 0, 2));
         cb5.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cb5FocusGained(evt);
             }
@@ -290,6 +295,7 @@ public class ListenerVisualPanel extends javax.swing.JPanel {
         cb6.setToolTipText(org.openide.util.NbBundle.getBundle(ListenerVisualPanel.class).getString("TTT_requestAttrListener_short")); // NOI18N
         cb6.setMargin(new java.awt.Insets(0, 2, 0, 2));
         cb6.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cb6FocusGained(evt);
             }

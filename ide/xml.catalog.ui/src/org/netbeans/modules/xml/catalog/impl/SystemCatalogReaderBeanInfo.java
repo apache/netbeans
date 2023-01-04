@@ -36,6 +36,7 @@ public class SystemCatalogReaderBeanInfo extends SimpleBeanInfo {
      * properties of this bean.  May return null if the
      * information should be obtained by automatic analysis.
      */
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor beanDescriptor = new BeanDescriptor  ( SystemCatalogReader.class , SystemCatalogCustomizer.class );
 
@@ -56,6 +57,7 @@ public class SystemCatalogReaderBeanInfo extends SimpleBeanInfo {
      * A client of getPropertyDescriptors can use "instanceof" to check
      * if a given PropertyDescriptor is an IndexedPropertyDescriptor.
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
 	return new PropertyDescriptor[0];
     }
@@ -67,6 +69,7 @@ public class SystemCatalogReaderBeanInfo extends SimpleBeanInfo {
      * events fired by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[0];
     }
@@ -78,10 +81,12 @@ public class SystemCatalogReaderBeanInfo extends SimpleBeanInfo {
      * implemented by this bean.  May return null if the information
      * should be obtained by automatic analysis.
      */
+    @Override
     public MethodDescriptor[] getMethodDescriptors() {
 	return new MethodDescriptor[0];
     }
 
+    @Override
     public Image getIcon (int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
             (type == java.beans.BeanInfo.ICON_MONO_16x16)) {

@@ -127,6 +127,7 @@ class ProjectSelector extends LazyComboBox<Lookup.Provider> {
             this.extraItemName = extraItemName;
         }
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                       boolean cellHasFocus) {
             JLabel renderer = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -166,6 +167,7 @@ class ProjectSelector extends LazyComboBox<Lookup.Provider> {
         
         // Default renderer doesn't follow font settings in combo (not popup)
         private static class Renderer extends DefaultListCellRenderer {
+            @Override
             public void setFont(Font font) {}
             public void setFontEx(Font font) { super.setFont(font); }
         }

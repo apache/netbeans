@@ -43,11 +43,14 @@ class HeaderComponent extends JComponent {
     
     HeaderComponent(final ActionListener listener) {
         if (listener != null) addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 isPressed = true;
                 isSelected = true;
                 repaint();
             }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
                 isPressed = false;
                 if (isSelected) {
@@ -55,12 +58,16 @@ class HeaderComponent extends JComponent {
                     fireActionEvent(e);
                 }
             }
+
+            @Override
             public void mouseEntered(MouseEvent e) {
                 if (isPressed || !isButtonDown(e)) {
                     isSelected = true;
                     repaint();
                 }
             }
+
+            @Override
             public void mouseExited(MouseEvent e) {
                 if (isSelected) {
                     isSelected = false;
@@ -80,7 +87,8 @@ class HeaderComponent extends JComponent {
             }
         });
     }
-    
+
+    @Override
     protected void paintComponent(Graphics g) {
         JTableHeader header = getHeader();
         setupHeader(header);
@@ -114,8 +122,10 @@ class HeaderComponent extends JComponent {
     private static JTable getTable() {
         if (REF_TABLE == null) REF_TABLE = new JTable(new Object[][] {{}},
                                                       new Object[] { " " }) { // NOI18N
+            @Override
             protected JTableHeader createDefaultTableHeader() {
                 return new JTableHeader(columnModel) {
+                    @Override
                     public boolean contains(int x, int y) { return x == 1 && y == 1; }
                 };
             }

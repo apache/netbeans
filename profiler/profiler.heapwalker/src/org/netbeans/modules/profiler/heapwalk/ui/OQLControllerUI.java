@@ -125,6 +125,7 @@ public class OQLControllerUI extends JPanel implements HelpCtx.Provider {
             setIcon(OQL_ICON);
 
             addKeyListener(new KeyAdapter() {
+                @Override
                 public void keyTyped(final KeyEvent e) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -135,13 +136,15 @@ public class OQLControllerUI extends JPanel implements HelpCtx.Provider {
                 }
             });
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width += 4;
             return d;
         }
-        
+
+        @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
         }
@@ -411,11 +414,13 @@ public class OQLControllerUI extends JPanel implements HelpCtx.Provider {
             editorScroll.getHorizontalScrollBar().setUnitIncrement(10);
 
             runButton = new JButton() {
+                @Override
                 protected void fireActionPerformed(ActionEvent e) { executeQuery(); }
             };
             Mnemonics.setLocalizedText(runButton, Bundle.OQLControllerUI_ExecuteButtonText());
             runButton.getAccessibleContext().setAccessibleDescription(Bundle.OQLControllerUI_ExecuteButtonAccessDescr());
             saveButton = new JButton() {
+                @Override
                  protected void fireActionPerformed(ActionEvent e) { saveQuery(); }
             };
             Mnemonics.setLocalizedText(saveButton, Bundle.OQLControllerUI_SaveButtonText());
@@ -432,6 +437,7 @@ public class OQLControllerUI extends JPanel implements HelpCtx.Provider {
             progressLabel = new JLabel();
             progressLabel.setLabelFor(progressBar);
             cancelButton = new JButton() {
+                @Override
                  protected void fireActionPerformed(ActionEvent e) { cancelQuery(); }
             };
             Mnemonics.setLocalizedText(cancelButton, Bundle.OQLControllerUI_CancelButtonText());
@@ -719,18 +725,21 @@ public class OQLControllerUI extends JPanel implements HelpCtx.Provider {
             noQueriesMsgPanel.add(noQueriesMsgLabel, BorderLayout.CENTER);
 
             openButton = new JButton() {
+                @Override
                  protected void fireActionPerformed(ActionEvent e) { openQuery(); }
             };
             Mnemonics.setLocalizedText(openButton, Bundle.OQLControllerUI_OpenButtonText());
             openButton.getAccessibleContext().
                             setAccessibleDescription(Bundle.OQLControllerUI_OpenButtonAccessDescr());
             editButton = new JButton() {
+                @Override
                  protected void fireActionPerformed(ActionEvent e) { editQuery(); }
             };
             Mnemonics.setLocalizedText(editButton, Bundle.OQLControllerUI_PropertiesButtonText());
             editButton.getAccessibleContext().
                             setAccessibleDescription(Bundle.OQLControllerUI_PropertiesButtonAccessDescr());
             deleteButton = new JButton() {
+                @Override
                  protected void fireActionPerformed(ActionEvent e) { deleteQueries(); }
             };
             Mnemonics.setLocalizedText(deleteButton, Bundle.OQLControllerUI_DeleteButtonText());
@@ -795,6 +804,7 @@ public class OQLControllerUI extends JPanel implements HelpCtx.Provider {
                 }
             });
             savedTree.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
                         openQuery();

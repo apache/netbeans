@@ -114,7 +114,8 @@ final class WindowBuilders {
         JDesktopPaneBuilder(Instance instance, Heap heap) {
             super(instance, heap);
         }
-        
+
+        @Override
         protected JLayeredPane createInstanceImpl() {
             return new JDesktopPane();
         }
@@ -157,9 +158,16 @@ final class WindowBuilders {
         
         protected Frame createInstanceImpl() {
             return new JFrame(title) {
+                @Override
                 protected void frameInit() {}
+
+                @Override
                 public void addNotify() {}
+
+                @Override
                 public void remove(Component comp) {}
+
+                @Override
                 public void setVisible(boolean b) {}
             };
         }
@@ -237,9 +245,16 @@ final class WindowBuilders {
         
         protected Dialog createInstanceImpl() {
             return new JDialog((Frame)null, title) {
+                @Override
                 protected void dialogInit() {}
+
+                @Override
                 public void addNotify() {}
+
+                @Override
                 public void remove(Component comp) {}
+
+                @Override
                 public void setVisible(boolean b) {}
             };
         }
@@ -312,9 +327,12 @@ final class WindowBuilders {
         
         protected JInternalFrame createInstanceImpl() {
             JInternalFrame frame = new JInternalFrame(title, resizable, closable, maximizable, iconable) {
+                @Override
                 protected JRootPane createRootPane() {
                     return _rootPane == null ? null : _rootPane.createInstance();
                 }
+
+                @Override
                 public void addNotify() {
                     try {
                         // Doesn't seem to work correctly

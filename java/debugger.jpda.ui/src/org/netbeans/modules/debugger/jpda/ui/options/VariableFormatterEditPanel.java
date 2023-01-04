@@ -359,6 +359,7 @@ public class VariableFormatterEditPanel extends javax.swing.JPanel {
                 java.lang.String.class, java.lang.String.class
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }

@@ -48,8 +48,9 @@ public class WsdlServiceHandler extends DefaultHandler{
     
     /** Creates a new instance of WsdlWrapperHandler */
     private WsdlServiceHandler() {
-    }    
-    
+    }
+
+    @Override
     public void startElement(String uri, String localName, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException {
         if (WSDL_SOAP_URI.equals(uri) && "service".equals(localName)) { // NOI18N
             insideService=true;
@@ -63,6 +64,7 @@ public class WsdlServiceHandler extends DefaultHandler{
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (WSDL_SOAP_URI.equals(uri) && "service".equals(localName)) {
             insideService=false;

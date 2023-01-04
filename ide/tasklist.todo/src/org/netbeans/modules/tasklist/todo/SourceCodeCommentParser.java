@@ -217,6 +217,7 @@ final class SourceCodeCommentParser {
          * @throws java.io.IOException if a read error occurs on the input
          *         stream.
          */
+        @Override
         public boolean nextRegion(CommentRegion reg) throws IOException {
             boolean ret = false;
             

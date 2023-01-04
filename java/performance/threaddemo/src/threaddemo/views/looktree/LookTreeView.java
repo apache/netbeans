@@ -47,11 +47,13 @@ public class LookTreeView extends JTree {
         return (LookTreeModel)getModel();
     }
     
+    @Override
     public void addNotify() {
         getLookTreeModel().addNotify();
         super.addNotify();
     }
-    
+
+    @Override
     public void removeNotify() {
         super.removeNotify();
         getLookTreeModel().removeNotify();

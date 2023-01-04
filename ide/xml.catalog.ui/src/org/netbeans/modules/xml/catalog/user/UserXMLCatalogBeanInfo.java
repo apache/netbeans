@@ -34,6 +34,7 @@ public class UserXMLCatalogBeanInfo extends SimpleBeanInfo {
     private static final int PROPERTY_displayName = 0;
     private static final int PROPERTY_shortDescription = 1;
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         PropertyDescriptor[] properties = new PropertyDescriptor[2];
     

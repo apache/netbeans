@@ -480,7 +480,8 @@ public class GrailsTargetChooserPanelGUI extends javax.swing.JPanel implements A
     private static final class GroupListCellRenderer extends DefaultListCellRenderer/*<SourceGroup>*/ {
         
         public GroupListCellRenderer() {}
-        
+
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             SourceGroup g = (SourceGroup) value;
             super.getListCellRendererComponent(list, g.getDisplayName(), index, isSelected, cellHasFocus);

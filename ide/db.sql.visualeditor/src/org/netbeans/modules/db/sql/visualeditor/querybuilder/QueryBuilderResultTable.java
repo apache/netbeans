@@ -70,6 +70,7 @@ public class QueryBuilderResultTable extends JTable
 
         _queryBuilder = queryBuilder;
         resultTableModel = new DefaultTableModel() {
+            @Override
             public boolean isCellEditable ( int row, int column ) {
                 return false;
             }
@@ -248,10 +249,12 @@ public class QueryBuilderResultTable extends JTable
     // Mouse listener -- bring up background menu
     class ResultTablePopupListener extends MouseAdapter {
 
+        @Override
         public void mousePressed(MouseEvent e) {
             maybeShowPopup(e);
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             mousePressed(e);
         }

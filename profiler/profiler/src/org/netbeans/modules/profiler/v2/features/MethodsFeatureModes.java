@@ -233,7 +233,8 @@ final class MethodsFeatureModes {
             JavaTypeFilter f = new JavaTypeFilter(s, JavaTypeFilter.TYPE_INCLUSIVE);
             settings.setInstrumentationFilter(f);
         }
-        
+
+        @Override
         void confirmSettings() {
             if (ui != null) {
                 assert SwingUtilities.isEventDispatchThread();
@@ -241,7 +242,8 @@ final class MethodsFeatureModes {
                 saveSelection();
             }
         }
-        
+
+        @Override
         boolean pendingChanges() {
             if (ui != null) {
                 assert SwingUtilities.isEventDispatchThread();
@@ -250,7 +252,8 @@ final class MethodsFeatureModes {
             }
             return false;
         }
-        
+
+        @Override
         boolean currentSettingsValid() {
             assert SwingUtilities.isEventDispatchThread();
             
@@ -318,8 +321,9 @@ final class MethodsFeatureModes {
             
             if (refreshLink) refreshProjectsLink();
         }
-        
-        
+
+
+        @Override
         JComponent getUI() {
             if (ui == null) {
                 final ChangeListener projectsListener = new ChangeListener() {
@@ -341,15 +345,22 @@ final class MethodsFeatureModes {
                 };
                 
                 editProjectLink = new JButton() {
+                    @Override
                     public void setText(String text) {
                         super.setText(Bundle.MethodsFeatureModes_editLink(text));
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         performEditProject();
                     }
+
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }
+
+                    @Override
                     public Dimension getMaximumSize() {
                         return getPreferredSize();
                     }
@@ -421,8 +432,9 @@ final class MethodsFeatureModes {
         private String filterValue;
         
         private boolean lastOutgoingSelected;
-        
-        
+
+
+        @Override
         void initialize() {
             // Migrate 8.1 settings
             String excludeJava = readFlag(SKIP_JAVA_FLAG, null);
@@ -620,15 +632,22 @@ final class MethodsFeatureModes {
                 selectionContent = new SettingsPanel();
 
                 editSelectionLink = new JButton() {
+                    @Override
                     public void setText(String text) {
                         super.setText(Bundle.MethodsFeatureModes_editLink(text));
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         performEditSelection(InstrMethodsMode.this.ui);
                     }
+
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }
+
+                    @Override
                     public Dimension getMaximumSize() {
                         return getPreferredSize();
                     }
@@ -654,6 +673,7 @@ final class MethodsFeatureModes {
 
                 lastOutgoingSelected = Boolean.parseBoolean(readFlag(OUTGOING_CALLS_ENABLED_FLAG, Boolean.TRUE.toString()));
                 outgoingChoice = new JCheckBox(Bundle.MethodsFeatureModes_outgoingCalls(), lastOutgoingSelected) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         lastOutgoingSelected = isSelected();
@@ -697,15 +717,22 @@ final class MethodsFeatureModes {
                 selectionContent.add(createStrut(filterLabel, 5, false));
 
                 filterLink = new JButton() {
+                    @Override
                     public void setText(String text) {
                         super.setText(Bundle.MethodsFeatureModes_editLink(text));
                     }
+
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         performEditFilter(this);
                     }
+
+                    @Override
                     public Dimension getMinimumSize() {
                         return getPreferredSize();
                     }
+
+                    @Override
                     public Dimension getMaximumSize() {
                         return getPreferredSize();
                     }
@@ -1125,6 +1152,7 @@ final class MethodsFeatureModes {
                 ButtonGroup bg = new ButtonGroup();
                 JPanel filterPanel = new SettingsPanel();
                 includeChoice = new JRadioButton(Bundle.MethodsFeatureModes_includeCalls()) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         settingsChanged();
@@ -1147,6 +1175,7 @@ final class MethodsFeatureModes {
                 p.add(filterPanel, c);
                 
                 excludeChoice = new JRadioButton(Bundle.MethodsFeatureModes_excludeCalls()) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         super.fireActionPerformed(e);
                         settingsChanged();

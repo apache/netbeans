@@ -40,6 +40,8 @@ public interface Element extends SchemaComponent{
         ALL(Type.ALL), RESTRICTION(Type.RESTRICTION), EXTENSION(Type.EXTENSION), SUBSTITUTION(Type.SUBSTITUTION), EMPTY(Type.EMPTY);
         private final Type value;
         Block(Type value) { this.value = value; }
+
+        @Override
         public String toString() { return value.toString(); }
     }
     

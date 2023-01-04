@@ -66,7 +66,8 @@ class FileObjectIterator implements Iterator<FileObject> {
         }
         return result;
     }
-    
+
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

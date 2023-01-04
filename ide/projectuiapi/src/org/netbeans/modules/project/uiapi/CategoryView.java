@@ -83,6 +83,7 @@ public class CategoryView extends JPanel implements ExplorerManager.Provider, Pr
         return manager;
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         btv.expandAll();

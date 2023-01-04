@@ -165,6 +165,7 @@ public class ProfilerXYChart extends SynchronousXYChart {
             super();
             updateAction();
             addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isMiddleMouseButton(e))
                         actionPerformed(null);

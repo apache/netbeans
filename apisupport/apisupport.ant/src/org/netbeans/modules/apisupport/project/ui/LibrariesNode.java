@@ -655,6 +655,7 @@ final class LibrariesNode extends AbstractNode {
             HtmlBrowser.URLDisplayer.getDefault().showURL(currectJavadoc);
         }
 
+        @Override
         public boolean isEnabled() {
             currectJavadoc = dep.getModuleEntry().getJavadoc(project.getPlatform(true));
             return currectJavadoc != null;

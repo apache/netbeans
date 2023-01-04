@@ -83,6 +83,7 @@ final class TimelineTooltipPainter extends JPanel {
     }
 
 
+    @Override
     protected void paintComponent(Graphics g) {
         g.setColor(background);
         g.fillRect(0, 0, getWidth(), getHeight());

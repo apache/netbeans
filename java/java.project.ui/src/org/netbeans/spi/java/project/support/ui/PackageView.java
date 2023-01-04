@@ -424,6 +424,7 @@ public class PackageView {
         }
         
         // #93658: GTK needs name to render cell renderer "natively"
+        @Override
         public String getName() {
             String name = super.getName();
             return name == null ? "ComboBox.renderer" : name;  // NOI18N

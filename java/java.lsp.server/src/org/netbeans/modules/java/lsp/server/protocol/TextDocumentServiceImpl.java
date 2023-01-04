@@ -1153,6 +1153,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                             AtomicReference<List<Pair<String, String>>> projectConfigurations = new AtomicReference<>();
                             new TreePathScanner<Void, Void>() {
+                                @Override
                                 public Void visitMethod(MethodTree tree, Void p) {
                                     Element el = cc.getTrees().getElement(getCurrentPath());
                                     if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {

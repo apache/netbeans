@@ -97,7 +97,8 @@ public abstract class TwoWayEvent<DM, UMD, DMD> extends EventObject {
         public UMD getUnderlyingDelta() {
             return underlyingDelta;
         }
-        
+
+        @Override
         public String toString() {
             return "TwoWayEvent.Derived[" + getTwoWaySupport() + ",oldValue=" + oldValue + ",newValue=" + newValue + ",derivedDelta=" + derivedDelta + ",underlyingDelta=" + underlyingDelta + "]";
         }
@@ -135,7 +136,8 @@ public abstract class TwoWayEvent<DM, UMD, DMD> extends EventObject {
         public UMD getUnderlyingDelta() {
             return underlyingDelta;
         }
-        
+
+        @Override
         public String toString() {
             return "TwoWayEvent.Invalidated[" + getTwoWaySupport() + ",oldValue=" + oldValue + ",underlyingDelta=" + underlyingDelta + "]";
         }
@@ -184,7 +186,8 @@ public abstract class TwoWayEvent<DM, UMD, DMD> extends EventObject {
         public DMD getDerivedDelta() {
             return derivedDelta;
         }
-        
+
+        @Override
         public String toString() {
             return "TwoWayEvent.Recreated[" + getTwoWaySupport() + ",oldValue=" + oldValue + ",newValue=" + newValue + ",derivedDelta=" + derivedDelta + "]";
         }
@@ -233,7 +236,8 @@ public abstract class TwoWayEvent<DM, UMD, DMD> extends EventObject {
         public DMD getDerivedDelta() {
             return derivedDelta;
         }
-        
+
+        @Override
         public String toString() {
             return "TwoWayEvent.Clobbered[" + getTwoWaySupport() + ",oldValue=" + oldValue + ",newValue=" + newValue + ",derivedDelta=" + derivedDelta + "]";
         }
@@ -252,7 +256,8 @@ public abstract class TwoWayEvent<DM, UMD, DMD> extends EventObject {
         Forgotten(TwoWaySupport<DM, UMD, DMD> s) {
             super(s);
         }
-        
+
+        @Override
         public String toString() {
             return "TwoWayEvent.Forgotten[" + getTwoWaySupport() + "]";
         }
@@ -304,7 +309,8 @@ public abstract class TwoWayEvent<DM, UMD, DMD> extends EventObject {
         public Exception getException() {
             return exception;
         }
-        
+
+        @Override
         public String toString() {
             return "TwoWayEvent.Broken[" + getTwoWaySupport() + ",oldValue=" + oldValue + ",underlyingDelta=" + underlyingDelta + ",exception=" + exception + "]";
         }

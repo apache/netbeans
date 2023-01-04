@@ -251,6 +251,7 @@ public class TreeAttlistDeclAttributeDefCustomizer extends AbstractTreeCustomize
         elementNameField.setEditable(false);
         elementNameField.setColumns(20);
         elementNameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 elementNameFieldFocusGained(evt);
             }
@@ -283,9 +284,12 @@ public class TreeAttlistDeclAttributeDefCustomizer extends AbstractTreeCustomize
         });
 
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 nameFieldFocusLost(evt);
             }
@@ -318,9 +322,12 @@ public class TreeAttlistDeclAttributeDefCustomizer extends AbstractTreeCustomize
         });
 
         typeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 typeFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 typeFieldFocusLost(evt);
             }
@@ -353,9 +360,12 @@ public class TreeAttlistDeclAttributeDefCustomizer extends AbstractTreeCustomize
         });
 
         enumeratedField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 enumeratedFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 enumeratedFieldFocusLost(evt);
             }
@@ -387,9 +397,12 @@ public class TreeAttlistDeclAttributeDefCustomizer extends AbstractTreeCustomize
         });
 
         defaultTypeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 defaultTypeFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 defaultTypeFieldFocusLost(evt);
             }
@@ -422,9 +435,12 @@ public class TreeAttlistDeclAttributeDefCustomizer extends AbstractTreeCustomize
         });
 
         defaultValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 defaultValueFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 defaultValueFieldFocusLost(evt);
             }

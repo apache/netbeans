@@ -150,6 +150,7 @@ public class MenuView extends JPanel {
 
     /* Initializes view.
     */
+    @Override
     public void addNotify() {
         super.addNotify();
         explorerManager = ExplorerManager.find(this);
@@ -159,6 +160,7 @@ public class MenuView extends JPanel {
 
     /* Deinitializes view.
     */
+    @Override
     public void removeNotify() {
         super.removeNotify();
         explorerManager.removePropertyChangeListener(listener);
@@ -196,6 +198,7 @@ public class MenuView extends JPanel {
             this.root = root;
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             if (e.getComponent().isEnabled()) {
                 // open the popup menu
@@ -512,6 +515,7 @@ public class MenuView extends JPanel {
         /** Inform the acceptor.
          * @param time see superclass
          */
+        @Override
         public void doClick(int time) {
             action.acceptNodes(new Node[] { node });
         }

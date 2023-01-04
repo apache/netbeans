@@ -51,6 +51,7 @@ public final class DocumentInputSource extends InputSource {
     }
 
     // inherit JavaDoc
+    @Override
     public Reader getCharacterStream() {
         String text = documentToString(doc);
         return new StringReader(text);
@@ -61,6 +62,7 @@ public final class DocumentInputSource extends InputSource {
      * Consequently its character stream is read-only, it
      * always reads content of associted <code>Document</code>.
      */
+    @Override
     public final void setCharacterStream(Reader reader) {
         // do nothing
     }
@@ -75,6 +77,7 @@ public final class DocumentInputSource extends InputSource {
      * </ul>
      * @return entity system Id or <code>null</code>
      */
+    @Override
     public String getSystemId() {
         
         String system = super.getSystemId();

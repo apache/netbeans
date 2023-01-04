@@ -70,7 +70,8 @@ class CollapsibleSplitPane extends JSplitPane {
         NbPreferences.forModule(CollapsibleSplitPane.class).
                 putBoolean(PREF_COLLAPSED, collapsed);
     }
-    
+
+    @Override
     public void setDividerLocation(int location) {
         if (!((CustomSplitterUI)getUI()).isCollapsed()) {
             savedDividerLocation = location;
@@ -79,18 +80,22 @@ class CollapsibleSplitPane extends JSplitPane {
         }
         super.setDividerLocation(location);
     }
-    
+
+    @Override
     public void setUI(SplitPaneUI ui) {}
-    
+
+    @Override
     public void updateUI() {}
     
     
     private static class CustomSplitterUI extends BasicSplitPaneUI {
-        
+
+        @Override
         public BasicSplitPaneDivider createDefaultDivider() {
             return new CustomSplitterDivider(this);
         }
-        
+
+        @Override
         public CollapsibleSplitPane getSplitPane() {
             return (CollapsibleSplitPane)super.getSplitPane();
         }
@@ -114,6 +119,7 @@ class CollapsibleSplitPane extends JSplitPane {
             setLayout(new BorderLayout());
             updateCursor();
             addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     setCollapsed(!isCollapsed);
                 }
@@ -121,24 +127,29 @@ class CollapsibleSplitPane extends JSplitPane {
         }
 
 
+        @Override
         public int getDividerSize() {
 //            return 7;
             return 6;
         }
-        
+
+        @Override
         public Border getBorder() {
             return null;
         }
-        
+
+        @Override
          public CustomSplitterUI getBasicSplitPaneUI() {
             return (CustomSplitterUI)super.getBasicSplitPaneUI();
         }
-        
+
+        @Override
         protected void setMouseOver(boolean mouseOver) {
             super.setMouseOver(mouseOver);
             repaint();
         }
-        
+
+        @Override
         public void setCursor(Cursor cursor) {}
         
         void setCollapsed(boolean collapsed) {
@@ -157,19 +168,23 @@ class CollapsibleSplitPane extends JSplitPane {
                   Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) :
                   Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
         }
-        
+
+        @Override
         protected void prepareForDragging() {
             if (!isCollapsed) super.prepareForDragging();
         }
 
+        @Override
         protected void dragDividerTo(int location) {
             if (!isCollapsed) super.dragDividerTo(location);
         }
 
+        @Override
         protected void finishDraggingTo(int location) {
             if (!isCollapsed) super.finishDraggingTo(location);
         }
-        
+
+        @Override
         public void paint(Graphics g) {
             int w = getWidth();
             int h = getHeight();

@@ -39,18 +39,22 @@ class RuntimePolicy extends Policy {
         return permissions;
     }
 
+    @Override
     public PermissionCollection getPermissions(CodeSource codesource) {
         return getAllPermissionCollection();
     }
     
+    @Override
     public boolean implies(ProtectionDomain domain, Permission permission) {
         return getPermissions(domain.getCodeSource()).implies(permission);
     }
-    
+
+    @Override
     public PermissionCollection getPermissions(ProtectionDomain domain) {
         return getPermissions(domain.getCodeSource());
     }
-    
+
+    @Override
     public void refresh() {
     }
 }

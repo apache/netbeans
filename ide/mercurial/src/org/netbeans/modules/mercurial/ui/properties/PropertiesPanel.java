@@ -47,7 +47,8 @@ public class PropertiesPanel extends javax.swing.JPanel implements PreferenceCha
     public void setPropertiesTable(PropertiesTable propertiesTable){
         this.propertiesTable = propertiesTable;
     }
-    
+
+    @Override
     public void addNotify() {
         super.addNotify();
         HgModuleConfig.getDefault().getPreferences().addPreferenceChangeListener(this);        
@@ -56,6 +57,7 @@ public class PropertiesPanel extends javax.swing.JPanel implements PreferenceCha
         txtAreaValue.selectAll();
     }
 
+    @Override
     public void removeNotify() {
         propertiesTable.getTableModel().removeTableModelListener(this);
         HgModuleConfig.getDefault().getPreferences().removePreferenceChangeListener(this);

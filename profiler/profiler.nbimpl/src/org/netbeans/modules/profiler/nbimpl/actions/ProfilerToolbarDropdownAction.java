@@ -114,6 +114,7 @@ public class ProfilerToolbarDropdownAction implements Action, Presenter.Toolbar 
         String name = (String)action.getValue("menuText"); // NOI18N
         if (name == null || name.trim().isEmpty()) name = (String)action.getValue(NAME);
         final JMenuItem item = new JMenuItem(Actions.cutAmpersand(name)) {
+            @Override
             public void fireActionPerformed(ActionEvent e) {
                 action.actionPerformed(e);
             }

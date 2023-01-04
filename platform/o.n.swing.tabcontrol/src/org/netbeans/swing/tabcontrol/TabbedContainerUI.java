@@ -58,6 +58,7 @@ public abstract class TabbedContainerUI extends ComponentUI {
         this.container = container;
     }
 
+    @Override
     public void installUI(JComponent c) {
         assert c == container;
     }

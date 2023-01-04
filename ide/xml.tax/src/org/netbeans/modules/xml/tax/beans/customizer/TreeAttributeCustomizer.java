@@ -189,9 +189,12 @@ public class TreeAttributeCustomizer extends AbstractTreeCustomizer {
         });
 
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 nameFieldFocusLost(evt);
             }
@@ -226,9 +229,12 @@ public class TreeAttributeCustomizer extends AbstractTreeCustomizer {
         });
 
         valueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 valueFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 valueFieldFocusLost(evt);
             }

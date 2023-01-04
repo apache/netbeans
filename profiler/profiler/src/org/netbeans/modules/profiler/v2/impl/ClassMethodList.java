@@ -126,6 +126,7 @@ public final class ClassMethodList {
             
             final XListModel xmodel = new XListModel();
             final JList list = new JList(xmodel) {
+                @Override
                 public Dimension getPreferredScrollableViewportSize() {
                     Dimension dim = super.getPreferredScrollableViewportSize();
                     dim.width = 420;

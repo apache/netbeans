@@ -248,12 +248,17 @@ public class GoToPanel extends javax.swing.JPanel {
             }
         });
         nameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 nameFieldKeyPressed(evt);
             }
+
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 nameFieldKeyReleased(evt);
             }
+
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 nameFieldKeyTyped(evt);
             }
@@ -282,6 +287,7 @@ public class GoToPanel extends javax.swing.JPanel {
         matchesList.setFont(new java.awt.Font("Monospaced", 0, getFontSize()));
         matchesList.setVisibleRowCount(15);
         matchesList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 matchesListMouseReleased(evt);
             }

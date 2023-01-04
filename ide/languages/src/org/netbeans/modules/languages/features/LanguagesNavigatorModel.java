@@ -314,7 +314,8 @@ class LanguagesNavigatorModel implements TreeModel {
             this.item =     item;
             this.path =     path;
         }
-        
+
+        @Override
         void show () {
             DataObject dataObject = NbEditorUtilities.getDataObject (document);
             LineCookie lineCookie = dataObject.getCookie (LineCookie.class);
@@ -325,7 +326,8 @@ class LanguagesNavigatorModel implements TreeModel {
         }
 
         private List<ASTNavigatorNode> nodes;
-        
+
+        @Override
         List<ASTNavigatorNode> getNodes (LanguagesNavigatorModel model) {
             if (nodes != null) return nodes;
             if (isLeaf)

@@ -177,6 +177,7 @@ public class AnnotationTypeProcessor implements XMLDataObject.Processor, Instanc
             throw new SAXException(e);
 	}
 
+        @Override
         public void startElement(String name, AttributeList amap) throws SAXException {
             switch (depth++) {
                 case 0:
@@ -319,7 +320,8 @@ public class AnnotationTypeProcessor implements XMLDataObject.Processor, Instanc
                     throw new SAXException("malformed AnnotationType xml file"); // NOI18N
             }
         }
-        
+
+        @Override
         public void endElement(String name) throws SAXException {
             if (--depth == 1) {
                 AnnotationType.CombinationMember[] combs = new AnnotationType.CombinationMember[combinations.size()];
@@ -327,7 +329,8 @@ public class AnnotationTypeProcessor implements XMLDataObject.Processor, Instanc
                 at.setCombinations(combs);
             };
         }
-        
+
+        @Override
         public InputSource resolveEntity(java.lang.String pid,java.lang.String sid) throws SAXException   {
             if (DTD_PUBLIC_ID.equals(pid)) {
                 return new InputSource(new ByteArrayInputStream(new byte[0]));

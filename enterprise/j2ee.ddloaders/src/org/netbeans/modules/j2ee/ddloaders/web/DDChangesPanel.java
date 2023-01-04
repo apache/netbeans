@@ -91,7 +91,8 @@ public class DDChangesPanel extends JPanel {
         
         add (changesPanel, "Center"); // NOI18N
     }
-    
+
+    @Override
     public java.awt.Dimension getPreferredSize () {
         return new java.awt.Dimension(600, 400);
     }
@@ -107,6 +108,7 @@ public class DDChangesPanel extends JPanel {
     
     static class ChangesListCellRenderer extends DefaultListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected,
                 boolean cellHasFocus) {

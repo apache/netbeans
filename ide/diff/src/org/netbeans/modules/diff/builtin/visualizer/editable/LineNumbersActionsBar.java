@@ -109,11 +109,13 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         addMouseListener(this);
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         initUI();
     }
 
+    @Override
     public void removeNotify() {
         super.removeNotify();
     }
@@ -160,7 +162,8 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         }
         return null;
     }
-    
+
+    @Override
     public String getToolTipText(MouseEvent event) {
         Point p = event.getPoint();
         HotSpot spot = getHotspotAt(p);
@@ -282,7 +285,8 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         return new Dimension(getBarWidth(), Integer.MAX_VALUE >> 2);
     }
@@ -296,6 +300,7 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         repaint();
     }
 
+    @Override
     protected void paintComponent(Graphics gr) {
         final Graphics2D g = (Graphics2D) gr;
         final Rectangle clip = g.getClipBounds();

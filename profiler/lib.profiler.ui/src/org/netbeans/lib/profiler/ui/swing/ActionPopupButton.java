@@ -71,6 +71,7 @@ public class ActionPopupButton extends PopupButton {
         for (final Action _action : actions) {
             if (_action != null) {
                 popup.add(new JRadioButtonMenuItem(_action.getValue(Action.NAME).toString(), _action == action) {
+                    @Override
                     protected void fireActionPerformed(ActionEvent e) {
                         selectAction(_action);
                         _action.actionPerformed(e);

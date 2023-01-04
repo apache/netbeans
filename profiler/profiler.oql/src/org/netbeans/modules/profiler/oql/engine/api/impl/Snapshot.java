@@ -178,6 +178,7 @@ public class Snapshot {
                 return delegated.next().getName();
             }
 
+            @Override
             public void remove() {
                 delegated.remove();
             }

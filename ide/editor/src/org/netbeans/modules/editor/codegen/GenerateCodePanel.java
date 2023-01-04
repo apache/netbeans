@@ -81,16 +81,19 @@ public class GenerateCodePanel extends javax.swing.JPanel {
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 4, 4, 4));
 
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 listMouseReleased(evt);
             }
         });
         jList1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 listMouseMoved(evt);
             }
         });
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 listKeyPressed(evt);
             }

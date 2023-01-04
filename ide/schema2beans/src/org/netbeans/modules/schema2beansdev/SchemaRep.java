@@ -536,6 +536,7 @@ public class SchemaRep implements PrefixGuesser {
             SchemaRep.this.attributeFormQualifiedDefault = value;
         }
 
+        @Override
         public void addSubElement(ElementExpr subElement) {
             if (subElement instanceof Element) {
                 Element el = (Element) subElement;
@@ -559,6 +560,7 @@ public class SchemaRep implements PrefixGuesser {
             super.addSubElement(subElement);
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer(" xmlns:"+getXSDNamespace()+"='"+getNamespaceURI(getXSDNamespace())+"'");	// NOI18N
             if (targetNamespace != null)
@@ -596,6 +598,7 @@ public class SchemaRep implements PrefixGuesser {
             return schemaValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof SchemaNode))
                 return false;
@@ -615,6 +618,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((targetNamespace == null) ? 0 : targetNamespace.hashCode());
@@ -675,6 +679,7 @@ public class SchemaRep implements PrefixGuesser {
             return writeDTDSubElementNames(out, false);
         }
 
+        @Override
         public String getAttributeString() {
             String result = "";
             if (getTypeName() != null)
@@ -706,6 +711,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof ComplexType))
                 return false;
@@ -720,6 +726,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((getTypeName() == null) ? 0 : getTypeName().hashCode());
@@ -757,9 +764,11 @@ public class SchemaRep implements PrefixGuesser {
             return null;
         }
 
+        @Override
         public void validate() {
         }
 
+        @Override
         public ElementExpr optimize() {
             return this;
         }
@@ -803,9 +812,11 @@ public class SchemaRep implements PrefixGuesser {
             return null;
         }
 
+        @Override
         public void validate() {
         }
 
+        @Override
         public ElementExpr optimize() {
             return this;
         }
@@ -832,6 +843,7 @@ public class SchemaRep implements PrefixGuesser {
             return complexContentValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof ComplexContent))
                 return false;
@@ -841,6 +853,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + (mixed ? 0 : 1);
@@ -917,18 +930,21 @@ public class SchemaRep implements PrefixGuesser {
         }
 
         // This may return null
+        @Override
         public String getJavaTypeName() {
             if (javaTypeName != null)
                 return javaTypeName;
             return super.getJavaTypeName();
         }
 
+        @Override
         public String getAttributeString() {
             if (getTypeName() == null)
                 return null;
             return (" name='"+getTypeName()+"'");
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             if (subElements.size() == 0)
                 return true;
@@ -954,6 +970,7 @@ public class SchemaRep implements PrefixGuesser {
             return simpleTypeValidSubElementTypeMap;
         }
 
+        @Override
         public String toString() {
             if (javaTypeName == null) {
                 if (getTypeName() == null)
@@ -964,6 +981,7 @@ public class SchemaRep implements PrefixGuesser {
                 return "simpleType "+getTypeName()+" "+javaTypeName;	// NOI18N
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof SimpleType))
                 return false;
@@ -974,6 +992,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             if (getTypeName() != null)
@@ -1039,12 +1058,14 @@ public class SchemaRep implements PrefixGuesser {
             return typeName;
         }
 
+        @Override
         public String getAttributeString() {
             if (memberTypes == null)
                 return null;
             return (" memberTypes='"+memberTypes+"'");
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             if (subElements.size() == 0)
                 return true;
@@ -1089,6 +1110,7 @@ public class SchemaRep implements PrefixGuesser {
             return unionTypeValidSubElementTypeMap;
         }
 
+        @Override
         public String toString() {
 			if (typeName == null)
 				return "unionType (not named)";	// NOI18N
@@ -1096,6 +1118,7 @@ public class SchemaRep implements PrefixGuesser {
 				return "unionType "+typeName;	// NOI18N
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof UnionType))
                 return false;
@@ -1108,6 +1131,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + memberTypes.hashCode();
@@ -1131,6 +1155,7 @@ public class SchemaRep implements PrefixGuesser {
             super(getXSDNamespace()+":hexBinary", "byte[]");
         }
 
+        @Override
         public String toString() {
             return "hexBinary";
         }
@@ -1141,6 +1166,7 @@ public class SchemaRep implements PrefixGuesser {
             super(getXSDNamespace()+":base64Binary", "byte[]");
         }
 
+        @Override
         public String toString() {
             return "base64Binary";
         }
@@ -1177,14 +1203,17 @@ public class SchemaRep implements PrefixGuesser {
             return base;
         }
 
+        @Override
         public String getJavaTypeName() {
             return schemaTypeToJavaType(base);
         }
 
+        @Override
         public boolean compressWhiteSpaceOuter() {
             return subElements.size() == 0;
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             return subElements.size() == 0;
         }
@@ -1193,6 +1222,7 @@ public class SchemaRep implements PrefixGuesser {
             return writeDTDSubElementNames(out, false);
         }
 
+        @Override
         public String getAttributeString() {
             if (base == null)
                 return null;
@@ -1211,6 +1241,7 @@ public class SchemaRep implements PrefixGuesser {
             return restrictionValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof Restriction))
                 return false;
@@ -1226,6 +1257,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public String toString() {
             Iterator subElements = subElementsIterator();
             StringBuffer sb = null;
@@ -1251,6 +1283,7 @@ public class SchemaRep implements PrefixGuesser {
                 return "";
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((base == null) ? 0: base.hashCode());
@@ -1310,6 +1343,7 @@ public class SchemaRep implements PrefixGuesser {
             return base;
         }
 
+        @Override
         public String getJavaTypeName() {
             return schemaTypeToJavaType(base);
         }
@@ -1318,6 +1352,7 @@ public class SchemaRep implements PrefixGuesser {
             return writeDTDSubElementNames(out, false);
         }
 
+        @Override
         public String getAttributeString() {
             if (base == null)
                 return null;
@@ -1336,6 +1371,7 @@ public class SchemaRep implements PrefixGuesser {
             return extensionValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof Extension))
                 return false;
@@ -1351,6 +1387,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((base == null) ? 0: base.hashCode());
@@ -1397,6 +1434,7 @@ public class SchemaRep implements PrefixGuesser {
             return itemType;
         }
 
+        @Override
         public String getJavaTypeName() {
             return schemaTypeToJavaType(itemType);
         }
@@ -1405,6 +1443,7 @@ public class SchemaRep implements PrefixGuesser {
             return writeDTDSubElementNames(out, false);
         }
 
+        @Override
         public String getAttributeString() {
             if (itemType == null)
                 return null;
@@ -1423,6 +1462,7 @@ public class SchemaRep implements PrefixGuesser {
             return listValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof ListElement))
                 return false;
@@ -1438,6 +1478,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((itemType == null) ? 0: itemType.hashCode());
@@ -1468,6 +1509,7 @@ public class SchemaRep implements PrefixGuesser {
             return value;
         }
 
+        @Override
         public void writeDTD(StringBuffer out) {
             // Has no bearing on a DTD
         }
@@ -1476,9 +1518,11 @@ public class SchemaRep implements PrefixGuesser {
             return false;
         }
 
+        @Override
         public void validate() {
         }
 
+        @Override
         public ElementExpr optimize() {
             return this;
         }
@@ -1511,6 +1555,7 @@ public class SchemaRep implements PrefixGuesser {
         }
         */
 
+        @Override
         public String toString() {
             return getName()+" ("+value+")";
         }
@@ -1898,6 +1943,7 @@ public class SchemaRep implements PrefixGuesser {
             return "collapse" == value;
         }
 
+        @Override
         public void validate() {
             super.validate();
             if (value == null || value.equals(""))
@@ -1955,6 +2001,7 @@ public class SchemaRep implements PrefixGuesser {
             return hasNamedSubElements;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (name != null)
@@ -1979,6 +2026,7 @@ public class SchemaRep implements PrefixGuesser {
 
         protected abstract ElementInformationItem newInstance();
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof ElementInformationItem))
                 return false;
@@ -1991,6 +2039,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((id == null) ? 0 : id.hashCode());
@@ -2069,6 +2118,7 @@ public class SchemaRep implements PrefixGuesser {
             return refer;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer(super.getAttributeString());
             if (refer != null)
@@ -2076,6 +2126,7 @@ public class SchemaRep implements PrefixGuesser {
             return sb.toString();
         }
 
+        @Override
         public void readSchema(org.w3c.dom.Element node) {
             String id = node.getAttribute("id");	// NOI18N
             String name = node.getAttribute("name");	// NOI18N
@@ -2136,6 +2187,7 @@ public class SchemaRep implements PrefixGuesser {
             this.xpath = xpath;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (xpath != null)
@@ -2160,6 +2212,7 @@ public class SchemaRep implements PrefixGuesser {
 
         protected abstract SelectorOrField newInstance();
 
+        @Override
         public void writeDTD(StringBuffer out) {
             // ?
         }
@@ -2169,6 +2222,7 @@ public class SchemaRep implements PrefixGuesser {
             return false;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof SelectorOrField))
                 return false;
@@ -2187,6 +2241,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((id == null) ? 0 : id.hashCode());
@@ -2485,6 +2540,7 @@ public class SchemaRep implements PrefixGuesser {
          * If we have only 1 element and attributes haven't been set, then
          * we replace ourselves with that element.
          */
+        @Override
         public ElementExpr optimize() {
             super.optimize();
             if (subElements.size() == 0)
@@ -2504,6 +2560,7 @@ public class SchemaRep implements PrefixGuesser {
             return hasNamedSubElements;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (minOccurs != "1")
@@ -2528,6 +2585,7 @@ public class SchemaRep implements PrefixGuesser {
 
         protected abstract ModelGroup newInstance();
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof ModelGroup))
                 return false;
@@ -2540,6 +2598,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((minOccurs == null) ? 0 : minOccurs.hashCode());
@@ -2646,6 +2705,7 @@ public class SchemaRep implements PrefixGuesser {
             }
         }
 
+        @Override
         public ElementExpr optimize() {
             if (ref != null)
                 return this;
@@ -2693,6 +2753,7 @@ public class SchemaRep implements PrefixGuesser {
             return groupValidSubElementTypeMap;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (name != null)
@@ -2702,6 +2763,7 @@ public class SchemaRep implements PrefixGuesser {
             return sb.toString();
         }
 
+        @Override
         public void readSchema(org.w3c.dom.Element node) {
             String myName = node.getAttribute("name");	// NOI18N
             String myRef = node.getAttribute("ref");	// NOI18N
@@ -2717,6 +2779,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Group();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof AttributeGroup))
                 return false;
@@ -2729,6 +2792,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((name == null) ? 0 : name.hashCode());
@@ -2761,6 +2825,7 @@ public class SchemaRep implements PrefixGuesser {
             return null;
         }
 
+        @Override
         public ElementExpr optimize() {
             super.optimize();
             if (subElements.size() == 0)
@@ -2768,6 +2833,7 @@ public class SchemaRep implements PrefixGuesser {
             return this;
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             return true;
         }
@@ -2805,10 +2871,12 @@ public class SchemaRep implements PrefixGuesser {
             return null;
         }
 
+        @Override
         public boolean compressWhiteSpaceOuter() {
             return true;
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             return true;
         }
@@ -2817,6 +2885,7 @@ public class SchemaRep implements PrefixGuesser {
             return "appinfo";
         }
 
+        @Override
         public ElementExpr optimize() {
             super.optimize();
             if (subElements.size() == 0)
@@ -2857,10 +2926,12 @@ public class SchemaRep implements PrefixGuesser {
             return null;
         }
 
+        @Override
         public boolean compressWhiteSpaceOuter() {
             return true;
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             return true;
         }
@@ -2915,10 +2986,12 @@ public class SchemaRep implements PrefixGuesser {
             return value;
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             return findSubElement("TextNode") != null;
         }
 
+        @Override
         public ElementExpr optimize() {
             super.optimize();
             if (name == null && value == null && subElements.size() == 0)
@@ -2953,6 +3026,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public String toString() {
             return "AnyNode("+name+")";
         }
@@ -2961,6 +3035,7 @@ public class SchemaRep implements PrefixGuesser {
             return anyNodeValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof AnyNode))
                 return false;
@@ -2979,6 +3054,7 @@ public class SchemaRep implements PrefixGuesser {
             return true;
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((value == null) ? 0 : value.hashCode());
@@ -3015,10 +3091,12 @@ public class SchemaRep implements PrefixGuesser {
             return null;
         }
 
+        @Override
         public boolean compressWhiteSpaceInner() {
             return true;
         }
 
+        @Override
         public ElementExpr optimize() {
             super.optimize();
             if (text == null || text.equals(""))
@@ -3047,6 +3125,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public String toString() {
             return "TextNode("+text+")";
         }
@@ -3055,6 +3134,7 @@ public class SchemaRep implements PrefixGuesser {
             return textNodeValidSubElementTypeMap;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof TextNode))
                 return false;
@@ -3067,6 +3147,7 @@ public class SchemaRep implements PrefixGuesser {
             return true;
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((text == null) ? 0 : text.hashCode());
@@ -3311,6 +3392,7 @@ public class SchemaRep implements PrefixGuesser {
             defaultValue = d;
         }
 
+        @Override
         public void writeDTD(StringBuffer out) {
             Element firstElement = (Element) elementTable.get(getElementName());
             if (firstElement == null)
@@ -3353,6 +3435,7 @@ public class SchemaRep implements PrefixGuesser {
             }
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (elementName != null) {
@@ -3472,6 +3555,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof Element))
                 return false;
@@ -3504,6 +3588,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((type == null) ? 0 : type.hashCode());
@@ -3588,6 +3673,7 @@ public class SchemaRep implements PrefixGuesser {
             return maxOccurs;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (minOccurs != "1")
@@ -3628,6 +3714,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof Any))
                 return false;
@@ -3643,6 +3730,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((namespace == null) ? 0 : namespace.hashCode());
@@ -3689,6 +3777,7 @@ public class SchemaRep implements PrefixGuesser {
             processContents = (pc == null) ? null : pc.intern();
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (namespace != null)
@@ -3719,6 +3808,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof AnyAttribute))
                 return false;
@@ -3730,6 +3820,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((namespace == null) ? 0 : namespace.hashCode());
@@ -3889,6 +3980,7 @@ public class SchemaRep implements PrefixGuesser {
             return defaultValue;
         }
 
+        @Override
         public void writeDTD(StringBuffer out) {
             writeDTD(out, "UNKNOWN");
         }
@@ -3903,6 +3995,7 @@ public class SchemaRep implements PrefixGuesser {
             return false;
         }
 
+        @Override
         public void validate() {
 
             super.validate();
@@ -3912,6 +4005,7 @@ public class SchemaRep implements PrefixGuesser {
             return attributeValidSubElementTypeMap;
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (name != null)
@@ -3969,6 +4063,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof Attribute))
                 return false;
@@ -3991,6 +4086,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((name == null) ? 0 : name.hashCode());
@@ -4077,6 +4173,7 @@ public class SchemaRep implements PrefixGuesser {
             return writeDTDSubElementNames(out, false);
         }
 
+        @Override
         public String getAttributeString() {
             StringBuffer sb = new StringBuffer();
             if (name != null)
@@ -4097,6 +4194,7 @@ public class SchemaRep implements PrefixGuesser {
             popCurrent();
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof AttributeGroup))
                 return false;
@@ -4109,6 +4207,7 @@ public class SchemaRep implements PrefixGuesser {
             return super.equals(el);
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             result = 37*result + ((name == null) ? 0 : name.hashCode());

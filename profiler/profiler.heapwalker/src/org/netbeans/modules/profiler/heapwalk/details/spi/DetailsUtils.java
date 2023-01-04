@@ -74,6 +74,7 @@ public final class DetailsUtils {
     private static String LAST_SUBCLASS_INSTANCE;
     private static final LinkedHashMap<String, Boolean> SUBCLASS_CACHE =
             new LinkedHashMap<String, Boolean>(100) {
+                @Override
                 protected boolean removeEldestEntry(Map.Entry eldest) {
                     return size() > 5000;
                 }

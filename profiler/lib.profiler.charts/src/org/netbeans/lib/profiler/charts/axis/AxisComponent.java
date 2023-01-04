@@ -85,6 +85,7 @@ public class AxisComponent extends JComponent {
 
     // --- Component paint -----------------------------------------------------
 
+    @Override
     public void paint(Graphics g) {
         Rectangle clip = g.getClipBounds();
         if (clip == null) clip = new Rectangle(0, 0, getWidth(), getHeight());

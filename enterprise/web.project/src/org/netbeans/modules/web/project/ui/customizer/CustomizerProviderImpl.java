@@ -177,11 +177,13 @@ public class CustomizerProviderImpl implements CustomizerProvider2, ProjectShara
         }        
         
         // Listening to window events ------------------------------------------
-                
+
+        @Override
         public void windowClosed( WindowEvent e) {
             project2Dialog.remove( project );
-        }   
-        
+        }
+
+        @Override
         public void windowClosing( WindowEvent e ) {
             //Dispose the dialog otherwsie the {@link WindowAdapter#windowClosed}
             //may not be called

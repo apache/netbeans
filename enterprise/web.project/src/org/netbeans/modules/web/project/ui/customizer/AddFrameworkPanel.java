@@ -125,7 +125,8 @@ public class AddFrameworkPanel extends javax.swing.JPanel {
     }
 
     public static class FrameworksListCellRenderer extends DefaultListCellRenderer {
-	
+
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof WebFrameworkProvider) {
                 WebFrameworkProvider item = (WebFrameworkProvider) value;

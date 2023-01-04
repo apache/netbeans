@@ -597,6 +597,7 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
 
         // telemetryOverviewCombo
         telemetryOverviewCombo = new JComboBox() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -628,9 +629,12 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
 
         // openThreadsViewCombo
         openThreadsViewCombo = new JComboBox() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
+
+            @Override
                 protected void fireActionEvent() {
                     onlyThreadsEnabledLabel.setVisible(
                             !Bundle.ProfilerOptionsPanel_KeyOpenNever().equals(getSelectedItem()));
@@ -674,9 +678,12 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
         
         // openLocksViewCombo
         openLocksViewCombo = new JComboBox() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
+
+            @Override
                 protected void fireActionEvent() {
                     onlyContentionEnabledLabel.setVisible(
                             !Bundle.ProfilerOptionsPanel_KeyOpenNever().equals(getSelectedItem()));
@@ -775,6 +782,7 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
 
         // takingSnapshotCombo
         takingSnapshotCombo = new JComboBox() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -806,6 +814,7 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
 
         // oomeCombo
         oomeCombo = new JComboBox() {
+            @Override
                 public Dimension getMinimumSize() {
                     return getPreferredSize();
                 }
@@ -841,10 +850,12 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
 
         // oomeDetectionDirTextField
         oomeDetectionDirTextField = new JTextField() {
+            @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(super.getPreferredSize().width, oomeDetectionChooseDirButton.getPreferredSize().height);
                 }
 
+            @Override
                 public Dimension getMinimumSize() {
                     return new Dimension(super.getMinimumSize().width, getPreferredSize().height);
                 }
@@ -913,6 +924,7 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
 
         // resetConfirmationsArea
         JTextArea resetConfirmationsArea = new JTextArea(Bundle.ProfilerOptionsPanel_ResetHintText()) {
+            @Override
             public Dimension getPreferredSize() {
                 Dimension size = super.getPreferredSize();
                 size.width = 1;

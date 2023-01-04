@@ -65,18 +65,22 @@ public final class TapPanel extends javax.swing.JPanel {
     static class Adap extends MouseAdapter implements MouseMotionListener {
         MouseListener other = null;
 
+        @Override
         public void mouseEntered (MouseEvent e) {
             ( (TapPanel) e.getSource () ).setArmed ( true );
         }
 
+        @Override
         public void mouseExited (MouseEvent e) {
             ( (TapPanel) e.getSource () ).setArmed ( false );
         }
 
+        @Override
         public void mouseMoved (MouseEvent e) {
             ( (TapPanel) e.getSource () ).setArmed ( ( (TapPanel) e.getSource () ).isArmPoint ( e.getPoint () ) );
         }
 
+        @Override
         public void mousePressed (MouseEvent e) {
             if ( ( (TapPanel) e.getSource () ).isArmPoint ( e.getPoint () ) ) {
                 ( (TapPanel) e.getSource () ).setExpanded ( !( (TapPanel) e.getSource () ).isExpanded () );
@@ -86,6 +90,7 @@ public final class TapPanel extends javax.swing.JPanel {
             }
         }
 
+        @Override
         public void mouseDragged (MouseEvent e) {
             //do nothing
         }
@@ -111,12 +116,14 @@ public final class TapPanel extends javax.swing.JPanel {
         getAdapter ().other = lis;
     }
 
+    @Override
     public void addNotify () {
         addMouseMotionListener ( getAdapter () );
         addMouseListener ( getAdapter () );
         super.addNotify ();
     }
 
+    @Override
     public void removeNotify () {
         super.removeNotify ();
         removeMouseMotionListener ( getAdapter () );
@@ -146,16 +153,19 @@ public final class TapPanel extends javax.swing.JPanel {
         return expanded;
     }
 
+    @Override
     public Dimension getPreferredSize () {
         return getLayout ().preferredLayoutSize ( this );
     }
 
+    @Override
     public Dimension getMinimumSize () {
         Dimension d = getPreferredSize ();
         d.width = 20;
         return d;
     }
 
+    @Override
     public Dimension getMaximumSize () {
         return getPreferredSize ();
     }
@@ -200,6 +210,7 @@ public final class TapPanel extends javax.swing.JPanel {
         //do nothing
     }
 
+    @Override
     public void paintBorder (Graphics g) {
         Color c = armed ? UIManager.getColor ( "List.selectionBackground" ) : getBackground (); //NOI18N
         if (c==null) {
@@ -226,6 +237,7 @@ public final class TapPanel extends javax.swing.JPanel {
         }
     }
 
+    @Override
     public void paintChildren (Graphics g) {
         if ( !expanded ) {
             return;

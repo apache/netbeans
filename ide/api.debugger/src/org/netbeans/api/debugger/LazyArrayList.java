@@ -199,6 +199,7 @@ class LazyArrayList<T> extends ArrayList<T> {
             return get(cursor++);
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("Not supported.");
         }

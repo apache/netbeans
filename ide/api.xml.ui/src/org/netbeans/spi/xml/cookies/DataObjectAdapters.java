@@ -74,11 +74,13 @@ public final class DataObjectAdapters {
         public DataObjectInputSource (DataObject dataObject) {
             this.dataObject = dataObject;
         }
-                
+
+        @Override
         public String getSystemId() {
             return DataObjectAdapters.getSystemId (dataObject);
         }
-        
+
+        @Override
         public Reader getCharacterStream() {
 
             EditorCookie editor = dataObject.getCookie(EditorCookie.class);
@@ -116,11 +118,13 @@ public final class DataObjectAdapters {
         public DataObjectSAXSource(DataObject dataObject) {
             this.dataObject = dataObject;
         }
-        
+
+        @Override
         public String getSystemId() {
             return DataObjectAdapters.getSystemId (dataObject);
         }
-        
+
+        @Override
         public XMLReader getXMLReader() {
             try {
                 XMLReader reader = newXMLReader();
@@ -137,7 +141,8 @@ public final class DataObjectAdapters {
             }
             return null;            
         }
-        
+
+        @Override
         public InputSource getInputSource() {
             return inputSource (dataObject);
         }

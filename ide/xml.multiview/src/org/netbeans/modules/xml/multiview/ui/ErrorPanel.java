@@ -42,6 +42,7 @@ public class ErrorPanel extends javax.swing.JPanel {
         
         errorLabel = new ErrorLabel();
         errorLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 Error error = getError();
                 if (error!=null) {
@@ -132,6 +133,7 @@ public class ErrorPanel extends javax.swing.JPanel {
             setText(""); //NOI18N
         }
 
+        @Override
         public void setText(String text) {
             if (text.length()==0) super.setText(" "); //NOI18N
             else super.setText("<html><u>"+text+"</u></html>"); //NOI18N

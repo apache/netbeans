@@ -43,6 +43,7 @@ public final class FilterIterator implements Iterator {
         this.filter = filter;
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

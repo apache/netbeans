@@ -235,7 +235,8 @@ public final class TokenSequenceList extends AbstractList<TokenSequence<?>> {
                 next = getOrNull(cursor++); // can increase cursor even if (next == null)
             }
         }
-        
+
+        @Override
         public void remove() {
             throw new UnsupportedOperationException(); // underlying list is immutable
         }

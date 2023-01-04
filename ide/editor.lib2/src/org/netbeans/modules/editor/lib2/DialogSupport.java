@@ -187,6 +187,7 @@ public final class DialogSupport {
             cancelButton.doClick( 10 );
         }
 
+        @Override
         public void windowClosing( WindowEvent evt ) {
             cancelButton.doClick( 10 );
         }

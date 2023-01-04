@@ -572,6 +572,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
 
         customBundleTextField.setToolTipText(bundle.getString("HINT_JSF_Directory")); // NOI18N
         customBundleTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 customBundleTextFieldKeyPressed(evt);
             }
@@ -593,6 +594,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
 
         jtNewLibraryName.setToolTipText(bundle.getString("HINT_Version")); // NOI18N
         jtNewLibraryName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jtNewLibraryNameKeyReleased(evt);
             }
@@ -1564,10 +1566,12 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             return model.size();
         }
 
+        @Override
         public Class getColumnClass(int columnIndex) {
             return COLUMN_TYPES[columnIndex];
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return (columnIndex == 0);
         }
@@ -1591,6 +1595,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             }
         }
 
+        @Override
         public void setValueAt(Object value, int row, int column) {
             JSFComponentModelItem item = getItem(row);
             switch (column) {

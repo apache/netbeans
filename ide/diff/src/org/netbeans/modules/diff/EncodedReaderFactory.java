@@ -508,6 +508,7 @@ public class EncodedReaderFactory {
         }
 
         /** Write a single character. */
+        @Override
         public void write(int c) throws IOException {
             try {
                 doc.insertString(doc.getLength(), Character.toString((char) c), null);
@@ -546,6 +547,7 @@ public class EncodedReaderFactory {
         /**
          * Write a string.
          */
+        @Override
         public void write(String str) throws IOException {
             try {
                 doc.insertString(doc.getLength(), str, null);

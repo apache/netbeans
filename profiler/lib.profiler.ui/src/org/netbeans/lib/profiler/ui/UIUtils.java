@@ -71,6 +71,7 @@ public final class UIUtils {
     
     public static JPanel createFillerPanel() {
         JPanel fillerPanel = new JPanel(null) {
+            @Override
             public Dimension getPreferredSize() {
                 return DIMENSION_SMALLEST;
             }
@@ -81,6 +82,7 @@ public final class UIUtils {
 
     public static JSeparator createHorizontalSeparator() {
         JSeparator horizontalSeparator = new JSeparator() {
+            @Override
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -92,12 +94,17 @@ public final class UIUtils {
     public static JSeparator createHorizontalLine(Color background) {
         final boolean customPaint = isNimbus() || isAquaLookAndFeel();
         JSeparator separator = new JSeparator() {
+            @Override
             public Dimension getMaximumSize() {
                 return new Dimension(super.getMaximumSize().width, 1);
             }
+
+            @Override
             public Dimension getPreferredSize() {
                 return new Dimension(super.getPreferredSize().width, 1);
             }
+
+            @Override
             public void paint(Graphics g) {
                 if (customPaint) {
                     g.setColor(getDisabledLineColor());
@@ -506,6 +513,7 @@ public final class UIUtils {
         if (comp != null) {
             final Component top = comp;
             top.addComponentListener(new ComponentAdapter() {
+                @Override
                     public void componentResized(ComponentEvent e) {
                         Dimension d = top.getSize();
                         Dimension min = top.getMinimumSize();

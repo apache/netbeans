@@ -353,6 +353,7 @@ public class J2SEProjectProperties {
             NbBundle.getMessage(CustomizerCompile.class, "LBL_CustomizeCompile_Processor_Options_Key"), //NOI18N
             NbBundle.getMessage(CustomizerCompile.class, "LBL_CustomizeCompile_Processor_Options_Value") //NOI18N
         }) {
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }

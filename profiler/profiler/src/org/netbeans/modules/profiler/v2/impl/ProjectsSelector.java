@@ -145,7 +145,8 @@ public abstract class ProjectsSelector {
             SelectedProjectsModel() {
                 ProjectUtilities.getOpenedProjects();
             }
-        
+
+            @Override
             public String getColumnName(int columnIndex) {
                 if (columnIndex == 0) {
                     return Bundle.ProjectsSelector_columnSelected();
@@ -155,6 +156,7 @@ public abstract class ProjectsSelector {
                 return null;
             }
 
+            @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
                     return Boolean.class;
@@ -181,6 +183,7 @@ public abstract class ProjectsSelector {
                 return null;
             }
 
+            @Override
             public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
                 if (Boolean.TRUE.equals(aValue)) {
                     if (selected.add(projects[rowIndex])) selectionChanged(selected);
@@ -189,6 +192,7 @@ public abstract class ProjectsSelector {
                 }
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex == 0;
             }

@@ -128,7 +128,8 @@ public class ValidatingTextField extends JTextField implements ComboBoxEditor {
 
     /*
      * Set new tooltip that will be displyed whenever entered value is valid.
-     */    
+     */
+    @Override
     public void setToolTipText(String text) {
         tooltip = text;
         feedback();

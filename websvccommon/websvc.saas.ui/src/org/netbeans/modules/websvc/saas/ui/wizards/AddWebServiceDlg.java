@@ -477,6 +477,7 @@ public class AddWebServiceDlg extends JPanel implements ActionListener {
 
         jTxtpackageName.setColumns(20);
         jTxtpackageName.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTxtpackageNameMouseClicked(evt);
             }

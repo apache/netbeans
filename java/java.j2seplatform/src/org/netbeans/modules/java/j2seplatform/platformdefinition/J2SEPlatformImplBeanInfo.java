@@ -34,6 +34,7 @@ public class J2SEPlatformImplBeanInfo extends SimpleBeanInfo {
     }
 
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors () {
         try {
             PropertyDescriptor[] descs =  new PropertyDescriptor[] {
@@ -59,6 +60,7 @@ public class J2SEPlatformImplBeanInfo extends SimpleBeanInfo {
     }
 
 
+    @Override
     public Image getIcon(int iconKind) {
         if ((iconKind == BeanInfo.ICON_COLOR_16x16) || (iconKind == BeanInfo.ICON_MONO_16x16)) {
             return ImageUtilities.loadImage("org/netbeans/modules/java/j2seplatform/resources/platform.gif"); // NOI18N

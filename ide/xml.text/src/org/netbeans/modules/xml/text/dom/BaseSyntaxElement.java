@@ -195,6 +195,7 @@ public abstract class BaseSyntaxElement implements org.netbeans.modules.xml.text
             super( support, first, start, end);
         }
 
+        @Override
         public String toString() {
             return "Error" + super.toString();                                  // NOI18N
         }

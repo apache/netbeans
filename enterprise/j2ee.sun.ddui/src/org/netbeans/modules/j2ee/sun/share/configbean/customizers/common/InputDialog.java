@@ -116,6 +116,7 @@ public abstract class InputDialog extends JDialog implements HelpCtx.Provider {
         super(getFrame(panel), title, true);
 
         addWindowListener(new WindowAdapter(){
+            @Override
             public void windowClosing(WindowEvent e) {
                 chosenOption = CANCEL_OPTION;
             }

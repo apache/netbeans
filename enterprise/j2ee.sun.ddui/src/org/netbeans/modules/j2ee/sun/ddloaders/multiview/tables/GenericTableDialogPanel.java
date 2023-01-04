@@ -223,6 +223,7 @@ public class GenericTableDialogPanel extends JPanel implements GenericTableDialo
             controlIndex = index;
         }
 
+        @Override
         public void keyReleased(KeyEvent evt) {
             values[controlIndex] = textField.getText();
             firePropertyChange(USER_DATA_CHANGED, null, null);

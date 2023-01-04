@@ -236,9 +236,12 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
 
         Mnemonics.setLocalizedText(codeSnifferLearnMoreLabel, NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.codeSnifferLearnMoreLabel.text")); // NOI18N
         codeSnifferLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 codeSnifferLearnMoreLabelMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(MouseEvent evt) {
                 codeSnifferLearnMoreLabelMousePressed(evt);
             }

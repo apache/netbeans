@@ -173,7 +173,8 @@ public class SimpleEngine extends AbstractEngine implements ActionListener {
         public SimpleInputMap (JComponent jc) {
             super (jc);
         }
-        
+
+        @Override
         public Object get(KeyStroke keyStroke) {
             return interp.getActionForKeystroke(keyStroke);
         }
@@ -181,15 +182,18 @@ public class SimpleEngine extends AbstractEngine implements ActionListener {
         public void remove(Object key) {
             throw new UnsupportedOperationException();
         }
-        
+
+        @Override
         public KeyStroke[] keys() {
             return interp.getAllKeystrokes();
         }
 
+        @Override
         public int size() {
             return super.size() + keys().length;
         }
-        
+
+        @Override
         public KeyStroke[] allKeys() {
             return keys(); //XXX merge w/ super
         }
@@ -204,6 +208,7 @@ public class SimpleEngine extends AbstractEngine implements ActionListener {
     }
     
     private class SimpleActionMap extends ActionMap {
+        @Override
         public Action get(Object key) {
             Action a = super.get(key);
             if (a == null && key instanceof String) {
@@ -211,7 +216,8 @@ public class SimpleEngine extends AbstractEngine implements ActionListener {
             }
             return a;
         }
-        
+
+        @Override
         public Object[] keys() {
             return interp.getAllActionsBoundToKeystrokes();
         }

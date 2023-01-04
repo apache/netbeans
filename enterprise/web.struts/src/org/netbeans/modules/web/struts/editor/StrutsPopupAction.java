@@ -85,6 +85,7 @@ public final class StrutsPopupAction extends SystemAction implements Presenter.P
         }
         
         /** Gets popup menu. Overrides superclass. Adds lazy menu items creation. */
+        @Override
         public JPopupMenu getPopupMenu() {
             JPopupMenu pm = super.getPopupMenu();
             pm.removeAll();

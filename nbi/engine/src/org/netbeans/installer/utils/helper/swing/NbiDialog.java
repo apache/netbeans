@@ -66,7 +66,8 @@ public class NbiDialog extends JDialog {
         
         setSize(DEFAULT_DIALOG_WIDTH, DEFAULT_DIALOG_HEIGHT);
     }
-    
+
+    @Override
     public void setVisible(boolean visible) {
         if (owner == null) {
             final GraphicsDevice screen = GraphicsEnvironment.

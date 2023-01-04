@@ -212,6 +212,7 @@ public class SpinnerEditorEditor extends PropertyEditorSupport
 
         formatField.setColumns(15);
         formatField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formatFieldFocusLost(evt);
             }

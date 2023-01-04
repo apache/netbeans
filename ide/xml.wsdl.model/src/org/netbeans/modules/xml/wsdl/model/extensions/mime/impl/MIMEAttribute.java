@@ -38,6 +38,7 @@ public enum MIMEAttribute implements Attribute {
         this.subtype = null;
     }
 
+    @Override
     public String toString() {
         return name;
     }

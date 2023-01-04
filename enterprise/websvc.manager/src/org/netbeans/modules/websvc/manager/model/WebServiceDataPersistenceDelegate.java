@@ -34,6 +34,7 @@ public class WebServiceDataPersistenceDelegate extends DefaultPersistenceDelegat
     /**
      * Overrideing PersistenceDelegate to clean up any unwanted classes trying to be written.
      */
+    @Override
     public void writeObject(Object oldInstance, Encoder out) {
         if(oldInstance instanceof javax.xml.namespace.QName) {
             return;

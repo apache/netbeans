@@ -55,10 +55,12 @@ public class TypeCellEditor extends DefaultCellEditor implements TableCellEditor
         this.classLoader = loader;
     }
 
+    @Override
     public void cancelCellEditing() {
         return;
     }
 
+    @Override
     public boolean stopCellEditing() {
         return super.stopCellEditing();
     }
@@ -66,6 +68,7 @@ public class TypeCellEditor extends DefaultCellEditor implements TableCellEditor
     /**
      * return the value of the last component.
      */
+    @Override
     public Object getCellEditorValue() {
         if(null == type) {
             return ((JTextField)lastComponent).getText();
@@ -82,7 +85,7 @@ public class TypeCellEditor extends DefaultCellEditor implements TableCellEditor
     }
 
 
-
+    @Override
     public java.awt.Component getTableCellEditorComponent(javax.swing.JTable table, Object value, boolean isSelected, int row, int column) {
         /**
          * We need to create the correct editing component for the type of field we have.

@@ -326,7 +326,8 @@ class SharedXMLSupport {
 
 
     private class Handler extends DefaultHandler {
-    
+
+        @Override
         public void warning (SAXParseException ex) {
             
             // heuristics to detect bogus schema loading requests
@@ -354,6 +355,7 @@ class SharedXMLSupport {
         /**
          * Report maximally getMaxErrorCount() errors then stop the parser.
          */
+        @Override
         public void error (SAXParseException ex) throws SAXException {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Just diagnostic exception", ex); // NOI18N
             if (errors++ == getMaxErrorCount()) {
@@ -380,8 +382,9 @@ class SharedXMLSupport {
             String msg = Util.THIS.getString("EX_parser_ierr", ex.getMessage());
             fatalError(new SAXParseException (msg, SharedXMLSupport.this.locator, ex));
         }
-        
-        public void fatalError (SAXParseException ex) {        
+
+        @Override
+        public void fatalError (SAXParseException ex) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("Just diagnostic exception", ex); // NOI18N
             fatalErrors++;
             CookieMessage message = new CookieMessage(
@@ -391,7 +394,8 @@ class SharedXMLSupport {
             );
             if (console != null) console.receive(message);
         }
-        
+
+        @Override
         public void setDocumentLocator(Locator locator) {
             SharedXMLSupport.this.locator = locator;
         }
@@ -508,7 +512,8 @@ class SharedXMLSupport {
             namespaces=new HashSet<>();
             mapping = new HashMap<>();
         }
-        
+
+        @Override
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {
             if (atts.getLength()>0) { //NOI18N
                 // parse XMLSchema location attribute
@@ -526,6 +531,7 @@ class SharedXMLSupport {
             }
         }
 
+        @Override
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             if ("http://www.w3.org/2001/XMLSchema-instance".equals(uri)) {  // NOIi8N
                 return; // it's build in into parser

@@ -96,10 +96,12 @@ public class CustomTaskButtonBorder extends AbstractBorder {
         return new CustomTaskButtonBorder(foreground, background, BORDER_STATE_FOCUSED);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return CustomTaskButtonBorder.getBorderInsets();
     }
 
+    @Override
     public boolean isBorderOpaque() {
         return false;
     }
@@ -143,6 +145,7 @@ public class CustomTaskButtonBorder extends AbstractBorder {
         setBorderState(CustomTaskButtonBorder.BORDER_STATE_SELECTED);
     }
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         if (!(g instanceof Graphics2D)) {
             return;

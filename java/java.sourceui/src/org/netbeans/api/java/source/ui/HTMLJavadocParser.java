@@ -321,6 +321,7 @@ class HTMLJavadocParser {
                 }
             }
 
+            @Override
             public void handleComment(char[] data, int pos){
                 String comment = String.valueOf(data);
                 if (comment!=null){
@@ -336,7 +337,8 @@ class HTMLJavadocParser {
                     }
                 }
             }
-            
+
+            @Override
             public void handleText(char[] data, int pos) {
                 if (state[0] == CLASS_DATA_START && "Deprecated.".equals(new String(data))) { //NOI18N
                     offset[0] = lastHRPos + 4;
@@ -514,6 +516,7 @@ class HTMLJavadocParser {
 
             int hrPos = -1;
 
+            @Override
             public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
                 if (t == HTML.Tag.HR && state[0]!=INIT){
                     if (state[0] == A_OPEN){
@@ -523,6 +526,7 @@ class HTMLJavadocParser {
                 }
             }
 
+            @Override
             public void handleStartTag(HTML.Tag t, MutableAttributeSet a, int pos) {
 
                 if (t == HTML.Tag.A) {

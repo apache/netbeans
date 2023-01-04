@@ -89,7 +89,8 @@ public final class SchemaParser extends DefaultHandler {
         }
         
     }
-    
+
+    @Override
     public void startElement (String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
         depth++;
         if (depth > 2) return;
@@ -110,8 +111,9 @@ public final class SchemaParser extends DefaultHandler {
                 info.namespace = ns;
             }
         }
-    }        
-    
+    }
+
+    @Override
     public void endElement (String uri, String localName, String qName) {
         depth--;
     }

@@ -56,6 +56,7 @@ public final class DropdownButton extends JToggleButton {
     }
 
 
+    @Override
     protected void fireActionPerformed(ActionEvent event) {
         JPopupMenu popup = new JPopupMenu();
         for (Action action : actions) addAction(popup, action);

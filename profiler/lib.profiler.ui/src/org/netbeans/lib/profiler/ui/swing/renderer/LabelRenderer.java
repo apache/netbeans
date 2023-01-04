@@ -73,7 +73,8 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
     public JComponent getComponent() {
         return this;
     }
-    
+
+    @Override
     public String toString() {
         return getText();
     }
@@ -90,11 +91,13 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
     private int iconTextGap;
     private int textWidth;
     private int fontAscent;
-    
+
+    @Override
     public void setUI(LabelUI ui) {
         super.setUI(UI);
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         return sharedDimension(getPreferredSizeImpl());
     }
@@ -124,6 +127,7 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
         if (height) preferredSize.height = DIRTY;
     }
 
+    @Override
     public void paint(Graphics g) {
         int xx = location.x;
         int h = size.height;
@@ -205,45 +209,55 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
     
     protected final Point location = new Point();
     protected final Dimension size = new Dimension();
-    
+
+    @Override
     public void move(int x, int y) {
         location.x = x;
         location.y = y;
     }
-    
+
+    @Override
     public Point getLocation() {
         return sharedPoint(location);
     }
-    
+
+    @Override
     public int getX() {
         return location.x;
     }
-    
+
+    @Override
     public int getY() {
         return location.y;
     }
-    
+
+    @Override
     public void setSize(int w, int h) {
         size.width = w;
         size.height = h;
     }
-    
+
+    @Override
     public Dimension getSize() {
         return sharedDimension(size);
     }
-    
+
+    @Override
     public int getWidth() {
         return size.width;
     }
-    
+
+    @Override
     public int getHeight() {
         return size.height;
     }
-    
+
+    @Override
     public Rectangle getBounds() {
         return sharedRectangle(location.x, location.y, size.width, size.height);
     }
-    
+
+    @Override
     public void reshape(int x, int y, int w, int h) {
         // ignore x, y: used only for move(x, y)
 //        location.x = x;
@@ -256,11 +270,13 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
     
     private final Insets insets = new Insets(0, 0, 0, 0);
     private final Insets margin = new Insets(0, 0, 0, 0);
-    
+
+    @Override
     public Insets getInsets() {
         return insets;
     }
 
+    @Override
     public Insets getInsets(Insets insets) {
         return this.insets;
     }
@@ -287,15 +303,18 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
     private Color background;
     private boolean enabled = true;
 
+    @Override
     public void setText(String text) {
         this.text = text;
         resetPreferredSize(true, false);
     }
 
+    @Override
     public String getText() {
         return text;
     }
 
+    @Override
     public void setIcon(Icon icon) {
         this.icon = icon;
         iconWidth = icon == null ? 0 : icon.getIconWidth();
@@ -303,42 +322,52 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
         resetPreferredSize(true, false); // Icon likely won't change height
     }
 
+    @Override
     public Icon getIcon() {
         return icon;
     }
 
+    @Override
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
 
+    @Override
     public Color getForeground() {
         return foreground;
     }
-    
+
+    @Override
     public void setBackground(Color background) {
         this.background = background;
     }
 
+    @Override
     public Color getBackground() {
         return background;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public int getDisplayedMnemonicIndex() {
         return -1;
     }
 
+    @Override
     public FontMetrics getFontMetrics(Font font) {
         return fontMetrics;
     }
 
+    @Override
     public void setFont(Font font) {
         super.setFont(font);
         fontMetrics = super.getFontMetrics(font);
@@ -352,11 +381,13 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
         setFont(font.deriveFont(font.getSize2D() + diff));
     }
 
+    @Override
     public int getIconTextGap() {
         return iconTextGap;
     }
 
 
+    @Override
     public void setIconTextGap(int iconTextGap) {
         this.iconTextGap = iconTextGap;
         resetPreferredSize(true, false);
@@ -364,44 +395,62 @@ public class LabelRenderer extends JLabel implements ProfilerRenderer {
     
     // --- Painting / Layout ---------------------------------------------------
 
+    @Override
     public void validate() {}
 
+    @Override
     public void revalidate() {}
 
+    @Override
     public void repaint(long tm, int x, int y, int width, int height) {}
 
+    @Override
     public void repaint(Rectangle r) {}
 
+    @Override
     public void repaint() {}
 
+    @Override
     public void setDisplayedMnemonic(int key) {}
 
+    @Override
     public void setDisplayedMnemonic(char aChar) {}
 
+    @Override
     public void setDisplayedMnemonicIndex(int index) {}
     
     // --- Events --------------------------------------------------------------
 
+    @Override
     public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, char oldValue, char newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, short oldValue, short newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, int oldValue, int newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, long oldValue, long newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, float oldValue, float newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, double oldValue, double newValue) {}
 
+    @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
+    @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
 
 
     private static final class LabelRendererUI extends BasicLabelUI {
+        @Override
         protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
             super.paintEnabledText(l, g, s, textX, textY);
         }

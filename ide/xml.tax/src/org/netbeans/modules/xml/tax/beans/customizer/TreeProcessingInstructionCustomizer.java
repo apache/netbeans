@@ -155,9 +155,12 @@ public class TreeProcessingInstructionCustomizer extends AbstractTreeCustomizer 
         });
 
         targetField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 targetFieldFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 targetFieldFocusLost(evt);
             }
@@ -176,15 +179,19 @@ public class TreeProcessingInstructionCustomizer extends AbstractTreeCustomizer 
 
         dataPanel.setPreferredSize(new java.awt.Dimension(350, 230));
         dataTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 dataTextAreaFocusGained(evt);
             }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 dataTextAreaFocusLost(evt);
             }
         });
 
         dataTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 dataTextAreaKeyPressed(evt);
             }

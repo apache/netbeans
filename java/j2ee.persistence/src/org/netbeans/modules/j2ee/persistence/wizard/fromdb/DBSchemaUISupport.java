@@ -93,6 +93,7 @@ public class DBSchemaUISupport {
             this.comboBox = comboBox;
         }
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Object displayName = null;
             ComboBoxModel model = comboBox.getModel();

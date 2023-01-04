@@ -108,6 +108,7 @@ public class QueryBuilderInternalFrame extends JInternalFrame
 
         // Add an anonymous listener for the internalFrameOpened event
         addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
             public void internalFrameOpened(InternalFrameEvent e) {
                 // As soon as a frame is opened select it.
                 // This doesn't seem to work.
@@ -227,6 +228,7 @@ public class QueryBuilderInternalFrame extends JInternalFrame
     /**
      * Suppress label printing in graph
      */
+    @Override
     public String toString() {
         return ""; // NOI18N
     }
@@ -256,6 +258,7 @@ public class QueryBuilderInternalFrame extends JInternalFrame
     
     // Record the new location, before passing on the set method
 
+    @Override
     public void setLocation(int x, int y) {
         _lastX = x;
         _lastY = y;
@@ -294,10 +297,12 @@ public class QueryBuilderInternalFrame extends JInternalFrame
     // Inner class for popup menu
     
     class TableColumnPopupListener extends MouseAdapter {
+        @Override
         public void mousePressed(MouseEvent e) {
             maybeShowPopup(e);
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             maybeShowPopup(e);
         }

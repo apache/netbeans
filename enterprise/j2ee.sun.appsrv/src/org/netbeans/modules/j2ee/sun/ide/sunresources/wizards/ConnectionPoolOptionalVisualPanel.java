@@ -42,6 +42,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
         initComponents();
     }
     
+    @Override
     public String getName() {
         return NbBundle.getMessage(ConnectionPoolOptionalVisualPanel.class, "StepName_OptionalConnectionPool"); // NOI18N
     }
@@ -103,6 +104,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
 
         steadyField.setText(getDefaultValue("steady-pool-size"));
         steadyField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 steadyFieldKeyReleased(evt);
             }
@@ -110,6 +112,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
 
         maxField.setText(getDefaultValue("max-pool-size"));
         maxField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 maxFieldKeyReleased(evt);
             }
@@ -117,6 +120,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
 
         waitField.setText(getDefaultValue("max-wait-time-in-millis"));
         waitField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 waitFieldKeyReleased(evt);
             }
@@ -124,6 +128,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
 
         resizeField.setText(getDefaultValue("pool-resize-quantity"));
         resizeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 resizeFieldKeyReleased(evt);
             }
@@ -131,6 +136,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
 
         idleField.setText(getDefaultValue("idle-timeout-in-seconds"));
         idleField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 idleFieldKeyReleased(evt);
             }
@@ -262,6 +268,7 @@ public final class ConnectionPoolOptionalVisualPanel extends JPanel {
 
         tableNameField.setText(getDefaultValue("validation-table-name"));
         tableNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 tableNameFieldKeyReleased(evt);
             }

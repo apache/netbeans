@@ -169,6 +169,7 @@ public final class MethodCustomizerPanel extends javax.swing.JPanel {
 
         returnTypeTextField.setText(org.openide.util.NbBundle.getMessage(MethodCustomizerPanel.class, "MethodCustomizerPanel.returnTypeTextField.text")); // NOI18N
         returnTypeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 returnTypeTextFieldFocusGained(evt);
             }
@@ -176,6 +177,7 @@ public final class MethodCustomizerPanel extends javax.swing.JPanel {
 
         nameTextField.setText(org.openide.util.NbBundle.getMessage(MethodCustomizerPanel.class, "MethodCustomizerPanel.nameTextField.text")); // NOI18N
         nameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 nameTextFieldFocusGained(evt);
             }
@@ -269,6 +271,7 @@ public final class MethodCustomizerPanel extends javax.swing.JPanel {
         ejbqlTextArea.setRows(5);
         ejbqlTextArea.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         ejbqlTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 ejbqlTextAreaFocusGained(evt);
             }

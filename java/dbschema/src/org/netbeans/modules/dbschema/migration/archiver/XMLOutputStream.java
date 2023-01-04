@@ -40,6 +40,7 @@ public class XMLOutputStream extends java.io.DataOutputStream implements java.io
         this.outStream = out;
     }
 
+    @Override
     public void close() throws java.io.IOException
     {
         this.outStream.close();

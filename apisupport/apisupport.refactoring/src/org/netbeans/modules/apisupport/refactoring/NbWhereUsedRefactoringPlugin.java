@@ -202,9 +202,13 @@ public class NbWhereUsedRefactoringPlugin extends AbstractRefactoringPlugin {
                     private int state = -1; // -1 - not encountered (or already found it but Halt did not work), 0 - in matching element, 1+ - in nested element
                     private Locator locator;
                     private String runningPath = "";
+
+                    @Override
                     public void setDocumentLocator(Locator l) {
                         locator = l;
                     }
+
+                    @Override
                     public void startElement(String uri, String localname, String qname, Attributes attr) throws SAXException {
                         if (qname.equals("file") || qname.equals("folder")) { // NOI18N
                             String name = attr.getValue("name"); // NOI18N
@@ -223,6 +227,8 @@ public class NbWhereUsedRefactoringPlugin extends AbstractRefactoringPlugin {
                             state++;
                         }
                     }
+
+                    @Override
                     public void endElement(String uri, String localname, String qname) throws SAXException {
                         if (qname.equals("file") || qname.equals("folder")) { // NOI18N
                             runningPath = runningPath.substring(0, Math.max(runningPath.lastIndexOf('/'), 0));
@@ -236,6 +242,7 @@ public class NbWhereUsedRefactoringPlugin extends AbstractRefactoringPlugin {
                             throw new Halt();
                         }
                     }
+                    @Override
                     public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
                         try {
                             return EntityCatalog.getDefault().resolveEntity(publicId, systemId);

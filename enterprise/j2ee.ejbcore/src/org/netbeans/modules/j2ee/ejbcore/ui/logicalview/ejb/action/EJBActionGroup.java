@@ -167,6 +167,7 @@ public class EJBActionGroup extends NodeAction implements Presenter.Popup {
             this.lookup = lookup;
         }
         
+        @Override
         public JPopupMenu getPopupMenu() {
             if (getItemCount() == 0) {
                 Action[] grouped = grouped();

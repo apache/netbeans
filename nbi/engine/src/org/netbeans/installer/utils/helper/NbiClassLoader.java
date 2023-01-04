@@ -34,7 +34,8 @@ public class NbiClassLoader extends URLClassLoader {
             addURL(uri.getLocal().toURL());
         }
     }
-    
+
+    @Override
     protected PermissionCollection getPermissions(final CodeSource source) {
         return getClass().getProtectionDomain().getPermissions();
     }

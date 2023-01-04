@@ -288,7 +288,8 @@ public class ExternalBindingTablePanel extends DefaultTablePanel{
             children.addAll(list);
             this.fireTableDataChanged(); //do we need to do this?
         }
-        
+
+        @Override
         public String getColumnName(int column) {
             return columnName[column];
         }

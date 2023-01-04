@@ -293,9 +293,6 @@
                 <runtime-relative-path>../maven/lib/commons-cli-1.4.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/commons-io-2.6.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>../maven/lib/commons-lang3-3.8.1.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
@@ -317,31 +314,31 @@
                 <runtime-relative-path>../maven/lib/jcl-over-slf4j-1.7.36.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-artifact-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-artifact-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-builder-support-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-builder-support-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-compat-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-compat-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-core-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-core-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-embedder-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-embedder-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-model-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-model-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-model-builder-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-model-builder-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-plugin-api-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-plugin-api-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-repository-metadata-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-repository-metadata-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/maven-resolver-api-1.6.3.jar</runtime-relative-path>
@@ -353,7 +350,7 @@
                 <runtime-relative-path>../maven/lib/maven-resolver-impl-1.6.3.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-provider-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-provider-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/maven-resolver-spi-1.6.3.jar</runtime-relative-path>
@@ -365,16 +362,16 @@
                 <runtime-relative-path>../maven/lib/maven-resolver-util-1.6.3.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-settings-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-settings-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-settings-builder-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-settings-builder-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/maven-shared-utils-3.3.4.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-slf4j-provider-3.8.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-slf4j-provider-3.8.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/org.eclipse.sisu.inject-0.3.5.jar</runtime-relative-path>
@@ -401,13 +398,13 @@
                 <runtime-relative-path>../maven/lib/slf4j-api-1.7.36.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/wagon-file-3.5.1.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/wagon-file-3.5.3.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/wagon-http-3.5.1-shaded.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/wagon-http-3.5.3-shaded.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/wagon-provider-api-3.5.1.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/wagon-provider-api-3.5.3.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

@@ -490,7 +490,7 @@ public final class OCIManager {
     }
     
     @FunctionalInterface
-    public interface OCIOperation<V,E extends Exception> extends Callable<V> {
+    public interface OCIOperation<V,E extends Exception> {
         /**
          * Performs the project operation, returning a value. The method may throw one
          * checked exception.

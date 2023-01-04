@@ -355,6 +355,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     initializeRunConfiguration().then(initialized => {
 		if (initialized) {
 			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', runConfigurationProvider));
+			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java', runConfigurationProvider));
 			context.subscriptions.push(vscode.window.registerTreeDataProvider('run-config', runConfigurationNodeProvider));
 			context.subscriptions.push(vscode.commands.registerCommand('java.workspace.configureRunSettings', (...params: any[]) => {
 				configureRunSettings(context, params);

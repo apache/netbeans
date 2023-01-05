@@ -2832,10 +2832,6 @@ public class Reformatter implements ReformatTask {
             spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
             wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
             accept(RPAREN);
-            if (node.getVariable() != null) {
-                space();
-                accept(IDENTIFIER);
-            }
             return true;
         }
 

@@ -86,7 +86,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
         }, true).get();
     }
     
-    private void prepareTest(String capitalizedName) throws Exception {
+    private void prepareTest(String capitalizedName, String sourceLevel) throws Exception {
         FileObject workFO = FileUtil.toFileObject(getWorkDir());
         
         assertNotNull(workFO);
@@ -125,7 +125,11 @@ public class ErrorHintsProviderTest extends NbTestCase {
         testSource = packageRoot.getFileObject(capitalizedName + ".java");
         
         assertNotNull(testSource);
-        
+
+        if (sourceLevel != null) {
+            SourceUtilsTestUtil.setSourceLevel(testSource, sourceLevel);
+        }
+
         js = JavaSource.forFileObject(testSource);
         
         assertNotNull(js);
@@ -136,7 +140,11 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     private void performTest(String name, boolean specialMacTreatment) throws Exception {
-        prepareTest(name);
+        performTest(name, specialMacTreatment, null);
+    }
+
+    private void performTest(String name, boolean specialMacTreatment, String sourceLevel) throws Exception {
+        prepareTest(name, sourceLevel);
         
         DataObject testData = DataObject.find(testSource);
         EditorCookie ec = testData.getLookup().lookup(EditorCookie.class);
@@ -183,7 +191,13 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testShortErrors8() throws Exception {
-        performTest("TestShortErrors8", false);
+        TestCompilerSettings.commandLine = "--enable-preview";
+
+        try {
+            performTest("TestShortErrors8", false, "20");
+        } finally {
+            TestCompilerSettings.commandLine = null;
+        }
     }
     
     public void testShortErrors9() throws Exception {

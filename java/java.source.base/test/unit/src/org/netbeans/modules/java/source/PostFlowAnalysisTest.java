@@ -51,15 +51,9 @@ public class PostFlowAnalysisTest extends NbTestCase {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
     }
 
-    public void test225887sl18() throws Exception {
+    public void test225887() throws Exception {
         performErrorsCorrectTest("package test; public class Test implements I { public void test() { I.super.test(); } } interface I { public default void test() { } }",
                                  "1.8");
-    }
-    
-    public void test225887sl17() throws Exception {
-        performErrorsCorrectTest("package test; public class Test implements I { public void test() { I.super.test(); } } interface I { public default void test() { } }",
-                                 "1.7",
-                                 "109:compiler.err.feature.not.supported.in.source.plural");
     }
     
     private void performErrorsCorrectTest(String code, String sourceLevel, String... errors) throws Exception {

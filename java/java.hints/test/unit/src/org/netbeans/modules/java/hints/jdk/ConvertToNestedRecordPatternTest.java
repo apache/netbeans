@@ -63,11 +63,87 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "enum Color {RED,GREEN,BLUE}\n"
                         + "public class Test {\n"
                         + "    private void test(Object o) {\n"
-                        + "        if (o instanceof Rect(ColoredPoint(Point p, Color c) ul, ColoredPoint(Point p1, Color c1) lr)) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint(Point p1, Color c1))) {\n"
                         + "            System.out.println(\"Hello\");\n"
                         + "        }\n"
                         + "    }\n"
                         + "}\n");
+    }
+
+    public void testRecordNameUsed() throws Exception {
+        if (!isRecordClassPresent()) {
+            return;
+        }
+        HintTest.create()
+                .input("package test;\n"
+                        + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
+                        + "record ColoredPoint(Point p, Color c) {}\n"
+                        + "record Point(int x, int y){}\n"
+                        + "enum Color {RED,GREEN,BLUE}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {\n"
+                        + "            Point p = ul.p();\n"
+                        + "            System.out.println(\"Hello, ul:\" + ul);\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertToNestedRecordPattern.class)
+                .assertWarnings();
+    }
+
+    public void testNameClash() throws Exception {
+        if (!isRecordClassPresent()) {
+            return;
+        }
+        HintTest.create()
+                .input("package test;\n"
+                        + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
+                        + "record ColoredPoint(Point p, Color c) {}\n"
+                        + "record Point(int x, int y){}\n"
+                        + "enum Color {RED,GREEN,BLUE}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {\n"
+                        + "            new Object() {\n"
+                        + "                {\n"
+                        + "                    ColoredPoint ul = null;\n"
+                        + "                    Point p = ul.p();\n"
+                        + "                    System.out.println(\"Hello\" + p);\n"
+                        + "                }\n"
+                        + "            };\n"
+                        + "            Point p = ul.p();\n"
+                        + "            System.out.println(\"Hello\" + p);\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertToNestedRecordPattern.class)
+                .findWarning("7:25-7:63:verifier:Convert to nested record pattern")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n"
+                              + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
+                              + "record ColoredPoint(Point p, Color c) {}\n"
+                              + "record Point(int x, int y){}\n"
+                              + "enum Color {RED,GREEN,BLUE}\n"
+                              + "public class Test {\n"
+                              + "    private void test(Object o) {\n"
+                              + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint(Point p1, Color c1))) {\n"
+                              + "            new Object() {\n"
+                              + "                {\n"
+                              + "                    ColoredPoint ul = null;\n"
+                              + "                    Point p = ul.p();\n"
+                              + "                    System.out.println(\"Hello\" + p);\n"
+                              + "                }\n"
+                              + "            };\n"
+                              + "            System.out.println(\"Hello\" + p);\n"
+                              + "        }\n"
+                              + "    }\n"
+                              + "}\n");
     }
 
     public void testMultipleNested() throws Exception {
@@ -82,7 +158,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "enum Color {RED,GREEN,BLUE}\n"
                         + "public class Test {\n"
                         + "    private void test(Object o) {\n"
-                        + "        if (o instanceof Rect(ColoredPoint(Point p, Color c) ul)) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point p, Color c))) {\n"
                         + "            int x = p.x();\n"
                         + "            System.out.println(\"Hello\");\n"
                         + "        }\n"
@@ -91,7 +167,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToNestedRecordPattern.class)
-                .findWarning("7:25-7:64:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
+                .findWarning("7:25-7:61:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n"
@@ -101,7 +177,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "enum Color {RED,GREEN,BLUE}\n"
                         + "public class Test {\n"
                         + "    private void test(Object o) {\n"
-                        + "        if (o instanceof Rect(ColoredPoint(Point(int x, int y) p, Color c) ul)) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point(int x, int y), Color c))) {\n"
                         + "            System.out.println(\"Hello\");\n"
                         + "        }\n"
                         + "    }\n"
@@ -120,7 +196,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "enum Color {RED,GREEN,BLUE}\n"
                         + "public class Test {\n"
                         + "    private void test(Object o) {\n"
-                        + "        if (o instanceof Rect(ColoredPoint(Point p, Color c) ul, ColoredPoint lr, ColoredPoint(Point p1, Color c1) ur)) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint lr, ColoredPoint(Point p1, Color c1))) {\n"
                         + "            int xVal = p.x();\n"
                         + "            int y1 = p.y();\n"
                         + "            Point p2 = lr.p();\n"
@@ -131,7 +207,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertToNestedRecordPattern.class)
-                .findWarning("7:25-7:118:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
+                .findWarning("7:25-7:112:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n"
@@ -141,7 +217,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "enum Color {RED,GREEN,BLUE}\n"
                         + "public class Test {\n"
                         + "    private void test(Object o) {\n"
-                        + "        if (o instanceof Rect(ColoredPoint(Point(int xVal, int y1) p, Color c) ul, ColoredPoint(Point p2, Color c2) lr, ColoredPoint(Point(int x, int y) p1, Color c1) ur)) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point(int xVal, int y1), Color c), ColoredPoint(Point p2, Color c2), ColoredPoint(Point(int x, int y), Color c1))) {\n"
                         + "            System.out.println(\"Hello\");\n"
                         + "        }\n"
                         + "    }\n"

@@ -1879,9 +1879,9 @@ public class CasualDiff {
     protected int diffForeachLoop(JCEnhancedForLoop oldT, JCEnhancedForLoop newT, int[] bounds) {
         int localPointer = bounds[0];
         // variable
-        int[] varBounds = getBounds(oldT.var);
+        int[] varBounds = getBounds(oldT.varOrRecordPattern);
         copyTo(localPointer, varBounds[0]);
-        localPointer = diffTree(oldT.var, newT.var, varBounds);
+        localPointer = diffTree(oldT.varOrRecordPattern, newT.varOrRecordPattern, varBounds);
         // expression
         int[] exprBounds = getBounds(oldT.expr);
         copyTo(localPointer, exprBounds[0]);
@@ -5856,7 +5856,8 @@ public class CasualDiff {
     }
 
     private boolean matchForeachLoop(JCEnhancedForLoop t1, JCEnhancedForLoop t2) {
-        return treesMatch(t1.var, t2.var) && treesMatch(t1.expr, t2.expr) &&
+        return treesMatch(t1.varOrRecordPattern, t2.varOrRecordPattern) &&
+               treesMatch(t1.expr, t2.expr) &&
                treesMatch(t1.body, t2.body);
     }
 

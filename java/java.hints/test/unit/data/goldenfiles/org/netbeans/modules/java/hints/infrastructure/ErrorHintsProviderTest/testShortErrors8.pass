@@ -1,2 +1,8 @@
-9:35-9:36:error:local variable y is accessed from within inner class; needs to be declared final
-10:35-10:36:error:local variable t is accessed from within inner class; needs to be declared final
+19:12-19:53:error:incomparable types:boolean and int
+20:12-20:55:error:incomparable types:boolean and int
+9:35-9:36:error:local variables referenced from an inner class must be final or effectively final
+10:35-10:36:error:local variables referenced from an inner class must be final or effectively final
+14:31-14:32:error:local variables referenced from a lambda expression must be final or effectively final
+15:31-15:32:error:local variables referenced from a lambda expression must be final or effectively final
+19:46-19:47:error:local variables referenced from a guard must be final or effectively final
+20:46-20:47:error:local variables referenced from a guard must be final or effectively final

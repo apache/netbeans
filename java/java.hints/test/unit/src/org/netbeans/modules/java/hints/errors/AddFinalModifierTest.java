@@ -21,6 +21,8 @@ package org.netbeans.modules.java.hints.errors;
 import com.sun.source.util.TreePath;
 import java.util.List;
 import java.util.Set;
+import junit.framework.Test;
+import junit.framework.TestCase;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
@@ -104,5 +106,13 @@ public class AddFinalModifierTest extends ErrorHintsTestBase {
     @Override
     protected Set<String> getSupportedErrorKeys() {
 	return AddOrRemoveFinalModifier.createAddFinalModifier().getCodes();
+    }
+    public static Test suite() {
+        //javac no longer supports any source level that would produce this error
+        return new TestCase("noop") {
+            @Override
+            public void runBare() throws Throwable {
+            }
+        };
     }
 }

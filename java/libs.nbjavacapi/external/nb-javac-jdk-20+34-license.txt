@@ -1,12 +1,12 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
-Files: nb-javac-jdk-19.0.1-ga-api.jar nb-javac-jdk-19.0.1-ga.jar
-Version: jdk-19.0.1-ga
+Version: jdk-20+34
+Files: nb-javac-jdk-20+34-api.jar nb-javac-jdk-20+34.jar
 License: GPL-2-CP
-Origin: OpenJDK (https://github.com/openjdk/jdk19)
-Source: https://github.com/openjdk/jdk19
-Type: compile-time,optional
-Comment: Used at compile and design time to compile against; optional at runtime.
+Origin: OpenJDK (https://github.com/openjdk/jdk20)
+Source: https://github.com/openjdk/jdk20
+Type: optional,reviewed
+Comment: The binary has been reviewed to be under the Classpath Exception as a whole. Optional at runtime, but used by default.
 
 The GNU General Public License (GPL)
 

@@ -20,9 +20,12 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,7 +106,13 @@ public final class ChangeType implements ErrorRule<Void> {
             // Is this a VARIABLE tree
             if (scope.getKind() == Kind.VARIABLE) {
                 if (((VariableTree) scope).getInitializer() != null) {
-                    resolved = info.getTrees().getTypeMirror(new TreePath(path, ((VariableTree) scope).getInitializer()));
+                    ExpressionTree init = ((VariableTree) scope).getInitializer();
+                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), init);
+                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), init);
+                    String initCode = info.getText().substring(start, end);
+                    ExpressionTree newInit = info.getTreeUtilities().parseVariableInitializer(initCode, new SourcePositions[1]);
+                    Scope resolutionScope = info.getTrees().getScope(path);
+                    resolved = info.getTreeUtilities().attributeTree(newInit, resolutionScope);
                 }
 
                 expected = info.getTrees().getTypeMirror(path);

@@ -47,45 +47,26 @@ public class NBClassFinderTest extends NbTestCase {
 
     public void testEmptyClassPath() throws Exception {
         String code = "package test; public class Test { void t(String s) { Integer i = s; } }";
-        if (hasPatchedNbJavac()) {
-            List<String> expectedErrors;
-            expectedErrors =
-                    Arrays.asList(
-                        "Test.java:1:1: compiler.err.cant.access: java.lang, (compiler.misc.fatal.err.no.java.lang)",
-                        "Test.java:1:42: compiler.err.cant.resolve.location: kindname.class, String, , , (compiler.misc.location: kindname.class, test.Test, null)"
-                    );
-            List<String> actualErrors;
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide");
-            assertEquals(expectedErrors, actualErrors);
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide");
-            assertEquals(expectedErrors, actualErrors);
-            expectedErrors = Arrays.asList("Fatal Error: Unable to find package java.lang in classpath or bootclasspath");
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide", "-XDbackgroundCompilation");
-            assertEquals(expectedErrors, actualErrors);
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide", "-XDbackgroundCompilation");
-            assertEquals(expectedErrors, actualErrors);
-        } else {
-            List<String> expectedErrors;
-            expectedErrors =
-                    Arrays.asList(
-                        "Test.java:1:22: compiler.err.cant.access: java.lang, (compiler.err.cant.resolve: package, java.lang)",
-                        "Test.java:1:42: compiler.err.cant.resolve.location: kindname.class, String, , , (compiler.misc.location: kindname.class, test.Test, null)"
-                    );
-            List<String> actualErrors;
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide");
-            assertEquals(expectedErrors, actualErrors);
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide");
-            assertEquals(expectedErrors, actualErrors);
-            expectedErrors =
-                    Arrays.asList(
-                        "Test.java:1:22: compiler.err.cant.access: java.lang, (compiler.err.cant.resolve: package, java.lang)",
-                        "Test.java:1:42: compiler.err.cant.resolve.location: kindname.class, String, , , (compiler.misc.location: kindname.class, test.Test, null)"
-                    );
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide", "-XDbackgroundCompilation");
-            assertEquals(expectedErrors, actualErrors);
-            actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide", "-XDbackgroundCompilation");
-            assertEquals(expectedErrors, actualErrors);
-        }
+        List<String> expectedErrors;
+        expectedErrors =
+                Arrays.asList(
+                    "Test.java:1:22: compiler.err.cant.access: java.lang, (compiler.err.cant.resolve: package, java.lang)",
+                    "Test.java:1:42: compiler.err.cant.resolve.location: kindname.class, String, , , (compiler.misc.location: kindname.class, test.Test, null)"
+                );
+        List<String> actualErrors;
+        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide", "-Xlint:-options");
+        assertEquals(expectedErrors, actualErrors);
+        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide");
+        assertEquals(expectedErrors, actualErrors);
+        expectedErrors =
+                Arrays.asList(
+                    "Test.java:1:22: compiler.err.cant.access: java.lang, (compiler.err.cant.resolve: package, java.lang)",
+                    "Test.java:1:42: compiler.err.cant.resolve.location: kindname.class, String, , , (compiler.misc.location: kindname.class, test.Test, null)"
+                );
+        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-source", "8", "-XDide", "-XDbackgroundCompilation", "-Xlint:-options");
+        assertEquals(expectedErrors, actualErrors);
+        actualErrors = compile(code, "-bootclasspath", "", "--system", "none", "-XDrawDiagnostics", "-XDide", "-XDbackgroundCompilation");
+        assertEquals(expectedErrors, actualErrors);
     }
 
     private static class MyFileObject extends SimpleJavaFileObject {
@@ -128,12 +109,4 @@ public class NBClassFinderTest extends NbTestCase {
         return Arrays.asList(sw.toString().split("\\R"));
     }
 
-    private static boolean hasPatchedNbJavac() {
-        try {
-            Class.forName("com.sun.tools.javac.model.LazyTreeLoader");
-            return true;
-        } catch (ClassNotFoundException ex) {
-            return false;
-        }
-    }
 }

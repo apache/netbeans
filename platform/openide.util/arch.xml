@@ -57,7 +57,7 @@
  <answer id="arch-quality">
   <p>
    There is a lot of unit tests in 
-   <a href="http://hg.netbeans.org/main-golden/openide.util/test/unit/src/">version control</a>
+   <a href="https://github.com/apache/netbeans/tree/master/platform/openide.util/test/unit/src/">version control</a>
    system.
   </p>
  </answer>
@@ -240,7 +240,7 @@
  </answer>
  <answer id="format-types">
   <p>
-    The <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#Provider%20Configuration%20File">META-INF/services/...</a> files.
+    The <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Provider%20Configuration%20File">META-INF/services/...</a> files.
     <api name="TranslateNames" category="official" type="export" group="java.io.File" 
     url="@TOP@/org/openide/util/BaseUtilities.html#translate-java.lang.String-">
     <a href="@TOP@/org/openide/util/BaseUtilities.html#translate-java.lang.String-">Utilities.translate</a> 

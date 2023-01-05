@@ -867,7 +867,7 @@ public final class Source implements Lookup.Provider {
             return new Source(mimeType, null, file, context);
         }
     } // End of MySourceAccessor class
-    private static interface ExtendableSourceModificationEvent {
+    private interface ExtendableSourceModificationEvent {
          ExtendableSourceModificationEvent add(final boolean changed, int start, int end);
     }
     private static class ASourceModificationEvent extends SourceModificationEvent implements ExtendableSourceModificationEvent {

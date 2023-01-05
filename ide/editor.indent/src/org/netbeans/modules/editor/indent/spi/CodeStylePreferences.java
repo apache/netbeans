@@ -183,7 +183,7 @@ public final class CodeStylePreferences {
      * 
      * @Since 1.18
      */
-    public static interface Provider {
+    public interface Provider {
         Preferences forFile(FileObject file, String mimeType);
         Preferences forDocument(Document doc, String mimeType);
     }

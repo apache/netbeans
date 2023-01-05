@@ -49,7 +49,7 @@ public class GenBeans {
      * writing of the generated files.
      * The caller of getStream will eventually run .close on the OutputStream
      */
-    public static interface OutputStreamProvider {
+    public interface OutputStreamProvider {
         public OutputStream getStream(String dir, String name,
                                       String extension)
             throws java.io.IOException;

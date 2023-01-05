@@ -43,7 +43,7 @@ import org.openide.util.BaseUtilities;
 public class XMLFileSystemTestHid extends TestBaseHid {
     /** Factory for all filesystems that want to use TCK in this class.
      */
-    public static interface Factory {
+    public interface Factory {
         /** Creates a filesystem representing XML files at given URLs
          *
          * @param testName name of the test

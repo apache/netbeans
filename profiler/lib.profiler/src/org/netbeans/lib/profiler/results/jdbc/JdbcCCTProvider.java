@@ -49,7 +49,7 @@ public interface JdbcCCTProvider extends CCTProvider, FlatProfileProvider {
     public static final String CONNECTION_INTERFACE = java.sql.Connection.class.getName();
     public static final String DRIVER_INTERFACE = java.sql.Driver.class.getName();
 
-    public static interface Listener extends CCTProvider.Listener {
+    public interface Listener extends CCTProvider.Listener {
     }
     
     RuntimeMemoryCCTNode[] getStacksForSelects();

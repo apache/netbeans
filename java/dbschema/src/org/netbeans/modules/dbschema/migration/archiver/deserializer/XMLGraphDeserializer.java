@@ -1169,7 +1169,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
          * Interface defining a valueOf method that converts the specified
          * string into an instance of a wrapper class.
          */
-        private static interface Converter { public Object valueOf(String s); }
+        private interface Converter { public Object valueOf(String s); }
 
         /** Map of wrapper class to Converter instances. */ 
         private static final Map converters;

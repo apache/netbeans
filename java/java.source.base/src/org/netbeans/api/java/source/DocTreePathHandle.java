@@ -231,7 +231,7 @@ public final class DocTreePathHandle {
         return "DocTreePathHandle[delegate:" + delegate + "]";
     }
 
-    static interface Delegate {
+    interface Delegate {
 
         public DocTreePath resolve(final CompilationInfo compilationInfo) throws IllegalArgumentException;
 

@@ -328,7 +328,7 @@ public abstract class TestBase extends NbTestCase {
         return highlights;
     }
     
-    public static interface Performer {
+    public interface Performer {
         
         public void compute(CompilationController parameter, Document doc, SemanticHighlighterBase.ErrorDescriptionSetter setter);
         

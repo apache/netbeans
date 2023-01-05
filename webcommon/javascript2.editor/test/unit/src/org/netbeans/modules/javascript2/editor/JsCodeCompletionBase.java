@@ -65,7 +65,7 @@ public class JsCodeCompletionBase extends JsTestBase {
         OptionsUtils.forLanguage(getPreferredLanguage().getLexerLanguage()).setTestTypeResolution(true);
     }
 
-    public static enum Match {
+    public enum Match {
         EXACT, CONTAINS, EMPTY, NOT_EMPTY, DOES_NOT_CONTAIN;
     }
 

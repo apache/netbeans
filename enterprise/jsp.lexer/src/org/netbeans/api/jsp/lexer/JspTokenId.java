@@ -59,7 +59,7 @@ public enum JspTokenId implements TokenId {
     EL("expression-language");
     
    /** Java code in JSP types.*/
-    public static enum JavaCodeType {
+    public enum JavaCodeType {
         SCRIPTLET("scriptlet"),
         DECLARATION("declaration"),
         EXPRESSION("expression");

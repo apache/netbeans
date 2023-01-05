@@ -37,7 +37,7 @@ public interface Element {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkElementTagName (TreeName elementTreeName) throws InvalidArgumentException;
 
@@ -53,7 +53,7 @@ public interface Element {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -70,7 +70,7 @@ public interface Element {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeElement (TreeElement element) throws TreeException;
         
@@ -84,14 +84,14 @@ public interface Element {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     
     /**
      *
      */
-    public static interface Attribute {
+    public interface Attribute {
         
     } // end: intereface Attribute
     

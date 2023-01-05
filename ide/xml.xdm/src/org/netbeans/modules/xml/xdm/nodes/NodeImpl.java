@@ -115,7 +115,7 @@ public abstract class NodeImpl implements Node, Cloneable {
         }
     }
     
-    private static interface UniqueId {
+    private interface UniqueId {
         int nextId();
     }
     

@@ -36,7 +36,7 @@ public interface GeneralEntityReference {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkGeneralEntityReferenceName (String name) throws InvalidArgumentException;
 
@@ -52,7 +52,7 @@ public interface GeneralEntityReference {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -69,7 +69,7 @@ public interface GeneralEntityReference {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeGeneralEntityReference (TreeGeneralEntityReference generalEntityReference) throws TreeException;
         
@@ -83,7 +83,7 @@ public interface GeneralEntityReference {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     

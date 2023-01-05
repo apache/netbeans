@@ -260,7 +260,7 @@ public final class FiltersDescriptor {
         pcs.removePropertyChangeListener(propertyChangeListener);
     }
     
-    public static interface FiltersAccessor {
+    public interface FiltersAccessor {
         public List<DVFilter> getFilters(DVSupport dvs);
         public FilterImpl getImpl(DVFilter filter);
     }

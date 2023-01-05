@@ -176,7 +176,7 @@ public final class OutputVisitor {
         return context;
     }
 
-    public static interface Context {
+    public interface Context {
 
         @CheckForNull Project getCurrentProject();
         

@@ -241,7 +241,7 @@ public final class Enumerations extends Object {
      * Processor interface that can filter out objects from the enumeration,
      * change them or add aditional objects to the end of the current enumeration.
      */
-    public static interface Processor<T,R> {
+    public interface Processor<T,R> {
         /** @param original the object that is going to be returned from the enumeration right now
          * @return a replacement for this object
          * @param toAdd can be non-null if one can add new objects at the end of the enumeration

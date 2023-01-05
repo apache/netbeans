@@ -224,7 +224,7 @@ public final class GitRevisionInfo {
         /**
          * State of the file in the second commit in relevance to the first commit.
          */
-        public static enum Status {
+        public enum Status {
             ADDED,
             MODIFIED,
             RENAMED,

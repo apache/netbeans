@@ -179,7 +179,7 @@ public class RESTExplorerPanel extends JPanel implements ExplorerManager.Provide
         }
     }
 
-    public static interface ProjectNodeFactory {
+    public interface ProjectNodeFactory {
         Node createNode( Project project );
         boolean canSelect( Node node );
     }

@@ -266,7 +266,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         attacher.detachAnnotation(a, synchronous);
     }
 
-    static interface Attacher {
+    interface Attacher {
         public void attachAnnotation(Position line, ParseErrorAnnotation a, boolean synchronous) throws BadLocationException;
         public void detachAnnotation(ParseErrorAnnotation a, boolean synchronous);
     }

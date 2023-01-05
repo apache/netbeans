@@ -233,7 +233,7 @@ public final class ClassIndex {
      * ResourceType used by {@link ClassIndex#getResources} to get results in
      * @since 2.5
      */
-    public static enum ResourceType {
+    public enum ResourceType {
 
         /**
          * Resources from a source root.
@@ -250,7 +250,7 @@ public final class ClassIndex {
      * Scope used by {@link ClassIndex} to search in
      * @since 0.82
      */
-    public static interface SearchScopeType {
+    public interface SearchScopeType {
         /**
          * Limits search only into given packages.
          * @return set of packages to search in or null which

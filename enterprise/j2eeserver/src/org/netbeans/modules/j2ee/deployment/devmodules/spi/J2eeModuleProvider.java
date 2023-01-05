@@ -286,7 +286,7 @@ public abstract class J2eeModuleProvider {
      * {@link #getServerID} method.
      */
     // FIXME replace this with final class - this is not deigned to be implemented by anybody
-    public static interface ConfigSupport {
+    public interface ConfigSupport {
         /**
          * Create an initial fresh configuration for the current module.  Do nothing if configuration already exists.
          * @return true if there is no existing configuration, false if there is exsisting configuration.
@@ -704,7 +704,7 @@ public abstract class J2eeModuleProvider {
          *
          * @since 1.97
          */
-        public static interface DeployOnSaveListener {
+        public interface DeployOnSaveListener {
 
             /**
              * Invoked when a deploy on save operation has been successfully
@@ -988,7 +988,7 @@ public abstract class J2eeModuleProvider {
     /**
      * @since 1.48
      */
-    public static interface DeployOnSaveSupport {
+    public interface DeployOnSaveSupport {
         
         public void addArtifactListener(ArtifactListener listner);
         
@@ -1003,7 +1003,7 @@ public abstract class J2eeModuleProvider {
     /**
      * @since 1.56
      */
-    public static interface DeployOnSaveClassInterceptor {
+    public interface DeployOnSaveClassInterceptor {
 
         public ArtifactListener.Artifact convert(ArtifactListener.Artifact original);
 

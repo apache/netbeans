@@ -92,7 +92,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
         });
     }
     
-    private static enum LoadStatus {
+    private enum LoadStatus {
         /**
          * Marker for a directory which is known to not be a project.
          */

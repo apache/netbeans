@@ -193,7 +193,7 @@ public abstract class PageModel extends Page {
     /**
      * CSS Styles view.
      */
-    public static interface CSSStylesView {
+    public interface CSSStylesView {
 
         /**
          * Returns the visual representation of CSS Styles.

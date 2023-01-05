@@ -1521,7 +1521,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
     
-    public static interface CompileWorkerProvider {
+    public interface CompileWorkerProvider {
         public CompileWorker[] getWorkers(List<CompileTuple> toCompile);
     }
 

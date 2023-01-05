@@ -91,7 +91,7 @@ public final class CustomizerUtilities {
      * handle data inputs and outputs in the license headers customizer panel.
      * @since 1.53
      */
-    public static interface LicensePanelContentHandler {
+    public interface LicensePanelContentHandler {
         /**
          * raw, unevaluated value points to the file in project space containing the header,
          * if present takes precedence over <code>getGlobalLicenseName()</code>

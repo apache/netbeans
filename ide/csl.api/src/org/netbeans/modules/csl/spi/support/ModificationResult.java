@@ -402,7 +402,7 @@ public final class ModificationResult implements org.netbeans.modules.refactorin
             return description;
         }
         
-        public static enum Kind {
+        public enum Kind {
             INSERT,
             REMOVE,
             CHANGE,

@@ -29,7 +29,7 @@ import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
  */
 public abstract class OQLEditorImpl {
     public static final String VALIDITY_PROPERTY = "document#valid";
-    public static interface ValidationCallback {
+    public interface ValidationCallback {
         void callback(boolean lexingResult);
     }
 

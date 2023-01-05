@@ -650,7 +650,7 @@ public final class Stamps {
     /** A callback interface to flush content of some cache at a suitable
      * point in time.
      */
-    public static interface Updater {
+    public interface Updater {
         /** Callback method to allow storage of the cache to a stream.
          * If an excetion is thrown, cache is invalidated.
          * 

@@ -320,7 +320,7 @@ public class PropertiesTableModel extends AbstractTableModel {
     
 
     /** Interface which finds out whether editing should be canceled if given cell is edited. */
-    private static interface CancelSelector {
+    private interface CancelSelector {
         /** Returns whether editing should be canceled for given row and column. */
         public boolean doCancelEditing(int row, int column);
     } // End of interface CancelSelector.

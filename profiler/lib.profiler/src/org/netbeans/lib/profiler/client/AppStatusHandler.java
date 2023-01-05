@@ -39,7 +39,7 @@ public interface AppStatusHandler {
      * blocks the thread that called it, so it should be called in a thread separate from the one in which the background
      * action is performed.
      */
-    public static interface AsyncDialog {
+    public interface AsyncDialog {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void close();
@@ -55,7 +55,7 @@ public interface AppStatusHandler {
      * A utility class, used to handle (by displaying things in GUI and by updating some parent class internal variables)
      * commands coming from the server.
      */
-    public static interface ServerCommandHandler {
+    public interface ServerCommandHandler {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void handleServerCommand(Command cmd);

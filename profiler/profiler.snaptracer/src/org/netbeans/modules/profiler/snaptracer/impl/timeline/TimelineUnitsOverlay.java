@@ -130,7 +130,7 @@ final class TimelineUnitsOverlay extends ChartOverlay {
 
     // --- Model definition ----------------------------------------------------
 
-    static interface Model {
+    interface Model {
 
         public void prefetch();
         public Color[]  getColors(TimelineChart.Row row);

@@ -46,7 +46,7 @@ import org.openide.util.Union2;
  */
 final class ResolveBrokenRuntimePlatform extends javax.swing.JPanel {
 
-    private static enum Type {
+    private enum Type {
         MISSING_PLATFORM,
         INVALID_PLATFORM
     }

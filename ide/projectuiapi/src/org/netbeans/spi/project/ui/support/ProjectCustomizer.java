@@ -278,7 +278,7 @@ public final class ProjectCustomizer {
     
     /** Provides components for categories.
      */
-    public static interface CategoryComponentProvider {
+    public interface CategoryComponentProvider {
         
         /** Creates component which has to be shown for given category.
          * @param category The Category
@@ -304,7 +304,7 @@ public final class ProjectCustomizer {
      * For details and usage see issue #91276.
      * @since org.netbeans.modules.projectuiapi/1 1.22
      */
-    public static interface CompositeCategoryProvider {
+    public interface CompositeCategoryProvider {
 
         /**
          * create the Category instance for the given project customizer context.

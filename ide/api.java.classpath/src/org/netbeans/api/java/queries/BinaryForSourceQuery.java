@@ -106,7 +106,7 @@ public final class BinaryForSourceQuery {
      * Result of finding binaries, encapsulating the answer as well as the
      * ability to listen to it.
      */
-    public static interface Result {
+    public interface Result {
         
         /**
          * Get the binary roots.         

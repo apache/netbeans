@@ -254,7 +254,7 @@ public final class HelpCtx extends Object {
      *
      * @since 3.20
      */
-    public static interface Provider {
+    public interface Provider {
         /**
          * Get the {@link HelpCtx} associated with implementing object.
          * @return assigned <code>HelpCtx</code> or

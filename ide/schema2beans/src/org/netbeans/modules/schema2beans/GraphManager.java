@@ -34,11 +34,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
  */
 public class GraphManager extends Object {
 
-    public static interface Writer {
+    public interface Writer {
 	public void write(OutputStream out, Document doc);
     }
 
-    public static interface Factory {
+    public interface Factory {
         public org.w3c.dom.Document createDocument(InputStream in,
                                                    boolean validate);
     }

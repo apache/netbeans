@@ -101,7 +101,7 @@ import org.openide.util.WeakSet;
  * @author Martin Entlicher
  */
 public class RemoteServices {
-    public static enum ServiceType {
+    public enum ServiceType {
         AWT, FX
     }
     
@@ -1305,7 +1305,7 @@ public class RemoteServices {
 
     }
     
-    public static interface LoggingListenerCallBack {
+    public interface LoggingListenerCallBack {
         
         public void eventsData(/*JavaComponentInfo ci,*/ String[] data, String[] stack);
         

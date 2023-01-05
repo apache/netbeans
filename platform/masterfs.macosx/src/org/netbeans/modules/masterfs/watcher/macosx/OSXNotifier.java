@@ -196,7 +196,7 @@ public final class OSXNotifier extends Notifier<Void> {
         return desc == Pointer.NULL ? "" : cf.CFStringGetCStringPtr(desc, ENC_MAC_ROMAN);   //NOI18N
     }
 
-    public static interface EventCallback extends Callback {
+    public interface EventCallback extends Callback {
         void invoke(Pointer streamRef,
                     Pointer clientCallBackInfo,
                     NativeLong numEvents,
@@ -205,7 +205,7 @@ public final class OSXNotifier extends Notifier<Void> {
                     Pointer eventIds);
     }
 
-    public static interface CoreFoundation extends Library {
+    public interface CoreFoundation extends Library {
         Pointer CFRunLoopGetCurrent();
         void CFRunLoopRun();
         void CFRunLoopStop(Pointer loop);
@@ -220,7 +220,7 @@ public final class OSXNotifier extends Notifier<Void> {
         String CFStringGetCStringPtr(Pointer theString, int encoding);
     }
 
-    public static interface CoreServices extends Library {
+    public interface CoreServices extends Library {
         Pointer FSEventStreamCreate(Pointer allocator, EventCallback callback, Pointer ctx, Pointer pathsToWatch, long sinceWhen, double latency, int flags);
         Pointer FSEventStreamCopyDescription(Pointer stream);
         void FSEventStreamScheduleWithRunLoop(Pointer stream, Pointer loop, Pointer mode);

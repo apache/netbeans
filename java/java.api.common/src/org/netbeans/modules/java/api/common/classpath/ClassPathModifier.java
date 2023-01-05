@@ -172,7 +172,7 @@ public final class ClassPathModifier extends ProjectClassPathModifierImplementat
     /**
      * Callback to customize classpath modifier behaviour.
      */
-    public static interface Callback {
+    public interface Callback {
         
         /**
          * Returns Ant property which keeps classpath of the given source group and

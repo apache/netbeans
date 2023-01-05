@@ -371,7 +371,7 @@ public final class XMLDataObject extends org.openide.loaders.XMLDataObject
     /**
      *
      */
-    public static interface DataNodeCreator {
+    public interface DataNodeCreator {
 
         /**
          */
@@ -388,7 +388,7 @@ public final class XMLDataObject extends org.openide.loaders.XMLDataObject
     /**
      *
      */
-    public static interface XMLCookieFactoryCreator extends CookieFactoryCreator {
+    public interface XMLCookieFactoryCreator extends CookieFactoryCreator {
         
     } // end: interface XMLCookieFactoryCreator
 

@@ -65,7 +65,7 @@ public class AnnotationProcessingQuery {
      * for {@link JavaClassPathConstants#PROCESSOR_PATH}.
      *
      */
-    public static interface Result {
+    public interface Result {
 
         /**When the annotation processors should be run.
          *
@@ -113,7 +113,7 @@ public class AnnotationProcessingQuery {
 
     /** Annotation processing triggers
      */
-    public static enum Trigger {
+    public enum Trigger {
 
         /** Annotation processors should run on scanning
          */

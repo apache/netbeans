@@ -189,7 +189,7 @@ public class ClassPathSupport {
      * The active {@link ClassPath} provider for multiplexing {@link ClassPath}.
      * @since 1.54
      */
-    public static interface Selector {
+    public interface Selector {
         /**
          * The name of the <code>activeClassPath</code> property.
          */

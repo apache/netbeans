@@ -39,13 +39,13 @@ import org.netbeans.lib.profiler.results.RuntimeCCTNodeProcessor;
 public final class CCTResultsFilter extends RuntimeCCTNodeProcessor.PluginAdapter {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Evaluator {
+    public interface Evaluator {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         boolean evaluate(Mark mark);
     }
     
-    public static interface EvaluatorProvider {
+    public interface EvaluatorProvider {
         Set/*<Evaluator>*/ getEvaluators();
     }
 

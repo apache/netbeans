@@ -180,7 +180,7 @@ public class InstancesView extends TopComponent {
         return PERSISTENCE_NEVER;
     }
     
-    public static interface HeapFragmentWalkerProvider {
+    public interface HeapFragmentWalkerProvider {
         
         HeapFragmentWalker getHeapFragmentWalker();
         

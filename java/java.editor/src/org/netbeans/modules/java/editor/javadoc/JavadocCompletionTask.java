@@ -91,7 +91,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         return new JavadocCompletionTask<>(caretOffset, factory, isAllQueryType, cancel);
     }
 
-    public static interface ItemFactory<T> {
+    public interface ItemFactory<T> {
         T createTagItem(String name, int startOffset);
         T createNameItem(String name, int startOffset);
         T createJavadocExecutableItem(CompilationInfo info, ExecutableElement e, ExecutableType et, int startOffset, boolean isInherited, boolean isDeprecated);

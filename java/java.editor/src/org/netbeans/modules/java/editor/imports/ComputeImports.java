@@ -766,7 +766,7 @@ public final class ComputeImports {
         }
     }
     
-    public static interface Hint {
+    public interface Hint {
         
         public abstract boolean filter(CompilationInfo info, ComputeImports state);
         

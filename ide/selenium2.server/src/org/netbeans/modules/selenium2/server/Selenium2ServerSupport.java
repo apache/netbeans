@@ -266,7 +266,7 @@ public class Selenium2ServerSupport implements Runnable {
         return NbPreferences.forModule(Selenium2Customizer.class);
     }
 
-    private static enum Action {
+    private enum Action {
 
         START, STOP, RESTART, RELOAD
     }

@@ -201,7 +201,7 @@ public final class FiltersDescription {
      * {@code RefactoringPlugin}s can implement this interface if they want to
      * supply new filters, or enable existing filters.
      */
-    public static interface Provider {
+    public interface Provider {
 
         /**
          * Add filters to the supplied {@code FiltersDescription}. This method

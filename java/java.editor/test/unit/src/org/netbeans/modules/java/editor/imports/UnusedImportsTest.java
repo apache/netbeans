@@ -536,7 +536,7 @@ public class UnusedImportsTest extends NbTestCase {
                                                                                         "        Class valuex() default List.class;\n" +
                                                                                         "    }\n" +
                                                                                         "    \n" +
-                                                                                        "    private static interface StopAtCurrentClass {}\n" +
+                                                                                        "    private interface StopAtCurrentClass {}\n" +
                                                                                         "\n" +
                                                                                         "}\n" +
                                                                                         ""));

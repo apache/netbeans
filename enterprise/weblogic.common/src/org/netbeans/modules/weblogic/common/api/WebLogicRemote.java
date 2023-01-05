@@ -105,7 +105,7 @@ public final class WebLogicRemote {
         }, nonProxy);
     }
 
-    public static interface JmxAction<T> {
+    public interface JmxAction<T> {
 
         T execute(MBeanServerConnection connection) throws Exception;
 

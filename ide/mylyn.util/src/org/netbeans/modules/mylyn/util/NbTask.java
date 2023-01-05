@@ -248,7 +248,7 @@ public final class NbTask {
         }
     }
 
-    public static enum SynchronizationState {
+    public enum SynchronizationState {
         INCOMING_NEW,
         INCOMING,
         OUTGOING_NEW,

@@ -128,7 +128,7 @@ public final class ProbeDescriptorComponent extends JPanel {
     }
 
 
-    public static interface SelectionHandler {
+    public interface SelectionHandler {
 
         public void descriptorSelected(TracerPackage p, TracerProbeDescriptor d);
 

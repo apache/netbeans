@@ -268,7 +268,7 @@ class MultiViewModel {
     /**
      * listener for changes in model's selected element.
      */
-    static interface ElementSelectionListener  {
+    interface ElementSelectionListener  {
         
         public void selectionChanged(MultiViewDescription oldOne, MultiViewDescription newOne);
         
@@ -278,7 +278,7 @@ class MultiViewModel {
     /**
      * Interface for creating the observers that are passed to newly created elements.
      */
-    static interface ActionRequestObserverFactory {
+    interface ActionRequestObserverFactory {
         MultiViewElementCallback createElementCallback(MultiViewDescription desc);
     }
     

@@ -126,7 +126,7 @@ public class HintsControllerImplTest extends NbTestCase {
         assertSpan(bdoc, 1, 0, 0);
     }
     
-    private static interface DocumentCreator {
+    private interface DocumentCreator {
         public Document createDocument();
     }
     

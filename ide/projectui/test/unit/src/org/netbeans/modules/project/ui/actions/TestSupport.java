@@ -48,7 +48,7 @@ import static junit.framework.TestCase.*;
  * @author Jesse Glick
  */
 public final class TestSupport {
-    public static interface ActionCreator {
+    public interface ActionCreator {
         public LookupSensitiveAction create(Lookup l);
     }
     

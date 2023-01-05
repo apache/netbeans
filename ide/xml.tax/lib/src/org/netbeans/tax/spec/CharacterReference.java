@@ -36,7 +36,7 @@ public interface CharacterReference {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkCharacterReferenceName (String name) throws InvalidArgumentException;
 
@@ -52,7 +52,7 @@ public interface CharacterReference {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -69,7 +69,7 @@ public interface CharacterReference {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeCharacterReference (TreeCharacterReference characterReference) throws TreeException;
         

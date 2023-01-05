@@ -36,7 +36,7 @@ public interface DocumentFragment {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkDocumentFragmentVersion (String version) throws InvalidArgumentException;
 
@@ -57,7 +57,7 @@ public interface DocumentFragment {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -74,7 +74,7 @@ public interface DocumentFragment {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeDocumentFragment (TreeDocumentFragment documentFragment) throws TreeException;
         
@@ -88,7 +88,7 @@ public interface DocumentFragment {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     

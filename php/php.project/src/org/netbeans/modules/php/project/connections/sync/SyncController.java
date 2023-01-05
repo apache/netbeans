@@ -60,7 +60,7 @@ import org.openide.util.RequestProcessor;
  */
 public final class SyncController implements Cancellable {
 
-    static enum SourceFiles {
+    enum SourceFiles {
         PROJECT,
         DIRECTORIES_ONLY,
         INDIVIDUAL_FILES;

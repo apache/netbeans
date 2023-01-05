@@ -107,7 +107,7 @@ public final class PredefinedSymbols {
                 "__unserialize", // NOI18N PHP 7.4
             })));
 
-    public static enum VariableKind {
+    public enum VariableKind {
         STANDARD,
         THIS,
         SELF,

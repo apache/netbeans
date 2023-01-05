@@ -342,7 +342,7 @@ public abstract class EditorViewFactory {
     /**
      * Factory for producing editor view factories.
      */
-    public static interface Factory {
+    public interface Factory {
 
         EditorViewFactory createEditorViewFactory(View documentView);
 

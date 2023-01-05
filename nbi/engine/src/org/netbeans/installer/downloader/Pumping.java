@@ -78,7 +78,7 @@ public interface Pumping {
 
     /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
-    public static interface Section {
+    public interface Section {
         /**
          * range of bytes this section responsible for.
          */

@@ -83,7 +83,7 @@ public class GeneratorUtilsTest extends NbTestCase {
         performTest("package test;\npublic class Test implements Runnable {\npublic Test(){\n}\n }\n", 54, new RunnableValidator());
     }
     
-    public static interface Validator {
+    public interface Validator {
         
         public void validate(CompilationInfo info);
         

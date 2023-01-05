@@ -44,7 +44,7 @@ public interface ModelResolver {
     @NonNull
     List<Identifier> getASTNodeName(Object astNode);
 
-    public static interface Provider {
+    public interface Provider {
         ModelResolver create(
                 @NonNull ParserResult result,
                 @NonNull final OccurrenceBuilder occurrenceBuilder);

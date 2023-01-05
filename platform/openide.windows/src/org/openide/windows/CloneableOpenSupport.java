@@ -249,7 +249,7 @@ public abstract class CloneableOpenSupport extends Object {
     /** Abstract interface that is used by CloneableOpenSupport to
     * talk to outside world.
     */
-    public static interface Env extends java.io.Serializable {
+    public interface Env extends java.io.Serializable {
         /** that is fired when the objects wants to mark itself as
         * invalid, so all components should be closed.
         */

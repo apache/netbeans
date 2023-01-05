@@ -44,7 +44,7 @@ public class MarkingEngine {
     
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface StateObserver {
+    public interface StateObserver {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         void stateChanged(MarkingEngine instance);

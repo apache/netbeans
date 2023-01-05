@@ -354,7 +354,7 @@ public final class SharableLibrariesUtils {
         return panels;
     }
 
-    static interface ErrorProvider {
+    interface ErrorProvider {
         @CheckForNull
         String getError();
     }

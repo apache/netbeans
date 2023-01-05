@@ -1258,7 +1258,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
      * <a href="@TOP@/org/openide/loaders/doc-files/api.html#register"/>separate document</a>.
      * @since 7.0
      */
-    public static interface Factory {
+    public interface Factory {
         /** Find a data object appropriate to the given file object--the meat of this class.
         * The loader can add all files it has recognized into the <CODE>recognized</CODE>
         * buffer. Then all these files will be excluded from further processing.
@@ -1283,7 +1283,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
      * For example DataFolder and DataShadow implement this interface
      * to allow others to access the contained objects in uniform maner
      */
-    public static interface Container extends Node.Cookie {
+    public interface Container extends Node.Cookie {
         /** Name of property that holds children of this container. */
         public static final String PROP_CHILDREN = "children"; // NOI18N
         

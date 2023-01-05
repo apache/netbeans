@@ -671,7 +671,7 @@ public final class Queries {
         }
     }
 
-    private static interface QueryFactory {
+    private interface QueryFactory {
         Query createTermQuery(@NonNull String name, @NonNull String value);
         Query createPrefixQuery(@NonNull String name, @NonNull String value);
         Query createRegExpQuery(@NonNull String name, @NonNull String value, boolean caseSensitive);

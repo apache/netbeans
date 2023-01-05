@@ -144,7 +144,7 @@ public final class SnapshotResultsWindow extends ProfilerTopComponent {
         }
     }
     
-    public static interface FindPerformer {
+    public interface FindPerformer {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void performFind();

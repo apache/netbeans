@@ -92,7 +92,7 @@ public class ActivationConfigProperties {
 
     }
 
-    public static enum AcknowledgeMode {
+    public enum AcknowledgeMode {
         // these values actually violates spec, but only these values works with GF
         // should be Auto_acknowledge and Dups_ok_acknowledge
         // see http://docs.oracle.com/javaee/6/api/javax/ejb/ActivationConfigProperty.html
@@ -110,7 +110,7 @@ public class ActivationConfigProperties {
         }
     }
 
-    public static enum DestinationType {
+    public enum DestinationType {
         QUEUE("javax.jms.Queue"),   //NOI18N
         TOPIC("javax.jms.Topic");   //NOI18N
 
@@ -125,7 +125,7 @@ public class ActivationConfigProperties {
         }
     }
 
-    public static enum SubscriptionDurability {
+    public enum SubscriptionDurability {
         NON_DURABLE("NonDurable"), //NOI18N
         DURABLE("Durable");         //NOI18N
 
@@ -140,7 +140,7 @@ public class ActivationConfigProperties {
         }
     }
 
-    protected static enum EjbVersion {
+    protected enum EjbVersion {
         EJB_3_0,
         EJB_3_2
     }

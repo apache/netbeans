@@ -138,7 +138,7 @@ public class ValidatingTextField extends JTextField implements ComboBoxEditor {
      * Reentarant validator of entered value.
      * It can provide reason of invalidity.
      */
-    public static interface Validator {
+    public interface Validator {
         
         /*
          * Test the passed value returning false on invalidity.

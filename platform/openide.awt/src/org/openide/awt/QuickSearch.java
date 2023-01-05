@@ -63,7 +63,7 @@ public class QuickSearch {
     private SearchFieldListener searchFieldListener;
     private JPanel searchPanel;
     private final RequestProcessor rp;
-    private static enum QS_FIRE { UPDATE, NEXT, MAX }
+    private enum QS_FIRE { UPDATE, NEXT, MAX }
     private AnimationTimer animationTimer;
     private boolean alwaysShown = false;
     private volatile boolean hasSearchText = false;
@@ -872,7 +872,7 @@ public class QuickSearch {
      * @author Martin Entlicher
      * @since 7.43
      */
-    public static interface Callback {
+    public interface Callback {
         
         /**
          * Called with an updated search text.

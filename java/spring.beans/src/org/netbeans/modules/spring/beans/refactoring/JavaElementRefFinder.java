@@ -127,7 +127,7 @@ public class JavaElementRefFinder {
         }
     }
 
-    public static interface Matcher {
+    public interface Matcher {
 
         String accept(String beanClassName);
     }

@@ -62,7 +62,7 @@ public class BuildArtifactMapper {
      * Notify that the files in the output directory has been updated.
      * @since 0.37
      */
-    public static interface ArtifactsUpdated {
+    public interface ArtifactsUpdated {
         /**
          * Notify that the files in the output directory has been updated.
          *

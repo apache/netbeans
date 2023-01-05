@@ -318,7 +318,7 @@ public final class AttributesUtilities {
         }
     } // End of Proxy class
 
-    private static interface CompositeAttributeSet {
+    private interface CompositeAttributeSet {
         public Collection<? extends AttributeSet> getDelegates();
     }
 

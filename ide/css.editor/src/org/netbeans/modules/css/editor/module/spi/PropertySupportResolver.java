@@ -26,7 +26,7 @@ public abstract class PropertySupportResolver {
     
     public abstract boolean isPropertySupported(String propertyName);
     
-    public static interface Factory {
+    public interface Factory {
         
         public PropertySupportResolver createPropertySupportResolver(Browser browser);
     

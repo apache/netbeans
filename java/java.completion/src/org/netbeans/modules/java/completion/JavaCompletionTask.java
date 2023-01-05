@@ -70,7 +70,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return new JavaCompletionTask<>(caretOffset, factory, cancel, options);
     }
 
-    public static interface ItemFactory<T> {
+    public interface ItemFactory<T> {
 
         T createKeywordItem(String kwd, String postfix, int substitutionOffset, boolean smartType);
 
@@ -115,26 +115,26 @@ public final class JavaCompletionTask<T> extends BaseTask {
         T createInitializeAllConstructorItem(CompilationInfo info, boolean isDefault, Iterable<? extends VariableElement> fields, ExecutableElement superConstructor, TypeElement parent, int substitutionOffset);
     }
     
-    public static interface TypeCastableItemFactory<T> extends ItemFactory<T> {
+    public interface TypeCastableItemFactory<T> extends ItemFactory<T> {
 
         T createTypeCastableVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset);
 
         T createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef);        
     }
     
-    public static interface LambdaItemFactory<T> extends ItemFactory<T> {
+    public interface LambdaItemFactory<T> extends ItemFactory<T> {
         T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon);
     }
     
-    public static interface ModuleItemFactory<T> extends ItemFactory<T> {
+    public interface ModuleItemFactory<T> extends ItemFactory<T> {
         T createModuleItem(String moduleName, int substitutionOffset);
     }
 
-    public static interface RecordPatternItemFactory<T> extends ItemFactory<T> {
+    public interface RecordPatternItemFactory<T> extends ItemFactory<T> {
         T createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars);
     }
 
-    public static enum Options {
+    public enum Options {
 
         ALL_COMPLETION,
         COMBINED_COMPLETION,

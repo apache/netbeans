@@ -197,7 +197,7 @@ public final class DockerEvent extends EventObject {
         return true;
     }
 
-    public static interface Listener extends EventListener {
+    public interface Listener extends EventListener {
 
         void onEvent(DockerEvent event);
 

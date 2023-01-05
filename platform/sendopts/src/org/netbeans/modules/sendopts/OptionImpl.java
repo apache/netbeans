@@ -249,7 +249,7 @@ public abstract class OptionImpl implements Cloneable {
         }
     } // end of Appearance
     
-    public static interface MessageFactory {
+    public interface MessageFactory {
         public String errorMessage(String[] args);
     } // end of MessageFactory
     

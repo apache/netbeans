@@ -50,7 +50,7 @@ public class MediaQueriesModule extends CssEditorModule {
             = new String[]{"all", "aural", "braille", "embossed", "handheld", 
                 "print", "projection", "screen", "tty", "tv"}; //NOI18N
     
-    private static enum MediaFeature {
+    private enum MediaFeature {
         
         width(true), 
         height(true), 

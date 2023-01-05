@@ -237,7 +237,7 @@ public final class WebLogicConfiguration {
         return sb.toString();
     }
 
-    public static interface Credentials {
+    public interface Credentials {
 
         @NonNull
         String getUsername();

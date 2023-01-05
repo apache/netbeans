@@ -145,7 +145,7 @@ public final class VariousUtils {
         SPECIAL_CLASS_NAMES.addAll(STATIC_CLASS_NAMES);
     }
 
-    public static enum Kind {
+    public enum Kind {
 
         CONSTRUCTOR,
         FUNCTION,

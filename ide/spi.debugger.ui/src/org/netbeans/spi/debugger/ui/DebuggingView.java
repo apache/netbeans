@@ -126,7 +126,7 @@ public final class DebuggingView {
         /**
          * The debugger state.
          */
-        public static enum STATE {
+        public enum STATE {
             RUNNING,
             DISCONNECTED
         }
@@ -296,7 +296,7 @@ public final class DebuggingView {
      * Nodes representing a thread in debugging view model should implement this
      * interface.
      */
-    public static interface DVThread {
+    public interface DVThread {
         
         /**
          * Property name fired when a thread gets suspended.
@@ -421,7 +421,7 @@ public final class DebuggingView {
      * Nodes representing a thread group in debugging view model should implement
      * this interface.
      */
-    public static interface DVThreadGroup {
+    public interface DVThreadGroup {
         
         /**
          * Get the name of the thread group.
@@ -454,7 +454,7 @@ public final class DebuggingView {
      * interface.
      * @since 2.65
      */
-    public static interface DVFrame {
+    public interface DVFrame {
 
         /**
          * Get the name of the frame. Usually the frame's class + method name, or function name.
@@ -569,7 +569,7 @@ public final class DebuggingView {
         /**
          * Pre-defined default filters enumeration.
          */
-        public static enum DefaultFilter {
+        public enum DefaultFilter {
             sortAlphabetic,
             sortSuspend,
             sortNatural,

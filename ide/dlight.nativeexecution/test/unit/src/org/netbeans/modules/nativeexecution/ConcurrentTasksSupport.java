@@ -122,7 +122,7 @@ public final class ConcurrentTasksSupport {
         }
     }
 
-    public static interface TaskFactory {
+    public interface TaskFactory {
 
         public Runnable newTask();
     }

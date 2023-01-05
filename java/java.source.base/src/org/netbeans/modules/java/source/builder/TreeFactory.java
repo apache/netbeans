@@ -1706,7 +1706,7 @@ public class TreeFactory {
     /**
      * Represents operation on list
      */
-    private static enum Operation {
+    private enum Operation {
         /** list's add operation */
         ADD,
         

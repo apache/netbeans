@@ -564,7 +564,7 @@ public abstract class BaseActionProvider implements ActionProvider {
     /**
      * Callback for accessing project private data.
      */
-    public static interface Callback {
+    public interface Callback {
         ClassPath getProjectSourcesClassPath(String type);
         ClassPath findClassPath(FileObject file, String type);
     }
@@ -575,7 +575,7 @@ public abstract class BaseActionProvider implements ActionProvider {
      * 
      * @since 1.29
      */
-    public static interface Callback2 extends Callback {
+    public interface Callback2 extends Callback {
 
         /**
          * Called before an <i>ant</i> target is invoked. Note that call to
@@ -616,7 +616,7 @@ public abstract class BaseActionProvider implements ActionProvider {
      *
      * @since 1.58
      */
-    public static interface Callback3 extends Callback2 {
+    public interface Callback3 extends Callback2 {
         /**
          * Creates additional properties passed to the <i>ant</t>.
          * Called before an <i>ant</i> target is invoked. Note that call to

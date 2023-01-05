@@ -138,7 +138,7 @@ public class RefreshClientDialog extends javax.swing.JPanel {
         return jTextField1.getText().trim();
     }
     
-    public static enum Result {
+    public enum Result {
         CLOSE,
         DOWNLOAD_AND_REFRESH,
         REFRESH_ONLY;

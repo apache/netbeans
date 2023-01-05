@@ -36,7 +36,7 @@ public interface Document {
     /**
      * Local constarins
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkDocumentVersion (String version) throws InvalidArgumentException;
 
@@ -62,7 +62,7 @@ public interface Document {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -79,7 +79,7 @@ public interface Document {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeDocument (TreeDocument document) throws TreeException;
         
@@ -93,7 +93,7 @@ public interface Document {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     

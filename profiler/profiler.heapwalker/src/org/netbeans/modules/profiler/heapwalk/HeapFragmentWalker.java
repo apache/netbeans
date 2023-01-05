@@ -349,7 +349,7 @@ public class HeapFragmentWalker {
     }
 
 
-    public static interface StateListener {
+    public interface StateListener {
 
         public void stateChanged(StateEvent e);
 

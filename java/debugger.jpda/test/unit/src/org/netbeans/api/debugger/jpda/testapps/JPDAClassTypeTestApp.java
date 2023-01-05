@@ -77,22 +77,22 @@ public class JPDAClassTypeTestApp implements EventListener, SwingConstants {
         }
     }
 
-    private static interface Intrfc1 {
+    private interface Intrfc1 {
     }
 
-    private static interface Intrfc2 {
+    private interface Intrfc2 {
     }
 
-    private static interface Intrfc3 extends Runnable {
+    private interface Intrfc3 extends Runnable {
     }
 
-    private static interface Intrfc4 extends Intrfc1, Intrfc2 {
+    private interface Intrfc4 extends Intrfc1, Intrfc2 {
     }
 
-    private static interface Intrfc5 extends Intrfc2, Intrfc3 {
+    private interface Intrfc5 extends Intrfc2, Intrfc3 {
     }
 
-    private static interface Intrfc6 extends Runnable, Intrfc1, Intrfc4, Intrfc5 {
+    private interface Intrfc6 extends Runnable, Intrfc1, Intrfc4, Intrfc5 {
     }
 
     private static class MultiImplSubClass1 extends MultiImpl {

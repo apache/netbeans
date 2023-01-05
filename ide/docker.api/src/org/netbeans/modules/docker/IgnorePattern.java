@@ -335,7 +335,7 @@ public class IgnorePattern {
         return "";
     }
 
-    private static interface Rule {
+    private interface Rule {
 
         int[] consume(char[] chars, int offset);
 

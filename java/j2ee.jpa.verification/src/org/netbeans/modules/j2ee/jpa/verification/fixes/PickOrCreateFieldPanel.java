@@ -306,7 +306,7 @@ class PickOrCreateFieldPanel extends javax.swing.JPanel {
         notSupport.setErrorMessage(errorMsgBundleId);
     }
     
-    public static interface FieldNameValidator{
+    public interface FieldNameValidator{
         public NameStatus checkName(String name);
         public void setExistingFieldNames(Set<String> existingFieldNames);
     }

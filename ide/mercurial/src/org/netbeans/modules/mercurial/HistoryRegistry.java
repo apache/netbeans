@@ -251,7 +251,7 @@ public class HistoryRegistry {
         return changePaths;
     }
     
-    public static interface ChangePathCollector {
+    public interface ChangePathCollector {
         
         HgLogMessageChangedPath[] getChangePaths ();
         

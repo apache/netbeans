@@ -140,7 +140,7 @@ public final class JavaMoveMembersProperties {
      * Used to specify visibility level. It can either be set explicitly, or set
      * to Escalate to automatically raise it to a necessary level.
      */
-    public static enum Visibility {
+    public enum Visibility {
 
         /**
          * Escalate, automatically raise the visibility to a necessary level,

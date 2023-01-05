@@ -178,7 +178,7 @@ public class LazyDeploymentManager implements DeploymentManager {
         }
     }
 
-    public static interface DeploymentManagerProvider {
+    public interface DeploymentManagerProvider {
 
         DeploymentManager getDeploymentManager();
 

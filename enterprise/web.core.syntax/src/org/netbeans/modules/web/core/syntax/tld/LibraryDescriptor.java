@@ -199,7 +199,7 @@ public abstract class LibraryDescriptor {
         return nodes;
     }
 
-    public static interface Tag {
+    public interface Tag {
         
         public String getName();
 
@@ -212,7 +212,7 @@ public abstract class LibraryDescriptor {
         public Attribute getAttribute(String name);
     }
 
-    public static interface Function {
+    public interface Function {
 
         public String getName();
 

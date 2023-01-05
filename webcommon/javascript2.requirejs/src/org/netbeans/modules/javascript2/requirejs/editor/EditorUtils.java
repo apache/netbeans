@@ -69,7 +69,7 @@ public class EditorUtils {
                 || context == CodeCompletionContext.REQUIRE_MODULE;
     }
 
-    public static enum CodeCompletionContext {
+    public enum CodeCompletionContext {
 
         /**
          * in configuration object after baseUrl: ''

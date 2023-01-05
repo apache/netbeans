@@ -188,7 +188,7 @@ public final class ProgressHandleWrapper {
         return result;
     }
 
-    public static interface ProgressHandleAbstraction {
+    public interface ProgressHandleAbstraction {
 
         public void start(int totalWork);
 

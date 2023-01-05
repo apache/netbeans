@@ -487,7 +487,7 @@ public final class ClientSideDevelopmentSupport implements
             return pattern;
         }
 
-        public static enum Type {
+        public enum Type {
             PREFIX,
             SUFFIX
         }

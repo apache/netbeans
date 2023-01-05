@@ -120,7 +120,7 @@ public interface ProfilerTreeTableModel {
     }
     
     
-    public static interface Listener {
+    public interface Listener {
         
         public void dataChanged();
         

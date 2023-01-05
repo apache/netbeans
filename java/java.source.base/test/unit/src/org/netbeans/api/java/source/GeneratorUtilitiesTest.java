@@ -646,7 +646,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         });
     }
 
-    public static interface Validator {
+    public interface Validator {
 
         public void validate(CompilationInfo info);
 

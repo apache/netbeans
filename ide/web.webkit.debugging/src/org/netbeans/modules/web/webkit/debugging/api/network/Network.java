@@ -247,7 +247,7 @@ public class Network {
     /**
      * Listener for events about network events.
      */
-    public static interface Listener {
+    public interface Listener {
 
         /**
          * New network request was created.

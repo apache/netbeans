@@ -9,6 +9,6 @@ public class AttributeDefaultValue {
         Class valuex() default List.class;
     }
     
-    private static interface StopAtCurrentClass {}
+    private interface StopAtCurrentClass {}
 
 }

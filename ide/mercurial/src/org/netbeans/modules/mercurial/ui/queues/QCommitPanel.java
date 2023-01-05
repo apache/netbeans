@@ -310,7 +310,7 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
         }
     }
     
-    private static interface NodesProvider {
+    private interface NodesProvider {
         QFileNode[] getNodes (File repository, File[] roots, boolean[] refreshFinished);
     }
     

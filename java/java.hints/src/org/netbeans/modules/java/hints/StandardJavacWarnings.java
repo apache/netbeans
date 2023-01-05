@@ -158,7 +158,7 @@ public class StandardJavacWarnings extends AbstractHint {
 
     // Private methods ---------------------------------------------------------
     
-    private static enum Kind {
+    private enum Kind {
 
         DEPRECATED("enable_lint_deprecation", "deprecation"),
         UNCHECKED("enable_lint_unchecked", "unchecked"),

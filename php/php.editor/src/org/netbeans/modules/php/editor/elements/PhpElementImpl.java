@@ -50,7 +50,7 @@ import org.openide.util.Utilities;
  */
 public abstract class PhpElementImpl implements PhpElement {
 
-    static enum Separator {
+    enum Separator {
         SEMICOLON(";"), //NOI18N
         COMMA(","), //NOI18N
         COLON(":"), //NOI18N

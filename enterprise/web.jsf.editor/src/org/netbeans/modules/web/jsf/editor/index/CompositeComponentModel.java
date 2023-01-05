@@ -50,7 +50,7 @@ import org.openide.filesystems.FileUtil;
  */
 public class CompositeComponentModel extends JsfPageModel {
 
-//    private static enum MavenProjectStandartDirectories {
+//    private enum MavenProjectStandartDirectories {
 //        
 //        SOURCES("src/main/java"), //NOI18N
 //        RESOURCES("src/main/resources"), //NOI18N

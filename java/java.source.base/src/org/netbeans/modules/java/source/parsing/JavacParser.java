@@ -934,7 +934,7 @@ public class JavacParser extends Parser {
                 files);
     }
 
-    private static enum ConfigFlags {
+    private enum ConfigFlags {
         BACKGROUND_COMPILATION,
         MULTI_SOURCE,
         MODULE_INFO
@@ -1475,7 +1475,7 @@ public class JavacParser extends Parser {
         }
     }
     
-    public static interface PartialReparser {
+    public interface PartialReparser {
         public boolean reparseMethod (final CompilationInfoImpl ci,
                 final Snapshot snapshot,
                 final MethodTree orig,
@@ -1514,15 +1514,15 @@ public class JavacParser extends Parser {
         }
     }
 
-    public static interface TreeLoaderRegistry {
+    public interface TreeLoaderRegistry {
         public void enhance(Context context, ClasspathInfo cpInfo, boolean detached);
     }
     
-    public static interface DuplicateClassRegistry {
+    public interface DuplicateClassRegistry {
         public void enhance(Context context, FQN2Files fqn2Files);
     }
     
-    public static interface ContextEnhancer {
+    public interface ContextEnhancer {
         public void enhance(Context context, boolean backgroundCompilation);
     }
 
@@ -1535,7 +1535,7 @@ public class JavacParser extends Parser {
         }
     }
 
-    public static interface SequentialParsing {
+    public interface SequentialParsing {
         public Iterable<? extends CompilationUnitTree> parse(JavacTask task, JavaFileObject file) throws IOException;
     }
 }

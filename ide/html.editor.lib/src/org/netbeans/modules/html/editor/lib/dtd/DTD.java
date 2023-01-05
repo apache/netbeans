@@ -70,7 +70,7 @@ public interface DTD {
     /** Element is the interface providing informations about HTML Element
      * and its content model.
      */
-    public static interface Element {
+    public interface Element {
         
         /** Get the name of this Element
          */
@@ -113,7 +113,7 @@ public interface DTD {
      * Every Element provides List of its' Attributes, which in turn provide.
      * information about their types and possible values.
      */
-    public static interface Attribute {
+    public interface Attribute {
         
         /** attribute of boolean type - the one which can't have "= smgt." after it */
         public static final int TYPE_BOOLEAN = 0;
@@ -176,14 +176,14 @@ public interface DTD {
     
     /* Simple shell for value, maybe there will be some additional info about
      * value in future */
-    public static interface Value {
+    public interface Value {
         public String getName();
     }
     
     /** The interface representing Character reference. Provides its name
      * and character it refers to
      */
-    public static interface CharRef extends NamedCharRef {
+    public interface CharRef extends NamedCharRef {
         /** @return alias to this CharRef */
         @Override
         public String getName();
@@ -200,7 +200,7 @@ public interface DTD {
      * Elements is that they are "sticky" - are propagated down the hierarchy
      * of Elements.
      */
-    public static interface ContentModel {
+    public interface ContentModel {
         
         /** @return the Content tree part of this model */
         public Content getContent();
@@ -223,7 +223,7 @@ public interface DTD {
     /** This interface represents an element of content tree. Its instances
      * should be either instances of ContetLeaf or instances of ContentNode.
      */
-    public static interface Content {
+    public interface Content {
         static class EmptyContent implements Content {
             public boolean isDiscardable() { return true; }
             public Content reduce( String name ) { return null; }
@@ -258,7 +258,7 @@ public interface DTD {
     }
     
     /** ContentLeaf is leaf of content tree, matches just one Element name (String)*/
-    public static interface ContentLeaf extends Content {
+    public interface ContentLeaf extends Content {
         /** get the Element of this leaf Content */
         public Element getElement();
 
@@ -269,7 +269,7 @@ public interface DTD {
     /** ContentNode is node of content tree, contains one operator (either unary
      * or n-ary) and sequence of elements on which this operator is applied.
      */
-    public static interface ContentNode extends Content {
+    public interface ContentNode extends Content {
 
         /** Get the operator for this node, could be unary ('+', '*', '?')
          * or n-ary ('|', '&', ',')

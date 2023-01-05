@@ -36,7 +36,7 @@ public interface DTD {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkDTDVersion (String version) throws InvalidArgumentException;
 
@@ -57,7 +57,7 @@ public interface DTD {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -74,7 +74,7 @@ public interface DTD {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeDTD (TreeDTD dtd) throws TreeException;
         
@@ -88,7 +88,7 @@ public interface DTD {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     

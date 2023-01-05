@@ -51,7 +51,7 @@ public final class SuspendSupport {
         return suspendStatus;
     }
     
-    public static interface SuspendStatusImpl {
+    public interface SuspendStatusImpl {
         public boolean isSuspendSupported();
         public boolean isSuspended();
         public void parkWhileSuspended() throws InterruptedException;

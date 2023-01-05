@@ -176,7 +176,7 @@ public final class JschSupport {
         }
     }
 
-    private static interface JSchWorker<T> {
+    private interface JSchWorker<T> {
 
         T call() throws InterruptedException, IOException, JSchException;
     }

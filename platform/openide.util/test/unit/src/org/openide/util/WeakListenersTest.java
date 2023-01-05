@@ -714,7 +714,7 @@ public class WeakListenersTest extends NbTestCase {
     } // End of PropChBean class
 
     // just a marker, its name will be used to construct the name of add/remove methods, e.g. addPCL, removePCL
-    private static interface PCL extends PropertyChangeListener {
+    private interface PCL extends PropertyChangeListener {
     } // End of PrivatePropL class
     
 }

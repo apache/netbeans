@@ -264,7 +264,7 @@ public final class JSchConnectionTask implements Cancellable {
         }
     }
 
-    public static enum ProblemType {
+    public enum ProblemType {
 
         ENV_PREPARE_ERROR,
         AUTH_FAIL,

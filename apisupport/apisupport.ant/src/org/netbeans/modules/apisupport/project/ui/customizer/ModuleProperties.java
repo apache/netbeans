@@ -370,7 +370,7 @@ public abstract class ModuleProperties {
      * Implement this interface when you want your panel to be told that the
      * properties/customizer are going to be saved.
      */
-    static interface LazyStorage {
+    interface LazyStorage {
         
         /** Called when user pressed <em>ok</em> before storing the model. */
         void store();

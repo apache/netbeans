@@ -106,7 +106,7 @@ public class FolderUploader {
         });
     }
 
-    public static interface Listener {
+    public interface Listener {
 
         void onUpload(String path);
 

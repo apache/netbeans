@@ -67,7 +67,7 @@ import org.netbeans.lib.profiler.ui.UIUtils;
 public class StatisticsPanel extends JPanel {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Listener {
+    public interface Listener {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void itemClicked(int itemIndex);

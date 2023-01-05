@@ -36,15 +36,15 @@ public class TestVCSInterceptor extends VCSInterceptor {
     public MoveHandler moveHandler;
     public CopyHandler copyHandler;
     
-    public static interface DeleteHandler {
+    public interface DeleteHandler {
         void delete(VCSFileProxy proxy) throws IOException;
     }
     
-    public static interface MoveHandler {
+    public interface MoveHandler {
         void move(VCSFileProxy from, VCSFileProxy to) throws IOException;
     }
     
-    public static interface CopyHandler {
+    public interface CopyHandler {
         void copy(VCSFileProxy from, VCSFileProxy to) throws IOException;
     }
     

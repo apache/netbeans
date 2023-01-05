@@ -147,7 +147,7 @@ public class WebServiceLibReferenceHelper {
         }
     }
     
-    private static interface AddLibrary<T> {
+    private interface AddLibrary<T> {
         public boolean hasLibraryReference(Project project, T library);
         public void addLibraryReferences(Project project, T[] libraries) throws IOException;
     }

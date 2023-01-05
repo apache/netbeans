@@ -66,7 +66,7 @@ public abstract class CacheManagerTestBaseHid extends NbTestCase implements Imag
         super(name);
     }
     
-    protected static interface ManagerFactory {
+    protected interface ManagerFactory {
         LayerCacheManager createManager() throws Exception;
         boolean supportsTimestamps ();
     }

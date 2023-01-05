@@ -783,7 +783,7 @@ public final class ContextualPatch {
         boolean     applied;
     }
 
-    public static enum PatchStatus { Patched, Missing, Failure };
+    public enum PatchStatus { Patched, Missing, Failure };
 
     public static final class PatchReport {
 

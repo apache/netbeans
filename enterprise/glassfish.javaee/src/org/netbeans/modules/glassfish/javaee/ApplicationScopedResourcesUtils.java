@@ -117,7 +117,7 @@ public final class ApplicationScopedResourcesUtils {
         return false;
     }
 
-    public static interface JndiNameResolver {
+    public interface JndiNameResolver {
 
         String resolveJndiName(String jndiName);
     }

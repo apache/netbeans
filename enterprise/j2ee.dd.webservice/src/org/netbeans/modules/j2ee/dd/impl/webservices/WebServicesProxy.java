@@ -436,7 +436,7 @@ public class WebServicesProxy implements Webservices {
     /** Contract between friend modules that enables 
     * a specific handling of write(FileObject) method for targeted FileObject
     */
-    public static interface OutputProvider {
+    public interface OutputProvider {
         public void write(Webservices webSvc) throws java.io.IOException;
         public org.openide.filesystems.FileObject getTarget();
     }

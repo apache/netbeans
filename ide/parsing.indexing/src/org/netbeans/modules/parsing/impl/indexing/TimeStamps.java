@@ -123,7 +123,7 @@ public final class TimeStamps {
         return false;
     }
 
-    private static interface Implementation {
+    private interface Implementation {
         boolean checkAndStoreTimestamp(FileObject root, String relativePath);
         Set<String> getUnseenFiles();
         void reset(long time);

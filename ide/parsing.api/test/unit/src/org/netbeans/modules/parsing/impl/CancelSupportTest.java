@@ -339,7 +339,7 @@ public class CancelSupportTest extends ParsingTestBase {
     }
     */
 
-    private static interface Action {
+    private interface Action {
         void run(Object[] params) throws Exception;
     }
 

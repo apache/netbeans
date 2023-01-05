@@ -1195,7 +1195,7 @@ public class ProfilerTable extends JTable {
     }
     
     
-    public static interface Tweaker {
+    public interface Tweaker {
         
         public void tweak(ProfilerTable table);
         

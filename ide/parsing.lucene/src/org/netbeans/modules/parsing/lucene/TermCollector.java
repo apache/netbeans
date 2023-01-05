@@ -67,7 +67,7 @@ public final class TermCollector extends Collector {
         return Collections.unmodifiableSet(doc2Terms.keySet());
     }    
     
-    public static interface TermCollecting {
+    public interface TermCollecting {
         void attach (TermCollector collector);
     }
 

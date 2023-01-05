@@ -39,7 +39,7 @@ final class ExportBatch {
     TracerProgressObject getProgress() { return progress; }
     BatchRunnable getWorker() { return worker; }
 
-    static interface BatchRunnable {
+    interface BatchRunnable {
         public void run() throws IOException;
     }
 

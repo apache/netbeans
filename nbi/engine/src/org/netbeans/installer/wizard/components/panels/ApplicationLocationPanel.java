@@ -582,7 +582,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
         }
     }
     
-    public static interface LocationValidator {
+    public interface LocationValidator {
         void validate(String location);
     }
     

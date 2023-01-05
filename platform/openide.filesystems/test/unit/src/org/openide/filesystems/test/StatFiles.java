@@ -179,7 +179,7 @@ public class StatFiles extends SecurityManager {
         }
     }
 
-    public static interface Monitor {
+    public interface Monitor {
 
         void checkRead(File file);
 

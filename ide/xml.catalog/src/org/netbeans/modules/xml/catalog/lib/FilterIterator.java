@@ -74,7 +74,7 @@ public final class FilterIterator implements Iterator {
         return false;
     }
     
-    public static interface Filter {
+    public interface Filter {
         public boolean accept(Object obj);
     }
 }

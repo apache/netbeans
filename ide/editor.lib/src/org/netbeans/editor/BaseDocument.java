@@ -2454,7 +2454,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * {@link javax.swing.text.Document#getProperty(java.lang.String)}
      * is called.
      */
-    public static interface PropertyEvaluator {
+    public interface PropertyEvaluator {
         public Object getValue();
     }
 

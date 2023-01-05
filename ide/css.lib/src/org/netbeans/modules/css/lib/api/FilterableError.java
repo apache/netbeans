@@ -43,7 +43,7 @@ public interface FilterableError extends Error {
      */
     public SetFilterAction getDisableFilterAction();
     
-    public static interface SetFilterAction extends Runnable {
+    public interface SetFilterAction extends Runnable {
 
         public String getDisplayName();
         

@@ -64,7 +64,7 @@ public class NodeAnnotator {
      * that are present in the global lookup are notified whenever some node
      * is annotated.
      */
-    public static interface Impl {
+    public interface Impl {
         /**
          * Adds a badge to a node.
          * 

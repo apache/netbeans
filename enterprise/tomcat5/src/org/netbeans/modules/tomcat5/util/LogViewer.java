@@ -359,7 +359,7 @@ public class LogViewer extends Thread {
      * <code>LogViewerStopListener</code> is notified when the <code>LogViewer</code>
      * stops running.
      */
-    public static interface LogViewerStopListener extends EventListener {
+    public interface LogViewerStopListener extends EventListener {
         public void callOnStop();
     }
     

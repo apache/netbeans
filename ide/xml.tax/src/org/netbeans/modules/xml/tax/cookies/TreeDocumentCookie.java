@@ -45,7 +45,7 @@ public interface TreeDocumentCookie extends Node.Cookie {
     
     /**
      */
-    /* public */ static interface Editor extends TreeDocumentCookie, EditorCookie {
+    /* public */ interface Editor extends TreeDocumentCookie, EditorCookie {
 	
 	/**
 	 */

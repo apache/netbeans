@@ -339,7 +339,7 @@ class CreateRelationshipPanel extends javax.swing.JPanel {
         return radioOwningSide.isSelected();
     }
     
-    public static interface FieldNameValidator{
+    public interface FieldNameValidator{
         public NameStatus checkName(String name);
         public void setExistingFieldNames(Collection<String> existingFieldNames);
     }

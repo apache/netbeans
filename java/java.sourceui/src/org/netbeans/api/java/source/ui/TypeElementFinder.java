@@ -96,7 +96,7 @@ public final class TypeElementFinder {
     /**
      * Customization of search scope and results
      */
-    public static interface Customizer {
+    public interface Customizer {
         
         /**
          * Set the scope of the search on particular classpath. Too expensive queries

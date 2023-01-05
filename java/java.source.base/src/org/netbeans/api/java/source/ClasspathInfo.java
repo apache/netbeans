@@ -592,7 +592,7 @@ public final class ClasspathInfo {
     // Innerclasses ------------------------------------------------------------
 
 
-    public static enum PathKind {
+    public enum PathKind {
 	BOOT,
         MODULE_BOOT,
 	COMPILE,

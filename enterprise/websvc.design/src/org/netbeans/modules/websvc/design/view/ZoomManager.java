@@ -469,7 +469,7 @@ public class ZoomManager {
     /**
      * The listener interface for receiving zoom events.
      */
-    private static interface ZoomListener extends EventListener {
+    private interface ZoomListener extends EventListener {
 
         /**
          * The zoom level of the ZoomManager has changed.

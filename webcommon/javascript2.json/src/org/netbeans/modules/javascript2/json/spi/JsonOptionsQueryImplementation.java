@@ -31,7 +31,7 @@ public interface JsonOptionsQueryImplementation {
     @CheckForNull
     Result getOptions(@NonNull FileObject file);
 
-    public static interface Result {
+    public interface Result {
         String PROP_COMMENT_SUPPORTED = "commentSupported"; //NOI18N
         @CheckForNull
         Boolean isCommentSupported();

@@ -38,7 +38,7 @@ public class ProfilerRuntime implements CommonConstants {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
     // ------------- Handling operations that should be performed outside ProfilerRuntime --------------
-    public static interface ExternalActionsHandler {
+    public interface ExternalActionsHandler {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void handleEventBufferDump(byte[] eventBuffer, int startPos, int curPtrPos);

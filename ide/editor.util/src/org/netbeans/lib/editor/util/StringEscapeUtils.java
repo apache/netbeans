@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class StringEscapeUtils {
 
-    private static enum Escape {
+    private enum Escape {
         AMP('&', "&amp;"), QUOT('\"', "&quot;"), LT('<', "&lt;"), GT('>', "&gt;"); // NOI18N
 
         private final Character character;

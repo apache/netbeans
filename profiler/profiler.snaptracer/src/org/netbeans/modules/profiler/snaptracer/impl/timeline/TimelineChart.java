@@ -720,7 +720,7 @@ final class TimelineChart extends SynchronousXYChart {
     }
 
 
-    public static interface RowListener {
+    public interface RowListener {
 
         public void rowsAdded(List<Row> rows);
 

@@ -1109,7 +1109,7 @@ public final class GitUtils {
         return VCSContext.forNodes(nodes);
     }
 
-    public static interface SearchCallback<T> {
+    public interface SearchCallback<T> {
         
         public boolean contains (T item, String needle);
         

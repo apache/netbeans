@@ -36,7 +36,7 @@ public interface Text {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkTextData (String data) throws InvalidArgumentException;
 
@@ -52,7 +52,7 @@ public interface Text {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -69,7 +69,7 @@ public interface Text {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeText (TreeText text) throws TreeException;
         

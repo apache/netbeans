@@ -82,7 +82,7 @@ public class TomEEWarListener implements FileChangeListener {
         }
     }
 
-    public static interface RefreshHook {
+    public interface RefreshHook {
         void refresh(TomcatManager.TomEEVersion version, TomcatManager.TomEEType type);
     }
 

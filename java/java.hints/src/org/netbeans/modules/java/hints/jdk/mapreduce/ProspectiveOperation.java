@@ -357,7 +357,7 @@ import org.netbeans.api.java.source.WorkingCopy;
         return this.treeMaker.Variable(treeMaker.Modifiers(new HashSet<Modifier>()), UNKNOWN_NAME, null, null);
     }
 
-    public static enum OperationType {
+    public enum OperationType {
 
         MAP, FOREACH, FILTER, REDUCE, ANYMATCH, NONEMATCH
     }

@@ -816,7 +816,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     ///////////////////
 
     /** A listener interface for tracking split point changes */
-    public static interface SplitChangeListener {
+    public interface SplitChangeListener {
         /** Called when a split point changes
         * @param evt The SplitChangeEvent that describes the change
         */

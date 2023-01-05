@@ -170,7 +170,7 @@ public final class CodeTemplateSettingsImpl {
         pcs.removePropertyChangeListener(l);
     }
 
-    public static enum OnExpandAction {
+    public enum OnExpandAction {
         FORMAT, INDENT, NOOP
     }
     

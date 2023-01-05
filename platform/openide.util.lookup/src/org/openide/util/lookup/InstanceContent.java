@@ -137,7 +137,7 @@ public final class InstanceContent extends AbstractLookup.Content {
     /** Convertor postpones an instantiation of an object.
      * @since 1.25
      */
-    public static interface Convertor<T,R> {
+    public interface Convertor<T,R> {
         /** Convert obj to other object. There is no need to implement
          * cache mechanism. It is provided by
          * {@link Item#getInstance()} method itself. However the

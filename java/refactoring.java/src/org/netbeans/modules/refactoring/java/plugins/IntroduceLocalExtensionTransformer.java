@@ -1373,7 +1373,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
         return conditionText;
     }
 
-    private static interface Acceptor {
+    private interface Acceptor {
 
         public boolean accept(CompilationInfo info, TypeMirror tm);
     }

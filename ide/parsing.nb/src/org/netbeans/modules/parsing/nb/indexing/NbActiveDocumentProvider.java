@@ -188,7 +188,7 @@ public final class NbActiveDocumentProvider implements ActiveDocumentProvider, P
         return result;
     }
 
-    private static interface F<P,R> {
+    private interface F<P,R> {
         R apply(P p);
     }
 }

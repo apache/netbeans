@@ -45,7 +45,7 @@ import org.openide.filesystems.FileObject;
  */
 public interface ElementQuery {
 
-    public static enum QueryScope {
+    public enum QueryScope {
 
         INDEX_SCOPE,
         VIRTUAL_SCOPE,

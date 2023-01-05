@@ -1047,7 +1047,7 @@ public class XMLDataObject extends MultiDataObject {
     * @deprecated Use {@link org.openide.loaders.Environment.Provider} instead.
     */
     @Deprecated
-    public static interface Processor extends Node.Cookie {
+    public interface Processor extends Node.Cookie {
         /** When the XMLDataObject creates new instance of the processor,
         * it uses this method to attach the processor to the data object.
         *

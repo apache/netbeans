@@ -339,7 +339,7 @@ final class TokensBrowserTopComponent extends TopComponent {
     
     // innerclasses ............................................................
     
-    static interface THNode extends TreeNode {
+    interface THNode extends TreeNode {
         Token getToken ();
         String getMimeType ();
         int getOffset ();

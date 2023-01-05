@@ -50,7 +50,7 @@ public class StubTest extends NbTestCase {
         assertEquals(false, p.getBoolean());
     }
     
-    private static interface Primitives {
+    private interface Primitives {
         
         public byte getByte();
         

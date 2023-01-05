@@ -155,7 +155,7 @@ public class BaseSymbolProvider {
     public void cleanup() {
     }
 
-    public static interface BaseSymbolDescriptor {
+    public interface BaseSymbolDescriptor {
 
         public Either<SymbolInformation, WorkspaceSymbol> getInfo();
 

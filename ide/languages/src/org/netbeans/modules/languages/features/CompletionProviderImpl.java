@@ -543,7 +543,7 @@ public class CompletionProviderImpl implements CompletionProvider {
         }
     }
     
-    private static interface Result {
+    private interface Result {
         void addItem (CompletionItem item);
         void finish ();
         boolean isFinished ();

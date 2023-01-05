@@ -323,7 +323,7 @@ class TableQuickSearchSupport implements QuickSearch.Callback {
 
     }
     
-    static interface StringValuedTable {
+    interface StringValuedTable {
         
         String getStringValueAt(int row, int col);
         

@@ -287,7 +287,7 @@ public final class TracerModel {
         });
     }
 
-    static interface Listener {
+    interface Listener {
 
         public void probeAdded(TracerProbe probe);
 

@@ -331,7 +331,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
             listener.columnPreferredWidthChanged(column, oldWidth, newWidth);
     }
     
-    static interface Listener {
+    interface Listener {
         
         public void columnOffsetChanged(int column, int oldOffset, int newOffset);
         

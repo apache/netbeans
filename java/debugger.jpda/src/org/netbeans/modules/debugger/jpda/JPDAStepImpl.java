@@ -1172,7 +1172,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
         }
     }
     
-    public static interface StopHereCheck {
+    public interface StopHereCheck {
         
         public boolean stopHere(boolean willStop);
     }

@@ -36,7 +36,7 @@ public interface Comment {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkCommentData (String data) throws InvalidArgumentException;
 
@@ -52,7 +52,7 @@ public interface Comment {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -69,7 +69,7 @@ public interface Comment {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeComment (TreeComment comment) throws TreeException;
         

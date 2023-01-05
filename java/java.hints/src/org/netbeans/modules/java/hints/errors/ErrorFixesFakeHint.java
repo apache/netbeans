@@ -103,7 +103,7 @@ public class ErrorFixesFakeHint extends AbstractHint {
         return customizer;
     }
 
-    public static enum FixKind {
+    public enum FixKind {
         SURROUND_WITH_TRY_CATCH,
         CREATE_LOCAL_VARIABLE,
         CREATE_FINAL_FIELD_CTOR,

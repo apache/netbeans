@@ -41,13 +41,13 @@ public abstract class CacheFolderProvider {
     private static final AtomicReference<Lookup.Result<CacheFolderProvider>> impls =
             new AtomicReference<>();
 
-    public static enum Kind {
+    public enum Kind {
         SOURCES,
         LIBRARIES,
         BINARIES
     }
 
-    public static enum Mode {
+    public enum Mode {
         EXISTENT,
         CREATE
     }

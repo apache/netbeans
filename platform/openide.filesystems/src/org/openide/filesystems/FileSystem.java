@@ -750,7 +750,7 @@ public abstract class FileSystem implements Serializable {
      * you any kind of consistency guarantees; rather, it avoids producing change
      * events too early and thus causing listener code to run before it should.
     */
-    public static interface AtomicAction {
+    public interface AtomicAction {
         /** Executed when it is guaranteed that no events about changes
         * in filesystems will be notified.
         *
@@ -759,7 +759,7 @@ public abstract class FileSystem implements Serializable {
         public void run() throws IOException;
     }
     
-    static interface AsyncAtomicAction extends AtomicAction {
+    interface AsyncAtomicAction extends AtomicAction {
         boolean isAsynchronous();
     }
 

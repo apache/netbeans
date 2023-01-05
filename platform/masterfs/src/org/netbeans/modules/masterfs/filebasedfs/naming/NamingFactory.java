@@ -344,7 +344,7 @@ public final class NamingFactory {
         return null;
     }
 
-    static enum FileType {file, directory, unknown}
+    enum FileType {file, directory, unknown}
     
     private static FileNaming createFileNaming(
         final FileInfo f, Integer theKey, final FileNaming parentName, FileType type

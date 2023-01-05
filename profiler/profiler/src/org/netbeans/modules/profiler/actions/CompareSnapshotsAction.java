@@ -1038,7 +1038,7 @@ public class CompareSnapshotsAction extends AbstractAction {
     }
     
     
-    public static interface Performer {
+    public interface Performer {
         
         void compare(LoadedSnapshot snapshot);
         

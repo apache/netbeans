@@ -29,7 +29,7 @@ import org.openide.util.Cancellable;
 public interface ProgressDisplayer {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface ProgressController extends Cancellable {
+    public interface ProgressController extends Cancellable {
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------

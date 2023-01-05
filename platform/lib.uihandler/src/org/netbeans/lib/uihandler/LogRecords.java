@@ -383,7 +383,7 @@ public final class LogRecords {
     
     private static final class Parser extends DefaultHandler {
         private Handler callback;
-        private static enum Elem {
+        private enum Elem {
             UIGESTURES, RECORD, DATE, MILLIS, SEQUENCE, LEVEL, THREAD,
             MESSAGE, KEY, PARAM, FRAME, CLASS, METHOD, LOGGER, EXCEPTION, LINE,
             CATALOG, MORE, FILE;

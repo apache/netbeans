@@ -55,12 +55,12 @@ import org.openide.windows.InputOutput;
  */
 public class WildflyStartServer extends StartServer implements ProgressObject {
 
-    static enum MODE {
+    enum MODE {
 
         RUN, DEBUG, PROFILE
     };
 
-    static enum ACTION_STATUS {
+    enum ACTION_STATUS {
 
         SUCCESS, FAILURE, UNKNOWN
     };

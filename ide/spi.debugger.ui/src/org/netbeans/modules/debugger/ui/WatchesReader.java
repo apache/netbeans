@@ -121,7 +121,7 @@ public class WatchesReader implements Properties.Reader {
         }
     }
     
-    public static interface PinReaderAccess {
+    public interface PinReaderAccess {
 
         String getVpId(EditorPin pin);
 

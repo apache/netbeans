@@ -291,7 +291,7 @@ public final class LocalizedBundleInfo {
                 getLongDescription() + "]"; // NOI18N
     }
     
-    public static interface Provider {
+    public interface Provider {
         @CheckForNull LocalizedBundleInfo getLocalizedBundleInfo();
     }
     

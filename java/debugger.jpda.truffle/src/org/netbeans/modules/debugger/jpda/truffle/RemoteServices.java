@@ -773,7 +773,7 @@ public final class RemoteServices {
 
     }
     
-    public static interface LoggingListenerCallBack {
+    public interface LoggingListenerCallBack {
         
         public void eventsData(String[] data, String[] stack);
         

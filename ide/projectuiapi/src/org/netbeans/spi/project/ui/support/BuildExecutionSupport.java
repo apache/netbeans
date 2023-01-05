@@ -92,7 +92,7 @@ public final class BuildExecutionSupport {
     /**
      * Wrapper for the build job used by <code>BuildExecutionSupport</code>
      */
-    public static interface Item {
+    public interface Item {
         /**
          * Display name of the build job
          * @return
@@ -121,7 +121,7 @@ public final class BuildExecutionSupport {
      * Implement <code>equals</code> and <code>hashcode</code> for advanced duplicate item resolution.
      * @since 1.69
      */
-    public static interface ActionItem extends Item {
+    public interface ActionItem extends Item {
         /**
          * <code>ActionProvider</code> constants, used for grouping the history items, as of 1.69 only <code>ActionProvider.COMMAND_RUN</code> is supported in UI.
          * @return never null

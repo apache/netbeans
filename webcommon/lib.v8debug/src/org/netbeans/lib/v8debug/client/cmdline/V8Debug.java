@@ -1102,7 +1102,7 @@ public class V8Debug {
         
     }
     
-    static interface Testeable extends IOListener {
+    interface Testeable extends IOListener {
         
         void notifyResponse(V8Response response);
         

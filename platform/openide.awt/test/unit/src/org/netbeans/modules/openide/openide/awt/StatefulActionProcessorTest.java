@@ -131,15 +131,15 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     }
     
     
-    public static enum EnValue {
+    public enum EnValue {
         ONE, TWO
     }
     
-    static interface NonpublicListener {
+    interface NonpublicListener {
         public void callback();
     }
     
-    public static interface CustomListener {
+    public interface CustomListener {
         public void callback();
     }
     

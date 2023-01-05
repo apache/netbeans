@@ -50,7 +50,7 @@ final class RemoveClassPathRootAction extends NodeAction {
      * into the node's Lookup to allow {@link RemoveClassPathRootAction}
      * on the node.
      */
-    static interface Removable {
+    interface Removable {
         /**
          * Checks if the classpath root can be removed
          * @return returns true if the action should be enabled

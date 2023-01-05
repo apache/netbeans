@@ -44,7 +44,7 @@ public abstract class FiltersManager {
      *
      * @see RefactoringElement#include
      */
-    public static interface Filterable {
+    public interface Filterable {
 
         /**
          * Indicates if this element should be included in the results.

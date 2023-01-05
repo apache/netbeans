@@ -310,7 +310,7 @@ class CustomEditorAction extends AbstractAction {
         }
     }
 
-    static interface Invoker {
+    interface Invoker {
         /** Get the selected object that should be edited  */
         public FeatureDescriptor getSelection();
 

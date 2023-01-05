@@ -360,7 +360,7 @@ public final class TreePathHandle {
         return "TreePathHandle[delegate:"+delegate+"]";
     }
 
-    static interface Delegate {
+    interface Delegate {
         public FileObject getFileObject();
 
         public TreePath resolve(final CompilationInfo compilationInfo) throws IllegalArgumentException;

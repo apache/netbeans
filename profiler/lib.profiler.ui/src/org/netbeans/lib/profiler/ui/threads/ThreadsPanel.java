@@ -71,7 +71,7 @@ public class ThreadsPanel extends DataView {
         return ResourceBundle.getBundle("org.netbeans.lib.profiler.ui.threads.Bundle"); // NOI18N
     }
     
-    public static enum Filter { ALL, LIVE, FINISHED, SELECTED }
+    public enum Filter { ALL, LIVE, FINISHED, SELECTED }
     
     private final ThreadsDataManager dataManager;
     private final ViewManager viewManager;

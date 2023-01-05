@@ -137,7 +137,7 @@ abstract class AbstractObjectProvider<T extends AbstractObjectProvider.Refreshab
          return namedMembers;
     }
     
-    static interface Refreshable {
+    interface Refreshable {
         boolean refresh( TypeElement type );
     }
     

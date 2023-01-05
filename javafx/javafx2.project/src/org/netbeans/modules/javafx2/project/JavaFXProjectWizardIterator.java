@@ -62,7 +62,7 @@ public class JavaFXProjectWizardIterator implements WizardDescriptor.ProgressIns
 
     private static final Logger LOG = Logger.getLogger(JavaFXProjectWizardIterator.class.getName());
 
-    public static enum WizardType {APPLICATION, PRELOADER, FXML, SWING, LIBRARY, EXTISTING}
+    public enum WizardType {APPLICATION, PRELOADER, FXML, SWING, LIBRARY, EXTISTING}
     
     static final String PROP_NAME_INDEX = "nameIndex"; // NOI18N
     static final String MAIN_CLASS = "mainClass";

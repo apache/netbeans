@@ -98,7 +98,7 @@ import static org.netbeans.modules.project.ui.Bundle.*;
  */
 public class TemplatesPanelGUI extends javax.swing.JPanel implements PropertyChangeListener {
     
-    public static interface Builder extends ActionListener {
+    public interface Builder extends ActionListener {
 
         public Children createCategoriesChildren (DataFolder folder, String filterText);
         

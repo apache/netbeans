@@ -88,7 +88,7 @@ public final class MeasurableSocketFactory implements SocketFactory {
         }
     }
 
-    public static interface IOListener {
+    public interface IOListener {
 
         public void bytesUploaded(int bytes);
 

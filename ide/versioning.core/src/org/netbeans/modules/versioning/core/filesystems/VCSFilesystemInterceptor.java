@@ -72,7 +72,7 @@ public final class VCSFilesystemInterceptor {
     /** 
      * Listener for changes in annotations of files.
      */
-    public static interface VCSAnnotationListener {
+    public interface VCSAnnotationListener {
         /** Notifies listener about change in annotataion of a few files.
         * @param ev event describing the change
         */

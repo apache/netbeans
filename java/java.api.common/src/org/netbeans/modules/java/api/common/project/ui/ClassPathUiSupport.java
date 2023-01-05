@@ -258,7 +258,7 @@ public final class ClassPathUiSupport {
     /**
      * Optional callback to perform initialization of item.
      */
-    public static interface Callback {
+    public interface Callback {
 
         /** Initialize additional data associated with given Item.*/
         void initItem(ClassPathSupport.Item item);

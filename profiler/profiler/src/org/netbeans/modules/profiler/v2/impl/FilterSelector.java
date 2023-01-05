@@ -75,7 +75,7 @@ import org.openide.util.NbBundle;
 })
 public abstract class FilterSelector {
     
-    public static enum FilterName {
+    public enum FilterName {
         NO_FILTER,
         EXCLUDE_JAVA_FILTER,
         EXCLUDE_CUSTOM_FILTER,

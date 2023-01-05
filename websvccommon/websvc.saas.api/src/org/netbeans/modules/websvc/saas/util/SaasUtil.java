@@ -761,7 +761,7 @@ public class SaasUtil {
         return iReader;
     }
     
-    public static interface ReadInputStream {
+    public interface ReadInputStream {
         
         <T> T loadJaxbObject(InputStream inputStream,  Class<T> type, 
                 boolean includeAware) throws JAXBException;

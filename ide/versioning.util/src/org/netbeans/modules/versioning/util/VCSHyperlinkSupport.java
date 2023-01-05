@@ -360,7 +360,7 @@ public class VCSHyperlinkSupport {
         }
     }
 
-    public static interface BoundsTranslator {
+    public interface BoundsTranslator {
         /**
          * Corrects the bounding rectangle of nested textpanes.
          * @param startComponent

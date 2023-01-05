@@ -29,7 +29,7 @@ import org.netbeans.lib.v8debug.vars.V8Value;
  */
 public final class V8Event extends V8Packet {
     
-    public static enum Kind {
+    public enum Kind {
         Break,
         Exception,
         AfterCompile,

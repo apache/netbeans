@@ -144,7 +144,7 @@ public final class Watch {
      * editor pin implementation.
      * @since 1.54
      */
-    public static interface Pin {
+    public interface Pin {
         
     }
 }

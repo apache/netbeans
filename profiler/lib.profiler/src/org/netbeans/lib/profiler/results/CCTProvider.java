@@ -27,7 +27,7 @@ package org.netbeans.lib.profiler.results;
 public interface CCTProvider {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Listener {
+    public interface Listener {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         /* void cctEstablished(RuntimeCCTNode appRootNode);

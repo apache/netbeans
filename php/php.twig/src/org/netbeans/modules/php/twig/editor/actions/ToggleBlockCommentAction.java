@@ -95,7 +95,7 @@ public class ToggleBlockCommentAction extends BaseAction {
         action.actionPerformed(evt, target);
     }
 
-    public static enum ToggleCommentType {
+    public enum ToggleCommentType {
         AS_TWIG_EVERYWHERE {
 
             @Override

@@ -915,7 +915,7 @@ public final class ResultsManager {
     }
     
     
-    public static interface SnapshotHandle {
+    public interface SnapshotHandle {
         public LoadedSnapshot getSnapshot();
     }
     

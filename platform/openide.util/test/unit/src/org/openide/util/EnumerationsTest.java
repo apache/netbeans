@@ -114,7 +114,7 @@ public class EnumerationsTest extends NbTestCase {
     
     /** Processor interface.
      */
-    public static interface QueueProcess<T,R> {
+    public interface QueueProcess<T,R> {
         public R process(T object, Collection<T> toAdd);
     }
     

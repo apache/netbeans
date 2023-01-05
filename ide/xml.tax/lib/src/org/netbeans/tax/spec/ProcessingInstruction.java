@@ -36,7 +36,7 @@ public interface ProcessingInstruction {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkProcessingInstructionTarget (String target) throws InvalidArgumentException;
 
@@ -57,7 +57,7 @@ public interface ProcessingInstruction {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -74,7 +74,7 @@ public interface ProcessingInstruction {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeProcessingInstruction (TreeProcessingInstruction processingInstruction) throws TreeException;
         

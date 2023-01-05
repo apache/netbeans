@@ -42,7 +42,7 @@ public enum ConfigOption {
     SCRIPTTYPE("scriptType", OptionType.STRING), 
     SKIPDATAMAIN("skipDataMain", OptionType.BOOLEAN);
     
-    public static enum OptionType {
+    public enum OptionType {
         STRING, OBJECT, NUMBER, ARRAY, BOOLEAN, UNKNOWN
     }
     

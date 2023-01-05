@@ -81,7 +81,7 @@ public class JSFBeanCache {
 
 
     //for unit tests>>>
-    public static interface JsfBeansProvider {
+    public interface JsfBeansProvider {
 
         public List<FacesManagedBean> getBeans(Project project);
 

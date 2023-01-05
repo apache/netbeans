@@ -643,7 +643,7 @@ public class AppClientProxy implements AppClient {
     /** Contract between friend modules that enables
      * a specific handling of write(FileObject) method for targeted FileObject
      */
-    public static interface OutputProvider {
+    public interface OutputProvider {
         public void write(AppClient app) throws java.io.IOException;
         public FileObject getTarget();
     }

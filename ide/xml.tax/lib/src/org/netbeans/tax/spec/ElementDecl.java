@@ -36,7 +36,7 @@ public interface ElementDecl {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkElementDeclName (String name) throws InvalidArgumentException;
 
@@ -57,7 +57,7 @@ public interface ElementDecl {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -74,7 +74,7 @@ public interface ElementDecl {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeElementDecl (TreeElementDecl elementDecl) throws TreeException;
         

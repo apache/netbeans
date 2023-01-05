@@ -77,9 +77,9 @@ public class CreateMethodTest extends ErrorHintsTestBase {
     @RandomlyFails
     public void testCreateMethodInInterface() throws Exception {
         performFixTest("test/Test.java",
-                       "package test; public class Test {public void test() {Int i = null; i.test(1);} public static interface Int{}}", 96 - 24,
+                       "package test; public class Test {public void test() {Int i = null; i.test(1);} public interface Int{}}", 96 - 24,
                        "CreateMethodFix:test(int i)void:test.Test.Int",
-                       "package test; public class Test {public void test() {Int i = null; i.test(1);} public static interface Int{ public void test(int i); }}");
+                       "package test; public class Test {public void test() {Int i = null; i.test(1);} public interface Int{ public void test(int i); }}");
     }
     @RandomlyFails
     public void testCreateMethod106255() throws Exception {

@@ -174,7 +174,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
         }
     }
     
-    public static interface Operations<K extends Object, V extends Object> {
+    public interface Operations<K extends Object, V extends Object> {
         public Map<K, V> load(MimePath mimePath, String profile, boolean defaults) throws IOException;
         public boolean save(MimePath mimePath, String profile, boolean defaults, Map<K, V> data, Map<K, V> defaultData) throws IOException;
         public void delete(MimePath mimePath, String profile, boolean defaults) throws IOException;
@@ -733,7 +733,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
      * Caching provider. Storage cache cannot be held in static variable, as they initialize
      * with per-execution data.
      */
-    public static interface StorageCache {
+    public interface StorageCache {
         public <K,V> EditorSettingsStorage<K,V>    createStorage(StorageDescription<K,V> desc);
     }
     

@@ -60,7 +60,7 @@ import org.openide.util.Parameters;
  */
 public final class ItemRenderer<T> extends DefaultListCellRenderer implements ChangeListener {
 
-    public static interface Convertor<T> {
+    public interface Convertor<T> {
         String getName(T item);
         String getHighlightText(T item);
         String getOwnerName(T item);

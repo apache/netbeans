@@ -49,7 +49,7 @@ public interface SourceForBinaryQueryImplementation2 extends SourceForBinaryQuer
      */
     public Result findSourceRoots2 (final URL binaryRoot);
     
-    public static interface Result extends SourceForBinaryQuery.Result {
+    public interface Result extends SourceForBinaryQuery.Result {
         
         /**
          * When true the java model prefers sources otherwise binaries are used.

@@ -129,7 +129,7 @@ public class LookupPermGenLeakTest extends NbTestCase implements InvocationHandl
     }
     
     
-    public static interface I {
+    public interface I {
     }
     
     @ServiceProvider(service=I.class)

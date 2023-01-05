@@ -676,7 +676,7 @@ public class LogViewMgr {
         return s;
     }
 
-    private static interface Filter {
+    private interface Filter {
         
         public String process(char c);
         

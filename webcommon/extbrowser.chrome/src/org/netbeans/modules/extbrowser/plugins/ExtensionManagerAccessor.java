@@ -65,7 +65,7 @@ public interface ExtensionManagerAccessor {
         }
     }
     
-    static interface BrowserExtensionManager {
+    interface BrowserExtensionManager {
         
         ExtensionManager.ExtensitionStatus isInstalled();
         

@@ -100,7 +100,7 @@ public final class XMLUpdateDocumentAction extends CookieAction {
      * To be somehow exposed via API, now XML module specifics.
      * It is registered at module layer. All registered performes are invoked.
      */
-    public static interface Performer {
+    public interface Performer {
         
         /**
          * Update internal state after possible change of external resources

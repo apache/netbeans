@@ -327,7 +327,7 @@ public final class Completion {
      *
      * @since 1.0
      */
-    public static enum Kind {
+    public enum Kind {
 
         Text,
         Method,
@@ -362,7 +362,7 @@ public final class Completion {
      *
      * @since 1.0
      */
-    public static enum Tag {
+    public enum Tag {
 
         Deprecated
     }
@@ -373,7 +373,7 @@ public final class Completion {
      *
      * @since 1.0
      */
-    public static enum TextFormat {
+    public enum TextFormat {
 
         /**
          * The primary text to be inserted is treated as a plain string.

@@ -152,7 +152,7 @@ public class FileObjectsTest extends NbTestCase {
         }
 
     }
-    private static enum Call {
+    private enum Call {
         READER,
         WRITER,
         CHARCONTENT

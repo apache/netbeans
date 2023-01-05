@@ -453,7 +453,7 @@ public class TaskList {
         tasksList = null; 
     }    
     
-    public static interface Listener {
+    public interface Listener {
         void tasksAdded( List<? extends Task> tasks );
         void tasksRemoved( List<? extends Task> tasks );
         void cleared();

@@ -36,7 +36,7 @@ public interface ConditionalSection {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
     } // end: interface Constraints
 
@@ -48,7 +48,7 @@ public interface ConditionalSection {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
 
         /**
          * @throws InvalidArgumentException
@@ -65,7 +65,7 @@ public interface ConditionalSection {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeConditionalSection (TreeConditionalSection conditionalSection) throws TreeException;
         
@@ -79,7 +79,7 @@ public interface ConditionalSection {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     

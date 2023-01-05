@@ -186,13 +186,13 @@ public class WSStackUtils {
         return null;
     }
 
-    public static enum WizardType {
+    public enum WizardType {
         WS,
         WS_FROM_WSDL,
         WS_CLIENT;
     }
 
-    public static enum ErrorType {
+    public enum ErrorType {
         ERROR,
         INFO,
         WARNING;

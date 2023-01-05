@@ -167,7 +167,7 @@ public final class WeakCacheMap<K, V extends KeyedValue<K>> extends AbstractMap<
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public static interface KeyedValue<K> {
+    public interface KeyedValue<K> {
         K getKey();
     }
     

@@ -83,7 +83,7 @@ public class V8Object extends V8Value {
     
     public static final class Property {
         
-        public static enum Type {
+        public enum Type {
             Normal,
             Field,
             Constant,
@@ -136,7 +136,7 @@ public class V8Object extends V8Value {
         
     }
     
-    public static interface Array {
+    public interface Array {
         
         long getReferenceAt(long index) throws NoSuchElementException;
         
@@ -149,7 +149,7 @@ public class V8Object extends V8Value {
         long getLength();
     }
     
-    public static interface IndexIterator {
+    public interface IndexIterator {
         
         boolean hasNextIndex();
         

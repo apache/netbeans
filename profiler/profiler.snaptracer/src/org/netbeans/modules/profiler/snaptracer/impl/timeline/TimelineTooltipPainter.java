@@ -162,7 +162,7 @@ final class TimelineTooltipPainter extends JPanel {
     }
 
 
-    static interface Model {
+    interface Model {
 
         public int    getRowsCount      ();
         public String getRowName        (int index);

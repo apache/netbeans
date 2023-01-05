@@ -252,7 +252,7 @@ public final class DefaultProcessor extends OptionProcessor {
         }
     }
 
-    private static enum Type {
+    private enum Type {
         withoutArgument, requiredArgument, optionalArgument, 
         additionalArguments, defaultArguments;
         

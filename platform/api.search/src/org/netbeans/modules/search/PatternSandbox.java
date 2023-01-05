@@ -671,7 +671,7 @@ public abstract class PatternSandbox extends JPanel
             "LBL_Windows=\\r\\n: Windows",
             "LBL_Unix=\\n: Unix (Linux, Mac)",
             "LBL_MacOld=\\r: Old Mac",})
-        private static enum LineEnding {
+        private enum LineEnding {
 
             CRLF("\r\n", Bundle.LBL_Windows()), //NOI18N
             LF("\n", Bundle.LBL_Unix()), //NOI18N

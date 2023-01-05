@@ -162,7 +162,7 @@ public class JFXApplicationClassChooserTest extends NbTestCase {
         return file;
     }
 
-    private static interface Interceptor {
+    private interface Interceptor {
         void onInit();
         void onAction();
     }

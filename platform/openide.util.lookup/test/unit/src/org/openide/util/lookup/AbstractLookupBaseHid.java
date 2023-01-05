@@ -91,7 +91,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
     }
     
     /** The methods to influence test behaviour */
-    public static interface Impl {
+    public interface Impl {
         /** Creates the initial abstract lookup.
          */
         public Lookup createInstancesLookup (InstanceContent ic);

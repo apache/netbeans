@@ -124,7 +124,7 @@ public class StayOpenPopupMenu extends ProfilerPopupMenu {
     
     // --- StayOpen items ------------------------------------------------------
     
-    private static interface StayOpen extends ActionListener {
+    private interface StayOpen extends ActionListener {
         
         JMenuItem getItem();
         

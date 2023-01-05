@@ -491,7 +491,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
      * Interface between Performer and value monitors.
      * @param <T> 
      */
-    static interface StatefulMonitor<T> {
+    interface StatefulMonitor<T> {
         public void clear();
         public void addChangeListener(ChangeListener l);
         public void removeChangeListener(ChangeListener l);

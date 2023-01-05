@@ -66,13 +66,13 @@ public class ErrorsCache {
 
     /**Getter for properties of the given error description.
      */
-    public static interface Convertor<T> {
+    public interface Convertor<T> {
         public ErrorKind getKind(T t);
         public int       getLineNumber(T t);
         public String    getMessage(T t);
     }
 
-    public static enum ErrorKind {
+    public enum ErrorKind {
         /**Error, that should be used to show error badge in the projects tab.
          */
         ERROR,

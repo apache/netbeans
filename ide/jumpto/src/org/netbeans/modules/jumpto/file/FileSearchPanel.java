@@ -667,7 +667,7 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
 //        SwingUtilities.invokeLater( run );
 //    }
 
-    public static interface ContentProvider {
+    public interface ContentProvider {
 
         public ListCellRenderer getListCellRenderer(
                 @NonNull JList list,

@@ -566,7 +566,7 @@ public class RepositoryComboSupportTest {
         }
     }
 
-    static enum ThreadType {
+    enum ThreadType {
         AWT(true, "an AWT"),
         NON_AWT(false, "a non-AWT");
 

@@ -562,7 +562,7 @@ public class GoToPanel extends javax.swing.JPanel {
     }
 
 
-    public static interface ContentProvider {
+    public interface ContentProvider {
 
         @NonNull
         public ListCellRenderer getListCellRenderer(

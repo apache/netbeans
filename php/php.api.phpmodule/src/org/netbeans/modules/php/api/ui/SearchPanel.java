@@ -248,7 +248,7 @@ public final class SearchPanel extends JPanel {
         }
     }
 
-    public static interface Detector {
+    public interface Detector {
         List<String> detect();
     }
 }

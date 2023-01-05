@@ -226,7 +226,7 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
         return lookup;
     }
 
-    private static enum IndentType {
+    private enum IndentType {
         NONE,
         BLOCK
     }

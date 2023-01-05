@@ -96,10 +96,10 @@ public abstract class CCTNode implements TreeNode {
     //---
     
     
-    public static interface FixedPosition {}
+    public interface FixedPosition {}
     
-    public static interface AlwaysFirst extends FixedPosition {}
+    public interface AlwaysFirst extends FixedPosition {}
     
-    public static interface AlwaysLast extends FixedPosition {}
+    public interface AlwaysLast extends FixedPosition {}
     
 }

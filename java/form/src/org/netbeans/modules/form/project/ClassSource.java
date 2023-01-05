@@ -133,7 +133,7 @@ public final class ClassSource {
         }
     }
     
-    public static interface Resolver {
+    public interface Resolver {
         /**
          * Reconstruct from serialized form.
          * Used by {@link PaletteItemDataObject} for storing *.palette_item files.

@@ -33,7 +33,7 @@ import org.openide.util.Lookup;
 public interface LoadGenPlugin {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Callback {
+    public interface Callback {
         //~ Static fields/initializers -------------------------------------------------------------------------------------------
 
         /**
@@ -67,7 +67,7 @@ public interface LoadGenPlugin {
 
     //~ Enumerations -------------------------------------------------------------------------------------------------------------
 
-    public static enum Result {//~ Enumeration constant initializers ------------------------------------------------------------------------------------
+    public enum Result {//~ Enumeration constant initializers ------------------------------------------------------------------------------------
 
         FAIL, SUCCESS, TIMEOUT;
     }

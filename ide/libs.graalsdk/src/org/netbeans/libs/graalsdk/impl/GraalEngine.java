@@ -58,7 +58,7 @@ final class GraalEngine implements ScriptEngine, Invocable {
         return unbox(result);
     }
     
-    private static interface ScriptAction {
+    private interface ScriptAction {
         public Value run();
     }
     

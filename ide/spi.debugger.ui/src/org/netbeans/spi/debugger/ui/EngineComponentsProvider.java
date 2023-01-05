@@ -180,7 +180,7 @@ public interface EngineComponentsProvider {
     }
     
     /*public - when generic Component suport is required. */
-    static interface ComponentProvider {
+    interface ComponentProvider {
         
         Component getComponent();
     }

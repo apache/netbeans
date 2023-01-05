@@ -341,11 +341,11 @@ public class JavaScriptEnginesTest {
         }
     }
 
-    public static interface ArrayLike {
+    public interface ArrayLike {
         int length();
     }
 
-    public static interface Point {
+    public interface Point {
         public double x();
         public long y();
         public long z(double v);

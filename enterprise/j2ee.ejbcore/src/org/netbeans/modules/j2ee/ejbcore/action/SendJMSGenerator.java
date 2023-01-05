@@ -532,7 +532,7 @@ public final class SendJMSGenerator {
         }
     }
 
-    public static enum InjectionStrategy {
+    public enum InjectionStrategy {
         INJ_EE7_CDI,
         INJ_EE7_SOURCES,
         INJ_COMMON,

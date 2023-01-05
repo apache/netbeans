@@ -285,7 +285,7 @@ public final class Modifications {
             return kind + "<" + startPos.getOffset() + ", " + endPos.getOffset() + ">: " + oldText + " -> " + newText; //NOI18N
         }
 
-        public static enum Kind {
+        public enum Kind {
 
             INSERT,
             REMOVE,

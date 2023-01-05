@@ -467,7 +467,7 @@ public class DescriptorListener implements PropertyChangeListener {
         return result;
     }
 
-    public static interface NameVisitorFactory {
+    public interface NameVisitorFactory {
 
         public NameVisitor createNameVisitor(CommonDDBean bean);
 
@@ -509,7 +509,7 @@ public class DescriptorListener implements PropertyChangeListener {
 
     }
 
-    public static interface NameVisitor {
+    public interface NameVisitor {
         public String getName(CommonDDBean bean);
         public String getNameProperty();
     }
@@ -654,7 +654,7 @@ public class DescriptorListener implements PropertyChangeListener {
         handlerCache.put("/Webservices/WebserviceDescription/PortComponent", wsDescVisitor);
     }
 
-    public static interface BeanVisitor {
+    public interface BeanVisitor {
         public void beanCreated(PayaraConfiguration config, String xpath,
                 CommonDDBean sourceDD, CommonDDBean newDD);
         public void beanDeleted(PayaraConfiguration config, String xpath,

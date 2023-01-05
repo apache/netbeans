@@ -135,7 +135,7 @@ public class MoveClassTest extends MoveBase {
         verifyContent(src,
                 new File("t/A.java", "package t;\n"
                 + "public interface A {\n"
-                + "    static interface B extends A {\n"
+                + "    interface B extends A {\n"
                 + "    }\n"
                 + "}\n"));
     }

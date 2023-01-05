@@ -353,7 +353,7 @@ public class CmpFromDbGenerator {
         return null;
     }
     
-    public static interface ProgressNotifier {
+    public interface ProgressNotifier {
         
         void switchToDeterminate(int workunits);
         

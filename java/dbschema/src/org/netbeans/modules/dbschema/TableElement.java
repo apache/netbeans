@@ -572,7 +572,7 @@ public final class TableElement extends DBElement implements ColumnElementHolder
 	/** Pluggable behaviour for table elements.
 	 * @see TableElement
 	 */
-	public static interface Impl extends DBElement.Impl {
+	public interface Impl extends DBElement.Impl {
 		/** Sets whether this is really a table, or a view.
 		 * @param isTable one of {@link #TABLE} or {@link #VIEW}
 		 * @throws DBException if impossible

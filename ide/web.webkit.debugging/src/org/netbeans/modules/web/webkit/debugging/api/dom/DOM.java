@@ -792,7 +792,7 @@ public class DOM {
     /**
      * DOM domain listener.
      */
-    public static interface Listener {
+    public interface Listener {
         /**
          * Document has been updated. Old node IDs are no longer valid.
          */

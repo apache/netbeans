@@ -888,7 +888,7 @@ bigloop:
     * @see ExplorerManager#find
     * @see ExplorerUtils
     */
-    public static interface Provider {
+    public interface Provider {
         /** Get the explorer manager.
         * @return the manager
         */

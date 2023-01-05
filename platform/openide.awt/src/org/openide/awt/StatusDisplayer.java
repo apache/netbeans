@@ -151,7 +151,7 @@ public abstract class StatusDisplayer {
      * @see #setStatusText(String,int)
      * @since 7.5
      */
-    public static interface Message {
+    public interface Message {
         /**
          * Removes this message from status line after <code>timeInMillis</code>
          * milliseconds. The StatusDisplayer fires a <code>ChangeEvent</code> when the message

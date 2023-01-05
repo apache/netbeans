@@ -82,7 +82,7 @@ public final class HintDescription {
         return options;
     }
 
-    public static interface Worker {
+    public interface Worker {
 
         public Collection<? extends ErrorDescription> createErrors(HintContext ctx);
 

@@ -35,7 +35,7 @@ final class IllegalModuleException extends IllegalArgumentException {
         "# {0} - names of modules",
         "MSG_ENABLE_MISSING=Cannot enable {0}"
     })
-    static enum Reason {
+    enum Reason {
         // from delete
         DELETE_FIXED_MODULE("fixed module: {0}"),
         DELETE_ENABLED_MODULE("enabled module: {0}"),

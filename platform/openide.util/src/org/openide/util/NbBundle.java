@@ -838,7 +838,7 @@ public class NbBundle extends Object {
      * @deprecated Useless.
      */
     @Deprecated
-    public static interface ClassLoaderFinder {
+    public interface ClassLoaderFinder {
         /**
          * Do not use.
          * @return nothing

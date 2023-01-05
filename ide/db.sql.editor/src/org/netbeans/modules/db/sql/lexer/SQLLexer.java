@@ -465,7 +465,7 @@ public class SQLLexer implements Lexer<SQLTokenId> {
         }
     }
 
-    private static enum State {
+    private enum State {
 
         INIT,
         ISI_WHITESPACE, // inside white space

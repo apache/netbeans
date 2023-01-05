@@ -854,7 +854,7 @@ public final class Models {
      * Support interface for 
      * {@link #createAction(String,Models.ActionPerformer,int)} method.
      */
-    public static interface ActionPerformer {
+    public interface ActionPerformer {
 
         /**
          * Returns enabled property state for given node.

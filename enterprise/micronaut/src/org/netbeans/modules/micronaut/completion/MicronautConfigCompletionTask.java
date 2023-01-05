@@ -64,7 +64,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  */
 public class MicronautConfigCompletionTask {
 
-    public static interface ItemFactory<T> {
+    public interface ItemFactory<T> {
         T createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize);
         T createPropertyItem(ConfigurationMetadataProperty property, int offset, int baseIndent, int indentLevelSize, int idx);
         T createValueItem(String value, int offset, boolean isEnum);

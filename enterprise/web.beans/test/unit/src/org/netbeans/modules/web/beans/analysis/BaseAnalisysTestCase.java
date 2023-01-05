@@ -342,7 +342,7 @@ public abstract class BaseAnalisysTestCase extends JavaSourceTestCase {
     private ClasspathInfo myClassPathInfo;
     private CdiTestUtilities myUtilities;
     
-    protected static interface ResultProcessor {
+    protected interface ResultProcessor {
         void process ( TestProblems result );
     }
     

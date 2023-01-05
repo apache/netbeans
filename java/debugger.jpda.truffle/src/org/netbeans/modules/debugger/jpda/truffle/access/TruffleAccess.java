@@ -769,7 +769,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         return false;
     }
 
-    public static interface MethodCallsAccess {
+    public interface MethodCallsAccess {
         
         void callMethods(JPDAThread thread) throws InvocationException;
         

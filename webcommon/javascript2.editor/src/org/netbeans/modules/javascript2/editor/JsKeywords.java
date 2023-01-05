@@ -30,7 +30,7 @@ import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 
 public class JsKeywords {
 
-    public static enum CompletionType {
+    public enum CompletionType {
         SIMPLE,
         CURSOR_INSIDE_BRACKETS,
         ENDS_WITH_CURLY_BRACKETS,

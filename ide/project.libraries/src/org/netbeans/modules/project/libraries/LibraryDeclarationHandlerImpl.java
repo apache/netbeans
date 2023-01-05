@@ -242,7 +242,7 @@ public class LibraryDeclarationHandlerImpl implements LibraryDeclarationHandler 
         }
     }
     
-    private static enum State {LIB, VOLUME, PROPERTIES, PROPERTY};
+    private enum State {LIB, VOLUME, PROPERTIES, PROPERTY};
 
 
     private static boolean urlsEqual (final Collection<? extends URL> first, final Collection<? extends URL> second) {

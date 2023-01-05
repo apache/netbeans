@@ -338,7 +338,7 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                     }
             }
         
-    static interface SubCategoryProvider {
+    interface SubCategoryProvider {
         public void showSubCategory(String name);
     }
 

@@ -852,7 +852,7 @@ public class JBDeploymentManager implements DeploymentManager {
         }
     }
 
-    private static interface Action<T> {
+    private interface Action<T> {
 
          T execute(DeploymentManager manager) throws ExecutionException;
     }

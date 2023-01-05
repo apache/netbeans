@@ -681,7 +681,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
         HASH_CODE_PATTERNS.put(new SimpleAcceptor(KindOfType.OTHER), "(this.{VAR} != null ? this.{VAR}.hashCode() : 0)");
     }
 
-    private static interface Acceptor {
+    private interface Acceptor {
         public boolean accept(CompilationInfo info, TypeMirror tm);
     }
 

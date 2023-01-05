@@ -475,7 +475,7 @@ public class NewTemplateAction extends NodeAction {
     /** Cookie that can be implemented by a node if it wishes to have a 
      * special templates wizard.
      */
-    public static interface Cookie extends Node.Cookie {
+    public interface Cookie extends Node.Cookie {
         /** Getter for the wizard that should be used for this cookie.
          */
         public TemplateWizard getTemplateWizard ();

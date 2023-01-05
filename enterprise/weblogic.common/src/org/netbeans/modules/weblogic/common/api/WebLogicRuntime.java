@@ -648,7 +648,7 @@ public final class WebLogicRuntime {
         }
         return new Socket(proxy);
     }
-    public static interface RunningCondition {
+    public interface RunningCondition {
 
         boolean isRunning();
 

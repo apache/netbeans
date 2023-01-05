@@ -274,13 +274,13 @@ public class BreakpointsHandler implements V8Debugger.Listener {
     }
 
     /** Fired when an active (hit) breakpoint changes. */
-    public static interface ActiveBreakpointListener {
+    public interface ActiveBreakpointListener {
         
         void notifyActiveBreakpoint(JSLineBreakpoint activeBreakpoint);
     }
     
     /** Fired when breakpoints are activated/deactivated */
-    static interface BreakpointsActiveListener {
+    interface BreakpointsActiveListener {
 
         void breakpointsActivated(boolean activated);
     }

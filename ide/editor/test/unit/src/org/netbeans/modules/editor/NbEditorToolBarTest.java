@@ -162,9 +162,9 @@ public class NbEditorToolBarTest extends NbTestCase {
         }
     }
 
-    private static interface Foo {
+    private interface Foo {
     }
 
-    private static interface Bar {
+    private interface Bar {
     }
 }

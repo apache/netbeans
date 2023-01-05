@@ -318,7 +318,7 @@ public class TreeNamedObjectMap extends TreeObjectList {
     /**
      * Gives possibility to TreeNamedObjectMap to create a key for the object.
      */
-    public static interface NamedObject {
+    public interface NamedObject {
         
         /** Used as key in map.
          */

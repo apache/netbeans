@@ -124,7 +124,7 @@ public final class ProjectOperations {
      * The callback is called before and after each project operation.
      * The callback is registered by {@link ProjectOperationsBuilder#setCallback} method.
      */
-    public static interface Callback {
+    public interface Callback {
         /**
          * The type of project operation.
          */

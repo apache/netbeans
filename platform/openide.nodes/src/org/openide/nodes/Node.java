@@ -1373,7 +1373,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     * <P>
     * Most examples are present in {@link org.openide.cookies}.
     */
-    public static interface Cookie {
+    public interface Cookie {
     }
 
     /** Serializable node reference. The node should not
@@ -1392,7 +1392,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     * </ul>
     * 
     */
-    public static interface Handle extends java.io.Serializable {
+    public interface Handle extends java.io.Serializable {
         /** @deprecated Only public by accident. */
         @Deprecated
         /* public static final */ long serialVersionUID = -4518262478987434353L;

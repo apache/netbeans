@@ -37,7 +37,7 @@ public interface Attribute {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkAttributeName (TreeName treeName) throws InvalidArgumentException;
 
@@ -58,7 +58,7 @@ public interface Attribute {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -76,7 +76,7 @@ public interface Attribute {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeAttribute (TreeAttribute attribute) throws TreeException;
         
@@ -90,7 +90,7 @@ public interface Attribute {
     /**
      *
      */
-    public static interface Value {
+    public interface Value {
         
     } // end: intereface Value
     

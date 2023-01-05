@@ -166,7 +166,7 @@ public final class LogicalViewProviders {
      * to enable or disable the project badge notifying an user about disabled
      * compile on save.
      */
-    public static interface CompileOnSaveBadge {
+    public interface CompileOnSaveBadge {
         /**
          * Badge visibility check.
          * @return true if the badge should be visible

@@ -253,7 +253,7 @@ public class ToolsAction extends SystemAction implements ContextAwareAction, Pre
 
     /** @deprecated Useless, see {@link ActionManager}. */
     @Deprecated
-    public static interface Model {
+    public interface Model {
         public SystemAction[] getActions();
 
         public void addChangeListener(javax.swing.event.ChangeListener l);

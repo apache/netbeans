@@ -36,7 +36,7 @@ import org.netbeans.spi.autoupdate.*;
  * @author Jiri Rechtacek
  */
 public final class UpdateUnitProvider {
-    public static enum CATEGORY {
+    public enum CATEGORY {
         STANDARD,
         COMMUNITY,
         BETA

@@ -755,7 +755,7 @@ nextCpE:for (ClassPath.Entry e : cp.entries()) {
         }
     }
 
-    private static interface Filter {
+    private interface Filter {
 
         public boolean accept(@NullAllowed FileObject fo);
 

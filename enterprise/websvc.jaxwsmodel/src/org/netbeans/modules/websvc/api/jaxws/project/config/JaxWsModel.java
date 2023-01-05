@@ -81,7 +81,7 @@ public interface JaxWsModel {
     
     public void removeServiceListener(ServiceListener listener);
     
-    public static interface ServiceListener {
+    public interface ServiceListener {
         
         public void serviceAdded(String name, String implementationClass);
         

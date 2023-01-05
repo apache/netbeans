@@ -1649,7 +1649,7 @@ widthcheck:  {
      * convert many times
      */
     @SuppressWarnings("PackageVisibleInnerClass")
-    static interface RE {
+    interface RE {
         public void init(String[] original, String[] newversion);
 
         public String convert(String pattern);

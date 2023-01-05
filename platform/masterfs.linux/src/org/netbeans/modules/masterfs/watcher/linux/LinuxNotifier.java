@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class LinuxNotifier extends Notifier<LinuxNotifier.LKey> {
     private static final Logger LOG = Logger.getLogger(LinuxNotifier.class.getName());
 
-    private static interface InotifyImpl extends Library {
+    private interface InotifyImpl extends Library {
 	public int inotify_init();
 	public int inotify_init1(int flags);
 	public int close(int fd);

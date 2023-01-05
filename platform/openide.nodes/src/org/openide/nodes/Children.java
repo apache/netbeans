@@ -591,7 +591,7 @@ public abstract class Children extends Object {
 
     /** Interface that provides a set of nodes.
     */
-    static interface Entry {
+    interface Entry {
         /** Set of nodes associated with this entry.
         */
         public Collection<Node> nodes(Object source);

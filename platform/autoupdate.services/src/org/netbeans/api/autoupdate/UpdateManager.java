@@ -30,7 +30,7 @@ import org.netbeans.modules.autoupdate.services.UpdateManagerImpl;
  */
 public final class UpdateManager {
     
-    public static enum TYPE {
+    public enum TYPE {
         MODULE,
         FEATURE,
         STANDALONE_MODULE,

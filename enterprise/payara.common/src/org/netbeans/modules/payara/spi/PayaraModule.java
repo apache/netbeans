@@ -114,7 +114,7 @@ public interface PayaraModule {
     /**
      * Enum for the current state of the server (stopped, running, etc.)
      */
-    public static enum ServerState {
+    public enum ServerState {
         STARTING,
         RUNNING,
         RUNNING_JVM_DEBUG,

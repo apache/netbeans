@@ -482,7 +482,7 @@ public abstract class ErrorManager extends Object {
 
     /** Annotation that can be attached to an error.
     */
-    public static interface Annotation {
+    public interface Annotation {
         /** Non-localized message.
         * @return associated message or <code>null</code>
         */

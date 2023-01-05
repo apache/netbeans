@@ -1211,7 +1211,7 @@ public abstract class FormProperty extends Node.Property {
 
     // ------------
 
-    public static interface Filter {
+    public interface Filter {
         public boolean accept(FormProperty property);
     }
 

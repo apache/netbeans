@@ -258,7 +258,7 @@ public abstract class PhpEnvironment {
         return FileUtils.findFileOnUsersPath(phpFilename);
     }
 
-    public static interface ReadDocumentRootsNotifier {
+    public interface ReadDocumentRootsNotifier {
         void finished(final List<DocumentRoot> documentRoots);
     }
 }

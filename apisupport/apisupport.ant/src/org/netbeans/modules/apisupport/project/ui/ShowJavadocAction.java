@@ -47,7 +47,7 @@ final class ShowJavadocAction extends NodeAction {
      * into the node's Lookup to allow {@link ShowJavadocAction}
      * on the node.
      */
-    public static interface JavadocProvider {
+    public interface JavadocProvider {
         
         /**
          * Checks if the node can provide Javaodc

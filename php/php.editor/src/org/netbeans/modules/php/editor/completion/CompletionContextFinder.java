@@ -209,7 +209,7 @@ final class CompletionContextFinder {
     private static final List<String> SERVER_ARRAY_TOKENTEXTS =
             Arrays.asList(new String[]{"$_SERVER", "["}); //NOI18N
 
-    public static enum CompletionContext {
+    public enum CompletionContext {
 
         EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION,
         HTML, CLASS_NAME, INTERFACE_NAME, BACKING_TYPE,
@@ -222,7 +222,7 @@ final class CompletionContextFinder {
         INTERFACE_CONTEXT_KEYWORDS, USE_TRAITS
     };
 
-    static enum KeywordCompletionType {
+    enum KeywordCompletionType {
 
         SIMPLE, CURSOR_INSIDE_BRACKETS, ENDS_WITH_CURLY_BRACKETS,
         ENDS_WITH_SPACE, ENDS_WITH_SEMICOLON, ENDS_WITH_COLON, ENDS_WITH_BRACKETS_AND_CURLY_BRACKETS,

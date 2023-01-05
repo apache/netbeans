@@ -104,7 +104,7 @@ public abstract class TestResultDisplayHandler {
      * Interface providing SPI for {@link TestResultDisplayHandler}s.
      * Instances should be registered in the default lookup.
      */
-    public static interface Spi<T> {
+    public interface Spi<T> {
 
         /**
          * Creates {@link Spi} instance for the test session.

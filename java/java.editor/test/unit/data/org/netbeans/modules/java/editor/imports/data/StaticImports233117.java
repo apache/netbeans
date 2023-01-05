@@ -7,7 +7,7 @@ public class StaticImports233117 {
     public static void main(String[] args) {
         bar(StaticImports233117::foo);
     }
-    public static interface R {
+    public interface R {
         public void run(StaticImports233117 i);
     }
 }

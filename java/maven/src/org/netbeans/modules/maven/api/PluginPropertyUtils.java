@@ -191,7 +191,7 @@ public class PluginPropertyUtils {
      * @param <T> 
      * @since 2.70
      */
-    public static interface ConfigurationBuilder<T> {
+    public interface ConfigurationBuilder<T> {
         T build(Xpp3Dom configRoot, ExpressionEvaluator eval);
     }
     
@@ -209,7 +209,7 @@ public class PluginPropertyUtils {
     };
 
     
-    private static interface ExternalDefaultBuilder<T> {
+    private interface ExternalDefaultBuilder<T> {
         T externalValue(MavenProject prj);
     }
 

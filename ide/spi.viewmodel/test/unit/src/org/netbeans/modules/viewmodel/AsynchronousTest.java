@@ -173,7 +173,7 @@ public class AsynchronousTest extends NbTestCase {
         }
     }
 
-    private static interface ThreadChecker {
+    private interface ThreadChecker {
 
         boolean isInCorrectThread();
 

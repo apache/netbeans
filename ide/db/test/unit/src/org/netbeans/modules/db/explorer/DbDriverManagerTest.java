@@ -274,7 +274,7 @@ public class DbDriverManagerTest extends TestBase {
         }
     }
     
-    private static interface ConnectionEx extends Connection {
+    private interface ConnectionEx extends Connection {
         
         public Driver getDriver();
     }

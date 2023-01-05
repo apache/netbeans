@@ -28,7 +28,7 @@ import org.netbeans.modules.php.spi.testing.run.TestCase;
 
 public final class TapParser {
 
-    private static enum State {
+    private enum State {
         OK,
         OK_SKIP,
         NOT_OK,

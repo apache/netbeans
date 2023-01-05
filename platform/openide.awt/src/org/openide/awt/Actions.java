@@ -865,7 +865,7 @@ public class Actions {
      * @deprecated used by deprecated {@link SubMenu}
      */
     @Deprecated
-    public static interface SubMenuModel {
+    public interface SubMenuModel {
         /** @return count of the submenu items. */
         public int getCount();
 

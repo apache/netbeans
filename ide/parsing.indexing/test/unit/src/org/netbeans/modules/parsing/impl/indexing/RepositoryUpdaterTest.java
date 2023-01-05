@@ -2562,7 +2562,7 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
     // <editor-fold defaultstate="collapsed" desc="Mock Services">
     public static class TestHandler extends Handler {
 
-        public static enum Type {BATCH, DELETE, FILELIST, ROOTS_WORK_FINISHED, BINARY};
+        public enum Type {BATCH, DELETE, FILELIST, ROOTS_WORK_FINISHED, BINARY};
 
         private Type type;
         private CountDownLatch latch;

@@ -891,7 +891,7 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
     /**
      * Optional callback to customize classpath support behaviour.
      */
-    public static interface Callback {
+    public interface Callback {
         
         /**
          * Reads additional information from project XML for classpath items.

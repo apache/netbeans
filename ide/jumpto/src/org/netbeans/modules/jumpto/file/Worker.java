@@ -189,7 +189,7 @@ final class Worker implements Runnable {
         return new Worker(request, strategy, collector);
     }
 
-    static enum Type {
+    enum Type {
         PROVIDER {
             @NonNull
             @Override

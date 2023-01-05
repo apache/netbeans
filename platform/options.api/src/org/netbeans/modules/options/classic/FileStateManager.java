@@ -263,7 +263,7 @@ final class FileStateManager {
         }
     }
 
-    public static interface FileStatusListener {
+    public interface FileStatusListener {
         public void fileStatusChanged (FileObject mfo);
     }
     

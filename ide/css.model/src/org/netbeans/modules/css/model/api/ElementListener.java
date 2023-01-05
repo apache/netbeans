@@ -26,7 +26,7 @@ public interface ElementListener {
     
     public void elementChanged(Event event);
     
-    public static interface Event {
+    public interface Event {
         
     }
     

@@ -304,7 +304,7 @@ public class DockerInstance {
         return url.replaceAll("[:/]", "_"); // NOI18N
     }
 
-    public static interface ConnectionListener extends EventListener {
+    public interface ConnectionListener extends EventListener {
 
         void onConnect();
 

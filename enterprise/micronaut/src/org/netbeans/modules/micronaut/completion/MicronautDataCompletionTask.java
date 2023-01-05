@@ -123,7 +123,7 @@ public class MicronautDataCompletionTask {
 
     private int anchorOffset;
 
-    public static interface ItemFactory<T> {
+    public interface ItemFactory<T> {
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
         T createSQLItem(CompletionItem item);
@@ -506,7 +506,7 @@ public class MicronautDataCompletionTask {
     }
 
     @FunctionalInterface
-    private static interface Consumer {
+    private interface Consumer {
         void accept(String namePrefix, String name, String type);
     }
 }

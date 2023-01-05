@@ -1193,7 +1193,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
     }
 
-    public static interface ErrorDescriptionSetter {
+    public interface ErrorDescriptionSetter {
         
         public void setHighlights(Document doc, Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText);
         public void setColorings(Document doc, Map<Token, Coloring> colorings);

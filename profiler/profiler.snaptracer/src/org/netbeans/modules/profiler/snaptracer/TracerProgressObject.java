@@ -191,7 +191,7 @@ public final class TracerProgressObject {
     /**
      * Listener to receive notifications about the initialization progress.
      */
-    public static interface Listener {
+    public interface Listener {
 
         /**
          * Invoked when the progress and/or text describing the current state

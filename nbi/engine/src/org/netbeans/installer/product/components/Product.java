@@ -1160,7 +1160,7 @@ public final class Product extends RegistryNode implements StatusInterface {
     
     /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
-    private static enum InstallationPhase {
+    private enum InstallationPhase {
         INITIALIZATION,
         EXTRACTION,
         CUSTOM_LOGIC,

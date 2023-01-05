@@ -659,7 +659,7 @@ public final class MavenEmbedder {
      * effective model. 
      * @since 2.30
      */
-    public static interface ModelDescription {
+    public interface ModelDescription {
         /*
          * groupId:artifactId:version
          */

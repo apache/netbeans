@@ -45,7 +45,7 @@ public class StreamItem {
         return error;
     }
 
-    public static interface Fetcher {
+    public interface Fetcher {
 
         StreamItem fetch();
 

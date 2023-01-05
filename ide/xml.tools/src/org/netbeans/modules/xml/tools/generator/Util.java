@@ -40,7 +40,7 @@ public class Util {
 
     
     /** A name checker interface. */
-    public static interface NameCheck {
+    public interface NameCheck {
         public boolean checkName (String name);        
     }
 

@@ -102,7 +102,7 @@ public class JdbcChildrenFactory extends ChildFactory<ResourceNode> implements R
         return key;
     }
 
-    public static interface Retriever {
+    public interface Retriever {
 
         List<JDBCDataBean> get();
 
@@ -114,7 +114,7 @@ public class JdbcChildrenFactory extends ChildFactory<ResourceNode> implements R
 
     }
 
-    public static interface UnregisterFactory {
+    public interface UnregisterFactory {
 
         UnregisterCookie createUnregisterForPool(
                 String name, RefreshModulesCookie refresh, Lookup lookup);

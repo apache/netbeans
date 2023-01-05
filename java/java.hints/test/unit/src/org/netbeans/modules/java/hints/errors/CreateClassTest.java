@@ -104,7 +104,7 @@ public class CreateClassTest extends ErrorHintsTestBase {
                        "package test; public class Test {public static class X implements Test.NonExisting {}}",
                        119 - 43,
                        "CreateInnerClass:test.Test.NonExisting:[private, static]:INTERFACE",
-                       "package test; public class Test {public static class X implements Test.NonExisting {} private static interface NonExisting { } }");
+                       "package test; public class Test {public static class X implements Test.NonExisting {} private interface NonExisting { } }");
     }
 
     public void testPerformCreateForExtends() throws Exception {

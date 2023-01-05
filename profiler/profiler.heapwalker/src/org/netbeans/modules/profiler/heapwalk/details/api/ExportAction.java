@@ -66,7 +66,7 @@ public final class ExportAction extends AbstractAction {
 
 //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface ExportProvider {
+    public interface ExportProvider {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void exportData(int exportedFileType, ExportDataDumper eDD);

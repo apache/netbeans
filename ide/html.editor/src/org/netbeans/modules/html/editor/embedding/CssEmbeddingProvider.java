@@ -47,7 +47,7 @@ public class CssEmbeddingProvider extends EmbeddingProvider {
         this.translator = new CssHtmlTranslator();
     }
 
-    public static interface Translator {
+    public interface Translator {
 
         public List<Embedding> getEmbeddings(Snapshot snapshot);
     

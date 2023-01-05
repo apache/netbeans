@@ -36,12 +36,12 @@ public interface InputService {
     @JsonRequest("validate")
     public CompletableFuture<String> validate(InputCallbackParams params);
 
-    public static interface Registry {
+    public interface Registry {
 
         public String registerInput(Callback callback);
     }
 
-    public static interface Callback {
+    public interface Callback {
 
         CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params);
 

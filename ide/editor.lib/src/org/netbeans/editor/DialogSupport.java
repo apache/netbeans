@@ -86,7 +86,7 @@ public class DialogSupport {
      * It can provide the dialog itself or delegate the functionality
      * to another piece of code, e.g some windowing system. 
      */
-    public static interface DialogFactory {
+    public interface DialogFactory {
         
         /** 
          * The method for creating a dialog with specified properties.

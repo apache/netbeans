@@ -65,7 +65,7 @@ import org.openide.DialogDisplayer;
 public class ReferencesBrowserController extends AbstractController {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Handler {
+    public interface Handler {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public HeapFragmentWalker getHeapFragmentWalker();

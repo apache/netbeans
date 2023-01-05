@@ -46,7 +46,7 @@ public final class Defaults {
     }
 
 
-    public static interface Provider {
+    public interface Provider {
 
         int getDefaultAsInt(String key);
 

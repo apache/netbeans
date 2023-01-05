@@ -978,7 +978,7 @@ public class ClientJavaSourceHelper {
         }
     }
 
-    static enum HttpMimeType {
+    enum HttpMimeType {
         XML("application/xml", "javax.ws.rs.core.MediaType.APPLICATION_XML"), //NOI18N
         JSON("application/json", "javax.ws.rs.core.MediaType.APPLICATION_JSON"), //NOI18N
         TEXT("text/plain", "javax.ws.rs.core.MediaType.TEXT_PLAIN"), //NOI18N

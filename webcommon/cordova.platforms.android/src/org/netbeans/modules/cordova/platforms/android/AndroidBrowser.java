@@ -94,7 +94,7 @@ public class AndroidBrowser extends HtmlBrowser.Impl implements EnhancedBrowser{
         return BrowserSupport.ignoreChangeDefaultImpl(fo);
     }
     
-    public static enum Kind {
+    public enum Kind {
         ANDROID_DEVICE_DEFAULT,
         ANDROID_DEVICE_CHROME,
         ANDROID_EMULATOR_DEFAULT

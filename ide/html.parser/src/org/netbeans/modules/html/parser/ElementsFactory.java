@@ -68,7 +68,7 @@ public class ElementsFactory {
         return new CommonAttribute(source, nameOffset, nameLen);
     }
 
-    static interface ModifiableElement extends Element {
+    interface ModifiableElement extends Element {
 
         public void detachFromParent();
         
@@ -77,13 +77,13 @@ public class ElementsFactory {
         public void setParent(Node parent);
     }
     
-    static interface ModifiableCloseTag extends ModifiableElement, CloseTag {
+    interface ModifiableCloseTag extends ModifiableElement, CloseTag {
         
         public void setMatchingOpenTag(OpenTag openTag);
         
     }
 
-    static interface ModifiableOpenTag extends ModifiableElement, OpenTag {
+    interface ModifiableOpenTag extends ModifiableElement, OpenTag {
 
         public void addChild(Element element);
         

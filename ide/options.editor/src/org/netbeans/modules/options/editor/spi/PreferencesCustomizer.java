@@ -117,7 +117,7 @@ public interface PreferencesCustomizer {
      * If the attribute is specified it should contain the full path to the text preview file
      * on the system filesystem.
      */
-    public static interface Factory {
+    public interface Factory {
 
         /**
          * Creates a new <code>PreferencesCustomizer</code>.

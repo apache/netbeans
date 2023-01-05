@@ -36,7 +36,7 @@ import org.netbeans.lib.profiler.ProfilerClient;
 public abstract class AbstractDataFrameProcessor implements DataFrameProcessor {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    protected static interface ListenerFunctor {
+    protected interface ListenerFunctor {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         void execute(ProfilingResultListener listener);

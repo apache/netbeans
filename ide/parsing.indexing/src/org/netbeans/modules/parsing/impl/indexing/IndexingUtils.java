@@ -63,7 +63,7 @@ public final class IndexingUtils {
     /**
      * Provides state of indexing
      */
-    public static interface IndexingStatus {
+    public interface IndexingStatus {
         Set<? extends RepositoryUpdater.IndexingState> getIndexingState ();
     }
     

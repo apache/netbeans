@@ -46,7 +46,7 @@ public abstract class JavadocSearchEngine extends java.lang.Object {
     
     /** Call back interface for Javadoc search engine
      */    
-    public static interface SearchEngineCallback {
+    public interface SearchEngineCallback {
         /**
          * Called if search process finished
          */

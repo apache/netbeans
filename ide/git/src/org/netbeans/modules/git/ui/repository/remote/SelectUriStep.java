@@ -73,7 +73,7 @@ public class SelectUriStep extends AbstractWizardPanel implements ActionListener
     private final Mode mode;
     private final Timer remoteNameEditTimer;
 
-    public static enum Mode {
+    public enum Mode {
         PULL("pull"), //NOI18N
         PUSH("push"), //NOI18N
         FETCH("fetch"); //NOI18N

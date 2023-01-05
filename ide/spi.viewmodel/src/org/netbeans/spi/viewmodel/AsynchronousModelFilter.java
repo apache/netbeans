@@ -53,7 +53,7 @@ public interface AsynchronousModelFilter extends Model {
      * The rest of the methods on models are called synchronously, or additional
      * enums can be added in the future.
      */
-    static enum CALL { CHILDREN, DISPLAY_NAME, SHORT_DESCRIPTION, VALUE }
+    enum CALL { CHILDREN, DISPLAY_NAME, SHORT_DESCRIPTION, VALUE }
 
     /**
      * Executor for invocation of models method calls in the current thread.

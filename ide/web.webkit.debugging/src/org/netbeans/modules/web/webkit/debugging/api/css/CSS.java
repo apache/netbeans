@@ -626,7 +626,7 @@ public class CSS {
     /**
      * CSS domain listener.
      */
-    public static interface Listener {
+    public interface Listener {
 
         /**
          * Fired whenever media query result changes (for example, when
@@ -704,7 +704,7 @@ public class CSS {
     /**
      * Pseudo class (used by {@code getMatchedStylesForNode()}).
      */
-    public static enum PseudoClass {
+    public enum PseudoClass {
         ACTIVE("active"), FOCUS("focus"), HOVER("hover"), VISITED("visited"); // NOI18N
         /** Code of the pseudo class. */
         private final String code;

@@ -73,7 +73,7 @@ public class OutlineComboBox extends JComboBox {
         }
     }
     
-    public static interface Expandable {
+    public interface Expandable {
         
         Object[] getItems();
         
@@ -83,7 +83,7 @@ public class OutlineComboBox extends JComboBox {
         
     }
     
-    public static interface PopupMenuItem {
+    public interface PopupMenuItem {
         
         String toPopupMenuString();
     }

@@ -180,7 +180,7 @@ public class BuildTask implements Runnable {
         }
     }
 
-    public static interface Hook {
+    public interface Hook {
 
         void onStart(FutureTask<DockerImage> task);
 

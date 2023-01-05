@@ -105,7 +105,7 @@ public final class GraalEnginesTest {
         Assert.assertEquals("Fourty two", 42, fourtyTwo.asInt());
     }
 
-    public static interface Mul {
+    public interface Mul {
         public int multiplyTwoNumbers(int x, int y);
     }
 

@@ -382,7 +382,7 @@ public class Utilities {
         }
     }
 
-    public static interface ParameterSetter {
+    public interface ParameterSetter {
         void setParameters();
     }
     

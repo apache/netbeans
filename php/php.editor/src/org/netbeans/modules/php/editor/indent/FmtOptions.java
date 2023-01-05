@@ -428,7 +428,7 @@ public final class FmtOptions {
     // Support section ---------------------------------------------------------
     public static class CategorySupport implements ActionListener, DocumentListener, PreviewProvider, PreferencesCustomizer {
 
-        private static enum Operation {
+        private enum Operation {
             LOAD,
             STORE,
             ADD_LISTENERS

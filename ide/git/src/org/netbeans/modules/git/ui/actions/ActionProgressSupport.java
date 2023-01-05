@@ -56,7 +56,7 @@ public abstract class ActionProgressSupport {
 
     protected abstract Callable<ActionProgress> getNextAction ();
 
-    public static interface GitProgressSupportDelegate {
+    public interface GitProgressSupportDelegate {
 
         ProgressDelegate getProgress ();
 

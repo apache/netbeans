@@ -36,7 +36,7 @@ public interface NotationDecl {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkNotationDeclName (String name) throws InvalidArgumentException;
 
@@ -62,7 +62,7 @@ public interface NotationDecl {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -79,7 +79,7 @@ public interface NotationDecl {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeNotationDecl (TreeNotationDecl notationDecl) throws TreeException;
         

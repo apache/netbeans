@@ -66,7 +66,7 @@ public final class TypeBrowser {
     /**
      * Filtering support
      */
-    public static interface Filter {
+    public interface Filter {
         
         boolean accept(TypeDescriptor typeDescriptor);
         

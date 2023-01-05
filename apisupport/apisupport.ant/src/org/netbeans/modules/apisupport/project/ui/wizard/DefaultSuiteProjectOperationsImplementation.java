@@ -305,7 +305,7 @@ public final class DefaultSuiteProjectOperationsImplementation {
         return result;
     }
     
-    static interface UserInputHandler {
+    interface UserInputHandler {
         void showConfirmationDialog(final JComponent panel, Project project, String caption, String confirmButton, String cancelButton, boolean doSetMessageType, final Executor executor);
     }
     
@@ -471,11 +471,11 @@ public final class DefaultSuiteProjectOperationsImplementation {
         OpenProjects.getDefault().close(new Project[] {prj});
     }
     
-    static interface Executor {
+    interface Executor {
         public void execute() throws Exception;
     }
     
-    public static interface InvalidablePanel {
+    public interface InvalidablePanel {
         public void addChangeListener(ChangeListener l);
         public void removeChangeListener(ChangeListener l);
         public boolean isPanelValid();

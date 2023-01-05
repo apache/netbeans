@@ -105,7 +105,7 @@ public class MethodBreakpointApp {
         
     }
     
-    private static interface InterfaceInner {
+    private interface InterfaceInner {
         
         String getString();
         

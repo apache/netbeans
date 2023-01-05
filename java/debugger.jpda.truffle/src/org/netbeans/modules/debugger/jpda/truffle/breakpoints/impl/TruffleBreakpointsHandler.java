@@ -483,7 +483,7 @@ public class TruffleBreakpointsHandler {
         }
     }
     
-    private static enum TruffleBPMethods {
+    private enum TruffleBPMethods {
         setEnabled,
         setIgnoreCount,
         setCondition;

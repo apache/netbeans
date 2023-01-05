@@ -123,7 +123,7 @@ public final class Environment extends Object {
     /** Cookie for objects that plan to provide environment.
      * @since 1.9
      */
-    public static interface Provider {
+    public interface Provider {
         /** Returns a lookup that represents environment.
          * @return the lookup
          */

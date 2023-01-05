@@ -881,7 +881,7 @@ public class PatchFile extends Task {
             boolean applied;
         }
 
-        public static enum PatchStatus {
+        public enum PatchStatus {
             Patched, Missing, Failure
         };
 

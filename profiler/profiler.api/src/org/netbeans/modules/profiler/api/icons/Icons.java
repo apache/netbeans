@@ -89,6 +89,6 @@ public final class Icons {
     }
     
     
-    public static interface Keys {}
+    public interface Keys {}
     
 }

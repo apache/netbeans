@@ -418,7 +418,7 @@ public class ExtTestCase extends NbTestCase {
         }
     }
     
-    private static interface EventGenerator {
+    private interface EventGenerator {
         public AWTEvent getEvent();
     }
     

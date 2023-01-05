@@ -249,7 +249,7 @@ final class HtmlStructureItem implements StructureItem {
         return collected;
     }
 
-    public static interface Task {
+    public interface Task {
 
         public void run(HtmlParserResult result);
         

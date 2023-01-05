@@ -1721,7 +1721,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
     // StateListener ----------------------------------------------------------
     
     /** Listener that allows to listen to server state changes */
-    public static interface StateListener extends EventListener {
+    public interface StateListener extends EventListener {
         void stateChanged(int oldState, int newState);
     }
     

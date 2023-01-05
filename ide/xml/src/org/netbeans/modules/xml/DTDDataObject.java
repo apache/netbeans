@@ -222,7 +222,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
     /**
      *
      */
-    public static interface DataNodeCreator {
+    public interface DataNodeCreator {
 
         /**
          */
@@ -239,7 +239,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
     /**
      *
      */
-    public static interface DTDCookieFactoryCreator extends CookieFactoryCreator {
+    public interface DTDCookieFactoryCreator extends CookieFactoryCreator {
         
     } // end: interface DTDCookieFactoryCreator
 

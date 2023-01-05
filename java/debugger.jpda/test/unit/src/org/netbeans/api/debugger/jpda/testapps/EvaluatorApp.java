@@ -61,7 +61,7 @@ public class EvaluatorApp extends BaseClass {
     private static char     cx = 'a';
     private static byte     btx = 127;
     private static Object   pointObject = new java.awt.Point(2, 3);
-    private static enum     e { ONE, TWO, THREE }
+    private enum     e { ONE, TWO, THREE }
     
     private int     ci = 1234;
     private long    cl = 12345678901234l;
@@ -1257,7 +1257,7 @@ public class EvaluatorApp extends BaseClass {
         
     }
     
-    private static interface ParentInterface {
+    private interface ParentInterface {
         
         String getValue();
         

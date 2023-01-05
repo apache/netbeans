@@ -295,7 +295,7 @@ public final class WebBrowserPane {
     /**
      * Listener to browser pane events, eg. pane was closed.
      */
-    public static interface WebBrowserPaneListener {
+    public interface WebBrowserPaneListener {
 
         void browserEvent(WebBrowserPaneEvent event);
     }

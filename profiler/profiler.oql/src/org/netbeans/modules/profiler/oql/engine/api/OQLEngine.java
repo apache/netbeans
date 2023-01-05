@@ -50,7 +50,7 @@ public final class OQLEngine {
      * @author A. Sundararajan
      * @author J. Bachorik
      */
-    public static interface ObjectVisitor {
+    public interface ObjectVisitor {
         // return true to terminate the result set callback earlier
         public boolean visit(Object o);
 

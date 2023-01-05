@@ -495,7 +495,7 @@ public class ClientSideProjectLogicalView implements LogicalViewProvider {
 
     }
 
-    private static enum BasicNodes {
+    private enum BasicNodes {
         Sources,
         SiteRoot,
         SourcesAndSiteRoot,

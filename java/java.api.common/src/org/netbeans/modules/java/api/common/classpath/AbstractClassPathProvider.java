@@ -66,7 +66,7 @@ public abstract class AbstractClassPathProvider implements ClassPathProvider {
      * Event listener interface for being notified of changes in the set of
      * projects paths.
      */
-    public static interface ClassPathsChangeListener extends EventListener {
+    public interface ClassPathsChangeListener extends EventListener {
         /**
          * Called when project's {@link ClassPath} set changes.
          * @param event the event describing the change.

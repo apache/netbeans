@@ -940,7 +940,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
 
     }
 
-    private static interface Action<T> {
+    private interface Action<T> {
 
          T execute(DeploymentManager manager) throws ExecutionException;
     }

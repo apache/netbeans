@@ -237,7 +237,7 @@ public class PullAction extends SingleRepositoryAction {
     
     public static final class BranchSynchronizer extends ActionProgressSupport {
         
-        public static interface GitProgressSupportDelegate extends ActionProgressSupport.GitProgressSupportDelegate {
+        public interface GitProgressSupportDelegate extends ActionProgressSupport.GitProgressSupportDelegate {
 
             public GitClient getClient () throws GitException;
 

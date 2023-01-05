@@ -682,7 +682,7 @@ implements Lookup.Provider, ContextActionEnabler<ContextActionTest.Openable> {
         return GeneralAction.context(perf, s, lookupProxy, c);
     }
     
-    public static interface Openable {
+    public interface Openable {
         public void open();
     }
     

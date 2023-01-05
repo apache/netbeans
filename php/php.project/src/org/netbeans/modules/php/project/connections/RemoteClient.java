@@ -84,7 +84,7 @@ public final class RemoteClient implements Cancellable {
     private static final int MAX_FILE_SIZE_FOR_MEMORY = 500 * 1024; // 500 kB
 
 
-    public static enum Operation { UPLOAD, DOWNLOAD, DELETE, LIST };
+    public enum Operation { UPLOAD, DOWNLOAD, DELETE, LIST };
 
     private final RemoteConfiguration configuration;
     private final AdvancedProperties properties;
@@ -1354,7 +1354,7 @@ public final class RemoteClient implements Cancellable {
 
     //~ Inner classes
 
-    public static interface OperationMonitor {
+    public interface OperationMonitor {
         /**
          * {@link Operation} started for the files.
          * @param operation {@link Operation} currently run

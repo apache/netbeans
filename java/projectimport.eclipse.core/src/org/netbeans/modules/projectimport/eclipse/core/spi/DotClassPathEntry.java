@@ -38,7 +38,7 @@ public final class DotClassPathEntry {
     public static final String ATTRIBUTE_SOURCE_EXCLUDES = "excluding"; //NOI18N
     public static final String ATTRIBUTE_SOURCE_INCLUDES = "including"; //NOI18N
 
-    public static enum Kind {
+    public enum Kind {
         CONTAINER,
         LIBRARY,
         PROJECT,

@@ -706,7 +706,7 @@ public final class ProcessUtils {
         }
     }
 
-    public static interface PostExecutor {
+    public interface PostExecutor {
 
         public void processFinished(ExitStatus status);
     }

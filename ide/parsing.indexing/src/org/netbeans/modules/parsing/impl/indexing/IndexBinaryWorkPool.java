@@ -67,12 +67,12 @@ class IndexBinaryWorkPool {
         return strategy.execute(fnc, cancel, binaries);
     }
     
-    static interface Function<P,R> {
+    interface Function<P,R> {
         R apply (P param);
     }
     
     
-    private static interface Strategy {
+    private interface Strategy {
         @NonNull
         Pair<Boolean,Collection<? extends URL>> execute(
                 @NonNull Function<URL,Boolean> fnc,

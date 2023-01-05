@@ -38,7 +38,7 @@ public class VMOptionEditorPanel extends javax.swing.JPanel {
 
 
 
-    public static interface Callback {
+    public interface Callback {
         void okButtonActionPerformed(java.awt.event.ActionEvent evt);
 
         void cancelButtonActionPerformed(java.awt.event.ActionEvent evt);

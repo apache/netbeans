@@ -29,7 +29,7 @@ import org.netbeans.lib.profiler.results.CCTProvider;
 public interface MemoryCCTProvider extends CCTProvider {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Listener extends CCTProvider.Listener {
+    public interface Listener extends CCTProvider.Listener {
     }
 
     //~ Inner Classes ------------------------------------------------------------------------------------------------------------

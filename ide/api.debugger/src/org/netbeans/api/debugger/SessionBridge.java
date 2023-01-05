@@ -171,7 +171,7 @@ public final class SessionBridge {
      * Implement this interface to handle a debug session change.
      * Register the implementation via {@link DebuggerServiceRegistration} annotation.
      */
-    public static interface SessionChanger {
+    public interface SessionChanger {
         
         /**
          * Provide the set of actions that are handled by this implementation.

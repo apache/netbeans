@@ -698,7 +698,7 @@ public class LogViewMgr {
         return line.startsWith(localizedWarning) || line.startsWith(localizedSevere);
     }
 
-    private static interface Filter {
+    private interface Filter {
         
         public String process(char c);
         

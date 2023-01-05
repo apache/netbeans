@@ -63,5 +63,5 @@ public class CollectDTDAction extends CollectSystemAction {
     /**
      * Interface DTDAction
      */
-    public static interface DTDAction {}
+    public interface DTDAction {}
 }

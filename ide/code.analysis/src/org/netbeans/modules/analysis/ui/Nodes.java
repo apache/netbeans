@@ -207,7 +207,7 @@ public class Nodes {
         return sorted;
     }
 
-    private static interface AttributeRetriever<A> {
+    private interface AttributeRetriever<A> {
         public A getAttribute(AnalyzerFactory a, ErrorDescription ed);
     }
 

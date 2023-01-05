@@ -1995,7 +1995,7 @@ public final class LibrariesNode extends AbstractNode {
      * Optional extension point to enhance LibrariesNode with additional nodes,
      * for example J2EE project type may add J2EE platform node.
      */
-    public static interface Callback {
+    public interface Callback {
 
         /** Enhance LibrariesNode with additional <code>Key</code>s.*/
         List<Key> getExtraKeys();

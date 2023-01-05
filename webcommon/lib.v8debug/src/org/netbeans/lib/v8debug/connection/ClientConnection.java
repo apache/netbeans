@@ -332,7 +332,7 @@ public final class ClientConnection {
     /**
      * Listener receiving debugger events.
      */
-    public static interface Listener {
+    public interface Listener {
         
         /**
          * Called when the initial header is received.

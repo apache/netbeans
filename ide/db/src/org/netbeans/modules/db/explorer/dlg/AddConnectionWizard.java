@@ -116,7 +116,7 @@ public class AddConnectionWizard extends ConnectionDialogMediator implements Wiz
     }
     
     
-    public static interface Panel extends WizardDescriptor.Panel<AddConnectionWizard>{}
+    public interface Panel extends WizardDescriptor.Panel<AddConnectionWizard>{}
     
     /**
      * Initialize panels representing individual wizard's steps and sets

@@ -611,7 +611,7 @@ public final class FolderList extends javax.swing.JPanel {
 
     }
 
-    private static interface ContextFileFilter extends FileFilter {
+    private interface ContextFileFilter extends FileFilter {
         void setContext(final File[] selectedFiles);
     }
 

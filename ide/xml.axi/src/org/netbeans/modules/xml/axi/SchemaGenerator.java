@@ -97,11 +97,11 @@ public abstract class SchemaGenerator extends DefaultVisitor {
         }
     }
     
-    public static interface UniqueId {
+    public interface UniqueId {
         int nextId();
     }
     
-    public static interface PrimitiveCart {
+    public interface PrimitiveCart {
         void add(Datatype d, SchemaComponent referer);
         Set<Map.Entry<SchemaComponent, Datatype>> getEntries();
         GlobalSimpleType getDefaultPrimitive();

@@ -519,7 +519,7 @@ public final class ElementUtilities {
 
     /**Filter {@link Element}s
      */
-    public static interface ElementAcceptor {
+    public interface ElementAcceptor {
         /**Is the given element accepted.
          * 
          * @param e element to test

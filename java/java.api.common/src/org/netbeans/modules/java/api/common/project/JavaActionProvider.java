@@ -166,18 +166,18 @@ public final class JavaActionProvider implements ActionProvider {
         this.cosOpsProvider = cosOpsProvider;
     }
 
-    public static enum CompileOnSaveOperation {
+    public enum CompileOnSaveOperation {
         UPDATE,
         EXECUTE
     }
 
-    public static interface AntTargetInvocationListener extends EventListener {
+    public interface AntTargetInvocationListener extends EventListener {
         void antTargetInvocationStarted(final String command, final Lookup context);
         void antTargetInvocationFinished(final String command, final Lookup context, int result);
         void antTargetInvocationFailed(final String command, final Lookup context);
     }
 
-    public static interface Action {
+    public interface Action {
         String getCommand();
         boolean isEnabled(@NonNull final Context context);
         void invoke(@NonNull final Context context);
@@ -596,7 +596,7 @@ public final class JavaActionProvider implements ActionProvider {
             this.mainClassServices = new Object[] {pmcp, mcc};
         }
 
-        public static interface CustomFileExecutor {
+        public interface CustomFileExecutor {
             @CheckForNull
             String[] getTargetNames(@NonNull final FileObject file, @NonNull Context context);
 

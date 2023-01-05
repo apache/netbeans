@@ -95,7 +95,7 @@ public class WSStackTest extends NbTestCase {
             this.data = data;
         }
         
-        static enum Tool implements WSStack.Tool {
+        enum Tool implements WSStack.Tool {
             WSIMPORT,
             WSGEN;
 
@@ -103,7 +103,7 @@ public class WSStackTest extends NbTestCase {
                 return name();
             }
         }
-        static enum Feature implements WSStack.Feature {
+        enum Feature implements WSStack.Feature {
             WSIT,
             JSR109;
 

@@ -62,7 +62,7 @@ public final class JavaSourceTaskFactoryManager {
         }
     }
     
-    public static interface Accessor {
+    public interface Accessor {
         public abstract void fireChangeEvent(JavaSourceTaskFactory f);
     }
     

@@ -115,7 +115,7 @@ public abstract class LockContentionPanel extends DataView {
     private static final String SEARCH_SCOPE_TOOLTIP = messages.getString("LockContentionPanel_SearchScopeTooltip"); // NOI18N
     // -----
     
-    public static enum Aggregation { BY_THREADS, BY_MONITORS }
+    public enum Aggregation { BY_THREADS, BY_MONITORS }
     
     private final ProfilerToolbar toolbar;
     

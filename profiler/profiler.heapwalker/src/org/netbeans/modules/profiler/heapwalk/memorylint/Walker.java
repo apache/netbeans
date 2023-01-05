@@ -90,7 +90,7 @@ public final class Walker {
         
     }
     
-    public static interface Filter {
+    public interface Filter {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public boolean accept(ObjectFieldValue val);

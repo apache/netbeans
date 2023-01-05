@@ -38,7 +38,7 @@ public class SuperPatternFilter extends RowFilter<TableModel, Integer> {
     private static final String UNKOWN_MODE = "unknown mode";
     private final int col;
 
-    public static enum MODE {
+    public enum MODE {
         LITERAL_FIND, REGEX_FIND, LITERAL_MATCH, REGEX_MATCH
     }
 

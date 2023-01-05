@@ -286,11 +286,11 @@ public class JavaScriptEnginesTest {
         fail("Access to Java.type classes shall be prevented: " + value);
     }
 
-    public static interface ArrayLike {
+    public interface ArrayLike {
         int length();
     }
 
-    public static interface Point {
+    public interface Point {
         public double x();
         public long y();
         public long z(double v);

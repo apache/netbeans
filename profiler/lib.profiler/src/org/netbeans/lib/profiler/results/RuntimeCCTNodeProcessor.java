@@ -40,7 +40,7 @@ public final class RuntimeCCTNodeProcessor {
      * A processor plugin definition. <br/>
      * Plugin implementations should be based rather on {@linkplain PluginAdapter}
      */
-    public static interface Plugin {
+    public interface Plugin {
         /**
          * {@linkplain RuntimeCCTNode} hierarchy traversal starts
          */

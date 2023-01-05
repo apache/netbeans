@@ -758,7 +758,7 @@ public final class V8Debugger {
      * Register an implementation of this interface into the default lookup
      * to handle the debugger protocol errors.
      */
-    public static interface ErrorMessageHandler {
+    public interface ErrorMessageHandler {
         
         void errorResponse(String error);
         

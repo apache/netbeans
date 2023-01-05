@@ -1510,7 +1510,7 @@ public class AbstractLookup extends Lookup implements Serializable {
         /** A job to be executed partially outside and partially inside
          * the storage lock.
          */
-        static interface Job {
+        interface Job {
             public void before();
 
             public void inside();

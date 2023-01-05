@@ -454,7 +454,7 @@ public final class Model implements PropertyChangeListener {
     /**
      * Allows clients to read/write access the css source model
      */
-    public static interface ModelTask {
+    public interface ModelTask {
 
         /**
          * This method is called within the model lock when one calls
@@ -566,7 +566,7 @@ public final class Model implements PropertyChangeListener {
         return new ElementFactoryImpl(model);
     }
 
-    private static interface OffsetConvertor {
+    private interface OffsetConvertor {
 
         public int getOriginalOffset(int documentOffset);
     }

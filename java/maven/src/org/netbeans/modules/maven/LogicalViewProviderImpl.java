@@ -185,7 +185,7 @@ public class LogicalViewProviderImpl implements LogicalViewProvider {
         return null;
     }
 
-    public static interface FindDelegate {
+    public interface FindDelegate {
          Node[] getDelegates(Node current);
     }
     

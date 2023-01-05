@@ -167,7 +167,7 @@ public final class IndexingBridge {
      * <p>Implementations of this interface ought to be registered via {@link ServiceProvider} annotation
      * in the default <code>Lookup</code>.
      */
-    public static interface IndexingBridgeProvider {
+    public interface IndexingBridgeProvider {
         /**
          * This method is te actual integration point between versioning and indexing.
          * A typical implementation should do something like this:

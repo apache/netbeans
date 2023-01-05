@@ -361,7 +361,7 @@ public class FileBasedFileSystem extends FileSystem {
         }
     }
     
-    public static interface  FSCallable<V>  {
+    public interface  FSCallable<V>  {
         public V call() throws IOException;                
     }
     

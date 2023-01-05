@@ -1448,7 +1448,7 @@ public class NotifyDescriptor extends Object {
          * Callback used to lazy create chained inputs.
          * @since 7.63
          */
-        public static interface Callback {
+        public interface Callback {
 
             /**
              * Lazy creates chained input of the given ordinal.

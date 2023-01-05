@@ -99,7 +99,7 @@ public final class BuildEvent extends EventObject {
         }
     }
 
-    public static interface Listener extends EventListener {
+    public interface Listener extends EventListener {
 
         void onEvent(BuildEvent event);
 

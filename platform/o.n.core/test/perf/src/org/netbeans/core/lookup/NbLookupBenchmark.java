@@ -153,10 +153,10 @@ public class NbLookupBenchmark extends Benchmark {
     }
     
     
-    private static interface I1 {}
-    private static interface I2 extends I1 {}
-    private static interface I3 extends I1 {}
-    private static interface I4 extends I2, I3 {}
+    private interface I1 {}
+    private interface I2 extends I1 {}
+    private interface I3 extends I1 {}
+    private interface I4 extends I2, I3 {}
     private static class C1 extends Object implements I2 {}
     private static class C2 extends C1 {}
     private static class C3 extends C2 implements I3 {}

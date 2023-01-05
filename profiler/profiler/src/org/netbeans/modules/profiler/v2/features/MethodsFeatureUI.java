@@ -141,7 +141,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
     
     // --- UI ------------------------------------------------------------------
     
-//    private static enum View { CALL_TREE, HOT_SPOTS, COMBINED }
+//    private enum View { CALL_TREE, HOT_SPOTS, COMBINED }
     
     private JLabel lrLabel;
     private JToggleButton lrPauseButton;

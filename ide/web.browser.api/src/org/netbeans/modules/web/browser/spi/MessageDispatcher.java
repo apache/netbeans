@@ -72,7 +72,7 @@ public class MessageDispatcher {
     /**
      * Message listener.
      */
-    public static interface MessageListener {
+    public interface MessageListener {
         /**
          * Invoked when a new message is being dispatched by the message dispatcher.
          * 

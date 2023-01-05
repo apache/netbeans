@@ -67,7 +67,7 @@ public final class ModuleCookieSupport {
         }
     }
 
-    public static interface Action {
+    public interface Action {
 
         ProgressObject execute(DeploymentManager manager, TargetModuleID module);
     }

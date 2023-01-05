@@ -168,13 +168,13 @@ public class CreateProjectBuilder {
     /**
      * create pom modeloperations based on the passed context
      */
-    public static interface PomOperationsHandle {
+    public interface PomOperationsHandle {
         
         @NonNull List<ModelOperation<POMModel>> createPomOperations(@NonNull Context context);
     
     }
     
-    public static interface AdditionalChangeHandle {
+    public interface AdditionalChangeHandle {
         Runnable createAdditionalChange(@NonNull Context context);
     }
     

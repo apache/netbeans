@@ -448,7 +448,7 @@ public final class SearchUtils {
     
     
     // Default keybinding Ctrl+F and F3 variants for Find action
-    private static interface Support { @ServiceProvider(service=ActionsSupportProvider.class, position=100)
+    private interface Support { @ServiceProvider(service=ActionsSupportProvider.class, position=100)
         public static final class SearchActionProvider extends ActionsSupportProvider {
             public KeyStroke registerAction(String actionKey, Action action, ActionMap actionMap, InputMap inputMap) {
                 KeyStroke ks = null;

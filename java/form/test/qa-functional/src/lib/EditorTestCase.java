@@ -372,7 +372,7 @@ public class EditorTestCase extends JellyTestCase {
     /** Interface for value resolver needed for i.e. waitMaxMilisForValue method.
      *  For more details, please look at {@link #waitMaxMilisForValue()}.
      */
-    public static interface ValueResolver{
+    public interface ValueResolver{
         /** Returns checked value */
         Object getValue();
     }

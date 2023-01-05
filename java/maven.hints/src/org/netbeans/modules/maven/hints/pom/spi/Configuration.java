@@ -128,7 +128,7 @@ public final class Configuration {
      *  <li><code>ERROR</code>  - will show up as error
      *  <li><code>WARNING</code>  - will show up as warning
      */
-    public static enum HintSeverity {
+    public enum HintSeverity {
         ERROR,
         WARNING;
 

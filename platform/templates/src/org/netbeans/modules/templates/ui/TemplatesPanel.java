@@ -1732,7 +1732,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
             }
         }
         
-        private static interface InstanceGetter<T> {
+        private interface InstanceGetter<T> {
             
             T getInstance();
             

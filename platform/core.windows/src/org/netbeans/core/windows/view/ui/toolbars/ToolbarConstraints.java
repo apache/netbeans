@@ -26,7 +26,7 @@ package org.netbeans.core.windows.view.ui.toolbars;
  */
 class ToolbarConstraints {
 
-    static enum Align {
+    enum Align {
         left,
         right;
 

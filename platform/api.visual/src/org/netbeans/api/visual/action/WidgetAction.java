@@ -1064,7 +1064,7 @@ public interface WidgetAction {
     /**
      * Represents an widget event.
      */
-    public static interface WidgetEvent {
+    public interface WidgetEvent {
 
         /**
          * Returns an event id.
@@ -1077,7 +1077,7 @@ public interface WidgetAction {
     /**
      * Represents an location event used for controlling mouse location.
      */
-    public static interface WidgetLocationEvent extends WidgetEvent {
+    public interface WidgetLocationEvent extends WidgetEvent {
 
         /**
          * Returns stored location.

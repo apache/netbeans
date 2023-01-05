@@ -237,7 +237,7 @@ public class ComboBoxWithTree extends JComboBox {
     /**
      * Converter between tree path and its string representation.
      */
-    public static interface Converter {
+    public interface Converter {
         /**
          * Converts tree path to string representation.
          * 

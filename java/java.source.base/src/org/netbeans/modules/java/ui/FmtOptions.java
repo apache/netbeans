@@ -564,7 +564,7 @@ public class FmtOptions {
 
     }
  
-    public static interface CodeStyleProducer {
+    public interface CodeStyleProducer {
         
         public CodeStyle create( Preferences preferences );    
     }

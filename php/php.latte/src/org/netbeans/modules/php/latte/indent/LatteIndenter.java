@@ -280,7 +280,7 @@ public class LatteIndenter extends AbstractIndenter<LatteTopTokenId> {
         return false;
     }
 
-    private static enum StackItemState {
+    private enum StackItemState {
         IN_BODY,
         IN_RULE,
         IN_VALUE,

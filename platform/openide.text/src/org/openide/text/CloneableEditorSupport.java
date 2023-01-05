@@ -2093,7 +2093,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     /** Interface for providing data for the support and also
     * locking the source of data.
     */
-    public static interface Env extends CloneableOpenSupport.Env {
+    public interface Env extends CloneableOpenSupport.Env {
         /** property that is fired when time of the data is changed */
         public static final String PROP_TIME = "time"; // NOI18N
 

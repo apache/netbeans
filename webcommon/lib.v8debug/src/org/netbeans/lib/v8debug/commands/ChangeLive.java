@@ -147,7 +147,7 @@ public final class ChangeLive {
             private final ChangeTree[] children;
             private final ChangeTree[] newChildren;
             
-            public static enum FunctionStatus {
+            public enum FunctionStatus {
                 Unchanged,
                 SourceChanged,
                 Changed,
@@ -311,7 +311,7 @@ public final class ChangeLive {
         
         public static final class BreakpointUpdate {
             
-            public static enum Type {
+            public enum Type {
                 CopiedToOld,
                 PositionChanged;
                 

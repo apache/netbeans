@@ -49,7 +49,7 @@ public final class GradleJavaSourceSet implements Serializable {
         "LBL_RESOURCES=Resources",
         "LBL_GENERATED=Generated"
     })
-    public static enum SourceType {
+    public enum SourceType {
 
         JAVA, GROOVY, SCALA, RESOURCES,
         /** @since 1.8 */
@@ -71,7 +71,7 @@ public final class GradleJavaSourceSet implements Serializable {
         }
     }
 
-    public static enum ClassPathType {
+    public enum ClassPathType {
 
         COMPILE, RUNTIME
     }

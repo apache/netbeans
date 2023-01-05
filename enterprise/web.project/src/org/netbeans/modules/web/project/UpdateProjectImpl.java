@@ -391,7 +391,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
     
     /** Used to notify someone that the project needs to be updated. 
      * A workaround for #54077 - Import 4.0 project - remove Servlet/JSP APIs */
-    public static interface ProjectUpdateListener {
+    public interface ProjectUpdateListener {
         public void projectUpdated();
     }
 }

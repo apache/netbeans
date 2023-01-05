@@ -94,7 +94,7 @@ final class ToolTipManagerEx extends MouseAdapter implements MouseMotionListener
     /** data lock for tooltip calculations */
     private static final Object TOOLTIP_DATA_LOCK = new Object();
 
-    static interface ToolTipProvider {
+    interface ToolTipProvider {
         JComponent getComponent();
         Rectangle getToolTipSourceBounds( Point loc );
         Point getToolTipLocation( Point mouseLocation, Dimension toolTipSize );

@@ -141,7 +141,7 @@ public class ImportDiffAction extends ContextAction {
         private final Kind kind;
         private final boolean commit;
         
-        static enum Kind {
+        enum Kind {
             PATCH,
             BUNDLE
         }

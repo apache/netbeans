@@ -241,7 +241,7 @@ public abstract class JavaSourceTaskFactory {
         };
     }
 
-    static interface Accessor2 {
+    interface Accessor2 {
         public abstract void addPhaseCompletionTask(JavaSource js, CancellableTask<CompilationInfo> task, Phase phase, Priority priority, TaskIndexingMode taskIndexingMode );
         public abstract void removePhaseCompletionTask(JavaSource js, CancellableTask<CompilationInfo> task );
         public abstract void rescheduleTask(JavaSource js, CancellableTask<CompilationInfo> task);

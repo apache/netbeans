@@ -227,7 +227,7 @@ public class SynchronizeQueryCommand extends BugtrackingCommand {
         return status;
     }
     
-    public static interface CommandProgressListener extends EventListener {
+    public interface CommandProgressListener extends EventListener {
         
         public void queryRefreshStarted (Collection<NbTask> tasks);
         

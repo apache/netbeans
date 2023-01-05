@@ -102,7 +102,7 @@ public interface UndoRedo {
      *
      * @since 7.25
      */
-    public static interface Provider {
+    public interface Provider {
         /** Getter for {@link UndoRedo} implementation associated with this provider.
          * @return non-null implementation
          */

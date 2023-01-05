@@ -117,7 +117,7 @@ public final class ClusteredIndexables {
         return new MemIndexDocument(primaryKey);
     }
 
-    public static interface AttachableDocumentIndexCache extends DocumentIndexCache.WithCustomIndexDocument {
+    public interface AttachableDocumentIndexCache extends DocumentIndexCache.WithCustomIndexDocument {
         void attach(@NonNull final String mode, @NonNull final ClusteredIndexables ci);
         void detach();
     }
@@ -169,7 +169,7 @@ public final class ClusteredIndexables {
         return DEFAULT_CACHE_HEAP_RATIO;
     }
 
-    private static interface IndexedIterator<T> extends Iterator<T> {
+    private interface IndexedIterator<T> extends Iterator<T> {
         int index();
     }
 

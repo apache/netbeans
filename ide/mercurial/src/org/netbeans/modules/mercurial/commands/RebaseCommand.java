@@ -131,7 +131,7 @@ public final class RebaseCommand extends HgCommand<RebaseCommand.Result> {
         private static final String SAVED_BACKUP_BUNDLE_TO = "saved backup bundle to "; //NOI18N
         private File bundleFile;
 
-        public static enum State {
+        public enum State {
             OK,
             ABORTED,
             MERGING

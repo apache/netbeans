@@ -167,7 +167,7 @@ public final class WLConnectionSupport {
         });
     }
 
-    public static interface JMXAction<T> {
+    public interface JMXAction<T> {
 
         T call(MBeanServerConnection connection) throws Exception;
 

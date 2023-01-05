@@ -551,7 +551,7 @@ public final class TimelineSupport {
     }
 
 
-    public static interface ValuesListener {
+    public interface ValuesListener {
 
         public void valuesAdded();
 
@@ -871,7 +871,7 @@ public final class TimelineSupport {
     }
 
 
-    public static interface SelectionListener {
+    public interface SelectionListener {
         
         public void intervalsSelectionChanged();
 
@@ -882,7 +882,7 @@ public final class TimelineSupport {
 
     }
 
-    public static interface DescriptorResolver {
+    public interface DescriptorResolver {
 
         public TracerProbeDescriptor getDescriptor(TracerProbe p);
 

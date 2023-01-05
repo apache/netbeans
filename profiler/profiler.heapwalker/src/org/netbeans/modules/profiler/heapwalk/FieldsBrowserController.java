@@ -46,7 +46,7 @@ public class FieldsBrowserController extends AbstractController {
     private final boolean showClassLoaders;
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface Handler {
+    public interface Handler {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public HeapFragmentWalker getHeapFragmentWalker();

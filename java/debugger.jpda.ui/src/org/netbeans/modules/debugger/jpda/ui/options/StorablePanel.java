@@ -43,7 +43,7 @@ public abstract class StorablePanel extends javax.swing.JPanel {
      */
     public abstract boolean isChanged();
     
-    public static interface Provider {
+    public interface Provider {
         
         /**
          * Provides the display name of the panel.

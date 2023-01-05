@@ -81,7 +81,7 @@ public final class IndexManager {
     /**
      * The action to be performed under the {@link IndexManager}'s lock
      */
-    public static interface Action<R> {
+    public interface Action<R> {
         
         /**
          * The action

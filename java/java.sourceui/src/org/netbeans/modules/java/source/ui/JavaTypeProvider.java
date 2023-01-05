@@ -816,7 +816,7 @@ public class JavaTypeProvider implements TypeProvider {
             }
         }
 
-        static interface DataCacheCallback {
+        interface DataCacheCallback {
             void handleDataCacheChange(@NonNull final CacheItem ci);
         }
 

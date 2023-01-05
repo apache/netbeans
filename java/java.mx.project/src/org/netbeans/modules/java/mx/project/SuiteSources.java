@@ -479,7 +479,7 @@ final class SuiteSources implements Sources,
         return g == null ? new URL[0] : new URL[] { g.getRootFolder().toURL() };
     }
 
-    static interface Dep extends Comparable<Dep> {
+    interface Dep extends Comparable<Dep> {
         String getName();
 
         Collection<String> depNames();

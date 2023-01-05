@@ -127,7 +127,7 @@ public class RootsToFile {
         return null;
     }
 
-    public static interface Callback {
+    public interface Callback {
         public boolean repositoryExistsFor (File file);
         public File getTopmostManagedAncestor(File file);
     }

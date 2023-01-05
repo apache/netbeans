@@ -91,7 +91,7 @@ public abstract class OperationWizardModel {
     
     abstract OperationContainer<OperationSupport> getCustomHandledContainer ();
     
-    public static enum OperationType {
+    public enum OperationType {
         /** Install <code>UpdateElement</code> */
         INSTALL,
         /** Uninstall <code>UpdateElement</code> */

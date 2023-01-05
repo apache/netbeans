@@ -52,7 +52,7 @@ final class TermCollector {
     }
     
     
-    static interface TermCollecting {
+    interface TermCollecting {
         void attach (TermCollector collector);
     }
 

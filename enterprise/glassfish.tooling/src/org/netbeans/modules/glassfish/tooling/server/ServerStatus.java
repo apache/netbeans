@@ -57,7 +57,7 @@ public class ServerStatus implements Closeable {
     /**
      * Individual server check status returned.
      */
-    public static enum Status {
+    public enum Status {
         /** Server status check passed. */
         SUCCESS,
 

@@ -73,7 +73,7 @@ public class TasklistSettings {
         return NbPreferences.forModule(TasklistSettings.class).node("tasklist");
     }
 
-    public static enum DependencyTracking {
+    public enum DependencyTracking {
         DISABLED,
         ENABLED_WITHIN_ROOT,
         ENABLED_WITHIN_PROJECT,

@@ -31,7 +31,7 @@ import java.util.List;
 public class NavigationHistoryManager {
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    public static interface NavigationHistoryCapable {
+    public interface NavigationHistoryCapable {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public Configuration getCurrentConfiguration();

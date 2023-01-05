@@ -107,7 +107,7 @@ public final class StatusEvent extends EventObject {
         }
     }
 
-    public static interface Listener extends EventListener {
+    public interface Listener extends EventListener {
 
         void onEvent(StatusEvent event);
 

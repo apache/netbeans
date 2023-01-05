@@ -88,11 +88,11 @@ public abstract class AbstractGenerator<T extends AbstractDocumentModel<? extend
 
     }
 
-    public static interface ModelWriter {
+    public interface ModelWriter {
         int write();
     }
             
-    protected static interface ChildrenListProvider<C extends DocumentComponent> {
+    protected interface ChildrenListProvider<C extends DocumentComponent> {
         List<C> get();
     }
     

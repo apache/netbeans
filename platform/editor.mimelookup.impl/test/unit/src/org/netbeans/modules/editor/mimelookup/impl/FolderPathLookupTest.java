@@ -162,11 +162,11 @@ public class FolderPathLookupTest extends NbTestCase {
         return new ImplAB(fo);
     }
     
-    public static interface IfaceA {
+    public interface IfaceA {
         void methodA();
     }
     
-    public static interface IfaceB {
+    public interface IfaceB {
         void methodB();
     }
     

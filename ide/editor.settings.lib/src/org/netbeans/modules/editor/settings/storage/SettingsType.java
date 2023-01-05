@@ -77,13 +77,13 @@ public final class SettingsType {
         return new DefaultLocator(sd.getId(), sd.isUsingProfiles(), sd.getMimeType(), sd.getLegacyFileName());
     }
     
-    public static interface Locator {
+    public interface Locator {
         public void scan(FileObject baseFolder, String mimeType, String profileId, boolean fullScan, boolean scanModules, boolean scanUsers, boolean resolveLinks, Map<String, List<Object []>> results);
         public String getWritableFileName(String mimeType, String profileId, String fileId, boolean modulesFile);
         public boolean isUsingProfiles();
     }
     
-    public static interface LocatorFactory {
+    public interface LocatorFactory {
         public Locator createLocator(StorageDescription sd);
     }
     

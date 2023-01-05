@@ -81,7 +81,7 @@ public class CookieSetTest extends NbTestCase {
         assertNull("No cookie now ", cs.getCookie(Cook.class));
         assertNull("No lkp now ", cs.getLookup().lookup(Cook.class));
     }
-    static interface Cook extends Node.Cookie {
+    interface Cook extends Node.Cookie {
     }
     public void testInconsistencyWhenDoubleCookie175750() {
         CookieSet cs = CookieSet.createGeneric(null);
@@ -113,7 +113,7 @@ public class CookieSetTest extends NbTestCase {
         assertNull("No h cookie now ", cs.getCookie(Hook.class));
         assertNull("No h lkp now ", cs.getLookup().lookup(Hook.class));
     }
-    static interface Hook extends Cook {
+    interface Hook extends Cook {
     }
 
     

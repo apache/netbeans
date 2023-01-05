@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  */
 public abstract class InsertSemicolonAction extends BaseAction {
 
-    public static enum NewLineProcessor {
+    public enum NewLineProcessor {
         WITH_NEW_LINE {
             @Override
             public void processNewLine(final int endOfLineOffset, final Caret caret, final Indent indenter) throws BadLocationException {

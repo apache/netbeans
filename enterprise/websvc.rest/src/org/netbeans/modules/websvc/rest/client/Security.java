@@ -71,7 +71,7 @@ public class Security {
         this.deploymentDescriptor = deploymentDescriptor;
     }
 
-    public static enum Authentication {
+    public enum Authentication {
         NONE("auth_none"),
         BASIC("auth_basic"),
         OAUTH("auth_oauth"),

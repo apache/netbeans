@@ -48,7 +48,7 @@ public class JspCompletionQueryTest extends TestBase {
 
     private static final String DATA_DIR_BASE = "testfiles/completion/";
 
-    public static enum Match {
+    public enum Match {
         EXACT, CONTAINS, DOES_NOT_CONTAIN, EMPTY, NOT_EMPTY;
     }
 

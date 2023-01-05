@@ -177,7 +177,7 @@ public class SwitcherTableItem implements Comparable {
      * This interface has to be implemented and passed to the
      * <code>SwitcherTableItem</code> constructor.
      */
-    public static interface Activatable {
+    public interface Activatable {
         /**
          * Here should be code witch <em>activate</em> this item. The method
          * <code>SwitcherTableItem.activate()</code> conveniently call this

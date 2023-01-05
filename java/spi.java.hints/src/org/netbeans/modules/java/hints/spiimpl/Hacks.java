@@ -135,7 +135,7 @@ public class Hacks {
         return null;
     }
     
-    public static interface InspectAndTransformOpener {
+    public interface InspectAndTransformOpener {
         public void openIAT(HintMetadata hm);
     }
 }

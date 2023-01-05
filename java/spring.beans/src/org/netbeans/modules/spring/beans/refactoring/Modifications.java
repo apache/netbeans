@@ -271,7 +271,7 @@ public final class Modifications implements org.netbeans.modules.refactoring.spi
             return kind + "<" + getStartPosition() + ", " + getEndPosition() + "> -> " + newText; //NOI18N
         }
 
-        public static enum Kind {
+        public enum Kind {
             INSERT,
             REMOVE,
             CHANGE

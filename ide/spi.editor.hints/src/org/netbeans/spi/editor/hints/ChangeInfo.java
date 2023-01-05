@@ -122,7 +122,7 @@ public final class ChangeInfo {
      * Interface representing a single caret-positioning or user-modifiable
      * change.
      */
-    public static interface Change {
+    public interface Change {
         /**
          * @return start position of the change
          */

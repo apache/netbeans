@@ -42,7 +42,7 @@ public interface JavaSourceProvider {
      * {@link JavaFileFilterImplementation#getOriginalPosition}, 
      * {@link JavaFileFilterImplementation#getJavaSourcePosition} are called.
      */
-    public static interface PositionTranslatingJavaFileFilterImplementation extends JavaFileFilterImplementation {
+    public interface PositionTranslatingJavaFileFilterImplementation extends JavaFileFilterImplementation {
         /**Compute position in the document for given position in the virtual
          * Java source.
          *

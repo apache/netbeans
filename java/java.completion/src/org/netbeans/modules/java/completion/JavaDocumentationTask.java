@@ -45,7 +45,7 @@ public final class JavaDocumentationTask<T> extends BaseTask {
         return new JavaDocumentationTask<>(caretOffset, element, factory, cancel);
     }
 
-    public static interface DocumentationFactory<T> {
+    public interface DocumentationFactory<T> {
 
         T create(CompilationInfo compilationInfo, Element element, final Callable<Boolean> cancel);
     }

@@ -42,7 +42,7 @@ public class CompilationCache {
         return new Key(items);
     }
     
-    public static interface ValueProvider<T> {
+    public interface ValueProvider<T> {
         public T get();
     }
     

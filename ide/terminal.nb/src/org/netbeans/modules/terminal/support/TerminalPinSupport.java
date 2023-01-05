@@ -135,7 +135,7 @@ public class TerminalPinSupport {
 	}
     }
 
-    public static interface DetailsStateListener extends EventListener{
+    public interface DetailsStateListener extends EventListener{
 
 	void detailsAdded(Term term);
     }

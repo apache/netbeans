@@ -458,7 +458,7 @@ public class RulesManager implements FileChangeListener {
 
     public static APIAccessor ACCESSOR;
     
-    public static interface APIAccessor {
+    public interface APIAccessor {
 
         public boolean isEnabledDefault( AbstractHint hint );
 

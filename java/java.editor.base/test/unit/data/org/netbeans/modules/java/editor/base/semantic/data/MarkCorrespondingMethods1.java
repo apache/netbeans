@@ -102,7 +102,7 @@ public class MarkCorrespondingMethods1 extends AbstractList<String> implements C
         }
     }
     
-    public static interface Int {
+    public interface Int {
         public int hashCode();
     }
     

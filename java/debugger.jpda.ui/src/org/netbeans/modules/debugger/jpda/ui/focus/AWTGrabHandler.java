@@ -89,7 +89,7 @@ class AWTGrabHandler {
     private JPDADebuggerImpl debugger;
     private Boolean doGrabCheck = null; // Not decided at the beginning
     
-    private static enum TOOLKIT {
+    private enum TOOLKIT {
         AWT,
         JAVAFX;
         

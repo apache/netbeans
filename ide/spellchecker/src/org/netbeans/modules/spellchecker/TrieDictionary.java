@@ -521,7 +521,7 @@ public class TrieDictionary implements Dictionary {
         }
     }
     
-    private static interface ProposalAcceptor {
+    private interface ProposalAcceptor {
         public boolean add(String proposal);
     }
     

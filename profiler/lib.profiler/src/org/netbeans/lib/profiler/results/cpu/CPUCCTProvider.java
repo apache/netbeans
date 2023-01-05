@@ -27,7 +27,7 @@ import org.netbeans.lib.profiler.results.CCTProvider;
  * @author Jaroslav Bachorik
  */
 public interface CPUCCTProvider extends CCTProvider {
-    public static interface Listener extends CCTProvider.Listener {
+    public interface Listener extends CCTProvider.Listener {
     }
 
     /**

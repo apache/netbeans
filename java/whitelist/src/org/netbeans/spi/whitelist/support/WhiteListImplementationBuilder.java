@@ -612,7 +612,7 @@ final class WhiteListImplementationBuilder {
         }
     }
 
-    private static interface Names {
+    private interface Names {
         @NonNull
         Integer putName(@NonNull String name);
 

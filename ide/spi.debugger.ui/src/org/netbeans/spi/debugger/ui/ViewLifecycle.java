@@ -78,7 +78,7 @@ public final class ViewLifecycle {
     /**
      * Model update listener, notified with updated compound model.
      */
-    public static interface ModelUpdateListener {
+    public interface ModelUpdateListener {
         
         /**
          * Called when compound model is updated.

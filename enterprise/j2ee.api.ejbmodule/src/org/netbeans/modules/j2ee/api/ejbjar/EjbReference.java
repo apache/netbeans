@@ -35,7 +35,7 @@ import org.openide.filesystems.FileObject;
  * @author Martin Adamek
  */
 public final class EjbReference {
-    public static enum EjbRefIType{
+    public enum EjbRefIType{
         NO_INTERFACE("Bean"),
         LOCAL("Local"),
         REMOTE("Remote");

@@ -42,7 +42,7 @@ import org.openide.xml.XMLUtil;
  */
 public abstract class YamlStructureItem implements StructureItem, ElementHandle {
 
-    public static enum NodeType { MAP, SEQUENCE, MAPPING, SCALAR, ALIAS };
+    public enum NodeType { MAP, SEQUENCE, MAPPING, SCALAR, ALIAS };
     
     private static final Logger LOGGER = Logger.getLogger(YamlStructureItem.class.getName());
     private final NodeType type;

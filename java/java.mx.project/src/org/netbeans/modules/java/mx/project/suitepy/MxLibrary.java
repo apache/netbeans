@@ -32,7 +32,7 @@ public interface MxLibrary {
 
     Map<String, MxLibrary.Arch> os_arch();
 
-    static interface Arch {
+    interface Arch {
         MxLibrary amd64();
     }
 }

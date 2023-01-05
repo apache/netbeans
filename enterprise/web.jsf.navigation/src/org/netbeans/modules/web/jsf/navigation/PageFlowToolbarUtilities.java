@@ -59,7 +59,7 @@ public class PageFlowToolbarUtilities {
     //    private static final int SCOPE_FACESCONFIG = 1;
     //    private static final int SCOPE_PROJECT = 2;
 
-    public static enum Scope {
+    public enum Scope {
 
         SCOPE_FACESCONFIG, SCOPE_PROJECT, SCOPE_ALL_FACESCONFIG
     }

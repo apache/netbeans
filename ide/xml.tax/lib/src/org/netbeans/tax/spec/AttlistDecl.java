@@ -36,7 +36,7 @@ public interface AttlistDecl {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkAttlistDeclElementName (String elementName) throws InvalidArgumentException;
 
@@ -77,7 +77,7 @@ public interface AttlistDecl {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -94,7 +94,7 @@ public interface AttlistDecl {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeAttlistDecl (TreeAttlistDecl attlistDecl) throws TreeException;
         

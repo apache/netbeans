@@ -89,7 +89,7 @@ import org.openide.windows.InputOutput;
  */
 public class NewPhpProjectWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
 
-    public static enum WizardType {
+    public enum WizardType {
         NEW,
         EXISTING,
         REMOTE,

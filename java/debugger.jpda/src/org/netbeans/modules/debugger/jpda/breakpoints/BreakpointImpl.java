@@ -1074,7 +1074,7 @@ public abstract class BreakpointImpl implements ConditionedExecutor, PropertyCha
 
     }
     
-    public static interface HitCountListener {
+    public interface HitCountListener {
         
         void hitCountChanged(JPDABreakpoint bp);
     }

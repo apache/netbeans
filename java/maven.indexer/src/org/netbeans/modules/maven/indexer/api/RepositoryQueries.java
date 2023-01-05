@@ -203,7 +203,7 @@ public final class RepositoryQueries {
         }
     }
     
-    private static interface QueryCall<T> {
+    private interface QueryCall<T> {
         ResultImplementation<T> call(RepositoryIndexQueryProvider queryProvider, List<RepositoryInfo> providerRepos);
     }
     

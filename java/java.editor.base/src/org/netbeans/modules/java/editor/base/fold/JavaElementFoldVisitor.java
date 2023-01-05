@@ -304,7 +304,7 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
         return super.visitCompilationUnit(node, p);
     }
 
-    public static interface FoldCreator<T> {
+    public interface FoldCreator<T> {
 
         T createImportsFold(int start, int end);
         T createInnerClassFold(int start, int end);

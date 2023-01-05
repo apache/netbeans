@@ -334,7 +334,7 @@ public final class SpringXMLConfigEditorUtils {
         return logicalBean[0];
     }
 
-    private static interface MutableSpringBean extends SpringBean {
+    private interface MutableSpringBean extends SpringBean {
         void setClassName(String className);
         void setFactoryBean(String factoryBean);
         void setFactoryMethod(String factoryMethod);

@@ -50,7 +50,7 @@ public abstract class AXIComponent extends AbstractComponent<AXIComponent>
      * Represents the type of this component.
      * Can be one of local, shared, proxy or reference.
      */
-    public static enum ComponentType {
+    public enum ComponentType {
         LOCAL,
         SHARED,
         PROXY,

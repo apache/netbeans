@@ -55,7 +55,7 @@ public enum JavaWhereUsedFilters {
         return key;
     }
 
-    public static enum ReadWrite {
+    public enum ReadWrite {
 
         READ("filter-read"),
         WRITE("filter-write"),

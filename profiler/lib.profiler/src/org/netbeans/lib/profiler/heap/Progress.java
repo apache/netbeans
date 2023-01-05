@@ -57,7 +57,7 @@ enum Progress {
         STARTED, PROGRESS, FINISHED;
     }
 
-    static interface Listener {
+    interface Listener {
         void started(Handle h);
         void progress(Handle h);
         void finished(Handle h);

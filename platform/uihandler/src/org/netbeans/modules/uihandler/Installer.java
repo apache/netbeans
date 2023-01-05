@@ -208,7 +208,7 @@ public class Installer extends ModuleInstall implements Runnable {
      */
     private static final Object METRICS_LOG_LOCK = new Object();
 
-    static enum DataType {
+    enum DataType {
         DATA_UIGESTURE,
         DATA_METRICS
     };
@@ -2821,7 +2821,7 @@ public class Installer extends ModuleInstall implements Runnable {
         }
     }
 
-    static enum Button {
+    enum Button {
         EXIT("exit"),
         NEVER_AGAIN("never-again"),
         VIEW_DATA("view-data"),

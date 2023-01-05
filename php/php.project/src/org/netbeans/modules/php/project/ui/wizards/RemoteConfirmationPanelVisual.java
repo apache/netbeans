@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
  */
 @org.netbeans.api.annotations.common.SuppressWarnings("SE_BAD_FIELD_STORE")
 public final class RemoteConfirmationPanelVisual extends JPanel {
-    static enum State { FETCHING, NO_FILES, FILES };
+    enum State { FETCHING, NO_FILES, FILES };
 
     private static final long serialVersionUID = 3753241413078222434L;
     private static final int STEP_INDEX = 2;

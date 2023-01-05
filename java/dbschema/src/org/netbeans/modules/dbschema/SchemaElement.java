@@ -470,7 +470,7 @@ public class SchemaElement extends DBElement implements Node.Cookie {
     /** Pluggable behaviour for schema elements.
      * @see SchemaElement
      */
-    public static interface Impl extends DBElement.Impl {
+    public interface Impl extends DBElement.Impl {
         /** Gets the parsing status of the element.
         * This is a non-blocking operation.
         * @return one of {@link #STATUS_NOT}, {@link #STATUS_ERROR},

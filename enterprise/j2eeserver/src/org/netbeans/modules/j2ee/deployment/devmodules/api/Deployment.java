@@ -68,7 +68,7 @@ public final class Deployment {
     /**
      * Deployment mode enumeration
      */
-    public static enum Mode {
+    public enum Mode {
         RUN, DEBUG, PROFILE;
     }
 
@@ -710,7 +710,7 @@ public final class Deployment {
         ServerRegistry.getInstance ().removeInstanceListener(l);
     }
     
-    public static interface Logger {
+    public interface Logger {
         public void log(String message);
     }
 }

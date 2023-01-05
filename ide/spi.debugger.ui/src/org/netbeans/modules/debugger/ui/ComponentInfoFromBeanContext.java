@@ -113,7 +113,7 @@ public class ComponentInfoFromBeanContext {
         
     }
     
-    public static interface Transform {
+    public interface Transform {
         
         ComponentInfo transform(Component c, boolean opened, boolean minimized);//BeanContextChildComponentProxy componentProxy);
         

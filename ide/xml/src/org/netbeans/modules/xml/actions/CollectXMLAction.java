@@ -62,5 +62,5 @@ public class CollectXMLAction extends CollectSystemAction {
     /**
      * Interface XMLAction
      */
-    public static interface XMLAction {}
+    public interface XMLAction {}
 }

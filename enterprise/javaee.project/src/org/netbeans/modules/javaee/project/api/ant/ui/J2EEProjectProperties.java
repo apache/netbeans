@@ -272,7 +272,7 @@ public final class J2EEProjectProperties {
     /**
      * Callback to a project type for project specific functionality.
      */
-    public static interface Callback {
+    public interface Callback {
         void registerJ2eePlatformListener(J2eePlatform platform);
         void unregisterJ2eePlatformListener(J2eePlatform platform);
     }
@@ -521,7 +521,7 @@ public final class J2EEProjectProperties {
      * Callback to set the desired server instance.
      * since 1.8
      */
-    public static interface SetServerInstanceCallback {
+    public interface SetServerInstanceCallback {
 
         /**
          * Sets the server instance.

@@ -53,7 +53,7 @@ public final class PhpSourcePath {
     /**
      * Possible types of a file.
      */
-    public static enum FileType {
+    public enum FileType {
         /** Internal files (signature files). */
         INTERNAL,
         /** PHP include path. */

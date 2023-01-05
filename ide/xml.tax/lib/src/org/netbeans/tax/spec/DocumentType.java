@@ -36,7 +36,7 @@ public interface DocumentType {
     /**
      *
      */
-    public static interface Constraints {
+    public interface Constraints {
 
         public void checkDocumentTypeElementName (String elementName) throws InvalidArgumentException;
 
@@ -62,7 +62,7 @@ public interface DocumentType {
     /**
      *
      */
-    public static interface Creator {
+    public interface Creator {
         
         /**
          * @throws InvalidArgumentException
@@ -84,7 +84,7 @@ public interface DocumentType {
     /**
      *
      */
-    public static interface Writer {
+    public interface Writer {
         
         public void writeDocumentType (TreeDocumentType documentType) throws TreeException;
         
@@ -98,7 +98,7 @@ public interface DocumentType {
     /**
      *
      */
-    public static interface Child {
+    public interface Child {
         
     } // end: intereface Child
     

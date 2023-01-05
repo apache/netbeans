@@ -1411,7 +1411,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     * this interface, so CloneAction can check it and call the cloneComponent
     * method.
     */
-    public static interface Cloneable {
+    public interface Cloneable {
         /** Creates a clone of this component
         * @return cloned component.
         */
@@ -1494,7 +1494,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     * and it permits listening to the currently selected element, and to
     * the activated nodes assigned to it.
     */
-    public static interface Registry {
+    public interface Registry {
         /** Name of property for the set of opened components. */
         public static final String PROP_OPENED = "opened"; // NOI18N
 

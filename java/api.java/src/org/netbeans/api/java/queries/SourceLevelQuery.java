@@ -156,7 +156,7 @@ public class SourceLevelQuery {
      * </div>
      * @since 1.47
      */
-    public static enum Profile {
+    public enum Profile {
 
         /**
          * The compact1 profile.

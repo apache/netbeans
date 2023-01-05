@@ -284,7 +284,7 @@ public final class PinWatchUISupport {
      * Register an implementation of this class via {@link DebuggerServiceRegistration}
      * for the corresponding debugger session ID path.
      */
-    public static interface ValueProvider {
+    public interface ValueProvider {
         
         /**
          * Get a unique ID of this value provider.
@@ -396,7 +396,7 @@ public final class PinWatchUISupport {
         /**
          * Listener for watch value changes.
          */
-        public static interface ValueChangeListener {
+        public interface ValueChangeListener {
             
             /**
              * Notify that a watch value has changed.

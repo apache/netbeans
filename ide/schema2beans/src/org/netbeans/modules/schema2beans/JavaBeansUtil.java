@@ -61,7 +61,7 @@ public class JavaBeansUtil {
     /**
      * BeanWriter is the generic way of writing a java bean out.
      */
-    public static interface BeanWriter {
+    public interface BeanWriter {
         public void beginPropertyName(String propertyName) throws IOException;
         public void endPropertyName(String propertyName) throws IOException;
         public void writeLeafObject(Object obj) throws IOException;

@@ -573,7 +573,7 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
     }
 
 
-    public static interface ContentProvider {
+    public interface ContentProvider {
 
         public ListCellRenderer getListCellRenderer(JList list,  ButtonModel caseSensitive);
 

@@ -555,7 +555,7 @@ public final class ToolbarPool extends JComponent implements Accessible {
     /**
      * Abstract class for toolbar configuration
      */
-    public static interface Configuration {
+    public interface Configuration {
         /** Activates the configuration and returns right
         * component that can display the configuration.
         * @return representation component

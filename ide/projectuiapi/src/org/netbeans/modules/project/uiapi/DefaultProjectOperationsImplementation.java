@@ -213,7 +213,7 @@ public final class DefaultProjectOperationsImplementation {
         LOG.log(Level.FINE, "delete done: {0}", displayName);
     }
     
-    static interface UserInputHandler {
+    interface UserInputHandler {
         void showConfirmationDialog(final JComponent panel, Project project, String caption, String confirmButton, String cancelButton, boolean doSetMessageType, final Executor executor);
     }
     
@@ -808,11 +808,11 @@ public final class DefaultProjectOperationsImplementation {
         }
     }
     
-    static interface Executor {
+    interface Executor {
         public void execute() throws Exception;
     }
     
-    public static interface InvalidablePanel {
+    public interface InvalidablePanel {
         public void addChangeListener(ChangeListener l);
         public void removeChangeListener(ChangeListener l);
         public boolean isPanelValid();

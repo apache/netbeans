@@ -29,7 +29,7 @@ import org.openide.util.actions.NodeAction;
  */
 final class EditRootAction extends NodeAction {
 
-    static interface Editable {
+    interface Editable {
         public boolean canEdit();
         public void edit();
     }

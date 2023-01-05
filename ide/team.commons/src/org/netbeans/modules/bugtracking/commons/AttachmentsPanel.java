@@ -619,7 +619,7 @@ public class AttachmentsPanel extends JPanel {
         return ideServices != null && ideServices.providesOpenInStackAnalyzer();
     }
 
-    public static interface Attachment {
+    public interface Attachment {
 
         public boolean isPatch ();
         

@@ -921,7 +921,7 @@ public class GroovyParser extends Parser {
     }
 
     /** Attempts to sanitize the input buffer */
-    public static enum Sanitize {
+    public enum Sanitize {
         /** Only parse the current file accurately, don't try heuristics */
         NEVER,
         /** Perform no sanitization */
@@ -1009,7 +1009,7 @@ public class GroovyParser extends Parser {
         }
     }
 
-    private static interface ParseErrorHandler {
+    private interface ParseErrorHandler {
 
         void error(Error error);
 

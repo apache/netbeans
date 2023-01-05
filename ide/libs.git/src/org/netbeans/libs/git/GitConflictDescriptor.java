@@ -35,7 +35,7 @@ public final class GitConflictDescriptor {
         this.type = type;
     }
     
-    public static enum Type {
+    public enum Type {
         /**
          * Deleted in both branches.
          */

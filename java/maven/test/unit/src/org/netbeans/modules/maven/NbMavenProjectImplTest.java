@@ -234,7 +234,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
         TestFileUtils.touch(TestFileUtils.writeFile(wd, ".mvn/maven.config", text), null);
     }
 
-    public static interface PS {
+    public interface PS {
         public String m();
     }
 

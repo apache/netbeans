@@ -459,11 +459,11 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
         }
     }
     
-    static interface AnnotationHandleStrategy {
+    interface AnnotationHandleStrategy {
         void handleAnnotation( AnnotationMirror mirror , TypeElement annotation );
     }
     
-    static interface SpecializeVisitor {
+    interface SpecializeVisitor {
         boolean visit( TypeElement superElement );
         boolean visit( ExecutableElement overridenElement );
     }

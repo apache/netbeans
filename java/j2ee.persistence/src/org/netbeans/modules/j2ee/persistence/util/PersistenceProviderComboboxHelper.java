@@ -203,7 +203,7 @@ public final class PersistenceProviderComboboxHelper {
         return null;
     }
     
-    public static interface LibraryItem {
+    public interface LibraryItem {
         String getText();
         void performAction();
     }

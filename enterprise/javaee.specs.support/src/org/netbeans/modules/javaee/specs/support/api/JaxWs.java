@@ -36,7 +36,7 @@ public class JaxWs {
         return uriDescriptor;
     }
             
-    public static enum Tool implements WSStack.Tool {
+    public enum Tool implements WSStack.Tool {
         WSIMPORT,
         WSGEN;
 
@@ -45,7 +45,7 @@ public class JaxWs {
         }
     }
     
-    public static enum Feature implements WSStack.Feature {
+    public enum Feature implements WSStack.Feature {
         JSR109,
         SERVICE_REF_INJECTION,
         TESTER_PAGE,
@@ -56,7 +56,7 @@ public class JaxWs {
         }
     }
     
-    public static interface UriDescriptor {
+    public interface UriDescriptor {
         /** Pattern for WSDL descriptor URI */
         public String getDescriptorUri (String applicationRoot, String serviceName, String portName, boolean isEjb);
         /** Pattern for Web Service URI */

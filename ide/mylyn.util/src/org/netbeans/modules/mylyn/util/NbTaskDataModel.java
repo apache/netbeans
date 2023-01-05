@@ -237,7 +237,7 @@ public final class NbTaskDataModel {
         return changes;
     }
     
-    public static interface NbTaskDataModelListener extends EventListener {
+    public interface NbTaskDataModelListener extends EventListener {
 
         public void attributeChanged (NbTaskDataModelEvent event);
         

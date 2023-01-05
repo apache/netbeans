@@ -372,7 +372,7 @@ public abstract class CLIHandler extends Object {
      * May remain null, otherwise contains list of Execute
      */
     private static List<Execute> doLater = new ArrayList<Execute> ();
-    static interface Execute {
+    interface Execute {
         /** @return returns exit code */
         public int exec ();
     }

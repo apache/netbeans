@@ -527,7 +527,7 @@ public class BatchSearch {
         }
     }
 
-    public static interface MapIndices {
+    public interface MapIndices {
         public IndexEnquirer findIndex(FileObject root, ProgressHandleWrapper progress, boolean recursive);
     }
 

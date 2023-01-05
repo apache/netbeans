@@ -58,7 +58,7 @@ public class JCheckTree extends JExtendedTree {
     // ---------------------------------------------------------------------------
 
     // --- CheckTreeListener interface definition --------------------------------
-    public static interface CheckTreeListener {
+    public interface CheckTreeListener {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         void checkNodeToggled(TreePath node, boolean before);

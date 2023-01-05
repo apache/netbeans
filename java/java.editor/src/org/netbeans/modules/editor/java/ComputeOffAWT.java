@@ -84,7 +84,7 @@ public class ComputeOffAWT {
         
     }
     
-    public static interface Worker<T> {
+    public interface Worker<T> {
         T process(CompilationInfo info);
     }
 

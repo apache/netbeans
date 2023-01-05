@@ -400,7 +400,7 @@ public final class FilterUtils {
     
     
     // Default keybinding Ctrl+G for Filter action
-    private static interface Support { @ServiceProvider(service=ActionsSupportProvider.class, position=100)
+    private interface Support { @ServiceProvider(service=ActionsSupportProvider.class, position=100)
         public static final class FilterActionProvider extends ActionsSupportProvider {
             public KeyStroke registerAction(String actionKey, Action action, ActionMap actionMap, InputMap inputMap) {
                 if (!FILTER_ACTION_KEY.equals(actionKey)) return null;

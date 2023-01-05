@@ -1222,7 +1222,7 @@ public class TreeModelNode extends AbstractNode {
 
     // innerclasses ............................................................
 
-    public static interface DisableableAction extends Action {
+    public interface DisableableAction extends Action {
 
         Action createDisableable(PrivilegedAction enabledTest);
         
@@ -1231,7 +1231,7 @@ public class TreeModelNode extends AbstractNode {
     /**
      * An action, that can act on a pre-set set of nodes.
      */
-    public static interface ActionOnPresetNodes extends Action {
+    public interface ActionOnPresetNodes extends Action {
         
         /**
          * Add a node to act on.

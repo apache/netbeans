@@ -345,7 +345,7 @@ public final class SourceJavadocAttacherUtil {
         };
     }
 
-    public static interface Function<P,R> {
+    public interface Function<P,R> {
         R call (P param) throws Exception;
     }
 

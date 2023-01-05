@@ -144,7 +144,7 @@ public class BeanChildren extends Children.Keys {
     * are created for a child bean.
     * @see BeanChildren#BeanChildren(BeanContext, BeanChildren.Factory)
     */
-    public static interface Factory {
+    public interface Factory {
         /** Create a node for a child bean.
         * @param bean the bean
         * @return the node for the bean

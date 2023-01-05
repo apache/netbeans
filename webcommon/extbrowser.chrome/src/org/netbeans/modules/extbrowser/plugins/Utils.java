@@ -443,7 +443,7 @@ public final class Utils {
     static class HWND extends HANDLE {
     }
 
-    static interface Shell32 extends Library {
+    interface Shell32 extends Library {
 
         public static final int MAX_PATH = 260;
         public static final int CSIDL_LOCAL_APPDATA = 0x001c;

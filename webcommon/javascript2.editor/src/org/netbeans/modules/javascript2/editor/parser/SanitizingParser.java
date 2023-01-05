@@ -661,7 +661,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
     }
 
     /** Attempts to sanitize the input buffer */
-    public static enum Sanitize {
+    public enum Sanitize {
         /** Only parse the current file accurately, don't try heuristics */
         NEVER {
 

@@ -29,7 +29,7 @@ public abstract class NativeExecutionUserNotification {
 
     private static NativeExecutionUserNotification INSTANCE = null;
 
-    public static enum Descriptor {
+    public enum Descriptor {
         WARNING,
         ERROR
     }

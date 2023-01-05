@@ -129,7 +129,7 @@ public class NodeInfo {
     // Class variables
     ////////////////////////////////////////////////////////////////////////////////
     
-    public static enum NodeType { ELEMENT, ATTRIBUTE, TEXT, WHITE_SPACE };
+    public enum NodeType { ELEMENT, ATTRIBUTE, TEXT, WHITE_SPACE };
     
     ////////////////////////////////////////////////////////////////////////////////
     // Member variables

@@ -46,7 +46,7 @@ public class CodeCompletionPanel extends JPanel {
     private static final long serialVersionUID = -24730122182427272L;
     private final Map<String, Object> id2Saved = new HashMap<>();
 
-    public static enum CodeCompletionType {
+    public enum CodeCompletionType {
         SMART,
         FULLY_QUALIFIED,
         UNQUALIFIED;
@@ -63,7 +63,7 @@ public class CodeCompletionPanel extends JPanel {
         }
     }
 
-    public static enum VariablesScope {
+    public enum VariablesScope {
         ALL,
         CURRENT_FILE;
 

@@ -189,7 +189,7 @@ public class GlassFishV3ServerNode extends J2eeServerNode {
     public static final int STATE_PROFILER_BLOCKING = 7;
     public static final int STATE_PROFILER_STARTING = 8;
 
-//    private static enum ServerState {
+//    private enum ServerState {
 //        STARTING,0
 //        RUNNING,1
 //        RUNNING_JVM_DEBUG,2

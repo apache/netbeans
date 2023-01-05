@@ -106,7 +106,7 @@ public class JsfTemplateUtils {
         }
     }
 
-    public static enum TemplateType {
+    public enum TemplateType {
         SNIPPETS("/Templates/JSF/JSF_From_Entity_Snippets"),
         PAGES("/Templates/JSF/JSF_From_Entity_Wizard");
 

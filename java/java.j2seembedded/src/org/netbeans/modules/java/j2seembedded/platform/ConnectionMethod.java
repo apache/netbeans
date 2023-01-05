@@ -49,7 +49,7 @@ public final class ConnectionMethod {
         private static final String PLAT_PROP_AUTH_USER = "platform.auth.username";     //NOI18N
 
 
-        public static enum Kind {
+        public enum Kind {
             PASSWORD {
                 @NonNull
                 @Override

@@ -36,7 +36,7 @@ import org.openide.util.Pair;
 
 public final class TapParser {
 
-    private static enum State {
+    private enum State {
         NOT_OK,
     }
 

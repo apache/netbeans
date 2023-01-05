@@ -338,7 +338,7 @@ public final class OptionsExportModel {
         out.closeEntry();
     }
 
-    private static enum ParserState {
+    private enum ParserState {
 
         START,
         IN_KEY_PATTERN,

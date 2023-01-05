@@ -26,7 +26,7 @@ import org.openide.util.NbBundle;
  */
 public class VCSCommitPanelModifier {
     
-    public static enum BundleMessage {
+    public enum BundleMessage {
         FILE_TABLE_INCLUDE_ACTION_NAME(NbBundle.getMessage(VCSCommitPanelModifier.class, "CTL_CommitTable_IncludeAction")), //NOI18N
         FILE_TABLE_EXCLUDE_ACTION_NAME(NbBundle.getMessage(VCSCommitPanelModifier.class, "CTL_CommitTable_ExcludeAction")), //NOI18N
         FILE_TABLE_ACCESSIBLE_NAME(NbBundle.getMessage(VCSCommitPanelModifier.class, "ACSN_CommitTable")), //NOI18N

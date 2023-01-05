@@ -54,12 +54,12 @@ import org.openide.util.BaseUtilities;
  */
 public abstract class ClassIndexImpl {
 
-    public static enum State {
+    public enum State {
         NEW,
         INITIALIZED,
     }
 
-    public static enum UsageType {
+    public enum UsageType {
         SUPER_CLASS,
         SUPER_INTERFACE,
         FIELD_REFERENCE,
@@ -71,7 +71,7 @@ public abstract class ClassIndexImpl {
     /**
      * Type of ClassIndexImpl
      */
-    public static enum Type {
+    public enum Type {
         /**
          * Index does not exist yet or
          * it's broken

@@ -29,7 +29,7 @@ public final class IndentCommand {
     /**
      * Enumeration of indentation command types.
      */
-    public static enum Type {
+    public enum Type {
 
         /**
          * This line should be indented.

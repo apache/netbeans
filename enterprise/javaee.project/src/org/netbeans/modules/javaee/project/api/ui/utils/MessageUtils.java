@@ -73,7 +73,7 @@ public final class MessageUtils {
     /**
      * The type of the message.
      */
-    public static enum MessageType {
+    public enum MessageType {
 
         /**
          * Error message.

@@ -365,7 +365,7 @@ public final class ConsoleSection {
      *
      * @author sdedic
      */
-    public static enum Type {
+    public enum Type {
         /**
          * Java input
          */

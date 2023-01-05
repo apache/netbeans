@@ -36,7 +36,7 @@ import org.openide.util.Pair;
 public class GrammarResolver {
 
     //logs types
-    public static enum Log {
+    public enum Log {
 
         DEFAULT,
         VALUES,
@@ -71,7 +71,7 @@ public class GrammarResolver {
     private static final Logger LOGGER = Logger.getLogger(GrammarResolver.class.getName());
 
     
-    public static enum Feature {
+    public enum Feature {
         /**
          * The resulting parse tree WILL contain the anonymous grammar rules.
          * Default behavior is not to put such nodes in the parse tree.

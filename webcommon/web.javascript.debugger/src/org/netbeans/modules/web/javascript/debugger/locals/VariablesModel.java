@@ -610,7 +610,7 @@ public class VariablesModel extends ViewModelSupport implements TreeModel, Exten
 
     }
 
-    public static enum ViewScope {
+    public enum ViewScope {
 
         LOCAL,
         CATCH,

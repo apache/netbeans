@@ -86,7 +86,7 @@ public class InstallSupportImpl {
     private Future<Boolean> runningTask;
     private final Object LOCK = new Object();
 
-    private static enum STEP {
+    private enum STEP {
         NOTSTARTED,
         DOWNLOAD,
         VALIDATION,

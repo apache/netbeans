@@ -115,7 +115,7 @@ public abstract class AbstractHint implements TreeRule {
      *  <li><code>WARNING</code>  - will show up as warrnig
      *  <li><code>CURRENT_LINE_WARNING</code>  - will only show up when the caret is placed in the errorneous element
      */
-    public static enum HintSeverity {
+    public enum HintSeverity {
         ERROR(Severity.ERROR),
         WARNING(Severity.VERIFIER),
         CURRENT_LINE_WARNING(Severity.HINT);

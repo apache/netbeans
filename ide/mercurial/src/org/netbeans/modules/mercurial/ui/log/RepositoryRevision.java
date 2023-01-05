@@ -72,7 +72,7 @@ public class RepositoryRevision {
     private final Set<String> headOfBranches;
     private final Kind kind;
     
-    public static enum Kind {
+    public enum Kind {
         INCOMING,
         OUTGOING,
         LOCAL

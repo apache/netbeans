@@ -292,7 +292,7 @@ public class J2eeTestCase extends JellyTestCase {
         }
     }
 
-    public static enum Server {
+    public enum Server {
 
         TOMCAT, GLASSFISH, JBOSS, ANY
     }

@@ -934,7 +934,7 @@ public class JavacParser extends Parser {
                 files);
     }
 
-    private static enum ConfigFlags {
+    private enum ConfigFlags {
         BACKGROUND_COMPILATION,
         MULTI_SOURCE,
         MODULE_INFO

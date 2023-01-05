@@ -72,7 +72,7 @@ public class ErrorsCache {
         public String    getMessage(T t);
     }
 
-    public static enum ErrorKind {
+    public enum ErrorKind {
         /**Error, that should be used to show error badge in the projects tab.
          */
         ERROR,

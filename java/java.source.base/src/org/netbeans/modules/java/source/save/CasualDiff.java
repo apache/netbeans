@@ -667,7 +667,7 @@ public class CasualDiff {
         return offset;
     }
 
-    private static enum ChangeKind {
+    private enum ChangeKind {
         INSERT,
         DELETE,
         MODIFY,
@@ -6181,7 +6181,7 @@ public class CasualDiff {
 
     // ---- TreeDiff inner classes - need refactoring.
 
-    public static enum DiffTypes {
+    public enum DiffTypes {
         /**
          * The tree has been modified; that is, different versions
          * of it exist in the old and new parent trees.
@@ -6206,7 +6206,7 @@ public class CasualDiff {
         public final String name;
     }
 
-    public static enum LineInsertionType {
+    public enum LineInsertionType {
         BEFORE, AFTER, NONE
     }
 

@@ -28,7 +28,7 @@ public interface PathConverter {
 
     public String convertAll(PathType srcType, PathType trgType, String path);
 
-    public static enum PathType {
+    public enum PathType {
 
         CYGWIN,
         MSYS,

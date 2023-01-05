@@ -36,7 +36,7 @@ public abstract class IOSelect {
      * Additional operations to perform when issuing {@link IOSelect#select}.
      * @author ivan
      */
-    public static enum AdditionalOperation {
+    public enum AdditionalOperation {
 	/**
 	 * Additionally issue open() on the TopComponent containing the InputOutput.
 	 */

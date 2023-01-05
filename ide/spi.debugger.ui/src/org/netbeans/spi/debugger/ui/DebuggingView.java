@@ -126,7 +126,7 @@ public final class DebuggingView {
         /**
          * The debugger state.
          */
-        public static enum STATE {
+        public enum STATE {
             RUNNING,
             DISCONNECTED
         }
@@ -569,7 +569,7 @@ public final class DebuggingView {
         /**
          * Pre-defined default filters enumeration.
          */
-        public static enum DefaultFilter {
+        public enum DefaultFilter {
             sortAlphabetic,
             sortSuspend,
             sortNatural,

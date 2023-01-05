@@ -45,7 +45,7 @@ public abstract class NotificationDisplayer {
     /**
      * Priority of Notification
      */
-    public static enum Priority {
+    public enum Priority {
         HIGH(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_high.png"))), //NOI18N
         NORMAL(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_normal.png"))), //NOI18N
         LOW(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_low.png"))), //NOI18N

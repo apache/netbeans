@@ -64,7 +64,7 @@ public class LanguageRegistrationTest extends NbTestCase {
         
     }
     
-    private static enum TestTokenId implements TokenId {
+    private enum TestTokenId implements TokenId {
 
         TOKEN_ID1,
         TOKEN_ID2;

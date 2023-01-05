@@ -48,7 +48,7 @@ public class Saas implements Comparable<Saas> {
     public static final String PROP_PARENT_GROUP = "parentGroup";
     public static final String PROP_STATE = "saasState";
 
-    public static enum State {
+    public enum State {
         UNINITIALIZED,
         INITIALIZING,
         RETRIEVED,

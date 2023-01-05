@@ -64,7 +64,7 @@ public class TokenElement {
         return type + ", " + name + ", " + startOffset + ", " + endOffset;
     }
 
-    public static enum Token {
+    public enum Token {
         EQUALS_TOKEN("=", TokenType.TOKEN_ATTR_EQUAL), WHITESPACE_TOKEN(" ", TokenType.TOKEN_WHITESPACE),
         CLOSE_ELEMENT(">", TokenType.TOKEN_ELEMENT_END_TAG), //NOI18N
 
@@ -99,7 +99,7 @@ public class TokenElement {
         private final TokenType type;
     }
 
-    public static enum TokenType {
+    public enum TokenType {
         TOKEN_ELEMENT_NAME,
         TOKEN_ELEMENT_START_TAG,
         TOKEN_ELEMENT_END_TAG,

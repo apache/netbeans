@@ -26,7 +26,7 @@ package org.netbeans.api.languages;
  */
 public class CompletionItem {
 
-    public static enum Type {
+    public enum Type {
         INTERFACE,
         CLASS,
         METHOD,

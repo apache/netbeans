@@ -35,7 +35,7 @@ import org.netbeans.installer.utils.StringUtils;
  */
 public class LauncherResource {
 
-    public static enum Type {
+    public enum Type {
         BUNDLED,
         ABSOLUTE,
         RELATIVE_JAVAHOME,

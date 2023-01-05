@@ -31,7 +31,7 @@ public final class OperationException extends Exception {
     /**
      * Define the failure
      */
-    public static enum ERROR_TYPE {
+    public enum ERROR_TYPE {
         /**
          * Problem with proxy configuration
          */

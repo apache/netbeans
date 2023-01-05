@@ -25,7 +25,7 @@ import java.util.Collection;
  * @author Jaroslav Bachorik
  */
 public abstract class SourcePackageInfo {
-    public static enum Scope {
+    public enum Scope {
         SOURCE, DEPENDENCIES
     }
     

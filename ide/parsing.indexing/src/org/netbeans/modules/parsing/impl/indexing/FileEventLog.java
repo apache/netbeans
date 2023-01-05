@@ -39,7 +39,7 @@ class FileEventLog implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(FileEventLog.class.getName());
 
-    public static enum FileOp {
+    public enum FileOp {
        DELETE,
        CREATE
     };

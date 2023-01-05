@@ -455,7 +455,7 @@ public final class MoveRefactoring extends CodeRefactoring {
     static final class NamedPathControl {
     }
 
-    public static enum Visibility {
+    public enum Visibility {
 
         ESCALATE("Escalate"),
         ASIS("As is"),
@@ -476,7 +476,7 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
     }
 
-    public static enum JavaDoc {
+    public enum JavaDoc {
 
         ASIS("As is"),
         UPDATE("Update");

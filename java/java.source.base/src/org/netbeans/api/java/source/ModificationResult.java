@@ -606,7 +606,7 @@ public final class ModificationResult {
             return s.getDocument(true);
         }
         
-        public static enum Kind {
+        public enum Kind {
             INSERT,
             REMOVE,
             CHANGE,

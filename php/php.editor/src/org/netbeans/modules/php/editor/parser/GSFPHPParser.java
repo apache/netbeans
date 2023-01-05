@@ -841,7 +841,7 @@ public class GSFPHPParser extends Parser implements PropertyChangeListener {
     /**
      * Attempts to sanitize the input buffer.
      */
-    public static enum Sanitize {
+    public enum Sanitize {
 
         /**
          * Only parse the current file accurately, don't try heuristics.

@@ -33,7 +33,7 @@ import org.netbeans.modules.web.browser.api.BrowserFamilyId;
  */
 public final class ExtensionManager {
 
-    public static enum ExtensitionStatus {
+    public enum ExtensitionStatus {
         INSTALLED,
         MISSING,
         NEEDS_UPGRADE,

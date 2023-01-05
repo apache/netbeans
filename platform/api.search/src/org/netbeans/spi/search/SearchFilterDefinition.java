@@ -40,7 +40,7 @@ public abstract class SearchFilterDefinition {
     /**
      * Result of filtering a folder.
      */
-    public static enum FolderResult {
+    public enum FolderResult {
 
         /**
          * Constant representing answer &quot;do not traverse the folder&quot;.

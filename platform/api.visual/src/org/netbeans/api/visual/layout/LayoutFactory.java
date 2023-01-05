@@ -38,7 +38,7 @@ public final class LayoutFactory {
     /**
      * Alignment of children widgets within a calculated widget used by FlowLayout (vertical and horizontal flow layout).
      */
-    public static enum SerialAlignment {
+    public enum SerialAlignment {
 
         LEFT_TOP, CENTER, RIGHT_BOTTOM, JUSTIFY
     }

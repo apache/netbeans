@@ -35,7 +35,7 @@ public final class MacroExpanderFactory {
 
     private static final Map<String, MacroExpander> expanderCache = new ConcurrentHashMap<>();
 
-    public static enum ExpanderStyle {
+    public enum ExpanderStyle {
 
         SUNSTUDIO_STYLE,
         DEFAULT_STYLE

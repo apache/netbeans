@@ -36,7 +36,7 @@ public class ContentModel extends AXIContainer implements AXIType {
     /**
      * Various types of content model.
      */
-    public static enum ContentModelType {
+    public enum ContentModelType {
         COMPLEX_TYPE,
         GROUP,
         ATTRIBUTE_GROUP

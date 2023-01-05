@@ -39,7 +39,7 @@ public final class SearchPattern {
         "LBL_MatchType_Basic_Wildcards=Basic Wildcards",
         "LBL_MatchType_Regular_Expression=Regular Expression"
     })
-    public static enum MatchType {
+    public enum MatchType {
 
         /**
          * Match the pattern literally.

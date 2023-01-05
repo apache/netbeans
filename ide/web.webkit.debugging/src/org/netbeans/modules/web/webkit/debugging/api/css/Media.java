@@ -63,7 +63,7 @@ public class Media {
     /**
      * Source of the media query.
      */
-    public static enum Source {
+    public enum Source {
         /** Specified by a {@code @media} rule. */
         MEDIA_RULE,
         /** Specified by an {@code @import} rule. */

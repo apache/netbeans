@@ -36,7 +36,7 @@ public abstract class ParserManager {
     /**
      * State of parser.
      */
-    public static enum State {
+    public enum State {
         /** Parser is running. */
         PARSING, 
         /** Parsed without errors. */

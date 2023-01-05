@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
  */
 public final class PasswordPanel extends JPanel {
     private static final long serialVersionUID = -12116662158021638L;
-    private static enum Type { USER, CERTIFICATE };
+    private enum Type { USER, CERTIFICATE };
 
     private final String configurationName;
 

@@ -47,7 +47,7 @@ import org.openide.util.NbPreferences;
  */
 public class AddServerLocationVisualPanel extends javax.swing.JPanel implements Retriever.Updater {
 
-    public static enum DownloadState { AVAILABLE, DOWNLOADING, COMPLETED };
+    public enum DownloadState { AVAILABLE, DOWNLOADING, COMPLETED };
 
     // expose for qa-functional tests
     public static final String V3_DOWNLOAD_PREFIX = "https://download.oracle.com/"; // NOI18N

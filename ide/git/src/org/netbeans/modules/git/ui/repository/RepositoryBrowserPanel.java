@@ -142,7 +142,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
     private String branchMergeWith;
     private static final String PROP_DELETE_ACTION = "RepoBrowser.deleteAction"; //NOI18N
 
-    public static enum Option {
+    public enum Option {
         DISPLAY_ALL_REPOSITORIES,
         DISPLAY_BRANCHES_LOCAL,
         DISPLAY_BRANCHES_REMOTE,
@@ -773,7 +773,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         }
     }
 
-    private static enum BranchNodeType {
+    private enum BranchNodeType {
         LOCAL {
             @Override
             public String toString () {

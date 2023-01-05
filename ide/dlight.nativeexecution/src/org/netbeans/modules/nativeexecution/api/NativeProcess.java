@@ -71,7 +71,7 @@ public abstract class NativeProcess extends Process {
     /**
      * Enumerates possible states of the {@link NativeProcess}.
      */
-    public static enum State {
+    public enum State {
 
         /**
          * Native process is in an Initial state. This means that it has not been

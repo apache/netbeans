@@ -92,7 +92,7 @@ public final class WebService {
     /**
      * Enum that enumerates the web service types (SOAP, REST, etc) supported in Netbeans.
      */
-    public static enum Type {
+    public enum Type {
         /**
          * WSDL-based services
          */

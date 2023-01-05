@@ -36,7 +36,7 @@ public class JaxWs {
         return uriDescriptor;
     }
             
-    public static enum Tool implements WSStack.Tool {
+    public enum Tool implements WSStack.Tool {
         WSIMPORT,
         WSGEN;
 
@@ -45,7 +45,7 @@ public class JaxWs {
         }
     }
     
-    public static enum Feature implements WSStack.Feature {
+    public enum Feature implements WSStack.Feature {
         JSR109,
         SERVICE_REF_INJECTION,
         TESTER_PAGE,

@@ -30,7 +30,7 @@ import org.openide.filesystems.FileUtil;
 public abstract class BasePathSupport {
 
     public static final class Item {
-        public static enum Type {
+        public enum Type {
             CLASSPATH,
             FOLDER
         }

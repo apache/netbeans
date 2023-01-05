@@ -131,7 +131,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     }
     
     
-    public static enum EnValue {
+    public enum EnValue {
         ONE, TWO
     }
     

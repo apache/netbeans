@@ -906,7 +906,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
         }
     }
 
-    private static enum MixedCodeOptions {
+    private enum MixedCodeOptions {
         DEFAULT("default"),  //NOI18N
         TRUSTED_ONLY("trusted_only"),   //NOI18N
         TRUSTED_LIBRARY("trusted_library"); //NOI18N

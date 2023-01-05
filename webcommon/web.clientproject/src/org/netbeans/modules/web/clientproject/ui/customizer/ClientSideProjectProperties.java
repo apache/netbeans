@@ -464,7 +464,7 @@ public final class ClientSideProjectProperties {
         "ProjectServer.internal.title=Embedded Lightweight",
         "ProjectServer.external.title=External"
     })
-    public static enum ProjectServer {
+    public enum ProjectServer {
         INTERNAL(Bundle.ProjectServer_internal_title()),
         EXTERNAL(Bundle.ProjectServer_external_title());
 

@@ -28,7 +28,7 @@ import org.netbeans.modules.php.editor.api.elements.PhpElement;
  */
 public interface Occurence {
 
-    public static enum Accuracy {
+    public enum Accuracy {
         NO,
         UNIQUE,
         EXACT,

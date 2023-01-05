@@ -86,7 +86,7 @@ public class LanguagePathTest extends NbTestCase {
         assertSame(jspJavaJavadocPath, mergedPath);
     }
     
-    private static enum TestTokenId implements TokenId {
+    private enum TestTokenId implements TokenId {
         
         TOKEN_ID1,
         TOKEN_ID2;

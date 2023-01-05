@@ -109,7 +109,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
         return  sb.toString();
     }
     
-    private static enum ELEMENTS {
+    private enum ELEMENTS {
         module_updates, module_group, notification, content_description, module, description,
         module_notification, external_package, manifest, l10n, license, message_digest
     }

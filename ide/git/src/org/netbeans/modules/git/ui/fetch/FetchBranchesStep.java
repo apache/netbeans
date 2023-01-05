@@ -62,7 +62,7 @@ public class FetchBranchesStep extends AbstractWizardPanel implements WizardDesc
     private final File repository;
     private final ItemSelector<BranchMapping> branches;
 
-    public static enum Mode {
+    public enum Mode {
         ACCEPT_EMPTY_SELECTION,
         ACCEPT_NON_EMPTY_SELECTION_ONLY
     }

@@ -88,7 +88,7 @@ public final class FunctionArgument {
         return this.value;
     }
 
-    public static enum Kind {
+    public enum Kind {
         STRING,
         REFERENCE,
         ANONYMOUS_OBJECT,

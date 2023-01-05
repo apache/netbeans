@@ -50,12 +50,12 @@ public abstract class Breakpoint {
     public static final String          PROP_HIT_COUNT_FILTER = "hitCountFilter"; // NOI18N
     
     /** Validity values */
-    public static enum                  VALIDITY { UNKNOWN, VALID, INVALID }
+    public enum                  VALIDITY { UNKNOWN, VALID, INVALID }
     
     /** The style of filtering of hit counts.
      * The breakpoint is reported when the actual hit count is "equal to",
      * "greater than" or "multiple of" the number specified by the hit count filter. */
-    public static enum                  HIT_COUNT_FILTERING_STYLE { EQUAL, GREATER, MULTIPLE }
+    public enum                  HIT_COUNT_FILTERING_STYLE { EQUAL, GREATER, MULTIPLE }
     
     /** Support for property listeners. */
     private PropertyChangeSupport       pcs;

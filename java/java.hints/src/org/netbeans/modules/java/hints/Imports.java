@@ -183,7 +183,7 @@ public class Imports {
 
     // Private methods ---------------------------------------------------------
     
-    private static enum ImportHintKind {
+    private enum ImportHintKind {
 
         DELEGATE,
         UNUSED,

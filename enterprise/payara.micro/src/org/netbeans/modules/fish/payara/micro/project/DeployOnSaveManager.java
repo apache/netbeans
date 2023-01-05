@@ -61,7 +61,7 @@ import static org.openide.util.NbBundle.getMessage;
 
 public final class DeployOnSaveManager {
 
-    public static enum DeploymentState {
+    public enum DeploymentState {
 
         MODULE_NOT_DEPLOYED,
         MODULE_UPDATED,

@@ -35,7 +35,7 @@ public final class TestRunInfo {
     /**
      * Session type.
      */
-    public static enum SessionType {
+    public enum SessionType {
         /**
          * Normal run.
          */

@@ -196,7 +196,7 @@ public class CommandLineParser extends Parser {
 	    }
 
 
-	    private static enum Kind {
+	    private enum Kind {
 	        SWITCH, D, LOOSEPARAM, EQPARAM, COLUMNPARAM, FOLLOWED
 	    }
 

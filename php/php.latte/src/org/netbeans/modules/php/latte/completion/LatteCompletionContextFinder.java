@@ -154,7 +154,7 @@ public final class LatteCompletionContextFinder {
         return accept;
     }
 
-    private static enum ValuedTokenId {
+    private enum ValuedTokenId {
         HELPER_TOKEN(LatteMarkupTokenId.T_CHAR, "|"), //NOI18N
         ITERATOR_TOKEN(LatteMarkupTokenId.T_VARIABLE, "$iterator"), //NOI18N
         OBJECT_ACCESS_TOKEN(LatteMarkupTokenId.T_CHAR, "->"), //NOI18N

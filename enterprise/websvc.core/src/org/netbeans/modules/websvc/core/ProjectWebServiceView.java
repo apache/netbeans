@@ -69,7 +69,7 @@ public final class ProjectWebServiceView {
     /** 
      * View Type: Service or Client
      */
-    public static enum ViewType {
+    public enum ViewType {
 
         SERVICE, CLIENT
     }

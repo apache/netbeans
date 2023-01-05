@@ -541,7 +541,7 @@ public final class UiUtils {
     /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     
-    public static enum MessageType {
+    public enum MessageType {
         INFORMATION,
         WARNING,
         ERROR,

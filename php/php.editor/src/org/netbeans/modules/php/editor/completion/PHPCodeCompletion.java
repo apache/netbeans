@@ -134,7 +134,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
     static volatile PhpVersion PHP_VERSION = null;
     private static final Logger LOGGER = Logger.getLogger(PHPCodeCompletion.class.getName());
 
-    private static enum UseType {
+    private enum UseType {
         TYPE,
         CONST,
         FUNCTION,

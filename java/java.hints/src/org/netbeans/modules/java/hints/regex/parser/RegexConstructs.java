@@ -262,7 +262,7 @@ public class RegexConstructs {
 
     }
 
-    public static enum GroupType {
+    public enum GroupType {
         POSITIVE_LOOKAHEAD,
         NEGATIVE_LOOKAHEAD,
         POSITIVE_LOOKBEHIND,

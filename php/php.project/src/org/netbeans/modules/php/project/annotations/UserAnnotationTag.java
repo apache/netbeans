@@ -33,7 +33,7 @@ public class UserAnnotationTag extends AnnotationCompletionTag {
         "UserAnnotationTag.type.field.title=Field",
         "UserAnnotationTag.type.method.title=Method"
     })
-    public static enum Type {
+    public enum Type {
         FUNCTION(Bundle.UserAnnotationTag_type_function_title()),
         TYPE(Bundle.UserAnnotationTag_type_type_title()),
         FIELD(Bundle.UserAnnotationTag_type_field_title()),

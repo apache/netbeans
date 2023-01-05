@@ -125,7 +125,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
     
     private static final Logger ERR = Logger.getLogger (AutoupdateInfoParser.class.getName ());
     
-    private static enum ELEMENTS {
+    private enum ELEMENTS {
         module, description,
         module_notification, external_package, manifest, l10n, license
     }

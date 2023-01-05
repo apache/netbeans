@@ -47,7 +47,7 @@ import org.openide.util.NbPreferences;
  */
 public class AddServerLocationVisualPanel extends javax.swing.JPanel implements Retriever.Updater {
 
-    public static enum DownloadState { AVAILABLE, DOWNLOADING, COMPLETED };
+    public enum DownloadState { AVAILABLE, DOWNLOADING, COMPLETED };
 
     public static final String DOWNLOAD_PREFIX = "https://www.payara.fish/"; // NOI18N
     

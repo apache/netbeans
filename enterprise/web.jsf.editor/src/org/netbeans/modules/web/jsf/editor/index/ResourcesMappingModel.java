@@ -306,7 +306,7 @@ public class ResourcesMappingModel extends JsfPageModel {
 
     }
 
-    public static enum ResourceType {
+    public enum ResourceType {
         SCRIPT("script"),
         STYLESHEET("stylesheet");
 

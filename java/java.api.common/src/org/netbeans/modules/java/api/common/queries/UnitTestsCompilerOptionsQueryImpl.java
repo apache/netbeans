@@ -323,7 +323,7 @@ final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQueryImp
             return null;
         }
 
-        private static enum TestMode {
+        private enum TestMode {
             /**
              * Tests for pre JDK9 sources.
              */

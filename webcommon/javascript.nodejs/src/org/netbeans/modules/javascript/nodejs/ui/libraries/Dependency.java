@@ -26,7 +26,7 @@ package org.netbeans.modules.javascript.nodejs.ui.libraries;
  */
 public class Dependency {
     /** Dependency types. */
-    public static enum Type { REGULAR, DEVELOPMENT, OPTIONAL };
+    public enum Type { REGULAR, DEVELOPMENT, OPTIONAL };
     /** Name of the package. */
     private final String name;
     /** Required version of the package. */

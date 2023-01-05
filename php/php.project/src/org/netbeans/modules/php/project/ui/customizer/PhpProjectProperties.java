@@ -149,7 +149,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
         "RunAsType.remote.label=Remote Web Site (FTP, SFTP)",
         "RunAsType.internal.label=PHP Built-in Web Server (running on built-in web server)"
     })
-    public static enum RunAsType {
+    public enum RunAsType {
         LOCAL(Bundle.RunAsType_local_label()),
         SCRIPT(Bundle.RunAsType_script_label()),
         REMOTE(Bundle.RunAsType_remote_label()),
@@ -167,7 +167,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
 
     }
 
-    public static enum UploadFiles {
+    public enum UploadFiles {
         MANUALLY ("LBL_UploadFilesManually", "TXT_UploadFilesManually"), // NOI18N
         ON_RUN ("LBL_UploadFilesOnRun", "TXT_UploadFilesOnRun"), // NOI18N
         ON_SAVE ("LBL_UploadFilesOnSave", "TXT_UploadFilesOnSave"); // NOI18N
@@ -189,13 +189,13 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
         }
     }
 
-    public static enum DebugUrl {
+    public enum DebugUrl {
         DEFAULT_URL,
         ASK_FOR_URL,
         DO_NOT_OPEN_BROWSER
     }
 
-    public static enum XDebugUrlArguments {
+    public enum XDebugUrlArguments {
         XDEBUG_SESSION_START,
         XDEBUG_SESSION_STOP,
         XDEBUG_SESSION_STOP_NO_EXEC

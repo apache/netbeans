@@ -86,7 +86,7 @@ public class LexerInputTest {
         }
     }
 
-    public static enum TokenIdImpl implements TokenId {
+    public enum TokenIdImpl implements TokenId {
 
         TEXT;
 

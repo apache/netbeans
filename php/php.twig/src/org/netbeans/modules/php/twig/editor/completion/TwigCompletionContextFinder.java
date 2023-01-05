@@ -34,7 +34,7 @@ import org.netbeans.modules.php.twig.editor.parsing.TwigParserResult;
  */
 public final class TwigCompletionContextFinder {
 
-    public static enum CompletionContext {
+    public enum CompletionContext {
         VARIABLE,
         BLOCK,
         FILTER,
@@ -42,7 +42,7 @@ public final class TwigCompletionContextFinder {
         ALL;
     }
 
-    private static enum ValuedTokenId {
+    private enum ValuedTokenId {
         FILTER_PUNCTUATION_TOKEN_BLOCK(TwigBlockTokenId.T_TWIG_PUNCTUATION, "|"), //NOI18N
         FILTER_PUNCTUATION_TOKEN_VAR_IABLE(TwigVariableTokenId.T_TWIG_PUNCTUATION, "|"), //NOI18N
         FILTER_TAG_TOKEN(TwigBlockTokenId.T_TWIG_TAG, "filter"); //NOI18N

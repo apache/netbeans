@@ -317,7 +317,7 @@ public class JSFConfigHyperlinkProvider implements HyperlinkProvider {
         }
     }
 
-    private static enum JsfConfigHyperlinkType {
+    private enum JsfConfigHyperlinkType {
         JAVA_CLASS,
         RESOURCE_PATH
     }

@@ -771,7 +771,7 @@ public final class JadeColoringLexer {
     boolean inString = false;
     int whereToGo = 0;
 
-    private static enum TAG_TYPE  { OTHER, SCRIPT, STYLE};
+    private enum TAG_TYPE  { OTHER, SCRIPT, STYLE};
     TAG_TYPE lastTag = TAG_TYPE.OTHER;
     
 

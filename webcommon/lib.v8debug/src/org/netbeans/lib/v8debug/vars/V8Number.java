@@ -28,7 +28,7 @@ public final class V8Number extends V8Value {
     private final long lvalue;
     private final double dvalue;
     
-    public static enum Kind {
+    public enum Kind {
         Long,
         Double
     }

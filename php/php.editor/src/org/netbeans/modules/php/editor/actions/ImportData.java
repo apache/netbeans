@@ -136,7 +136,7 @@ public class ImportData {
 
     public static class ItemVariant implements Comparable<ItemVariant> {
 
-        public static enum UsagePolicy {
+        public enum UsagePolicy {
             CAN_BE_USED() {
 
                 @Override

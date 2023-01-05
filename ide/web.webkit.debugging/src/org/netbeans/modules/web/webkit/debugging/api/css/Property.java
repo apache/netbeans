@@ -158,7 +158,7 @@ public class Property {
     /**
      * Status of a property.
      */
-    public static enum Status {
+    public enum Status {
         /** Property is effective in the style. */
         ACTIVE,
         /** Property is overriden by a same-named property in the style later on. */

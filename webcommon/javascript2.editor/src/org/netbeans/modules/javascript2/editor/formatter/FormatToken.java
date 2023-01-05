@@ -110,7 +110,7 @@ public final class FormatToken {
         this.previous = previous;
     }
 
-    public static enum Kind {
+    public enum Kind {
         SOURCE_START {
             @Override
             public boolean isSpaceMarker() {

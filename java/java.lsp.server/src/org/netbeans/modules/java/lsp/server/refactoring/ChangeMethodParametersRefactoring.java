@@ -371,7 +371,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
     }
 
-    public static enum Modifier {
+    public enum Modifier {
         PUBLIC("public"), PROTECTED("protected"), PACKAGE_PRIVATE("", "package private"), PRIVATE("private");
 
         final String javaName;

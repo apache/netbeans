@@ -44,7 +44,7 @@ public class DataSourcesReader {
     /**
      * GlassFish server <code>resource</code> property type.
      */
-    private static enum ResourceType {
+    private enum ResourceType {
         /** Unknown resource type. */
         UNKNOWN,
 

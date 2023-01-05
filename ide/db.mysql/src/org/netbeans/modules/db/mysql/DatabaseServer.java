@@ -36,7 +36,7 @@ public interface DatabaseServer extends Cookie {
     /**
      * Current state of the server
      */
-    public static enum ServerState {CONFIGERR, DISCONNECTED , CONNECTED};
+    public enum ServerState {CONFIGERR, DISCONNECTED , CONNECTED};
 
     /**
      * Ask the server to validate it's configuration.  If it's invalid,

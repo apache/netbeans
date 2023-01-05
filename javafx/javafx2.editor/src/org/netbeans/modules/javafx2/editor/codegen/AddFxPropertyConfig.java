@@ -24,8 +24,8 @@ package org.netbeans.modules.javafx2.editor.codegen;
  * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
  */
 public class AddFxPropertyConfig {
-    public static enum ACCESS {PRIVATE, PACKAGE, PROTECTED, PUBLIC};
-    public static enum GENERATE {WRITABLE, READ_ONLY};
+    public enum ACCESS {PRIVATE, PACKAGE, PROTECTED, PUBLIC};
+    public enum GENERATE {WRITABLE, READ_ONLY};
     
     private String name;
     private String initializer;

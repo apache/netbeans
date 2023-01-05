@@ -113,7 +113,7 @@ public class AnnotationProcessingQuery {
 
     /** Annotation processing triggers
      */
-    public static enum Trigger {
+    public enum Trigger {
 
         /** Annotation processors should run on scanning
          */

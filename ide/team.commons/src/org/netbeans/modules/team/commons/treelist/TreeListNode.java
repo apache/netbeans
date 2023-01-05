@@ -386,7 +386,7 @@ public abstract class TreeListNode extends ListNode {
     /**
      * Type of the node - each type has a specific background
      */
-    protected static enum Type {
+    protected enum Type {
         NORMAL,
         CLOSED,
         TITLE;

@@ -399,7 +399,7 @@ public final class PropertiesEncoding extends FileEncodingQueryImplementation {
         
         private final Logger log = Logger.getLogger(getClass().getName().replace('$', '.'));
 
-        private static enum State {
+        private enum State {
             INITIAL,
             BACKSLASH,
             UNICODE,

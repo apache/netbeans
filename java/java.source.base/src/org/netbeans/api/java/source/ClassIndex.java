@@ -233,7 +233,7 @@ public final class ClassIndex {
      * ResourceType used by {@link ClassIndex#getResources} to get results in
      * @since 2.5
      */
-    public static enum ResourceType {
+    public enum ResourceType {
 
         /**
          * Resources from a source root.

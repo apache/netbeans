@@ -62,7 +62,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PropertyC
     /**
      * Type of file classpath is required for.
      */
-    private static enum FileType {
+    private enum FileType {
         SOURCE,         // java source
         CLASS,          // compiled java class
         WEB_SOURCE,     // web source
@@ -71,7 +71,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PropertyC
     /**
      * Constants for different cached classpaths.
      */
-    private static enum ClassPathCache {
+    private enum ClassPathCache {
         WEB_SOURCE,
         WEB_COMPILATION,
         WEB_RUNTIME,

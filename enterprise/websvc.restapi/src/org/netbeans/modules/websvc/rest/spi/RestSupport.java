@@ -714,7 +714,7 @@ public abstract class RestSupport {
         return PROJECT_TYPE_WEB;
     }
 
-    public static enum RestConfig {
+    public enum RestConfig {
         // Application subclass registration:
         IDE,
         // this type is not used anymore but kept for existing projects

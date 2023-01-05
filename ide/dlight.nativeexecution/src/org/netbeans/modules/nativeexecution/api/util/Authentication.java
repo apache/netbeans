@@ -251,7 +251,7 @@ public final class Authentication {
         return sshKeyFile;
     }
 
-    public static enum Type {
+    public enum Type {
         UNDEFINED(),
         PASSWORD(),
         SSH_KEY();
@@ -261,7 +261,7 @@ public final class Authentication {
      * Represents one of authentication methods.
      * The ID should be exactly the same as used in jsch
      */
-    public static enum Method {
+    public enum Method {
 
         GssapiWithMic("gssapi-with-mic", false), // NOI18N
         PublicKey("publickey", true), // NOI18N

@@ -85,7 +85,7 @@ import org.openide.util.WeakListeners;
  */
 final class ActionFilterNode extends FilterNode implements NodeListener {
 
-    private static enum Mode {
+    private enum Mode {
         ROOT {
             @Override
             public boolean isFolder() {

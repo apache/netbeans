@@ -26,7 +26,7 @@ package org.netbeans.modules.javascript.bower.ui.libraries;
  */
 public class Dependency {
     /** Dependency types. */
-    public static enum Type { REGULAR, DEVELOPMENT };
+    public enum Type { REGULAR, DEVELOPMENT };
     /** Name of the package. */
     private final String name;
     /** Required version of the package. */

@@ -355,7 +355,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         public boolean hasMoreResults ();
         
         public static final class SearchHighlight {
-            public static enum Kind {
+            public enum Kind {
                 MESSAGE,
                 AUTHOR,
                 REVISION,

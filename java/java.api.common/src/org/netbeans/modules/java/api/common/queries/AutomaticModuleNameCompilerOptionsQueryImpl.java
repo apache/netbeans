@@ -265,7 +265,7 @@ final class AutomaticModuleNameCompilerOptionsQueryImpl implements CompilerOptio
 
     private static final class FCL implements FileChangeListener {
 
-        private static enum Op {
+        private enum Op {
             FILE_CREATED,
             FOLDER_CREATED,
             FILE_CHANGED,

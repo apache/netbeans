@@ -28,7 +28,7 @@ public final class V8Breakpoint {
     /**
      * The breakpoint type.
      */
-    public static enum Type {
+    public enum Type {
     
         function,
         scriptName,

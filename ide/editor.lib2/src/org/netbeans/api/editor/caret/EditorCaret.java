@@ -3336,7 +3336,7 @@ public final class EditorCaret implements Caret {
 
     }
     
-    private static enum MouseState {
+    private enum MouseState {
 
         DEFAULT, // Mouse released; not extending any selection
         CHAR_SELECTION, // Extending character selection after single mouse press 

@@ -442,6 +442,6 @@ public class ViewManager extends ProfilerTableContainer.ColumnChangeAdapter {
         
     }
     
-    private static enum Position { LEFT, WITHIN, RIGHT }
+    private enum Position { LEFT, WITHIN, RIGHT }
     
 }

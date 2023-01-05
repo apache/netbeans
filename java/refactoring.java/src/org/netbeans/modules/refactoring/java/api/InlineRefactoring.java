@@ -33,7 +33,7 @@ import org.openide.util.lookup.Lookups;
  */
 public final class InlineRefactoring extends AbstractRefactoring {
     
-    public static enum Type {
+    public enum Type {
         METHOD,
         TEMP,
         CONSTANT,

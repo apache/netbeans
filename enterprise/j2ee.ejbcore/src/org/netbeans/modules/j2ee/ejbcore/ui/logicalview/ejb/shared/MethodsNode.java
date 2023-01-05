@@ -45,7 +45,7 @@ import org.openide.util.lookup.InstanceContent;
  * @author Martin Adamek
  */
 public class MethodsNode extends AbstractNode implements OpenCookie {
-    public static enum ViewType{NO_INTERFACE, LOCAL, REMOTE};
+    public enum ViewType{NO_INTERFACE, LOCAL, REMOTE};
     private final String ejbClass;
     private final MetadataModel<EjbJarMetadata> model;
     private final EjbViewController controller;

@@ -56,7 +56,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PhpSource
     /**
      * Constants for different cached classpaths.
      */
-    private static enum ClassPathCache {
+    private enum ClassPathCache {
         PLATFORM,
         SOURCE,
         TEST

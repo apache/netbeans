@@ -854,7 +854,7 @@ public final class TokenHierarchyOperation<I, T extends TokenId> { // "I" stands
 //
 //    }
 
-    static enum Activity {
+    enum Activity {
         
         NOT_INITED, // Initial state for mutable inputs
         INACTIVE, // Explicitly set to inactive

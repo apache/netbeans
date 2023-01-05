@@ -110,7 +110,7 @@ public interface GlassfishModule {
     /**
      * Enum for the current state of the server (stopped, running, etc.)
      */
-    public static enum ServerState {
+    public enum ServerState {
         STARTING,
         RUNNING,
         RUNNING_JVM_DEBUG,

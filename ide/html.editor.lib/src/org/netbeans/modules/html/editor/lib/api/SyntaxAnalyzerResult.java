@@ -685,7 +685,7 @@ public class SyntaxAnalyzerResult {
     /**
      * @since 3.18
      */
-    public static enum FilteredContent {
+    public enum FilteredContent {
         /**
          * Filter out custom tags (injected by {@link UndeclaredContentResolver}).
          * 

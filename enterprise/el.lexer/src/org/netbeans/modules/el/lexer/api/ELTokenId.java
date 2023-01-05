@@ -114,7 +114,7 @@ public enum ELTokenId implements TokenId {
     
     
     /** EL token categories enum.*/
-    public static enum ELTokenCategories {
+    public enum ELTokenCategories {
         
         /** Token category for EL keywords like and, false etc. */
         KEYWORDS("keyword"),

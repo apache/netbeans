@@ -37,7 +37,7 @@ import org.openide.util.NbPreferences;
  */
 public final class PrintPreferences {
     /** Constants for center, right, left position of page header, footer. */    
-    public static enum Alignment { LEFT, CENTER, RIGHT};            
+    public enum Alignment { LEFT, CENTER, RIGHT};
     
     private static final PrintPreferences  INSTANCE = new PrintPreferences();    
     /** Property name of the wrap property */

@@ -123,7 +123,7 @@ public class AccessibilityQuery {
      * The Java package accessibility.
      * @since 1.64
      */
-    public static enum Accessibility {
+    public enum Accessibility {
         /**
          * The package is publicly accessible by other compilation units.
          */

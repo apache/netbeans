@@ -35,7 +35,7 @@ import org.openide.util.NbPreferences;
 public class VCSHooksConfig {
     private final HookType type;
 
-    static enum HookType {
+    enum HookType {
         SVN("svn"),
         HG("hg"),
         GIT("git");

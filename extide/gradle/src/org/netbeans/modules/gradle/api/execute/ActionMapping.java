@@ -42,7 +42,7 @@ public interface ActionMapping extends Serializable, Comparable<ActionMapping> {
      * by default done, by setting the offline flag in Gradle in order to avoid
      * bumping into some time consuming remote interactions.
      */
-    static enum ReloadRule {
+    enum ReloadRule {
         /** Never reload the project. */
         NEVER,
         /**

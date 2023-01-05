@@ -76,7 +76,7 @@ public class RefactoringRegressionsTest extends GeneratorTestMDRCompat {
             "\n" +
             "public class Mnozina {\n" +
             "    \n" +
-            "    static enum Prvek {\n" +
+            "    enum Prvek {\n" +
             "        PrvniPrvek,\n" +
             "        DruhyPrvek;\n" +
             "    }\n" +
@@ -96,7 +96,7 @@ public class RefactoringRegressionsTest extends GeneratorTestMDRCompat {
             "\n" +
             "public class Mnozina {\n" +
             "    \n" +
-            "    static enum Unit {\n" +
+            "    enum Unit {\n" +
             "        PrvniPrvek,\n" +
             "        DruhyPrvek;\n" +
             "    }\n" +

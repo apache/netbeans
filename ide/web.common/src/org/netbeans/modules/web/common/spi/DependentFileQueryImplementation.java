@@ -25,7 +25,7 @@ import org.openide.filesystems.FileObject;
  */
 public interface DependentFileQueryImplementation {
 
-    public static enum Dependency {
+    public enum Dependency {
         YES,
         NO,
         UNKNOWN,

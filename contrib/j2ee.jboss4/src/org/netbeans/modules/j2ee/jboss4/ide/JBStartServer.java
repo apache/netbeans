@@ -62,9 +62,9 @@ import org.openide.filesystems.FileUtil;
  */
 public class JBStartServer extends StartServer implements ProgressObject{
     
-    static enum MODE { RUN, DEBUG, PROFILE };
+    enum MODE { RUN, DEBUG, PROFILE };
     
-    static enum ACTION_STATUS { SUCCESS, FAILURE, UNKNOWN };
+    enum ACTION_STATUS { SUCCESS, FAILURE, UNKNOWN };
 
     private static final Logger LOGGER = Logger.getLogger(JBStartServer.class.getName());
 

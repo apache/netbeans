@@ -338,7 +338,7 @@ public final class OptionsExportModel {
         out.closeEntry();
     }
 
-    private static enum ParserState {
+    private enum ParserState {
 
         START,
         IN_KEY_PATTERN,
@@ -537,7 +537,7 @@ public final class OptionsExportModel {
     }
 
     /** Represents 3 state of category. */
-    static enum State {
+    enum State {
 
         ENABLED(Boolean.TRUE),
         DISABLED(Boolean.FALSE),

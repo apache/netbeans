@@ -80,11 +80,11 @@ public class EntityRelation {
         return roles;
     }
     
-    public static enum FetchType {
+    public enum FetchType {
         DEFAULT, EAGER, LAZY;
     }
     
-    public static enum CollectionType {
+    public enum CollectionType {
         COLLECTION("java.util.Collection"), //NOI18N
         LIST("java.util.List"), //NOI18N
         SET("java.util.Set"); //NOI18N

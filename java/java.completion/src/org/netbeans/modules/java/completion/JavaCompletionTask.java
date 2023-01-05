@@ -134,7 +134,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         T createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars);
     }
 
-    public static enum Options {
+    public enum Options {
 
         ALL_COMPLETION,
         COMBINED_COMPLETION,

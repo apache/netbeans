@@ -33,7 +33,7 @@ import javax.swing.JCheckBox;
  */
 public class HttpMethodsPanel extends javax.swing.JPanel {
     
-    static enum HttpMethods {
+    enum HttpMethods {
         GET,
         HEAD, 
         POST,

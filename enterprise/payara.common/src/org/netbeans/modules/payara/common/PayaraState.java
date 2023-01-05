@@ -50,7 +50,7 @@ public class PayaraState {
      * <p/>
      * Allows to select server state check mode.
      */
-    public static enum Mode {
+    public enum Mode {
 
         ////////////////////////////////////////////////////////////////////////
         // Enum values                                                        //

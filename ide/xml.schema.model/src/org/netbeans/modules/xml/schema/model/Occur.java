@@ -25,7 +25,7 @@ package org.netbeans.modules.xml.schema.model;
  */
 public interface Occur {
 
-    public static enum ZeroOne implements Occur {
+    public enum ZeroOne implements Occur {
         ZERO, ONE;
 
         public static ZeroOne valueOfNumeric(String owner, String s) {

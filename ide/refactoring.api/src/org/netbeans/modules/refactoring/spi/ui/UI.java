@@ -37,7 +37,7 @@ public final class UI {
     private UI() {
     }
     
-    public static enum Constants {
+    public enum Constants {
         REQUEST_PREVIEW;
     }
 

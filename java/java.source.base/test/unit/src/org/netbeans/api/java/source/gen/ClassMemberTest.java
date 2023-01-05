@@ -633,7 +633,7 @@ public class ClassMemberTest extends GeneratorTestMDRCompat {
             "package hierbas.del.litoral;\n" +
             "\n" +
             "public class Test {\n" +
-            "    static enum Enumerace {\n" +
+            "    enum Enumerace {\n" +
             "        A, B\n" +
             "    };\n" +
             "}\n"
@@ -642,7 +642,7 @@ public class ClassMemberTest extends GeneratorTestMDRCompat {
             "package hierbas.del.litoral;\n" +
             "\n" +
             "public class Test {\n" +
-            "    static enum Enumerace {\n" +
+            "    enum Enumerace {\n" +
             "        A, B\n" +
             "    };\n" +
             "\n" +

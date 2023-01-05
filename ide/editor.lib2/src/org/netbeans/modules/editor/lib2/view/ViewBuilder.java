@@ -174,7 +174,7 @@ final class ViewBuilder {
     
     private volatile boolean staleCreation;
     
-    static enum RebuildCause {
+    enum RebuildCause {
         FULL_REBUILD, // Full rebuild of all paragraphs
         REBUILD_PARAGRAPHS, // Rebuild a paragraphs region that has changed
         INIT_PARAGRAPHS, // Initialize children of one or more paragraphs (for painting etc.)

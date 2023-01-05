@@ -1587,7 +1587,7 @@ public class NPECheck {
         
     }
     
-    static enum State {
+    enum State {
         NULL,
         NULL_HYPOTHETICAL,
         POSSIBLE_NULL,

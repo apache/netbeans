@@ -53,7 +53,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
     //null == NOT_EXPANDABLE, true == EXPANDED, false == COLLAPSED
     private Boolean isExpanded = null; 
         
-    public static enum Type {
+    public enum Type {
         INSTALLED,UPDATE,AVAILABLE,LOCAL
     }
             

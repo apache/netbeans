@@ -73,7 +73,7 @@ public class SchemaUpdate {
     
     public static class UpdateUnit {
         
-        public static enum Type {CHILD_ADDED, CHILD_DELETED, CHILD_MODIFIED};
+        public enum Type {CHILD_ADDED, CHILD_DELETED, CHILD_MODIFIED};
         
         private String id;
         

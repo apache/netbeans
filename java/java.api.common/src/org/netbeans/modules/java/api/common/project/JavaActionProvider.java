@@ -166,7 +166,7 @@ public final class JavaActionProvider implements ActionProvider {
         this.cosOpsProvider = cosOpsProvider;
     }
 
-    public static enum CompileOnSaveOperation {
+    public enum CompileOnSaveOperation {
         UPDATE,
         EXECUTE
     }

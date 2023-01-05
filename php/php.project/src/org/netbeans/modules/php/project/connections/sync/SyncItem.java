@@ -67,7 +67,7 @@ public final class SyncItem {
         "Operation.fileDirCollision.titleWithMnemonic=File &vs. Directory Collision",
         "Operation.fileConflict.titleWithMnemonic=File C&onflict"
     })
-    public static enum Operation {
+    public enum Operation {
 
         NOOP(Bundle.Operation_noop_titleWithMnemonic(), Bundle.Operation_noop_toolTip(), NOOP_ICON_PATH, false),
         DOWNLOAD(Bundle.Operation_download_titleWithMnemonic(), Bundle.Operation_download_toolTip(), DOWNLOAD_ICON_PATH, DOWNLOAD_MIRRORED_ICON_PATH, true),

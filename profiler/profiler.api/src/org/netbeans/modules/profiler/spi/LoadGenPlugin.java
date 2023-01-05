@@ -67,7 +67,7 @@ public interface LoadGenPlugin {
 
     //~ Enumerations -------------------------------------------------------------------------------------------------------------
 
-    public static enum Result {//~ Enumeration constant initializers ------------------------------------------------------------------------------------
+    public enum Result {//~ Enumeration constant initializers ------------------------------------------------------------------------------------
 
         FAIL, SUCCESS, TIMEOUT;
     }

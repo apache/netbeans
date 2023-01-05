@@ -77,7 +77,7 @@ public class JShellLexer implements Lexer<JShellToken>, TokenPropertyProvider<JS
         "!", "" // NOI18N
     };
     
-    private static enum S {
+    private enum S {
         INITIAL, // next: PROMPT_INPUT
         PROMPT_INPUT,
         PROMPT_MESSAGE,

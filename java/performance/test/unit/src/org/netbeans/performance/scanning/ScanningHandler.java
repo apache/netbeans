@@ -41,7 +41,7 @@ class ScanningHandler extends Handler {
         data.clear();
     }
     
-    static enum ScanType {
+    enum ScanType {
 
         INITIAL(" initial "),
         UP_TO_DATE(" up-to-date ");

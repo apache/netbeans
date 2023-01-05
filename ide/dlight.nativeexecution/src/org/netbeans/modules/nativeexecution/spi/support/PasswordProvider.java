@@ -27,7 +27,7 @@ import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 public interface PasswordProvider {
 
     
-    public static enum SecretType {
+    public enum SecretType {
 
         PASSWORD,
         PASSPHRASE

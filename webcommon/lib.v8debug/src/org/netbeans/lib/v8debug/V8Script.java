@@ -122,7 +122,7 @@ public final class V8Script extends V8Value {
         return evalFromLocation;
     }
     
-    public static enum Type {
+    public enum Type {
         NATIVE,
         EXTENSION,
         NORMAL;
@@ -163,7 +163,7 @@ public final class V8Script extends V8Value {
         }
     }
     
-    public static enum CompilationType {
+    public enum CompilationType {
         
         API,
         EVAL;

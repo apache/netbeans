@@ -101,7 +101,7 @@ import org.openide.util.WeakSet;
  * @author Martin Entlicher
  */
 public class RemoteServices {
-    public static enum ServiceType {
+    public enum ServiceType {
         AWT, FX
     }
     

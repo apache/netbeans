@@ -856,7 +856,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
     }
 
-    private static enum IconKind {
+    private enum IconKind {
         ARCHVIVE {
             @Override
             protected Icon createIcon() {

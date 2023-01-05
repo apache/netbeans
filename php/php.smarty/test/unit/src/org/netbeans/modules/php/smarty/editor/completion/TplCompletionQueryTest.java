@@ -127,7 +127,7 @@ public class TplCompletionQueryTest extends CslTestBase {
         }
     }
 
-    public static enum Match {
+    public enum Match {
         EXACT, CONTAINS, DOES_NOT_CONTAIN, EMPTY, NOT_EMPTY;
     }
 

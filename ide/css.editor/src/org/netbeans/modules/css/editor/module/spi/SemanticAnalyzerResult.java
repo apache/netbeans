@@ -28,7 +28,7 @@ import org.netbeans.modules.css.lib.api.ProblemDescription;
  */
 public final class SemanticAnalyzerResult {
     
-    public static enum Type {
+    public enum Type {
         /**
          * Not known context - no error checks applicable.
          */

@@ -725,7 +725,7 @@ public class ClassIndexTest extends NbTestCase {
         
     }
     
-    private static enum EventType {
+    private enum EventType {
         TYPES_ADDED,
         TYPES_REMOVED,
         TYPES_CHANGED,

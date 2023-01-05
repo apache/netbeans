@@ -846,7 +846,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         });
     }
 
-    static enum ACTION { COPY, WRAP, SAVEAS, CLOSE, NEXT_ERROR, PREV_ERROR,
+    enum ACTION { COPY, WRAP, SAVEAS, CLOSE, NEXT_ERROR, PREV_ERROR,
                          SELECT_ALL, FIND, FIND_NEXT, NAVTOLINE, POSTMENU,
                          FIND_PREVIOUS, CLEAR, NEXTTAB, PREVTAB, LARGER_FONT,
                          SMALLER_FONT, SETTINGS, FILTER, PASTE, COLLAPSE_FOLD,

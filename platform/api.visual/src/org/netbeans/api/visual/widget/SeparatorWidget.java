@@ -31,7 +31,7 @@ public class SeparatorWidget extends Widget {
     /**
      * The separator orientation
      */
-    public static enum Orientation {
+    public enum Orientation {
         HORIZONTAL, VERTICAL
     }
 

@@ -44,7 +44,7 @@ import org.openide.filesystems.FileObject;
  */
 public class BreakpointGroup {
 
-    static enum Group { NO, CUSTOM, LANGUAGE, TYPE, PROJECT, FILE, ENGINE, NESTED }
+    enum Group { NO, CUSTOM, LANGUAGE, TYPE, PROJECT, FILE, ENGINE, NESTED }
 
     static final String PROP_FROM_OPEN_PROJECTS = "fromOpenProjects";       // NOI18N
     static final String PROP_FROM_CURRENT_SESSION_PROJECTS = "fromCurrentSessionProjects";  // NOI18N

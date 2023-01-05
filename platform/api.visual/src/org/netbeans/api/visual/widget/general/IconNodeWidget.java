@@ -39,7 +39,7 @@ public class IconNodeWidget extends Widget {
     /**
      * The text orientation specified relatively to the image
      */
-    public static enum TextOrientation {
+    public enum TextOrientation {
 
         BOTTOM_CENTER, RIGHT_CENTER
 

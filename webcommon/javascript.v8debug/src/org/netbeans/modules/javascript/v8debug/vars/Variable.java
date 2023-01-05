@@ -29,7 +29,7 @@ import org.netbeans.lib.v8debug.vars.V8Value;
  */
 public class Variable {
     
-    public static enum Kind {
+    public enum Kind {
         ARGUMENT,
         LOCAL,
         PROPERTY,

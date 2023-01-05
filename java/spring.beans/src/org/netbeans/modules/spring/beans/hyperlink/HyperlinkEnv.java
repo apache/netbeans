@@ -53,7 +53,7 @@ public final class HyperlinkEnv {
     private String tagName;
     private Map<String, String> beanAttribs;
 
-    public static enum Type {
+    public enum Type {
 
         ATTRIB_VALUE,
         ATTRIB,

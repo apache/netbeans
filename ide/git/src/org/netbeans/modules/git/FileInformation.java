@@ -345,13 +345,13 @@ public class FileInformation extends FileNodeInformation {
         return status.toString();
     }
 
-    public static enum Mode {
+    public enum Mode {
         HEAD_VS_WORKING_TREE,
         HEAD_VS_INDEX,
         INDEX_VS_WORKING_TREE
     }
     
-    public static enum Status {
+    public enum Status {
 
         /**
          * There is nothing known about the file, it may not even exist.

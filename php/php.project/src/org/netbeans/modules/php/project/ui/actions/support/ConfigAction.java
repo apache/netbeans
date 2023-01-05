@@ -32,7 +32,7 @@ import org.openide.util.Lookup;
  * @author Tomas Mysik
  */
 public abstract class ConfigAction {
-    public static enum Type {
+    public enum Type {
         LOCAL,
         REMOTE,
         SCRIPT,

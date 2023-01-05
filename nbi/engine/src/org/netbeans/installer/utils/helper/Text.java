@@ -46,7 +46,7 @@ public class Text {
         return contentType;
     }
     
-    public static enum ContentType {
+    public enum ContentType {
         PLAIN_TEXT,
         HTML;
         

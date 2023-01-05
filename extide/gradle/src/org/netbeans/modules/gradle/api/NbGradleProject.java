@@ -79,7 +79,7 @@ public final class NbGradleProject {
      * </p>
      * @since 1.0
      */
-    public static enum Quality {
+    public enum Quality {
 
         /**
          * The data of this project is unreliable, based on heuristics. This is

@@ -43,7 +43,7 @@ public interface PHP5ErrorHandler extends ParserErrorHandler {
             "SE_ValidMessage=Syntax error",
             "SE_PossibleMessage=POSSIBLE Syntax Error (check preceding valid syntax error)"
         })
-        public static enum Type {
+        public enum Type {
             FIRST_VALID_ERROR() {
 
                 @Override

@@ -45,7 +45,7 @@ import org.w3c.dom.Node;
 public class CompletionContext {
     private List<String> existingAttributes;
 
-    public static enum CompletionType {
+    public enum CompletionType {
         TAG,
         VALUE,
         ATTRIBUTE,

@@ -301,7 +301,7 @@ public final class FileFilterSupport {
                     substring, ignoreCase);
         }
 
-        public static enum ComparisonResult {
+        public enum ComparisonResult {
 
             THE_SAME, BETTER, WORSE, DIFFERENT
         }

@@ -44,7 +44,7 @@ public class RemoteObject extends AbstractObject {
     private static final String PROP_CLASS_NAME = "className";      // NOI18N
     private static final String PROP_OBJECT_ID = "objectId";        // NOI18N
     
-    public static enum Type {
+    public enum Type {
         OBJECT(Bundle.TYPE_OBJECT()),
         FUNCTION(Bundle.TYPE_FUNCTION()),
         UNDEFINED(Bundle.TYPE_UNDEFINED()),
@@ -64,7 +64,7 @@ public class RemoteObject extends AbstractObject {
         
     }
     
-    public static enum SubType {
+    public enum SubType {
         ARRAY,
         DATE,
         NODE,

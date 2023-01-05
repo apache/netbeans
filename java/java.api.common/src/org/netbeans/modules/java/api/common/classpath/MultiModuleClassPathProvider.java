@@ -725,7 +725,7 @@ public final class MultiModuleClassPathProvider extends AbstractClassPathProvide
         }
     }
 
-    private static enum Location {
+    private enum Location {
         SOURCE(true),
         BUILD(false),
         DIST(false);

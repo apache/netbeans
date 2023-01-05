@@ -375,7 +375,7 @@ public final class LexUtilities {
         }
     }
 
-    public static enum LineBalance {
+    public enum LineBalance {
 
         PLAIN,
         UP_FIRST, // } keyword {

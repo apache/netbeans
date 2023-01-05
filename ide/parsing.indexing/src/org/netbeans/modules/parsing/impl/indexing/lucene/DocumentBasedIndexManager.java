@@ -57,7 +57,7 @@ public final class DocumentBasedIndexManager {
     private DocumentBasedIndexManager() {}
 
 
-    public static enum Mode {
+    public enum Mode {
         OPENED,
         CREATE,
         IF_EXIST;

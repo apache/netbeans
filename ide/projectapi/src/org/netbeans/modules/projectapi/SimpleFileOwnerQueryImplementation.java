@@ -238,7 +238,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     private static final Object cacheLock = new Object();
     private static volatile boolean cacheInvalid = false;
 
-    private static enum ExternalRootsState {
+    private enum ExternalRootsState {
         NEW,
         LOADING,
         LOADED

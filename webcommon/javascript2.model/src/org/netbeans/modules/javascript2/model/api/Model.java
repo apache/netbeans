@@ -97,7 +97,7 @@ public final class Model {
 
     private static final Pattern RETURN_TYPE_PATTERN = Pattern.compile("(\\S+), RESOLVED: (true|false)");
 
-    private static enum ParsingState {
+    private enum ParsingState {
         DOCUMETATION_URL, RETURN, PARAMETER, PROPERTY
     }
 

@@ -27,7 +27,7 @@ import org.netbeans.modules.web.jsf.navigation.graph.PageFlowScene;
  */
 public class LayoutUtility<N, E, P> {
     
-    public static enum LayoutType  {
+    public enum LayoutType  {
         GRID_GRAPH,  TREE_GRAPH, FREE_PLACES_NODES
     }
     

@@ -37,7 +37,7 @@ public final class TestNGSupport {
     /** Cache of all available TestNGSupportImplementation instances. */
     private static List<TestNGSupportImplementation> cache;
 
-    public static enum Action {
+    public enum Action {
         CREATE_TEST,
         RUN_FAILED,
         RUN_TESTMETHOD,

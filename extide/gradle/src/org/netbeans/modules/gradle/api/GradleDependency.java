@@ -35,7 +35,7 @@ import org.netbeans.modules.gradle.GradleModuleFileCache21;
 public abstract class GradleDependency implements Serializable, Comparable<GradleDependency> {
 
     /** The type of a Dependency. */
-    public static enum Type {
+    public enum Type {
         /** Dependency type for modules which was not able to be resolved by Gradle. */
         UNRESOLVED,
         /** Dependency type for sub-project in the current multi-project setup. */

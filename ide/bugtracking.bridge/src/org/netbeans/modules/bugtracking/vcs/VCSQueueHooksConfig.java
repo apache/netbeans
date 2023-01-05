@@ -34,7 +34,7 @@ import org.openide.util.NbPreferences;
 public class VCSQueueHooksConfig {
     private final HookType type;
 
-    static enum HookType {
+    enum HookType {
         HG("hg");
 
         private String type;

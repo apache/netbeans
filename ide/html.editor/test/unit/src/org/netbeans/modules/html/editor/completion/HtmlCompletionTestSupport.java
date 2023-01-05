@@ -44,7 +44,7 @@ import org.netbeans.spi.editor.completion.CompletionItem;
  */
 public class HtmlCompletionTestSupport {
 
-    public static enum Match {
+    public enum Match {
 
         EXACT, CONTAINS, DOES_NOT_CONTAIN, EMPTY, NOT_EMPTY;
     }

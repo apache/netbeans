@@ -286,7 +286,7 @@ public abstract class VCSKenaiAccessor {
         /**
          * Type of modification
          */
-        public static enum Type {
+        public enum Type {
             NEW,
             CHANGE,
             DELETE

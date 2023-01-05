@@ -59,7 +59,7 @@ public class MergeControl extends Object implements ActionListener, VetoableChan
     private boolean firstNewlineIsFake;
     private boolean secondNewlineIsFake;
     
-    static enum AcceptKind {
+    enum AcceptKind {
         LEFT,
         RIGHT,
         LEFT_RIGHT,

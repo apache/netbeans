@@ -10,7 +10,7 @@ public class CCTest8iii {
 
     }
     
-    private static enum InnerEnum {
+    private enum InnerEnum {
         A, B, C
     }
 }

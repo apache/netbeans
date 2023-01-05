@@ -52,7 +52,7 @@ public class SaasServicesModel {
     private State state = State.UNINITIALIZED;
     private PropertyChangeSupport pps = new PropertyChangeSupport(this);
 
-    public static enum State {
+    public enum State {
 
         UNINITIALIZED, INITIALIZING, READY
     }

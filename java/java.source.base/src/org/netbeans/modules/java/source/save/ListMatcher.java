@@ -120,7 +120,7 @@ public final class ListMatcher<E> {
     /**
      * Represents type of difference.
      */
-    public static enum Operation {
+    public enum Operation {
         /** Element was inserted. */
         INSERT("insert"),
         

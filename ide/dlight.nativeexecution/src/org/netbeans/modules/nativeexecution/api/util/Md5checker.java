@@ -40,7 +40,7 @@ import org.netbeans.modules.nativeexecution.api.util.ProcessUtils.ExitStatus;
  */
 /*package-local*/ class Md5checker {
 
-    public static enum Result {
+    public enum Result {
         INEXISTENT,
         UPTODATE,
         DIFFERS

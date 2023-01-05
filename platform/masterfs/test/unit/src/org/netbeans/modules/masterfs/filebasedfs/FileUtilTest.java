@@ -659,7 +659,7 @@ public class FileUtilTest extends NbTestCase {
     }
     
 
-    public static enum EventType {
+    public enum EventType {
 
         DATA_CREATED, FOLDER_CREATED, DELETED, CHANGED, RENAMED, ATTRIBUTE_CHANGED
     };

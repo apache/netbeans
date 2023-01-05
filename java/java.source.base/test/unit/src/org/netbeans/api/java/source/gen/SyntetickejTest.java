@@ -57,7 +57,7 @@ public class SyntetickejTest extends GeneratorTestMDRCompat {
             "\n" +
             "public class Main {\n" +
             "\n" +
-            "    static enum Whorehouse {\n" +
+            "    enum Whorehouse {\n" +
             "        /** first prostitute */\n" +
             "        PrvniDevka,\n" +
             "        /** second prostitue */\n" +
@@ -76,7 +76,7 @@ public class SyntetickejTest extends GeneratorTestMDRCompat {
             "\n" +
             "public class Main {\n" +
             "\n" +
-            "    static enum Whorehouse {\n" +
+            "    enum Whorehouse {\n" +
             "        /** first prostitute */\n" +
             "        PrvniDevka,\n" +
             "        /** second prostitue */\n" +

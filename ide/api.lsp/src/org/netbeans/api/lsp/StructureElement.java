@@ -54,7 +54,7 @@ public final class StructureElement {
     /**
      * Kind of the structure element.
      */
-    public static enum Kind {
+    public enum Kind {
         File,
         Module,
         Namespace,
@@ -86,7 +86,7 @@ public final class StructureElement {
     /**
      * Tags are extra annotations that tweak the rendering of a symbol.
      */
-    public static enum Tag {
+    public enum Tag {
         Deprecated;
     }
 

@@ -39,7 +39,7 @@ public class Compositor extends AXIComponent {
      * Represents the type of this compositor.
      * Can be one of sequence, choice and all.
      */
-    public static enum CompositorType {
+    public enum CompositorType {
         SEQUENCE, CHOICE, ALL;
                 
         public String getName() {

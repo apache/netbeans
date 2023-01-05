@@ -2,7 +2,7 @@ package a;
 
 public class InnerClasses {
 
-    public static enum Type {
+    public enum Type {
         DUMMY_1,
         DUMMY_2;
 

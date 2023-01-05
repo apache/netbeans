@@ -152,7 +152,7 @@ public final class StartupExtender {
     /**
      * Class representing the startup mode of the process.
      */
-    public static enum StartMode {
+    public enum StartMode {
 
         /**
          * The normal startup mode.

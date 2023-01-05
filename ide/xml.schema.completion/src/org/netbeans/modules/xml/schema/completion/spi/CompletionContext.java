@@ -106,7 +106,7 @@ public abstract class CompletionContext {
     /**
      * The types of code completion that can be requested.
      */
-    public static enum CompletionType {
+    public enum CompletionType {
         /**
          * Completion in a place whose type cannot be determined by the context.
          */

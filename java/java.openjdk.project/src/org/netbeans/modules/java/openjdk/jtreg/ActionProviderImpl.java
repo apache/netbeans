@@ -688,7 +688,7 @@ public class ActionProviderImpl implements ActionProvider {
         }
     }
 
-    static enum TestType {
+    enum TestType {
         JDK,
         LANGTOOLS,
         OTHER;

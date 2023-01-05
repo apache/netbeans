@@ -281,7 +281,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
             return SourceUtils.parseModuleName(moduleInfo);
         }
     
-        private static enum TestMode {
+        private enum TestMode {
             /**
              * Tests for pre JDK9 sources.
              */

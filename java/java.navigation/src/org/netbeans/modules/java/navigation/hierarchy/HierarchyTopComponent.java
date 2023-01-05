@@ -465,7 +465,7 @@ public final class HierarchyTopComponent extends TopComponent implements Explore
     @NbBundle.Messages({
         "LBL_SuperTypeView=Supertypes",
         "LBL_SubTypeView=Subtypes"})
-    private static enum ViewType {
+    private enum ViewType {
                        
         SUPER_TYPE(Bundle.LBL_SuperTypeView()),
         SUB_TYPE(Bundle.LBL_SubTypeView());

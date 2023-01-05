@@ -48,7 +48,7 @@ public class JDKSetupTest extends NbTestCase {
     private static String JS_MESSAGE = "JavaScript has been successfully called.";
     private static String TEST_RESULT = "TEST RESULT: ";
     
-    private static enum OSType {WINDOWS, MAC, UNIX}
+    private enum OSType {WINDOWS, MAC, UNIX}
     
     private static boolean versionChecked = false;
     private static boolean JDKpre16 = false;

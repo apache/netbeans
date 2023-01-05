@@ -44,7 +44,7 @@ import org.openide.util.NbPreferences;
  * @author Tomas Mysik
  */
 public final class SearchHistory {
-    private static enum MoveOffset {
+    private enum MoveOffset {
         CURRENT, NEXT, PREVIOUS
     }
     private static final Logger LOGGER = Logger.getLogger(SearchHistory.class.getName());

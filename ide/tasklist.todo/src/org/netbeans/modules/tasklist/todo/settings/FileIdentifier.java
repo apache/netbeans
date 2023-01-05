@@ -88,7 +88,7 @@ public abstract class FileIdentifier implements Comparable<FileIdentifier>{
         return hash;
     }
 
-    static enum Type {
+    enum Type {
         MIME(1, "MIME Types"),
         EXTENSION(2, "Extensions");
 

@@ -316,7 +316,7 @@ public class TplIndenter extends AbstractIndenter<TplTopTokenId> {
         return false;
     }
 
-    private static enum StackItemState {
+    private enum StackItemState {
 
         IN_BODY,
         IN_RULE,

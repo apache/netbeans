@@ -65,7 +65,7 @@ public final class FileObjectFactory {
     private BaseFileObj root;
     private static final Logger LOG_REFRESH = Logger.getLogger("org.netbeans.modules.masterfs.REFRESH"); // NOI18N
 
-    public static enum Caller {
+    public enum Caller {
         ToFileObject, GetFileObject, GetChildern, GetParent, Refresh, Others;
 
         boolean asynchFire() {

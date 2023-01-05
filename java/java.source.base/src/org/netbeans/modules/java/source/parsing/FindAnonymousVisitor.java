@@ -35,7 +35,7 @@ import java.util.Set;
  */
 class FindAnonymousVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
-    private static enum Mode {COLLECT, CHECK};
+    private enum Mode {COLLECT, CHECK};
 
     int noInner;
     boolean hasLocalClass;

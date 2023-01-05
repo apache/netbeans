@@ -65,7 +65,7 @@ public final class JPDAMethodChooserUtils {
     
     private JPDAMethodChooserUtils() {}
     
-    public static enum MethodEntry {
+    public enum MethodEntry {
         SELECTED,
         DIRECT
     }

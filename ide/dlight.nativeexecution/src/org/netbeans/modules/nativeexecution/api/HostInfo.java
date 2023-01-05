@@ -23,7 +23,7 @@ import java.util.Map;
 
 public interface HostInfo {
 
-    public static enum CpuFamily {
+    public enum CpuFamily {
 
         SPARC,
         X86,
@@ -32,7 +32,7 @@ public interface HostInfo {
         UNKNOWN;
     }
 
-    public static enum OSFamily {
+    public enum OSFamily {
 
         SUNOS,
         LINUX,
@@ -83,7 +83,7 @@ public interface HostInfo {
         }
     }
 
-    public static enum Bitness {
+    public enum Bitness {
 
         _32,
         _64;

@@ -553,7 +553,7 @@ public class RepositoryInfo {
         return trackingInfo;
     }
     
-    public static enum PushMode {
+    public enum PushMode {
         UPSTREAM,
         ASK
     }

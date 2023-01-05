@@ -193,7 +193,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         "LBL_Blame.menu.show.date=Date",
         "LBL_Blame.menu.show.author=Author"
     })
-    private static enum DisplayField {
+    private enum DisplayField {
         
         COMMIT_ID(1, Bundle.LBL_Blame_menu_show_commitId(), true) {
 

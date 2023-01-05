@@ -79,7 +79,7 @@ class AutoUpdateCatalogParser extends DefaultHandler {
     
     private static final Logger ERR = Logger.getLogger (AutoUpdateCatalogParser.class.getName ());
     
-    private static enum ELEMENTS {
+    private enum ELEMENTS {
         module_updates, module_group, notification, module, description,
         module_notification, external_package, manifest, l10n, license,
         message_digest, UNKNOWN;

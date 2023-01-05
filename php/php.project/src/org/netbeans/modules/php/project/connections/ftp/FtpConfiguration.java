@@ -292,7 +292,7 @@ public final class FtpConfiguration extends RemoteConfiguration {
         "LBL_EncryptionTlsExplicit=Explicit FTP using TLS",
         "LBL_EncryptionTlsImplicit=Implicit FTP using TLS"
     })
-    public static enum Encryption {
+    public enum Encryption {
 
         /**
          * No encryption, pure FTP.

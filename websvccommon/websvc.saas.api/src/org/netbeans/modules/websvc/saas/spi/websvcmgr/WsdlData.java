@@ -33,7 +33,7 @@ public interface WsdlData {
      */
     public static final String PROP_STATE = "state";
     
-    public static enum Status {
+    public enum Status {
         WSDL_UNRETRIEVED, WSDL_RETRIEVING, WSDL_RETRIEVED,
         WSDL_SERVICE_COMPILING, WSDL_SERVICE_COMPILED, WSDL_SERVICE_COMPILE_FAILED
     }

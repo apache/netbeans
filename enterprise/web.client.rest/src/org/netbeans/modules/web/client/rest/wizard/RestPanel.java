@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
  */
 public class RestPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
 {
-    static enum JsUi {
+    enum JsUi {
         NO_UI(NbBundle.getMessage(RestPanel.class, "TXT_NoUi")),                // NOI18N
         TABLESORTER(NbBundle.getMessage(RestPanel.class, "TXT_TablesorterUi")); // NOI18N
         

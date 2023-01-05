@@ -440,7 +440,7 @@ final class SecurityUtils {
         }
     }
 
-    public static enum CertificateAcceptanceStatus {
+    public enum CertificateAcceptanceStatus {
 
         ACCEPT_PERMANENTLY,
         ACCEPT_FOR_THIS_SESSION,

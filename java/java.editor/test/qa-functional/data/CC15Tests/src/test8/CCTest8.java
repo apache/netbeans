@@ -10,7 +10,7 @@ public class CCTest8 {
 	InnerEnum x = e.A; //Check the CC provided after the dot
     }
     
-    private static enum InnerEnum {
+    private enum InnerEnum {
         A, B, C
     }
 }

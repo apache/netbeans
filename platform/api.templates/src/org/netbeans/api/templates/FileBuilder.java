@@ -89,7 +89,7 @@ public final class FileBuilder {
     /**
      * Determines the default procedure for copying the template in {@link #createFromTemplate}.
      */
-    public static enum Mode {
+    public enum Mode {
         /**
          * The template will be formatted using formatter.
          */

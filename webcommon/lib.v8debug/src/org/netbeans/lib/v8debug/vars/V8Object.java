@@ -83,7 +83,7 @@ public class V8Object extends V8Value {
     
     public static final class Property {
         
-        public static enum Type {
+        public enum Type {
             Normal,
             Field,
             Constant,

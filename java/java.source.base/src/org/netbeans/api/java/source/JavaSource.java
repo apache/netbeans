@@ -87,7 +87,7 @@ import org.openide.util.Parameters;
 public final class JavaSource {
 
 
-    public static enum Phase {
+    public enum Phase {
         MODIFIED,
 
         PARSED,
@@ -100,7 +100,7 @@ public final class JavaSource {
 
     };
 
-    public static enum Priority {
+    public enum Priority {
         MAX,
         HIGH,
         ABOVE_NORMAL,

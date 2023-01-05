@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  */
 public final class NetworkProxySettings {
 
-    public static enum ProxyMode {
+    public enum ProxyMode {
         DIRECT,
         AUTO,
         MANUAL

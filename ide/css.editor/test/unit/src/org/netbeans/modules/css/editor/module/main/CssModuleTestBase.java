@@ -236,7 +236,7 @@ public class CssModuleTestBase extends CslTestBase {
         return sb.toString();
     }
 
-    public static enum Match {
+    public enum Match {
 
         EXACT, CONTAINS, EMPTY, NOT_EMPTY, DOES_NOT_CONTAIN, CONTAINS_ONCE;
     }

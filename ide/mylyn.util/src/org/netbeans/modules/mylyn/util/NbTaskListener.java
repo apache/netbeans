@@ -61,7 +61,7 @@ public interface NbTaskListener extends EventListener {
             return stateChanged;
         }
         
-        public static enum Kind {
+        public enum Kind {
             DELETED,
             MODIFIED
         }

@@ -404,12 +404,12 @@ public final class MavenSettings  {
         }
     }
 
-    public static enum OutputTabName {
+    public enum OutputTabName {
         PROJECT_NAME,
         PROJECT_ID
     }
     
-    public static enum DownloadStrategy {
+    public enum DownloadStrategy {
         NEVER,
         FIRST_OPEN,
         EVERY_OPEN

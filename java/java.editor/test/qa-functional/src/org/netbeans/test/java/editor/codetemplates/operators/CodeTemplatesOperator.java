@@ -229,7 +229,7 @@ public class CodeTemplatesOperator extends NbDialogOperator {
         return result;
     }
             
-    public static enum ExpandTemplateOn {
+    public enum ExpandTemplateOn {
         TAB("Tab",KeyEvent.VK_TAB,0),
         SPACE("Space",KeyEvent.VK_SPACE,0),
         SHIFTSPACE("Shift+Space",KeyEvent.VK_SPACE,KeyEvent.SHIFT_DOWN_MASK),
@@ -263,7 +263,7 @@ public class CodeTemplatesOperator extends NbDialogOperator {
         return this;
     }
     
-    public static enum OnExpansion {
+    public enum OnExpansion {
         REFORMAT("Reformat Text"),REINDENT("Reindent Text"),NOTHING("Do Nothing");
         
         private final String displayName;

@@ -39,7 +39,7 @@ public final class GitRevertResult {
     /**
      * Result status of a commit revert.
      */
-    public static enum Status {
+    public enum Status {
         REVERTED {
             @Override
             public String toString() {

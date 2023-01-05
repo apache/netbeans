@@ -210,7 +210,7 @@ final class ConnectionErrorDlg extends Box {
         box.add(c);
     }
     
-    static enum SegmentKind {
+    enum SegmentKind {
         LABEL,  // A label with a text, which is not possible to copy
         LINK,   // A link which opens in a web browser
         FIELD,  // A non-editable field with a text, which is possible to copy

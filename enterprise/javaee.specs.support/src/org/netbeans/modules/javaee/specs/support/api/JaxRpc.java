@@ -31,7 +31,7 @@ public class JaxRpc {
     public JaxRpc() {
     }
             
-    public static enum Tool implements WSStack.Tool {
+    public enum Tool implements WSStack.Tool {
         WCOMPILE;
 
         @Override
@@ -40,7 +40,7 @@ public class JaxRpc {
         }
     }
     
-    public static enum Feature implements WSStack.Feature {
+    public enum Feature implements WSStack.Feature {
         JSR109;
 
         @Override

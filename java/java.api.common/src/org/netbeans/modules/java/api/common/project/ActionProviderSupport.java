@@ -141,14 +141,14 @@ final class ActionProviderSupport {
         throw new IllegalStateException("No instance allowed.");    //NOI18N
     }
 
-    static enum ActionFlag {
+    enum ActionFlag {
         PLATFORM_SENSITIVE,
         JAVA_MODEL_SENSITIVE,
         SCAN_SENSITIVE,
         COS_ENABLED
     }
 
-    static enum UserPropertiesPolicy {
+    enum UserPropertiesPolicy {
         RUN_ANYWAY(NbBundle.getMessage(ActionProviderSupport.class, "OPTION_Run_Anyway")),
         RUN_WITH(NbBundle.getMessage(ActionProviderSupport.class, "OPTION_Run_With")),
         RUN_UPDATE(NbBundle.getMessage(ActionProviderSupport.class, "OPTION_Run_Update"));
@@ -170,7 +170,7 @@ final class ActionProviderSupport {
         }
     }
 
-    static enum JavaMainAction {
+    enum JavaMainAction {
         RUN("run"),     //NOI18N
         TEST("test");   //NOI18N
 

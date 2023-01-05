@@ -425,7 +425,7 @@ public class WebServiceData implements WsdlData {
         propertyListeners.remove(listener);
     }
 
-    public static enum State {
+    public enum State {
 
         WSDL_UNRETRIEVED, WSDL_RETRIEVING, WSDL_RETRIEVED,
         WSDL_SERVICE_COMPILING, WSDL_SERVICE_COMPILED, WSDL_SERVICE_COMPILE_FAILED

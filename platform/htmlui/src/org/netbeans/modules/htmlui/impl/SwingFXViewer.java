@@ -43,7 +43,7 @@ public class SwingFXViewer implements HTMLViewerSpi<SFXView, JButton> {
 
     @Override
     public JButton createButton(SFXView view, String id) {
-        JButton b = new JButton();;
+        JButton b = new JButton();
         b.setName(id);
         if (view == null || view.buttons == null) {
             throw new NullPointerException("Am I: " + this + " view: " + view);

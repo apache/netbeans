@@ -63,7 +63,7 @@ public class EditList {
     private Document doc;
     private List<Edit> edits;
     private boolean formatAll;
-    private List<DelegatedPosition> positions = new ArrayList<DelegatedPosition>();;
+    private List<DelegatedPosition> positions = new ArrayList<DelegatedPosition>();
     
     public EditList(BaseDocument doc) {
         this.doc = doc;

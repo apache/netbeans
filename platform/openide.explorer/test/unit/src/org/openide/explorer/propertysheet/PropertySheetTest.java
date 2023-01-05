@@ -133,7 +133,7 @@ public class PropertySheetTest extends NbTestCase {
             // Wait for the reinitialization
             for (int i = 0; i < 100; i++) {
                 if (te.getAsText().equals(initEditorValue)) {
-                    //LOG.info(i + " value not updated ");;
+                    //LOG.info(i + " value not updated ");
                     Thread.sleep(50);
                 } else {
                     LOG.info("value was updated");

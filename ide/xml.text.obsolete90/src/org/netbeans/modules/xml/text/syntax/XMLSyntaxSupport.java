@@ -304,7 +304,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
             case XMLDefaultTokenContext.DECLARATION_ID:
                 
                 // we treat internal DTD as one syntax element
-                boolean seekforDTDEnd = false;;
+                boolean seekforDTDEnd = false;
                 while( id == XMLDefaultTokenContext.DECLARATION
                         || id == XMLDefaultTokenContext.VALUE
                         || seekforDTDEnd) {

@@ -75,7 +75,7 @@ import org.openide.util.Utilities;
 public class CreateLibraryAction extends AbstractAction implements LookupListener {
     private final Lookup lookup;
     private final Lookup.Result<DependencyNode> result;
-    private static final @StaticResource String LIBRARIES_ICON = "org/netbeans/modules/maven/actions/libraries.gif";;
+    private static final @StaticResource String LIBRARIES_ICON = "org/netbeans/modules/maven/actions/libraries.gif";
     private boolean createRunning;
 
     @Messages("ACT_Library=Create Library")

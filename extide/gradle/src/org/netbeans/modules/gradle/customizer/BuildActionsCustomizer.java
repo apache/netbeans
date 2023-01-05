@@ -187,7 +187,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             // in the other panel.
             GradleExecConfiguration cur = (GradleExecConfiguration)configModel.getSelectedItem();
             GradleExecConfiguration act = configSnapshot.getActiveConfiguration();
-            configModel.removeAllElements();;
+            configModel.removeAllElements();
             for (GradleExecConfiguration c : configSnapshot.getConfigurations()) {
                 configModel.addElement(c);
                 if (cur != null) {

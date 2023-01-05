@@ -109,7 +109,7 @@ public class DefineInterceptor implements FunctionInterceptor {
                 List<String> fqn = (List<String>) fArg.getValue();
                 JsObject posibleFunc = findJsObjectByName(globalObject, fqn);
 
-                if (posibleFunc != null && posibleFunc instanceof JsFunction) {
+                if (posibleFunc instanceof JsFunction) {
                     JsFunction defFunc = (JsFunction) posibleFunc;
                     List<String> paths = new ArrayList<>();
                     if (modules != null && snapshot != null) {

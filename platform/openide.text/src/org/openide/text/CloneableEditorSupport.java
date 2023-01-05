@@ -833,8 +833,8 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                 }
                 
                 if ((last == ed) ||
-                    ((last != null) && (last instanceof Component) && (ed instanceof Container)
-                    && ((Container) ed).isAncestorOf((Component) last))) {
+                    ((last instanceof Component) && (ed instanceof Container)
+                     && ((Container) ed).isAncestorOf((Component) last))) {
                     ll.addFirst(p);
                 } else {
                     ll.add(p);
@@ -878,8 +878,8 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             if (ed != null) {
                 JEditorPane p = null;
                 if ((last == ed) ||
-                    ((last != null) && (last instanceof Component) && (ed instanceof Container)
-                    && ((Container) ed).isAncestorOf((Component) last))) {
+                    ((last instanceof Component) && (ed instanceof Container)
+                     && ((Container) ed).isAncestorOf((Component) last))) {
                     if (ed instanceof CloneableEditor) {
                         if (((CloneableEditor) ed).isEditorPaneReady()) {
                             p = ed.getEditorPane();

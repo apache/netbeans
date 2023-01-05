@@ -58,7 +58,7 @@ public abstract class TerminalAction extends AbstractAction implements ContextAw
              */
             if (source instanceof Component) {
                 Container container = SwingUtilities.getAncestorOfClass(Terminal.class, (Component) source);
-                if (container != null && container instanceof Terminal) {
+                if (container instanceof Terminal) {
                     this.context = (Terminal) container;
                 }
             }

@@ -135,7 +135,7 @@ public class MavenPackageModifierImpl implements PackageModifierImplementation {
                         @Override
                         public void run() {
                             TopComponent projecttc = WindowManager.getDefault().findTopComponent(ID_LOGICAL);
-                            if (projecttc != null && projecttc instanceof ExplorerManager.Provider) {
+                            if (projecttc instanceof ExplorerManager.Provider) {
                                 ExplorerManager.Provider em = (ExplorerManager.Provider) projecttc;
                                 Node root = em.getExplorerManager().getRootContext();
                                 toRet[0] = root;

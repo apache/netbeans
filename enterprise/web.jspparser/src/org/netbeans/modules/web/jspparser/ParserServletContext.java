@@ -462,7 +462,7 @@ public class ParserServletContext implements ServletContext {
         } catch (DataObjectNotFoundException e) {
             LOGGER.log(Level.INFO, null, e);
         }
-        if (ec != null && (ec instanceof CloneableEditorSupport)) {
+        if ((ec instanceof CloneableEditorSupport)) {
             try {
                 result = ((CloneableEditorSupport) ec).getInputStream();
             } catch (IOException e) {

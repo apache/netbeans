@@ -767,7 +767,7 @@ public final class CompletionContext {
      * @return a valid ASTNode or null
      */
     private ClassNode getBeforeDotDeclaringClass() {
-        if (declaringClass != null && declaringClass instanceof ClassNode) {
+        if (declaringClass instanceof ClassNode) {
             return declaringClass;
         }
         

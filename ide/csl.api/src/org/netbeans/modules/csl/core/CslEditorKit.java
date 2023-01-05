@@ -438,7 +438,7 @@ public final class CslEditorKit extends NbEditorKit {
 
                         Object helpID = a.getValue("helpID"); // NOI18N
 
-                        if ((helpID != null) && (helpID instanceof String)) {
+                        if (helpID instanceof String) {
                             item.putClientProperty("HelpID", helpID); // NOI18N
                         }
                     } else {

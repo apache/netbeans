@@ -117,7 +117,7 @@ abstract class AsyncConverter {
         }
 
         Element enclosingElement = element.getEnclosingElement();
-        if ( enclosingElement== null || !(enclosingElement instanceof TypeElement)){
+        if (!(enclosingElement instanceof TypeElement)){
             return false;
         }
         return true;

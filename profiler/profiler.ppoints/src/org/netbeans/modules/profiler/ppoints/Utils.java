@@ -197,7 +197,7 @@ public class Utils {
             renderer.setEnabled(rendererOrig.isEnabled());
             renderer.setBorder(rendererOrig.getBorder());
 
-            if ((value != null) && value instanceof Lookup.Provider) {
+            if (value instanceof Lookup.Provider) {
                 renderer.setText(ProjectUtilities.getDisplayName((Lookup.Provider)value));
                 renderer.setIcon(ProjectUtilities.getIcon((Lookup.Provider)value));
 

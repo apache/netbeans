@@ -181,7 +181,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         private void invokeInplaceEditing () {
             if (startEditing == null) {
                 Object o = tree.getActionMap ().get ("startEditing"); // NOI18N
-                if (o != null && o instanceof Action) {
+                if (o instanceof Action) {
                     startEditing = (Action) o;
                 }
             }

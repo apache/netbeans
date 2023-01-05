@@ -317,7 +317,7 @@ public class ExtKit extends BaseKit {
                         }
                         item.setEnabled(a.isEnabled());
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if (helpID instanceof String)
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }

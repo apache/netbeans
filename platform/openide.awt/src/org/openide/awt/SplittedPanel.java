@@ -779,10 +779,10 @@ public class SplittedPanel extends JComponent implements Accessible {
         getAccessibleContext().setAccessibleName(
             nameFormat.format(
                 new Object[] {
-                    ((firstComponent == null) || !(firstComponent instanceof Accessible)) ? null
+                    (!(firstComponent instanceof Accessible)) ? null
                                                                                           : firstComponent.getAccessibleContext()
                                                                                                           .getAccessibleName(),
-                    ((secondComponent == null) || !(secondComponent instanceof Accessible)) ? null
+                    (!(secondComponent instanceof Accessible)) ? null
                                                                                             : secondComponent.getAccessibleContext()
                                                                                                              .getAccessibleName()
                 }
@@ -797,10 +797,10 @@ public class SplittedPanel extends JComponent implements Accessible {
         getAccessibleContext().setAccessibleDescription(
             descriptionFormat.format(
                 new Object[] {
-                    ((firstComponent == null) || !(firstComponent instanceof Accessible)) ? null
+                    (!(firstComponent instanceof Accessible)) ? null
                                                                                           : firstComponent.getAccessibleContext()
                                                                                                           .getAccessibleDescription(),
-                    ((secondComponent == null) || !(secondComponent instanceof Accessible)) ? null
+                    (!(secondComponent instanceof Accessible)) ? null
                                                                                             : secondComponent.getAccessibleContext()
                                                                                                              .getAccessibleDescription()
                 }

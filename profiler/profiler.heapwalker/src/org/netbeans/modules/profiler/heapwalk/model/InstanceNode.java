@@ -132,7 +132,7 @@ public abstract class InstanceNode extends AbstractHeapWalkerNode implements Hea
         if (hasInstance()) {
             HeapWalkerNode parent = getParent();
 
-            while ((parent != null) && parent instanceof HeapWalkerInstanceNode) {
+            while (parent instanceof HeapWalkerInstanceNode) {
                 if (((HeapWalkerInstanceNode) parent).getInstance().equals(instance)) {
                     return parent;
                 }

@@ -134,7 +134,7 @@ public class ExtJsCodeCompletion implements CompletionProvider {
 
     @Override
     public String getHelpDocumentation(ParserResult info, ElementHandle element) {
-        if (element != null && element instanceof ExtJsElement) {
+        if (element instanceof ExtJsElement) {
             return ((ExtJsElement)element).getDocumentation();
         }
         return null;

@@ -309,7 +309,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                     }
                 }
             }
-            if (a != null && a instanceof DebuggerAction) {
+            if (a instanceof DebuggerAction) {
                 return (DebuggerAction) a;
             }
         }

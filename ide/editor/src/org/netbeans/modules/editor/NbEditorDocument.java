@@ -144,7 +144,7 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
                                        boolean replace) {
         if (s != null) {
             Object val = s.getAttribute(NbDocument.GUARDED);
-            if (val != null && val instanceof Boolean) {
+            if (val instanceof Boolean) {
                 if (((Boolean)val).booleanValue() == true) { // want make guarded
                     super.setCharacterAttributes(offset, length, guardedSet, replace);
                 } else { // want make unguarded

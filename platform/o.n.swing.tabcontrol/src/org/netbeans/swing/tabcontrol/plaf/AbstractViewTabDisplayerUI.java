@@ -742,8 +742,8 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
                     getSelectionModel().setSelectedIndex(i);
                     tabState.setSelected(i);
                     Component tc = i >= 0 ? getDataModel().getTab(i).getComponent() : null;
-                    if( null != tc && tc instanceof TopComponent
-                        && !((TopComponent)tc).isAncestorOf( KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner() ) ) {
+                    if(tc instanceof TopComponent
+                       && !((TopComponent) tc).isAncestorOf(KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner())) {
                         ((TopComponent)tc).requestActive();
                     }
                 }

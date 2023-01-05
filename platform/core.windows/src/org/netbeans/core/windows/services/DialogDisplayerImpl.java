@@ -116,7 +116,7 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                             // all docked windows implements ModeUIBase interface
                             if (! (w instanceof DefaultSeparateContainer.ModeUIBase)) {
                                 Container cont = SwingUtilities.getAncestorOfClass(Window.class, w);
-                                if (cont != null && (cont instanceof DefaultSeparateContainer.ModeUIBase)) {
+                                if (cont instanceof DefaultSeparateContainer.ModeUIBase) {
                                     w = (Window) cont;
                                 } else {
                                     // don't set non-ide window as parent

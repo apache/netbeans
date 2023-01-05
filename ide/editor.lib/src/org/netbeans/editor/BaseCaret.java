@@ -1190,7 +1190,7 @@ AtomicLockListener, FoldHierarchyListener {
      *
      * @deprecated use #setDot(int, boolean) preceded by <code>JComponent.scrollRectToVisible()</code>.
      */
-    
+    @Deprecated
     public void setDot(int offset, Rectangle scrollRect, int scrollPolicy, boolean expandFold) {
         if (LOG_EDT.isLoggable(Level.FINE)) { // Only permit operations in EDT
             if (!SwingUtilities.isEventDispatchThread()) {
@@ -1261,6 +1261,7 @@ AtomicLockListener, FoldHierarchyListener {
      *
      * @deprecated use #setDot(int) preceded by <code>JComponent.scrollRectToVisible()</code>.
      */
+    @Deprecated
     public void setDot(int offset, Rectangle scrollRect, int scrollPolicy) {
         setDot(offset, scrollRect, scrollPolicy, true);
     }
@@ -1282,6 +1283,7 @@ AtomicLockListener, FoldHierarchyListener {
      *
      * @deprecated use #setDot(int) preceded by <code>JComponent.scrollRectToVisible()</code>.
      */
+    @Deprecated
     public void moveDot(int offset, Rectangle scrollRect, int scrollPolicy) {
         if (LOG_EDT.isLoggable(Level.FINE)) { // Only permit operations in EDT
             if (!SwingUtilities.isEventDispatchThread()) {

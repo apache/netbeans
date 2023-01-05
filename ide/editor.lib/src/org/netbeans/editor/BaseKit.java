@@ -449,6 +449,7 @@ public class BaseKit extends DefaultEditorKit {
      * <code>MimeLookup</code> instead to find <code>EditorKit</code> for a mime
      * type.
      */
+    @Deprecated
     public static BaseKit getKit(Class kitClass) {
         if (kitClass != null && BaseKit.class.isAssignableFrom(kitClass) && BaseKit.class != kitClass) {
             String mimeType = KitsTracker.getInstance().findMimeType(kitClass);
@@ -556,6 +557,7 @@ public class BaseKit extends DefaultEditorKit {
      * @deprecated Please use Lexer instead, for details see
      *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
      */
+    @Deprecated
     public Syntax createSyntax(Document doc) {
         return new DefaultSyntax();
     }
@@ -566,6 +568,7 @@ public class BaseKit extends DefaultEditorKit {
      * @deprecated Please use Editor Indentation API instead, for details see
      *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
      */
+    @Deprecated
     public Syntax createFormatSyntax(Document doc) {
         return createSyntax(doc);
     }
@@ -576,6 +579,7 @@ public class BaseKit extends DefaultEditorKit {
      * @deprecated Please use Lexer instead, for details see
      *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
      */
+    @Deprecated
     public SyntaxSupport createSyntaxSupport(BaseDocument doc) {
         return new SyntaxSupport(doc);
     }
@@ -606,6 +610,7 @@ public class BaseKit extends DefaultEditorKit {
      *  {@link #createPrintEditorUI(BaseDocument, boolean, boolean)} is being
      *  called instead.
      */
+    @Deprecated
     protected EditorUI createPrintEditorUI(BaseDocument doc) {
         return new EditorUI(doc);
     }
@@ -914,6 +919,7 @@ public class BaseKit extends DefaultEditorKit {
     /**
      * @deprecated Without any replacement. 
      */
+    @Deprecated
     protected Action[] getMacroActions() {
         return new Action[0];
     }                               
@@ -1049,6 +1055,7 @@ public class BaseKit extends DefaultEditorKit {
      *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
      */
 //    @EditorActionRegistration(name = defaultKeyTypedAction)
+    @Deprecated
     public static class DefaultKeyTypedAction extends LocalBaseAction {
 
         static final long serialVersionUID = 3069164318144463899L;
@@ -1436,6 +1443,7 @@ public class BaseKit extends DefaultEditorKit {
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
      *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
      */
+    @Deprecated
     public static class InsertBreakAction extends LocalBaseAction {
 
         static final long serialVersionUID =7966576342334158659L;
@@ -2019,6 +2027,7 @@ public class BaseKit extends DefaultEditorKit {
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
      *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
      */
+    @Deprecated
     public static class DeleteCharAction extends LocalBaseAction {
 
         protected boolean nextChar;
@@ -3705,6 +3714,7 @@ public class BaseKit extends DefaultEditorKit {
     /**
      * @deprecated use {@link CamelCaseInterceptor} instead
      */
+    @Deprecated
     public static class NextWordAction extends LocalBaseAction {
 
         static final long serialVersionUID =-5909906947175434032L;
@@ -3747,6 +3757,7 @@ public class BaseKit extends DefaultEditorKit {
     /**
      * @deprecated use {@link CamelCaseInterceptor} instead
      */
+    @Deprecated
     public static class PreviousWordAction extends LocalBaseAction {
 
         static final long serialVersionUID =-5465143382669785799L;

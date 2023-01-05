@@ -50,6 +50,7 @@ public final class CheckedHighlightsSequence implements HighlightsSequence {
      * @param containerDebugId
      * @deprecated Use the other constructor and setContainerDebugId
      */
+    @Deprecated
     public CheckedHighlightsSequence(HighlightsSequence seq, int startOffset, int endOffset, String containerDebugId) {
         assert seq != null : "seq must not be null"; //NOI18N
         assert 0 <= startOffset : "startOffset must be greater than or equal to zero"; //NOI18N

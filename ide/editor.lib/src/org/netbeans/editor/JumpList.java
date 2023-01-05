@@ -93,6 +93,7 @@ public final class JumpList {
      * 
      * @deprecated Use {@link #addEntry(JTextComponent, int)} instead.
      */
+    @Deprecated
     public static void checkAddEntry(JTextComponent c, int pos) {
         addEntry(c, pos);
     }

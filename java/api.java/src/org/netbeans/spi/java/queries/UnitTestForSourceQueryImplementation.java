@@ -45,6 +45,7 @@ import org.openide.filesystems.FileObject;
  * @author David Konecny
  * @since org.netbeans.api.java/1 1.4
  */
+@Deprecated
 public interface UnitTestForSourceQueryImplementation {
     
     /**

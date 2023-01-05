@@ -351,6 +351,7 @@ public abstract class BasicTabDisplayerUI extends AbstractTabDisplayerUI {
     /**
      * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead.
      */
+    @Deprecated
     protected boolean isAntialiased() {
         return ColorUtil.shouldAntialias();
     }

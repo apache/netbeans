@@ -34,6 +34,7 @@ import javax.swing.*;
  * @deprecated See org.openide.spi.editor.lib2.DialogFactory. DialogSupport has
  * no public replacement.
  */
+@Deprecated
 public class DialogSupport {
 
     /** Noone needs to instantiate the dialog support */

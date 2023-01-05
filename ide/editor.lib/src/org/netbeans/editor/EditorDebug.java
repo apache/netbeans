@@ -31,6 +31,7 @@ import javax.swing.text.Segment;
  * @version 0.10
  * @deprecated Should never have been made public. No replacement.
  */
+@Deprecated
 public class EditorDebug {
 
     private EditorDebug() {

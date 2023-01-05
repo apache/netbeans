@@ -981,6 +981,7 @@ public final class TreeUtilities {
      * @return true if {@code member} is accessible in {@code type}
      * @deprecated since 0.111, {@link Trees#isAccessible(Scope, Element, DeclaredType)} should be used instead.
      */
+    @Deprecated
     public boolean isAccessible(Scope scope, Element member, TypeMirror type) {
         return type instanceof DeclaredType ? info.getTrees().isAccessible(scope, member, (DeclaredType)type) : false;
     }

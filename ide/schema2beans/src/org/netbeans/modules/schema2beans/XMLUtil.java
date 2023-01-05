@@ -41,6 +41,7 @@ public class XMLUtil {
 
     /** @deprecated this public method is not expected to be used by schema2beans client 
      */
+    @Deprecated
     public static void printXML(StringBuffer out, char msg, boolean attribute) {
         if (msg == '&')
             out.append("&amp;");
@@ -77,7 +78,8 @@ public class XMLUtil {
 	}
         
         /** @deprecated this public method is not expected to be used by schema2beans client 
-         */ 
+         */
+    @Deprecated
 	public static void writeXML(java.io.Writer out, char msg, boolean attribute) throws java.io.IOException {
 		if (msg == '&')
 			out.write("&amp;");
@@ -166,6 +168,7 @@ public class XMLUtil {
     
     /** @deprecated this public method is not expected to be used by schema2beans client 
      */
+    @Deprecated
     public static void printXML(java.io.Writer out, char msg, boolean attribute) throws java.io.IOException {
         if (msg == '&')
             out.write("&amp;");

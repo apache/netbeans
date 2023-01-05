@@ -45,6 +45,7 @@ import org.openide.util.NbBundle;
  * @author Vladimir Voskresensky
  * @deprecated use {@link CslActions#createGoToMarkOccurrencesAction(boolean) } instead.
  */
+@Deprecated
 public final class GoToMarkOccurrencesAction extends BaseAction {
 
     private static final String prevActionName = EditorActionNames.gotoPrevOccurrence;

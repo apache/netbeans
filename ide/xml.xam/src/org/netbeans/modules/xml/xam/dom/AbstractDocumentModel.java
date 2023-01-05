@@ -234,6 +234,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
      * @deprecated Use {@link org.netbeans.modules.xml.xam.dom.AbstractDocumentModel#prepareChangeInfo(java.util.List, java.util.List)} instead. It is necessary for fixing bug #166177.
      *
      */
+    @Deprecated
     public ChangeInfo prepareChangeInfo(List<Node> pathToRoot) {
         return prepareChangeInfo(pathToRoot, pathToRoot);
     }

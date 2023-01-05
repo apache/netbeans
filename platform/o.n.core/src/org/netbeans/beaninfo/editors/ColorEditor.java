@@ -940,6 +940,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
     /**
      * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead
      */
+    @Deprecated
     public static final boolean gtkShouldAntialias() {
         if (gtkAA == null) {
             Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N

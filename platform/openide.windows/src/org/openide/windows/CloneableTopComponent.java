@@ -337,6 +337,7 @@ public abstract class CloneableTopComponent extends TopComponent implements Exte
          * @deprecated Use {@link #getArbitraryComponent} instead.
          *             It doesn't throw a runtime exception.
         */
+        @Deprecated
         public CloneableTopComponent getAnyComponent() {
             synchronized (LOCK) {
                 return componentSet.iterator().next();

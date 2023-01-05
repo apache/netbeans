@@ -97,6 +97,7 @@ public class GuardedDocument extends BaseDocument
      * @deprecated The use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public GuardedDocument(Class kitClass) {
         this(kitClass, true, new StyleContext());
     }
@@ -123,6 +124,7 @@ public class GuardedDocument extends BaseDocument
      * @deprecated The use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
     */
+    @Deprecated
     public GuardedDocument(Class kitClass, boolean addToRegistry, StyleContext styles) {
         super(kitClass, addToRegistry);
         init(styles);

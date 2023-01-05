@@ -81,6 +81,7 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
      * @deprecated Use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public NbEditorDocument(Class kitClass) {
         super(kitClass);
         init();

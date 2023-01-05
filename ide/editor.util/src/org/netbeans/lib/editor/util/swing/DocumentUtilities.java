@@ -270,6 +270,7 @@ public final class DocumentUtilities {
      * @deprecated
      * @see #isTypingModification(Document)
      */
+    @Deprecated
     public static boolean isTypingModification(DocumentEvent evt) {
         return isTypingModification(evt.getDocument());
     }

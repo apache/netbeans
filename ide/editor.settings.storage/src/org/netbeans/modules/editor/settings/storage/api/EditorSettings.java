@@ -84,6 +84,7 @@ public abstract class EditorSettings {
      * general contract clients should listen on mime type specific Lookup for
      * changes in editor settings.
      */
+    @Deprecated
     public static final String PROP_DEFAULT_FONT_COLORS = "defaultFontColors"; //NOI18N
     
     /** 
@@ -93,6 +94,7 @@ public abstract class EditorSettings {
      * general contract clients should listen on mime type specific Lookup for
      * changes in editor settings.
      */
+    @Deprecated
     public static final String PROP_EDITOR_FONT_COLORS = EditorSettingsImpl.PROP_EDITOR_FONT_COLORS;
 
     /**
@@ -138,6 +140,7 @@ public abstract class EditorSettings {
      * 
      * @deprecated Use getFontColorSettings(new String[0]).getAllFontColors(profile) instead.
      */
+    @Deprecated
     public abstract Collection<AttributeSet> getDefaultFontColors (
 	String profile
     );
@@ -151,6 +154,7 @@ public abstract class EditorSettings {
      * 
      * @deprecated Use getFontColorSettings(new String[0]).getAllFontColorsDefaults(profile) instead.
      */
+    @Deprecated
     public abstract Collection<AttributeSet> getDefaultFontColorDefaults (
 	String profile
     );
@@ -163,6 +167,7 @@ public abstract class EditorSettings {
      * 
      * @deprecated Use getFontColorSettings(new String[0]).setAllFontColors(profile, fontColors) instead.
      */
+    @Deprecated
     public abstract void setDefaultFontColors (
 	String profile,
 	Collection<AttributeSet> fontColors

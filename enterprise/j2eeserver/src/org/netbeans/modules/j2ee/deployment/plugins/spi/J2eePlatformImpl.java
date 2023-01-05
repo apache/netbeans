@@ -122,6 +122,7 @@ public abstract class J2eePlatformImpl {
      *         <code>false</code> otherwise.
      * @deprecated {@link #getLookup()} should be used to obtain tool specifics
      */
+    @Deprecated
     public abstract boolean isToolSupported(String toolName);
     
     /**
@@ -132,6 +133,7 @@ public abstract class J2eePlatformImpl {
      * @return list of supported J2EE specification versions.
      * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(java.lang.Object)}
      */
+    @Deprecated
     public Set<String> getSupportedSpecVersions() {
         return Collections.emptySet();
     }
@@ -151,6 +153,7 @@ public abstract class J2eePlatformImpl {
      * @return list of supported J2EE specification versions.
      * @deprecated override {@link #getSupportedProfiles()} and {@link #getSupportedProfiles(java.lang.Object)}
      */
+    @Deprecated
     public Set <String> getSupportedSpecVersions(Object moduleType) {
         return getSupportedSpecVersions();
     }
@@ -209,6 +212,7 @@ public abstract class J2eePlatformImpl {
      * @return list of supported J2EE module types.
      * @deprecated override {@link #getSupportedTypes()}
      */
+    @Deprecated
     public Set getSupportedModuleTypes() {
         return Collections.emptySet();
     }
@@ -304,6 +308,7 @@ public abstract class J2eePlatformImpl {
      * @since 1.16
      * @deprecated {@link #getLookup()} should be used to obtain tool specifics
      */
+    @Deprecated
     public String getToolProperty(String toolName, String propertyName) {
         return null;
     }

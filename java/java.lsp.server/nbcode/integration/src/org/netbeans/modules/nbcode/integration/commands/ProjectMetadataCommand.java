@@ -98,7 +98,7 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
             .registerTypeAdapterFactory(new TypeAdapterFactory() {
                 @Override
                 public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> tt) {
-                    if (tt.getRawType() != FileObject.class) {
+                    if (!FileObject.class.isAssignableFrom(tt.getRawType())) {
                         return null;
                     }
                     return new TypeAdapter<T>() {

@@ -220,7 +220,7 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
 
     /**
      * Sort enumeration by fila names;
-     *
+     * @param enm
      */
     static <T extends FileObject> Enumeration<T> sortEnum(
             Enumeration<T> enm) {

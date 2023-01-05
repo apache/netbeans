@@ -214,7 +214,8 @@ public abstract class IOProvider {
      *
      * @param <IO>
      * @param <OW>
-     * @param <POS>
+     * @param <P>
+     * @param <F>
      */
     private static class Impl<IO, OW extends PrintWriter, P, F>
             extends IOProvider {

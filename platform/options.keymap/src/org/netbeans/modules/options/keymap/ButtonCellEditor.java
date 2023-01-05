@@ -195,7 +195,8 @@ class ButtonCellEditor extends DefaultCellEditor {
 
     /**
      * Shows dialog where user chooses whether SC of conflicting action should be overridden
-     * @param displayName name of conflicting action
+     * @param conflictingActions set of conflicting actions
+     * @param sameScope
      * @return dialog result
      */
     private Object overrride(Set<ShortcutAction> conflictingActions, Collection<ShortcutAction> sameScope) {

@@ -56,12 +56,12 @@ public class WindowsNetworkProxy implements NetworkProxyResolver {
             }
 
             Pointer pacFilePointer = prxCnf.pacFile;
-            if (pacFilePointer != null) {
-                String pacFileUrl = pacFilePointer.getWideString(0);
+            if (pacFilePointer != null || prxCnf.autoDetect) {
+                String pacFileUrl = pacFilePointer != null ? pacFilePointer.getWideString(0) : "http://wpad/wpad.dat"; // NOI18N
                 
                 LOGGER.log(Level.INFO, "Windows system proxy resolver: auto - PAC ({0})", pacFileUrl); //NOI18N                
                 return new NetworkProxySettings(pacFileUrl);
-            }
+            } 
 
             Pointer proxyPointer = prxCnf.proxy;
             Pointer proxyBypassPointer = prxCnf.proxyBypass;

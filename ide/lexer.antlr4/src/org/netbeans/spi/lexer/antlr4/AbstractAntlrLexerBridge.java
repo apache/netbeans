@@ -27,10 +27,12 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.netbeans.spi.lexer.TokenFactory;
 
 /**
+ * Implementations of this class shall take an ANTLRv4 Lexer and map ANTLR tokens
+ * to NetBeans Lexer tokens.
  *
  * @author Laszlo Kishalmi
- * @param <L>
- * @param <T>
+ * @param <L> The ANTLR Lexer type
+ * @param <T> The NetBeans TokenId type
  */
 public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenId> implements org.netbeans.spi.lexer.Lexer<T> {
 
@@ -38,6 +40,17 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
     protected final L lexer;
     protected final LexerInputCharStream input;
 
+    /**
+     * Constructor for the lexer bridge, usually used as:
+     * <pre>{@code
+     * public SomeLexer(LexerRestartInfo<SomeTokenId> info) {
+     *     super(info, new SomeANTLRLexer(new LexerInputCharStream(info.input())));
+     * }
+     * }
+     * </pre>
+     * @param info  The lexer restart info
+     * @param lexer The ANTLR generated Lexer
+     */
     @SuppressWarnings("unchecked")
     public AbstractAntlrLexerBridge(LexerRestartInfo<T> info, L lexer) {
         this.tokenFactory = info.tokenFactory();
@@ -65,9 +78,34 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         return nextToken.getType() != EOF ? mapToken(nextToken.getType()) : null;
     }
 
+    /**
+     * Implementations shall provide a suitable mapping between ANTLR lexer
+     * token types and NetBeans lexer tokens. The mapping is usually many to one,
+     * could be implemented as:
+     * <pre>{@code
+     * switch (antlrTokenType) {
+     *      case DOC_COMMENT:
+     *      case BLOCK_COMMENT:
+     *      case LINE_COMMENT:
+     *          return token(SomeTokenId.COMMENT);
+*
+     *      case STRING_CHAR:
+     *          return groupToken(SomeTokenId.STRING);
+     *      default:
+     *          return token(SomeTokenId.ERROR);
+     *  }
+     * }</pre>
+     * @param antlrTokenType the token type from the ANTLR Lexer
+     *
+     * @return a NetBeans lexer token.
+     */
     protected abstract Token<T> mapToken(int antlrTokenType);
 
     @Override
+    /**
+     * This method can be overridden, if some resource cleanup is needed when
+     * the lexer is no longer in use. Usually not required for ANTLR lexers.
+     */
     public void release() {
     }
 
@@ -76,6 +114,16 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         return new LexerState<>(lexer);
     }
 
+    /**
+     * Some grammars provide big chunks of the same token. It is recommended to
+     * group those tokens together in one Token for the editor for performance
+     * reasons.
+     *
+     * @param id the NetBeans TokenId of the returned token.
+     * @param antlrTokenType the ANTLR token type to be collected till found.
+     *
+     * @return one lexer token, that represents several ANTLR tokens.
+     */
     protected final Token<T> groupToken(T id, int antlrTokenType) {
         preFetchedToken = nextRealToken();
         while (preFetchedToken.getType() == antlrTokenType) {
@@ -100,6 +148,14 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         return ret;
     }
 
+    /**
+     * This class can save and restore the internal state of a basic ANTLR Lexer.
+     * Some grammars has additional state information, for those this class
+     * needs to be extended, and the {@link #state()} method has to be
+     * overridden.
+     *
+     * @param <L> The ANTLR Lexer, that state is to be kept.
+     */
     public static class LexerState<L extends Lexer> {
         final int state;
         final int mode;

@@ -100,7 +100,7 @@ public final class Path {
         if (pathName == null) {
             if (Utilities.isWindows()) {
                 for (String key : System.getenv().keySet()) {
-                    if (key.toLowerCase().equals("path")) { // NOI18N
+                    if (key.equalsIgnoreCase("path")) { // NOI18N
                         pathName = key.substring(0, 4);
                         return pathName;
                     }

@@ -489,7 +489,7 @@ public class IssuePanel extends javax.swing.JPanel {
         ComboBoxModel model = combo.getModel();
         for(int i = 0; i < model.getSize(); i++) {
             String element = model.getElementAt(i).toString();
-            if(value.toLowerCase().equals(element.toString().toLowerCase())) {
+            if(value.equalsIgnoreCase(element)) {
                 return element;
             }
         }
@@ -3011,7 +3011,7 @@ public class IssuePanel extends javax.swing.JPanel {
                 List<String> versions = repository.getConfiguration().getVersions(product);
                 String defaultVersion = getCurrentNetBeansVersion();
                 for (String v : versions) {
-                    if (v.trim().toLowerCase().equals(defaultVersion.toLowerCase())) {
+                    if (v.trim().equalsIgnoreCase(defaultVersion)) {
                         issue.setFieldValue(IssueField.VERSION, v);
                     }
                 }
@@ -3727,7 +3727,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     private String getCurrentNetBeansVersion() {        
         String version = parseProductVersion(getProductVersionValue());        
         if(version != null) {
-            if(version.toLowerCase().equals("dev")) {                           // NOI18N
+            if(version.equalsIgnoreCase("dev")) {                           // NOI18N
                 return CURRENT_NB_VERSION;
             } else {                
                 return version;

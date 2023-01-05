@@ -199,7 +199,7 @@ public final class Source {
             name = name.substring(1, name.length() - 1);
         }
         int nl = name.length();
-        if (nl < 4 || !name.substring(nl - 3, nl).toLowerCase().equals(".js")) {
+        if (nl < 4 || !name.substring(nl - 3, nl).equalsIgnoreCase(".js")) {
             name = name + ".js";
         }
         // Check whether the file happens to exist

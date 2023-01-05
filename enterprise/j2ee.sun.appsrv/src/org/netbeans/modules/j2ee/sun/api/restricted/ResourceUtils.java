@@ -1285,7 +1285,7 @@ public class ResourceUtils implements WizardConstants{
 
     public static void createSampleDataSource(J2eeModuleProvider provider){
         DeploymentManager dm = getDeploymentManager(provider);
-        if ((dm != null) && (dm instanceof SunDeploymentManagerInterface)) {
+        if (dm instanceof SunDeploymentManagerInterface) {
             SunDeploymentManagerInterface eightDM = (SunDeploymentManagerInterface) dm;
             try {
                 ObjectName configObjName = new ObjectName(MAP_RESOURCES);

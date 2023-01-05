@@ -307,7 +307,7 @@ public class AXIModelUpdater extends DeepAXITreeVisitor {
         }
         //the element ref now points to a different global element
         AXIComponent newElement = Util.lookup(elementRef.getModel(), newGE);
-        if(newElement != null && newElement instanceof Element) {
+        if(newElement instanceof Element) {
             elementRef.setRef((Element)newElement);
             elementRef.forceFireEvent();
         }
@@ -350,7 +350,7 @@ public class AXIModelUpdater extends DeepAXITreeVisitor {
         
         //the attribute ref now points to a different global attribute
         AXIComponent newAttr = Util.lookup(attributeRef.getModel(), newGA);
-        if(newAttr != null && newAttr instanceof Attribute) {
+        if(newAttr instanceof Attribute) {
             attributeRef.setRef((Attribute)newAttr);
             attributeRef.forceFireEvent();
         }

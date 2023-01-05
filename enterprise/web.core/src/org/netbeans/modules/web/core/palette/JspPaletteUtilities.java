@@ -64,7 +64,7 @@ public final class JspPaletteUtilities {
 
     public static void insert(String s, JTextComponent target, boolean reformat) throws BadLocationException {
         Document _doc = target.getDocument();
-        if (_doc == null || !(_doc instanceof BaseDocument)) {
+        if (!(_doc instanceof BaseDocument)) {
             return;
         }
 
@@ -270,7 +270,7 @@ public final class JspPaletteUtilities {
     /**************************************************************************/
     private static void insertTagLibRef(JTextComponent target, String prefix, String uri) {
         Document doc = target.getDocument();
-        if (doc != null && doc instanceof BaseDocument) {
+        if (doc instanceof BaseDocument) {
             BaseDocument baseDoc = (BaseDocument)doc;
             baseDoc.atomicLock();
             try {

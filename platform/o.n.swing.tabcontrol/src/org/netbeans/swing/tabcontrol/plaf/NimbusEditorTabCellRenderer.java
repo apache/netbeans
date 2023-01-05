@@ -115,7 +115,7 @@ final class NimbusEditorTabCellRenderer extends AbstractTabCellRenderer {
         } else {
             o = UIManager.get("TabbedPane:TabbedPaneTab[Enabled].backgroundPainter");
         }
-        if ((o != null) && (o instanceof javax.swing.Painter)) {
+        if (o instanceof javax.swing.Painter) {
             javax.swing.Painter painter = (javax.swing.Painter) o;
             BufferedImage bufIm = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = bufIm.createGraphics();

@@ -723,7 +723,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
     private MavenModule[] checkConfiguration(MavenProject prj, Object conf) {
         List<MavenModule> toRet = new ArrayList<MavenModule>();
-        if (conf != null && conf instanceof Xpp3Dom) {
+        if (conf instanceof Xpp3Dom) {
             ExpressionEvaluator eval = PluginPropertyUtils.createEvaluator(project);
             Xpp3Dom dom = (Xpp3Dom) conf;
             Xpp3Dom modules = dom.getChild("modules"); //NOI18N

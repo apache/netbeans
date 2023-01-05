@@ -123,7 +123,7 @@ public class NewWebServiceFromWSDLWizardIterator implements TemplateWizard.Itera
         // Creating steps.
         Object prop = this.wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);

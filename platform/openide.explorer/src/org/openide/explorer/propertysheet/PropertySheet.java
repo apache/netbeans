@@ -1130,7 +1130,7 @@ public class PropertySheet extends JPanel {
             String id = null;
 
             //First look on the individual property
-            if ((fd != null) && fd instanceof Node.Property) {
+            if (fd instanceof Node.Property) {
                 id = (String) fd.getValue("helpID"); //NOI18N
             }
 

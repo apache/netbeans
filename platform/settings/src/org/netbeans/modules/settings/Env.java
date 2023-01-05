@@ -106,7 +106,7 @@ public final class Env implements Environment.Provider {
      * @return set of items
      */
     public static java.util.Set<String> parseAttribute(Object attr) {
-        if (attr != null && attr instanceof String) {
+        if (attr instanceof String) {
             java.util.StringTokenizer s = 
                 new java.util.StringTokenizer((String) attr, ","); //NOI18N
             java.util.Set<String> set = new java.util.HashSet<String>(10);

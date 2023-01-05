@@ -150,7 +150,7 @@ class RevisionNode extends AbstractNode implements Comparable {
 
     @Override
     public int compareTo(Object obj) {
-        if( !(obj instanceof RevisionNode) || obj == null) {
+        if(!(obj instanceof RevisionNode)) {
             return -1;
         }
         RevisionNode node = (RevisionNode) obj;
@@ -436,7 +436,7 @@ class RevisionNode extends AbstractNode implements Comparable {
         
         @Override
         public int compareTo(Object obj) {
-            if( !(obj instanceof FileNode) || obj == null) {
+            if(!(obj instanceof FileNode)) {
                 return -1;
             }
             FileNode node = (FileNode) obj;        

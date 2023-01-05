@@ -252,8 +252,8 @@ public class DTDPanel extends AbstractPanel {
     // does user entered a PID
     private boolean existsPID() {
         Object pid = pidModel.getSelectedItem();
-        return (pid != null) && (pid instanceof String)
-            && (((String)pid).trim().equals("") == false);
+        return (pid instanceof String)
+               && (((String) pid).trim().equals("") == false);
     }
 
     private void updatePossibilities() {

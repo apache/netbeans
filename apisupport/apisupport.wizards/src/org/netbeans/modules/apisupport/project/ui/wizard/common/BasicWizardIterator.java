@@ -247,7 +247,7 @@ public abstract class BasicWizardIterator implements WizardDescriptor.Asynchrono
         // mkleint: copied from the NewJavaFileWizardIterator.. there must be something painfully wrong..
         String[] beforeSteps = null;
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         position = 0;

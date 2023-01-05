@@ -123,7 +123,7 @@ public final class JschSupport {
             } catch (JSchException ex) {
                 String message = ex.getMessage();
                 Throwable cause = ex.getCause();
-                if (cause != null && cause instanceof NullPointerException) {
+                if (cause instanceof NullPointerException) {
                     // Jsch bug... retry?
                     log.log(Level.INFO, "JSch exception opening channel to " + env + ". Retrying", ex); // NOI18N
                 } else if ("java.io.InterruptedIOException".equals(message)) { // NOI18N

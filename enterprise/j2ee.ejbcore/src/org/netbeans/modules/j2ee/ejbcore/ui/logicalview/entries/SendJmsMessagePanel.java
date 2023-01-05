@@ -317,7 +317,7 @@ public class SendJmsMessagePanel extends javax.swing.JPanel implements ChangeLis
             @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                        if (newvalue instanceof Boolean) {
                             boolean isServiceLocatorOk = ((Boolean) newvalue);
                             if (isServiceLocatorOk) {
                                 verifyAndFire();

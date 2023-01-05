@@ -65,7 +65,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         while (!(b instanceof Binding) && (b != null)) {
             b = b.getParent();
         }
-        if ((b != null) && (b instanceof Binding)) {
+        if (b instanceof Binding) {
             binding = (Binding) b;
         }
         

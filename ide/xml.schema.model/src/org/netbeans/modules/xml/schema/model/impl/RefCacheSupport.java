@@ -91,7 +91,7 @@ public class RefCacheSupport {
      */
     public SchemaModelImpl getCachedModel(SchemaModelReference ref) {
         Object cachedValue = refModelCache.get(ref);
-        if (cachedValue != null && cachedValue instanceof SmAttachment) {
+        if (cachedValue instanceof SmAttachment) {
             return SmAttachment.class.cast(cachedValue).mSchemaModel;
         } else {
             return null;
@@ -199,7 +199,7 @@ public class RefCacheSupport {
                     //
                     if (SchemaModelReference.SCHEMA_LOCATION_PROPERTY.equals(propName)) {
                         Object source = evt.getSource();
-                        if (source != null && source instanceof SchemaModelReference) {
+                        if (source instanceof SchemaModelReference) {
                             excludeModelRef((SchemaModelReference)source);
                             // System.out.println("schema location changed");
                         }
@@ -207,7 +207,7 @@ public class RefCacheSupport {
                     //
                     if (Import.NAMESPACE_PROPERTY.equals(propName)) {
                         Object source = evt.getSource();
-                        if (source != null && source instanceof Import) {
+                        if (source instanceof Import) {
                             excludeModelRef((Import)source);
                             // System.out.println("Import's namespace changed");
                         }
@@ -288,7 +288,7 @@ public class RefCacheSupport {
     private synchronized void excludeModelRef(SchemaModelReference sModelRef) {
         Object oldValue = refModelCache.remove(sModelRef);
         //
-        if (oldValue != null && oldValue instanceof SmAttachment) {
+        if (oldValue instanceof SmAttachment) {
             SmAttachment sma = SmAttachment.class.cast(oldValue);
             sma.mSchemaModel.removePropertyChangeListener(sma.mPCL);
         }

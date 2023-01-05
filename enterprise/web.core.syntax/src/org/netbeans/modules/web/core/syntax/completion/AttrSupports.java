@@ -278,7 +278,7 @@ public class AttrSupports {
                         //do nothing
                     } finally {
                         // avoids JAR locking
-                        if (cld != null && (cld instanceof Closeable)) {
+                        if (cld instanceof Closeable) {
                             try {
                                 ((Closeable) cld).close();
                             } catch (IOException ex) {

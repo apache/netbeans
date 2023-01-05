@@ -169,7 +169,7 @@ public final class ByteStack {
             return true;
         }
 
-        if (obj == null || !(obj instanceof ByteStack)) {
+        if (!(obj instanceof ByteStack)) {
             return false;
         }
 

@@ -290,7 +290,7 @@ public abstract class CloneableOpenSupport extends Object {
         public boolean isModified();
 
         /** Support for marking the environement modified.
-        * @exception IOException if the environment cannot be marked modified
+        * @exception java.io.IOException if the environment cannot be marked modified
         *    (for example when the file is readonly), when such exception
         *    is the support should discard all previous changes
         */

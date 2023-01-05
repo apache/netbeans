@@ -229,10 +229,6 @@ public class Utilities {
      * <li>{@link #SIGNATURE_VERIFIED}</li>
      * <li>{@link #TRUSTED}</li>
      * </ul>
-     *
-     * @param verificationResult1
-     * @param verificationResult2
-     * @return
      */
     public static final Comparator<String> VERIFICATION_RESULT_COMPARATOR = new Comparator<String>() {
         @Override
@@ -308,7 +304,7 @@ public class Utilities {
     /**
      * Get the certpaths that were used to sign the NBM content.
      *
-     * @param nbmFile
+     * @param nbmFile file of nbm
      * @return collection of CodeSigners, that were used to sign the non-signature
      * entries of the NBM
      * @throws IOException

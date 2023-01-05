@@ -239,11 +239,7 @@ final class CreateFromTemplateImpl {
      * <li>{@code time} system time : String
      * <li>{@code dateTime} java.util.Date representation of the current system time
      * </ul>
-     * 
-     * @param template
-     * @param folder
-     * @param name
-     * @param param
+     *
      * @return completed parameters
      */
     public Map<String,Object> findTemplateParameters() {

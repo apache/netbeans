@@ -658,7 +658,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
 
     /**
      * {@inheritDoc}
-     * @throws an IllegalStateException if called on the
+     * @throws IllegalStateException if called on the
      * {@linkplain #getDefault default request processor}
      * @since org.openide.util 8.2
      */
@@ -1380,13 +1380,14 @@ outer:  do {
         private AtomicBoolean cancelled;
 
         /** @param run runnable to start
-        * @param delay amount of millis to wait
-        * @param priority the priorty of the task
         */
         Task(Runnable run) {
             super(run);
         }
 
+        /** @param run runnable to start
+         * @param priority the priorty of the task
+         */
         Task(Runnable run, int priority) {
             super(run);
 

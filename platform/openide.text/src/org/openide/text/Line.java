@@ -519,7 +519,8 @@ public abstract class Line extends Annotatable implements Serializable {
         }
 
         /** Registers the line to this <code>Line.Set</code>.
-         * @param line <code>Line</code> to register
+         * @param lineIndex line index
+         * @param lineCreator <code>Line</code> to register
          * @return registered <code>Line</code>. <em>Note:</em> the retruned
          * <code>Line</code> could be different (identityHashCode not equal)
          * from the one passed in */

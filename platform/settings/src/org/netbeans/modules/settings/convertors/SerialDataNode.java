@@ -100,7 +100,9 @@ public final class SerialDataNode extends DataNode {
             getPrimaryFile().getAttribute("beaninfo"))); // NOI18N
     }
      
-    /** @param obj the object to use
+    /**
+     * @param conv convertor to handle serialdata format
+     * @param dobj object to work with
      * @param noBeanInfo info to use
      */
     private SerialDataNode(SerialDataConvertor conv, DataObject dobj, boolean noBeanInfo) {

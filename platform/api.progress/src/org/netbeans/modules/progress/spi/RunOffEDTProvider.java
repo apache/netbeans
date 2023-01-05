@@ -54,7 +54,7 @@ public interface RunOffEDTProvider {
          * @param operation A runnable that needs to be run with the UI blocked
          * @param handle A progress handle that will be updated to reflect
          * the progress of the operation
-         * @param showDetails If true, a label should be provided in the progress
+         * @param includeDetailLabel If true, a label should be provided in the progress
          * dialog to show detailed progress messages
          */
         public void showProgressDialogAndRun(Runnable operation, ProgressHandle handle, boolean includeDetailLabel);
@@ -107,7 +107,7 @@ public interface RunOffEDTProvider {
          * to interrupt the operation.
          * 
          * @param operation  task to perform in the background
-         * @param dialogTitle dialog title
+         * @param operationDescr dialog title
          * @param progress  progress handle. Do not invoke any methods before
          *                  passing to this method. Start/progress/finish it
          *                  only in {@code operation}

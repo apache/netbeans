@@ -151,7 +151,6 @@ public class ProxyLookup extends Lookup {
          * If called before a {@link ProxyLookup} has been attached to this
          * controller, an IllegalStateException will be thrown.
          *
-         * @param exe An executor to notify in
          * @param lookups An array of Lookups to be proxied
          * @throws IllegalStateException if called before this instance
          * has been passed to the constructor of (exactly one) {@link ProxyLookup}
@@ -480,9 +479,10 @@ public class ProxyLookup extends Lookup {
         }
 
         /** Called when there is a change in the list of proxied lookups.
-         * @param added set of added lookups
-         * @param remove set of removed lookups
          * @param current array of current lookups
+         * @param oldData
+         * @param added set of added lookups
+         * @param removed set of removed lookups
          */
         final void lookupChange(
             ImmutableInternalData newData, Lookup[] current, ImmutableInternalData oldData,

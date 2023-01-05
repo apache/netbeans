@@ -50,9 +50,8 @@ final class SearchTask implements Runnable, Cancellable {
     /**
      * Creates a new <code>SearchTask</code>.
      *
-     * @param  searchScope  defines scope of the search task
-     * @param  basicSearchCriteria  basic search criteria
-     * @param  customizedSearchTypes  search types
+     * @param searchComposition search composition
+     * @param replacing replace mode
      */
     public SearchTask(SearchComposition<?> searchComposition,
             boolean replacing) {

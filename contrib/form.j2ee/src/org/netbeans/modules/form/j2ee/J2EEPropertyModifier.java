@@ -423,7 +423,7 @@ public class J2EEPropertyModifier implements PropertyModifier {
          */
         @Override
         public Object getDefaultValue() {
-            return Integer.valueOf(0);
+            return 0;
         }
 
     }
@@ -462,7 +462,7 @@ public class J2EEPropertyModifier implements PropertyModifier {
          */
         @Override
         public Object getDefaultValue() {
-            return Integer.valueOf(-1);
+            return -1;
         }
 
     }

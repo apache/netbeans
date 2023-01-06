@@ -57,8 +57,8 @@ public class WLPluginPropertiesTest extends NbTestCase {
         createJar(file, "Implementation-Version: 10.0.0.1");
         Version version = WLPluginProperties.getServerVersion(baseFolder);
         assertEquals("10.0.0.1", version.toString());
-        assertEquals(10, version.getMajor().intValue());
-        assertEquals(1, version.getUpdate().intValue());
+        assertEquals(10, version.getMajor());
+        assertEquals(1, version.getUpdate());
         assertTrue(file.delete());
     }
 

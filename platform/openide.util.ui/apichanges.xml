@@ -27,6 +27,22 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="actionsForPathLookup">
+         <api name="util"/>
+         <summary>Added variant Utilities.actionsForPath with Lookup that produces context-aware actions</summary>
+         <version major="9" minor="28"/>
+         <date day="5" month="1" year="2023"/>
+         <author login="sdedic"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added a variant <a href="@TOP@/org/openide/util/Utilities.html#actionsForPath-java.lang.String-org.openide.util.Lookup-">actionsToPath</a> that instantiates context-bound actions if the registered action(s) implements 
+                 <a href="@TOP@/org/openide/util/ContextAwareAction.html">ContextAwareAction</a>.
+                 Improves consistency with <a href="@TOP@/org/openide/util/Utilities.html#actionsToPopup-javax.swing.Action:A-org.openide.util.Lookup-">actionsToPopup</a> that supports contextual actions. 
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
     <change id="findDialogParent">
          <api name="util"/>
          <summary>static method Utilities.findDialogParent added</summary>

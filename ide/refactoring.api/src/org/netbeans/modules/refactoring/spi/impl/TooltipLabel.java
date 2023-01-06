@@ -22,6 +22,7 @@ import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.SystemColor;
 import java.awt.event.MouseEvent;
+import java.util.regex.Pattern;
 import javax.swing.JLabel;
 import javax.swing.JToolTip;
 
@@ -31,6 +32,8 @@ import javax.swing.JToolTip;
  */
 public class TooltipLabel extends JLabel {
 
+    private static final Pattern p = Pattern.compile("<[^>]*>");
+
     public TooltipLabel() {
         setToolTipText(" "); //NOI18N
     }
@@ -39,7 +42,7 @@ public class TooltipLabel extends JLabel {
     public String getToolTipText(MouseEvent e) {
         FontMetrics metrix = getFontMetrics(getFont());
         String text = getText();
-        int textWidth = metrix.stringWidth(text.replaceAll("<[^>]*>", ""));//NOI18N
+        int textWidth = metrix.stringWidth(p.matcher(text).replaceAll(""));//NOI18N
         return (textWidth > getParent().getSize().width ? text : null);
     }
 

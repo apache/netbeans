@@ -44,6 +44,8 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
@@ -108,6 +110,8 @@ public class DatabaseConnectionConvertor implements Environment.Provider, Instan
     private Reference<DatabaseConnection> refConnection = new WeakReference<>(null);
     
     private PCL listener;
+
+    private static final Pattern p = Pattern.compile("[^\\p{Alnum}]");
 
     // a essential method for testing DB Explorer, don't remove it.
     private static DatabaseConnectionConvertor createProvider() {
@@ -253,7 +257,7 @@ public class DatabaseConnectionConvertor implements Environment.Provider, Instan
     }
     
     private static String convertToFileName(String databaseURL) {
-        return databaseURL.substring(0, Math.min(32, databaseURL.length())).replaceAll("[^\\p{Alnum}]", "_"); // NOI18N
+        return p.matcher(databaseURL.substring(0, Math.min(32, databaseURL.length()))).replaceAll("_"); // NOI18N
     }
     
     /**

@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,6 +43,13 @@ import org.netbeans.installer.utils.helper.Platform;
 public class Components2 extends HttpServlet {
     @EJB
     private Manager manager;
+
+    private static final Pattern p = Pattern.compile("\r\n|\r|\n");
+
+    private static String replaceSomething(String str) {
+        str = str.replace("\"", "\\\"");
+        return p.matcher(str).replaceAll("\\\n");
+    }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final List<String> java = Arrays.asList(
@@ -161,13 +169,15 @@ public class Components2 extends HttpServlet {
                         ((double) product.getDownloadSize()) / 1024. );
                 productUids.add(product.getUid());
                 productVersions.add(product.getVersion().toString());
-                productDisplayNames.add(product.getDisplayName().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
-                productDescriptions.add(product.getDescription().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+
+                productDisplayNames.add(replaceSomething(product.getDisplayName()));
+                productDescriptions.add(replaceSomething(product.getDescription()));
+
                 productDownloadSizes.add(Long.toString(size));
                 productPlatforms.add(product.getPlatforms());
                 
                 if (notes.get(product.getUid()) != null) {
-                    productNotes.add(notes.get(product.getUid()).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                    productNotes.add(notes.get(product.getUid()));
                 } else {
                     productNotes.add("");
                 }
@@ -270,8 +280,8 @@ public class Components2 extends HttpServlet {
                 }
                 
                 groupProducts.add(components);
-                groupDisplayNames.add(group.getDisplayName().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
-                groupDescriptions.add(group.getDescription().replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                groupDisplayNames.add(replaceSomething(group.getDisplayName()));
+                groupDescriptions.add(replaceSomething(group.getDescription()));
             }
             
             if (defaultGroupProducts.size() > 0) {

@@ -35,6 +35,7 @@ import java.io.File;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,6 +47,8 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener,
     private final FileObject peer;
     private JList elementsList;
     private FileObject selectedEditorFile;
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
 
     /** Creates new form EditorBufferSelectorPanel 
      * @param fileChooser*/
@@ -113,7 +116,7 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener,
                 if (null == htmlText) {
                     return null;
                 }
-                return htmlText.replaceAll( "<[^>]*>", "" ) // NOI18N
+                return p.matcher(htmlText).replaceAll("") // NOI18N
                                .replace( "&nbsp;", " " ) // NOI18N
                                .trim();
             }

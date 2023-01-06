@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.LineDocument;
@@ -106,7 +107,9 @@ public class GsfStructureProvider implements StructureProvider {
             }
         }
     }
-    
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
+
     /** A formatter that strips the html elements from the text */
     static private class NoHtmlFormatter extends HtmlFormatter {
         StringBuilder sb = new StringBuilder();
@@ -119,9 +122,10 @@ public class GsfStructureProvider implements StructureProvider {
         static String stripHtml( String htmlText ) {
             if( null == htmlText )
                 return null;
-            return htmlText.replaceAll( "<[^>]*>", "" ) // NOI18N
-                           .replace( "&nbsp;", " " ) // NOI18N
-                           .trim();
+
+            return p.matcher(htmlText).replaceAll("") // NOI18N
+                    .replace( "&nbsp;", " " ) // NOI18N
+                    .trim();
         }
         
         @Override

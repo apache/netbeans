@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
@@ -35,6 +36,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
+
 import org.netbeans.modules.csl.api.Rule;
 
 import org.netbeans.modules.csl.api.Rule.UserConfigurableRule;
@@ -130,7 +132,9 @@ public final class HintsPanel extends javax.swing.JPanel implements TreeCellRend
 
         return parent;
     }
- 
+
+    private static final Pattern p = Pattern.compile("</?[a-z0-9]+.*?>");
+
     private class AcceptorImpl implements OptionsFilter.Acceptor {
         @Override
         public boolean accept(Object originalTreeNode, String filterText) {
@@ -151,7 +155,7 @@ public final class HintsPanel extends javax.swing.JPanel implements TreeCellRend
             if (r instanceof UserConfigurableRule) {
                 String htmlDesc = (((UserConfigurableRule)r)).getDescription().toLowerCase();
                 // filter out opening and closing tags. Hope that > does not appear in attribute values.
-                String untagged = htmlDesc.replaceAll("</?[a-z0-9]+.*?>", ""); // NOI18N
+                String untagged = p.matcher(htmlDesc).replaceAll(""); // NOI18N
                 return untagged.
                         toLowerCase().contains(filterText);
             }

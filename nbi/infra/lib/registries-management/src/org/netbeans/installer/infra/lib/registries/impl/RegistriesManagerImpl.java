@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
+
 import org.netbeans.installer.Installer;
 import org.netbeans.installer.downloader.DownloadManager;
 import org.netbeans.installer.product.Registry;
@@ -630,7 +632,14 @@ public class RegistriesManagerImpl implements RegistriesManager {
             final File root, final File bundlesList) throws ManagerException {
         return generateComponentsJs(root, bundlesList, null);
     }
-    
+
+    private static final Pattern p = Pattern.compile("\r\n|\r|\n");
+
+    private static String replaceSomething(String str) {
+        str = str.replace("\"", "\\\"");
+        return p.matcher(str).replaceAll("\\\n");
+    }
+
     public String generateComponentsJs(
             final File root, File bundlesList, final String localeString) throws ManagerException {
         
@@ -730,13 +739,13 @@ public class RegistriesManagerImpl implements RegistriesManager {
                         ((double) product.getDownloadSize()) / 1024. );
                 productUids.add(product.getUid());
                 productVersions.add(product.getVersion().toString());
-                productDisplayNames.add(product.getDisplayName(locale).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
-                productDescriptions.add(product.getDescription(locale).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                productDisplayNames.add(replaceSomething(product.getDisplayName(locale)));
+                productDescriptions.add(replaceSomething(product.getDescription(locale)));
                 productDownloadSizes.add(Long.toString(size));
                 productPlatforms.add(product.getPlatforms());
                 
                 if (notes.get(product.getUid()) != null) {
-                    productNotes.add(notes.get(product.getUid()).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                    productNotes.add(replaceSomething(notes.get(product.getUid())));
                 } else {
                     productNotes.add("");
                 }
@@ -782,10 +791,10 @@ public class RegistriesManagerImpl implements RegistriesManager {
                         }
                     }
                 }
-                
+
                 groupProducts.add(components);
-                groupDisplayNames.add(group.getDisplayName(locale).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
-                groupDescriptions.add(group.getDescription(locale).replace("\"", "\\\"").replaceAll("\r\n|\r|\n", "\\\n"));
+                groupDisplayNames.add(replaceSomething(group.getDisplayName(locale)));
+                groupDescriptions.add(replaceSomething(group.getDescription(locale)));
             }
             
             if (defaultGroupProducts.size() > 0) {
@@ -821,6 +830,7 @@ public class RegistriesManagerImpl implements RegistriesManager {
             lock.unlock();
         }
     }
+
     // private //////////////////////////////////////////////////////////////////////
     private synchronized ReentrantLock getLock(
             final File root) {

@@ -23,6 +23,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
@@ -70,6 +71,8 @@ class Table extends JTable {
     private final JPanel topItemPanel = new JPanel();
     //shows a submenu-like arrow icon and the name of currently active sub-component
     private final JLabel rightArrowLabel = new JLabel();
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
 
     public Table( Model model ) {
         super( model );
@@ -331,7 +334,7 @@ class Table extends JTable {
     static String stripHtml( String htmlText ) {
         if( null == htmlText )
             return null;
-        String res = htmlText.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
+        String res = p.matcher(htmlText).replaceAll( ""); // NOI18N // NOI18N
         res = res.replace( "&nbsp;", " " ); // NOI18N // NOI18N
         res = res.trim();
         return res;

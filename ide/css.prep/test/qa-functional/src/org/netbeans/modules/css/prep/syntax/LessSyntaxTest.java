@@ -25,6 +25,8 @@ import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.modules.css.prep.GeneralCSSPrep;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Vladimir Riha (vriha)
@@ -33,6 +35,8 @@ public class LessSyntaxTest extends GeneralCSSPrep{
     
         
     public static final String PROJECT_NAME = "css_prep";
+
+    private static final Pattern p = Pattern.compile("<.*>");
     
     public LessSyntaxTest(String args){
         super(args);
@@ -64,7 +68,7 @@ public class LessSyntaxTest extends GeneralCSSPrep{
         String ideal = "Unknown property colors";
          for (Object object : annotations) {
             String desc = EditorOperator.getAnnotationShortDescription(object);
-            desc = desc.replaceAll("<.*>", "");
+            desc = p.matcher(desc).replaceAll("");
             assertTrue("Expected: " + ideal + " but found: " + desc.trim(), desc.trim().startsWith(ideal));
         }
         endTest();

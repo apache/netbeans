@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -130,6 +131,9 @@ public final class UiUtils {
         table.setRowHeight(Math.max(table.getRowHeight(), height));
     }
 
+    private static final Pattern p1 = Pattern.compile("(^|:)(0+(:|$)){2,8}");
+    private static final Pattern p2 = Pattern.compile("(:|^)0+([0-9A-Fa-f])");
+
     public static Collection<String> getAddresses(boolean includeIpv6, boolean includeDocker) {
         Set<InetAddress> addresses = new HashSet<>();
         try {
@@ -161,7 +165,9 @@ public final class UiUtils {
                     host = host.substring(0, index);
                 }
                 // compress IPv6 address
-                host = host.replaceFirst("(^|:)(0+(:|$)){2,8}", "::").replaceAll("(:|^)0+([0-9A-Fa-f])", "$1$2"); // NOI18N
+
+                host = p1.matcher(host).replaceFirst("::"); // NOI18N
+                host = p2.matcher(host).replaceAll("$1$2"); // NOI18N
             }
             ret.add(host);
         }

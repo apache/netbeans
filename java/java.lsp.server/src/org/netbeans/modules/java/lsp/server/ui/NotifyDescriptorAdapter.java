@@ -35,6 +35,7 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -97,6 +98,9 @@ class NotifyDescriptorAdapter {
     private static final Object[] JUST_OK = new Object[] {
         NotifyDescriptor.OK_OPTION
     };
+
+    private static final Pattern p1 = Pattern.compile("<p/>|</p>|<br>");
+    private static final Pattern p2 = Pattern.compile("<[^>]*>");
     
     public NotifyDescriptorAdapter(NotifyDescriptor descriptor, UIContext client) {
         this.descriptor = descriptor;
@@ -128,10 +132,11 @@ class NotifyDescriptorAdapter {
         if (!original.startsWith("<html>")) { // NOI18N
             return original;
         }
-        return original.replaceAll("<p/>|</p>|<br>", "\n") // NOI18N
-                       .replaceAll("<[^>]*>", "")
-                       .replace("&nbsp;", " ") // NOI18N
-                       .trim();
+
+        String res = p1.matcher(original).replaceAll("\n"); // NOI18N
+        res = p2.matcher(res).replaceAll("");
+
+        return res.replace("&nbsp;", " ").trim(); // NOI18N
     }
     
     public String getAccessibleDescription(Object o) {

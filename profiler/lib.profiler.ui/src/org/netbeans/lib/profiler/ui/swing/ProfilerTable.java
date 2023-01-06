@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.accessibility.AccessibleContext;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -100,6 +101,8 @@ public class ProfilerTable extends JTable {
     }
     
     public static final String PROP_NO_HOVER = "ProfilerTableHover_NoHover"; // NOI18N
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
     
     public ProfilerTable(TableModel model, boolean sortable,
                          boolean hideableColums, int[] scrollableColumns) {
@@ -1013,7 +1016,11 @@ public class ProfilerTable extends JTable {
             TableColumn column = columns.get(col);
             if (column.getWidth() > 0) {
                 String columnName = column.getHeaderValue().toString();
-                if (columnName.toLowerCase().startsWith("<html>")) columnName = columnName.replaceAll("<[^>]*>", ""); // NOI118N
+
+                if (columnName.toLowerCase().startsWith("<html>")) {
+                    columnName = p.matcher(columnName).replaceAll(""); // NOI118N
+                }
+
                 copyItem.add(new JMenuItem(MessageFormat.format(genericItemName, columnName)) {
                     protected void fireActionPerformed(ActionEvent e) {
                         StringSelection s = new StringSelection(getStringValue(row, _col));

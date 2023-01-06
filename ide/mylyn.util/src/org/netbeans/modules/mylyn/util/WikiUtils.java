@@ -20,6 +20,8 @@ package org.netbeans.modules.mylyn.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
@@ -72,10 +74,14 @@ public class WikiUtils {
         return cleanHtmlTags(dirtyHtml);
     }
 
+    private static final Pattern p1 = Pattern.compile("<\\?xml.*?>");
+    private static final Pattern p2 = Pattern.compile("<html.*?>");
+    private static final Pattern p3 = Pattern.compile("<head>.*</head>");
+
     private static String cleanHtmlTags(String html) {
-        html = html.replaceFirst("<\\?xml.*?>", ""); //NOI18N
-        html = html.replaceAll("<html.*?>", "<html>"); //NOI18N
-        html = html.replaceAll("<head>.*</head>", ""); //NOI18N
+        html = p1.matcher(html).replaceFirst(""); //NOI18N
+        html = p2.matcher(html).replaceAll("<html>"); //NOI18N
+        html = p3.matcher(html).replaceAll(""); //NOI18N
 
         boolean remove = html.contains("<body><p>"); //NOI18N
         if (remove) {

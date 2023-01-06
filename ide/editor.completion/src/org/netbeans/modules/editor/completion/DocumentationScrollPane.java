@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -456,13 +457,15 @@ public class DocumentationScrollPane extends JScrollPane {
         }
     }
 
+    private static final Pattern p = Pattern.compile("[^0-9]");
+
     private class HyperlinkAction implements HyperlinkListener {
         
         @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e != null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getDescription().startsWith("copy.snippet")) {
                 Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                String snippetCount = e.getDescription().replaceAll("[^0-9]", "");
+                String snippetCount = p.matcher(e.getDescription()).replaceAll("");
                 HTMLDocument HtmlDoc = (HTMLDocument) e.getSourceElement().getDocument();
                 HTMLDocView source = (HTMLDocView) e.getSource();
                 source.getText();

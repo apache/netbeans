@@ -40,6 +40,8 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import org.junit.Assert;
 import org.openide.util.Utilities;
 
@@ -467,6 +469,8 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         return prefix == null || startsWith(file, prefix);
     }
 
+    private static final Pattern p = Pattern.compile("[/\\\\][^/\\\\]*$");
+
     private boolean acceptFileRead(String file) {
         if (prefix != null && !startsWith(file, prefix)) {
             return false;
@@ -478,7 +482,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         if (file.endsWith("tests.jar")) {
             return false;
         }
-        if (startsWith(file, System.getProperty("java.home").replaceAll("[/\\\\][^/\\\\]*$", ""))) {
+        if (startsWith(file, p.matcher(System.getProperty("java.home")).replaceAll(""))) {
             return false;
         }
         if (!acceptFileInDir(file, System.getProperty("netbeans.home"))) {

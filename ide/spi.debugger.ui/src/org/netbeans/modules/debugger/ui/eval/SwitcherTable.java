@@ -28,6 +28,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JTable;
@@ -68,6 +69,8 @@ public class SwitcherTable extends JTable {
      * this is for fontsize support
      */
     private boolean needCalcRowHeight = true;
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
     
     /**
      * Creates a new instance of SwitcherTable. Created table will be as high
@@ -158,7 +161,7 @@ public class SwitcherTable extends JTable {
     private String stripHtml( String htmlText ) {
         if( null == htmlText )
             return null;
-        String res = htmlText.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
+        String res = p.matcher(htmlText).replaceAll(""); // NOI18N // NOI18N
         res = res.replace( "&nbsp;", " " ); // NOI18N // NOI18N
         res = res.trim();
         return res;

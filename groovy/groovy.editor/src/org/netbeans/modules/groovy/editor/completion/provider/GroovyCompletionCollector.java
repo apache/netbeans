@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -75,7 +76,9 @@ public class GroovyCompletionCollector implements CompletionCollector {
     private final Lookup lkp;
 
     private GroovyCompletionImpl cService;
-    
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
+
     public GroovyCompletionCollector() {
         this(Lookup.getDefault());
     }
@@ -382,7 +385,7 @@ public class GroovyCompletionCollector implements CompletionCollector {
         static String stripHtml( String htmlText ) {
             if( null == htmlText )
                 return null;
-            return htmlText.replaceAll( "<[^>]*>", "" ) // NOI18N
+            return p.matcher(htmlText).replaceAll("") // NOI18N
                            .replace( "&nbsp;", " " ) // NOI18N
                            .trim();
         }

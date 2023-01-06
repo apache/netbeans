@@ -57,6 +57,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -492,9 +493,11 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         }
         return res;
     }
-    
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
+
     private String stripHtml( String htmlSnippet ) {
-        return htmlSnippet.replaceAll( "<[^>]*>", "" ) // NOI18N
+        return p.matcher(htmlSnippet).replaceAll("") // NOI18N
                           .replace( "&nbsp;", " " ) // NOI18N
                           .trim();
     }

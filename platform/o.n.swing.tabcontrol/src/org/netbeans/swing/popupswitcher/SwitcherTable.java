@@ -28,6 +28,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -212,12 +213,14 @@ public class SwitcherTable extends JTable {
         
         return ren;
     }
+
+    private static final Pattern p = Pattern.compile("<[^>]*>");
     
     private String stripHtml( String htmlText ) {
         // XXX could be useful with TABNAMES_HTML on Win XP L&F (dark selection background)
         if( null == htmlText )
             return null;
-        String res = htmlText.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
+        String res = p.matcher(htmlText).replaceAll(""); // NOI18N // NOI18N
         res = res.replace( "&nbsp;", " " ); // NOI18N // NOI18N
         res = res.trim();
         return res;

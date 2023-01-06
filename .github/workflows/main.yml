@@ -523,6 +523,9 @@ jobs:
       - name: ide/lexer
         run: ant $OPTS -f ide/lexer test
 
+      - name: ide/lexer.antlr4
+        run: ant $OPTS -f ide/lexer.antlr4 test
+
       - name: ide/lib.terminalemulator
         run: ant $OPTS -f ide/lib.terminalemulator test
 

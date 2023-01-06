@@ -646,7 +646,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
                 } else if ((nameAttr = sub.getAttribute("shortvalue")) != null) { // NOI18N
                     return Short.valueOf(nameAttr.getValue());
                 } else if ((nameAttr = sub.getAttribute("intvalue")) != null) { // NOI18N
-                    return Integer.valueOf(nameAttr.getValue());
+                    return Integer.parseInt(nameAttr.getValue());
                 } else if ((nameAttr = sub.getAttribute("longvalue")) != null) { // NOI18N
                     return Long.valueOf(nameAttr.getValue());
                 } else if ((nameAttr = sub.getAttribute("floatvalue")) != null) { // NOI18N

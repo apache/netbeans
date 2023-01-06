@@ -342,7 +342,7 @@ public class ModuleListTest extends TestBase {
         assertNotNull(e.getProvidedTokens());
         assertEquals("there is just provided cnb token", 1, e.getProvidedTokens().length);
         assertEquals("cnb." + e.getCodeNameBase(), e.getProvidedTokens()[0]);
-        assertEquals("number of public packages for " + e, new Integer(1), new Integer(e.getPublicPackages().length));
+        assertEquals("number of public packages for " + e, 1, e.getPublicPackages().length);
         e = ml.getEntry("org.netbeans.libs.xerces");
         assertNotNull("can find nb.org binary module too", e);
         assertEquals("have sources for that", file("ide/libs.xerces"), e.getSourceLocation());

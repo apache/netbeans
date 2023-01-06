@@ -33,7 +33,7 @@ final class ClusterizeVisualPanel1 extends JPanel {
         initComponents();
         progressPanel.add(BorderLayout.CENTER, ProgressHandleFactory.createProgressComponent(handle));
         progressName.add(BorderLayout.CENTER, ProgressHandleFactory.createMainLabelComponent(handle));
-        putClientProperty("WizardPanel_contentSelectedIndex", Integer.valueOf(0)); // NOI18N
+        putClientProperty("WizardPanel_contentSelectedIndex", 0); // NOI18N
         putClientProperty("WizardPanel_contentData", panel.settings.getSteps()); // NOI18N
         putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE); // NOI18N
         putClientProperty("WizardPanel_contentDisplayed", Boolean.TRUE); // NOI18N

@@ -36,7 +36,7 @@ public final class ClusterizeVisualPanel3 extends JPanel {
         );
         this.panel = panel;
 
-        putClientProperty("WizardPanel_contentSelectedIndex", Integer.valueOf(2));
+        putClientProperty("WizardPanel_contentSelectedIndex", 2);
         putClientProperty("WizardPanel_contentData", panel.settings.getStep(2));
         putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE);
         putClientProperty("WizardPanel_contentDisplayed", Boolean.TRUE);

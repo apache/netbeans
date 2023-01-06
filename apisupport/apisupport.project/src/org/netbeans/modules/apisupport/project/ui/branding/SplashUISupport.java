@@ -103,7 +103,7 @@ class SplashUISupport {
     }
     
     static Color stringToColor(final String color) throws NumberFormatException {
-        return new Color(Integer.decode(color).intValue());
+        return new Color(Integer.decode(color));
     }
 
     static Color bundleKeyToColor(@NullAllowed BundleKey bk) throws NumberFormatException {
@@ -115,7 +115,7 @@ class SplashUISupport {
     }
     
     static int stringToInteger(final String integer) throws NumberFormatException {
-        return Integer.decode(integer).intValue();
+        return Integer.decode(integer);
     }
 
     static int bundleKeyToInteger(@NullAllowed BundleKey bk) throws NumberFormatException {

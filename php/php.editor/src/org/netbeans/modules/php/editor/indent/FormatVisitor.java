@@ -1331,7 +1331,7 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         ASTNode body = node.getStatement();
-        if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
+        if (body instanceof Block && !((Block) body).isCurly()) {
             addAllUntilOffset(body.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), options.indentSize));
             scan(node.getStatement());
@@ -1398,7 +1398,7 @@ public class FormatVisitor extends DefaultVisitor {
             formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR, ts.offset() + ts.token().length()));
         }
         ASTNode body = node.getBody();
-        if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
+        if (body instanceof Block && !((Block) body).isCurly()) {
             addAllUntilOffset(body.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), options.indentSize));
             scan(node.getBody());
@@ -2278,7 +2278,7 @@ public class FormatVisitor extends DefaultVisitor {
     public void visit(WhileStatement node) {
         scan(node.getCondition());
         ASTNode body = node.getBody();
-        if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
+        if (body instanceof Block && !((Block) body).isCurly()) {
             addAllUntilOffset(body.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), options.indentSize));
             scan(node.getBody());

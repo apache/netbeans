@@ -337,7 +337,7 @@ public final class Utils {
     public static List<PHPDocVarTypeTag> getPropertyTags(Program root, ClassDeclaration node) {
         List<PHPDocVarTypeTag> tags = new ArrayList<>();
         Comment comment = Utils.getCommentForNode(root, node);
-        if (comment != null && (comment instanceof PHPDocBlock)) {
+        if (comment instanceof PHPDocBlock) {
             PHPDocBlock phpDoc = (PHPDocBlock) comment;
             for (PHPDocTag tag : phpDoc.getTags()) {
                 if (tag.getKind().equals(PHPDocTag.Type.PROPERTY)

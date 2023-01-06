@@ -612,7 +612,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     protected void firePropertyChange(String nm, Object old, Object nue) {
         if (
             ("flat".equals(nm) || "radioButtonMax".equals(nm) || "suppressCustomEditor".equals(nm) ||
-                "useLabels".equals(nm)) && (displayer != null) && displayer instanceof PropertyDisplayer_Inline
+                "useLabels".equals(nm)) && displayer instanceof PropertyDisplayer_Inline
         ) { //NOI18N
             updateDisplayerFromClientProp(nm, nue);
         }

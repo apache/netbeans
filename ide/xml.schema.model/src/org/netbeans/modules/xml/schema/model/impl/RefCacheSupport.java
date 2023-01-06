@@ -186,8 +186,7 @@ public class RefCacheSupport {
                     if (Schema.SCHEMA_REFERENCES_PROPERTY.equals(propName)) {
                         Object newValue = evt.getNewValue();
                         Object oldValue = evt.getOldValue();
-                        if (newValue == null && oldValue != null &&
-                                oldValue instanceof SchemaModelReference) {
+                        if (newValue == null && oldValue instanceof SchemaModelReference) {
                             //
                             // An Import/Include/Redefine is deleted.
                             SchemaModelReference sModelRef =

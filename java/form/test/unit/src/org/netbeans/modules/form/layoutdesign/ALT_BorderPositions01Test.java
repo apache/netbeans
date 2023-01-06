@@ -51,7 +51,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // < UPDATE CURRENT STATE
         lc = new LayoutComponent("jPanel1", true, 100, 100);
         // > START ADDING
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         {
             LayoutComponent[] comps = new LayoutComponent[] { lc };
             Rectangle[] bounds = new Rectangle[] {
@@ -62,10 +62,10 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.startAdding(comps, bounds, hotspot, defaultContId);
         }
         // < START ADDING
-        prefPaddingInParent.put("Form-jPanel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(45,51);
@@ -78,10 +78,10 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(44,51);
@@ -97,26 +97,26 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > END MOVING
         compPrefSize.put("jPanel1", new Dimension(100, 100));
         compPrefSize.put("jPanel1", new Dimension(100, 100));
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
         // < END MOVING
         ld.externalSizeChangeHappened();
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(0, 0, 100, 100));
         compBounds.put("jPanel1", new Rectangle(0, 0, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(100, 100));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         contInterior.put("jPanel1", new Rectangle(0, 0, 100, 100));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -124,7 +124,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
     // Resize panel slightly to the right, then down.
     public void doChanges1() {
         // > START RESIZING
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         {
             String[] compIds = new String[] {
@@ -142,7 +142,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(115,52);
@@ -155,7 +155,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(116,52);
@@ -169,11 +169,11 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
         contInterior.put("jPanel1", new Rectangle(-32768, -32768, 116, 100));
         compBounds.put("jPanel1", new Rectangle(-32768, -32768, 116, 100));
-        baselinePosition.put("jPanel1-116-100", new Integer(0));
+        baselinePosition.put("jPanel1-116-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(100, 100));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
@@ -184,22 +184,22 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(0, 0, 116, 100));
         compBounds.put("jPanel1", new Rectangle(0, 0, 116, 100));
-        baselinePosition.put("jPanel1-116-100", new Integer(0));
+        baselinePosition.put("jPanel1-116-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(116, 100));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 116, 100));
-        baselinePosition.put("jPanel1-116-100", new Integer(0));
+        baselinePosition.put("jPanel1-116-100", 0);
         contInterior.put("jPanel1", new Rectangle(0, 0, 116, 100));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 116, 100));
-        baselinePosition.put("jPanel1-116-100", new Integer(0));
+        baselinePosition.put("jPanel1-116-100", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jPanel1-116-100", new Integer(0));
+        baselinePosition.put("jPanel1-116-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         {
             String[] compIds = new String[] {
@@ -217,7 +217,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(54,123);
@@ -230,7 +230,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(54,124);
@@ -244,11 +244,11 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         contInterior.put("jPanel1", new Rectangle(-32768, -32768, 116, 121));
         compBounds.put("jPanel1", new Rectangle(-32768, -32768, 116, 121));
-        baselinePosition.put("jPanel1-116-121", new Integer(0));
+        baselinePosition.put("jPanel1-116-121", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(116, 100));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
@@ -259,18 +259,18 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(0, 0, 116, 121));
         compBounds.put("jPanel1", new Rectangle(0, 0, 116, 121));
-        baselinePosition.put("jPanel1-116-121", new Integer(0));
+        baselinePosition.put("jPanel1-116-121", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(116, 121));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 116, 121));
-        baselinePosition.put("jPanel1-116-121", new Integer(0));
+        baselinePosition.put("jPanel1-116-121", 0);
         contInterior.put("jPanel1", new Rectangle(0, 0, 116, 121));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 116, 121));
-        baselinePosition.put("jPanel1-116-121", new Integer(0));
+        baselinePosition.put("jPanel1-116-121", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -278,7 +278,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
     // Resize panel down-right to fill whole frame (no gaps).
     public void doChanges2() {
         // > START RESIZING
-        baselinePosition.put("jPanel1-116-121", new Integer(0));
+        baselinePosition.put("jPanel1-116-121", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         {
             String[] compIds = new String[] {
@@ -296,8 +296,8 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(394,296);
@@ -310,8 +310,8 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(395,296);
@@ -327,7 +327,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > END MOVING
         contInterior.put("jPanel1", new Rectangle(-32768, -32768, 400, 300));
         compBounds.put("jPanel1", new Rectangle(-32768, -32768, 400, 300));
-        baselinePosition.put("jPanel1-400-300", new Integer(0));
+        baselinePosition.put("jPanel1-400-300", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(116, 121));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
@@ -338,18 +338,18 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 400, 300));
-        baselinePosition.put("jPanel1-400-300", new Integer(0));
+        baselinePosition.put("jPanel1-400-300", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(400, 300));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 400, 300));
-        baselinePosition.put("jPanel1-400-300", new Integer(0));
+        baselinePosition.put("jPanel1-400-300", 0);
         contInterior.put("jPanel1", new Rectangle(0, 0, 400, 300));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(0, 0, 400, 300));
-        baselinePosition.put("jPanel1-400-300", new Integer(0));
+        baselinePosition.put("jPanel1-400-300", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -357,7 +357,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
     // Resize (shrink) panel from top-left corner.
     public void doChanges3() {
         // > START RESIZING
-        baselinePosition.put("jPanel1-400-300", new Integer(0));
+        baselinePosition.put("jPanel1-400-300", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         {
             String[] compIds = new String[] {
@@ -375,8 +375,8 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-0", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(279,206);
@@ -389,8 +389,8 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-0", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(280,206);
@@ -404,11 +404,11 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPaddingInParent.put("Form-jPanel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-0", 11); // parentId-compId-dimension-compAlignment
         contInterior.put("jPanel1", new Rectangle(-32485, -32560, 117, 92));
         compBounds.put("jPanel1", new Rectangle(-32485, -32560, 117, 92));
-        baselinePosition.put("jPanel1-117-92", new Integer(0));
+        baselinePosition.put("jPanel1-117-92", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(400, 300));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
@@ -419,18 +419,18 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(283, 208, 117, 92));
         compBounds.put("jPanel1", new Rectangle(283, 208, 117, 92));
-        baselinePosition.put("jPanel1-117-92", new Integer(0));
+        baselinePosition.put("jPanel1-117-92", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(117, 92));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(283, 208, 117, 92));
-        baselinePosition.put("jPanel1-117-92", new Integer(0));
+        baselinePosition.put("jPanel1-117-92", 0);
         contInterior.put("jPanel1", new Rectangle(283, 208, 117, 92));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(283, 208, 117, 92));
-        baselinePosition.put("jPanel1-117-92", new Integer(0));
+        baselinePosition.put("jPanel1-117-92", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -438,7 +438,7 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
     // Resize bottom-right corner to have preferred gaps.
     public void doChanges4() {
         // > START RESIZING
-        baselinePosition.put("jPanel1-117-92", new Integer(0));
+        baselinePosition.put("jPanel1-117-92", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         {
             String[] compIds = new String[] {
@@ -456,8 +456,8 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(392,291);
@@ -470,8 +470,8 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         {
             Point p = new Point(391,291);
@@ -485,11 +485,11 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPaddingInParent.put("Form-jPanel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jPanel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel1-1-0", 11); // parentId-compId-dimension-compAlignment
         contInterior.put("jPanel1", new Rectangle(-32485, -32560, 107, 81));
         compBounds.put("jPanel1", new Rectangle(-32485, -32560, 107, 81));
-        baselinePosition.put("jPanel1-107-81", new Integer(0));
+        baselinePosition.put("jPanel1-107-81", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(117, 92));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
@@ -500,18 +500,18 @@ public class ALT_BorderPositions01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(283, 208, 107, 81));
         compBounds.put("jPanel1", new Rectangle(283, 208, 107, 81));
-        baselinePosition.put("jPanel1-107-81", new Integer(0));
+        baselinePosition.put("jPanel1-107-81", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(107, 81));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(283, 208, 107, 81));
-        baselinePosition.put("jPanel1-107-81", new Integer(0));
+        baselinePosition.put("jPanel1-107-81", 0);
         contInterior.put("jPanel1", new Rectangle(283, 208, 107, 81));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jPanel1", new Rectangle(283, 208, 107, 81));
-        baselinePosition.put("jPanel1-107-81", new Integer(0));
+        baselinePosition.put("jPanel1-107-81", 0);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

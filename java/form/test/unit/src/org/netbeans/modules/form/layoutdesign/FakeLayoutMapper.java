@@ -110,7 +110,7 @@ public class FakeLayoutMapper implements VisualMapper {
     @Override
     public int getBaselinePosition(String componentId, int width, int height) {
         String id = componentId + "-" + width + "-" + height; //NOI18N
-        return ((Integer) baselinePosition.get(id)).intValue();
+        return (Integer) baselinePosition.get(id);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class FakeLayoutMapper implements VisualMapper {
         String id = comp1Id + "-" + comp2Id  + "-" + dimension + "-" + comp2Alignment + "-" // NOI18N
                     + (paddingType != null ? paddingType.ordinal() : 0);
         Integer pad = (Integer) prefPadding.get(id);
-        return pad != null ? pad.intValue() : 6;
+        return pad != null ? pad : 6;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class FakeLayoutMapper implements VisualMapper {
     {
         String id = parentId + "-" + compId + "-" + dimension + "-" + compAlignment; //NOI18N
         Integer pad = (Integer) prefPaddingInParent.get(id);
-        return pad != null ? pad.intValue() : 10;
+        return pad != null ? pad : 10;
     }
 
     @Override

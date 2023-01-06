@@ -227,7 +227,7 @@ public class SetUpRemotePlatform extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 11, 0, 0);
         add(portLabel, gridBagConstraints);
 
-        port.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        port.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
         port.setEditor(new javax.swing.JSpinner.NumberEditor(port, "#0"));
         port.setPreferredSize(new java.awt.Dimension(54, 20));
         port.setValue(22);

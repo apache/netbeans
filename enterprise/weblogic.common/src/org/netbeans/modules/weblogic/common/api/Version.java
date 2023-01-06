@@ -99,13 +99,13 @@ public final class Version {
         Matcher matcher = JSR277_PATTERN.matcher(version);
         if (matcher.matches()) {
             String fragment = matcher.group(1);
-            Integer majorNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer majorNumber = fragment != null ? Integer.parseInt(fragment) : null;
             fragment = matcher.group(3);
-            Integer minorNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer minorNumber = fragment != null ? Integer.parseInt(fragment) : null;
             fragment = matcher.group(5);
-            Integer microNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer microNumber = fragment != null ? Integer.parseInt(fragment) : null;
             fragment = matcher.group(7);
-            Integer updateNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer updateNumber = fragment != null ? Integer.parseInt(fragment) : null;
             String qualifier = matcher.group(9);
 
             return new Version(version, majorNumber, minorNumber,
@@ -130,13 +130,13 @@ public final class Version {
         Matcher matcher = DOTTED_PATTERN.matcher(version);
         if (matcher.matches()) {
             String fragment = matcher.group(1);
-            Integer majorNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer majorNumber = fragment != null ? Integer.parseInt(fragment) : null;
             fragment = matcher.group(3);
-            Integer minorNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer minorNumber = fragment != null ? Integer.parseInt(fragment) : null;
             fragment = matcher.group(5);
-            Integer microNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer microNumber = fragment != null ? Integer.parseInt(fragment) : null;
             fragment = matcher.group(7);
-            Integer updateNumber = fragment != null ? Integer.valueOf(fragment) : null;
+            Integer updateNumber = fragment != null ? Integer.parseInt(fragment) : null;
             String qualifier = matcher.group(9);
 
             return new Version(version, majorNumber, minorNumber,
@@ -335,7 +335,7 @@ public final class Version {
             return 0;
         }
         if (o1 == null) {
-            return Integer.valueOf(0).compareTo(o2);
+            return -o2.compareTo(0);
         }
         if (o2 == null) {
             return o1.compareTo(0);

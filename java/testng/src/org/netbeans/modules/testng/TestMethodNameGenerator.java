@@ -240,13 +240,13 @@ final class TestMethodNameGenerator {
                     Integer oldValue = usageNumbers.get(simpleName);
                     int suffix = (oldValue == null)
                                  ? 0
-                                 : oldValue.intValue();
+                                 : oldValue;
                     String numberedName;
                     do {
                         suffix++;
                         numberedName = simpleName + suffix;
                     } while (reservedNames.contains(numberedName));
-                    usageNumbers.put(simpleName, Integer.valueOf(suffix));
+                    usageNumbers.put(simpleName, suffix);
 
                     /* fixate immediately to ensure thare are really no conflicts */
                     result[index] = numberedName;
@@ -435,13 +435,13 @@ final class TestMethodNameGenerator {
                 Integer oldValue = usageNumbers.get(noNumMethodName);
                 int suffix = (oldValue == null)
                              ? 0
-                             : oldValue.intValue();
+                             : oldValue;
                 String methodName;
                 do {
                     suffix++;
                     methodName = noNumMethodName + suffix;
                 } while (reservedNames.contains(methodName));
-                usageNumbers.put(methodName, Integer.valueOf(suffix));
+                usageNumbers.put(methodName, suffix);
 
                 /* fixate immediately to ensure thare are really no conflicts */
                 result[index] = methodName;
@@ -469,7 +469,7 @@ final class TestMethodNameGenerator {
                                        int index,
                                        Map<String, Object>namesUsage,
                                        BitSet conflictingNamesIndices) {
-        Object oldValue = namesUsage.put(testMethodName, Integer.valueOf(index));
+        Object oldValue = namesUsage.put(testMethodName, index);
         boolean nameConflict = (oldValue != null)
                                || (reservedNames != null)
                                   && (reservedNames.contains(testMethodName));
@@ -488,7 +488,7 @@ final class TestMethodNameGenerator {
                  *                           in conflict with some other name
                  */
                 assert (oldValue.getClass() == Integer.class);
-                int conflictingNameIndex = ((Integer) oldValue).intValue();
+                int conflictingNameIndex = (Integer) oldValue;
                 assert !conflictingNamesIndices.get(conflictingNameIndex);
                 conflictingNamesIndices.set(conflictingNameIndex);
                 rv++;

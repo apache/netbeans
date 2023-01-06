@@ -554,7 +554,7 @@ public class CreationFactory {
             { "borderInsets" }
         };
 
-        Integer one = Integer.valueOf(1);
+        Integer one = 1;
         defaultConstrParams = new Object[] { one, one, one, one };
         methodName = "createEmptyBorder";
         
@@ -580,7 +580,7 @@ public class CreationFactory {
             { "border" }
         };
         
-        defaultConstrParams = new Object[] { null, "", Integer.valueOf(0), Integer.valueOf(0) };
+        defaultConstrParams = new Object[] { null, "", 0, 0 };
         methodName = "createTitledBorder";                      
         registerDescriptor(new CreationDescriptor(
                 javax.swing.BorderFactory.class, javax.swing.border.TitledBorder.class, methodName,
@@ -615,7 +615,7 @@ public class CreationFactory {
                            "shadowOuterColor", "shadowInnerColor" }
         };
                       
-        defaultConstrParams = new Object[] { Integer.valueOf(javax.swing.border.BevelBorder.RAISED) };
+        defaultConstrParams = new Object[] {javax.swing.border.BevelBorder.RAISED};
         methodName = "createBevelBorder";                     
         registerDescriptor(new CreationDescriptor(
                 javax.swing.BorderFactory.class, javax.swing.border.BevelBorder.class, methodName, 
@@ -813,10 +813,10 @@ public class CreationFactory {
             Insets insets = (Insets) getRealValue(prop);                            
             if(insets != null) {
                 return new Object[] {
-                    Integer.valueOf(insets.top),
-                    Integer.valueOf(insets.left),
-                    Integer.valueOf(insets.bottom),
-                    Integer.valueOf(insets.right)
+                    insets.top,
+                    insets.left,
+                    insets.bottom,
+                    insets.right
                 };
             } else {
                 return new Object[] { };                

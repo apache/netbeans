@@ -46,11 +46,11 @@ class MarkMapper implements MarkingEngine.StateObserver {
         }
         
         synchronized (marksGuard) {
-            Mark mark = (Mark) markMap.get(Integer.valueOf(methodId));
+            Mark mark = (Mark) markMap.get(methodId);
 
             if (mark == null) {
                 mark = MarkingEngine.getDefault().mark(methodId, status); // do mark the method
-                markMap.put(Integer.valueOf(methodId), mark);
+                markMap.put(methodId, mark);
             }
 
             return mark;

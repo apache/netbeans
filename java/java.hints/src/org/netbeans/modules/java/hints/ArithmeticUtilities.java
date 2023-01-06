@@ -322,7 +322,7 @@ public class ArithmeticUtilities {
             }
             // casting to some non-char primitive type, perform unary numeric promotion JLS 5.6.1
             if (tm.getKind() != TypeKind.CHAR && op instanceof Character) {
-                op = Integer.valueOf(((Character)op).charValue());
+                op = (int) (Character) op;
             }
             // accept unboxing conversion, primitive conversion
             switch (tm.getKind()) {
@@ -334,7 +334,7 @@ public class ArithmeticUtilities {
                     break;
                 case CHAR:
                     if (op instanceof Character) result = op;
-                    if (op instanceof Number)  result = Character.valueOf((char)((Number)op).intValue());
+                    if (op instanceof Number)  result = (char) ((Number) op).intValue();
                     break;
                 case DOUBLE:
                     if (op instanceof Number)  result = ((Number)op).doubleValue();
@@ -529,10 +529,10 @@ public class ArithmeticUtilities {
             // JSL 5.6.2, binary numeric promotion + JLS 5.1.2, widening primitive conversion for char values.
             // other value types are handled by the Number class in JDK. Chars may be promoted further to float / double.
             if (left instanceof Character && !(right instanceof String)) {
-                left = Integer.valueOf(((Character)left).charValue());
+                left = (int) (Character) left;
             }
             if (right instanceof Character && !(left instanceof String)) {
-                right = Integer.valueOf(((Character)right).charValue());
+                right = (int) (Character) right;
             }
             if (left != null && right != null) {
                 Object result = null;
@@ -881,7 +881,7 @@ public class ArithmeticUtilities {
             if (op != null) {
                 Object result = null;
                 if (op instanceof Character) {
-                    op = Integer.valueOf(((Character)op).charValue());
+                    op = (int) (Character) op;
                 }
                 switch (node.getKind()) {
                     case BITWISE_COMPLEMENT:

@@ -506,7 +506,7 @@ public final class AutomaticDependencies {
                 return false;
             }
             Integer dRelI = (Integer)Util.parseCodeName(d.getName())[1];
-            int dRel = (dRelI == null) ? -1 : dRelI.intValue();
+            int dRel = (dRelI == null) ? -1 : dRelI;
             if (dRel < major) return true;
             if (dRel > major) return false;
             if (spec == null) return false;

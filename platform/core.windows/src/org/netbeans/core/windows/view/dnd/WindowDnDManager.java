@@ -962,7 +962,7 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
             || constr == Constants.BOTTOM) {
                 controller.userDroppedTopComponents(modeView, draggable, (String)constr);
             } else if(constr instanceof Integer) {
-                controller.userDroppedTopComponents(modeView, draggable, ((Integer)constr).intValue());
+                controller.userDroppedTopComponents(modeView, draggable, (Integer) constr);
             } else {
                 controller.userDroppedTopComponents(modeView, draggable);
             }

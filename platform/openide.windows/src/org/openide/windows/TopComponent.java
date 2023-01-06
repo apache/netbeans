@@ -1189,7 +1189,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
             // backward compatibility read
             serialVersion = 0;
 
-            closeOperation = ((Integer) firstObject).intValue();
+            closeOperation = (Integer) firstObject;
 
             // BCR: this is backward compatibility read and is likely not needed
             // BCR: anymore. So let's just ignore the read of the data object

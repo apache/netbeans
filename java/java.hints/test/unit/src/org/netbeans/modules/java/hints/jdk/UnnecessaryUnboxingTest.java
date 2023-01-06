@@ -80,8 +80,8 @@ public class UnnecessaryUnboxingTest extends NbTestCase {
                 + "import java.util.stream.Collectors;\n" 
                 + "final class Test  {"
                 + "    public void x() {\n" +
-                "        Integer x = new Integer(4);\n" +
-                "        Integer y = new Integer(4);\n" +
+                "        Integer x = 4;\n" +
+                "        Integer y = 4;\n" +
                 "        if( x.intValue() == (int)y ) {\n" +
                 "            System.out.println(x + \" == \" + y);\n" +
                 "        } else {\n" +
@@ -99,8 +99,8 @@ public class UnnecessaryUnboxingTest extends NbTestCase {
                 + "import java.util.stream.Collectors;\n" 
                 + "final class Test  {"
                 + "    public void x() {\n" +
-                "        Integer x = new Integer(4);\n" +
-                "        Integer y = new Integer(4);\n" +
+                "        Integer x = 4;\n" +
+                "        Integer y = 4;\n" +
                 "        if( x == (int)y ) {\n" +
                 "            System.out.println(x + \" == \" + y);\n" +
                 "        } else {\n" +
@@ -123,8 +123,8 @@ public class UnnecessaryUnboxingTest extends NbTestCase {
                 + "import java.util.stream.Collectors;\n" 
                 + "final class Test  {"
                 + "    public void x() {\n" +
-                "        Integer x = new Integer(4);\n" +
-                "        Integer y = new Integer(4);\n" +
+                "        Integer x = 4;\n" +
+                "        Integer y = 4;\n" +
                 "        if( x.intValue() == y.intValue() ) {\n" +
                 "            System.out.println(x + \" == \" + y);\n" +
                 "        } else {\n" +

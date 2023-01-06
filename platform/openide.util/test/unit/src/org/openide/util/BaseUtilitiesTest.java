@@ -451,8 +451,8 @@ public class BaseUtilitiesTest extends NbTestCase {
         result = toObjectArray(new int[]{0, 1});
         assertTrue(result instanceof Integer[]);
         assertEquals(2, result.length);
-        assertEquals(new Integer(0), result[0]);
-        assertEquals(new Integer(1), result[1]);
+        assertEquals(0, result[0]);
+        assertEquals(1, result[1]);
         
         result = toObjectArray(new long[]{(long)0, (long)1});
         assertTrue(result instanceof Long[]);
@@ -533,7 +533,7 @@ public class BaseUtilitiesTest extends NbTestCase {
         assertEquals((short)0, ((short[])result)[0]);
         assertEquals((short)1, ((short[])result)[1]);
         
-        result = toPrimitiveArray(new Integer[]{null, new Integer(1)});
+        result = toPrimitiveArray(new Integer[]{null, 1});
         assertTrue(result instanceof int[]);
         assertEquals(2, ((int[])result).length);
         assertEquals(0, ((int[])result)[0]);

@@ -350,7 +350,7 @@ public class TableCustomizer extends JPanel implements Customizer, FormAwareEdit
         org.openide.awt.Mnemonics.setLocalizedText(insertColumnButton, org.openide.util.NbBundle.getMessage(TableCustomizer.class, "LBL_TableCustomizer_Columns_Insert")); // NOI18N
         insertColumnButton.addActionListener(formListener);
 
-        columnCountSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        columnCountSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         columnCountSpinner.addChangeListener(formListener);
 
         org.openide.awt.Mnemonics.setLocalizedText(deleteColumnButton, org.openide.util.NbBundle.getMessage(TableCustomizer.class, "LBL_TableCustomizer_Columns_Delete")); // NOI18N
@@ -614,7 +614,7 @@ public class TableCustomizer extends JPanel implements Customizer, FormAwareEdit
         rowCountLabel.setLabelFor(rowCountSpinner);
         rowCountLabel.setText(org.openide.util.NbBundle.getMessage(TableCustomizer.class, "LBL_TableCustomizer_Rows_Count")); // NOI18N
 
-        rowCountSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        rowCountSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         rowCountSpinner.addChangeListener(formListener);
 
         org.openide.awt.Mnemonics.setLocalizedText(insertRowButton, org.openide.util.NbBundle.getMessage(TableCustomizer.class, "LBL_TableCustomizer_Rows_Insert")); // NOI18N
@@ -827,7 +827,7 @@ public class TableCustomizer extends JPanel implements Customizer, FormAwareEdit
 
     private void rowCountSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rowCountSpinnerStateChanged
         stopCellEditing(rowsTable);
-        int rowNo = ((Integer)rowCountSpinner.getValue()).intValue();
+        int rowNo = (Integer) rowCountSpinner.getValue();
         ensureRowCount(rowNo);
     }//GEN-LAST:event_rowCountSpinnerStateChanged
 
@@ -839,7 +839,7 @@ public class TableCustomizer extends JPanel implements Customizer, FormAwareEdit
 
     private void columnCountSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_columnCountSpinnerStateChanged
         stopCellEditing(columnsTable);
-        int columnNo = ((Integer)columnCountSpinner.getValue()).intValue();
+        int columnNo = (Integer) columnCountSpinner.getValue();
         ensureColumnCount(columnNo);
     }//GEN-LAST:event_columnCountSpinnerStateChanged
 

@@ -632,8 +632,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
                             comScopes.setEnabled(true);
                             if (scene.getMaxNodeDepth() > 1) {
                                 lblPath.setVisible(true);
-                                ((SpinnerNumberModel)maxPathSpinner.getModel()).
-                                        setMaximum(Integer.valueOf(scene.getMaxNodeDepth()));
+                                ((SpinnerNumberModel)maxPathSpinner.getModel()).setMaximum(scene.getMaxNodeDepth());
                                 maxPathSpinner.setEnabled(true);
                                 maxPathSpinner.setVisible(true);
                             }

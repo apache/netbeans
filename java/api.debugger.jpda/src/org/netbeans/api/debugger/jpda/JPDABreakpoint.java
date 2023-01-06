@@ -116,7 +116,7 @@ public class JPDABreakpoint extends Breakpoint {
             old = suspend;
             suspend = s;
         }
-        firePropertyChange (PROP_SUSPEND, Integer.valueOf(old), Integer.valueOf(s));
+        firePropertyChange (PROP_SUSPEND, old, s);
     }
     
     /**

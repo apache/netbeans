@@ -118,7 +118,7 @@ public class ReflectiveCustomizerProvider implements CustomizerProvider {
             add(l, constraints);
             
             JComponent field;
-            int val = prefs.getInt(option.preferencesKey, ((Integer)option.defaultValue).intValue());
+            int val = prefs.getInt(option.preferencesKey, (Integer) option.defaultValue);
             if (iopt.step() > 0) {
                 val = Math.min(iopt.maxValue(), Math.max(iopt.minValue(), val));
                 prefs.putInt(option.preferencesKey, val);

@@ -49,15 +49,15 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 370, 300));
         compBounds.put("jLabel1", new Rectangle(27, 30, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton2", new Rectangle(91, 58, 105, 23));
-        baselinePosition.put("jToggleButton2-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-105-23", 15);
         compBounds.put("jComboBox1", new Rectangle(255, 27, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(47, 99, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(184, 99, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compPrefSize.put("jToggleButton2", new Dimension(105, 23));
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
@@ -65,19 +65,19 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         compPrefSize.put("jCheckBox2", new Dimension(81, 23));
         contInterior.put("Form", new Rectangle(0, 0, 370, 300));
         compBounds.put("jLabel1", new Rectangle(27, 30, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton2", new Rectangle(91, 58, 105, 23));
-        baselinePosition.put("jToggleButton2-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-105-23", 15);
         compBounds.put("jComboBox1", new Rectangle(255, 27, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(47, 99, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(184, 99, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jToggleButton2-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-105-23", 15);
         compPrefSize.put("jToggleButton2", new Dimension(105, 23));
         {
             String[] compIds = new String[]{"jToggleButton2"};
@@ -88,7 +88,7 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jToggleButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton2-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         // > MOVE
@@ -101,7 +101,7 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jToggleButton2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton2-0-1", 10); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         // > MOVE
@@ -115,8 +115,8 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPadding.put("jLabel1-jToggleButton2-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jToggleButton2-jComboBox1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jLabel1-jToggleButton2-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jToggleButton2-jComboBox1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.endMoving(true);
         // < END MOVING
@@ -124,15 +124,15 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 370, 300));
         compBounds.put("jLabel1", new Rectangle(27, 30, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton2", new Rectangle(91, 58, 145, 23));
-        baselinePosition.put("jToggleButton2-145-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-145-23", 15);
         compBounds.put("jComboBox1", new Rectangle(255, 27, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(47, 99, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(184, 99, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compPrefSize.put("jToggleButton2", new Dimension(105, 23));
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
@@ -140,15 +140,15 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         compPrefSize.put("jCheckBox2", new Dimension(81, 23));
         contInterior.put("Form", new Rectangle(0, 0, 370, 300));
         compBounds.put("jLabel1", new Rectangle(27, 30, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton2", new Rectangle(91, 58, 145, 23));
-        baselinePosition.put("jToggleButton2-145-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-145-23", 15);
         compBounds.put("jComboBox1", new Rectangle(255, 27, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(47, 99, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(184, 99, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }
@@ -161,7 +161,7 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
      */
     public void doChanges1() {
         // > START RESIZING
-        baselinePosition.put("jToggleButton2-145-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-145-23", 15);
         compPrefSize.put("jToggleButton2", new Dimension(105, 23));
         {
             String[] compIds = new String[]{"jToggleButton2"};
@@ -172,8 +172,8 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jToggleButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel1-jToggleButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jToggleButton2-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel1-jToggleButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         // > MOVE
         // > MOVE
@@ -186,8 +186,8 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jToggleButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel1-jToggleButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jToggleButton2-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel1-jToggleButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         // > MOVE
         // > MOVE
@@ -201,7 +201,7 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPaddingInParent.put("Form-jToggleButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton2-0-0", 10); // parentId-compId-dimension-compAlignment
         // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
         // < END MOVING
@@ -209,15 +209,15 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("Form", new Rectangle(0, 0, 370, 300));
         compBounds.put("jLabel1", new Rectangle(27, 30, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton2", new Rectangle(55, 58, 181, 23));
-        baselinePosition.put("jToggleButton2-181-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-181-23", 15);
         compBounds.put("jComboBox1", new Rectangle(255, 27, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(47, 99, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(184, 99, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compPrefSize.put("jToggleButton2", new Dimension(105, 23));
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
@@ -225,15 +225,15 @@ public class ALT_SeqResizing04bTest extends LayoutTestCase {
         compPrefSize.put("jCheckBox2", new Dimension(81, 23));
         contInterior.put("Form", new Rectangle(0, 0, 370, 300));
         compBounds.put("jLabel1", new Rectangle(27, 30, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jToggleButton2", new Rectangle(55, 58, 181, 23));
-        baselinePosition.put("jToggleButton2-181-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-181-23", 15);
         compBounds.put("jComboBox1", new Rectangle(255, 27, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(47, 99, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jCheckBox2", new Rectangle(184, 99, 81, 23));
-        baselinePosition.put("jCheckBox2-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox2-81-23", 15);
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

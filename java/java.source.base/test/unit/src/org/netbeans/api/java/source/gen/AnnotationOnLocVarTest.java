@@ -76,7 +76,7 @@ public class AnnotationOnLocVarTest extends GeneratorTestMDRCompat {
                 ModifiersTree mods = statement.getModifiers();
                 List<AnnotationTree> anns = new ArrayList<AnnotationTree>(1);
                 List<AssignmentTree> attribs = new ArrayList<AssignmentTree>(4);
-                attribs.add(make.Assignment(make.Identifier("id"), make.Literal(Integer.valueOf(666))));
+                attribs.add(make.Assignment(make.Identifier("id"), make.Literal(666)));
                 attribs.add(make.Assignment(make.Identifier("synopsis"), make.Literal("fat")));
                 attribs.add(make.Assignment(make.Identifier("engineer"), make.Literal("PaF")));
                 attribs.add(make.Assignment(make.Identifier("date"), make.Literal("2005")));
@@ -107,7 +107,7 @@ public class AnnotationOnLocVarTest extends GeneratorTestMDRCompat {
                 statements.remove(0); // remove super(), which is in class file, but not present in source
                 List<AnnotationTree> anns = new ArrayList<AnnotationTree>(1);
                 List<AssignmentTree> attribs = new ArrayList<AssignmentTree>(4);
-                attribs.add(make.Assignment(make.Identifier("id"), make.Literal(Integer.valueOf(777))));
+                attribs.add(make.Assignment(make.Identifier("id"), make.Literal(777)));
                 attribs.add(make.Assignment(make.Identifier("synopsis"), make.Literal("thin")));
                 attribs.add(make.Assignment(make.Identifier("engineer"), make.Literal("Snoopy")));
                 attribs.add(make.Assignment(make.Identifier("date"), make.Literal("2001")));
@@ -120,7 +120,7 @@ public class AnnotationOnLocVarTest extends GeneratorTestMDRCompat {
                         null,
                         Collections.<ExpressionTree>emptyList(),
                         make.Identifier("java.util.ArrayList"),
-                        Collections.singletonList(make.Literal(Integer.valueOf(3))),
+                        Collections.singletonList(make.Literal(3)),
                         null
                     )
                 ));

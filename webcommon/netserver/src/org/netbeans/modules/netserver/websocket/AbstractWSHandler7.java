@@ -46,35 +46,28 @@ abstract class AbstractWSHandler7<T extends SocketFramework> extends AbstractWSH
     protected static final String SALT = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";     // NOI18N
 
 
-    protected static final byte FINISH_BYTE = Integer.valueOf("10000000",     // NOI18N
-        2).byteValue();
+    protected static final byte FINISH_BYTE = (byte) 0b1000_0000;
 
-    protected static final byte CONT_BYTE = Integer.valueOf("00000000",     // NOI18N
-        2).byteValue();
+    protected static final byte CONT_BYTE = (byte) 0b0000_0000;
 
     /**
      * FIN bit is set and opcode is text ( equals 1 )
      */
-    protected static final byte FIRST_BYTE_MESSAGE = Integer.valueOf("10000001",     // NOI18N
-            2).byteValue();
+    protected static final byte FIRST_BYTE_MESSAGE =  (byte) 0b1000_0001;
 
-    protected static final byte FIRST_CONT_BYTE_MESSAGE = Integer.valueOf("00000001",     // NOI18N
-            2).byteValue();
+    protected static final byte FIRST_CONT_BYTE_MESSAGE = (byte) 0b0000_0001;
 
     /**
      * FIN bit is set and opcode is close connection ( equals 8 )
      */
-    protected static final byte CLOSE_CONNECTION_BYTE = Integer.valueOf("10001000",     // NOI18N
-            2).byteValue();
+    protected static final byte CLOSE_CONNECTION_BYTE = (byte) 0b1000_1000;
 
     /**
      * FIN bit is set and opcode is binary ( equals 2 )
      */
-    protected static final byte FIRST_BYTE_BINARY = Integer.valueOf("10000010",     // NOI18N
-            2).byteValue();
+    protected static final byte FIRST_BYTE_BINARY = (byte) 0b1000_0010;
 
-    protected static final byte FIRST_CONT_BYTE_BINARY = Integer.valueOf("00000010",     // NOI18N
-            2).byteValue();
+    protected static final byte FIRST_CONT_BYTE_BINARY = (byte) 0b0000_0010;
 
     /*
      * Message max length which is marked in the message with 126 code in the

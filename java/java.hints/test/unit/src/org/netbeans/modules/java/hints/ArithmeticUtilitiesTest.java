@@ -45,16 +45,16 @@ public class ArithmeticUtilitiesTest extends TestBase {
     }
     
     public void testIntegerOperations() throws Exception {
-        performExpressionTest("1 + 1", Integer.valueOf(2));
-        performExpressionTest("3 * 5", Integer.valueOf(15));
-        performExpressionTest("17 / 5", Integer.valueOf(3));
-        performExpressionTest("12 % 5", Integer.valueOf(2));
+        performExpressionTest("1 + 1", 2);
+        performExpressionTest("3 * 5", 15);
+        performExpressionTest("17 / 5", 3);
+        performExpressionTest("12 % 5", 2);
         performExpressionTest("1 == 1", Boolean.valueOf(true));
         performExpressionTest("2 != 1", Boolean.valueOf(true));
         performExpressionTest("5 > 3", Boolean.valueOf(true));
         performExpressionTest("3 <= 9", Boolean.valueOf(true));
-        performExpressionTest("-3", Integer.valueOf(-3));
-        performExpressionTest("+3", Integer.valueOf(3));
+        performExpressionTest("-3", -3);
+        performExpressionTest("+3", 3);
     }
     
     public void testLongOperations() throws Exception {
@@ -125,11 +125,11 @@ public class ArithmeticUtilitiesTest extends TestBase {
     }
     
     public void testBitwiseOperations() throws Exception {
-        performExpressionTest("1 << 2", Integer.valueOf(4));
-        performExpressionTest("2 >> 1", Integer.valueOf(1));
-        performExpressionTest("1 | 2", Integer.valueOf(3));
-        performExpressionTest("7 & 4", Integer.valueOf(4));
-        performExpressionTest("7 ^ 4", Integer.valueOf(3));
+        performExpressionTest("1 << 2", 4);
+        performExpressionTest("2 >> 1", 1);
+        performExpressionTest("1 | 2", 3);
+        performExpressionTest("7 & 4", 4);
+        performExpressionTest("7 ^ 4", 3);
     }
     
     public void testBooleanBitwiseOperation() throws Exception {
@@ -144,9 +144,9 @@ public class ArithmeticUtilitiesTest extends TestBase {
     }
     
     public void testResolveFieldsJLS() throws Exception {
-        performWithFields("intVar + 5", Integer.valueOf(8), "static final int intVar = 3");
+        performWithFields("intVar + 5", 8, "static final int intVar = 3");
         // final field initialized with an expression is OK
-        performWithFields("intVar + 5", Integer.valueOf(26), "static final int intVar = 3 * 7");
+        performWithFields("intVar + 5", 26, "static final int intVar = 3 * 7");
         // non-final field is NOT ok, should fail
         performWithFields("intVar + 5", null, "static int intVar = 3 * 7");
         // check concatenation with String constant

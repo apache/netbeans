@@ -2075,7 +2075,7 @@ public class ETable extends JTable {
                 s = convertValueToString(val);
             }   
             if ((s != null) && (s.toUpperCase().indexOf(prefix.toUpperCase()))!= -1   ) {
-                results.add(new Integer(startIndex));
+                results.add(startIndex);
             
                 // initialize prefix
                 if (maxPrefix == null) {
@@ -2228,7 +2228,7 @@ public class ETable extends JTable {
                 int selectedRowIndex = (rows == null || rows.length == 0) ? 0 : rows[0];
                 int r = 0;
                 for (Iterator<Integer> it = results.iterator(); it.hasNext(); r++) {
-                    int curResult = it.next().intValue();
+                    int curResult = it.next();
                     if (selectedRowIndex <= curResult) {
                         currentSelectionIndex = r;
                         break;
@@ -2247,7 +2247,7 @@ public class ETable extends JTable {
                 if (currentSelectionIndex >= sz) {
                     currentSelectionIndex = sz - 1;
                 }
-                int selRow = results.get(currentSelectionIndex).intValue();
+                int selRow = results.get(currentSelectionIndex);
                 setRowSelectionInterval(selRow, selRow);
                 Rectangle rect = getCellRect(selRow, 0, true);
                 scrollRectToVisible(rect);

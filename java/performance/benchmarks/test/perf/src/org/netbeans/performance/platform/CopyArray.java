@@ -32,8 +32,8 @@ public class CopyArray extends Benchmark {
 
     public CopyArray(String name) {
         super( name, new Integer[] {
-            new Integer(1), new Integer(5), new Integer(10),
-            new Integer(100), new Integer(1000)
+            1, 5, 10,
+            100, 1000
         });
     }
 
@@ -44,7 +44,7 @@ public class CopyArray extends Benchmark {
     private Object[] src_s;
 
     protected void setUp() {
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 	src = new Object[magnitude];
 	dest = new Object[magnitude];
 	src_b = new byte[magnitude];
@@ -63,7 +63,7 @@ public class CopyArray extends Benchmark {
      */
     public void testCopyNativeObjects() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 
         while( count-- > 0 ) {
 	    System.arraycopy(src, 0, dest, 0, magnitude);
@@ -74,7 +74,7 @@ public class CopyArray extends Benchmark {
      */
     public void testCopyNativeMixed() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 
         while( count-- > 0 ) {
 	    System.arraycopy(src_s, 0, dest_s, 0, magnitude);
@@ -85,7 +85,7 @@ public class CopyArray extends Benchmark {
      */
     public void testCopyNativeBytes() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
 
         while( count-- > 0 ) {
 	    System.arraycopy(src_b, 0, dest_b, 0, magnitude);
@@ -97,7 +97,7 @@ public class CopyArray extends Benchmark {
      */
     public void testCopyLoopObjects() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
     
         while( count-- > 0 ) {
 	    for( int i=0; i<magnitude; i++ ) dest[i] = src[i];
@@ -108,7 +108,7 @@ public class CopyArray extends Benchmark {
      */
     public void testCopyLoopBytes() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
     
         while( count-- > 0 ) {
 	    for( int i=0; i<magnitude; i++ ) dest_b[i] = src_b[i];
@@ -119,7 +119,7 @@ public class CopyArray extends Benchmark {
      */
     public void testCopyLoopMixed() throws Exception {
         int count = getIterationCount();
-        int magnitude = ((Integer)getArgument()).intValue();
+        int magnitude = (Integer) getArgument();
     
         while( count-- > 0 ) {
 	    for( int i=0; i<magnitude; i++ ) dest_s[i] = (String) src_s[i];

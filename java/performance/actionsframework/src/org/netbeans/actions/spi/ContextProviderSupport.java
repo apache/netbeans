@@ -166,7 +166,7 @@ public final class ContextProviderSupport implements ContextProvider {
         private Integer identity = null;
         Integer getIdentity() {
             if (identity == null) {
-                identity = new Integer (identityOf(keys));
+                identity = identityOf(keys);
             }
             return identity;
         }
@@ -284,14 +284,14 @@ public final class ContextProviderSupport implements ContextProvider {
             for (int i=0; i < maps.length; i++) {
                 //Some minor optimizations for known types
                 if (maps[i] instanceof FixedMap) {
-                    result ^= ((FixedMap) maps[i]).getIdentity().intValue();
+                    result ^= ((FixedMap) maps[i]).getIdentity();
                 } else if (maps[i] instanceof ProxyMap) {
-                    result ^= ((ProxyMap) maps[i]).getIdentity().intValue();
+                    result ^= ((ProxyMap) maps[i]).getIdentity();
                 } else {
                     result ^= identityOf (keys(maps[i]));
                 }
             }
-            identity = new Integer(result);
+            identity = result;
         }
         
         //XXX more effcient may be to simply compose a real hashmap on any

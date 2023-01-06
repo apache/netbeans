@@ -320,7 +320,7 @@ public class ArraysTest extends GeneratorTestMDRCompat {
                 ClassTree clazz = (ClassTree) cut.getTypeDecls().get(0);
                 VariableTree var = (VariableTree) clazz.getMembers().get(1);
                 NewArrayTree nat = (NewArrayTree) var.getInitializer();
-                NewArrayTree dim2 = make.NewArray(null, Collections.<ExpressionTree>emptyList(), Collections.singletonList(make.Literal(Integer.valueOf(1))));
+                NewArrayTree dim2 = make.NewArray(null, Collections.<ExpressionTree>emptyList(), Collections.singletonList(make.Literal(1)));
                 NewArrayTree newTree = make.NewArray(null, Collections.<ExpressionTree>emptyList(), Collections.<ExpressionTree>singletonList(dim2));
                 workingCopy.rewrite(nat, newTree);
             }
@@ -357,7 +357,7 @@ public class ArraysTest extends GeneratorTestMDRCompat {
                 ClassTree clazz = (ClassTree) cut.getTypeDecls().get(0);
                 VariableTree var = (VariableTree) clazz.getMembers().get(1);
                 NewArrayTree nat = (NewArrayTree) var.getInitializer();
-                NewArrayTree dim2 = make.NewArray(null, Collections.<ExpressionTree>emptyList(), Collections.singletonList(make.Literal(Integer.valueOf(1))));
+                NewArrayTree dim2 = make.NewArray(null, Collections.<ExpressionTree>emptyList(), Collections.singletonList(make.Literal(1)));
                 NewArrayTree newTree = make.NewArray(null, Collections.<ExpressionTree>emptyList(), Collections.<ExpressionTree>singletonList(dim2));
                 workingCopy.rewrite(nat, newTree);
             }

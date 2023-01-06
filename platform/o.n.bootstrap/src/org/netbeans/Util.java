@@ -608,10 +608,10 @@ public final class Util {
                     String end = cn.substring(i + 1);
                     int j = end.indexOf('-');
                     if (j == -1) {
-                        r[1] = Integer.valueOf(end);
+                        r[1] = Integer.parseInt(end);
                     } else {
-                        r[1] = Integer.valueOf(end.substring(0, j));
-                        r[2] = Integer.valueOf(end.substring(j + 1));
+                        r[1] = Integer.parseInt(end.substring(0, j));
+                        r[2] = Integer.parseInt(end.substring(j + 1));
                     }
                 }
                 codeNameParseCache.put(cn.intern(), r);
@@ -635,7 +635,7 @@ public final class Util {
                     if (!p[0].equals(cnb)) {
                         continue;
                     }
-                    int rel = ((Integer)p[1]).intValue(); // ignore any end range, consider only start
+                    int rel = (Integer) p[1]; // ignore any end range, consider only start
                     if (rel == -1) rel = 0; // XXX will this lead to incorrect semantics?
                     return new SpecificationVersion("" + rel + "." + d.getVersion()); // NOI18N
                 } catch (NumberFormatException nfe) {

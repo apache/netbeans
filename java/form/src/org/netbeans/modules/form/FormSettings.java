@@ -41,7 +41,7 @@ public class FormSettings {
 
         // Variables Modifier
         int variablesModifier = FormLoaderSettings.getInstance().getVariablesModifier();
-        settings.put(FormLoaderSettings.PROP_VARIABLES_MODIFIER, Integer.valueOf(variablesModifier));
+        settings.put(FormLoaderSettings.PROP_VARIABLES_MODIFIER, variablesModifier);
         
         // Local Variables
         boolean localVariables = FormLoaderSettings.getInstance().getVariablesLocal();
@@ -53,7 +53,7 @@ public class FormSettings {
         
         // Listener Generation Style
         int listenerGenerationStyle = FormLoaderSettings.getInstance().getListenerGenerationStyle();
-        settings.put(FormLoaderSettings.PROP_LISTENER_GENERATION_STYLE, Integer.valueOf(listenerGenerationStyle));
+        settings.put(FormLoaderSettings.PROP_LISTENER_GENERATION_STYLE, listenerGenerationStyle);
 
         // Generate FQN
         boolean generateFQN = FormLoaderSettings.getInstance().getGenerateFQN();
@@ -64,12 +64,11 @@ public class FormSettings {
     // code generation
 
     public int getVariablesModifier() {
-        Integer variablesModifier = (Integer)settings.get(FormLoaderSettings.PROP_VARIABLES_MODIFIER);
-        return variablesModifier.intValue();
+        return (Integer)settings.get(FormLoaderSettings.PROP_VARIABLES_MODIFIER);
     }
     
     public void setVariablesModifier(int value) {
-        settings.put(FormLoaderSettings.PROP_VARIABLES_MODIFIER, Integer.valueOf(value));
+        settings.put(FormLoaderSettings.PROP_VARIABLES_MODIFIER, value);
     }
     
     public boolean getVariablesLocal() {
@@ -120,12 +119,11 @@ public class FormSettings {
     }
     
     public int getListenerGenerationStyle() {
-        Integer listenerGenerationStyle = (Integer)settings.get(FormLoaderSettings.PROP_LISTENER_GENERATION_STYLE);
-        return listenerGenerationStyle.intValue();
+        return (Integer)settings.get(FormLoaderSettings.PROP_LISTENER_GENERATION_STYLE);
     }
     
     public void setListenerGenerationStyle(int value) {
-        settings.put(FormLoaderSettings.PROP_LISTENER_GENERATION_STYLE, Integer.valueOf(value));
+        settings.put(FormLoaderSettings.PROP_LISTENER_GENERATION_STYLE, value);
     }
 
     public int getLayoutCodeTarget() {
@@ -133,14 +131,14 @@ public class FormSettings {
     }
 
     public void setLayoutCodeTarget(int value) {
-        settings.put(FormLoaderSettings.PROP_LAYOUT_CODE_TARGET, Integer.valueOf(value));
+        settings.put(FormLoaderSettings.PROP_LAYOUT_CODE_TARGET, value);
     }
 
     private int checkLayoutCodeTarget() {
         Integer lctSetting = (Integer)settings.get(FormLoaderSettings.PROP_LAYOUT_CODE_TARGET);
         int layoutCodeTarget;
         if (lctSetting != null) {
-            layoutCodeTarget = lctSetting.intValue();
+            layoutCodeTarget = lctSetting;
         }
         else { // no setting
             layoutCodeTarget = JavaCodeGenerator.LAYOUT_CODE_AUTO;
@@ -187,7 +185,7 @@ public class FormSettings {
         Integer resSetting = (Integer) settings.get(ResourceSupport.PROP_AUTO_RESOURCING);
         int resAutoMode = ResourceSupport.AUTO_OFF;
         if (resSetting != null) {
-            resAutoMode = resSetting.intValue();
+            resAutoMode = resSetting;
         }
         else {
             Boolean i18nSetting = (Boolean) settings.get(PROP_AUTO_I18N);

@@ -95,11 +95,10 @@ class BinaryHeapModel implements HeapModel {
     }
         
     public Item getItem(int id) {
-        Integer key = Integer.valueOf(id);
-        Item ret = createdObjects.get(key);
+        Item ret = createdObjects.get(id);
         if (ret == null) {
             ret = new HItem(id);
-            createdObjects.put(key, ret);
+            createdObjects.put(id, ret);
         }
         return ret;
     }
@@ -115,11 +114,10 @@ class BinaryHeapModel implements HeapModel {
     }
 
     private Cls getCls(int offset) {
-        Integer key = Integer.valueOf(offset);
-        Cls ret = createdClasses.get(key);
+        Cls ret = createdClasses.get(offset);
         if (ret == null) {
             ret = new Cls(offset);
-            createdClasses.put(key, ret);
+            createdClasses.put(offset, ret);
         }
         return ret;
     }

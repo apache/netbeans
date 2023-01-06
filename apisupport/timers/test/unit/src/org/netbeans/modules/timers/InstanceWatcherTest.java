@@ -41,7 +41,7 @@ public class InstanceWatcherTest extends NbTestCase {
         
         iw.addChangeListener(listener);
         
-        Integer ts1 = new Integer( 20 );
+        Integer ts1 = 20;
         iw.add( ts1 );
                
         WeakReference tmp; // For forcing GC

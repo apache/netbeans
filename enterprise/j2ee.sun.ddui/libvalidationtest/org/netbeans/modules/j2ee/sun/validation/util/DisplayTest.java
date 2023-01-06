@@ -64,7 +64,7 @@ public class DisplayTest extends TestCase{
         //test to make sure text() reports error, if the Collection it is 
         //processing has objects that are not of type Failure.
         ArrayList failures = new ArrayList();
-        failures.add(new Integer(5));
+        failures.add(5);
         failures.add("failure_message");                                //NOI18N
         display.text(failures);
     }

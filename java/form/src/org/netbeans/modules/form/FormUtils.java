@@ -351,7 +351,7 @@ public class FormUtils
      * properties needs to be restricted to "detached write". */
     private static Object[][] propertiesAccess = {
         { "javax.swing.JFrame", CLASS_AND_SUBCLASSES,
-              "defaultCloseOperation", Integer.valueOf(FormProperty.DETACHED_WRITE) }
+              "defaultCloseOperation", FormProperty.DETACHED_WRITE}
     };
 
     /** Table of properties that need the component to be added in the parent,
@@ -1282,7 +1282,7 @@ public class FormUtils
                                  Object[] propsClsf)
     {
         Object access = findPropertyClsf(pd.getName(), propsClsf);
-        return access == null ? 0 : ((Integer)access).intValue();
+        return access == null ? 0 : (Integer) access;
     }
 
     static Object[] getPropertiesParentChildDepsClsf(Class beanClass) {
@@ -2193,7 +2193,7 @@ public class FormUtils
         }
 
         if (Integer.class.isAssignableFrom(type) || Integer.TYPE.equals(type)) {
-            return Integer.valueOf(encoded);
+            return Integer.parseInt(encoded);
         }
         if (Short.class.isAssignableFrom(type) || Short.TYPE.equals(type)) {
             return Short.valueOf(encoded);

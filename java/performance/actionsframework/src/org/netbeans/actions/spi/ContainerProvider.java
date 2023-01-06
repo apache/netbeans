@@ -34,8 +34,8 @@ import java.util.Map;
  */
 public abstract class ContainerProvider {
     public static final String CONTEXTMENU_CONTEXT = "contextMenu"; //NOI18N
-    public static final Object TYPE_TOOLBAR = new Integer (1);
-    public static final Object TYPE_MENU = new Integer (2);
+    public static final Object TYPE_TOOLBAR = 1;
+    public static final Object TYPE_MENU = 2;
 
     protected ContainerProvider() {
     }

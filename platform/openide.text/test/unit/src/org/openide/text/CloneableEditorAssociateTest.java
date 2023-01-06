@@ -86,7 +86,7 @@ implements CloneableEditorSupport.Env {
 
         CloneableEditor ed = (CloneableEditor)support.getRef ().getAnyComponent ();
         ic.add(20);
-        assertEquals("twenty", Integer.valueOf(20), ed.getLookup().lookup(Integer.class));
+        assertEquals("twenty", 20, ed.getLookup().lookup(Integer.class));
         ic.remove(20);
         assertNull("no twenty", ed.getLookup().lookup(Integer.class));
         
@@ -107,9 +107,9 @@ implements CloneableEditorSupport.Env {
         assertEquals ("One is there again", 1, panes.length);
         
         ic.add(10);
-        assertEquals("ten", Integer.valueOf(10), ed.getLookup().lookup(Integer.class));
+        assertEquals("ten", 10, ed.getLookup().lookup(Integer.class));
     }
-    
+
     //
     // Implementation of the CloneableEditorSupport.Env
     //

@@ -190,7 +190,7 @@ public class ErrorManagerTest extends Benchmark {
                 	showUniquifier = true;
             	    } else if (uniquifier == 1) {
                 	synchronized (uniquifiedIds) {
-                    	    int count = ((Integer)uniquifiedIds.get(prefix)).intValue();
+                    	    int count = (Integer) uniquifiedIds.get(prefix);
                     	    showUniquifier = count > 1;
                 	}
             	    } else {
@@ -232,9 +232,9 @@ public class ErrorManagerTest extends Benchmark {
         	if (i == null) {
             	    newEM.uniquifier = 1;
         	} else {
-            	    newEM.uniquifier = i.intValue() + 1;
+            	    newEM.uniquifier = i + 1;
         	}
-        	uniquifiedIds.put(newEM.prefix, new Integer(newEM.uniquifier));
+        	uniquifiedIds.put(newEM.prefix, newEM.uniquifier);
     	    }
     	    newEM.minLogSeverity = minLogSeverity;
     	    String prop = newEM.prefix;

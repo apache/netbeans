@@ -307,7 +307,7 @@ abstract class BaseTable extends JTable implements FocusListener {
         int rowHeight;
 
         if (i != null) {
-            rowHeight = i.intValue();
+            rowHeight = i;
         } else {
             //Derive a row height to accomodate the font and expando icon
             Font f = getFont();

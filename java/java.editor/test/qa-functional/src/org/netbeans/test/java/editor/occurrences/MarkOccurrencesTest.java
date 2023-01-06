@@ -195,7 +195,7 @@ public class MarkOccurrencesTest extends NbTestCase {
         }
         
         public int compareTo(Object o) {
-            return new Integer(start).compareTo(((SimpleMark)o).start);
+            return Integer.compare(start, ((SimpleMark) o).start);
         }
         
     }

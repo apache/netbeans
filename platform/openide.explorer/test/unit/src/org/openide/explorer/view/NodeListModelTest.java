@@ -120,7 +120,7 @@ public class NodeListModelTest extends NbTestCase {
         public CNodeChildren() {
             List myKeys = new LinkedList();
             for (int i = 0; i < NO_OF_NODES; i++) {
-                myKeys.add(Integer.valueOf(i));
+                myKeys.add(i);
             }
             
             setKeys(myKeys);

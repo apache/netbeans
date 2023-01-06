@@ -41,7 +41,7 @@ public class addHint {
         c = 'c';
         d = (byte) 2;
         e = 3.4;
-        f = new Integer(1);
+        f = 1;
         g = new LinkedList<String>();                        
         h = "ssss";
         i = getMap();

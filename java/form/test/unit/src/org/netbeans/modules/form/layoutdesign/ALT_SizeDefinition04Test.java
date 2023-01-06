@@ -55,24 +55,24 @@ public class ALT_SizeDefinition04Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 176, 300));
         contInterior.put("Form", new Rectangle(0, 0, 176, 300));
         compBounds.put("jLabel1", new Rectangle(10, 11, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compBounds.put("jTextField1", new Rectangle(48, 11, 118, 20));
-        baselinePosition.put("jTextField1-118-20", new Integer(14));
+        baselinePosition.put("jTextField1-118-20", 14);
         compBounds.put("jToggleButton1", new Rectangle(10, 42, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jTextField2", new Rectangle(121, 42, 45, 20));
-        baselinePosition.put("jTextField2-45-20", new Integer(14));
+        baselinePosition.put("jTextField2-45-20", 14);
         compBounds.put("jCheckBox1", new Rectangle(10, 71, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jButton1", new Rectangle(93, 71, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compMinSize.put("Form", new Dimension(176, 105));
         compBounds.put("Form", new Rectangle(0, 0, 176, 300));
         compPrefSize.put("jTextField1", new Dimension(59, 20));
         compPrefSize.put("jTextField2", new Dimension(59, 20));
         compPrefSize.put("jButton1", new Dimension(73, 23));
-        prefPaddingInParent.put("Form-jCheckBox1-1-1", new Integer(7)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jCheckBox1-1-1", 7); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

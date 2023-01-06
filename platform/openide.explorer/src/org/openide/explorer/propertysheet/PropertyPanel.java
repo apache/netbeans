@@ -638,7 +638,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
                 }
             } else if ("radioButtonMax".equals(nm)) { //NOI18N
 
-                int max = (val instanceof Integer) ? ((Integer) val).intValue() : 0;
+                int max = (val instanceof Integer) ? (Integer) val : 0;
                 inline.setRadioButtonMax(max);
             } else if ("suppressCustomEditor".equals(nm)) { //NOI18N
                 inline.setShowCustomEditorButton(!Boolean.TRUE.equals(val));

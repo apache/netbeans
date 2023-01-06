@@ -49,37 +49,37 @@ public class ALT_Resizing01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jInternalFrame1", new Rectangle(13, 54, 18, 0));
         compBounds.put("jInternalFrame1", new Rectangle(10, 31, 24, 26));
-        baselinePosition.put("jInternalFrame1-24-26", new Integer(-1));
+        baselinePosition.put("jInternalFrame1-24-26", -1);
         compMinSize.put("jInternalFrame1", new Dimension(30, 26));
         compPrefSize.put("jInternalFrame1", new Dimension(24, 26));
         hasExplicitPrefSize.put("jInternalFrame1", new Boolean(false));
         hasExplicitPrefSize.put("jInternalFrame1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(10, 11, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jInternalFrame1", new Rectangle(10, 31, 24, 26));
-        baselinePosition.put("jInternalFrame1-24-26", new Integer(-1));
+        baselinePosition.put("jInternalFrame1-24-26", -1);
         compBounds.put("jScrollPane1", new Rectangle(286, 11, 104, 64));
-        baselinePosition.put("jScrollPane1-104-64", new Integer(0));
+        baselinePosition.put("jScrollPane1-104-64", 0);
         compPrefSize.put("jScrollPane1", new Dimension(104, 64));
         compBounds.put("jButton1", new Rectangle(315, 266, 75, 23));
-        baselinePosition.put("jButton1-75-23", new Integer(15));
+        baselinePosition.put("jButton1-75-23", 15);
         compPrefSize.put("jButton1", new Dimension(75, 23));
         compBounds.put("jButton2", new Rectangle(234, 266, 75, 23));
-        baselinePosition.put("jButton2-75-23", new Integer(15));
+        baselinePosition.put("jButton2-75-23", 15);
         compPrefSize.put("jButton2", new Dimension(75, 23));
-        prefPadding.put("jButton2-jButton1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jInternalFrame1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel1-jInternalFrame1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jScrollPane1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jButton2-jButton1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton2-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jInternalFrame1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel1-jInternalFrame1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollPane1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
@@ -98,13 +98,13 @@ public class ALT_Resizing01Test extends LayoutTestCase {
             boolean inLayout = true;
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
-        baselinePosition.put("jInternalFrame1-24-26", new Integer(-1));
+        baselinePosition.put("jInternalFrame1-24-26", -1);
         compMinSize.put("jInternalFrame1", new Dimension(30, 26));
         // < START RESIZING
-        prefPaddingInParent.put("Form-jInternalFrame1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jInternalFrame1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jScrollPane1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jInternalFrame1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jInternalFrame1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jScrollPane1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         {
             Point p = new Point(276,252);
@@ -117,10 +117,10 @@ public class ALT_Resizing01Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jInternalFrame1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jInternalFrame1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jScrollPane1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jInternalFrame1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jInternalFrame1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jScrollPane1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         // > MOVE
         {
             Point p = new Point(276,253);
@@ -134,13 +134,13 @@ public class ALT_Resizing01Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPadding.put("jScrollPane1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         contInterior.put("jInternalFrame1", new Rectangle(13, 54, 264, 203));
         compBounds.put("jInternalFrame1", new Rectangle(10, 31, 270, 229));
-        baselinePosition.put("jInternalFrame1-270-229", new Integer(-1));
+        baselinePosition.put("jInternalFrame1-270-229", -1);
         compMinSize.put("jInternalFrame1", new Dimension(30, 26));
         compPrefSize.put("jInternalFrame1", new Dimension(24, 26));
         hasExplicitPrefSize.put("jInternalFrame1", new Boolean(false));
@@ -151,43 +151,43 @@ public class ALT_Resizing01Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jInternalFrame1", new Rectangle(13, 54, 264, 203));
         compBounds.put("jInternalFrame1", new Rectangle(10, 31, 270, 229));
-        baselinePosition.put("jInternalFrame1-270-229", new Integer(-1));
+        baselinePosition.put("jInternalFrame1-270-229", -1);
         compMinSize.put("jInternalFrame1", new Dimension(30, 26));
         compPrefSize.put("jInternalFrame1", new Dimension(270, 229));
         hasExplicitPrefSize.put("jInternalFrame1", new Boolean(false));
         hasExplicitPrefSize.put("jInternalFrame1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 300));
         compBounds.put("jLabel1", new Rectangle(10, 11, 34, 14));
-        baselinePosition.put("jLabel1-34-14", new Integer(11));
+        baselinePosition.put("jLabel1-34-14", 11);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jScrollPane1", new Rectangle(286, 11, 104, 64));
-        baselinePosition.put("jScrollPane1-104-64", new Integer(0));
+        baselinePosition.put("jScrollPane1-104-64", 0);
         compPrefSize.put("jScrollPane1", new Dimension(104, 64));
         compBounds.put("jButton1", new Rectangle(315, 266, 75, 23));
-        baselinePosition.put("jButton1-75-23", new Integer(15));
+        baselinePosition.put("jButton1-75-23", 15);
         compPrefSize.put("jButton1", new Dimension(75, 23));
         compBounds.put("jButton2", new Rectangle(234, 266, 75, 23));
-        baselinePosition.put("jButton2-75-23", new Integer(15));
+        baselinePosition.put("jButton2-75-23", 15);
         compPrefSize.put("jButton2", new Dimension(75, 23));
         compBounds.put("jInternalFrame1", new Rectangle(10, 31, 270, 229));
-        baselinePosition.put("jInternalFrame1-270-229", new Integer(-1));
-        prefPadding.put("jLabel1-jScrollPane1-0-0-0", new Integer(4)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jScrollPane1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jButton2-jButton1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jButton2-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jInternalFrame1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jLabel1-jInternalFrame1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jScrollPane1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jLabel1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jButton1-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jInternalFrame1-jButton2-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        baselinePosition.put("jInternalFrame1-270-229", -1);
+        prefPadding.put("jLabel1-jScrollPane1-0-0-0", 4); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jScrollPane1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jButton2-jButton1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton2-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jInternalFrame1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jLabel1-jInternalFrame1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollPane1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jLabel1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jButton1-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jInternalFrame1-jButton2-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton2-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
     }

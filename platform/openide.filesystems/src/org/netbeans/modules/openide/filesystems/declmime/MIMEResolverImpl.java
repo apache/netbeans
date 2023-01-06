@@ -691,7 +691,7 @@ public final class MIMEResolverImpl {
                     } else if (PATTERN.equals(qName)) {
 
                         s = atts.getValue(VALUE); if (s == null) error();
-                        int range = Integer.valueOf(atts.getValue(RANGE));
+                        int range = Integer.parseInt(atts.getValue(RANGE));
                         assert range <= READ_LIMIT || !readLimitReported.add(fo.getPath()): "MIME resolver " + fo.getPath() + " should not exceed " + READ_LIMIT + " bytes limit for files content check.";  //NOI18N
                         boolean ignoreCase = Type.FilePattern.DEFAULT_IGNORE_CASE;
                         String ignoreCaseAttr = atts.getValue(IGNORE_CASE);

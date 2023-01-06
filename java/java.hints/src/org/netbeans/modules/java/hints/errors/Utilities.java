@@ -3405,7 +3405,7 @@ public class Utilities {
     }
 
     public static boolean isJDKVersionLower(int previewUntilJDK){
-        if(Integer.valueOf(SourceVersion.latest().name().split(UNDERSCORE)[1]).compareTo(previewUntilJDK)<=0)
+        if(Integer.parseInt(SourceVersion.latest().name().split(UNDERSCORE)[1]).compareTo(previewUntilJDK)<=0)
             return true;
 
         return false;

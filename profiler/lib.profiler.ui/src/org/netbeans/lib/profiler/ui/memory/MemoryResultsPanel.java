@@ -185,7 +185,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
                             return;
                         }
 
-                        selectedClassId = sortedClassIds[((Integer) filteredToFullIndexes.get(selectedRow)).intValue()];
+                        selectedClassId = sortedClassIds[(Integer) filteredToFullIndexes.get(selectedRow)];
                     }
                 });
 
@@ -196,7 +196,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
                             int selectedRow = table.getSelectedRow();
 
                             if (selectedRow != -1) {
-                                selectedClassId = sortedClassIds[((Integer) filteredToFullIndexes.get(selectedRow)).intValue()];
+                                selectedClassId = sortedClassIds[(Integer) filteredToFullIndexes.get(selectedRow)];
 
                                 Rectangle cellRect = table.getCellRect(selectedRow, 0, false);
                                 JPopupMenu popup = getPopupMenu();
@@ -226,7 +226,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
                         if (clickedLine != -1) {
                             resTable.getSelectionModel().setSelectionInterval(clickedLine, clickedLine);
                             //selectedClassId = sortedClassIds[clickedLine];
-                            selectedClassId = sortedClassIds[((Integer) filteredToFullIndexes.get(clickedLine)).intValue()];
+                            selectedClassId = sortedClassIds[(Integer) filteredToFullIndexes.get(clickedLine)];
 
                             if (e.getModifiers() == InputEvent.BUTTON3_MASK) {
                                 JPopupMenu popup = getPopupMenu();
@@ -281,7 +281,7 @@ public abstract class MemoryResultsPanel extends ResultsPanel {
 
         for (int i = 0; i < nInfoLines; i++) {
             if (passesFilters(i) && passesValueFilter(i)) {
-                filteredToFullIndexes.add(Integer.valueOf(i));
+                filteredToFullIndexes.add(i);
             }
         }
 

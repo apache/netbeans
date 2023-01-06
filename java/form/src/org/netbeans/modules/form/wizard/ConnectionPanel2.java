@@ -98,7 +98,7 @@ class ConnectionPanel2 extends javax.swing.JPanel {
 
         updateActionList();
 
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(1)); // NOI18N
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1); // NOI18N
     }
 
     @Override

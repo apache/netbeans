@@ -73,7 +73,7 @@ public class Common extends Object {
     private static final String METHODS = "newMethod";
     private static final String FIELDS = "newField";
     //private static final int DEFAULTMODIFIERS = Modifier.PUBLIC;
-    private static final String DEFAULTBODY = "for (int i=0;i<100;i++){\n\tSystem.out.println(new Integer(i).toString());\n}\nreturn 0;\n";
+    private static final String DEFAULTBODY = "for (int i=0;i<100;i++){\n\tSystem.out.println(i);\n}\nreturn 0;\n";
     public  static final String DEFAULTINITIALIZERBODY = "\n/*somebody*/\n";
     
     /** int parameter1
@@ -114,7 +114,7 @@ public class Common extends Object {
      * @return Makes String from String and int
      */
     public static String concat(String s, int i){
-        return s+new Integer(i).toString();
+        return s+i;
     }
     
     /**

@@ -193,7 +193,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
             Future<Integer> future = service.run();
             try {
                 Integer ret = future.get();
-                if (ret.intValue() != 0) {
+                if (ret != 0) {
                     String msg = NbBundle.getMessage(GrailsArtifactWizardIterator.class, "WIZARD_ERROR_MESSAGE_ARTIFACT");
                     DialogDisplayer.getDefault().notify(
                             new NotifyDescriptor.Message(msg, NotifyDescriptor.WARNING_MESSAGE));
@@ -265,7 +265,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }

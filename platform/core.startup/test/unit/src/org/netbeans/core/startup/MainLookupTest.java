@@ -32,9 +32,9 @@ public class MainLookupTest extends NbTestCase {
 
     public void testInstanceInServicesFolderIsVisible() throws IOException {
         FileObject inst = FileUtil.createData(FileUtil.getConfigRoot(), "Services/Test/X.instance");
-        inst.setAttribute("instanceCreate", Integer.valueOf(33));
+        inst.setAttribute("instanceCreate", 33);
         assertTrue("Is main lookup", MainLookup.getDefault() instanceof MainLookup);
         Lookup.getDefault().lookup(ModuleInfo.class);
-        assertEquals("33 found", Integer.valueOf(33), Lookup.getDefault().lookup(Integer.class));
+        assertEquals("33 found", 33, Lookup.getDefault().lookup(Integer.class));
     }
 }

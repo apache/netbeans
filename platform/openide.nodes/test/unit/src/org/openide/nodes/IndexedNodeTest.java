@@ -39,7 +39,7 @@ public class IndexedNodeTest implements Index {
     public void testConstructorWithLookup() {
         Lookup lkp = Lookups.singleton(55);
         Node n = new IndexedNode(Children.LEAF, this, lkp) {};
-        assertEquals(Integer.valueOf(55), n.getLookup().lookup(Integer.class));
+        assertEquals(55, n.getLookup().lookup(Integer.class));
     }
 
     @Override

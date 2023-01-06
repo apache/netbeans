@@ -123,7 +123,7 @@ public abstract class LoaderTransfer {
                 df.getPrimaryType ().equals (primary)
             ) {
                 try {
-                    int m = Integer.valueOf (df.getParameter (mask)).intValue ();
+                    int m = Integer.parseInt(df.getParameter(mask));
                     if ((m & action) != 0) {
                         // found the node
                         DataObject o = (DataObject)t.getTransferData(df);
@@ -210,7 +210,7 @@ public abstract class LoaderTransfer {
     */
     private static DataFlavor createDndFlavor (int actions) {
         try {
-            return new DataFlavor(dndMimeType.format(new Object[] {new Integer(actions)}), null, DataObject.class.getClassLoader());
+            return new DataFlavor(dndMimeType.format(new Object[] {actions}), null, DataObject.class.getClassLoader());
         } catch (ClassNotFoundException ex) {
             throw new AssertionError(ex);
         }

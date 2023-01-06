@@ -74,7 +74,7 @@ public class NewFileWizardIterator implements WizardDescriptor.InstantiatingIter
             Component c = panels[i].getComponent();
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i + beforeStepLength - 1));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i + beforeStepLength - 1);
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }
         }

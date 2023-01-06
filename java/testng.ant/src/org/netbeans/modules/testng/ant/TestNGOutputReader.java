@@ -257,7 +257,7 @@ final class TestNGOutputReader {
 	    suiteFinished = false;
             Matcher m = Pattern.compile(RegexpUtils.RUNNING_SUITE_REGEX).matcher(in);
             if (m.matches()) {
-                suiteStarted(m.group(1), Integer.valueOf(m.group(2)), m.group(3));
+                suiteStarted(m.group(1), Integer.parseInt(m.group(2)), m.group(3));
             } else {
                 assert false : "Cannot match: '" + in + "'.";
             }
@@ -295,17 +295,17 @@ final class TestNGOutputReader {
                 if (suiteStat.testRun < 0) {
                     //Tests run/fail/skip
                     if (m.matches()) {
-                        suiteStat.testRun = Integer.valueOf(m.group(1));
-                        suiteStat.testFail = Integer.valueOf(m.group(2));
-                        suiteStat.testSkip = Integer.valueOf(m.group(4));
+                        suiteStat.testRun = Integer.parseInt(m.group(1));
+                        suiteStat.testFail = Integer.parseInt(m.group(2));
+                        suiteStat.testSkip = Integer.parseInt(m.group(4));
                     } else {
                         assert false : "Cannot match: '" + in + "'.";
                     }
                 } else {
                     //Configuration fail/skip
                     if (m.matches()) {
-                        suiteStat.confFail = Integer.valueOf(m.group(1));
-                        suiteStat.confSkip = Integer.valueOf(m.group(2));
+                        suiteStat.confFail = Integer.parseInt(m.group(1));
+                        suiteStat.confSkip = Integer.parseInt(m.group(2));
                     } else {
                         assert false : "Cannot match: '" + in + "'.";
                     }

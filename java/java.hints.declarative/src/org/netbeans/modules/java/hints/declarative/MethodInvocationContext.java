@@ -140,7 +140,7 @@ public class MethodInvocationContext {
                     toAdd = e.getKey();
                     break;
                 case INT_LITERAL:
-                    toAdd = Integer.valueOf(e.getKey());
+                    toAdd = Integer.parseInt(e.getKey());
                     break;
                 case ENUM_CONSTANT:
                     toAdd = loadEnumConstant(e.getKey());

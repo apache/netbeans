@@ -433,7 +433,7 @@ public class TableModelEditor implements PropertyEditor, XMLPropertyEditor,
             return encoded;
 
         if (Integer.class.isAssignableFrom(type) || Integer.TYPE.equals(type))
-            return Integer.valueOf(encoded);
+            return Integer.parseInt(encoded);
         if (Short.class.isAssignableFrom(type) || Short.TYPE.equals(type))
             return Short.valueOf(encoded);
         if (Byte.class.isAssignableFrom(type) || Byte.TYPE.equals(type))

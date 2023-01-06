@@ -300,11 +300,11 @@ public final class ResultsManager {
         Integer type = typeCache.get(fo);
 
         if (type == null) {
-            type = Integer.valueOf(readTypeFromFile(fo));
+            type = readTypeFromFile(fo);
             typeCache.put(fo, type);
         }
 
-        return type.intValue();
+        return type;
     }
 
     @ServiceProviders({@ServiceProvider(service=CPUCCTProvider.Listener.class), @ServiceProvider(service=MemoryCCTProvider.Listener.class)})

@@ -50,7 +50,7 @@ public class WinClassicCompBorder implements Border {
         if (c instanceof JComponent) {
             JComponent jc = (JComponent)c;
             Integer in = (Integer)jc.getClientProperty("MultiViewBorderHack.topOffset");
-            topOffset = in == null ? topOffset : in.intValue();
+            topOffset = in == null ? topOffset : in;
         }
         g.translate(x, y);
         g.setColor(UIManager.getColor("InternalFrame.borderShadow")); //NOI18N

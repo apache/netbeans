@@ -439,9 +439,7 @@ public final class NbErrorManager extends Handler {
                 case 4: // date
                     return new Date();
                 default:
-                    throw new IllegalArgumentException(
-                        "Unknown " + Integer.valueOf(kind) // NOI18N
-                        );
+                    throw new IllegalArgumentException("Unknown " + kind); // NOI18N
             }
         }
     }

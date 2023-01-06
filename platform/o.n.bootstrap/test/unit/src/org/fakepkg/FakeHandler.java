@@ -47,7 +47,7 @@ public class FakeHandler extends CLIHandler {
     protected int cli(CLIHandler.Args args) {
         if (chained != null) {
             Integer i = chained.get(args);
-            return i.intValue();
+            return i;
         }
         return 0;
     }

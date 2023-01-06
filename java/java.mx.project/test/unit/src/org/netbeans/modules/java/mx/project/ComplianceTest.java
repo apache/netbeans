@@ -184,7 +184,7 @@ public class ComplianceTest {
         if (max == null) {
             assertEquals(Integer.MAX_VALUE, c.max);
         } else {
-            assertEquals(max.intValue(), c.max);
+            assertEquals(max, c.max);
         }
     }
 }

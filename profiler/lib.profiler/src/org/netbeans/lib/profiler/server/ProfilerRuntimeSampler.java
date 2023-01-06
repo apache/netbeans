@@ -82,7 +82,7 @@ class ProfilerRuntimeSampler extends ProfilerRuntime {
                             Integer tid = (Integer) threadIdMap.get(ltid);
 
                             if (index != null) {
-                                if (status == states[index.intValue()] && Arrays.equals(mids,methodIds[index.intValue()])) {
+                                if (status == states[index] && Arrays.equals(mids,methodIds[index])) {
                                     writeThreadInfoNoChange(tid);
                                 } else {
                                     writeThreadInfo(tid,status,mids);
@@ -93,7 +93,7 @@ class ProfilerRuntimeSampler extends ProfilerRuntime {
                                 tid = ti.getThreadId();
                                 if (!ti.isInitialized()) {
                                     ti.initialize();
-                                    ProfilerRuntime.writeThreadCreationEvent(t,tid.intValue());
+                                    ProfilerRuntime.writeThreadCreationEvent(t, tid);
                                 }
                                 writeThreadInfo(tid,status,mids);
                             } else { // new thread which is not started yet or it did not ever have stacktrace 
@@ -176,7 +176,7 @@ class ProfilerRuntimeSampler extends ProfilerRuntime {
                 curPos = 0;
             }
 
-            int threadId = tid.intValue();
+            int threadId = tid;
             
             eventBuffer[curPos++] = THREAD_INFO_IDENTICAL;
             eventBuffer[curPos++] = (byte) ((threadId >> 8) & 0xFF);
@@ -196,7 +196,7 @@ class ProfilerRuntimeSampler extends ProfilerRuntime {
                 curPos = 0;
             }
 
-            int threadId = tid.intValue();
+            int threadId = tid;
             int stackLen = mids.length;
             
             eventBuffer[curPos++] = THREAD_INFO;

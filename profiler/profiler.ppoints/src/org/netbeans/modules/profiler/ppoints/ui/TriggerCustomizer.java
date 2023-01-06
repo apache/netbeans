@@ -148,25 +148,25 @@ public class TriggerCustomizer extends ValidityAwarePanel implements ActionListe
 
         if (Bundle.TriggerCustomizer_HeapUsgRelKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_HEAPUSG);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue());
+            condition.setValue((Integer) triggerValueSpinner.getValue());
         } else if (Bundle.TriggerCustomizer_HeapSizeAbsKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_HEAPSIZ);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue() * (1024L * 1024L));
+            condition.setValue((Integer) triggerValueSpinner.getValue() * (1024L * 1024L));
         } else if (Bundle.TriggerCustomizer_SurvgenCountKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_SURVGEN);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue());
+            condition.setValue((Integer) triggerValueSpinner.getValue());
         } else if (Bundle.TriggerCustomizer_LdClassCountKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_LDCLASS);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue());
+            condition.setValue((Integer) triggerValueSpinner.getValue());
         } else if (Bundle.TriggerCustomizer_CpuTimeKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_CPUUSG);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue());
+            condition.setValue((Integer) triggerValueSpinner.getValue());
         } else if (Bundle.TriggerCustomizer_GcTimeKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_GCUSG);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue());
+            condition.setValue((Integer) triggerValueSpinner.getValue());
         } else if (Bundle.TriggerCustomizer_ThreadsCountKey().equals(key)) {
             condition.setMetric(TriggeredGlobalProfilingPoint.TriggerCondition.METRIC_THREADS);
-            condition.setValue(((Integer) triggerValueSpinner.getValue()).intValue());
+            condition.setValue((Integer) triggerValueSpinner.getValue());
         }
 
         condition.setOnetime(triggerOnceRadio.isSelected());

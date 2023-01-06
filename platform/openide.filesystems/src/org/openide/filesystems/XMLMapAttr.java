@@ -922,7 +922,7 @@ final class XMLMapAttr implements Map {
                     case 1:
                         return Short.valueOf(value);
                     case 2:
-                        return new Integer(value); //(objI);
+                        return Integer.parseInt(value); //(objI);
                     case 3:
                         return new Long(value);
                     case 4:

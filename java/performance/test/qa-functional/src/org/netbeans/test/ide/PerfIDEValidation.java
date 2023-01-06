@@ -678,7 +678,7 @@ public class PerfIDEValidation extends JellyTestCase {
         // "Run File"
         String runFileItem = Bundle.getStringTrimmed("org.netbeans.modules.project.ui.actions.Bundle",
                 "LBL_RunSingleAction_Name",
-                new Object[]{new Integer(1), SAMPLE1_FILE_NAME});
+                new Object[]{1, SAMPLE1_FILE_NAME});
         // call "Run|Run File|Run "SampleClass1.java""
         new Action(runItem + "|" + runFileItem, null).perform(sampleClass1Node);
         // "SampleProject (run-single)"
@@ -836,11 +836,11 @@ public class PerfIDEValidation extends JellyTestCase {
         // "Test File"
         String testFileItem = Bundle.getStringTrimmed("org.netbeans.modules.project.ui.actions.Bundle",
                 "LBL_TestSingleAction_Name",
-                new Object[]{new Integer(1), SAMPLE2_FILE_NAME});
+                new Object[]{1, SAMPLE2_FILE_NAME});
         // "Test Project"
         String testProjectItem = Bundle.getStringTrimmed("org.netbeans.modules.project.ui.actions.Bundle",
                 "LBL_TestProjectAction_Name",
-                new Object[]{new Integer(1), SAMPLE_PROJECT_NAME});
+                new Object[]{1, SAMPLE_PROJECT_NAME});
 
         // increase timeout to 60 seconds
         MainWindowOperator.getDefault().getTimeouts().setTimeout("Waiter.WaitingTime", 60000); // NOI18N

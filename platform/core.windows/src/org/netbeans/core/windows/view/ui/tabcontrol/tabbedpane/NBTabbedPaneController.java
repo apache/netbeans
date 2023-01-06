@@ -122,7 +122,7 @@ public class NBTabbedPaneController {
                                 //Get the index into the old array of a deleted tab
                                 Integer idx = i.next();
                                 //Find the TabData object for it
-                                TabData del = old[idx.intValue()];
+                                TabData del = old[idx];
                                 //Make sure its component is not one we'll be adding
                                 if( !components.contains( toComp( del ) ) ) {
                                     //remove it
@@ -139,7 +139,7 @@ public class NBTabbedPaneController {
                                 //Get the index into the new array of the added tab
                                 Integer idx = i.next();
                                 //Find the TabData object that was added
-                                TabData add = nue[idx.intValue()];
+                                TabData add = nue[idx];
                                 //Make sure it's not already showing so we don't do
                                 //extra work
                                 if( !container.isAncestorOf(

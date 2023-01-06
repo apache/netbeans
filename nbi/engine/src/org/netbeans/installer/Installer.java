@@ -153,7 +153,7 @@ public class Installer implements FinishHandler {
         final Object prop = System.getProperties().get(EXIT_CODE_PROPERTY);
         if (prop instanceof Integer) {
             try {
-                exitCode = ((Integer)prop).intValue();
+                exitCode = (Integer) prop;
             } catch (NumberFormatException e) {
                 LogManager.log("... cannot parse exit code : " + prop, e);
             }
@@ -250,9 +250,7 @@ public class Installer implements FinishHandler {
     private void exitImmediately(int errorCode) {
         if (Boolean.getBoolean(DONT_USE_SYSTEM_EXIT_PROPERTY) &&
                 (errorCode != CRITICAL_ERRORCODE)) {
-            System.getProperties().put(
-                    EXIT_CODE_PROPERTY,
-                    Integer.valueOf(errorCode));
+            System.getProperties().put(EXIT_CODE_PROPERTY, errorCode);
         } else {
             System.exit(errorCode);
         }

@@ -120,7 +120,7 @@ public class LiveLivenessResultsPanel extends LivenessResultsPanel implements Li
                 protected Object doInBackground() throws Exception {
                     MemoryCCTProvider olcgb = runner.getProfilerClient().getMemoryCCTProvider();
                     boolean[] newlyUnprofiledClasses = new boolean[sortedClassIds.length];
-                    int line = ((Integer) filteredToFullIndexes.get(clickedLineLocal)).intValue();
+                    int line = (Integer) filteredToFullIndexes.get(clickedLineLocal);
 
                     if (!olcgb.classMarkedUnprofiled(sortedClassIds[line])) {
                         olcgb.markClassUnprofiled(sortedClassIds[line]);
@@ -166,7 +166,7 @@ public class LiveLivenessResultsPanel extends LivenessResultsPanel implements Li
                     int nClasses = filteredToFullIndexes.size();
 
                     for (int i = line + 1; i < nClasses; i++) {
-                        int index = ((Integer) filteredToFullIndexes.get(i)).intValue();
+                        int index = (Integer) filteredToFullIndexes.get(i);
 
                         if (!olcgb.classMarkedUnprofiled(sortedClassIds[index])) {
                             olcgb.markClassUnprofiled(sortedClassIds[index]);

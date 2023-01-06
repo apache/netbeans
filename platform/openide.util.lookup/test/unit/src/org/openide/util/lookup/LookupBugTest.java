@@ -66,7 +66,7 @@ public class LookupBugTest implements LookupListener
         for(i = 0; i < MAX_LOOPS; i++ )
         {
             word = String.valueOf(i);
-            number = new Integer(i);
+            number = i;
             content.add(word);
             assertTrue( "word on loop " + i, checkLookupEventFired() );
             content.add(number);

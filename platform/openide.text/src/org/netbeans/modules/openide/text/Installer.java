@@ -43,7 +43,7 @@ public class Installer implements Runnable {
             v = v + 1;
             mimeTypes.put(mimeType, v);
         } else {
-            Integer v = new Integer(1);
+            Integer v = 1;
             mimeTypes.put(mimeType, v);
         }
     }

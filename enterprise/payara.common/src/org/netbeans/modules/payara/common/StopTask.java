@@ -75,7 +75,7 @@ public class StopTask extends BasicTask<TaskState> {
         }
                
         try {
-            port = Integer.valueOf(instance.getProperty(PayaraModule.ADMINPORT_ATTR));
+            port = Integer.parseInt(instance.getProperty(PayaraModule.ADMINPORT_ATTR));
             if(port < 0 || port > 65535) {
                 return fireOperationStateChanged(TaskState.FAILED,
                         TaskEvent.CMD_FAILED,

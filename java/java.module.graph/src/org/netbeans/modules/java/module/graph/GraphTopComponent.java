@@ -516,8 +516,7 @@ final class GraphTopComponent extends TopComponent implements MultiViewElement, 
         scene.setSelectedObjects(Collections.singleton(scene.getRootGraphNode()));
         if (scene.getMaxNodeDepth() > 1) {
             lblPath.setVisible(true);
-            ((SpinnerNumberModel)maxPathSpinner.getModel()).
-                    setMaximum(Integer.valueOf(scene.getMaxNodeDepth()));
+            ((SpinnerNumberModel)maxPathSpinner.getModel()).setMaximum(scene.getMaxNodeDepth());
             maxPathSpinner.setEnabled(true);
             maxPathSpinner.setVisible(true);
         }

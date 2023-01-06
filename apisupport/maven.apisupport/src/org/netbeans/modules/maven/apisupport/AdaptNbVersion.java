@@ -61,7 +61,7 @@ public class AdaptNbVersion {
                     token = token.substring(0, token.indexOf('_')); //NOI18N
                 }
                 try {
-                    Integer intValue = Integer.valueOf(token);
+                    Integer intValue = Integer.parseInt(token);
                     token = intValue.toString();
                 } catch (NumberFormatException exc) {
                     // ignore, will just not be added to the

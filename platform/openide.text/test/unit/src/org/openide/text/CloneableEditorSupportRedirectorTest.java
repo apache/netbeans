@@ -103,7 +103,7 @@ implements CloneableEditorSupport.Env {
     
     public void testLineLookupIsPropagated () throws Exception {
         content = "Line1\nLine2\n";
-        Integer template = new Integer (1);
+        Integer template = 1;
         ic.add (template); // put anything into the lookup
         
         // in order to set.getLines() work correctly, the document has to be loaded

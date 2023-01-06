@@ -93,14 +93,14 @@ class LayoutOperations implements LayoutConstants {
                 if (idx < startIndex) {
                     if (toRemainL == null) {
                         toRemainL = new LinkedList<Object>();
-                        toRemainL.add(new Integer(LayoutInterval.getEffectiveAlignment(li)));
+                        toRemainL.add(LayoutInterval.getEffectiveAlignment(li));
                     }
                     toRemainL.add(li);
                 }
                 else if (idx > endIndex) {
                     if (toRemainT == null) {
                         toRemainT = new LinkedList<Object>();
-                        toRemainT.add(new Integer(LayoutInterval.getEffectiveAlignment(li)));
+                        toRemainT.add(LayoutInterval.getEffectiveAlignment(li));
                     }
                     toRemainT.add(li);
                 }
@@ -210,14 +210,14 @@ class LayoutOperations implements LayoutConstants {
             List subList = (List) it.next();
             LayoutInterval interval;
             if (subList.size() == 2) { // there is just one interval - use it directly
-                int alignment = ((Integer)subList.get(0)).intValue();
+                int alignment = (Integer) subList.get(0);
                 interval = (LayoutInterval) subList.get(1);
                 if (alignment == LEADING || alignment == TRAILING)
                     layoutModel.setIntervalAlignment(interval, alignment);
             }
             else { // there are more intervals - create sequence
                 interval = new LayoutInterval(SEQUENTIAL);
-                int alignment = ((Integer)subList.get(0)).intValue();
+                int alignment = (Integer) subList.get(0);
                 if (alignment == LEADING || alignment == TRAILING)
                     interval.setAlignment(alignment);
                 for (int i=1,n=subList.size(); i < n; i++) {

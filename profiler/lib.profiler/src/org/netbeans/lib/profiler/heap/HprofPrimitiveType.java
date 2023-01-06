@@ -30,18 +30,18 @@ import java.util.Map;
 class HprofPrimitiveType implements PrimitiveType {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
 
-    private static Map primitiveTypeMap;
+    private static final Map<Integer, Type> PRIMITIVE_TYPE_MAP;
 
     static {
-        primitiveTypeMap = new HashMap(10);
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.BOOLEAN), new HprofPrimitiveType("boolean")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.CHAR), new HprofPrimitiveType("char")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.FLOAT), new HprofPrimitiveType("float")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.DOUBLE), new HprofPrimitiveType("double")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.BYTE), new HprofPrimitiveType("byte")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.SHORT), new HprofPrimitiveType("short")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.INT), new HprofPrimitiveType("int")); //NOI18N
-        primitiveTypeMap.put(Integer.valueOf(HprofHeap.LONG), new HprofPrimitiveType("long")); //NOI18N
+        PRIMITIVE_TYPE_MAP = new HashMap<>(10);
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.BOOLEAN, new HprofPrimitiveType("boolean")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.CHAR, new HprofPrimitiveType("char")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.FLOAT, new HprofPrimitiveType("float")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.DOUBLE, new HprofPrimitiveType("double")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.BYTE, new HprofPrimitiveType("byte")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.SHORT, new HprofPrimitiveType("short")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.INT, new HprofPrimitiveType("int")); //NOI18N
+        PRIMITIVE_TYPE_MAP.put(HprofHeap.LONG, new HprofPrimitiveType("long")); //NOI18N
     }
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
@@ -61,6 +61,6 @@ class HprofPrimitiveType implements PrimitiveType {
     }
 
     static Type getType(byte type) {
-        return (Type) primitiveTypeMap.get(Integer.valueOf(type));
+        return (Type) PRIMITIVE_TYPE_MAP.get((int) type);
     }
 }

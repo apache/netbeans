@@ -34,7 +34,7 @@ public class RunnableMethod extends Benchmark {
 
     public RunnableMethod(String name) {
         super( name, new Integer[] {
-            new Integer(1), new Integer(100), new Integer( 10000 )
+            1, 100, 10000
         });
     }
     
@@ -43,7 +43,7 @@ public class RunnableMethod extends Benchmark {
      */
     public void testUsingRealRunnable() {
         int count = getIterationCount();
-        final int workload = ((Integer)getArgument()).intValue();
+        final int workload = (Integer) getArgument();
         
         while( count-- > 0 ) {
             new Runnable() {
@@ -60,7 +60,7 @@ public class RunnableMethod extends Benchmark {
      */
     public void testUsingDelegatingRunnable() {
         int count = getIterationCount();
-        final int workload = ((Integer)getArgument()).intValue();
+        final int workload = (Integer) getArgument();
         
         while( count-- > 0 ) {
             new Runnable() {
@@ -76,12 +76,12 @@ public class RunnableMethod extends Benchmark {
      */
     public void testUsingMethodRunner() throws Exception {
         int count = getIterationCount();
-        int workload = ((Integer)getArgument()).intValue();
+        int workload = (Integer) getArgument();
         
         while( count-- > 0 ) {
             Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
             mtd.setAccessible(true);
-            new MethodRunner( mtd, this, new Object[] { new Integer(workload) } ).run();
+            new MethodRunner( mtd, this, new Object[] { workload } ).run();
         }
     }
 
@@ -91,12 +91,12 @@ public class RunnableMethod extends Benchmark {
      */
     public void testUsingMethodRunnerWithCachedMethod() throws Exception {
         int count = getIterationCount();
-        int workload = ((Integer)getArgument()).intValue();
+        int workload = (Integer) getArgument();
         Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
         mtd.setAccessible(true);
         
         while( count-- > 0 ) {
-            new MethodRunner( mtd, this, new Object[] { new Integer(workload) } ).run();
+            new MethodRunner( mtd, this, new Object[] { workload } ).run();
         }
     }
 
@@ -106,10 +106,10 @@ public class RunnableMethod extends Benchmark {
      */
     public void testUsingMethodRunnerWithCachedParams() throws Exception {
         int count = getIterationCount();
-        int workload = ((Integer)getArgument()).intValue();
+        int workload = (Integer) getArgument();
         Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
         mtd.setAccessible(true);
-        Object[] params = new Object[] { new Integer(workload) };
+        Object[] params = new Object[] { workload };
         
         while( count-- > 0 ) {
             new MethodRunner( mtd, this, params ).run();
@@ -122,10 +122,10 @@ public class RunnableMethod extends Benchmark {
      */
     public void testUsingCachedMethodRunner() throws Exception {
         int count = getIterationCount();
-        int workload = ((Integer)getArgument()).intValue();
+        int workload = (Integer) getArgument();
         Method mtd = getClass().getDeclaredMethod( "workerMethod", new Class[] { Integer.TYPE } );
         mtd.setAccessible(true);
-        Object[] params = new Object[] { new Integer(workload) };
+        Object[] params = new Object[] { workload };
         MethodRunner mr = new MethodRunner( mtd, this, params );
 
         while( count-- > 0 ) {

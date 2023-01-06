@@ -522,7 +522,7 @@ public class FilterNodeTest extends NbTestCase {
             protected void addNotify () {
                 addNotify++;
                 
-                Integer key = new Integer (50);
+                Integer key = 50;
                 setKeys (Collections.singleton (key));
                 keyRef = new java.lang.ref.WeakReference (key);
             }
@@ -577,7 +577,7 @@ public class FilterNodeTest extends NbTestCase {
         assertEquals ("nonoptimal not called", 0, k.nonoptimal);
         assertEquals ("One node", 1, arr.length);
         
-        k.setKeys (new Object[] { new Integer (10), new Integer (50), new Integer (70) });
+        k.setKeys (new Object[] { 10, 50, 70 });
         
         arr = fn.getChildren ().getNodes ();
         
@@ -610,7 +610,7 @@ public class FilterNodeTest extends NbTestCase {
             @Override
             public Node[] getNodes (boolean optimal) {
                 if (optimal) {
-                    Integer key = new Integer (50);
+                    Integer key = 50;
                     setKeys (Collections.singleton (key));
                     this.optimal++;
                 }
@@ -634,7 +634,7 @@ public class FilterNodeTest extends NbTestCase {
         assertEquals ("optimal called", 1, k.optimal);
         assertEquals ("One node", 1, arr.length);
         
-        k.setKeys (new Object[] { new Integer (1), new Integer (50) });
+        k.setKeys (new Object[] { 1, 50 });
         
         arr = fn.getChildren ().getNodes ();
         assertEquals ("Two nodes", 2, arr.length);

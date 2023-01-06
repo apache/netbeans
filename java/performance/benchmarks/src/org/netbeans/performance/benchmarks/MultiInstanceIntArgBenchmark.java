@@ -31,10 +31,10 @@ public abstract class MultiInstanceIntArgBenchmark extends MultiInstanceBenchmar
     }
 
     protected static Integer i( int i ) {
-	return new Integer( i );
+        return i;
     }
 
     protected int getIntArg() {
-	return ((Integer)getArgument()).intValue();
+	return (Integer) getArgument();
     }
 }

@@ -558,7 +558,7 @@ final class TestStringWizardPanel extends JPanel {
                             "ACS_TestStringWizardPanel"));              //NOI18N
             
             panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX,
-                                    Integer.valueOf(2));
+                                    2);
             panel.setName(
                     NbBundle.getMessage(TestStringWizardPanel.class,
                                         "TXT_FoundMissingResource"));   //NOI18N

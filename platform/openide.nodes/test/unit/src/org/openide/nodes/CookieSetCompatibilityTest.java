@@ -125,7 +125,7 @@ public class CookieSetCompatibilityTest extends NbTestCase implements java.lang.
                     if (c != null) {
                         o = c.getConstructors()[0].newInstance(new Object[] { this });
                     } else {
-                        o = new Integer (r.nextInt());
+                        o = r.nextInt();
                     }
                     instances.add (o);
                     break;
@@ -299,7 +299,7 @@ public class CookieSetCompatibilityTest extends NbTestCase implements java.lang.
                 return Boolean.valueOf (proxy == args[0]);
             }
             if ("hashCode".equals (method.getName ())) {
-                return new Integer (System.identityHashCode(proxy));
+                return System.identityHashCode(proxy);
             }
             if ("toString".equals (method.getName ())) {
                 return proxy.getClass () + "@" + System.identityHashCode(proxy);

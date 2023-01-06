@@ -545,8 +545,8 @@ public class Parser {
             throwParseException(numberNode2.end);
         }
 
-        int num1 = ((Integer) numberNode1.getAttribs()).intValue();
-        int num2 = ((Integer) numberNode2.getAttribs()).intValue();
+        int num1 = (Integer) numberNode1.getAttribs();
+        int num2 = (Integer) numberNode2.getAttribs();
         if (num2 < num1) {
             throwParseException(numberNode2.start);
         }
@@ -655,7 +655,7 @@ public class Parser {
 
         Integer integer;
         try {
-            integer = Integer.valueOf(regexp.substring(start, start + 4), 16);
+            integer = Integer.parseInt(regexp.substring(start, start + 4), 16);
         } catch (NumberFormatException ex) {
             throw new AssertionError();         //should not happen
         }
@@ -800,12 +800,12 @@ public class Parser {
         int char1 = charObject instanceof Character
                      ? Character.getNumericValue(
                             ((Character) charObject).charValue())
-                     : ((Integer) charObject).intValue();
+                     : (Integer) charObject;
         charObject = rangeCharNode2.getAttribs();
         int char2 = charObject instanceof Character
                      ? Character.getNumericValue(
                             ((Character) charObject).charValue())
-                     : ((Integer) charObject).intValue();
+                     : (Integer) charObject;
 
         if (!(char1 < char2)) {
 
@@ -852,7 +852,7 @@ public class Parser {
                             /* expected: 4-digit hexadecimal number */
                             throwParseException(start + 2);
                         }
-                        int codeValue = unicode.intValue();
+                        int codeValue = unicode;
                         assert codeValue >= 0;
                         if (codeValue <= 0x007f) {
 

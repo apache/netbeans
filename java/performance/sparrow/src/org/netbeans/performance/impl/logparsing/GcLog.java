@@ -142,11 +142,11 @@ public class GcLog extends AbstractLogFile {
             }
             
             addElement (new NameValueLogElement (GC_SECONDS, totalGcTime));
-            addElement (new NameValueLogElement (GC_TOTAL, new Integer(gcs.size())));
-            addElement (new NameValueLogElement (GC_FULLTOTAL, new Integer(fullGcCount)));
-            addElement (new NameValueLogElement (GC_MINORTOTAL, new Integer(gcs.size() - fullGcCount)));
+            addElement (new NameValueLogElement (GC_TOTAL, gcs.size()));
+            addElement (new NameValueLogElement (GC_FULLTOTAL, fullGcCount));
+            addElement (new NameValueLogElement (GC_MINORTOTAL, gcs.size() - fullGcCount));
             addElement (new NameValueLogElement (GC_TOTALGARBAGE, new Long(totalCollected)));
-            addElement (new NameValueLogElement (GC_HGES, new Integer(heapChangeCount)));
+            addElement (new NameValueLogElement (GC_HGES, heapChangeCount));
             addElement (new NameValueLogElement (GC_AVGCOLLECTEDPERGC, new Long(totalCollected / gcs.size())));
             addElement (new NameValueLogElement (GC_SECSMAJOR, totalMajorGcTime));
             addElement (new NameValueLogElement (GC_SECSMINOR, totalMinorGcTime));

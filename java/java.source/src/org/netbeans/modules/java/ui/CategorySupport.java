@@ -437,10 +437,10 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
         else if ( jc instanceof JSpinner ) {
             JSpinner js = (JSpinner)jc;
             Object value = js.getValue();
-            if (getDefaultAsInt(optionID) == ((Integer)value).intValue())
+            if (getDefaultAsInt(optionID) == (Integer) value)
                 node.remove(optionID);
             else
-                node.putInt(optionID, ((Integer)value).intValue());
+                node.putInt(optionID, (Integer) value);
         }
         else if ( jc instanceof JToggleButton ) {
             JToggleButton toggle = (JToggleButton)jc;

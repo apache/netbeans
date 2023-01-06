@@ -34,11 +34,11 @@ import org.netbeans.spi.lexer.TokenFactory;
  * Lexical analyzer for java language.
  * <br/>
  * It recognizes "version" attribute and expects <code>java.lang.Integer</code>
- * value for it. The default value is Integer.valueOf(5). The lexer changes
+ * value for it. The default value is 5. The lexer changes
  * its behavior in the following way:
  * <ul>
- *     <li> Integer.valueOf(4) - "assert" recognized as keyword (not identifier)
- *     <li> Integer.valueOf(5) - "enum" recognized as keyword (not identifier)
+ *     <li> 4 - "assert" recognized as keyword (not identifier)
+ *     <li> 5 - "enum" recognized as keyword (not identifier)
  * </ul>
  *
  * @author Miloslav Metelka
@@ -78,7 +78,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
         } else if (verAttribute instanceof Integer) {
             ver = (Integer) verAttribute;
         }
-        this.version = (ver != null) ? ver.intValue() : 10; // TODO: Java 1.8 used by default        
+        this.version = (ver != null) ? ver : 10; // TODO: Java 1.8 used by default
     }
     
     public Object state() {

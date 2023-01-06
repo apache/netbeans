@@ -252,7 +252,7 @@ public final class Utilities {
         if (array instanceof int[]) {
             int i, k = ((int[])array).length;
             Integer[] r = new Integer [k];
-            for (i = 0; i < k; i++) r [i] = new Integer (((int[]) array)[i]);
+            for (i = 0; i < k; i++) r [i] = ((int[]) array)[i];
             return r;
         }
         if (array instanceof boolean[]) {
@@ -410,7 +410,7 @@ public final class Utilities {
         
         str = System.getProperty("netbeans.taskbar.height"); // NOI18N
         if (str != null) {
-            bounds.height -= Integer.getInteger(str, 0).intValue();
+            bounds.height -= Integer.getInteger(str, 0);
             return bounds;
         }
 

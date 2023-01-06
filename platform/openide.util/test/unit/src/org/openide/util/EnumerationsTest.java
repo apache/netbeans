@@ -201,8 +201,8 @@ public class EnumerationsTest extends NbTestCase {
         
         /*** Return { i1, "", "", "", i2 } */
         class WeakEnum implements Enumeration<Object> {
-            public Object i1 = new Integer(1);
-            public Object i2 = new Integer(1);
+            public Object i1 = 1;
+            public Object i2 = 1;
             
             private int state;
             

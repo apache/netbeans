@@ -68,12 +68,12 @@ public class MeasureStartupTimeTestCase extends org.netbeans.junit.NbPerformance
      * Number of repeated runs on the same userdir (for first run is used new
      * userdir).
      */
-    protected static int repeat = Integer.getInteger("org.netbeans.performance.repeat", 1).intValue();
+    protected static int repeat = Integer.getInteger("org.netbeans.performance.repeat", 1);
 
     /**
      * Number of repeated runs on new userdir.
      */
-    protected static int repeatNewUserdir = Integer.getInteger("org.netbeans.performance.repeat.with.new.userdir", 1).intValue();
+    protected static int repeatNewUserdir = Integer.getInteger("org.netbeans.performance.repeat.with.new.userdir", 1);
 
     /**
      * Number used for unknown time.

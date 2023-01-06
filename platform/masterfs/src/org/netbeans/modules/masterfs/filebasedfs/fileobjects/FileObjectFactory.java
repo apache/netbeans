@@ -243,9 +243,8 @@ public final class FileObjectFactory {
         return true;
     }
 
-    private Integer initRealExists(int initTouch) {
-        final Integer retval = new Integer(initTouch);
-        return retval;
+    private Integer initRealExists(int initTouch) { //fixme
+        return initTouch;
     }
 
     private void printWarning(File file) {

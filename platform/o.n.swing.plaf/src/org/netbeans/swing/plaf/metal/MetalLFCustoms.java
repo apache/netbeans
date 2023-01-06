@@ -43,7 +43,7 @@ public final class MetalLFCustoms extends LFCustoms {
         int fontsize = 11;
         Integer in = (Integer) UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
         if (in != null) {
-            fontsize = in.intValue();
+            fontsize = in;
         }
         
         //XXX fetch the custom font size here instead

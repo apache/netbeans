@@ -44,7 +44,7 @@ package org.netbeans.performance.benchmarks;
  *
  *     public void testAppend() {
  *         int count = getIterationsCount();
- *         int arg = ((Integer)getArgument()).intValue();
+ *         int arg = (Integer) getArgument();
  *
  *         while( count-- > 0 ) {
  *             for( int i=0; i<arg; i++ ) {

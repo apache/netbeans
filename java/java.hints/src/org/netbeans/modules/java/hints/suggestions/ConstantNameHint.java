@@ -237,7 +237,7 @@ public class ConstantNameHint {
                             new TreePath(val, xpr),
                             dims.get(dims.size() -1)), 
                         true);
-                return ArithmeticUtilities.isRealValue(size) && Integer.valueOf(0).equals(size);
+                return ArithmeticUtilities.isRealValue(size) && size.equals(0);
             } else {
                 return nat.getInitializers() != null && nat.getInitializers().isEmpty();
             }

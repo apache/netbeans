@@ -1510,7 +1510,7 @@ public class ProfilerInterface implements CommonConstants {
                 if (superClass != null) {
                     Integer clsId = (Integer) classIndex.get(superClass);
                     if (clsId != null) {
-                        loadedClassesSuper[i] = clsId.intValue();
+                        loadedClassesSuper[i] = clsId;
                     } else {
                         //System.out.println("Super class of class "+name+" not found: "+superClass.getName());
                         loadedClassesSuper[i] = -1;
@@ -1522,7 +1522,7 @@ public class ProfilerInterface implements CommonConstants {
                 for (int j = 0; j < interfaces.length; j++) {
                     Integer clsId = (Integer)classIndex.get(interfaces[j]);
                     if (clsId != null) {
-                        loadedClassesInterfaces[i][j] = clsId.intValue();
+                        loadedClassesInterfaces[i][j] = clsId;
                     } else {
                         //System.out.println("Interface of class "+name+" not found: "+interfaces[j].getName());
                         loadedClassesSuper[i] = -1;

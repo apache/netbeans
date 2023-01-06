@@ -48,23 +48,23 @@ public class ALT_Anchor01Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 602, 455));
         contInterior.put("Form", new Rectangle(0, 0, 602, 455));
         compBounds.put("jSlider1", new Rectangle(10, 346, 200, 23));
-        baselinePosition.put("jSlider1-200-23", new Integer(0));
+        baselinePosition.put("jSlider1-200-23", 0);
         compBounds.put("jSlider2", new Rectangle(10, 305, 200, 23));
-        baselinePosition.put("jSlider2-200-23", new Integer(0));
+        baselinePosition.put("jSlider2-200-23", 0);
         compBounds.put("jComboBox1", new Rectangle(10, 267, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jComboBox2", new Rectangle(154, 267, 56, 20));
-        baselinePosition.put("jComboBox2-56-20", new Integer(14));
+        baselinePosition.put("jComboBox2-56-20", 14);
         compBounds.put("jScrollPane1", new Rectangle(216, 122, 74, 322));
-        baselinePosition.put("jScrollPane1-74-322", new Integer(0));
+        baselinePosition.put("jScrollPane1-74-322", 0);
         compMinSize.put("Form", new Dimension(300, 380));
         compBounds.put("Form", new Rectangle(0, 0, 602, 455));
-        prefPadding.put("jComboBox1-jComboBox2-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jScrollPane1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jComboBox1-jComboBox2-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollPane1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-0", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > ADJUST COMPONENT ALIGNMENT
@@ -80,45 +80,45 @@ public class ALT_Anchor01Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 602, 455));
         contInterior.put("Form", new Rectangle(0, 0, 602, 455));
         compBounds.put("jSlider1", new Rectangle(10, 346, 200, 23));
-        baselinePosition.put("jSlider1-200-23", new Integer(0));
+        baselinePosition.put("jSlider1-200-23", 0);
         compBounds.put("jSlider2", new Rectangle(10, 305, 200, 23));
-        baselinePosition.put("jSlider2-200-23", new Integer(0));
+        baselinePosition.put("jSlider2-200-23", 0);
         compBounds.put("jComboBox1", new Rectangle(10, 267, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jComboBox2", new Rectangle(154, 267, 56, 20));
-        baselinePosition.put("jComboBox2-56-20", new Integer(14));
+        baselinePosition.put("jComboBox2-56-20", 14);
         compBounds.put("jScrollPane1", new Rectangle(216, 122, 74, 322));
-        baselinePosition.put("jScrollPane1-74-322", new Integer(0));
+        baselinePosition.put("jScrollPane1-74-322", 0);
         compMinSize.put("Form", new Dimension(300, 455));
         compBounds.put("Form", new Rectangle(0, 0, 602, 455));
-        prefPadding.put("jComboBox1-jComboBox2-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jScrollPane1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jSlider1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jComboBox1-jComboBox2-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollPane1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jSlider1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-1", 11); // parentId-compId-dimension-compAlignment
         compBounds.put("Form", new Rectangle(0, 0, 602, 455));
         contInterior.put("Form", new Rectangle(0, 0, 602, 455));
         compBounds.put("jSlider1", new Rectangle(10, 346, 200, 23));
-        baselinePosition.put("jSlider1-200-23", new Integer(0));
+        baselinePosition.put("jSlider1-200-23", 0);
         compBounds.put("jSlider2", new Rectangle(10, 305, 200, 23));
-        baselinePosition.put("jSlider2-200-23", new Integer(0));
+        baselinePosition.put("jSlider2-200-23", 0);
         compBounds.put("jComboBox1", new Rectangle(10, 267, 56, 20));
-        baselinePosition.put("jComboBox1-56-20", new Integer(14));
+        baselinePosition.put("jComboBox1-56-20", 14);
         compBounds.put("jComboBox2", new Rectangle(154, 267, 56, 20));
-        baselinePosition.put("jComboBox2-56-20", new Integer(14));
+        baselinePosition.put("jComboBox2-56-20", 14);
         compBounds.put("jScrollPane1", new Rectangle(216, 122, 74, 322));
-        baselinePosition.put("jScrollPane1-74-322", new Integer(0));
+        baselinePosition.put("jScrollPane1-74-322", 0);
         compMinSize.put("Form", new Dimension(300, 455));
         compBounds.put("Form", new Rectangle(0, 0, 602, 455));
-        prefPadding.put("jComboBox1-jComboBox2-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jComboBox1-jComboBox2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jScrollPane1-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jSlider1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jScrollPane1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jComboBox1-jComboBox2-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jComboBox1-jComboBox2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("Form-jScrollPane1-0-1", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jSlider1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jScrollPane1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
     }

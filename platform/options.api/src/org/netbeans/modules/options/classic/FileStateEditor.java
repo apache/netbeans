@@ -71,13 +71,13 @@ class FileStateEditor extends ListImageEditor {
         try {
             Integer value = null;
             if (action_define.equals (str)) {
-                value  = Integer.valueOf (SettingChildren.FileStateProperty.ACTION_DEFINE);
+                value  = FileStateProperty.ACTION_DEFINE;
             }
             if (action_revert.equals (str)) {
-                value = Integer.valueOf (FileStateProperty.ACTION_REVERT);
+                value = FileStateProperty.ACTION_REVERT;
             }
             if (action_delete.equals (str)) {
-                value = Integer.valueOf (FileStateProperty.ACTION_DELETE);                
+                value = FileStateProperty.ACTION_DELETE;
             }
             if (value != null) {
                 doSetValue(prop, value);

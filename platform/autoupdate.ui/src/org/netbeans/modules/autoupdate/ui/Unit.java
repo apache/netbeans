@@ -244,7 +244,7 @@ public abstract class Unit {
     }
     
     public static int compareCompleteSizes (Unit unit1, Unit unit2) {
-        return Integer.valueOf (unit1.getCompleteSize ()).compareTo (unit2.getCompleteSize ());
+        return Integer.compare(unit1.getCompleteSize(), unit2.getCompleteSize());
     }
     
     public static class Installed extends Unit {

@@ -88,7 +88,7 @@ public class ThreadBreakpoint extends JPDABreakpoint {
             throw new IllegalArgumentException  ();
         int old = this.breakpointType;
         this.breakpointType = breakpointType;
-        firePropertyChange (PROP_BREAKPOINT_TYPE, Integer.valueOf(old), Integer.valueOf(breakpointType));
+        firePropertyChange (PROP_BREAKPOINT_TYPE, old, breakpointType);
     }
 
     /**

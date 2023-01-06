@@ -130,12 +130,12 @@ public class RecaptureSchema {
                                 String message;
                                 
                                 if (event.getPropertyName().equals("totalCount")) { //NOI18N
-                                    pf.setMaximum(((Integer)event.getNewValue()).intValue());
+                                    pf.setMaximum((Integer) event.getNewValue());
                                     return;
                                 }
 
                                 if (event.getPropertyName().equals("progress")) { //NOI18N
-                                    pf.setValue(((Integer)event.getNewValue()).intValue());
+                                    pf.setValue((Integer) event.getNewValue());
                                     return;
                                 }
                                 

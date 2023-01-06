@@ -48,26 +48,26 @@ public class ALT_GapsOptimization7Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 438, 263));
         contInterior.put("Form", new Rectangle(0, 0, 438, 263));
         compBounds.put("jPanel1", new Rectangle(10, 11, 418, 241));
-        baselinePosition.put("jPanel1-418-241", new Integer(0));
+        baselinePosition.put("jPanel1-418-241", 0);
         contInterior.put("jPanel1", new Rectangle(10, 11, 418, 241));
         compBounds.put("jScrollPane1", new Rectangle(20, 22, 175, 93));
-        baselinePosition.put("jScrollPane1-175-93", new Integer(0));
+        baselinePosition.put("jScrollPane1-175-93", 0);
         compBounds.put("jCheckBox1", new Rectangle(341, 22, 81, 23));
-        baselinePosition.put("jCheckBox1-81-23", new Integer(15));
+        baselinePosition.put("jCheckBox1-81-23", 15);
         compBounds.put("jRadioButton1", new Rectangle(16, 201, 93, 23));
-        baselinePosition.put("jRadioButton1-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton1-93-23", 15);
         compMinSize.put("jPanel1", new Dimension(414, 157));
         compBounds.put("jPanel1", new Rectangle(10, 11, 418, 241));
         compPrefSize.put("jPanel1", new Dimension(418, 241));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
-        prefPadding.put("jCheckBox1-jRadioButton1-1-0-0", new Integer(0)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jCheckBox1-jRadioButton1-1-0-1", new Integer(3)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jCheckBox1-jRadioButton1-1-0-2", new Integer(0)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jCheckBox1-jRadioButton1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-1", new Integer(7)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-2", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jCheckBox1-jRadioButton1-1-0-0", 0); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jCheckBox1-jRadioButton1-1-0-1", 3); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jCheckBox1-jRadioButton1-1-0-2", 0); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jCheckBox1-jRadioButton1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-1", 7); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-2", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         compMinSize.put("Form", new Dimension(434, 179));
         compBounds.put("Form", new Rectangle(0, 0, 438, 263));
@@ -76,31 +76,31 @@ public class ALT_GapsOptimization7Test extends LayoutTestCase {
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         lm.removeComponent("jCheckBox1", true);
-        prefPaddingInParent.put("jPanel1-jRadioButton1-0-1", new Integer(6)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-1", new Integer(7)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-2", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel1-jRadioButton1-0-1", 6); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-1", 7); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-2", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         ld.externalSizeChangeHappened();
 // > UPDATE CURRENT STATE
         compBounds.put("Form", new Rectangle(0, 0, 438, 263));
         contInterior.put("Form", new Rectangle(0, 0, 438, 263));
         compBounds.put("jPanel1", new Rectangle(10, 11, 418, 241));
-        baselinePosition.put("jPanel1-418-241", new Integer(0));
+        baselinePosition.put("jPanel1-418-241", 0);
         contInterior.put("jPanel1", new Rectangle(10, 11, 418, 241));
         compBounds.put("jScrollPane1", new Rectangle(20, 22, 175, 93));
-        baselinePosition.put("jScrollPane1-175-93", new Integer(0));
+        baselinePosition.put("jScrollPane1-175-93", 0);
         compBounds.put("jRadioButton1", new Rectangle(16, 201, 93, 23));
-        baselinePosition.put("jRadioButton1-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton1-93-23", 15);
         compMinSize.put("jPanel1", new Dimension(414, 157));
         compBounds.put("jPanel1", new Rectangle(10, 11, 418, 241));
         compPrefSize.put("jPanel1", new Dimension(418, 241));
-        prefPaddingInParent.put("jPanel1-jRadioButton1-0-1", new Integer(6)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel1-jRadioButton1-0-1", 6); // parentId-compId-dimension-compAlignment
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-1", new Integer(7)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-2", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-1", 7); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-2", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         compMinSize.put("Form", new Dimension(434, 179));
         compBounds.put("Form", new Rectangle(0, 0, 438, 263));

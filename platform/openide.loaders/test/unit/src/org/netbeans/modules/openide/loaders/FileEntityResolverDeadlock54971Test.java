@@ -197,7 +197,7 @@ public class FileEntityResolverDeadlock54971Test extends TestCase {
             
             // add few instnaces to turn this into InheritanceTree storage lookup
             for (int i = 0; i < 20; i++) {
-                Lkp.INSTANCE.add (new Integer (i));
+                Lkp.INSTANCE.add (i);
             }
 
         }

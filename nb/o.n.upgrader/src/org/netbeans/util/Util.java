@@ -178,7 +178,7 @@ public class Util {
                         (event.getPropertyName().equals(JOptionPane.VALUE_PROPERTY)) &&
                         event.getNewValue() != null &&
                         event.getNewValue() != JOptionPane.UNINITIALIZED_VALUE) {
-		    if (new Integer(JOptionPane.YES_OPTION).equals(pane.getValue())) {
+		        if (pane.getValue().equals(JOptionPane.YES_OPTION)) {
                         // IOException from CopyFiles constructor created this error dialog
                         // most probably because netbeans.import could not be located,
                         // so discard the error dialog, stop the importing task and return

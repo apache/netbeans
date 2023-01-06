@@ -49,25 +49,25 @@ public class ALT_MultiResizable04Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 421, 300));
         contInterior.put("Form", new Rectangle(0, 0, 421, 300));
         compBounds.put("jToggleButton1", new Rectangle(10, 11, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jToggleButton2", new Rectangle(121, 11, 179, 23));
-        baselinePosition.put("jToggleButton2-179-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-179-23", 15);
         compBounds.put("jToggleButton3", new Rectangle(306, 11, 105, 23));
-        baselinePosition.put("jToggleButton3-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton3-105-23", 15);
         compBounds.put("jButton1", new Rectangle(174, 138, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compMinSize.put("Form", new Dimension(421, 172));
         compBounds.put("Form", new Rectangle(0, 0, 421, 300));
         compBounds.put("Form", new Rectangle(0, 0, 421, 300));
         compBounds.put("Form", new Rectangle(0, 0, 421, 300));
         compPrefSize.put("jToggleButton2", new Dimension(179, 23));
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton2-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton3-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-jToggleButton3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton2-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton3-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jToggleButton3-0-1", 10); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
         ld.externalSizeChangeHappened();
@@ -82,18 +82,18 @@ public class ALT_MultiResizable04Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 427, 300));
         contInterior.put("Form", new Rectangle(0, 0, 427, 300));
         compBounds.put("jToggleButton1", new Rectangle(10, 11, 105, 23));
-        baselinePosition.put("jToggleButton1-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton1-105-23", 15);
         compBounds.put("jToggleButton2", new Rectangle(121, 11, 185, 23));
-        baselinePosition.put("jToggleButton2-185-23", new Integer(15));
+        baselinePosition.put("jToggleButton2-185-23", 15);
         compBounds.put("jToggleButton3", new Rectangle(312, 11, 105, 23));
-        baselinePosition.put("jToggleButton3-105-23", new Integer(15));
+        baselinePosition.put("jToggleButton3-105-23", 15);
         compBounds.put("jButton1", new Rectangle(174, 138, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compMinSize.put("Form", new Dimension(421, 172));
         compBounds.put("Form", new Rectangle(0, 0, 427, 300));
         compBounds.put("Form", new Rectangle(0, 0, 427, 300));
         compPrefSize.put("jToggleButton2", new Dimension(179, 23));
-        prefPaddingInParent.put("Form-jButton1-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jButton1-1-1", 11); // parentId-compId-dimension-compAlignment
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
     }

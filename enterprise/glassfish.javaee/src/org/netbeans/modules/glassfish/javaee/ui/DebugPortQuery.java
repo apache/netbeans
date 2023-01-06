@@ -37,7 +37,7 @@ public class DebugPortQuery extends javax.swing.JPanel {
 
     public void setDebugPort(String debugPort) {
         try {
-            int port = Integer.valueOf(debugPort);
+            int port = Integer.parseInt(debugPort);
             if(port > 0 && port < 65536) {
                 debugPortSpinner.getModel().setValue(port);
             } else {

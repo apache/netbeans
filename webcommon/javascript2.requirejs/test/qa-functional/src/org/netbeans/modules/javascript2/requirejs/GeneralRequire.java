@@ -501,7 +501,7 @@ public class GeneralRequire extends JellyTestCase {
         try {
             EditorOperator ed = new EditorOperator(config[4]);
             int position = ed.txtEditorPane().getCaretPosition();
-            ed.setCaretPosition(Integer.valueOf(config[5]), Integer.valueOf(config[6]));
+            ed.setCaretPosition(Integer.parseInt(config[5]), Integer.parseInt(config[6]));
             int expectedPosition = ed.txtEditorPane().getCaretPosition();
             assertTrue("Incorrect caret position. Expected position " + expectedPosition + " but was " + position, position == expectedPosition);
             ed.close(false);

@@ -26,7 +26,7 @@ public class RenameMethod {
 
     public int usage() {
         test();
-        new Integer(test());
+        test();
         return test();
     }
 

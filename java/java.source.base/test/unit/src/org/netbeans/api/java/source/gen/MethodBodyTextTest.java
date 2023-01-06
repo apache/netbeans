@@ -363,7 +363,7 @@ public class MethodBodyTextTest extends GeneratorTestMDRCompat {
             "    }\n" +
             "    \n" +
             "    public Object method() {\n" +
-            "        return new Integer(5);\n" +
+            "        return 5;\n" +
             "    }\n" +
             "}\n";
                  
@@ -376,7 +376,7 @@ public class MethodBodyTextTest extends GeneratorTestMDRCompat {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) cut.getTypeDecls().get(0);
                 MethodTree meth = (MethodTree) clazz.getMembers().get(1);
-                String bodyText = "{return new Integer(5);}";
+                String bodyText = "{return 5;}";
                 MethodTree newMeth = make.Method(
                         meth.getModifiers(),
                         meth.getName(),

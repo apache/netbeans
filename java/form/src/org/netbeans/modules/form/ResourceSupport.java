@@ -1667,7 +1667,7 @@ public class ResourceSupport {
                     if (value == null || value.equals(oldMode)) {
                         return;
                     }
-                    int newMode = value.intValue();
+                    int newMode = value;
                     FormSettings settings = formModel.getSettings();
                     boolean i18nResChange // changing between i18n and resourcing?
                         = (oldMode == AUTO_I18N && (newMode == AUTO_RESOURCING || newMode == AUTO_INJECTION))

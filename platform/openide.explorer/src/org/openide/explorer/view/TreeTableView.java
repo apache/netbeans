@@ -1175,8 +1175,8 @@ public class TreeTableView extends BeanTreeView {
                          .addPropertyChangeListener(listener);
             } else if ("column_moved".equals(evt.getPropertyName())) { // NOI18N
 
-                int from = ((Integer) evt.getOldValue()).intValue();
-                int to = ((Integer) evt.getNewValue()).intValue();
+                int from = (Integer) evt.getOldValue();
+                int to = (Integer) evt.getNewValue();
 
                 if ((from == 0) || (to == 0)) {
                     if (movecorrection) {

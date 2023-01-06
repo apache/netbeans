@@ -274,7 +274,7 @@ public class GeneralJavaScript extends JellyTestCase {
             EditorOperator ed = new EditorOperator(config[2]);
             JemmyProperties.setCurrentTimeout("ComponentOperator.WaitComponentTimeout", defaultTimeout);
             int position = ed.txtEditorPane().getCaretPosition();
-            ed.setCaretPosition(Integer.valueOf(config[3]), Integer.valueOf(config[4].trim()));
+            ed.setCaretPosition(Integer.parseInt(config[3]), Integer.parseInt(config[4].trim()));
             int expectedPosition = ed.txtEditorPane().getCaretPosition();
             assertTrue("Incorrect caret position. Expected position " + expectedPosition + " but was " + position, position == expectedPosition);
 

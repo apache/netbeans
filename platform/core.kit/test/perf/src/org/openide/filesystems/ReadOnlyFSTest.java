@@ -65,7 +65,7 @@ public abstract class ReadOnlyFSTest extends MapArgBenchmark {
     /** inherited; sets up env */
     protected void setUp() throws Exception {
         Map param = (Map) getArgument();
-        foCount = ((Integer) param.get(FILE_NO_KEY)).intValue();
+        foCount = (Integer) param.get(FILE_NO_KEY);
         iterations = getIterationCount();
         files = setUpFileObjects(foCount);
         pairs = generateRandomStrings(new String[files.length][2]);
@@ -93,7 +93,7 @@ public abstract class ReadOnlyFSTest extends MapArgBenchmark {
     /** Creates a Map with default arguments values */
     protected Map createDefaultMap() {
         Map map = super.createDefaultMap();
-        map.put(FILE_NO_KEY, new Integer(1000));
+        map.put(FILE_NO_KEY, 1000);
         return map;
     }    
     

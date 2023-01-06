@@ -44,9 +44,9 @@ implements EntityResolver {
      */
     public XMLFSvsParserTest (String name) {
         super (name, new Object[] {
-            new Integer (100),
-            new Integer (1000),
-            new Integer (10000)
+            100,
+            1000,
+            10000
         });
     }
     

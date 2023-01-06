@@ -331,7 +331,7 @@ public class SAXGeneratorModel implements java.io.Serializable {
                 //find the suffix integer value
                 String str = name.substring(index+1);
                 try {
-                    suffix = Integer.valueOf(str).intValue()+1;
+                    suffix = Integer.parseInt(str) + 1;
                 } catch (NumberFormatException ex) {
                     //str was a not an integer
                 }

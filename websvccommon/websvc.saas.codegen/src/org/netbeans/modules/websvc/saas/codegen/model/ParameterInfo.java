@@ -177,7 +177,7 @@ public class ParameterInfo {
     
     private Object generateDefaultValue() {
         if (type == Integer.class || type == Integer.TYPE) {
-            return new Integer(0);
+            return 0;
         } else if (type == Short.class || type == Short.TYPE) {
             return (short)0;
         } else if (type == Long.class || type == Long.TYPE) {

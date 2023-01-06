@@ -274,7 +274,7 @@ class Generator {
                 break;
 
             case TreeNode.UNICODE_CHAR:
-                int code = ((Integer) attribs).intValue();
+                int code = (Integer) attribs;
                 buf.append((char) code);
                 break;
 

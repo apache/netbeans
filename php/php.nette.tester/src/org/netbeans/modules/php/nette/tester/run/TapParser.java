@@ -77,7 +77,7 @@ public final class TapParser {
             success = matcher.find();
         }
         if (success) {
-            return Pair.of(matcher.group("FILE"), Integer.valueOf(matcher.group("LINE"))); // NOI18N
+            return Pair.of(matcher.group("FILE"), Integer.parseInt(matcher.group("LINE"))); // NOI18N
         }
         return null;
     }

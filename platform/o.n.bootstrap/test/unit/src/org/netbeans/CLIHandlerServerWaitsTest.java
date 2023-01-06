@@ -245,7 +245,7 @@ public class CLIHandlerServerWaitsTest extends NbTestCase {
     }
 
     public void testGetInetAddressDoesNotBlock () throws Exception {
-        CLIHandler.Status res = cliInitialize(new String[0], Collections.<CLIHandler>emptyList(), nullInput, nullOutput, nullOutput, Integer.valueOf(27));
+        CLIHandler.Status res = cliInitialize(new String[0], Collections.<CLIHandler>emptyList(), nullInput, nullOutput, nullOutput, 27);
         assertEquals("CLIHandler init finished" ,0, res.getExitCode());
     }
     
@@ -306,7 +306,7 @@ public class CLIHandlerServerWaitsTest extends NbTestCase {
         CLIHandler.finishInitialization(true);
         
         h.toReturn = 7;
-        CLIHandler.Status res = cliInitialize(new String[0], h, nullInput, nullOutput, nullOutput, new Integer(667));
+        CLIHandler.Status res = cliInitialize(new String[0], h, nullInput, nullOutput, nullOutput, 667);
         // finish all calls
         int newRes = CLIHandler.finishInitialization(false);
         

@@ -285,7 +285,7 @@ public final class NodeHelper {
                 } else if (currentType.equals(BigDecimal.class.getName())) {
                     value = BigDecimal.valueOf(0);
                 } else if (currentType.equals(BigInteger.class.getName())) {
-                    value = BigInteger.valueOf(0);
+                    value = Big0;
                 } else if (currentType.equals(URI.class.getName())) {
                     try {
                         value = new URI("http://java.sun.com");

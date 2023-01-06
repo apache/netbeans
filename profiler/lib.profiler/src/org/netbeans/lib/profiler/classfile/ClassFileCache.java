@@ -107,7 +107,7 @@ public class ClassFileCache {
                     String names[] = (String[]) preloadNames.toArray(new String[0]);
                     int loadersId[] = new int[preloadLoaderIds.size()];
                     for (int i=0; i<loadersId.length; i++) {
-                        loadersId[i] = ((Integer)preloadLoaderIds.get(i)).intValue();
+                        loadersId[i] = (Integer) preloadLoaderIds.get(i);
                     }
                     //System.out.println("Caching "+names.length+" classes");
                     byte[][] bytes = client.getCachedClassFileBytes(names, loadersId);
@@ -152,7 +152,7 @@ public class ClassFileCache {
                 // known class without bytecode; get it from TA
                 preloadNames.add(name);
                 String loaderIdStr = location.substring(ClassRepository.LOCATION_VMSUPPLIED.length());
-                preloadLoaderIds.add(Integer.valueOf(loaderIdStr));
+                preloadLoaderIds.add(Integer.parseInt(loaderIdStr));
             }
         }
     }

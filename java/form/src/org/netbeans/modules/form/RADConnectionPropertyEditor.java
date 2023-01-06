@@ -565,7 +565,7 @@ public class RADConnectionPropertyEditor
             if ("java.lang.String".equals(typeName)) { // NOI18N
                 return value;
             } else if ("int".equals(typeName)) { // NOI18N
-                return Integer.valueOf(value);
+                return value;
             } else if ("short".equals(typeName)) { // NOI18N
                 return Short.valueOf(value);
             } else if ("long".equals(typeName)) { // NOI18N

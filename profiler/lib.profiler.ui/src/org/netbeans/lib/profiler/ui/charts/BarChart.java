@@ -474,12 +474,12 @@ public class BarChart extends JComponent implements ComponentListener, AncestorL
                 int height = (int) ((drawableHeight * yItems[i]) / (float) maxHeight);
                 int horizLegendX = ((i == 0) ? Math.max(currentX - (xSpacing / 2), vertAxisWidth) : (currentX - (xSpacing / 2)));
                 drawBar(g2, currentX, drawHeight - horizAxisHeight - height - outlineStrokeWidth, width, height);
-                horizAxisXes.add(Integer.valueOf(horizLegendX));
+                horizAxisXes.add(horizLegendX);
                 currentX += (width + xSpacing);
                 drawnWidth += width;
             }
 
-            horizAxisXes.add(Integer.valueOf(Math.min(currentX - (xSpacing / 2), drawWidth)));
+            horizAxisXes.add(Math.min(currentX - (xSpacing / 2), drawWidth));
 
             // draw horizontal chart axis
             drawHorizontalAxis(g2, horizAxisXes, xItems);
@@ -496,7 +496,7 @@ public class BarChart extends JComponent implements ComponentListener, AncestorL
         g2.drawLine(vertAxisWidth - 3, drawHeight - horizAxisHeight, drawWidth, drawHeight - horizAxisHeight);
 
         for (int i = 0; i < horizAxisXes.size(); i++) {
-            int x = ((Integer) horizAxisXes.get(i)).intValue();
+            int x = (Integer) horizAxisXes.get(i);
             g2.drawLine(x, drawHeight - horizAxisHeight + 1, x, drawHeight - horizAxisHeight + 3);
             drawHorizontalAxisLegendItem(g2, x, xItems[i]);
         }

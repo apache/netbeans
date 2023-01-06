@@ -417,7 +417,7 @@ public class RADVisualComponent extends RADComponent {
 
     final int getComponentLayer() {
         Object layer = getAuxValue(PROP_LAYER);
-        return layer instanceof Integer ? ((Integer)layer).intValue() : JLayeredPane.DEFAULT_LAYER;
+        return layer instanceof Integer ? (Integer) layer : JLayeredPane.DEFAULT_LAYER;
     }
 
     final String getComponentLayerJavaInitCode() {
@@ -526,7 +526,7 @@ public class RADVisualComponent extends RADComponent {
             javax.swing.undo.UndoableEdit ue = layoutModel.getUndoableEdit();
             boolean autoUndo = true;
             try {
-                layoutModel.setUserIntervalSize(interval, dimension, newValue.intValue());
+                layoutModel.setUserIntervalSize(interval, dimension, newValue);
                 getNodeReference().firePropertyChangeHelper(
                     getName(), oldValue, newValue);
                 autoUndo = false;
@@ -543,13 +543,12 @@ public class RADVisualComponent extends RADComponent {
         
         @Override
         public Object getValue() {
-            int size = getComponent().getLayoutInterval(dimension).getPreferredSize();
-            return Integer.valueOf(size);
+            return getComponent().getLayoutInterval(dimension).getPreferredSize();
         }
 
         @Override
         Object getDefaultValue() {
-            return Integer.valueOf(LayoutConstants.NOT_EXPLICITLY_DEFINED);
+            return LayoutConstants.NOT_EXPLICITLY_DEFINED;
         }
 
         @Override
@@ -699,7 +698,7 @@ public class RADVisualComponent extends RADComponent {
         public Object getValue() {
             Object value = getAuxValue(PROP_LAYER);
             if (!(value instanceof Integer)) {
-                value = Integer.valueOf(JLayeredPane.DEFAULT_LAYER);
+                value = JLayeredPane.DEFAULT_LAYER;
             }
             return value;
         }
@@ -719,7 +718,7 @@ public class RADVisualComponent extends RADComponent {
 
         @Override
         Object getDefaultValue() {
-            return Integer.valueOf(JLayeredPane.DEFAULT_LAYER);
+            return JLayeredPane.DEFAULT_LAYER;
         }
 
         @Override
@@ -743,7 +742,7 @@ public class RADVisualComponent extends RADComponent {
         public void setAsText(String str) {
             if (!setValueFromString(str)) { // not one of the known constants
                 try {
-                    setValue(new Integer(Integer.parseInt(str)));
+                    setValue(Integer.parseInt(str));
                 } catch (NumberFormatException ex) {
                 }
             }

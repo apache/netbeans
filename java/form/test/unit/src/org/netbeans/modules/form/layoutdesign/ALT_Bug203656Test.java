@@ -48,76 +48,76 @@ public class ALT_Bug203656Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 921, 777));
         contInterior.put("Form", new Rectangle(0, 0, 921, 777));
         compBounds.put("jPanel2", new Rectangle(10, 11, 901, 755));
-        baselinePosition.put("jPanel2-901-755", new Integer(0));
+        baselinePosition.put("jPanel2-901-755", 0);
         contInterior.put("jPanel2", new Rectangle(10, 11, 901, 755));
         compBounds.put("jScrollPane1", new Rectangle(20, 22, 166, 407));
-        baselinePosition.put("jScrollPane1-166-407", new Integer(0));
+        baselinePosition.put("jScrollPane1-166-407", 0);
         compBounds.put("jRadioButton3", new Rectangle(192, 736, 93, 23));
-        baselinePosition.put("jRadioButton3-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton3-93-23", 15);
         compBounds.put("jRadioButton2", new Rectangle(192, 713, 93, 23));
-        baselinePosition.put("jRadioButton2-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton2-93-23", 15);
         compBounds.put("jRadioButton1", new Rectangle(192, 690, 93, 23));
-        baselinePosition.put("jRadioButton1-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton1-93-23", 15);
         compBounds.put("jComboBox2", new Rectangle(192, 42, 56, 20));
-        baselinePosition.put("jComboBox2-56-20", new Integer(14));
+        baselinePosition.put("jComboBox2-56-20", 14);
         compBounds.put("jButton4", new Rectangle(192, 80, 73, 579));
-        baselinePosition.put("jButton4-73-579", new Integer(293));
+        baselinePosition.put("jButton4-73-579", 293);
         compBounds.put("filler1", new Rectangle(295, 80, 0, 25));
-        baselinePosition.put("filler1-0-25", new Integer(-1));
+        baselinePosition.put("filler1-0-25", -1);
         compBounds.put("filler2", new Rectangle(313, 80, 0, 25));
-        baselinePosition.put("filler2-0-25", new Integer(-1));
+        baselinePosition.put("filler2-0-25", -1);
         compBounds.put("jButton2", new Rectangle(295, 80, 73, 578));
-        baselinePosition.put("jButton2-73-578", new Integer(293));
+        baselinePosition.put("jButton2-73-578", 293);
         compBounds.put("jButton3", new Rectangle(397, 218, 73, 440));
-        baselinePosition.put("jButton3-73-440", new Integer(224));
+        baselinePosition.put("jButton3-73-440", 224);
         compBounds.put("jSlider1", new Rectangle(192, 665, 200, 23));
-        baselinePosition.put("jSlider1-200-23", new Integer(0));
+        baselinePosition.put("jSlider1-200-23", 0);
         compMinSize.put("jPanel2", new Dimension(901, 755));
         compBounds.put("jPanel2", new Rectangle(10, 11, 901, 755));
         compPrefSize.put("jPanel2", new Dimension(901, 755));
-        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("jRadioButton3", new Dimension(93, 23));
         compPrefSize.put("jRadioButton2", new Dimension(93, 23));
         compPrefSize.put("jRadioButton1", new Dimension(93, 23));
         compPrefSize.put("jComboBox2", new Dimension(56, 20));
         compPrefSize.put("jButton4", new Dimension(73, 23));
         compPrefSize.put("filler1", new Dimension(0, 0));
-        prefPadding.put("filler1-filler2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler1-filler2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("filler2", new Dimension(0, 0));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compPrefSize.put("jButton3", new Dimension(73, 23));
         compPrefSize.put("jSlider1", new Dimension(200, 23));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
         compPrefSize.put("jButton4", new Dimension(73, 23));
-        prefPadding.put("filler2-jButton3-1-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("filler2-jButton3-1-0-1", new Integer(11)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("filler2-jButton3-1-0-2", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("filler2-jButton3-1-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler2-jButton3-1-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler2-jButton3-1-0-1", 11); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler2-jButton3-1-0-2", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler2-jButton3-1-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
         compMinSize.put("Form", new Dimension(921, 777));
         compBounds.put("Form", new Rectangle(0, 0, 921, 777));
@@ -126,7 +126,7 @@ public class ALT_Bug203656Test extends LayoutTestCase {
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > START RESIZING
-        baselinePosition.put("jButton3-73-440", new Integer(224));
+        baselinePosition.put("jButton3-73-440", 224);
         compPrefSize.put("jButton3", new Dimension(73, 23));
         {
             String[] compIds = new String[]{
@@ -144,7 +144,7 @@ public class ALT_Bug203656Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("jPanel2-jButton3-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel2-jButton3-1-0", 11); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(428, 83);
@@ -157,7 +157,7 @@ public class ALT_Bug203656Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("jPanel2-jButton3-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel2-jButton3-1-0", 11); // parentId-compId-dimension-compAlignment
 // > MOVE
         {
             Point p = new Point(428, 82);
@@ -171,12 +171,12 @@ public class ALT_Bug203656Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", 10); // parentId-compId-dimension-compAlignment
         compPrefSize.put("jButton4", new Dimension(73, 23));
         compMinSize.put("jButton2", new Dimension(73, 23));
-        prefPadding.put("jButton2-jButton3-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("filler2-jButton3-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("jPanel2-jButton3-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jButton2-jButton3-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler2-jButton3-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel2-jButton3-0-1", 10); // parentId-compId-dimension-compAlignment
         ld.endMoving(true);
 // < END MOVING
         ld.externalSizeChangeHappened();
@@ -184,59 +184,59 @@ public class ALT_Bug203656Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 921, 777));
         contInterior.put("Form", new Rectangle(0, 0, 921, 777));
         compBounds.put("jPanel2", new Rectangle(10, 11, 901, 755));
-        baselinePosition.put("jPanel2-901-755", new Integer(0));
+        baselinePosition.put("jPanel2-901-755", 0);
         contInterior.put("jPanel2", new Rectangle(10, 11, 901, 755));
         compBounds.put("jScrollPane1", new Rectangle(20, 22, 166, 407));
-        baselinePosition.put("jScrollPane1-166-407", new Integer(0));
+        baselinePosition.put("jScrollPane1-166-407", 0);
         compBounds.put("jRadioButton3", new Rectangle(192, 736, 93, 23));
-        baselinePosition.put("jRadioButton3-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton3-93-23", 15);
         compBounds.put("jRadioButton2", new Rectangle(192, 713, 93, 23));
-        baselinePosition.put("jRadioButton2-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton2-93-23", 15);
         compBounds.put("jRadioButton1", new Rectangle(192, 690, 93, 23));
-        baselinePosition.put("jRadioButton1-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton1-93-23", 15);
         compBounds.put("jComboBox2", new Rectangle(192, 42, 56, 20));
-        baselinePosition.put("jComboBox2-56-20", new Integer(14));
+        baselinePosition.put("jComboBox2-56-20", 14);
         compBounds.put("jButton4", new Rectangle(192, 80, 73, 579));
-        baselinePosition.put("jButton4-73-579", new Integer(293));
+        baselinePosition.put("jButton4-73-579", 293);
         compBounds.put("filler1", new Rectangle(295, 80, 0, 25));
-        baselinePosition.put("filler1-0-25", new Integer(-1));
+        baselinePosition.put("filler1-0-25", -1);
         compBounds.put("filler2", new Rectangle(313, 80, 0, 25));
-        baselinePosition.put("filler2-0-25", new Integer(-1));
+        baselinePosition.put("filler2-0-25", -1);
         compBounds.put("jButton2", new Rectangle(295, 80, 73, 578));
-        baselinePosition.put("jButton2-73-578", new Integer(293));
+        baselinePosition.put("jButton2-73-578", 293);
         compBounds.put("jButton3", new Rectangle(397, 80, 73, 578));
-        baselinePosition.put("jButton3-73-578", new Integer(293));
+        baselinePosition.put("jButton3-73-578", 293);
         compBounds.put("jSlider1", new Rectangle(192, 665, 200, 23));
-        baselinePosition.put("jSlider1-200-23", new Integer(0));
+        baselinePosition.put("jSlider1-200-23", 0);
         compMinSize.put("jPanel2", new Dimension(901, 755));
         compBounds.put("jPanel2", new Rectangle(10, 11, 901, 755));
         compPrefSize.put("jPanel2", new Dimension(901, 755));
-        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton3-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-0", new Integer(2)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-1", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jRadioButton1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jSlider1-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jComboBox2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-0", new Integer(6)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-1", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-2", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jScrollPane1-jButton4-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton3-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-0", 2); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-1", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jRadioButton1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jSlider1-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jComboBox2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-0", 6); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-1", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-2", 10); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("jScrollPane1-jButton4-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("jRadioButton3", new Dimension(93, 23));
         compPrefSize.put("jRadioButton2", new Dimension(93, 23));
         compPrefSize.put("jRadioButton1", new Dimension(93, 23));
@@ -244,7 +244,7 @@ public class ALT_Bug203656Test extends LayoutTestCase {
         compPrefSize.put("jComboBox2", new Dimension(56, 20));
         compPrefSize.put("jButton4", new Dimension(73, 23));
         compPrefSize.put("filler1", new Dimension(0, 0));
-        prefPadding.put("filler1-filler2-0-0-3", new Integer(18)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
+        prefPadding.put("filler1-filler2-0-0-3", 18); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         compPrefSize.put("filler2", new Dimension(0, 0));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compPrefSize.put("jButton3", new Dimension(73, 23));
@@ -260,33 +260,33 @@ public class ALT_Bug203656Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 921, 777));
         contInterior.put("Form", new Rectangle(0, 0, 921, 777));
         compBounds.put("jPanel2", new Rectangle(10, 11, 901, 755));
-        baselinePosition.put("jPanel2-901-755", new Integer(0));
+        baselinePosition.put("jPanel2-901-755", 0);
         contInterior.put("jPanel2", new Rectangle(10, 11, 901, 755));
         compBounds.put("jScrollPane1", new Rectangle(20, 22, 166, 407));
-        baselinePosition.put("jScrollPane1-166-407", new Integer(0));
+        baselinePosition.put("jScrollPane1-166-407", 0);
         compBounds.put("jRadioButton3", new Rectangle(192, 736, 93, 23));
-        baselinePosition.put("jRadioButton3-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton3-93-23", 15);
         compBounds.put("jRadioButton2", new Rectangle(192, 713, 93, 23));
-        baselinePosition.put("jRadioButton2-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton2-93-23", 15);
         compBounds.put("jRadioButton1", new Rectangle(192, 690, 93, 23));
-        baselinePosition.put("jRadioButton1-93-23", new Integer(15));
+        baselinePosition.put("jRadioButton1-93-23", 15);
         compBounds.put("jComboBox2", new Rectangle(192, 42, 56, 20));
-        baselinePosition.put("jComboBox2-56-20", new Integer(14));
+        baselinePosition.put("jComboBox2-56-20", 14);
         compBounds.put("jButton4", new Rectangle(192, 80, 73, 579));
-        baselinePosition.put("jButton4-73-579", new Integer(293));
+        baselinePosition.put("jButton4-73-579", 293);
         compBounds.put("filler1", new Rectangle(295, 80, 0, 25));
-        baselinePosition.put("filler1-0-25", new Integer(-1));
+        baselinePosition.put("filler1-0-25", -1);
         compBounds.put("filler2", new Rectangle(313, 80, 0, 25));
-        baselinePosition.put("filler2-0-25", new Integer(-1));
+        baselinePosition.put("filler2-0-25", -1);
         compBounds.put("jButton2", new Rectangle(295, 80, 73, 578));
-        baselinePosition.put("jButton2-73-578", new Integer(293));
+        baselinePosition.put("jButton2-73-578", 293);
         compBounds.put("jButton3", new Rectangle(397, 80, 73, 578));
-        baselinePosition.put("jButton3-73-578", new Integer(293));
+        baselinePosition.put("jButton3-73-578", 293);
         compBounds.put("jSlider1", new Rectangle(192, 665, 200, 23));
-        baselinePosition.put("jSlider1-200-23", new Integer(0));
+        baselinePosition.put("jSlider1-200-23", 0);
         compMinSize.put("jPanel2", new Dimension(901, 755));
         compBounds.put("jPanel2", new Rectangle(10, 11, 901, 755));
-        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("jPanel2-jScrollPane1-0-0", 10); // parentId-compId-dimension-compAlignment
         compPrefSize.put("jButton4", new Dimension(73, 23));
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compPrefSize.put("jButton3", new Dimension(73, 23));

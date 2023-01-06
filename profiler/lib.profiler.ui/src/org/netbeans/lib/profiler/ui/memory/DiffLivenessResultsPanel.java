@@ -93,7 +93,7 @@ public class DiffLivenessResultsPanel extends SnapshotLivenessResultsPanel {
     }
 
     protected Object computeValueAt(int row, int col) {
-        int index = ((Integer) filteredToFullIndexes.get(row)).intValue();
+        int index = (Integer) filteredToFullIndexes.get(row);
 
         switch (col) {
             case 0:

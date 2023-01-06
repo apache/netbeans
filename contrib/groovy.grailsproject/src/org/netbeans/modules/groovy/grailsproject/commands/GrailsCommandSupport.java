@@ -207,7 +207,7 @@ public final class GrailsCommandSupport {
         ExecutionService service = ExecutionService.newService(callable, descriptor, "help"); // NOI18N
         Future<Integer> task = service.run();
         try {
-            if (task.get().intValue() == 0) {
+            if (task.get() == 0) {
                 freshCommands = new ArrayList<GrailsCommand>();
                 for (String command : lineProcessor.getCommands()) {
                     freshCommands.add(new GrailsCommand(command, null, command)); // NOI18N

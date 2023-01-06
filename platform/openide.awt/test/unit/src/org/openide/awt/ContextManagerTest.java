@@ -57,7 +57,7 @@ public class ContextManagerTest extends NbTestCase {
         clone.addPropertyChangeListener(listener);
 
         assertFalse("Disabled", clone.isEnabled());
-        Object val = Integer.valueOf(1);
+        Object val = 1;
         ic.add(val);
         assertTrue("Enabled now", clone.isEnabled());
         assertEquals("One change", 1, listener.cnt);

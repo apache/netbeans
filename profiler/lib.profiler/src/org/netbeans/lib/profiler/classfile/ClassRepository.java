@@ -559,7 +559,7 @@ public abstract class ClassRepository implements CommonConstants {
         Integer loaderInt = (Integer) definingClassLoaderMap.get(classId);
 
         if (loaderInt != null) {
-            return loaderInt.intValue();
+            return loaderInt;
         }
 
         int loader = -1;
@@ -570,7 +570,7 @@ public abstract class ClassRepository implements CommonConstants {
             // Don't bother about reporting an exception - somebody will do that later
         }
 
-        definingClassLoaderMap.put(classId, Integer.valueOf(loader));
+        definingClassLoaderMap.put(classId, loader);
 
         return loader;
     }

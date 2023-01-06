@@ -420,7 +420,7 @@ public class KarmaExecutable {
                 // incomplete path
                 return null;
             }
-            return Pair.of(file, Integer.valueOf(matcher.group("LINE"))); // NOI18N
+            return Pair.of(file, Integer.parseInt(matcher.group("LINE"))); // NOI18N
         }
 
     }

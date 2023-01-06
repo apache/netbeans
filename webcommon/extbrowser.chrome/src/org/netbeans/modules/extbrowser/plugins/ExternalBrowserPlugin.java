@@ -580,8 +580,8 @@ public final class ExternalBrowserPlugin {
                 resizeOptions.add(ResizeOption.create(
                         ResizeOption.Type.valueOf(String.valueOf(option.get("type"))), // NOI18N
                         String.valueOf(option.get("displayName")), // NOI18N
-                        Integer.valueOf(String.valueOf(option.get("width"))), // NOI18N
-                        Integer.valueOf(String.valueOf(option.get("height"))), // NOI18N
+                        Integer.parseInt(String.valueOf(option.get("width"))), // NOI18N
+                        Integer.parseInt(String.valueOf(option.get("height"))), // NOI18N
                         Boolean.valueOf(String.valueOf(option.get("showInToolbar"))), // NOI18N
                         Boolean.valueOf(String.valueOf(option.get("isDefault"))))); // NOI18N
             }

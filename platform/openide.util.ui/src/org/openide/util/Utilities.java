@@ -811,7 +811,7 @@ public final class Utilities {
     }
 
     private static void appendRest(StringBuilder sb, KeyStroke stroke) {
-        String c = initNameAndValues().keyToString.get(Integer.valueOf(stroke.getKeyCode()));
+        String c = initNameAndValues().keyToString.get(stroke.getKeyCode());
 
         if (c == null) {
             sb.append(stroke.getKeyChar());
@@ -1263,7 +1263,7 @@ public final class Utilities {
         str = System.getProperty("netbeans.taskbar.height"); // NOI18N
 
         if (str != null) {
-            bounds.height -= Integer.getInteger(str, 0).intValue();
+            bounds.height -= Integer.getInteger(str, 0);
 
             return bounds;
         }

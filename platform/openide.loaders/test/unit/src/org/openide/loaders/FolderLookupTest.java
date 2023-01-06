@@ -572,7 +572,7 @@ public class FolderLookupTest extends NbTestCase implements LookupListener {
 
        private ALkp (InstanceContent ic) {
            super (ic);
-           ic.add (new Integer (1));
+           ic.add(1);
            this.ic = ic;
        }
 

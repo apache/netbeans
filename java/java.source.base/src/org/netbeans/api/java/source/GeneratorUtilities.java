@@ -1356,7 +1356,7 @@ public final class GeneratorUtilities {
                     el = currentToImportElement.getEnclosingElement();
                     break;
             }
-            Integer cnt = el == null ? Integer.valueOf(0) : isStatic ? typeCounts.get((TypeElement)el) : pkgCounts.get((PackageElement)el);
+            int cnt = el == null ? 0 : isStatic ? typeCounts.get((TypeElement)el) : pkgCounts.get((PackageElement)el);
             if (explicitNamedImports.contains(currentToImportElement))
                 cnt = 0;
             if (cnt == -2) {

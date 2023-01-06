@@ -79,7 +79,7 @@ final class SpunPhadhail extends Spin {
         } else if (mname.equals("equals")) {
             return args[0] == ph ? Boolean.TRUE : Boolean.FALSE;
         } else if (mname.equals("hashCode")) {
-            return new Integer(ph.hashCode());
+            return ph.hashCode();
         } else if (mname.endsWith("PhadhailListener")) {
             // Can do this synch - it's thread-safe and fast.
             assert args != null;
@@ -150,7 +150,7 @@ final class SpunPhadhail extends Spin {
             } else if (mname.equals("equals")) {
                 return args[0] == l ? Boolean.TRUE : Boolean.FALSE;
             } else if (mname.equals("hashCode")) {
-                return new Integer(l.hashCode());
+                return l.hashCode();
             } else {
                 assert mname.endsWith("Changed"): mname;
                 assert EventQueue.isDispatchThread() : mname;

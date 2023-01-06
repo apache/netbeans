@@ -274,7 +274,7 @@ class InnerTabsPanel extends javax.swing.JPanel {
         int rowCount = settings.getRowCount();
         checkMultiRow.setSelected( rowCount > 1 || settings.isTabRowPerProject() );
         if( rowCount > 1 )
-            spinRowCount.getModel().setValue( Integer.valueOf( rowCount ) );
+            spinRowCount.getModel().setValue(rowCount);
         radioRowPerProject.setSelected( settings.isTabRowPerProject() );
         radioRowCount.setSelected( rowCount > 1 );
 

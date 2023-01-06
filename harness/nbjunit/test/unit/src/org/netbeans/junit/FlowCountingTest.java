@@ -91,7 +91,7 @@ public class FlowCountingTest extends NbTestCase {
                 try {
                     Thread.sleep(r.nextInt(100));
                 } catch (InterruptedException ex) {}
-                log.log(Level.WARNING, "cnt: {0}", new Integer(i));
+                log.log(Level.WARNING, "cnt: {0}", i);
             }
         }
         public static void doCount(Logger log) throws InterruptedException {

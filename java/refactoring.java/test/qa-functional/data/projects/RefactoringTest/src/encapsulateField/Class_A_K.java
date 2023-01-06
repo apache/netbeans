@@ -54,7 +54,7 @@ public class Class_A_K {
 
         public void m1() {
             val = 10;
-            field1 = (int) Math.asin((double) field1) + Integer.valueOf(field2) + Boolean.compare(isField3(), true) + field4.getVal();
+            field1 = (int) Math.asin((double) field1) + Integer.parseInt(field2) + Boolean.compare(isField3(), true) + field4.getVal();
         }
     }
 

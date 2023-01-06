@@ -132,8 +132,8 @@ public final class SimpleFactoryTest extends NbTestCase {
         assertNotNull("MyCE found", mice);
         assertNull("No integers", mice.getLookup().lookup(Integer.class));
         ((SO)obj).addInteger();
-        assertEquals("One integer in object", Integer.valueOf(10), obj.getLookup().lookup(Integer.class));
-        assertEquals("One integer", Integer.valueOf(10), mice.getLookup().lookup(Integer.class));
+        assertEquals("One integer in object", 10, obj.getLookup().lookup(Integer.class));
+        assertEquals("One integer", 10, mice.getLookup().lookup(Integer.class));
         
         Savable sav = obj.getLookup().lookup(Savable.class);
         assertNull("No savable yet", sav);

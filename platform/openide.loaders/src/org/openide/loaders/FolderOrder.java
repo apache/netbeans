@@ -119,7 +119,7 @@ final class FolderOrder extends Object implements Comparator<Object> {
                 FileObject fo = obj.getPrimaryFile ();
                 if (folder.equals (fo.getParent ())) {
                     // object for my folder
-                    order.put (fo.getNameExt (), Integer.valueOf (i++));
+                    order.put (fo.getNameExt (), i++);
                 }
             }
         } else {
@@ -296,7 +296,7 @@ final class FolderOrder extends Object implements Comparator<Object> {
             Map<String, Integer> set = new HashMap<String, Integer> (names.length);
 
             for (int i = 0; i < names.length; i++) {
-                set.put (names[i], Integer.valueOf (i));
+                set.put (names[i], i);
             }
             order = set;
             return;
@@ -309,7 +309,7 @@ final class FolderOrder extends Object implements Comparator<Object> {
             int i = 0;
             while (tok.hasMoreTokens ()) {
                 String file = tok.nextToken ();
-                set.put (file, Integer.valueOf (i));
+                set.put(file, i);
                 i++;
             }
             

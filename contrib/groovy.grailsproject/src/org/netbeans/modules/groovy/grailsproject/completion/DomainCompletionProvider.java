@@ -254,7 +254,7 @@ public class DomainCompletionProvider implements CompletionProvider {
             if (LOGGER.isLoggable(Level.FINE)) {
                 int count = matcher.groupCount();
                 for (int i = 1; i <= count; i++) {
-                    LOGGER.log(Level.FINE, "Group {0} {1}", new Object[] {Integer.valueOf(i), matcher.group(i)});
+                    LOGGER.log(Level.FINE, "Group {0} {1}", new Object[] {i, matcher.group(i)});
                 }
             }
 
@@ -303,7 +303,7 @@ public class DomainCompletionProvider implements CompletionProvider {
 
             for (Map.Entry<String, Integer> entry : names.entrySet()) {
                 addQueryEntries(result, context, matcher.group(1),
-                        entry.getKey().substring(matcher.group(1).length()), entry.getValue().intValue(), !noContinuation);
+                        entry.getKey().substring(matcher.group(1).length()), entry.getValue(), !noContinuation);
             }
             if ("".equals(prefix) && !matcher.group(1).equals(context.getPrefix())) {
                 addQueryEntries(result, context, matcher.group(1),

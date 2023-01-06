@@ -244,7 +244,7 @@ public class ClassManager implements JavaClassConstants, CommonConstants {
                         int iidx = interfaceNamedIdxs[j];
                         if (iidx != -1) {
                             interfaces.add(loadedClasses[iidx]);
-                            allInterfacesIndexes.add(Integer.valueOf(iidx));
+                            allInterfacesIndexes.add(iidx);
                         }
                     }
                     ClassRepository.addVMSuppliedClassFile(name, loaderId, bytes, superClass, (String[])interfaces.toArray(new String[0]));
@@ -255,7 +255,7 @@ public class ClassManager implements JavaClassConstants, CommonConstants {
         }
         // set interfaces
         for (Object intIndex : allInterfacesIndexes) {
-            int iidx = ((Integer)intIndex).intValue();
+            int iidx = (Integer) intIndex;
             if (cachedClassFileBytes[iidx] != null) {
                 DynamicClassInfo iface = javaClassForName(loadedClasses[iidx], loadedClassLoaderIds[iidx]);
                 iface.setInterface();

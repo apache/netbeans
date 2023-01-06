@@ -46,7 +46,7 @@ public class CompileJavaAction extends Action {
         this.menuPath = compileItem + "|" +
                 Bundle.getStringTrimmed("org.netbeans.modules.project.ui.actions.Bundle",
                                         "LBL_CompileSingleAction_Name",
-                                        new Object[] {Integer.valueOf(1), node.getText()});
+                                        new Object[] {1, node.getText()});
         super.performMenu(node);
     }
 
@@ -54,7 +54,7 @@ public class CompileJavaAction extends Action {
         this.popupPath =
                 Bundle.getStringTrimmed("org.netbeans.modules.project.ui.actions.Bundle",
                                         "LBL_CompileSingleAction_Name",
-                                        new Object[] {Integer.valueOf(1), node.getText()});
+                                        new Object[] {1, node.getText()});
         super.performPopup(node);
     }
 }

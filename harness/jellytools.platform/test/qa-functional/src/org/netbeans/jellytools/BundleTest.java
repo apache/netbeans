@@ -134,7 +134,7 @@ public class BundleTest extends JellyTestCase {
      */
     public void testGetStringParams() {
         String pattern = Bundle.getString("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_LocalProperties");
-        Object[] params = new Object[]{new Integer(1), "AnObject"};
+        Object[] params = new Object[]{1, "AnObject"};
         String value = Bundle.getString("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_LocalProperties", params);
         String expected = java.text.MessageFormat.format(pattern, params);
         assertEquals("Parameters not properly formattted.", expected, value);
@@ -159,7 +159,7 @@ public class BundleTest extends JellyTestCase {
      */
     public void testGetStringTrimmedParams() {
         String pattern = Bundle.getString("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_LocalProperties");
-        Object[] params = new Object[]{new Integer(1), "AnOb&ject"};
+        Object[] params = new Object[]{1, "AnOb&ject"};
         String value = Bundle.getStringTrimmed("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_LocalProperties", params);
         String expected = java.text.MessageFormat.format(pattern, params);
         expected = new StringBuffer(expected).deleteCharAt(expected.indexOf('&')).toString();

@@ -198,7 +198,7 @@ public class NbCollectionsTest extends NbTestCase {
         }
         assertEquals(0, s2.size());
         assertEquals(Collections.emptySet(), s2);
-        assertEquals(new HashSet(Arrays.asList(new Integer[] {1, 2})), s);
+        assertEquals(new HashSet(Arrays.asList(1, 2)), s);
         s.clear();
         s.add("new");
         assertEquals("modifications to original found", Collections.singleton("new"), s2);
@@ -217,7 +217,7 @@ public class NbCollectionsTest extends NbTestCase {
         Iterator<Integer> it3 = s3.iterator();
         assertTrue(it3.hasNext());
         assertTrue(it3.hasNext());
-        assertEquals(new Integer(1), it3.next());
+        assertEquals(1, it3.next());
         assertFalse(it3.hasNext());
         assertFalse(it3.hasNext());
         try {

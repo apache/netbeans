@@ -1649,10 +1649,10 @@ public class MetaComponentCreator {
         } else if (comp instanceof JTextArea) {
             JTextArea textArea = (JTextArea)comp;
             if (textArea.getRows() == 0) {
-                changes.put("rows", Integer.valueOf(5)); // NOI18N
+                changes.put("rows", 5); // NOI18N
             }
             if (textArea.getColumns() == 0) {
-                changes.put("columns", Integer.valueOf(20)); // NOI18N
+                changes.put("columns", 20); // NOI18N
             }
         }
 

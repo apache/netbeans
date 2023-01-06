@@ -88,7 +88,7 @@ public class UiUtilsTest extends NbTestCase {
         assertTrue(result[0] instanceof FileObject);
         assertTrue(result[1] instanceof Integer);
         assertEquals(srcFile, result[0]);
-        assertEquals(824, ((Integer) result[1]).intValue());
+        assertEquals(824, (Integer) result[1]);
     }
 
     private static FileObject getSrcRoot(FileObject wrkRoot) throws IOException {

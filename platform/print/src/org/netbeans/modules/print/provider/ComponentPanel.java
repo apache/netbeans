@@ -110,8 +110,8 @@ final class ComponentPanel extends JPanel {
         Collections.sort(components, new Comparator<JComponent>() {
 
             public int compare(JComponent component1, JComponent component2) {
-                int order1 = getInteger(component1).intValue();
-                int order2 = getInteger(component2).intValue();
+                int order1 = getInteger(component1);
+                int order2 = getInteger(component2);
 
                 if (order1 < order2) {
                     return -1;

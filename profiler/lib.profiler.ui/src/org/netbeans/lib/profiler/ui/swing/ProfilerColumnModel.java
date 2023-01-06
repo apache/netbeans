@@ -91,8 +91,8 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
         column.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (PROP_COLUMN_WIDTH.equals(evt.getPropertyName())) {
-                    int oldWidth = ((Integer)evt.getOldValue()).intValue();
-                    int newWidth = ((Integer)evt.getNewValue()).intValue();
+                    int oldWidth = (Integer) evt.getOldValue();
+                    int newWidth = (Integer) evt.getNewValue();
                     fireColumnWidthChanged(index, oldWidth, newWidth);
                 }
             }
@@ -107,7 +107,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     boolean setColumnOffset(int column, int offset) {
         if (columnOffsets == null) columnOffsets = new HashMap();
         Integer previousOffset = columnOffsets.put(column, offset);
-        int _previousOffset = previousOffset == null ? 0 : previousOffset.intValue();
+        int _previousOffset = previousOffset == null ? 0 : previousOffset;
         boolean change = _previousOffset != offset;
         if (change) fireColumnOffsetChanged(column, _previousOffset, offset);
         return change;
@@ -116,7 +116,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     int getColumnOffset(int column) {
         if (columnOffsets == null) return 0;
         Integer offset = columnOffsets.get(column);
-        return offset == null ? 0 : offset.intValue();
+        return offset == null ? 0 : offset;
     }
     
     void clearColumnsPrefferedWidth() {
@@ -126,7 +126,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     boolean setColumnPreferredWidth(int column, int width) {
         if (columnPreferredWidths == null) columnPreferredWidths = new HashMap();
         Integer previousWidth = columnPreferredWidths.put(column, width);
-        int _previousWidth = previousWidth == null ? 0 : previousWidth.intValue();
+        int _previousWidth = previousWidth == null ? 0 : previousWidth;
         boolean change = _previousWidth != width;
         if (change) fireColumnPreferredWidthChanged(column, _previousWidth, width);
         return change;
@@ -135,7 +135,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     int getColumnPreferredWidth(int column) {
         if (columnPreferredWidths == null) return 0;
         Integer width = columnPreferredWidths.get(column);
-        return width == null ? 0 : width.intValue();
+        return width == null ? 0 : width;
     }
     
     // --- Column visibility ---------------------------------------------------
@@ -170,7 +170,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     int getDefaultColumnWidth(int column) {
         Integer width = defaultColumnWidths == null ? null :
                         defaultColumnWidths.get(column);
-        return width == null ? defaultColumnWidth : width.intValue();
+        return width == null ? defaultColumnWidth : width;
     }
     
     void setColumnVisibility(TableColumn column, boolean visible, ProfilerTable table) {
@@ -193,7 +193,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
     void showColumn(TableColumn column, ProfilerTable table) {
         column.setMaxWidth(Integer.MAX_VALUE);
         Integer width = hiddenColumnWidths.remove(column.getModelIndex());
-        column.setWidth(width != null ? width.intValue() :
+        column.setWidth(width != null ? width :
                         getDefaultColumnWidth(column.getModelIndex()));
         column.setMinWidth(minColumnWidth);
         

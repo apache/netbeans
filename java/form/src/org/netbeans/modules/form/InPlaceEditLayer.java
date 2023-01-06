@@ -400,7 +400,7 @@ public class InPlaceEditLayer extends JPanel
             icon = button.getIcon();
             if (icon != null || editedComp instanceof JMenuItem) {
                 Integer gap = (Integer)UIManager.get("Button.textIconGap"); // NOI18N
-                itGap = gap != null ? gap.intValue() : 4;
+                itGap = gap != null ? gap : 4;
             }
             else itGap = 0;
             text = button.getText();

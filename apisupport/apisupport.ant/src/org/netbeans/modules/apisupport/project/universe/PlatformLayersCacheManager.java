@@ -206,7 +206,7 @@ public class PlatformLayersCacheManager {
         Integer index = cacheIndex.get(clusterDir);
         if (index == null)
             return null;
-        File cf = new File(cacheLocation, String.format(CACHE_FILE_FMT, Integer.valueOf(index)));
+        File cf = new File(cacheLocation, String.format(CACHE_FILE_FMT, index));
         return cf.exists() ? cf : null;
     }
 

@@ -148,7 +148,7 @@ public class TimeCustomizer extends ValidityAwarePanel implements ActionListener
 
         condition.setStartTime(time.getTime() + date.getTime() + Calendar.getInstance().get(Calendar.ZONE_OFFSET));
         condition.setRepeats(timeFrequencyRadio.isSelected());
-        condition.setPeriodTime(((Integer) timeFrequencySpinner.getValue()).intValue());
+        condition.setPeriodTime((Integer) timeFrequencySpinner.getValue());
 
         if (Bundle.TimeCustomizer_UnitsMinutes().equals(timeFrequencyCombo.getSelectedItem())) {
             condition.setPeriodUnits(TimedGlobalProfilingPoint.TimeCondition.UNITS_MINUTES);

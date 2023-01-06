@@ -246,7 +246,7 @@ public final class AnalysisOptions {
         }
         String phpstanLevel;
         try {
-            phpstanLevel = String.valueOf(AnalysisUtils.getValidInt(PHPSTAN_MIN_LEVEL, PHPSTAN_MAX_LEVEL, Integer.valueOf(level)));
+            phpstanLevel = String.valueOf(AnalysisUtils.getValidInt(PHPSTAN_MIN_LEVEL, PHPSTAN_MAX_LEVEL, Integer.parseInt(level)));
         } catch (NumberFormatException e) {
             phpstanLevel = level;
         }

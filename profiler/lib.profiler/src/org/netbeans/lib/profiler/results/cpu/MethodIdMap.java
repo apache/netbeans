@@ -98,11 +98,11 @@ public class MethodIdMap {
         if (classId == null) {
             curClassId++;
             classOrPackageNames.add(name);
-            classIdCache.put(name, Integer.valueOf(curClassId));
+            classIdCache.put(name, curClassId);
 
             return curClassId;
         } else {
-            return classId.intValue();
+            return classId;
         }
     }
 

@@ -366,7 +366,7 @@ public class ClassHierarchyPanel extends JPanel implements HelpCtx.Provider {
                         ? index.getInheritedByTypesAsTree(type, types)
                         : index.getInheritedTypesAsTree(type, types);
                 recursionDetection.add(type);
-                childernNodes[i] = createTypeNode(retval, treeType, recursionDetection, Integer.valueOf(0));
+                childernNodes[i] = createTypeNode(retval, treeType, recursionDetection, 0);
             }
         }
         retval.setChildern(sortTypes(childernNodes));

@@ -1709,13 +1709,13 @@ public class TokenFormatter {
                                                 int lineNumber = LineDocumentUtils.getLineIndex(doc, phpOpenTagOffset);
                                                 Integer suggestedIndent = suggestedLineIndents != null
                                                         ? suggestedLineIndents.get(lineNumber)
-                                                        : Integer.valueOf(0);
+                                                        : 0;
                                                 if (suggestedIndent == null) {
                                                     // XXX this is a hack
                                                     //sometimes the html formatter doesn't catch the first line.
                                                     suggestedIndent = suggestedLineIndents.get(lineNumber + 1) != null
                                                             ? suggestedLineIndents.get(lineNumber + 1)
-                                                            : Integer.valueOf(0);
+                                                            : 0;
                                                 }
 
                                                 int lineOffset = LineDocumentUtils.getLineStart(doc, phpOpenTagOffset);
@@ -1724,7 +1724,7 @@ public class TokenFormatter {
                                                     indentRule = true;
                                                     changeOffset = lineOffset - delta;
                                                     oldText = doc.getText(lineOffset, firstNonWhiteCharacterOffset - lineOffset);
-                                                    htmlIndent = suggestedIndent.intValue();
+                                                    htmlIndent = suggestedIndent;
                                                     // the indentation is composed from html inden + php indent
                                                     indent = htmlIndent + docOptions.initialIndent + lastPHPIndent;
                                                     // is it the first php open file in the file? Than don't add
@@ -1786,7 +1786,7 @@ public class TokenFormatter {
                                                     int lineNumber = LineDocumentUtils.getLineIndex(doc, offset) + 1;
                                                     Integer suggestedIndent = suggestedLineIndents.get(lineNumber);
                                                     if (suggestedIndent != null) {
-                                                        htmlIndent = suggestedIndent.intValue();
+                                                        htmlIndent = suggestedIndent;
                                                         indent = htmlIndent + docOptions.initialIndent + lastPHPIndent;
                                                         countSpaces = indent;
                                                     } else {

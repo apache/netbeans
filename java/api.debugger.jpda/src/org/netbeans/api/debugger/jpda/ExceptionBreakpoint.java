@@ -226,11 +226,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
            ) throw new IllegalArgumentException  ();
         int old = this.catchType;
         this.catchType = catchType;
-        firePropertyChange (
-            PROP_CATCH_TYPE, 
-            Integer.valueOf(old),
-            Integer.valueOf(catchType)
-        );
+        firePropertyChange (PROP_CATCH_TYPE, old, catchType);
     }
 
     /**

@@ -276,7 +276,7 @@ public class SchemaRootChildren extends Children.Keys {
             boolean refresh = DBElementProperties.PROP_SCHEMA.equals(evt.getPropertyName());
             if (!refresh && DBElementProperties.PROP_STATUS.equals(evt.getPropertyName())) {
                 Integer val = (Integer) evt.getNewValue();
-                refresh = ((val == null) || (val.intValue() != SchemaElement.STATUS_NOT));
+                refresh = ((val == null) || (val != SchemaElement.STATUS_NOT));
             }
             
             if (refresh)

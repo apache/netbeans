@@ -49,25 +49,25 @@ public class ALT_Bug174593Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(11, 12, 227, 226));
         compBounds.put("jPanel1", new Rectangle(10, 11, 229, 228));
-        baselinePosition.put("jPanel1-229-228", new Integer(0));
+        baselinePosition.put("jPanel1-229-228", 0);
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compPrefSize.put("jPanel1", new Dimension(229, 228));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 433, 292));
         compBounds.put("jComboBox1", new Rectangle(10, 250, 229, 20));
-        baselinePosition.put("jComboBox1-229-20", new Integer(14));
+        baselinePosition.put("jComboBox1-229-20", 14);
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
         compBounds.put("jPanel1", new Rectangle(10, 11, 229, 228));
-        baselinePosition.put("jPanel1-229-228", new Integer(0));
+        baselinePosition.put("jPanel1-229-228", 0);
         compBounds.put("jLabel1", new Rectangle(249, 11, 72, 64));
-        baselinePosition.put("jLabel1-72-64", new Integer(36));
+        baselinePosition.put("jLabel1-72-64", 36);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jPanel2", new Rectangle(245, 81, 102, 116));
-        baselinePosition.put("jPanel2-102-116", new Integer(0));
+        baselinePosition.put("jPanel2-102-116", 0);
         contInterior.put("jPanel2", new Rectangle(246, 82, 100, 114));
         compBounds.put("jPanel2", new Rectangle(245, 81, 102, 116));
-        baselinePosition.put("jPanel2-102-116", new Integer(0));
+        baselinePosition.put("jPanel2-102-116", 0);
         compMinSize.put("jPanel2", new Dimension(2, 2));
         compPrefSize.put("jPanel2", new Dimension(102, 116));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
@@ -75,18 +75,18 @@ public class ALT_Bug174593Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(11, 12, 227, 226));
         contInterior.put("Form", new Rectangle(0, 0, 433, 292));
         compBounds.put("jComboBox1", new Rectangle(10, 250, 229, 20));
-        baselinePosition.put("jComboBox1-229-20", new Integer(14));
+        baselinePosition.put("jComboBox1-229-20", 14);
         compBounds.put("jPanel1", new Rectangle(10, 11, 229, 228));
-        baselinePosition.put("jPanel1-229-228", new Integer(0));
+        baselinePosition.put("jPanel1-229-228", 0);
         compBounds.put("jLabel1", new Rectangle(249, 11, 72, 64));
-        baselinePosition.put("jLabel1-72-64", new Integer(36));
+        baselinePosition.put("jLabel1-72-64", 36);
         compBounds.put("jPanel2", new Rectangle(245, 81, 102, 116));
-        baselinePosition.put("jPanel2-102-116", new Integer(0));
+        baselinePosition.put("jPanel2-102-116", 0);
         contInterior.put("jPanel2", new Rectangle(246, 82, 100, 114));
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE
         // > START RESIZING
-        baselinePosition.put("jPanel2-102-116", new Integer(0));
+        baselinePosition.put("jPanel2-102-116", 0);
         compMinSize.put("jPanel2", new Dimension(2, 2));
         {
             String[] compIds = new String[]{"jPanel2"};
@@ -97,7 +97,7 @@ public class ALT_Bug174593Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
         // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel2-1-1", 11); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         {
@@ -109,7 +109,7 @@ public class ALT_Bug174593Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
         // < MOVE
-        prefPaddingInParent.put("Form-jPanel2-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel2-1-1", 11); // parentId-compId-dimension-compAlignment
         // > MOVE
         // > MOVE
         {
@@ -122,10 +122,10 @@ public class ALT_Bug174593Test extends LayoutTestCase {
         }
         // < MOVE
         // > END MOVING
-        prefPaddingInParent.put("Form-jPanel2-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-jPanel2-0-1", 10); // parentId-compId-dimension-compAlignment
         contInterior.put("jPanel2", new Rectangle(-32522, -32686, 100, 156));
         compBounds.put("jPanel2", new Rectangle(-32523, -32687, 102, 158));
-        baselinePosition.put("jPanel2-102-158", new Integer(0));
+        baselinePosition.put("jPanel2-102-158", 0);
         compMinSize.put("jPanel2", new Dimension(2, 2));
         compPrefSize.put("jPanel2", new Dimension(102, 116));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
@@ -136,25 +136,25 @@ public class ALT_Bug174593Test extends LayoutTestCase {
         // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(11, 12, 227, 226));
         compBounds.put("jPanel1", new Rectangle(10, 11, 229, 228));
-        baselinePosition.put("jPanel1-229-228", new Integer(0));
+        baselinePosition.put("jPanel1-229-228", 0);
         compMinSize.put("jPanel1", new Dimension(2, 2));
         compPrefSize.put("jPanel1", new Dimension(229, 228));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 433, 292));
         compBounds.put("jComboBox1", new Rectangle(10, 250, 229, 20));
-        baselinePosition.put("jComboBox1-229-20", new Integer(14));
+        baselinePosition.put("jComboBox1-229-20", 14);
         compPrefSize.put("jComboBox1", new Dimension(56, 20));
         compBounds.put("jPanel1", new Rectangle(10, 11, 229, 228));
-        baselinePosition.put("jPanel1-229-228", new Integer(0));
+        baselinePosition.put("jPanel1-229-228", 0);
         compBounds.put("jLabel1", new Rectangle(249, 11, 72, 64));
-        baselinePosition.put("jLabel1-72-64", new Integer(36));
+        baselinePosition.put("jLabel1-72-64", 36);
         compPrefSize.put("jLabel1", new Dimension(34, 14));
         compBounds.put("jPanel2", new Rectangle(245, 81, 102, 158));
-        baselinePosition.put("jPanel2-102-158", new Integer(0));
+        baselinePosition.put("jPanel2-102-158", 0);
         contInterior.put("jPanel2", new Rectangle(246, 82, 100, 156));
         compBounds.put("jPanel2", new Rectangle(245, 81, 102, 158));
-        baselinePosition.put("jPanel2-102-158", new Integer(0));
+        baselinePosition.put("jPanel2-102-158", 0);
         compMinSize.put("jPanel2", new Dimension(2, 2));
         compPrefSize.put("jPanel2", new Dimension(102, 158));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
@@ -162,13 +162,13 @@ public class ALT_Bug174593Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(11, 12, 227, 226));
         contInterior.put("Form", new Rectangle(0, 0, 433, 292));
         compBounds.put("jComboBox1", new Rectangle(10, 250, 229, 20));
-        baselinePosition.put("jComboBox1-229-20", new Integer(14));
+        baselinePosition.put("jComboBox1-229-20", 14);
         compBounds.put("jPanel1", new Rectangle(10, 11, 229, 228));
-        baselinePosition.put("jPanel1-229-228", new Integer(0));
+        baselinePosition.put("jPanel1-229-228", 0);
         compBounds.put("jLabel1", new Rectangle(249, 11, 72, 64));
-        baselinePosition.put("jLabel1-72-64", new Integer(36));
+        baselinePosition.put("jLabel1-72-64", 36);
         compBounds.put("jPanel2", new Rectangle(245, 81, 102, 158));
-        baselinePosition.put("jPanel2-102-158", new Integer(0));
+        baselinePosition.put("jPanel2-102-158", 0);
         contInterior.put("jPanel2", new Rectangle(246, 82, 100, 156));
         ld.updateCurrentState();
         // < UPDATE CURRENT STATE

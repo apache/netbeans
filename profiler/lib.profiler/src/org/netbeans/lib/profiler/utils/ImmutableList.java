@@ -172,7 +172,7 @@ public class ImmutableList implements Iterable {
         ImmutableList list = new ImmutableList();
 
         for (int i = 0; i < 10000; i++) {
-            list.add(Integer.valueOf(i));
+            list.add(i);
         }
 
         System.out.println("ready"); // NOI18N
@@ -184,7 +184,7 @@ public class ImmutableList implements Iterable {
         list.clear();
 
         for (int i = 0; i < 100000; i++) {
-            list.add(Integer.valueOf(i));
+            list.add(i);
         }
 
         System.out.println("ready"); // NOI18N

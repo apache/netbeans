@@ -29,7 +29,7 @@ public class ThrowMultipleExceptions {
     
     public static void main(String args[]) {
         Vector vector = new Vector();
-        vector.add(new Integer(1));
+        vector.add(1);
         
         for (int i = 0; i < 5; i++) {
             try {

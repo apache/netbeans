@@ -157,7 +157,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
     }
 
     public CodeProfilingPoint.Location getPPLocation() {
-        int offset = ((Integer) lineOffsetSpinner.getValue()).intValue();
+        int offset = (Integer) lineOffsetSpinner.getValue();
 
         if (lineBeginRadio.isSelected()) {
             offset = CodeProfilingPoint.Location.OFFSET_START;
@@ -165,8 +165,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
             offset = CodeProfilingPoint.Location.OFFSET_END;
         }
 
-        return new CodeProfilingPoint.Location(fileTextField.getText(), ((Integer) lineNumberSpinner.getValue()).intValue(),
-                                               offset);
+        return new CodeProfilingPoint.Location(fileTextField.getText(), (Integer) lineNumberSpinner.getValue(), offset);
     }
 
     public int getPreferredCaptionAreaWidth() {
@@ -187,7 +186,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
             } else if (lineEndRadio.isSelected()) {
                 setPPLocation(Utils.getCurrentLocation(CodeProfilingPoint.Location.OFFSET_END));
             } else {
-                setPPLocation(Utils.getCurrentLocation(((Integer) lineOffsetSpinner.getValue()).intValue()));
+                setPPLocation(Utils.getCurrentLocation((Integer) lineOffsetSpinner.getValue()));
             }
         }
     }

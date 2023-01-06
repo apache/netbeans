@@ -52,7 +52,7 @@ public class ProxyLookupAvoidBeforeTest extends NbTestCase implements LookupList
 
         one.queryAllowed = true;
         assertEquals("Two", Long.valueOf(2L), longResult.allInstances().iterator().next());
-        assertEquals("One", Integer.valueOf(1), intResult.allInstances().iterator().next());
+        assertEquals("One", 1, intResult.allInstances().iterator().next());
         assertEquals("Two numbers", 2, numResult.allInstances().size());
         assertEquals("Two number items", 2, numResult.allItems().size());
         one.queryAllowed = false;
@@ -63,7 +63,7 @@ public class ProxyLookupAvoidBeforeTest extends NbTestCase implements LookupList
         nob.queryAllowed = true;
         one.queryAllowed = true;
         assertEquals("Again Two", Long.valueOf(2L), lkp.lookup(Long.class));
-        assertEquals("Again One", Integer.valueOf(1), lkp.lookup(Integer.class));
+        assertEquals("Again One", 1, lkp.lookup(Integer.class));
         assertEquals("Again Two numbers", 2, lkp.lookupAll(Number.class).size());
     }
 

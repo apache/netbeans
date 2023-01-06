@@ -64,7 +64,7 @@ public class JpsProxy {
             }
 
             for (Iterator j = jvms.iterator(); j.hasNext();) {
-                int lvmid = ((Integer) j.next()).intValue();
+                int lvmid = (Integer) j.next();
 
                 if (selfName.startsWith(lvmid + "@")) { // myself
 

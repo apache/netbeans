@@ -249,7 +249,7 @@ public class WizardOperatorTest extends JellyTestCase implements PropertyChangeL
             if (changeSupport == null) {
                 changeSupport = new PropertyChangeSupport(this);
             }
-            changeSupport.firePropertyChange(PROP_CONTENT_SELECTED_INDEX, null, new Integer(index));
+            changeSupport.firePropertyChange(PROP_CONTENT_SELECTED_INDEX, null, index);
             JLabel label = new JLabel(TEST_WIZARD_LABEL + index);
             label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
             return label;

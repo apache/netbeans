@@ -83,6 +83,6 @@ public  class VersionSupport {
             }
             ++i;
         }
-        return buf.length() > 0 ? Integer.valueOf(buf.toString()) : 0;
+        return buf.length() > 0 ? Integer.parseInt(buf.toString()) : 0;
     }
 }

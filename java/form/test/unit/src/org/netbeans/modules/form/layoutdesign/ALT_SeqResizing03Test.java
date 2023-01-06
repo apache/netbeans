@@ -55,28 +55,28 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
 // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(26, 30, 100, 100));
         compBounds.put("jPanel1", new Rectangle(26, 30, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(100, 100));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 349));
         compBounds.put("jPanel1", new Rectangle(26, 30, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compBounds.put("jButton2", new Rectangle(317, 54, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compBounds.put("jPanel2", new Rectangle(180, 156, 100, 100));
-        baselinePosition.put("jPanel2-100-100", new Integer(0));
+        baselinePosition.put("jPanel2-100-100", 0);
         compBounds.put("jButton3", new Rectangle(317, 185, 73, 23));
-        baselinePosition.put("jButton3-73-23", new Integer(15));
+        baselinePosition.put("jButton3-73-23", 15);
         compPrefSize.put("jButton3", new Dimension(73, 23));
         compBounds.put("jButton1", new Rectangle(43, 262, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         contInterior.put("jPanel2", new Rectangle(180, 156, 100, 100));
         compBounds.put("jPanel2", new Rectangle(180, 156, 100, 100));
-        baselinePosition.put("jPanel2-100-100", new Integer(0));
+        baselinePosition.put("jPanel2-100-100", 0);
         compMinSize.put("jPanel2", new Dimension(0, 0));
         compPrefSize.put("jPanel2", new Dimension(100, 100));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
@@ -84,20 +84,20 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(26, 30, 100, 100));
         contInterior.put("Form", new Rectangle(0, 0, 400, 349));
         compBounds.put("jPanel1", new Rectangle(26, 30, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compBounds.put("jButton2", new Rectangle(317, 54, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compBounds.put("jPanel2", new Rectangle(180, 156, 100, 100));
-        baselinePosition.put("jPanel2-100-100", new Integer(0));
+        baselinePosition.put("jPanel2-100-100", 0);
         compBounds.put("jButton3", new Rectangle(317, 185, 73, 23));
-        baselinePosition.put("jButton3-73-23", new Integer(15));
+        baselinePosition.put("jButton3-73-23", 15);
         compBounds.put("jButton1", new Rectangle(43, 262, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         contInterior.put("jPanel2", new Rectangle(180, 156, 100, 100));
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
 // > START RESIZING
-        baselinePosition.put("jPanel2-100-100", new Integer(0));
+        baselinePosition.put("jPanel2-100-100", 0);
         compMinSize.put("jPanel2", new Dimension(0, 0));
         {
             String[] compIds = new String[]{"jPanel2"};
@@ -108,7 +108,7 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
             ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);
         }
 // < START RESIZING
-        prefPaddingInParent.put("Form-jPanel2-1-0", new Integer(11));
+        prefPaddingInParent.put("Form-jPanel2-1-0", 11);
         // parentId-compId-dimension-compAlignment
 // > MOVE
         {
@@ -120,7 +120,7 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
             ld.move(p, containerId, autoPositioning, lockDimension, bounds);
         }
 // < MOVE
-        prefPaddingInParent.put("Form-jPanel2-1-0", new Integer(11));
+        prefPaddingInParent.put("Form-jPanel2-1-0", 11);
         // parentId-compId-dimension-compAlignment
 // > MOVE
         {
@@ -133,23 +133,23 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
         }
 // < MOVE
 // > END MOVING
-        prefPadding.put("jPanel1-jPanel2-0-0-0", new Integer(6));
+        prefPadding.put("jPanel1-jPanel2-0-0-0", 6);
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel2-jButton2-0-0-0", new Integer(6));
+        prefPadding.put("jPanel2-jButton2-0-0-0", 6);
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPaddingInParent.put("Form-jPanel2-0-0", new Integer(10));
+        prefPaddingInParent.put("Form-jPanel2-0-0", 10);
         // parentId-compId-dimension-compAlignment
-        prefPadding.put("jPanel2-jButton3-0-0-0", new Integer(6));
+        prefPadding.put("jPanel2-jButton3-0-0-0", 6);
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel1-jPanel2-0-0-0", new Integer(6));
+        prefPadding.put("jPanel1-jPanel2-0-0-0", 6);
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel2-jButton2-0-0-0", new Integer(6));
+        prefPadding.put("jPanel2-jButton2-0-0-0", 6);
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
-        prefPadding.put("jPanel2-jButton3-0-0-0", new Integer(6));
+        prefPadding.put("jPanel2-jButton3-0-0-0", 6);
         // comp1Id-comp2Id-dimension-comp2Alignment-paddingType
         contInterior.put("jPanel2", new Rectangle(-32588, -32714, 100, 202));
         compBounds.put("jPanel2", new Rectangle(-32588, -32714, 100, 202));
-        baselinePosition.put("jPanel2-100-202", new Integer(0));
+        baselinePosition.put("jPanel2-100-202", 0);
         compMinSize.put("jPanel2", new Dimension(0, 0));
         compPrefSize.put("jPanel2", new Dimension(100, 100));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
@@ -160,28 +160,28 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
 // > UPDATE CURRENT STATE
         contInterior.put("jPanel1", new Rectangle(26, 30, 100, 100));
         compBounds.put("jPanel1", new Rectangle(26, 30, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compMinSize.put("jPanel1", new Dimension(0, 0));
         compPrefSize.put("jPanel1", new Dimension(100, 100));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         hasExplicitPrefSize.put("jPanel1", new Boolean(false));
         contInterior.put("Form", new Rectangle(0, 0, 400, 349));
         compBounds.put("jPanel1", new Rectangle(26, 30, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compBounds.put("jButton2", new Rectangle(317, 54, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compPrefSize.put("jButton2", new Dimension(73, 23));
         compBounds.put("jButton3", new Rectangle(317, 185, 73, 23));
-        baselinePosition.put("jButton3-73-23", new Integer(15));
+        baselinePosition.put("jButton3-73-23", 15);
         compPrefSize.put("jButton3", new Dimension(73, 23));
         compBounds.put("jButton1", new Rectangle(43, 262, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compPrefSize.put("jButton1", new Dimension(73, 23));
         compBounds.put("jPanel2", new Rectangle(180, 54, 100, 202));
-        baselinePosition.put("jPanel2-100-202", new Integer(0));
+        baselinePosition.put("jPanel2-100-202", 0);
         contInterior.put("jPanel2", new Rectangle(180, 54, 100, 202));
         compBounds.put("jPanel2", new Rectangle(180, 54, 100, 202));
-        baselinePosition.put("jPanel2-100-202", new Integer(0));
+        baselinePosition.put("jPanel2-100-202", 0);
         compMinSize.put("jPanel2", new Dimension(0, 0));
         compPrefSize.put("jPanel2", new Dimension(100, 202));
         hasExplicitPrefSize.put("jPanel2", new Boolean(false));
@@ -189,15 +189,15 @@ public class ALT_SeqResizing03Test extends LayoutTestCase {
         contInterior.put("jPanel1", new Rectangle(26, 30, 100, 100));
         contInterior.put("Form", new Rectangle(0, 0, 400, 349));
         compBounds.put("jPanel1", new Rectangle(26, 30, 100, 100));
-        baselinePosition.put("jPanel1-100-100", new Integer(0));
+        baselinePosition.put("jPanel1-100-100", 0);
         compBounds.put("jButton2", new Rectangle(317, 54, 73, 23));
-        baselinePosition.put("jButton2-73-23", new Integer(15));
+        baselinePosition.put("jButton2-73-23", 15);
         compBounds.put("jButton3", new Rectangle(317, 185, 73, 23));
-        baselinePosition.put("jButton3-73-23", new Integer(15));
+        baselinePosition.put("jButton3-73-23", 15);
         compBounds.put("jButton1", new Rectangle(43, 262, 73, 23));
-        baselinePosition.put("jButton1-73-23", new Integer(15));
+        baselinePosition.put("jButton1-73-23", 15);
         compBounds.put("jPanel2", new Rectangle(180, 54, 100, 202));
-        baselinePosition.put("jPanel2-100-202", new Integer(0));
+        baselinePosition.put("jPanel2-100-202", 0);
         contInterior.put("jPanel2", new Rectangle(180, 54, 100, 202));
         ld.updateCurrentState();
     }

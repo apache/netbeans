@@ -89,7 +89,7 @@ final class SourceWizardPanel extends JPanel {
         
         initList();
         
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(0));
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
         
         if (testRole) {
             setName(Util.getString("TXT_SelecTestSources"));            //NOI18N

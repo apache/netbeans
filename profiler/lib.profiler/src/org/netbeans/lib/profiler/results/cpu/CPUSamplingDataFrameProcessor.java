@@ -97,10 +97,9 @@ public class CPUSamplingDataFrameProcessor extends AbstractLockDataFrameProcesso
                 }
                 case CommonConstants.THREAD_INFO_IDENTICAL: {
                     int threadId = buffer.getChar();
-                    Integer threadIdObj = Integer.valueOf(threadId);
-                    ThreadInfo lastInfo = lastThreadsDump.get(threadIdObj);
+                    ThreadInfo lastInfo = lastThreadsDump.get(threadId);
                     assert lastInfo != null;
-                    currentThreadsDump.put(threadIdObj,lastInfo);
+                    currentThreadsDump.put(threadId, lastInfo);
                     if (LOGGER.isLoggable(Level.FINEST)) {
                         LOGGER.finest("Thread info identical: tId:"+threadId); // NOI18N
                     }
@@ -122,7 +121,7 @@ public class CPUSamplingDataFrameProcessor extends AbstractLockDataFrameProcesso
                     } else {
                         info = new ThreadInfo(null,threadId,state,methodIds);                        
                     }
-                    currentThreadsDump.put(Integer.valueOf(threadId),info);
+                    currentThreadsDump.put(threadId,info);
                     if (LOGGER.isLoggable(Level.FINEST)) {
                         LOGGER.finest("Thread info: tId:"+threadId+" state:"+state+" mIds:"+Arrays.toString(methodIds)); // NOI18N
                     }
@@ -261,7 +260,7 @@ public class CPUSamplingDataFrameProcessor extends AbstractLockDataFrameProcesso
 
                 for (int i=0; i<methodIds.length; i++) {
                     int methodId = methodIds[i];
-                    StackTraceElement el = stackTraceElements.get(Integer.valueOf(methodId));
+                    StackTraceElement el = stackTraceElements.get(methodId);
                     
                     if (el == null) {
                         JMethodIdTableEntry entry = methodIdTable.getEntry(methodId);
@@ -269,7 +268,7 @@ public class CPUSamplingDataFrameProcessor extends AbstractLockDataFrameProcesso
                         String className = entry.className.replace('/','.'); // NOI18N
                         String methodName = method+StackTraceSnapshotBuilder.NAME_SIG_SPLITTER+entry.methodSig;
                         el = new StackTraceElement(className, methodName, null, entry.isNative?-2:-1);
-                        stackTraceElements.put(Integer.valueOf(methodId),el);
+                        stackTraceElements.put(methodId,el);
                     }
                     stackTrace[i] = el;
                 }

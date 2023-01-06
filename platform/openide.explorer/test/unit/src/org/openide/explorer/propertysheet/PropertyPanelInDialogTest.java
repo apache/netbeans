@@ -157,7 +157,7 @@ public class PropertyPanelInDialogTest extends NbTestCase {
         exRen = new PropertyPanel(exProp);
         numRen = new PropertyPanel(numProp);
         edRen = new PropertyPanel(edProp);
-        tagsRen2.putClientProperty("radioButtonMax", new Integer(10));
+        tagsRen2.putClientProperty("radioButtonMax", 10);
         
         renderers = new PropertyPanel[] {
             basicRen, tagsRen1, tagsRen2, boolRen, custRen, edRen, numRen
@@ -846,7 +846,7 @@ public class PropertyPanelInDialogTest extends NbTestCase {
     }
     
     public class NumProperty extends PropertySupport {
-        private Integer myValue = new Integer(4);
+        private Integer myValue = 4;
         // Create new Property
         public NumProperty(String name, boolean isWriteable) {
             super(name, Integer.class, name, "", true, isWriteable);
@@ -903,19 +903,19 @@ public class PropertyPanelInDialogTest extends NbTestCase {
         
         // Set the Property value threw the Editor
         public void setValue(Object newValue) {
-            val = ((Integer) newValue).intValue();
+            val = (Integer) newValue;
             firePropertyChange();
         }
         
         public String getAsText() {
-            return getTags()[((Integer) getValue()).intValue()];
+            return getTags()[(Integer) getValue()];
         }
         
         public void setAsText(String txt) {
             String[] t = getTags();
             for (int i=0; i < t.length; i++) {
                 if (txt.trim().equals(t[i])) {
-                    setValue(new Integer(i));
+                    setValue(i);
                     return;
                 }
             }
@@ -924,7 +924,7 @@ public class PropertyPanelInDialogTest extends NbTestCase {
         }
         
         public Object getValue() {
-            return new Integer(val);
+            return val;
         }
         
         public Component getCustomEditor() {

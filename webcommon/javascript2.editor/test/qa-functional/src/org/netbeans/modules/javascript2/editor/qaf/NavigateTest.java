@@ -98,13 +98,13 @@ public class NavigateTest extends GeneralJavaScript {
                 data[0] = data[0].trim();
                 data[1] = data[1].trim();
                 
-                eo.setCaretPosition(offset+Integer.valueOf(data[0].trim()).intValue());
+                eo.setCaretPosition(offset+Integer.parseInt(data[0].trim()));
                 new org.netbeans.jellytools.actions.Action(null, null, KeyStroke.getKeyStroke(KeyEvent.VK_B, 2)).performShortcut(eo);
                 try {
                     ed = new EditorOperator("test.js");
                     position = ed.txtEditorPane().getCaretPosition();
                     boolean result = false;
-                    if (position == Integer.valueOf(data[1]).intValue()) {
+                    if (position == Integer.parseInt(data[1])) {
                         result = true;
                     }
 

@@ -390,7 +390,7 @@ final class JComponentBuilders {
         
         try {
             if (DetailsUtils.isSubclassOf(number, Integer.class.getName()))
-                return Integer.valueOf(_number);
+                return Integer.parseInt(_number);
             else if (DetailsUtils.isSubclassOf(number, Byte.class.getName()))
                 return Byte.valueOf(_number);
             else if (DetailsUtils.isSubclassOf(number, Short.class.getName()))

@@ -1542,8 +1542,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
                     } 
                     mf = resizingHintFormat;                                        
                 }
-                mouseHint = mf.format(new Object[] { Integer.valueOf(size.width),
-                                                     Integer.valueOf(size.height) });
+                mouseHint = mf.format(new Object[] {size.width, size.height});
             }
         } else {
             resizeType = 0;
@@ -1806,7 +1805,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
             if ((constraints == null) && metacomp.getBeanInstance() instanceof Component) {
                 int index = laysup.getNewIndex(cont, contDel, (Component)metacomp.getBeanInstance(), -1, p, hotSpot);
                 if (index != -1) {
-                    constraints = Integer.valueOf(index);
+                    constraints = index;
                 }
             }
             return constraints;

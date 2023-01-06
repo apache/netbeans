@@ -951,7 +951,7 @@ public class Outline extends ETable {
         
         int rHeight = 20;
         if (i != null) {
-            rHeight = i.intValue();
+            rHeight = i;
         } else {
             //Derive a row height to accomodate the font and expando icon
             Font f = getFont();

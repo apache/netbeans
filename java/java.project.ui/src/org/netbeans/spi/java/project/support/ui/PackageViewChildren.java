@@ -1300,7 +1300,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
         private PackageNode node;
 
         public PackageTransferable (PackageNode node, int operation) throws ClassNotFoundException {
-            super(new DataFlavor(PACKAGE_FLAVOR.format(new Object[] {new Integer(operation)}), null, PackageNode.class.getClassLoader()));
+            super(new DataFlavor(PACKAGE_FLAVOR.format(new Object[] {operation}), null, PackageNode.class.getClassLoader()));
             this.node = node;
         }
 

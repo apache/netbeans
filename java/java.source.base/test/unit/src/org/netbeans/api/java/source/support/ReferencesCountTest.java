@@ -139,10 +139,10 @@ public class ReferencesCountTest extends NbTestCase {
         }
         assertEquals(expectedUsedTypes.keySet(), usedTypes);
         for (ElementHandle<? extends TypeElement> type : types) {
-            assertEquals(expectedUsedTypes.get(type.getBinaryName()),Integer.valueOf(rc.getTypeReferenceCount(type)));
+            assertEquals(expectedUsedTypes.get(type.getBinaryName()), rc.getTypeReferenceCount(type));
         }
     }
-    
+
     public void testGetPackageReferenceCount() throws Exception {
         final ClassIndexImpl ciImpl = ClassIndexManager.getDefault().getUsagesQuery(srcRoot.toURL(), false);
         assertNotNull(ciImpl);
@@ -171,7 +171,7 @@ public class ReferencesCountTest extends NbTestCase {
         }
         assertEquals(expectedUsedPackages.keySet(), usedPackages);
         for (ElementHandle<? extends PackageElement> pkg : packages) {
-            assertEquals(expectedUsedPackages.get(SourceUtils.getJVMSignature(pkg)[0]),Integer.valueOf(rc.getPackageReferenceCount(pkg)));
+            assertEquals(expectedUsedPackages.get(SourceUtils.getJVMSignature(pkg)[0]), rc.getPackageReferenceCount(pkg));
         }
     }
     

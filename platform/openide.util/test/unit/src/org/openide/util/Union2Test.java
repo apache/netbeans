@@ -33,7 +33,7 @@ public class Union2Test extends NbTestCase {
 
     public void testUnions() throws Exception {
         Union2<Integer,String> union = Union2.createFirst(3);
-        assertEquals(3, union.first().intValue());
+        assertEquals(3, union.first());
         try {
             union.second();
             fail();

@@ -58,7 +58,7 @@ public class MirrorValuesApp {
         double[][] darr = new double[][] { { 0.1, 0.2, 0.3 }, { 1.1, 1.2, 1.3 }, { 2.1, 2.2, 2.3 } };
         
         String str = "A String";
-        Integer integer = new Integer(Integer.MIN_VALUE);
+        Integer minValue = Integer.MIN_VALUE;
         
         Date date = new Date(1000000000l);
         date.toString(); // This is necessary to initialize the Date.cdate field and Gregorian$Date class.
@@ -81,7 +81,7 @@ public class MirrorValuesApp {
                              Arrays.equals(iarr, new int[] { 9, 7, 5, 3, 1 }) &&
                              Arrays.deepEquals(darr, new double[][] { { 1e100, 2e200 }, { 1.1e100, 2.1e200 }, { 1.2e100, 2.2e200 }, { 1.3e100, 2.3e200 } }) &&
                              str.equals("An alternate sTRING") &&
-                             integer.equals(-1048576) &&
+                             minValue.equals(-1048576) &&
                              date.equals(new Date(3333333333l)) &&
                              color.equals(Color.GREEN) &&
                              point.equals(new Point(-100, -100)) &&

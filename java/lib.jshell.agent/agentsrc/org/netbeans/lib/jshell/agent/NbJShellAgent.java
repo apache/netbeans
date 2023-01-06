@@ -207,7 +207,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
                         LOG.log(Level.SEVERE, "Invalid host address: {0}", ex);
                     }
             } else if ("port".equals(opt)) {
-                    agent.setPort(Integer.valueOf(nameVal[1]));
+                    agent.setPort(Integer.parseInt(nameVal[1]));
             } else if ("libraries".equals(opt)) {
                     agent.setLibraries(Arrays.asList(nameVal[1].split(";")));
             } else if ("key".equals(opt)) {

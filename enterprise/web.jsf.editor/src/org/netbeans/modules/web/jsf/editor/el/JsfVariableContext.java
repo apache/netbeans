@@ -103,11 +103,11 @@ public class JsfVariableContext implements Comparable {
     public int compareTo(Object o) {
         final JsfVariableContext c = (JsfVariableContext)o;
 
-        int comp = Integer.valueOf(getFrom()).compareTo(c.getFrom());
+        int comp = Integer.compare(getFrom(), c.getFrom());
         if (comp != 0) {
             return comp;
         } else {
-            return Integer.valueOf(getTo()).compareTo(c.getTo());
+            return Integer.compare(getTo(), c.getTo());
         }
     }
 

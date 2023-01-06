@@ -298,7 +298,7 @@ public final class MavenCoverageProvider implements CoverageProvider {
             lineCount++;
             String attr = line.getAttribute(jacoco ? "ci" : "hits");
             String num = line.getAttribute(jacoco ? "nr" : "number");
-            detLines.put(Integer.valueOf(num) - 1,Integer.valueOf(attr));
+            detLines.put(Integer.parseInt(num) - 1,Integer.parseInt(attr));
             if (!attr.equals("0")) {
                 executedLineCount++;
             }

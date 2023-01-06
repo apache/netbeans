@@ -51,21 +51,21 @@ public class ALT_SizeDefinition11Test extends LayoutTestCase {
         compBounds.put("Form", new Rectangle(0, 0, 492, 446));
         contInterior.put("Form", new Rectangle(0, 0, 492, 446));
         compBounds.put("panel", new Rectangle(10, 11, 472, 424));
-        baselinePosition.put("panel-472-424", new Integer(0));
+        baselinePosition.put("panel-472-424", 0);
         compMinSize.put("Form", new Dimension(63, 71));
         contInterior.put("panel", new Rectangle(10, 11, 472, 424));
         compBounds.put("scrollPane", new Rectangle(20, 22, 452, 402));
-        baselinePosition.put("scrollPane-452-402", new Integer(0));
+        baselinePosition.put("scrollPane-452-402", 0);
         compMinSize.put("panel", new Dimension(43, 49));
         compPrefSize.put("scrollPane", new Dimension(452, 427));
         compPrefSize.put("panel", new Dimension(472, 449));
         hasExplicitPrefSize.put("panel", Boolean.FALSE);
         ld.updateCurrentState();
 // < UPDATE CURRENT STATE
-        prefPaddingInParent.put("Form-panel-1-0", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-panel-1-1", new Integer(11)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-panel-0-0", new Integer(10)); // parentId-compId-dimension-compAlignment
-        prefPaddingInParent.put("Form-panel-0-1", new Integer(10)); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-panel-1-0", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-panel-1-1", 11); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-panel-0-0", 10); // parentId-compId-dimension-compAlignment
+        prefPaddingInParent.put("Form-panel-0-1", 10); // parentId-compId-dimension-compAlignment
     }
 
 }

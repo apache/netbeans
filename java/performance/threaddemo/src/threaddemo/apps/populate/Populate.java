@@ -58,20 +58,20 @@ public class Populate {
         String msg = "How many files should I create?";
         String title = "Choose Size of Test Data";
         Integer[] sizes = new Integer[] {
-            new Integer(5),
-            new Integer(10),
-            new Integer(25),
-            new Integer(50),
-            new Integer(100),
-            new Integer(250),
-            new Integer(500),
-            new Integer(1000),
-            new Integer(2500),
-            new Integer(5000),
-            new Integer(10000),
-            new Integer(25000),
+            5,
+            10,
+            25,
+            50,
+            100,
+            250,
+            500,
+            1000,
+            2500,
+            5000,
+            10000,
+            25000,
         };
-        Integer def = new Integer(500);
+        Integer def = 500;
         Integer i = (Integer)JOptionPane.showInputDialog(null, msg, title,
                                                          JOptionPane.QUESTION_MESSAGE,
                                                          null, sizes, def);
@@ -79,7 +79,7 @@ public class Populate {
             // Cancelled.
             return;
         }
-        final int val = i.intValue();
+        final int val = i;
         final JProgressBar progress = new JProgressBar(0, val);
         final JDialog dialog = new JDialog(app, "Creating test files...", true);
         dialog.getContentPane().setLayout(new FlowLayout());

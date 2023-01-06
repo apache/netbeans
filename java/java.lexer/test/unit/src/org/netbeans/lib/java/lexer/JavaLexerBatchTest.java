@@ -405,7 +405,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void xtestExoticIdentifiers() {//Support for exotic identifiers has been removed 6999438
         String text = "a #\" \" #\"\\\"\"";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(7), true);
+        attr.setValue(JavaTokenId.language(), "version", 7, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.of(JavaTokenId.WHITESPACE), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -417,7 +417,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testNoExoticIdentifiers() {
         String text = "a #\" \"";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(5), true);
+        attr.setValue(JavaTokenId.language(), "version", 5, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.of(JavaTokenId.WHITESPACE), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -429,7 +429,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testInterferenceBraceIdent() {
         String text = "() -> {A::a();}";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(7), true);
+        attr.setValue(JavaTokenId.language(), "version", 7, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.of(JavaTokenId.WHITESPACE), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -451,7 +451,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testBinaryLiterals() {
         String text = "0b101 0B101 0b101l 0b101L";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(7), true);
+        attr.setValue(JavaTokenId.language(), "version", 7, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.of(JavaTokenId.WHITESPACE), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -464,7 +464,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testNoBinaryLiterals() {
         String text = "0b101 0B101 0b101l 0b101L";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(5), true);
+        attr.setValue(JavaTokenId.language(), "version", 5, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.of(JavaTokenId.WHITESPACE), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -481,7 +481,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testUnderscoresInLiterals() {
         String text = "_12 1_2 12_ 0_12 01_2 0x1_2";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(7), true);
+        attr.setValue(JavaTokenId.language(), "version", 7, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.of(JavaTokenId.WHITESPACE), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -497,7 +497,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testUnicode() {
         String text = "//\\u000Aint\\u0020\\u002E\\uuuuuu002E\\u000A";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(7), true);
+        attr.setValue(JavaTokenId.language(), "version", 7, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -512,7 +512,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testBrokenUnicode() {
         String text = "\\u000X\\u00";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(7), true);
+        attr.setValue(JavaTokenId.language(), "version", 7, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -525,7 +525,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testVarKeyword() {
         String text = "var /*comment*/ /**comment*/ var = 0;";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(10), true);
+        attr.setValue(JavaTokenId.language(), "version", 10, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -546,7 +546,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testVarIdent() {
         String text = "var var = 0;";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(9), true);
+        attr.setValue(JavaTokenId.language(), "version", 9, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
@@ -563,7 +563,7 @@ public class JavaLexerBatchTest extends TestCase {
     public void testVarWeird() {
         String text = "var = 0; varu = 0; val = 0; if (a.var);";
         InputAttributes attr = new InputAttributes();
-        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(10), true);
+        attr.setValue(JavaTokenId.language(), "version", 10, true);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 

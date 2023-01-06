@@ -69,11 +69,11 @@ public class FlowControlTest extends NbTestCase {
             
             public void directly() {
                 err.info("0");
-                events.add(new Integer(1));
+                events.add(1);
                 err.info("1");
-                events.add(new Integer(2));
+                events.add(2);
                 err.info("2");
-                events.add(new Integer(3));
+                events.add(3);
                 err.info("3");
             }
         }
@@ -118,11 +118,11 @@ public class FlowControlTest extends NbTestCase {
             
             public void directly() {
                 err.info("0");
-                events.add(new Integer(1));
+                events.add(1);
                 err.info("1");
-                events.add(new Integer(2));
+                events.add(2);
                 err.info("2");
-                events.add(new Integer(3));
+                events.add(3);
                 err.info("3");
             }
         }
@@ -167,11 +167,11 @@ public class FlowControlTest extends NbTestCase {
             
             public void directly() {
                 err.info("0");
-                events.add(new Integer(1));
+                events.add(1);
                 err.info("1");
-                events.add(new Integer(2));
+                events.add(2);
                 err.info("2");
-                events.add(new Integer(3));
+                events.add(3);
                 err.info("3");
             }
         }

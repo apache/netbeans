@@ -72,21 +72,21 @@ public class ScrollbarBeanInfo extends ComponentBeanInfo.Support {
         public void setAsText(String s) {
             Integer i;
             getTags();
-            if (s.equals(tags[0])) i = new Integer(Scrollbar.HORIZONTAL);
-            else i = new Integer(Scrollbar.VERTICAL);
+            if (s.equals(tags[0])) i = Scrollbar.HORIZONTAL;
+            else i = Scrollbar.VERTICAL;
             setValue(i);
         }
 
         @Override
         public String getAsText() {
-            int i = ((Integer) getValue()).intValue();
+            int i = (Integer) getValue();
             getTags();
             return i == Scrollbar.VERTICAL ? tags[1] : tags[0];
         }
 
         @Override
         public String getJavaInitializationString() {
-            int i = ((Integer) getValue()).intValue();
+            int i = (Integer) getValue();
             return i == Scrollbar.VERTICAL ? "java.awt.Scrollbar.VERTICAL" : "java.awt.Scrollbar.HORIZONTAL"; // NOI18N
         }
     }

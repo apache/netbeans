@@ -171,7 +171,7 @@ public class WildflyManagerNode extends AbstractNode implements Node.Cookie {
                 NbBundle.getMessage(WildflyManagerNode.class, "LBL_PORT"), NbBundle.getMessage(WildflyManagerNode.class, "HINT_PORT")) {
             @Override
                     public Object getValue() {
-                        return new Integer(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT));
+                        return Integer.parseInt(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT));
                     }
                 };
         properties.put(property);

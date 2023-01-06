@@ -423,7 +423,7 @@ final class ModuleList implements Stamps.Updater {
             return Boolean.valueOf(v);
         } else {
             if (k == "startlevel") { // NOI18N 
-                return Integer.valueOf(v);
+                return Integer.parseInt(v);
             }
             // Other properties are of type String.
             // Intern the smaller ones which are likely to be repeated somewhere.

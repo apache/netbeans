@@ -147,7 +147,7 @@ public abstract class NodeTransfer extends Object {
 
             if (df.getSubType().equals(subtype) && df.getPrimaryType().equals(primary)) {
                 try {
-                    int m = Integer.valueOf(df.getParameter(mask)).intValue();
+                    int m = Integer.parseInt(df.getParameter(mask));
 
                     if ((m & action) != 0) {
                         // found the node

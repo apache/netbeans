@@ -250,8 +250,8 @@ public final class NbSheet extends TopComponent {
             }
         }
         Object[] titleParams = new Object[] {
-            Integer.valueOf(copyNodes.size()),
-            nodeTitle
+                copyNodes.size(),
+                nodeTitle
         };
         // different naming if docked in properties mode
         if ((ourMode != null) && 

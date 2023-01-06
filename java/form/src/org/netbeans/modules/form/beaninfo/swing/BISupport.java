@@ -131,7 +131,7 @@ abstract class BISupport extends SimpleBeanInfo {
             if (valObj instanceof Integer) {
                 if (tags == null) createTags();
 
-                int value = ((Integer)valObj).intValue();
+                int value = (Integer) valObj;
                 for (int i = 0; i < values.length; i++)
                     if (value == values[i])
                         return tags[i];
@@ -153,14 +153,14 @@ abstract class BISupport extends SimpleBeanInfo {
             }
 
             if (value != -1)
-                setValue(new Integer(value));
+                setValue(value);
         }
 
         @Override
         public String getJavaInitializationString() {
             Object valObj = getValue();
             if (valObj instanceof Integer) {
-                int value = ((Integer)valObj).intValue();
+                int value = (Integer) valObj;
                 for (int i = 0; i < values.length; i++)
                     if (value == values[i])
                         return javaInitStrings[i];

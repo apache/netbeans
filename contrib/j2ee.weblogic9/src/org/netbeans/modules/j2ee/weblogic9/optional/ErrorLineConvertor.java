@@ -70,7 +70,7 @@ public class ErrorLineConvertor implements LineConvertor {
                         String lineNum = logLine.substring(colonIdx + 1,
                                 nextColonIdx);
                         try {
-                            lineNo = Integer.valueOf(lineNum).intValue();
+                            lineNo = Integer.parseInt(lineNum);
                             accessible = true;
                         }
                         catch (NumberFormatException nfe) {
@@ -100,7 +100,7 @@ public class ErrorLineConvertor implements LineConvertor {
                         String lineNum = logLine.substring(secondColonIdx + 1,
                                 thirdColonIdx);
                         try {
-                            lineNo = Integer.valueOf(lineNum).intValue();
+                            lineNo = Integer.parseInt(lineNum);
                             accessible = true;
                         }
                         catch (NumberFormatException nfe) {
@@ -135,7 +135,7 @@ public class ErrorLineConvertor implements LineConvertor {
                         if (lastColonIdx > -1) {
                             String lineNum = content.substring(lastColonIdx + 1);
                             try {
-                                lineNo = Integer.valueOf(lineNum).intValue();
+                                lineNo = Integer.parseInt(lineNum);
                             } catch(NumberFormatException nfe) {
                                 // ignore it
                                 Logger.getLogger(ErrorLineConvertor.class.getName()).log(Level.INFO, null, nfe);

@@ -72,7 +72,7 @@ public class NbiPanel extends JPanel {
     }
     public ImageIcon getBackgroundImage(int anchor) {
         for(Pair <Integer, ImageIcon> pair : images) {
-            if(pair.getFirst().intValue() == anchor) {
+            if(pair.getFirst() == anchor) {
                 return pair.getSecond();
             }
         }
@@ -82,7 +82,7 @@ public class NbiPanel extends JPanel {
         super.paintComponent(graphics);
         
         for(Pair <Integer, ImageIcon> pair : images){
-            final int anchor = pair.getFirst().intValue();
+            final int anchor = pair.getFirst();
             Image backgroundImage = pair.getSecond().getImage();
             if (backgroundImage != null) {
                 switch(anchor) {

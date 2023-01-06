@@ -57,11 +57,11 @@ public class GlobalActionContextImplTest extends NbTestCase {
         tc.open();
         tc.requestActive();
         
-        assertEquals("Check before", Integer.valueOf(10), Utilities.actionsGlobalContext().lookup(Integer.class));
+        assertEquals("Check before", 10, Utilities.actionsGlobalContext().lookup(Integer.class));
         
         GlobalActionContextImpl.blickActionMapImpl(null, new Component[] { new JButton() });
         
-        assertEquals("Check after", Integer.valueOf(10), Utilities.actionsGlobalContext().lookup(Integer.class));
+        assertEquals("Check after", 10, Utilities.actionsGlobalContext().lookup(Integer.class));
         
     }
     

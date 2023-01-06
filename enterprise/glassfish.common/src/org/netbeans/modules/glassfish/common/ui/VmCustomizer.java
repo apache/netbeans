@@ -148,7 +148,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      */
     private void setAddressValue(String number) {
         try {
-        addressValue.setValue(new Integer(number));
+            addressValue.setValue(Integer.parseInt(number));
         } catch (NumberFormatException nfe) {
             addressValue.setValue(0);
         }
@@ -164,7 +164,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      * <code>addressValue</code> field.
      */
     private void setAddressValue(Integer number) {
-        addressValue.setValue(number != null ? number : new Integer(0));
+        addressValue.setValue(number != null ? number : 0);
     }
 
     private void persistFields() {

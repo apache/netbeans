@@ -141,7 +141,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         final InstanceDataObject ido = InstanceDataObject.create(
             DataFolder.findFolder(myFolder),
             "object",
-            new Integer(2),
+            2,
             null);
         System.err.println("Created instance " + ido);
         
@@ -575,7 +575,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         FileSystem sndlfs = TestUtilHid.createLocalFileSystem (new File (getWorkDir(), "2"), fsstruct);
         
 
-        Object x = new Integer (10);
+        Object x = 10;
         String path;
         {
             FileObject lookupFO = lfs.findResource("/system/Services/lookupTest");
@@ -587,7 +587,7 @@ public class InstanceDataObjectTest extends NbTestCase {
             assertGC ("disappear", ref);
         }
 
-        Object y = new Integer (11);
+        Object y = 11;
         FileObject lookupFO;
         {
             lookupFO = sndlfs.findResource("/system/Services/lookupTest");
@@ -692,7 +692,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         public void setProperty(int property) {
             int oldProperty = this.property;
             this.property = property;
-            propertyChangeSupport.firePropertyChange("property", new Integer(oldProperty), new Integer(property));
+            propertyChangeSupport.firePropertyChange("property", oldProperty, property);
         }
         
     }

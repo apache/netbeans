@@ -134,7 +134,7 @@ public final class Stub {
             Class[] paramTypes = method.getParameterTypes();
 
             if ("hashCode".equals(methodName)) {
-                return new Integer(System.identityHashCode(proxy));
+                return System.identityHashCode(proxy);
             } else if ("equals".equals(methodName) && paramTypes.length == 1 && paramTypes[0] == Object.class) {
                 return Boolean.valueOf(args[0] == proxy);
             }
@@ -147,7 +147,7 @@ public final class Stub {
                 } else if (retClass == Short.TYPE) {
                     return (short)0;
                 } else if (retClass == Integer.TYPE) {
-                    return new Integer(0);
+                    return 0;
                 } else if (retClass == Long.TYPE) {
                     return new Long(0L);
                 } else if (retClass == Float.TYPE) {

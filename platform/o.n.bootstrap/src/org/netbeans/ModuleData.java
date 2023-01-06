@@ -91,7 +91,7 @@ class ModuleData {
             if (verifyCNBs) {
                 Dependency.create(Dependency.TYPE_MODULE, codeName);
             }
-            codeNameRelease = (cnParse[1] != null) ? ((Integer) cnParse[1]).intValue() : -1;
+            codeNameRelease = (cnParse[1] != null) ? (Integer) cnParse[1] : -1;
             if (cnParse[2] != null) {
                 throw new NumberFormatException(codeName);
             }

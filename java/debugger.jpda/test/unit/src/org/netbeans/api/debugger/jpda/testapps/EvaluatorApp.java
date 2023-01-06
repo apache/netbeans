@@ -908,7 +908,7 @@ public class EvaluatorApp extends BaseClass {
     }
     
     public static float testAutobox2() {
-        return methodAutobox(new Integer(ix), (long) ix, 1.4f);
+        return methodAutobox(ix, (long) ix, 1.4f);
     }
     
     public static float testAutobox3() {
@@ -984,7 +984,7 @@ public class EvaluatorApp extends BaseClass {
     }
     
     public static float testConversion7() {
-        return new Integer(123) + new Float(1.222222222) + new Long(999999999999999999l);
+        return 123 + new Float(1.222222222) + new Long(999999999999999999l);
     }
     
     // Constructors

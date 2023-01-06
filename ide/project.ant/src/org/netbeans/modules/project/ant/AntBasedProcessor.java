@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.project.ant;
 
-import java.util.Collections;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -45,8 +44,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class AntBasedProcessor extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(AntBasedProjectRegistration.class.getCanonicalName());
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(AntBasedProjectRegistration.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

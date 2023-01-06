@@ -248,7 +248,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
             @NonNull Set<? super String> currentResources) {
         if (cachedFile == null) {
             cachedValue = readFile(file);
-            cachedResources = new HashSet<String>(Arrays.asList(cachedValue.toString().split("\n")));  //NOI18N
+            cachedResources = Set.of(cachedValue.toString().split("\n");  //NOI18N
             cachedFile = file;
         }        
         assert cachedValue != null;

@@ -143,9 +143,11 @@ public class AmazonJ2eePlatformImpl2 extends J2eePlatformImpl2 {
         return false;
     }
 
+    private static final Set<String> SUPPORTED_PLATFORMS = Set.of("1.6","1.5");
+
     @Override
     public Set getSupportedJavaPlatformVersions() {
-        return new HashSet<String>(Arrays.asList(new String[] {"1.6","1.5"}));
+        return SUPPORTED_PLATFORMS;
     }
 
     @Override

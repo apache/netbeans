@@ -79,12 +79,12 @@ public class NbmActionGoalProvider implements MavenActionsProvider {
         }
     };
 
+    private static final Set<String> SUPPORTED_ACTIONS = Set.of(NBMRELOAD, RELOAD_TARGET);
 
     public @Override Set<String> getSupportedDefaultActions() {
-        return new HashSet<String>(Arrays.asList(NBMRELOAD, RELOAD_TARGET));
+        return SUPPORTED_ACTIONS;
     }
-    
-    
+
     @ActionID(id = "org.netbeans.modules.maven.apisupport.NBMReload", category = "Project")
     @ActionRegistration(displayName = "#ACT_NBM_Reload", lazy=false)
     @ActionReference(position = 1250, path = "Projects/org-netbeans-modules-maven/Actions")

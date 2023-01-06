@@ -23,9 +23,9 @@ package org.netbeans.modules.properties;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
+
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.cookies.SaveCookie;
@@ -138,6 +138,9 @@ public final class Util extends Object {
             return fName.substring(baseName.length());
     }
 
+    private static final Set<String> KNOWN_LANGUAGES = Set.of(Locale.getISOLanguages());
+    private static final Set<String> KNOWN_COUNTRIES = Set.of(Locale.getISOCountries());
+
     private static boolean isValidLocaleSuffix(String s) {
         // first char is _
         int n = s.length();
@@ -160,14 +163,12 @@ public final class Util extends Object {
             return false;
         }
 
-        HashSet<String> knownLanguages = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
-        if (!knownLanguages.contains(s1)) {
+        if (!KNOWN_LANGUAGES.contains(s1)) {
             return false;
         }
 
         if (s2 != null) {
-            HashSet<String> knownCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
-            if (!knownCountries.contains(s2)) {
+            if (!KNOWN_COUNTRIES.contains(s2)) {
                 return false;
             }
         }

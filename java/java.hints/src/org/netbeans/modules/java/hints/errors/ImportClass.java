@@ -107,18 +107,20 @@ public final class ImportClass implements ErrorRule<Void>{
     
     public ImportClass() {
     }
-    
+
+    private static final Set<String> CODES = Set.of(
+            "compiler.err.cant.resolve",
+            "compiler.err.cant.resolve.location",
+            "compiler.err.cant.resolve.location.args",
+            "compiler.err.doesnt.exist",
+            "compiler.err.not.stmt",
+            "compiler.err.not.def.public.cant.access",
+            "compiler.err.expected"
+    );
+
     @Override
     public Set<String> getCodes() {
-        return new HashSet<>(Arrays.asList(
-                "compiler.err.cant.resolve",
-                "compiler.err.cant.resolve.location",
-                "compiler.err.cant.resolve.location.args",
-                "compiler.err.doesnt.exist",
-                "compiler.err.not.stmt", 
-                "compiler.err.not.def.public.cant.access",
-                "compiler.err.expected"
-        ));
+        return CODES;
     }
 
     @Override

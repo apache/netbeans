@@ -78,15 +78,16 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
     private static final String[] DEFAULT_COMPLETIONS = { "Menu", "Toolbars", "Shortcuts", "Loaders" }; // NOI18N
     private Processor COMPLETIONS;
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            ActionRegistration.class.getCanonicalName(),
+            ActionID.class.getCanonicalName(),
+            ActionReference.class.getCanonicalName(),
+            ActionReferences.class.getCanonicalName()
+    );
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> hash = new HashSet<String>();
-        hash.add(ActionRegistration.class.getCanonicalName());
-        hash.add(ActionID.class.getCanonicalName());
-        hash.add(ActionReference.class.getCanonicalName());
-        hash.add(ActionReferences.class.getCanonicalName());
-//        hash.add(ActionState.class.getCanonicalName());
-        return hash;
+        return ANNOTATION_TYPES;
     }
     
     @Override

@@ -56,19 +56,20 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class DebuggerProcessor extends LayerGeneratingProcessor {
 
-    public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
             AttachType.Registration.class.getCanonicalName(),
             BreakpointType.Registration.class.getCanonicalName(),
             ColumnModelRegistration.class.getCanonicalName(),
             ColumnModelRegistrations.class.getCanonicalName(),
             DebuggingView.DVSupport.Registration.class.getCanonicalName(),
             CodeEvaluator.EvaluatorService.Registration.class.getCanonicalName()
-        ));
+    );
+
+    public @Override Set<String> getSupportedAnnotationTypes() {
+        return ANNOTATION_TYPES;
     }
 
     public static final String SERVICE_NAME = "serviceName"; // NOI18N
-
 
     @Override
     protected boolean handleProcess(

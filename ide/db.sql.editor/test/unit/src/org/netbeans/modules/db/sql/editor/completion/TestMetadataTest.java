@@ -22,6 +22,8 @@ package org.netbeans.modules.db.sql.editor.completion;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+
 import org.netbeans.modules.db.metadata.model.api.Catalog;
 import org.netbeans.modules.db.metadata.model.api.Schema;
 import org.netbeans.modules.db.metadata.model.test.api.MetadataTestBase;
@@ -53,12 +55,12 @@ public class TestMetadataTest extends MetadataTestBase {
                 "      col35",
                 "catalog9"
         });
-        assertNames(new HashSet<String>(Arrays.asList("catalog0", "catalog9")), metadata.getCatalogs());
+        assertNames(Set.of("catalog0", "catalog9"), metadata.getCatalogs());
         Catalog defaultCatalog = metadata.getDefaultCatalog();
         assertEquals("catalog0", defaultCatalog.getName());
         assertSame(defaultCatalog, metadata.getCatalog("catalog0"));
         assertNotNull(metadata.getCatalog("catalog9"));
-        assertNames(new HashSet<String>(Arrays.asList("schema1", "schema5")), defaultCatalog.getSchemas());
+        assertNames(Set.of("schema1", "schema5"), defaultCatalog.getSchemas());
         Schema defaultSchema = metadata.getDefaultSchema();
         assertEquals("schema1", defaultSchema.getName());
         assertNames(Collections.singleton("table2"), defaultSchema.getTables());
@@ -82,7 +84,7 @@ public class TestMetadataTest extends MetadataTestBase {
                 "<unknown>",
                 "another"
         });
-        assertNames(new HashSet<String>(Arrays.asList(null, "another")), metadata.getCatalogs());
+        assertNames(Set.of(null, "another"), metadata.getCatalogs());
     }
 
     public void testNoSchema() throws Exception {

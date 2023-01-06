@@ -32,7 +32,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,7 +70,6 @@ import org.netbeans.modules.java.api.common.SourceRoots;
 import org.netbeans.modules.java.api.common.ant.UpdateHelper;
 import org.netbeans.modules.java.api.common.project.ProjectProperties;
 import org.netbeans.modules.java.api.common.project.BaseActionProvider;
-import org.netbeans.modules.java.api.common.project.BaseActionProvider.Callback3;
 import org.netbeans.modules.java.api.common.project.ProjectConfigurations;
 import org.netbeans.modules.java.j2seproject.api.J2SEBuildPropertiesProvider;
 import org.netbeans.modules.java.preprocessorbridge.spi.CompileOnSaveAction;
@@ -173,13 +171,42 @@ public class J2SEActionProvider extends BaseActionProvider {
     private final CosAction cosAction;
 
     /** Map from commands to ant targets */
-    private Map<String,String[]> commands;
+    private static final Map<String,String[]> COMMANDS = Map.ofEntries(
+            // treated specially: COMMAND_{,RE}BUILD
+            Map.entry(COMMAND_CLEAN, new String[]{"clean"}), // NOI18N
+            Map.entry(COMMAND_COMPILE_SINGLE, new String[]{"compile-single"}), // NOI18N
+            Map.entry(COMMAND_RUN, new String[]{"run"}), // NOI18N
+            Map.entry(COMMAND_RUN_SINGLE, new String[]{"run-single"}), // NOI18N
+            Map.entry(COMMAND_DEBUG, new String[]{"debug"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_SINGLE, new String[]{"debug-single"}), // NOI18N
+            Map.entry(COMMAND_PROFILE, new String[]{"profile"}), // NOI18N
+            Map.entry(COMMAND_PROFILE_SINGLE, new String[]{"profile-single"}), // NOI18N
+            Map.entry(JavaProjectConstants.COMMAND_JAVADOC, new String[]{"javadoc"}), // NOI18N
+            Map.entry(COMMAND_TEST, new String[]{"test"}), // NOI18N
+            Map.entry(COMMAND_TEST_SINGLE, new String[]{"test-single"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_TEST_SINGLE, new String[]{"debug-test"}), // NOI18N
+            Map.entry(COMMAND_PROFILE_TEST_SINGLE, new String[]{"profile-test"}), // NOI18N
+            Map.entry(JavaProjectConstants.COMMAND_DEBUG_FIX, new String[]{"debug-fix"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_STEP_INTO, new String[]{"debug-stepinto"}), // NOI18N
+            Map.entry(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[]{"test-single-method"}), // NOI18N
+            Map.entry(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[]{"debug-single-method"}) // NOI18N
+    );
 
     /**Set of commands which are affected by background scanning*/
-    private Set<String> bkgScanSensitiveActions;
+    private static final Set<String> BKG_SCAN_SENSITIVE_ACTIONS = Set.of(
+            COMMAND_RUN,
+            COMMAND_RUN_SINGLE,
+            COMMAND_DEBUG,
+            COMMAND_DEBUG_SINGLE,
+            COMMAND_DEBUG_STEP_INTO,
+            SingleMethod.COMMAND_RUN_SINGLE_METHOD,
+            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD
+    );
 
     /**Set of commands which need java model up to date*/
-    private Set<String> needJavaModelActions;
+    private static final Set<String> NEED_JAVA_MODEL_ACTIONS = Set.of(
+            JavaProjectConstants.COMMAND_DEBUG_FIX
+    );
 
     public J2SEActionProvider(J2SEProject project, UpdateHelper updateHelper) {
         super(
@@ -190,39 +217,7 @@ public class J2SEActionProvider extends BaseActionProvider {
             project.getTestSourceRoots(),
             project.getAntProjectHelper(),
             new CallbackImpl(project));
-        commands = new HashMap<String,String[]>();
-        // treated specially: COMMAND_{,RE}BUILD
-        commands.put(COMMAND_CLEAN, new String[] {"clean"}); // NOI18N
-        commands.put(COMMAND_COMPILE_SINGLE, new String[] {"compile-single"}); // NOI18N
-        commands.put(COMMAND_RUN, new String[] {"run"}); // NOI18N
-        commands.put(COMMAND_RUN_SINGLE, new String[] {"run-single"}); // NOI18N
-        commands.put(COMMAND_DEBUG, new String[] {"debug"}); // NOI18N
-        commands.put(COMMAND_DEBUG_SINGLE, new String[] {"debug-single"}); // NOI18N
-        commands.put(COMMAND_PROFILE, new String[] {"profile"}); // NOI18N
-        commands.put(COMMAND_PROFILE_SINGLE, new String[] {"profile-single"}); // NOI18N
-        commands.put(JavaProjectConstants.COMMAND_JAVADOC, new String[] {"javadoc"}); // NOI18N
-        commands.put(COMMAND_TEST, new String[] {"test"}); // NOI18N
-        commands.put(COMMAND_TEST_SINGLE, new String[] {"test-single"}); // NOI18N
-        commands.put(COMMAND_DEBUG_TEST_SINGLE, new String[] {"debug-test"}); // NOI18N
-        commands.put(COMMAND_PROFILE_TEST_SINGLE, new String[]{"profile-test"}); // NOI18N
-        commands.put(JavaProjectConstants.COMMAND_DEBUG_FIX, new String[] {"debug-fix"}); // NOI18N
-        commands.put(COMMAND_DEBUG_STEP_INTO, new String[] {"debug-stepinto"}); // NOI18N
-        commands.put(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}); // NOI18N
-        commands.put(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}); // NOI18N
 
-        this.bkgScanSensitiveActions = new HashSet<String>(Arrays.asList(
-            COMMAND_RUN,
-            COMMAND_RUN_SINGLE,
-            COMMAND_DEBUG,
-            COMMAND_DEBUG_SINGLE,
-            COMMAND_DEBUG_STEP_INTO,
-            SingleMethod.COMMAND_RUN_SINGLE_METHOD,
-            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD
-        ));
-
-        this.needJavaModelActions = new HashSet<String>(Arrays.asList(
-            JavaProjectConstants.COMMAND_DEBUG_FIX
-        ));
         this.cosAction = new CosAction(
                 this,
                 project.evaluator(),
@@ -242,24 +237,24 @@ public class J2SEActionProvider extends BaseActionProvider {
 
     @Override
     public Map<String, String[]> getCommands() {
-        return commands;
+        return COMMANDS;
     }
 
     @Override
     protected Set<String> getScanSensitiveActions() {
-        return bkgScanSensitiveActions;
+        return BKG_SCAN_SENSITIVE_ACTIONS;
     }
 
     @Override
     protected Set<String> getJavaModelActions() {
-        return needJavaModelActions;
+        return NEED_JAVA_MODEL_ACTIONS;
     }
 
     @Override
     protected boolean isCompileOnSaveEnabled() {
         return isCompileOnSaveUpdate() && cosAction.getTarget() == null;
     }
-    
+
     @Override
     protected boolean isCompileOnSaveUpdate() {
         return J2SEProjectUtil.isCompileOnSaveEnabled((J2SEProject)getProject());
@@ -510,9 +505,9 @@ public class J2SEActionProvider extends BaseActionProvider {
                 case SYNC:
                     return performSync(ctx);
                 default:
-                    throw new IllegalArgumentException(String.valueOf(ctx.getOperation()));                 
+                    throw new IllegalArgumentException(String.valueOf(ctx.getOperation()));
             }
-        }               
+        }
 
         @Override
         public void artifactsUpdated(@NonNull final Iterable<File> artifacts) {
@@ -651,11 +646,11 @@ public class J2SEActionProvider extends BaseActionProvider {
                     (String) target :
                     null;
         }
-        
+
         @CheckForNull
         private String getUpdatedFileSetProperty() {
             Object res = updatedFSProp;
-            if (res == null) {                
+            if (res == null) {
                 final String val = eval.getProperty(COS_CUSTOM);
                 res = updatedFSProp = val != null && !val.isEmpty() ?
                         val :
@@ -666,12 +661,12 @@ public class J2SEActionProvider extends BaseActionProvider {
             }
             return (String) res;
         }
-        
+
         private boolean isCustomUpdate() {
             return getUpdatedFileSetProperty() != null;
         }
-        
-        
+
+
         @CheckForNull
         private Boolean performUpdate(@NonNull final Context ctx) {
             final String target = getTarget();
@@ -737,19 +732,19 @@ public class J2SEActionProvider extends BaseActionProvider {
             }
             return true;
         }
-        
+
         @CheckForNull
         private Boolean performClean(@NonNull final Context ctx) {
             //Not sure what to do
             return null;
         }
-        
+
         @CheckForNull
         private Boolean performSync(@NonNull final Context ctx) {
             //Not sure what to do
             return null;
         }
-        
+
         @NonNull
         private FileObject getCosScript() throws IOException {
             final FileObject snippets = FileUtil.createFolder(
@@ -888,7 +883,7 @@ public class J2SEActionProvider extends BaseActionProvider {
                     null :
                     include.toString();
         }
-        
+
         private static String relativize(
                 @NonNull final File file,
                 @NonNull final File folder) {
@@ -976,7 +971,7 @@ public class J2SEActionProvider extends BaseActionProvider {
             }
         }
     }
-    
+
     @ServiceProvider(service = CompileOnSaveAction.Provider.class, position = 10_000)
     public static final class Provider implements CompileOnSaveAction.Provider {
 
@@ -985,7 +980,7 @@ public class J2SEActionProvider extends BaseActionProvider {
             try {
                 final Project p = FileOwnerQuery.getOwner(root.toURI());
                 if (p != null) {
-                    ActionProvider prov = p.getLookup().lookup(ActionProvider.class);  
+                    ActionProvider prov = p.getLookup().lookup(ActionProvider.class);
                     if (prov != null) {
                         prov.getSupportedActions(); //Force initialization
                     }
@@ -997,6 +992,6 @@ public class J2SEActionProvider extends BaseActionProvider {
             }
             return null;
         }
-        
+
     }
 }

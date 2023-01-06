@@ -45,12 +45,14 @@ import org.openide.util.NbBundle;
  */
 public class VarCompDeclaration implements ErrorRule<Void> {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
-            "compiler.err.var.not.allowed.compound", "compiler.err.restricted.type.not.allowed.compound")); // NOI18N
+    private static final Set<String> ERROR_CODES = Set.of(
+            "compiler.err.var.not.allowed.compound",
+            "compiler.err.restricted.type.not.allowed.compound"
+    ); // NOI18N
 
     @Override
     public Set<String> getCodes() {
-        return Collections.unmodifiableSet(ERROR_CODES);
+        return ERROR_CODES;
     }
 
     @Override

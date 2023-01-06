@@ -48,7 +48,7 @@ public class MockPropertyChangeListener implements PropertyChangeListener {
      * @param whiteListedPropertyNames an optional list of property names; if any others are received, an assertion will be thrown
      */
     public MockPropertyChangeListener(String... whitelistedPropertyNames) {
-        whitelist = whitelistedPropertyNames.length > 0 ? new HashSet<String>(Arrays.asList(whitelistedPropertyNames)) : null;
+        whitelist = whitelistedPropertyNames.length > 0 ? Set.of(whitelistedPropertyNames) : null;
     }
 
     /**

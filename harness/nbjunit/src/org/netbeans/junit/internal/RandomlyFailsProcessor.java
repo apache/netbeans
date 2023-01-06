@@ -40,8 +40,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class RandomlyFailsProcessor extends AbstractProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(RandomlyFails.class.getCanonicalName());
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(RandomlyFails.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

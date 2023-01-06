@@ -45,7 +45,7 @@ final class FileRecognitionPanel extends BasicWizardIterator.Panel {
     private static final Pattern EXTENSION_PATTERN = Pattern.compile("([.]?[a-zA-Z0-9_]+){1}([ ,]+[.]?[a-zA-Z0-9_]+)*[ ]*"); // NOI18N
     private static final Pattern ELEMENT_PATTERN = Pattern.compile("(application/([a-zA-Z0-9_.-])*\\+xml|text/([a-zA-Z0-9_.-])*\\+xml)"); // NOI18N
     private static final Pattern REG_NAME_PATTERN = Pattern.compile("^[[\\p{Alnum}][!#$&.+\\-^_]]{1,127}$"); //NOI18N
-    private static final Set<String> WELL_KNOWN_TYPES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> WELL_KNOWN_TYPES = Set.of(
         "application", //NOI18N
         "audio", //NOI18N
         "content", //NOI18N   for content/unknown mime type
@@ -55,7 +55,7 @@ final class FileRecognitionPanel extends BasicWizardIterator.Panel {
         "multipart", //NOI18N
         "text", //NOI18N
         "video" //NOI18N
-    ));
+    );
     
     private NewLoaderIterator.DataModel data;
     private ButtonGroup group;

@@ -89,7 +89,7 @@ public class GradleCommandLineTest {
         System.out.println("addTask");
         GradleCommandLine instance = new GradleCommandLine("-a", "clean");
         instance.addTask("build");
-        assertEquals(new HashSet<String>(Arrays.asList("clean", "build")), instance.getTasks());
+        assertEquals(Set.of("clean", "build"), instance.getTasks());
     }
 
     @Test

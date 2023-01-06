@@ -92,15 +92,17 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
     public SearchClassDependencyInRepo() {
     }
 
+    private static final Set<String> CODES = Set.of(
+            MODULE_DOES_NOT_READ,
+            "compiler.err.cant.resolve",//NOI18N
+            "compiler.err.cant.resolve.location",//NOI18N
+            "compiler.err.doesnt.exist",//NOI18N
+            "compiler.err.not.stmt"
+    );//NOI18N
+
     @Override
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList(
-                MODULE_DOES_NOT_READ, 
-                "compiler.err.cant.resolve",//NOI18N
-                "compiler.err.cant.resolve.location",//NOI18N
-                "compiler.err.doesnt.exist",//NOI18N
-                "compiler.err.not.stmt"));//NOI18N
-
+        return CODES;
     }
 
     @Override

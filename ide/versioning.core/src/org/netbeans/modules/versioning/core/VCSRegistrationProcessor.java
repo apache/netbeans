@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.versioning.core;
 
-import java.util.Collections;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -38,9 +37,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class VCSRegistrationProcessor extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(VersioningSystem.Registration.class.getCanonicalName());
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(VersioningSystem.Registration.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

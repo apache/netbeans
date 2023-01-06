@@ -775,9 +775,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
 
         @Override
         public Set<String> getSourcePathIds() {
-            return new HashSet<String>(Arrays.asList(new String [] {
-                CP1, CP3
-            }));
+            return Set.of(CP1, CP3);
         }
 
         @Override

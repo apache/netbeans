@@ -86,7 +86,7 @@ public class LHTestCase extends NbTestCase {
         if (files == null || files.length == 0) {
             fail("no files in store folder for file " + file.getAbsolutePath() + " store folder " + storeFolder.getAbsolutePath());
         }
-        Set<String> filesSet = new HashSet<String>(Arrays.asList(files));
+        Set<String> filesSet = Set.of(files);
         if(!filesSet.contains("data")) {
             fail("no data file available for file file " + file.getAbsolutePath() + " store folder " + storeFolder.getAbsolutePath());
         }

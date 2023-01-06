@@ -42,10 +42,12 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 public class ApplyGroovyTransformationProcessor extends LayerGeneratingProcessor {
-    private static final Set<String> APPLY_DEFAULT = new HashSet<>(Arrays.asList(new String[] { "parse" })); // NOI18N
+    private static final Set<String> APPLY_DEFAULT = Set.of("parse"); // NOI18N
+
+    private static final Set<String> ANNOTATION_TYPES = Set.of(ApplyGroovyTransformation.class.getCanonicalName());
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(ApplyGroovyTransformation.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

@@ -58,14 +58,16 @@ public class OptionsPanelControllerProcessor extends LayerGeneratingProcessor {
 
     private Element originatingElement;
 
-    public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
             TopLevelRegistration.class.getCanonicalName(),
             ContainerRegistration.class.getCanonicalName(),
             SubRegistration.class.getCanonicalName(),
             KeywordsRegistration.class.getCanonicalName(),
             Keywords.class.getCanonicalName()
-        ));
+    );
+
+    public @Override Set<String> getSupportedAnnotationTypes() {
+        return ANNOTATION_TYPES;
     }
 
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {

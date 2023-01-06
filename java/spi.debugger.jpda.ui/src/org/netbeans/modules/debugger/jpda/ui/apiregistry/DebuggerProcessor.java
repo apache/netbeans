@@ -51,10 +51,12 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
 
     public static final String SERVICE_NAME = "serviceName"; // NOI18N
 
-    public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
             VariablesFilter.Registration.class.getCanonicalName()
-        ));
+    );
+
+    public @Override Set<String> getSupportedAnnotationTypes() {
+        return ANNOTATION_TYPES;
     }
 
     @Override

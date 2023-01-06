@@ -63,17 +63,19 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
 public final class SvnProperties implements ActionListener {
 
     /** Subversion properties that may be set only on directories */
-    private static final HashSet<String> DIR_ONLY_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {
-                                                            "svn:ignore",
-                                                            "svn:externals"}));
- 
+    private static final Set<String> DIR_ONLY_PROPERTIES = Set.of(
+            "svn:ignore",
+            "svn:externals"
+    );
+
     /** Subversion properties that may be set only on files (not directories) */
-    private static final HashSet<String> FILE_ONLY_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {
-                                                            "svn:eol-style",
-                                                            "svn:executable",
-                                                            "svn:keywords",
-                                                            "svn:needs-lock",
-                                                            "svn:mime-type"}));
+    private static final Set<String> FILE_ONLY_PROPERTIES = Set.of(
+            "svn:eol-style",
+            "svn:executable",
+            "svn:keywords",
+            "svn:needs-lock",
+            "svn:mime-type"
+    );
 
     private static final HashSet<String> MIXED_PROPERTIES = new HashSet<String>(DIR_ONLY_PROPERTIES.size() + FILE_ONLY_PROPERTIES.size());
     static {
@@ -518,7 +520,7 @@ public final class SvnProperties implements ActionListener {
                 private void removePropertyRecursively (SvnClient client, Set<File> toRefresh) throws SVNClientException {
                     String propName = getPropertyName();
                     if (!propName.trim().isEmpty()) {
-                        if (JOptionPane.showConfirmDialog(panel, 
+                        if (JOptionPane.showConfirmDialog(panel,
                                 Bundle.MSG_SvnProperties_RecursiveDelete_question(propName),
                                 Bundle.LBL_SvnProperties_RecursiveDelete_title(),
                                 JOptionPane.YES_NO_OPTION,

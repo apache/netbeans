@@ -20,9 +20,6 @@
 package org.netbeans.modules.j2ee.clientproject;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -46,9 +43,9 @@ import org.openide.util.Lookup;
  * Action provider of the Application Client project.
  */
 class AppClientActionProvider extends BaseActionProvider {
-    
+
     private static final String COMMAND_VERIFY = "verify"; //NOI18N
-    
+
     // Commands available from Application Client project
     private static final String[] supportedActions = {
         COMMAND_BUILD,
@@ -74,8 +71,8 @@ class AppClientActionProvider extends BaseActionProvider {
         COMMAND_MOVE,
         COMMAND_RENAME,
     };
-    
-    
+
+
     private static final String[] platformSensitiveActions = {
         COMMAND_BUILD,
         COMMAND_REBUILD,
@@ -93,51 +90,11 @@ class AppClientActionProvider extends BaseActionProvider {
         SingleMethod.COMMAND_RUN_SINGLE_METHOD,
         SingleMethod.COMMAND_DEBUG_SINGLE_METHOD,
     };
-    
-    /**Set of commands which are affected by background scanning*/
-    private Set<String> bkgScanSensitiveActions;
 
-    /**Set of commands which need java model up to date*/
-    private Set<String> needJavaModelActions;
-
-    private static final String[] actionsDisabledForQuickRun = {
-        COMMAND_COMPILE_SINGLE,
-        JavaProjectConstants.COMMAND_DEBUG_FIX,
-    };
-
-    /** Map from commands to ant targets */
-    Map<String,String[]> commands;
-    
-    public AppClientActionProvider( AppClientProject project, UpdateHelper updateHelper ) {
-        super(project, updateHelper, project.evaluator(), project.getSourceRoots(),
-                project.getTestSourceRoots(), project.getAntProjectHelper(), 
-                new BaseActionProvider.CallbackImpl(project.getClassPathProvider()));
-        commands = new HashMap<String, String[]>();
-        commands.put(COMMAND_BUILD, new String[] {"dist"}); // NOI18N
-        commands.put(COMMAND_CLEAN, new String[] {"clean"}); // NOI18N
-        commands.put(COMMAND_REBUILD, new String[] {"clean", "dist"}); // NOI18N
-        commands.put(COMMAND_COMPILE_SINGLE, new String[] {"compile-single"}); // NOI18N
-        commands.put(COMMAND_RUN, new String[] {"run"}); // NOI18N
-        commands.put(COMMAND_RUN_SINGLE, new String[] {"run-single"}); // NOI18N
-        commands.put(EjbProjectConstants.COMMAND_REDEPLOY, new String[] {"run-deploy"}); // NOI18N
-        commands.put(COMMAND_DEBUG, new String[] {"debug"}); // NOI18N
-        commands.put(COMMAND_DEBUG_SINGLE, new String[] {"debug-single"}); // NOI18N
-        commands.put(JavaProjectConstants.COMMAND_JAVADOC, new String[] {"javadoc"}); // NOI18N
-        commands.put(COMMAND_TEST, new String[] {"test"}); // NOI18N
-        commands.put(COMMAND_TEST_SINGLE, new String[] {"test-single"}); // NOI18N
-        commands.put(COMMAND_DEBUG_TEST_SINGLE, new String[] {"debug-test"}); // NOI18N
-        commands.put(JavaProjectConstants.COMMAND_DEBUG_FIX, new String[] {"debug-fix"}); // NOI18N
-        commands.put(COMMAND_DEBUG_STEP_INTO, new String[] {"debug-stepinto"}); // NOI18N
-        commands.put(COMMAND_VERIFY, new String[] {"verify"}); // NOI18N
-        commands.put(COMMAND_DEBUG_SINGLE, new String[] {"debug-single"}); // NOI18N
-        commands.put(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}); // NOI18N
-        commands.put(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}); // NOI18N
-
-        this.needJavaModelActions = new HashSet<String>(Arrays.asList(
-            JavaProjectConstants.COMMAND_DEBUG_FIX
-        ));
-        
-        this.bkgScanSensitiveActions = new HashSet<String>(Arrays.asList(new String[] {
+    /**
+     * Set of commands which are affected by background scanning
+     */
+    private static final Set<String> BKG_SCAN_SENSITIVE_ACTIONS = Set.of(
             COMMAND_RUN,
             COMMAND_RUN_SINGLE,
             COMMAND_DEBUG,
@@ -145,7 +102,44 @@ class AppClientActionProvider extends BaseActionProvider {
             COMMAND_DEBUG_STEP_INTO,
             SingleMethod.COMMAND_RUN_SINGLE_METHOD,
             SingleMethod.COMMAND_DEBUG_SINGLE_METHOD
-        }));
+    );
+
+    /**Set of commands which need java model up to date*/
+    private static final Set<String> NEED_JAVA_MODEL_ACTIONS = Set.of(
+            JavaProjectConstants.COMMAND_DEBUG_FIX
+    );
+
+    private static final String[] actionsDisabledForQuickRun = {
+        COMMAND_COMPILE_SINGLE,
+        JavaProjectConstants.COMMAND_DEBUG_FIX,
+    };
+
+    /** Map from commands to ant targets */
+    private static final Map<String,String[]> COMMANDS = Map.ofEntries(
+            Map.entry(COMMAND_BUILD, new String[]{"dist"}), // NOI18N
+            Map.entry(COMMAND_CLEAN, new String[]{"clean"}), // NOI18N
+            Map.entry(COMMAND_REBUILD, new String[]{"clean", "dist"}), // NOI18N
+            Map.entry(COMMAND_COMPILE_SINGLE, new String[]{"compile-single"}), // NOI18N
+            Map.entry(COMMAND_RUN, new String[]{"run"}), // NOI18N
+            Map.entry(COMMAND_RUN_SINGLE, new String[]{"run-single"}), // NOI18N
+            Map.entry(EjbProjectConstants.COMMAND_REDEPLOY, new String[]{"run-deploy"}), // NOI18N
+            Map.entry(COMMAND_DEBUG, new String[]{"debug"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_SINGLE, new String[]{"debug-single"}), // NOI18N
+            Map.entry(JavaProjectConstants.COMMAND_JAVADOC, new String[]{"javadoc"}), // NOI18N
+            Map.entry(COMMAND_TEST, new String[]{"test"}), // NOI18N
+            Map.entry(COMMAND_TEST_SINGLE, new String[]{"test-single"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_TEST_SINGLE, new String[]{"debug-test"}), // NOI18N
+            Map.entry(JavaProjectConstants.COMMAND_DEBUG_FIX, new String[]{"debug-fix"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_STEP_INTO, new String[]{"debug-stepinto"}), // NOI18N
+            Map.entry(COMMAND_VERIFY, new String[]{"verify"}), // NOI18N
+            Map.entry(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[]{"test-single-method"}), // NOI18N
+            Map.entry(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[]{"debug-single-method"}) // NOI18N
+    );
+
+    public AppClientActionProvider( AppClientProject project, UpdateHelper updateHelper ) {
+        super(project, updateHelper, project.evaluator(), project.getSourceRoots(),
+                project.getTestSourceRoots(), project.getAntProjectHelper(),
+                new BaseActionProvider.CallbackImpl(project.getClassPathProvider()));
     }
 
     @Override
@@ -160,17 +154,17 @@ class AppClientActionProvider extends BaseActionProvider {
 
     @Override
     public Map<String, String[]> getCommands() {
-        return commands;
+        return COMMANDS;
     }
 
     @Override
     protected Set<String> getScanSensitiveActions() {
-        return bkgScanSensitiveActions;
+        return BKG_SCAN_SENSITIVE_ACTIONS;
     }
 
     @Override
     protected Set<String> getJavaModelActions() {
-        return needJavaModelActions;
+        return NEED_JAVA_MODEL_ACTIONS;
     }
 
     @Override
@@ -185,7 +179,7 @@ class AppClientActionProvider extends BaseActionProvider {
 
     @Override
     public String[] getTargetNames(String command, Lookup context, Properties p, boolean doJavaChecks) throws IllegalArgumentException {
-        if (command.equals(COMMAND_RUN) || command.equals(EjbProjectConstants.COMMAND_REDEPLOY) || 
+        if (command.equals(COMMAND_RUN) || command.equals(EjbProjectConstants.COMMAND_REDEPLOY) ||
                 command.equals(COMMAND_DEBUG) || command.equals(COMMAND_DEBUG_SINGLE) || command.equals(COMMAND_RUN_SINGLE)) {
             if (!checkSelectedServer(command.equals(COMMAND_DEBUG) || command.equals(COMMAND_DEBUG_SINGLE), false, false)) {
                 return null;
@@ -201,7 +195,7 @@ class AppClientActionProvider extends BaseActionProvider {
         }
         return super.getTargetNames(command, context, p, doJavaChecks);
     }
-    
+
     @Override
     public boolean isActionEnabled( String command, Lookup context ) {
         boolean res = super.isActionEnabled(command, context);
@@ -215,7 +209,7 @@ class AppClientActionProvider extends BaseActionProvider {
         }
         return res;
     }
-    
+
     private boolean checkSelectedServer(boolean checkDebug, boolean checkProfile, boolean noMessages) {
         return J2EEProjectProperties.checkSelectedServer(getProject(), getAntProjectHelper(),
                 ((AppClientProject) getProject()).getAPICar().getJ2eeProfile(), J2eeModule.Type.CAR, new J2EEProjectProperties.SetServerInstanceCallback() {
@@ -226,11 +220,11 @@ class AppClientActionProvider extends BaseActionProvider {
             }
         }, checkDebug, checkProfile, false);
     }
-    
+
     private void setServerInstance(final String serverInstanceId) {
         AppClientProjectProperties.setServerInstance((AppClientProject)getProject(), getAntProjectHelper(), serverInstanceId);
     }
-    
+
    private boolean isDebugged() {
         J2eeModuleProvider jmp = getProject().getLookup().lookup(J2eeModuleProvider.class);
         ServerDebugInfo sdi = jmp.getServerDebugInfo();
@@ -238,7 +232,7 @@ class AppClientActionProvider extends BaseActionProvider {
             return false;
         }
         Session[] sessions = DebuggerManager.getDebuggerManager().getSessions();
-        
+
         for (int i=0; i < sessions.length; i++) {
             Session s = sessions[i];
             if (s != null) {
@@ -260,7 +254,7 @@ class AppClientActionProvider extends BaseActionProvider {
         }
         return false;
     }
-   
+
     private boolean isTargetServerRemote() {
         J2eeModuleProvider module = getProject().getLookup().lookup(J2eeModuleProvider.class);
         InstanceProperties props = module.getInstanceProperties();

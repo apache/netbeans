@@ -1348,10 +1348,11 @@ public class JavaCustomIndexer extends CustomIndexer {
         return JavaIndex.ensureAttributeValue(root.toURL(), SOURCE_PATH, srcPathStr);
     }
 
-    private static final Set<String> JDK7AndLaterWarnings = new HashSet<String>(Arrays.asList(
+    private static final Set<String> JDK_7_AND_LATER_WARNINGS = Set.of(
             "compiler.warn.diamond.redundant.args", 
             "compiler.warn.diamond.redundant.args.1",
-            "compiler.note.potential.lambda.found"));
+            "compiler.note.potential.lambda.found"
+    );
 
     @CheckForNull
     private static File dumpHeap(@NonNull final String path) {
@@ -1399,7 +1400,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static class FilterOutJDK7AndLaterWarnings implements Comparable<Diagnostic<? extends JavaFileObject>> {
         @Override public int compareTo(Diagnostic<? extends JavaFileObject> o) {
-            return JDK7AndLaterWarnings.contains(o.getCode()) ? 0 : -1;
+            return JDK_7_AND_LATER_WARNINGS.contains(o.getCode()) ? 0 : -1;
         }
     }
     

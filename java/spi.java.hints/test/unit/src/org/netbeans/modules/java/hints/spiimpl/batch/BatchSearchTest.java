@@ -160,7 +160,7 @@ public class BatchSearchTest extends NbTestCase {
             snipets.add(code.substring(span[0], span[1]));
         }
 
-        Set<String> golden = new HashSet<String>(Arrays.asList("c.i().getFileObject(\"\")"));
+        Set<String> golden = Set.of("c.i().getFileObject(\"\")");
         assertEquals(golden, snipets);
     }
 
@@ -233,7 +233,7 @@ public class BatchSearchTest extends NbTestCase {
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), Set.of("src1/test/Test1.java", "src2/test/Test1.java"));
 
         assertEquals(golden, output);
 
@@ -288,7 +288,7 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Iterable<String>> output = toDebugOutput(result);
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), Set.of("src1/test/Test1.java", "src2/test/Test1.java"));
 
         assertEquals(golden, output);
     }

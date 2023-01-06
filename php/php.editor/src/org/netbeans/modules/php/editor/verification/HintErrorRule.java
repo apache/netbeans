@@ -28,9 +28,11 @@ import org.netbeans.modules.csl.api.Hint;
  */
 public abstract class HintErrorRule extends ErrorRule implements InvokableRule<Hint> {
 
+    private static final Set<?> CODES = Set.of(PHPHintsProvider.ErrorType.HINT_ERRORS);
+
     @Override
     public Set<?> getCodes() {
-        return Collections.singleton(PHPHintsProvider.ErrorType.HINT_ERRORS);
+        return CODES;
     }
 
 }

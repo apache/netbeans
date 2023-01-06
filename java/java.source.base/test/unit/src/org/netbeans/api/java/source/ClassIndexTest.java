@@ -572,7 +572,7 @@ public class ClassIndexTest extends NbTestCase {
         for (Symbols s : result) {
             actualResult.add(s.getEnclosingType().getQualifiedName() + ":" + s.getSymbols().toString());
         }
-        assertEquals(new HashSet<String>(Arrays.asList("test.foo:[foo]", "test.Test:[foo]")), actualResult);
+        assertEquals(Set.of("test.foo:[foo]", "test.Test:[foo]"), actualResult);
     }
     
     private FileObject createJavaFile (

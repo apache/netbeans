@@ -304,7 +304,7 @@ public abstract class Group {
         String sanitizedId = name.replaceAll("[^a-zA-Z0-9_.-]+", "_");
         Set<String> existing;
         try {
-            existing = new HashSet<String>(Arrays.asList(NODE.childrenNames()));
+            existing = Set.of(NODE.childrenNames());
         } catch (BackingStoreException x) {
             Exceptions.printStackTrace(x);
             return sanitizedId;

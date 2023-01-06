@@ -23,6 +23,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
@@ -76,7 +78,7 @@ public class SuiteProjectTest extends NbTestCase {
         ep.setProperty("app.name", "sweetness");
         ep.setProperty("app.title", "Sweetness is Now!");
         p.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
-        assertEquals(new HashSet<String>(Arrays.asList(ProjectInformation.PROP_NAME, ProjectInformation.PROP_DISPLAY_NAME)), l.changed);
+        assertEquals(Set.of(ProjectInformation.PROP_NAME, ProjectInformation.PROP_DISPLAY_NAME), l.changed);
         assertEquals("Sweet_Stuff", i.getName());
         assertEquals("Sweetness is Now!", i.getDisplayName());
         model = new SuiteBrandingModel(new SuiteProperties(p, p.getHelper(), p.getEvaluator(), Collections.<NbModuleProject>emptySet()));

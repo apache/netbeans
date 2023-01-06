@@ -24,9 +24,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +52,10 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  */
 public class MicronautJavaConfigPropertiesCompletion implements Processor {
 
-    private static final Set<String> supportedAnnotationTypes = new HashSet<String>(Arrays.asList("io.micronaut.context.annotation.Property", "io.micronaut.context.annotation.Value"));
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            "io.micronaut.context.annotation.Property",
+            "io.micronaut.context.annotation.Value"
+    );
     private Reference<ProcessingEnvironment> processingEnv;
 
     @Override
@@ -125,7 +126,7 @@ public class MicronautJavaConfigPropertiesCompletion implements Processor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return supportedAnnotationTypes;
+        return ANNOTATION_TYPES;
     }
 
     @Override

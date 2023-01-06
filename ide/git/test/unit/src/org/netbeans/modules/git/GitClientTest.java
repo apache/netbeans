@@ -80,7 +80,7 @@ public class GitClientTest extends AbstractGitTestCase {
      * @throws Exception
      */
     public void testIndexReadOnlyMethods () throws Exception {
-        Set<String> allTestedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> allTestedMethods = Set.of(
                 "add",
                 "addNotificationListener",
                 "blame",
@@ -139,7 +139,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "unignore",
                 "updateReference",
                 "updateSubmodules"
-        ));
+        );
         Set<String> readOnlyMethods = new HashSet<String>(Arrays.asList(
                 "addNotificationListener",
                 "blame",
@@ -203,7 +203,7 @@ public class GitClientTest extends AbstractGitTestCase {
      * @throws Exception
      */
     public void testMethodsNeedingRepositoryInfoRefresh () throws Exception {
-        Set<String> allTestedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> allTestedMethods = Set.of(
                 "add",
                 "addNotificationListener",
                 "blame",
@@ -262,7 +262,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "unignore",
                 "updateReference",
                 "updateSubmodules"
-        ));
+        );
         Set<String> expectedMethods = new HashSet<String>(Arrays.asList(
                 "checkout",
                 "checkoutRevision",

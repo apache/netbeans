@@ -773,7 +773,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
     }
 
     /** Special attributes which should not be checked for weight. See RemoveWritablesTest. */
-    private static final Set<String> SPECIAL_ATTR_NAMES = new HashSet<String>(Arrays.asList(FileObject.REMOVE_WRITABLES_ATTR, WEIGHT_ATTRIBUTE, "java.io.File")); // NOI18N
+    private static final Set<String> SPECIAL_ATTR_NAMES = Set.of(FileObject.REMOVE_WRITABLES_ATTR, WEIGHT_ATTRIBUTE, "java.io.File"); // NOI18N
     private final Object getAttribute(String attrName, String path) {
         // Look for attribute in any file system starting at the front.
         // Additionally, look for attribute in root folder, where

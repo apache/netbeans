@@ -37,10 +37,10 @@ public class JavaPathRecognizer extends PathRecognizer {
 
     private static final Set<String> SOURCES = Collections.singleton(ClassPath.SOURCE);
 
-    private static final Set<String> BINARIES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> BINARIES = Set.of(
         ClassPath.BOOT,
         ClassPath.COMPILE
-    })));
+    );
 
     @Override
     public Set<String> getSourcePathIds() {

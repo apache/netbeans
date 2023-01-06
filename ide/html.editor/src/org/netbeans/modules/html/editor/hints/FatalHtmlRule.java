@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.html.editor.hints;
 
-import java.util.Collections;
 import java.util.Set;
 import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.Rule.ErrorRule;
@@ -34,10 +33,12 @@ public class FatalHtmlRule implements ErrorRule {
     public enum Code {
         DEFAULT;
     }
+
+    private static final Set<?> CODES = Set.of(Code.DEFAULT);
     
     @Override
     public Set<?> getCodes() {
-        return Collections.singleton(Code.DEFAULT);
+        return CODES;
     }
 
     @Override

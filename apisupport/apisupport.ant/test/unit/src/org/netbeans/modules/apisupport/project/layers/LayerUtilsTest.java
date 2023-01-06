@@ -631,10 +631,10 @@ public class LayerUtilsTest extends LayerTestBase {
             }
         }
         assertEquals("#63295: masks work",
-                new HashSet<String>(Arrays.asList(
-            "org-netbeans-modules-options-OptionsWindowAction.shadow"
-            // org-netbeans-core-actions-OptionsAction.instance should be masked
-        )), optionInstanceNames);
+                Set.of(
+                        "org-netbeans-modules-options-OptionsWindowAction.shadow"
+                        // org-netbeans-core-actions-OptionsAction.instance should be masked
+                ), optionInstanceNames);
 // catalogs registered by annotation
 //        assertNotNull("system FS has xml/catalog", fs.findResource("Services/Hidden/CatalogProvider/org-netbeans-modules-xml-catalog-impl-XCatalogProvider.instance"));
         assertNull("but one entry hidden by apisupport/project", fs.findResource("Services/Hidden/org-netbeans-modules-xml-catalog-impl-SystemCatalogProvider.instance"));

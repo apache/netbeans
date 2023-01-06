@@ -52,12 +52,16 @@ public final class NamedServiceProcessor extends AbstractServiceProviderProcesso
     private static final String PATH = "META-INF/namedservices.index"; // NOI18N
     private static Pattern reference = Pattern.compile("@([^/]+)\\(\\)"); // NOI18N
 
+    private static final Set<String> ANNOTATION_TYPES = new HashSet<String>();
+
+    static {
+        ANNOTATION_TYPES.add(NamedServiceDefinition.class.getName());
+        searchAnnotations(ANNOTATION_TYPES, true);
+    }
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> all = new HashSet<String>();
-        all.add(NamedServiceDefinition.class.getName());
-        searchAnnotations(all, true);
-        return all;
+        return ANNOTATION_TYPES;
     }
     
 

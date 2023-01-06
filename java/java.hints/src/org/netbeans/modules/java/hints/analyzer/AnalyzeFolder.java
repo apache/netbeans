@@ -67,7 +67,7 @@ public final class AnalyzeFolder extends AbstractAction implements ContextAwareA
         putValue(NAME, NbBundle.getMessage(AnalyzeFolder.class, "CTL_AnalyzeFolder"));
     }
     
-    private static final Set<String> SUPPORTED_IDS = new HashSet<String>(Arrays.asList("create-javadoc", "error-in-javadoc"));
+    private static final Set<String> SUPPORTED_IDS = Set.of("create-javadoc", "error-in-javadoc");
     
     public void actionPerformed(ActionEvent e) {
         RequestProcessor.getDefault().post(new Runnable() {

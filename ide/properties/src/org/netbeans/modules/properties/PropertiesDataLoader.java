@@ -24,8 +24,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import org.openide.filesystems.FileObject;
@@ -64,9 +62,9 @@ public final class PropertiesDataLoader extends MultiFileLoader {
     private Reference<PropertiesEncoding> encodingRef;
     
     /** */
-    private static Set<String> knownLanguages;
+    private static final Set<String> KNOWN_LANGUAGES = Set.of(Locale.getISOLanguages());
     /** */
-    private static Set<String> knownCountries;
+    private static final Set<String> KNOWN_COUNTRIES = Set.of(Locale.getISOCountries());
 
     /** */
     private static boolean nestedView = false;
@@ -179,19 +177,13 @@ public final class PropertiesDataLoader extends MultiFileLoader {
         } else {
             return false;
         }
-        
-        if (knownLanguages == null) {
-            knownLanguages = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
-        }
-        if (!knownLanguages.contains(s1)) {
+
+        if (!KNOWN_LANGUAGES.contains(s1)) {
             return false;
         }
 
         if (s2 != null) {
-            if (knownCountries == null) {
-                knownCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
-            }
-            if (!knownCountries.contains(s2)) {
+            if (!KNOWN_COUNTRIES.contains(s2)) {
                 return false;
             }
         }

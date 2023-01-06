@@ -100,7 +100,7 @@ public class AddOrRemoveFinalModifier implements ErrorRule<Void> {
     }
 
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList(errorCode));
+        return Set.of(errorCode);
      }
 
     public List<Fix> run(CompilationInfo compilationInfo, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {

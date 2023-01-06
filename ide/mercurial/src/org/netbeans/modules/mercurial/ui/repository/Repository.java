@@ -304,10 +304,12 @@ public class Repository implements ActionListener, FocusListener, ItemListener {
         urlComboEditor.selectAll();
     }
 
-    private static final Set<String> SKIPPED_PATHS = new HashSet<String>(Arrays.asList(HgConfigFiles.HG_DEFAULT_PULL, 
+    private static final Set<String> SKIPPED_PATHS = Set.of(
+            HgConfigFiles.HG_DEFAULT_PULL,
             HgConfigFiles.HG_DEFAULT_PULL_VALUE, 
             HgConfigFiles.HG_DEFAULT_PUSH, 
-            HgConfigFiles.HG_DEFAULT_PUSH_VALUE));
+            HgConfigFiles.HG_DEFAULT_PUSH_VALUE
+    );
     
     private Vector<?> createPresetComboEntries() {
         assert repositoryPanel.urlComboBox.isEditable();

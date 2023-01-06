@@ -45,13 +45,12 @@ import org.openide.util.Exceptions;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.java.classpath.ClassPathProvider.class, position=150)
 public class J2SELibraryClassPathProvider implements ClassPathProvider {
     
-    private static final Set<? extends String> SUPPORTED_CLASS_PATH_TYPES =
-            new HashSet<String>(Arrays.asList(new String[]{
-                ClassPath.SOURCE,
-                ClassPath.BOOT,
-                ClassPath.COMPILE,
-                JavaClassPathConstants.MODULE_BOOT_PATH
-            }));
+    private static final Set<? extends String> SUPPORTED_CLASS_PATH_TYPES = Set.of(
+            ClassPath.SOURCE,
+            ClassPath.BOOT,
+            ClassPath.COMPILE,
+            JavaClassPathConstants.MODULE_BOOT_PATH
+    );
 
     public ClassPath findClassPath(
             @NonNull final FileObject file,

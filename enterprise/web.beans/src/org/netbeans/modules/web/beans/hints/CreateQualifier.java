@@ -104,15 +104,20 @@ public class CreateQualifier implements ErrorRule<Void> {
     public void cancel() {
     }
 
+    private static final Set<String> CODES = Set.of(
+            "compiler.err.cant.resolve.location",
+            "compiler.err.cant.resolve.location.args",
+            "compiler.err.cant.apply.symbol",
+            "compiler.err.cant.resolve",
+            "compiler.err.cant.resolve.args"
+    ); // NOI18N
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.java.hints.spi.ErrorRule#getCodes()
      */
     @Override
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList("compiler.err.cant.resolve.location", 
-                "compiler.err.cant.resolve.location.args", 
-                "compiler.err.cant.apply.symbol", "compiler.err.cant.resolve", 
-                "compiler.err.cant.resolve.args")); // NOI18N
+        return CODES;
     }
 
     /* (non-Javadoc)

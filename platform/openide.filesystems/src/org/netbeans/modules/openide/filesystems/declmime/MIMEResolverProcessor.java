@@ -49,13 +49,15 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class MIMEResolverProcessor extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            MIMEResolver.Registration.class.getCanonicalName(),
+            MIMEResolver.ExtensionRegistration.class.getCanonicalName(),
+            MIMEResolver.NamespaceRegistration.class.getCanonicalName()
+    );
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> set = new HashSet<String>();
-        set.add(MIMEResolver.Registration.class.getCanonicalName());
-        set.add(MIMEResolver.ExtensionRegistration.class.getCanonicalName());
-        set.add(MIMEResolver.NamespaceRegistration.class.getCanonicalName());
-        return set;
+        return ANNOTATION_TYPES;
     }
     
     

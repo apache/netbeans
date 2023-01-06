@@ -42,11 +42,13 @@ import org.openide.util.lookup.implspi.AbstractServiceProviderProcessor;
 
 public class ServiceProviderProcessor extends AbstractServiceProviderProcessor {
 
-    public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
             ServiceProvider.class.getCanonicalName(),
             ServiceProviders.class.getCanonicalName()
-        ));
+    );
+
+    public @Override Set<String> getSupportedAnnotationTypes() {
+        return ANNOTATION_TYPES;
     }
 
     /** public for ServiceLoader */

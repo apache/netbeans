@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints.infrastructure;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -82,11 +81,11 @@ public class SuppressWarningsCompletion implements Processor {
         return Collections.emptySet();
     }
 
-    private static final Set<String> supportedAnnotationTypes = new HashSet<String>(Arrays.asList(SuppressWarnings.class.getName()));
+    private static final Set<String> ANNOTATION_TYPES = Set.of(SuppressWarnings.class.getName());
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return supportedAnnotationTypes;
+        return ANNOTATION_TYPES;
     }
 
     @Override

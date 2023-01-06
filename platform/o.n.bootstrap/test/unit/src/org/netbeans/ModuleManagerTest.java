@@ -1634,12 +1634,12 @@ public class ModuleManagerTest extends SetupHid {
             "prov-foo-req-bar.jar",
         };
         // Never make any of the following eager:
-        Set<String> noDepsNames = new HashSet<String>(Arrays.asList(
+        Set<String> noDepsNames = Set.of(
             "simple-module.jar",
             "prov-foo.jar",
             "prov-baz.jar",
             "prov-foo-bar.jar"
-        ));
+        );
         List<String> freeModules = new ArrayList<String>(Arrays.asList(moduleNames));
         int count = 100; // # of things to do in order
         Random r = new Random(count * 17 + 113);

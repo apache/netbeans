@@ -25,6 +25,8 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
+
 import org.netbeans.modules.db.metadata.model.api.Catalog;
 import org.netbeans.modules.db.metadata.model.api.Column;
 import org.netbeans.modules.db.metadata.model.api.ForeignKey;
@@ -131,7 +133,7 @@ public class JDBCMetadataDerbyTest extends JDBCMetadataTestBase {
         assertEquals(IndexType.OTHER, index.getIndexType());
         assertEquals("JDBCIndex[name='BAR_INDEX', type=OTHER, unique=false]", index.toString());
         Collection<IndexColumn> columns = index.getColumns();
-        assertNames(new HashSet<String>(Arrays.asList("FOO_ID", "FOO_NAME")), columns);
+        assertNames(Set.of("FOO_ID", "FOO_NAME"), columns);
 
         IndexColumn col = index.getColumn("FOO_ID");
         assertNotNull(col);
@@ -155,7 +157,7 @@ public class JDBCMetadataDerbyTest extends JDBCMetadataTestBase {
         assertEquals(IndexType.OTHER, index.getIndexType());
         columns = index.getColumns();
         assertEquals(1, columns.size());
-        assertNames(new HashSet<String>(Arrays.asList("DEC_COL")), columns);
+        assertNames(Set.of("DEC_COL"), columns);
         col = index.getColumn("DEC_COL");
         assertNotNull(col);
         assertEquals(index, col.getParent());
@@ -191,7 +193,7 @@ public class JDBCMetadataDerbyTest extends JDBCMetadataTestBase {
         Schema schema = metadata.getDefaultSchema();
 
         Collection<View> views = schema.getViews();
-        assertNames(new HashSet<String>(Arrays.asList("BARVIEW")), views);
+        assertNames(Set.of("BARVIEW"), views);
         View barView = schema.getView("BARVIEW");
         assertTrue(views.contains(barView));
         assertSame(schema, barView.getParent());

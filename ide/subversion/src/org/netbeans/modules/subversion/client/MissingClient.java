@@ -24,6 +24,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -47,8 +48,7 @@ import org.openide.util.NbBundle;
 public class MissingClient implements ActionListener, HyperlinkListener {
     
     private final MissingClientPanel panel;
-    private static final HashSet<String> ALLOWED_EXECUTABLES =
-            new HashSet<String>(Arrays.asList(new String[] {"svn", "svn.exe"} )); //NOI18N
+    private static final Set<String> ALLOWED_EXECUTABLES = Set.of("svn", "svn.exe"); //NOI18N
     
     /** Creates a new instance of MissingSvnClient */
     public MissingClient() {

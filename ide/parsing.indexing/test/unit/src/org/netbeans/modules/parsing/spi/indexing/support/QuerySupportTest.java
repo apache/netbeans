@@ -496,7 +496,7 @@ public class QuerySupportTest extends IndexingTestBase {
 
         @Override
         public Set<String> getBinaryLibraryPathIds() {
-            return new HashSet<String>(Arrays.asList(BOOT, COMPILE));
+            return Set.of(BOOT, COMPILE);
         }
 
         @Override

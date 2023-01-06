@@ -57,26 +57,14 @@ public final class JspSourceTask extends ParserResultTask<JspParserResult> {
     private boolean cancelled;
 
     //map of jsp syntax element kind -> element name -> attribute name
-    private static final Map<JspSyntaxElement.Kind, Map<String, Set<String>>> EMBEDDINGS =
-            new HashMap<JspSyntaxElement.Kind, Map<String, Set<String>>>();
-
-    static {
-        Map<String, Set<String>> tags = new HashMap<String, Set<String>>();
-        tags.put("jsp:useBean",
-                new HashSet<String>(Arrays.asList(new String[]{"class", "type", "id"}))); //NOI18N
-        
-        Map<String, Set<String>> dirs = new HashMap<String, Set<String>>();
-        dirs.put("page",
-                new HashSet<String>(Arrays.asList(new String[]{"extends", "import"}))); //NOI18N
-        dirs.put("tag",
-                new HashSet<String>(Collections.singletonList("import"))); //NOI18N
-        dirs.put("attribute",
-                new HashSet<String>(Collections.singletonList("type"))); //NOI18N
-
-        EMBEDDINGS.put(JspSyntaxElement.Kind.OPENTAG, tags);
-        EMBEDDINGS.put(JspSyntaxElement.Kind.DIRECTIVE, dirs);
-
-    }
+    private static final Map<JspSyntaxElement.Kind, Map<String, Set<String>>> EMBEDDINGS = Map.of(
+            JspSyntaxElement.Kind.OPENTAG, Map.of("jsp:useBean", Set.of("class", "type", "id")), //NOI18N
+            JspSyntaxElement.Kind.DIRECTIVE, Map.of(
+                    "page", Set.of("extends", "import"), //NOI18N
+                    "tag", Set.of("import"), //NOI18N
+                    "attribute", Set.of("type") //NOI18N
+            )
+    );
 
     public static class Factory extends TaskFactory {
 

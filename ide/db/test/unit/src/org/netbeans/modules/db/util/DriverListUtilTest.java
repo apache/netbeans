@@ -46,28 +46,26 @@ public class DriverListUtilTest extends TestCase {
     private static final String DSN = "mydsn";
     private static final String TNSNAME = "mytns";
     
-    private static final HashMap<String, String> ALLPROPS = new HashMap<>();
+    private static final Map<String, String> ALLPROPS = Map.of(
+            JdbcUrl.TOKEN_HOST, HOST,
+            JdbcUrl.TOKEN_DB, DB,
+            JdbcUrl.TOKEN_PORT, PORT,
+            JdbcUrl.TOKEN_SERVERNAME, SERVERNAME,
+            JdbcUrl.TOKEN_ADDITIONAL, ADDITIONAL,
+            JdbcUrl.TOKEN_DSN, DSN,
+            JdbcUrl.TOKEN_SERVICENAME, SERVICENAME,
+            JdbcUrl.TOKEN_SID, SID,
+            JdbcUrl.TOKEN_TNSNAME, TNSNAME,
+            JdbcUrl.TOKEN_INSTANCE, INSTANCE
+    );
     
-    private static final ArrayList<String> STD_SUPPORTED_PROPS = new ArrayList<>();
-    
-    static {
-        ALLPROPS.put(JdbcUrl.TOKEN_HOST, HOST);
-        ALLPROPS.put(JdbcUrl.TOKEN_DB, DB);
-        ALLPROPS.put(JdbcUrl.TOKEN_PORT, PORT);
-        ALLPROPS.put(JdbcUrl.TOKEN_SERVERNAME, SERVERNAME);
-        ALLPROPS.put(JdbcUrl.TOKEN_ADDITIONAL, ADDITIONAL);
-        ALLPROPS.put(JdbcUrl.TOKEN_DSN, DSN);
-        ALLPROPS.put(JdbcUrl.TOKEN_SERVICENAME, SERVICENAME);
-        ALLPROPS.put(JdbcUrl.TOKEN_SID, SID);
-        ALLPROPS.put(JdbcUrl.TOKEN_TNSNAME, TNSNAME);
-        ALLPROPS.put(JdbcUrl.TOKEN_INSTANCE, INSTANCE);
-        
-        STD_SUPPORTED_PROPS.add(JdbcUrl.TOKEN_HOST);
-        STD_SUPPORTED_PROPS.add(JdbcUrl.TOKEN_PORT);
-        STD_SUPPORTED_PROPS.add(JdbcUrl.TOKEN_DB);
-        STD_SUPPORTED_PROPS.add(JdbcUrl.TOKEN_ADDITIONAL);
-    }
-    
+    private static final List<String> STD_SUPPORTED_PROPS = List.of(
+            JdbcUrl.TOKEN_HOST,
+            JdbcUrl.TOKEN_PORT,
+            JdbcUrl.TOKEN_DB,
+            JdbcUrl.TOKEN_ADDITIONAL
+    );
+
     public DriverListUtilTest(String testName) {
         super(testName);
     }

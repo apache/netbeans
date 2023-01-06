@@ -108,10 +108,14 @@ public class EjbJarActionProvider extends BaseActionProvider {
     private final EjbJarProject project;
 
     /**Set of commands which are affected by background scanning*/
-    private Set<String> bkgScanSensitiveActions;
+    private static final Set<String> BKG_SCAN_SENSITIVE_ACTIONS = Set.of(
+            COMMAND_RUN_SINGLE
+    );
 
     /**Set of commands which need java model up to date*/
-    private Set<String> needJavaModelActions;
+    private static final Set<String> NEED_JAVA_MODEL_ACTIONS = Set.of(
+            JavaProjectConstants.COMMAND_DEBUG_FIX
+    );
 
     private static final String[] actionsDisabledForQuickRun = {
         COMMAND_COMPILE_SINGLE,
@@ -119,39 +123,32 @@ public class EjbJarActionProvider extends BaseActionProvider {
     };
     
     /** Map from commands to ant targets */
-    private Map<String,String[]> commands;
+    private static final Map<String,String[]> COMMANDS = Map.ofEntries(
+            Map.entry(COMMAND_BUILD, new String[] {"dist"}), // NOI18N
+            Map.entry(COMMAND_CLEAN, new String[] {"clean"}), // NOI18N
+            Map.entry(COMMAND_REBUILD, new String[] {"clean", "dist"}), // NOI18N
+            Map.entry(COMMAND_COMPILE_SINGLE, new String[] {"compile-single"}), // NOI18N
+            Map.entry(COMMAND_RUN, new String[] {"run"}), // NOI18N
+            Map.entry(COMMAND_RUN_SINGLE, new String[] {"run-main"}), // NOI18N
+            Map.entry(EjbProjectConstants.COMMAND_REDEPLOY, new String[] {"run"}), // NOI18N
+            Map.entry(COMMAND_DEBUG, new String[] {"debug"}), // NOI18N
+            Map.entry(COMMAND_PROFILE, new String[]{"profile"}), // NOI18N
+            Map.entry(JavaProjectConstants.COMMAND_JAVADOC, new String[] {"javadoc"}), // NOI18N
+            Map.entry(COMMAND_TEST, new String[] {"test"}), // NOI18N
+            Map.entry(COMMAND_TEST_SINGLE, new String[] {"test-single"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_TEST_SINGLE, new String[] {"debug-test"}), // NOI18N
+            Map.entry(JavaProjectConstants.COMMAND_DEBUG_FIX, new String[] {"debug-fix"}), // NOI18N
+            Map.entry(COMMAND_VERIFY, new String[] {"verify"}), // NOI18N
+            Map.entry(COMMAND_DEBUG_SINGLE, new String[] {"debug-single"}), // NOI18N
+            Map.entry(COMMAND_PROFILE_SINGLE, new String[]{"profile-single"}), // NOI18N
+            Map.entry(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}), // NOI18N
+            Map.entry(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}) // NOI18N
+    );
 
     public EjbJarActionProvider(EjbJarProject project, UpdateHelper updateHelper) {
         super(project, updateHelper, project.evaluator(), project.getSourceRoots(), project.getTestSourceRoots(), 
                 project.getAntProjectHelper(), new CallbackImpl(new BaseActionProvider.CallbackImpl(project.getClassPathProvider()), project.getEjbModule()));
         this.project = project;
-        commands = new HashMap<String,String[]>();
-        commands.put(COMMAND_BUILD, new String[] {"dist"}); // NOI18N
-        commands.put(COMMAND_CLEAN, new String[] {"clean"}); // NOI18N
-        commands.put(COMMAND_REBUILD, new String[] {"clean", "dist"}); // NOI18N
-        commands.put(COMMAND_COMPILE_SINGLE, new String[] {"compile-single"}); // NOI18N
-        commands.put(COMMAND_RUN, new String[] {"run"}); // NOI18N
-        commands.put(COMMAND_RUN_SINGLE, new String[] {"run-main"}); // NOI18N
-        commands.put(EjbProjectConstants.COMMAND_REDEPLOY, new String[] {"run"}); // NOI18N
-        commands.put(COMMAND_DEBUG, new String[] {"debug"}); // NOI18N
-        commands.put(COMMAND_PROFILE, new String[]{"profile"}); // NOI18N
-        commands.put(JavaProjectConstants.COMMAND_JAVADOC, new String[] {"javadoc"}); // NOI18N
-        commands.put(COMMAND_TEST, new String[] {"test"}); // NOI18N
-        commands.put(COMMAND_TEST_SINGLE, new String[] {"test-single"}); // NOI18N
-        commands.put(COMMAND_DEBUG_TEST_SINGLE, new String[] {"debug-test"}); // NOI18N
-        commands.put(JavaProjectConstants.COMMAND_DEBUG_FIX, new String[] {"debug-fix"}); // NOI18N
-        commands.put(COMMAND_VERIFY, new String[] {"verify"}); // NOI18N
-        commands.put(COMMAND_DEBUG_SINGLE, new String[] {"debug-single"}); // NOI18N
-        commands.put(COMMAND_PROFILE_SINGLE, new String[]{"profile-single"}); // NOI18N
-        commands.put(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}); // NOI18N
-        commands.put(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}); // NOI18N
-        this.bkgScanSensitiveActions = new HashSet<String>(Arrays.asList(
-            COMMAND_RUN_SINGLE
-        ));
-
-        this.needJavaModelActions = new HashSet<String>(Arrays.asList(
-            JavaProjectConstants.COMMAND_DEBUG_FIX
-        ));
         setServerExecution(true);
     }
 
@@ -167,17 +164,17 @@ public class EjbJarActionProvider extends BaseActionProvider {
 
     @Override
     public Map<String, String[]> getCommands() {
-        return commands;
+        return COMMANDS;
     }
 
     @Override
     protected Set<String> getScanSensitiveActions() {
-        return bkgScanSensitiveActions;
+        return BKG_SCAN_SENSITIVE_ACTIONS;
     }
 
     @Override
     protected Set<String> getJavaModelActions() {
-        return needJavaModelActions;
+        return NEED_JAVA_MODEL_ACTIONS;
     }
 
     @Override
@@ -260,7 +257,7 @@ public class EjbJarActionProvider extends BaseActionProvider {
             } else {
                 p.setProperty("forceRedeploy", "false"); //NOI18N
             }
-            return commands.get(command);
+            return COMMANDS.get(command);
         } else {
             return super.getTargetNames(command, context, p, doJavaChecks);
         }

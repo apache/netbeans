@@ -26,6 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -125,21 +127,21 @@ public class EditableManifestTest extends NbTestCase {
         assertEquals(Collections.EMPTY_SET, m.getAttributeNames(null));
         assertEquals(Collections.EMPTY_SET, m.getSectionNames());
         m = string2Manifest("Foo: val1\nBar: val2");
-        assertEquals(new HashSet<String>(Arrays.asList("Foo", "Bar")), m.getAttributeNames(null));
+        assertEquals(Set.of("Foo", "Bar"), m.getAttributeNames(null));
         assertEquals("val1", m.getAttribute("Foo", null));
         assertEquals("val2", m.getAttribute("Bar", null));
         assertEquals(Collections.emptySet(), m.getSectionNames());
         m = string2Manifest("Foo: val1\nBar: val2\n\nName: something.class\nAttr: val\n\nName: other.class\nAttr: val2\n\n");
-        assertEquals(new HashSet<String>(Arrays.asList("Foo", "Bar")), m.getAttributeNames(null));
+        assertEquals(Set.of("Foo", "Bar"), m.getAttributeNames(null));
         assertEquals("val1", m.getAttribute("foo", null));
         assertEquals("val2", m.getAttribute("bar", null));
-        assertEquals(new HashSet<String>(Arrays.asList("something.class", "other.class")), m.getSectionNames());
+        assertEquals(Set.of("something.class", "other.class"), m.getSectionNames());
         assertEquals(Collections.singleton("Attr"), m.getAttributeNames("something.class"));
         assertEquals("val", m.getAttribute("Attr", "something.class"));
         assertEquals(Collections.singleton("Attr"), m.getAttributeNames("other.class"));
         assertEquals("val2", m.getAttribute("Attr", "other.class"));
         m = string2Manifest("Foo :  bar \nBaz:quux");
-        assertEquals(new HashSet<String>(Arrays.asList("Foo", "Baz")), m.getAttributeNames(null));
+        assertEquals(Set.of("Foo", "Baz"), m.getAttributeNames(null));
         assertEquals("bar ", m.getAttribute("Foo", null));
         assertEquals("quux", m.getAttribute("Baz", null));
     }

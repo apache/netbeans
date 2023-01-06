@@ -371,7 +371,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         MAX_COMMANDLINE_SIZE = maxCmdSize;
     }
 
-    private static final HashSet<String> WORKING_COPY_PARENT_MODIFYING_COMMANDS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> WORKING_COPY_PARENT_MODIFYING_COMMANDS = Set.of(
         HG_BACKOUT_CMD,
         HG_CLONE_CMD,
         HG_COMMIT_CMD,
@@ -392,9 +392,9 @@ public abstract class HgCommand<T> implements Callable<T> {
         HG_TAG_CMD,
         HG_UNBUNDLE_CMD,
         HG_UPDATE_ALL_CMD
-    ));
+    );
 
-    private static final HashSet<String> REPOSITORY_NOMODIFICATION_COMMANDS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> REPOSITORY_NOMODIFICATION_COMMANDS = Set.of(
         HG_ANNOTATE_CMD,
         HG_BRANCH_CMD,
         HG_BRANCHES_CMD,
@@ -419,7 +419,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         HG_VERIFY_CMD,
         HG_VERSION_CMD,
         HG_VIEW_CMD
-    ));
+    );
     private static final String HG_FLAG_TOPO = "--topo"; //NOI18N
     
     private static final String CMD_EXE = "cmd.exe"; //NOI18N
@@ -4610,7 +4610,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     private static final Set<File> loggedRepositories = new HashSet<File>();
-    private static final Set<String> noLogCommands = new HashSet<String>(Arrays.asList(
+    private static final Set<String> noLogCommands = Set.of(
         HG_BRANCH_CMD,
         HG_BRANCHES_CMD,
         HG_CAT_CMD,
@@ -4621,7 +4621,8 @@ public abstract class HgCommand<T> implements Callable<T> {
         HG_DIFF_CMD,
         HG_TAGS_CMD,
         HG_VERSION_CMD
-    ));
+    );
+
     private static void logExternalRepositories (File repository, String hgCommand) {
         if (!noLogCommands.contains(hgCommand) && loggedRepositories.add(repository)) {
             HgConfigFiles hgConfigFiles = new HgConfigFiles(repository);

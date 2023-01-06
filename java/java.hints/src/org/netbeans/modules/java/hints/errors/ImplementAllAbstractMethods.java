@@ -85,12 +85,13 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
     public ImplementAllAbstractMethods() {
     }
 
+    private static final Set<String> CODES = Set.of(
+            "compiler.err.abstract.cant.be.instantiated", // NOI18N
+            "compiler.err.does.not.override.abstract", // NOI18N
+            "compiler.err.enum.constant.does.not.override.abstract"); // NOI18N
+
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList(
-                "compiler.err.abstract.cant.be.instantiated", // NOI18N
-                "compiler.err.does.not.override.abstract", // NOI18N
-                "compiler.err.abstract.cant.be.instantiated", // NOI18N
-                "compiler.err.enum.constant.does.not.override.abstract")); // NOI18N
+        return CODES;
     }
     
     /**

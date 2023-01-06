@@ -383,7 +383,7 @@ public class UnusedImportsTest extends NbTestCase {
             out.add(h.resolve(ci).getLeaf().toString());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList(golden)), out);
+        assertEquals(Set.of(golden), out);
     }
 
     @Override

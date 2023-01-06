@@ -20,8 +20,6 @@ package org.netbeans.modules.properties;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -284,6 +282,9 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
                 "Resource Bundles: Entries not initialized");           //NOI18N
     }
 
+    private static final Set<String> KNOWN_LANGUAGES = Set.of(Locale.getISOLanguages());
+    private static final Set<String> KNOWN_COUNTRIES = Set.of(Locale.getISOCountries());
+
     private static boolean isValidLocaleSuffix(String s) {
         // first char is _
         int n = s.length();
@@ -306,14 +307,12 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
             return false;
         }
 
-        Set<String> knownLanguages = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
-        if (!knownLanguages.contains(s1)) {
+        if (!KNOWN_LANGUAGES.contains(s1)) {
             return false;
         }
 
         if (s2 != null) {
-            Set<String> knownCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
-            if (!knownCountries.contains(s2)) {
+            if (!KNOWN_COUNTRIES.contains(s2)) {
                 return false;
             }
         }

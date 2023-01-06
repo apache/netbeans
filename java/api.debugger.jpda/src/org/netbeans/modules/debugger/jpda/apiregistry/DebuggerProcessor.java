@@ -56,15 +56,17 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
 
     public static final String SERVICE_NAME = "serviceName"; // NOI18N
 
-    public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
             JPDADebugger.Registration.class.getCanonicalName(),
             SmartSteppingCallback.Registration.class.getCanonicalName(),
             SourcePathProvider.Registration.class.getCanonicalName(),
             EditorContext.Registration.class.getCanonicalName(),
             Evaluator.Registration.class.getCanonicalName(),
             BreakpointsClassFilter.Registration.class.getCanonicalName()
-        ));
+    );
+
+    public @Override Set<String> getSupportedAnnotationTypes() {
+        return ANNOTATION_TYPES;
     }
 
     @Override

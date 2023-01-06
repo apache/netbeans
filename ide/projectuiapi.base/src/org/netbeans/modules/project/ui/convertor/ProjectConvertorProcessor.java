@@ -40,9 +40,12 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 public class ProjectConvertorProcessor extends LayerGeneratingProcessor {
+
+    private static final Set<String> ANNOTATION_TYPES = Set.of(ProjectConvertor.Registration.class.getCanonicalName());
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(ProjectConvertor.Registration.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

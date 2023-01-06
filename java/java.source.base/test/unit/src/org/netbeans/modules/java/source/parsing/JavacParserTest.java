@@ -256,7 +256,7 @@ public class JavacParserTest extends NbTestCase {
                     codes.add(d.getCode());
                 }
 
-                assertEquals(new HashSet<String>(Arrays.asList("compiler.warn.missing.SVUID", "compiler.err.does.not.override.abstract")), codes);
+                assertEquals(Set.of("compiler.warn.missing.SVUID", "compiler.err.does.not.override.abstract"), codes);
             }
         }, true);
         

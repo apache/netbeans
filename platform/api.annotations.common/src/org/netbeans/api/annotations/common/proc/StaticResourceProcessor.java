@@ -45,22 +45,22 @@ import org.netbeans.api.annotations.common.StaticResource;
 
 public class StaticResourceProcessor extends AbstractProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            // org.netbeans.api.annotations.common annotations
+            CheckForNull.class.getCanonicalName(),
+            CheckReturnValue.class.getCanonicalName(),
+            NonNull.class.getCanonicalName(),
+            NullAllowed.class.getCanonicalName(),
+            NullUnknown.class.getCanonicalName(),
+            StaticResource.class.getCanonicalName(),
+            SuppressWarnings.class.getCanonicalName(),
+
+            // other well-known Java platform annotations
+            SupportedAnnotationTypes.class.getCanonicalName()
+    );
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        TreeSet<String> all = new TreeSet<>();
-
-        // org.netbeans.api.annotations.common annotations
-        all.add(CheckForNull.class.getCanonicalName());
-        all.add(CheckReturnValue.class.getCanonicalName());
-        all.add(NonNull.class.getCanonicalName());
-        all.add(NullAllowed.class.getCanonicalName());
-        all.add(NullUnknown.class.getCanonicalName());
-        all.add(StaticResource.class.getCanonicalName());
-        all.add(SuppressWarnings.class.getCanonicalName());
-
-        // other well-known Java platform annotations
-        all.add(SupportedAnnotationTypes.class.getCanonicalName());
-
-        return all;
+        return ANNOTATION_TYPES;
     }
 
     @Override

@@ -97,14 +97,16 @@ public class SearchModuleDependency implements org.netbeans.modules.java.hints.s
     public SearchModuleDependency() {
     }
 
+    private static final Set<String> CODES = Set.of(
+            "compiler.err.cant.resolve",//NOI18N
+            "compiler.err.cant.resolve.location",//NOI18N
+            "compiler.err.doesnt.exist",//NOI18N
+            "compiler.err.not.stmt"
+    );//NOI18N
+
     @Override
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList(
-                "compiler.err.cant.resolve",//NOI18N
-                "compiler.err.cant.resolve.location",//NOI18N
-                "compiler.err.doesnt.exist",//NOI18N
-                "compiler.err.not.stmt"));//NOI18N
-
+        return CODES;
     }
 
     private boolean isHintEnabled() {

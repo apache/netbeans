@@ -38,9 +38,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class BugtrackingRegistrationProcessor extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(BugtrackingConnector.Registration.class.getCanonicalName());
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(BugtrackingConnector.Registration.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

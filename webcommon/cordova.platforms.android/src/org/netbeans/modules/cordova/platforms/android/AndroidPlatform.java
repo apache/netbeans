@@ -25,10 +25,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -135,7 +132,7 @@ public class AndroidPlatform implements MobilePlatform {
         return Target.parse(avdString);
     }
     
-    private final HashSet<String> targets = new HashSet<String>(Arrays.asList(new String[]{
+    private static final Set<String> TARGETS = Set.of(
             "android-14", //NOI18N
             "android-15", //NOI18N
             "android-16", //NOI18N
@@ -144,7 +141,8 @@ public class AndroidPlatform implements MobilePlatform {
             "android-19", //NOI18N
             "android-20", //NOI18N
             "android-21", //NOI18N
-            "android-22"})); //NOI18N
+            "android-22"
+    ); //NOI18N
     
     
     @Override
@@ -152,7 +150,7 @@ public class AndroidPlatform implements MobilePlatform {
         try {
             final Collection<SDK> targets1 = getSDKs();
             for (SDK t: targets1) {
-                if (targets.contains(t.getName())) {
+                if (TARGETS.contains(t.getName())) {
                     return t;
                 }
             }

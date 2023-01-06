@@ -49,10 +49,13 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class Schema2BeansProcessor extends AbstractProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            Schema2Beans.class.getCanonicalName(),
+            Multiple.class.getCanonicalName()
+    );
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
-                Schema2Beans.class.getCanonicalName(),
-                Multiple.class.getCanonicalName()));
+        return ANNOTATION_TYPES;
     }
 
     @Override

@@ -301,6 +301,9 @@ public class ReferencesCountTest extends NbTestCase {
     
     public static class PRImpl extends PathRecognizer {
 
+        private static final Set<String> CLASS_PATH_SET = Set.of(ClassPath.BOOT, ClassPath.COMPILE);
+        private static final Set<String> MIME_TYPES = Set.of(JavaDataLoader.JAVA_MIME_TYPE);
+
         @Override
         public Set<String> getSourcePathIds() {
             return Collections.<String>singleton(ClassPath.SOURCE);
@@ -313,13 +316,12 @@ public class ReferencesCountTest extends NbTestCase {
 
         @Override
         public Set<String> getBinaryLibraryPathIds() {
-            return Collections.unmodifiableSet(
-                    new HashSet<String>(Arrays.asList(ClassPath.BOOT, ClassPath.COMPILE)));
+            return CLASS_PATH_SET;
         }
 
         @Override
         public Set<String> getMimeTypes() {
-            return Collections.<String>singleton(JavaDataLoader.JAVA_MIME_TYPE);
+            return MIME_TYPES;
         }
         
     }

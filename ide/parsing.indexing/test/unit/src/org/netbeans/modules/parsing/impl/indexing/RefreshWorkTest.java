@@ -172,10 +172,10 @@ public class RefreshWorkTest  extends IndexingTestBase {
         assertTrue("Expecting " + rootCUrl + " to be scanned", indexer.indexedFiles.containsKey(rootCUrl));
 
         Set<String> files = indexer.indexedFiles.get(rootCUrl);
-        assertEquals("Wrong files scanned", new HashSet<String>(Arrays.asList(new String [] {
+        assertEquals("Wrong files scanned", Set.of(
             "org/pckg1/pckg2/file1.txt",
             "org/pckg1/pckg2/file2.txt"
-        })), files);
+        ), files);
     }
 
     public void testInnerFiles() throws IOException {
@@ -204,9 +204,9 @@ public class RefreshWorkTest  extends IndexingTestBase {
         assertTrue("Expecting " + rootCUrl + " to be scanned", indexer.indexedFiles.containsKey(rootCUrl));
 
         Set<String> files = indexer.indexedFiles.get(rootCUrl);
-        assertEquals("Wrong files scanned", new HashSet<String>(Arrays.asList(new String [] {
+        assertEquals("Wrong files scanned", Set.of(
             "org/pckg1/pckg2/file1.txt"
-        })), files);
+        ), files);
     }
 
     private static final class Indexer extends CustomIndexer {

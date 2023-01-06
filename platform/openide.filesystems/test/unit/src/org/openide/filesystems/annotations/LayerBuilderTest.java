@@ -299,8 +299,10 @@ public class LayerBuilderTest extends NbTestCase {
 
     @ServiceProvider(service=Processor.class)
     public static class AP extends LayerGeneratingProcessor {
+        private static final Set<String> ANNOTATION_TYPES = Set.of(A.class.getCanonicalName());
+
         public @Override Set<String> getSupportedAnnotationTypes() {
-            return Collections.singleton(A.class.getCanonicalName());
+            return ANNOTATION_TYPES;
         }
         protected @Override boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
             if (roundEnv.processingOver()) {
@@ -358,8 +360,11 @@ public class LayerBuilderTest extends NbTestCase {
     // this processor has deliberately @SupportedSourceVersion left and obsolete, a test checks this
     @SupportedSourceVersion(SourceVersion.RELEASE_7)
     public static class VP extends LayerGeneratingProcessor {
+
+        private static final Set<String> ANNOTATION_TYPES = Set.of(V.class.getCanonicalName());
+
         public @Override Set<String> getSupportedAnnotationTypes() {
-            return Collections.singleton(V.class.getCanonicalName());
+            return ANNOTATION_TYPES;
         }
         protected @Override boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
             if (roundEnv.processingOver()) {
@@ -424,8 +429,11 @@ public class LayerBuilderTest extends NbTestCase {
     public @interface I {}
     @ServiceProvider(service=Processor.class)
     public static class IP extends LayerGeneratingProcessor {
+
+        private static final Set<String> ANNOTATION_TYPES = Set.of(I.class.getCanonicalName());
+
         public @Override Set<String> getSupportedAnnotationTypes() {
-            return Collections.singleton(I.class.getCanonicalName());
+            return ANNOTATION_TYPES;
         }
         protected @Override boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
             if (roundEnv.processingOver()) {

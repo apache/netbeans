@@ -42,13 +42,15 @@ public final class TopComponentProcessor extends LayerGeneratingProcessor {
     public TopComponentProcessor() {
     }
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            TopComponent.Registration.class.getCanonicalName(),
+            TopComponent.OpenActionRegistration.class.getCanonicalName(),
+            TopComponent.Description.class.getCanonicalName()
+    );
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> hash = new HashSet<String>();
-        hash.add(TopComponent.Registration.class.getCanonicalName());
-        hash.add(TopComponent.OpenActionRegistration.class.getCanonicalName());
-        hash.add(TopComponent.Description.class.getCanonicalName());
-        return hash;
+        return ANNOTATION_TYPES;
     }
     
     @Override

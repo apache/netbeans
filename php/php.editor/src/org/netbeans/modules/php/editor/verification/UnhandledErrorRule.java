@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
-import java.util.Collections;
 import java.util.Set;
 import org.netbeans.modules.csl.api.Error;
 
@@ -28,9 +27,11 @@ import org.netbeans.modules.csl.api.Error;
  */
 public abstract class UnhandledErrorRule extends ErrorRule implements InvokableRule<Error> {
 
+    private static final Set<?> CODES = Set.of(PHPHintsProvider.ErrorType.UNHANDLED_ERRORS);
+
     @Override
     public Set<?> getCodes() {
-        return Collections.singleton(PHPHintsProvider.ErrorType.UNHANDLED_ERRORS);
+        return CODES;
     }
 
 }

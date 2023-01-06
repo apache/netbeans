@@ -53,8 +53,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class ServiceTabProcessor extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(ServicesTabNodeRegistration.class.getCanonicalName());
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(ServicesTabNodeRegistration.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

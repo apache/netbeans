@@ -99,7 +99,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetResourceRefsOnClasspath() throws Exception {
         initClasses();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myDS", "yourDataSource"));
+        final Set<String> resourceNames = Set.of("myDS", "yourDataSource");
         createWebAppModel(false).runReadAction(new MetadataModelAction<WebAppMetadata, Void>() {
             public Void run(WebAppMetadata metadata) throws VersionNotSupportedException {
                 List<ResourceRef> rs = metadata.getResourceRefs();
@@ -122,7 +122,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetResourceRefsInClass() throws Exception {
         initClass();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myDS", "yourDataSource"));
+        final Set<String> resourceNames = Set.of("myDS", "yourDataSource");
 
         createEjbJarModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {
             public Void run(EjbJarMetadata metadata) throws VersionNotSupportedException {
@@ -140,7 +140,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetResourceEnvRefsOnClasspath() throws Exception {
         initClasses();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myInteractionSpec", "yourClass"));
+        final Set<String> resourceNames = Set.of("myInteractionSpec", "yourClass");
         createWebAppModel(false).runReadAction(new MetadataModelAction<WebAppMetadata, Void>() {
             public Void run(WebAppMetadata metadata) throws VersionNotSupportedException {
                 List<ResourceEnvRef> rs = metadata.getResourceEnvRefs();
@@ -163,7 +163,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetResourceEnvRefsInClass() throws Exception {
         initClass();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myTransaction"));
+        final Set<String> resourceNames = Set.of("myTransaction");
 
         createEjbJarModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {
             public Void run(EjbJarMetadata metadata) throws VersionNotSupportedException {
@@ -181,7 +181,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetEnvEntriesOnClasspath() throws Exception {
         initClasses();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myString", "yourLong"));
+        final Set<String> resourceNames = Set.of("myString", "yourLong");
         createWebAppModel(false).runReadAction(new MetadataModelAction<WebAppMetadata, Void>() {
             public Void run(WebAppMetadata metadata) throws VersionNotSupportedException {
                 List<EnvEntry> rs = metadata.getEnvEntries();
@@ -204,7 +204,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetEnvEntriesInClass() throws Exception {
         initClass();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myString", "yourLong"));
+        final Set<String> resourceNames = Set.of("myString", "yourLong");
 
         createEjbJarModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {
             public Void run(EjbJarMetadata metadata) throws VersionNotSupportedException {
@@ -222,7 +222,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetMessageDestinationRefsOnClasspath() throws Exception {
         initClasses();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myQueue"));
+        final Set<String> resourceNames = Set.of("myQueue");
         createWebAppModel(false).runReadAction(new MetadataModelAction<WebAppMetadata, Void>() {
             public Void run(WebAppMetadata metadata) throws VersionNotSupportedException {
                 List<MessageDestinationRef> rs = metadata.getMessageDestinationRefs();
@@ -245,7 +245,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetMessageDestinationRefsInClass() throws Exception {
         initClass();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myTopic"));
+        final Set<String> resourceNames = Set.of("myTopic");
 
         createEjbJarModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {
             public Void run(EjbJarMetadata metadata) throws VersionNotSupportedException {
@@ -263,7 +263,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetServiceRefsOnClasspath() throws Exception {
         initClasses();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("yourService"));
+        final Set<String> resourceNames = Set.of("yourService");
         createWebAppModel(false).runReadAction(new MetadataModelAction<WebAppMetadata, Void>() {
             public Void run(WebAppMetadata metadata) throws VersionNotSupportedException {
                 List<ServiceRef> rs = metadata.getServiceRefs();
@@ -286,7 +286,7 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
      */
     public void testGetServiceRefsInClass() throws Exception {
         initClass();
-        final Set<String> resourceNames = new HashSet<String>(Arrays.asList("myService"));
+        final Set<String> resourceNames = Set.of("myService");
 
         createEjbJarModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {
             public Void run(EjbJarMetadata metadata) throws VersionNotSupportedException {

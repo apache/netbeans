@@ -412,20 +412,18 @@ public class DTDLexer implements Lexer<DTDTokenId> {
         }
         return error();
     }
-    
-    private static final Map<String, Integer>   DECLARATION_KEYWORDS = new HashMap<>();
 
     /**
      * Recognized declaration keywords. A declaration (&lt;!) followed by other name
      * will be reported as ERROR token.
      */
-    static {
-        DECLARATION_KEYWORDS.put("ELEMENT", ISI_ELEMENT);
-        DECLARATION_KEYWORDS.put("ATTLIST", ISI_ATTLIST);
-        DECLARATION_KEYWORDS.put("ENTITY", ISI_ENTITY);
-        DECLARATION_KEYWORDS.put("NOTATION", ISI_NOTATION);
-    }
-    
+    private static final Map<String, Integer> DECLARATION_KEYWORDS = Map.of(
+            "ELEMENT", ISI_ELEMENT,
+            "ATTLIST", ISI_ATTLIST,
+            "ENTITY", ISI_ENTITY,
+            "NOTATION", ISI_NOTATION
+    );
+
     private Token<DTDTokenId> nextDeclaration() {
         int ch = input.read();
         // process escapes:

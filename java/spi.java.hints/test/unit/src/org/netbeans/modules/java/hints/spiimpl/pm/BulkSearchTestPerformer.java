@@ -530,7 +530,7 @@ public abstract class BulkSearchTestPerformer extends NbTestCase {
 
         BulkPattern bp = createSearch().create(info, new AtomicBoolean(), "$0.isDirectory()");
 
-        assertEquals(Arrays.asList(new HashSet<String>(Arrays.asList("isDirectory"))), bp.getIdentifiers());
+        assertEquals(List.of("isDirectory"), bp.getIdentifiers());
         //TODO: the actual code for kinds differs for NFABased search and REBased search:
 //        assertEquals(Arrays.asList(new HashSet<String>(Arrays.asList(Kind.METHOD_INVOCATION.name()))), bp.getKinds());
     }

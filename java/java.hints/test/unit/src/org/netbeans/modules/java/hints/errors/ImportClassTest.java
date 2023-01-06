@@ -102,7 +102,12 @@ public class ImportClassTest extends HintsTestBase {
         return "org/netbeans/modules/java/hints/errors/only-imports-layer.xml";
     }
 
-    private static final Set<String> IGNORED_IMPORTS = new HashSet<String>(Arrays.asList("com.sun.tools.javac.util.List", "com.sun.xml.internal.bind.v2.schemagen.xmlschema.List", "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"));
+    private static final Set<String> IGNORED_IMPORTS = Set.of(
+            "com.sun.tools.javac.util.List",
+            "com.sun.xml.internal.bind.v2.schemagen.xmlschema.List",
+            "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"
+    );
+
     @Override
     protected boolean includeFix(Fix f) {
         if (!(f instanceof FixImport)) {

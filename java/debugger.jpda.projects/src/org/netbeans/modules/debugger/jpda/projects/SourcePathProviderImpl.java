@@ -893,7 +893,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             srcRoots = unorderedOriginalRoots;
         }
         projectSourceRoots = getSourceRoots(originalSourcePath);
-        Set<String> smartSteppingRoots = new HashSet<String>(Arrays.asList(getSourceRoots(smartSteppingSourcePath)));
+        Set<String> smartSteppingRoots = Set.of(getSourceRoots(smartSteppingSourcePath));
         String[] orderedSmartSteppingRoots = new String[smartSteppingRoots.size()];
         int i = 0;
         for (String root : projectSourceRoots) {

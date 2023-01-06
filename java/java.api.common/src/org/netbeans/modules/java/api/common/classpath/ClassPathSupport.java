@@ -22,10 +22,7 @@ package org.netbeans.modules.java.api.common.classpath;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +76,7 @@ public final class ClassPathSupport {
     private AntProjectHelper antProjectHelper;
     private UpdateHelper updateHelper;
     //@GuardedBy("ClassPathSupport.class")
-    private static Set<String> wellKnownPaths;
+    private static final Set<String> WELL_KNOWN_PATHS = Set.of(ProjectProperties.WELL_KNOWN_PATHS);
     private static String antArtifactPrefix = ANT_ARTIFACT_PREFIX;
         
     private Callback callback;
@@ -327,12 +324,8 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
     }
 
     @NonNull
-    private static synchronized Set<String> getWellKnownPaths() {
-        if (wellKnownPaths == null) {
-             wellKnownPaths = Collections.unmodifiableSet(
-                     new HashSet<String>(Arrays.asList(ProjectProperties.WELL_KNOWN_PATHS)));
-        }
-        return wellKnownPaths;
+    private static Set<String> getWellKnownPaths() {
+        return WELL_KNOWN_PATHS;
     }
 
     public static boolean isVariableBasedReference(String ref) {

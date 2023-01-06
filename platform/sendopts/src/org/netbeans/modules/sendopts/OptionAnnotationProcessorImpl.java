@@ -41,11 +41,13 @@ import org.openide.filesystems.annotations.LayerGenerationException;
  */
 final class OptionAnnotationProcessorImpl extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            Arg.class.getName()
+    );
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> set = new HashSet<String>();
-        set.add(Arg.class.getName());
-        return set;
+        return ANNOTATION_TYPES;
     }
 
     @Override

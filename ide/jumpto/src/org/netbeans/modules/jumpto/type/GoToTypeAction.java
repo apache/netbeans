@@ -125,7 +125,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         putValue("PopupMenuText", NbBundle.getBundle(GoToTypeAction.class).getString("editor-popup-TXT_GoToType")); // NOI18N
         this.title = title;
         this.typeFilter = typeFilter;
-        this.implicitTypeProviders = typeProviders.length == 0 ? null : Collections.unmodifiableCollection(Arrays.asList(typeProviders));
+        this.implicitTypeProviders = typeProviders.length == 0 ? null : List.of(typeProviders);
         this.multiSelection = multiSelection;
         this.currentSearch = new CurrentSearch(() -> new AbstractModelFilter<TypeDescriptor>() {
             @Override

@@ -658,11 +658,13 @@ public final class ModuleManager extends Modules {
             return allPermissions;
         }
 
-        private final Set<String> JRE_PROVIDED_FACTORIES = new HashSet<String>(Arrays.asList(
+        private final Set<String> JRE_PROVIDED_FACTORIES = Set.of(
                 "META-INF/services/javax.xml.parsers.SAXParserFactory", // NOI18N
                 "META-INF/services/javax.xml.parsers.DocumentBuilderFactory", // NOI18N
                 "META-INF/services/javax.xml.transform.TransformerFactory", // NOI18N
-                "META-INF/services/javax.xml.validation.SchemaFactory")); // NOI18N
+                "META-INF/services/javax.xml.validation.SchemaFactory"
+        ); // NOI18N
+
         @Override
         public InputStream getResourceAsStream(String name) {
             if (JRE_PROVIDED_FACTORIES.contains(name)) {

@@ -90,20 +90,20 @@ public final class Actions implements ActionProvider {
      * Some routine global actions for which we can supply a display name.
      * These are IDE-specific.
      */
-    private static final Set<String> COMMON_IDE_GLOBAL_ACTIONS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> COMMON_IDE_GLOBAL_ACTIONS = Set.of(
         ActionProvider.COMMAND_DEBUG,
         ActionProvider.COMMAND_PROFILE,
         ActionProvider.COMMAND_DELETE,
         ActionProvider.COMMAND_COPY,
         ActionProvider.COMMAND_MOVE,
-        ActionProvider.COMMAND_RENAME));
+        ActionProvider.COMMAND_RENAME);
     /**
      * Similar to {@link #COMMON_IDE_GLOBAL_ACTIONS}, but these are not IDE-specific.
      * We also mark all of these as bound in the project; if the user
      * does not really have a binding, they are prompted for one when
      * the action is "run".
      */
-    private static final Set<String> COMMON_NON_IDE_GLOBAL_ACTIONS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> COMMON_NON_IDE_GLOBAL_ACTIONS = Set.of(
         ActionProvider.COMMAND_BUILD,
         ActionProvider.COMMAND_CLEAN,
         ActionProvider.COMMAND_REBUILD,
@@ -115,7 +115,7 @@ public final class Actions implements ActionProvider {
         // XXX should this really be here? perhaps not, once web part of #46886 is implemented...
         "redeploy",
         // XXX deploy action of EJB freeform project
-        "deploy")); // NOI18N
+        "deploy"); // NOI18N
     
     private final FreeformProject project;
     

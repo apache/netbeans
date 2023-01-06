@@ -32,21 +32,20 @@ public final class NbJUnitProcessor extends AbstractProcessor {
         return true;
     }
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            org.junit.After.class.getCanonicalName(),
+            org.junit.AfterClass.class.getCanonicalName(),
+            org.junit.Before.class.getCanonicalName(),
+            org.junit.BeforeClass.class.getCanonicalName(),
+            org.junit.ClassRule.class.getCanonicalName(),
+            org.junit.FixMethodOrder.class.getCanonicalName(),
+            org.junit.Ignore.class.getCanonicalName(),
+            org.junit.Rule.class.getCanonicalName(),
+            org.junit.Test.class.getCanonicalName()
+    );
+
     public Set<String> getSupportedAnnotationTypes() {
-        TreeSet<String> all = new TreeSet<>();
-
-        // org.junit annotations
-        all.add(org.junit.After.class.getCanonicalName());
-        all.add(org.junit.AfterClass.class.getCanonicalName());
-        all.add(org.junit.Before.class.getCanonicalName());
-        all.add(org.junit.BeforeClass.class.getCanonicalName());
-        all.add(org.junit.ClassRule.class.getCanonicalName());
-        all.add(org.junit.FixMethodOrder.class.getCanonicalName());
-        all.add(org.junit.Ignore.class.getCanonicalName());
-        all.add(org.junit.Rule.class.getCanonicalName());
-        all.add(org.junit.Test.class.getCanonicalName());
-
-        return all;
+        return ANNOTATION_TYPES;
     }
 
     @Override

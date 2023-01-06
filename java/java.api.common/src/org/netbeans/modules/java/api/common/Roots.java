@@ -139,7 +139,7 @@ public abstract class Roots {
 
         private NonSourceRoots(final String... rootPropNames) {
             super(false,false, null, null);
-            this.rootPropNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(rootPropNames)));
+            this.rootPropNames = Set.of(rootPropNames);
         }
 
         @Override

@@ -80,7 +80,7 @@ public class PostFlowAnalysisTest extends NbTestCase {
             }
         }, true);
         
-        assertEquals(new HashSet<String>(Arrays.asList(errors)), actual);
+        assertEquals(Set.of(errors), actual);
     }
 
     private FileObject sourceRoot;

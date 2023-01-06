@@ -169,11 +169,10 @@ public final class UncaughtException implements ErrorRule<Void> {
     static final String ERR_IMPLICIT_CLOSE = "compiler.err.unreported.exception.implicit.close"; // NOI18N
     static final String ERR_UNREPORTED = "compiler.err.unreported.exception.need.to.catch.or.throw"; // NOI18N
     
-    private static final Set<String> ERRCODES = new HashSet<String>(Arrays.asList(
-        new String[]{
+    private static final Set<String> ERRCODES = Set.of(
             ERR_UNREPORTED,
             ERR_IMPLICIT_CLOSE
-        }));
+    );
     
     public Set<String> getCodes() {
         return ERRCODES;

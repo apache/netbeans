@@ -62,12 +62,15 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Processor.class)
 public class HTMLDialogProcessor extends AbstractProcessor
 implements Comparator<ExecutableElement> {
+
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            HTMLDialog.class.getCanonicalName(),
+            HTMLComponent.class.getCanonicalName()
+    );
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> hash = new HashSet<>();
-        hash.add(HTMLDialog.class.getCanonicalName());
-        hash.add(HTMLComponent.class.getCanonicalName());
-        return hash;
+        return ANNOTATION_TYPES;
     }
 
     @Override

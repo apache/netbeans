@@ -1047,7 +1047,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
             return 0;
         }
 
-        private static final Set<String> NETWORK_PROTOCOLS = new HashSet<String>(Arrays.asList("http", "https", "ftp")); // NOI18N
+        private static final Set<String> NETWORK_PROTOCOLS = Set.of("http", "https", "ftp"); // NOI18N
         /** One item cache to eliminate File.lastModified queries (see #160390). */
         private static File lastFile = null;
         private static Date lastFileDate = null;

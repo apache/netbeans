@@ -1357,7 +1357,7 @@ public class ProjectProblemsProviders {
             this.platformType = platformType;
             this.minimalVersion = minimalVersion;
             this.platformProp = platformProp;
-            this.versionProps = new HashSet<String>(Arrays.asList(versionProps));
+            this.versionProps = Set.of(versionProps);
         }
 
         @Override

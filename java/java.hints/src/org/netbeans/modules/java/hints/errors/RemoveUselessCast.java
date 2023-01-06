@@ -42,9 +42,11 @@ public final class RemoveUselessCast implements ErrorRule<Void> {
     
     public RemoveUselessCast() {
     }
+
+    private static final Set<String> CODES = Set.of("compiler.warn.redundant.cast"); // NOI18N
     
     public Set<String> getCodes() {
-        return Collections.singleton("compiler.warn.redundant.cast"); // NOI18N
+        return CODES;
     }
     
     public List<Fix> run(CompilationInfo info, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {

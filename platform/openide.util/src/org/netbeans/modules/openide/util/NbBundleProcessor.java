@@ -58,8 +58,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Processor.class)
 public class NbBundleProcessor extends AbstractProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(NbBundle.Messages.class.getCanonicalName())
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(NbBundle.Messages.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     @Override

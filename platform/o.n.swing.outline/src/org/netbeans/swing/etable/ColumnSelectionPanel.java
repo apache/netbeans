@@ -30,16 +30,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -386,11 +377,13 @@ class ColumnSelectionPanel extends JPanel {
      * changes to the visible column for the given table.
      */
     private static void makeVisibleColumns(ETable table, String[] visibleColumns) {
-        HashSet<String> visible = new HashSet<String>(Arrays.asList(visibleColumns));
         TableColumnModel columnModel = table.getColumnModel();
         if (! (columnModel instanceof ETableColumnModel)) {
             return;
         }
+
+        Set<String> visible = Set.of(visibleColumns);
+
         final ETableColumnModel etcm = (ETableColumnModel)columnModel;
         List<TableColumn> columns = etcm.getAllColumns();
         Collections.sort(columns, ETableColumnComparator.DEFAULT);

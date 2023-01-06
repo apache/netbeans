@@ -86,8 +86,8 @@ public class ActionMappingPropertyReaderTest {
         DefaultActionMapping mapping = (DefaultActionMapping) result.iterator().next();
         assertEquals("build", mapping.getName());
         assertEquals(100, mapping.priority);
-        assertTrue(mapping.isApplicable(new HashSet<String>(Arrays.asList("groovy", "root", "war"))));
-        assertFalse(mapping.isApplicable(new HashSet<String>(Arrays.asList("groovy"))));
+        assertTrue(mapping.isApplicable(Set.of("groovy", "root", "war")));
+        assertFalse(mapping.isApplicable(Set.of("groovy")));
     }
 
     @Test

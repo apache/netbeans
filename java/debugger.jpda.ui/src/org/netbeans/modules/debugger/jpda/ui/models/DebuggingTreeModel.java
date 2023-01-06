@@ -80,18 +80,20 @@ public class DebuggingTreeModel extends CachedChildrenTreeModel {
     public static final String SHOW_SYSTEM_THREADS = "show.systemThreads";
     public static final String SHOW_THREAD_GROUPS = "show.threadGroups";
     public static final String SHOW_SUSPENDED_THREADS_ONLY = "show.suspendedThreadsOnly";
-    
-    private static final Set<String> SYSTEM_THREAD_NAMES = new HashSet<String>(Arrays.asList(new String[] {
-                                                           "Reference Handler",
-                                                           "Signal Dispatcher",
-                                                           "Finalizer",
-                                                           "Java2D Disposer",
-                                                           "TimerQueue",
-                                                           "Attach Listener"}));
-    private static final Set<String> SYSTEM_MAIN_THREAD_NAMES = new HashSet<String>(Arrays.asList(new String[] {
-                                                           "DestroyJavaVM",
-                                                           "AWT-XAWT",
-                                                           "AWT-Shutdown"}));
+
+    private static final Set<String> SYSTEM_THREAD_NAMES = Set.of(
+            "Reference Handler",
+            "Signal Dispatcher",
+            "Finalizer",
+            "Java2D Disposer",
+            "TimerQueue",
+            "Attach Listener"
+    );
+    private static final Set<String> SYSTEM_MAIN_THREAD_NAMES = Set.of(
+            "DestroyJavaVM",
+            "AWT-XAWT",
+            "AWT-Shutdown"
+    );
     
     private final JPDADebugger debugger;
     private Listener listener;

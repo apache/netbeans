@@ -375,7 +375,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 if (isDir) {
                     String[] kids = d.list();
                     if (kids != null) {
-                        fileCachePerPrefix.put(root, new HashSet<String>(Arrays.asList(kids)));
+                        fileCachePerPrefix.put(root, Set.of(kids));
                     } else {
                         Util.err.log(Level.WARNING, "could not read files in {0} at {1}", new Object[] {d, findCaller()});
                     }

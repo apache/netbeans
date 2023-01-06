@@ -1055,7 +1055,7 @@ public class NbModuleSuite {
 
             return cnbs;
         }
-        private static final Set<String> pseudoModules = new HashSet<String>(Arrays.asList(
+        private static final Set<String> PSEUDO_MODULES = Set.of(
                 "org.openide.util",
                 "org.openide.util.ui",
                 "org.openide.util.lookup",
@@ -1065,7 +1065,8 @@ public class NbModuleSuite {
                 "org.openide.filesystems.compat8",
                 "org.netbeans.core.startup",
                 "org.netbeans.core.startup.base",
-                "org.netbeans.libs.asm"));
+                "org.netbeans.libs.asm"
+        );
         static void turnClassPathModules(File ud, ClassLoader loader) throws IOException {
             Enumeration<URL> en = loader.getResources("META-INF/MANIFEST.MF");
             while (en.hasMoreElements()) {
@@ -1085,7 +1086,7 @@ public class NbModuleSuite {
                     if (jar == null) {
                         continue;
                     }
-                    if (pseudoModules.contains(cnb)) {
+                    if (PSEUDO_MODULES.contains(cnb)) {
                         // Otherwise will get DuplicateException.
                         continue;
                     }

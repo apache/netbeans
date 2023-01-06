@@ -71,7 +71,7 @@ import org.openide.loaders.DataObject;
  */
 public class ComputeImportsTest extends NbTestCase {
     
-    private static final Set<String> IGNORE_CLASSES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> IGNORE_CLASSES = Set.of(
         "com.sun.tools.javac.util.List",
         "com.sun.tools.javac.code.Attribute.RetentionPolicy",
         "com.sun.tools.classfile.Opcode.Set",
@@ -92,12 +92,12 @@ public class ComputeImportsTest extends NbTestCase {
         "sun.rmi.transport.Target",
         "com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Element",
         "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"
-    }));
+    );
     
-    private static final List<Pattern> IGNORE_PATTERNS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Pattern> IGNORE_PATTERNS = List.of(
         Pattern.compile("jdk\\..*\\.internal\\..*"),
         Pattern.compile("org\\.graalvm\\..*")
-    ));
+    );
 
     private FileObject testSource;
     private JavaSource js;

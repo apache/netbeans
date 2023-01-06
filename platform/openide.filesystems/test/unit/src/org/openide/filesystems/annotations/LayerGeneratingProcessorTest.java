@@ -82,8 +82,11 @@ public class LayerGeneratingProcessorTest extends NbTestCase {
     public @interface A {}
     static class P extends LayerGeneratingProcessor {
         ProcessingEnvironment env;
+
+        private static final Set<String> ANNOTATION_TYPES = Set.of(A.class.getCanonicalName());
+
         public @Override Set<String> getSupportedAnnotationTypes() {
-            return Collections.singleton(A.class.getCanonicalName());
+            return ANNOTATION_TYPES;
         }
         protected @Override boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
             env = processingEnv;

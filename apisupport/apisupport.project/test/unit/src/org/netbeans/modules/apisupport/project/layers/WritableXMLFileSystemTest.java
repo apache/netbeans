@@ -146,7 +146,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
         FileSystem fs = new Layer("<file name='x'><attr name='a' stringvalue='v'/> <attr name='b' urlvalue='file:/nothing'/></file> " +
                 "<folder name='y'> <file name='ignore'/><attr name='a' boolvalue='true'/><!--ignore--></folder>").read();
         FileObject x = fs.findResource("x");
-        assertEquals(new HashSet<String>(Arrays.asList("a", "b")), new HashSet<String>(Collections.list(x.getAttributes())));
+        assertEquals(Set.of("a", "b"), Set.of(Collections.list(x.getAttributes())));
         assertEquals("v", x.getAttribute("a"));
         assertEquals(new URL("file:/nothing"), x.getAttribute("b"));
         assertEquals(null, x.getAttribute("dummy"));
@@ -613,9 +613,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
         FileUtil.createData(fs.getRoot(), "a");
         FileUtil.createData(fs.getRoot(), "f/b");
         fs.findResource("x").delete();
-        assertEquals("expected things fired",
-                new HashSet<String>(Arrays.asList("a", "f/b", "x")),
-                        fcl.changes());
+        assertEquals("expected things fired", Set.of("a", "f/b", "x"), fcl.changes());
     }
 
     @RandomlyFails // issue #237349

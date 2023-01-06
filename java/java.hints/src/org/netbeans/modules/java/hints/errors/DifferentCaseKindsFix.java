@@ -47,12 +47,13 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
     private static final int SWITCH_RULE_PREVIEW_JDK_VERSION = 13;
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
-            "compiler.err.switch.mixing.case.types")); // NOI18N
+    private static final Set<String> ERROR_CODES = Set.of(
+            "compiler.err.switch.mixing.case.types"
+    ); // NOI18N
     
     @Override
     public Set<String> getCodes() {
-        return Collections.unmodifiableSet(ERROR_CODES);
+        return ERROR_CODES;
     }
 
     @Override

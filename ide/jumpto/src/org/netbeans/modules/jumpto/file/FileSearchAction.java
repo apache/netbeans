@@ -95,18 +95,16 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     /* package */ static final String CAMEL_CASE_SEPARATOR = "\\p{javaUpperCase}|-|_|\\.";    //NOI18N
     /* package */ static final String CAMEL_CASE_PART_CASE_SENSITIVE = "\\p{javaLowerCase}|\\p{Digit}|\\$";         //NOI18N
     /* package */ static final String CAMEL_CASE_PART_CASE_INSENSITIVE = "\\p{javaLowerCase}|\\p{Digit}|\\p{javaUpperCase}|\\$";         //NOI18N
-    /* package */ static final Map<String,Object> SEARCH_OPTIONS_CASE_SENSITIVE;
-    /* package */ static final Map<String,Object> SEARCH_OPTIONS_CASE_INSENSITIVE;
-    static {
-        Map<String,Object> m = new HashMap<>();
-        m.put(Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR);
-        m.put(Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_SENSITIVE);
-        SEARCH_OPTIONS_CASE_SENSITIVE = Collections.unmodifiableMap(m);
-        m = new HashMap<>();
-        m.put(Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR);
-        m.put(Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_INSENSITIVE);
-        SEARCH_OPTIONS_CASE_INSENSITIVE = Collections.unmodifiableMap(m);
-    }
+    /* package */ static final Map<String,Object> SEARCH_OPTIONS_CASE_SENSITIVE = Map.of(
+            Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR,
+            Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_SENSITIVE
+    );
+
+    /* package */ static final Map<String,Object> SEARCH_OPTIONS_CASE_INSENSITIVE = Map.of(
+            Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR,
+            Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_INSENSITIVE
+    );
+
     private static final char LINE_NUMBER_SEPARATOR = ':';    //NOI18N
     private static final Pattern PATTERN_WITH_LINE_NUMBER = Pattern.compile("(.*)"+LINE_NUMBER_SEPARATOR+"(\\d*)");    //NOI18N
 

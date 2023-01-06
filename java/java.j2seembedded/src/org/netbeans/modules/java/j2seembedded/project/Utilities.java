@@ -73,8 +73,7 @@ final class Utilities {
     private static final String BUILD_SCRIPT_BACK_UP = "remote-platform-impl_backup";   //NOI18N
     private static final String BUILD_SCRIPT_PROTOTYPE = "/org/netbeans/modules/java/j2seembedded/resources/remote-platform-impl.xml";  //NOI18N
     private static final Map<String,String> CONFIG_PROPERTIES;
-    private static final Set<String> REMOVE_CONFIG_PROPERTIES = Collections.unmodifiableSet(
-        new HashSet<String>(Arrays.asList(new String[] {TARGET_RUN, TARGET_DEBUG, TARGET_PROFILE})));
+    private static final Set<String> REMOVE_CONFIG_PROPERTIES = Set.of(TARGET_RUN, TARGET_DEBUG, TARGET_PROFILE);
 
     private static final String PLATFORM_RUNTIME = "platform.runtime"; //NOI18N
 

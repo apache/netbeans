@@ -37,22 +37,19 @@ import org.openide.util.Parameters;
  */
 public final class NameMatcherFactory {
 
-    private static final Map<Character,String> RE_SPECIALS;
-    static {
-        final Map<Character,String> m = new HashMap<>();
-        m.put('{',"\\{");         //NOI18N
-        m.put('}',"\\}");         //NOI18N
-        m.put('[',"\\[");         //NOI18N
-        m.put(']',"\\]");         //NOI18N
-        m.put('(',"\\(");         //NOI18N
-        m.put(')',"\\)");         //NOI18N
-        m.put('\\',"\\\\");       //NOI18N
-        m.put('.', "\\.");        //NOI18N
-        m.put('+',"\\+");         //NOI18N
-        m.put('*', ".*" );        //NOI18N
-        m.put('?', ".");          //NOI18N
-        RE_SPECIALS = Collections.unmodifiableMap(m);
-    }
+    private static final Map<Character,String> RE_SPECIALS = Map.ofEntries( //NOI18N
+            Map.entry('{',"\\{"),
+            Map.entry('}',"\\}"),
+            Map.entry('[',"\\["),
+            Map.entry(']',"\\]"),
+            Map.entry('(',"\\("),
+            Map.entry(')',"\\)"),
+            Map.entry('\\',"\\\\"),
+            Map.entry('.', "\\."),
+            Map.entry('+',"\\+"),
+            Map.entry('*', ".*"),
+            Map.entry('?', ".")
+    );
 
     private NameMatcherFactory() {
     }

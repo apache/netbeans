@@ -244,7 +244,7 @@ public class InterceptorTest extends NbTestCase {
     /**
      * methods that aren't implemented in {@link LocalHistoryVCSInterceptor}
      */
-    private static final Set<String> INTERCEPTOR_COMPLETE_WHITELIST = new HashSet<String>(Arrays.asList(
+    private static final Set<String> INTERCEPTOR_COMPLETE_WHITELIST = Set.of(
         "isMutable",
         "getAttribute",
         "doDelete",
@@ -252,18 +252,20 @@ public class InterceptorTest extends NbTestCase {
         "doCopy",
         "doCreate",
         "afterCopy",
-        "refreshRecursively"));
+        "refreshRecursively"
+    );
     
     /**
      * files that are implemented in LocalHistoryVCSInterceptor,
      * but do not have to call {@link LocalHistoryStore.waitForProcessedStoring}
      */
-    private static final Set<String> WAIT_FOR_STORING_WHITELIST = new HashSet<String>(Arrays.asList(
+    private static final Set<String> WAIT_FOR_STORING_WHITELIST = Set.of(
         "beforeEdit",
         "afterChange",
         "afterDelete",
         "afterMove",
-        "afterCreate"));
+        "afterCreate"
+    );
     
     /**
      * Test whether all important methods are overriden and 

@@ -59,8 +59,7 @@ public class ClassFile {
     /** size of buffer in buffered input streams */
     private static final int BUFFER_SIZE = 4096;
 
-     private static final Set<String> badNonJavaClassNames  =
-             new HashSet<String>(Arrays.asList(new String[] {";","[","."}));    //NOI18N
+     private static final Set<String> badNonJavaClassNames  = Set.of(";", "[", ".");    //NOI18N
     
     /**
      * Create a new ClassFile object.

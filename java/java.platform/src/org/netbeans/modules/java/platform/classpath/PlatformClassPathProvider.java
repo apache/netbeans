@@ -42,13 +42,12 @@ import org.openide.modules.SpecificationVersion;
 public class PlatformClassPathProvider implements ClassPathProvider {
     private static final SpecificationVersion JAVA_9 = new SpecificationVersion("9");   //NOI18N
 
-    private static final Set<? extends String> SUPPORTED_CLASS_PATH_TYPES =
-            new HashSet<String>(Arrays.asList(new String[]{
-                ClassPath.SOURCE,
-                ClassPath.BOOT,
-                ClassPath.COMPILE,
-                JavaClassPathConstants.MODULE_BOOT_PATH
-            }));
+    private static final Set<? extends String> SUPPORTED_CLASS_PATH_TYPES = Set.of(
+            ClassPath.SOURCE,
+            ClassPath.BOOT,
+            ClassPath.COMPILE,
+            JavaClassPathConstants.MODULE_BOOT_PATH
+    );
 
 
 

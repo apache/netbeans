@@ -60,8 +60,10 @@ import org.xml.sax.SAXException;
 @ServiceProvider(service=Processor.class)
 public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
 
+    private static final Set<String> ANNOTATION_TYPES = Set.of(HelpSetRegistration.class.getCanonicalName());
+
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(HelpSetRegistration.class.getCanonicalName());
+        return ANNOTATION_TYPES;
     }
 
     protected @Override boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
@@ -129,7 +131,7 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
                             try {
                                 PrintWriter pw = new PrintWriter(os);
                                 pw.println("IndexRemove " + d + File.separator);
-                                scan(d, pw, cnt, new HashSet<String>(Arrays.asList(r.excludes())), "");
+                                scan(d, pw, cnt, Set.of(r.excludes()), "");
                                 pw.flush();
                             } finally {
                                 os.close();

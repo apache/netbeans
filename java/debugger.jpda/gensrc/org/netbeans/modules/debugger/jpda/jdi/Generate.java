@@ -73,15 +73,15 @@ public class Generate {
     private static final Set<Class> SILENT_EXCEPTIONS = Collections.unmodifiableSet(new LinkedHashSet<Class>(Arrays.asList(new Class[] {
            com.sun.jdi.InternalException.class, com.sun.jdi.ObjectCollectedException.class, com.sun.jdi.VMDisconnectedException.class })));
 
-    private static final Set<String> NOT_USED_CLASSES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> NOT_USED_CLASSES = Set.of(
             com.sun.jdi.Accessible.class.getName(), com.sun.jdi.Bootstrap.class.getName(),
             com.sun.jdi.ClassLoaderReference.class.getName(),
             com.sun.jdi.PathSearchingVirtualMachine.class.getName(),
             com.sun.jdi.VoidValue.class.getName(),
             // Connectors are used in API and UI modules.
             // Classes starting with "com.sun.jdi.connect" are not generated
-            com.sun.jdi.event.EventIterator.class.getName(),
-    })));
+            com.sun.jdi.event.EventIterator.class.getName()
+    );
     
     private static final String METHODS_BY_JDK = "MethodsByJDK";
 

@@ -52,9 +52,10 @@ import org.openide.util.MutexException;
  */
 public class EnablePreviewSingleSourceFile implements ErrorRule<Void> {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> ERROR_CODES = Set.of(
             "compiler.err.preview.feature.disabled",           //NOI18N  
-            "compiler.err.preview.feature.disabled.plural")); // NOI18N
+            "compiler.err.preview.feature.disabled.plural"
+    ); // NOI18N
     private static final String ENABLE_PREVIEW_FLAG = "--enable-preview";   // NOI18N
     private static final String SOURCE_FLAG = "--source";   // NOI18N
 
@@ -62,7 +63,7 @@ public class EnablePreviewSingleSourceFile implements ErrorRule<Void> {
 
     @Override
     public Set<String> getCodes() {
-        return Collections.unmodifiableSet(ERROR_CODES);
+        return ERROR_CODES;
     }
 
     @Override

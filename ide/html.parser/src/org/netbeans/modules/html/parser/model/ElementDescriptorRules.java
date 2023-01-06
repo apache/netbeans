@@ -18,13 +18,7 @@
  */
 package org.netbeans.modules.html.parser.model;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Some additional html5 metadata
@@ -56,7 +50,7 @@ public class ElementDescriptorRules {
             ElementDescriptor.TH, ElementDescriptor.TD);
 
     //manually regexped from http://www.w3.org/TR/MathML/appendixl.html#index.elem
-    public static final Collection<String> MATHML_TAG_NAMES = new HashSet<String>(Arrays.asList(new String[]{
+    public static final Set<String> MATHML_TAG_NAMES = Set.of(
         "abs", "and", "annotation", "annotation-xml", "apply", "approx", "arccos", "arccosh",
         "arccot", "arccoth", "arccsc", "arccsch", "arcsec", "arcsech", "arcsin", "arcsinh",
         "arctan", "arctanh", "arg", "bvar", "card", "cartesianproduct", "ceiling", "ci", "cn",
@@ -67,28 +61,28 @@ public class ElementDescriptorRules {
         "fn", "forall", "function", "gcd", "geq", "grad", "gt", "ident", "image", "imaginary",
         "imaginaryi", "implies", "in", "infinity", "int", "integers", "intersect", "interval",
         "inverse", "lambda", "laplacian", "lcm", "leq", "limit", "list", "ln", "log", "logbase",
-        "lowlimit", "lt", "apply", "mrow", "maction", "malign", "maligngroup", "malignmark",
+        "lowlimit", "lt", "mrow", "maction", "malign", "maligngroup", "malignmark",
         "malignscope", "math", "matrix", "matrixrow", "max", "mean", "median", "menclose", "merror",
         "mfenced", "mfrac", "mfraction", "mglyph", "mi", "min", "minus", "mlabeledtr", "mmultiscripts",
         "mn", "mo", "mode", "moment", "momentabout", "mover", "mpadded", "mphantom", "mprescripts",
-        "mroot", "mrow", "ms", "mspace", "msqrt", "mstyle", "msub", "msubsup", "msup", "mtable",
+        "mroot", "ms", "mspace", "msqrt", "mstyle", "msub", "msubsup", "msup", "mtable",
         "mtd", "mtext", "mtr", "munder", "munderover", "naturalnumbers", "neq", "none", "not",
         "notanumber", "notin", "notprsubset", "notsubset", "or", "otherwise", "outerproduct",
         "partialdiff", "pi", "piece", "piecewice", "piecewise", "plus", "power", "primes", "product",
         "prsubset", "quotient", "rationals", "real", "reals", "reln", "rem", "root", "scalarproduct",
         "sdev", "sec", "sech", "selector", "semantics", "sep", "set", "setdiff", "sin", "sinh", "subset",
         "sum", "tan", "tanh", "tendsto", "times", "transpose", "true", "union", "uplimit", "variance",
-        "vector", "vectorproduct", "xor"}));//NOI18N
+        "vector", "vectorproduct", "xor");//NOI18N
 
     //manually regexped from http://www.w3.org/TR/SVGTiny12/elementTable.html
-    public static final Collection<String> SVG_TAG_NAMES = new HashSet<String>(Arrays.asList(new String[]{
+    public static final Set<String> SVG_TAG_NAMES = Set.of(
         "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation", "audio",
         "circle", "defs", "desc", "discard", "ellipse", "font", "font-face", "font-face-src",
         "font-face-uri", "foreignObject", "g", "glyph", "handler", "hkern", "image", "line",
         "linearGradient", "listener", "metadata", "missing-glyph", "mpath", "path", "polygon",
         "polyline", "prefetch", "radialGradient", "rect", "script", "set", "solidColor", "stop",
         "svg", "switch", "tbreak", "text", "textArea", "title", "tspan", "use", "video"
-    }));//NOI18N
+    );//NOI18N
 
     public static synchronized Collection<ElementDescriptor> getElementsByContentType(ContentType ctype) {
         //the mapping needs to be extracted from the reverse information element->ctype first

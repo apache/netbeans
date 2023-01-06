@@ -120,7 +120,7 @@ public class NBClassWriterTest extends NbTestCase {
             actualClassNames.add(ct.getElements().getBinaryName(te).toString());
         }
 
-        if (!new HashSet<String>(Arrays.asList(expectedClassNames)).equals(actualClassNames)) {
+        if (!Set.of(expectedClassNames).equals(actualClassNames)) {
             throw new AssertionError(actualClassNames.toString());
         }
     }

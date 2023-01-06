@@ -57,13 +57,13 @@ import org.openide.util.NbBundle;
  */
 public final class AddCast implements ErrorRule<Void> {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> ERROR_CODES = Set.of(
             "compiler.err.prob.found.req", // NOI18N
             "compiler.err.cant.apply.symbol", // NOI18N
             "compiler.err.cant.apply.symbol.1", // NOI18N
             "compiler.err.cant.resolve.location.args", // NOI18N
             "compiler.err.cant.apply.symbols",
-            "compiler.err.prob.found.req/compiler.misc.incompatible.ret.type.in.lambda/compiler.misc.inconvertible.types")); // NOI18N
+            "compiler.err.prob.found.req/compiler.misc.incompatible.ret.type.in.lambda/compiler.misc.inconvertible.types"); // NOI18N
     
     static void computeType(CompilationInfo info, int offset, List<TypeMirror> targetType, TreePath[] typeTree, ExpressionTree[] expression, Tree[] leaf) {
         TreePath path = info.getTreeUtilities().pathFor(offset + 1);

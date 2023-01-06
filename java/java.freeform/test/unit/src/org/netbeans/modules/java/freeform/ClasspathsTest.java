@@ -284,9 +284,9 @@ public class ClasspathsTest extends TestBase {
         assertEquals("original classpath is empty now", 0, cpAnt.entries().size());
         assertEquals("classpath for src/ and antsrc/ are the same. " + cpAnt2 + " "+cpSrc2, cpAnt2, cpSrc2);
         
-        assertEquals("ROOTS fired", new HashSet<String>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), srcL.changed);
+        assertEquals("ROOTS fired", Set.of(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS), srcL.changed);
         srcL.reset();
-        assertEquals("ROOTS fired", new HashSet<String>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), antL.changed);
+        assertEquals("ROOTS fired", Set.of(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS), antL.changed);
         antL.reset();
         
         compile = gpr.getPaths(ClassPath.COMPILE);

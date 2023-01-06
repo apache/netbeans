@@ -35,7 +35,6 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring.ParameterInfo;
 import org.netbeans.spi.editor.hints.Fix;
@@ -49,12 +48,16 @@ public class ChangeMethodParameters implements ErrorRule<Void> {
     private String DEFAULT_NAME = "par";
     private boolean cancel = false;
 
+    private static final Set<String> CODES = Set.of(
+            "compiler.err.cant.apply.symbol",
+            "compiler.err.cant.apply.symbol.1",
+            "compiler.err.cant.apply.symbols",
+            "compiler.err.prob.found.req"
+            ); // NOI18N
+
     @Override
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList("compiler.err.cant.apply.symbol",
-                                                 "compiler.err.cant.apply.symbol.1",
-                                                 "compiler.err.cant.apply.symbols",
-                                                 "compiler.err.prob.found.req")); // NOI18N
+        return CODES;
     }
 
     @Override

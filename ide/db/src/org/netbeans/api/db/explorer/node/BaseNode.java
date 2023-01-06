@@ -22,10 +22,7 @@ package org.netbeans.api.db.explorer.node;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -313,7 +310,7 @@ public abstract class BaseNode extends AbstractNode {
 
     public synchronized Collection<Property> getProperties() {
         Property[] properties = getSheet().get(Sheet.PROPERTIES).getProperties();
-        return Collections.unmodifiableCollection(Arrays.asList(properties));
+        return List.of(properties);
     }
 
     @Override

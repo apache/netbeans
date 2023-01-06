@@ -63,9 +63,8 @@ import org.openide.util.io.NbMarshalledObject;
 
 
 public class BaseFileObjectTestHid extends TestBaseHid{
-    public static final HashSet<String> AUTOMOUNT_SET = new HashSet<String>(Arrays.asList("set", "shared", "net", "java", "share", "home", "ws", "ade_autofs"));
-    private static final Set<String> REMOTE_FSTYPES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-    "nfs", "nfs4","autofs")));  //NOI18N
+    public static final Set<String> AUTOMOUNT_SET = Set.of("set", "shared", "net", "java", "share", "home", "ws", "ade_autofs");
+    private static final Set<String> REMOTE_FSTYPES = Set.of("nfs", "nfs4","autofs");  //NOI18N
     private static final boolean CHECK_REMOTE_FSTYPES = true;
     private FileObject root;
     private Logger LOG;

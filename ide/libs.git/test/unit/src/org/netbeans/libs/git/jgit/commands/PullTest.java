@@ -25,6 +25,8 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RefSpec;
@@ -190,7 +192,7 @@ public class PullTest extends AbstractGitTestCase {
         assertEquals(1, updates.size());
         assertUpdate(updates.get("origin/master"), "origin/master", "master", commitId, masterInfo.getRevision(), new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.FAST_FORWARD);
         assertEquals(MergeStatus.MERGED, result.getMergeResult().getMergeStatus());
-        assertEquals(new HashSet<String>(Arrays.asList(commitId, localCommitId)), new HashSet<String>(Arrays.asList(result.getMergeResult().getMergedCommits())));
+        assertEquals(Set.of(commitId, localCommitId), Set.of(result.getMergeResult().getMergedCommits()));
         assertTrue(f.exists());
         assertTrue(f2.exists());
     }
@@ -241,7 +243,7 @@ public class PullTest extends AbstractGitTestCase {
         assertEquals(1, updates.size());
         assertUpdate(updates.get("origin/" + BRANCH_NAME), "origin/" + BRANCH_NAME, BRANCH_NAME, commitId, branch.getId(), new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.FAST_FORWARD);
         assertEquals(MergeStatus.MERGED, result.getMergeResult().getMergeStatus());
-        assertEquals(new HashSet<String>(Arrays.asList(commitId, localCommitId)), new HashSet<String>(Arrays.asList(result.getMergeResult().getMergedCommits())));
+        assertEquals(Set.of(Arrays.asList(commitId, localCommitId), Set.of(result.getMergeResult().getMergedCommits()));
         assertTrue(f.exists());
         assertTrue(f2.exists());
     }

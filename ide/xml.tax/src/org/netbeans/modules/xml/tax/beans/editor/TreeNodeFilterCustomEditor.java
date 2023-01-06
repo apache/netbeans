@@ -40,43 +40,36 @@ import org.netbeans.modules.xml.tax.util.TAXUtil;
  */
 public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustomPropertyEditor {
     /** */
-    private static final long serialVersionUID = 1767193347881681541L;    
+    private static final long serialVersionUID = 1767193347881681541L;
 
-    
-    /** */
-    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap<>();
+    /**
+     *
+     */
+    private static final Map<Class<?>, String> PUBLIC_NODE_TYPE_NAMES_MAP = Map.ofEntries(
+            Map.entry(TreeNode.class, Util.THIS.getString("NAME_Any_Node_Type")),
+            Map.entry(TreeParentNode.class, Util.THIS.getString("NAME_Any_Parent_Node_Type")),
+            Map.entry(TreeCharacterData.class, Util.THIS.getString("NAME_Any_Character_Data_Node_Type")),
+            Map.entry(TreeReference.class, Util.THIS.getString("NAME_Any_Reference_Node_Type")),
+//          Map.entry(TreeEntityReference.class, Util.THIS.getString ("NAME_Any_Entity_Reference_Node_Type")),
+            Map.entry(TreeNodeDecl.class, Util.THIS.getString("NAME_Any_Declaration_Node_Type")),
 
-
-    //
-    // Static initialization
-    //
-        
-    static {
-        publicNodeTypeNamesMap.put (TreeNode.class, Util.THIS.getString ("NAME_Any_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeParentNode.class, Util.THIS.getString ("NAME_Any_Parent_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeCharacterData.class, Util.THIS.getString ("NAME_Any_Character_Data_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeReference.class, Util.THIS.getString ("NAME_Any_Reference_Node_Type"));
-//          publicNodeTypeNamesMap.put (TreeEntityReference.class, Util.THIS.getString ("NAME_Any_Entity_Reference_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeNodeDecl.class, Util.THIS.getString ("NAME_Any_Declaration_Node_Type"));
-
-        publicNodeTypeNamesMap.put (TreeComment.class, Util.THIS.getString ("NAME_Comment_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeProcessingInstruction.class, Util.THIS.getString ("NAME_Processing_Instruction_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeText.class, Util.THIS.getString ("NAME_Text_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeCDATASection.class, Util.THIS.getString ("NAME_CDATA_Section_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeElement.class, Util.THIS.getString ("NAME_Element_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeAttribute.class, Util.THIS.getString ("NAME_Attribute_Node_Type"));
-//          publicNodeTypeNamesMap.put (TreeDocument.class, Util.THIS.getString ("NAME_Document_Node_Type"));
-//          publicNodeTypeNamesMap.put (TreeDTD.class, Util.THIS.getString ("NAME_DTD_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeConditionalSection.class, Util.THIS.getString ("NAME_Conditional_Section_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeDocumentType.class, Util.THIS.getString ("NAME_Document_Type_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeGeneralEntityReference.class, Util.THIS.getString ("NAME_General_Entity_Reference_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeParameterEntityReference.class, Util.THIS.getString ("NAME_Parameter_Entity_Reference_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeElementDecl.class, Util.THIS.getString ("NAME_Element_Declaration_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeEntityDecl.class, Util.THIS.getString ("NAME_Entity_Declaration_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeAttlistDecl.class, Util.THIS.getString ("NAME_Attlist_Declaration_Node_Type"));
-        publicNodeTypeNamesMap.put (TreeNotationDecl.class, Util.THIS.getString ("NAME_Notation_Declaration_Node_Type"));
-    }
-
+            Map.entry(TreeComment.class, Util.THIS.getString("NAME_Comment_Node_Type")),
+            Map.entry(TreeProcessingInstruction.class, Util.THIS.getString("NAME_Processing_Instruction_Node_Type")),
+            Map.entry(TreeText.class, Util.THIS.getString("NAME_Text_Node_Type")),
+            Map.entry(TreeCDATASection.class, Util.THIS.getString("NAME_CDATA_Section_Node_Type")),
+            Map.entry(TreeElement.class, Util.THIS.getString("NAME_Element_Node_Type")),
+            Map.entry(TreeAttribute.class, Util.THIS.getString("NAME_Attribute_Node_Type")),
+//          Map.entry(TreeDocument.class, Util.THIS.getString ("NAME_Document_Node_Type")),
+//          Map.entry(TreeDTD.class, Util.THIS.getString ("NAME_DTD_Node_Type")),
+            Map.entry(TreeConditionalSection.class, Util.THIS.getString("NAME_Conditional_Section_Node_Type")),
+            Map.entry(TreeDocumentType.class, Util.THIS.getString("NAME_Document_Type_Node_Type")),
+            Map.entry(TreeGeneralEntityReference.class, Util.THIS.getString("NAME_General_Entity_Reference_Node_Type")),
+            Map.entry(TreeParameterEntityReference.class, Util.THIS.getString("NAME_Parameter_Entity_Reference_Node_Type")),
+            Map.entry(TreeElementDecl.class, Util.THIS.getString("NAME_Element_Declaration_Node_Type")),
+            Map.entry(TreeEntityDecl.class, Util.THIS.getString("NAME_Entity_Declaration_Node_Type")),
+            Map.entry(TreeAttlistDecl.class, Util.THIS.getString("NAME_Attlist_Declaration_Node_Type")),
+            Map.entry(TreeNotationDecl.class, Util.THIS.getString("NAME_Notation_Declaration_Node_Type"))
+    );
 
     /** */
     private final TreeNodeFilter filter;
@@ -468,7 +461,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         /**
          */
         public String toString () {
-            String name = publicNodeTypeNamesMap.get (clazz);
+            String name = PUBLIC_NODE_TYPE_NAMES_MAP.get (clazz);
 
             if ( name == null ) {
                 name = clazz.getName();
@@ -530,7 +523,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Init Set"); // NOI18N
             
             Item rootItem = new Item();
-            Object[] array = publicNodeTypeNamesMap.keySet().toArray();
+            Object[] array = PUBLIC_NODE_TYPE_NAMES_MAP.keySet().toArray();
             for (int i = 0; i < array.length; i++) {
                 Class<?> clazz = (Class)array[i];
                 Item.insertItemIntoLayer (rootItem.layer, Item.getItem (clazz));

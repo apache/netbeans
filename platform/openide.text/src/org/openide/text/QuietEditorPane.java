@@ -190,11 +190,11 @@ final class QuietEditorPane extends JEditorPane {
     // on any measurements. Use -Dtryme.args="-J-Dorg.netbeans.QuietEditorPane.level=FINE" to
     // see in the log file what property chenges are swallowed.
     // If making changes to the list make sure to check on #132669.
-    private static final Set<String> EXPENSIVE_PROPERTIES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> EXPENSIVE_PROPERTIES = Set.of(
             "document", //NOI18N
             "editorKit", //NOI18N
             "keymap" //NOI18N
-    ));
+    );
 
     public @Override void firePropertyChange(String s, Object val1, Object val2) {
         if ((working & FIRE) != 0 || s == null || !EXPENSIVE_PROPERTIES.contains(s)) {

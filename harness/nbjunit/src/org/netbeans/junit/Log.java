@@ -404,7 +404,7 @@ public final class Log extends Handler {
             List<Reference> refs = new ArrayList<Reference>();
             List<String> txts = new ArrayList<String>();
             int count = 0;
-            Set<String> nameSet = names == null || names.length == 0 ? null : new HashSet<String>(Arrays.asList(names));
+            Set<String> nameSet = names == null || names.length == 0 ? null : Set.of(names);
             synchronized (instances) {
                 for (Iterator<Map.Entry<Object, String>> it = instances.entrySet().iterator(); it.hasNext();) {
                     Entry<Object, String> entry = it.next();

@@ -100,7 +100,7 @@ public class AddModuleFilterTest extends TestBase {
         for (ModuleDependency dep : filter.getMatches(null, text, false)) {
             matchedCNBs.add(dep.getModuleEntry().getCodeNameBase());
         }
-        assertEquals("correct matches for '" + text + "'", new HashSet<String>(Arrays.asList(cnbs)), matchedCNBs);
+        assertEquals("correct matches for '" + text + "'", Set.of(cnbs), matchedCNBs);
     }
     
 }

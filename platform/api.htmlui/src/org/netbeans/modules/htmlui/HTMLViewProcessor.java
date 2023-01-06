@@ -41,11 +41,14 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = Processor.class)
 public class HTMLViewProcessor extends LayerGeneratingProcessor {
+
+    private static final Set<String> ANNOTATION_TYPES = Set.of(
+            OpenHTMLRegistration.class.getCanonicalName()
+    );
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> hash = new HashSet<>();
-        hash.add(OpenHTMLRegistration.class.getCanonicalName());
-        return hash;
+        return ANNOTATION_TYPES;
     }
     
     @Override

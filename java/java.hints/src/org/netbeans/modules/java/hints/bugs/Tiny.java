@@ -253,24 +253,20 @@ public class Tiny {
         return ErrorDescriptionFactory.forName(ctx, columnIndex, displayName);
     }
     
-    private static final Set<String> METHOD_NAME = new HashSet<String>(Arrays.asList(
+    private static final Set<String> METHOD_NAME = Set.of(
             "getString", "getBoolean", "getByte", "getShort", "getInt", "getLong",
             "getFloat", "getDouble", "getBigDecimal", "getBytes", "getDate",
             "getTime", "getTimestamp", "getAsciiStream", "getUnicodeStream",
-            "getBinaryStream", "getObject", "getCharacterStream", "getBigDecimal",
+            "getBinaryStream", "getObject", "getCharacterStream",
             "updateNull", "updateBoolean", "updateByte", "updateShort", "updateInt",
             "updateLong", "updateFloat", "updateDouble", "updateBigDecimal", "updateString",
             "updateBytes", "updateDate", "updateTime", "updateTimestamp", "updateAsciiStream",
-            "updateBinaryStream", "updateCharacterStream", "updateObject", "updateObject",
-            "getObject", "getRef", "getBlob", "getClob", "getArray", "getDate", "getTime",
-            "getTimestamp", "getURL", "updateRef", "updateBlob", "updateClob", "updateArray",
+            "updateBinaryStream", "updateCharacterStream", "updateObject",
+            "getRef", "getBlob", "getClob", "getArray",
+            "getURL", "updateRef", "updateBlob", "updateClob", "updateArray",
             "getRowId", "updateRowId", "updateNString", "updateNClob", "getNClob", "getSQLXML",
-            "updateSQLXML", "getNString", "getNCharacterStream", "updateNCharacterStream",
-            "updateAsciiStream", "updateBinaryStream", "updateCharacterStream", "updateBlob",
-            "updateClob", "updateNClob", "updateNCharacterStream", "updateAsciiStream",
-            "updateBinaryStream", "updateCharacterStream", "updateBlob", "updateClob",
-            "updateNClob"
-    ));
+            "updateSQLXML", "getNString", "getNCharacterStream", "updateNCharacterStream"
+    );
     
     @Hint(displayName = "#DN_indentation", description = "#DESC_indentation", category="bugs", suppressWarnings="SuspiciousIndentAfterControlStatement", options=Options.QUERY)
     @TriggerTreeKind({Kind.IF, Kind.WHILE_LOOP, Kind.FOR_LOOP, Kind.ENHANCED_FOR_LOOP})

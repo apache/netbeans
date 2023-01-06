@@ -362,7 +362,7 @@ implements PropertyChangeListener {
                             long offs = positions.getStartPosition(compUnit, outerTree);
                             result[0] = Utilities.getLineOffset(doc, (int)offs) + 1;
                         } else {
-                            if (outerTree != null && outerTree instanceof BlockTree) {
+                            if (outerTree instanceof BlockTree) {
                                 Tree pTree = outerTreePath.getParentPath().getLeaf();
                                 if (pTree instanceof MethodTree) {
                                     long endOffs = positions.getEndPosition(compUnit, pTree);

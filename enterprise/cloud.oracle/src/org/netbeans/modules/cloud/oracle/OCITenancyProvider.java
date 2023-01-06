@@ -129,11 +129,16 @@ public class OCITenancyProvider implements ServerInstanceProvider, ChangeListene
         List<ProfileKey> currentKeys = new ArrayList<>();
         for (OCIProfile p : OCIManager.getDefault().getConnectedProfiles()) {
             ProfileKey k = new ProfileKey(p.getConfigPath(), p.getId(), p.getTenantId());
-            if (!newInstances.containsKey(k)) {
-                ServerInstance si = ServerInstanceFactory.createServerInstance(new TenancyInstance(
-                        p.getTenancy().orElse(null), p));
-                newInstances.put(k, si);
+            ServerInstance prev = newInstances.get(k);
+            if (prev != null) {
+                OCIProfile prevProf = prev.getLookup().lookup(OCIProfile.class);
+                if (prevProf == null || (prevProf.isValid() != p.isValid())) {
+                    continue;
+                }
             }
+            ServerInstance si = ServerInstanceFactory.createServerInstance(new TenancyInstance(
+                    p.getTenancy().orElse(null), p));
+            newInstances.put(k, si);
             currentKeys.add(k);
         }
         newInstances.keySet().retainAll(currentKeys);

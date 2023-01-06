@@ -44,7 +44,7 @@ import org.openide.util.NbBundle;
 )
 
 @ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Tenancy/Actions", position = 250)
+    @ActionReference(path = "Cloud/Oracle/Tenancy/Actions", position = 200)
 })
 @NbBundle.Messages({
     "CTL_SetDefaultProfileAction=Set As Default",

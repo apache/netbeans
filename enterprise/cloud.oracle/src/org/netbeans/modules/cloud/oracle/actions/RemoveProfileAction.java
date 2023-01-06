@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCIProfile;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -43,8 +42,8 @@ import org.openide.util.NbBundle;
 )
 
 @ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Tenancy/Actions", position = 250),
-    @ActionReference(path = "Cloud/Oracle/BrokenProfile/Actions", position = 250)
+    @ActionReference(path = "Cloud/Oracle/Tenancy/Actions", position = 230),
+    @ActionReference(path = "Cloud/Oracle/BrokenProfile/Actions", position = 230)
 })
 @NbBundle.Messages({
     "RemoveProfileAction=Remove Profile"

@@ -82,7 +82,7 @@ public class TenancyNode extends OCINode implements PropertyChangeListener {
 
     @Override
     public boolean canDestroy() {
-        return OCIManager.getDefault().getConnectedProfiles().contains(session);
+        return OCIManager.getDefault().isConfiguredProfile((OCIProfile)session);
     }
 
     @Override

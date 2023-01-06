@@ -29,8 +29,6 @@ Apache NetBeans is an open source development environment, tooling platform, and
    * GitHub actions
      * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)
      * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
-   * TravisCI:
-     * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
    * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
      * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
@@ -54,11 +52,11 @@ Build with the default config (See the [cluster.config](https://github.com/apach
 ```
 $ ant
 ```
-Build the basic project (mainly, JavaSE features):
+Build the basic project (mainly Java features):
 ```
 $ ant -Dcluster.config=basic
 ```
-Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+Build the full project (including Groovy, PHP, JavaEE/JakartaEE and JavaScript features):
 ```
 $ ant -Dcluster.config=full
 ```
@@ -66,9 +64,14 @@ Build the NetBeans Platform:
 ```
 $ ant -Dcluster.config=platform
 ```
+Cleanup:
+```
+$ ant -q clean
+```
 
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+* once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
 
 #### Generating Javadoc
 
@@ -102,7 +105,7 @@ Latest release (convenience binary of released source artifacts): https://netbea
 
 ### Reporting Bugs
 
-Bugs should be reported to https://github.com/apache/netbeans/issues
+[How to report bugs](https://netbeans.apache.org/participate/report-issue.html)
 
 ### Log, Config and Cache Locations
 

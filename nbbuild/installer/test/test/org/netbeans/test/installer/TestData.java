@@ -267,7 +267,7 @@ public class TestData implements Serializable {
         String proxyPort = System.getProperty("installer.proxy.port", null);
 
         if (proxyHost != null && proxyPort != null) {
-            proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.valueOf(proxyPort)));
+            proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort)));
         } else {
             proxy = Proxy.NO_PROXY;
         }

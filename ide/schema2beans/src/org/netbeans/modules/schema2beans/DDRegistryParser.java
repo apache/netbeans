@@ -117,7 +117,7 @@ public class DDRegistryParser implements Iterator {
 	    }
 	    
 	    if (path.indexOf('#') == 0 ) {
-		path = path.substring(1, path.length());
+		path = path.substring(1);
 		
 		String remSuffix = null;
 		int idx = path.indexOf('-');
@@ -427,7 +427,7 @@ public class DDRegistryParser implements Iterator {
 	    graphName = path.substring(1, idx);
 	    
 	    if (path.length() > idx+1)
-		path = path.substring(idx+1, path.length());
+		path = path.substring(idx+1);
 	    else
 		path = ".";	// NOI18N
 	    

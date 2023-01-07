@@ -76,7 +76,7 @@ public class PHPVarCommentParser {
                         docType = new PHPDocTypeNode(startDocNode, endPosition, type, isArray);
                     } else {
                         String className = type.substring(0, index);
-                        String constantName = type.substring(index + 2, type.length());
+                        String constantName = type.substring(index + 2);
                         PHPDocNode classNameNode = new PHPDocNode(startDocNode, startDocNode + className.length(), className);
                         PHPDocNode constantNode = new PHPDocNode(startDocNode + className.length() + 2, startDocNode + type.length(), constantName);
                         docType = new PHPDocStaticAccessType(startDocNode, startDocNode + type.length(), type, classNameNode, constantNode);

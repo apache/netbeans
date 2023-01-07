@@ -3091,7 +3091,7 @@ public class JavaBeanClass extends AbstractCodeGeneratorClass implements CodeGen
             jw.writeEol("(", namespaceMapName, ")");
             jw.end();
         }
-        jw.writeEol("String attrNSPrefix = attrName.substring(6, attrName.length())");
+        jw.writeEol("String attrNSPrefix = attrName.substring(6)");
         jw.writeEol(namespaceMapName, ".put(attrNSPrefix, attr.getValue())");
         jw.end();
         jw.end();

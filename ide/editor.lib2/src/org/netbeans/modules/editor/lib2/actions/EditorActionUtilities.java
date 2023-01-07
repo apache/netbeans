@@ -127,7 +127,7 @@ public final class EditorActionUtilities {
             String suffix = "";
             int dotIndex;
             if ((dotIndex = iconResource.lastIndexOf('.')) >= 0) {
-                suffix = iconResource.substring(dotIndex, iconResource.length());
+                suffix = iconResource.substring(dotIndex);
                 base = iconResource.substring(0, dotIndex);
             }
             if (useLargeIcon) {
@@ -166,7 +166,7 @@ public final class EditorActionUtilities {
     static String insertBeforeSuffix(String path, String toInsert) {
         int dotIndex;
         if ((dotIndex = path.lastIndexOf('.')) >= 0) {
-            path = path.substring(0, dotIndex) + toInsert + path.substring(dotIndex, path.length());
+            path = path.substring(0, dotIndex) + toInsert + path.substring(dotIndex);
         } else {
             path += toInsert;
         }

@@ -212,7 +212,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
             idx = matcher.end();
         }
         if(sb.length() > 0) {
-            sb.append(idx < s.length() ? s.substring(idx, s.length()) : "");
+            sb.append(idx < s.length() ? s.substring(idx) : "");
             s = sb.toString();
         }
         return s;

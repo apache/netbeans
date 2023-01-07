@@ -336,7 +336,7 @@ class SearchThreadJdk12_japan extends IndexSearchThread {
                 String text = new String( data );      
                 /*
                 // Stop suffering if we are behind the searched words
-                if ( text.substring( 0, Math.min(toFind.length(), text.length()) ).compareTo( toFind ) > 0 ) {
+                if ( text.substring( 0, Math.min(toFind.length()) ).compareTo( toFind ) > 0 ) {
                     try {
                         System.out.println("Stoping suffering");
                         in.close();

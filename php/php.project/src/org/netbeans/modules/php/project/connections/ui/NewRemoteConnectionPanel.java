@@ -109,7 +109,7 @@ public final class NewRemoteConnectionPanel extends JPanel {
         byte[] digest = md.digest();
         BigInteger hash = new BigInteger(1, digest);
         String hashWord = hash.toString(16);
-        String postfix = hashWord.substring(hashWord.length() - 6, hashWord.length());
+        String postfix = hashWord.substring(hashWord.length() - 6);
 
         return getOldConfigName() + "-" + postfix; // NOI18N
     }

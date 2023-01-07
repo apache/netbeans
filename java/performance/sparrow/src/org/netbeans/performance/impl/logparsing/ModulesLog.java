@@ -80,7 +80,7 @@ public class ModulesLog extends AbstractLogFile {
         int startidx = s.indexOf(lookfor + lookfor.length());
         startidx = s.indexOf('\n', startidx);
         
-        String moduleSection = s.substring(startidx, s.length());
+        String moduleSection = s.substring(startidx);
         
         StringTokenizer sk = new StringTokenizer(moduleSection, "\n");
         String curr;

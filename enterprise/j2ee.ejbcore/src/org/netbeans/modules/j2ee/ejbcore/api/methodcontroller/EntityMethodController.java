@@ -224,7 +224,7 @@ public final class EntityMethodController extends AbstractMethodController {
 //        }
 //        String prefix = methodName.substring(0, 3);
 //        if (prefix.equals("set") || prefix.equals("get")) {
-//            return lower(methodName.substring(3, methodName.length()));
+//            return lower(methodName.substring(3));
 //        }
 //        return null;
 //    }

@@ -62,7 +62,7 @@ public class ElementHandleImpl implements ElementHandle {
 
                     String lightId = indexDelim >= 0 ? token.substring(0, indexDelim) : token;
 
-                    String sindex = indexDelim >= 0 ? token.substring(indexDelim + 1, token.length()) : "1";
+                    String sindex = indexDelim >= 0 ? token.substring(indexDelim + 1) : "1";
                     int index = Integer.parseInt(sindex);
 
                     int count = 0;

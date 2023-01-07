@@ -1968,7 +1968,7 @@ public final class VariousUtils {
                     int indexOfArrayDelim = typeName.indexOf('[');
                     if (indexOfArrayDelim != -1) {
                         typeRawPart = typeName.substring(0, indexOfArrayDelim);
-                        typeArrayPart = typeName.substring(indexOfArrayDelim, typeName.length());
+                        typeArrayPart = typeName.substring(indexOfArrayDelim);
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987

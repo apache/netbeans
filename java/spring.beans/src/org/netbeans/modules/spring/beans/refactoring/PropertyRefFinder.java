@@ -311,7 +311,7 @@ public class PropertyRefFinder {
         builder.append("&lt;property"); // NOI18N
         String beforeMatch = escapeAttrValue(attrValue.substring(0, matchIndex));
         String match = escapeAttrValue(attrValue.substring(matchIndex, matchIndex + matchLength));
-        String afterMatch = escapeAttrValue(attrValue.substring(matchIndex + matchLength, attrValue.length()));
+        String afterMatch = escapeAttrValue(attrValue.substring(matchIndex + matchLength));
         if (beforeMatch != null && match != null && afterMatch != null) {
             builder.append(" name="); // NOI18N
             builder.append(beforeMatch).append("<b>").append(match).append("</b>").append(afterMatch); // NOI18N
@@ -323,7 +323,7 @@ public class PropertyRefFinder {
         StringBuilder builder = new StringBuilder();
         String beforeMatch = attr.substring(0, matchIndex);
         String match = attr.substring(matchIndex, matchIndex + matchLength);
-        String afterMatch = escapeAttrValue(attr.substring(matchIndex + matchLength, attr.length()));
+        String afterMatch = escapeAttrValue(attr.substring(matchIndex + matchLength));
         if (beforeMatch != null && match != null && afterMatch != null) {
             builder.append(beforeMatch).append("<b>").append(match).append("</b>").append(afterMatch); // NOI18N
         }

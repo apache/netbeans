@@ -363,7 +363,7 @@ public class JShellTool implements MessageHandler {
         }
         return leading
                 + s.substring(0, s.length() - 1).replaceAll("\\R", System.getProperty("line.separator") + feedback.getPre())
-                + s.substring(s.length() - 1, s.length());
+                + s.substring(s.length() - 1);
     }
 
     /**

@@ -196,8 +196,8 @@ public class SwingInterop extends JApplet {
     }
 
     private Pane createBrowser() {
-        Double widthDouble = new Integer(PANEL_WIDTH_INT).doubleValue();
-        Double heightDouble = new Integer(PANEL_HEIGHT_INT).doubleValue();
+        Double widthDouble = (double) PANEL_WIDTH_INT;
+        Double heightDouble = (double) PANEL_HEIGHT_INT;
         WebView view = new WebView();
         view.setMinSize(widthDouble, heightDouble);
         view.setPrefSize(widthDouble, heightDouble);

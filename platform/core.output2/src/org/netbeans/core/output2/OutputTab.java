@@ -872,7 +872,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             EXPAND_TREE
     };
 
-    private final Map<ACTION, TabAction> actions = new EnumMap<ACTION, TabAction>(ACTION.class);;
+    private final Map<ACTION, TabAction> actions = new EnumMap<ACTION, TabAction>(ACTION.class);
 
     private void createActions() {
         KeyStrokeUtils.refreshActionCache();

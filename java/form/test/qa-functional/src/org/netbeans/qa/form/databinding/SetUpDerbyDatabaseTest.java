@@ -45,7 +45,7 @@ import org.netbeans.junit.NbModuleSuite;
  * 20 April 2011 NOT WORKS NOW
  */
 public class SetUpDerbyDatabaseTest  extends ExtJellyTestCase {
-    public static String TMP_DB_DIR_NAME = "TempDerbyDatabaseDir" + String.valueOf(new Date().getTime());;
+    public static String TMP_DB_DIR_NAME = "TempDerbyDatabaseDir" + String.valueOf(new Date().getTime());
     public static String DEFAULT_DERBY_DIR_NAME = "db";    
 
     public static String JAVA_DB_MENU = "Tools|Java DB Database|";

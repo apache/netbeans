@@ -331,7 +331,7 @@ public class CharsetMapping implements Comparable {
 	public static final Integer CHARSET_ALIAS_SELECTION = 2;
 
 	private static Integer displayOption = CHARSET_ALIAS_ASIDE;
-	private static java.beans.PropertyChangeSupport propSupport = new PropertyChangeSupport(CharsetMapping.class);;
+	private static java.beans.PropertyChangeSupport propSupport = new PropertyChangeSupport(CharsetMapping.class);
 	
 	public static void addPropertyChangeListener(PropertyChangeListener listener) {
 		propSupport.addPropertyChangeListener(listener);

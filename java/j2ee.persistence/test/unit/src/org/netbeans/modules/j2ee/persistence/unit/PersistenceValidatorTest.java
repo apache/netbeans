@@ -85,7 +85,7 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         // Java EE
         PersistenceValidator javaEEvalidator = new PersistenceValidatorImpl(dataObject, false);
         errors = javaEEvalidator.validate();
-        assertTrue(errors.isEmpty());;
+        assertTrue(errors.isEmpty());
     }
     
     /**
@@ -109,7 +109,7 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         // Java EE
         PersistenceValidator javaEEvalidator = new PersistenceValidatorImpl(dataObject, false);
         errors = javaEEvalidator.validate();
-        assertTrue(errors.isEmpty());;
+        assertTrue(errors.isEmpty());
     }
     
     /**

@@ -3045,7 +3045,7 @@ public abstract class CslTestBase extends NbTestCase {
                 completionResult.insert(proposal);
                 completionResult.afterInsert(proposal);
 
-                String fileContent = doc.getText(0, doc.getLength());;
+                String fileContent = doc.getText(0, doc.getLength());
                 assertFileContentsMatches(file, fileContent, false, ".ccresult");
             }
         });

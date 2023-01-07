@@ -53,7 +53,7 @@ public class TestUtilitiesTest extends NbTestCase {
         cache.mkdirs();
         final File sourceDir = FileUtil.normalizeFile(new File(wf,"src"));
         sourceDir.mkdirs();        
-        boot = BootClassPathUtil.getBootClassPath();;
+        boot = BootClassPathUtil.getBootClassPath();
         compile = ClassPathSupport.createClassPath(new URL[0]);
         source = ClassPathSupport.createClassPath(new URL[]{Utilities.toURI(sourceDir).toURL()});
         TestUtilities.setCacheFolder(cache);

@@ -512,7 +512,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                         Element lineElementRoot = doc.getDefaultRootElement();
                         ParagraphViewDescriptor pViewDesc = lockedVH.getParagraphViewDescriptor(pViewIndex);
                         int pViewStartOffset = pViewDesc.getStartOffset();
-                        int lineIndex = lineElementRoot.getElementIndex(pViewStartOffset);;
+                        int lineIndex = lineElementRoot.getElementIndex(pViewStartOffset);
                         int lineEndOffset = lineElementRoot.getElement(lineIndex).getEndOffset();
                         int lineWithAnno = -1;
                         float rowHeight = lockedVH.getDefaultRowHeight();

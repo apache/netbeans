@@ -903,7 +903,7 @@ public abstract class ErrorManager extends Object {
 
                 for (LogRecord log : r) {
                     if (log.getMessage() != null) {
-                        a.append(log.getMessage()).append("\n");;
+                        a.append(log.getMessage()).append("\n");
                     }
                     if (log.getThrown() != null) {
                         StringWriter w = new StringWriter();

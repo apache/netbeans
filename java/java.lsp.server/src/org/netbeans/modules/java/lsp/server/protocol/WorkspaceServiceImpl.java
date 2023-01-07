@@ -1182,7 +1182,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final class CommandProgress extends ActionProgress {
 
-        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();;
+        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();
         private int running;
         private int success;
         private int failure;

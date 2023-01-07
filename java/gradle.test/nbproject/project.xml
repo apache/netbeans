@@ -29,8 +29,8 @@
                     <code-name-base>org.netbeans.modules.libs.gradle</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>7</release-version>
-                        <specification-version>7.0</specification-version>
+                        <release-version>8</release-version>
+                        <specification-version>8.0.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

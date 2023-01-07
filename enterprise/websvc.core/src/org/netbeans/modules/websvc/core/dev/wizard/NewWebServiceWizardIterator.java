@@ -171,7 +171,7 @@ public class NewWebServiceWizardIterator implements TemplateWizard.Iterator /*, 
     }
 
     public String name() {
-        return MessageFormat.format(NbBundle.getMessage(NewWebServiceWizardIterator.class, "LBL_WizardStepsCount"), Integer.valueOf(index + 1).toString(), Integer.valueOf(panels.length).toString()); //NOI18N
+        return MessageFormat.format(NbBundle.getMessage(NewWebServiceWizardIterator.class, "LBL_WizardStepsCount"), index + 1, panels.length); //NOI18N
     }
     
     public boolean hasNext() {

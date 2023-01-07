@@ -33,9 +33,9 @@ public class VersionTest extends NbTestCase {
     public void testJsr277() {
         Version version = Version.fromJsr277NotationWithFallback("10.3.4");
         assertEquals("10.3.4", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
         assertNull(version.getUpdate());
         assertNull(version.getQualifier());
 
@@ -49,10 +49,10 @@ public class VersionTest extends NbTestCase {
 
         version = Version.fromJsr277NotationWithFallback("10.3.4.5-something");
         assertEquals("10.3.4.5-something", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
-        assertEquals(Integer.valueOf("5"), version.getUpdate());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
+        assertEquals(5, version.getUpdate());
         assertEquals("something", version.getQualifier());
 
         version = Version.fromJsr277NotationWithFallback("10.3.4.5.6");
@@ -67,9 +67,9 @@ public class VersionTest extends NbTestCase {
     public void testDotted() {
         Version version = Version.fromDottedNotationWithFallback("10.3.4");
         assertEquals("10.3.4", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
         assertNull(version.getUpdate());
         assertNull(version.getQualifier());
 
@@ -91,19 +91,19 @@ public class VersionTest extends NbTestCase {
 
         version = Version.fromDottedNotationWithFallback("10.3.4.5.6");
         assertEquals("10.3.4.5.6", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
-        assertEquals(Integer.valueOf("5"), version.getUpdate());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
+        assertEquals(5, version.getUpdate());
         assertEquals("6", version.getQualifier());
     }
 
     public void testJsr277OrDotted() {
         Version version = Version.fromJsr277OrDottedNotationWithFallback("10.3.4");
         assertEquals("10.3.4", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
         assertNull(version.getUpdate());
         assertNull(version.getQualifier());
 
@@ -117,18 +117,18 @@ public class VersionTest extends NbTestCase {
 
         version = Version.fromJsr277OrDottedNotationWithFallback("10.3.4.5-something");
         assertEquals("10.3.4.5-something", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
-        assertEquals(Integer.valueOf("5"), version.getUpdate());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
+        assertEquals(5, version.getUpdate());
         assertEquals("something", version.getQualifier());
 
         version = Version.fromJsr277OrDottedNotationWithFallback("10.3.4.5.6");
         assertEquals("10.3.4.5.6", version.toString());
-        assertEquals(Integer.valueOf("10"), version.getMajor());
-        assertEquals(Integer.valueOf("3"), version.getMinor());
-        assertEquals(Integer.valueOf("4"), version.getMicro());
-        assertEquals(Integer.valueOf("5"), version.getUpdate());
+        assertEquals(10, version.getMajor());
+        assertEquals(3, version.getMinor());
+        assertEquals(4, version.getMicro());
+        assertEquals(5, version.getUpdate());
         assertEquals("6", version.getQualifier());
     }
 

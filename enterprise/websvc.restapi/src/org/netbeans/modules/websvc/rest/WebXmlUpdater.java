@@ -237,7 +237,7 @@ public class WebXmlUpdater {
                         adaptorServlet.setServletClass(REST_SERVLET_ADAPTOR_CLASS);
                     }
                 }
-                adaptorServlet.setLoadOnStartup(BigInteger.valueOf(1));
+                adaptorServlet.setLoadOnStartup(Big1);
                 webApp.addServlet(adaptorServlet);
                 servletUpdated = true;
             }
@@ -277,7 +277,7 @@ public class WebXmlUpdater {
                 initParam.setParamName(PARAM_NAME_APPLICATION_CLASS);
                 initParam.setParamValue(applicationClassName); //NOI18N
                 adaptorServlet.addInitParam(initParam);
-                adaptorServlet.setLoadOnStartup(BigInteger.valueOf(1));
+                adaptorServlet.setLoadOnStartup(Big1);
                 webApp.addServlet(adaptorServlet);
                 servletUpdated = true;
             }

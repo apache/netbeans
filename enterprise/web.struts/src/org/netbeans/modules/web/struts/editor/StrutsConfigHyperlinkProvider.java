@@ -65,35 +65,35 @@ public class StrutsConfigHyperlinkProvider implements HyperlinkProvider {
     
     {
         hyperlinkTable = new Hashtable<>();
-        hyperlinkTable.put("data-source#className", new Integer(JAVA_CLASS));   //NOI18N
-        hyperlinkTable.put("data-source#type", new Integer(JAVA_CLASS));        //NOI18N
-        hyperlinkTable.put("form-beans#type", new Integer(JAVA_CLASS));         //NOI18N
-        hyperlinkTable.put("form-bean#className", new Integer(JAVA_CLASS));     //NOI18N
-        hyperlinkTable.put("form-bean#type", new Integer(JAVA_CLASS));          //NOI18N
-        hyperlinkTable.put("form-property#className", new Integer(JAVA_CLASS)); //NOI18N
-        hyperlinkTable.put("form-property#type", new Integer(JAVA_CLASS));      //NOI18N
-        hyperlinkTable.put("exception#className", new Integer(JAVA_CLASS));     //NOI18N
-        hyperlinkTable.put("exception#type", new Integer(JAVA_CLASS));          //NOI18N
-        hyperlinkTable.put("exception#handler", new Integer(JAVA_CLASS));       //NOI18N
-        hyperlinkTable.put("exception#path", new Integer(RESOURCE_PATH));       //NOI18N
-        hyperlinkTable.put("global-forwards#type", new Integer(JAVA_CLASS));    //NOI18N
-        hyperlinkTable.put("forward#className", new Integer(JAVA_CLASS));       //NOI18N
-        hyperlinkTable.put("forward#type", new Integer(JAVA_CLASS));            //NOI18N
-        hyperlinkTable.put("forward#path", new Integer(RESOURCE_PATH));         //NOI18N
-        hyperlinkTable.put("action-mappings#type", new Integer(JAVA_CLASS));    //NOI18N
-        hyperlinkTable.put("action#name", new Integer(FORM_NAME));              //NOI18N
-        hyperlinkTable.put("action#className", new Integer(JAVA_CLASS));        //NOI18N
-        hyperlinkTable.put("action#type", new Integer(JAVA_CLASS));             //NOI18N
-        hyperlinkTable.put("action#forward", new Integer(RESOURCE_PATH));       //NOI18N
-        hyperlinkTable.put("action#include", new Integer(RESOURCE_PATH));       //NOI18N
-        hyperlinkTable.put("action#input", new Integer(RESOURCE_PATH));         //NOI18N
-        hyperlinkTable.put("action#path", new Integer(RESOURCE_PATH));          //NOI18N
-        hyperlinkTable.put("controller#className", new Integer(JAVA_CLASS));        //NOI18N
-        hyperlinkTable.put("controller#processorClass", new Integer(JAVA_CLASS));   //NOI18N
-        hyperlinkTable.put("controller#multipartClass", new Integer(JAVA_CLASS));   //NOI18N
-        hyperlinkTable.put("message-resources#className", new Integer(JAVA_CLASS)); //NOI18N
-        hyperlinkTable.put("message-resources#factory", new Integer(JAVA_CLASS));   //NOI18N
-        hyperlinkTable.put("plug-in#className", new Integer(JAVA_CLASS));           //NOI18N
+        hyperlinkTable.put("data-source#className", JAVA_CLASS);   //NOI18N
+        hyperlinkTable.put("data-source#type", JAVA_CLASS);        //NOI18N
+        hyperlinkTable.put("form-beans#type", JAVA_CLASS);         //NOI18N
+        hyperlinkTable.put("form-bean#className", JAVA_CLASS);     //NOI18N
+        hyperlinkTable.put("form-bean#type", JAVA_CLASS);          //NOI18N
+        hyperlinkTable.put("form-property#className", JAVA_CLASS); //NOI18N
+        hyperlinkTable.put("form-property#type", JAVA_CLASS);      //NOI18N
+        hyperlinkTable.put("exception#className", JAVA_CLASS);     //NOI18N
+        hyperlinkTable.put("exception#type", JAVA_CLASS);          //NOI18N
+        hyperlinkTable.put("exception#handler", JAVA_CLASS);       //NOI18N
+        hyperlinkTable.put("exception#path", RESOURCE_PATH);       //NOI18N
+        hyperlinkTable.put("global-forwards#type", JAVA_CLASS);    //NOI18N
+        hyperlinkTable.put("forward#className", JAVA_CLASS);       //NOI18N
+        hyperlinkTable.put("forward#type", JAVA_CLASS);            //NOI18N
+        hyperlinkTable.put("forward#path", RESOURCE_PATH);         //NOI18N
+        hyperlinkTable.put("action-mappings#type", JAVA_CLASS);    //NOI18N
+        hyperlinkTable.put("action#name", FORM_NAME);              //NOI18N
+        hyperlinkTable.put("action#className", JAVA_CLASS);        //NOI18N
+        hyperlinkTable.put("action#type", JAVA_CLASS);             //NOI18N
+        hyperlinkTable.put("action#forward", RESOURCE_PATH);       //NOI18N
+        hyperlinkTable.put("action#include", RESOURCE_PATH);       //NOI18N
+        hyperlinkTable.put("action#input", RESOURCE_PATH);         //NOI18N
+        hyperlinkTable.put("action#path", RESOURCE_PATH);          //NOI18N
+        hyperlinkTable.put("controller#className", JAVA_CLASS);        //NOI18N
+        hyperlinkTable.put("controller#processorClass", JAVA_CLASS);   //NOI18N
+        hyperlinkTable.put("controller#multipartClass", JAVA_CLASS);   //NOI18N
+        hyperlinkTable.put("message-resources#className", JAVA_CLASS); //NOI18N
+        hyperlinkTable.put("message-resources#factory", JAVA_CLASS);   //NOI18N
+        hyperlinkTable.put("plug-in#className", JAVA_CLASS);           //NOI18N
     }
     
     private int valueOffset;

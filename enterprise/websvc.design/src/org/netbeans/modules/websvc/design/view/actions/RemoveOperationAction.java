@@ -69,7 +69,7 @@ public class RemoveOperationAction extends AbstractAction{
     public RemoveOperationAction(ProjectService service) {
         super(getName());
         putValue(SHORT_DESCRIPTION, NbBundle.getMessage(RemoveOperationAction.class, "Hint_RemoveOperation"));
-        putValue(MNEMONIC_KEY, Integer.valueOf(NbBundle.getMessage(AddOperationAction.class, "LBL_RemoveOperation_mnem_pos")));
+        putValue(MNEMONIC_KEY, Integer.parseInt(NbBundle.getMessage(AddOperationAction.class, "LBL_RemoveOperation_mnem_pos")));
         this.service = service;
         setEnabled(false);
     }

@@ -181,6 +181,6 @@ public final class WsDesignerUtilities {
         TopComponentOperator tco = design(wsName);
         final LabelWidgetOperator lwo = new LabelWidgetOperator(tco, opsLabel);
         String countSt = new LabelWidgetOperator(lwo.getParent(), 1).getLabel();
-        return Integer.valueOf(countSt.substring(1, countSt.lastIndexOf(')'))); //NOI18N
+        return Integer.parseInt(countSt.substring(1, countSt.lastIndexOf(')'))); //NOI18N
     }
 }

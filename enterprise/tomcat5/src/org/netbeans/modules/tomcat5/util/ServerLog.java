@@ -169,7 +169,7 @@ class ServerLog {
                         if (nextColonIdx > -1) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum);
+                                line = Integer.parseInt(lineNum);
                             } catch(NumberFormatException nfe) { 
                                 // ignore it
                                 Logger.getLogger(ServerLog.class.getName()).log(Level.INFO, null, nfe);
@@ -194,7 +194,7 @@ class ServerLog {
                         if (thirdColonIdx > -1) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum);
+                                line = Integer.parseInt(lineNum);
                             } catch(NumberFormatException nfe) { 
                                 // ignore it
                                 Logger.getLogger(ServerLog.class.getName()).log(Level.INFO, null, nfe);
@@ -225,7 +225,7 @@ class ServerLog {
                             if (lastColonIdx > -1) {
                                 String lineNum = content.substring(lastColonIdx + 1);
                                 try {
-                                    line = Integer.valueOf(lineNum);
+                                    line = Integer.parseInt(lineNum);
                                 } catch(NumberFormatException nfe) {
                                     // ignore it
                                     Logger.getLogger(ServerLog.class.getName()).log(Level.INFO, null, nfe);

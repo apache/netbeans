@@ -64,7 +64,7 @@ public class JaxWsStackSupport {
             if (index > 0) {
                 String releaseVersion = parseReleaseVersion(
                         javaVersion.substring(index+1));
-                Integer rv = Integer.valueOf(releaseVersion);
+                Integer rv = Integer.parseInt(releaseVersion);
                 if (rv >= 4) {
                     return "2.1.1"; //NOI18N
                 } else {

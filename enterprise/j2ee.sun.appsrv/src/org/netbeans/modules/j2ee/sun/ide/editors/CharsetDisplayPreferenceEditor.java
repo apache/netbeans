@@ -31,7 +31,7 @@ import org.openide.util.NbBundle;
  */
 public class CharsetDisplayPreferenceEditor extends LogLevelEditor{
 
-    public static Integer DEFAULT_PREF_VAL = Integer.valueOf("1"); // NOI18N
+    public static Integer DEFAULT_PREF_VAL = 1; // NOI18N
 
     private Integer val = DEFAULT_PREF_VAL;
 
@@ -66,8 +66,8 @@ public class CharsetDisplayPreferenceEditor extends LogLevelEditor{
         if (intVal > 2){
             intVal = 1;
         }
-        String valS = String.valueOf(intVal);
-        val = Integer.valueOf(valS);
+
+        val = intVal;
         this.firePropertyChange();
     }
     

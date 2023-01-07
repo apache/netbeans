@@ -188,7 +188,7 @@ public class BlameCommand extends SvnCommand {
         public void startElement(String uri, String localName, String qName, Attributes elementAttributes) throws SAXException {            
             tag = qName.trim();                
             if (TARGET_ELEMENT_NAME.equals(qName)) {                        
-                values = new HashMap<String, String>();                
+                values = new HashMap<>();
             } else if (COMMIT_ELEMENT_NAME.equals(qName)) {                                
                 values.put(REVISION_ATTR, elementAttributes.getValue(REVISION_ATTRIBUTE));
             } else if (ENTRY_ELEMENT_NAME.equals(qName)) {                                

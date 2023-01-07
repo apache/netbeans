@@ -76,7 +76,7 @@ class WriteBackTransaction extends FileManagerTransaction {
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
-        deleted = new HashSet<File>();
+        deleted = new HashSet<>();
         createCacheRef();
     }
 
@@ -108,7 +108,7 @@ class WriteBackTransaction extends FileManagerTransaction {
      * Set of work dirs. One workdir is expected in practice, 
      * as the Transaction should work for one source root only.
      */
-    private Collection<File> workDirs = new HashSet<File>();
+    private Collection<File> workDirs = new HashSet<>();
 
     private void createCacheRef() {
         cacheRef = new CacheRef(this, new Pair[]{contentCache});

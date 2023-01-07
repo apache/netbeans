@@ -387,7 +387,7 @@ public class CheckHelpSetsBin extends Task {
     
     private final class VerifyHSFactory extends HelpSet.DefaultHelpSetFactory {
         
-        private Set<String> ids = new HashSet<String>(1000);
+        private Set<String> ids = new HashSet<>(1000);
         
         public void processMapRef(HelpSet hs, Hashtable attrs) {
             try {

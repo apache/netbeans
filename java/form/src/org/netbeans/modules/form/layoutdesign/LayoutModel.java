@@ -1255,7 +1255,7 @@ public class LayoutModel implements LayoutConstants {
         if (l != null) {
             l.add(lc.getId());
         } else {
-            l = new ArrayList<String>();
+            l = new ArrayList<>();
             l.add(lc.getId());
             linkSizeGroups.put(groupIdInt, l);
         }
@@ -1328,7 +1328,7 @@ public class LayoutModel implements LayoutConstants {
         }
         
         Iterator i = components.iterator();
-        List<Integer> idsFound = new ArrayList<Integer>();
+        List<Integer> idsFound = new ArrayList<>();
 
         while (i.hasNext()) {
             String cid = (String)i.next();

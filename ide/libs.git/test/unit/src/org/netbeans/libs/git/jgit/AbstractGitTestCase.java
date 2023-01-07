@@ -235,7 +235,7 @@ public class AbstractGitTestCase extends NbTestCase {
     }
 
     protected static class Monitor extends ProgressMonitor.DefaultProgressMonitor implements FileListener {
-        public final HashSet<File> notifiedFiles = new HashSet<File>();
+        public final HashSet<File> notifiedFiles = new HashSet<>();
         public final List<String> notifiedWarnings = new LinkedList<String>();
         private boolean barrierAccessed;
         public int count;

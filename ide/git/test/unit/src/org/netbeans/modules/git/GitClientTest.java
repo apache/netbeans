@@ -80,7 +80,7 @@ public class GitClientTest extends AbstractGitTestCase {
      * @throws Exception
      */
     public void testIndexReadOnlyMethods () throws Exception {
-        Set<String> allTestedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> allTestedMethods = new HashSet<>(Arrays.asList(
                 "add",
                 "addNotificationListener",
                 "blame",
@@ -140,7 +140,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "updateReference",
                 "updateSubmodules"
         ));
-        Set<String> readOnlyMethods = new HashSet<String>(Arrays.asList(
+        Set<String> readOnlyMethods = new HashSet<>(Arrays.asList(
                 "addNotificationListener",
                 "blame",
                 "catFile",
@@ -203,7 +203,7 @@ public class GitClientTest extends AbstractGitTestCase {
      * @throws Exception
      */
     public void testMethodsNeedingRepositoryInfoRefresh () throws Exception {
-        Set<String> allTestedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> allTestedMethods = new HashSet<>(Arrays.asList(
                 "add",
                 "addNotificationListener",
                 "blame",
@@ -263,7 +263,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "updateReference",
                 "updateSubmodules"
         ));
-        Set<String> expectedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> expectedMethods = new HashSet<>(Arrays.asList(
                 "checkout",
                 "checkoutRevision",
                 "cherryPick",
@@ -314,7 +314,7 @@ public class GitClientTest extends AbstractGitTestCase {
      * @throws Exception
      */
     public void testNetworkMethods () throws Exception {
-        Set<String> allTestedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> allTestedMethods = new HashSet<>(Arrays.asList(
                 "add",
                 "addNotificationListener",
                 "blame",
@@ -374,7 +374,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "updateReference",
                 "updateSubmodules"
         ));
-        Set<String> networkMethods = new HashSet<String>(Arrays.asList(
+        Set<String> networkMethods = new HashSet<>(Arrays.asList(
                 "fetch",
                 "listRemoteBranches",
                 "listRemoteTags",
@@ -495,7 +495,7 @@ public class GitClientTest extends AbstractGitTestCase {
      * @throws Exception
      */
     public void testExclusiveMethods () throws Exception {
-        Set<String> allTestedMethods = new HashSet<String>(Arrays.asList(
+        Set<String> allTestedMethods = new HashSet<>(Arrays.asList(
                 "add",
                 "addNotificationListener",
                 "blame",
@@ -555,7 +555,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "updateReference",
                 "updateSubmodules"
         ));
-        Set<String> parallelizableMethods = new HashSet<String>(Arrays.asList(
+        Set<String> parallelizableMethods = new HashSet<>(Arrays.asList(
                 "addNotificationListener",
                 "blame",
                 "catFile",
@@ -1054,7 +1054,7 @@ public class GitClientTest extends AbstractGitTestCase {
         }
 
         private void setExpectedParents(File[] files) {
-            this.expectedParents = new HashSet<File>(Arrays.asList(files));
+            this.expectedParents = new HashSet<>(Arrays.asList(files));
         }
     }
 

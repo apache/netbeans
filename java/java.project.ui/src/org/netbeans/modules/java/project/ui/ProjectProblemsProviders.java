@@ -345,7 +345,7 @@ public class ProjectProblemsProviders {
         }
 
         //Check for libbraries with broken classpath content
-        Set<String> usedLibraries = new HashSet<String>();
+        Set<String> usedLibraries = new HashSet<>();
         Pattern libPattern = Pattern.compile("\\$\\{(libs\\.[-._a-zA-Z0-9]+\\.classpath)\\}"); //NOI18N
         for (String p : ps) {
             String propertyValue = ep.getProperty(p);
@@ -1357,7 +1357,7 @@ public class ProjectProblemsProviders {
             this.platformType = platformType;
             this.minimalVersion = minimalVersion;
             this.platformProp = platformProp;
-            this.versionProps = new HashSet<String>(Arrays.asList(versionProps));
+            this.versionProps = new HashSet<>(Arrays.asList(versionProps));
         }
 
         @Override

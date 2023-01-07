@@ -151,7 +151,7 @@ public final class SiteHelper {
             ZipEntry entry;
             Set<String> ignored = Collections.emptySet();
             if (ignoredFiles != null && ignoredFiles.length > 0) {
-                ignored = new HashSet<String>(Arrays.asList(ignoredFiles));
+                ignored = new HashSet<>(Arrays.asList(ignoredFiles));
             }
             while ((entry = str.getNextEntry()) != null) {
                 String entryName = entry.getName();

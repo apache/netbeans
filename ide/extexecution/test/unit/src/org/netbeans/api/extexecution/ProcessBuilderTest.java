@@ -83,7 +83,7 @@ public class ProcessBuilderTest extends NbTestCase {
         builder.call();
         assertTrue(testBuilder.getArguments().isEmpty());
 
-        List<String> arguments = new ArrayList<String>();
+        List<String> arguments = new ArrayList<>();
         Collections.addAll(arguments, "test1", "test2");
         builder.setArguments(arguments);
         assertTrue(testBuilder.getArguments().isEmpty());
@@ -117,7 +117,7 @@ public class ProcessBuilderTest extends NbTestCase {
         builder.call();
         assertTrue(testBuilder.getPaths().isEmpty());
 
-        List<String> paths = new ArrayList<String>();
+        List<String> paths = new ArrayList<>();
         Collections.addAll(paths, "test1", "test2");
         builder.setPaths(paths);
         assertTrue(testBuilder.getPaths().isEmpty());
@@ -151,7 +151,7 @@ public class ProcessBuilderTest extends NbTestCase {
         builder.call();
         assertTrue(testBuilder.getEnvironment().isEmpty());
 
-        Map<String, String> environment = new HashMap<String, String>();
+        Map<String, String> environment = new HashMap<>();
         environment.put("key1", "value1");
         environment.put("key2", "value2");
         builder.setEnvironmentVariables(environment);

@@ -152,7 +152,7 @@ public class ShelveChangesAction extends ContextAction {
                 @Override
                 protected void perform () {
                     logger = getLogger();
-                    filteredRoots = new HashSet<File>(Arrays.asList(HgUtils.getModifiedFiles(context, FileInformation.STATUS_LOCAL_CHANGE, true)));
+                    filteredRoots = new HashSet<>(Arrays.asList(HgUtils.getModifiedFiles(context, FileInformation.STATUS_LOCAL_CHANGE, true)));
                     shelveChanges(filteredRoots.toArray(new File[filteredRoots.size()]));
                 }
             };

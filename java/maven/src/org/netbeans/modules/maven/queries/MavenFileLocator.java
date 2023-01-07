@@ -90,7 +90,7 @@ public class MavenFileLocator implements LineConvertors.FileLocator {
     private ClassPath getProjectClasspath(Project p) {
         ClassPath result;
         ClassPathProvider cpp = p.getLookup().lookup(ClassPathProvider.class);
-        Set<FileObject> roots = new HashSet<FileObject>();
+        Set<FileObject> roots = new HashSet<>();
         Sources sources = ProjectUtils.getSources(p);
         if (sources != null) {
             SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);

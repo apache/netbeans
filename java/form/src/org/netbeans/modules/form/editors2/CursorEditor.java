@@ -41,8 +41,8 @@ public class CursorEditor extends PropertyEditorSupport  implements
                                                          ExPropertyEditor, XMLPropertyEditor, 
                                                          org.netbeans.modules.form.NamedPropertyEditor {
 
-    private static Map<String,Integer> CURSOR_TYPES = new HashMap<String,Integer>();
-    private static Map<Integer,String> CURSOR_CONSTANTS = new HashMap<Integer,String>();
+    private static Map<String,Integer> CURSOR_TYPES = new HashMap<>();
+    private static Map<Integer,String> CURSOR_CONSTANTS = new HashMap<>();
     static {
         CURSOR_TYPES.put(new Cursor(Cursor.CROSSHAIR_CURSOR).getName(), new Integer(Cursor.CROSSHAIR_CURSOR));
         CURSOR_TYPES.put(new Cursor(Cursor.DEFAULT_CURSOR).getName(), new Integer(Cursor.DEFAULT_CURSOR));

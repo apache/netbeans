@@ -63,7 +63,7 @@ public class EnableModulesActionTest {
         String expResult = null;
         String result = EnableModulesAction.getDup(targets);
         assertEquals(expResult, result);
-        targets = new ArrayList<String>();
+        targets = new ArrayList<>();
         targets.add("A");
         result = EnableModulesAction.getDup(targets);
         assertEquals(expResult, result);

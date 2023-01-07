@@ -38,8 +38,8 @@ import org.openide.windows.TopComponent;
  */
 public final class TopComponentTracker {
     
-    private final Set<String> viewIds = new HashSet<String>(30);
-    private final Set<String> editorIds = new HashSet<String>(30);
+    private final Set<String> viewIds = new HashSet<>(30);
+    private final Set<String> editorIds = new HashSet<>(30);
     private final Set<TopComponent> editors = new WeakSet<TopComponent>( 100 );
     
     private static TopComponentTracker theInstance;

@@ -89,7 +89,7 @@ public class CLICoreBridge extends CLIHandler {
         moduleSystem.readList();
         
         
-        ArrayList<URL> urls = new ArrayList<URL>();
+        ArrayList<URL> urls = new ArrayList<>();
         for (Module m : moduleSystem.getManager().getModules()) {
             for (File f : m.getAllJars()) {
                 try {

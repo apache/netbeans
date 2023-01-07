@@ -91,7 +91,7 @@ abstract class AbstractProjectSearchScope extends SearchScopeDefinition
                 Sources.TYPE_GENERIC);
 
         FileObject base = project.getProjectDirectory();
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         if (base != null) {
             roots.add(base);
         }

@@ -227,7 +227,7 @@ abstract class AbstractFolder extends FileObject {
         }
 
         int size = children.length;
-        ArrayList<FileObject> aList = new ArrayList<FileObject>();
+        ArrayList<FileObject> aList = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             FileObject f = getChild(children[i]);
@@ -758,7 +758,7 @@ abstract class AbstractFolder extends FileObject {
                 final HashMap<String, Reference<AbstractFolder>> newMap = new HashMap<String, Reference<AbstractFolder>>(initialCapacity);
 
                 /*Just for firing event*/
-                addedNames = new HashSet<String>(initialCapacity);
+                addedNames = new HashSet<>(initialCapacity);
 
                 if (newChildren != null) {
                     final Reference<AbstractFolder> removedRef = ((map != null) ? map.get(removed) : null);
@@ -820,7 +820,7 @@ abstract class AbstractFolder extends FileObject {
                 fire && (added == null) && (removed == null) && !getFileSystem().isReadOnly() &&
                     !(this instanceof MultiFileObject)
             ) {
-                Set<String> nameFilter = nameFilter = new HashSet<String>();
+                Set<String> nameFilter = nameFilter = new HashSet<>();
 
                 if (addedNames != null) {
                     nameFilter.addAll(addedNames);

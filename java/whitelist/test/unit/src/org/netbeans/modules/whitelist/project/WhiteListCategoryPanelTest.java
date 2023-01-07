@@ -135,8 +135,8 @@ public class WhiteListCategoryPanelTest extends NbTestCase {
 
     private final class MockAux implements AuxiliaryConfiguration, AuxiliaryProperties {
 
-        private final Map<String,String> projProp = new HashMap<String, String>();
-        private final Map<String,String> privProp = new HashMap<String, String>();
+        private final Map<String,String> projProp = new HashMap<>();
+        private final Map<String,String> privProp = new HashMap<>();
         private final Document projDoc;
         private final Document privDoc;
 
@@ -187,7 +187,7 @@ public class WhiteListCategoryPanelTest extends NbTestCase {
         @Override
         public Iterable<String> listKeys(boolean shared) {
             final Map<String,String> map = shared ? projProp : privProp;
-            return Collections.unmodifiableSet(new HashSet<String>(map.keySet()));
+            return Collections.unmodifiableSet(new HashSet<>(map.keySet()));
         }
 
     }

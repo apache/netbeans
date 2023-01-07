@@ -121,7 +121,7 @@ public class QueryParameterTest extends NbTestCase implements TestConstants {
 
         String get = lp.get(false).toString();
         String[] returned = get.split("&");
-        Set<String> ss = new HashSet<String>();
+        Set<String> ss = new HashSet<>();
         for (int i = 1; i < returned.length; i++) ss.add(returned[i]);
         assertEquals(2, ss.size());
         if(!ss.contains(PARAMETER + "=" + PV2.getValue())) fail("mising parameter [" + PV2 + "]");
@@ -162,7 +162,7 @@ public class QueryParameterTest extends NbTestCase implements TestConstants {
 
         String get = lp.get(false).toString();
         String[] returned = get.split("&");
-        Set<String> ss = new HashSet<String>();
+        Set<String> ss = new HashSet<>();
         for (int i = 1; i < returned.length; i++) ss.add(returned[i]);
         assertEquals(2, ss.size());
         if(!ss.contains(PARAMETER + "=" + PV2.getValue())) fail("mising parameter [" + PV2 + "]");

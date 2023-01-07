@@ -145,7 +145,7 @@ public class ApplicationActionsTest extends ExtJellyTestCase {
     public void testGeneratedCodeAndProperties() {
         FormDesignerOperator designer = new FormDesignerOperator(getTestProjectName() + "View.java");  // NOI18N
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("public void FooSimpleMethod() {");  // NOI18N        
         lines.add("@Action(enabledProperty = \"fooEnabledProp\", selectedProperty = \"fooSelectedProp\")"); // NOI18N
         lines.add("public void FooMethod() {");  // NOI18N
@@ -171,7 +171,7 @@ public class ApplicationActionsTest extends ExtJellyTestCase {
         EditorOperator editorOp = new EditorOperator(getTestProjectName() + "View");  // NOI18N
         String fileContent = editorOp.getText();
         
-        lines = new ArrayList<String>();
+        lines = new ArrayList<>();
         lines.add("FooSimpleMethod.Action.text=");  // NOI18N        
         lines.add("FooSimpleMethod.Action.shortDescription=");  // NOI18N        
         lines.add("FooMethod.Action.text=Foo Text");  // NOI18N        

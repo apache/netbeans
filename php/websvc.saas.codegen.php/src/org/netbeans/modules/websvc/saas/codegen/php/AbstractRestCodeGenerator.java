@@ -43,7 +43,7 @@ abstract class AbstractRestCodeGenerator extends SaasClientCodeGenerator {
     public abstract FileObject getSaasFolder() throws IOException;
     
     protected void addImportsToSaasService() throws IOException {
-        List<String> imports = new ArrayList<String>();
+        List<String> imports = new ArrayList<>();
         imports.add(REST_CONNECTION_PACKAGE + "->" + REST_CONNECTION);
         imports.add(REST_CONNECTION_PACKAGE + "->" + REST_RESPONSE);
         //addImportsToPhp(getSaasServiceFile(), imports);
@@ -52,7 +52,7 @@ abstract class AbstractRestCodeGenerator extends SaasClientCodeGenerator {
     protected void createRestConnectionFile(Project project) throws IOException {
         FileObject fileObject = project.getProjectDirectory().getFileObject(
                 AntProjectHelper.PROJECT_PROPERTIES_PATH);
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> map = new HashMap<>();
         if ( fileObject != null ){
             Properties properties = new Properties();
             InputStream inputStream = fileObject.getInputStream();

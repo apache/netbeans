@@ -149,7 +149,7 @@ public class CommonTestCase extends JavaSourceTestCase {
             assertEquals("no injectables expected, but found: "+typeElements, 0, typeElements.size());
         }
         assertTrue("number of injectables does not match: returned="+typeElements+" expected="+Arrays.asList(injectables), injectables.length == typeElements.size());
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         for (TypeElement injactable : typeElements) {
             set.add(injactable.getQualifiedName().toString());
         }
@@ -172,7 +172,7 @@ public class CommonTestCase extends JavaSourceTestCase {
             assertEquals("no producers expected, but found: "+productions, 0, productions.size());
         }
         assertTrue("number of productions does not match: returned="+productions+" expected="+Arrays.asList(producers), producers.length == productions.size());
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         for (Element injectable : productions) {
             if (variable) {
                 assertTrue("injectable should be a production method," + " but found :"

@@ -172,7 +172,7 @@ public class Utilities {
         Lookup proxyLookup = Lookups.proxy(new Lookup.Provider() {
             @Override
             public Lookup getLookup() {
-                List<Object> items = new ArrayList<Object>();
+                List<Object> items = new ArrayList<>();
                 items.add(thisFileObj);
                 try {
                     DataObject dobj = dobject != null ? dobject : DataObject.find(thisFileObj);

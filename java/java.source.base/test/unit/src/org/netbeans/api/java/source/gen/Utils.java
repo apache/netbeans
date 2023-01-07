@@ -34,7 +34,7 @@ public class Utils {
 
     public static Map<String, String> setCodePreferences(Map<String, String> values) {
         Preferences preferences = CodeStylePreferences.get(new PlainDocument(), JavacParser.MIME_TYPE).getPreferences();
-        Map<String, String> origValues = new HashMap<String, String>();
+        Map<String, String> origValues = new HashMap<>();
         for (String key : values.keySet()) {
             origValues.put(key, preferences.get(key, null));
         }

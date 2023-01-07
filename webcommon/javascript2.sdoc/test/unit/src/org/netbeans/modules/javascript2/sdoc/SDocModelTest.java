@@ -356,7 +356,7 @@ public class SDocModelTest extends JsDocumentationTestBase {
     private static class FakeSDocElement implements SDocElement {
 
         private final SDocElementType type;
-        private Map<String, String> properties = new HashMap<String, String>();
+        private Map<String, String> properties = new HashMap<>();
 
         public FakeSDocElement(SDocElementType type) {
             assertNotNull(type);

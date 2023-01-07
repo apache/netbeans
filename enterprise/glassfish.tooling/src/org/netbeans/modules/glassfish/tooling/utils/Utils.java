@@ -86,7 +86,7 @@ public class Utils {
      * @return list of existing jars, normalized
      */
     public static List<File> classPathToFileList(String cp, File root) {
-        List<File> result = new ArrayList<File>();
+        List<File> result = new ArrayList<>();
         if(cp != null && cp.length() > 0) {
             String [] jars = cp.split(File.pathSeparator);
             for(String jar: jars) {

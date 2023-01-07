@@ -141,7 +141,7 @@ public final class ActionUtils {
             if (compatibilityCandidates.isEmpty()) {
                 return null; // shortcut - just not a file selection at all
             }
-            List<FileObject> _candidates = new ArrayList<FileObject>();
+            List<FileObject> _candidates = new ArrayList<>();
             for (DataObject d : compatibilityCandidates) {
                 _candidates.add(d.getPrimaryFile());
             }
@@ -202,7 +202,7 @@ public final class ActionUtils {
      * @throws IllegalArgumentException in case some source file is not in the source directory
      */
     public static FileObject[] regexpMapFiles(FileObject[] fromFiles, FileObject fromDir, Pattern fromRx, FileObject toDir, String toSubst, boolean strict) throws IllegalArgumentException {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         for (FileObject fromFile : fromFiles) {
             String path = FileUtil.getRelativePath(fromDir, fromFile);
             if (path == null) {

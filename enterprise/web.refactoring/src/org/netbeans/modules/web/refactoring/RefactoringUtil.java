@@ -250,7 +250,7 @@ public class RefactoringUtil {
             }
         }
 
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         for (final TreePathHandle handle : tphs) {
             JavaSource source = JavaSource.forFileObject(handle.getFileObject());
             try {

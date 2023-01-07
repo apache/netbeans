@@ -192,7 +192,7 @@ public class I18nOptions {
     }
     
     private static FileSystem[] getFileSystems() {
-        List<FileSystem> retval = new ArrayList<FileSystem>();
+        List<FileSystem> retval = new ArrayList<>();
         for (File file : File.listRoots()) {
             FileObject fo = FileUtil.toFileObject(file);
             if (fo != null) {

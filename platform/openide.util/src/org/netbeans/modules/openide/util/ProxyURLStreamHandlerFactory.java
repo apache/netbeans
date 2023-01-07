@@ -42,7 +42,7 @@ public final class ProxyURLStreamHandlerFactory implements URLStreamHandlerFacto
     /** prevents GC only */
     private final Map<String, Lookup.Result<URLStreamHandler>> results = new HashMap<String, Lookup.Result<URLStreamHandler>>();
     private final Map<String, URLStreamHandler> handlers = new HashMap<String, URLStreamHandler>();
-    private static final Set<String> STANDARD_PROTOCOLS = new HashSet<String>(Arrays.asList("jar", "file", "http", "https", "resource")); // NOI18N
+    private static final Set<String> STANDARD_PROTOCOLS = new HashSet<>(Arrays.asList("jar", "file", "http", "https", "resource")); // NOI18N
 
     public @Override synchronized URLStreamHandler createURLStreamHandler(final String protocol) {
         if (STANDARD_PROTOCOLS.contains(protocol)) {

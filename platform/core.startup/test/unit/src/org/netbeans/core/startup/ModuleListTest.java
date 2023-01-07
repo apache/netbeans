@@ -277,7 +277,7 @@ public class ModuleListTest extends SetupHid {
     private static class LoggedFileListener implements FileChangeListener {
 
         /** names of files that have changed: */
-        private final Set<String> files = new HashSet<String>(100);
+        private final Set<String> files = new HashSet<>(100);
 
         private synchronized void change(FileEvent ev) {
             files.add(ev.getFile().getPath());

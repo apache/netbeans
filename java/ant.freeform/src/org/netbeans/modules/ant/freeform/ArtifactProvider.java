@@ -52,7 +52,7 @@ final class ArtifactProvider implements AntArtifactProvider {
     public AntArtifact[] getBuildArtifacts() {
         Element data = project.getPrimaryConfigurationData();
         List<AntArtifact> artifacts = new ArrayList<AntArtifact>();
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         HashMap<String,FreeformArtifact> uniqueArtifacts = new HashMap<String,FreeformArtifact>();
         for (Element export : XMLUtil.findSubElements(data)) {
             if (!export.getLocalName().equals("export")) { // NOI18N

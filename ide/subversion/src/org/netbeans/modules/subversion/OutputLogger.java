@@ -58,7 +58,7 @@ public class OutputLogger implements ISVNNotifyListener {
      * So if this cache doesn't contain the repository string yet, it will probably mean the OW is automatically opened
      * and in that case it should be closed again. See getLog().
      */
-    private static final HashSet<String> openedWindows = new HashSet<String>(5);
+    private static final HashSet<String> openedWindows = new HashSet<>(5);
     private static final Pattern[] filePatterns = new Pattern[] {
         Pattern.compile("[AUCGE ][ UC][ BC][ C] ?(.+)"), //NOI18N
         Pattern.compile("Reverted '(.+)'"), //NOI18N - for commandline

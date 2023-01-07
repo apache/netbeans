@@ -306,7 +306,7 @@ public class AnnotationTypes {
     /** Iterator of all annotation type names in the system */
     public Iterator<String> getAnnotationTypeNames() {
         loadTypes();
-        Set<String> temp = new HashSet<String>();
+        Set<String> temp = new HashSet<>();
         if (allTypes != null)
             temp.addAll(allTypes.keySet());
         return temp.iterator();

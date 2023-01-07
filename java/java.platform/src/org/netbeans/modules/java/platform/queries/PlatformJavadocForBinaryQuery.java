@@ -106,7 +106,7 @@ public class PlatformJavadocForBinaryQuery implements JavadocForBinaryQueryImple
         @NonNull
         public synchronized URL[] getRoots() {
             if (this.cachedRoots == null) {
-                final List<URL> l = new ArrayList<URL>();
+                final List<URL> l = new ArrayList<>();
                 for (JavaPlatform platform : platforms) {
                     final List<? extends URL> javadoc = platform.getJavadocFolders();
                     if (!javadoc.isEmpty()) {
@@ -260,7 +260,7 @@ public class PlatformJavadocForBinaryQuery implements JavadocForBinaryQueryImple
                 return children[0];
             }
             else {
-                final Set<FileObject> candidates = new HashSet<FileObject>();
+                final Set<FileObject> candidates = new HashSet<>();
                 for (FileObject fo : children) {
                     if (!fo.isFolder()) {
                         continue;
@@ -292,7 +292,7 @@ public class PlatformJavadocForBinaryQuery implements JavadocForBinaryQueryImple
         private static synchronized Set<String> getLocales () {
             if (locales == null) {
                 final Locale[] locs = Locale.getAvailableLocales();
-                locales = new HashSet<String>();
+                locales = new HashSet<>();
                 for (Locale l : locs) {
                     locales.add (l.toString());
                 }

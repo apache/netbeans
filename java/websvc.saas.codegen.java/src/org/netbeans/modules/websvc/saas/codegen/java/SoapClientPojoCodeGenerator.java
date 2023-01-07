@@ -140,7 +140,7 @@ public class SoapClientPojoCodeGenerator extends SaasClientCodeGenerator {
 
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Collections.<FileObject>emptyList());
+        return new HashSet<>(Collections.<FileObject>emptyList());
     }
 
     /**
@@ -358,7 +358,7 @@ public class SoapClientPojoCodeGenerator extends SaasClientCodeGenerator {
 
                 // compute the service field name
                 if (generateWsRefInjection[0]) {
-                    Set<String> serviceFieldNames = new HashSet<String>();
+                    Set<String> serviceFieldNames = new HashSet<>();
                     boolean injectionExists = false;
                     int memberOrder = 0;
                     for (Tree member : classTree.getMembers()) {

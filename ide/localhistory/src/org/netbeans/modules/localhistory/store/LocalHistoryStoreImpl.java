@@ -76,7 +76,7 @@ class LocalHistoryStoreImpl implements LocalHistoryStore {
     private static Map<Long, String> emptyLabels = new HashMap<Long, String>();
     private static StoreEntry[] emptyStoreEntryArray = new StoreEntry[0];
 
-    private Set<File> lockedFolders = Collections.synchronizedSet(new HashSet<File>(5));
+    private Set<File> lockedFolders = Collections.synchronizedSet(new HashSet<>(5));
 
     private static long LOCK_TIMEOUT = 30;
     private final RequestProcessor rp = new RequestProcessor("LocalHistoryStore", 50); // NOI18N

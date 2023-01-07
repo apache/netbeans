@@ -132,7 +132,7 @@ public class OpenTagCompletionProvider extends CompletionModelProvider {
         return null;
     }
 
-    private Set<String> usedPrefixes = new HashSet<String>();
+    private Set<String> usedPrefixes = new HashSet<>();
 
     private String generatePrefix(String namespace) {
         String prefix = namespace.substring(namespace.lastIndexOf("/") + 1).toLowerCase();

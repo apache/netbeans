@@ -687,7 +687,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         }
         
         public Object createInstance(List fileObjectList) {
-            ArrayList<FileObject> textBaseFilesList = new ArrayList<FileObject>();
+            ArrayList<FileObject> textBaseFilesList = new ArrayList<>();
 
             for(Object o : fileObjectList) {
                 FileObject fileObject = null;

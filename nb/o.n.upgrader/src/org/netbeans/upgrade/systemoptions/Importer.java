@@ -94,7 +94,7 @@ public class Importer {
     }
 
     private static Set<FileObject> getImportFiles(final Properties props) {
-        Set<FileObject> fileobjects = new HashSet<FileObject>();        
+        Set<FileObject> fileobjects = new HashSet<>();        
         for (Iterator it = props.keySet().iterator(); it.hasNext();) {
             String path = (String) it.next();
             FileObject f = FileUtil.getConfigFile(path);

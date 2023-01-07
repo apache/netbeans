@@ -100,7 +100,7 @@ final class LocallDownloadDnD implements DropTargetListener {
             dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
             List<File> files = null;
             if (value instanceof String) {
-                files = new ArrayList<File>();
+                files = new ArrayList<>();
                 for (String v : ((String) value).split("\n")) {
                     File f = Utilities.toFile(new URI(((String) v).trim()));
                     assert f.exists() : "File shall exist: " + f;

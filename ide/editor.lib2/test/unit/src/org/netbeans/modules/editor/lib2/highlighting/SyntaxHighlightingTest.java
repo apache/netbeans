@@ -53,7 +53,7 @@ public class SyntaxHighlightingTest extends NbTestCase {
     /** Creates a new instance of SyntaxHighlightingTest */
     public SyntaxHighlightingTest(String name) {
         super(name);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimple");
 //        includes.add("testNoPrologEpilogEmbedding");
 //        includes.add("testEmbedded");
@@ -180,7 +180,7 @@ public class SyntaxHighlightingTest extends NbTestCase {
     }
 
     private void checkHighlights(String message, HighlightsSequence seq, Integer... expected) {
-        List<Integer> actual = new ArrayList<Integer>();
+        List<Integer> actual = new ArrayList<>();
         while(seq.moveNext()) {
             actual.add(seq.getStartOffset());
             actual.add(seq.getEndOffset());

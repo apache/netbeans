@@ -172,7 +172,7 @@ public class RunCommand extends HttpServlet {
      */
     private Map<String, Object> getParameters(HttpServletRequest request)
             throws IOException {
-        final Map<String, Object> parameters  = new HashMap<String, Object>();
+        final Map<String, Object> parameters  = new HashMap<>();
         final ServletInputStream  input       = request.getInputStream();
         final String              boundary    = getBoundary(request);
         final String              endBoundary = boundary + "--";

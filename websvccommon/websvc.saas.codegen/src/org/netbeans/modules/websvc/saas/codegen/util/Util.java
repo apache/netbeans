@@ -391,7 +391,7 @@ public class Util {
 
     public static boolean isKeyword(String name) {
         if (keywords == null) {
-            keywords = new HashSet<String>();
+            keywords = new HashSet<>();
 
             keywords.add("abstract");
             keywords.add("assert");
@@ -694,7 +694,7 @@ public class Util {
                 methodBody += "        if (" + tokenName + " != null) {\n";
 
                 methodBody += "           session.removeAttribute(\"" + groupName + "_auth_token\");\n";
-                Map<String, String> tokenMap = new HashMap<String, String>();
+                Map<String, String> tokenMap = new HashMap<>();
                 methodBody += getLoginBody(login, bean, groupName, tokenMap);
                 for (Entry e : tokenMap.entrySet()) {
                     String name = (String) e.getKey();
@@ -1192,7 +1192,7 @@ public class Util {
     }
 
     public static List<String> getJaxBClassImports() {
-        List<String> imports = new ArrayList<String>();
+        List<String> imports = new ArrayList<>();
         ClassLoader orig = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(Util.class.getClassLoader());
         try {
@@ -1273,7 +1273,7 @@ public class Util {
     }
 
     public static String[] getParamNames(List<ParameterInfo> params) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
 
         for (ParameterInfo param : params) {
             results.add(getParameterName(param, true, true, true));
@@ -1283,7 +1283,7 @@ public class Util {
     }
 
     public static String[] getParamTypeNames(List<ParameterInfo> params) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
 
         for (ParameterInfo param : params) {
             results.add(param.getTypeName());
@@ -1293,7 +1293,7 @@ public class Util {
     }
 
     public static Object[] getParamValues(List<ParameterInfo> params) {
-        List<Object> results = new ArrayList<Object>();
+        List<Object> results = new ArrayList<>();
 
         for (ParameterInfo param : params) {
             results.add(getParamValue(param));
@@ -1382,13 +1382,13 @@ public class Util {
     }
 
     public static String[] getGetParamNames(List<ParameterInfo> queryParams) {
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
         params.addAll(Arrays.asList(getParamNames(queryParams)));
         return params.toArray(new String[params.size()]);
     }
 
     public static String[] getGetParamTypes(List<ParameterInfo> queryParams) {
-        ArrayList<String> types = new ArrayList<String>();
+        ArrayList<String> types = new ArrayList<>();
         types.addAll(Arrays.asList(getParamTypeNames(queryParams)));
         return types.toArray(new String[types.size()]);
     }

@@ -59,7 +59,7 @@ final class PerfCountingSecurityManager extends SecurityManager implements Calla
     private static PerfCountingSecurityManager.Mode mode;
 
     static void initWrites() throws IOException {
-        Set<String> allowedFiles = new HashSet<String>();
+        Set<String> allowedFiles = new HashSet<>();
         InputStream is = PerfCountingSecurityManager.class.getResourceAsStream("allowed-file-writes.txt");
         Assert.assertNotNull("file found", is);
         BufferedReader r = new BufferedReader(new InputStreamReader(is));

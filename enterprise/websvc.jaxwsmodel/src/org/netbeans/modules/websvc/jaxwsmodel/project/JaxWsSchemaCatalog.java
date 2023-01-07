@@ -55,7 +55,7 @@ public class JaxWsSchemaCatalog implements CatalogReader, CatalogDescriptor, Ent
      */
     @Override
     public Iterator<String> getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(JAXWS_CONF_ID);
         return list.listIterator();
     }

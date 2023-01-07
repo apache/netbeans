@@ -81,8 +81,8 @@ public class SessionImpl extends PersistentObject implements Session {
     
     // lazy initialization
     private Set<String> interfacesSet;
-    private Set<String> businessLocal = new HashSet<String>();
-    private Set<String> businessRemote = new HashSet<String>();
+    private Set<String> businessLocal = new HashSet<>();
+    private Set<String> businessRemote = new HashSet<>();
     private EjbRef[] ejbRefs;
     private EjbLocalRef[] ejbLocalRefs;
     private ServiceRef[] serviceRefs;
@@ -98,7 +98,7 @@ public class SessionImpl extends PersistentObject implements Session {
     public SessionImpl(Kind kind, AnnotationModelHelper helper, TypeElement typeElement) {
         super(helper, typeElement);
         this.kind = kind;
-        this.interfacesSet = new HashSet<String>();
+        this.interfacesSet = new HashSet<>();
         boolean valid = refresh(typeElement);
         assert valid;
     }
@@ -147,8 +147,8 @@ public class SessionImpl extends PersistentObject implements Session {
      * Initializes businessLocal and businessRemote fields
      */
     private void initBusinessInterfaces() {
-        Set<String> businessLocalOld = new HashSet<String>(businessLocal);
-        Set<String> businessRemoteOld = new HashSet<String>(businessRemote);
+        Set<String> businessLocalOld = new HashSet<>(businessLocal);
+        Set<String> businessRemoteOld = new HashSet<>(businessRemote);
         // try to remember set of interfaces from last initialization
         // and if it is changed, reinitialize again
         
@@ -184,7 +184,7 @@ public class SessionImpl extends PersistentObject implements Session {
         */
         TypeElement typeElement = getTypeElement();
 
-        interfacesSet = new HashSet<String>();
+        interfacesSet = new HashSet<>();
         businessLocal.clear();
         businessRemote.clear();
         
@@ -215,9 +215,9 @@ public class SessionImpl extends PersistentObject implements Session {
         AnnotationMirror beanRemoteAnnotation = annByType.get("javax.ejb.Remote"); // @Remote at beans class
         boolean isEmptyBeanRemoteAnnotation = beanRemoteAnnotation != null && beanRemoteAnnotation.getElementValues().isEmpty();
         
-        List<String> annotatedLocalInterfaces = new ArrayList<String>();
-        List<String> annotatedRemoteInterfaces = new ArrayList<String>();
-        List<String> allInterfaces = new ArrayList<String>();
+        List<String> annotatedLocalInterfaces = new ArrayList<>();
+        List<String> annotatedRemoteInterfaces = new ArrayList<>();
+        List<String> allInterfaces = new ArrayList<>();
         
         for (TypeElement interfaceTypeElement : interfaces) {
             Map<String, ? extends AnnotationMirror> ifaceAnnByType = getHelper().getAnnotationsByType(interfaceTypeElement.getAnnotationMirrors());
@@ -284,7 +284,7 @@ public class SessionImpl extends PersistentObject implements Session {
      * Extracts Class[] from @Local and @Remote annotations
      */
     private List<String> getClassesFromLocalOrRemote(AnnotationMirror beanLocalAnnotation) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         AnnotationParser parser = AnnotationParser.create(getHelper());
         parser.expectClassArray("value", new ArrayValueHandler() { // NOI18N
             public Object handleArray(List<AnnotationValue> arrayMembers) {

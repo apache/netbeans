@@ -125,7 +125,7 @@ public class TemplateAttrProvider implements CreateFromTemplateAttributesProvide
 
         //#206321
         if (mp.getProperties() != null) {
-            Map<String, Object> props = new HashMap<String, Object>();
+            Map<String, Object> props = new HashMap<>();
             for (String prop : mp.getProperties().stringPropertyNames()) {
                 String[] split = prop.split("\\.");
                 String value = mp.getProperties().getProperty(prop);
@@ -164,7 +164,7 @@ public class TemplateAttrProvider implements CreateFromTemplateAttributesProvide
                 Object valu = props.get(split[0]);
                 Map<String, Object> childProp;
                 if (valu == null) {
-                    childProp = new HashMap<String, Object>();
+                    childProp = new HashMap<>();
                     props.put(split[0], childProp);
                 } else {
                     if (valu instanceof Map) {

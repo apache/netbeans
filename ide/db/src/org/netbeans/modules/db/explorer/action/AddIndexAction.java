@@ -103,7 +103,7 @@ public class AddIndexAction extends BaseAction {
 
             drvSpec.getColumns(tablename, "%");
             ResultSet rs = drvSpec.getResultSet();
-            Map<Integer, String> rset = new HashMap<Integer, String>();
+            Map<Integer, String> rset = new HashMap<>();
             while (rs.next()) {
                 rset = drvSpec.getRow();
                 cols.add(rset.get(Integer.valueOf(4)));

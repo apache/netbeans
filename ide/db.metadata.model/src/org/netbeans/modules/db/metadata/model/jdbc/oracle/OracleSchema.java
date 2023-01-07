@@ -90,7 +90,7 @@ public class OracleSchema extends JDBCSchema {
         String driverName = null;
         String driverVer = null;
         List<String> emptyList = Collections.emptyList();
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         try {
             driverName = dmd.getDriverName();
             driverVer = dmd.getDriverVersion();

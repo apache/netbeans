@@ -106,7 +106,7 @@ public final class AntBuildExtender {
      * @return list of target names
      */
     public List<String> getExtensibleTargets() {
-        List<String> targets = new ArrayList<String>();
+        List<String> targets = new ArrayList<>();
         targets.addAll(implementation.getExtensibleTargets());
         targets = Collections.unmodifiableList(targets);
         return targets;
@@ -397,7 +397,7 @@ public final class AntBuildExtender {
             Collection<String> tars = dependencies.get(mainBuildTarget);
             boolean changed = false;
             if (tars == null) {
-                tars = new ArrayList<String>();
+                tars = new ArrayList<>();
                 dependencies.put(mainBuildTarget, tars);
                 changed = true;
             }
@@ -432,7 +432,7 @@ public final class AntBuildExtender {
             TreeMap<String, Collection<String>> toRet = new TreeMap<String, Collection<String>>();
             synchronized (this) {
                 for (String str : dependencies.keySet()) {
-                    ArrayList<String> col = new ArrayList<String>();
+                    ArrayList<String> col = new ArrayList<>();
                     col.addAll(dependencies.get(str));
                     toRet.put(str, col);
                 }

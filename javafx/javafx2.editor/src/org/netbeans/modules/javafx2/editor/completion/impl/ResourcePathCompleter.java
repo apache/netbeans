@@ -71,8 +71,8 @@ public class ResourcePathCompleter implements Completer, Completer.Factory {
             fileMatch = valPrefix.substring(lastSlash + 1);
         }
 
-        Set<String> names = new HashSet<String>();
-        List<FileObject> files = new ArrayList<FileObject>();
+        Set<String> names = new HashSet<>();
+        List<FileObject> files = new ArrayList<>();
 
         collectFromClasspath(context.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE), 
                 folderName, files, names, fileMatch, extMatch);
@@ -154,8 +154,8 @@ public class ResourcePathCompleter implements Completer, Completer.Factory {
             folderName = null;
         }
         
-        Set<String> names = new HashSet<String>();
-        List<FileObject> files = new ArrayList<FileObject>();
+        Set<String> names = new HashSet<>();
+        List<FileObject> files = new ArrayList<>();
         
         collectFromClasspath(context.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE), 
                 classpathDir, files, names, fileMatch, extMatch);
@@ -176,8 +176,8 @@ public class ResourcePathCompleter implements Completer, Completer.Factory {
         }
         
         // first try to complete from the nearby files; if empty, try to query all resources with the matching name.
-        Set<String> names = new HashSet<String>();
-        List<FileObject> files = new ArrayList<FileObject>();
+        Set<String> names = new HashSet<>();
+        List<FileObject> files = new ArrayList<>();
         
         
         if (valPrefix.startsWith("/")) {

@@ -111,7 +111,7 @@ public class TplLexer implements Lexer<TplTokenId> {
     private static final int ISA_HASH = 10;         // Is after hash - "#_"
     private static final int ISI_QUOT = 12;         // Is in quot - "'_" "'asd_"
     private static final int ISI_DQUOT = 13;        // Is in double quot - "\"_" "\"asdfasd_"
-    static final Set<String> VARIABLE_MODIFIERS = new HashSet<String>();
+    static final Set<String> VARIABLE_MODIFIERS = new HashSet<>();
     static {
         // See http://www.smarty.net/manual/en/language.modifiers.php
         VARIABLE_MODIFIERS.add("capitalize"); // NOI18N
@@ -140,7 +140,7 @@ public class TplLexer implements Lexer<TplTokenId> {
         VARIABLE_MODIFIERS.add("wordwrap"); // NOI18N
     }
 
-    static final Set<String> OPERATORS = new HashSet<String>();
+    static final Set<String> OPERATORS = new HashSet<>();
     static {
         // See http://www.smarty.net/manual/en/language.function.if.php
         OPERATORS.add("as"); // NOI18N
@@ -165,7 +165,7 @@ public class TplLexer implements Lexer<TplTokenId> {
         OPERATORS.add("and"); // NOI18N
     }
 
-    static final Set<String> FUNCTIONS = new HashSet<String>();
+    static final Set<String> FUNCTIONS = new HashSet<>();
     static {
         // See http://www.smarty.net/manual/en/language.builtin.functions.php,
         //     http://www.smarty.net/manual/en/language.custom.functions.php

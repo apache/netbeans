@@ -586,7 +586,7 @@ public final class MavenExecuteUtils {
 
     public static List<String> extractDebugJVMOptions(String argLine) {
         Iterable<String> split = propertySplitter(argLine, true);
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         for (String arg : split) {
             if ("-Xdebug".equals(arg)) { //NOI18N
                 continue;

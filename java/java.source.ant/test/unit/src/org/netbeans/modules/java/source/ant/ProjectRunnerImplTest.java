@@ -183,7 +183,7 @@ public class ProjectRunnerImplTest extends NbTestCase {
     }
 
     private void checkProperties(String command, Collection<?> source, Collection<String> target, String displayName) {
-        Map<String, Object> sourceMap = new HashMap<String, Object>();
+        Map<String, Object> sourceMap = new HashMap<>();
 
         for (Iterator<?> it = source.iterator(); it.hasNext();) {
             String key = (String) it.next();

@@ -275,7 +275,7 @@ public class NbBundleTest extends TestCase {
     }
 
     public static void testGetLocalizedValue() throws Exception {
-        Map<String,String> m = new HashMap<String,String>();
+        Map<String,String> m = new HashMap<>();
         m.put("k1", "v1");
         m.put("k1_ja", "v1_ja");
         m.put("k1_ja_JP", "v1_ja_JP");

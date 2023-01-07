@@ -224,7 +224,7 @@ public final class GrailsSettings {
 
         Preferences prefs = getPreferences();
         Preferences subPrefs = prefs.node(getLocalPluginsKey(prj));
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
         try {
             for (String name : subPrefs.keys()) {
                 String value = subPrefs.get(name, null);
@@ -246,7 +246,7 @@ public final class GrailsSettings {
 
         Set<String> keys = null;
         try {
-            keys = new HashSet<String>(Arrays.asList(subPrefs.keys()));
+            keys = new HashSet<>(Arrays.asList(subPrefs.keys()));
         } catch (BackingStoreException ex) {
             keys = Collections.emptySet();
         }

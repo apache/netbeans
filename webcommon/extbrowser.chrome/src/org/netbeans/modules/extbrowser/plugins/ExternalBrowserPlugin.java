@@ -545,7 +545,7 @@ public final class ExternalBrowserPlugin {
         }
 
         private void handleLoadResizeOptions(SelectionKey key) {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("resizeOptions", createLoadResizeOptionsMessage(ResizeOptions.getDefault().loadAll())); // NOI18N
             Message msg = new Message(Message.MessageType.LOAD_RESIZE_OPTIONS, map);
             server.sendMessage(key, msg.toStringValue());

@@ -52,7 +52,7 @@ public class ExecSession extends ExecutionEventObject {
         ExecSession toRet = new ExecSession(prjCount, t);
         JSONArray arr = (JSONArray) obj.get("mvncoreurls");
         if (arr != null) {
-            List<URL> urlList = new ArrayList<URL>();
+            List<URL> urlList = new ArrayList<>();
             Iterator it = arr.iterator();
             while (it.hasNext()) {
                 String url = (String) it.next();

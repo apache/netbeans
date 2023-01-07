@@ -97,7 +97,7 @@ public final class ModuleDeleterImpl  {
             handle.switchToDeterminate (modules.size() + 1);
         }
         
-        Collection<File> configs = new HashSet<File> ();
+        Collection<File> configs = new HashSet<> ();
         int i = 0;
         for (ModuleInfo moduleInfo : modules) {
             File config = locateConfigFile (moduleInfo);
@@ -125,7 +125,7 @@ public final class ModuleDeleterImpl  {
             handle.switchToDeterminate (modules.size () * 2 + 1);
         }
 
-        Collection<File> configFiles = new HashSet<File> ();
+        Collection<File> configFiles = new HashSet<> ();
         int i = 0;
         for (ModuleInfo moduleInfo : modules) {
             Collection<File> configs = locateAllConfigFiles (moduleInfo);
@@ -200,7 +200,7 @@ public final class ModuleDeleterImpl  {
     }
     
     private Collection<File> locateAllConfigFiles (ModuleInfo m) {
-        Collection<File> configFiles = new HashSet<File> ();
+        Collection<File> configFiles = new HashSet<> ();
         String configFileName = m.getCodeNameBase ().replace ('.', '-') + ".xml"; // NOI18N
         for (File cluster : UpdateTracking.clusters (true)) {
             File configFile = new File (new File (new File (cluster, ModuleDeactivator.CONFIG), ModuleDeactivator.MODULES), configFileName);
@@ -464,7 +464,7 @@ public final class ModuleDeleterImpl  {
     
     private Set<File> getStorageFilesForDelete () {
         if (storageFilesForDelete == null) {
-            storageFilesForDelete = new HashSet<File> ();
+            storageFilesForDelete = new HashSet<> ();
         }
         return storageFilesForDelete;
     }

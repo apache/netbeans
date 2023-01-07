@@ -510,7 +510,7 @@ class CategoryPanelFormatters extends StorablePanel {
 }//GEN-LAST:event_copyButtonActionPerformed
 
     private Set<String> getFormatterNames() {
-        Set<String> formatterNames = new HashSet<String>();
+        Set<String> formatterNames = new HashSet<>();
         ListModel formattersModel = formattersList.getModel();
         int n = formattersModel.getSize();
         for (int i = 0; i < n; i++) {

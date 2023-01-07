@@ -43,9 +43,9 @@ public class Closure {
       throws IOException {
         if (closure != null)
             return;
-        closure = new HashSet<String>();
-        Set<String> visited = new HashSet<String>();
-        Stack<ClassName> stk = new Stack<ClassName>();
+        closure = new HashSet<>();
+        Set<String> visited = new HashSet<>();
+        Stack<ClassName> stk = new Stack<>();
         ClassName thisCN = ClassName.getClassName(thisClass.replace('.', '/'));
         stk.push(thisCN);
         visited.add(thisCN.getExternalName());

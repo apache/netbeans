@@ -622,7 +622,7 @@ public final class MavenModelUtils {
         String result = id;
         List<PluginExecution> executions = plugin.getExecutions();
         if (executions != null) {
-            Set<String> execIdSet = new HashSet<String>();
+            Set<String> execIdSet = new HashSet<>();
             for (PluginExecution ex : executions) {
                 String execId = ex.getId();
                 if (execId != null) {

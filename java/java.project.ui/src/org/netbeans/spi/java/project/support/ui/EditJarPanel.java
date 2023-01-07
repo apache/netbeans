@@ -86,7 +86,7 @@ class EditJarPanel extends javax.swing.JPanel {
     }
 
     private static Set<String> getVariableNames() {
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         for (String v : PropertyUtils.getGlobalProperties().keySet()) {
             if (!v.startsWith("var.")) { // NOI18N
                 continue;

@@ -67,9 +67,9 @@ public class ResourceRefMetadataReader extends CommonBeanReader {
                 String resourceRefName = resourceRef.getResRefName();
                 if(Utils.notEmpty(resourceRefName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> resourceRefMap = new HashMap<String, Object>();
+                    Map<String, Object> resourceRefMap = new HashMap<>();
                     result.put(resourceRefName, resourceRefMap);
                     resourceRefMap.put(DDBinding.PROP_NAME, resourceRefName);
                 }

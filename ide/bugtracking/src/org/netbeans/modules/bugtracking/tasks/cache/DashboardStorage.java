@@ -153,7 +153,7 @@ public class DashboardStorage {
         if (dis == null) {
             return Collections.emptyList();
         }
-        List<String> entries = new ArrayList<String>();
+        List<String> entries = new ArrayList<>();
         while (true) {
             String entry;
             try {

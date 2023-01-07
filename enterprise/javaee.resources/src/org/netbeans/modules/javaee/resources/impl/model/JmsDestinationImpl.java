@@ -104,7 +104,7 @@ public final class JmsDestinationImpl extends PersistentObject implements JmsDes
         parser.expectString("description", parser.defaultValue("")); //NOI18N
         parser.expectString("destinationName", parser.defaultValue("")); //NOI18N
         parser.expectString("name", null); //NOI18N
-        List<String> props = new ArrayList<String>();
+        List<String> props = new ArrayList<>();
         parser.expectStringArray("properties", new JndiResourcesValueHandlers.PropertiesArrayValueHandler(props),
                 parser.defaultValue(new String[0])); //NOI18N
         parser.expectString("resourceAdapterName", parser.defaultValue("")); //NOI18N

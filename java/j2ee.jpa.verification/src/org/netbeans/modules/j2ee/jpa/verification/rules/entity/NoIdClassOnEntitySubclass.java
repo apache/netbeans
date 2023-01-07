@@ -97,7 +97,7 @@ public class NoIdClassOnEntitySubclass {
                             Entity parentEntity = ModelUtils.getEntity(((JPAProblemContext) ctx).getMetaData(), superClassElem);
 
                             if (parentEntity != null) {
-                                Set<String> parentEntityIds = new HashSet<String>(1);
+                                Set<String> parentEntityIds = new HashSet<>(1);
 
                                 for (Id id : parentEntity.getAttributes().getId()) {
                                     parentEntityIds.add(id.getName());

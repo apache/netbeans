@@ -74,7 +74,7 @@ public final class J2SELibraryTypeProvider implements LibraryTypeProvider {
         VOLUME_TYPE_MAVEN_POM
     };
 
-    private static final Set<String> VOLUME_TYPES_REQUIRING_FOLDER = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> VOLUME_TYPES_REQUIRING_FOLDER = new HashSet<>(Arrays.asList(new String[] {
         VOLUME_TYPE_CLASSPATH,
         VOLUME_TYPE_SRC,
         VOLUME_TYPE_JAVADOC,

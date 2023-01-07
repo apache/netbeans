@@ -54,7 +54,7 @@ public class RequiredFiles {
     }
     
     private void init(File f) throws IOException {
-        files = new HashSet<String>();
+        files = new HashSet<>();
         BufferedReader r = new BufferedReader(new FileReader(f));
         String s = null;
         while ((s = r.readLine()) != null) {
@@ -70,6 +70,6 @@ public class RequiredFiles {
      *   Returns sorted list of required files (as String)
      */
     public Set<String> getRequiredFiles() {
-        return new HashSet<String>(files);
+        return new HashSet<>(files);
     }
 }

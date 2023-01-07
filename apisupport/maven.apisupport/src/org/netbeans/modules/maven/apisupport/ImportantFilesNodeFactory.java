@@ -168,7 +168,7 @@ public class ImportantFilesNodeFactory implements NodeFactory {
     @Messages({"LBL_module_manifest=Module Manifest", "LBL_module.xml=Module Descriptor (deprecated)"})
     private static final class ImportantFilesChildren extends Children.Keys<String> {
         
-        private List<String> visibleFiles = new ArrayList<String>();
+        private List<String> visibleFiles = new ArrayList<>();
         private FileChangeListener fcl;
         boolean nolayer = false;
         
@@ -246,8 +246,8 @@ public class ImportantFilesNodeFactory implements NodeFactory {
                 });
                 return;
             }
-            Set<FileObject> files = new HashSet<FileObject>();
-            List<String> newVisibleFiles = new ArrayList<String>();
+            Set<FileObject> files = new HashSet<>();
+            List<String> newVisibleFiles = new ArrayList<>();
             if (!nolayer) {
                 newVisibleFiles.add(LAYER);
                 nolayer = false;

@@ -53,7 +53,7 @@ public class AutoImport extends SimpleTypeVisitor6<Void, Void> {
     private CompilationInfo info;
     private StringBuilder builder;
     private TreePath path;
-    private Set<String> importedTypes = new HashSet<String>();
+    private Set<String> importedTypes = new HashSet<>();
 
     private AutoImport(CompilationInfo info) {
         this.info = info;

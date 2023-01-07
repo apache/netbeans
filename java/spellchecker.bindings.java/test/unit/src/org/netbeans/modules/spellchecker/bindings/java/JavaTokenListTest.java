@@ -127,7 +127,7 @@ public class JavaTokenListTest extends NbTestCase {
         
         doc.insertString(0, documentContent, null);
         
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         TokenList l = new JavaTokenList(doc);
         
         l.setStartOffset(0);
@@ -146,7 +146,7 @@ public class JavaTokenListTest extends NbTestCase {
         
         doc.insertString(0, documentContent, null);
         
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         TokenList l = new JavaTokenList(doc);
         
         while (l.nextWord()) {

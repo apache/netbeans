@@ -246,7 +246,7 @@ public class OperationUtils {
 
     public static ArrayList<String> readSavedData(String filename) {
         BufferedReader br = null;
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         try {
             File f = new File(System.getProperty(EXTERNAL_WORKSPACE_PROPERTY), filename);
             br = new BufferedReader(new FileReader(f));

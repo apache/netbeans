@@ -86,7 +86,7 @@ class ArchiveViews {
         }
         
         private void createNodes() {
-            List<String> keys = new ArrayList<String>();
+            List<String> keys = new ArrayList<>();
            
             DataFolder docBaseDir = getFolder(EarProjectProperties.META_INF);
             if (docBaseDir != null) {

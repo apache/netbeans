@@ -218,9 +218,9 @@ public class WhiteListTaskProvider extends  PushTaskScanner {
             @NonNull final FileObject root,
             @NonNull final AtomicBoolean canceled) {
         Set<FileObject> filesWithErrors = getFilesWithAttachedErrors(root);
-        Set<FileObject> fixedFiles = new HashSet<FileObject>(filesWithErrors);
+        Set<FileObject> fixedFiles = new HashSet<>(filesWithErrors);
         filesWithErrors.clear();
-        Set<FileObject> nueFilesWithErrors = new HashSet<FileObject>();
+        Set<FileObject> nueFilesWithErrors = new HashSet<>();
         final Map<FileObject,List<Task>> filesToTasks = new HashMap<FileObject,List<Task>>();
         for (WhiteListIndex.Problem problem : WhiteListIndex.getDefault().getWhiteListViolations(root, null)) {
             if (canceled.get()) {

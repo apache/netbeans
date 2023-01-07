@@ -589,7 +589,7 @@ public class GenerateJnlpFileTask extends Task {
         ArrayList<Map<String,String>> listToReturn = new ArrayList<Map<String,String>>();
         int index = 0;
         while (true) {
-            HashMap<String,String> map = new HashMap<String,String>();
+            HashMap<String,String> map = new HashMap<>();
             int numProps = 0;
             for (String propSuffix : propSuffixes) {
                 String propValue = getProject().getProperty(propPrefix + index + "." + propSuffix); //NOI18N
@@ -614,7 +614,7 @@ public class GenerateJnlpFileTask extends Task {
     }
 
     private static Set<? extends File> getLazyJarsSet(final Project prj, final List<? extends File> runCp, final Path value) {
-        final Set<File> result = new HashSet<File>();
+        final Set<File> result = new HashSet<>();
         if (value != null) {
             for (String pathElement : value.list()) {
                 result.add(prj.resolveFile(pathElement));
@@ -630,7 +630,7 @@ public class GenerateJnlpFileTask extends Task {
     
     private static List<? extends File> resolveCp(final Project prj, final String path) {
         final PathTokenizer ptok = new PathTokenizer(path);
-        final List<File> result = new ArrayList<File>();
+        final List<File> result = new ArrayList<>();
         while (ptok.hasMoreTokens()) {
             result.add(prj.resolveFile(ptok.nextToken()));
         }
@@ -646,7 +646,7 @@ public class GenerateJnlpFileTask extends Task {
      * @return set of JAR file names
      */
     private static Set<? extends String> getExternalJarsProp(final Project prj) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         final String extJarsProp = prj.getProperty(EXTERNAL_JARS_PROP);
         if(extJarsProp != null) {
             for(String extJar : extJarsProp.split(EXTERNAL_PROP_DELIMITER)) {
@@ -672,7 +672,7 @@ public class GenerateJnlpFileTask extends Task {
         if(extJnlpsProp != null) {
             for(String extJnlp : extJnlpsProp.split(EXTERNAL_PROP_DELIMITER)) {
                 if(!extJnlp.isEmpty()) {
-                    Map<String, String> m = new HashMap<String, String>();
+                    Map<String, String> m = new HashMap<>();
                     m.put(EXT_RESOURCE_SUFFIXES[0], extJnlp);
                     result.add(m);
                 }

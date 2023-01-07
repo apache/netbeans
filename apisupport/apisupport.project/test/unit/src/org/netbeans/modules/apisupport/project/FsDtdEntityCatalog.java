@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
 @org.openide.util.lookup.ServiceProvider(service=org.openide.xml.EntityCatalog.class)
 public final class FsDtdEntityCatalog extends EntityCatalog {
 
-    private final Map<String,String> DTD_MAP = new HashMap<String,String>();
+    private final Map<String,String> DTD_MAP = new HashMap<>();
 
     /** Default constructor for lookup. */
     public FsDtdEntityCatalog() {

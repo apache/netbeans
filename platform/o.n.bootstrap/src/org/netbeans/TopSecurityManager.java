@@ -279,8 +279,8 @@ public class TopSecurityManager extends SecurityManager {
         }
         return callerClazz;
     }
-    private final Set<String> warnedClassesNDE = new HashSet<String>(25);
-    private static final Set<String> warnedClassesNH = new HashSet<String>(25);
+    private final Set<String> warnedClassesNDE = new HashSet<>(25);
+    private static final Set<String> warnedClassesNH = new HashSet<>(25);
     static {
         // XXX cleaner would be to use @SuppressWarnings, but that has Retention(SOURCE), and not all these can use org.netbeans.api.annotations.common
         warnedClassesNH.add("org.openide.modules.Places");
@@ -432,7 +432,7 @@ public class TopSecurityManager extends SecurityManager {
      * Create list of safe callers for {@link #checkMemberAccess(Class, int)}.
      */
     private static Set<String> createCallerWhiteList() {
-        Set<String> wl = new HashSet<String>();
+        Set<String> wl = new HashSet<>();
         wl.add("org.netbeans.core.output2.FileMapStorage");             //NOI18N
         wl.add("com.sun.tools.javac.util.CloseableURLClassLoader");     //NOI18N
         wl.add("java.lang.Thread$1");                                   //NOI18N

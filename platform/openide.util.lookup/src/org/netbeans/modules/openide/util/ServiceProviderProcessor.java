@@ -43,7 +43,7 @@ import org.openide.util.lookup.implspi.AbstractServiceProviderProcessor;
 public class ServiceProviderProcessor extends AbstractServiceProviderProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             ServiceProvider.class.getCanonicalName(),
             ServiceProviders.class.getCanonicalName()
         ));

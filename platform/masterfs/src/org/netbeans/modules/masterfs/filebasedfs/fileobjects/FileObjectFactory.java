@@ -140,14 +140,14 @@ public final class FileObjectFactory {
     }
 
     private List<FileObject> existingFileObjects() {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         allIBaseLock.readLock().lock();
         try {
             list.addAll(allIBaseFileObjects.values());
         } finally {
             allIBaseLock.readLock().unlock();
         }
-        List<FileObject> res = new ArrayList<FileObject>();
+        List<FileObject> res = new ArrayList<>();
         for (Object obj : list) {
             Collection<?> all;
             if (obj instanceof Reference<?>) {
@@ -739,14 +739,14 @@ public final class FileObjectFactory {
 
     @Override
     public String toString() {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         allIBaseLock.readLock().lock();
         try {
             list.addAll(allIBaseFileObjects.values());
         } finally {
             allIBaseLock.readLock().unlock();
         }
-        List<String> l2 = new ArrayList<String>();
+        List<String> l2 = new ArrayList<>();
         for (Iterator<Object> it = list.iterator(); it.hasNext();) {
             @SuppressWarnings("unchecked")
             Reference<FileObject> ref = (Reference<FileObject>) it.next();

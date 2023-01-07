@@ -270,7 +270,7 @@ abstract class AsyncConverter {
                     {
                         List<VariableElement> fields = ElementFilter
                                 .fieldsIn(clazz.getEnclosedElements());
-                        Set<String> fieldNames = new HashSet<String>();
+                        Set<String> fieldNames = new HashSet<>();
                         for (VariableElement field : fields) {
                             fieldNames.add(field.getSimpleName().toString());
                             TypeMirror fieldType = field.asType();

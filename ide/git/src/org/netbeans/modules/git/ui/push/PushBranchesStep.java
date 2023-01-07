@@ -248,8 +248,8 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
     }
 
     private boolean isDeleteUpdateConflict (List<PushMapping> selectedObjects) {
-        Set<String> toDelete = new HashSet<String>(selectedObjects.size());
-        Set<String> toUpdate = new HashSet<String>(selectedObjects.size());
+        Set<String> toDelete = new HashSet<>(selectedObjects.size());
+        Set<String> toUpdate = new HashSet<>(selectedObjects.size());
         for (PushMapping m : selectedObjects) {
             if (m.isDeletion()) {
                 toDelete.add(m.getRemoteName());

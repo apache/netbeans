@@ -109,7 +109,7 @@ public class MavenRepoProvider implements SearchProvider {
         searchTask.cancel();
 
         Collections.sort(infos);
-        Set<String> artifacts = new HashSet<String>();
+        Set<String> artifacts = new HashSet<>();
         String ql = q.toLowerCase(Locale.ENGLISH);
         for (final NBVersionInfo art : infos) {
             String label = art.getGroupId() + " : " + art.getArtifactId();
@@ -138,7 +138,7 @@ public class MavenRepoProvider implements SearchProvider {
     List<QueryField> getQuery(String q) {
         List<QueryField> fq = new ArrayList<QueryField>();
         String[] splits = q.split(" "); //NOI18N
-        List<String> fields = new ArrayList<String>();
+        List<String> fields = new ArrayList<>();
         fields.add(QueryField.FIELD_GROUPID);
         fields.add(QueryField.FIELD_ARTIFACTID);
 //        fields.add(QueryField.FIELD_VERSION);

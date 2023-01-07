@@ -1006,10 +1006,10 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public void assertEquals(Collection<String> s1, Collection<String> s2) {
-        List<String> l1 = new ArrayList<String>();
+        List<String> l1 = new ArrayList<>();
         l1.addAll(s1);
         Collections.sort(l1);
-        List<String> l2 = new ArrayList<String>();
+        List<String> l2 = new ArrayList<>();
         l2.addAll(s2);
         Collections.sort(l2);
 
@@ -1114,7 +1114,7 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     protected String annotateErrors(List<? extends Error> errors) {
-        List<String> descs = new ArrayList<String>();
+        List<String> descs = new ArrayList<>();
         for (Error error : errors) {
             StringBuilder desc = new StringBuilder();
             if (error.getKey() != null) {
@@ -1921,8 +1921,8 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     private String prettyPrint(List<TestIndexDocumentImpl> documents, String localUrl) throws IOException {
-        List<String> nonEmptyDocuments = new ArrayList<String>();
-        List<String> emptyDocuments = new ArrayList<String>();
+        List<String> nonEmptyDocuments = new ArrayList<>();
+        List<String> emptyDocuments = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
 
@@ -1932,7 +1932,7 @@ public abstract class CslTestBase extends NbTestCase {
 
             sb.append("Searchable Keys:");
             sb.append("\n");
-            List<String> strings = new ArrayList<String>();
+            List<String> strings = new ArrayList<>();
 
             List<String> keys = doc.indexedKeys;
             List<String> values = doc.indexedValues;
@@ -1951,7 +1951,7 @@ public abstract class CslTestBase extends NbTestCase {
             sb.append("\n");
             sb.append("Not Searchable Keys:");
             sb.append("\n");
-            strings = new ArrayList<String>();
+            strings = new ArrayList<>();
             keys = doc.unindexedKeys;
             values = doc.unindexedValues;
             for (int i = 0, n = keys.size(); i < n; i++) {
@@ -2001,10 +2001,10 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
 //    public class IndexDocumentImpl extends IndexDocument {
-//        public List<String> indexedKeys = new ArrayList<String>();
-//        public List<String> indexedValues = new ArrayList<String>();
-//        public List<String> unindexedKeys = new ArrayList<String>();
-//        public List<String> unindexedValues = new ArrayList<String>();
+//        public List<String> indexedKeys = new ArrayList<>();
+//        public List<String> indexedValues = new ArrayList<>();
+//        public List<String> unindexedKeys = new ArrayList<>();
+//        public List<String> unindexedValues = new ArrayList<>();
 //
 //        public String overrideUrl;
 //
@@ -2154,8 +2154,8 @@ public abstract class CslTestBase extends NbTestCase {
 
                 // Write folding structure
                 String source = resultIterator.getSnapshot().getText().toString();
-                List<Integer> begins = new ArrayList<Integer>();
-                List<Integer> ends = new ArrayList<Integer>();
+                List<Integer> begins = new ArrayList<>();
+                List<Integer> ends = new ArrayList<>();
 
                 begins.add(0);
 
@@ -2723,7 +2723,7 @@ public abstract class CslTestBase extends NbTestCase {
             }
 
 //            if (proposal.getModifiers().size() > 0) {
-//                List<String> modifiers = new ArrayList<String>();
+//                List<String> modifiers = new ArrayList<>();
 //                for (Modifier mod : proposal.getModifiers()) {
 //                    modifiers.add(mod.name());
 //                }
@@ -3267,7 +3267,7 @@ public abstract class CslTestBase extends NbTestCase {
         }
 
 //            if (proposal.getModifiers().size() > 0) {
-//                List<String> modifiers = new ArrayList<String>();
+//                List<String> modifiers = new ArrayList<>();
 //                for (Modifier mod : proposal.getModifiers()) {
 //                    modifiers.add(mod.name());
 //                }
@@ -3493,8 +3493,8 @@ public abstract class CslTestBase extends NbTestCase {
                 assertTrue(r instanceof ParserResult);
                 ParserResult pr = (ParserResult) r;
 
-                List<Object> validNodes = new ArrayList<Object>();
-                List<Object> invalidNodes = new ArrayList<Object>();
+                List<Object> validNodes = new ArrayList<>();
+                List<Object> invalidNodes = new ArrayList<>();
                 Map<Object,OffsetRange> positions = new HashMap<Object,OffsetRange>();
                 initializeNodes(pr, validNodes, positions, invalidNodes);
 
@@ -3545,13 +3545,13 @@ public abstract class CslTestBase extends NbTestCase {
             OffsetRange range = positions.get(node);
             List<Object> list = starts.get(range.getStart());
             if (list == null) {
-                list = new ArrayList<Object>();
+                list = new ArrayList<>();
                 starts.put(range.getStart(), list);
             }
             list.add(node);
             list = ends.get(range.getEnd());
             if (list == null) {
-                list = new ArrayList<Object>();
+                list = new ArrayList<>();
                 ends.put(range.getEnd(), list);
             }
             list.add(node);
@@ -3566,7 +3566,7 @@ public abstract class CslTestBase extends NbTestCase {
         }
 
         // Include 0-0 nodes first
-        List<String> missing = new ArrayList<String>();
+        List<String> missing = new ArrayList<>();
         for (Object n : invalidNodes) {
             String desc = describeNode(info, n, true);
             assertNotNull("You must implement describeNode()", desc);
@@ -3588,7 +3588,7 @@ public abstract class CslTestBase extends NbTestCase {
                 for (Object n : ns) {
                     if (sts != null && sts.contains(n)) {
                         if (deferred == null) {
-                            deferred = new ArrayList<Object>();
+                            deferred = new ArrayList<>();
                         }
                         deferred.add(n);
                     } else {
@@ -3606,7 +3606,7 @@ public abstract class CslTestBase extends NbTestCase {
                 for (Object n : ns) {
                     if (ets != null && ets.contains(n)) {
                         if (deferred == null) {
-                            deferred = new ArrayList<Object>();
+                            deferred = new ArrayList<>();
                         } else if (deferred.get(deferred.size()-1) != n) {
                             deferred.add(n);
                         }
@@ -3896,16 +3896,16 @@ public abstract class CslTestBase extends NbTestCase {
 //        BaseDocument doc = (BaseDocument)info.getDocument();
 //        assertEquals("Parse trees must equal", doc, fullParseResult,incrementalResult);
 //
-////        List<Object> incrValidNodes = new ArrayList<Object>();
-////        List<Object> incrInvalidNodes = new ArrayList<Object>();
+////        List<Object> incrValidNodes = new ArrayList<>();
+////        List<Object> incrInvalidNodes = new ArrayList<>();
 ////        Map<Object,OffsetRange> incrPositions = new HashMap<Object,OffsetRange>();
 ////        initializeNodes(info, incrementalResult, incrValidNodes, incrPositions, incrInvalidNodes);
 ////
 ////        String incrementalAnnotatedSource = annotateOffsets(incrValidNodes, incrPositions, incrInvalidNodes, info);
 ////
 ////        // Now make sure we get an identical linearization of the non-incremental result
-////        List<Object> validNodes = new ArrayList<Object>();
-////        List<Object> invalidNodes = new ArrayList<Object>();
+////        List<Object> validNodes = new ArrayList<>();
+////        List<Object> invalidNodes = new ArrayList<>();
 ////        Map<Object,OffsetRange> positions = new HashMap<Object,OffsetRange>();
 ////        initializeNodes(info, fullParseResult, validNodes, positions, invalidNodes);
 ////
@@ -3947,7 +3947,7 @@ public abstract class CslTestBase extends NbTestCase {
                 assertTrue(r instanceof ParserResult);
                 ParserResult pr = (ParserResult) r;
 
-                List<Object> nodes = new ArrayList<Object>();
+                List<Object> nodes = new ArrayList<>();
                 Map<Object,String> types = new HashMap<Object,String>();
                 Map<Object,OffsetRange> positions = new HashMap<Object,OffsetRange>();
                 initializeTypeNodes(pr, nodes, positions, types);
@@ -3998,13 +3998,13 @@ public abstract class CslTestBase extends NbTestCase {
             OffsetRange range = positions.get(node);
             List<Object> list = starts.get(range.getStart());
             if (list == null) {
-                list = new ArrayList<Object>();
+                list = new ArrayList<>();
                 starts.put(range.getStart(), list);
             }
             list.add(node);
             list = ends.get(range.getEnd());
             if (list == null) {
-                list = new ArrayList<Object>();
+                list = new ArrayList<>();
                 ends.put(range.getEnd(), list);
             }
             list.add(node);

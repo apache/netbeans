@@ -562,7 +562,7 @@ public class MetaInfServicesLookupTest extends NbTestCase {
     public void testMultiRegWithDifferentPositions() throws IOException,
             ClassNotFoundException, InterruptedException {
 
-        List<Object> preventGc = new ArrayList<Object>();
+        List<Object> preventGc = new ArrayList<>();
 
         ClassLoader loader = new URLClassLoader(new URL[]{
             findJar("problem249414.jar", "^(org\\.(baz)\\..*)$"),},

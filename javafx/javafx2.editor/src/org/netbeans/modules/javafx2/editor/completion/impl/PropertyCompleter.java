@@ -48,7 +48,7 @@ public class PropertyCompleter extends InstanceCompleter {
     /**
      * Property names which already exist on the tag
      */
-    private Set<String> existingPropNames = new HashSet<String>();
+    private Set<String> existingPropNames = new HashSet<>();
     
     public PropertyCompleter() {
     }
@@ -135,7 +135,7 @@ public class PropertyCompleter extends InstanceCompleter {
         if (beanInfo == null) {
             return;
         }
-        HashSet<String> names = new HashSet<String>();
+        HashSet<String> names = new HashSet<>();
         boolean next = false;
         do {
             addPropertiesFrom(beanInfo.getDeclareadInfo(), names, next);
@@ -164,7 +164,7 @@ public class PropertyCompleter extends InstanceCompleter {
         if (getBeanInfo() == null) {
             return null;
         }
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         if (ctx.getCompletionType() == CompletionProvider.COMPLETION_QUERY_TYPE) {
             addImportantProperties();
             if (resultItems.isEmpty()) {

@@ -241,7 +241,7 @@ public class ModulesInstaller {
     public static String presentUpdateElements (Collection<UpdateElement> elems) {
         StringBuilder sb = new StringBuilder();
         String sep = "";
-        Set<String> used = new HashSet<String>();
+        Set<String> used = new HashSet<>();
         
         for (UpdateElement el : elems) {
             if (!used.add(el.getCategory())) {

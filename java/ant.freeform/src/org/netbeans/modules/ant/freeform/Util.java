@@ -41,7 +41,7 @@ public class Util {
     private static final Pattern VALIDATION = Pattern.compile("([A-Za-z0-9])+"); // NOI18N
     
     public static String getMergedHelpIDFragments(Project p) {
-        List<String> fragments = new ArrayList<String>();
+        List<String> fragments = new ArrayList<>();
         
         for (HelpIDFragmentProvider provider : p.getLookup().lookupAll(HelpIDFragmentProvider.class)) {
             String fragment = provider.getHelpIDFragment();

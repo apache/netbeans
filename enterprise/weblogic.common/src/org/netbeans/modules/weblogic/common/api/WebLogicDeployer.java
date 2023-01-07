@@ -743,7 +743,7 @@ public final class WebLogicDeployer {
                 org.netbeans.api.extexecution.base.ProcessBuilder.getLocal();
         builder.setExecutable(getJavaBinary());
         builder.setRedirectErrorStream(true);
-        List<String> arguments = new ArrayList<String>();
+        List<String> arguments = new ArrayList<>();
         // NB supports only JDK6+ while WL 9, only JDK 5
         Version version = config.getDomainVersion();
         if (version == null

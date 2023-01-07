@@ -92,7 +92,7 @@ public class DelegateAssignabilityTest extends CommonTestCase {
                                 ((ExecutableElement)element).getParameters().get(0));
                     }
                 }
-                Set<String> names = new HashSet<String>();
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     names.add(element.getSimpleName().toString());
                     if ( element.getSimpleName().contentEquals("myField")){
@@ -278,7 +278,7 @@ public class DelegateAssignabilityTest extends CommonTestCase {
                         injectionPoints.add( (VariableElement)element );
                     }
                 }
-                Set<String> names = new HashSet<String>();
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     names.add( element.getSimpleName().toString() );
                     if ( element.getSimpleName().contentEquals("myField1")){

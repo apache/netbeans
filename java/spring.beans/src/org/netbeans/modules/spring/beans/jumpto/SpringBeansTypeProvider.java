@@ -119,7 +119,7 @@ public class SpringBeansTypeProvider implements TypeProvider {
                 if (isCancelled) {
                     return;
                 }
-                final Set<File> processed = new HashSet<File>();
+                final Set<File> processed = new HashSet<>();
 
                 // getting entries from configuration files
                 List<SpringConfigModel> models = scope.getAllConfigModels();

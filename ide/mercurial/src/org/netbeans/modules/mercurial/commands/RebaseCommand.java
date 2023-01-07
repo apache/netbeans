@@ -145,7 +145,7 @@ public final class RebaseCommand extends HgCommand<RebaseCommand.Result> {
         private Result (List<String> output) {
             this.output = output;
             touchedFiles = new LinkedHashSet<File>();
-            conflicts = new ArrayList<File>();
+            conflicts = new ArrayList<>();
         }
 
         public static Result build (File repo, List<String> output) {

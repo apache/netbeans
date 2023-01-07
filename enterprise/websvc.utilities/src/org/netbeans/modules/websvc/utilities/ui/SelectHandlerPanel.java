@@ -134,7 +134,7 @@ public class SelectHandlerPanel extends JPanel implements ExplorerManager.Provid
         }
         
         private void createNodes() {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             l.add(KEY_SOURCES);
             setKeys(l);
         }

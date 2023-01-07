@@ -146,7 +146,7 @@ public class DiffAction extends NodeAction {
     }
     
     public void performAction(Node[] nodes) {
-        ArrayList<FileObject> fos = new ArrayList<FileObject>();
+        ArrayList<FileObject> fos = new ArrayList<>();
         for (int i = 0; i < nodes.length; i++) {
             FileObject fo = getFileFromNode(nodes[i]);
             if (fo != null) {

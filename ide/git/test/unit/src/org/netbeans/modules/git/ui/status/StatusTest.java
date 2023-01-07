@@ -232,7 +232,7 @@ public class StatusTest extends AbstractGitTestCase {
 
     private void assertTable (final JTable table, Set<File> files) throws Exception {
         Thread.sleep(5000);
-        final Set<File> displayedFiles = new HashSet<File>();
+        final Set<File> displayedFiles = new HashSet<>();
         EventQueue.invokeAndWait(new Runnable() {
             @Override
             public void run() {

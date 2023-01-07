@@ -74,8 +74,8 @@ public class SuiteInstallerProjectProperties {
         ResourceBundle rb = NbBundle.getBundle(SuiteInstallerProjectProperties.class);
         Enumeration<String> keys = rb.getKeys();
         String prefix = "SuiteInstallerProjectProperties.license.type.";
-        List<String> names = new ArrayList<String>();
-        List<String> types = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
+        List<String> types = new ArrayList<>();
 
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();

@@ -311,7 +311,7 @@ public class CompletionHandler implements CodeCompletionHandler2 {
         // here we need to calculate the list of parameters for the methods under the caret.
         // proposal seems to be null all the time.
 
-        List<String> paramList = new ArrayList<String>();
+        List<String> paramList = new ArrayList<>();
 
         AstPath path = getPathFromInfo(caretOffset, info);
 

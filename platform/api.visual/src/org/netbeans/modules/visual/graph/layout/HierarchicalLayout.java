@@ -867,7 +867,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             upProcessingOrder = upProcessingOrderTmp;
 
             for (int i = 0; i < layers.length; i++) {
-                space[i] = new ArrayList<Integer>();
+                space[i] = new ArrayList<>();
                 downProcessingOrder[i] = new ArrayList<LayoutNode>();
                 upProcessingOrder[i] = new ArrayList<LayoutNode>();
 
@@ -895,7 +895,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
         private int calculateOptimalDown(LayoutNode n) {
 
-            List<Integer> values = new ArrayList<Integer>();
+            List<Integer> values = new ArrayList<>();
             if (n.preds.size() == 0) {
                 return n.x;
             }
@@ -908,7 +908,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
         private int calculateOptimalUp(LayoutNode n) {
 
-            List<Integer> values = new ArrayList<Integer>();
+            List<Integer> values = new ArrayList<>();
             if (n.succs.size() == 0) {
                 return n.x;
             }

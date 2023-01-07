@@ -80,7 +80,7 @@ public class AppClientProjectOperations implements DeleteOperationImplementation
     
     public List<FileObject> getMetadataFiles() {
         FileObject projectDirectory = project.getProjectDirectory();
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         addFile(projectDirectory, "nbproject", files); // NOI18N
         addFile(projectDirectory, "build.xml", files); // NOI18N
@@ -90,7 +90,7 @@ public class AppClientProjectOperations implements DeleteOperationImplementation
     }
     
     public List<FileObject> getDataFiles() {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         FileObject metaInf = project.getCarModule().getMetaInf();
         if (metaInf != null) {

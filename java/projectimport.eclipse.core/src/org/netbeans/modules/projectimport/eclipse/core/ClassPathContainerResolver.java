@@ -171,7 +171,7 @@ public class ClassPathContainerResolver {
     }
     
     private static DotClassPathEntry createFileDotClassPathEntry(File f) {
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(DotClassPathEntry.ATTRIBUTE_KIND, "lib"); // NOI18N
         props.put(DotClassPathEntry.ATTRIBUTE_PATH, f.getPath());
         DotClassPathEntry d = new DotClassPathEntry(props, null);

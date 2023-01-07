@@ -58,7 +58,7 @@ import org.openide.util.NbBundle;
  */
 public class MissingReturnStatement implements ErrorRule<Void> {
 
-    private static final Set<String> CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> CODES = new HashSet<>(Arrays.asList(
             "compiler.err.missing.ret.stmt",
             "compiler.err.prob.found.req/compiler.misc.incompatible.ret.type.in.lambda/compiler.misc.missing.ret.val",
             "compiler.err.prob.found.req/compiler.misc.incompatible.ret.type.in.lambda/compiler.misc.inconvertible.types"

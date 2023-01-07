@@ -449,7 +449,7 @@ public final class DatabaseResourceWizardIterator implements WizardDescriptor.In
         Set<FileObject> created = generator.createdObjects();
         TableClosure closure = helper.getTableClosure();
         Set<Table> tables = closure.getSelectedTables();
-        Set<FileObject> extension = new HashSet<FileObject>(); 
+        Set<FileObject> extension = new HashSet<>();
         for(Table table :tables ){
             if ( table.isDisabled() ){
                 DisabledReason reason = table.getDisabledReason();

@@ -190,7 +190,7 @@ public class CatalogWriteModelImpl extends CatalogModelImpl implements CatalogWr
         //relativize to this cat file
         String catStr = Utilities.relativize(master, catURI).toString();
         
-        HashMap <String, String> result = new HashMap<String, String>();
+        HashMap <String, String> result = new HashMap<>();
         
         result.put(CatalogAttribute.xprojectCatalogFileLocation.toString(), catStr);
         

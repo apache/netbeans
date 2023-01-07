@@ -249,7 +249,7 @@ public class NewProjectWizardsTest extends J2eeTestCase {
     }
 
     private Set getDifference(Set<String> s1, Set<String> s2) {
-        Set<String> result = new HashSet<String>(s2);
+        Set<String> result = new HashSet<>(s2);
         result.removeAll(s1);
         for (String s : result) {
             if (s.indexOf(".LCK") < 0) {

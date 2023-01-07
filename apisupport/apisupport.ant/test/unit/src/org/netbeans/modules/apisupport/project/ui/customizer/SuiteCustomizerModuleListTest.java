@@ -86,14 +86,14 @@ public class SuiteCustomizerModuleListTest extends TestBase {
 //        
 //        String c1 = doDisableCluster(1, true);
 //        String c2 = doDisableCluster(2, false);
-//        Set<String> c = new HashSet<String>();
+//        Set<String> c = new HashSet<>();
 //        c.add(c1);
 //        c.add(c2);
 //        
 //        String[] xyz = suite1Props.getEnabledClusters();
 //        //assertEquals("Two clusters disabled", ???, xyz.length);
 //        
-//        Set<String> real = new HashSet<String>(Arrays.asList(xyz));
+//        Set<String> real = new HashSet<>(Arrays.asList(xyz));
 //        assertFalse(real.containsAll(c));
 //    }
     

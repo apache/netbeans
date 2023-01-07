@@ -127,7 +127,7 @@ public class PreferredProjectPlatformTest extends NbTestCase {
                 @NonNull final String platformType) {
             super();
             this.displayName = name;
-            this.props = new HashMap<String, String>();
+            this.props = new HashMap<>();
             this.props.put("platform.ant.name",name);                   //NOI18N
             this.platformType = platformType;
         }

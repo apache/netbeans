@@ -139,7 +139,7 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
         url += "&"+ installLocation;                                        // NOI18N
 
         try {
-            Map<String, String> initialProperties = new HashMap<String, String>();
+            Map<String, String> initialProperties = new HashMap<>();
             initialProperties.put(WildflyPluginProperties.PROPERTY_SERVER, server);
             initialProperties.put(WildflyPluginProperties.PROPERTY_DEPLOY_DIR, deployDir);
             initialProperties.put(WildflyPluginProperties.PROPERTY_SERVER_DIR, serverPath);

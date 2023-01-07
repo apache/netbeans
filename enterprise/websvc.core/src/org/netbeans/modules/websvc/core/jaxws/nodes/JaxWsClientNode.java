@@ -378,7 +378,7 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, JaxWsRe
     
     public void configureHandler() {
         Project project = FileOwnerQuery.getOwner(srcRoot);
-        ArrayList<String> handlerClasses = new ArrayList<String>();
+        ArrayList<String> handlerClasses = new ArrayList<>();
         BindingsModel bindingsModel = getBindingsModel();
         if(bindingsModel != null){  //if there is an existing bindings file, load it
             GlobalBindings gb = bindingsModel.getGlobalBindings();
@@ -482,7 +482,7 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, JaxWsRe
         }
         
         FileObject bindingsFolder = getJAXWSClientSupport().getBindingsFolderForClient(getName(),true);
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         for (int i=0;i<bindingFiles.length;i++) {
             FileObject fo = bindingsFolder.getFileObject(bindingFiles[i]);
             if (fo != null) {

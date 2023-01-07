@@ -1061,7 +1061,7 @@ public class ListView extends JScrollPane implements Externalizable {
         }
 
         private List<Integer> doSearch(String prefix) {
-            List<Integer> results = new ArrayList<Integer>();
+            List<Integer> results = new ArrayList<>();
 
             // do search forward the selected index
             int startIndex = (getSelectedIndex() == -1) ? 0 : getSelectedIndex();

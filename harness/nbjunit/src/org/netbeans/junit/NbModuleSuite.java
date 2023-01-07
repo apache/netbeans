@@ -169,7 +169,7 @@ public class NbModuleSuite {
          * @return clone of this configuration with cluster set to regExp value
          */
         public Configuration clusters(String regExp) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             if (clusterRegExp != null) {
                 list.addAll(clusterRegExp);
             }
@@ -214,7 +214,7 @@ public class NbModuleSuite {
          * @since 1.55
          */
         public Configuration enableModules(String clusterRegExp, String moduleRegExp) {
-            List<String> arr = new ArrayList<String>();
+            List<String> arr = new ArrayList<>();
             if (this.moduleRegExp != null) {
                 arr.addAll(this.moduleRegExp);
             }
@@ -249,7 +249,7 @@ public class NbModuleSuite {
                 throw new IllegalStateException("Must specify at least one startup argument");
             }
 
-            List<String> newArgs = new ArrayList<String>();
+            List<String> newArgs = new ArrayList<>();
             if (startupArgs != null) {
                 newArgs.addAll(startupArgs);
             }
@@ -688,7 +688,7 @@ public class NbModuleSuite {
         }
         
         private static String[] tokenizePath(String path) {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
             char dosHack = '\0';
             char lastDelim = '\0';
@@ -781,8 +781,8 @@ public class NbModuleSuite {
         private void runInRuntimeContainer(TestResult result) throws Exception {
             System.getProperties().remove("netbeans.dirs");
             File platform = findPlatform();
-            List<URL> bootCP = new ArrayList<URL>();
-            List<File> dirs = new ArrayList<File>();
+            List<URL> bootCP = new ArrayList<>();
+            List<File> dirs = new ArrayList<>();
             dirs.add(new File(platform, "lib"));
             
             File jdkHome = new File(System.getProperty("java.home"));
@@ -892,7 +892,7 @@ public class NbModuleSuite {
             }
             preparePatches(System.getProperty("java.class.path"), System.getProperties(), allClasses.toArray(new Class<?>[0]));
             
-            List<String> args = new ArrayList<String>();
+            List<String> args = new ArrayList<>();
             args.add("--nosplash");
             if (!config.gui) {
                 args.add("--nogui");
@@ -1055,7 +1055,7 @@ public class NbModuleSuite {
 
             return cnbs;
         }
-        private static final Set<String> pseudoModules = new HashSet<String>(Arrays.asList(
+        private static final Set<String> pseudoModules = new HashSet<>(Arrays.asList(
                 "org.openide.util",
                 "org.openide.util.ui",
                 "org.openide.util.lookup",

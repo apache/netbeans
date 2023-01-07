@@ -241,7 +241,7 @@ public class DriverSpecification {
     }
 
     public Map<Integer, String> getRow() throws SQLException {
-        Map<Integer, String> rset = new HashMap<Integer, String>();
+        Map<Integer, String> rset = new HashMap<>();
         String value;
 
         try {

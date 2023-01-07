@@ -186,7 +186,7 @@ public class IsOverriddenAnnotationCreatorTest extends NbTestCase {
         StyledDocument doc = ec.openDocument();
         
         List<IsOverriddenAnnotation> annotations = new ComputeAnnotations().computeAnnotations(info, doc);
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (IsOverriddenAnnotation annotation : annotations) {
             result.add(annotation.debugDump(includePosition));

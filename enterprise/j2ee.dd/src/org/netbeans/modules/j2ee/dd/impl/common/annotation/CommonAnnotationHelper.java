@@ -60,7 +60,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.Ar
 public class CommonAnnotationHelper {
     
     // see JSR250
-    private static final Set<String> RESOURCE_REF_TYPES = new HashSet<String>(Arrays.<String>asList(
+    private static final Set<String> RESOURCE_REF_TYPES = new HashSet<>(Arrays.<String>asList(
             "javax.sql.DataSource",
             "javax.jms.ConnectionFactory",
             "javax.jms.QueueConnectionFactory",
@@ -71,7 +71,7 @@ public class CommonAnnotationHelper {
             "org.omg.CORBA_2_3.ORB"
             // any other connection factory defined by a resource adapter
             ));
-    private static final Set<String> ENV_ENTRY_TYPES = new HashSet<String>(Arrays.<String>asList(
+    private static final Set<String> ENV_ENTRY_TYPES = new HashSet<>(Arrays.<String>asList(
             "java.lang.String",
             "java.lang.Character",
             "java.lang.Integer",
@@ -81,11 +81,11 @@ public class CommonAnnotationHelper {
             "java.lang.Short",
             "java.lang.Long",
             "java.lang.Float"));
-    private static final Set<String> SERVICE_REF_TYPES = new HashSet<String>(Arrays.<String>asList(
+    private static final Set<String> SERVICE_REF_TYPES = new HashSet<>(Arrays.<String>asList(
             "javax.xml.rpc.Service",
             "javax.xml.ws.Service",
             "javax.jws.WebService"));
-    private static final Set<String> MESSAGE_DESTINATION_TYPES = new HashSet<String>(Arrays.<String>asList(
+    private static final Set<String> MESSAGE_DESTINATION_TYPES = new HashSet<>(Arrays.<String>asList(
             "javax.jms.Queue",
             "javax.jms.Topic"));
 

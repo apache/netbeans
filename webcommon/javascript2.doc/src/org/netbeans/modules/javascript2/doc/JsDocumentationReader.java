@@ -32,7 +32,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
 public class JsDocumentationReader {
 
     public static Set<String> getAllTags(Snapshot snapshot) {
-        Set<String> tags = new HashSet<String>();
+        Set<String> tags = new HashSet<>();
 
 //        TokenSequence tokenSequence = snapshot.getTokenHierarchy().tokenSequence(JsTokenId.javascriptLanguage());
 //        if (tokenSequence == null) {
@@ -51,7 +51,7 @@ public class JsDocumentationReader {
     }
 
     protected static Set<String> getCommentTags(CharSequence commentText) {
-        Set<String> tags = new HashSet<String>();
+        Set<String> tags = new HashSet<>();
         String comment = commentText.toString();
         // XXX - could be rewrite to lexer
         Pattern pattern = Pattern.compile("[@][a-zA-Z]+"); //NOI18N

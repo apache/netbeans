@@ -201,7 +201,7 @@ public class ProjectFactorySupportTest extends NbTestCase {
                 new File(prj, "test"), "test", model.getEclipseSourceRootsAsFileArray(), 
                 model.getEclipseTestSourceRootsAsFileArray(), null, null, null);
         J2SEProject p = (J2SEProject)ProjectManager.getDefault().findProject(helper.getProjectDirectory());
-        List<String> importProblems = new ArrayList<String>();
+        List<String> importProblems = new ArrayList<>();
         ProjectFactorySupport.updateProjectClassPath(helper, p.getReferenceHelper(), model, importProblems);
         EditableProperties ep = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         assertEquals(
@@ -230,7 +230,7 @@ public class ProjectFactorySupportTest extends NbTestCase {
                 new File(prj, "test"), "test", model.getEclipseSourceRootsAsFileArray(), 
                 model.getEclipseTestSourceRootsAsFileArray(), null, null, null);
         J2SEProject p = (J2SEProject)ProjectManager.getDefault().findProject(helper.getProjectDirectory());
-        List<String> importProblems = new ArrayList<String>();
+        List<String> importProblems = new ArrayList<>();
         ProjectFactorySupport.updateProjectClassPath(helper, p.getReferenceHelper(), model, importProblems);
         EditableProperties ep = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         assertEquals(
@@ -315,7 +315,7 @@ public class ProjectFactorySupportTest extends NbTestCase {
                 new File(prj, "test"), "test", model.getEclipseSourceRootsAsFileArray(), 
                 model.getEclipseTestSourceRootsAsFileArray(), null, null, null);
         J2SEProject p = (J2SEProject)ProjectManager.getDefault().findProject(helper.getProjectDirectory());
-        List<String> importProblems = new ArrayList<String>();
+        List<String> importProblems = new ArrayList<>();
         ProjectFactorySupport.updateProjectClassPath(helper, p.getReferenceHelper(), model, importProblems);
         EditableProperties ep = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         // required project "JavaLibrary1" is not available and therefore should not be
@@ -374,7 +374,7 @@ public class ProjectFactorySupportTest extends NbTestCase {
         // #147126: force recalc of source groups; otherwise project may not have claimed ownership of external roots.
         ProjectUtils.getSources(ProjectManager.getDefault().findProject(helper.getProjectDirectory())).getSourceGroups("irrelevant"); // NOI18N
         
-        List<String> importProblems = new ArrayList<String>();
+        List<String> importProblems = new ArrayList<>();
         boolean res  = ProjectFactorySupport.areSourceRootsOwned(model, new File(prj, "new-project"), importProblems);
         assertTrue(res);
         assertEquals(1, importProblems.size());

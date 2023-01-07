@@ -174,7 +174,7 @@ public final class SpringUtilities {
     }
 
     private static ClassPath createClassPath(List<URL> roots) {
-        List<URL> jarRootURLs = new ArrayList<URL>();
+        List<URL> jarRootURLs = new ArrayList<>();
         for (URL url : roots) {
             // Workaround for #126307: ClassPath roots should be JAR root URL, not file URLs.
             if (FileUtil.getArchiveFile(url) == null) {

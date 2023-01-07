@@ -123,7 +123,7 @@ public abstract class AntArtifact {
         return getArtifactLocations()[0];
     }
 
-    private static final Set<String> warnedClasses = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> warnedClasses = Collections.synchronizedSet(new HashSet<>());
     /**
      * Get the locations of the build artifacts relative to the Ant script.
      * For example, <samp>dist/mylib.jar</samp>. The method is not defined 
@@ -200,7 +200,7 @@ public abstract class AntArtifact {
      * @since 1.5
      */
     public final FileObject[] getArtifactFiles() {
-        List<FileObject> l = new ArrayList<FileObject>();
+        List<FileObject> l = new ArrayList<>();
         for (URI artifactLocation : getArtifactLocations()) {
             FileObject fo = getArtifactFile(artifactLocation);
             if (fo != null) {

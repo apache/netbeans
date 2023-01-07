@@ -70,7 +70,7 @@ final class StandardModuleData extends ModuleData {
         assert jar != null : "Cannot load extensions from classpath module " + getCodeNameBase();
         List<File> l = LocaleVariants.findLocaleVariantsOf(jar, getCodeNameBase());
         if (!l.isEmpty()) {
-            localeVariants = new HashSet<File>(l);
+            localeVariants = new HashSet<>(l);
         } else {
             localeVariants = null;
         }
@@ -112,7 +112,7 @@ final class StandardModuleData extends ModuleData {
                 //No need to sync on extensionOwners - we are in write mutex
                 Set<File> owners = extensionOwners.get(extfile);
                 if (owners == null) {
-                    owners = new HashSet<File>(2);
+                    owners = new HashSet<>(2);
                     owners.add(jar);
                     extensionOwners.put(extfile, owners);
                 } else if (!owners.contains(jar)) {
@@ -127,13 +127,13 @@ final class StandardModuleData extends ModuleData {
                     );
                 }
                 if (pe == null) {
-                    pe = new HashSet<File>();
+                    pe = new HashSet<>();
                 }
                 pe.add(extfile);
                 l = LocaleVariants.findLocaleVariantsOf(extfile, getCodeNameBase());
                 if (!l.isEmpty()) {
                     if (le == null) {
-                        le = new HashSet<File>();
+                        le = new HashSet<>();
                     }
                     le.addAll(l);
                 }
@@ -175,7 +175,7 @@ final class StandardModuleData extends ModuleData {
     
     private static Set<File> readFiles(DataInput is) throws IOException {
         int size = is.readInt();
-        Set<File> set = new HashSet<File>();
+        Set<File> set = new HashSet<>();
         while (size-- > 0) {
             set.add(new File(Stamps.readRelativePath(is)));
         }

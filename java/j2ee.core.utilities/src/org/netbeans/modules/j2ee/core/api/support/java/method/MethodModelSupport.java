@@ -90,7 +90,7 @@ public final class MethodModelSupport {
                 return null;
             }
         }
-        List<String> exceptions = new ArrayList<String>();
+        List<String> exceptions = new ArrayList<>();
         for (TypeMirror typeMirror : method.getThrownTypes()) {
             exceptions.add(getTypeName(typeMirror));
         }
@@ -155,7 +155,7 @@ public final class MethodModelSupport {
         Parameters.notNull("workingCopy", workingCopy); //NOI18N
         Parameters.notNull("methodModel", methodModel); //NOI18N
         TreeMaker treeMaker = workingCopy.getTreeMaker();
-        List<VariableTree> paramsList = new ArrayList<VariableTree>();
+        List<VariableTree> paramsList = new ArrayList<>();
         if (methodModel.getParameters() != null) {
             for (MethodModel.Variable parameter : methodModel.getParameters()) {
                 VariableTree variableTree = treeMaker.Variable(

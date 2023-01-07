@@ -76,7 +76,7 @@ public class TopLoggingLookupTest extends NbTestCase {
     }
 
     public static class MyHandler extends Handler {
-        public List<String> logs = new ArrayList<String>();
+        public List<String> logs = new ArrayList<>();
 
         public void publish(LogRecord record) {
             logs.add(record.getMessage());

@@ -605,7 +605,7 @@ public class CatalogModelImpl implements CatalogModel {
     }
     
     protected URI resolveUsingApacheCatalog(File catalogFile, String locationURI) throws IOException, CatalogModelException{
-        List<File> catalogFileList = new ArrayList<File>();
+        List<File> catalogFileList = new ArrayList<>();
         catalogFileList.add(catalogFile);
         return resolveUsingApacheCatalog(catalogFileList, locationURI);
     }

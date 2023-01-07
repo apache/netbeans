@@ -84,7 +84,7 @@ public class HgRepositoryContextCache {
             HgConfigFiles config = new HgConfigFiles(repoRoot);
             String pull = config.getDefaultPull(true);
             String push = config.getDefaultPush(true);
-            paths = new HashMap<String, String>();
+            paths = new HashMap<>();
             paths.put(HgConfigFiles.HG_DEFAULT_PULL_VALUE, pull);
             paths.put(HgConfigFiles.HG_DEFAULT_PUSH, push);
             for (Map.Entry<Object, Object> e : config.getProperties(HgConfigFiles.HG_PATHS_SECTION).entrySet()) {
@@ -101,7 +101,7 @@ public class HgRepositoryContextCache {
 
     private Map<File, Map<String, String>> getRootToDefaultPaths() {
         if(rootToDefaultPaths == null) {
-            rootToDefaultPaths = new HashMap<File, Map<String, String>>();
+            rootToDefaultPaths = new HashMap<>();
         }
         return rootToDefaultPaths;
     }

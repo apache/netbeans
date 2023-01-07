@@ -366,7 +366,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
 
         @Override
         public void readAttributes(String qname, Attributes attributes) throws SAXException {
-            properties = new HashMap<String, String>();
+            properties = new HashMap<>();
             String poolName = attributes.getValue("name"); // NOI18N
             if(poolName != null && poolName.length() > 0) {
                 if(!pools.containsKey(poolName)) {

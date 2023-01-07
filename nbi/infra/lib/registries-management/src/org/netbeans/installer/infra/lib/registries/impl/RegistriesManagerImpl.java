@@ -652,7 +652,7 @@ public class RegistriesManagerImpl implements RegistriesManager {
              bundles.add(new Pair(list,  key.toString()));
         }
         
-        final Map<String, String> notes = new HashMap<String, String>();
+        final Map<String, String> notes = new HashMap<>();
         //notes.put("nb-javase", "for Java SE, includes GUI Builder, Profiler");
         
         Locale locale = StringUtils.parseLocale(localeString==null ? "" : localeString);
@@ -680,7 +680,7 @@ public class RegistriesManagerImpl implements RegistriesManager {
                     getGroups(registry.getRegistryRoot());
             
             final Map<Integer, Integer> productMapping =
-                    new HashMap<Integer, Integer>();
+                    new HashMap<>();
             
             final List<String> productUids =
                     new LinkedList<String>();

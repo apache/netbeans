@@ -402,7 +402,7 @@ implements ChangeListener {
     private void refreshAllFolders () {
         Set<FileObject> files;
         synchronized (this) {
-            files = new HashSet<FileObject>(map.keySet());
+            files = new HashSet<>(map.keySet());
         }
 
         for (FileObject fo : files) {
@@ -874,7 +874,7 @@ implements ChangeListener {
     * @return set of files
     */
     private static Set<FileObject> createSetOfAllFiles(Collection<Item> c) {
-        Set<FileObject> set = new HashSet<FileObject>(c.size() * 7);
+        Set<FileObject> set = new HashSet<>(c.size() * 7);
         
         for (Item item : c) {
             DataObject obj = item.getDataObjectOrNull ();
@@ -1201,9 +1201,9 @@ implements ChangeListener {
                 
                 s = enter (s);
                 
-                recognizedFiles = new HashSet<FileObject>();
+                recognizedFiles = new HashSet<>();
                 refusingObjects = new HashSet<DataObject>();
-                createdFiles = new HashSet<FileObject>();
+                createdFiles = new HashSet<>();
 
                 DataLoaderPool pool = lp;
                 Iterator<FileObject> it = s.iterator();

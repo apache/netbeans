@@ -162,7 +162,7 @@ public class PullAction extends SingleRepositoryAction {
             LOG.log(Level.FINE, "Pulling {0}/{1} from {2}", new Object[] { fetchRefSpecs, branchToMerge, target }); //NOI18N
             try {
                 final GitClient client = getClient();
-                final Set<String> toDelete = new HashSet<String>();
+                final Set<String> toDelete = new HashSet<>();
                 for(ListIterator<String> it = fetchRefSpecs.listIterator(); it.hasNext(); ) {
                     String refSpec = it.next();
                     if (refSpec.startsWith(GitUtils.REF_SPEC_DEL_PREFIX)) {

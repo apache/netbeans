@@ -313,7 +313,7 @@ public final class ProjectXMLManager {
      * iterating and using <code>removeDependency</code> for every entry.
      */
     public void removeDependencies(Collection<ModuleDependency> depsToDelete) {
-        Set<String> cnbsToDelete = new HashSet<String>(depsToDelete.size());
+        Set<String> cnbsToDelete = new HashSet<>(depsToDelete.size());
         for (ModuleDependency dep : depsToDelete) {
             cnbsToDelete.add(dep.getModuleEntry().getCodeNameBase());
         }
@@ -828,7 +828,7 @@ public final class ProjectXMLManager {
         if (cpExtensions != null) {
             return Collections.unmodifiableMap(cpExtensions);
         }
-        Map<String, String> cps = new HashMap<String, String>();
+        Map<String, String> cps = new HashMap<>();
         for (Element cpExtEl : XMLUtil.findSubElements(getConfData())) {
             if (CLASS_PATH_EXTENSION.equals(cpExtEl.getTagName())) {
                 Element binOrigEl = findElement(cpExtEl, BINARY_ORIGIN);

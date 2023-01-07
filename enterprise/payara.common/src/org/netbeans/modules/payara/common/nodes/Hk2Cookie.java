@@ -330,7 +330,7 @@ public class Hk2Cookie {
                         } catch (InterruptedException | ExecutionException ie) {
                             Logger.getLogger("payara")
                                     .log(Level.INFO, ie.getMessage(), ie);
-                            value = new HashMap<String, String>();
+                            value = new HashMap<>();
                         }
                         retVal.initializeData(name, value);
                     }
@@ -636,7 +636,7 @@ public class Hk2Cookie {
                         } catch (InterruptedException | ExecutionException ie) {
                             Logger.getLogger("payara")
                                     .log(Level.INFO, ie.getMessage(), ie);
-                            value = new HashMap<String, String>();
+                            value = new HashMap<>();
                         }
                         retVal.initializeData(name, value);
                     }

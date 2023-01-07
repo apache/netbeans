@@ -81,7 +81,7 @@ public class SpringConfigModelTest extends ConfigFileTestCase {
         File configFile2 = createConfigFileName("dispatcher-servlet.xml");
         TestUtils.copyStringToFile(contents, configFile2);
         SpringConfigModel model = createConfigModel(configFile, configFile2);
-        final Set<File> invokedForFiles = new HashSet<File>();
+        final Set<File> invokedForFiles = new HashSet<>();
         model.runDocumentAction(new Action<DocumentAccess>() {
             public void run(DocumentAccess docAccess) {
                 invokedForFiles.add(docAccess.getFile());

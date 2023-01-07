@@ -234,7 +234,7 @@ public class DomainEditor {
     }
        
     public String[] getHttpProxyOptions(){
-        List<String> httpProxyOptions = new ArrayList<String>();
+        List<String> httpProxyOptions = new ArrayList<>();
         Document domainDoc = getDomainDocument();
         NodeList javaConfigNodeList = domainDoc.getElementsByTagName("java-config");
         if (javaConfigNodeList == null || javaConfigNodeList.getLength() == 0) {

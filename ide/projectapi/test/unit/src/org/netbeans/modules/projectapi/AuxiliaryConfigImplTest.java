@@ -129,7 +129,7 @@ public class AuxiliaryConfigImplTest extends NbTestCase {
         AuxiliaryConfiguration ac1 = ProjectUtils.getAuxiliaryConfiguration(prj1);
         ac1.putConfigurationFragment(makeElement("x", "ns"), true);
         ac1.putConfigurationFragment(makeElement("y", "ns"), false);
-        final List<String> ops = new ArrayList<String>();
+        final List<String> ops = new ArrayList<>();
         Project prj2 = new Project() {
             public FileObject getProjectDirectory() {
                 return prjdir;

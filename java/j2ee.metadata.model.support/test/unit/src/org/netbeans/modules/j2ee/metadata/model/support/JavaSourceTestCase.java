@@ -83,7 +83,7 @@ public abstract class JavaSourceTestCase extends NbTestCase {
         compileCPImpl = new ClassPathImpl();
         compileCP = ClassPathFactory.createClassPath(compileCPImpl);
         bootCP = JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries();
-        roots = new ArrayList<FileObject>();
+        roots = new ArrayList<>();
         roots.add(srcFO);
         cpProvider = new ClassPathProviderImpl();
         MockLookup.setInstances(cpProvider);

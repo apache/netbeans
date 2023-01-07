@@ -44,7 +44,7 @@ public class CopyFilesTest extends org.netbeans.junit.NbTestCase {
 
     @Test
     public void testCopyDeep() throws Exception {
-	ArrayList<String> fileList = new ArrayList<String>();
+	ArrayList<String> fileList = new ArrayList<>();
 	fileList.addAll(Arrays.asList(new java.lang.String[]{"source/foo/X.txt",
 		    "source/foo/A.txt", "source/foo/B.txt", "source/foo/foo2/C.txt"}));
 

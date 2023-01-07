@@ -131,9 +131,9 @@ public class CustomizedLog extends Handler {
             AssertionFailedError t = null;
 
             List<Reference> refs = new ArrayList<Reference>();
-            List<String> txts = new ArrayList<String>();
+            List<String> txts = new ArrayList<>();
             int count = 0;
-            Set<String> nameSet = names == null || names.length == 0 ? null : new HashSet<String>(Arrays.asList(names));
+            Set<String> nameSet = names == null || names.length == 0 ? null : new HashSet<>(Arrays.asList(names));
             synchronized (instances) {
                 for (Iterator<Map.Entry<Object, String>> it = instances.entrySet().iterator(); it.hasNext();) {
                     Entry<Object, String> entry = it.next();

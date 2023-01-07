@@ -162,7 +162,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
             checkRemoved();
 
             // Determine modified or added keys
-            Set<String> keys = new HashSet<String>();
+            Set<String> keys = new HashSet<>();
             keys.addAll(data.keySet());
             keys.removeAll(removedKeys);
             if (!keys.isEmpty()) {
@@ -301,7 +301,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
     public String[] keys() throws BackingStoreException {
         synchronized (tree.treeLock()) {
             checkRemoved();
-            HashSet<String> keys = new HashSet<String>();
+            HashSet<String> keys = new HashSet<>();
             if (delegate != null) {
                 keys.addAll(Arrays.asList(delegate.keys()));
             }
@@ -315,7 +315,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
     public String[] childrenNames() throws BackingStoreException {
         synchronized (tree.treeLock()) {
             checkRemoved();
-            HashSet<String> names = new HashSet<String>();
+            HashSet<String> names = new HashSet<>();
             if (delegate != null) {
                 names.addAll(Arrays.asList(delegate.childrenNames()));
             }
@@ -700,9 +700,9 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
     private boolean removed;
     
     private final Map<String, TypedValue> data = new HashMap<String, TypedValue>();
-    private final Set<String> removedKeys = new HashSet<String>();
+    private final Set<String> removedKeys = new HashSet<>();
     private final Map<String, ProxyPreferencesImpl> children = new HashMap<String, ProxyPreferencesImpl>();
-    private final Set<String> removedChildren = new HashSet<String>();
+    private final Set<String> removedChildren = new HashSet<>();
 
     private boolean noEvents = false;
     private PreferenceChangeListener weakPrefListener;

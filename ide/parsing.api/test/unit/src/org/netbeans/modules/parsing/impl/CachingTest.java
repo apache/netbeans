@@ -388,7 +388,7 @@ public class CachingTest extends IndexingAwareTestCase {
     }
 
     private Collection<? extends Integer> asContentNumber(final Iterable<? extends Embedding> embeddings) {
-        final Collection<Integer> result = new ArrayList<Integer>();
+        final Collection<Integer> result = new ArrayList<>();
         for (Embedding e : embeddings) {
             result.add(Integer.parseInt(e.getSnapshot().getText().toString()));
         }

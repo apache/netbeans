@@ -292,7 +292,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
     private PropertyEvaluator createEvaluator(ModuleList ml) {
         // XXX a lot of this duplicates ModuleList.parseProperties... can they be shared?
         PropertyProvider predefs = project.getHelper().getStockPropertyPreprovider();
-        Map<String,String> stock = new HashMap<String,String>();
+        Map<String,String> stock = new HashMap<>();
         File dir = project.getProjectDirectoryFile();
         NbModuleType type = project.getModuleType();
         PropertyProvider privateProperties = project.getHelper().getPropertyProvider(AntProjectHelper.PRIVATE_PROPERTIES_PATH);
@@ -384,7 +384,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         providers.add(new NbJdkProvider(baseEval));
         providers.add(privateProperties);
         providers.add(projectProperties);
-        Map<String,String> defaults = new HashMap<String,String>();
+        Map<String,String> defaults = new HashMap<>();
         if (codeNameBase != null) { // #121856
             defaults.put("code.name.base.dashes", codeNameBase.replace('.', '-')); // NOI18N
         }
@@ -405,7 +405,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             defaults.put("suite.build.dir", "${suite.dir}/build"); // NOI18N
             defaults.put("test.user.dir", "${suite.build.dir}/testuserdir"); // NOI18N
         }
-        Set<String> testTypes = new HashSet<String>(Arrays.asList(NbModuleProject.COMMON_TEST_TYPES));
+        Set<String> testTypes = new HashSet<>(Arrays.asList(NbModuleProject.COMMON_TEST_TYPES));
         // XXX would be good to add in any other types defined in project.xml
         for (String testType : testTypes) {
             defaults.put("test." + testType + ".src.dir", "test/" + testType + "/src"); // NOI18N
@@ -421,7 +421,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         if (ml != null) {
             providers.add(PropertyUtils.fixedPropertyProvider(Collections.singletonMap("module.classpath", computeModuleClasspath(ml)))); // NOI18N
             providers.add(PropertyUtils.fixedPropertyProvider(Collections.singletonMap("module.run.classpath", computeRuntimeModuleClasspath(ml)))); // NOI18N
-            Map<String,String> buildDefaults = new HashMap<String,String>();
+            Map<String,String> buildDefaults = new HashMap<>();
             buildDefaults.put("cp.extra", ""); // NOI18N
             buildDefaults.put(CP, "${module.classpath}:${cp.extra}"); // NOI18N
             buildDefaults.put(RUN_CP, "${module.run.classpath}:${cp.extra}:${build.classes.dir}"); // NOI18N
@@ -480,7 +480,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         }
         
         public @Override final Map<String,String> getProperties() {
-            Map<String,String> props = new HashMap<String,String>();
+            Map<String,String> props = new HashMap<>();
             String home = eval.getProperty(NBJDK_HOME);
             if (home == null) {
                 String active = eval.getProperty(ModuleProperties.JAVA_PLATFORM_PROPERTY);
@@ -505,7 +505,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
                 FileObject homeFO = FileUtil.toFileObject(FileUtil.normalizeFile(new File(home)));
                 if (homeFO != null) {
                     for (JavaPlatform platform : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                        if (new HashSet<FileObject>(platform.getInstallFolders()).equals(Collections.singleton(homeFO))) {
+                        if (new HashSet<>(platform.getInstallFolders()).equals(Collections.singleton(homeFO))) {
                             // Matching JDK is registered, so look up its real bootcp.
                             ClassPath boot = platform.getBootstrapLibraries();
                             boot.removePropertyChangeListener(weakListener);
@@ -661,9 +661,9 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
      * @see "issue #70206"
      */
     private String computeRuntimeModuleClasspath(ModuleList ml) {
-        Set<String> unprocessed = new HashSet<String>();
+        Set<String> unprocessed = new HashSet<>();
         unprocessed.add(project.getCodeNameBase());
-        Set<String> processed = new HashSet<String>();
+        Set<String> processed = new HashSet<>();
         StringBuilder cp = new StringBuilder();
         if(cachedProjectModuleEntries.get(project) == null) {
             cachedProjectModuleEntries.put(project, new HashMap<String, SoftReference<ModuleEntry>>());
@@ -759,10 +759,10 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
     }
     
     private void computeTestType(String ttName, File testDistDir, Set<TestModuleDependency> ttModules, Map<String,TestClasspath> classpaths, ModuleList ml) {
-        final Set<String> compileCnbs = new HashSet<String>();
-        final Set<String> runtimeCnbs = new HashSet<String>();
-        final Set<String> testCompileCnbs = new HashSet<String>();
-        final Set<String> testRuntimeCnbs = new HashSet<String>();
+        final Set<String> compileCnbs = new HashSet<>();
+        final Set<String> runtimeCnbs = new HashSet<>();
+        final Set<String> testCompileCnbs = new HashSet<>();
+        final Set<String> testRuntimeCnbs = new HashSet<>();
         Logger logger = Logger.getLogger(Evaluator.class.getName());
         // maps CNB->status: FALSE - added only to runtime CP, TRUE - added to compile CP too,
         // null - not processed (yet)
@@ -774,7 +774,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             logger.log(Level.FINE, "computeTestType: processing ''{0}''", cnb);
             if (td.isRecursive()) {
                 // scan cp recursively
-                Set<String> unprocessed = new HashSet<String>();
+                Set<String> unprocessed = new HashSet<>();
 
                 final String codeNameBase = project.getCodeNameBase();
                 unprocessed.add(td.getModule().getCodeNameBase());
@@ -836,7 +836,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         classpaths.put(ttName,testClasspath);
     }
 
-   private static final Set<String> warnedModules = Collections.synchronizedSet(new HashSet<String>());
+   private static final Set<String> warnedModules = Collections.synchronizedSet(new HashSet<>());
     private String mergePaths(Set<String> cnbs, boolean test,String testtype,File testDistDir,ModuleList ml) {
         StringBuilder cps = new StringBuilder();
         for (String cnb : cnbs) {

@@ -212,7 +212,7 @@ public final class FileUtilities {
     public static List<String> listZipFiles(@NonNull File zipFile, @NonNull ZipEntryFilter entryFilter) throws IOException {
         assert zipFile != null;
         assert entryFilter != null;
-        final List<String> files = new ArrayList<String>();
+        final List<String> files = new ArrayList<>();
         runOnZipEntries(zipFile, new ZipEntryTask() {
             @Override
             public void run(ZipEntry zipEntry) {

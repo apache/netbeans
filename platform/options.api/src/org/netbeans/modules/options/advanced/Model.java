@@ -55,7 +55,7 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class Model extends TabbedPanelModel {
     
-    private Map<String,String> idToCategory = new HashMap<String,String>();
+    private Map<String,String> idToCategory = new HashMap<>();
     private Map<String,AdvancedOption> categoryToOption = new LinkedHashMap<String,AdvancedOption>();
     private Map<String, JComponent> categoryToPanel = new HashMap<String, JComponent> ();
     private Map<String, OptionsPanelController> categoryToController = new HashMap<String, OptionsPanelController>();

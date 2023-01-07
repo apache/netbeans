@@ -314,7 +314,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
                     idGetter = genUtils.addAnnotation(idGetter, generatedValueAnnotation);
                 }
                 
-                List<VariableTree> classFields = new ArrayList<VariableTree>();
+                List<VariableTree> classFields = new ArrayList<>();
                 classFields.add(serialVersionUID);
                 classFields.add(idField);
                 modifiedClazz = genUtils.addClassFields(clazz, classFields);

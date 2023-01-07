@@ -49,7 +49,7 @@ public class ReadAccessTest extends NbTestCase {
 
         System.getProperties().remove("netbeans.dirs");
 
-        Set<String> allowedFiles = new HashSet<String>();
+        Set<String> allowedFiles = new HashSet<>();
         InputStream is = ReadAccessTest.class.getResourceAsStream("allowed-file-reads.txt");
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
         for (;;) {

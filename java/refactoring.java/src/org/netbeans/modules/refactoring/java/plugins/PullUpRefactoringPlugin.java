@@ -253,7 +253,7 @@ public final class PullUpRefactoringPlugin extends JavaRefactoringPlugin {
     public Problem prepare(RefactoringElementsBag refactoringElements) {
         ClasspathInfo cpInfo = getClasspathInfo(refactoring);
 
-        Set<FileObject> a = new HashSet<FileObject>();
+        Set<FileObject> a = new HashSet<>();
         a.addAll(getSuperTypesFiles(refactoring.getSourceType()));
         a.add(RefactoringUtils.getFileObject(treePathHandle));
         fireProgressListenerStart(AbstractRefactoring.PREPARE, a.size());

@@ -558,13 +558,13 @@ public class LayerUtilsTest extends LayerTestBase {
             Manifest mf = new Manifest();
             mf.getMainAttributes().putValue("OpenIDE-Module", "platform.module");
             mf.getMainAttributes().putValue("OpenIDE-Module-Layer", "platform/module/layer.xml");
-            Map<String,String> contents = new HashMap<String,String>();
+            Map<String,String> contents = new HashMap<>();
             contents.put("platform/module/Bundle.properties", "folder/file=English");
             contents.put("platform/module/layer.xml", "<filesystem><folder name=\"folder\"><file name=\"file\"><attr name=\"SystemFileSystem.localizingBundle\" stringvalue=\"platform.module.Bundle\"/></file></folder></filesystem>");
             TestBase.createJar(new File(platformDir, "cluster/modules/platform-module.jar".replace('/', File.separatorChar)), contents, mf);
             assertTrue("cluster/config/Modules folder in platform, so that cluster is considered valid.", (new File(platformDir, "cluster/config/Modules")).mkdirs());
             mf = new Manifest();
-            contents = new HashMap<String,String>();
+            contents = new HashMap<>();
             contents.put("platform/module/Bundle_ja.properties", "folder/file=Japanese");
             TestBase.createJar(new File(platformDir, "cluster/modules/locale/platform-module_ja.jar".replace('/', File.separatorChar)), contents, mf);
             // To satisfy NbPlatform.isValid:
@@ -621,7 +621,7 @@ public class LayerUtilsTest extends LayerTestBase {
     public void testMasks() throws Exception {
         NbModuleProject project = TestBase.generateStandaloneModule(getWorkDir(), "module");
         FileSystem fs = LayerUtils.getEffectiveSystemFilesystem(project);
-        Set<String> optionInstanceNames = new HashSet<String>();
+        Set<String> optionInstanceNames = new HashSet<>();
         FileObject toolsMenu = fs.findResource("Menu/Tools");
         assertNotNull(toolsMenu);
         for (FileObject kid : toolsMenu.getChildren()) {
@@ -631,7 +631,7 @@ public class LayerUtilsTest extends LayerTestBase {
             }
         }
         assertEquals("#63295: masks work",
-                new HashSet<String>(Arrays.asList(
+                new HashSet<>(Arrays.asList(
             "org-netbeans-modules-options-OptionsWindowAction.shadow"
             // org-netbeans-core-actions-OptionsAction.instance should be masked
         )), optionInstanceNames);

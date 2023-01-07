@@ -38,7 +38,7 @@ public class LibraryTestUtils {
         DefaultLibraryImplementation lib;
         lib = new DefaultLibraryImplementation("j2se", new String[]{"classpath", "src", "javadoc"});
         lib.setName(libName);
-        List<URL> l = new ArrayList<URL>();
+        List<URL> l = new ArrayList<>();
         URL u = Utilities.toURI(cp).toURL();
         if (cp.getPath().endsWith(".jar")) {
             u = FileUtil.getArchiveRoot(u);
@@ -46,7 +46,7 @@ public class LibraryTestUtils {
         l.add(u);
         lib.setContent("classpath", l);
         if (src != null) {
-            l = new ArrayList<URL>();
+            l = new ArrayList<>();
             u = Utilities.toURI(src).toURL();
             if (src.getPath().endsWith(".jar")) {
                 u = FileUtil.getArchiveRoot(u);
@@ -55,7 +55,7 @@ public class LibraryTestUtils {
             lib.setContent("src", l);
         }
         if (javadoc != null) {
-            l = new ArrayList<URL>();
+            l = new ArrayList<>();
             u = Utilities.toURI(javadoc).toURL();
             if (javadoc.getPath().endsWith(".jar")) {
                 u = FileUtil.getArchiveRoot(u);

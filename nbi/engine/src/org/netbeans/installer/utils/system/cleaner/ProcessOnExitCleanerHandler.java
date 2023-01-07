@@ -65,7 +65,7 @@ public abstract class ProcessOnExitCleanerHandler extends SystemPropertyOnExitCl
 
         if(fileList.size() > 0) {            
             try {
-                List<String> paths = new ArrayList<String>();
+                List<String> paths = new ArrayList<>();
                 for (String s : fileList) {
                     if (!paths.contains(s)) {
                             paths.add(s);

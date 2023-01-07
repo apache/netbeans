@@ -314,7 +314,7 @@ public class JFXActionProvider implements ActionProvider {
         } else {
             return Collections.emptyList();
         }
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
 
         for (StartupExtender group : StartupExtender.getExtenders(context, mode)) {
             args.addAll(group.getArguments());

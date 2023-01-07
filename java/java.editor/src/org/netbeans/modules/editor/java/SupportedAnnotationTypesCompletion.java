@@ -112,7 +112,7 @@ public class SupportedAnnotationTypesCompletion implements Processor {
         return Collections.emptySet();
     }
 
-    private static final Set<String> supportedAnnotationTypes = new HashSet<String>(Arrays.asList(SupportedAnnotationTypes.class.getName()));
+    private static final Set<String> supportedAnnotationTypes = new HashSet<>(Arrays.asList(SupportedAnnotationTypes.class.getName()));
     
     @Override
     public Set<String> getSupportedAnnotationTypes() {

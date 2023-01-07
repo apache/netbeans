@@ -304,7 +304,7 @@ public abstract class Group {
         String sanitizedId = name.replaceAll("[^a-zA-Z0-9_.-]+", "_");
         Set<String> existing;
         try {
-            existing = new HashSet<String>(Arrays.asList(NODE.childrenNames()));
+            existing = new HashSet<>(Arrays.asList(NODE.childrenNames()));
         } catch (BackingStoreException x) {
             Exceptions.printStackTrace(x);
             return sanitizedId;
@@ -335,7 +335,7 @@ public abstract class Group {
     }
 
     private static void persistDocumentsInGroup(Project p, Set<DataObject> get, String oldGroupName) {
-        Set<String> urls = new HashSet<String>();
+        Set<String> urls = new HashSet<>();
         if (get != null) {
             for (DataObject dob : get) {
                 //same way of creating string as in ProjectUtilities
@@ -500,7 +500,7 @@ public abstract class Group {
      * @return a list based on {@link #getProjects()} in the default implementation
      */
     protected List<String> projectPaths() {
-        List<String> urls = new ArrayList<String>();
+        List<String> urls = new ArrayList<>();
         for (Project p : getProjects()) {
             urls.add(p.getProjectDirectory().toURL().toString());
         }

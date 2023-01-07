@@ -124,7 +124,7 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
         index = 0;
         ValidationGroup vg = ValidationGroup.create(new WizardDescriptorAdapter(wiz));
         panels = new ArrayList<>();
-        List<String> steps = new ArrayList<String>();
+        List<String> steps = new ArrayList<>();
         
         panels.add(new BasicWizardPanel(vg, null, true, false, null)); //only download archetype (for additional props) when unknown archetype is used.
         steps.add(LBL_CreateProjectStep2());

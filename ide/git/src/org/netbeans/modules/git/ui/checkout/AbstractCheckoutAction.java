@@ -81,7 +81,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
         GitProgressSupport supp = new GitProgressSupport() {
 
             private String revision;
-            private final Collection<File> notifiedFiles = new HashSet<File>();
+            private final Collection<File> notifiedFiles = new HashSet<>();
 
             @Override
             protected void perform () {
@@ -91,7 +91,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                 }
                 
                 Collection<File> seenRoots = Git.getInstance().getSeenRoots(repository);
-                final Set<String> seenPaths = new HashSet<String>(GitUtils.getRelativePaths(repository, seenRoots.toArray(new File[seenRoots.size()])));
+                final Set<String> seenPaths = new HashSet<>(GitUtils.getRelativePaths(repository, seenRoots.toArray(new File[seenRoots.size()])));
                 try {
                     final GitClient client = getClient();
                     revision = revisionToCheckout;

@@ -46,7 +46,7 @@ class Utils {
     static Collection<FileObject> collectEditedFiles() {
         Collection<TopComponent> comps = new ArrayList<TopComponent>( TopComponent.getRegistry().getOpened() );
         
-        HashSet<FileObject> collectedFiles = new HashSet<FileObject>( comps.size() );
+        HashSet<FileObject> collectedFiles = new HashSet<>( comps.size() );
         
         for( final TopComponent tc : comps ) {
             if( WindowManager.getDefault().isOpenedEditorTopComponent( tc ) ) {

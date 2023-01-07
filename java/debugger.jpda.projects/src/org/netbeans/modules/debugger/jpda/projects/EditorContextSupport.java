@@ -341,7 +341,7 @@ public final class EditorContextSupport {
         if (js == null) {
             return null;
         }
-        final List<Integer> result = new ArrayList<Integer>();
+        final List<Integer> result = new ArrayList<>();
         try {
             final Future f = parseWhenScanFinishedReallyLazy(fo, new UserTask() {
                 @Override

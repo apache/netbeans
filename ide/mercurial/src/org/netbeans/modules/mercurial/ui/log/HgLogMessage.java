@@ -90,9 +90,9 @@ public class HgLogMessage {
         this.bMerged = this.parentOneRev != null && this.parentTwoRev != null && !this.parentOneRev.getRevisionNumber().equals("-1") && !this.parentTwoRev.getRevisionNumber().equals("-1");
 
         this.paths = new ArrayList<HgLogMessageChangedPath>();
-        List<String> apathsStrings = new ArrayList<String>();
-        List<String> dpathsStrings = new ArrayList<String>();
-        List<String> cpathsStrings = new ArrayList<String>();
+        List<String> apathsStrings = new ArrayList<>();
+        List<String> dpathsStrings = new ArrayList<>();
+        List<String> cpathsStrings = new ArrayList<>();
 
         // Mercurial Bug: Currently not seeing any file_copies coming back from Mercurial
         if (fd != null && !fd.equals("")) {

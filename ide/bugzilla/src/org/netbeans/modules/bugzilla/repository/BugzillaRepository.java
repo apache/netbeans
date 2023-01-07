@@ -275,7 +275,7 @@ public class BugzillaRepository {
         final List<BugzillaIssue> ret = new LinkedList<BugzillaIssue>();
         try {
             MylynSupport supp = MylynSupport.getInstance();
-            Set<String> unknownTasks = new HashSet<String>(ids.length);
+            Set<String> unknownTasks = new HashSet<>(ids.length);
             for (String id : ids) {
                 BugzillaIssue issue = findUnsubmitted(id);
                 if (issue == null) {

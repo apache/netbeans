@@ -41,7 +41,7 @@ public class WebServiceGroup {
     String groupName = null;
     boolean userDefined = true;
     
-    Set<String> webserviceIds = new HashSet<String>();
+    Set<String> webserviceIds = new HashSet<>();
     
     public WebServiceGroup() {
         this(WebServiceListModel.getInstance().getUniqueWebServiceGroupId());

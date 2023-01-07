@@ -81,7 +81,7 @@ public class Context implements Serializable {
     }
 
     private void removeDuplicates(List<File> files) {
-        List<File> newFiles = new ArrayList<File>();
+        List<File> newFiles = new ArrayList<>();
         outter: for (Iterator<File> i = files.iterator(); i.hasNext();) {
             File file = i.next();
             for (Iterator<File> j = newFiles.iterator(); j.hasNext();) {

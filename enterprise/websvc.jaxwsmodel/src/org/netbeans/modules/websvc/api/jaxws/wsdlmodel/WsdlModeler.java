@@ -171,7 +171,7 @@ public class WsdlModeler {
     private void generateWsdlModel(WsdlErrorHandler errorHandler) {
         WsimportOptions options = new WsimportOptions();
         properties = new Properties();
-        bindingFiles = new HashSet<String>();
+        bindingFiles = new HashSet<>();
         if (bindings != null) {
             for (int i = 0; i < bindings.length; i++) {
                 try {

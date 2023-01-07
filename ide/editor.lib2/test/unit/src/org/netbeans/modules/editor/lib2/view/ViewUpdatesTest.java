@@ -46,7 +46,7 @@ public class ViewUpdatesTest extends NbTestCase {
     public ViewUpdatesTest(String testName) {
         super(testName);
 
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testModsNoHighlights");
 //        includes.add("testNewlineRemovalNoHighlights");
 //        includes.add("testLongInsert");

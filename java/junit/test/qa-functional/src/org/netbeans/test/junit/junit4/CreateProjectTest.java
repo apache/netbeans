@@ -115,7 +115,7 @@ public class CreateProjectTest extends ExtJellyTestCaseForJunit4 {
         // testing RootSuite.java
         openAc.perform(new Node(prn, "Test Packages|<default package>|RootSuite.java"));
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("import org.junit.");
         lines.add("@RunWith(Suite.class)");
         lines.add("@Suite.SuiteClasses({junit4testproject.Junit4testprojectSuite.class})");
@@ -132,7 +132,7 @@ public class CreateProjectTest extends ExtJellyTestCaseForJunit4 {
         // testing Junit4testprojectSuite.java
         openAc.perform(new Node(prn, "Test Packages|junit4testproject|Junit4testprojectSuite.java"));
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("import org.junit.");
         lines.add("@Suite.SuiteClasses({junit4testproject.JUnit4TestProjectTest.class})");
         lines.add("@RunWith(Suite.class)");
@@ -149,7 +149,7 @@ public class CreateProjectTest extends ExtJellyTestCaseForJunit4 {
         // testing JUnit4TestProjectTest.java
         openAc.perform(new Node(prn, "Test Packages|junit4testproject|JUnit4TestProjectTest.java"));
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("import org.junit.");        
         lines.add("import static org.junit.Assert.*;");
         lines.add("@Test");

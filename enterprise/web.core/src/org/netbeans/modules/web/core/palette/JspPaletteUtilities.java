@@ -184,7 +184,7 @@ public final class JspPaletteUtilities {
     }
 
     public static List<String> getTypeProperties(JTextComponent target, final String fqcn, final String[] prefix) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         if (prefix != null) {
             runUserActionTask(target, new Task<CompilationController>() {
 

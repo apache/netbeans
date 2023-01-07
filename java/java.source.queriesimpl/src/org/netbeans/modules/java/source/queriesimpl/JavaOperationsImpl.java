@@ -153,7 +153,7 @@ class JavaOperationsImpl<T> implements ModelOperations {
                 tm = types.erasure(tm);
             }
         }
-        final Collection<String> result = new ArrayList<String>();
+        final Collection<String> result = new ArrayList<>();
         for (VariableElement ve : ElementFilter.fieldsIn(te.getEnclosedElements())) {
             if (isSameType(types,tm,ve.asType(),rt)) {
                 result.add(ve.getSimpleName().toString());
@@ -232,7 +232,7 @@ class JavaOperationsImpl<T> implements ModelOperations {
         ClassTree mainClassTree = (ClassTree) mainClassTreePath.getLeaf();
         final ClassTree origMainTree = mainClassTree;
         if (mainClassElm != null) {
-            Set<String> actualInterfaces = new HashSet<String>();
+            Set<String> actualInterfaces = new HashSet<>();
             TreeMaker maker = wcopy.getTreeMaker();
             // first take the current interfaces and exclude the removed ones
             List<? extends TypeMirror> interfaces = ((TypeElement) mainClassElm).getInterfaces();

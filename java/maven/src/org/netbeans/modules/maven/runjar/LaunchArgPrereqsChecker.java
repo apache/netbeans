@@ -74,7 +74,7 @@ public class LaunchArgPrereqsChecker implements LateBoundPrerequisitesChecker {
         boolean appArgsPresent = props.containsKey(MavenExecuteUtils.RUN_APP_PARAMS);
         boolean execArgsPresent = props.containsKey(MavenExecuteUtils.RUN_PARAMS);
 
-        List<String> fixedArgs = new ArrayList<String>();
+        List<String> fixedArgs = new ArrayList<>();
         if (execArgsPresent || vmArgsPresent || appArgsPresent) {
             // define exec.vmArgs and exec.appArgs
             InstanceContent ic = new InstanceContent();

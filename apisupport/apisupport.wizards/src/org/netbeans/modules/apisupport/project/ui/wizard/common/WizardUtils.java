@@ -514,7 +514,7 @@ public class WizardUtils {
     }
 
     private static Collection<FileObject> getFolders(final FileObject root, final Map<String,Object> excludeAttrs) {
-        Collection<FileObject> folders = new HashSet<FileObject>();
+        Collection<FileObject> folders = new HashSet<>();
         SUBFOLDERS: for (FileObject subFolder : NbCollections.iterable(root.getFolders(false))) {
             for (Map.Entry<String,Object> entry : excludeAttrs.entrySet()) {
                 if (entry.getValue().equals(subFolder.getAttribute(entry.getKey()))) {

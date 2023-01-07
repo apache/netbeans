@@ -80,7 +80,7 @@ public class MatcherUtilitiesTest extends TestBase {
 
         Map<String, TreePath> outVariables = new HashMap<String, TreePath>();
         Map<String, Collection<? extends TreePath>> outMultiVariables = new HashMap<String, Collection<? extends TreePath>>();
-        Map<String, String> outVariables2Names = new HashMap<String, String>();
+        Map<String, String> outVariables2Names = new HashMap<>();
 
         assertTrue(MatcherUtilities.matches(ctx, ctx.getPath().getParentPath(), "$1 $0 = $_;", outVariables, outMultiVariables, outVariables2Names));
         assertEquals("int", outVariables.get("$1").getLeaf().toString());

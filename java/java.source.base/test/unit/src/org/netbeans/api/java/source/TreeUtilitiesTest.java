@@ -507,13 +507,13 @@ public class TreeUtilitiesTest extends NbTestCase {
 
         TreePath tp = info.getTreeUtilities().pathFor(pos);
         Set<TypeMirror> uncaughtExceptions = info.getTreeUtilities().getUncaughtExceptions(tp);
-        Set<String> uncaughtExceptionStrings = new HashSet<String>();
+        Set<String> uncaughtExceptionStrings = new HashSet<>();
 
         for (TypeMirror tm : uncaughtExceptions) {
             uncaughtExceptionStrings.add(tm.toString());
         }
 
-        Set<String> golden = new HashSet<String>();
+        Set<String> golden = new HashSet<>();
 
         assertEquals(golden, uncaughtExceptionStrings);
     }

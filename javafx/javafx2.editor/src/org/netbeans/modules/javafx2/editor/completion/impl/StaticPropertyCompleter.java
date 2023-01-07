@@ -47,7 +47,7 @@ import org.netbeans.spi.editor.completion.CompletionProvider;
  */
 @MimeRegistration(mimeType=JavaFXEditorUtils.FXML_MIME_TYPE, service=Completer.Factory.class)
 public class StaticPropertyCompleter extends InstanceCompleter {
-    private Set<String>     directClasses = new HashSet<String>();
+    private Set<String>     directClasses = new HashSet<>();
     
     private String  propertyPrefix;
     

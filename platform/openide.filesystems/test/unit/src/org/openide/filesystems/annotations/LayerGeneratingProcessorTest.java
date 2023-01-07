@@ -58,7 +58,7 @@ public class LayerGeneratingProcessorTest extends NbTestCase {
         AnnotationProcessorTestUtils.makeSource(src, "p.C", "@" + A.class.getCanonicalName() + " public class C {}");
         File dest = new File(getWorkDir(), "dest");
         assertTrue(dest.mkdirs());
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
         args.add("-classpath");
         args.add(dest + File.pathSeparator + System.getProperty("java.class.path"));
         args.add("-d");

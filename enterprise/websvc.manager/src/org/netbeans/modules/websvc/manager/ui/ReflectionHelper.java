@@ -251,7 +251,7 @@ public class ReflectionHelper {
             } else {
                 Class<?> cls = Class.forName(className, true, loader);
                 if (cls.isInterface()) {
-                    return new ArrayList<Object>();
+                    return new ArrayList<>();
                 } else {
                     savedLoader = Thread.currentThread().getContextClassLoader();
                     Thread.currentThread().setContextClassLoader(loader);
@@ -298,7 +298,7 @@ public class ReflectionHelper {
     public static List<String> getEnumerationValues(String enumeration, ClassLoader loader)
             throws WebServiceReflectionException {
         try {
-            List<String> enumerations = new ArrayList<String>();
+            List<String> enumerations = new ArrayList<>();
             Class<?> enumerClass = Class.forName(enumeration, true, loader);
 
             Field[] fields = enumerClass.getDeclaredFields();
@@ -319,7 +319,7 @@ public class ReflectionHelper {
             throws WebServiceReflectionException {
         ClassLoader savedLoader = null;
         try {
-            List<String> properties = new ArrayList<String>();
+            List<String> properties = new ArrayList<>();
             savedLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(loader);
 

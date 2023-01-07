@@ -246,7 +246,7 @@ implements PropertyChangeListener, LookupListener {
             m.removePropertyChangeListener(this);
             m.addPropertyChangeListener(this);
         }
-        Set<String> tmp = new HashSet<String>();
+        Set<String> tmp = new HashSet<>();
         for (ModuleInfo mi : result.allInstances()) {
             if (mi.isEnabled()) {
                 tmp.add(mi.getCodeNameBase());
@@ -320,7 +320,7 @@ implements PropertyChangeListener, LookupListener {
         }
         final FileObject[] arr = fo.getChildren();
 
-        Set<String> enabled = new HashSet<String>();
+        Set<String> enabled = new HashSet<>();
         for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
             Module m = (Module) mi;
             if (m.isAutoload() || m.isEager() || m.isFixed()) {
@@ -334,7 +334,7 @@ implements PropertyChangeListener, LookupListener {
 
         Map<String,Long> cnb2Date = new HashMap<String, Long>();
         Map<Long,List<FileObject>> date2Files = new HashMap<Long,List<FileObject>>();
-        Set<String> explicitlyUsedCnbs = new HashSet<String>();
+        Set<String> explicitlyUsedCnbs = new HashSet<>();
         for (int i = 0; i < arr.length; i++) {
             final FileObject module = arr[i];
             final String cnb = module.getName().replace('-', '.');
@@ -350,7 +350,7 @@ implements PropertyChangeListener, LookupListener {
             cnb2Date.put(cnb, date);
             List<FileObject> files = date2Files.get(date);
             if (files == null) {
-                files = new ArrayList<FileObject>();
+                files = new ArrayList<>();
                 date2Files.put(date, files);
             }
             files.add(module);
@@ -398,7 +398,7 @@ implements PropertyChangeListener, LookupListener {
             }
         }
 
-        Set<FileObject> processed = new HashSet<FileObject>();
+        Set<FileObject> processed = new HashSet<>();
         for (FeatureInfo fi : unused) {
             LOG.log(Level.FINE, "Unused feature {0}", fi.clusterName);
             Long groupId = null;
@@ -461,7 +461,7 @@ implements PropertyChangeListener, LookupListener {
     }
 
     private static Set<String> transitiveDeps(Set<String> cnbs) {
-        HashSet<String> all = new HashSet<String>();
+        HashSet<String> all = new HashSet<>();
         all.addAll(cnbs);
         for (;;) {
             int prev = all.size();
@@ -482,7 +482,7 @@ implements PropertyChangeListener, LookupListener {
             }
             if (prev == all.size()) {
                 Set<String> test = null;
-                assert (test = new HashSet<String>(all)) != null;
+                assert (test = new HashSet<>(all)) != null;
                 if (test != null) {
                     for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
                         test.remove(mi.getCodeNameBase());

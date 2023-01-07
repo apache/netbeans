@@ -130,7 +130,7 @@ public class BreakpointsClassFilterTest extends NbTestCase {
             this.isFiltered = isFiltered;
             this.allBreakpoints = allBreakpoints;
             if (isFiltered) {
-                toBeHitIn = new HashSet<String>();
+                toBeHitIn = new HashSet<>();
                 toBeHitIn.add(APP_CLASS_NAME);
                 toBeHitIn.add(APP2_CLASS_NAME);
             } else {

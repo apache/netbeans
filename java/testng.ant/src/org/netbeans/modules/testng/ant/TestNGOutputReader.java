@@ -203,7 +203,7 @@ final class TestNGOutputReader {
         private int confSkip = 0;
     }
     private SuiteStats suiteStat;
-    private List<String> txt = new ArrayList<String>();
+    private List<String> txt = new ArrayList<>();
 
     private static int x = 0;
 
@@ -811,7 +811,7 @@ final class TestNGOutputReader {
             testngManager.displayOutput(testSession, text, error);
         }
 //        if (state == State.TESTCASE_STARTED) {
-//            List<String> addedLines = new ArrayList<String>();
+//            List<String> addedLines = new ArrayList<>();
 //            addedLines.add(text);
 //            Testcase tc = testSession.getCurrentTestCase();
 //            if (tc != null) {

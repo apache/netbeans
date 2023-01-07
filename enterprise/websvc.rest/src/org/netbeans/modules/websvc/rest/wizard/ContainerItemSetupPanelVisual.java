@@ -71,7 +71,7 @@ public class ContainerItemSetupPanelVisual extends javax.swing.JPanel
     
     public ContainerItemSetupPanelVisual(String name) {
         setName(name);
-        this.listeners = new ArrayList<ChangeListener>();
+        this.listeners = new ArrayList<>();
         initComponents();
         packageComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override

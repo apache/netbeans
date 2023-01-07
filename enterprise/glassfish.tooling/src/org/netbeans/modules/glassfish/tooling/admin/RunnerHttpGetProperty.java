@@ -84,7 +84,7 @@ public class RunnerHttpGetProperty extends RunnerHttp {
             LOGGER.log(Level.WARNING, METHOD, "manifestNull", query);
             return false;
         }
-        result.value = new HashMap<String, String>();
+        result.value = new HashMap<>();
         for (String encodedkey : manifest.getEntries().keySet()) {
             String key = "";
             try {

@@ -83,6 +83,6 @@ public class BeanDependsOnCompletor extends BeansRefCompletor {
         
         String existingStr = typedPrefix.substring(0, length);
         List<String> names = StringUtils.tokenize(existingStr, SpringXMLConfigEditorUtils.BEAN_NAME_DELIMITERS);
-        return new HashSet<String>(names);
+        return new HashSet<>(names);
     }
 }

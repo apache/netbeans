@@ -290,7 +290,7 @@ public class SelectConfigFilesPanel extends javax.swing.JPanel {
     private final class FileDetector implements Runnable {
 
         public void run() {
-            final Set<File> result = new HashSet<File>();
+            final Set<File> result = new HashSet<>();
             // Search in the source groups of the projects.
             for (SourceGroup group : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                 for (FileObject fo : NbCollections.iterable(group.getRootFolder().getChildren(true))) {

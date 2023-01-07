@@ -35,7 +35,7 @@ public class ProcessParametersTest extends NbTestCase {
     }
 
     public void testParameters() {
-        Map<String, String> variables = new HashMap<String, String>();
+        Map<String, String> variables = new HashMap<>();
         variables.put("key1", "value1");
         variables.put("key2", "value2");
 

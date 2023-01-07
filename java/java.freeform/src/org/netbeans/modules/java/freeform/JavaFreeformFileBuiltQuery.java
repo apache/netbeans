@@ -73,8 +73,8 @@ final class JavaFreeformFileBuiltQuery implements FileBuiltQueryImplementation, 
         }
         
         Element java = aux.getConfigurationFragment(JavaProjectNature.EL_JAVA, JavaProjectNature.NS_JAVA_LASTEST, true);
-        List<String> from = new ArrayList<String>();
-        List<String> to   = new ArrayList<String>();
+        List<String> from = new ArrayList<>();
+        List<String> to   = new ArrayList<>();
         
         if (java != null) {
             List<Element> compilationUnits = XMLUtil.findSubElements(java);
@@ -83,7 +83,7 @@ final class JavaFreeformFileBuiltQuery implements FileBuiltQueryImplementation, 
                 List<String> rootNames = Classpaths.findPackageRootNames(compilationUnitEl);
                 List<String> builtToNames = findBuiltToNames(compilationUnitEl);
                 
-                List<String> rootPatterns = new ArrayList<String>();
+                List<String> rootPatterns = new ArrayList<>();
                 String builtToPattern = null;
                 
                 for (String n : rootNames) {
@@ -163,7 +163,7 @@ final class JavaFreeformFileBuiltQuery implements FileBuiltQueryImplementation, 
     }
     
     static List<String> findBuiltToNames(Element compilationUnitEl) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (Element e : XMLUtil.findSubElements(compilationUnitEl)) {
             if (!e.getLocalName().equals("built-to")) { // NOI18N
                 continue;

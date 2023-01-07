@@ -55,7 +55,7 @@ public class EclipseProjectTestUtils {
     }
     
     public static DotClassPathEntry createDotClassPathEntry(String ... keyvalue) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for (int i=0; i<keyvalue.length; i = i +2) {
             map.put(keyvalue[i], keyvalue[i+1]);
         }

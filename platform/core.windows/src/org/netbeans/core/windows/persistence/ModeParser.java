@@ -455,7 +455,7 @@ class ModeParser {
             tcRefConfigMap.put(mc.tcRefConfigs[i].tc_id, mc.tcRefConfigs[i]);
         }
         TCRefParser tcRefParser;
-        List<String> toDelete = new ArrayList<String>(10);
+        List<String> toDelete = new ArrayList<>(10);
         for (String s: tcRefParserMap.keySet()) {
             tcRefParser = tcRefParserMap.get(s);
             if (!tcRefConfigMap.containsKey(tcRefParser.getName())) {
@@ -1143,7 +1143,7 @@ class ModeParser {
             String includes = attrs.getValue("includes"); // NOI18N
             if (includes != null) {
                 String[] split = includes.split( "," ); //NOI18N
-                Set<String> otherNames = new HashSet<String>( split.length );
+                Set<String> otherNames = new HashSet<>( split.length );
                 for( String s : split ) {
                     s = s.trim();
                     if( s.isEmpty() )

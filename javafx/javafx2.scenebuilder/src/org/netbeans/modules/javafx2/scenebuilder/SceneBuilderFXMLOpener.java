@@ -54,7 +54,7 @@ public final class SceneBuilderFXMLOpener extends FXMLOpener {
             return false;
         }
         
-        List<String> cmdList = new ArrayList<String>();
+        List<String> cmdList = new ArrayList<>();
         cmdList.add(getExecutablePath());
         
         boolean allSaved = true;

@@ -46,7 +46,7 @@ import org.openide.util.test.TestFileUtils;
 public class DataFolderTimeOrderTest extends NbTestCase implements PropertyChangeListener {
 
     private DataFolder aa;
-    private final ArrayList<String> events = new ArrayList<String>();
+    private final ArrayList<String> events = new ArrayList<>();
     private static FileSystem lfs;
     
     public DataFolderTimeOrderTest (String name) {

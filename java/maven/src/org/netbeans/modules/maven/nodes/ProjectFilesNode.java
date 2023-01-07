@@ -101,7 +101,7 @@ public class ProjectFilesNode extends AnnotatedAbstractNode {
     }
     
     private void setMyFiles() {
-        Set<FileObject> fobs = new HashSet<FileObject>();
+        Set<FileObject> fobs = new HashSet<>();
         FileObject fo = project.getProjectDirectory().getFileObject("pom.xml"); //NOI18N
         if (fo != null) {
             //#119134 for some unknown reason, the pom.xml might be missing from the project directory in some cases.

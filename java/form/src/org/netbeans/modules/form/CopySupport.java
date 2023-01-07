@@ -411,7 +411,7 @@ class CopySupport {
                             if (sourceContainer != null) { // source is one visual container, we can copy the layout
                                 if (sourceContainer.getLayoutSupport() == null) { // copying from new layout
                                     if (sourceToTargetId == null) {
-                                        sourceToTargetId = new HashMap<String, String>();
+                                        sourceToTargetId = new HashMap<>();
                                     }
                                     sourceToTargetId.put(sourceComp.getId(), copiedComp.getId());
                                     // remember the copied component - for next paste operation

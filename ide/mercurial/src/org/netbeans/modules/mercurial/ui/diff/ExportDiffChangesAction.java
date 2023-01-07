@@ -337,7 +337,7 @@ public class ExportDiffChangesAction extends ContextAction {
     }
 
     private File[] getRoots (Collection<Setup> setups) {
-        HashSet<File> roots = new HashSet<File>(setups.size());
+        HashSet<File> roots = new HashSet<>(setups.size());
         for (Setup setup : setups) {
             File f = setup.getBaseFile();
             if (f != null) {

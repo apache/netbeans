@@ -73,7 +73,7 @@ public class GapListRandomTest extends TestCase {
         }
         
         gl = new GapList<Object>();
-        al = new ArrayList<Object>();
+        al = new ArrayList<>();
         
         
         testRound(random, OP_COUNT_1, ADD_RATIO_1, ADD_ALL_RATIO_1, ADD_ALL_MAX_COUNT_1,
@@ -106,7 +106,7 @@ public class GapListRandomTest extends TestCase {
                 int index = (int)(random.nextDouble() * (al.size() + 1));
                 int off = (int)(random.nextDouble() * count);
                 int len = (int)(random.nextDouble() * (count + 1 - off));
-                ArrayList<Object> l = new ArrayList<Object>();
+                ArrayList<Object> l = new ArrayList<>();
                 for (int i = count; i > 0; i--) {
                     l.add(new Object());
                 }
@@ -204,7 +204,7 @@ public class GapListRandomTest extends TestCase {
                         assertEquals("Lists differ", al, copyList);
                         break;
                     case 1:
-                        ArrayList<Object> targetList = new ArrayList<Object>();
+                        ArrayList<Object> targetList = new ArrayList<>();
                         gl.copyElements(off, len, targetList);
                         assertEquals("Lists differ", al.subList(off, off + len), targetList);
                         break;

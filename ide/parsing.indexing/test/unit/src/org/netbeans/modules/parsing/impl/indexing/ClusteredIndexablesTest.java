@@ -197,12 +197,12 @@ public class ClusteredIndexablesTest {
     private void check(String message, Collection<Indexable> indexableImpls, Collection<Indexable> indexables) {
         Assert.assertEquals(message, indexableImpls.size(), indexables.size());
 
-        Map<String, String> iiMap = new HashMap<String, String>();
+        Map<String, String> iiMap = new HashMap<>();
         for(Indexable ii : indexableImpls) {
             iiMap.put(ii.getRelativePath(), ii.getMimeType());
         }
 
-        Map<String, String> iMap = new HashMap<String, String>();
+        Map<String, String> iMap = new HashMap<>();
         for(Indexable i : indexables) {
             iMap.put(i.getRelativePath(), i.getMimeType());
         }

@@ -226,7 +226,7 @@ public class MultiViewElementTest extends NbTestCase {
     }
     
     private class UndoRedoImpl implements UndoRedo {
-        public List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        public List<ChangeListener> listeners = new ArrayList<>();
         public boolean undo = true;
         public boolean redo = true;
         

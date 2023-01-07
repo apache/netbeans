@@ -36,7 +36,7 @@ public class HgKenaiAccessor {
 
     private static HgKenaiAccessor instance;
     private VCSKenaiAccessor kenaiAccessor = null;
-    private Set<String> queriedUrls = new HashSet<String>(5);
+    private Set<String> queriedUrls = new HashSet<>(5);
 
     private HgKenaiAccessor() {
         kenaiAccessor = Lookup.getDefault().lookup(VCSKenaiAccessor.class);

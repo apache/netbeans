@@ -80,15 +80,15 @@ NodeActionsProvider {
 
     private Vector<ModelListener>   listeners = new Vector<ModelListener>();
     // set of filters
-    //private Set<String>             enabledSourceRoots = new HashSet<String>();
-    private Set<String>             disabledSourceRoots = new HashSet<String>();
+    //private Set<String>             enabledSourceRoots = new HashSet<>();
+    private Set<String>             disabledSourceRoots = new HashSet<>();
     private List<String>            additionalSourceRoots = Collections.emptyList();
     private String[]                unorderedOriginalSourceRoots;
     private String[]                sortedOriginalSourceRoots;
     private int[]                   sourcePathPermutation;
     private Properties              sourcesProperties = Properties.
         getDefault ().getProperties ("debugger").getProperties ("sources");
-    //private final Set<String>       sourceRootsSet = new HashSet<String>();
+    //private final Set<String>       sourceRootsSet = new HashSet<>();
     private String                  projectRoot;
     private PropertyChangeListener  mainProjectListener;
     private DebuggerManagerListener debuggerListener;
@@ -219,16 +219,16 @@ NodeActionsProvider {
                     addSrcRoots = loadAdditionalSourceRoots(root);
                 }
                 if (addSrcRoots == null) {
-                    addSrcRoots = new ArrayList<String>();
+                    addSrcRoots = new ArrayList<>();
                 } else {
                     addSrcRoots = new ArrayList<String>(addSrcRoots);
                 }
                 additionalSourceRoots = addSrcRoots;
                 disabledSourceRoots = loadDisabledSourceRoots(root);
                 if (disabledSourceRoots == null) {
-                    disabledSourceRoots = new HashSet<String>();
+                    disabledSourceRoots = new HashSet<>();
                 } else {
-                    disabledSourceRoots = new HashSet<String>(disabledSourceRoots);
+                    disabledSourceRoots = new HashSet<>(disabledSourceRoots);
                 }
                 projectRoot = root;
             }
@@ -286,9 +286,9 @@ NodeActionsProvider {
     }
 
     private static List<FileObject> getProjectSources(Project p) {
-        List<FileObject> allSourceRoots = new ArrayList<FileObject>();
-        Set<FileObject> addedBinaryRoots = new HashSet<FileObject>();
-        Set<FileObject> preferredRoots = new HashSet<FileObject>();
+        List<FileObject> allSourceRoots = new ArrayList<>();
+        Set<FileObject> addedBinaryRoots = new HashSet<>();
+        Set<FileObject> preferredRoots = new HashSet<>();
         Sources s = ProjectUtils.getSources(p);
         SourceGroup[] sgs = s.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         for (SourceGroup sg : sgs) {

@@ -38,7 +38,7 @@ public  class VersionSupport {
         
         int tokenPosition = 0;
         StringTokenizer versionTokens = new StringTokenizer(version,"."); //NOI18N
-        List<Integer> versionNumbers = new ArrayList<Integer>();
+        List<Integer> versionNumbers = new ArrayList<>();
         while (versionTokens.hasMoreTokens()) {
             versionNumbers.add(valueOf(versionTokens.nextToken().trim()));
         }

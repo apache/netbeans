@@ -56,7 +56,7 @@ public class JBWebApplicationsChildren extends JBAsyncChildren implements Refres
 
     private static final Logger LOGGER = Logger.getLogger(JBWebApplicationsChildren.class.getName());
 
-    private static final Set<String> SYSTEM_WEB_APPLICATIONS = new HashSet<String>();
+    private static final Set<String> SYSTEM_WEB_APPLICATIONS = new HashSet<>();
     static {
         Collections.addAll(SYSTEM_WEB_APPLICATIONS,
                 "jbossws-context", "jmx-console", "jbossws", "jbossws",

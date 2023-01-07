@@ -139,7 +139,7 @@ public final class GlobalSourceForBinaryImpl implements SourceForBinaryQueryImpl
         }
 
         public FileObject[] getRoots() {
-            final List<FileObject> candidates = new ArrayList<FileObject>();
+            final List<FileObject> candidates = new ArrayList<>();
             try {
                 for (URL root : srp.getSourceRoots()) {
                     if (root.getProtocol().equals("jar")) { // NOI18N
@@ -342,7 +342,7 @@ public final class GlobalSourceForBinaryImpl implements SourceForBinaryQueryImpl
         }
         
         private void doScanZippedNetBeansOrgSources() throws IOException {
-            cnbToPrjDir = new HashMap<String,String>();
+            cnbToPrjDir = new HashMap<>();
             for (Enumeration<? extends ZipEntry> en = nbSrcZip.entries(); en.hasMoreElements(); ) {
                 ZipEntry entry = en.nextElement();
                 if (!entry.isDirectory()) {

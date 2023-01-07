@@ -52,7 +52,7 @@ public class NetBeansStartupArgs implements LateBoundPrerequisitesChecker {
         } else {
             return true;
         }
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
         InstanceContent ic = new InstanceContent();
         Project p = config.getProject();
         if (p != null) {

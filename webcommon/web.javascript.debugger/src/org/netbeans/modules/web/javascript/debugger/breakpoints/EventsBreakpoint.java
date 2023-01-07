@@ -71,14 +71,14 @@ public class EventsBreakpoint extends AbstractBreakpoint {
     private static final Set<String> instrumentationEvents;
     
     /** The actual breakpoint events. */
-    private final Set<String> events = new HashSet<String>();
+    private final Set<String> events = new HashSet<>();
     
     static {
         int n = EVENTS.length;
         assert INSTRUMENTATION.length == n;
         Map<String, Set<String>> ebcm = new HashMap<String, Set<String>>(n);
-        Map<String, String> catOf = new HashMap<String, String>();
-        Set<String> instrEv = new HashSet<String>();
+        Map<String, String> catOf = new HashMap<>();
+        Set<String> instrEv = new HashSet<>();
         for (int i = 0; i < n; i++) {
             Set<String> evts = new LinkedHashSet<String>(EVENTS[i].length - 1);
             boolean isInstrumentation = INSTRUMENTATION[i];
@@ -116,7 +116,7 @@ public class EventsBreakpoint extends AbstractBreakpoint {
     
     public Set<String> getEvents() {
         synchronized (events) {
-            return Collections.unmodifiableSet(new HashSet<String>(events));
+            return Collections.unmodifiableSet(new HashSet<>(events));
         }
     }
     

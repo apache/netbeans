@@ -359,7 +359,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             public void run() {
                 StyledDocument sd = (StyledDocument) doc;
                 Iterator<AnnotateLine> it = lines.iterator();
-                previousRevisions = Collections.synchronizedMap(new HashMap<String, String>());
+                previousRevisions = Collections.synchronizedMap(new HashMap<>());
                 elementAnnotations = Collections.synchronizedMap(new HashMap<Element, AnnotateLine>(lines.size()));
                 while (it.hasNext()) {
                     AnnotateLine line = it.next();

@@ -145,7 +145,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
     /** Libraries excluded from panel's {@link #jsfLibraries}. Libraries offered as registered in the IDE. */
-    private static final Set<String> EXCLUDE_FROM_REGISTERED_LIBS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> EXCLUDE_FROM_REGISTERED_LIBS = new HashSet<>(Arrays.asList(
             "jsp-compilation", "jsp-compilation-syscp")); //NOI18N
 
     /** Cached all JSF libraries */

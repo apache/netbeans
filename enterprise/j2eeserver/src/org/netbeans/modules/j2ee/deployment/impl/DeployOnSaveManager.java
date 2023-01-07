@@ -154,7 +154,7 @@ public final class DeployOnSaveManager {
             }
 
             // get all binary urls
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             for (J2eeModuleProvider provider : providers) {
                 for (FileObject file : provider.getSourceFileMap().getSourceRoots()) {
                     URL url = URLMapper.findURL(file, URLMapper.EXTERNAL);

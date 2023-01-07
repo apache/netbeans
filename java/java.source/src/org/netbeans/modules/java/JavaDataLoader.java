@@ -140,7 +140,7 @@ public final class JavaDataLoader extends UniFileLoader {
     *        from template
     */
     static Map<String, String> createStringsMap() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("USER", System.getProperty("user.name"));
         Date d = new Date();
         map.put("DATE", DateFormat.getDateInstance(DateFormat.LONG).format(d)); // NOI18N

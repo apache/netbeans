@@ -168,7 +168,7 @@ public abstract class EntityComparator<E> implements Comparator<E> {
      * @return a collection of the names.
      */
     private static Collection<String> getNamesOfOpenProjects() {
-        ArrayList<String> names = new ArrayList<String>(10);
+        ArrayList<String> names = new ArrayList<>(10);
         for(Project p: OpenProjects.getDefault().getOpenProjects()) {
             String pName = ProjectUtils.getInformation(p).getDisplayName();
             names.add(pName);

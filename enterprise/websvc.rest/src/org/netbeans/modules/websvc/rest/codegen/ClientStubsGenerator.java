@@ -297,7 +297,7 @@ public class ClientStubsGenerator extends AbstractGenerator {
         createDataObjectFromTemplate(JS_PROJECTSTUB_TEMPLATE, prjStubDir, 
                 getProjectName(), JS, canOverwrite(), getProjectStubParameters(  
                         getProjectName()));
-        Set<String> entities = new HashSet<String>();
+        Set<String> entities = new HashSet<>();
         for (Resource r : resourceList) {
             if(pHandle != null) {
                 reportProgress(NbBundle.getMessage(ClientStubsGenerator.class,
@@ -313,7 +313,7 @@ public class ClientStubsGenerator extends AbstractGenerator {
         
         initJs(p, getRestStubContentParams( resourceList, ""));
 
-        Set<FileObject> files = new HashSet<FileObject>();
+        Set<FileObject> files = new HashSet<>();
         FileObject rjsTest = rjsDir.getFileObject(JS_TESTSTUBS, HTML);
         if(rjsTest != null)
             files.add(rjsTest);
@@ -392,7 +392,7 @@ public class ClientStubsGenerator extends AbstractGenerator {
     }
 
     private void initJs(Project p, Map<String,String> testStubsParams) throws IOException {
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         map.put(RESTCLIENT_STABS_VAR, NbBundle.getMessage(ClientStubsGenerator.class, TTL_RestClient_Stubs));
         map.put(README_VAR, NbBundle.getMessage(ClientStubsGenerator.class, MSG_Readme));
         map.put(TESTPAGE_VAR, NbBundle.getMessage(ClientStubsGenerator.class, MSG_TestPage));
@@ -474,7 +474,7 @@ public class ClientStubsGenerator extends AbstractGenerator {
 
     private Map<String,String> getProjectStubParameters( String prjName) 
     {
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         
         String url = getBaseUrl();
         if ( url.endsWith("/")){                        // NOI18N
@@ -581,7 +581,7 @@ public class ClientStubsGenerator extends AbstractGenerator {
         sb2.append("\t\tvar n = document.getElementById('containerContent');\n");
         sb2.append("\t\tn.innerHTML = n.innerHTML + str;\n\n");
         sb2.append("\t</script>\n");
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         map.put("js_scripts_declaration", sb1.toString());      // NOI18N
         map.put("js_usage", sb2.toString());                    // NOI18N
         

@@ -121,7 +121,7 @@ public class ClassPathSupportCallbackImpl implements ClassPathSupport.Callback {
     }
        
     public void readAdditionalProperties(List<Item> items, String projectXMLElement) {
-        Map<String, String> destination = new HashMap<String, String>();
+        Map<String, String> destination = new HashMap<>();
         List<String> l = getIncludedLibraries(helper, projectXMLElement, destination);
         for (Item item : items) {
             boolean b = l.contains(item.getReference());

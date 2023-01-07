@@ -116,7 +116,7 @@ public class TwoWaySupportTest extends TestCase {
                 undval = getString();
             }
             if (undval.length() == 0) throw new Exception("empty string");
-            List<String> v = new ArrayList<String>();
+            List<String> v = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(undval);
             while (tok.hasMoreTokens()) {
                 v.add(tok.nextToken());

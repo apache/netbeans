@@ -85,7 +85,7 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
     private boolean customized;
     private @NonNull final String id;
     private List<String> profiles;
-    private final Map<String,String> properties = new HashMap<String,String>();
+    private final Map<String,String> properties = new HashMap<>();
     private final FileObject projectDirectory;
     
     private final AtomicBoolean resetCache = new AtomicBoolean(false);

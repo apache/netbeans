@@ -597,7 +597,7 @@ public class EjbJarWebServicesSupport implements WebServicesSupportImpl{
         EditableProperties projectProperties = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         
         { // Block that adjusts wscompile.client.classpath as necessary.
-            HashSet<String> wscJars = new HashSet<String>();
+            HashSet<String> wscJars = new HashSet<>();
             boolean newWscJars = false;
             String wscClientClasspath = projectProperties.getProperty(WSCOMPILE_CLASSPATH);
             if(wscClientClasspath != null) {
@@ -674,7 +674,7 @@ public class EjbJarWebServicesSupport implements WebServicesSupportImpl{
                         Collections.<Modifier>singleton(Modifier.PUBLIC),
                         Collections.<AnnotationTree>emptyList()
                         );
-                List<VariableTree> params = new ArrayList<VariableTree>();
+                List<VariableTree> params = new ArrayList<>();
                 params.add(make.Variable(
                         make.Modifiers(
                         Collections.<Modifier>emptySet(),

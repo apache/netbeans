@@ -177,7 +177,7 @@ public class ClasspathInfoTest extends NbTestCase {
     
     private static void assertEquals (final String[] binNames,
             final Iterable<JavaFileObject> jfos, final JavaFileManager fm) {
-        final Set<String> bs = new HashSet<String>();
+        final Set<String> bs = new HashSet<>();
         bs.addAll(Arrays.asList(binNames));
         for (JavaFileObject jfo : jfos) {
             final String bn = fm.inferBinaryName (StandardLocation.SOURCE_PATH, jfo);

@@ -236,7 +236,7 @@ public final class TLIndexerFactory extends EmbeddingIndexerFactory {
             Collection<SimpleError> storedErrors = this.errors.get(indexable);
 
             if (storedErrors == null) {
-                this.errors.put(indexable, storedErrors = new ArrayList<SimpleError>());
+                this.errors.put(indexable, storedErrors = new ArrayList<>());
             }
 
             if (errors == null) {
@@ -255,7 +255,7 @@ public final class TLIndexerFactory extends EmbeddingIndexerFactory {
             List<? extends Error> lst  = ErrorFilterQuery.getFilteredErrors(gsfParserResult,  FEATURE_ERROR_BADGES);
             //convert the Error-s to SimpleError-s instancies. For more info look at the SimpleError class javadoc
             List<SimpleError> simplifiedErrors = new ArrayList<SimpleError>();
-            Set<String> seenErrorKeys = new HashSet<String>();
+            Set<String> seenErrorKeys = new HashSet<>();
             if (lst != null) {
                 if (filteredErrors == null) {
                     filteredErrors = new ArrayList<Error>(lst.size());
@@ -301,7 +301,7 @@ public final class TLIndexerFactory extends EmbeddingIndexerFactory {
         }
         
         private static List<Integer> getLineStartOffsets(Source source) {
-            List<Integer> lineStartOffsets = new ArrayList<Integer>();
+            List<Integer> lineStartOffsets = new ArrayList<>();
 
             lineStartOffsets.add(0);
 

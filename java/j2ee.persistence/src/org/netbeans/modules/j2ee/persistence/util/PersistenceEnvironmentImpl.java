@@ -93,7 +93,7 @@ public class PersistenceEnvironmentImpl implements PersistenceEnvironment{
      */
     @Override
     public List<URL> getProjectClassPath(FileObject projectFile) {
-        List<URL> projectClassPathEntries = new ArrayList<URL>();
+        List<URL> projectClassPathEntries = new ArrayList<>();
         SourceGroup[] sgs = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if (sgs.length < 1) {
             return projectClassPathEntries;
@@ -122,7 +122,7 @@ public class PersistenceEnvironmentImpl implements PersistenceEnvironment{
      */
     @Override
     public List<URL> getProjectClassPath() {
-        List<URL> projectClassPathEntries = new ArrayList<URL>();
+        List<URL> projectClassPathEntries = new ArrayList<>();
         for (SourceGroup sourceGroup : getSourceGroups(project)) {
             if (sourceGroup == null) {
                 continue;

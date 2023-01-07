@@ -87,7 +87,7 @@ public final class JsTestDriver {
 //        if (extjar == null) {
 //            throw new RuntimeException("libs.jstestdriver-ext.jar not found");
 //        }
-//        List<URL> urls = new ArrayList<URL>();
+//        List<URL> urls = new ArrayList<>();
 //        try {
 //            urls.add(extjar.toURI().toURL());
 //            urls.add(jsTestDriverJar.toURI().toURL());

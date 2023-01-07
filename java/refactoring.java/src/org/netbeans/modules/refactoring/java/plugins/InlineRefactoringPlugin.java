@@ -112,7 +112,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
 
     private Set<FileObject> getRelevantFiles() {
         ClasspathInfo cpInfo = getClasspathInfo(refactoring);
-        final Set<FileObject> set = new HashSet<FileObject>();
+        final Set<FileObject> set = new HashSet<>();
         JavaSource source = JavaSource.create(cpInfo, treePathHandle.getFileObject());
 
         try {

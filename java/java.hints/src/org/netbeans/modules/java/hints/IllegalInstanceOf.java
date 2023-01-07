@@ -113,7 +113,7 @@ public class IllegalInstanceOf extends AbstractHint {
         return null;
     }
     
-    private static Map<String, String> packagesToCheck = new HashMap<String, String>();
+    private static Map<String, String> packagesToCheck = new HashMap<>();
     
     static {
         packagesToCheck.put("javax.lang.model.element", "javax.lang.model.element.Element"); //NOI18N

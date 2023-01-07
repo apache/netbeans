@@ -898,7 +898,7 @@ public class ClientSideProject implements Project {
 
     private static final class ProjectSearchInfo extends SearchInfoDefinition {
 
-        private static final Set<String> WATCHED_PROPERTIES = new HashSet<String>(Arrays.asList(
+        private static final Set<String> WATCHED_PROPERTIES = new HashSet<>(Arrays.asList(
                 ClientSideProjectConstants.PROJECT_SITE_ROOT_FOLDER,
                 ClientSideProjectConstants.PROJECT_TEST_FOLDER));
 

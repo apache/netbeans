@@ -56,7 +56,7 @@ public class Lines {
     }
     
     private void initLines() {
-        List<Integer> ls = new ArrayList<Integer>();
+        List<Integer> ls = new ArrayList<>();
         int lineStart = 0;
         for(int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);

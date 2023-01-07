@@ -280,7 +280,7 @@ public class SearchForJavaAction extends WizardAction {
     }
 
     private void fetchLocationsFromFilesystem(final List<File> locations) {
-        final List<String> candidateLocations = new ArrayList<String>();
+        final List<String> candidateLocations = new ArrayList<>();
         
         for(String location : JAVA_FILESYSTEM_LOCATIONS_COMMON) {
             candidateLocations.add(location);

@@ -135,7 +135,7 @@ public class AndroidPlatform implements MobilePlatform {
         return Target.parse(avdString);
     }
     
-    private final HashSet<String> targets = new HashSet<String>(Arrays.asList(new String[]{
+    private final HashSet<String> targets = new HashSet<>(Arrays.asList(new String[]{
             "android-14", //NOI18N
             "android-15", //NOI18N
             "android-16", //NOI18N

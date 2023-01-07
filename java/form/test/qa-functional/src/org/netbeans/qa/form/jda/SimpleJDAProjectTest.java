@@ -110,7 +110,7 @@ public class SimpleJDAProjectTest extends ExtJellyTestCase {
         
         String basePackagePath = "Source Packages|" + getTestPackageName(); // NOI18N
 
-        ArrayList<String> nodePaths = new ArrayList<String>();
+        ArrayList<String> nodePaths = new ArrayList<>();
 
         nodePaths.add(""); // NOI18N
         nodePaths.add("|" + getTestProjectName() + "AboutBox.java"); // NOI18N

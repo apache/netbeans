@@ -56,7 +56,7 @@ public class CachingAndExternalPathsTest extends NbTestCase {
     private static final Logger LOG = Logger.getLogger(CachingAndExternalPathsTest.class.getName());
 
     private static void initCheckReadAccess() throws IOException {
-        Set<String> allowedFiles = new HashSet<String>();
+        Set<String> allowedFiles = new HashSet<>();
         CountingSecurityManager.initialize(null, CountingSecurityManager.Mode.CHECK_READ, allowedFiles);
     }
     

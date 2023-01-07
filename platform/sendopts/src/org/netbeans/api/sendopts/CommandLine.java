@@ -156,7 +156,7 @@ public final class CommandLine {
         Env env = OptionImpl.Trampoline.DEFAULT.create(this, is, os, err, currentDir);
         
         
-        ArrayList<String> additionalParams = new ArrayList<String>();
+        ArrayList<String> additionalParams = new ArrayList<>();
         ArrayList<OptionImpl> opts = new ArrayList<OptionImpl>();
         OptionImpl acceptsAdons = null;
         

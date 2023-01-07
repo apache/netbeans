@@ -62,9 +62,9 @@ public class UpdateTest extends NbTestCase {
         List<UpdateElement> installedPlugins = null;
         List<UpdateElement> newPlugins = null;
         List<UpdateElement> updatePlugins = null;
-        installedPlugins = new ArrayList<UpdateElement>();
-        newPlugins = new ArrayList<UpdateElement>();
-        updatePlugins = new ArrayList<UpdateElement>();
+        installedPlugins = new ArrayList<>();
+        newPlugins = new ArrayList<>();
+        updatePlugins = new ArrayList<>();
 
 
         boolean[] includePluginFiltersUsed = null;
@@ -133,11 +133,11 @@ public class UpdateTest extends NbTestCase {
 
     public static CountsStruct getPluginCounts(String[] excludePluginFilters, String[] includePluginFilters) {
         currentlyPendingUpdates = null;
-        currentlyPendingUpdates = new ArrayList<UpdateElement>();
+        currentlyPendingUpdates = new ArrayList<>();
         currentlyInstalledPlugins = null;
-        currentlyInstalledPlugins = new ArrayList<UpdateElement>();
+        currentlyInstalledPlugins = new ArrayList<>();
         currentlyUpdatePlugins = null;
-        currentlyUpdatePlugins = new ArrayList<UpdateElement>();
+        currentlyUpdatePlugins = new ArrayList<>();
 
         //new, installed, updates, filtered, pending
         CountsStruct countsStruct = new CountsStruct();
@@ -316,7 +316,7 @@ public class UpdateTest extends NbTestCase {
         OperationUtils.saveUCList(OperationUtils.UC_LIST_FILE_NAME, true);
 
         filteredPlugins = null;
-        filteredPlugins = new ArrayList<UpdateElement>();
+        filteredPlugins = new ArrayList<>();
 
 
         allAvailableUnits = UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.KIT_MODULE);

@@ -130,13 +130,13 @@ final class BinaryFS extends FileSystem implements DataInput {
         LayerCacheManager.err.log(Level.FINER, "Stored Len OK: {0}", storedLen);
 
         int strLen = buff.getInt();
-        this.texts = new HashMap<Integer, String>();
+        this.texts = new HashMap<>();
         this.strings = buff.slice().asReadOnlyBuffer();
         buff.position(buff.position() + strLen);
 
         // fill the modifications array
         int stop = buff.getInt() + 8 + MAGIC.length + strLen + 4;
-        urls = new ArrayList<String>();
+        urls = new ArrayList<>();
         List<Long> _modifications = new ArrayList<Long>();
         while (buff.position() < stop) {
             urls.add(toAbsoluteURL(getString(buff)));
@@ -577,7 +577,7 @@ final class BinaryFS extends FileSystem implements DataInput {
 
         private Object getLayersAttr() {
             // NOI18N
-            List<URL> ret = new ArrayList<URL>();
+            List<URL> ret = new ArrayList<>();
             if (isRoot()) {
                 // all layers
                 for (String u : urls) {
@@ -682,7 +682,7 @@ final class BinaryFS extends FileSystem implements DataInput {
             }
             return null; // problem getting the value...
         }
-        private static final Set<String> notified = Collections.synchronizedSet(new HashSet<String>());
+        private static final Set<String> notified = Collections.synchronizedSet(new HashSet<>());
 
         public Class<?> getType( BFSBase foProvider) {
             try {

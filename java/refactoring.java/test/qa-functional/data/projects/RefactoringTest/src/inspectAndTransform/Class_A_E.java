@@ -6,7 +6,7 @@ import java.util.List;
 public class Class_A_E {
 
     protected void finalize() throws Throwable {
-        List<Integer> ls = new ArrayList<Integer>();
+        List<Integer> ls = new ArrayList<>();
         super.finalize(); //To change body of generated methods, choose Tools | Templates.
     }
 

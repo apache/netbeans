@@ -579,7 +579,7 @@ public class MultiDataObject extends DataObject {
     * secondary entries and then deletes the getPrimaryEntry() entry.
     */
     protected void handleDelete() throws IOException {
-        List<FileObject> toRemove = new ArrayList<FileObject>();
+        List<FileObject> toRemove = new ArrayList<>();
         Iterator<Map.Entry<FileObject,Entry>> it;
         synchronized ( synchObjectSecondary() ) {
             removeAllInvalid ();
@@ -613,7 +613,7 @@ public class MultiDataObject extends DataObject {
 
         Map<FileObject,Entry> add = null;
 
-        List<FileObject> toRemove = new ArrayList<FileObject>();
+        List<FileObject> toRemove = new ArrayList<>();
         
         Iterator<Map.Entry<FileObject,Entry>> it;
         synchronized ( synchObjectSecondary() ) {
@@ -680,7 +680,7 @@ public class MultiDataObject extends DataObject {
      */
     private Map<String, Object> getTemplateAttrs() {
         if (isTemplate()) {
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             FileObject fo = getPrimaryFile();
             Enumeration<String> attributes = fo.getAttributes();
             while (attributes.hasMoreElements()) {
@@ -744,7 +744,7 @@ public class MultiDataObject extends DataObject {
         try {
             HashMap<FileObject,Entry> add = null;
 
-            ArrayList<FileObject> toRemove = new ArrayList<FileObject>();
+            ArrayList<FileObject> toRemove = new ArrayList<>();
             Iterator<Map.Entry<FileObject,Entry>> it;
             int count;
             synchronized ( synchObjectSecondary() ) {

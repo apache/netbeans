@@ -145,11 +145,11 @@ public class EjbJarActionProvider extends BaseActionProvider {
         commands.put(COMMAND_PROFILE_SINGLE, new String[]{"profile-single"}); // NOI18N
         commands.put(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}); // NOI18N
         commands.put(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}); // NOI18N
-        this.bkgScanSensitiveActions = new HashSet<String>(Arrays.asList(
+        this.bkgScanSensitiveActions = new HashSet<>(Arrays.asList(
             COMMAND_RUN_SINGLE
         ));
 
-        this.needJavaModelActions = new HashSet<String>(Arrays.asList(
+        this.needJavaModelActions = new HashSet<>(Arrays.asList(
             JavaProjectConstants.COMMAND_DEBUG_FIX
         ));
         setServerExecution(true);

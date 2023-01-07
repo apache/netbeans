@@ -157,7 +157,7 @@ public class IgnoresTest extends AbstractHgTestCase {
 
         getCache().refreshAllRoots(Collections.singleton(workDir));
 
-        Set<File> ignoredFiles = new HashSet<File>();
+        Set<File> ignoredFiles = new HashSet<>();
         File[] parentFiles = new File[] { workDir };
         // ignoredFiles is empty
         assertIgnoreStatus(parentFiles, ignoredFiles);
@@ -235,7 +235,7 @@ public class IgnoresTest extends AbstractHgTestCase {
         write(ignoreFile, "^ignored$\n^ignored2$\n");
         
         getCache().refreshAllRoots(Collections.singleton(workDir));
-        assertIgnoreStatus(file, new HashSet<File>(Arrays.asList(file, file2)));
+        assertIgnoreStatus(file, new HashSet<>(Arrays.asList(file, file2)));
         
         Thread.sleep(1100);
         ignoreFile.delete();
@@ -303,7 +303,7 @@ public class IgnoresTest extends AbstractHgTestCase {
     }
 
     private Set<File> getFiles (File file) {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         files.add(file);
         File[] children = file.listFiles();
         if (children != null) {

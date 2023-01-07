@@ -242,7 +242,7 @@ public abstract class XsdBasedValidator implements Validator {
         
         
         private void setupLinePositions() {
-            linePositions = new ArrayList<Integer>();
+            linePositions = new ArrayList<>();
             Document document = ((AbstractDocumentModel) model).getBaseDocument();
             if (document == null) {
                 return;

@@ -217,10 +217,10 @@ public final class LibrariesNode extends AbstractNode {
         private final UpdateHelper helper;
         private final ReferenceHelper refHelper;
         private final ClassPathSupport cs;
-        private final Set<String> classPathIgnoreRef = new HashSet<String>();
+        private final Set<String> classPathIgnoreRef = new HashSet<>();
         private final Set<String> modulePathIgnoreRef = new HashSet<>();
         private final List<Action> librariesNodeActions = new ArrayList<Action>();
-        private final List<String> classPathProperties = new ArrayList<String>();
+        private final List<String> classPathProperties = new ArrayList<>();
         private String name = NbBundle.getMessage(LibrariesNode.class, "TXT_LibrariesNode");
         private Pair<Pair<String,String>,ClassPath> boot = Pair.<Pair<String,String>,ClassPath>of(Pair.<String,String>of(null,null),null);
         private Pair<Set<String>,ClassPath> modulePath;
@@ -662,7 +662,7 @@ public final class LibrariesNode extends AbstractNode {
             this.helper = helper;
             this.refHelper = refHelper;
             this.classPathProperties = new LinkedHashSet<>(classPathProperties);
-            this.classPathIgnoreRef = new HashSet<String>(classPathIgnoreRef);
+            this.classPathIgnoreRef = new HashSet<>(classPathIgnoreRef);
             this.boot = boot;
             this.modulePath = modulePath != null ?
                     modulePath :
@@ -1957,7 +1957,7 @@ public final class LibrariesNode extends AbstractNode {
 
         public SimpleFileFilter (String description) {
             this.description = description;
-            this.extensions = new HashSet<String>();
+            this.extensions = new HashSet<>();
             this.extensions.addAll(FileUtil.getMIMETypeExtensions("application/x-java-archive"));    //NOI18N
         }
 
@@ -2038,7 +2038,7 @@ public final class LibrariesNode extends AbstractNode {
         private final AtomicInteger state = new AtomicInteger();
 
         RootsListener(List<? extends URL> roots) {
-            listensOn = new HashSet<File>();
+            listensOn = new HashSet<>();
             for (URL root : roots) {
                 try {
                     final URL archiveURL = FileUtil.getArchiveFile(root);

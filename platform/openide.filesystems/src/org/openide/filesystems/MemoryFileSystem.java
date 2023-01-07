@@ -183,7 +183,7 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
             f = f + "/";
         }
 
-        Set<String> l = new HashSet<String>();
+        Set<String> l = new HashSet<>();
 
         //System.out.println("Folder: " + f);
         synchronized(entries) {

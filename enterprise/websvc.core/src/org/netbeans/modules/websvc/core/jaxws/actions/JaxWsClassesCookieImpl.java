@@ -95,7 +95,7 @@ public class JaxWsClassesCookieImpl implements JaxWsClassesCookie {
                     
                     // add @WebParam annotations 
                     List<? extends VariableTree> parameters = method.getParameters();
-                    List<VariableTree> newParameters = new ArrayList<VariableTree>();
+                    List<VariableTree> newParameters = new ArrayList<>();
                     for (VariableTree param:parameters) {
                         AnnotationTree paramAnnotation = make.Annotation(
                             make.QualIdent("javax.jws.WebParam"),           //NOI18N

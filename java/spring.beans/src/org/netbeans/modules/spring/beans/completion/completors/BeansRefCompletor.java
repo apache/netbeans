@@ -68,7 +68,7 @@ public class BeansRefCompletor extends Completor {
         final String contextPrefix = getContextPrefix(context);
         final Set<String> forbiddenNames = getForbiddenNames(context);
 
-        final List<String> cNames = new ArrayList<String>();
+        final List<String> cNames = new ArrayList<>();
         String tagName = context.getTag().getNodeName();
         // get current bean parameters
         if (tagName.equals(BeansElements.BEAN) && SpringXMLConfigEditorUtils.hasAttribute(context.getTag(), BeansAttributes.ID)) {

@@ -69,7 +69,7 @@ public class FieldNamesCalculatorTest extends TestCase {
     }
 
     public void testCalculationWithCollision() {
-        Set<String> forbidden = new HashSet<String>(Arrays.<String>asList("bad", "bad1", "value"));
+        Set<String> forbidden = new HashSet<>(Arrays.<String>asList("bad", "bad1", "value"));
         FieldNamesCalculator instance = new FieldNamesCalculator("BadValue", forbidden);
         List<String> result = instance.calculate();
         assertFieldCalculations(new String[]{"bad2", "badValue", "value1"}, result);

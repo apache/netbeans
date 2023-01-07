@@ -85,7 +85,7 @@ public class JspParserImpl implements JspParserAPI {
     private static void initURLs() throws MalformedURLException, IOException {
         if (urls == null) {
             File[] files = new File[JAR_FILE_NAMES.length];
-            List<String> missing = new ArrayList<String>();
+            List<String> missing = new ArrayList<>();
             for(int i = 0; i < JAR_FILE_NAMES.length; i++) {
                 files[i] = InstalledFileLocator.getDefault().locate(JAR_FILE_NAMES[i], null, false);
                 if(files[i] == null) {

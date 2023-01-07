@@ -179,7 +179,7 @@ public class RepositoryNode extends AsynchronousNode<Collection<QueryImpl>> impl
         synchronized (LOCK) {
             queryNodes = new ArrayList<QueryNode>();
             filteredQueryNodes = new ArrayList<QueryNode>();
-            Set<String> keys = new HashSet<String>(queryNodesMap.keySet());
+            Set<String> keys = new HashSet<>(queryNodesMap.keySet());
             for (QueryImpl query : queries) {
                 QueryNode queryNode = queryNodesMap.get(query.getDisplayName());
                 keys.remove(query.getDisplayName());

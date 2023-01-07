@@ -296,7 +296,7 @@ public class FileStatusCache {
     public File [] listFiles(File[] roots, int includeStatus) { 
         long ts = System.currentTimeMillis();
         try {
-            Set<File> set = new HashSet<File>();
+            Set<File> set = new HashSet<>();
 
             // get all files with given status underneath the roots files;
             // do it recusively if root isn't a flat folder
@@ -333,7 +333,7 @@ public class FileStatusCache {
     public File [] listFiles(Context context, int includeStatus) {
         long ts = System.currentTimeMillis();
         try {
-            Set<File> set = new HashSet<File>();
+            Set<File> set = new HashSet<>();
             File [] roots = context.getRootFiles();
 
             // list all files applying to the status with
@@ -363,7 +363,7 @@ public class FileStatusCache {
         if(roots == null || roots.length == 0) {
             return Collections.emptySet();
         }
-        Set<File> ret = new HashSet<File>();
+        Set<File> ret = new HashSet<>();
         for (File root : roots) {
             if(recursively) {
                 ret.addAll(listFilesIntern(cacheProvider.getIndexValues(root, includeStatus), includeStatus, recursively));
@@ -590,7 +590,7 @@ public class FileStatusCache {
 
                 dir = FileUtil.normalizeFile(dir);
                 file = new File(dir, file.getName());
-                Map<File, FileInformation> newFiles = new HashMap<File, FileInformation>(files);
+                Map<File, FileInformation> newFiles = new HashMap<>(files);
                 if (fi.getStatus() == FileInformation.STATUS_UNKNOWN) {
                     newFiles.remove(file);
                     turbo.writeEntry(file, FILE_STATUS_MAP, null);  // remove mapping in case of directories
@@ -660,7 +660,7 @@ public class FileStatusCache {
                         FileInformation info = createFileInformation(file, new FakeRevisionStatus(entry, revision), REPOSITORY_STATUS_UNKNOWN);
                         File dir = file.getParentFile();
                         Map<File, FileInformation> files = getScannedFiles(dir);
-                        Map<File, FileInformation> newFiles = new HashMap<File, FileInformation>(files);
+                        Map<File, FileInformation> newFiles = new HashMap<>(files);
                         newFiles.put(file, info);
                         turbo.writeEntry(dir, FILE_STATUS_MAP, newFiles.isEmpty() ? null : newFiles);
                     }
@@ -852,7 +852,7 @@ public class FileStatusCache {
     private Map<File, FileInformation> scanFolder(File dir) {
         File [] files = dir.listFiles();
         if (files == null) files = new File[0];
-        Map<File, FileInformation> folderFiles = new HashMap<File, FileInformation>(files.length);
+        Map<File, FileInformation> folderFiles = new HashMap<>(files.length);
 
         ISVNStatus [] entries = null;
         try {
@@ -881,7 +881,7 @@ public class FileStatusCache {
                 }
             }
         } else {
-            Set<File> localFiles = new HashSet<File>(Arrays.asList(files));
+            Set<File> localFiles = new HashSet<>(Arrays.asList(files));
             for (int i = 0; i < entries.length; i++) {
                 ISVNStatus entry = entries[i];
                 File file = new File(entry.getPath());
@@ -1329,7 +1329,7 @@ public class FileStatusCache {
         private final LinkedHashMap<File, FileLabelInfo> fileLabels;
         private static final long VALID_LABEL_PERIOD = 20000; // 20 seconds
         private static final FileLabelInfo FAKE_LABEL_INFO = new FileLabelInfo("", "", "", "", "", ""); //NOI18N
-        private final Set<File> filesForLabelRefresh = new HashSet<File>();
+        private final Set<File> filesForLabelRefresh = new HashSet<>();
         private final RequestProcessor.Task labelInfoRefreshTask;
         private boolean mimeTypeFlag;
         private final FileStatusCache master;
@@ -1426,7 +1426,7 @@ public class FileStatusCache {
                 Set<File> filesToRefresh;
                 synchronized (filesForLabelRefresh) {
                     // pick up files for refresh
-                    filesToRefresh = new HashSet<File>(filesForLabelRefresh);
+                    filesToRefresh = new HashSet<>(filesForLabelRefresh);
                     filesForLabelRefresh.clear();
                 }
                 if (!filesToRefresh.isEmpty()) {

@@ -131,7 +131,7 @@ public class ImportBlueprintEarWizardIterator implements WizardDescriptor.Progre
         
         // remember last used server
         UserProjectSettings.getDefault().setLastUsedServer(serverInstanceID);
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
         resultSet.add(dir);
         
         NewEarProjectWizardIterator.setProjectChooserFolder(dirF);

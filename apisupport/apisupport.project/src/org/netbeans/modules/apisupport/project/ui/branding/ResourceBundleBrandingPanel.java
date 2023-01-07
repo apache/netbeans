@@ -202,7 +202,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
     private void prepareTree() {
         List<BundleNode> resourcebundlenodes = new LinkedList<BundleNode>();
 
-        Set<File> jars = new HashSet<File>();
+        Set<File> jars = new HashSet<>();
         PlatformJarProvider pjp = prj.getLookup().lookup(PlatformJarProvider.class);
         if (pjp != null) {
             try {

@@ -46,7 +46,7 @@ import org.openide.filesystems.FileUtil;
 public class TestAnnotationProvider extends BaseAnnotationProvider {
 
     static TestAnnotationProvider instance = null;
-    List<String> events = new ArrayList<String>();
+    List<String> events = new ArrayList<>();
     FilesystemInterceptor interceptor = new FilesystemInterceptor();
     
     public TestAnnotationProvider() {

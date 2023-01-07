@@ -75,7 +75,7 @@ class StandardModule extends Module {
      * Used only for debugging purposes, so that we can be sure
      * that no one is using Class-Path to refer to other modules.
      */
-    private static final Set<File> moduleJARs = new HashSet<File>();
+    private static final Set<File> moduleJARs = new HashSet<>();
 
     /** Patches added at the front of the classloader (or null).
      * Files are assumed to be JARs; directories are themselves.
@@ -284,7 +284,7 @@ class StandardModule extends Module {
                 if (jars != null) {
                     for (File patchJar : jars) {
                         if (patches == null) {
-                            patches = new HashSet<File>(5);
+                            patches = new HashSet<>(5);
                         }
                         patches.add(patchJar);
                     }
@@ -304,7 +304,7 @@ class StandardModule extends Module {
                     File fileElement = new File(element);
                     if (fileElement.exists()) {
                         if (patches == null) {
-                            patches = new HashSet<File>(15);
+                            patches = new HashSet<>(15);
                         }
                         patches.add(fileElement);
                     }
@@ -418,7 +418,7 @@ class StandardModule extends Module {
      */
     @Override
     public List<File> getAllJars() {
-        List<File> l = new ArrayList<File>();
+        List<File> l = new ArrayList<>();
         Set<File> ptchs = findPatches();
         if (ptchs != null) l.addAll(ptchs);
         if (physicalJar != null) {

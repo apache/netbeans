@@ -56,7 +56,7 @@ class OpenedEditors implements PropertyChangeListener {
 
     private Set<JTextComponent> visibleEditors = new WeakSet<JTextComponent>();
     private Map<JTextComponent, DataObject> visibleEditors2Files = new WeakHashMap<JTextComponent, DataObject>();
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private List<ChangeListener> listeners = new ArrayList<>();
 
     private static OpenedEditors DEFAULT;
 

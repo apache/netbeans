@@ -58,7 +58,7 @@ public class SourceNodeFactory implements NodeFactory {
 
         // Contains a set of String for which tree view node will be created
         // Every node not contained in this bag will use package view node
-        private static final Set<String> treeViewBag = new HashSet<String>();
+        private static final Set<String> treeViewBag = new HashSet<>();
         static {
             treeViewBag.add("conf"); // NOI18N
             treeViewBag.add("i18n"); // NOI18N

@@ -474,7 +474,7 @@ class PolicyManager {
         }
         
         private boolean hasPolicy;
-        private Set<String> policies = new HashSet<String>();
+        private Set<String> policies = new HashSet<>();
         private Collection<DefaultHandler> delegates;
     }
     

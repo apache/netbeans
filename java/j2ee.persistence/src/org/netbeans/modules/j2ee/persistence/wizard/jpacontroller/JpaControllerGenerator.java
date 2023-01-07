@@ -287,8 +287,8 @@ public class JpaControllerGenerator {
                     
                     CompilationUnitTree modifiedImportCut = null;
                     
-                    List<String> parameterTypes = new ArrayList<String>();
-                    List<String> parameterNames = new ArrayList<String>();
+                    List<String> parameterTypes = new ArrayList<>();
+                    List<String> parameterNames = new ArrayList<>();
                     String body = "";   //NOI18N
                     boolean isUserTransaction = workingCopy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE).findResource("javax/transaction/UserTransaction.class")!=null;  //NOI18N
                     if (isUserTransaction && isInjection) {
@@ -436,7 +436,7 @@ public class JpaControllerGenerator {
                                 illegalOrphansInCreate.append(simpleEntityName + " " + relrelInstanceName + " = " + scalarRelFieldName + "OrphanCheck." + relrelGetterName + "();\n");
                                 illegalOrphansInCreate.append("if (" + relrelInstanceName + " != null) {\n" + 
                                         "if (illegalOrphanMessages == null) {\n" +
-                                        "illegalOrphanMessages = new ArrayList<String>();\n" +
+                                        "illegalOrphanMessages = new ArrayList<>();\n" +
                                         "}\n" +
                                         "illegalOrphanMessages.add(\"The " + relTypeReference + " \" + " + scalarRelFieldName + "OrphanCheck + \" already has an item of type " + simpleEntityName + " whose " + scalarRelFieldName + " column cannot be null. Please make another selection for the " + scalarRelFieldName + " field.\");\n" +
                                         "}\n");
@@ -495,7 +495,7 @@ public class JpaControllerGenerator {
                                             "for(" + relTypeReference + " " + oldScalarRelFieldName + " : " + relFieldOld + ") {\n" +
                                             "if (!" + relFieldNew + ".contains(" + oldScalarRelFieldName + ")) {\n" +
                                             "if (illegalOrphanMessages == null) {\n" +
-                                            "illegalOrphanMessages = new ArrayList<String>();\n" +
+                                            "illegalOrphanMessages = new ArrayList<>();\n" +
                                             "}\n" +
                                             "illegalOrphanMessages.add(\"You must retain " + relTypeReference + " \" + " + oldScalarRelFieldName + " + \" since its " + otherFieldName + " field is not nullable.\");\n" +
                                             "}\n" +
@@ -542,7 +542,7 @@ public class JpaControllerGenerator {
                                     illegalOrphansInEdit.append(
                                         "if(" + scalarRelFieldName + "Old != null && !" + scalarRelFieldName + "Old.equals(" + scalarRelFieldName + "New)) {\n" +
                                         "if (illegalOrphanMessages == null) {\n" +
-                                        "illegalOrphanMessages = new ArrayList<String>();\n" +
+                                        "illegalOrphanMessages = new ArrayList<>();\n" +
                                         "}\n" +
                                         "illegalOrphanMessages.add(\"You must retain " + relTypeReference + " \" + " + scalarRelFieldName + "Old + \" since its " + otherFieldName + " field is not nullable.\");\n" +
                                         "}\n");
@@ -565,7 +565,7 @@ public class JpaControllerGenerator {
                                     illegalOrphansInEdit.append(simpleEntityName + " " + relrelInstanceName + " = " + scalarRelFieldName + "New." + relrelGetterName + "();\n" + 
                                                 "if (" + relrelInstanceName + " != null) {\n" + 
                                                 "if (illegalOrphanMessages == null) {\n" +
-                                                "illegalOrphanMessages = new ArrayList<String>();\n" +
+                                                "illegalOrphanMessages = new ArrayList<>();\n" +
                                                 "}\n" +
                                                 "illegalOrphanMessages.add(\"The " + relTypeReference + " \" + " + scalarRelFieldName + "New + \" already has an item of type " + simpleEntityName + " whose " + scalarRelFieldName + " column cannot be null. Please make another selection for the " + scalarRelFieldName + " field.\");\n" +
                                                 "}\n");
@@ -598,7 +598,7 @@ public class JpaControllerGenerator {
                                         (isCollection ? simpleCollectionTypeName + "<" + relTypeReference + "> " + orphanCheckCollection : relTypeReference + " " + orphanCheckScalar) + " = " + fieldName + "." + mName +"();\n" +
                                         (isCollection ? "for(" + relTypeReference + " " + orphanCheckScalar + " : " + orphanCheckCollection : "if (" + orphanCheckScalar + " != null") + ") {\n" +
                                         "if (illegalOrphanMessages == null) {\n" +
-                                        "illegalOrphanMessages = new ArrayList<String>();\n" +
+                                        "illegalOrphanMessages = new ArrayList<>();\n" +
                                         "}\n" +
                                         "illegalOrphanMessages.add(\"This " + simpleEntityName + " (\" + " +  fieldName + " + \") cannot be destroyed since the " + relTypeReference + " \" + " + orphanCheckScalar + " + \" in its " + relFieldName + " field has a non-nullable " + otherFieldName + " field.\");\n" +
                                         "}\n");
@@ -676,7 +676,7 @@ public class JpaControllerGenerator {
                             (isInjection || !isGenerated ? "throw ex;\n" : "") +
                             "} finally {\n if (em != null) {\nem.close();\n}\n}";
                     
-                    List<String> methodExceptionTypeList = new ArrayList<String>();
+                    List<String> methodExceptionTypeList = new ArrayList<>();
                     if (illegalOrphansInCreate.length() > 0) {
                         methodExceptionTypeList.add(exceptionPackage + ".IllegalOrphanException");
                     }

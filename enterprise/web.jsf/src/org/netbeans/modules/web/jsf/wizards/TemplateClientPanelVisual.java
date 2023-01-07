@@ -232,7 +232,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
     }//GEN-LAST:event_jbBrowseActionPerformed
 
     private FileObject[] getFaceletTemplateRoots() {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         // web project document roots
         roots.addAll(getSourceRoots());
         // web project contracts roots
@@ -259,7 +259,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
      * Gets templates from the document roots of the project.
      */
     private List<FileObject> getSourceRoots() {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         for (SourceGroup sourceGroup : getProjectDocumentSourceGroups()) {
             roots.add(sourceGroup.getRootFolder());
         }
@@ -270,7 +270,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
      * Gets templates from contracts folders of the external .JARs.
      */
     private List<FileObject> getLibContractsRoots() {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         if (getProjectDocumentSourceGroups().length > 0) {
             ClassPathProvider cpp = Templates.getProject(wizardDescriptor).getLookup().lookup(ClassPathProvider.class);
             for (SourceGroup sourceGroup : getProjectDocumentSourceGroups()) {
@@ -294,7 +294,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
      * Gets templates from contracts folders of the document roots.
      */
     private List<FileObject> getProjectContractsRoots() {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         for (SourceGroup sourceGroup : getProjectDocumentSourceGroups()) {
             FileObject contractsRoot = sourceGroup.getRootFolder().getFileObject(JsfConstants.CONTRACTS_FOLDER);
             if (contractsRoot != null && contractsRoot.isValid() && contractsRoot.isFolder()) {

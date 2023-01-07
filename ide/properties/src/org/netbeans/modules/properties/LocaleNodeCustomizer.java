@@ -127,7 +127,7 @@ public class LocaleNodeCustomizer extends JPanel {
     /** Retrievs keys in entry. Utility method.
      * @param entry entry which keys to get */
     private static String[] retrieveKeys(PropertiesFileEntry entry) {
-        List<String> keysList = new ArrayList<String>();
+        List<String> keysList = new ArrayList<>();
         
         if(entry == null) {
             return new String[0];

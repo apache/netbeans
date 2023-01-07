@@ -49,7 +49,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public final class OverrideWeakerAccess implements ErrorRule<Void> {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> ERROR_CODES = new HashSet<>(Arrays.asList(
             "compiler.err.override.weaker.access")); // NOI18N
     
     public Set<String> getCodes() {

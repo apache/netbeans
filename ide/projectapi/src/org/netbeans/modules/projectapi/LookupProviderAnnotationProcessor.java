@@ -58,7 +58,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class LookupProviderAnnotationProcessor extends LayerGeneratingProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             LookupProvider.Registration.class.getCanonicalName(),
             ProjectServiceProvider.class.getCanonicalName(),
             LookupMerger.Registration.class.getCanonicalName()

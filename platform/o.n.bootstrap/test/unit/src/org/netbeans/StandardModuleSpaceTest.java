@@ -61,7 +61,7 @@ public class StandardModuleSpaceTest extends NbTestCase {
         System.setProperty("netbeans.user", userdir.getPath());
         
         File tmp = new File(new File(new File(ide, "modules"), "ext"), "Sp a ce.jar");
-        Map<String,String> cnt = new HashMap<String, String>();
+        Map<String,String> cnt = new HashMap<>();
         cnt.put("say/hello.txt", "Ahoj");
         SetupHid.createJar(tmp, cnt, Collections.<String,String>emptyMap());
         
@@ -87,12 +87,12 @@ public class StandardModuleSpaceTest extends NbTestCase {
         
         File tmp = new File(new File(cluster, "modules"), dashes + ".jar");
 
-        Map<String,String> attribs = new HashMap<String, String>();
+        Map<String,String> attribs = new HashMap<>();
         for (int i = 0; i < attr.length; i += 2) {
             attribs.put(attr[i], attr[i + 1]);
         }
 
-        Map<String,String> files = new HashMap<String, String>();
+        Map<String,String> files = new HashMap<>();
         files.put("fake/" + cnb, cnb);
 
         tmp.getParentFile().mkdirs();

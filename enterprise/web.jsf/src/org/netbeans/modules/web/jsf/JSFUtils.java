@@ -161,7 +161,7 @@ public class JSFUtils {
             return false;
         }
 
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         if (resource.isDirectory()) {
             // JSF version 2.1.2-
             // find all jars in the folder/lib
@@ -300,7 +300,7 @@ public class JSFUtils {
                 return false;
             }
             List<File> platformClasspath = Arrays.asList(ClasspathUtil.getJ2eePlatformClasspathEntries(project, ProjectUtil.getPlatform(project)));
-            List<URL> projectDeps = new ArrayList<URL>();
+            List<URL> projectDeps = new ArrayList<>();
             for (ClassPath.Entry entry : compileCP.entries()) {
                 File archiveOrDir = FileUtil.archiveOrDirForURL(entry.getURL());
                 if (archiveOrDir == null || !platformClasspath.contains(archiveOrDir)) {

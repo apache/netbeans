@@ -95,7 +95,7 @@ public abstract class TargetAnalyzer extends RuntimeRetentionAnalyzer
             AnnotationHelper helper, AnnotationMirror target)
     {
         AnnotationParser parser = AnnotationParser.create(helper);
-        final Set<String> elementTypes = new HashSet<String>();
+        final Set<String> elementTypes = new HashSet<>();
         parser.expectEnumConstantArray( AnnotationUtil.VALUE, 
                 helper.resolveType(
                 ElementType.class.getCanonicalName()), 

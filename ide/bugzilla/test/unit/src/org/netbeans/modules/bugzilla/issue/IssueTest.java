@@ -436,7 +436,7 @@ public class IssueTest extends NbTestCase implements TestConstants {
 
         // remove a cc
         td = task.getTaskDataState().getRepositoryData();
-        ccs = new ArrayList<String>();
+        ccs = new ArrayList<>();
         ccs.add(REPO_USER4);
         ccs.add(REPO_USER);
         setFieldValues(td, IssueField.REMOVECC, ccs);
@@ -453,7 +453,7 @@ public class IssueTest extends NbTestCase implements TestConstants {
 
         // remove all
         td = task.getTaskDataState().getRepositoryData();
-        ccs = new ArrayList<String>();
+        ccs = new ArrayList<>();
         ccs.add(REPO_USER3);
         ccs.add(REPO_USER2);        
         setFieldValues(td, IssueField.REMOVECC, ccs);

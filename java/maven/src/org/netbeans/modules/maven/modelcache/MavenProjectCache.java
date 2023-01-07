@@ -300,7 +300,7 @@ public final class MavenProjectCache {
 //                                    }
 //                                }
 //                            } else {
-                                List<String> parts = new ArrayList<String>();
+                                List<String> parts = new ArrayList<>();
                                 for (AbstractMavenLifecycleParticipant part : lookup) {
                                     if (isLifecycleParticipatnIgnored(part)) {
                                         //#204898 create a whitelist of known not harmful participants that can be just ignored

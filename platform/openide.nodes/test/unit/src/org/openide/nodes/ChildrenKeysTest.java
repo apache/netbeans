@@ -2500,7 +2500,7 @@ public class ChildrenKeysTest extends NbTestCase {
                 if (props.get(i).getPropertyName().equals(expectedProps[i])) {
                     continue;
                 }
-                List<String> names = new ArrayList<String>();
+                List<String> names = new ArrayList<>();
                 for (PropertyChangeEvent ev : props) {
                     names.add(ev.getPropertyName());
                 }

@@ -37,7 +37,7 @@ public class EditorDocumentContentTest extends NbTestCase {
 
     public EditorDocumentContentTest(String testName) {
         super(testName);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimpleUndo");
 //        includes.add("testSimplePositionSharingMods");
 //        includes.add("testEndPosition");

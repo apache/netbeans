@@ -91,7 +91,7 @@ final class DefaultModel implements Model {
     /** The docking status (slided-out/docked) for TopComponents in the default mode (nothing is maximized)*/
     private DockingStatus defaultDockingStatus = new DefaultDockingStatus( this );
     /** TopComponents that are maximized when slided-in. */
-    private Set<String> slideInMaximizedTopComponents = new HashSet<String>( 3 );
+    private Set<String> slideInMaximizedTopComponents = new HashSet<>( 3 );
     
     /** Modes structure. */
     private ModesSubModel modesSubModel = new ModesSubModel(this);

@@ -103,7 +103,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
     private static final Logger logger = Logger.getLogger(JPQLEditorTopComponent.class.getName());
     private PUDataObject puObject;
     private HashMap<String, PersistenceUnit> puConfigMap = new HashMap<String, PersistenceUnit>();
-    private static List<Integer> windowCounts = new ArrayList<Integer>();
+    private static List<Integer> windowCounts = new ArrayList<>();
     private Integer thisWindowCount = new Integer(0);
     private JPQLEditorController controller = null;
     private ProgressHandle ph = null;
@@ -332,11 +332,11 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     Project project = pXml != null ? FileOwnerQuery.getOwner(pXml) : null;
                     PersistenceEnvironment pe = project != null ? project.getLookup().lookup(PersistenceEnvironment.class) : null;
                     ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-                    final List<URL> localResourcesURLList = new ArrayList<URL>();
-                    final HashMap<String, String> props = new HashMap<String, String>();
+                    final List<URL> localResourcesURLList = new ArrayList<>();
+                    final HashMap<String, String> props = new HashMap<>();
                     final boolean containerManaged = Util.isSupportedJavaEEVersion(pe.getProject());
                     final Provider provider = ProviderUtil.getProvider(selectedConfigObject.getProvider(), pe.getProject());
-                    final List<String> initialProblems = new ArrayList<String>();
+                    final List<String> initialProblems = new ArrayList<>();
                     if (containerManaged && provider!=null) {
                         Utils.substitutePersistenceProperties(pe, selectedConfigObject, dbconn, props);
                     }

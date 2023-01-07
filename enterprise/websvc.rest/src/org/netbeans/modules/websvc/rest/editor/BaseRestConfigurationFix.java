@@ -72,7 +72,7 @@ abstract class BaseRestConfigurationFix implements Fix {
                             RestServicesMetadata metadata )
                             throws Exception
                     {
-                        Set<String> restFqns = new HashSet<String>();
+                        Set<String> restFqns = new HashSet<>();
                         RestServices services = metadata.getRoot();
                         RestServiceDescription[] descriptions = services
                                 .getRestServiceDescription();
@@ -85,7 +85,7 @@ abstract class BaseRestConfigurationFix implements Fix {
 
                 });
         JavaSource javaSource = JavaSource.create(cpInfo);
-        final Set<String> packs = new HashSet<String>();
+        final Set<String> packs = new HashSet<>();
         javaSource.runUserActionTask( new Task<CompilationController>() {
             
             @Override
@@ -115,7 +115,7 @@ abstract class BaseRestConfigurationFix implements Fix {
     }
     
     private Set<String> getPackages(Set<String> fqns , CompilationController controller){
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         Set<TypeElement> restElements = getRestElements(fqns, controller );
         for (TypeElement typeElement : restElements) {
             PackageElement pack = controller.getElements().

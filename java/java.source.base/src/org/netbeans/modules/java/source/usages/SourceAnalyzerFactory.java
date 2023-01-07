@@ -634,7 +634,7 @@ public final class SourceAnalyzerFactory {
                         if (topLevel) {
                             if (virtual || !className.equals(sourceName)) {
                                 if (signatureFiles && rsList == null) {
-                                    rsList = new HashSet<String>();
+                                    rsList = new HashSet<>();
                                     if (crossedTopLevel) {
                                         rsList.add(sourceName);
                                     }

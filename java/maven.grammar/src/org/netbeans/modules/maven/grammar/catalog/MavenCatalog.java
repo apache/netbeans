@@ -74,7 +74,7 @@ public class MavenCatalog implements CatalogReader, CatalogDescriptor2, org.xml.
      */
     @Override
     public Iterator getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(ID_POM_4_0_0);
         list.add(ID_SETTINGS_1_0_0);
         list.add(ID_SETTINGS_1_1_0);

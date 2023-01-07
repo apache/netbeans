@@ -72,7 +72,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         }
         
         // generate .java file for ModuleInstall
-        Map<String, String> basicTokens = new HashMap<String, String>();
+        Map<String, String> basicTokens = new HashMap<>();
         basicTokens.put("PACKAGE_NAME", getPackageName()); // NOI18N
         basicTokens.put("CLASS_NAME", className); // NOI18N
         // XXX use nbresloc URL protocol rather than
@@ -89,7 +89,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         
         
         // add manifest attribute
-        Map<String, String> attribs = new HashMap<String, String>();
+        Map<String, String> attribs = new HashMap<>();
         if (osgi) {
             attribs.put(BUNDLE_ACTIVATOR, getPackageName() + '.' + className);
             attribs.put(IMPORT_PACKAGE, "org.osgi.framework"); // NOI18N

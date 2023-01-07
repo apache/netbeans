@@ -104,7 +104,7 @@ public class FormDesigner {
     private FormEditor formEditor;
 
     // selection
-    private List<RADComponent> selectedComponents = new ArrayList<RADComponent>();
+    private List<RADComponent> selectedComponents = new ArrayList<>();
     private List<RADVisualComponent> selectedLayoutComponents = new ArrayList<RADVisualComponent>();
     private ExplorerManager explorerManager;
     private boolean synchronizingSelection;
@@ -2432,7 +2432,7 @@ public class FormDesigner {
                 RADVisualContainer subcont = (RADVisualContainer) sub;
                 if (subcont.getLayoutSupport() == null) {
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                     }
                     list.add(subcont.getId());
                 } else {

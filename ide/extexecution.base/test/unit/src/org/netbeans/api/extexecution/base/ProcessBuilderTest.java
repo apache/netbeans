@@ -87,7 +87,7 @@ public class ProcessBuilderTest extends NbTestCase {
         builder.call();
         assertTrue(testBuilder.getParameters().getArguments().isEmpty());
 
-        List<String> arguments = new ArrayList<String>();
+        List<String> arguments = new ArrayList<>();
         Collections.addAll(arguments, "test1", "test2");
         builder.setArguments(arguments);
         assertTrue(testBuilder.getParameters().getArguments().isEmpty());
@@ -233,7 +233,7 @@ public class ProcessBuilderTest extends NbTestCase {
 
     private static class TestEnvironment implements EnvironmentImplementation {
 
-        private final Map<String, String> values = new HashMap<String, String>();
+        private final Map<String, String> values = new HashMap<>();
 
         @Override
         public String getVariable(String name) {

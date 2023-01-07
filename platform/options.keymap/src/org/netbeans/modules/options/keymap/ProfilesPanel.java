@@ -481,7 +481,7 @@ public class ProfilesPanel extends javax.swing.JPanel {
 
     private class ProfileListModel extends AbstractListModel {
 
-        private ArrayList<String> delegate = new ArrayList<String>();
+        private ArrayList<String> delegate = new ArrayList<>();
 
         public int getSize() {
             return delegate.size();

@@ -96,7 +96,7 @@ public class GrailsPluginSupport {
             if (GrailsPlatform.Version.VERSION_1_1.compareTo(projectConfig.getGrailsPlatform().getVersion()) <= 0) {
                 List<GrailsPlugin> plugins = loadInstalledPlugins11();
 
-                final Set<String> pluginDirs = new HashSet<String>();
+                final Set<String> pluginDirs = new HashSet<>();
                 for (GrailsPlugin plugin : plugins) {
                     pluginDirs.add(plugin.getDirName());
                 }

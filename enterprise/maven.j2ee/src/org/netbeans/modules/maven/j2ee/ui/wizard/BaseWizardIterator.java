@@ -58,7 +58,7 @@ public abstract class BaseWizardIterator implements WizardDescriptor.BackgroundI
 
 
     public BaseWizardIterator() {
-        listeners = new ArrayList<ChangeListener>();
+        listeners = new ArrayList<>();
     }
 
     protected abstract WizardDescriptor.Panel[] createPanels(ValidationGroup vg);

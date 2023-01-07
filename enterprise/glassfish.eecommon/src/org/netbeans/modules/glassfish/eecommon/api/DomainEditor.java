@@ -238,7 +238,7 @@ public class DomainEditor {
     }
        
     public String[] getHttpProxyOptions(){
-        List<String> httpProxyOptions = new ArrayList<String>();
+        List<String> httpProxyOptions = new ArrayList<>();
         Document domainDoc = getDomainDocument();
         NodeList javaConfigNodeList = domainDoc.getElementsByTagName("java-config");
         if (javaConfigNodeList == null || javaConfigNodeList.getLength() == 0) {
@@ -613,7 +613,7 @@ public class DomainEditor {
             if(cpAttrMap.getNamedItem(CONST_RES_TYPE) != null) {
                 cpAttrMap.getNamedItem(CONST_RES_TYPE).setNodeValue("javax.sql.DataSource"); //N0I18N
             }
-            HashMap<String, String> poolProps = new HashMap<String, String>();
+            HashMap<String, String> poolProps = new HashMap<>();
             poolProps.put(CONST_SERVER_NAME, "localhost"); //N0I18N
             poolProps.put(CONST_PASSWORD, "app"); //N0I18N
             poolProps.put(CONST_USER, "app"); //N0I18N
@@ -671,7 +671,7 @@ public class DomainEditor {
     }
 
     public HashMap<String,String> getAdminObjectResourcesFromXml(){
-        HashMap<String,String> aoResources = new HashMap<String,String>();
+        HashMap<String,String> aoResources = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             NodeList adminObjectNodeList = domainDoc.getElementsByTagName(CONST_AO);

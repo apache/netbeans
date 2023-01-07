@@ -69,7 +69,7 @@ public class RepositoryRevision {
      */ 
     private final List<Event> events = new ArrayList<Event>(5);
     private final List<Event> dummyEvents;
-    private final Map<File, String> commonAncestors = new HashMap<File, String>();
+    private final Map<File, String> commonAncestors = new HashMap<>();
     private final Set<GitTag> tags;
     private final Set<GitBranch> branches;
     private boolean eventsInitialized;
@@ -536,7 +536,7 @@ public class RepositoryRevision {
 
         @Override
         protected Action createAction (File repositoryRoot, Event... events) {
-            Set<File> fileSet = new HashSet<File>(events.length);
+            Set<File> fileSet = new HashSet<>(events.length);
             for (Event e : events) {
                 if (e.isViewEnabled()) {
                     fileSet.add(e.getFile());
@@ -685,7 +685,7 @@ public class RepositoryRevision {
 
         private List<Event> prepareEvents (Map<File, GitFileInfo> files) {
             final List<Event> logEvents = new ArrayList<Event>(files.size());
-            Set<File> renamedFilesOriginals = new HashSet<File>(files.size());
+            Set<File> renamedFilesOriginals = new HashSet<>(files.size());
             for (Map.Entry<File, GitFileInfo> e : files.entrySet()) {
                 if (e.getValue().getStatus() == Status.RENAMED) {
                     renamedFilesOriginals.add(e.getValue().getOriginalFile());

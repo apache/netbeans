@@ -443,7 +443,7 @@ public class PanelSourceFolders extends SettingsPanel implements PropertyChangeL
 
         public void addChangeListener(ChangeListener l) {
             if (this.listeners == null) {
-                this.listeners = new ArrayList<ChangeListener>();
+                this.listeners = new ArrayList<>();
             }
             this.listeners.add (l);
         }

@@ -299,7 +299,7 @@ public class OutputKeymapManager extends KeymapManager {
                     continue;
                 }
                 Enumeration<String> atts = actionFile.getAttributes();
-                Set<String> strokes = new HashSet<String>();
+                Set<String> strokes = new HashSet<>();
                 while (atts.hasMoreElements()) {
                     String att = atts.nextElement();
                     if (att.startsWith(SHORTCUT_PREFIX)) {

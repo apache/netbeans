@@ -156,11 +156,11 @@ public class InstalledFileLocatorImplTest extends NbTestCase {
         doTestLocateAll();
     }
     private void doTestLocateAll() {
-        assertEquals(new HashSet<File>(Arrays.asList(file(nbuser, "a/b"), file(nbhome, "a/b"))), ifl.locateAll("a/b", null, false));
+        assertEquals(new HashSet<>(Arrays.asList(file(nbuser, "a/b"), file(nbhome, "a/b"))), ifl.locateAll("a/b", null, false));
         assertEquals(Collections.emptySet(), ifl.locateAll("nonexistent", null, false));
         assertEquals(Collections.emptySet(), ifl.locateAll("nonexistent", null, true));
-        assertEquals(new HashSet<File>(Arrays.asList(file(nbhome, "loc/y.html"), file(nbdir2, "loc/y_foo.html"))), ifl.locateAll("loc/y.html", null, true));
-        assertEquals(new HashSet<File>(Arrays.asList(file(nbdir1, "e/f"), file(nbhome, "e/f"))), ifl.locateAll("e/f", null, false));
+        assertEquals(new HashSet<>(Arrays.asList(file(nbhome, "loc/y.html"), file(nbdir2, "loc/y_foo.html"))), ifl.locateAll("loc/y.html", null, true));
+        assertEquals(new HashSet<>(Arrays.asList(file(nbdir1, "e/f"), file(nbhome, "e/f"))), ifl.locateAll("e/f", null, false));
     }
     
     public void testLocateParallel() throws Exception {

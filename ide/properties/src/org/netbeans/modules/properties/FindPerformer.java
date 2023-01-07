@@ -91,7 +91,7 @@ public class FindPerformer extends javax.swing.AbstractAction
     private final ActionListener toggleHighlightListener;
     
     /** Keeps history of found strings. */
-    private Set<String> history = new HashSet<String>();
+    private Set<String> history = new HashSet<>();
 
     /** Helper variable keeping <code>settings</code>. */
     private TableViewSettings settings;

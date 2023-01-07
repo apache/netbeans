@@ -41,7 +41,7 @@ public class ExecutableFilesIndexTest extends NbTestCase {
     }            
 
     public void testWrapUnWrap() throws Exception {
-        Set<String> strings = new HashSet<String>();
+        Set<String> strings = new HashSet<>();
         
         strings.add("test");
         strings.add(":::");

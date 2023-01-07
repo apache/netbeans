@@ -172,7 +172,7 @@ public class DBSchemaTableProvider implements TableProvider {
                     // bad one
                     continue;
                 }
-                List<String> cols = new ArrayList<String>();
+                List<String> cols = new ArrayList<>();
                 for (int cIx = 0; cIx < colElms.length; cIx++) {
                     cols.add( colElms[cIx].getName().getName());
                 }

@@ -42,7 +42,7 @@ import org.openide.util.Lookup;
 public final class RegisteredCategory extends OptionsCategory {
     private static Icon icon;
     private static PropertyChangeListener propertyChangeListener;
-    private Collection<String> calls = new HashSet<String>();
+    private Collection<String> calls = new HashSet<>();
 
     public void setInvalid() {
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, OptionsPanelController.PROP_VALID, null, null));

@@ -307,7 +307,7 @@ public class InterceptorBindingsTest extends CommonTestCase {
         
         Set<String> fqns = getIBindingFqns(interceptorBindings);
         
-        Set<String> expected = new HashSet<String>( Arrays.asList( annotationFqns));
+        Set<String> expected = new HashSet<>( Arrays.asList( annotationFqns));
         expected.removeAll( fqns );
         if ( expected.size() >0 ){
             StringBuilder builder = new StringBuilder();
@@ -342,7 +342,7 @@ public class InterceptorBindingsTest extends CommonTestCase {
     private Set<String> getIBindingFqns(
             Collection<AnnotationMirror> interceptorBindings )
     {
-        Set<String> fqns = new HashSet<String>();
+        Set<String> fqns = new HashSet<>();
         for (AnnotationMirror annotationMirror : interceptorBindings) {
             Element iBinding = annotationMirror.getAnnotationType().asElement();
             if ( iBinding instanceof TypeElement ){

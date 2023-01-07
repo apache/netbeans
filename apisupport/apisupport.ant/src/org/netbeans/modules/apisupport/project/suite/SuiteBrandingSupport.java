@@ -58,7 +58,7 @@ class SuiteBrandingSupport extends BrandingSupport {
     @Override public Set<File> getBrandableJars() {
         NbPlatform platf = getActivePlatform();
         Set<ModuleEntry> modules = platf.getModules();
-        Set<File> jars = new HashSet<File>(modules.size());
+        Set<File> jars = new HashSet<>(modules.size());
         for (ModuleEntry m : modules) {
             File j = m.getJarLocation();
             if (j != null) {

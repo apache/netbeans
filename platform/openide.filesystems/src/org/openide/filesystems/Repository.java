@@ -151,7 +151,7 @@ public class Repository implements Serializable {
         if (this != Repository.getDefault()) {
             return Collections.emptyList();
         }
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         p.registerLayers(urls);
         return urls;
     }
@@ -193,7 +193,7 @@ public class Repository implements Serializable {
             layerUrls.add(generatedLayer);
         }
         for (LayerProvider p : Lookup.getDefault().lookupAll(LayerProvider.class)) {
-            List<URL> newURLs = new ArrayList<URL>();
+            List<URL> newURLs = new ArrayList<>();
             p.registerLayers(newURLs);
             layerUrls.addAll(newURLs);
         }
@@ -210,7 +210,7 @@ public class Repository implements Serializable {
         }
         
         final void refreshLayers() {
-            List<URL> layerUrls = new ArrayList<URL>();
+            List<URL> layerUrls = new ArrayList<>();
             try {
                 provideLayers(Thread.currentThread().getContextClassLoader(), layerUrls);
                 layers.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
@@ -222,7 +222,7 @@ public class Repository implements Serializable {
         }
 
         private static FileSystem[] computeDelegates() {
-            List<FileSystem> arr = new ArrayList<FileSystem>();
+            List<FileSystem> arr = new ArrayList<>();
             arr.add(MEMORY);
             for (FileSystem f : ALL.allInstances()) {
                 if (Boolean.TRUE.equals(f.getRoot().getAttribute("fallback"))) { // NOI18N
@@ -323,7 +323,7 @@ public class Repository implements Serializable {
     */
     private void init() {
         // empties the pool
-        fileSystems = new ArrayList<FileSystem>();
+        fileSystems = new ArrayList<>();
         names = new Hashtable<String, FileSystem>();
         if (addFileSystemDelayed(system)) {
             addFileSystem(system);

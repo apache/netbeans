@@ -4223,7 +4223,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         return type;
     }
 
-    private static final Set<String> PRIMITIVE_CLASS_NAMES = Collections.unmodifiableSet(new HashSet<String>(
+    private static final Set<String> PRIMITIVE_CLASS_NAMES = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList(new String[] {
                 java.lang.Boolean.class.getName(),
                 java.lang.Byte.class.getName(),

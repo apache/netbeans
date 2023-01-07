@@ -69,7 +69,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
 
     @Override
     protected Set<String> additionalSourceClassPath() {
-        HashSet<String> sourceClassPath = new HashSet<String>();
+        HashSet<String> sourceClassPath = new HashSet<>();
         sourceClassPath.add(getExpandedSourcePath());
 
         return sourceClassPath;
@@ -303,7 +303,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
             }
 
 //            if (proposal.getModifiers().size() > 0) {
-//                List<String> modifiers = new ArrayList<String>();
+//                List<String> modifiers = new ArrayList<>();
 //                for (Modifier mod : proposal.getModifiers()) {
 //                    modifiers.add(mod.name());
 //                }

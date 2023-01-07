@@ -334,8 +334,8 @@ public class GroovyFormatter implements Formatter {
         // a lot of things will work better: breakpoints and other line annotations
         // will be left in place, semantic coloring info will not be temporarily
         // damaged, and the caret will stay roughly where it belongs.
-        final List<Integer> offsets = new ArrayList<Integer>();
-        final List<Integer> indents = new ArrayList<Integer>();
+        final List<Integer> offsets = new ArrayList<>();
+        final List<Integer> indents = new ArrayList<>();
 
         // When we're formatting sections, include whitespace on empty lines; this
         // is used during live code template insertions for example. However, when

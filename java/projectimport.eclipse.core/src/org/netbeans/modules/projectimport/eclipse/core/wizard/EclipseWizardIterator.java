@@ -48,7 +48,7 @@ final class EclipseWizardIterator implements
     private SelectionWizardPanel workspacePanel;
     private ProjectWizardPanel projectPanel;
     private List<WizardDescriptor.Panel<WizardDescriptor>> extraPanels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-    private List<String> currentPanelProviders = new ArrayList<String>();
+    private List<String> currentPanelProviders = new ArrayList<>();
     
     int numberOfPanels = 2;
     int currentPanel = 0;
@@ -165,8 +165,8 @@ final class EclipseWizardIterator implements
         if (getCurrent() != projectPanel) {
             return;
         }
-        Set<String> alreadyIncluded = new HashSet<String>();
-        List<String> panelProviders = new ArrayList<String>();
+        Set<String> alreadyIncluded = new HashSet<>();
+        List<String> panelProviders = new ArrayList<>();
         for (EclipseProject ep : getProjects()) {
             if (!ep.isImportSupported()) {
                 continue;
@@ -198,7 +198,7 @@ final class EclipseWizardIterator implements
     }
     
     private String[] getWizardPanelName(List<WizardDescriptor.Panel<WizardDescriptor>> l) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add(ImporterWizardPanel.WORKSPACE_LOCATION_STEP);
         names.add(ImporterWizardPanel.PROJECTS_SELECTION_STEP);
         if (l != null) {

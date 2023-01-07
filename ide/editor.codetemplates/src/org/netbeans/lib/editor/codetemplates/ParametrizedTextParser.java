@@ -52,7 +52,7 @@ public final class ParametrizedTextParser {
     }
     
     public void parse() {
-        parametrizedTextFragments = new ArrayList<String>();
+        parametrizedTextFragments = new ArrayList<>();
 
         StringBuffer textFrag = new StringBuffer();
         int copyStartIndex = 0;

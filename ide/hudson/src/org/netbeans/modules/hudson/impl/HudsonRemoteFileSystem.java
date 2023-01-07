@@ -132,9 +132,9 @@ final class HudsonRemoteFileSystem extends RemoteFileSystem implements
      * List of paths known to be data files.
      * Also used as a general lock for metadata accesses.
      */
-    private final Set<String> nonDirs = new HashSet<String>();
+    private final Set<String> nonDirs = new HashSet<>();
     private final Map<String,Long> lastModified = new HashMap<String,Long>();
-    private final Map<String,Integer> size = new HashMap<String,Integer>();
+    private final Map<String,Integer> size = new HashMap<>();
     private final Map<String,byte[]> headers = new HashMap<String,byte[]>();
 
     public String[] children(String f) {
@@ -148,7 +148,7 @@ final class HudsonRemoteFileSystem extends RemoteFileSystem implements
                 LOG.log(Level.FINE, "non-plain dir listing: {0}", url);
                 return new String[0];
             }
-            java.util.List<String> kids = new ArrayList<String>();
+            java.util.List<String> kids = new ArrayList<>();
             InputStream is = conn.getInputStream();
             try {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));

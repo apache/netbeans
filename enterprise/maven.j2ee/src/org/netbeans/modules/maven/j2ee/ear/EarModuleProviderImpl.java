@@ -228,7 +228,7 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
        ProjectSourcesClassPathProvider cppImpl = project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
         ClassPath cp = cppImpl.getProjectSourcesClassPath(ClassPath.SOURCE);
         NbMavenProject prj = project.getLookup().lookup(NbMavenProject.class);
-        List<URL> resUris = new ArrayList<URL>();
+        List<URL> resUris = new ArrayList<>();
         for (URI uri : prj.getResources(false)) {
             try {
                 resUris.add(uri.toURL());
@@ -237,7 +237,7 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
             }
         }
         Iterator<ClassPath.Entry> en = cp.entries().listIterator();
-        List<FileObject> toRet = new ArrayList<FileObject>();
+        List<FileObject> toRet = new ArrayList<>();
         int index = 0;
         while (en.hasNext()) {
             ClassPath.Entry ent = en.next();

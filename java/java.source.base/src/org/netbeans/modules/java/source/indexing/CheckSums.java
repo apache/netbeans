@@ -104,7 +104,7 @@ public final class CheckSums {
         for (TypeElement te : topLevelElements) {
             toHandle.offer(te);
         }
-        List<String> sigs = new ArrayList<String>();
+        List<String> sigs = new ArrayList<>();
         while (!toHandle.isEmpty()) {
             Element te = toHandle.poll();
             if (te == null) {

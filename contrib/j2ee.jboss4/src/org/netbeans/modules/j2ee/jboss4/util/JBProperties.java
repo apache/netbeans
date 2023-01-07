@@ -193,7 +193,7 @@ public class JBProperties {
     }
 
     public List<URL> getClasses() {
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         File rootDir = getRootDir();
         File serverDir = getServerDir();
         File commonLibDir =  new File(rootDir, "common" + File.separator + "lib");
@@ -234,7 +234,7 @@ public class JBProperties {
                     "org" + File.separator + "hibernate" + File.separator + "main"), list); // NOI18N
         }
 
-        Set<String> commonLibs = new HashSet<String>();
+        Set<String> commonLibs = new HashSet<>();
 
         if (version != null
                 && version.compareToIgnoreUpdate(JBPluginUtils.JBOSS_6_0_0) >= 0) {
@@ -337,7 +337,7 @@ public class JBProperties {
     public List<URL> getSources() {
         String path = ip.getProperty(PROP_SOURCES);
         if (path == null) {
-            return new ArrayList<URL>();
+            return new ArrayList<>();
         }
         return CustomizerSupport.tokenizePath(path);
     }
@@ -350,7 +350,7 @@ public class JBProperties {
     public List<URL> getJavadocs() {
         String path = ip.getProperty(PROP_JAVADOCS);
         if (path == null) {
-            ArrayList<URL> list = new ArrayList<URL>();
+            ArrayList<URL> list = new ArrayList<>();
                 File j2eeDoc = InstalledFileLocator.getDefault().locate("docs/javaee-doc-api.jar", null, false); // NOI18N
                 if (j2eeDoc != null) {
                     addFileToList(list, j2eeDoc);

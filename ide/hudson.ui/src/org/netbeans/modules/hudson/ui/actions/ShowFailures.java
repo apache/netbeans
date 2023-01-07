@@ -98,7 +98,7 @@ public class ShowFailures extends AbstractAction implements ContextAwareAction {
         Collection<? extends HudsonMavenModuleBuild> alreadyIncludedBuilds =
                 context.lookupAll(HudsonMavenModuleBuild.class);
         Set<String> alreadyIncludedURLs =
-                new HashSet<String>(alreadyIncludedBuilds.size());
+                new HashSet<>(alreadyIncludedBuilds.size());
         for (HudsonMavenModuleBuild b : alreadyIncludedBuilds) {
             alreadyIncludedURLs.add(b.getUrl());
         }

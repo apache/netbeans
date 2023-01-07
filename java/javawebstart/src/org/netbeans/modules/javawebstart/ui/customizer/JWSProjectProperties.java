@@ -732,7 +732,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
                 }
             }
             
-            final Set<String> appletNames = new HashSet<String>();
+            final Set<String> appletNames = new HashSet<>();
             
             RequestProcessor.getDefault().post(new Runnable() {
                 public void run() {
@@ -831,7 +831,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
         }
         
         public void addRow() {
-            Map<String,String> emptyMap = new HashMap<String,String>();
+            Map<String,String> emptyMap = new HashMap<>();
             for (String  suffix : propSuffixes) {
                 emptyMap.put(suffix, "");
             }
@@ -851,7 +851,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
         ArrayList<Map<String,String>> listToReturn = new ArrayList<Map<String,String>>();
         int index = 0;
         while (true) {
-            HashMap<String,String> map = new HashMap<String,String>();
+            HashMap<String,String> map = new HashMap<>();
             int numProps = 0;
             for (String propSuffix : propSuffixes) {
                 String propValue = evaluator.getProperty(propPrefix + index + "." + propSuffix);
@@ -875,7 +875,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
         int propGroupIndex = 0;
         // find all properties with the prefix
         Set<String> keys = editableProps.keySet();
-        Set<String> keys2Remove = new HashSet<String>();
+        Set<String> keys2Remove = new HashSet<>();
         for (String key : keys) {
             if (key.startsWith(prefix)) {
                 keys2Remove.add(key);
@@ -966,13 +966,13 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
         final String bc = eval.getProperty(BUILD_CLASSES);        
         final File prjDir = FileUtil.toFile(prj.getProjectDirectory());
         final File bcDir = bc == null ? null : PropertyUtils.resolveFile(prjDir, bc);
-        final List<File> lazyFileList = new ArrayList<File>();
+        final List<File> lazyFileList = new ArrayList<>();
         if (lz != null) {
             for (String p : PropertyUtils.tokenizePath(lz)) {
                 lazyFileList.add(PropertyUtils.resolveFile(prjDir, p));
             }
         }
-        final List<File> resFileList = new ArrayList<File>();
+        final List<File> resFileList = new ArrayList<>();
         if(rcp != null) {
             for (String p : PropertyUtils.tokenizePath(rcp)) {
                 if (p.startsWith("${") && p.endsWith("}")) {    //NOI18N

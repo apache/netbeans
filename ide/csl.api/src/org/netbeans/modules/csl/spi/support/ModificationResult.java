@@ -81,7 +81,7 @@ public final class ModificationResult implements org.netbeans.modules.refactorin
     }
     
     public Set<File> getNewFiles() {
-        Set<File> newFiles = new HashSet<File>();
+        Set<File> newFiles = new HashSet<>();
         for (List<Difference> ds:diffs.values()) {
             for (Difference d: ds) {
                 if (d.getKind() == Difference.Kind.CREATE) {

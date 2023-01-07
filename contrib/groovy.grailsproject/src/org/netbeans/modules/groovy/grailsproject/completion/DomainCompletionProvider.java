@@ -66,9 +66,9 @@ public class DomainCompletionProvider implements CompletionProvider {
 
     private static final String LIST_ORDER_BY_METHOD = "listOrderBy"; // NOI18N
 
-    private static final Set<String> QUERY_OPERATOR = new HashSet<String>();
+    private static final Set<String> QUERY_OPERATOR = new HashSet<>();
 
-    private static final Set<String> QUERY_COMPARATOR = new HashSet<String>();
+    private static final Set<String> QUERY_COMPARATOR = new HashSet<>();
 
     // FIXME move it to some resource file, check the grails version - this is for 1.0.4
     static {
@@ -260,8 +260,8 @@ public class DomainCompletionProvider implements CompletionProvider {
 
             String name = context.getPrefix().substring(0, context.getPrefix().length() - prefix.length());
 
-            Map<String, Integer> names = new HashMap<String, Integer>();
-            Set<String> forbidden = new HashSet<String>();
+            Map<String, Integer> names = new HashMap<>();
+            Set<String> forbidden = new HashSet<>();
             int paramCount = getUsedComparators(context, forbidden);
 
             boolean noContinuation = (matcher.group(7) != null && matcher.group(8) != null);
@@ -326,7 +326,7 @@ public class DomainCompletionProvider implements CompletionProvider {
     }
 
     private Map<String, Integer> getSuffixForOperator(String prefix, List<String> properties, String tail, int paramCount) {
-        Map<String, Integer> result = new HashMap<String, Integer>();
+        Map<String, Integer> result = new HashMap<>();
         for (String property : properties) {
             for (String operator : QUERY_OPERATOR) {
                 String suffix = operator + capitalise(property);
@@ -341,7 +341,7 @@ public class DomainCompletionProvider implements CompletionProvider {
     private Map<String, Integer> getSuffixForComparator(String prefix, CompletionContext context, String tail,
             String property, Set<String> forbidden, int paramCount) {
 
-        Map<String, Integer> result = new HashMap<String, Integer>();
+        Map<String, Integer> result = new HashMap<>();
 
         for (String operator : QUERY_COMPARATOR) {
             int realCount = paramCount;
@@ -359,7 +359,7 @@ public class DomainCompletionProvider implements CompletionProvider {
     }
 
     private Map<String, Integer> getSuffixForProperty(String prefix, List<String> properties, String tail, int paramCount) {
-        Map<String, Integer> result = new HashMap<String, Integer>();
+        Map<String, Integer> result = new HashMap<>();
         for (String property : properties) {
             String suffix = capitalise(property);
             if (suffix.startsWith(tail)) {

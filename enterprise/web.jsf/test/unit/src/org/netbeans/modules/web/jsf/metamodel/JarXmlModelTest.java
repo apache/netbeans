@@ -45,7 +45,7 @@ public class JarXmlModelTest extends CommonTestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        List<URL> urls = new ArrayList<URL>(2);
+        List<URL> urls = new ArrayList<>(2);
         URL url = JarXmlModelTest.class.getResource("data/lib.jar");
         urls.add(  FileUtil.getArchiveRoot( url ));
         url = JarXmlModelTest.class.getResource("data/lib1.jar");

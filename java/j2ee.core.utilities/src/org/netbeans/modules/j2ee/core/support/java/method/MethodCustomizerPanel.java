@@ -420,7 +420,7 @@ public final class MethodCustomizerPanel extends javax.swing.JPanel {
     }
 
     public List<String> getExceptions() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (exceptionsPanel != null) {
             for (String exception : exceptionsPanel.getExceptions()) {
                 if (!"".equals(exception.trim())) {  // NOI18N

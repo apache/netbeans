@@ -202,7 +202,7 @@ public class SQLStatementAnalyzer {
 
     /** Returns fully qualified identifier or null. */
     protected QualIdent parseIdentifier() {
-        List<String> parts = new ArrayList<String>();
+        List<String> parts = new ArrayList<>();
         parts.add(getUnquotedIdentifier());
         boolean afterDot = false;
         main:

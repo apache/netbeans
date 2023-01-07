@@ -112,7 +112,7 @@ public final class PathArchiveTest extends NbTestCase {
             final Deque<Set<String>> state = new ArrayDeque<>();
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                state.offer(new HashSet<String>());
+                state.offer(new HashSet<>());
                 return FileVisitResult.CONTINUE;
             }
 

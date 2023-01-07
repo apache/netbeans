@@ -160,8 +160,8 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String PERSISTENCE_JAVADOC = "javaee-doc-api.jar"; // NOI18N
     
     private static boolean ensureEclipseLinkSupport(String installRoot) {
-        List<URL> libraryList = new ArrayList<URL>();
-        List<URL> docList = new ArrayList<URL>();
+        List<URL> libraryList = new ArrayList<>();
+        List<URL> docList = new ArrayList<>();
         try {
             File f = ServerUtilities.getJarName(installRoot, EL_CORE_JAR_MATCHER);
             if (f != null && f.exists()) {
@@ -212,7 +212,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String GRIZZLY_OPTIONAL_JAR_MATCHER = "grizzly-optional" + ServerUtilities.GFV3_VERSION_MATCHER; // NOI18N
 
     private static boolean ensureCometSupport(String installRoot) {
-        List<URL> libraryList = new ArrayList<URL>();
+        List<URL> libraryList = new ArrayList<>();
         String name = COMET_LIB;
         File f = ServerUtilities.getJarName(installRoot, GRIZZLY_OPTIONAL_JAR_MATCHER);
         if (f == null || !f.exists()) {
@@ -254,7 +254,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static boolean ensureGlassFishApiSupport(GlassFishServer server) {
         String installRoot = server.getServerRoot();
         List<URL> libraryList = Hk2LibraryProvider.getProvider(server).getJavaEEClassPathURLs();
-        List<URL> docList = new ArrayList<URL>();
+        List<URL> docList = new ArrayList<>();
         String name = JAVA_EE_5_LIB;
 
         File f = ServerUtilities.getJarName(installRoot, "gmbal" + ServerUtilities.GFV3_VERSION_MATCHER);

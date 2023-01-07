@@ -515,7 +515,7 @@ public abstract class BulkSearchTestPerformer extends NbTestCase {
         createSearch().encode(info.getCompilationUnit(), ec, new AtomicBoolean());
         
         Map<String, Integer> actual = createSearch().matchesWithFrequencies(new ByteArrayInputStream(out.toByteArray()), createSearch().create(info, new AtomicBoolean(), "$1.isDirectory()", "new ImageIcon($1)"), new AtomicBoolean());
-        Map<String, Integer> golden = new HashMap<String, Integer>();
+        Map<String, Integer> golden = new HashMap<>();
 
         golden.put("$1.isDirectory()", 2);
         golden.put("new ImageIcon($1)", 1);
@@ -530,9 +530,9 @@ public abstract class BulkSearchTestPerformer extends NbTestCase {
 
         BulkPattern bp = createSearch().create(info, new AtomicBoolean(), "$0.isDirectory()");
 
-        assertEquals(Arrays.asList(new HashSet<String>(Arrays.asList("isDirectory"))), bp.getIdentifiers());
+        assertEquals(Arrays.asList(new HashSet<>(Arrays.asList("isDirectory"))), bp.getIdentifiers());
         //TODO: the actual code for kinds differs for NFABased search and REBased search:
-//        assertEquals(Arrays.asList(new HashSet<String>(Arrays.asList(Kind.METHOD_INVOCATION.name()))), bp.getKinds());
+//        assertEquals(Arrays.asList(new HashSet<>(Arrays.asList(Kind.METHOD_INVOCATION.name()))), bp.getKinds());
     }
     
     public void testModifiersMultiVariable() throws Exception {
@@ -596,7 +596,7 @@ public abstract class BulkSearchTestPerformer extends NbTestCase {
         }
 
 
-        Set<String> none = new HashSet<String>(result.keySet());
+        Set<String> none = new HashSet<>(result.keySet());
 
         none.retainAll(notContainedPatterns);
 

@@ -63,10 +63,10 @@ public class ViewDependency {
             }
             database = database.trim();
             if (database.equalsIgnoreCase("Oracle")) {
-                getOraclePKTable(user, view, new HashSet<String>());
+                getOraclePKTable(user, view, new HashSet<>());
                 getOracleViewColumns();
             } else if (database.equalsIgnoreCase("Microsoft SQL Server")) {
-                getMSSQLServerPKTable(user, view, new HashSet<String>());
+                getMSSQLServerPKTable(user, view, new HashSet<>());
                 getMSSQLServerViewColumns();
             }
         } catch (SQLException exc) {

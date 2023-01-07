@@ -140,7 +140,7 @@ public class TestDataDirsNodeFactory implements NodeFactory {
         private Node findPathPlain(FileObject fo, FileObject groupRoot, Node rootNode) {
             FileObject folder = fo.isFolder() ? fo : fo.getParent();
             String relPath = FileUtil.getRelativePath(groupRoot, folder);
-            List<String> path = new ArrayList<String>();
+            List<String> path = new ArrayList<>();
             StringTokenizer strtok = new StringTokenizer(relPath, "/"); // NOI18N
             while (strtok.hasMoreTokens()) {
                 String token = strtok.nextToken();

@@ -98,7 +98,7 @@ public class MenuAndPopupMenuTest extends ExtJellyTestCase {
             public void run() {
                 String menuPalettePath = "Add From Palette|";
 
-                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> items = new ArrayList<>();
                 items.add(menuPalettePath + "Menu Item"); // NOI18N
                 items.add(menuPalettePath + "Menu Item / CheckBox"); // NOI18N
                 items.add(menuPalettePath + "Menu Item / RadioButton"); // NOI18N
@@ -117,7 +117,7 @@ public class MenuAndPopupMenuTest extends ExtJellyTestCase {
             }
         });
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("jMenu3.add(jMenu4);"); // NOI18N
         lines.add("jMenu1.add(jMenu3);"); // NOI18N
         lines.add("jMenuBar1.add(jMenu1);"); // NOI18N
@@ -169,7 +169,7 @@ public class MenuAndPopupMenuTest extends ExtJellyTestCase {
             public void run() {
                 ComponentInspectorOperator inspector = new ComponentInspectorOperator();
                 String popupMenuPalettePath = "Add From Palette|";
-                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<String> items = new ArrayList<>();
                 items.add(popupMenuPalettePath + "Menu Item"); // NOI18N
                 items.add(popupMenuPalettePath + "Menu Item / CheckBox"); // NOI18N
                 items.add(popupMenuPalettePath + "Menu Item / RadioButton"); // NOI18N
@@ -184,7 +184,7 @@ public class MenuAndPopupMenuTest extends ExtJellyTestCase {
             }
         });
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("jPopupMenu1.add(jMenuItem1);"); // NOI18N
         lines.add("jPopupMenu1.add(jCheckBoxMenuItem1)"); // NOI18N
         lines.add("jPopupMenu1.add(jRadioButtonMenuItem1);");

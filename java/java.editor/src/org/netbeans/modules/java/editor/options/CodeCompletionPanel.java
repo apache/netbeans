@@ -66,7 +66,7 @@ public class CodeCompletionPanel extends javax.swing.JPanel implements DocumentL
 
     // null if a new entry is to be created, otherwise the entry to be replaced
     private volatile String javaExcluderEditing;
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     /** Creates new form FmtTabsIndents */
     public CodeCompletionPanel(Preferences p) {

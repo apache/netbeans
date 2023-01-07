@@ -44,7 +44,7 @@ public final class XMLSuiteSupport {
         Map<String, Collection<String>> classes = new HashMap<String, Collection<String>>();
         Set<String> methods = null;
         if (methodName != null) {
-            methods = new HashSet<String>();
+            methods = new HashSet<>();
             methods.add(methodName);
         }
         pkgName = pkgName.trim();

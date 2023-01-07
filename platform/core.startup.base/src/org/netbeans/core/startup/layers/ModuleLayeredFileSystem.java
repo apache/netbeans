@@ -267,7 +267,7 @@ implements LookupListener {
         if (urls.contains(null)) {
             throw new NullPointerException("urls=" + urls);
         }
-        ArrayList<URL> arr = new ArrayList<URL>();
+        ArrayList<URL> arr = new ArrayList<>();
         if (this.prevs != null) {
             arr.addAll(this.prevs);
         }
@@ -306,7 +306,7 @@ implements LookupListener {
     }
     
     public static List<URL> collectLayers(ClassLoader loader) throws IOException {
-        List<URL> layerUrls = new ArrayList<URL>();
+        List<URL> layerUrls = new ArrayList<>();
         for (URL manifest : NbCollections.iterable(loader.getResources("META-INF/MANIFEST.MF"))) { // NOI18N
             InputStream is = manifest.openStream();
             try {

@@ -129,11 +129,11 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
         }
     }
 
-    public static final Set<String> activeRegistrationSet = Collections.synchronizedSet(new HashSet<String>());
+    public static final Set<String> activeRegistrationSet = Collections.synchronizedSet(new HashSet<>());
 
     private final Map<String, GlassfishInstance> instanceMap =
             Collections.synchronizedMap(new HashMap<String, GlassfishInstance>());
-    private static final Set<String> activeDisplayNames = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> activeDisplayNames = Collections.synchronizedSet(new HashSet<>());
     private final ChangeSupport support = new ChangeSupport(this);
 
     private final String[] instancesDirNames;

@@ -109,7 +109,7 @@ public class HgHistoryProvider implements VCSHistoryProvider {
                     rev2LMMap.put(r, h);
                     Set<File> s = rev2FileMap.get(r);
                     if(s == null) {
-                        s = new HashSet<File>();
+                        s = new HashSet<>();
                         rev2FileMap.put(r, s);
                     }
                     s.add(file);
@@ -396,7 +396,7 @@ public class HgHistoryProvider implements VCSHistoryProvider {
     }
 
     private static Set<File> getRepositoryRoots(File... files) {
-        Set<File> repositories = HgUtils.getRepositoryRoots(new HashSet<File>(Arrays.asList(files)));
+        Set<File> repositories = HgUtils.getRepositoryRoots(new HashSet<>(Arrays.asList(files)));
         if (repositories.size() != 1) {
             LOG.log(Level.WARNING, "History requested for {0} repositories", repositories.size()); // NOI18N
             return null;

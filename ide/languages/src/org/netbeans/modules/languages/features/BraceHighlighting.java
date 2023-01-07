@@ -162,7 +162,7 @@ public class BraceHighlighting implements BracesMatcher, BracesMatcherFactory {
             // Proper matching using the pairs supplied by the language definition
             assert seq != null : "No token sequence"; //NOI18N
 
-            List<String> unresolved = new ArrayList<String>();
+            List<String> unresolved = new ArrayList<>();
             unresolved.add(originText);
             while(moveTheSequence(seq, backwards, -1)) {
                 String tokenText = seq.token().text().toString();
@@ -218,14 +218,14 @@ public class BraceHighlighting implements BracesMatcher, BracesMatcherFactory {
                 String end = s.substring(i + 1);
                 Set<String> matchTextsEnd = startToEnd.get(start);
                 if (matchTextsEnd == null) {
-                    matchTextsEnd = new HashSet<String>();
+                    matchTextsEnd = new HashSet<>();
                     startToEnd.put(start, matchTextsEnd);
 
                 }
                 matchTextsEnd.add(end);
                 Set<String> matchTextsStart = endToStart.get(end); 
                 if (matchTextsStart == null) {
-                    matchTextsStart = new HashSet<String>();
+                    matchTextsStart = new HashSet<>();
                     endToStart.put(end, matchTextsStart);
                 }
                 matchTextsStart.add(start);

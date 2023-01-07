@@ -1634,7 +1634,7 @@ public class ModuleManagerTest extends SetupHid {
             "prov-foo-req-bar.jar",
         };
         // Never make any of the following eager:
-        Set<String> noDepsNames = new HashSet<String>(Arrays.asList(
+        Set<String> noDepsNames = new HashSet<>(Arrays.asList(
             "simple-module.jar",
             "prov-foo.jar",
             "prov-baz.jar",
@@ -2544,7 +2544,7 @@ public class ModuleManagerTest extends SetupHid {
         File m1j = new File(getWorkDir(), "m1.jar");
         createJar(m1j, Collections.<String,String>emptyMap(), Collections.singletonMap("OpenIDE-Module", "m1"));
         File m2j = new File(getWorkDir(), "m2.jar");
-        Map<String,String> mani = new HashMap<String,String>();
+        Map<String,String> mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m2");
         mani.put("OpenIDE-Module-Module-Dependencies", "m1");
         mani.put("OpenIDE-Module-Java-Dependencies", "Java > 2046");
@@ -2568,12 +2568,12 @@ public class ModuleManagerTest extends SetupHid {
 
     public void testShouldDelegateResource() throws Exception {
         File m1j = new File(getWorkDir(), "m1.jar");
-        Map<String,String> contents = new HashMap<String,String>();
+        Map<String,String> contents = new HashMap<>();
         contents.put("javax/swing/JPanel.class", "overrides");
         contents.put("javax/xml/parsers/DocumentBuilder.class", "ignored");
         createJar(m1j, contents, Collections.singletonMap("OpenIDE-Module", "m1"));
         File m2j = new File(getWorkDir(), "m2.jar");
-        Map<String,String> mani = new HashMap<String,String>();
+        Map<String,String> mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m2");
         mani.put("OpenIDE-Module-Module-Dependencies", "m1");
         createJar(m2j, Collections.<String,String>emptyMap(), mani);
@@ -2638,12 +2638,12 @@ public class ModuleManagerTest extends SetupHid {
         File m1j = new File(getWorkDir(), "m1.jar");
         createJar(m1j, Collections.<String,String>emptyMap(), Collections.singletonMap("OpenIDE-Module", "m1/0"));
         File m2j = new File(getWorkDir(), "m2.jar");
-        Map<String,String> mani = new HashMap<String,String>();
+        Map<String,String> mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m2");
         mani.put("OpenIDE-Module-Module-Dependencies", "m1/0-1");
         createJar(m2j, Collections.<String,String>emptyMap(), mani);
         File m3j = new File(getWorkDir(), "m3.jar");
-        mani = new HashMap<String,String>();
+        mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m3");
         mani.put("OpenIDE-Module-Module-Dependencies", "m1/0");
         createJar(m3j, Collections.<String,String>emptyMap(), mani);
@@ -2679,7 +2679,7 @@ public class ModuleManagerTest extends SetupHid {
         File m1j = new File(getWorkDir(), "m1.jar");
         createJar(m1j, Collections.<String,String>emptyMap(), Collections.singletonMap("OpenIDE-Module", "m1/0"));
         File m2j = new File(getWorkDir(), "m2.jar");
-        Map<String,String> mani = new HashMap<String,String>();
+        Map<String,String> mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m2");
         mani.put("OpenIDE-Module-Module-Dependencies", "m1/0-1");
         createJar(m2j, Collections.<String,String>emptyMap(), mani);
@@ -3168,7 +3168,7 @@ public class ModuleManagerTest extends SetupHid {
 
     private static Collection<String> assertCnb(Module m) {
         String token = "cnb." + m.getCodeNameBase();
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         boolean ok = false;
         for (String t : m.getProvides()) {
             if (token.equals(t)) {

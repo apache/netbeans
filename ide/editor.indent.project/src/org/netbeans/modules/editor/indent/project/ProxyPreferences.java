@@ -84,7 +84,7 @@ public final class ProxyPreferences extends AbstractPreferences {
 
     @Override
     protected String[] keysSpi() throws BackingStoreException {
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         checkDelegates();
         for(int i = 0; i < delegates.length; i++) {
             if (delegates[i] != null) {
@@ -101,7 +101,7 @@ public final class ProxyPreferences extends AbstractPreferences {
 
     @Override
     protected String[] childrenNamesSpi() throws BackingStoreException {
-//        Set<String> names = new HashSet<String>();
+//        Set<String> names = new HashSet<>();
 //        for(Preferences d : delegates) {
 //            names.addAll(Arrays.asList(d.childrenNames()));
 //        }

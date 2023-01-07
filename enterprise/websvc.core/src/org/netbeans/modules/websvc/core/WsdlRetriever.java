@@ -396,8 +396,8 @@ public class WsdlRetriever implements Runnable {
         private boolean insideSchema;
         
         ServiceNameParser() {
-            serviceNameList = new ArrayList<String>();
-            schemaNames = new ArrayList<String>();
+            serviceNameList = new ArrayList<>();
+            schemaNames = new ArrayList<>();
         }
         
         @Override

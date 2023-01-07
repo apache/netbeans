@@ -115,7 +115,7 @@ public class Utils {
             this.source = source;
             breakpoints = new ArrayList<Breakpoint>();
             lineBreakpoints = new ArrayList<LineBreakpoint>();
-            stops = new HashMap<String, Integer>();
+            stops = new HashMap<>();
         }
         
         void addBreakpoint(Breakpoint brkp) {

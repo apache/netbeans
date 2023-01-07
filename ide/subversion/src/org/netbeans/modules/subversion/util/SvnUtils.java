@@ -337,7 +337,7 @@ public class SvnUtils {
             rootFiles.add(rootFile);
             boolean containsSubprojects = false;
             FileObject [] rootChildren = srcRootFo.getChildren();
-            Set<File> projectFiles = new HashSet<File>(rootChildren.length);
+            Set<File> projectFiles = new HashSet<>(rootChildren.length);
             for (int i = 0; i < rootChildren.length; i++) {
                 FileObject rootChildFo = rootChildren[i];
                 if (isAdministrative(rootChildFo.getNameExt())) continue;
@@ -371,9 +371,9 @@ public class SvnUtils {
      * @return Context context that defines list of supplied projects
      */
     public static Context getProjectsContext(Project [] projects) {
-        List<File> filtered = new ArrayList<File>();
-        List<File> roots = new ArrayList<File>();
-        List<File> exclusions = new ArrayList<File>();
+        List<File> filtered = new ArrayList<>();
+        List<File> roots = new ArrayList<>();
+        List<File> exclusions = new ArrayList<>();
         for (int i = 0; i < projects.length; i++) {
             addProjectFiles(filtered, roots, exclusions, projects[i]);
         }
@@ -381,7 +381,7 @@ public class SvnUtils {
     }
 
     public static File [] toFileArray(Collection<FileObject> fileObjects) {
-        Set<File> files = new HashSet<File>(fileObjects.size()*4/3+1);
+        Set<File> files = new HashSet<>(fileObjects.size()*4/3+1);
         for (Iterator<FileObject> i = fileObjects.iterator(); i.hasNext();) {
             File f = FileUtil.toFile(i.next());
             if (f != null) {
@@ -461,7 +461,7 @@ public class SvnUtils {
     public static String getRelativePath(File file) throws SVNClientException {
         String repositoryPath = null;
 
-        List<String> path = new ArrayList<String>();
+        List<String> path = new ArrayList<>();
         SVNUrl repositoryURL = null;
         boolean fileIsManaged = false;
         File lastManaged = file;
@@ -1111,7 +1111,7 @@ public class SvnUtils {
      */
     public static File [] getModifiedFiles(Context context, int includeStatus) {
         File[] all = Subversion.getInstance().getStatusCache().listFiles(context, includeStatus);
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (int i = 0; i < all.length; i++) {
             File file = all[i];
             String path = file.getAbsolutePath();
@@ -1279,7 +1279,7 @@ public class SvnUtils {
      * @return the first pattern matching with the given value
      */
     public static List<String> getMatchinIgnoreParterns(List<String> patterns, String value, boolean onlyFirstMatch)  {
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         if(patterns == null) return ret;
         for (Iterator<String> i = patterns.iterator(); i.hasNext();) {
             try {
@@ -1471,7 +1471,7 @@ public class SvnUtils {
      * @return list of all direct children
      */
     public static List<File> listChildren (File root) {
-        List<File> ret = new ArrayList<File>();
+        List<File> ret = new ArrayList<>();
         if(root == null) {
             return ret;
         }
@@ -1567,7 +1567,7 @@ public class SvnUtils {
 
     public static File[] getActionRoots (Context ctx, boolean showSelector) {
         File[] roots = ctx.getRootFiles();
-        List<File> l = new ArrayList<File>();
+        List<File> l = new ArrayList<>();
 
         // filter managed roots
         for (File file : roots) {
@@ -1781,7 +1781,7 @@ public class SvnUtils {
      * XXX move to versioning.utils if needed in other modules
      */
     public static void refreshFS (File... files) {
-        final Set<File> parents = new HashSet<File>();
+        final Set<File> parents = new HashSet<>();
         for (File f : files) {
             File parent = f.getParentFile();
             if (parent != null) {
@@ -1818,7 +1818,7 @@ public class SvnUtils {
                     if (Subversion.LOG.isLoggable(Level.FINER)) {
                         Subversion.LOG.log(Level.FINER, "Running block with disabled indexing: on {0}", Arrays.asList(files)); //NOI18N
                     }
-                    indexingFiles.set(new HashSet<File>(Arrays.asList(files)));
+                    indexingFiles.set(new HashSet<>(Arrays.asList(files)));
                     return IndexingBridge.getInstance().runWithoutIndexing(callable, files);
                 } finally {
                     indexingFiles.remove();

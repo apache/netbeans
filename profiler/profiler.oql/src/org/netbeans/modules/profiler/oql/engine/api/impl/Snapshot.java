@@ -299,7 +299,7 @@ public class Snapshot {
     }
     
     public List getRootsList() {
-        List<Object> roots = new ArrayList<Object>();
+        List<Object> roots = new ArrayList<>();
         for(Object rootObj : delegate.getGCRoots()) {
             GCRoot root = (GCRoot)rootObj;
             Instance inst = root.getInstance();

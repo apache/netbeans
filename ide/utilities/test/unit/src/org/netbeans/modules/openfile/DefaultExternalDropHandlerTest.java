@@ -149,7 +149,7 @@ public class DefaultExternalDropHandlerTest extends NbTestCase {
     }
 
     public static class MockOpenFileImpl implements OpenFileImpl {
-        private Set<File> openedFiles = new HashSet<File>();
+        private Set<File> openedFiles = new HashSet<>();
 
         public boolean open(FileObject fileObject, int line) {
             if( null != fileObject ) {

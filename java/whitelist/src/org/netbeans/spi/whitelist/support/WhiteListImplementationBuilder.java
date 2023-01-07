@@ -363,8 +363,8 @@ final class WhiteListImplementationBuilder {
                     throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
                 }
                 checkedPkgs = Union2.<StringBuilder,Pattern>createFirst(new StringBuilder());
-                allowedPackages = new ArrayList<String>();
-                disallowedPackages = new ArrayList<String>();
+                allowedPackages = new ArrayList<>();
+                disallowedPackages = new ArrayList<>();
         }
 
         void addCheckedPackage(
@@ -623,7 +623,7 @@ final class WhiteListImplementationBuilder {
     //@NotThreadSafe
     static class SimpleNames implements Names {
 
-        private final Map<String,Integer> names = new HashMap<String, Integer>();
+        private final Map<String,Integer> names = new HashMap<>();
         private int counter = Integer.MIN_VALUE;
 
         @Override

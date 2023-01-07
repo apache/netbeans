@@ -36,7 +36,7 @@ import org.openide.util.Lookup;
 public abstract class KitsTracker {
         
     private static final Logger LOG = Logger.getLogger(KitsTracker.class.getName());
-    private static final Set<String> ALREADY_LOGGED = Collections.synchronizedSet(new HashSet<String>(10));
+    private static final Set<String> ALREADY_LOGGED = Collections.synchronizedSet(new HashSet<>(10));
     
     private static KitsTracker instance = null;
     

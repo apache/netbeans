@@ -354,7 +354,7 @@ public final class ProjectUtilities {
      * @return a list of fully qualified String names of packages within the provided project that contain sources
      */
     public static String[] getProjectPackages(final Project project) {
-        ArrayList<String> packages = new ArrayList<String>();
+        ArrayList<String> packages = new ArrayList<>();
 
         for (FileObject root : getSourceRoots(project, true)) {
             addSubpackages(packages, "", root); //NOI18N
@@ -463,7 +463,7 @@ public final class ProjectUtilities {
      * @return an array of FileObjects that are the source roots for this project
      */
     public static FileObject[] getSourceRoots(final Project project, final boolean traverse) {
-        Set<FileObject> set = new HashSet<FileObject>();
+        Set<FileObject> set = new HashSet<>();
         Set<Project> projects = new HashSet<Project>();
 
         projects.add(project);
@@ -510,7 +510,7 @@ public final class ProjectUtilities {
         }
 
         if (storage[0] == null) {
-            ArrayList<String> packages1 = new ArrayList<String>();
+            ArrayList<String> packages1 = new ArrayList<>();
 
             for (FileObject root : getSourceRoots(project, false)) {
                 addSubpackages(packages1, "", root); //NOI18N
@@ -521,7 +521,7 @@ public final class ProjectUtilities {
 
         if (subprojects && (storage[1] == null)) {
             FileObject[] srcRoots2 = getSourceRoots(project, true); // TODO: should be computed based on already known srcRoots1
-            ArrayList<String> packages2 = new ArrayList<String>();
+            ArrayList<String> packages2 = new ArrayList<>();
 
             for (FileObject root : srcRoots2) {
                 addSubpackages(packages2, "", root); //NOI18N

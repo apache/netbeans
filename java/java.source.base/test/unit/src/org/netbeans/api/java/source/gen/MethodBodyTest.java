@@ -675,12 +675,12 @@ public class MethodBodyTest extends GeneratorTestBase {
     }
     
     private Map<String, String> alterSettings(String... settings) {
-        Map<String, String> adjustPreferences = new HashMap<String, String>();
+        Map<String, String> adjustPreferences = new HashMap<>();
         for (int i = 0; i < settings.length; i += 2) {
             adjustPreferences.put(settings[i], settings[i + 1]);
         }
         Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
-        Map<String, String> origValues = new HashMap<String, String>();
+        Map<String, String> origValues = new HashMap<>();
         for (String key : adjustPreferences.keySet()) {
             origValues.put(key, preferences.get(key, null));
         }

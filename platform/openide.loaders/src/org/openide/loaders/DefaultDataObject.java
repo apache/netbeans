@@ -158,7 +158,7 @@ final class DefaultDataObject extends MultiDataObject implements OpenCookie {
             ic.open();
         } else {
             // ask a query 
-            List<Object> options = new ArrayList<Object>();
+            List<Object> options = new ArrayList<>();
             options.add (NotifyDescriptor.OK_OPTION);
             options.add (NotifyDescriptor.CANCEL_OPTION);
             NotifyDescriptor nd = new NotifyDescriptor (

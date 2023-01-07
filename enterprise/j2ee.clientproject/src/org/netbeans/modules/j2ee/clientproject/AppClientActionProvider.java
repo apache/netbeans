@@ -133,11 +133,11 @@ class AppClientActionProvider extends BaseActionProvider {
         commands.put(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}); // NOI18N
         commands.put(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}); // NOI18N
 
-        this.needJavaModelActions = new HashSet<String>(Arrays.asList(
+        this.needJavaModelActions = new HashSet<>(Arrays.asList(
             JavaProjectConstants.COMMAND_DEBUG_FIX
         ));
         
-        this.bkgScanSensitiveActions = new HashSet<String>(Arrays.asList(new String[] {
+        this.bkgScanSensitiveActions = new HashSet<>(Arrays.asList(new String[] {
             COMMAND_RUN,
             COMMAND_RUN_SINGLE,
             COMMAND_DEBUG,

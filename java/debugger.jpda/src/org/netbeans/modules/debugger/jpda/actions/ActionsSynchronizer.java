@@ -57,8 +57,8 @@ public class ActionsSynchronizer {
         ACTIONS_WAITING_FOR_OTHERS.put(ACTION_RUN_TO_CURSOR, actionsToWaitForBeforeResume);
     }
     
-    private final List<Object> runningActions = new ArrayList<Object>();
-    private final List<Object> scheduledActions = new ArrayList<Object>();
+    private final List<Object> runningActions = new ArrayList<>();
+    private final List<Object> scheduledActions = new ArrayList<>();
     
     private ActionsSynchronizer() {}
     

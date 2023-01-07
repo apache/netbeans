@@ -134,10 +134,10 @@ public class DriverListUtilTest extends TestCase {
     }
     
     public void testJavaDbEmbedded() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_DB);
         
-        ArrayList<String> supportedProps = new ArrayList<String>();
+        ArrayList<String> supportedProps = new ArrayList<>();
         supportedProps.add(JdbcUrl.TOKEN_DB);
         supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
         
@@ -159,7 +159,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     public void testJavaDbNetwork() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_HOST);
         requiredProps.add(JdbcUrl.TOKEN_DB);
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_JavaDbNetwork"), null, "org.apache.derby.jdbc.ClientDriver", 
@@ -188,7 +188,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     public void testMySQL() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MySQL"), null, "com.mysql.cj.jdbc.Driver", 
                 "jdbc:mysql://[<HOST>[:<PORT>]][/<DB>][?<ADDITIONAL>]",
                 STD_SUPPORTED_PROPS, requiredProps);
@@ -208,7 +208,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     public void testMariaDB() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MariaDB"), null, "org.mariadb.jdbc.Driver",
                 "jdbc:mariadb://[<HOST>[:<PORT>]][/<DB>][?<ADDITIONAL>]",
                 STD_SUPPORTED_PROPS, requiredProps);
@@ -230,7 +230,7 @@ public class DriverListUtilTest extends TestCase {
     public void testAmazonAthenaStandard() throws Exception {
         ArrayList<String> supportedProps = new ArrayList<>();
         supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
 
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Athena"), getType("TYPE_Standard"), "com.simba.athena.jdbc.Driver",
                 "jdbc:awsathena://[<ADDITIONAL>]",
@@ -249,7 +249,7 @@ public class DriverListUtilTest extends TestCase {
         supportedProps.add(JdbcUrl.TOKEN_HOST);
         supportedProps.add(JdbcUrl.TOKEN_PORT);
         supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_HOST);
 
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Athena"), getType("TYPE_Endpoint"), "com.simba.athena.jdbc.Driver",
@@ -268,7 +268,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     public void testAmazonRedshiftUserName() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Redshift"), getType("TYPE_UserName"), "com.amazon.redshift.jdbc.Driver",
                 "jdbc:redshift://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]",
                 STD_SUPPORTED_PROPS, requiredProps);
@@ -288,7 +288,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     public void testAmazonRedshiftIAM() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Redshift"), getType("TYPE_IAM"), "com.amazon.redshift.jdbc.Driver",
                 "jdbc:redshift:iam://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]",
                 STD_SUPPORTED_PROPS, requiredProps);
@@ -321,7 +321,7 @@ public class DriverListUtilTest extends TestCase {
         testDB2(DB2Types.CLOUDSCAPE);
     }
     private void testDB2(DB2Types type) throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_HOST);
         requiredProps.add(JdbcUrl.TOKEN_PORT);
         requiredProps.add(JdbcUrl.TOKEN_DB);
@@ -382,7 +382,7 @@ public class DriverListUtilTest extends TestCase {
         testJTDS(JTDSTypes.SQLSERVER);
     }
     private void testJTDS(JTDSTypes type) throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_HOST);
         
         String typeString;
@@ -433,11 +433,11 @@ public class DriverListUtilTest extends TestCase {
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", true);
         */
-        ArrayList<String> supportedProps = new ArrayList<String>();
+        ArrayList<String> supportedProps = new ArrayList<>();
         supportedProps.addAll(STD_SUPPORTED_PROPS);
         supportedProps.add(JdbcUrl.TOKEN_INSTANCE);
         
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MSSQL"), null,
                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", 
                 "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", 
@@ -547,12 +547,12 @@ public class DriverListUtilTest extends TestCase {
     }
     
     private void testOracleSID(OracleTypes otype) throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_HOST);
         requiredProps.add(JdbcUrl.TOKEN_SID);
         requiredProps.add(JdbcUrl.TOKEN_PORT);
         
-        ArrayList<String> supportedProps = new ArrayList<String>();
+        ArrayList<String> supportedProps = new ArrayList<>();
         supportedProps.addAll(requiredProps);
         supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
         
@@ -580,10 +580,10 @@ public class DriverListUtilTest extends TestCase {
     }
     
     private void testOracleServiceName(OracleTypes otype) throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_HOST);
         
-        ArrayList<String> supportedProps = new ArrayList<String>();
+        ArrayList<String> supportedProps = new ArrayList<>();
         supportedProps.addAll(requiredProps);
         supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
         supportedProps.add(JdbcUrl.TOKEN_PORT);
@@ -609,10 +609,10 @@ public class DriverListUtilTest extends TestCase {
         testBadUrlString(url, prefix);
     }
     private void testOracleTnsName(OracleTypes otype) throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_TNSNAME);
         
-        ArrayList<String> supportedProps = new ArrayList<String>();
+        ArrayList<String> supportedProps = new ArrayList<>();
         supportedProps.addAll(requiredProps);
         supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
         
@@ -635,7 +635,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     private HashMap<String,String> buildPropValues(List<String> supportedProps) {
-        HashMap<String, String> propValues = new HashMap<String,String>();
+        HashMap<String, String> propValues = new HashMap<>();
         for (String prop : ALLPROPS.keySet()) {
             if (supportedProps.contains(prop)) {
                 propValues.put(prop, ALLPROPS.get(prop));
@@ -686,7 +686,7 @@ public class DriverListUtilTest extends TestCase {
     }
 
     public void testPostgreSQL() throws Exception {
-        ArrayList<String> requiredProps = new ArrayList<String>();
+        ArrayList<String> requiredProps = new ArrayList<>();
         requiredProps.add(JdbcUrl.TOKEN_DB);
         
         JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_PostgreSQL"), null, "org.postgresql.Driver", 

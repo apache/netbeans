@@ -387,7 +387,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
         }
     }
     
-    private Map<String, ConnectionSettings> recentConnectionSettings = new HashMap<String, ConnectionSettings>();
+    private Map<String, ConnectionSettings> recentConnectionSettings = new HashMap<>();
     private void initUrlComboValues(final String forPath, final PasswordAuthentication pa) {
         enableUrlCombo(false);
         Git.getInstance().getRequestProcessor().post(new Runnable() {

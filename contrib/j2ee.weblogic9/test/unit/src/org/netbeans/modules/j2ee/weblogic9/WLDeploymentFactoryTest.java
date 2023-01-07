@@ -49,7 +49,7 @@ public class WLDeploymentFactoryTest extends NbTestCase {
         String serverPath = FileUtil.toFile(server).getAbsolutePath();
         String domainPath = FileUtil.toFile(domain).getAbsolutePath();
         String url = WLDeploymentFactory.getUrl("localhost", 7001, serverPath, domainPath);
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(WLPluginProperties.SERVER_ROOT_ATTR, serverPath);
         props.put(WLPluginProperties.DOMAIN_ROOT_ATTR, domainPath);
 

@@ -188,14 +188,14 @@ public abstract class CommandRestTest extends CommandTest {
                 GFPROP_GLASSFISH_ARGS);
         List<String> javaArgs = javaArgsProperty != null
                 ? Arrays.asList(javaArgsProperty.split(" +"))
-                : new ArrayList<String>();
+                : new ArrayList<>();
         List<String> glassFishArgs = glassFishArgsProperty != null
                 ? Arrays.asList(glassFishArgsProperty.split(" +"))
-                : new ArrayList<String>();
+                : new ArrayList<>();
         StartupArgsEntity startupArgs = new StartupArgsEntity(
                 glassFishArgs,
                 javaArgs,
-                new HashMap<String, String>(),
+                new HashMap<>(),
                 getJdkProperty(JDKPROP_HOME));
         GlassFishServer server = glassFishServer();
         // restore domain before starting server

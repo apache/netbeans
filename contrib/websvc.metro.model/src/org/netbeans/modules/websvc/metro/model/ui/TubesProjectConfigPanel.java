@@ -87,7 +87,7 @@ public class TubesProjectConfigPanel extends JPanel {
 
     public List<String> getTubeList(boolean client) {
         TableModel tModel = client ? tubeTableClientModel : tubeTableServiceModel;
-        List<String> retList = new ArrayList<String>();
+        List<String> retList = new ArrayList<>();
         for (int i=0; i < tModel.getRowCount(); i++) {
             retList.add((String)tModel.getValueAt(i, 0));
         }

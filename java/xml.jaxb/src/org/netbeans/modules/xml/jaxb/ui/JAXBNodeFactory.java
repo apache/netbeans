@@ -60,14 +60,14 @@ public class JAXBNodeFactory implements NodeFactory {
     
     private class JAXBRootNodeList  implements NodeList<String> {
         private Project project;
-        private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private List<ChangeListener> listeners = new ArrayList<>();
         private JAXBWizEventListener modelListener = new ModelListener();
         
         private List<String> rootKeys = null;
         
         public JAXBRootNodeList(Project prj){
             this.project = prj;
-            rootKeys = new ArrayList<String>();
+            rootKeys = new ArrayList<>();
             ProjectHelper.addModelListener(prj, modelListener);
             updateKeys();
         }
@@ -112,7 +112,7 @@ public class JAXBNodeFactory implements NodeFactory {
         }
         
         private void fireChange() {
-            ArrayList<ChangeListener> list = new ArrayList<ChangeListener>();
+            ArrayList<ChangeListener> list = new ArrayList<>();
             synchronized (this) {
                 list.addAll(listeners);
             }

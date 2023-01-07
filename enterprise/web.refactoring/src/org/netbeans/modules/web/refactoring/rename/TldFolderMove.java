@@ -50,7 +50,7 @@ public class TldFolderMove extends BaseTldRename{
     @Override
     protected List<RenameItem> getAffectedClasses() {
         List<RenameItem> result = new ArrayList<RenameItem>();
-        List<FileObject> fos = new ArrayList<FileObject>();
+        List<FileObject> fos = new ArrayList<>();
         RefactoringUtil.collectChildren(folder, fos);
         for (FileObject each : fos){
             if (RefactoringUtil.isPackageInfo(each)) {

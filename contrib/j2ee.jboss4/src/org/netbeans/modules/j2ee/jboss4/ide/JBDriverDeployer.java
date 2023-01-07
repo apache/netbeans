@@ -179,7 +179,7 @@ public class JBDriverDeployer implements JDBCDriverDeployer {
 
         /** Returns a list of jdbc drivers that need to be deployed. */
         private List<FileObject> jdbcDriversToDeploy(boolean as7) {
-            List<FileObject> jdbcDriverFiles = new ArrayList<FileObject>();
+            List<FileObject> jdbcDriverFiles = new ArrayList<>();
             Collection<File> driverCP = getJDBCDriverClasspath(as7);
             for (Datasource datasource : datasources) {
                 String className = datasource.getDriverClassName();

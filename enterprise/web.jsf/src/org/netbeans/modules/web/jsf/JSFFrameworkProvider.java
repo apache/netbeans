@@ -498,7 +498,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                     }
                     // add welcome file
                     WelcomeFileList welcomeFiles = ddRoot.getSingleWelcomeFileList();
-                    List<String> welcomeFileList = new ArrayList<String>();
+                    List<String> welcomeFileList = new ArrayList<>();
 
                     // add the welcome file only if there isn't any
                     if (!faceletsEnabled) {

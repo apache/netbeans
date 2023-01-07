@@ -649,7 +649,7 @@ public final class DefaultPlugin extends JUnitPlugin {
 //                               ? new String[] {oppoClsName}
 //                               : null;
 //            } else {
-//                List<String> clsNames = new ArrayList<String>();
+//                List<String> clsNames = new ArrayList<>();
 //                clsNames.add(clsElement.getSimpleName().toString());
 //                do {
 //                    if (cancelled) {

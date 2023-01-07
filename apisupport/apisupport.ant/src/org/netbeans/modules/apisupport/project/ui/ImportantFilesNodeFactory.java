@@ -239,8 +239,8 @@ public class ImportantFilesNodeFactory implements NodeFactory {
         }
         
         private void refreshKeys() {
-            Set<FileObject> files = new HashSet<FileObject>();
-            List<String> newVisibleFiles = new ArrayList<String>();
+            Set<FileObject> files = new HashSet<>();
+            List<String> newVisibleFiles = new ArrayList<>();
             if (LayerHandle.forProject(project).getLayerFile() != null) {
                 newVisibleFiles.add(KEY_LAYER);
             }
@@ -296,7 +296,7 @@ public class ImportantFilesNodeFactory implements NodeFactory {
      */
     private static final class SuiteImportantFilesChildren extends Children.Keys<String> {
         
-        private List<String> visibleFiles = new ArrayList<String>();
+        private List<String> visibleFiles = new ArrayList<>();
         private FileChangeListener fcl;
         
         /** Abstract location to display name. */
@@ -341,9 +341,9 @@ public class ImportantFilesNodeFactory implements NodeFactory {
         }
         
         private void refreshKeys() {
-            List<String> newVisibleFiles = new ArrayList<String>();
+            List<String> newVisibleFiles = new ArrayList<>();
             Iterator<String> it = FILES.keySet().iterator();
-            Set<FileObject> files = new HashSet<FileObject>();
+            Set<FileObject> files = new HashSet<>();
             while (it.hasNext()) {
                 String loc = it.next();
                 String locEval = project.getEvaluator().evaluate(loc);

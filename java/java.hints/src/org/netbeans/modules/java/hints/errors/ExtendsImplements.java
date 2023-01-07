@@ -44,7 +44,7 @@ public class ExtendsImplements implements ErrorRule<Void> {
     
     private static final String KEY_EXTENDS_TO_IMPLEMENTS = "compiler.err.no.intf.expected.here";
     private static final String KEY_IMPLEMENTS_TO_EXTENDS = "compiler.err.intf.expected.here";
-    private static final Set<String> CODES = new HashSet<String>(Arrays.asList(KEY_EXTENDS_TO_IMPLEMENTS, KEY_IMPLEMENTS_TO_EXTENDS));
+    private static final Set<String> CODES = new HashSet<>(Arrays.asList(KEY_EXTENDS_TO_IMPLEMENTS, KEY_IMPLEMENTS_TO_EXTENDS));
     
     @Override
     public Set<String> getCodes() {

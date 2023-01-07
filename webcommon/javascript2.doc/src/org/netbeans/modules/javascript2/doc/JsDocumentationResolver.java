@@ -76,7 +76,7 @@ public class JsDocumentationResolver {
     }
 
     private float countTagsCoverageRatio(Set<String> tags, JsDocumentationProvider provider) {
-        Set<String> unsupportedTags = new HashSet<String>(tags);
+        Set<String> unsupportedTags = new HashSet<>(tags);
         unsupportedTags.removeAll(provider.getSupportedTags());
         if (unsupportedTags.isEmpty()) {
             return 1.0f;

@@ -120,7 +120,7 @@ public class MasterDetailFormTest extends ExtJellyTestCase {
         n.performPopupAction("Open");
         FormDesignerOperator designer = new FormDesignerOperator(_newFormName);
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("JButton refreshButton;"); // NOI18N
         lines.add("JButton saveButton;"); // NOI18N
         lines.add("JLabel addressline1Label;"); // NOI18N

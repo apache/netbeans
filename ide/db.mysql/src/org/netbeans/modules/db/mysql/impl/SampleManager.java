@@ -45,7 +45,7 @@ public class SampleManager {
     public static List<String> getSampleNames() {
         Collection<SampleProvider> providers = SampleProviderHelper.getProviders();
 
-        List<String> sampleNames = new ArrayList<String>();
+        List<String> sampleNames = new ArrayList<>();
         for (SampleProvider provider : providers) {
             sampleNames.addAll(provider.getSampleNames());
         }
@@ -61,7 +61,7 @@ public class SampleManager {
     public static boolean isSample(String name) {
         Collection<SampleProvider> providers = SampleProviderHelper.getProviders();
 
-        List<String> sampleNames = new ArrayList<String>();
+        List<String> sampleNames = new ArrayList<>();
         for (SampleProvider provider : providers) {
             sampleNames.addAll(provider.getSampleNames());
         }

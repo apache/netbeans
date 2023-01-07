@@ -424,7 +424,7 @@ public final class XMLUtil extends Object {
             }
 
             // See #123816
-            Set<String> cdataQNames = new HashSet<String>();
+            Set<String> cdataQNames = new HashSet<>();
             collectCDATASections(doc2, cdataQNames);
             if (cdataQNames.size() > 0) {
                 StringBuilder cdataSections = new StringBuilder();
@@ -519,7 +519,7 @@ public final class XMLUtil extends Object {
     }
     private static void fixupAttrsSingle(Element e) throws DOMException {
         removeXmlBase(e);
-        Map<String, String> replace = new HashMap<String, String>();
+        Map<String, String> replace = new HashMap<>();
         NamedNodeMap attrs = e.getAttributes();
         for (int j = 0; j < attrs.getLength(); j++) {
             Attr attr = (Attr) attrs.item(j);

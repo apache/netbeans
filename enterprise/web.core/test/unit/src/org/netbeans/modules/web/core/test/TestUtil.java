@@ -527,7 +527,7 @@ public final class TestUtil extends ProxyLookup {
             systemDir.mkdirs();
             lfs.setRootDirectory(systemDir);
             lfs.setReadOnly(false);
-            List<FileSystem> layers = new ArrayList<FileSystem>();
+            List<FileSystem> layers = new ArrayList<>();
             layers.add(lfs);
             /*
             //get layer for the generic server

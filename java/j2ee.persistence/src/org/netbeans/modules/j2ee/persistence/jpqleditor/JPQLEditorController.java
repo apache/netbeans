@@ -59,11 +59,11 @@ public class JPQLEditorController {
             final PersistenceEnvironment pe,
             final int maxRowCount,
             final ProgressHandle ph) {
-        final List<URL> localResourcesURLList = new ArrayList<URL>();
+        final List<URL> localResourcesURLList = new ArrayList<>();
 
         //
-        final HashMap<String, String> props = new HashMap<String, String>();
-        final List<String> initialProblems = new ArrayList<String>();
+        final HashMap<String, String> props = new HashMap<>();
+        final List<String> initialProblems = new ArrayList<>();
         //connection open
         final DatabaseConnection dbconn = JPAEditorUtil.findDatabaseConnection(pu, pe.getProject());
         if (dbconn != null) {

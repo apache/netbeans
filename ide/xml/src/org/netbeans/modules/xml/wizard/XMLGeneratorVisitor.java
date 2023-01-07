@@ -77,7 +77,7 @@ public class XMLGeneratorVisitor extends DeepAXITreeVisitor {
     /**
      * Set of elements this machine has decided to include, although minOccurs allowed to skip it.
      */
-    private Set<String> machineIncluded = new HashSet<String>();
+    private Set<String> machineIncluded = new HashSet<>();
     
     /**
      * True, if parent compositor can be skipped. Evaluated at compositors, set to true whenever XML is printed
@@ -462,7 +462,7 @@ public class XMLGeneratorVisitor extends DeepAXITreeVisitor {
         
         if(! ns.equals(primaryTNS)) {
                if(namespaceToPrefix == null)
-                    namespaceToPrefix = new HashMap<String, String>();
+                    namespaceToPrefix = new HashMap<>();
                 
                       
                 String pre = namespaceToPrefix.get(ns);

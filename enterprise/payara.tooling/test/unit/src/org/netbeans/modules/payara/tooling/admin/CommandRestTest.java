@@ -170,14 +170,14 @@ public abstract class CommandRestTest extends CommandTest {
                 PFPROP_PAYARA_ARGS);
         List<String> javaArgs = javaArgsProperty != null
                 ? Arrays.asList(javaArgsProperty.split(" +"))
-                : new ArrayList<String>();
+                : new ArrayList<>();
         List<String> payaraArgs = payaraArgsProperty != null
                 ? Arrays.asList(payaraArgsProperty.split(" +"))
-                : new ArrayList<String>();
+                : new ArrayList<>();
         StartupArgsEntity startupArgs = new StartupArgsEntity(
                 payaraArgs,
                 javaArgs,
-                new HashMap<String, String>(),
+                new HashMap<>(),
                 getJdkProperty(JDKPROP_HOME));
         PayaraServer server = payaraServer();
         // restore domain before starting server

@@ -704,7 +704,7 @@ public class UnixNativeUtils extends NativeUtils {
     }
     
     public List<File> findExecutableFiles(File parent) throws IOException {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
 
         if (parent.exists()) {
             if(parent.isDirectory()) {
@@ -746,7 +746,7 @@ public class UnixNativeUtils extends NativeUtils {
     }
 
     public List<File> findIrrelevantFiles(File parent) throws IOException {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
 
         if (parent.exists()) {
             if(parent.isDirectory()) {
@@ -867,7 +867,7 @@ public class UnixNativeUtils extends NativeUtils {
                 throw new IOException();
             }
         }
-        final List<String> stdoutList = new ArrayList<String>();
+        final List<String> stdoutList = new ArrayList<>();
 
         Thread quotaThread = null;
         try {

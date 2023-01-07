@@ -81,7 +81,7 @@ public class LibrariesHelper {
 
     public static void addArchiveRefsToProject(Project project, FileObject targetSource,
             List<String> jars, String classPathType) {
-        List<FileObject> jarFiles = new ArrayList<FileObject>();
+        List<FileObject> jarFiles = new ArrayList<>();
         for (String jarPath : jars) {
             FileObject jarFO = FileUtil.toFileObject(new File(jarPath));
             if (jarFO != null) {
@@ -105,7 +105,7 @@ public class LibrariesHelper {
         if (classPath != null) {  //hack for PHP
             try {
                 FileObject wsClientsSubDir = getWebServiceClientLibraryDir(project);
-                ArrayList<URL> archiveJars = new ArrayList<URL>();
+                ArrayList<URL> archiveJars = new ArrayList<>();
                 for (FileObject jarFO : jars) {
                     try {
                         FileObject destJar = wsClientsSubDir.getFileObject(jarFO.getNameExt());
@@ -150,7 +150,7 @@ public class LibrariesHelper {
 
     public static List<String> getDefaultJaxWsClientJars(WsdlSaas saas, String jarType) {
         WsdlData data = saas.getWsdlData();
-        List<String> jarPaths = new ArrayList<String>();
+        List<String> jarPaths = new ArrayList<>();
         File basePath = data.getJaxWsDescriptor().getXmlDescriptorFile().getParentFile();
         for (WsdlServiceProxyDescriptor.JarEntry jar : data.getJaxWsDescriptor().getJars()) {
             if (jar.getType().equals(jarType)) {
@@ -163,7 +163,7 @@ public class LibrariesHelper {
 
     public static List<String> getDefaultJaxRpcClientJars(WsdlSaas saas, String jarType) {
         WsdlData data = saas.getWsdlData();
-        List<String> jarPaths = new ArrayList<String>();
+        List<String> jarPaths = new ArrayList<>();
         File basePath = data.getJaxRpcDescriptor().getXmlDescriptorFile().getParentFile();
         for (WsdlServiceProxyDescriptor.JarEntry jar : data.getJaxRpcDescriptor().getJars()) {
             if (jar.getType().equals(jarType)) {

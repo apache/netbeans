@@ -169,7 +169,7 @@ public final class UncaughtException implements ErrorRule<Void> {
     static final String ERR_IMPLICIT_CLOSE = "compiler.err.unreported.exception.implicit.close"; // NOI18N
     static final String ERR_UNREPORTED = "compiler.err.unreported.exception.need.to.catch.or.throw"; // NOI18N
     
-    private static final Set<String> ERRCODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> ERRCODES = new HashSet<>(Arrays.asList(
         new String[]{
             ERR_UNREPORTED,
             ERR_IMPLICIT_CLOSE
@@ -379,7 +379,7 @@ public final class UncaughtException implements ErrorRule<Void> {
             
             if (!uncaught.isEmpty() && !disableSurroundWithTryCatch) {
                 List<TypeMirrorHandle> thandles = new ArrayList<TypeMirrorHandle>();
-                List<String> fqns = new ArrayList<String>();
+                List<String> fqns = new ArrayList<>();
 
                 for (TypeMirror tm : uncaught) {
                     if (tm.getKind() != TypeKind.ERROR) {

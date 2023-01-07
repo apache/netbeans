@@ -172,7 +172,7 @@ public final class VCSContext {
     }
         
     private static Set<File> toFileSet(Set<VCSFileProxy> files) {
-        Set<File> s = new HashSet<File>(files.size());
+        Set<File> s = new HashSet<>(files.size());
         for (VCSFileProxy fileProxy : files) {
             s.add(fileProxy.toFile());
         }

@@ -98,7 +98,7 @@ import org.openide.util.RequestProcessor;
  */
 public final class CustomizerLibraries extends NbPropertyPanel.Single {
     private ListComponent emListComp;
-    private Map<File, Boolean> isJarExportedMap = Collections.synchronizedMap(new HashMap<File, Boolean>());
+    private Map<File, Boolean> isJarExportedMap = Collections.synchronizedMap(new HashMap<>());
     private ProjectXMLManager pxml;
 
     @Messages("CTL_AddSimple=&Add...")
@@ -845,7 +845,7 @@ public final class CustomizerLibraries extends NbPropertyPanel.Single {
     @Messages("MSG_PublicPackagesAddedFmt=Exported {0} public package(s).\nList of public packages can be further customized on \"API Versioning\" tab.")
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
         int[] selectedIndices = emListComp.getSelectedIndices();
-        List<File> jars = new ArrayList<File>();
+        List<File> jars = new ArrayList<>();
         DefaultListModel listModel = getProperties().getWrappedJarsListModel();
         for (int i : selectedIndices) {
             Item item = (Item) listModel.getElementAt(i);
@@ -920,7 +920,7 @@ public final class CustomizerLibraries extends NbPropertyPanel.Single {
             updateMapTask = RP.create(new Runnable() {
                 @Override public void run() {
                     for (File jar : wrappedJars.get()) {
-                        final Set<String> pkgs = new HashSet<String>();
+                        final Set<String> pkgs = new HashSet<>();
                         ApisupportAntUtils.scanJarForPackageNames(pkgs, jar);
                         pkgs.removeAll(selectedPackages.get());
                         // when pkgs - selPkgs is empty, all packages are already exported

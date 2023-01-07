@@ -64,7 +64,7 @@ class ExportBundle extends ExportDiffSupport implements ActionListener, Property
     private final String HG_TIP = "tip"; //NOI18N
     private final String HG_NULL_BASE = "null"; //NOI18N
     private final ChangesetPickerSimplePanel changesetPickerPanel;
-    private static final HashMap<String, String> resourceNames = new HashMap<String, String>();
+    private static final HashMap<String, String> resourceNames = new HashMap<>();
     static {
         resourceNames.put("CTL_Attaching", "CTL_Attaching");
         resourceNames.put("CTL_Export_Title", "CTL_ExportBundleDialog_Title");

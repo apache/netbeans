@@ -377,7 +377,7 @@ public class NewFileWizardsTest extends J2eeTestCase {
             String[] err = ejb.checkExistingFiles();
             assertTrue(Arrays.asList(err).toString(), err.length == 0);
         }
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         File prjDir = (hasMoreSrcRoots)
                 ? new File(prjRoot).getCanonicalFile()
                 : new File(new File(projectLocation), prjRoot).getCanonicalFile();
@@ -442,7 +442,7 @@ public class NewFileWizardsTest extends J2eeTestCase {
         jcbo.selectItem("jdbc/sample");
         nfwo.finish();
         nfwo.waitClosed();
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         File prjDir = new File(new File(projectLocation), prjRoot).getCanonicalFile();
         files.add(new File(prjDir, "src/conf/persistence.xml"));
         checkFiles(files);
@@ -460,7 +460,7 @@ public class NewFileWizardsTest extends J2eeTestCase {
                 name, pkg, srcRoot);
         nop.finish();
         nop.waitClosed();
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         File prjDir = (hasMoreSrcRoots)
                 ? new File(prjRoot).getCanonicalFile()
                 : new File(new File(projectLocation), prjRoot).getCanonicalFile();
@@ -517,7 +517,7 @@ public class NewFileWizardsTest extends J2eeTestCase {
 
     private void createGoldenFiles(List<File> from) {
         File f = getDataDir();
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add("goldenfiles");
         while (!f.getName().equals("test")) {
             if (!f.getName().equals("sys") && !f.getName().equals("work") && !f.getName().equals("tests")) {

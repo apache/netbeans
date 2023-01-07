@@ -177,7 +177,7 @@ public class OldJavaRunnerCOS {
     
     static  boolean deprecatedJavaRunnerApproachTest(final RunConfig config, String actionName) {
         String test = config.getProperties().get("test");
-        final Map<String, Object> params = new HashMap<String, Object>();
+        final Map<String, Object> params = new HashMap<>();
         FileObject selected = config.getSelectedFileObject();
         ProjectSourcesClassPathProvider cpp = config.getProject().getLookup().lookup(ProjectSourcesClassPathProvider.class);
         ClassPath srcs = cpp.getProjectSourcesClassPath(ClassPath.SOURCE);
@@ -229,8 +229,8 @@ public class OldJavaRunnerCOS {
         }
         params.put(JavaRunner.PROP_EXECUTE_FILE, selected);
         params.put(JavaRunner.PROP_PLATFORM, config.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class).getJavaPlatform());
-        List<String> jvmProps = new ArrayList<String>();
-        Set<String> jvmPropNames = new HashSet<String>();
+        List<String> jvmProps = new ArrayList<>();
+        Set<String> jvmPropNames = new HashSet<>();
         params.put(JavaRunner.PROP_PROJECT_NAME, config.getExecutionName() + "/CoS");
         String dir = PluginPropertyUtils.getPluginProperty(config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "basedir", "test", "basedir");
         jvmPropNames.add("basedir");
@@ -297,7 +297,7 @@ public class OldJavaRunnerCOS {
         String[] additionals = PluginPropertyUtils.getPluginPropertyList(config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "additionalClasspathElements", "additionalClasspathElement", "test");
         ClassPath cp = createRuntimeClassPath(config.getMavenProject(), true);
         if (additionals != null) {
-            List<URL> roots = new ArrayList<URL>();
+            List<URL> roots = new ArrayList<>();
             File base = FileUtil.toFile(config.getProject().getProjectDirectory());
             for (String add : additionals) {
                 File root = FileUtilities.resolveFilePath(base, add);
@@ -366,7 +366,7 @@ public class OldJavaRunnerCOS {
     }
 
     static boolean deprecatedJavaRunnerApproach(final RunConfig config, String actionName) {
-        final Map<String, Object> params = new HashMap<String, Object>();
+        final Map<String, Object> params = new HashMap<>();
         params.put(JavaRunner.PROP_PROJECT_NAME, config.getExecutionName() + "/CoS");
         String proppath = config.getProperties().get("exec.workingdir");
         if (proppath != null) {
@@ -493,7 +493,7 @@ public class OldJavaRunnerCOS {
                 ic.add(pp.getJavaPlatform());
             }
         }
-        Set<String> args = new HashSet<String>();
+        Set<String> args = new HashSet<>();
 
         for (StartupExtender group : StartupExtender.getExtenders(new AbstractLookup(ic), mode)) {
             args.addAll(group.getArguments());

@@ -91,7 +91,7 @@ public class SuspiciousNamesCombination extends AbstractHint {
         if (mapNameToGroup != null) {
             return mapNameToGroup;
         }
-        mapNameToGroup = new HashMap<String, Integer>();
+        mapNameToGroup = new HashMap<>();
         Preferences prefs = getPreferences(null);
         String value = prefs.get(GROUP_KEY, DEFAULT_GROUPS);
         if (value == null) {
@@ -235,7 +235,7 @@ public class SuspiciousNamesCombination extends AbstractHint {
     }
     
     static Set<String> breakName(String name) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         int wordStartOffset = 0;
         int index = 0;
         

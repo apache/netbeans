@@ -105,7 +105,7 @@ public final class ProjectFactory {
     void loadDotProject(EclipseProject project) throws ProjectImporterException {
         logger.finest("Loading .project for project: " + project.getDirectory().getAbsolutePath()); // NOI18N
         try {
-            Set<String> natures = new HashSet<String>();
+            Set<String> natures = new HashSet<>();
             List<Link> links = new ArrayList<Link>();
             Set<Variable> variables = new HashSet<Variable>();
             if (project.getWorkspace() != null) {

@@ -128,7 +128,7 @@ public abstract class PersistenceManager {
 
     private static List<String> getManagersNamesList() {
         if (managersByName == null)
-            managersByName = new ArrayList<String>();
+            managersByName = new ArrayList<>();
         return managersByName;
     }
 

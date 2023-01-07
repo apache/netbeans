@@ -253,7 +253,7 @@ public class ChooseSameSizeAction extends NodeAction {
     }
     
     private static List<String> getComponentIds(List/*<RADComponent>*/ components) {
-        List<String> ids = new ArrayList<String>();
+        List<String> ids = new ArrayList<>();
         Iterator i = components.iterator();
         while (i.hasNext()) {
             RADComponent rc = (RADComponent)i.next();

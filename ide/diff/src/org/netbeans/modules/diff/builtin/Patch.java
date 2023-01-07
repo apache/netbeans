@@ -280,7 +280,7 @@ public class Patch extends Reader {
                     throw new IOException(nfex.getLocalizedMessage());
                 }
             } else continue;
-            ArrayList<Object> firstChanges = new ArrayList<Object>(); // List of intervals and texts
+            ArrayList<Object> firstChanges = new ArrayList<>(); // List of intervals and texts
             line = fillChanges(firstInterval, br, CONTEXT_MARK2B, firstChanges);
             int[] secondInterval = new int[2];
             if (line != null && line.startsWith(CONTEXT_MARK2B)) {
@@ -290,7 +290,7 @@ public class Patch extends Reader {
                     throw new IOException(nfex.getLocalizedMessage());
                 }
             } else continue;
-            ArrayList<Object> secondChanges = new ArrayList<Object>(); // List of intervals and texts
+            ArrayList<Object> secondChanges = new ArrayList<>(); // List of intervals and texts
             line = fillChanges(secondInterval, br, DIFFERENCE_DELIMETER, secondChanges);
             if (changesCountInvariant(firstChanges, secondChanges) == false) {
                 throw new IOException("Diff file format error. Number of new and old file changes in one hunk must be same!");   // NOI18N

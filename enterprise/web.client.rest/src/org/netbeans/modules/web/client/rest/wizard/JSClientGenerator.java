@@ -114,7 +114,7 @@ class JSClientGenerator {
         if ( restSource == null ){
             return Collections.emptyMap();
         }
-        Map<String,String> result = new HashMap<String, String>();
+        Map<String,String> result = new HashMap<>();
         myModels = new StringBuilder();        
         myRouters = new StringBuilder();
         myContent = new StringBuilder();
@@ -243,7 +243,7 @@ class JSClientGenerator {
             String pathNoParam = removeParamTemplate( path , getValue(annotation));
             oneParamGetMethods.put(pathNoParam, method );
         }
-        Map<String,String> fqn2Path = new HashMap<String, String>();
+        Map<String,String> fqn2Path = new HashMap<>();
         for(Entry<String,ExecutableElement> entry : noParamGetMethods.entrySet()){
             String path = entry.getKey();
             ExecutableElement method = entry.getValue();
@@ -825,7 +825,7 @@ class JSClientGenerator {
     private StringBuilder myTmplCreate;
     private StringBuilder myTmplList;
     private StringBuilder myTmplDetails;
-    private final Set<String> myEntities = new HashSet<String>();
+    private final Set<String> myEntities = new HashSet<>();
     private boolean isModelGenerated;
     private int myModelsCount;
     private boolean hasUi;

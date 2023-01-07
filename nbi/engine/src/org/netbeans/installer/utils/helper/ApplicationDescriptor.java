@@ -56,7 +56,7 @@ public class ApplicationDescriptor {
         this.uninstallCommand = uninstallCommand;
         this.modifyCommand = modifyCommand;
         
-        this.parameters = new HashMap<String, Object>();
+        this.parameters = new HashMap<>();
     }
     
     public ApplicationDescriptor(

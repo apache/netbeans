@@ -52,7 +52,7 @@ public class ResourceNodeChildren extends Children.Keys<Object> {
     }
 
     private void updateKeys() {
-        ArrayList<Object> keys = new ArrayList<Object>();
+        ArrayList<Object> keys = new ArrayList<>();
         List<WadlSaasResource> resources = resource.getChildResources();
         Collections.sort(resources);
         keys.addAll(resources);

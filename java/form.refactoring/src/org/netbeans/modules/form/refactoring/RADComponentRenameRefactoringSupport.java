@@ -148,7 +148,7 @@ public class RADComponentRenameRefactoringSupport implements RenameSupport.Refac
                                 this.handle = TreePathHandle.create(path, info);
                                 variableElement = el;
                                 if (findUsages) {
-                                    usagesPositions = new ArrayList<Integer>();
+                                    usagesPositions = new ArrayList<>();
                                 }
                             }
                         }

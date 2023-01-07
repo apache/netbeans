@@ -63,7 +63,7 @@ public class Change extends Difference {
                 NamedNodeMap nm1 = n1.getAttributes();
                 NamedNodeMap nm2 = n2.getAttributes();
                 HashMap<Node, Integer> posMap = new HashMap<Node, Integer>();
-                List<String> allAttrNames = new ArrayList<String>();
+                List<String> allAttrNames = new ArrayList<>();
                 for ( int i=0; i < nm1.getLength(); i++ ) {
                     Node oldAttr = (Node) nm1.item(i);
                     String name = oldAttr.getNodeName();

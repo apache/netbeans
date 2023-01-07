@@ -139,7 +139,7 @@ public class WebModuleProviderImpl extends BaseEEModuleProvider implements WebMo
 
         ClassPath cp = cppImpl.getProjectSourcesClassPath(ClassPath.SOURCE);
         NbMavenProject prj = project.getLookup().lookup(NbMavenProject.class);
-        List<URL> resUris = new ArrayList<URL>();
+        List<URL> resUris = new ArrayList<>();
         URI webapp = prj.getWebAppDirectory();
         if (webapp != null) {
             try {
@@ -156,7 +156,7 @@ public class WebModuleProviderImpl extends BaseEEModuleProvider implements WebMo
             }
         }
         Iterator<ClassPath.Entry> en = cp.entries().listIterator();
-        List<FileObject> toRet = new ArrayList<FileObject>();
+        List<FileObject> toRet = new ArrayList<>();
         int index = 0;
         while (en.hasNext()) {
             ClassPath.Entry ent = en.next();

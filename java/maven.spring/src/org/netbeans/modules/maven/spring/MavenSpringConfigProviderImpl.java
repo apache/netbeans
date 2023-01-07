@@ -74,7 +74,7 @@ public class MavenSpringConfigProviderImpl implements SpringConfigFileLocationPr
 
     @Override
     public Set<File> getConfigFiles() {
-        Set<File> result = new HashSet<File>();
+        Set<File> result = new HashSet<>();
         NbMavenProject project = prj.getLookup().lookup(NbMavenProject.class);
         if (NbMavenProject.TYPE_WAR.equals(project.getPackagingType())) {
             FileObject fo = FileUtilities.convertURItoFileObject(project.getWebAppDirectory());

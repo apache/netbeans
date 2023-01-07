@@ -108,7 +108,7 @@ public class NewJavaHelpIterator extends BasicWizardIterator {
                 }
                 
                 files = new CreatedModifiedFiles(getProject());
-                Map<String,String> tokens = new HashMap<String,String>();
+                Map<String,String> tokens = new HashMap<>();
                 tokens.put("CODE_NAME", basename); // NOI18N
                 tokens.put("FULL_CODE_NAME", codeNameBase); // NOI18N
                 tokens.put("DISPLAY_NAME", ProjectUtils.getInformation(getProject()).getDisplayName()); // NOI18N
@@ -142,7 +142,7 @@ public class NewJavaHelpIterator extends BasicWizardIterator {
 
                 if (!ann && !isMaven) {
                     // edit some properties
-                    Map<String,String> props = new HashMap<String,String>();
+                    Map<String,String> props = new HashMap<>();
                     // Default for javahelp.base (org/netbeans/modules/foo/docs) is correct.
                     // For <checkhelpset> (nb.org modules only):
                     props.put("javahelp.hs", basename + TEMPLATE_SUFFIX_HS); // NOI18N

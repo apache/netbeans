@@ -126,7 +126,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
             final boolean hasLocal,
             boolean overrideExisting) throws IOException {
 
-        final Set<FileObject> createdFiles = new HashSet<FileObject>();
+        final Set<FileObject> createdFiles = new HashSet<>();
         final String entitySimpleName = JavaIdentifiers.unqualify(entityFQN);
         final String variableName = entitySimpleName.toLowerCase().charAt(0) + 
             entitySimpleName.substring(1);
@@ -377,7 +377,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                     }
 
                     // create arguments list
-                    List<VariableTree> vars = new ArrayList<VariableTree>();
+                    List<VariableTree> vars = new ArrayList<>();
                     String[] paramNames = option.getParameterNames();
                     int paramLength = paramNames == null ? 0 : 
                         option.getParameterNames().length ;
@@ -519,7 +519,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
     private void modifyEntityManager( List<GenerationOptions> methodOptions ,
             FileObject fileObject)  throws IOException 
     {
-        final Set<String> methodNames = new HashSet<String>();
+        final Set<String> methodNames = new HashSet<>();
         for( GenerationOptions opt : methodOptions ){
             methodNames.add( opt.getMethodName());
         }

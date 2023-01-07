@@ -32,8 +32,8 @@ import org.openide.util.Lookup;
 class InstallConfig {
     private boolean ergonomics = false;
     private boolean somePacksDisabled = false;
-    private Set<String> enabledPackNames = new HashSet<String>(10);
-    private Set<String> availablePackNames = new HashSet<String>(10);
+    private Set<String> enabledPackNames = new HashSet<>(10);
+    private Set<String> availablePackNames = new HashSet<>(10);
 
     private static final String javaSEPackName = "org.netbeans.modules.java.kit"; //NOI18N
 

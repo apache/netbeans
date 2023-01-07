@@ -510,7 +510,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
             return Collections.emptyList();
         }
         Project project = FileOwnerQuery.getOwner(fo);
-        HashSet<String> unique = new HashSet<String>();
+        HashSet<String> unique = new HashSet<>();
         try {
             CssIndex cssIndex = CssIndex.create(project);
             Map<FileObject, Collection<String>> findIdsByPrefix = cssIndex.findIdsByPrefix(tagIdPrefix);
@@ -532,7 +532,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
             return Collections.emptyList();
         }
         Project project = FileOwnerQuery.getOwner(fo);
-        HashSet<String> unique = new HashSet<String>();
+        HashSet<String> unique = new HashSet<>();
         try {
             CssIndex cssIndex = CssIndex.create(project);
             Map<FileObject, Collection<String>> findIdsByPrefix = cssIndex.findClassesByPrefix(classPrefix);

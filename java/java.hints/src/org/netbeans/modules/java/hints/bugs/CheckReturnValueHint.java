@@ -63,7 +63,7 @@ public class CheckReturnValueHint {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
     }
 
-    private static final Set<String> JDK_IMMUTABLE_CLASSES = new HashSet<String>(Arrays.asList("java.lang.String"));
+    private static final Set<String> JDK_IMMUTABLE_CLASSES = new HashSet<>(Arrays.asList("java.lang.String"));
 
     private static boolean checkReturnValueForJDKMethods(ExecutableElement method) {
         Element owner = method.getEnclosingElement();

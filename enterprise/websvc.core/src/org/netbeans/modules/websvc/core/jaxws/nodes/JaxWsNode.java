@@ -878,7 +878,7 @@ public class JaxWsNode extends AbstractNode implements
             DialogDisplayer.getDefault().notify(dialogDesc);
             return;
         }
-        List<String> handlerClasses = new ArrayList<String>();
+        List<String> handlerClasses = new ArrayList<>();
         FileObject handlerFO = null;
         HandlerChains handlerChains = null;
         //obtain the handler config file, if any from annotation in implbean

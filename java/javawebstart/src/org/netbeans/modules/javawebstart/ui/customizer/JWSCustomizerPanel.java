@@ -655,7 +655,7 @@ private void manageResources(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_
     private List<Map<String,String>> copyList(List<Map<String,String>> list2Copy) {
         List<Map<String,String>> list2Return = new ArrayList<Map<String,String>>();
         for (Map<String,String> map : list2Copy) {
-            Map<String,String> newMap = new HashMap<String,String>();
+            Map<String,String> newMap = new HashMap<>();
             for(String key : map.keySet()) {
                 String value = map.get(key);
                 newMap.put(key, value);

@@ -85,7 +85,7 @@ public class NewLibraryPanel extends javax.swing.JPanel {
 
 
     private void initModel(String preselectedLibraryType) {
-        this.typeMap = new HashMap<Integer,String>();
+        this.typeMap = new HashMap<>();
         this.name.setText (NbBundle.getMessage (NewLibraryPanel.class,"TXT_NewLibrary"));
         LibraryTypeProvider[] providers = LibrariesSupport.getLibraryTypeProviders();
         int index = 0;

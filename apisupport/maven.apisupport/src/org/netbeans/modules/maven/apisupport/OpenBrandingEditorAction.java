@@ -184,7 +184,7 @@ public class OpenBrandingEditorAction extends AbstractAction implements ContextA
         }
 
         @Override public Set<File> getBrandableJars() {
-            Set<File> jars = new HashSet<File>();
+            Set<File> jars = new HashSet<>();
             for (BrandableModuleImpl m : modules.values()) {
                 jars.add(m.jar);
             }

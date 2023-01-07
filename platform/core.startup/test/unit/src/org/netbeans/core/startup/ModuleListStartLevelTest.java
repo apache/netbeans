@@ -52,9 +52,9 @@ public class ModuleListStartLevelTest extends SetupHid {
     private void initModule() throws IOException {
         FileObject fo = modulesfolder.createData("com-jcraft-jsch.xml");
         File mod = new File(new File(ud, "modules"), "com-jcraft-jsch.jar");
-        final HashMap<String, String> man = new HashMap<String, String>();
+        final HashMap<String, String> man = new HashMap<>();
         man.put("Bundle-SymbolicName", "com.jcraft.jsch");
-        createJar(mod, new HashMap<String, String>(), man);
+        createJar(mod, new HashMap<>(), man);
         
         InputStream is = ModuleListStartLevelTest.class.getResourceAsStream("ModuleList-com-jcraft-jsch.xml");
         assertNotNull("Module definition found", is);

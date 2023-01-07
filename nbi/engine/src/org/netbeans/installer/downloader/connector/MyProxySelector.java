@@ -49,7 +49,7 @@ public class MyProxySelector extends ProxySelector implements DomExternalizable 
     private final Map<MyProxyType, MyProxy> proxies = 
             new HashMap<MyProxyType, MyProxy>();
 
-    private transient Set<String> byPassSet = new HashSet<String>();
+    private transient Set<String> byPassSet = new HashSet<>();
 
     public void add(MyProxy proxy) {
         proxies.put(proxy.type, proxy);

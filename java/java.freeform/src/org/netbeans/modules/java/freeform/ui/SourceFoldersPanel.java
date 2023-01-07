@@ -510,7 +510,7 @@ private void encodingComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
 private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_includesExcludesButtonActionPerformed
         // Assumes they all use the same include/exclude patterns. Close enough.
         IncludeExcludeVisualizer v = new IncludeExcludeVisualizer();
-        List<File> roots = new ArrayList<File>();
+        List<File> roots = new ArrayList<>();
         for (JavaProjectGenerator.SourceFolder folder : model.getSourceFolders()) {
             v.setIncludePattern(folder.includes != null ? folder.includes : "**");
             v.setExcludePattern(folder.excludes != null ? folder.excludes : "");
@@ -690,7 +690,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
     }
     
     /*package private for tests*/static Set<File> processRoots(ProjectModel model, File[] files, boolean isTests, boolean isWizard) {
-        Set<File> invalidRoots = new HashSet<File>();
+        Set<File> invalidRoots = new HashSet<>();
         
         FILE: for (File file : files) {
             File sourceLoc = FileUtil.normalizeFile(file);

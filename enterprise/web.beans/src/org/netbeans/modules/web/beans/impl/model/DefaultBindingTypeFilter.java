@@ -66,7 +66,7 @@ class DefaultBindingTypeFilter<T extends Element> extends Filter<T> {
             List<? extends AnnotationMirror> allAnnotationMirrors = getImplementation()
                     .getHelper().getCompilationController().getElements()
                     .getAllAnnotationMirrors(element);
-            Set<String> qualifierNames = new HashSet<String>();
+            Set<String> qualifierNames = new HashSet<>();
             for (AnnotationMirror annotationMirror : allAnnotationMirrors) {
                 DeclaredType annotationType = annotationMirror
                         .getAnnotationType();

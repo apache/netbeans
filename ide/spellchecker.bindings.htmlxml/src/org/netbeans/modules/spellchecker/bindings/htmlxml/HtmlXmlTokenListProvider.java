@@ -39,7 +39,7 @@ import org.netbeans.modules.spellchecker.spi.language.TokenListProvider;
  */
 public class HtmlXmlTokenListProvider implements TokenListProvider {
 
-    private static final Map<String, String> MIME_TO_SETTING_NAME = new HashMap<String, String>();
+    private static final Map<String, String> MIME_TO_SETTING_NAME = new HashMap<>();
     static {
         MIME_TO_SETTING_NAME.put("text/html", "HTML"); //NOI18N
         MIME_TO_SETTING_NAME.put("text/xhtml", "XHTML"); //NOI18N

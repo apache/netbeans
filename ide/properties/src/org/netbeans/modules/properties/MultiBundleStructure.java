@@ -97,7 +97,7 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
                     return;
                 }
             }
-            List<FileObject> listFileObjects = new ArrayList<FileObject>();
+            List<FileObject> listFileObjects = new ArrayList<>();
             String fName;
             FileObject oldCandidate;
             for (FileObject file : parent.getChildren()) {
@@ -306,13 +306,13 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
             return false;
         }
 
-        Set<String> knownLanguages = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
+        Set<String> knownLanguages = new HashSet<>(Arrays.asList(Locale.getISOLanguages()));
         if (!knownLanguages.contains(s1)) {
             return false;
         }
 
         if (s2 != null) {
-            Set<String> knownCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
+            Set<String> knownCountries = new HashSet<>(Arrays.asList(Locale.getISOCountries()));
             if (!knownCountries.contains(s2)) {
                 return false;
             }

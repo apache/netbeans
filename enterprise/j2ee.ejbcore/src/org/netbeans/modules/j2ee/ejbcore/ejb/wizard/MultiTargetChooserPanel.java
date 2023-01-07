@@ -62,7 +62,7 @@ public final class MultiTargetChooserPanel implements WizardDescriptor.Panel, Ch
     private static final String FOLDER_TO_DELETE = "folderToDelete";    //NOI18N
 
     private final SpecificationVersion JDK_14 = new SpecificationVersion ("1.4");   //NOI18N
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private MultiTargetChooserPanelGUI gui;
     private WizardDescriptor.Panel bottomPanel;
     private WizardDescriptor wizard;

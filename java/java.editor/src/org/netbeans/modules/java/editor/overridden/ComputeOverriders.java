@@ -93,7 +93,7 @@ public class ComputeOverriders {
                 for (URL u2 : l1) {
                     List<URL> l2 = inverseDeps.get(u2);
                     if (l2 == null) {
-                        l2 = new ArrayList<URL>();
+                        l2 = new ArrayList<>();
                         inverseDeps.put (u2,l2);
                     }
                     l2.add (u1);

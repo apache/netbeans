@@ -465,7 +465,7 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
     
     static Set<String> getAnnotationFqns( Collection<? extends AnnotationMirror> annotations )
     {
-        Set<String> annotationFqns = new HashSet<String>();
+        Set<String> annotationFqns = new HashSet<>();
         for (AnnotationMirror annotationMirror : annotations) {
             DeclaredType annotationType = annotationMirror.getAnnotationType();
             Element annotationElement = annotationType.asElement();

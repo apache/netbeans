@@ -156,9 +156,9 @@ public abstract class AbstractGitTestCase extends NbTestCase {
     protected class StatusRefreshLogHandler extends Handler {
         private Set<File> filesToRefresh;
         private boolean filesRefreshed;
-        private final HashSet<File> refreshedFiles = new HashSet<File>();
+        private final HashSet<File> refreshedFiles = new HashSet<>();
         private final File topFolder;
-        private final Set<String> interestingFiles = new HashSet<String>();
+        private final Set<String> interestingFiles = new HashSet<>();
         boolean active;
 
         public StatusRefreshLogHandler (File topFolder) {
@@ -224,7 +224,7 @@ public abstract class AbstractGitTestCase extends NbTestCase {
         }
 
         Set<String> getInterestingFiles () {
-            return new HashSet<String>(interestingFiles);
+            return new HashSet<>(interestingFiles);
         }
 
     }

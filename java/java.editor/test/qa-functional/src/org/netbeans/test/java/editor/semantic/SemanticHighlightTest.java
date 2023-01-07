@@ -90,7 +90,7 @@ public class SemanticHighlightTest extends JavaEditorTestCase {
                 AttributeSet as  = hs.getAttributes();
                 Enumeration en = as.getAttributeNames();//produces elements in random order!
                 getRef().println(hs.getStartOffset()+ " "+hs.getEndOffset());                
-                ArrayList<String> tmpEnumContent = new ArrayList<String>();
+                ArrayList<String> tmpEnumContent = new ArrayList<>();
                 while(en.hasMoreElements()) {
                     Object s = en.nextElement();
                     String attrValue = as.getAttribute(s).toString();

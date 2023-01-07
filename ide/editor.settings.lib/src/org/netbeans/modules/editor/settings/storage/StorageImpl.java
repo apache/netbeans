@@ -503,7 +503,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
                 filterForId.filtersForId.add(f);
             }
             
-            Set<String> changedIds = new HashSet<String>(filters.keySet());
+            Set<String> changedIds = new HashSet<>(filters.keySet());
             return changedIds;
         }
         

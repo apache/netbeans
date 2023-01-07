@@ -150,7 +150,7 @@ public class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementat
                 }
 
                 if (contains) {
-                    List<FileObject> result = new ArrayList<FileObject>();
+                    List<FileObject> result = new ArrayList<>();
                     for (URL u : lib.getContent(ServerLibraryTypeProvider.VOLUME_SOURCE)) {
                         FileObject sourceRootURL = URLMapper.findFileObject(u);
                         if (sourceRootURL != null) {

@@ -330,7 +330,7 @@ public final class WebProjectProperties {
         privateGroup = new StoreGroup();
         projectGroup = new StoreGroup();
 
-        additionalProperties = new HashMap<String,String>();
+        additionalProperties = new HashMap<>();
 
         init(); // Load known properties
     }
@@ -992,7 +992,7 @@ public final class WebProjectProperties {
     }
 
     void loadIncludesExcludes(IncludeExcludeVisualizer v) {
-        Set<File> roots = new HashSet<File>();
+        Set<File> roots = new HashSet<>();
         for (DefaultTableModel model : new DefaultTableModel[] {SOURCE_ROOTS_MODEL, TEST_ROOTS_MODEL}) {
             for (Object row : model.getDataVector()) {
                 File d = (File) ((Vector) row).elementAt(0);

@@ -602,7 +602,7 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
         String namespace = model.getNamespace();
         List nodes = model.getSchemaNodes();
         
-        nsToPrefix = new HashMap<String, String>();
+        nsToPrefix = new HashMap<>();
         
         SchemaObject noNamespaceSchema = null;
         
@@ -693,7 +693,7 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
     private static final String PARAM_ENCODING = "fileEncoding"; // NOI18N
     
     Map<String, Object> prepareParameters(DataFolder df) throws IOException {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         // side effect: rootLocalName is initialized
         params.put(PARAM_ROOT_TAG_NS, getRootTag());
         params.put(PARAM_DOCTYPE, createDoctype());

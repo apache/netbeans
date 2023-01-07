@@ -60,7 +60,7 @@ implements CloneableEditorSupport.Env {
 
     public CloneableEditorSupportOpenCloseTest(String name) {
         super(name);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testOpenParallel");
 //        includes.add("testOpenFromOpenNotification");
 //        includes.add("testCloseWhileOpening");

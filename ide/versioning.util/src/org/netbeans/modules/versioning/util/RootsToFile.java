@@ -104,7 +104,7 @@ public class RootsToFile {
         root = callback.getTopmostManagedAncestor(file);
         if(root != null) {
             if(file.isFile()) file = file.getParentFile();
-            List<File> folders = new ArrayList<File>();
+            List<File> folders = new ArrayList<>();
             for (; file != null && !file.getAbsolutePath().equals(root.getAbsolutePath()) ; file = file.getParentFile()) {
                 File knownRoot = get(file);
                 if(knownRoot != null) {

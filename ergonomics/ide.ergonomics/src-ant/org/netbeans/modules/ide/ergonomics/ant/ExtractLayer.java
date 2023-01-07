@@ -346,7 +346,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
 
         {
             HashMap<String,Resource> names = new HashMap<String,Resource>();
-            HashSet<String> duplicates = new HashSet<String>();
+            HashSet<String> duplicates = new HashSet<>();
             for (Resource r : icons) {
                 String name = r.getName();
                 Resource prev = names.put(name, r);
@@ -633,7 +633,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
                 }
                 final String value = line.substring(equals + 1);
                 if (map == null) {
-                    map = new HashMap<String, String>();
+                    map = new HashMap<>();
                 }
                 if (map.containsKey(key)) {
                     final String oldValue = map.get(key);

@@ -90,7 +90,7 @@ public final class FileUtil extends Object {
     /** transient attributes which should not be copied
     * of type Set<String>
     */
-    static final Set<String> transientAttributes = new HashSet<String>();
+    static final Set<String> transientAttributes = new HashSet<>();
 
     static {
         transientAttributes.add("templateWizardURL"); // NOI18N
@@ -1477,7 +1477,7 @@ public final class FileUtil extends Object {
      */
     public static List<String> getMIMETypeExtensions(String mimeType) {
         Parameters.notEmpty("mimeType", mimeType);  //NOI18N
-        HashMap<String, String> extensionToMime = new HashMap<String, String>();
+        HashMap<String, String> extensionToMime = new HashMap<>();
         for (FileObject mimeResolverFO : MIMEResolverImpl.getOrderedResolvers()) {
             Map<String, Set<String>> mimeToExtensions = MIMEResolverImpl.getMIMEToExtensions(mimeResolverFO);
             for (Map.Entry<String, Set<String>> entry : mimeToExtensions.entrySet()) {
@@ -1488,7 +1488,7 @@ public final class FileUtil extends Object {
                 }
             }
         }
-        List<String> registeredExtensions = new ArrayList<String>();
+        List<String> registeredExtensions = new ArrayList<>();
         for (Map.Entry<String, String> entry : extensionToMime.entrySet()) {
             if (entry.getValue().equals(mimeType)) {
                 registeredExtensions.add(entry.getKey());

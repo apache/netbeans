@@ -623,7 +623,7 @@ public class Utilities {
     private static final Set<String> nonCtorKeywords;
     
     static {
-        keywords = new HashSet<String>();
+        keywords = new HashSet<>();
         
         keywords.add("true");
         keywords.add("false");
@@ -632,7 +632,7 @@ public class Utilities {
         keywords.add("super");
         keywords.add("class");
 
-        nonCtorKeywords = new HashSet<String>(keywords);
+        nonCtorKeywords = new HashSet<>(keywords);
         nonCtorKeywords.remove("this");
         nonCtorKeywords.remove("super");
 

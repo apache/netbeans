@@ -78,7 +78,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
     }
     
     public Iterator getPublicIDs() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (SchemaInfo each : schemas){
             result.add(each.getPublicId());
         }

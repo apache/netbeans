@@ -69,7 +69,7 @@ public class SuiteCustomizerLibrariesTest extends TestBase {
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_IMPLEMENTATION_VERSION, "foo-1");
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_LOCALIZING_BUNDLE, "foo/Bundle.properties");
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_PROVIDES, "tok1, tok1a");
-        Map<String,String> contents = new HashMap<String,String>();
+        Map<String,String> contents = new HashMap<>();
         contents.put("foo/Bundle.properties", "OpenIDE-Module-Name=Foo Module");
         TestBase.createJar(new File(new File(new File(install, "somecluster"), "modules"), "foo.jar"), contents, mani);
         // MODULE bar
@@ -81,7 +81,7 @@ public class SuiteCustomizerLibrariesTest extends TestBase {
         mani = new Manifest();
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE, "foo2");
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_PROVIDES, "tok1b");
-        contents = new HashMap<String,String>();
+        contents = new HashMap<>();
         TestBase.createJar(new File(new File(new File(install, "somecluster"), "modules"), "foo2.jar"), contents, mani);
         // MODULE bar2
         mani = new Manifest();
@@ -200,7 +200,7 @@ public class SuiteCustomizerLibrariesTest extends TestBase {
         EventQueue.invokeAndWait(r);
         SuiteCustomizerLibraries scl = ref[0];
         Set<SuiteCustomizerLibraries.UniverseModule> modules = SuiteCustomizerLibraries.loadUniverseModules(platform.getSortedModules(), SuiteUtils.getSubProjects(suite), Collections.<ModuleEntry>emptySet());
-        Set<File> allClusters = new HashSet<File>(Arrays.asList(
+        Set<File> allClusters = new HashSet<>(Arrays.asList(
                 new File(install, "somecluster"), new File(install, "anothercluster"), ClusterUtils.getClusterDirectory(suite)));
         assertEquals(null, join(scl.findWarning(modules, allClusters, Collections.<String>emptySet()).warning));
         /* XXX failing, investigate:

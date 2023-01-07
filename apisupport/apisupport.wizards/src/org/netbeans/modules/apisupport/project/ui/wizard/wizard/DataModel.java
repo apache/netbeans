@@ -91,11 +91,11 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
     private void regenerate() {
         cmf = new CreatedModifiedFiles(getProject());
         
-        Map<String, String> basicTokens = new HashMap<String, String>();
+        Map<String, String> basicTokens = new HashMap<>();
         basicTokens.put("PACKAGE_NAME", getPackageName()); // NOI18N
         basicTokens.put("WIZARD_PREFIX", prefix); // NOI18N
 
-        List<String> panelClassNames = new ArrayList<String>();
+        List<String> panelClassNames = new ArrayList<>();
         
         // Create wizard and visual panels
         for (int stepNumber = 1; stepNumber < (nOfSteps + 1); stepNumber++) {
@@ -205,7 +205,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         boolean isJava = fileTemplateType == TemplateType.HTML4J;
         cmf = new CreatedModifiedFiles(getProject());
         
-        Map<String, Object> basicTokens = new HashMap<String, Object>();
+        Map<String, Object> basicTokens = new HashMap<>();
         basicTokens.put("PACKAGE_NAME", getPackageName()); // NOI18N
         basicTokens.put("WIZARD_PREFIX", prefix); // NOI18N
 

@@ -36,7 +36,7 @@ public class KeyringSupport {
 
     private static final Logger LOG = Logger.getLogger("versioning.util.KeyringSupport"); //NOI18N
     private static final boolean PRINT_PASSWORDS = "true".equals(System.getProperty("versioning.keyring.logpassword", "false")); //NOI18N
-    private static final Set<String> NULL_HASHED_RECORDS = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> NULL_HASHED_RECORDS = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Saves password for a key constructed from keyPrefix and key

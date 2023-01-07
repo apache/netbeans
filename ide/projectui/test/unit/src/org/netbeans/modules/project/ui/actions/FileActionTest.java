@@ -220,7 +220,7 @@ public class FileActionTest extends NbTestCase {
         
         private String[] ACTIONS = new String[] { COMMAND };
         
-        private List<String> invocations = new ArrayList<String>();
+        private List<String> invocations = new ArrayList<>();
         
         public String[] getSupportedActions() {
             return ACTIONS;

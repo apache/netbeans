@@ -35,7 +35,7 @@ import org.openide.util.NbBundle;
  */
 public class MemoryInstancePropertiesImpl extends DeletableInstanceProperties implements InstanceListener {
 
-    private Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<>();
 
     private final String url;
 
@@ -73,7 +73,7 @@ public class MemoryInstancePropertiesImpl extends DeletableInstanceProperties im
     @Override
     public Enumeration propertyNames() throws IllegalStateException {
         synchronized (this) {
-            return Collections.enumeration(new HashSet<String>(getProperties().keySet()));
+            return Collections.enumeration(new HashSet<>(getProperties().keySet()));
         }
     }
 

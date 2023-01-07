@@ -139,7 +139,7 @@ class SelectStatementAnalyzer extends SQLStatementAnalyzer {
     }
 
     private List<String> analyzeSelectValue() {
-        List<String> parts = new ArrayList<String>();
+        List<String> parts = new ArrayList<>();
         parts.add(getUnquotedIdentifier());
         boolean afterDot = false;
         main: for (;;) {

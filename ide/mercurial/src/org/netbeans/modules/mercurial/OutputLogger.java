@@ -52,7 +52,7 @@ public class OutputLogger {
     public static final int MAX_LINES_TO_PRINT = 500;
 
     private static final String MSG_TOO_MANY_LINES = "The number of output lines is greater than 500; see message log for complete output";
-    private static final HashSet<String> openedWindows = new HashSet<String>(5);
+    private static final HashSet<String> openedWindows = new HashSet<>(5);
 
 
     static OutputLogger getLogger(String repositoryRoot) {

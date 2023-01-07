@@ -1095,7 +1095,7 @@ public class FlowTest extends NbTestCase {
                 .getTreeUtilities()
                 .pathFor(span[0]);
 
-        Set<String> actual = new HashSet<String>();
+        Set<String> actual = new HashSet<>();
         Iterable<? extends TreePath> c = flow
                 .getAssignmentsForUse()
                 .get(sel
@@ -1114,7 +1114,7 @@ public class FlowTest extends NbTestCase {
             }
         }
 
-        assertEquals(new HashSet<String>(Arrays
+        assertEquals(new HashSet<>(Arrays
                 .asList(assignments)), actual);
     }
 
@@ -1601,7 +1601,7 @@ public class FlowTest extends NbTestCase {
         prepareTest(code, allowErrors);
 
         FlowResult actual = Flow.assignmentsForUse(info, new AtomicBoolean());
-        List<String> computedCandidates = new ArrayList<String>();
+        List<String> computedCandidates = new ArrayList<>();
         
         for (VariableElement ve : actual.getFinalCandidates()) {
             computedCandidates.add(ve.getSimpleName().toString());

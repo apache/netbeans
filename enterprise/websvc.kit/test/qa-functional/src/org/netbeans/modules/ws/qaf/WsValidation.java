@@ -88,7 +88,7 @@ public class WsValidation extends WebServicesTestBase {
     protected static final String WEB_SERVICES_NODE_NAME = Bundle.getStringTrimmed("org.netbeans.modules.websvc.core.jaxws.nodes.Bundle", "LBL_WebServices");
     private static final String WEB_SERVICE_CLIENTS_NODE_NAME = Bundle.getStringTrimmed("org.netbeans.modules.websvc.core.jaxws.nodes.Bundle", "LBL_ServiceReferences");
     private static final Logger LOG = Logger.getLogger(WsValidation.class.getName());
-    private static List<String> resourceConfDialogClosed = new ArrayList<String>();
+    private static List<String> resourceConfDialogClosed = new ArrayList<>();
 
     private static int foId = 0;
 

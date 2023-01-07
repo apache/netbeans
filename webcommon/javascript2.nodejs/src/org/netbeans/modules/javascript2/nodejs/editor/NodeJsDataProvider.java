@@ -207,7 +207,7 @@ public class NodeJsDataProvider {
      * exist
      */
     public Collection<String> getRuntimeModules() {
-        HashSet<String> modules = new HashSet<String>();
+        HashSet<String> modules = new HashSet<>();
         if (docFolder != null) {
             FileObject libFolder = getFolderWithRuntimeSources();
             if (libFolder != null) {
@@ -249,7 +249,7 @@ public class NodeJsDataProvider {
      * @return collection of local modules, that are obtained from the first node_modules folder
      */
     public Collection<FileObject> getLocalModules(FileObject forFile) {
-        HashSet<FileObject> modules = new HashSet<FileObject>();
+        HashSet<FileObject> modules = new HashSet<>();
         Project project = FileOwnerQuery.getOwner(forFile);
         FileObject nodeModulesFolder = null;
         FileObject parent = forFile.getParent();
@@ -318,7 +318,7 @@ public class NodeJsDataProvider {
                     String name = getJSONStringProperty(event, NAME);
                     Collection<String> documentations = result.get(name);
                     if (documentations == null) {
-                        documentations = new ArrayList<String>();
+                        documentations = new ArrayList<>();
                         result.put(name, documentations);
                     }
                     String documentation = getJSONStringProperty(event, DESCRIPTION);
@@ -443,7 +443,7 @@ public class NodeJsDataProvider {
                     if (methodName != null && signatures != null) {
                         for (Object signature : signatures) {
                             JSONArray params = getJSONArrayProperty((JSONObject) signature, PARAMS);
-                            List<String> paramNames = new ArrayList<String>();
+                            List<String> paramNames = new ArrayList<>();
                             if (params != null && !params.isEmpty()) {
                                 for (Object param : params) {
                                     String paramName = getJSONStringProperty((JSONObject) param, NAME);

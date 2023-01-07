@@ -217,7 +217,7 @@ public class ModelTest extends CommonTestCase {
                     }
                 }
                 
-                Set<String> names = new HashSet<String>(); 
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     names.add( element.getSimpleName().toString() );
                     if ( element.getSimpleName().contentEquals("myFieldA")){
@@ -348,7 +348,7 @@ public class ModelTest extends CommonTestCase {
                     }
                 }
 
-                Set<String> names = new HashSet<String>();
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     names.add( element.getSimpleName().toString() );
                     if ( element.getSimpleName().contentEquals("mySlowProducer")){
@@ -525,7 +525,7 @@ public class ModelTest extends CommonTestCase {
                     }
                 }
                 
-                Set<String> names = new HashSet<String>(); 
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     names.add( element.getSimpleName().toString() );
                     if ( element.getSimpleName().contentEquals("myFieldA")){

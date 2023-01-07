@@ -487,7 +487,7 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
 
     private static String inferName(CompilationInfo info, TreePath currentPath) {
         Scope s = info.getTrees().getScope(currentPath);
-        Set<String> existingVariables = new HashSet<String>();
+        Set<String> existingVariables = new HashSet<>();
 
         for (Element e : info.getElementUtilities().getLocalVars(s, new ElementAcceptor() {
             public boolean accept(Element e, TypeMirror type) {

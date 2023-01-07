@@ -110,7 +110,7 @@ public class StatFilesTest extends NbTestCase {
     public void testGetCachedChildren() throws IOException {
         FileObject fobj = getFileObject(testFile);
         FileObject parent = fobj.getParent();
-        List<FileObject> l = new ArrayList<FileObject>();
+        List<FileObject> l = new ArrayList<>();
         parent = parent.createFolder("parent");
         for (int i = 0; i < 10; i++) {
             l.add(parent.createData("file" + i));
@@ -133,7 +133,7 @@ public class StatFilesTest extends NbTestCase {
     public void testGetChildrenCaches() throws IOException {
         FileObject fobj = getFileObject(testFile);
         FileObject parent = fobj.getParent();
-        List<FileObject> l = new ArrayList<FileObject>();
+        List<FileObject> l = new ArrayList<>();
         parent = parent.createFolder("parent");
         for (int i = 0; i < 20; i++) {
             l.add(parent.createData("file" + i + ".txt"));

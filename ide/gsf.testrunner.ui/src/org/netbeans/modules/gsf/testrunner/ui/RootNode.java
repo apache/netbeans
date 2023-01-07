@@ -322,7 +322,7 @@ final class RootNode extends AbstractNode {
         "# {0} - info about passed tests", "# {1} - info about pending tests", "# {2} - info about failed tests", "# {3} - info about erroneous tests", "# {4} - info about skipped tests", "# {5} - info about aborted tests", "MSG_TestResultSummary5={0}, {1}, {2}, {3}, {4}, {5}."
     })
     String constructMessage(String... subMessages) {
-        List<String> messageList = new ArrayList<String>();
+        List<String> messageList = new ArrayList<>();
         for (String msg : subMessages) {
             if (msg != null) {
                 messageList.add(msg);

@@ -62,8 +62,8 @@ public class NbmExternalTest extends NbTestCase {
     private static File catalogFile;
     private static URL catalogURL;
     private File tmpDirectory;
-    private List<File> nbms = new ArrayList<File>();
-    private List<String> moduleElements = new ArrayList<String>();
+    private List<File> nbms = new ArrayList<>();
+    private List<String> moduleElements = new ArrayList<>();
 
     public NbmExternalTest(String testName) {
         super(testName);

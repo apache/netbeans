@@ -282,7 +282,7 @@ public class WebUtils {
         }
 
         //link: ../../folder/file.txt
-        List<FileObject> targetPathFiles = new ArrayList<FileObject>();
+        List<FileObject> targetPathFiles = new ArrayList<>();
         FileObject file = target;
         while ((file = file.getParent()) != null) {
             assert file.isFolder();

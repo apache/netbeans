@@ -270,7 +270,7 @@ public final class Archetype {
      * @return required property name as key and default value as map value
      */
     public Map<String, String> loadRequiredProperties() {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         File fil = getArtifact().getFile();
         assert fil != null : "requires a resolved artifact";
         JarFile jf = null;

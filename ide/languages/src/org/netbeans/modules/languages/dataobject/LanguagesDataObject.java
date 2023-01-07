@@ -69,7 +69,7 @@ public class LanguagesDataObject extends MultiDataObject {
     protected DataObject handleCreateFromTemplate(final DataFolder df, final String name) throws IOException {
         DataObject createdClass = super.handleCreateFromTemplate(df, name);
         FileObject createdClassFO = createdClass.getPrimaryFile();
-        Map<String, String> tokens = new HashMap<String, String>();
+        Map<String, String> tokens = new HashMap<>();
         tokens.put("__CLASS_NAME__", name);
         tokens.put("__PACKAGE_NAME__", getPackageName(createdClassFO));
         createFileWithSubstitutions(this.getPrimaryFile(), createdClassFO, tokens);

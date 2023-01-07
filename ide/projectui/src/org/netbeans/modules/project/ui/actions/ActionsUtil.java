@@ -93,7 +93,7 @@ class ActionsUtil {
         for (Project p : lookup.lookupAll(Project.class)) {
             result.add(p);
         }
-        List<FileObject> result2 = new ArrayList<FileObject>();
+        List<FileObject> result2 = new ArrayList<>();
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
             result2.add(dObj.getPrimaryFile());
         }
@@ -125,7 +125,7 @@ class ActionsUtil {
      * with given command supported.
      */    
     public static FileObject[] getFilesFromLookup( Lookup lookup, Project project ) {
-        HashSet<FileObject> result = new HashSet<FileObject>();
+        HashSet<FileObject> result = new HashSet<>();
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
             FileObject fObj = dObj.getPrimaryFile();
             Project p = FileOwnerQuery.getOwner(fObj);

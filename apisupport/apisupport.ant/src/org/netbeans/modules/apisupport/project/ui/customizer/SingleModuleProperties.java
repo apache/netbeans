@@ -130,7 +130,7 @@ public final class SingleModuleProperties extends ModuleProperties {
 
     static {
         // setup defaults
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put(BUILD_COMPILER_DEBUG, "true"); // NOI18N
         map.put(BUILD_COMPILER_DEPRECATION, "true"); // NOI18N
         map.put(IS_AUTOLOAD, "false"); // NOI18N
@@ -895,7 +895,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     }
 
     private Collection<String> getSelectedPackages() {
-        Collection<String> sPackages = new HashSet<String>();
+        Collection<String> sPackages = new HashSet<>();
         ManifestManager.PackageExport[] pexports = getProjectXMLManager().getPublicPackages();
         for (int i = 0; i < pexports.length; i++) {
             ManifestManager.PackageExport pexport = pexports[i];
@@ -972,7 +972,7 @@ public final class SingleModuleProperties extends ModuleProperties {
         // store class-path-extensions + its src & javadoc
         if (cps != null && wrappedJarsListModel != null && wrappedJarsChanged) {
             final List<Item> cpExtList = ClassPathUiSupport.getList(wrappedJarsListModel);
-            Map<String, String> newCpExt = new HashMap<String, String>();
+            Map<String, String> newCpExt = new HashMap<>();
 
             for (Item item : cpExtList) {
                 String binPath = item.getFilePath();
@@ -988,7 +988,7 @@ public final class SingleModuleProperties extends ModuleProperties {
 
             // delete removed JARs, remove any remaining exported packages and src&javadoc refs left
             Iterator<Item> it = getCPExtIterator();
-            HashSet<String> jarsSet = new HashSet<String>(newCpExt.values());
+            HashSet<String> jarsSet = new HashSet<>(newCpExt.values());
             while (it.hasNext()) {
                 Item item = it.next();
                 if (!jarsSet.contains(item.getFilePath())) {
@@ -1033,7 +1033,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     /** Sends info to UI handler about NetBeans APIs in use
      */
     private static void logNetBeansAPIUsage(String msg, Collection<ModuleDependency> deps) {
-        List<String> cnbs = new ArrayList<String>();
+        List<String> cnbs = new ArrayList<>();
         for (ModuleDependency moduleDependency : deps) {
             String cnb = moduleDependency.getModuleEntry().getCodeNameBase();
             // observe just NetBeans API module usage
@@ -1229,7 +1229,7 @@ public final class SingleModuleProperties extends ModuleProperties {
      */
     int exportPackagesFromJars(List<File> jars) {
         PublicPackagesTableModel model = getPublicPackagesModel();
-        Set<String> pkgs = new HashSet<String>(model.getSelectedPackages());
+        Set<String> pkgs = new HashSet<>(model.getSelectedPackages());
         int origC = pkgs.size();
         for (File jar : jars) {
             ApisupportAntUtils.scanJarForPackageNames(pkgs, jar);

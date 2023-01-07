@@ -266,7 +266,7 @@ public class ChildFactoryTest extends NbTestCase {
         n = ch.getNodes(true);
         assertEquals (0, n.length);
         Set<Node> destroyed = r.getDestroyed();
-        Set<String> expected = new HashSet<String>();
+        Set<String> expected = new HashSet<>();
         Collections.addAll(expected, "foo", "bar");
         for (Node node : destroyed) {
             assertTrue(node.getDisplayName(), expected.contains(node.getDisplayName()));
@@ -288,7 +288,7 @@ public class ChildFactoryTest extends NbTestCase {
         n = ch.getNodes(true);
         assertEquals (0, n.length);
         Set<Node> destroyed = r.getDestroyed();
-        Set<String> expected = new HashSet<String>();
+        Set<String> expected = new HashSet<>();
         Collections.addAll(expected, r.createWaitNode().getDisplayName(), "foo", "bar");
         for (Node node : destroyed) {
             assertTrue(node.getDisplayName(), expected.contains(node.getDisplayName()));
@@ -331,11 +331,11 @@ public class ChildFactoryTest extends NbTestCase {
     }
 
     public void testBatchNodeRecreation() throws Exception { // #211847
-        final List<Integer> nodesCreated = new ArrayList<Integer>();
+        final List<Integer> nodesCreated = new ArrayList<>();
         final AtomicInteger size = new AtomicInteger(3);
         class F extends ChildFactory<Integer> {
             @Override protected boolean createKeys(List<Integer> keys) {
-                List<Integer> arr = new ArrayList<Integer>();
+                List<Integer> arr = new ArrayList<>();
                 for (int i = 1; i <= size.get(); i++) {
                     arr.add(i);
                 }
@@ -371,7 +371,7 @@ public class ChildFactoryTest extends NbTestCase {
     }
     
     public void testIncrementalNodeRecreation() throws Exception { // #211847
-        final List<Integer> nodesCreated = new ArrayList<Integer>();
+        final List<Integer> nodesCreated = new ArrayList<>();
         final AtomicInteger size = new AtomicInteger(3);
         class F extends ChildFactory<Integer> {
             @Override protected boolean createKeys(List<Integer> keys) {
@@ -460,7 +460,7 @@ public class ChildFactoryTest extends NbTestCase {
     }
 
     public void testIncrementalNodeRemoval() throws Exception { // #211847
-        final List<Integer> nodesCreated = new ArrayList<Integer>();
+        final List<Integer> nodesCreated = new ArrayList<>();
         final AtomicInteger size = new AtomicInteger(3);
         class F extends ChildFactory<Integer> {
             @Override protected boolean createKeys(List<Integer> keys) {

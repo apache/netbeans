@@ -124,7 +124,7 @@ public class MercurialFileSystemTestCase extends FileSystemFactoryHid {
 
     private void commit(List<File> files) throws HgException {       
         
-        List<File> filesToAdd = new ArrayList<File>();
+        List<File> filesToAdd = new ArrayList<>();
         for (File file : files) {
             if(findStatus(HgCommand.getStatus(getWorkDir(), Collections.singletonList(file), null, null),
                     FileInformation.STATUS_NOTVERSIONED_NEWLOCALLY)) {
@@ -133,7 +133,7 @@ public class MercurialFileSystemTestCase extends FileSystemFactoryHid {
         }            
             
         HgCommand.doAdd(getWorkDir(), filesToAdd, null);
-        List<File> filesToCommit = new ArrayList<File>();
+        List<File> filesToCommit = new ArrayList<>();
         for (File file : files) {
             if(file.isFile()) {
                 filesToCommit.add(file);

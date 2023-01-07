@@ -70,8 +70,8 @@ public class ReplaceConstructorWithBuilderUI implements RefactoringUI, JavaRefac
         ExecutableElement contructorElement = (ExecutableElement) constructor.resolveElement(info);
         this.name = contructorElement.getSimpleName().toString();
         MethodTree constTree = (MethodTree) constructor.resolve(info).getLeaf();
-        paramaterNames = new ArrayList<String>();
-        parameterTypes = new ArrayList<String>();
+        paramaterNames = new ArrayList<>();
+        parameterTypes = new ArrayList<>();
         parameterTypeVars = new ArrayList<Boolean>();
         boolean varargs = contructorElement.isVarArgs();
         List<? extends VariableElement> parameterElements = contructorElement.getParameters();

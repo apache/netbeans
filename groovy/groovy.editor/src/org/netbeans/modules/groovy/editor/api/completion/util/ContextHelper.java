@@ -400,7 +400,7 @@ public final class ContextHelper {
         GroovyIndex index = GroovyIndex.get(QuerySupport.findRoots(f,
                 Collections.singleton(ClassPath.SOURCE), Collections.<String>emptySet(), Collections.<String>emptySet()));
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         
         for (IndexedField indexedField : index.getAllFields(context.getTypeName())) {
             if (!indexedField.isStatic() && indexedField.isProperty()) {

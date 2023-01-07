@@ -663,7 +663,7 @@ public final class NbLoaderPool extends DataLoaderPool implements PropertyChange
             m.setAccessible(true);
             DataLoader dl = (DataLoader) m.invoke(null);
             FileObject services = FileUtil.getConfigFile("Services"); // NOI18N
-            return (DataFolder)dl.findDataObject(services, new HashSet<FileObject>()); 
+            return (DataFolder)dl.findDataObject(services, new HashSet<>()); 
         }
 
         final Lookup findServicesLookup() {

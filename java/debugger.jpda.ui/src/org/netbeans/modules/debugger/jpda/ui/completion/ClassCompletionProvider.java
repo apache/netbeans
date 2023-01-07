@@ -74,7 +74,7 @@ public class ClassCompletionProvider implements CompletionProvider {
                 ClasspathInfo cpi = getClassPathInfo();
                 ClassIndex classIndex = cpi.getClassIndex();
                 Set<String> packageNames = classIndex.getPackageNames(text, false, scope);
-                Set<String> resultPackages = new HashSet<String>();
+                Set<String> resultPackages = new HashSet<>();
                 int lastTextDot = text.lastIndexOf('.');
                 for (String pn : packageNames) {
                     int dot = pn.indexOf('.', n);
@@ -94,7 +94,7 @@ public class ClassCompletionProvider implements CompletionProvider {
                 }
                 String classFilterLC = classFilter.toLowerCase();
                 Set<ElementHandle<TypeElement>> declaredTypes = classIndex.getDeclaredTypes(classFilter, ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX, scope);
-                Set<String> resultClasses = new HashSet<String>();
+                Set<String> resultClasses = new HashSet<>();
                 for (ElementHandle<TypeElement> type : declaredTypes) {
                     String className = type.getQualifiedName();
                     int packageDotIndex = -1;

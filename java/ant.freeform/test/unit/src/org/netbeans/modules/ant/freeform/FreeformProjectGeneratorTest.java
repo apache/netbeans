@@ -178,7 +178,7 @@ public class FreeformProjectGeneratorTest extends NbTestCase {
         FreeformProjectGenerator.TargetMapping tm = new FreeformProjectGenerator.TargetMapping();
         tm.name = "first-targetName";
         tm.script = "antScript";
-        tm.targets = new ArrayList<String>();
+        tm.targets = new ArrayList<>();
         tm.targets.add("target-1");
         tm.targets.add("target-2");
         tm.targets.add("target-3");
@@ -195,7 +195,7 @@ public class FreeformProjectGeneratorTest extends NbTestCase {
         tm = new FreeformProjectGenerator.TargetMapping();
         tm.name = "second-targetName";
         tm.script = "second-antScript";
-        tm.targets = new ArrayList<String>();
+        tm.targets = new ArrayList<>();
         tm.targets.add("second-target-1");
         tm.targets.add("second-target-2");
         tm.targets.add("second-target-3");
@@ -267,7 +267,7 @@ public class FreeformProjectGeneratorTest extends NbTestCase {
         tm = new FreeformProjectGenerator.TargetMapping();
         tm.name = "foo";
         tm.script = "antScript";
-        tm.targets = new ArrayList<String>();
+        tm.targets = new ArrayList<>();
         tm.targets.add("target-1");
         tm.targets.add("target-2");
         mappings.add(tm);
@@ -297,7 +297,7 @@ public class FreeformProjectGeneratorTest extends NbTestCase {
         tm = new FreeformProjectGenerator.TargetMapping();
         tm.name = "foo";
         tm.script = "diff-script";
-        tm.targets = new ArrayList<String>();
+        tm.targets = new ArrayList<>();
         tm.targets.add("target-1");
         tm.targets.add("target-B");
         tm.properties = new EditableProperties(false);
@@ -402,7 +402,7 @@ public class FreeformProjectGeneratorTest extends NbTestCase {
         FreeformProjectGenerator.CustomTarget ct = new FreeformProjectGenerator.CustomTarget();
         ct.label = "customAction1";
         ct.script = "customScript1";
-        ct.targets = new ArrayList<String>();
+        ct.targets = new ArrayList<>();
         ct.targets.add("customTarget1");
         ct.targets.add("customTarget2");
         ct.properties = new EditableProperties(false);
@@ -412,7 +412,7 @@ public class FreeformProjectGeneratorTest extends NbTestCase {
         ct = new FreeformProjectGenerator.CustomTarget();
         ct.label = "customAction2";
         ct.script = "customScript2";
-        ct.targets = new ArrayList<String>();
+        ct.targets = new ArrayList<>();
         ct.targets.add("second-customTarget1");
         ct.targets.add("second-customTarget2");
         ct.properties = new EditableProperties(false);

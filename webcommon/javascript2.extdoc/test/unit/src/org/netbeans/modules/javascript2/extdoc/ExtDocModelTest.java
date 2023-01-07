@@ -351,7 +351,7 @@ public class ExtDocModelTest extends JsDocumentationTestBase {
     private static class FakeExtDocElement implements ExtDocElement {
 
         private final ExtDocElementType type;
-        private Map<String, String> properties = new HashMap<String, String>();
+        private Map<String, String> properties = new HashMap<>();
 
         public FakeExtDocElement(ExtDocElementType type) {
             assertNotNull(type);

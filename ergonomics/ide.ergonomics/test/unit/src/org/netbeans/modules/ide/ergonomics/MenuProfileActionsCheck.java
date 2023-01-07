@@ -137,7 +137,7 @@ public class MenuProfileActionsCheck extends NbTestCase {
             if (f.startsWith(dynVery)) {
                 int cnt = Integer.parseInt(System.getProperties().getProperty(f));
                 f = f.substring(dynVery.length());
-                ArrayList<String> arr = new ArrayList<String>();
+                ArrayList<String> arr = new ArrayList<>();
                 String pref = dynAttr + f + "@";
                 for (Map.Entry<Object, Object> entry : System.getProperties().entrySet()) {
                     if (entry.getKey() instanceof String) {

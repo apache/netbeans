@@ -34,7 +34,7 @@ import org.tigris.subversion.svnclientadapter.SVNNodeKind;
  */
 public class SvnClientRefreshHandler implements ISVNNotifyListener {
 
-    private final Set<File>  filesToRefresh = new HashSet<File>();
+    private final Set<File>  filesToRefresh = new HashSet<>();
 
     public void setCommand(int arg0)                { /* boring */ }
     public void logCommandLine(String arg0)         { /* boring */ }
@@ -112,7 +112,7 @@ public class SvnClientRefreshHandler implements ISVNNotifyListener {
 //     * @param files files to refresh
 //     */
 //    private void refreshFS(File... files) {
-//        final Set<File> parents = new HashSet<File>();
+//        final Set<File> parents = new HashSet<>();
 //        for (File f : files) {
 //            File parent = f.getParentFile();
 //            if (parent != null) {

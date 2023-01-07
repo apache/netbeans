@@ -929,7 +929,7 @@ public class TableCustomizer extends JPanel implements Customizer, FormAwareEdit
     }
 
     private int getFreeColumnIndex() {
-        Set<Integer> set = new HashSet<Integer>();
+        Set<Integer> set = new HashSet<>();
         for (ColumnInfo info : columns) {
             set.add(info.getColumn().getIndex());
         }

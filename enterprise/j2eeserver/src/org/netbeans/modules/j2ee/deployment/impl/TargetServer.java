@@ -933,7 +933,7 @@ public class TargetServer {
         }
 
         ServerInstance serverInstance = dtarget.getServer().getServerInstance();
-        Set<String> targetNames = new HashSet<String>();
+        Set<String> targetNames = new HashSet<>();
         for (int i = 0; i < targets.length; i++) {
             targetNames.add(targets[i].getName());
         }

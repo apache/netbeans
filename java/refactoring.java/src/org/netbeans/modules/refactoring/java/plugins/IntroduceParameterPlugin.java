@@ -165,7 +165,7 @@ public class IntroduceParameterPlugin extends JavaRefactoringPlugin {
 
     private Set<FileObject> getRelevantFiles() {
         ClasspathInfo cpInfo = getClasspathInfo(refactoring);
-        final Set<FileObject> set = new HashSet<FileObject>();
+        final Set<FileObject> set = new HashSet<>();
         JavaSource source = JavaSource.create(cpInfo, refactoring.getRefactoringSource().lookup(TreePathHandle.class).getFileObject());
 
         try {

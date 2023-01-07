@@ -473,7 +473,7 @@ public class MethodChooser {
     }
 
     private AttributeSet createAttribs(Object... keyValuePairs) {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         for (int i = keyValuePairs.length / 2 - 1; i >= 0; i--) {
             Object attrKey = keyValuePairs[2 * i];
             Object attrValue = keyValuePairs[2 * i + 1];

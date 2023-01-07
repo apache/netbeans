@@ -47,7 +47,7 @@ public class DestDirProvider extends ApisupportAntUtils.ComputedPropertyProvider
         }
         platformS = inputPropertyValues.get("nbplatform.active");
         if (platformS != null) {
-            Map<String, String> m = new HashMap<String, String>();
+            Map<String, String> m = new HashMap<>();
             m.put(ModuleList.NETBEANS_DEST_DIR, "${nbplatform." + platformS + ".netbeans.dest.dir}");
             m.put("harness.dir", "${nbplatform." + platformS + ".harness.dir}");
             return m;

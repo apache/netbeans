@@ -53,7 +53,7 @@ public class LogUtils {
             String line = Bundle.MSG_LogUtils_updateBranch_actions("{0}", "{1}");
             int historyPos = line.indexOf("{0}");
             int diffPos = line.indexOf("{1}");
-            List<String> segments = new ArrayList<String>();
+            List<String> segments = new ArrayList<>();
             OutputListener list1, list2;
             if (historyPos < diffPos) {
                 segments.add(line.substring(0, historyPos));

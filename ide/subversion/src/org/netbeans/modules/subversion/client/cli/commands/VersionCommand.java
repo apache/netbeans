@@ -35,7 +35,7 @@ import org.tigris.subversion.svnclientadapter.ISVNNotifyListener;
  */
 public class VersionCommand extends SvnCommand {
 
-    private List<String> output = new ArrayList<String>();
+    private List<String> output = new ArrayList<>();
     private boolean unsupportedVersion = false;
     private boolean supportedMetadataFormat = false;
     static final Version VERSION_15 = Version.parse("1.5");

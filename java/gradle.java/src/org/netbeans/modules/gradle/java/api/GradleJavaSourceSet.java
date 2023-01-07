@@ -290,7 +290,7 @@ public final class GradleJavaSourceSet implements Serializable {
      * @return all existing source directories.
      */
     public final Collection<File> getAvailableDirs(boolean deduplicate) {
-        Collection<File> ret = deduplicate ? new HashSet<File>() : new ArrayList<File>();
+        Collection<File> ret = deduplicate ? new HashSet<>() : new ArrayList<>();
         if (sources != null) {
             for (Set<File> s : sources.values()) {
                 for (File f : s) {

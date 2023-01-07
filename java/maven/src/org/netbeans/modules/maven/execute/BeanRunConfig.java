@@ -154,7 +154,7 @@ public class BeanRunConfig implements RunConfig {
         Project prj = getProject();
         if (prj != null) {
             NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
-            List<String> profiles = new ArrayList<String>();
+            List<String> profiles = new ArrayList<>();
             profiles.addAll(impl.getCurrentActiveProfiles());
             if (getActivatedProfiles() != null) {
                 profiles.addAll(getActivatedProfiles());
@@ -305,7 +305,7 @@ public class BeanRunConfig implements RunConfig {
 
     @Override
     public final void setActivatedProfiles(List<String> activeteProfiles) {
-        activate = new ArrayList<String>();
+        activate = new ArrayList<>();
         activate.addAll(activeteProfiles);
         //#243897 let's assume that all profiles were set before the getMavenProject() method was called.
 //        synchronized (this) {

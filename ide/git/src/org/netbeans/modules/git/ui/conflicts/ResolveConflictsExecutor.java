@@ -80,7 +80,7 @@ public class ResolveConflictsExecutor extends GitProgressSupport {
     public ResolveConflictsExecutor(File[] files) {
         super();
         this.files = files;
-        this.toResolve = new HashSet<File>();
+        this.toResolve = new HashSet<>();
     }
 
     private void exec (MergeVisualizer merge, File file) {

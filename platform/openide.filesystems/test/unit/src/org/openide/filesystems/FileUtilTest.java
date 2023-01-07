@@ -65,7 +65,7 @@ public class FileUtilTest extends NbTestCase {
         NbTestSuite suite = new NbTestSuite();
 
         // These tests have to be run in correct order, see bug 231316.
-        List<String> orderedMethods = new ArrayList<String>();
+        List<String> orderedMethods = new ArrayList<>();
         orderedMethods.add("testGetMIMETypeConstrained");
         orderedMethods.add("testSetMIMEType");
 
@@ -342,7 +342,7 @@ public class FileUtilTest extends NbTestCase {
 
     private Map<String, String> createNormalizedPaths() throws IOException {
         // pairs of path before and after normalization
-        Map<String, String> paths = new HashMap<String, String>();
+        Map<String, String> paths = new HashMap<>();
         if (BaseUtilities.isWindows()) {
             paths.put("A:\\", "A:\\");
             paths.put("A:\\dummy", "A:\\dummy");

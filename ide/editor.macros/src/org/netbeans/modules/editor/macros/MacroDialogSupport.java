@@ -234,7 +234,7 @@ outer:      for(MultiKeyBinding mkb : m.getShortcuts()) {
     public static class RunMacroAction extends BaseAction {
 
         static final long serialVersionUID = 1L;
-        static HashSet<String> runningActions = new HashSet<String>();
+        static HashSet<String> runningActions = new HashSet<>();
 
         public static final String runMacroAction = "run-macro"; //NOI18N
         

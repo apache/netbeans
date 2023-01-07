@@ -47,7 +47,7 @@ public final class EJBListViewChildren extends Children.Keys<String> {
     }
 
     private void createNodes() {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         l.add(KEY_EJBS);
         setKeys(l);
     }

@@ -96,7 +96,7 @@ import org.openide.util.WeakListeners;
 
 public class ToolTipAnnotation extends Annotation implements Runnable {
 
-    private static final Set<String> JAVA_KEYWORDS = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList(new String[] {
         "abstract",     "continue",     "for",          "new",  	"switch",
         "assert", 	"default", 	"goto", 	"package", 	"synchronized",
         "boolean", 	"do",           "if",           "private", 	/*"this",*/
@@ -582,7 +582,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
             return false;
         }
         if (className[0].length() > 0) {
-            Set<String> superTypeNames = new HashSet<String>();
+            Set<String> superTypeNames = new HashSet<>();
             This thisVar = currentFrame.getThisVariable();
             if (thisVar != null) {
                 String fqn = thisVar.getType();

@@ -60,7 +60,7 @@ public class UpdateAllProjects {
     }
     
     private boolean ensureProjectsReachable(List<UpgradableProject> ups, boolean silent) {
-        Map<String,String> resolvedEntries = new HashMap<String, String>();
+        Map<String,String> resolvedEntries = new HashMap<>();
         for (UpgradableProject up : ups) {
             if (!up.isEclipseProjectReachable()) {
                 if (silent) {
@@ -99,7 +99,7 @@ public class UpdateAllProjects {
     private Boolean resolveNewRequiredProjects(List<UpgradableProject> ups, boolean silent, 
             List<String> importProblems, List<Project> createdProjects) throws IOException {
         Map<File, ProjectsAndDestination> workspaceProjectsMap = new HashMap<File, ProjectsAndDestination>();
-        Set<File> workspaces = new HashSet<File>();
+        Set<File> workspaces = new HashSet<>();
         for (UpgradableProject up : ups) {
             if (up.getWorkspace() != null) {
                 workspaces.add(up.getWorkspace().getDirectory());
@@ -166,7 +166,7 @@ public class UpdateAllProjects {
         boolean deepTest = !silent;
         for (UpgradableProject up : ups) {
             if (!up.isUpToDate(deepTest)) {
-                List<String> issues = new ArrayList<String>();
+                List<String> issues = new ArrayList<>();
                 changed = true;
                 up.update(issues);
                 if (issues.size() > 0) {
@@ -188,7 +188,7 @@ public class UpdateAllProjects {
     public void update(boolean silent) {
         LOG.fine("Eclipse resynchronize started ("+silent+")"); //NOI18N
         WorkspaceFactory.getInstance().resetCache();
-        List<String> importProblems = new ArrayList<String>();
+        List<String> importProblems = new ArrayList<>();
         List<UpgradableProject> projs = getListOfUpdatableProjects();
         if (projs.size() == 0 && !silent) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(UpdateProjectAction.class, "UpdateProjectAction.nothing-to-synch")));

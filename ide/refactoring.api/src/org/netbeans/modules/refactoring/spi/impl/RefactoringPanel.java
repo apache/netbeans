@@ -726,7 +726,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                             setTreeControlsEnabled(false);
                         }
                     });
-                    Set<FileObject> fileObjects = new HashSet<FileObject>();
+                    Set<FileObject> fileObjects = new HashSet<>();
                     int errorsNum = 0;
                     if (!isQuery) {
                         for (Iterator iter = elements.iterator(); iter.hasNext(); ) {

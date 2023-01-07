@@ -67,7 +67,7 @@ public enum MexQName implements SchemaLocationProvider {
     private final QName qName;
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         hmap.put(MEX_NS_URI, local ? MEX_NS_URI_LOCAL : MEX_NS_URI_EXT);
         return hmap;
     }

@@ -326,7 +326,7 @@ public class ChromeManagerAccessor implements ExtensionManagerAccessor {
             // see http://www.chromium.org/user-experience/user-data-directory
             // TODO - this will not work for Chromium on Windows and Mac
             if (Utilities.isWindows()) {
-                ArrayList<String> result = new ArrayList<String>();
+                ArrayList<String> result = new ArrayList<>();
                 String localAppData = System.getenv("LOCALAPPDATA");                // NOI18N
                 if (localAppData != null) {
                     result.add(localAppData+"\\Google\\Chrome\\User Data");

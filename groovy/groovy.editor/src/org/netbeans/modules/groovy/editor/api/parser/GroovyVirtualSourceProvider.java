@@ -173,7 +173,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
 
         private boolean java5 = false;
         private boolean requireSuperResolved = false;
-        private List<String> toCompile = new ArrayList<String>();
+        private List<String> toCompile = new ArrayList<>();
 
         private JavaStubGenerator(final boolean requireSuperResolved, final boolean java5) {
             this.requireSuperResolved = requireSuperResolved;

@@ -51,7 +51,7 @@ public class CheckNode extends DefaultMutableTreeNode {
         setSelectionMode(DIG_IN_SELECTION);
         this.nodeLabel = nodeLabel;
         this.icon = icon;
-        listeners = new ArrayList<ChangeListener>();
+        listeners = new ArrayList<>();
     }
     
     String getLabel() {

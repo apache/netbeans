@@ -269,7 +269,7 @@ public class JavaSourceHelper {
     }
     
     public static Collection<String> getImports(CompilationController controller) {
-        Set<String> imports = new HashSet<String>();
+        Set<String> imports = new HashSet<>();
         CompilationUnitTree cu = controller.getCompilationUnit();
         
         if (cu != null) {
@@ -378,7 +378,7 @@ public class JavaSourceHelper {
         DataObject templateDO = DataObject.find(templateFO);
         DataFolder dataFolder = DataFolder.findFolder(targetFolder);
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         parameters.put("package", packageName);
         if (params != null) {
             for(Entry<String, String> entry: params.entrySet()){
@@ -514,7 +514,7 @@ public class JavaSourceHelper {
         TreeMaker maker = copy.getTreeMaker();
         ModifiersTree modifiersTree = createModifiersTree(copy, modifiers, null, null);
         ModifiersTree paramModTree = maker.Modifiers(Collections.<Modifier>emptySet());
-        List<VariableTree> paramTrees = new ArrayList<VariableTree>();
+        List<VariableTree> paramTrees = new ArrayList<>();
 
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -552,7 +552,7 @@ public class JavaSourceHelper {
 
         Tree returnTypeTree = createTypeTree(copy, returnType);
 
-        List<VariableTree> paramTrees = new ArrayList<VariableTree>();
+        List<VariableTree> paramTrees = new ArrayList<>();
 
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -926,7 +926,7 @@ public class JavaSourceHelper {
 
     public static Collection<String> getAnnotationValuesForAllMethods(JavaSource source, 
             final String annotation) {
-        final Collection<String> results = new HashSet<String>();
+        final Collection<String> results = new HashSet<>();
         try {
             source.runUserActionTask(new AbstractTask<CompilationController>() {
 

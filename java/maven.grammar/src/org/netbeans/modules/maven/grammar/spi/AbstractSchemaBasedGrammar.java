@@ -275,7 +275,7 @@ public abstract class AbstractSchemaBasedGrammar implements GrammarQuery {
         Node parentNode = virtualElementCtx.getParentNode();
         boolean hasSchema = false;
         if (parentNode != null && schemaDoc != null) {
-            List<String> parentNames = new ArrayList<String>();
+            List<String> parentNames = new ArrayList<>();
             while (parentNode != null & parentNode.getNodeName() != null) {
                 parentNames.add(0, parentNode.getNodeName());
                 if (parentNode.getParentNode() == null || parentNode.getParentNode().getNodeName() == null) {
@@ -348,7 +348,7 @@ public abstract class AbstractSchemaBasedGrammar implements GrammarQuery {
     @Override
     public Enumeration<GrammarResult> queryValues(HintContext virtualTextCtx) {
         Node parentNode = virtualTextCtx.getParentNode();
-        List<String> parentNames = new ArrayList<String>();
+        List<String> parentNames = new ArrayList<>();
         if (virtualTextCtx.getCurrentPrefix().length() == 0) {
             parentNames.add(virtualTextCtx.getNodeName());
         }

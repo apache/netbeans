@@ -149,7 +149,7 @@ public class WebUtilsTest extends CslTestBase {
         final String mimeType = "text/x-tpl";
         final String embeddedPhpMimeType = "text/x-php5";
 
-        Set<String> embeddedMimeTypes = new HashSet<String>(Arrays.asList(embeddedPhpMimeType, HTML_MIME_TYPE));
+        Set<String> embeddedMimeTypes = new HashSet<>(Arrays.asList(embeddedPhpMimeType, HTML_MIME_TYPE));
         setEmbeddingProviderIntoMockLookup(mimeType, embeddedMimeTypes);
         setEmbeddingProviderIntoMockLookup(embeddedPhpMimeType, Collections.singleton(HTML_MIME_TYPE));
 
@@ -164,7 +164,7 @@ public class WebUtilsTest extends CslTestBase {
         final String embeddedPhp4MimeType = "text/x-php4";
         final String embeddedPhp5MimeType = "text/x-php5";
 
-        Set<String> embeddedMimeTypes = new HashSet<String>(Arrays.asList(embeddedPhp4MimeType, embeddedPhp5MimeType));
+        Set<String> embeddedMimeTypes = new HashSet<>(Arrays.asList(embeddedPhp4MimeType, embeddedPhp5MimeType));
         setEmbeddingProviderIntoMockLookup(mimeType, embeddedMimeTypes);
         setEmbeddingProviderIntoMockLookup(embeddedPhp4MimeType, Collections.singleton(HTML_MIME_TYPE));
         setEmbeddingProviderIntoMockLookup(embeddedPhp5MimeType, Collections.singleton(HTML_MIME_TYPE));

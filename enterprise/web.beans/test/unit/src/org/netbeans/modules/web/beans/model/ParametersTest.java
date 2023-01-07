@@ -138,7 +138,7 @@ public class ParametersTest extends CommonTestCase {
                         }
                     }
                 }
-                Set<String> names = new HashSet<String>(); 
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     Element enclosingElement = element.getEnclosingElement();
                     assert enclosingElement instanceof ExecutableElement;
@@ -280,7 +280,7 @@ public class ParametersTest extends CommonTestCase {
                         }
                     }
                 }
-                Set<String> names = new HashSet<String>(); 
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     Element enclosingElement = element.getEnclosingElement();
                     assert enclosingElement instanceof ExecutableElement;
@@ -407,7 +407,7 @@ public class ParametersTest extends CommonTestCase {
                         }
                     }
                 }
-                Set<String> names = new HashSet<String>(); 
+                Set<String> names = new HashSet<>();
                 for( VariableElement element : injectionPoints ){
                     Element enclosingElement = element.getEnclosingElement();
                     assert enclosingElement instanceof ExecutableElement;

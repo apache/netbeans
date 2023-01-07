@@ -253,7 +253,7 @@ public class Tiny {
         return ErrorDescriptionFactory.forName(ctx, columnIndex, displayName);
     }
     
-    private static final Set<String> METHOD_NAME = new HashSet<String>(Arrays.asList(
+    private static final Set<String> METHOD_NAME = new HashSet<>(Arrays.asList(
             "getString", "getBoolean", "getByte", "getShort", "getInt", "getLong",
             "getFloat", "getDouble", "getBigDecimal", "getBytes", "getDate",
             "getTime", "getTimestamp", "getAsciiStream", "getUnicodeStream",

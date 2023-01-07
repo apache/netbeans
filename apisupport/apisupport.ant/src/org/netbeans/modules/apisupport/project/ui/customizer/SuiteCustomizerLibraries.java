@@ -250,7 +250,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
     }
 
     private void addExtCluster(ClusterInfo ci) {
-        Set<String> disabledModuleCNB = new HashSet<String>(Arrays.asList(getProperties().getDisabledModules()));
+        Set<String> disabledModuleCNB = new HashSet<>(Arrays.asList(getProperties().getDisabledModules()));
         Children.SortedArray moduleCh = new Children.SortedArray();
         try {
             ModuleList ml = ModuleList.scanCluster(ci.getClusterDir(), null, false, ci);
@@ -274,7 +274,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
         assert ci.getProject() != null;
         assert ci.getProject().getLookup().lookup(SuiteProvider.class) != null;
 
-        Set<String> disabledModuleCNB = new HashSet<String>(Arrays.asList(getProperties().getDisabledModules()));
+        Set<String> disabledModuleCNB = new HashSet<>(Arrays.asList(getProperties().getDisabledModules()));
         Children.SortedArray moduleCh = new Children.SortedArray();
         moduleCh.setComparator(MODULES_COMPARATOR);
         Set<NbModuleProject> modules = SuiteUtils.getSubProjects(ci.getProject());
@@ -313,8 +313,8 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
         // create platform modules children first
         platformModules = plaf.getSortedModules();
         initNodes();
-        Set<String> disabledModuleCNB = new HashSet<String>(Arrays.asList(getProperties().getDisabledModules()));
-        Set<String> enabledClusters = new HashSet<String>(Arrays.asList(getProperties().getEnabledClusters()));
+        Set<String> disabledModuleCNB = new HashSet<>(Arrays.asList(getProperties().getDisabledModules()));
+        Set<String> enabledClusters = new HashSet<>(Arrays.asList(getProperties().getEnabledClusters()));
 
         Map<File, ClusterNode> clusterToNode = new HashMap<File, ClusterNode>();
         synchronized (libChildren.platformNodes) {
@@ -1569,7 +1569,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
             synchronized(lock) /* #71791, #163158 */ {
                 if (universe == null) {
                     Set<NbModuleProject> suiteModules =
-                            new HashSet<NbModuleProject>(getProperties().getSubModules());
+                            new HashSet<>(getProperties().getSubModules());
                     libChildren.getProjectModules(suiteModules);
                     universe = loadUniverseModules(platformModules, suiteModules, extraBinaryModules);
                 }
@@ -1652,7 +1652,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
 
         String[] warning;
         boolean fixable = true;
-        Set<String> toAdd = new HashSet<String>();
+        Set<String> toAdd = new HashSet<>();
         private SortedSet<String> currentAdditions = new TreeSet<String>();
 
         private boolean isEmpty() {

@@ -645,7 +645,7 @@ public class TryTest extends GeneratorTestMDRCompat {
             "    }\n" +
             "}\n";
         
-        Map<String, String> adjustPreferences = new HashMap<String, String>();
+        Map<String, String> adjustPreferences = new HashMap<>();
 
         adjustPreferences.put(FmtOptions.placeFinallyOnNewLine, "true");
         adjustPreferences.put(FmtOptions.placeCatchOnNewLine, "true");
@@ -653,7 +653,7 @@ public class TryTest extends GeneratorTestMDRCompat {
         adjustPreferences.put(FmtOptions.methodDeclBracePlacement, BracePlacement.NEW_LINE.name());
         adjustPreferences.put(FmtOptions.otherBracePlacement, BracePlacement.NEW_LINE.name());
         Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
-        Map<String, String> origValues = new HashMap<String, String>();
+        Map<String, String> origValues = new HashMap<>();
         for (String key : adjustPreferences.keySet()) {
             origValues.put(key, preferences.get(key, null));
         }

@@ -42,7 +42,7 @@ public class RestrictThreadCreation {
 
     private RestrictThreadCreation() {}
 
-    private static Set<String> currentlyPermitted = new HashSet<String>();
+    private static Set<String> currentlyPermitted = new HashSet<>();
 
     /**
      * Explicitly permits one or more thread creation idioms.

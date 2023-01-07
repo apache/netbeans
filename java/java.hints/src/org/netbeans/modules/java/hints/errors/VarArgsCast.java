@@ -48,7 +48,7 @@ import org.openide.util.NbBundle;
  */
 public class VarArgsCast implements ErrorRule<Void> {
 
-    private static final Set<String> CODES = new HashSet<String>(Arrays.asList("compiler.warn.inexact.non-varargs.call"));
+    private static final Set<String> CODES = new HashSet<>(Arrays.asList("compiler.warn.inexact.non-varargs.call"));
     
     @Override
     public Set<String> getCodes() {

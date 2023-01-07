@@ -72,7 +72,7 @@ public class ClasspathUtil {
         Parameters.notNull("classpath", classPath); // NOI18N
         Parameters.notNull("className", className); // NOI18N
 
-        List<File> diskFiles = new ArrayList<File>();
+        List<File> diskFiles = new ArrayList<>();
         for (URL url : classPath) {
             URL archiveURL = FileUtil.getArchiveFile(url);
 
@@ -170,7 +170,7 @@ public class ClasspathUtil {
             throw new IllegalArgumentException("classNames can't be empty"); // NOI18N
         }
 
-        List<File> diskFiles = new ArrayList<File>();
+        List<File> diskFiles = new ArrayList<>();
         for (URL url : classPath) {
             URL archiveURL = FileUtil.getArchiveFile(url);
 

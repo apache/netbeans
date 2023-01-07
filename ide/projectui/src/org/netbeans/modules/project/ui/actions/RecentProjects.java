@@ -144,7 +144,7 @@ public class RecentProjects extends AbstractAction implements Presenter.Menu, Pr
         ActionListener jmiActionListener = new MenuItemActionListener();
                         
         // Fill menu with items
-        final List<URL> urls = new ArrayList<URL>();
+        final List<URL> urls = new ArrayList<>();
         for (final UnloadedProjectInformation p : projects) {
                 URL prjDirURL = p.getURL();
                 urls.add(prjDirURL);

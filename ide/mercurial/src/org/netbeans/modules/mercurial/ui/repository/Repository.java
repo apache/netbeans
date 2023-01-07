@@ -304,7 +304,7 @@ public class Repository implements ActionListener, FocusListener, ItemListener {
         urlComboEditor.selectAll();
     }
 
-    private static final Set<String> SKIPPED_PATHS = new HashSet<String>(Arrays.asList(HgConfigFiles.HG_DEFAULT_PULL, 
+    private static final Set<String> SKIPPED_PATHS = new HashSet<>(Arrays.asList(HgConfigFiles.HG_DEFAULT_PULL,
             HgConfigFiles.HG_DEFAULT_PULL_VALUE, 
             HgConfigFiles.HG_DEFAULT_PUSH, 
             HgConfigFiles.HG_DEFAULT_PUSH_VALUE));

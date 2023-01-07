@@ -553,7 +553,7 @@ public abstract class AbstractDocumentComponent<C extends DocumentComponent<C>>
      * @return mapping from prefix to namespace.
      */
     public Map<String, String> getPrefixes() {
-        Map<String,String> prefixes = new HashMap<String,String>();
+        Map<String,String> prefixes = new HashMap<>();
         NamedNodeMap nodes = getPeer().getAttributes();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);

@@ -184,8 +184,8 @@ public final class NbModuleProject implements Project {
         }
         eval = new Evaluator(this);
         // XXX could add globs for other package roots too
-        List<String> from = new ArrayList<String>();
-        List<String> to = new ArrayList<String>();
+        List<String> from = new ArrayList<>();
+        List<String> to = new ArrayList<>();
         from.add("${src.dir}/*.java"); // NOI18N
         to.add("${build.classes.dir}/*.class"); // NOI18N
         for (String type : supportedTestTypes(false)) {
@@ -651,7 +651,7 @@ public final class NbModuleProject implements Project {
     }
 
     public List<String> supportedTestTypes(boolean mustExist) {
-        List<String> types = new ArrayList<String>();
+        List<String> types = new ArrayList<>();
         for (String type : COMMON_TEST_TYPES) {
             if (((mustExist && getTestSourceDirectory(type) != null)
                         || (! mustExist && getTestSourceDirectoryFile(type) != null))
@@ -1063,7 +1063,7 @@ public final class NbModuleProject implements Project {
         @Override @NonNull public Map<String, String> getProperties() {
             Map<String,String> ce = cache.get();
             if (ce == null) {
-                ce = new HashMap<String, String>();
+                ce = new HashMap<>();
                 ProjectXMLManager pxm = new ProjectXMLManager(NbModuleProject.this);
                 String[] cpExts = pxm.getBinaryOrigins();
                 for (String cpe : cpExts) {
@@ -1123,7 +1123,7 @@ public final class NbModuleProject implements Project {
                 return Collections.emptySet();
             }
             Set<ModuleEntry> entries = platform.getModules();
-            Set<File> jars = new HashSet<File>(entries.size());
+            Set<File> jars = new HashSet<>(entries.size());
             for (ModuleEntry entry : entries) {
                 jars.add(entry.getJarLocation());
             }

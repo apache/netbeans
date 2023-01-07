@@ -206,12 +206,12 @@ public class WSDLModelTest extends NbTestCase {
     }
     
     private void initLists() {
-        serviceNames = new ArrayList<String>();
-        portNames = new ArrayList<String>();
-        opNames = new ArrayList<String>();
-        opTypes = new ArrayList<String>();
-        paramNames = new ArrayList<String>();
-        paramTypes = new ArrayList<String>();
+        serviceNames = new ArrayList<>();
+        portNames = new ArrayList<>();
+        opNames = new ArrayList<>();
+        opTypes = new ArrayList<>();
+        paramNames = new ArrayList<>();
+        paramTypes = new ArrayList<>();
     }
     
     private void initResults() {

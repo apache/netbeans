@@ -167,8 +167,8 @@ public class PullAction extends ContextAction {
                 FileInformation.STATUS_VERSIONED_MODIFIEDLOCALLY | 
                 FileInformation.STATUS_VERSIONED_CONFLICT | 
                 FileInformation.STATUS_NOTVERSIONED_NEWLOCALLY);
-        List<String> listIncomingAndLocalMod = new ArrayList<String>();
-        Set<String> setFiles = new HashSet<String>();
+        List<String> listIncomingAndLocalMod = new ArrayList<>();
+        Set<String> setFiles = new HashSet<>();
         String filesStr;
         String[] aFileStr;
         String root = rootFile.getAbsolutePath();

@@ -194,7 +194,7 @@ public final class SuiteProject implements Project {
         providers.add(new DestDirProvider(baseEval));
         providers.add(helper.getPropertyProvider(AntProjectHelper.PRIVATE_PROPERTIES_PATH));
         providers.add(helper.getPropertyProvider(AntProjectHelper.PROJECT_PROPERTIES_PATH));
-        Map<String,String> fixedProps = new HashMap<String,String>();
+        Map<String,String> fixedProps = new HashMap<>();
         // synchronize with suite.xml
         fixedProps.put(SuiteProperties.ENABLED_CLUSTERS_PROPERTY, "");
         fixedProps.put(SuiteProperties.DISABLED_CLUSTERS_PROPERTY, "");
@@ -378,7 +378,7 @@ public final class SuiteProject implements Project {
     private class PlatformJarProviderImpl implements PlatformJarProvider {
 
         @Override public Set<File> getPlatformJars() throws IOException {
-            Set<File> jars = new HashSet<File>();
+            Set<File> jars = new HashSet<>();
             for (ModuleEntry entry : ModuleList.findOrCreateModuleListFromSuite(getProjectDirectoryFile(), null).getAllEntries()) {
                 jars.add(entry.getJarLocation());
             }

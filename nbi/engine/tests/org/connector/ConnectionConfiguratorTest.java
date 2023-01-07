@@ -73,12 +73,12 @@ public class ConnectionConfiguratorTest extends MyTestCase {
   }
   public void testByPassCatchedAndMyAdd() {
     URLConnector connector = new URLConnector(MyTestCase.testWD);
-    final Set<String> expected = new HashSet<String>();
+    final Set<String> expected = new HashSet<>();
     expected.add("sun.com");
     expected.add("www.my.ru");
     expected.add("w3c.go.go");
     expected.add("12.34.65.2");
-    final Set<String> list = new HashSet<String>();
+    final Set<String> list = new HashSet<>();
     for(String str : connector.getByPassHosts()) {
       list.add(str);
     }

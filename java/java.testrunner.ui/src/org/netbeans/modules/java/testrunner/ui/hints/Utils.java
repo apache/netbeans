@@ -63,7 +63,7 @@ public class Utils {
 	Map<Object, List<String>> validCombinations = new HashMap<Object, List<String>>();
 	for (Object location : locations) {
 	    String targetFolderPath = Utils.getTargetFolderPath(location);
-	    List<String> framework2Add = new ArrayList<String>();
+	    List<String> framework2Add = new ArrayList<>();
 	    for (String framework : testingFrameworks) {
 		String preffiledName = Utils.getPreffiledName(info, framework);
 		preffiledName = preffiledName.replace(".", "/").concat(".java"); //NOI18N
@@ -109,7 +109,7 @@ public class Utils {
     }
 
     private static void populateTestingFrameworks() {
-	testingFrameworks = new ArrayList<String>();
+	testingFrameworks = new ArrayList<>();
 	Collection<? extends Lookup.Item<TestCreatorProvider>> testCreatorProviders = Lookup.getDefault().lookupResult(TestCreatorProvider.class).allItems();
 	for (Lookup.Item<TestCreatorProvider> provider : testCreatorProviders) {
 	    testingFrameworks.add(provider.getDisplayName());

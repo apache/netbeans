@@ -122,7 +122,7 @@ ALL:
 
     /** Data structure to needed to store the */
     public void init(String[] original, String[] newversion) {
-        ArrayList<Object> root = new ArrayList<Object>();
+        ArrayList<Object> root = new ArrayList<>();
 
         for (int i = 0; i < original.length; i++) {
             placeString(root, original[i], i);
@@ -165,7 +165,7 @@ ALL:
                             // next is the list or null
                             List<Object> listForPref = (List<Object>) it.next();
 
-                            List<Object> switchList = new ArrayList<Object>();
+                            List<Object> switchList = new ArrayList<>();
                             it.set(switchList);
 
                             switchList.add(pref.substring(i));
@@ -174,7 +174,7 @@ ALL:
                             if (i >= s.length()) {
                                 switchList.add(new Integer(indx));
                             } else {
-                                ArrayList<Object> terminalList = new ArrayList<Object>();
+                                ArrayList<Object> terminalList = new ArrayList<>();
                                 terminalList.add(new Integer(indx));
 
                                 switchList.add(s.substring(i));
@@ -199,7 +199,7 @@ ALL:
         //
         // ok new prefix in this item
         //
-        ArrayList<Object> id = new ArrayList<Object>();
+        ArrayList<Object> id = new ArrayList<>();
         id.add(new Integer(indx));
 
         item.add(s);

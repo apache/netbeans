@@ -76,7 +76,7 @@ public class RestWrapperForSoapClientGenerator extends SoapClientRestResourceCod
         targetSource.runModificationTask(task).commit();
 
 
-        return new HashSet<FileObject>(Collections.<FileObject>emptySet());
+        return new HashSet<>(Collections.<FileObject>emptySet());
     }
 
     private ClassTree addGetMethod(MimeType mime, String returnType, WorkingCopy copy, ClassTree tree) throws IOException {

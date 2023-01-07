@@ -190,7 +190,7 @@ public final class InheritedPreferences extends AbstractPreferences implements P
 
     @Override
     protected String[] keysSpi() throws BackingStoreException {
-        Collection<String> names = new HashSet<String>();
+        Collection<String> names = new HashSet<>();
         names.addAll(Arrays.asList(stored.keys()));
         names.addAll(Arrays.asList(inherited.keys()));
         return names.toArray(new String[names.size()]);

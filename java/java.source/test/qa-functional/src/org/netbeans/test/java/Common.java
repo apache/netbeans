@@ -510,7 +510,7 @@ public class Common extends Object {
             Set<Modifier> modifiers) {        
             
         Tree extendsTree = make.QualIdent(workingCopy.getElements().getTypeElement(superClass));        
-        Map<String,String> params = new HashMap<String, String>();
+        Map<String,String> params = new HashMap<>();
         params.put("param1", "String");
         MethodTree mt = Common.createMethod(make, "method", params);
         VariableTree vt = Common.createField(make, "variable", EnumSet.of(Modifier.PROTECTED), "double");

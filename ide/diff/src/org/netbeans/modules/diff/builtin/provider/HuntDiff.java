@@ -271,7 +271,7 @@ class HuntDiff {
             if (start1 > n) break;
             if (J[start1] < start2) { // There's something extra in the first file
                 int end1 = start1 + 1;
-                List<String> deletedLines = new ArrayList<String>();
+                List<String> deletedLines = new ArrayList<>();
                 deletedLines.add(lines1[start1-1]);
                 while (end1 <= n && J[end1] < start2) {
                     String line = lines1[end1-1];
@@ -283,7 +283,7 @@ class HuntDiff {
                 start1 = end1;
             } else { // There's something extra in the second file
                 int end2 = J[start1];
-                List<String> addedLines = new ArrayList<String>();
+                List<String> addedLines = new ArrayList<>();
                 for (int i = start2; i < end2; i++) {
                     String line = lines2[i-1];
                     addedLines.add(line);
@@ -295,7 +295,7 @@ class HuntDiff {
         } while (start1 <= n);
         if (start2 <= m) { // There's something extra at the end of the second file
             int end2 = start2 + 1;
-            List<String> addedLines = new ArrayList<String>();
+            List<String> addedLines = new ArrayList<>();
             addedLines.add(lines2[start2-1]);
             while (end2 <= m) {
                 String line = lines2[end2-1];

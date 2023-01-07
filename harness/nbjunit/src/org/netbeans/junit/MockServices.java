@@ -201,7 +201,7 @@ public class MockServices {
             if (name.startsWith(prefix)) {
                 try {
                     Class<?> xface = loadClass(name.substring(prefix.length()));
-                    List<String> impls = new ArrayList<String>();
+                    List<String> impls = new ArrayList<>();
                     for (Class<?> c : services) {
                         boolean assignable = xface.isAssignableFrom(c);
                         if (assignable) {

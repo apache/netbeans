@@ -149,7 +149,7 @@ public class SimpleIssueFinder {
                  * Checks that precondition #2 is met
                  * - all elements of BUGNUM_PREFIX_PARTS are unique:
                  */
-                Set<String> bugnumPrefixPartsSet = new HashSet<String>(7);
+                Set<String> bugnumPrefixPartsSet = new HashSet<>(7);
                 bugnumPrefixPartsSet.addAll(Arrays.asList(BUGNUM_PREFIX_PARTS));
                 assert bugnumPrefixPartsSet.size() == BUGNUM_PREFIX_PARTS.length;
             }

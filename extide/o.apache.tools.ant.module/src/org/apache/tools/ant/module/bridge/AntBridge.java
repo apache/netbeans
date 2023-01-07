@@ -518,8 +518,8 @@ public final class AntBridge {
                 throw new IOException("Bad root element for " + antlib + ": " + docEl); // NOI18N
             }
             NodeList nl = docEl.getChildNodes();
-            Map<String,String> newTaskDefs = new HashMap<String,String>();
-            Map<String,String> newTypeDefs = new HashMap<String,String>();
+            Map<String,String> newTaskDefs = new HashMap<>();
+            Map<String,String> newTypeDefs = new HashMap<>();
             for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
                 if (n.getNodeType() != Node.ELEMENT_NODE) {

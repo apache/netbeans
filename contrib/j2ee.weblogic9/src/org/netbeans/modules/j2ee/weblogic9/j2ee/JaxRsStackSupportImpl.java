@@ -665,7 +665,7 @@ class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
     }
     
     private boolean addJars( Project project, Collection<URL> jars ){
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         for (URL url : jars) {
             if ( FileUtil.isArchiveFile( url)){
                 urls.add(FileUtil.getArchiveRoot(url));

@@ -229,8 +229,8 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
     private void refreshKeymapNames() {
         DataFolder root = getRootFolder(KEYMAPS_FOLDER, null);
         Enumeration en = root.children(false);
-        List<String> names = new ArrayList<String>();
-        Map<String, String> displayNames = new HashMap<String, String>();
+        List<String> names = new ArrayList<>();
+        Map<String, String> displayNames = new HashMap<>();
         while (en.hasMoreElements()) {
             FileObject f = ((DataObject) en.nextElement()).getPrimaryFile();
             if (f.isFolder()) {
@@ -321,7 +321,7 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
      */
     private Map<ShortcutAction, Set<String>> overrideWithKeyMap(Map<ShortcutAction, Set<String>> base,
             Map<ShortcutAction, Set<String>> keyMap, String profile) {
-        Set<String> overrideKeyStrokes = new HashSet<String>();
+        Set<String> overrideKeyStrokes = new HashSet<>();
         Map<String, ShortcutAction> shortcuts = null;
         
         for (ShortcutAction a : keyMap.keySet()) {
@@ -434,7 +434,7 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
 
         FileObject fo = root.getPrimaryFile();
         Collection<FileObject> entries = (Collection<FileObject>)fo.getAttribute("revealEntries");
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         for (FileObject f : entries) {
             try {
                 GlobalAction action;
@@ -483,8 +483,8 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
         }
         final FileObject fo = root.getPrimaryFile();
         final Collection<FileObject> entries = (Collection<FileObject>)fo.getAttribute("revealEntries");
-        final Set<String> keys = new HashSet<String>();
-        final Set<String> discard = new HashSet<String>();
+        final Set<String> keys = new HashSet<>();
+        final Set<String> discard = new HashSet<>();
         
         for (ShortcutAction ac : actions) {
             Set<String> sc = defaultKeyMap.get(ac);
@@ -608,7 +608,7 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
         // 2) convert to: Map (String (shortcut AC-C X) > GlobalAction)
         Map<String, ShortcutAction> shortcutToAction = shortcutToAction (actionToShortcuts);
         
-        Set<String> definedShortcuts = new HashSet<String>(shortcutToAction.keySet());
+        Set<String> definedShortcuts = new HashSet<>(shortcutToAction.keySet());
         
         // 3) delete obsolete DataObjects
         FileObject targetDir = folder.getPrimaryFile();
@@ -640,7 +640,7 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
             }
         }
         
-        Set<String> defaultNames = new HashSet<String>();
+        Set<String> defaultNames = new HashSet<>();
         // 4) add new shortcuts
         en = defaultMap.children();
         while (en.hasMoreElements()) {

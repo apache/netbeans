@@ -58,7 +58,7 @@ public class ManagerTest extends NbTestCase {
         DelegatingConnector[] connectors = BugtrackingManager.getInstance().getConnectors();
         assertNotNull(connectors);
         assertTrue(connectors.length > 1);
-        Set<String> repos = new HashSet<String>();
+        Set<String> repos = new HashSet<>();
         for (DelegatingConnector c : connectors) {
             repos.add(c.getDisplayName());
         }

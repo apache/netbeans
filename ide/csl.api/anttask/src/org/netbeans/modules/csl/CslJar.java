@@ -248,7 +248,7 @@ public class CslJar extends JarWithModuleAttributes {
                     boolean hasDeclarationFinder = true; // unless we find out otherwise
 
                     try {
-                        List<URL> urls = new ArrayList<URL>();
+                        List<URL> urls = new ArrayList<>();
                         String classDir = getProject().getProperty("build.classes.dir"); // NOI18N
                         if (classDir != null && classDir.length() > 0) {
                             urls.add(new File(classDir).toURI().toURL());

@@ -548,7 +548,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
 
         public void setValue(List<String> value) {
             StringBuilder val = new StringBuilder();
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             if (!value.isEmpty()) {
                 l.add(encode(key, true) + "=\\"); // NOI18N
                 Iterator<String> it = value.iterator();
@@ -574,12 +574,12 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
          * Returns persistent image of this property.
          */
         public List<String> getRawData() {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             if (commentLines != null) {
                 l.addAll(commentLines);
             }
             if (keyValueLines == null) {
-                keyValueLines = new ArrayList<String>();
+                keyValueLines = new ArrayList<>();
                 if (key != null && value != null) {
                     keyValueLines.add(encode(key, true)+"="+encode(value, false));
                 }

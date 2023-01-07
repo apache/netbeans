@@ -59,7 +59,7 @@ public class NodeActionsProviderTest {
                 new AbstractGlobalActionContext());
         try {
             NodeActionsProvider p = new NodeActionsProvider(Collections.EMPTY_SET);
-            Map<String, String> m = new HashMap<String, String>();
+            Map<String, String> m = new HashMap<>();
             m.put("name", "test");
             m.put("id", "test1");
 

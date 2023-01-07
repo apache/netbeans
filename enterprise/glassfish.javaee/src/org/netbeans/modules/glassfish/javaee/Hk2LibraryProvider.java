@@ -397,7 +397,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
                 List<String> javadocLookups = gfLib.getJavadocLookups();
                 lib.setName(libraryName);
                 // Build class path
-                List<URL> cp = new ArrayList<URL>();
+                List<URL> cp = new ArrayList<>();
                 for (URL url : gfLib.getClasspath()) {
                     if (FileUtil.isArchiveFile(url)) {
                         cp.add(FileUtil.getArchiveRoot(url));
@@ -406,7 +406,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
                     }
                 }
                 // Build java docs
-                List<URL> javadoc = new ArrayList<URL>();
+                List<URL> javadoc = new ArrayList<>();
                 if (javadocLookups != null) {
                     for (String lookup : javadocLookups) {
                         try {

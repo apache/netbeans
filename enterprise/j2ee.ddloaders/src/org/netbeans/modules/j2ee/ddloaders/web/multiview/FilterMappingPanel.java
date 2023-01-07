@@ -120,7 +120,7 @@ public class FilterMappingPanel extends javax.swing.JPanel {
             jRadioButton2.setSelected(true);
             urlTF.setEnabled(false);
             List<Integer> indeces = new LinkedList<Integer>( );
-            Set<String> servletSet = new HashSet<String>( Arrays.asList( 
+            Set<String> servletSet = new HashSet<>( Arrays.asList( 
                     selectedServletNames));
             for( int i=0; i<servletNames.length ;i++ ){
                 if ( servletSet.contains( servletNames[i])){

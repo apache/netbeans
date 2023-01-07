@@ -45,8 +45,8 @@ public class WadlSaasEx {
     private boolean compileSchemas() throws IOException {
         assert this.wadlSaas != null;
         assert this.wadlSaas.getWadlModel() != null;
-        jaxbJars = new ArrayList<FileObject>();
-        jaxbSourceJars = new ArrayList<FileObject>();
+        jaxbJars = new ArrayList<>();
+        jaxbSourceJars = new ArrayList<>();
         for (FileObject xsdFile : this.wadlSaas.getLocalSchemaFiles()) {
             Xsd2Java xjCompiler = new Xsd2Java(xsdFile, this.wadlSaas.getPackageName() + "." + 
                     SaasUtil.toValidJavaName(xsdFile.getName()).toLowerCase());
@@ -61,7 +61,7 @@ public class WadlSaasEx {
     }
 
     public List<FileObject> getLibraryJars() {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         if (jaxbJars == null) {
             try {
                 compileSchemas();

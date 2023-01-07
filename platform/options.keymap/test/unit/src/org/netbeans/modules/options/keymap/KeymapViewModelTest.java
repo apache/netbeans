@@ -193,7 +193,7 @@ public class KeymapViewModelTest extends NbTestCase {
             public void run (MutableShortcutsModel model, ShortcutAction action) {
                 String[] sh = model.getShortcuts (action);
                 if (sh.length == 0) return;
-                Set<String> shortcuts = new HashSet<String>(Arrays.asList(sh));
+                Set<String> shortcuts = new HashSet<>(Arrays.asList(sh));
                 //System.out.println("sh: " + shortcuts + " : " + action);
                 assertFalse ("Same shortcuts assigned to two actions ", result.containsKey (shortcuts));
                 result.put (shortcuts, action);
@@ -217,7 +217,7 @@ public class KeymapViewModelTest extends NbTestCase {
             public void run (MutableShortcutsModel model, ShortcutAction action) {
                 String[] sh = model.getShortcuts (action);
                 if (sh.length == 0) return;
-                Set<String> s = new HashSet<String>(Arrays.asList(sh));
+                Set<String> s = new HashSet<>(Arrays.asList(sh));
                 if (print)
                     System.out.println (s + " : " + action + " : " + localCopy.get (s));
                 assertEquals ("Shortcut changed: " + s + " : " + action, localCopy.get (s), action);

@@ -79,7 +79,7 @@ public class LayerGenerationExceptionTest extends NbTestCase {
     @ServiceProvider(service=Processor.class)
     public static class AP extends LayerGeneratingProcessor {
         public @Override Set<String> getSupportedAnnotationTypes() {
-            return new HashSet<String>(Arrays.asList(A.class.getCanonicalName(), AS.class.getCanonicalName()));
+            return new HashSet<>(Arrays.asList(A.class.getCanonicalName(), AS.class.getCanonicalName()));
         }
         protected @Override boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
             if (roundEnv.processingOver()) {

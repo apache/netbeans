@@ -42,7 +42,7 @@ final class HyperColumnModel extends ColumnModel {
     }
     
     private static Set<String> createAllIDs(ColumnModel... cms) {
-        Set<String> allIds = new HashSet<String>();
+        Set<String> allIds = new HashSet<>();
         for (ColumnModel cm : cms) {
             if (cm instanceof HyperColumnModel) {
                 allIds.addAll(((HyperColumnModel) cm).getAllIDs());

@@ -308,7 +308,7 @@ public class EditorFindSupportTest {
 //     */
 //    @Test
 //    public void testReplaceAll3() throws Exception {
-//        final Map<String, Object> props = new HashMap<String, Object>();
+//        final Map<String, Object> props = new HashMap<>();
 //        props.put(EditorFindSupport.FIND_WHAT, "ahoj");
 //        props.put(EditorFindSupport.FIND_REPLACE_WITH, "xxx");
 //        props.put(EditorFindSupport.FIND_HIGHLIGHT_SEARCH, Boolean.TRUE);
@@ -357,7 +357,7 @@ public class EditorFindSupportTest {
 //     */
 //    @Test
 //    public void testReplaceAll5() throws Exception {
-//        final Map<String, Object> props = new HashMap<String, Object>();
+//        final Map<String, Object> props = new HashMap<>();
 //        props.put(EditorFindSupport.FIND_WHAT, "ahoj");
 //        props.put(EditorFindSupport.FIND_REPLACE_WITH, "xxx");
 //        props.put(EditorFindSupport.FIND_HIGHLIGHT_SEARCH, Boolean.TRUE);
@@ -504,7 +504,7 @@ public class EditorFindSupportTest {
 //     */
 //    @Test
 //    public void testReplaceAll11() throws Exception {
-//        final Map<String, Object> props = new HashMap<String, Object>();
+//        final Map<String, Object> props = new HashMap<>();
 //        props.put(EditorFindSupport.FIND_WHAT, "a");
 //        props.put(EditorFindSupport.FIND_REPLACE_WITH, "b");
 //        props.put(EditorFindSupport.FIND_HIGHLIGHT_SEARCH, Boolean.TRUE);

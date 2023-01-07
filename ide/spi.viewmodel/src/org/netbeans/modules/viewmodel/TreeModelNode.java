@@ -107,7 +107,7 @@ public class TreeModelNode extends AbstractNode {
     private boolean             iconLoaded;
     private String              shortDescription;
     private final Object        shortDescriptionLock = new Object();
-    private final Map<String, Object> properties = new HashMap<String, Object>();
+    private final Map<String, Object> properties = new HashMap<>();
     private final Map<String, String> columnIDsMap;
     private static final String EVALUATING_STR = NbBundle.getMessage(TreeModelNode.class, "EvaluatingProp");
 
@@ -235,7 +235,7 @@ public class TreeModelNode extends AbstractNode {
         for (ColumnModel cm : columns) {
             if (cm instanceof HyperColumnModel) {
                 if (cids == null) {
-                    cids = new HashMap<String, String>();
+                    cids = new HashMap<>();
                 }
                 HyperColumnModel hcm = (HyperColumnModel) cm;
                 String mainID = cm.getID();
@@ -782,7 +782,7 @@ public class TreeModelNode extends AbstractNode {
     
     private class PropertyDisplayNameListener implements PropertyChangeListener {
         
-        private Set<String> propertyNames = new HashSet<String>();
+        private Set<String> propertyNames = new HashSet<>();
         
         PropertyDisplayNameListener() {
         }

@@ -352,7 +352,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
     private boolean isAlreadyHandled( JFileChooser chooser, File[] files ,
             String property ) 
     {
-        Set<File> fileSet = new HashSet<File>( Arrays.asList( files ));
+        Set<File> fileSet = new HashSet<>( Arrays.asList( files ));
         File file = chooser.getSelectedFile();
         boolean contains = (file == null && files.length ==0 ) 
             || (file!= null && fileSet.contains( file ));

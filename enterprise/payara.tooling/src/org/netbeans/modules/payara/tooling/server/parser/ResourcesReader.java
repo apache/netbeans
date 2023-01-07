@@ -89,7 +89,7 @@ public class ResourcesReader extends NodeListener implements
     @Override
     public void readAttributes(String qname, Attributes attributes) throws
             SAXException {
-        properties = new HashMap<String, String>();
+        properties = new HashMap<>();
 
         String resourceName = attributes.getValue(keyName);
         properties.put(keyName, resourceName);

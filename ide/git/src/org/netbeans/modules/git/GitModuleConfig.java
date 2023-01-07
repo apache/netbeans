@@ -162,7 +162,7 @@ public final class GitModuleConfig {
     
     synchronized Set<String> getCommitExclusions() {
         if (exclusions == null) {
-            exclusions = new HashSet<String>(Utils.getStringList(getPreferences(), PROP_COMMIT_EXCLUSIONS));
+            exclusions = new HashSet<>(Utils.getStringList(getPreferences(), PROP_COMMIT_EXCLUSIONS));
         }
         return exclusions;
     }  
@@ -311,7 +311,7 @@ public final class GitModuleConfig {
         getPreferences().putBoolean(KEY_SHOW_FILE_INFO, info);
     }
     
-    private final HashMap<String, ConnectionSettings> cachedConnectionSettings = new HashMap<String, ConnectionSettings>(5);
+    private final HashMap<String, ConnectionSettings> cachedConnectionSettings = new HashMap<>();
     public void insertRecentConnectionSettings (ConnectionSettings toStore) {
         assert !EventQueue.isDispatchThread();
         String guriString = getUriStringWithoutCredentials(toStore.getUri());

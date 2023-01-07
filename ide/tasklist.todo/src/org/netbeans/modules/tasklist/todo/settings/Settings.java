@@ -232,7 +232,7 @@ public final class Settings {
     private static Collection<String> decodePatterns( String encodedPatterns ) {
         StringTokenizer st = new StringTokenizer( encodedPatterns, OBJECT_DELIMITER, false );
         
-        Collection<String> patterns = new ArrayList<String>();
+        Collection<String> patterns = new ArrayList<>();
         
         while( st.hasMoreTokens() ) {
             String im = st.nextToken();

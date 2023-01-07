@@ -118,7 +118,7 @@ public class ProxySelectorTest extends MyTestCase {
   public void testByPassAddGet() {
     MyProxySelector selector = new MyProxySelector();
     assertTrue(selector.getByPass().length == 0);
-    final Set<String> expected = new HashSet<String>();
+    final Set<String> expected = new HashSet<>();
     expected.add("sun.com");
     selector.addByPassHost("sun.com");
     assertTrue(selector.getByPass().length == 1);
@@ -129,7 +129,7 @@ public class ProxySelectorTest extends MyTestCase {
     selector.addByPassHost("www.my.ru");
     selector.addByPassHost("w3c.go.go");
     selector.addByPassHost("12.34.65.2");
-    final Set<String> list = new HashSet<String>();
+    final Set<String> list = new HashSet<>();
     for(String str : selector.getByPass()) {
       list.add(str);
     }

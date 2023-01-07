@@ -278,7 +278,7 @@ public final class SourcesHelper {
                 return supe;
             }
             else if (supe.size() == 1) {
-                Set<FileObject> roots = new HashSet<FileObject>();
+                Set<FileObject> roots = new HashSet<>();
                 for (File r : computeIncludeExcludePatterns().findIncludedRoots()) {
                     FileObject subroot = FileUtil.toFileObject(r);
                     if (subroot != null) {
@@ -832,7 +832,7 @@ public final class SourcesHelper {
             propChangeL = new PropChangeL(); // hold a strong ref
             evaluator.addPropertyChangeListener(WeakListeners.propertyChange(propChangeL, evaluator));
         }
-        Set<FileObject> newRegisteredRoots = new HashSet<FileObject>();
+        Set<FileObject> newRegisteredRoots = new HashSet<>();
         // XXX might be a bit more efficient to cache for each root the actualLocation value
         // that was last computed, and just check if that has changed... otherwise we wind
         // up calling APH.resolveFileObject repeatedly (for each property change)
@@ -859,12 +859,12 @@ public final class SourcesHelper {
             }
         }
         // Just check for changes since the last time.
-        Set<FileObject> toUnregister = new HashSet<FileObject>(lastRegisteredRoots);
+        Set<FileObject> toUnregister = new HashSet<>(lastRegisteredRoots);
         toUnregister.removeAll(newRegisteredRoots);
         for (FileObject loc : toUnregister) {
             FileOwnerQuery.markExternalOwner(loc, null, registeredRootAlgorithm);
         }
-        Set<FileObject> toRegister = new HashSet<FileObject>(newRegisteredRoots);
+        Set<FileObject> toRegister = new HashSet<>(newRegisteredRoots);
         toRegister.removeAll(lastRegisteredRoots);
         for (FileObject loc : toRegister) {
             FileOwnerQuery.markExternalOwner(loc, p, registeredRootAlgorithm);
@@ -924,7 +924,7 @@ public final class SourcesHelper {
         
         private final ChangeSupport cs = new ChangeSupport(this);
         private boolean haveAttachedListeners;
-        private final Set<File> rootsListenedTo = new HashSet<File>();
+        private final Set<File> rootsListenedTo = new HashSet<>();
         /**
          * The root URLs which were computed last, keyed by group type.
          */
@@ -981,7 +981,7 @@ public final class SourcesHelper {
                     groups.add(entry.getValue().toGroup(entry.getKey()));
                 }
             } else {
-                Set<FileObject> dirs = new HashSet<FileObject>();
+                Set<FileObject> dirs = new HashSet<>();
                 LOG.log(Level.FINE, "Calculating groups of type: {0} for: {1}", //NOI18N
                         new Object[]{
                             type,
@@ -1049,7 +1049,7 @@ public final class SourcesHelper {
             // #47451: check whether anything really changed.
             boolean change = false;
             // Cannot iterate over entrySet, as the map will be modified by getSourceGroups.
-            for (String type : new HashSet<String>(lastComputedRoots.keySet())) {
+            for (String type : new HashSet<>(lastComputedRoots.keySet())) {
                 List<URL> previous = new ArrayList<URL>(lastComputedRoots.get(type));
                 getSourceGroups(type);
                 List<URL> nue = lastComputedRoots.get(type);

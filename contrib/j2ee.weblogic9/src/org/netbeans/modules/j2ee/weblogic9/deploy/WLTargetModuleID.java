@@ -49,7 +49,7 @@ public class WLTargetModuleID implements WebTargetModuleID {
 
     private TargetModuleID  parent;
 
-    private List<URL> serverUrls = new ArrayList<URL>();
+    private List<URL> serverUrls = new ArrayList<>();
 
     public WLTargetModuleID(Target target) {
         this(target, "");

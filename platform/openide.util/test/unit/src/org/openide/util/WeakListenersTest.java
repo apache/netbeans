@@ -625,7 +625,7 @@ public class WeakListenersTest extends NbTestCase {
     }
 
     public static class Singleton {
-        public static List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        public static List<ChangeListener> listeners = new ArrayList<>();
         public static void addChangeListener(ChangeListener l) {
             listeners.add(l);
         }

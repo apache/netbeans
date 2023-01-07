@@ -117,7 +117,7 @@ public class TranslateClassPath extends Task {
             boolean appendEntry = false;
 
             if (!disableSources && r.preferSources() && r.getRoots().length > 0) {
-                final List<File> translated = new ArrayList<File>();
+                final List<File> translated = new ArrayList<>();
                 for (FileObject source : r.getRoots()) {
                     final File sourceFile = FileUtil.toFile(source);
                     if (sourceFile == null) {

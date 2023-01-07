@@ -107,7 +107,7 @@ public final class MessageGenerator {
         this.displayName = ejbNameOptions.getMessageDrivenDisplayNamePrefix() + wizardTargetName + ejbNameOptions.getMessageDrivenDisplayNameSuffix();
         this.packageName = EjbGenerationUtil.getSelectedPackageName(pkg);
         this.packageNameWithDot = packageName + ".";
-        this.templateParameters = new HashMap<String, Object>();
+        this.templateParameters = new HashMap<>();
         this.profile = profile;
         this.jmsSupport = jmsSupport;
         boolean useMappedName = useMappedName();

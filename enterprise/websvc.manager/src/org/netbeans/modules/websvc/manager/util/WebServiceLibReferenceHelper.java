@@ -63,7 +63,7 @@ public class WebServiceLibReferenceHelper {
                 wsClientsSubDir = projectLibDir.createFolder( WEBSERVICE_CLIENTS_SUB_DIR );
             
             // Copy over the jar files into the project library directory
-            ArrayList<URL> copiedArchiveJars = new ArrayList<URL>();
+            ArrayList<URL> copiedArchiveJars = new ArrayList<>();
             for (String jarFilePath : jars) {
                 try {
                     String jarFileName = new File(jarFilePath).getName();
@@ -202,7 +202,7 @@ public class WebServiceLibReferenceHelper {
     }
     
     public static List<String> getDefaultJaxWsClientJars(WebServiceData data) {
-        List<String> jarPaths = new ArrayList<String>();
+        List<String> jarPaths = new ArrayList<>();
         File basePath = new File(WebServiceDescriptor.WEBSVC_HOME, data.getJaxWsDescriptorPath()).getParentFile();
         for (WebServiceDescriptor.JarEntry jar : data.getJaxWsDescriptor().getJars()) {
             if (jar.getType().equals(WebServiceDescriptor.JarEntry.PROXY_JAR_TYPE)) {

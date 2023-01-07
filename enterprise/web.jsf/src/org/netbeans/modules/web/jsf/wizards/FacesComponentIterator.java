@@ -64,7 +64,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
         DataFolder dataFolder = DataFolder.findFolder(targetFolder);
         FileObject template = Templates.getTemplate(wizard);
         DataObject dTemplate = DataObject.find(template);
-        Map<String, Object> templateProperties = new HashMap<String, Object>();
+        Map<String, Object> templateProperties = new HashMap<>();
 
         String tagName = (String) wizard.getProperty(FacesComponentPanel.PROP_TAG_NAME);
         String tagNamespace = (String) wizard.getProperty(FacesComponentPanel.PROP_TAG_NAMESPACE);

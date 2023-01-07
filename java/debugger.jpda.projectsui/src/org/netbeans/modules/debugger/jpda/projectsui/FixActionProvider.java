@@ -153,7 +153,7 @@ public class FixActionProvider extends ActionsProviderSupport {
             return ((SourcePathProviderImpl) sp).getSourceRootsFO();
         } else {
             String[] sourceRoots = sp.getSourceRoots();
-            Set<FileObject> fos = new HashSet<FileObject>();
+            Set<FileObject> fos = new HashSet<>();
             for (String root : sourceRoots) {
                 FileObject fo;
                 int jarIndex = root.indexOf("!/");

@@ -235,7 +235,7 @@ public final class EndorsedClassPathImpl implements ClassPathImplementation, Fil
 
     private StripPlatformResult stripDefaultJavaPlatform(String[] boot) {
         StripPlatformResult res = new StripPlatformResult();
-        List<URL> toRet = new ArrayList<URL>();
+        List<URL> toRet = new ArrayList<>();
         res.urls = toRet;
         Set<URL> defs = getDefJavaPlatBCP();
         OUTER: for (String s : boot) {

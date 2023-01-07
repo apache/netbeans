@@ -88,13 +88,13 @@ public class BasicPerformanceTest extends TestCase {
 //        
 //        StopWatch swatch = new StopWatch();
 //        Enumeration<JarEntry> entries = jar.entries();
-//        ArrayList<String> names = new ArrayList<String>(); 
+//        ArrayList<String> names = new ArrayList<>();
 //        while( entries.hasMoreElements() ) {
 //            names.add( entries.nextElement().getName() );
 //        }        
 //        swatch.stop( "Got enries " + names.size()  );
 //        
-//        HashSet<String> distinct = new HashSet<String>(); 
+//        HashSet<String> distinct = new HashSet<>();
 //        swatch.start();
 //        for( String name : names ) {
 //            distinct.addAll( parseName( name ) );
@@ -125,7 +125,7 @@ public class BasicPerformanceTest extends TestCase {
 //        
 //        StopWatch swatch = new StopWatch();
 //        Enumeration<JarEntry> entries = jar.entries();
-//        ArrayList<String> names = new ArrayList<String>(); 
+//        ArrayList<String> names = new ArrayList<>();
 //        while( entries.hasMoreElements() ) {
 //            names.add( entries.nextElement().getName() );
 //        }
@@ -146,7 +146,7 @@ public class BasicPerformanceTest extends TestCase {
 //        swatch.start();
 //        
 //        /*
-//        HashMap<String> packages = new HashSet<String>();
+//        HashMap<String> packages = new HashSet<>();
 //        for( String name : names ) {            
 //            String pn = name.substring( 0, name.lastIndexOf( "/" ) ); // .replace( '/', '.' );
 //            if ( !packages.contains( pn ) ) {

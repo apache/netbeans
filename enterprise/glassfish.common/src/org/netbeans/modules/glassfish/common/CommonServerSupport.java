@@ -681,7 +681,7 @@ public class CommonServerSupport
     public Future<ResultString> redeploy(TaskStateListener stateListener,
     String name, String contextRoot, File[] libraries,
     boolean resourcesChanged) {
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         String url = instance.getProperty(GlassfishModule.URL_ATTR);
         String sessionPreservationFlag = instance.getProperty(
                 GlassfishModule.SESSION_PRESERVATION_FLAG);

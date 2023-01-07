@@ -77,7 +77,7 @@ public class BuiltInDiffProvider extends DiffProvider implements java.io.Seriali
     private String[] getLines(Reader r) throws IOException {
         BufferedReader br = new BufferedReader(r);
         String line;
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }

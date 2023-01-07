@@ -299,7 +299,7 @@ public class SelectorsLoader extends DefaultHandler {
                         longDescription = "";
                         sample = "";
                         longDescription = "";
-                        notes = new ArrayList<String>();
+                        notes = new ArrayList<>();
                         signatures = new ArrayList<Signature>();
                     }
                 }
@@ -548,7 +548,7 @@ public class SelectorsLoader extends DefaultHandler {
             this.jQuery = jQuery;
             this.elementFactory = elementFactory;
             this.tagPath = new ArrayList<Tag>();
-            this.params  = new ArrayList<String>();
+            this.params  = new ArrayList<>();
         }
 
         @Override

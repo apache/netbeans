@@ -56,7 +56,7 @@ public final class CustomizerSelector {
         this.acceptOldControllers = acceptOldControllers;
 
         if (allowedMimeTypes != null) {
-            this.allowedMimeTypes = new HashSet<String>();
+            this.allowedMimeTypes = new HashSet<>();
             for(String mimeType : allowedMimeTypes.split(",")) { //NOI18N
                 mimeType = mimeType.trim();
                 if (MimePath.validate(mimeType)) {
@@ -120,7 +120,7 @@ public final class CustomizerSelector {
 
     public synchronized Collection<? extends String> getMimeTypes() {
         if (mimeTypes == null) {
-            mimeTypes = new HashSet<String>();
+            mimeTypes = new HashSet<>();
             mimeTypes.add(""); //NOI18N
 
             // filter out mime types that don't supply customizers

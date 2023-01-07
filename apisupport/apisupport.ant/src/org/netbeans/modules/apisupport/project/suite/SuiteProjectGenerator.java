@@ -103,7 +103,7 @@ public class SuiteProjectGenerator {
 
         NbPlatform plaf = NbPlatform.getPlatformByID(platformID);
         if (plaf != null && plaf.getHarnessVersion().compareTo(HarnessVersion.V65) > 0) {
-            List<String> clusterPath = new ArrayList<String>();
+            List<String> clusterPath = new ArrayList<>();
             File[] files = plaf.getDestDir().listFiles();
             for (File file : files) {
                 if (ClusterUtils.isValidCluster(file))

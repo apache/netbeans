@@ -464,7 +464,7 @@ public class PropertyUtils {
      * @return a tokenization of that path into components
      */
     public static String[] tokenizePath(String path) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
         char dosHack = '\0';
         char lastDelim = '\0';

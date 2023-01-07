@@ -60,7 +60,7 @@ public class RunnerHttpLocation extends RunnerHttp {
         if (manifest == null)
             return false;
         
-        result.value = new HashMap<String, String>();
+        result.value = new HashMap<>();
         Attributes mainAttrs = manifest.getMainAttributes();
             if(mainAttrs != null) {
                 result.value.put("Base-Root_value", mainAttrs.getValue("Base-Root_value"));

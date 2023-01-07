@@ -228,7 +228,7 @@ public enum SecurityPolicyQName {
     private final QName qName;
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         for (ConfigVersion cfg : ConfigVersion.values()) {
             try {
                 String nsUri = getNamespaceUri(cfg);

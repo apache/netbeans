@@ -196,7 +196,7 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
     @Override
     public String getLicenseId() {
         String res = "";
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         for (ModuleUpdateElementImpl impl : getContainedModuleElements()) {
             if (!impl.getUpdateUnit().getAvailableUpdates().isEmpty()) {
                 String id = impl.getUpdateUnit().getAvailableUpdates().get(0).getLicenseId();
@@ -425,9 +425,9 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
             Set<ModuleUpdateElementImpl> res = new HashSet<ModuleUpdateElementImpl> ();
             assert dependenciesToModulesOrFeatures != null : "Invalid Feature " + this + " with null modules.";
             if (dependenciesToModulesOrFeatures == null) {
-                dependenciesToModulesOrFeatures = new HashSet<String>();
+                dependenciesToModulesOrFeatures = new HashSet<>();
             } else {
-                dependenciesToModulesOrFeatures = new HashSet<String>(dependenciesToModulesOrFeatures);
+                dependenciesToModulesOrFeatures = new HashSet<>(dependenciesToModulesOrFeatures);
             }
             Set<Dependency> deps = new HashSet<Dependency> ();
             for (String depSpec : dependenciesToModulesOrFeatures) {

@@ -67,9 +67,9 @@ public class ResourceEnvRefMetadataReader extends CommonBeanReader {
                 String resourceEnvRefName = resourceEnvRef.getResourceEnvRefName();
                 if(Utils.notEmpty(resourceEnvRefName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> resourceEnvRefMap = new HashMap<String, Object>();
+                    Map<String, Object> resourceEnvRefMap = new HashMap<>();
                     result.put(resourceEnvRefName, resourceEnvRefMap);
                     resourceEnvRefMap.put(DDBinding.PROP_NAME, resourceEnvRefName);
                 }

@@ -153,8 +153,8 @@ public class QueryTest extends NbTestCase implements TestConstants, QueryConstan
         assertTrue(nl.finished);
         assertEquals(2, nl.getIssues(STATUS_ALL).size());
         assertEquals(2, bugzillaIssues.size());
-        List<String> summaries = new ArrayList<String>();
-        List<String> ids = new ArrayList<String>();
+        List<String> summaries = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for(BugzillaIssue issue : bugzillaIssues) {
             summaries.add(issue.getSummary());
             ids.add(issue.getID());
@@ -166,8 +166,8 @@ public class QueryTest extends NbTestCase implements TestConstants, QueryConstan
 
 //        Collection<Issue> is = BugtrackingUtil.getByIdOrSummary(BugzillaUtil.getQuery(q).getIssues(), "" + ts); // shoud return both issues
 //        assertEquals(2, is.size());
-//        summaries = new ArrayList<String>();
-//        ids = new ArrayList<String>();
+//        summaries = new ArrayList<>();
+//        ids = new ArrayList<>();
 //        for(Issue issue : is) {
 //            summaries.add(issue.getSummary());
 //            ids.add(issue.getID());

@@ -171,21 +171,21 @@ public class J2SEConfigurationProviderTest extends NbTestCase {
         ProjectConfiguration c = configs.get(1);
         assertEquals("debug", c.getDisplayName());
         setActiveConfiguration(pcp, c);
-        assertEquals(new HashSet<String>(Arrays.asList("config", "debug")), l.events());
+        assertEquals(new HashSet<>(Arrays.asList("config", "debug")), l.events());
         assertEquals("debug", eval.getProperty("config"));
         assertEquals("true", eval.getProperty("debug"));
         assertEquals(null, eval.getProperty("more"));
         c = configs.get(2);
         assertEquals("release", c.getDisplayName());
         setActiveConfiguration(pcp, c);
-        assertEquals(new HashSet<String>(Arrays.asList("config", "debug", "more")), l.events());
+        assertEquals(new HashSet<>(Arrays.asList("config", "debug", "more")), l.events());
         assertEquals("release", eval.getProperty("config"));
         assertEquals("false", eval.getProperty("debug"));
         assertEquals("stuff", eval.getProperty("more"));
         c = configs.get(0);
         assertEquals("<default config>", c.getDisplayName());
         setActiveConfiguration(pcp, c);
-        assertEquals(new HashSet<String>(Arrays.asList("config", "debug", "more")), l.events());
+        assertEquals(new HashSet<>(Arrays.asList("config", "debug", "more")), l.events());
         assertEquals(null, eval.getProperty("config"));
         assertEquals(null, eval.getProperty("debug"));
         assertEquals(null, eval.getProperty("more"));
@@ -213,7 +213,7 @@ public class J2SEConfigurationProviderTest extends NbTestCase {
         });
         ProjectManager.mutex().readAccess(new Mutex.ExceptionAction<Void>() {
                 @Override public Void run () throws Exception {
-                    assertEquals(new HashSet<String>(Arrays.asList(ProjectConfigurationProvider.PROP_CONFIGURATIONS, ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE)),
+                    assertEquals(new HashSet<>(Arrays.asList(ProjectConfigurationProvider.PROP_CONFIGURATIONS, ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE)),
                         l.events());
                     assertEquals(2, pcp.getConfigurations().size());
                     assertEquals("X", pcp.getActiveConfiguration().getDisplayName());
@@ -230,13 +230,13 @@ public class J2SEConfigurationProviderTest extends NbTestCase {
     }
 
     private static final class TestListener implements PropertyChangeListener {
-        private Set<String> events = new HashSet<String>();
+        private Set<String> events = new HashSet<>();
         @Override public void propertyChange(PropertyChangeEvent evt) {
             events.add(evt.getPropertyName());
         }
         public Set<String> events() {
             Set<String> copy = events;
-            events = new HashSet<String>();
+            events = new HashSet<>();
             return copy;
         }
     }

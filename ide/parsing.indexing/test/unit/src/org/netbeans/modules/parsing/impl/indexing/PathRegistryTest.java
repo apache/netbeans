@@ -720,7 +720,7 @@ public class PathRegistryTest extends IndexingTestBase {
 
         @Override
         public Set<String> getBinaryLibraryPathIds() {
-            final Set<String> res = new HashSet<String>();
+            final Set<String> res = new HashSet<>();
             res.add(FOO_PLATFORM);
             res.add(FOO_BINARY);
             return res;

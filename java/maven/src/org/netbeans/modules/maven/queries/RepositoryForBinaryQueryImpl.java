@@ -439,7 +439,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                 File[] f = SourceJavadocByHash.find(root, false);
                 if (f != null) {
                     //hashes are processed separately, should not mesh with other means of discovery.
-                    List<FileObject> accum = new ArrayList<FileObject>();
+                    List<FileObject> accum = new ArrayList<>();
                     for (File ff : f) {
                         accum.addAll(Arrays.asList(getSourceJarRoot(ff)));
                     }
@@ -449,7 +449,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                     //now comes the magic.
                     //all this should always come with preferSources == false
                     
-                    List<FileObject> fos = new ArrayList<FileObject>();
+                    List<FileObject> fos = new ArrayList<>();
                     
                     if (prj != null) { // have project here means we also have classifier
                         add(fos, getProjectSrcRoots(prj));
@@ -559,7 +559,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
             try {
                 List<Coordinates> coordinates = coorProvider.apply(Utilities.toFile(binary.toURI()));
                 File lrf = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
-                List<FileObject> fos = new ArrayList<FileObject>();
+                List<FileObject> fos = new ArrayList<>();
                 if (coordinates != null) {
                     for (Coordinates coord : coordinates) {
                         if (coord.artifactId.equals(artifactId) && coord.groupId.equals(groupId) && coord.version.equals(version)) {
@@ -727,7 +727,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                 URL root = FileUtil.isArchiveFile(binary) ? FileUtil.getArchiveRoot(binary) : binary;
                 File[] f = SourceJavadocByHash.find(root, true);
                 if (f != null) {
-                    List<URL> accum = new ArrayList<URL>();
+                    List<URL> accum = new ArrayList<>();
                     for (File ff : f) {
                         URL[] url = getJavadocJarRoot(ff);
                         if (url != null) {
@@ -847,7 +847,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
             try {
                 List<Coordinates> coordinates = coorProvider.apply(Utilities.toFile(binary.toURI()));
                 File lrf = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
-                List<URL> urls = new ArrayList<URL>();
+                List<URL> urls = new ArrayList<>();
                 if (coordinates != null) {
                     for (Coordinates coord : coordinates) {
                             File javadocJar = new File(lrf, coord.groupId.replace(".", File.separator) + File.separator + coord.artifactId + File.separator + coord.version + File.separator + coord.artifactId + "-" + coord.version + "-javadoc.jar");

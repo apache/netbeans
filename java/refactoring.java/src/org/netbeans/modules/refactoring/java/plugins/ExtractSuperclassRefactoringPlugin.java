@@ -249,7 +249,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
     }
 
     private Set<FileObject> getRelevantFiles() {
-        final Set<FileObject> set = new HashSet<FileObject>();
+        final Set<FileObject> set = new HashSet<>();
         set.add(refactoring.getSourceType().getFileObject());
         return set;
     }
@@ -633,7 +633,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
         private static MethodTree removeRuntimeExceptions(final WorkingCopy javac, ExecutableElement superclassConstr, final TreeMaker make, MethodTree newConstr) {
             int i = 0;
             TypeMirror rte = javac.getElements().getTypeElement("java.lang.RuntimeException").asType(); //NOI18N
-            ArrayList<Integer> rtes = new ArrayList<Integer>();
+            ArrayList<Integer> rtes = new ArrayList<>();
             for (TypeMirror throwz : superclassConstr.getThrownTypes()) {
                 if (javac.getTypes().isSubtype(throwz, rte)) {
                     rtes.add(i);

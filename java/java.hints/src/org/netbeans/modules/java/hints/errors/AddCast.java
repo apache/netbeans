@@ -57,7 +57,7 @@ import org.openide.util.NbBundle;
  */
 public final class AddCast implements ErrorRule<Void> {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> ERROR_CODES = new HashSet<>(Arrays.asList(
             "compiler.err.prob.found.req", // NOI18N
             "compiler.err.cant.apply.symbol", // NOI18N
             "compiler.err.cant.apply.symbol.1", // NOI18N

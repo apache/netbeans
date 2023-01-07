@@ -190,7 +190,7 @@ public abstract class VCSStatusTable<T extends VCSStatusNode> implements FileVie
     }
 
     public final void setSelectedNodes (File[] selectedFiles) {
-        Set<File> files = new HashSet<File>(Arrays.asList(selectedFiles));
+        Set<File> files = new HashSet<>(Arrays.asList(selectedFiles));
         ListSelectionModel selection = table.getSelectionModel();
         selection.setValueIsAdjusting(true);
         selection.clearSelection();

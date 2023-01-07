@@ -113,7 +113,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
             Project project = FileOwnerQuery.getOwner(fo);
             RequireJsIndex rIndex = null;
             if (fo != null && EditorUtils.isFileReference(snapshot, offset)) {
-                List<FileObject> relativeTo = new ArrayList<FileObject>();
+                List<FileObject> relativeTo = new ArrayList<>();
                 //get already written files
                 Collection<String> usedFileInDefine = EditorUtils.getUsedFileInDefine(snapshot, offset);
                 for (String path : usedFileInDefine) {
@@ -174,7 +174,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                 }
 
                 if (relativeTo.isEmpty()) {
-                    Collection<String> basePaths = new ArrayList<String>();
+                    Collection<String> basePaths = new ArrayList<>();
                     if (rIndex != null) {
                         basePaths = rIndex.getBasePaths();
                         relativeTo.add(fo.getParent());

@@ -553,7 +553,7 @@ public class HintsInvokerTest extends TestBase {
                        "import java.util.Arrays;\n" +
                        "import java.util.HashSet;\n" +
                        "public class Test {\n" +
-                       "     { new HashSet<String>(Arrays.<String>asList(\"a\", \"b\", \"c\")); }\n" +
+                       "     { new HashSet<>(Arrays.<String>asList(\"a\", \"b\", \"c\")); }\n" +
                        "}\n",
                        "4:7-4:64:verifier:HINT",
                        "FixImpl",
@@ -561,7 +561,7 @@ public class HintsInvokerTest extends TestBase {
                        "import java.util.Arrays;\n" +
                        "import java.util.HashSet;\n" +
                        "public class Test {\n" +
-                       "     { new HashSet<String>(Arrays.<String>asList(\"d\", \"a\", \"b\", \"c\")); }\n" +
+                       "     { new HashSet<>(Arrays.<String>asList(\"d\", \"a\", \"b\", \"c\")); }\n" +
                        "}\n").replaceAll("[ \t\n]+", " "));
     }
 
@@ -672,7 +672,7 @@ public class HintsInvokerTest extends TestBase {
         test2Hint.put("testPattern2", test2Hint.get("testPattern1"));
         test2Hint.put("testKind1", HintDescriptionFactory.create().setTrigger(new Kinds(EnumSet.of(Kind.METHOD_INVOCATION))).setWorker(new WorkerImpl()).produce());
         test2Hint.put("testPatternVariable1", HintDescriptionFactory.create().setTrigger(PatternDescription.create("{ $1 $2; $2 = $3; }", Collections.<String, String>emptyMap())).setWorker(new WorkerImpl("{ $1 $2 = $3; }")).produce());
-        Map<String, String> constraints = new HashMap<String, String>();
+        Map<String, String> constraints = new HashMap<>();
 
         constraints.put("$1", "boolean");
         constraints.put("$2", "java.lang.Object");

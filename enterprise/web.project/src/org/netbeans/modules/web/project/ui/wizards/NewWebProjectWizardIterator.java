@@ -101,7 +101,7 @@ public class NewWebProjectWizardIterator implements WizardDescriptor.ProgressIns
         handle.start(4);
         handle.progress(NbBundle.getMessage(NewWebProjectWizardIterator.class, "LBL_NewWebProjectWizardIterator_WizardProgress_CreatingProject"), 1);
         
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
 
         File dirF = (File) wiz.getProperty(ProjectLocationWizardPanel.PROJECT_DIR);
         if (dirF != null) {

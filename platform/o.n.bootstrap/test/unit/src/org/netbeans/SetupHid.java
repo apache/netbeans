@@ -387,7 +387,7 @@ public abstract class SetupHid extends NbTestCase {
         return m;
     }
     private static List<File> findSourceFiles(File... roots) {
-        List<File> sourceFiles = new ArrayList<File>();
+        List<File> sourceFiles = new ArrayList<>();
         for (File root : roots) {
             doFindSourceFiles(sourceFiles, root);
         }

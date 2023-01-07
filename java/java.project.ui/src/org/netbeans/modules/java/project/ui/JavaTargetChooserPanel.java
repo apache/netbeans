@@ -55,7 +55,7 @@ public final class JavaTargetChooserPanel implements WizardDescriptor.Panel<Wiza
 
     private final SpecificationVersion JDK_14 = new SpecificationVersion ("1.4");   //NOI18N
     private final SpecificationVersion JDK_18 = new SpecificationVersion ("1.8");   //NOI18N
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private JavaTargetChooserPanelGUI gui;
     private WizardDescriptor.Panel<WizardDescriptor> bottomPanel;
     private WizardDescriptor wizard;

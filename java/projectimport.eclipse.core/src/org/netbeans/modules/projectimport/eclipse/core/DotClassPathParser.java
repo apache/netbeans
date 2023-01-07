@@ -81,7 +81,7 @@ final class DotClassPathParser {
         DotClassPathEntry output = null;
         DotClassPathEntry jre = null;
         for (Element classpathEntry : classpathEntryEls) {
-            Map<String, String> props = new HashMap<String, String>();
+            Map<String, String> props = new HashMap<>();
             NamedNodeMap attrs = classpathEntry.getAttributes();
             String linkName = null;
             for (int i=0; i <attrs.getLength(); i++) {

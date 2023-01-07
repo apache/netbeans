@@ -567,7 +567,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
     }
 
     private void assertMain(final String[] expected, final Iterable<? extends ElementHandle<TypeElement>> result) {
-        final Set<String> es = new HashSet<String>(Arrays.asList(expected));
+        final Set<String> es = new HashSet<>(Arrays.asList(expected));
         for (ElementHandle<TypeElement> r : result) {
             assertTrue(es.remove(r.getQualifiedName()));
         }
@@ -676,7 +676,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
     private static final class Match {
         private String[] fqns;
         private String[] names;
-        private final Set<String> used = new HashSet<String>();
+        private final Set<String> used = new HashSet<>();
         Match(String fqns, String names) {
             this.fqns = fqns.split(",");
             this.names = names.split(",");

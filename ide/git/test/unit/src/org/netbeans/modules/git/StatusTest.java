@@ -103,7 +103,7 @@ public class StatusTest extends AbstractGitTestCase {
         File unversionedFile = new File(getWorkDir(), "file");
         unversionedFile.createNewFile();
         // create new files
-        Set<File> newFiles = new HashSet<File>();
+        Set<File> newFiles = new HashSet<>();
         File newFile;
         newFiles.add(newFile = new File(repositoryLocation, "file"));
         newFile.createNewFile();

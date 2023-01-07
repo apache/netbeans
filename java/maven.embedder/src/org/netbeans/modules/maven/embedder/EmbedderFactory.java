@@ -60,7 +60,7 @@ public final class EmbedderFactory {
     
     //same prop constant in MavenSettings.java
     static final String PROP_DEFAULT_OPTIONS = "defaultOptions"; 
-    private static final Set<String> forbidden = new HashSet<String>();
+    private static final Set<String> forbidden = new HashSet<>();
     static {
         forbidden.add("netbeans.logger.console"); //NOI18N
         forbidden.add("java.util.logging.config.class"); //NOI18N
@@ -236,7 +236,7 @@ public final class EmbedderFactory {
     
     static Map<String, String> getCustomGlobalUserProperties() {
         //maybe set org.eclipse.aether.ConfigurationProperties.USER_AGENT with netbeans specific value.
-        Map<String, String> toRet = new HashMap<String, String>();
+        Map<String, String> toRet = new HashMap<>();
         String options = getPreferences().get(PROP_DEFAULT_OPTIONS, "");
         try {
             

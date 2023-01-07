@@ -385,7 +385,7 @@ public class JdbcUrl extends HashMap<String, String> {
         // Go through the URL template and split it up into a series
         // of components or elements that makes it easier to build and
         // parse URLs 
-        urlComponents = new ArrayList<String>();
+        urlComponents = new ArrayList<>();
         int length = urlTemplate.length();
         boolean isToken = false;
         int optionalLevel = 0;
@@ -455,7 +455,7 @@ public class JdbcUrl extends HashMap<String, String> {
      * This list is used when parsing a URL passed in to setUrl() 
      */
     private void setStaticComponents() {
-        staticComponents = new ArrayList<String>();
+        staticComponents = new ArrayList<>();
         for (String component : urlComponents) {
             if (isToken(component) || isOptionalStart(component) || isOptionalEnd(component)) {
                 continue;

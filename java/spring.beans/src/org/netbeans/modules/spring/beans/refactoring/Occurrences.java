@@ -47,7 +47,7 @@ public class Occurrences {
 
     public static List<Occurrence> getPropertyOccurrences(final RenamedProperty renamedProperty, JavaSource js, final SpringScope scope) throws IOException {
         final List<Occurrence> result = new ArrayList<Occurrence>();
-        final Set<File> processed = new HashSet<File>();
+        final Set<File> processed = new HashSet<>();
 
         js.runUserActionTask(new Task<CompilationController>() {
 
@@ -79,7 +79,7 @@ public class Occurrences {
     
     public static List<Occurrence> getJavaClassOccurrences(final String className, SpringScope scope) throws IOException {
         final List<Occurrence> result = new ArrayList<Occurrence>();
-        final Set<File> processed = new HashSet<File>();
+        final Set<File> processed = new HashSet<>();
         for (SpringConfigModel model : scope.getAllConfigModels()) {
             model.runDocumentAction(new Action<DocumentAccess>() {
                 public void run(DocumentAccess docAccess) {
@@ -101,7 +101,7 @@ public class Occurrences {
 
     public static List<Occurrence> getJavaPackageOccurrences(final String packageName, final boolean subpackages, SpringScope scope) throws IOException {
         final List<Occurrence> result = new ArrayList<Occurrence>();
-        final Set<File> processed = new HashSet<File>();
+        final Set<File> processed = new HashSet<>();
         for (SpringConfigModel model : scope.getAllConfigModels()) {
             model.runDocumentAction(new Action<DocumentAccess>() {
                 public void run(DocumentAccess docAccess) {

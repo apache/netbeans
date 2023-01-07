@@ -138,7 +138,7 @@ public abstract class ArtifactCopyOnSaveSupport implements FileChangeListener,
         for (Item artifactItem : getArtifacts()) {
             ClassPathSupport.Item item = artifactItem.getItem();
             String path = null;
-            Collection<File> files = new ArrayList<File>();
+            Collection<File> files = new ArrayList<>();
 
             if (!item.isBroken()) {
                 if (item.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {

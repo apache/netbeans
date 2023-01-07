@@ -72,7 +72,7 @@ final class ProjectJaxWsWebServiceView extends AbstractProjectWebServiceViewImpl
             return new Node[0];
         }
         Sources sources = (Sources) getProject().getLookup().lookup(Sources.class);
-        ArrayList<FileObject> roots = new ArrayList<FileObject>();
+        ArrayList<FileObject> roots = new ArrayList<>();
         if (sources != null) {
             SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
             if (groups != null) {

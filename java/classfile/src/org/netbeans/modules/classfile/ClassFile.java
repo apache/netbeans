@@ -60,7 +60,7 @@ public class ClassFile {
     private static final int BUFFER_SIZE = 4096;
 
      private static final Set<String> badNonJavaClassNames  =
-             new HashSet<String>(Arrays.asList(new String[] {";","[","."}));    //NOI18N
+             new HashSet<>(Arrays.asList(new String[] {";","[","."}));    //NOI18N
     
     /**
      * Create a new ClassFile object.

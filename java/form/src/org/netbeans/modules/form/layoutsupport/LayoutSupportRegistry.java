@@ -283,7 +283,7 @@ public class LayoutSupportRegistry {
 
     private static Map<String,String> getContainersMap() {
         if (containerToLayoutDelegate == null) {
-            containerToLayoutDelegate = new HashMap<String,String>();
+            containerToLayoutDelegate = new HashMap<>();
             // fill in default containers
             containerToLayoutDelegate.put(
                 "javax.swing.JScrollPane", // NOI18N
@@ -315,7 +315,7 @@ public class LayoutSupportRegistry {
 
     private static Map<String,String> getLayoutsMap() {
         if (layoutToLayoutDelegate == null) {
-            layoutToLayoutDelegate = new HashMap<String,String>();
+            layoutToLayoutDelegate = new HashMap<>();
             // fill in default layouts
             layoutToLayoutDelegate.put(
                 "java.awt.BorderLayout", // NOI18N

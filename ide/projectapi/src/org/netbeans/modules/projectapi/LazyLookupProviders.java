@@ -136,7 +136,7 @@ public class LazyLookupProviders {
         if (params.length > 2) {
             return null;
         }
-        List<Object> values = new ArrayList<Object>();
+        List<Object> values = new ArrayList<>();
         for (Class param : params) {
             if (param == Lookup.class) {
                 values.add(lkp);

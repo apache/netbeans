@@ -157,7 +157,7 @@ public class HistoryTest extends AbstractGitTestCase {
         assertEquals(rev.getRevision(), historyEntry.getRevision());
         assertEquals(rev.getAuthor().toString(), historyEntry.getUsername());
         assertEquals(new Date(rev.getCommitTime()), historyEntry.getDateTime());
-        assertEquals(rev.getModifiedFiles().keySet(), new HashSet<File>(Arrays.asList(historyEntry.getFiles())));
+        assertEquals(rev.getModifiedFiles().keySet(), new HashSet<>(Arrays.asList(historyEntry.getFiles())));
     }
 
     private void assertEntry (HistoryEntry expected, HistoryEntry entry) {
@@ -165,6 +165,6 @@ public class HistoryTest extends AbstractGitTestCase {
         assertEquals(expected.getRevision(), entry.getRevision());
         assertEquals(expected.getUsername(), entry.getUsername());
         assertEquals(expected.getDateTime(), entry.getDateTime());
-        assertEquals(new HashSet<File>(Arrays.asList(expected.getFiles())), new HashSet<File>(Arrays.asList(entry.getFiles())));
+        assertEquals(new HashSet<>(Arrays.asList(expected.getFiles())), new HashSet<>(Arrays.asList(entry.getFiles())));
     }
 }

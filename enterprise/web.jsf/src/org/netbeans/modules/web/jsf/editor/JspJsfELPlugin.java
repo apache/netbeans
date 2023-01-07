@@ -153,7 +153,7 @@ public class JspJsfELPlugin extends ELPlugin {
         String attributeReturnType = methodSignature.substring(0, atributeNameIndex).trim();
         String attributeParametersStr = methodSignature.substring(atributeNameIndex + attributeName.length()).replaceAll("[()]", "").trim();
 
-        List<String> attributeParameters = new ArrayList<String>();
+        List<String> attributeParameters = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(attributeParametersStr, ",");
         while (tokenizer.hasMoreTokens()) {
             String parameterClass = tokenizer.nextToken();

@@ -90,7 +90,7 @@ class SearchExecutor extends SvnProgressSupport {
                     populatePathToRoot(file, rootUrl);
                     Set<File> set = workFiles.get(rootUrl);
                     if (set == null) {
-                        set = new HashSet<File>(2);
+                        set = new HashSet<>(2);
                         workFiles.put(rootUrl, set);
                     }
                     set.add(file);
@@ -308,7 +308,7 @@ class SearchExecutor extends SvnProgressSupport {
 
     List<RepositoryRevision> search(SVNUrl repositoryUrl, int count, SvnProgressSupport supp) {
         results.clear();
-        search(repositoryUrl, searchingUrl() ? null : new HashSet<File>(Arrays.asList(master.getRoots())),
+        search(repositoryUrl, searchingUrl() ? null : new HashSet<>(Arrays.asList(master.getRoots())),
                 fromRevision, toRevision, supp, false, count);
         return new ArrayList<RepositoryRevision>(results);
     }

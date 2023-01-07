@@ -240,7 +240,7 @@ public abstract class NodeImpl implements Node, Cloneable {
         if (cloneNamespacePrefix && root != null) {
             allNamespaces = root.getNamespaceMap();
         }
-        Map<String,String> clonePrefixes = new HashMap<String,String>();
+        Map<String,String> clonePrefixes = new HashMap<>();
         return cloneNode(deep, allNamespaces, clonePrefixes);
     }
     

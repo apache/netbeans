@@ -133,7 +133,7 @@ public final class SessionGenerator {
         this.displayName = ejbNameOptions.getSessionDisplayNamePrefix() + wizardTargetName + ejbNameOptions.getSessionDisplayNameSuffix();
         this.packageName = EjbGenerationUtil.getSelectedPackageName(pkg);
         this.packageNameWithDot = packageName + ".";
-        this.templateParameters = new HashMap<String, Object>();
+        this.templateParameters = new HashMap<>();
         // fill all possible template parameters
         this.templateParameters.put("package", packageName);
         this.templateParameters.put("localInterface", packageNameWithDot + localName);

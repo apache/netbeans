@@ -280,7 +280,7 @@ public class CommitTableModel extends AbstractTableModel {
     private void includeExcludeParents (Collection<Integer> nodeIndexes, int statusMask, boolean include) {
         boolean includeExcludeWholeTree = include && (statusMask & (STATUS_DELETED)) != 0
                 || !include && (statusMask & (STATUS_NEW)) != 0;
-        HashSet<Integer> toCheck = new HashSet<Integer>();
+        HashSet<Integer> toCheck = new HashSet<>();
         boolean[] checkedNodes = new boolean[nodes.length];
         outer:
         for (int nodeIndex : nodeIndexes) {
@@ -306,7 +306,7 @@ public class CommitTableModel extends AbstractTableModel {
 
     private void includeExcludeChildren (Collection<Integer> nodeIndexes, int statusMask, boolean include) {
         boolean[] checkedNodes = new boolean[nodes.length];
-        HashSet<Integer> toCheck = new HashSet<Integer>();
+        HashSet<Integer> toCheck = new HashSet<>();
         for (int nodeIndex : nodeIndexes) {
             toCheck.add(nodeIndex);
         }
@@ -381,7 +381,7 @@ public class CommitTableModel extends AbstractTableModel {
 
             private void addChild(int childIndex) {
                 if (childrenIndexes == null) {
-                    childrenIndexes = new HashSet<Integer>();
+                    childrenIndexes = new HashSet<>();
                 }
                 childrenIndexes.add(childIndex);
             }

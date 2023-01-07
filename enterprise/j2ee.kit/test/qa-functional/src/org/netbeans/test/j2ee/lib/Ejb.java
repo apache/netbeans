@@ -69,7 +69,7 @@ public final class Ejb extends AbstractJ2eeFile {
     
     @Override
     public String[] checkExistingFiles() {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         if (!implClassExists()) {
             l.add(MESSAGE.replaceAll("\\$0", "Bean impl class"));
         }

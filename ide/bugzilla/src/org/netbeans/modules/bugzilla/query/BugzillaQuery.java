@@ -298,7 +298,7 @@ public class BugzillaQuery {
 
     private class QueryProgressListener implements SynchronizeQueryCommand.CommandProgressListener {
         
-        private final Set<String> addedIds = new HashSet<String>();
+        private final Set<String> addedIds = new HashSet<>();
         
         @Override
         public void queryRefreshStarted (Collection<NbTask> tasks) {

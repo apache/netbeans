@@ -565,7 +565,7 @@ public class CodeStructure {
         if (register) {
             createVariable(CodeVariable.LOCAL, type, name);    
             if(externalVariables == null) {
-                externalVariables = new HashSet<String>();
+                externalVariables = new HashSet<>();
             }	
             externalVariables.add(name);
         }

@@ -91,7 +91,7 @@ public class CompilerHacks {
     static final class HackPageInfo extends PageInfo {
 
         /** Map of prefix -> uri. */
-        private final Map<String, String> approxXmlPrefixMapper = new HashMap<String, String>();
+        private final Map<String, String> approxXmlPrefixMapper = new HashMap<>();
         
         HackPageInfo(BeanRepository beanRepository, String jspFile) {
             super(beanRepository, jspFile);

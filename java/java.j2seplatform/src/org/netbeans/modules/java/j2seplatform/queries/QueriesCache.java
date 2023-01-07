@@ -124,7 +124,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
                                final URL binUrl = getURL(key);
                                List<URL> binding = bindings.get(binUrl);
                                if(binding == null) {
-                                   binding = new ArrayList<URL>();
+                                   binding = new ArrayList<>();
                                    bindings.put(binUrl,binding);
                                }
                                binding.add(new URL(value));
@@ -160,7 +160,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
     private Iterable<? extends String> filterKeys(
             final String[] keys,
             final String binaryRoot) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         for (int i=0; i<keys.length; i++) {
             final int index = keys[i].lastIndexOf(SEP); //NOI18N
             if (index <=0) {

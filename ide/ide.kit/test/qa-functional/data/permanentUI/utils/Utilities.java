@@ -270,7 +270,7 @@ public class Utilities {
      * @return
      */
     public static ArrayList<String> parseFileByLines(String filename) {
-        ArrayList<String> textLines = new ArrayList<String>();
+        ArrayList<String> textLines = new ArrayList<>();
 
         try {
             Scanner scanner = new Scanner(new File(filename));
@@ -285,7 +285,7 @@ public class Utilities {
     }
 
     public static ArrayList<String> parseFileByLinesLeaveSpaces(String filename) {
-        ArrayList<String> textLines = new ArrayList<String>();
+        ArrayList<String> textLines = new ArrayList<>();
 
         try {
             Scanner scanner = new Scanner(new File(filename));

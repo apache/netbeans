@@ -559,7 +559,7 @@ public final class ManifestManager {
     }
     
     private static String[] parseFriends(final String friends) {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         StringTokenizer tok = new StringTokenizer(friends, ", "); // NOI18N
         while (tok.hasMoreTokens()) {
             String piece = tok.nextToken();

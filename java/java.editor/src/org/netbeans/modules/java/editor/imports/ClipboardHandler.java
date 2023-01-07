@@ -139,7 +139,7 @@ public class ClipboardHandler {
                         }
                     });
 
-                    Map<String, String> imported = new HashMap<String, String>();
+                    Map<String, String> imported = new HashMap<>();
 
                     for (Position[] span : spans) {
                         String currentSimpleName = copy.getText().substring(span[0].getOffset(), span[1].getOffset());
@@ -239,7 +239,7 @@ public class ClipboardHandler {
     }
 
     private static Collection<? extends String> needsImports(JavaSource js, final int caret, final Map<String, String> simple2FQNs) {
-        final List<String> unavailable = new ArrayList<String>();
+        final List<String> unavailable = new ArrayList<>();
 
         boolean finished = runQuickly(js, new Task<CompilationController>() {
             @Override
@@ -421,7 +421,7 @@ public class ClipboardHandler {
                     final JTextComponent tc = (JTextComponent) comp;
                     final int start = tc.getSelectionStart();
                     final int end = tc.getSelectionEnd();
-                    final Map<String, String> simple2ImportFQN = new HashMap<String, String>();
+                    final Map<String, String> simple2ImportFQN = new HashMap<>();
                     final List<int[]> spans = new ArrayList<int[]>();
 
                     Task<CompilationController> w = new Task<CompilationController>() {
@@ -596,7 +596,7 @@ public class ClipboardHandler {
                                     unavailable = (file == null || !file.equals(imports.sourceFO)) ? imports.simple2ImportFQN.values() : Collections.<String>emptyList();
                                 }
 
-                                final Collection<String> toShow = new HashSet<String>(imports.simple2ImportFQN.values());
+                                final Collection<String> toShow = new HashSet<>(imports.simple2ImportFQN.values());
                                 
                                 toShow.retainAll(unavailable);
 

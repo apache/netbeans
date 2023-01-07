@@ -180,7 +180,7 @@ public class CompletionUtil {
      */
     public static List<String> getPrefixesAgainstNamespace(
             CompletionContextImpl context, String namespace) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         
         for(Map.Entry<String, String> entry : context.getDeclaredNamespaces().entrySet()) {
             String key = entry.getKey();
@@ -507,7 +507,7 @@ public class CompletionUtil {
     
     private static List<String> getPrefixes(CompletionContextImpl context, AXIComponent ae,
         CompletionModel cm) {
-        List<String> prefixes = new ArrayList<String>();
+        List<String> prefixes = new ArrayList<>();
         if(cm == null) {
             ae = findOriginal(ae);
             String defaultNS = context.getDefaultNamespace();
@@ -719,7 +719,7 @@ public class CompletionUtil {
      * @return
      */
     public static HashMap<String, String> getNamespacesFromStartTags(Document document) {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         ((AbstractDocument)document).readLock();
         try {
             TokenHierarchy th = TokenHierarchy.get(document);
@@ -764,7 +764,7 @@ public class CompletionUtil {
 //        private HashMap<String, String> nsMap;
 //
 //        NsHandler() {
-//            nsMap = new HashMap<String, String>();
+//            nsMap = new HashMap<>();
 //        }
 //
 //        @Override

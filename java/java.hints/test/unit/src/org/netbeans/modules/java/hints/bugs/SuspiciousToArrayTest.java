@@ -39,7 +39,7 @@ public class SuspiciousToArrayTest extends NbTestCase {
                 + "import java.util.Collection;\n"
                 + "public final class Test {\n"
                 + "    public static void main(String[] args) {\n"
-                + "        Collection<String> col = new ArrayList<String>();  \n"
+                + "        Collection<String> col = new ArrayList<>();  \n"
                 + "        Object[] arr = col.toArray(/* comment */ new Integer[/* something */ 0x6f]);  \n"
                 + "    }\n"
                 + "}"
@@ -54,7 +54,7 @@ public class SuspiciousToArrayTest extends NbTestCase {
                 + "import java.util.Collection;\n"
                 + "public final class Test {\n"
                 + "    public static void main(String[] args) {\n"
-                + "        Collection<String> col = new ArrayList<String>();  \n"
+                + "        Collection<String> col = new ArrayList<>();  \n"
                 + "        Object[] arr = col.toArray(/* comment */ new String[/* something */ 0x6f]);  \n"
                 + "    }\n"
                 + "}");

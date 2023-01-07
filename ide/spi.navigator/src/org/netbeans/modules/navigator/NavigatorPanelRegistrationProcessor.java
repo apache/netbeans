@@ -35,7 +35,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class NavigatorPanelRegistrationProcessor extends LayerGeneratingProcessor {
 
     @Override public Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(NavigatorPanel.Registration.class.getCanonicalName(), NavigatorPanel.Registrations.class.getCanonicalName()));
+        return new HashSet<>(Arrays.asList(NavigatorPanel.Registration.class.getCanonicalName(), NavigatorPanel.Registrations.class.getCanonicalName()));
     }
 
     @Override protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {

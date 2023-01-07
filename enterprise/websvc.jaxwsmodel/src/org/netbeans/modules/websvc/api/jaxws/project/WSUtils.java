@@ -404,7 +404,7 @@ public class WSUtils {
     }
 
     private static List<URL> getJaxWsApiJars() throws IOException {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         File apiJar = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
         if (apiJar != null) {
             URL url = new URL("jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jakarta.xml.ws-api.jar!/");
@@ -519,8 +519,8 @@ public class WSUtils {
         }
         StringTokenizer tokens = new StringTokenizer(base,"/"); //NOI18N
         if (tokens.countTokens() > 0) {
-            List<String> packageParts = new ArrayList<String>();
-            List<String> nsParts = new ArrayList<String>();
+            List<String> packageParts = new ArrayList<>();
+            List<String> nsParts = new ArrayList<>();
             while (tokens.hasMoreTokens()) {
                 String part = tokens.nextToken();
                 if (part.length() >= 0) {
@@ -531,7 +531,7 @@ public class WSUtils {
                 StringTokenizer tokens1 = new StringTokenizer(nsParts.get(0),"."); //NOI18N
                 int countTokens = tokens1.countTokens();
                 if (countTokens > 0) {
-                    List<String> list = new ArrayList<String>();
+                    List<String> list = new ArrayList<>();
                     while(tokens1.hasMoreTokens()) {
                         list.add(tokens1.nextToken());
                     }

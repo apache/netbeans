@@ -128,7 +128,7 @@ public class SlowRefreshInterruptibleTest extends NbTestCase {
 
         final Runnable r = (Runnable)obj;
         class AE extends ActionEvent implements Runnable {
-            List<FileObject> files = new ArrayList<FileObject>();
+            List<FileObject> files = new ArrayList<>();
             int goingIdle;
             
             public AE() {

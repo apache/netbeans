@@ -147,7 +147,7 @@ final class BinaryForSourceQueryImpl implements BinaryForSourceQueryImplementati
                 cache.remove(root);
                 return new URL[0];
             }
-            final List<URL> urls = new ArrayList<URL>();
+            final List<URL> urls = new ArrayList<>();
             for (String propName : names) {
                 String val = eval.getProperty(propName);
                 if (val != null) {

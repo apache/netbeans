@@ -416,7 +416,7 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
            
     private static class ModifiedPreferences extends AbstractPreferences {
         
-        private final Map<String,Object> map = new HashMap<String, Object>();
+        private final Map<String,Object> map = new HashMap<>();
 
         public ModifiedPreferences( Preferences node ) {
             super(null, ""); // NOI18N

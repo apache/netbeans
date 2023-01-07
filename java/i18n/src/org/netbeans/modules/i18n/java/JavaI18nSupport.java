@@ -153,7 +153,7 @@ public class JavaI18nSupport extends I18nSupport {
         String strAndVar = ((JavaI18nFinder)getFinder()).strAndVarFound;
         int strAndVarLength = strAndVar.length();
         if(hcStr.contains(strAndVar)) { // handle Bug 33759 (http://netbeans.org/bugzilla/show_bug.cgi?id=33759)
-            ArrayList<String> variables = new ArrayList<String>();
+            ArrayList<String> variables = new ArrayList<>();
             int startVar = hcStr.indexOf(strAndVar);
             int endVar = -1;
             int counterVar = 0;

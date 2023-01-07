@@ -524,7 +524,7 @@ public class JpaControllerUtil {
         if (desiredMethodElement == null) {
             throw new IllegalArgumentException("Could not find " + methodName + " in " + fqClass);
         }
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         List<? extends TypeMirror> thrownTypes = desiredMethodElement.getThrownTypes();
         for (TypeMirror thrownType : thrownTypes) {
             if (thrownType.getKind() == TypeKind.DECLARED) {
@@ -659,9 +659,9 @@ public class JpaControllerUtil {
     private static class EmbeddedPkSupportInfo {
         private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<String,ExecutableElement>();
         private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<ExecutableElement,List<String>>(); //used only in isRedundantWithPkFields
-        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<String,String>();
-        private Map<String,String> columnNameToAccessorString = new HashMap<String,String>();
-        private Map<String,String> columnNameToSetterString = new HashMap<String,String>();
+        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<>();
+        private Map<String,String> columnNameToAccessorString = new HashMap<>();
+        private Map<String,String> columnNameToSetterString = new HashMap<>();
         private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<ExecutableElement,String>();
         private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<ExecutableElement,String>();
         private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<ExecutableElement,String>(); //derived
@@ -835,7 +835,7 @@ public class JpaControllerUtil {
                     joinColumnNameToReferencedColumnName.put(columnName, referencedColumnName);
                     List<String> joinColumnNameList = relationshipMethodToJoinColumnNames.get(m);
                     if (joinColumnNameList == null) {
-                        joinColumnNameList = new ArrayList<String>();
+                        joinColumnNameList = new ArrayList<>();
                         relationshipMethodToJoinColumnNames.put(m, joinColumnNameList);
                     }
                     joinColumnNameList.add(columnName);
@@ -913,7 +913,7 @@ public class JpaControllerUtil {
             TreeMaker make = wc.getTreeMaker();
             TypeInfo[] pTypes = mInfo.getParameterTypes();
             String[] pNames = mInfo.getParameterNames();
-            List<VariableTree> params = new ArrayList<VariableTree>();
+            List<VariableTree> params = new ArrayList<>();
             for (int i = 0 ; pTypes != null && i < pTypes.length; i++) {
                 VariableTree vtree = createVariable(wc, pNames[i], pTypes[i]);
                 params.add(vtree);

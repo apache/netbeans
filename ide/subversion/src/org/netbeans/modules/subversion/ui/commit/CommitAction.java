@@ -223,8 +223,8 @@ public class CommitAction extends ContextAction {
     }
 
     private static Set<File> getUnversionedParents(Collection<File> files, boolean onlyCached) {
-        Set<File> checked = new HashSet<File>();
-        Set<File> ret = new HashSet<File>();
+        Set<File> checked = new HashSet<>();
+        Set<File> ret = new HashSet<>();
         FileStatusCache cache = Subversion.getInstance().getStatusCache();
         for (File file : files) {
             File parent = file;
@@ -404,7 +404,7 @@ public class CommitAction extends ContextAction {
 
                 // The commits are made non recursively, so
                 // add also the roots to the to be commited list.
-                Set<File> filesSet = new HashSet<File>();
+                Set<File> filesSet = new HashSet<>();
                 filesSet.addAll(Arrays.asList(contextFiles));
                 for (File file : roots) {
                     filesSet.add(file);
@@ -560,7 +560,7 @@ public class CommitAction extends ContextAction {
         assert EventQueue.isDispatchThread();
         ResourceBundle loc = NbBundle.getBundle(CommitAction.class);
         Map<SvnFileNode, CommitOptions> files = table.getCommitFiles();
-        Set<String> stickyTags = new HashSet<String>();
+        Set<String> stickyTags = new HashSet<>();
         boolean conflicts = false;
 
         boolean enabled = commit.isEnabled();
@@ -651,10 +651,10 @@ public class CommitAction extends ContextAction {
             support.setDisplayName(org.openide.util.NbBundle.getMessage(CommitAction.class, "LBL_Commit_Progress")); // NOI18N
 
             List<SvnFileNode> addCandidates = new ArrayList<SvnFileNode>();
-            List<File> removeCandidates = new ArrayList<File>();
-            List<File> missingFiles = new ArrayList<File>();
+            List<File> removeCandidates = new ArrayList<>();
+            List<File> missingFiles = new ArrayList<>();
             Set<File> commitCandidates = new LinkedHashSet<File>();
-            Set<File> binnaryCandidates = new HashSet<File>();
+            Set<File> binnaryCandidates = new HashSet<>();
 
             Iterator<SvnFileNode> it = commitFiles.keySet().iterator();
             // XXX refactor the olowing loop. there seem to be redundant blocks
@@ -741,7 +741,7 @@ public class CommitAction extends ContextAction {
             }
 
             List<ISVNLogMessage> logs = new ArrayList<ISVNLogMessage>();
-            List<File> hookFiles = new ArrayList<File>();
+            List<File> hookFiles = new ArrayList<>();
             boolean handleHooks = false;
             String originalMessage = message;
             if(hooks.size() > 0) {
@@ -1014,7 +1014,7 @@ public class CommitAction extends ContextAction {
             }
             if(managedTreesList == null) {
                 // no list for files from the same wc as commitCandidateFile created yet
-                managedTreesList = new ArrayList<File>();
+                managedTreesList = new ArrayList<>();
                 managedTrees.add(managedTreesList);
             }
             managedTreesList.add(commitCandidateFile);
@@ -1027,8 +1027,8 @@ public class CommitAction extends ContextAction {
      * Calls the svn add command on not yet added files
      */
     private static void performAdds(SvnClient client, SvnProgressSupport support, List<SvnFileNode> addCandidates) throws SVNClientException {
-        List<File> addFiles = new ArrayList<File>();
-        List<File> addDirs = new ArrayList<File>();
+        List<File> addFiles = new ArrayList<>();
+        List<File> addDirs = new ArrayList<>();
         // XXX waht if user denied directory add but wants to add a file in it?
         Iterator<SvnFileNode> it = addCandidates.iterator();
         while (it.hasNext()) {
@@ -1048,7 +1048,7 @@ public class CommitAction extends ContextAction {
         }
 
         Iterator<File> itFiles = addDirs.iterator();
-        List<File> dirsToAdd = new ArrayList<File>();
+        List<File> dirsToAdd = new ArrayList<>();
         while (itFiles.hasNext()) {
             File dir = itFiles.next();
             if (!dirsToAdd.contains(dir)) {
@@ -1107,7 +1107,7 @@ public class CommitAction extends ContextAction {
      */
     private static List<File> getRecursiveCommits(List<File> nonRecursiveComits, List<File> removeCandidates) {
         FileStatusCache cache = Subversion.getInstance().getStatusCache();
-        List<File> recursiveCommits = new ArrayList<File>();
+        List<File> recursiveCommits = new ArrayList<>();
 
         // 1. if there is at least one directory which isn't removed or copied
         //    we have to commit it nonrecursively ...
@@ -1150,7 +1150,7 @@ public class CommitAction extends ContextAction {
      * Returns all files from the children list which have a parent in or are equal to a folder from the parents list
      */
     private static List<File> getAllChildren(List<File> parents, List<File> children) {
-        List<File> ret = new ArrayList<File>();
+        List<File> ret = new ArrayList<>();
         if(parents.size() > 0) {
             for(File child : children) {
                 File parent = child;
@@ -1172,7 +1172,7 @@ public class CommitAction extends ContextAction {
     }
 
     private static List<File> listUnmanagedParents(SvnFileNode node) {
-        List<File> unmanaged = new ArrayList<File>();
+        List<File> unmanaged = new ArrayList<>();
         File file = node.getFile();
         File parent = file.getParentFile();
         FileStatusCache cache = Subversion.getInstance().getStatusCache();
@@ -1189,7 +1189,7 @@ public class CommitAction extends ContextAction {
             }
         }
 
-        List<File> ret = new ArrayList<File>();
+        List<File> ret = new ArrayList<>();
         Iterator<File> it = unmanaged.iterator();
         while (it.hasNext()) {
             File un = it.next();
@@ -1211,7 +1211,7 @@ public class CommitAction extends ContextAction {
     private static List<File> filterChildren (List<File> files) {
         Set<File> filteredFiles = new LinkedHashSet<File>(files);
         for (File parent : files) {
-            Set<File> toRemove = new HashSet<File>(filteredFiles.size());
+            Set<File> toRemove = new HashSet<>(filteredFiles.size());
             for (File f : filteredFiles) {
                 if (Utils.isAncestorOrEqual(f, parent)) {
                     continue;

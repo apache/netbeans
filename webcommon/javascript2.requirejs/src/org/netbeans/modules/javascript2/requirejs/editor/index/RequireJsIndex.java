@@ -131,7 +131,7 @@ public class RequireJsIndex {
             Exceptions.printStackTrace(ex);
         }
         if (result != null && !result.isEmpty()) {
-            Map<String, String> mappings = new HashMap<String, String>();
+            Map<String, String> mappings = new HashMap<>();
             for (IndexResult indexResult : result) {
                 for(String value : indexResult.getValues(RequireJsIndexer.FIELD_PATH_MAP)) {
                     String[] parts = value.split(";");

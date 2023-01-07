@@ -67,7 +67,7 @@ public class AssistantMessages {
             String context = getContext(bundleKey);
             Set<String> messages = contextToSet.get(context);
             if (messages == null) {
-                messages = new HashSet<String>();
+                messages = new HashSet<>();
                 contextToSet.put(context, messages);
             }
             messages.add(message);

@@ -94,7 +94,7 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
         index = 0;
         ValidationGroup vg = ValidationGroup.create(new WizardDescriptorAdapter(wiz));
         panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        List<String> steps = new ArrayList<String>();
+        List<String> steps = new ArrayList<>();
         if (archetype == null) {
             panels.add(new ChooseWizardPanel());
             steps.add(LBL_CreateProjectStep());

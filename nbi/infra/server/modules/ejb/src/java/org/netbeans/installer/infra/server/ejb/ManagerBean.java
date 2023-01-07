@@ -752,7 +752,7 @@ public class ManagerBean implements Manager {
     
     public void generateBundles(String[] registryNames) throws ManagerException {
         try {
-            final List<File> files = new ArrayList<File>();
+            final List<File> files = new ArrayList<>();
             for (String name: registryNames) {
                 if (registries.get(name) == null) {
                     addRegistry(name);

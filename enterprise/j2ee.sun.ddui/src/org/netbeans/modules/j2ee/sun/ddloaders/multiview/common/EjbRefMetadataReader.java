@@ -67,9 +67,9 @@ public class EjbRefMetadataReader extends CommonBeanReader {
                 String ejbRefName = ejbRef.getEjbRefName();
                 if(Utils.notEmpty(ejbRefName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> ejbRefMap = new HashMap<String, Object>();
+                    Map<String, Object> ejbRefMap = new HashMap<>();
                     result.put(ejbRefName, ejbRefMap);
                     ejbRefMap.put(DDBinding.PROP_NAME, ejbRefName);
                 }

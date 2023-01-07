@@ -60,7 +60,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
      */
     protected List<TableColumn> hiddenColumns = new ArrayList<TableColumn>();
     
-    List<Integer> hiddenColumnsPosition = new ArrayList<Integer>();
+    List<Integer> hiddenColumnsPosition = new ArrayList<>();
     
     /**
      * Allows the user to customize the list of the visible columns using
@@ -108,7 +108,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
             etc.readSettings(p, i, propertyPrefix + PROP_HIDDEN_PREFIX);
             hiddenColumns.add(etc);
         }
-        hiddenColumnsPosition = new ArrayList<Integer>();
+        hiddenColumnsPosition = new ArrayList<>();
         for (int i = 0; i < numHiddenColumns; i++) {
             String myPrefix = propertyPrefix + PROP_HIDDEN_POSITION_PREFIX + ETableColumn.PROP_PREFIX + Integer.toString(i);
             String posStr = p.getProperty(myPrefix);

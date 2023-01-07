@@ -49,7 +49,7 @@ public class WebXmlFolderMove extends BaseWebXmlRename{
     @Override
     protected List<RenameItem> getRenameItems() {
         List<RenameItem> result = new ArrayList<RenameItem>();
-        List<FileObject> fos = new ArrayList<FileObject>();
+        List<FileObject> fos = new ArrayList<>();
         RefactoringUtil.collectChildren(folder, fos);
         for (FileObject each : fos){
             // #142870 -- skip package-info, it is not needed in web.xml refactoring

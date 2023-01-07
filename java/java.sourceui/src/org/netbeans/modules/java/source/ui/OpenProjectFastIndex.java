@@ -266,7 +266,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
     }
 
     private void updateSourceIds() {
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         for (PathRecognizer r : recognizers.allInstances()) {
             Set<String> rids = r.getSourcePathIds();
             if (rids != null) {
@@ -338,7 +338,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
     }
     
     private static Set<FileObject> getRoots(Set<ClassPath> paths) {
-        Set<FileObject> sroots = new HashSet<FileObject>();
+        Set<FileObject> sroots = new HashSet<>();
 
         for (ClassPath cp : paths) {
             sroots.addAll(Arrays.asList(cp.getRoots()));
@@ -368,7 +368,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         /**
          * Source paths, which should be eventually indexed with higher priority upon project open
          */
-        private Set<FileObject> rootsToIndex = new HashSet<FileObject>();
+        private Set<FileObject> rootsToIndex = new HashSet<>();
         
         /**
          * Will be filled when PROPERTY_OPENED_PROJECTS is received, with new projects

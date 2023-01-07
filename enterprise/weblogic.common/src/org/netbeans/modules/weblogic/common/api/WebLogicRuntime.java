@@ -342,7 +342,7 @@ public final class WebLogicRuntime {
                             builder.setWorkingDirectory(domainHome.getAbsolutePath());
                             builder.getEnvironment().setVariable(STOP_KEY_UUID, uuid);
 
-                            List<String> arguments = new ArrayList<String>();
+                            List<String> arguments = new ArrayList<>();
                             arguments.add(config.getUsername());
                             arguments.add(config.getPassword());
                             arguments.add(config.getAdminURL());
@@ -380,7 +380,7 @@ public final class WebLogicRuntime {
                                 }
                                 return;
                             }
-                            Map<String, String> mark = new HashMap<String, String>();
+                            Map<String, String> mark = new HashMap<>();
                             mark.put(START_KEY_UUID, config.getId());
                             Processes.killTree(process, mark);
                         }
@@ -433,7 +433,7 @@ public final class WebLogicRuntime {
                     } finally {
                         // do the cleanup
                         if (stopProcess != null) {
-                            Map<String, String> mark = new HashMap<String, String>();
+                            Map<String, String> mark = new HashMap<>();
                             mark.put(STOP_KEY_UUID, uuid);
                             Processes.killTree(stopProcess, mark);
                             stopService(stopService);
@@ -457,7 +457,7 @@ public final class WebLogicRuntime {
             process = PROCESSES.get(config);
         }
         if (process != null) {
-            Map<String, String> mark = new HashMap<String, String>();
+            Map<String, String> mark = new HashMap<>();
             mark.put(START_KEY_UUID, config.getId());
             Processes.killTree(process, mark);
         }

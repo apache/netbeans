@@ -749,7 +749,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         void addReplacement(Tree parent, int start, int end) {
             List<Integer> rr = replacements.get(parent);
             if (rr == null) {
-                rr = new ArrayList<Integer>();
+                rr = new ArrayList<>();
                 replacements.put(parent, rr);
             }
             rr.add(start); rr.add(end);

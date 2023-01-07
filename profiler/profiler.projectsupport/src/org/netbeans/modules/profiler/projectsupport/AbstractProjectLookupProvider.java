@@ -37,7 +37,7 @@ public abstract class AbstractProjectLookupProvider implements LookupProvider {
     private DataFilesProviderImplementation getDataFilesProviderImplementation(final Project project) {
         return new DataFilesProviderImplementation() {
                 public List<FileObject> getMetadataFiles() {
-                    List<FileObject> metadataFilesList = new ArrayList<FileObject>();
+                    List<FileObject> metadataFilesList = new ArrayList<>();
                     FileObject buildBackupFile = (project == null) ? null
                                                                    : project.getProjectDirectory()
                                                                             .getFileObject("build-before-profiler.xml"); // NOI18N

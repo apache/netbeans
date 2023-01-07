@@ -72,10 +72,10 @@ public class EntityClosure {
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     
     private Set<Entity> availableEntityInstances = new HashSet<Entity>();
-    private Set<String> availableEntities = new HashSet<String>();
-    private Set<String> wantedEntities = new HashSet<String>();
-    private Set<String> selectedEntities = new HashSet<String>();
-    private Set<String> referencedEntities = new HashSet<String>();
+    private Set<String> availableEntities = new HashSet<>();
+    private Set<String> wantedEntities = new HashSet<>();
+    private Set<String> selectedEntities = new HashSet<>();
+    private Set<String> referencedEntities = new HashSet<>();
     private HashMap<String,Entity> fqnEntityMap = new HashMap<String,Entity>();
     private HashMap<String,Boolean> fqnIdExistMap = new HashMap<String,Boolean>();
     private boolean modelReady;
@@ -220,7 +220,7 @@ public class EntityClosure {
             if (wantedEntities.addAll(entities)) {
                 try{
                     Set<String> refEntities = getReferencedEntitiesTransitively(entities);
-                    Set<String> addedEntities = new HashSet<String>(entities);
+                    Set<String> addedEntities = new HashSet<>(entities);
                     addedEntities.addAll(refEntities);
                     
                     selectedEntities.addAll(addedEntities);
@@ -290,7 +290,7 @@ public class EntityClosure {
     private Set<String> getReferencedEntitiesTransitively(Set<String> entities) throws IOException {
         
         Queue<String> entityQueue = new Queue<String>(entities);
-        Set<String> refEntities = new HashSet<String>();
+        Set<String> refEntities = new HashSet<>();
         
         while (!entityQueue.isEmpty()) {
             String entity = entityQueue.poll();
@@ -321,13 +321,13 @@ public class EntityClosure {
             }
         });
                 
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
 
         source.runUserActionTask(new Task<CompilationController>() {
             @Override
             public void run(CompilationController parameter) throws Exception {
                 List<Entity> entities = readHelper.getResult();
-                Set<String> entitiesFqn = new HashSet<String>();
+                Set<String> entitiesFqn = new HashSet<>();
                 for( Entity entity : entities){
                     entitiesFqn.add( entity.getClass2());  
                 }
@@ -372,7 +372,7 @@ public class EntityClosure {
     }
 
     private void redoClosure() {
-        Set<String> allEntities = new HashSet<String>(availableEntities);
+        Set<String> allEntities = new HashSet<>(availableEntities);
         allEntities.addAll(selectedEntities);
         
         referencedEntities.clear();
@@ -404,7 +404,7 @@ public class EntityClosure {
         if (closureEnabled) {
             redoClosure();
         } else {
-            Set<String> allEntities = new HashSet<String>(availableEntities);
+            Set<String> allEntities = new HashSet<>(availableEntities);
             allEntities.addAll(selectedEntities);
             
             referencedEntities.clear();
@@ -554,7 +554,7 @@ public class EntityClosure {
     private static class EntityClosureComboBoxModel extends DefaultComboBoxModel implements ChangeListener {
 
         private EntityClosure entityClosure;
-        private List<String> entities = new ArrayList<String>();
+        private List<String> entities = new ArrayList<>();
 
         EntityClosureComboBoxModel(EntityClosure entityClosure) {
             this.entityClosure = entityClosure;

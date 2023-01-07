@@ -327,7 +327,7 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
                 Collection<? extends CodeTemplateFilter> filters = CodeTemplateManagerOperation.getTemplateFilters(doc, queryAnchorOffset, queryAnchorOffset);
                 
                 queryResult = new ArrayList<CodeTemplateCompletionItem>(ctsPT.size() + ctsAb.size());
-                Set<String> abbrevs = new HashSet<String>(ctsPT.size() + ctsAb.size());
+                Set<String> abbrevs = new HashSet<>(ctsPT.size() + ctsAb.size());
                 for (CodeTemplate ct : ctsPT) {
                     if (ct.getContexts() != null && ct.getContexts().size() > 0 && accept(ct, filters) && abbrevs.add(ct.getAbbreviation())) {
                         consumer.accept(ct, false);

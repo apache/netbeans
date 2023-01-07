@@ -268,7 +268,7 @@ public final class FolderList extends javax.swing.JPanel {
                 private final AtomicBoolean cancel = new AtomicBoolean();
                 @Override
                 public Void run(final ProgressHandle handle) {
-                    final List<File> toAdd = new ArrayList<File>();
+                    final List<File> toAdd = new ArrayList<>();
                     for (File file : files) {
                         if (cancel.get()) {
                             return null;
@@ -321,7 +321,7 @@ public final class FolderList extends javax.swing.JPanel {
                 }
             }
             final File[] toAddArr = toAdd == null ? files : toAdd.toArray(new File[toAdd.size()]);
-            Set<File> invalidRoots = new HashSet<File>();
+            Set<File> invalidRoots = new HashSet<>();
             addFiles(toAddArr, invalidRoots);
             if (!related.isEmpty()) {
                 relatedFolderList.addFiles(related.toArray(new File[related.size()]), invalidRoots);
@@ -430,7 +430,7 @@ public final class FolderList extends javax.swing.JPanel {
 
             @Override
             public void setContext(File[] selectedFiles) {
-                this.selectedFiles = new HashSet<File>(Arrays.asList(selectedFiles));
+                this.selectedFiles = new HashSet<>(Arrays.asList(selectedFiles));
             }
         };
     }
@@ -564,8 +564,8 @@ public final class FolderList extends javax.swing.JPanel {
                 return false;
             }
 
-            final List<File> validRoots = new ArrayList<File>();
-            final Set<File> invalidRoots = new HashSet<File>();
+            final List<File> validRoots = new ArrayList<>();
+            final Set<File> invalidRoots = new HashSet<>();
             if (relatedFolderList != null && projectFolder != null) {
                 final File[] relatedFolders = support.getSourceDropActions() == MOVE ?
                         new File[0]:

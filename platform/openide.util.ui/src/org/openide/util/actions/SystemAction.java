@@ -71,7 +71,7 @@ public abstract class SystemAction extends SharedClassObject implements Action, 
 
     /** Name of property for the action's display icon, if textual. */
     private static final String PROP_ICON_TEXTUAL = "iconTextual"; // NOI18N
-    private static final Set<String> relativeIconResourceClasses = new HashSet<String>(200);
+    private static final Set<String> relativeIconResourceClasses = new HashSet<>(200);
 
     // Matches NB 3.4 w/ openide-compat.jar; see #26491
     private static final long serialVersionUID = -8361232596876856810L;

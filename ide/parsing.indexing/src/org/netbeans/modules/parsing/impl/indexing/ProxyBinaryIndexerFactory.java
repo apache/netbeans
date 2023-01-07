@@ -167,7 +167,7 @@ public final class ProxyBinaryIndexerFactory extends BinaryIndexerFactory {
                 final Enumeration<? extends FileObject> fos = root.getChildren(true);
                 final Set<String> mimeTypesSet = mimeTypes == null ?
                         null :
-                        new HashSet<String>(Arrays.asList(mimeTypes));
+                        new HashSet<>(Arrays.asList(mimeTypes));
                 while (fos.hasMoreElements()) {
                     final FileObject f = fos.nextElement();
                     if (pattern != null) {

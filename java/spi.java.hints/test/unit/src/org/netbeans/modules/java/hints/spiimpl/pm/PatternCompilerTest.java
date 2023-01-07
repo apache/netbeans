@@ -155,7 +155,7 @@ public class PatternCompilerTest extends TestBase {
         assertNotNull(vars);
         assertTrue(vars.hasNext());
 
-        Map<String, String> actual = new HashMap<String, String>();
+        Map<String, String> actual = new HashMap<>();
 
         for (Entry<String, TreePath> e : vars.next().getVariables().entrySet()) {
             int[] span = new int[] {

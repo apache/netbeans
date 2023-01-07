@@ -147,7 +147,7 @@ public class SpringCustomizerPanel extends javax.swing.JPanel implements HelpCtx
     }
 
     private void removeFiles() {
-        List<File> removedFiles = new ArrayList<File>();
+        List<File> removedFiles = new ArrayList<>();
         int[] indices = filesList.getSelectedIndices();
         for (int i = 0; i < indices.length; i++) {
             removedFiles.add(files.remove(indices[i] - i));
@@ -449,7 +449,7 @@ private void removeFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//
 }//GEN-LAST:event_removeFileButtonActionPerformed
 
 private void detectFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detectFilesButtonActionPerformed
-        Set<File> alreadySelectedFiles = new HashSet<File>(files);
+        Set<File> alreadySelectedFiles = new HashSet<>(files);
         SelectConfigFilesPanel panel;
         if (detectedFiles != null) {
             panel = SelectConfigFilesPanel.create(detectedFiles, alreadySelectedFiles, fileDisplayName);
@@ -499,7 +499,7 @@ private void addGroupFilesButtonActionPerformed(java.awt.event.ActionEvent evt) 
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE));
             return;
         }
-        Set<File> alreadySelectedFiles = new HashSet<File>(groups.get(currentGroupIndex).getFiles());
+        Set<File> alreadySelectedFiles = new HashSet<>(groups.get(currentGroupIndex).getFiles());
         SelectConfigFilesPanel panel = SelectConfigFilesPanel.create(files, alreadySelectedFiles, fileDisplayName);
         if (panel.open()) {
             addFilesToCurrentGroup(panel.getSelectedFiles());
@@ -536,7 +536,7 @@ private void removeGroupFileButtonActionPerformed(java.awt.event.ActionEvent evt
 
     private final class RelativeDisplayName implements FileDisplayName {
 
-        private Map<File, String> abs2Rel = new HashMap<File, String>();
+        private Map<File, String> abs2Rel = new HashMap<>();
 
         public String getDisplayName(File absolute) {
             String relative = abs2Rel.get(absolute);

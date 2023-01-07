@@ -38,7 +38,7 @@ public class ReportUtils {
 
     public static Set<File> doCompare(Set<File> refFiles, Set<File> newFiles) throws Exception {
 
-        HashSet<File> outputs = new HashSet<File>();
+        HashSet<File> outputs = new HashSet<>();
         OutputStreamWriter ow = null;
         try {
             ResultsHandler handler = new ResultsHandler();

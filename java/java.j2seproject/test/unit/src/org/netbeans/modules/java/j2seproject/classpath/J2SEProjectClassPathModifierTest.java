@@ -189,7 +189,7 @@ public class J2SEProjectClassPathModifierTest extends NbTestCase {
         assertEquals("", eval.getProperty("javac.classpath"));
     }
     private List<String> getPrjLibRefs() {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         Element libs = helper.createAuxiliaryConfiguration().getConfigurationFragment("libraries", "http://www.netbeans.org/ns/ant-project-libraries/1", true);
         if (libs != null) {
             NodeList nl = libs.getElementsByTagName("definitions");

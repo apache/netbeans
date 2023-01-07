@@ -797,7 +797,7 @@ public class WizardDescriptor extends DialogDescriptor {
         updateStateOpen (data);
     }
 
-    private static final Set<String> logged = new HashSet<String>();
+    private static final Set<String> logged = new HashSet<>();
     @SuppressWarnings("unchecked")
     private static void checkComponent(Panel<?> pnl) {
         String name = pnl.getClass().getName();

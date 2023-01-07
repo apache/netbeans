@@ -129,7 +129,7 @@ public class Hk2PluginProperties {
      */
     public static List<URL> tokenizePath(String path) {
         try {
-            List<URL> l = new ArrayList<URL>();
+            List<URL> l = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
 
             char dosHack = '\0';
@@ -184,7 +184,7 @@ public class Hk2PluginProperties {
             return l;
         } catch (MalformedURLException e) {
             ErrorManager.getDefault().notify(e);
-            return new ArrayList<URL>();
+            return new ArrayList<>();
         }
     }
 

@@ -53,7 +53,7 @@ public class CodeHintProviderImplTest {
     public void testComputeHints() throws Exception {
         Map<HintMetadata, ? extends Collection<? extends HintDescription>> hints = new CodeHintProviderImpl().computeHints();
 
-        Set<String> golden = new HashSet<String>(Arrays.asList(
+        Set<String> golden = new HashSet<>(Arrays.asList(
             "$1.toURL():public static org.netbeans.spi.editor.hints.ErrorDescription org.netbeans.modules.java.hints.providers.code.CodeHintProviderImplTest.hintPattern1(org.netbeans.spi.java.hints.HintContext)",
             "[METHOD_INVOCATION]:public static org.netbeans.spi.editor.hints.ErrorDescription org.netbeans.modules.java.hints.providers.code.CodeHintProviderImplTest.hintPattern2(org.netbeans.spi.java.hints.HintContext)"
         ));

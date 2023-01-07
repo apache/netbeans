@@ -125,7 +125,7 @@ public final class ProjectTemplateAttributesProvider implements CreateFromTempla
             // What can we do?
             return m;
         }
-        Map<String, Object> projectMap = new HashMap<String, Object>();
+        Map<String, Object> projectMap = new HashMap<>();
         ensureProjectAttrs(projectMap, parent);
         if (m != null) {
             m.put(ATTR_PROJECT, projectMap); // NOI18N

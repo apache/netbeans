@@ -429,7 +429,7 @@ public class NbMainSequence extends WizardSequence {
             if (installRoot == null || ! installRoot.exists()) {
                 return ;
             }
-            final Set<File> updateDownloadDirs = new HashSet<File> ();
+            final Set<File> updateDownloadDirs = new HashSet<> ();
             installRoot.listFiles(new FileFilter() {
 
                                    @Override

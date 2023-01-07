@@ -48,7 +48,7 @@ public class MetroSchemaCatalog implements CatalogReader, CatalogDescriptor2, En
      * @return null if cannot proceed, try later.
      */
     public Iterator<String> getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.addAll(getLocalSchemaDefs().keySet());
         return list.listIterator();
     }
@@ -73,7 +73,7 @@ public class MetroSchemaCatalog implements CatalogReader, CatalogDescriptor2, En
     }
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         hmap.put("http://java.sun.com/xml/ns/metro/config", local ? "nbres:/org/netbeans/modules/websvc/metro/model/catalog/resources/metro.xsd" : null);
         return hmap;
     }

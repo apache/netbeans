@@ -27,8 +27,8 @@ import java.util.Map;
  * sheet.
  */
 class SelectionAndScrollPositionManager {
-    private static Map<String, String> groupsToNodes = new HashMap<String, String>();
-    private static Map<String, Integer> namesToPositions = new HashMap<String, Integer>();
+    private static Map<String, String> groupsToNodes = new HashMap<>();
+    private static Map<String, Integer> namesToPositions = new HashMap<>();
     private static final Integer zero = new Integer(0);
     private String lastSelectedGroup = "";
     private String nodeName = null;

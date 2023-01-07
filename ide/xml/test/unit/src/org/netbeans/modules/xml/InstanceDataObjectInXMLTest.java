@@ -37,7 +37,7 @@ public class InstanceDataObjectInXMLTest extends NbTestCase {
     public void testInstanceDataObjectCreate() throws Exception {
         final FileObject fo = FileUtil.createMemoryFileSystem().getRoot();
         final DataFolder folder = DataFolder.findFolder(fo);
-        final ArrayList<Object> obj = new ArrayList<Object>();
+        final ArrayList<Object> obj = new ArrayList<>();
         InstanceDataObject dataObj = InstanceDataObject.create(folder, null, obj, null);
         assertSame("Instance is preserved", dataObj.instanceCreate(), obj);
     }

@@ -91,7 +91,7 @@ public class IndexerVersionsTest extends IndexingTestBase {
 
         indexerFactory = new MockIndexerFactory(1);
         MockMimeLookup.setInstances(MimePath.get(MIME), indexerFactory);
-        Set<String> mt = new HashSet<String>();
+        Set<String> mt = new HashSet<>();
         mt.add(MIME);
         Util.allMimeTypes = mt;
         assertNotNull("No masterfs",wd);
@@ -209,7 +209,7 @@ public class IndexerVersionsTest extends IndexingTestBase {
     }
 
     private void assertEquals(final Collection<? extends FileObject> expected, final Iterable<? extends Indexable> result) {
-        final Set<FileObject> expectedCopy = new HashSet<FileObject>(expected);
+        final Set<FileObject> expectedCopy = new HashSet<>(expected);
         for (Indexable i : result) {
             final FileObject fo = URLMapper.findFileObject(i.getURL());
             if (fo != null) {

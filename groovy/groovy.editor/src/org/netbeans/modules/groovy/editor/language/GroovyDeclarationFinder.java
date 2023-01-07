@@ -637,7 +637,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                     // Perhaps we specified a class without its FQN, such as "TableDefinition"
                     // -- go and look for the full FQN and add in all the matches from there
                     Set<IndexedClass> classes = index.getClasses(type, QuerySupport.Kind.EXACT);
-                    Set<String> fqns = new HashSet<String>();
+                    Set<String> fqns = new HashSet<>();
                     for (IndexedClass cls : classes) {
                         String f = cls.getFqn();
                         if (f != null) {

@@ -987,7 +987,7 @@ private void fireChangeEvent(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_
 
     public List<String> getBindingFiles(){
         if (this.chkbxUseBindingFile.isSelected()){
-            List<String> files = new ArrayList<String>();
+            List<String> files = new ArrayList<>();
             ComboBoxModel model = this.cmbBindingFiles.getModel();
             int i = model.getSize();
 

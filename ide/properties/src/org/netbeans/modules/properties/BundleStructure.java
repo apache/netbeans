@@ -361,7 +361,7 @@ public class BundleStructure {
                     if (item != null) {
                         String locale = Util.getLocaleSuffix(pfe);
                         if (list == null) {
-                            list = new ArrayList<String>();
+                            list = new ArrayList<>();
                         }
                         list.add(locale);
                         list.add(item.getValue());
@@ -595,7 +595,7 @@ public class BundleStructure {
         //Create interim Set as ArrayList.contains is an expensive operation
         // and can cause delayes on large property files.
         // See: #188619
-        Set interimSet = new HashSet<String>(keyList);
+        Set interimSet = new HashSet<>(keyList);
         // for all entries add all keys
         int entriesCount = getEntryCount();
         for (int index = 0; index < entriesCount; index++) {

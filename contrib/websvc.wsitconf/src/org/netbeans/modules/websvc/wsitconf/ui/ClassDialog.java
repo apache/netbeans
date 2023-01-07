@@ -70,7 +70,7 @@ public class ClassDialog {
     }
     
     public Set<String> getSelectedClasses(){
-        Set<String> selectedClasses = new HashSet<String>();
+        Set<String> selectedClasses = new HashSet<>();
         Node[] nodes = sPanel.getSelectedNodes();
         for(int i = 0; i < nodes.length; i++){
             String name = getClassNameFromNode(nodes[i]);

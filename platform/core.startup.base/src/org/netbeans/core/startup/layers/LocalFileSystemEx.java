@@ -50,7 +50,7 @@ public final class LocalFileSystemEx extends LocalFileSystem {
          * it removes invalid locks from pLocks.
          */
         LinkedList<String> l = new LinkedList<String>();
-        Set<String> pLocksCopy = new HashSet<String>();
+        Set<String> pLocksCopy = new HashSet<>();
         synchronized (allLocks) {
             l.addAll(allLocks.keySet());
             pLocksCopy.addAll(pLocks);
@@ -69,7 +69,7 @@ public final class LocalFileSystemEx extends LocalFileSystem {
         /* Returns true if either allLocks or pLocks are not empty. As side effect
          * it removes invalid locks from pLocks.
          */
-        Set<String> pLocksCopy = new HashSet<String>();
+        Set<String> pLocksCopy = new HashSet<>();
         boolean allLocksEmpty;
         synchronized (allLocks) {
             allLocksEmpty = allLocks.isEmpty();
@@ -100,7 +100,7 @@ public final class LocalFileSystemEx extends LocalFileSystem {
 
     private static Set<String> getInvalid (Set<String> names) {
         LOGGER.finest("133616 - checking invalid");
-        Set<String> invalid = new HashSet<String>();
+        Set<String> invalid = new HashSet<>();
         Iterator<String> i = names.iterator();
         while (i.hasNext ()) {
             String name = i.next();

@@ -57,7 +57,7 @@ class VolumeContentModel extends AbstractListModel/*<String>*/ {
             }
         }
         if (content == null) {
-            content = new ArrayList<Object>();
+            content = new ArrayList<>();
         }
     }
     

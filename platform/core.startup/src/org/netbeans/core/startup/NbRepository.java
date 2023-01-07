@@ -75,7 +75,7 @@ public final class NbRepository extends Repository {
         
         File u = null;
         File h = null;
-        List<File> extradirs = new ArrayList<File>();
+        List<File> extradirs = new ArrayList<>();
         String homeDir = CLIOptions.getHomeDir ();
         if (homeDir != null) {
             // -----------------------------------------------------------------------------------------------------

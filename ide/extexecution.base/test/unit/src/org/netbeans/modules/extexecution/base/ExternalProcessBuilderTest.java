@@ -50,7 +50,7 @@ public class ExternalProcessBuilderTest extends NbTestCase {
 
     public void testPath() {
         ExternalProcessBuilder creator = new ExternalProcessBuilder("command");
-        Map<String, String> original = new HashMap<String, String>();
+        Map<String, String> original = new HashMap<>();
         original.put("PATH", "original");
 
         // original path

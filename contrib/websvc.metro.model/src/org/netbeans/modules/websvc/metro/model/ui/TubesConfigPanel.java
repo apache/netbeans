@@ -76,7 +76,7 @@ public class TubesConfigPanel extends JPanel {
     }
 
     public List<String> getTubeList() {
-        List<String> retList = new ArrayList<String>();
+        List<String> retList = new ArrayList<>();
         for (int i=0; i < tubeTableModel.getRowCount(); i++) {
             retList.add((String)tubeTableModel.getValueAt(i, 0));
         }

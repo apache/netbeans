@@ -180,7 +180,7 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
 
         @Override
         public URL[] getLibraries() {
-            List<URL> cPath = new ArrayList<URL>();
+            List<URL> cPath = new ArrayList<>();
             if (isMetroInstalled()) {
                 for (String entry : METRO_LIBRARIES) {
                     File f = getWsJarName(gfRootStr, entry);

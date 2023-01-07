@@ -75,7 +75,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
     private Map packagePostfix = new HashMap();
     final AbstractRefactoring refactoring;
     final boolean isRenameRefactoring;
-    ArrayList<FileObject> filesToMove = new ArrayList<FileObject>();
+    ArrayList<FileObject> filesToMove = new ArrayList<>();
     /** top level classes to move */
     Set<ElementHandle<TypeElement>> classes;
     /** packages of which the content will change */
@@ -348,7 +348,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
     @SuppressWarnings("CollectionContainsUrl")
     private Problem checkProjectDeps() {
         ClasspathInfo cpInfo = getClasspathInfo(refactoring);
-        Set<FileObject> sourceRoots = new HashSet<FileObject>();
+        Set<FileObject> sourceRoots = new HashSet<>();
         for (TreePathHandle tph : refactoring.getRefactoringSource().lookupAll(TreePathHandle.class)) {
             FileObject file = tph.getFileObject();
             ClassPath cp = ClassPath.getClassPath(file, ClassPath.SOURCE);
@@ -394,7 +394,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
     @SuppressWarnings("CollectionContainsUrl")
     private Problem checkProjectDeps(Set<FileObject> a) {
         if (!isRenameRefactoring) {
-            Set<FileObject> sourceRoots = new HashSet<FileObject>();
+            Set<FileObject> sourceRoots = new HashSet<>();
             for (FileObject file : filesToMove) {
                 ClassPath cp = ClassPath.getClassPath(file, ClassPath.SOURCE);
                 if (cp != null) {
@@ -513,7 +513,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
             packageNames = Collections.emptySet();
             return null;
         } else {
-            packageNames = new HashSet<String>();
+            packageNames = new HashSet<>();
         }
         
         for (List<FileObject> folders : foldersToMove) {
@@ -658,7 +658,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                 }
                 List<FileObject> curRootList = sameRootList;
                 if (sameRootList == null) {
-                    curRootList = new ArrayList<FileObject>();
+                    curRootList = new ArrayList<>();
                     foldersToMove.add(curRootList);
                 }
                 curRootList.add(fo);

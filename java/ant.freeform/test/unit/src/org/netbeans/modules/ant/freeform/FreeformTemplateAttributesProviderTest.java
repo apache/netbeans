@@ -53,7 +53,7 @@ public class FreeformTemplateAttributesProviderTest extends TestBase {
             assertEquals(1, result.size());
             Map values = (Map)result.get("project");
             if (root.getName().equals("src")) {
-                Map<String, String> expected = new HashMap<String, String>();
+                Map<String, String> expected = new HashMap<>();
                 expected.put("license", "cddl-netbeans-sun");
                 expected.put("encoding", "UTF-8");
                 assertEquals(expected, values);

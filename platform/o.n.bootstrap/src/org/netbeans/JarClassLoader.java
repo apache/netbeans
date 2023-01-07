@@ -489,8 +489,8 @@ public class JarClassLoader extends ProxyClassLoader {
         private volatile int[] versions;
         private volatile Reference<Manifest> manifest;
         /** #141110: expensive to repeatedly look for them */
-        private final Set<String> nonexistentResources = Collections.synchronizedSet(new HashSet<String>());
-        private final Set<File> warnedFiles = Collections.synchronizedSet(new HashSet<File>()); // #183696
+        private final Set<String> nonexistentResources = Collections.synchronizedSet(new HashSet<>());
+        private final Set<File> warnedFiles = Collections.synchronizedSet(new HashSet<>()); // #183696
         
         JarSource(File file) throws IOException {
             this(file, toURI(file));
@@ -1032,7 +1032,7 @@ public class JarClassLoader extends ProxyClassLoader {
             }
         }
         
-        Set<String> known = new HashSet<String>();
+        Set<String> known = new HashSet<>();
         Manifest m = mod == null ? null : mod.getManifest();
         if (m != null) {
             Attributes attr = m.getMainAttributes();

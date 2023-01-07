@@ -92,6 +92,6 @@ public class ListModifiedIndexEntriesTest extends AbstractGitTestCase {
 
         modifications = getClient(workDir).listModifiedIndexEntries(new File[] { workDir }, NULL_PROGRESS_MONITOR);
         assertEquals(2, modifications.length);
-        assertEquals(new HashSet<File>(Arrays.asList(new File[] { f1, f2 })), new HashSet<File>(Arrays.asList(modifications)));
+        assertEquals(new HashSet<>(Arrays.asList(new File[] { f1, f2 })), new HashSet<>(Arrays.asList(modifications)));
     }
 }

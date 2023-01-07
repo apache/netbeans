@@ -95,7 +95,7 @@ public class Icefaces2CustomizerPanelVisual extends javax.swing.JPanel {
      */
     public final void initLibraries(final boolean setStoredValue) {
         long time = System.currentTimeMillis();
-        final List<String> registeredRichfaces = new ArrayList<String>();
+        final List<String> registeredRichfaces = new ArrayList<>();
 
         RP.post(new Runnable() {
             @Override

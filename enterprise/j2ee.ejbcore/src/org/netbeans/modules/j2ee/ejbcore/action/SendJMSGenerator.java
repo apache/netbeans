@@ -351,7 +351,7 @@ public final class SendJMSGenerator {
         destBuff.setCharAt(0, Character.toUpperCase(destBuff.charAt(0)));
 
         String body;
-        List<String> throwsClause = new ArrayList<String>();
+        List<String> throwsClause = new ArrayList<>();
         String parameterType = Object.class.getName();
         switch (injectionStrategy) {
             case INJ_EE7_CDI:

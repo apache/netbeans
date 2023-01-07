@@ -63,8 +63,8 @@ public final class TokenDumpCheck {
             boolean afterEOF = true; // Ignore newlines when after eof
             boolean newline = false;
             int textStartIndex = 0;
-            List<String> inputs = new ArrayList<String>();
-            List<String> testNames = new ArrayList<String>();
+            List<String> inputs = new ArrayList<>();
+            List<String> testNames = new ArrayList<>();
             // Estimate 4 subtests equally long
             StringBuilder inputBuffer = new StringBuilder(wholeInput.length() / 4);
             String testName = "<Unnamed test>";

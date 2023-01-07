@@ -216,7 +216,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
             }
         }
         
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         
         for (ElementNode.Description d : proposals) {
             ExecutableElement resolved = (ExecutableElement) d.getElementHandle().resolve(info);

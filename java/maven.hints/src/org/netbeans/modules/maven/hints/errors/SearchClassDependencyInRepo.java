@@ -94,7 +94,7 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
 
     @Override
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
                 MODULE_DOES_NOT_READ, 
                 "compiler.err.cant.resolve",//NOI18N
                 "compiler.err.cant.resolve.location",//NOI18N

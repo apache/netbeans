@@ -53,7 +53,7 @@ public class WhitespaceHighlightingTest extends NbTestCase {
     
     public WhitespaceHighlightingTest(String name) {
         super(name);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimple");
 //        filterTests(includes);
     }

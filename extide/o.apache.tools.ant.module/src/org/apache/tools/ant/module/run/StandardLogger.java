@@ -198,7 +198,7 @@ public final class StandardLogger extends AntLogger {
         getSessionData(session).startTime = System.currentTimeMillis();
         StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(StandardLogger.class, "FMT_running_ant", session.getDisplayName()));
         if (!session.getOriginatingScript().getParentFile().getName().equals("executor-snippets")) { // internal detail of JavaRunner
-            List<String> cmd = new ArrayList<String>();
+            List<String> cmd = new ArrayList<>();
             cmd.add("ant");
             switch (session.getVerbosity()) {
             case AntEvent.LOG_DEBUG:

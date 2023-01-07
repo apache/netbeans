@@ -48,7 +48,7 @@ public class HttpMethodImpl extends RestMethodDescriptionImpl implements HttpMet
         this.consumeMime = Utils.getConsumeMime(methodElement);
         this.produceMime = Utils.getProduceMime(methodElement);
         this.path = Utils.hasUriTemplate(methodElement) ? Utils.getUriTemplate(methodElement) : ""; //NOI18N
-        this.queryParams = new HashMap<String, String>();
+        this.queryParams = new HashMap<>();
         Utils.fillQueryParams( queryParams , methodElement);
     }
 
@@ -99,7 +99,7 @@ public class HttpMethodImpl extends RestMethodDescriptionImpl implements HttpMet
             isModified = true;
         }
         
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         Utils.fillQueryParams( map , element);
         Set<String> current = map.keySet();
         Set<String> original = queryParams.keySet();

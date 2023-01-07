@@ -282,7 +282,7 @@ public final class UiUtils {
                                 if (System.getProperty("java.version").startsWith("1.6")) {
                                     File desktop = new File(SystemUtils.getUserHomeDirectory(), "Desktop");
                                     File[] zips = null;
-                                    final List<String> names = new ArrayList<String>();
+                                    final List<String> names = new ArrayList<>();
                                     if (FileUtils.exists(desktop)) {
                                         zips = desktop.listFiles(new FileFilter() {
                                             public boolean accept(File pathname) {

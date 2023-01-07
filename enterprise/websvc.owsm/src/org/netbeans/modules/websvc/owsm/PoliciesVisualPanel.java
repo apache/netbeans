@@ -157,7 +157,7 @@ public class PoliciesVisualPanel extends javax.swing.JPanel {
 
 
     private Set<String> getWsPolicyIds(JavaSource wsJava ) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         try {
             wsJava.runUserActionTask( new Task<CompilationController>() {
                 

@@ -213,7 +213,7 @@ final class TestUtil {
      * (No namespaces returned.)
      */
     public static List<String> grammarResultValues(Enumeration<GrammarResult> e) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         while (e.hasMoreElements()) {
             l.add(e.nextElement().toString());
         }

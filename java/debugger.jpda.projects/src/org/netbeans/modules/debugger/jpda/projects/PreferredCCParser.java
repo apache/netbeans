@@ -328,7 +328,7 @@ class PreferredCCParser {
         if (file == null || (js = JavaSource.forFileObject(file)) == null) {
             return new String [0];
         }
-        final List<String> imports = new ArrayList<String>();
+        final List<String> imports = new ArrayList<>();
         if (SourceUtils.isScanInProgress()) {
             try {
                 ParserManager.parse(Collections.singleton(Source.create(file)), new UserTask() {
@@ -381,7 +381,7 @@ class PreferredCCParser {
 
     private static JavaSource getJavaSource(SourcePathProvider sp) {
         String[] roots = sp.getOriginalSourceRoots();
-        List<FileObject> sourcePathFiles = new ArrayList<FileObject>();
+        List<FileObject> sourcePathFiles = new ArrayList<>();
         for (String root : roots) {
             FileObject fo = FileUtil.toFileObject (new java.io.File(root));
             if (fo != null && FileUtil.isArchiveFile (fo)) {

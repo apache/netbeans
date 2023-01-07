@@ -2779,7 +2779,7 @@ public class FileObjectTestHid extends TestBaseHid {
             assertEquals(txt, new String(arr, StandardCharsets.UTF_8));
             assertEquals(txt, fo1.asText("UTF-8"));
 
-            ArrayList<String> all = new ArrayList<String>();
+            ArrayList<String> all = new ArrayList<>();
             List<String> lines = fo1.asLines("UTF-8");
             for (String l : lines) {
                 // it is possible to rewrite the content, if the file is small
@@ -2844,7 +2844,7 @@ public class FileObjectTestHid extends TestBaseHid {
             lines = null;
             assertGC("The list of strings can be GCed", ref);
 
-            ArrayList<String> all = new ArrayList<String>();
+            ArrayList<String> all = new ArrayList<>();
             for (String l : fo1.asLines("UTF-8")) {
                 int cnt = all.size();
                 if (cnt % 100 == 0 && acquire-- > 0) {

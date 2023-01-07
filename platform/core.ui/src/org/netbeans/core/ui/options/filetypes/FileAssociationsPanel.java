@@ -344,7 +344,7 @@ private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         newlyAddedExtensions.add(newExtensionPanel.getExtension());
         fireChanged(null, null);
         // add new extension to combo box and re-create
-        ArrayList<String> newItems = new ArrayList<String>();
+        ArrayList<String> newItems = new ArrayList<>();
         for (int i = 0; i < cbExtension.getItemCount(); i++) {
             newItems.add(cbExtension.getItemAt(i).toString());
         }

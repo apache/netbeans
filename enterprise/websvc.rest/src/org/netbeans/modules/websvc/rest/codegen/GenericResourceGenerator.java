@@ -103,7 +103,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             source = JavaSourceHelper.createJavaSource(
                     getTemplate(), getDestDir(), bean.getPackageName(), bean.getName());
         } else {
-            Map<String,String> params = new HashMap<String,String>();
+            Map<String,String> params = new HashMap<>();
             String[] uriParams = bean.getUriParams();
             StringBuilder fieldList = new StringBuilder();
             StringBuilder paramList = new StringBuilder();
@@ -140,7 +140,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
         }
         
         modifyResourceClass(source);
-        return new HashSet<FileObject>(source.getFileObjects());
+        return new HashSet<>(source.getFileObjects());
     }
   
     private void addInputParamFields(JavaSource source) throws IOException {
@@ -237,7 +237,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     }
     
     public static String[] getJsr311AnnotationImports(GenericResourceBean rbean) {
-        HashSet<String> result = new HashSet<String>();
+        HashSet<String> result = new HashSet<>();
         if (rbean.isGenerateUriTemplate()) {
             result.add(RestConstants.PATH);
         }
@@ -515,7 +515,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     }
     
     private String[] getGetParamNames(List<ParameterInfo> queryParams) {
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
         if (bean.isRootResource()) {
             params.addAll(Arrays.asList(bean.getUriParams()));
         }
@@ -524,7 +524,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     }
     
     private String[] getGetParamTypes(List<ParameterInfo> queryParams) {
-        ArrayList<String> types = new ArrayList<String>();
+        ArrayList<String> types = new ArrayList<>();
         if (bean.isRootResource()) {
             types.addAll(Arrays.asList(getUriParamTypes()));
         }
@@ -644,7 +644,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     }
     
       private String[] getParamNames(List<ParameterInfo> params) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         
         for (ParameterInfo param : params) {
             results.add(param.getName());
@@ -654,7 +654,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     }
     
     private String[] getParamTypeNames(List<ParameterInfo> params) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         
         for (ParameterInfo param : params) {
             results.add(param.getTypeName());
@@ -664,7 +664,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     }
     
     private Object[] getParamValues(List<ParameterInfo> params) {
-        List<Object> results = new ArrayList<Object>();
+        List<Object> results = new ArrayList<>();
         
         for (ParameterInfo param : params) {
             Object defaultValue = null;

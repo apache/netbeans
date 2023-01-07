@@ -134,7 +134,7 @@ public class AsyncCloseTest extends NbTestCase {
         worker.start();
         signal.await();
 
-        final Collection<String> data = new ArrayList<String>();
+        final Collection<String> data = new ArrayList<>();
         index.query(
             data,
             new Convertor<Document,String>(){

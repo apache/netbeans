@@ -83,7 +83,7 @@ public final class MemoryMimeDataProvider implements MimeDataProvider {
     
     private static final class Lkp extends AbstractLookup {
         
-        private ArrayList<Object> all = new ArrayList<Object>();
+        private ArrayList<Object> all = new ArrayList<>();
         private InstanceContent contents;
             
         public Lkp() {
@@ -101,7 +101,7 @@ public final class MemoryMimeDataProvider implements MimeDataProvider {
         }
 
         public void removeInstances(Object... instances) {
-            ArrayList<Object> newAll = new ArrayList<Object>();
+            ArrayList<Object> newAll = new ArrayList<>();
             
             loop:
             for(Object oo : all) {

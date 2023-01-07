@@ -67,7 +67,7 @@ public class SaasCatalog implements CatalogReader, CatalogDescriptor,
      * @return null if cannot proceed, try later.
      */
     public java.util.Iterator getPublicIDs() {
-        ArrayList<String> ids = new ArrayList<String>();
+        ArrayList<String> ids = new ArrayList<>();
         ids.add(SAAS_SERVICES_1_0_ID);
         
         return ids.iterator();

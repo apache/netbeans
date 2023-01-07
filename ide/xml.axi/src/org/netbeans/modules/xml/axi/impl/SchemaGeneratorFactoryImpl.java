@@ -175,7 +175,7 @@ public class SchemaGeneratorFactoryImpl extends SchemaGeneratorFactory {
     }
     
     private void filterOtherModelComponents(List cs, AXIModel am) {
-        List<Integer> removeList = new ArrayList<Integer>();
+        List<Integer> removeList = new ArrayList<>();
         for(int i=0;i<cs.size();i++) {
             AXIComponent e = (AXIComponent) cs.get(i);
             if(!SchemaGeneratorUtil.fromSameSchemaModel(

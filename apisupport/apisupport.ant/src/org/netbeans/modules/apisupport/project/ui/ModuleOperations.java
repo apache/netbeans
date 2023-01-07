@@ -162,7 +162,7 @@ public final class ModuleOperations implements DeleteOperationImplementation,
     }
     
     public List<FileObject> getMetadataFiles() {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         addFile(GeneratedFilesHelper.BUILD_XML_PATH, files);
         addFile("manifest.mf", files); // NOI18N
         addFile("nbproject", files); // NOI18N
@@ -170,7 +170,7 @@ public final class ModuleOperations implements DeleteOperationImplementation,
     }
     
     public List<FileObject> getDataFiles() {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         Sources srcs = ProjectUtils.getSources(project);
         SourceGroup[] grps = srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);

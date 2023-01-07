@@ -1141,7 +1141,7 @@ public final class Terminal extends JComponent {
     
     private void applyShortcuts() {
 	if (!termOptions.getIgnoreKeymap()) {
-	    Set<String> actions = new HashSet<String>();
+	    Set<String> actions = new HashSet<>();
 	    for (FileObject def : shortcutsDir.getChildren()) {
 		try {
 		    DataObject dobj = DataObject.find(def);
@@ -1340,7 +1340,7 @@ public final class Terminal extends JComponent {
 	    try {
 		if (multiTransferObject != null && support.isDataFlavorSupported(multiTransferObject)) {
 		    MultiTransferObject mto = (MultiTransferObject) transferable.getTransferData(multiTransferObject);
-		    List<String> strings = new ArrayList<String>();
+		    List<String> strings = new ArrayList<>();
 		    for (int i = 0; i < mto.getCount(); i++) {
 			if (mto.isDataFlavorSupported(i, dataObjectDnd)) {
 			    DataObject dObj = (DataObject) mto.getTransferData(i, dataObjectDnd);
@@ -1362,7 +1362,7 @@ public final class Terminal extends JComponent {
 		    }
 		} else if (support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 		    List<File> list = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
-		    List<String> strings = new ArrayList<String>();
+		    List<String> strings = new ArrayList<>();
 		    for (File file : list) {
 			strings.add(file.getAbsolutePath());
 		    }

@@ -501,8 +501,8 @@ public class Mercurial {
         return version;
     }
 
-    private Set<File> knownRoots = Collections.synchronizedSet(new HashSet<File>());
-    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<File>(20));
+    private Set<File> knownRoots = Collections.synchronizedSet(new HashSet<>());
+    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<>(20));
     File getTopmostManagedAncestor(File file) {
         long t = System.currentTimeMillis();
         if (Mercurial.LOG.isLoggable(Level.FINE)) {
@@ -533,7 +533,7 @@ public class Mercurial {
                 }
             }
         }
-        Set<File> done = new HashSet<File>();
+        Set<File> done = new HashSet<>();
         File topmost = null;
         for (;file != null; file = file.getParentFile()) {
             if(unversionedParents.contains(file)) {

@@ -38,7 +38,7 @@ public class TokenReplacer {
         this.clientStubsGenerator = clientStubsGenerator;
     }
 
-    private Map<String, String> tokens = new HashMap<String, String>();
+    private Map<String, String> tokens = new HashMap<>();
 
     public Map<String, String> getTokens() {
         return Collections.unmodifiableMap(tokens);

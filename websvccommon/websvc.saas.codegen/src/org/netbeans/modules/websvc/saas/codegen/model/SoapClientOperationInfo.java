@@ -177,7 +177,7 @@ public class SoapClientOperationInfo {
 
     //TODO maybe parse SEI class (using Retouche) for @WebParam.Mode annotation
     public String[] getInputParameterNames() {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         for (WSParameter p : getOperation().getParameters()) {
             if (!p.isHolder()) {
                 names.add(p.getName());

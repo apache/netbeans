@@ -305,7 +305,7 @@ public class RefFinderTest extends NbTestCase {
         doc
                 .putProperty("mimeType", "text/x-java");
         
-        List<FileObject> fos = new ArrayList<FileObject>();
+        List<FileObject> fos = new ArrayList<>();
         fos.add(data);
         if (additionalFiles != null) {
             for (String s : additionalFiles) {

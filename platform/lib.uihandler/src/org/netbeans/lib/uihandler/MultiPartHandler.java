@@ -250,7 +250,7 @@ class MultiPartHandler {
    * Content-Transfer-Encoding: binary
    */
   private HashMap parsePartHeaders() throws IOException {
-    HashMap<String,String> partHeaders = new HashMap<String,String>();
+    HashMap<String,String> partHeaders = new HashMap<>();
 
     Vector<String> headers = new Vector<String>();
     String line = readLine();

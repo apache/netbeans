@@ -45,7 +45,7 @@ public final class CodeCompletionOptionsSelector {
 
     public synchronized Set<? extends String> getMimeTypes() {
         if (mimeTypes == null) {
-            mimeTypes = new HashSet<String>();
+            mimeTypes = new HashSet<>();
             mimeTypes.add(""); //NOI18N
 
             // filter out mime types that don't supply customizers

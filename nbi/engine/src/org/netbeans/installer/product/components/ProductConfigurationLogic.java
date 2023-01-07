@@ -218,7 +218,7 @@ public abstract class ProductConfigurationLogic {
      * Get additonal information about the product that is used during system integration
      */
     public Map <String, Object> getAdditionalSystemIntegrationInfo() {
-        return new HashMap<String, Object>();
+        return new HashMap<>();
     }
     // installation behavior ////////////////////////////////////////////////////////
     public RemovalMode getRemovalMode() {

@@ -136,7 +136,7 @@ public final class BeanModelBuilder {
     
     private void addDependency(String name) {
         if (dependencies.isEmpty()) {
-            dependencies = new HashSet<String>();
+            dependencies = new HashSet<>();
         }
         dependencies.add(name);
     }
@@ -851,7 +851,7 @@ public final class BeanModelBuilder {
     
     private void addConstant(String s) {
         if (constants.isEmpty()) {
-            constants = new HashSet<String>();
+            constants = new HashSet<>();
         }
         constants.add(s);
     }

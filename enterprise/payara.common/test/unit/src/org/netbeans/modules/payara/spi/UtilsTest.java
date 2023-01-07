@@ -173,7 +173,7 @@ public class UtilsTest extends NbTestCase {
             String hostname =  //"127.0.0.1";
                  "10.229.117.91";
             int port = 4848;
-            Map<String,String> ip = new HashMap<String,String>();
+            Map<String,String> ip = new HashMap<>();
             ip.put(PayaraModule.HOSTNAME_ATTR, hostname);
             ip.put(PayaraModule.ADMINPORT_ATTR, port+"");
             PayaraInstance instance = PayaraInstance.create(ip, null);

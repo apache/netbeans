@@ -57,7 +57,7 @@ public class PreferredVMParserTest extends ProjectImporterTestCase {
         
         Map<String,String> jdks = PreferredVMParser.parse(org_eclipse_jdt_launching_PREF_VM_XML);
         
-        Map<String,String> expectedJDKs = new HashMap<String,String>();
+        Map<String,String> expectedJDKs = new HashMap<>();
         expectedJDKs.put("jdk-6-rc-bin-b64", "/space/java/jdk-6-rc-bin-b64");
         expectedJDKs.put("org.eclipse.jdt.launching.JRE_CONTAINER", "/space/java/jdk-6-rc-bin-b64");
         expectedJDKs.put("jdk-6-beta-bin-b59c", "/space/java/jdk-6-beta-bin-b59c");

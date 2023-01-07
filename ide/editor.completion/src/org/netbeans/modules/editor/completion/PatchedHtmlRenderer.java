@@ -1159,7 +1159,7 @@ public final class PatchedHtmlRenderer {
         if (!STRICT_HTML) {
             if (LOG.isLoggable(Level.WARNING)) {
                 if (badStrings == null) {
-                    badStrings = new HashSet<String>();
+                    badStrings = new HashSet<>();
                 }
 
                 if (!badStrings.contains(msg)) {

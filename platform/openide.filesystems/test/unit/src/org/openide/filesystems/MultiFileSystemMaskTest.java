@@ -48,7 +48,7 @@ public class MultiFileSystemMaskTest extends NbTestCase {
     
     private static String childrenNames(FileObject folder) {
         FileObject[] kids = folder.getChildren();        
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (int i = 0; i < kids.length; i++) {
             l.add(kids[i].getNameExt());
         }

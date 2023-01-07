@@ -653,7 +653,7 @@ public final class Utils {
             final String keystore,
             final String alias,
             final String password) throws IOException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         
         command.add(getJarSignerExecutable());
         command.add("-keystore");
@@ -864,7 +864,7 @@ public final class Utils {
             final String... args) throws IOException {
         final String classPath = project.getProperty(CLASSPATH_VALUE_PROPERTY);
         
-        final List<String> command = new ArrayList<String>();
+        final List<String> command = new ArrayList<>();
         
         command.add(getVerificationJavaExecutable());
         command.add(CLASSPATH_ARG);

@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  */
 public class WebServiceFromWSDLPanel extends javax.swing.JPanel implements HelpCtx.Provider, DocumentListener {
 
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private static String previousDirectory = "";
     private final FileFilter WSDL_FILE_FILTER = new WsdlFileFilter();
     private boolean isWaitingForScan = false;

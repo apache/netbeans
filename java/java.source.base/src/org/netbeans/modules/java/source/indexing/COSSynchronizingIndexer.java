@@ -119,7 +119,7 @@ public class COSSynchronizingIndexer extends CustomIndexer {
     }
 
     public static Set<String> gatherJavaMimeTypes() {
-        Set<String> mimeTypes = new HashSet<String>();
+        Set<String> mimeTypes = new HashSet<>();
 
         final Collection<? extends IndexerInfo<CustomIndexerFactory>> indexers =
             IndexerCache.getCifCache().getIndexersByName(JavaIndex.NAME);

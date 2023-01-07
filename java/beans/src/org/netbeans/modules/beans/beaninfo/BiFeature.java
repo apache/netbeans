@@ -184,7 +184,7 @@ public abstract class BiFeature implements IconBases, Node.Cookie, Comparable<Bi
 
     /** Generates collection of strings which customize the feature */
     List<String> getCustomizationStrings () {
-        List<String> col = new ArrayList<String>();
+        List<String> col = new ArrayList<>();
         StringBuffer sb = new StringBuffer( 100 );
 
         if ( expert ) {

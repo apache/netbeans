@@ -194,7 +194,7 @@ public class LocalDownloadSupport {
 
     private synchronized void initCodeName2Unit () {
         assert nbm2unitCodeName == null : "Cannot initialize nbm2unit twice!";
-        nbm2unitCodeName = new HashMap<File, String> ();
+        nbm2unitCodeName = new HashMap<> ();
         codeName2unit = new HashMap<String, UpdateUnit> ();
         Iterator<File> it = getAllFiles ().iterator ();
         while (it.hasNext ()) {
@@ -348,7 +348,7 @@ public class LocalDownloadSupport {
 
         Set<File> getCheckedFiles () {
             if (checkedFiles == null) {
-                checkedFiles = new HashSet<File> ();
+                checkedFiles = new HashSet<> ();
                 for (File f : getAllFiles ()) {
                     if (isChecked (f)) {
                         checkedFiles.add (f);
@@ -387,7 +387,7 @@ public class LocalDownloadSupport {
         }
 
         private Set<File> loadPresistentState () {
-            Set<File> retval = new HashSet<File> ();
+            Set<File> retval = new HashSet<> ();
             String files = getPreferences ().get (LOCAL_DOWNLOAD_FILES, null);
             if (files != null) {
                 String[] fileArray = files.split (","); // NOI18N  
@@ -467,7 +467,7 @@ public class LocalDownloadSupport {
         }
 
         private static Set<File> stripNotExistingFiles (Set<File> files) {
-            Set<File> retval = new HashSet<File> ();
+            Set<File> retval = new HashSet<> ();
             for (File file : files) {
                 if (file.exists ()) {
                     retval.add (file);
@@ -477,7 +477,7 @@ public class LocalDownloadSupport {
         }
 
         private static Set<File> stripNoNBMsNorOSGi(Set<File> files) {
-            Set<File> retval = new HashSet<File> ();
+            Set<File> retval = new HashSet<> ();
             for (File file : files) {
                 if (NBM_FILE_FILTER.accept (file)) {
                     retval.add (file);

@@ -107,7 +107,7 @@ public class NewJ2SEFreeformProjectWizardIterator implements WizardDescriptor.Pr
         }
         ProjectModel pm = (ProjectModel)wiz.getProperty(PROP_PROJECT_MODEL);
         File nbProjectFolder = pm.getNBProjectFolder();
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
         resultSet.add(FileUtil.toFileObject(nbProjectFolder));
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(nbProjectFolder));
         if (p != null) {
@@ -134,7 +134,7 @@ public class NewJ2SEFreeformProjectWizardIterator implements WizardDescriptor.Pr
         index = 0;
         panels = createPanels();
         
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent();
             assert c instanceof JComponent;

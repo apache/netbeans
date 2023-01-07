@@ -67,7 +67,7 @@ public class WadlSaasMethod extends SaasMethod {
                     Set<String> medias = null;
 
                     if (GET.equals(name)) {
-                        medias = new HashSet<String>();
+                        medias = new HashSet<>();
                         for( org.netbeans.modules.websvc.saas.model.wadl.Response 
                                 response :wadlMethod.getResponse())
                         {
@@ -106,7 +106,7 @@ public class WadlSaasMethod extends SaasMethod {
                     Set<String> medias = null;
 
                     if (GET.equals(displayName)) {
-                        medias = new HashSet<String>();
+                        medias = new HashSet<>();
                         for( org.netbeans.modules.websvc.saas.model.wadl.Response 
                                 response :wadlMethod.getResponse())
                         {

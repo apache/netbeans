@@ -135,7 +135,7 @@ class PropertiesStorage implements NbPreferences.FileStorage {
         Statistics.StopWatch sw = Statistics.getStopWatch(Statistics.CHILDREN_NAMES, true);
         try {
             FileObject folder = toFolder();
-            List<String> folderNames = new ArrayList<String>();
+            List<String> folderNames = new ArrayList<>();
             
             if (folder != null) {
                 for (FileObject fo : Collections.list(folder.getFolders(false))) {

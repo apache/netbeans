@@ -86,7 +86,7 @@ public final class AmazonJ2EEServerInstanceProvider implements ServerInstancePro
                 ServerInstance si = ServerInstanceFactory.createServerInstance(new AmazonJ2EEServerInstanceImplementation(inst));
                 InstanceProperties ip = InstanceProperties.getInstanceProperties(inst.getId());
                 if (ip == null) {
-                    Map<String, String> props = new HashMap<String, String>();
+                    Map<String, String> props = new HashMap<>();
                     props.put(AmazonDeploymentFactory.IP_ENVIRONMENT_ID, inst.getEnvironmentId());
                     props.put(AmazonDeploymentFactory.IP_APPLICATION_NAME, inst.getApplicationName());
                     props.put(AmazonDeploymentFactory.IP_KEY_ID, ai.getKeyId());

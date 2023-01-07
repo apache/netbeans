@@ -128,7 +128,7 @@ public class CertificateQuestionPanel extends javax.swing.JPanel {
         boolean inQuote = false;
         boolean inKey = true;
 
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         StringBuilder key = new StringBuilder();
         StringBuilder value = new StringBuilder();
 

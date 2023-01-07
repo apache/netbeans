@@ -94,7 +94,7 @@ public class SessionEJBWizardDescriptor implements WizardDescriptor.FinishablePa
         FileObject targetFolder = (FileObject) wizardDescriptor.getProperty(MultiTargetChooserPanel.TARGET_FOLDER);
         if (targetFolder != null) {
             String targetName = (String) wizardDescriptor.getProperty(MultiTargetChooserPanel.TARGET_NAME);
-            List<String> proposedNames = new ArrayList<String>();
+            List<String> proposedNames = new ArrayList<>();
             proposedNames.add(ejbNames.getSessionEjbClassPrefix() + targetName + ejbNames.getSessionEjbClassSuffix());
             if (isLocal) {
                 proposedNames.add(ejbNames.getSessionLocalPrefix() + targetName + ejbNames.getSessionLocalSuffix());

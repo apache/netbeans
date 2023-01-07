@@ -90,19 +90,19 @@ public class JFXProjectConfigurations {
     private FileObject projectDir;
 
     // list of all properties related to project configurations (excluding application parameter properties that are handled separately)
-    private List<String> PROJECT_PROPERTIES = new ArrayList<String>();
+    private List<String> PROJECT_PROPERTIES = new ArrayList<>();
     // list of those properties that should be stored in private.properties instead of project.properties
-    private List<String> PRIVATE_PROPERTIES = new ArrayList<String>();
+    private List<String> PRIVATE_PROPERTIES = new ArrayList<>();
     // list of properties that, if set, should later not be overriden by changes in default configuration
     // (useful for keeping pre-defined configurations that do not change unexpectedly after changes in default config)
     // Note that the standard behavior is: when setting a default property, the property is checked in all configs
     // and reset if its value in any non-def config is equal to that in default config
-    private List<String> STATIC_PROPERTIES = new ArrayList<String>();
+    private List<String> STATIC_PROPERTIES = new ArrayList<>();
     // defaults if missing - on read, substitute missing property values by those registered here
-    private Map<String, String> DEFAULT_IF_MISSING = new HashMap<String, String>();
+    private Map<String, String> DEFAULT_IF_MISSING = new HashMap<>();
     // on save remove the following props from file if they are empty
-    private List<String> CLEAN_EMPTY_PROJECT_PROPERTIES = new ArrayList<String>();
-    private List<String> CLEAN_EMPTY_PRIVATE_PROPERTIES = new ArrayList<String>();
+    private List<String> CLEAN_EMPTY_PROJECT_PROPERTIES = new ArrayList<>();
+    private List<String> CLEAN_EMPTY_PRIVATE_PROPERTIES = new ArrayList<>();
 
     private Comparator<String> getComparator() {
         return new Comparator<String>() {
@@ -327,7 +327,7 @@ public class JFXProjectConfigurations {
         assert config != null; // erasing default config not allowed
         RUN_CONFIGS.remove(config);
         if(ERASED_CONFIGS == null) {
-            ERASED_CONFIGS = new HashSet<String>();
+            ERASED_CONFIGS = new HashSet<>();
         }
         ERASED_CONFIGS.add(config);
     }
@@ -1387,8 +1387,8 @@ public class JFXProjectConfigurations {
             String value = getDefaultProperty(name);
             updateProperty(name, value, projectProperties, privateProperties, isBoundedToNonemptyProperty(null, name));
         }
-        List<String> paramNamesUsed = new ArrayList<String>();
-        List<String> manifestEntryNamesUsed = new ArrayList<String>();
+        List<String> paramNamesUsed = new ArrayList<>();
+        List<String> manifestEntryNamesUsed = new ArrayList<>();
         appParams.updateDefaultEntryProperties(projectProperties, privateProperties, paramNamesUsed);
         appManifestEntries.updateDefaultEntryProperties(projectProperties, privateProperties, manifestEntryNamesUsed);
         storeDefaultParamsAsCommandLine(privateProperties);
@@ -1543,7 +1543,7 @@ public class JFXProjectConfigurations {
         Map<String, Set<String>> groups = new HashMap<String, Set<String>>();
 
         public void defineGroup(String groupName, Collection<String> props) {
-            Set<String> group = new HashSet<String>();
+            Set<String> group = new HashSet<>();
             group.addAll(props);
             groups.put(groupName, group);
         }
@@ -1577,7 +1577,7 @@ public class JFXProjectConfigurations {
          * @return 
          */
         public Collection<String> getBoundedProperties(String prop) {
-            Set<String> bounded = new HashSet<String>();
+            Set<String> bounded = new HashSet<>();
             for(Map.Entry<String, Set<String>> entry : groups.entrySet()) {
                 Set<String> group = entry.getValue();
                 if(group != null && group.contains(prop)) {
@@ -1974,8 +1974,8 @@ public class JFXProjectConfigurations {
             }
             List<Map<String,String/*|null*/>> union = new ArrayList<Map<String,String>>();
             // create marker set - identify entries to be added from default and current configs
-            Set<String> markerDefault = new HashSet<String>();
-            Set<String> markerConfig = new HashSet<String>();
+            Set<String> markerDefault = new HashSet<>();
+            Set<String> markerConfig = new HashSet<>();
             List<Map<String,String/*|null*/>> defaultEntries = getDefaultEntries();
             if(defaultEntries != null) {
                 for(Map<String,String> map : defaultEntries) {
@@ -2158,7 +2158,7 @@ public class JFXProjectConfigurations {
         }
         
         private Map<String, String> copyEntry(@NonNull Map<String, String> entry) {
-            Map<String, String> newEntry = new HashMap<String, String>();
+            Map<String, String> newEntry = new HashMap<>();
             for(String name : suffixes) {
                 String value = entry.get(name);
                 if(value != null && !value.isEmpty()) {
@@ -2320,7 +2320,7 @@ public class JFXProjectConfigurations {
             assert !configNameWrong(config);
             if(config == null) {
                 List<Map<String,String>> newDefault = new ArrayList<Map<String, String>>();
-                Set<String> toClean = new HashSet<String>();
+                Set<String> toClean = new HashSet<>();
                 if(APP_MULTIPROPS.get(null) != null) {
                     for(Map<String,String> entry : APP_MULTIPROPS.get(null)) {
                         if(isEntryHidden(entry)) {
@@ -2833,7 +2833,7 @@ public class JFXProjectConfigurations {
         public String toString() {
             StringBuilder sb = new StringBuilder(MULTI_PROPERTY_STRING); // getClass().getName()); // NOI18N
             sb.append(":"); // NOI18N
-            List<String> keys = new ArrayList<String>();
+            List<String> keys = new ArrayList<>();
             keys.addAll(APP_MULTIPROPS.keySet());
             Collections.sort(keys, new Comparator<String>() {
                 @Override

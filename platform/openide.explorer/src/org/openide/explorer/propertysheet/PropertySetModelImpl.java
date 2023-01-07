@@ -56,7 +56,7 @@ class PropertySetModelImpl implements PropertySetModel, Runnable {
     /** Retains the persistent list of sets the user has explicitly
      *  closed, so they remain closed for other similar nodes
      */
-    static Set<String> closedSets = new HashSet<String>(5);
+    static Set<String> closedSets = new HashSet<>(5);
 
     static {
         closedSets.addAll(Arrays.asList(PropUtils.getSavedClosedSetNames()));

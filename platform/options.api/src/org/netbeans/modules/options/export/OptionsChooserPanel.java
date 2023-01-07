@@ -211,7 +211,7 @@ public final class OptionsChooserPanel extends JPanel {
                 public void run() {
                     // to avoid false possitives during import, find the items that are explicitly selected by the user for export
                     Enumeration dfs = ((DefaultMutableTreeNode) treeModel.getRoot()).depthFirstEnumeration();
-                    ArrayList<String> enabledItems = new ArrayList<String>();
+                    ArrayList<String> enabledItems = new ArrayList<>();
                     while (dfs.hasMoreElements()) {
                         Object userObject = ((DefaultMutableTreeNode) dfs.nextElement()).getUserObject();
                         if (userObject instanceof OptionsExportModel.Category) {
@@ -407,7 +407,7 @@ public final class OptionsChooserPanel extends JPanel {
         LOGGER.fine("getOptionsTreeModel - " + getOptionsExportModel());  //NOI18N
         String allLabel = NbBundle.getMessage(OptionsChooserPanel.class, "OptionsChooserPanel.outline.all");
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(allLabel);
-        ArrayList<String> enabledItems = new ArrayList<String>();
+        ArrayList<String> enabledItems = new ArrayList<>();
         double buildNumberDuringExport = 0;
         double currentBuildNumber;
         String nbBuildNumber = System.getProperty("netbeans.buildnumber"); // NOI18N

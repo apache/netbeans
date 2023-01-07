@@ -51,7 +51,7 @@ public final class ValidatingPropertyChangeListener implements PropertyChangeLis
         statusLine = notifyDescriptor.createNotificationLineSupport();
         this.checkInterfaces = panel.supportsInterfacesChecking();
         this.existingMethods = existingMethods;
-        this.existingMethodsNames = new HashSet<String>();
+        this.existingMethodsNames = new HashSet<>();
         for (MethodModel methodModel : existingMethods) {
             existingMethodsNames.add(methodModel.getName());
         }

@@ -75,7 +75,7 @@ public class ServiceProviderProcessorTest extends NbTestCase {
         // #181095: order in file should also be fixed, for benefit of ServiceLoader.
         BufferedReader r = new BufferedReader(new InputStreamReader(ServiceProviderProcessorTest.class.getResourceAsStream(
                 "/META-INF/services/" + OrderedInterface.class.getName())));
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         String line;
         while ((line = r.readLine()) != null) {
             lines.add(line);

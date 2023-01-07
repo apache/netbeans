@@ -748,7 +748,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
         
         /** did we warned about the size of the file?
          */
-        private static transient Set<FileObject> warnedFiles = new HashSet<FileObject>();
+        private static transient Set<FileObject> warnedFiles = new HashSet<>();
 
         private static transient boolean sentBigFileInfo;
 

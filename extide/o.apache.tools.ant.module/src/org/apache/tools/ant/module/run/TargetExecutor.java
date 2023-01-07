@@ -93,7 +93,7 @@ public final class TargetExecutor implements Runnable {
     /**
      * Display names of currently active processes.
      */
-    private static final Set<String> activeDisplayNames = new HashSet<String>();
+    private static final Set<String> activeDisplayNames = new HashSet<>();
     
     private AntProjectCookie pcookie;
     private InputOutput io;
@@ -128,7 +128,7 @@ public final class TargetExecutor implements Runnable {
 
     public void setConcealedProperties(@NonNull final Set<? extends String> concealedProperties) {
         Parameters.notNull("concealedProperties", concealedProperties); //NOI18N
-        this.concealedProperties = Collections.unmodifiableSet(new HashSet<String>(concealedProperties));
+        this.concealedProperties = Collections.unmodifiableSet(new HashSet<>(concealedProperties));
     }
 
     public void setSaveAllDocuments(boolean shouldSaveAllDocs) {

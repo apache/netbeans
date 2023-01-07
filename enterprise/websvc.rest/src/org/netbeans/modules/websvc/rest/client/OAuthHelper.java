@@ -176,7 +176,7 @@ public class OAuthHelper {
             // getAccessToken method
             ExpressionTree accessTokenReturnTree = getResponseType(copy, oauthAccessTokenMethod);
 
-            List<VariableTree> paramList = new ArrayList<VariableTree>();
+            List<VariableTree> paramList = new ArrayList<>();
             VariableTree paramTree = maker.Variable(paramModifier, "requestTokenResponse", requestTokenReturnTree, null); //NOI18N
             paramList.add(paramTree);
             if (oauthAccessTokenMethod.isVerifier()) {
@@ -247,7 +247,7 @@ public class OAuthHelper {
 
             // getRequestToken method
             ExpressionTree requestTokenReturnTree = getResponseType(copy, oauthRequestTokenMethod);
-            List<VariableTree> paramList = new ArrayList<VariableTree>();
+            List<VariableTree> paramList = new ArrayList<>();
             MethodTree methodTree = maker.Method (
                 privateStaticModif,
                 "getOAuthRequestToken", //NOI18N
@@ -282,7 +282,7 @@ public class OAuthHelper {
             modifiedClass = maker.addClassMember(modifiedClass, methodTree);
 
             // initOAuth method
-            paramList = new ArrayList<VariableTree>();
+            paramList = new ArrayList<>();
             typeTree = JavaSourceHelper.createTypeTree(copy, "javax.servlet.http.HttpServletRequest"); //NOI18N
             paramTree = maker.Variable(paramModifier, "request", typeTree, null); //NOI18N
             paramList.add(paramTree);
@@ -383,7 +383,7 @@ public class OAuthHelper {
             // getOAuthAccessToken method
             ExpressionTree accessTokenReturnTree = getResponseType(copy, oauthRequestTokenMethod);
 
-            List<VariableTree> paramList = new ArrayList<VariableTree>();
+            List<VariableTree> paramList = new ArrayList<>();
             VariableTree paramTree = maker.Variable(paramModifier, "requestTokenResponse", requestTokenReturnTree, null); //NOI18N
             paramList.add(paramTree);
             if (oauthAccessTokenMethod.isVerifier()) {
@@ -451,7 +451,7 @@ public class OAuthHelper {
 
             String format = oauthRequestTokenMethod.getResponseStyle();
 
-            List<VariableTree> paramList = new ArrayList<VariableTree>();
+            List<VariableTree> paramList = new ArrayList<>();
             VariableTree paramTree = maker.Variable(paramModifier, "response", stringType, null); //NOI18N
             paramList.add(paramTree);
             String paramName = ("JSON".equals(format) ? "jsonPath" : "xPath"); //NOI18N
@@ -990,7 +990,7 @@ public class OAuthHelper {
         ModifiersTree paramModifier =  maker.Modifiers(Collections.<Modifier>emptySet());
 
         // params
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         ExpressionTree typeTree = JavaSourceHelper.createTypeTree(copy, "javax.servlet.http.HttpServletRequest"); //NOI18N
         VariableTree paramTree = maker.Variable(paramModifier, "request", typeTree, null); //NOI18N
         paramList.add(paramTree);

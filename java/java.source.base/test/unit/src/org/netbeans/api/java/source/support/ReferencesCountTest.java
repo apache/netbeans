@@ -133,7 +133,7 @@ public class ReferencesCountTest extends NbTestCase {
             }
         };
         final Iterable<? extends ElementHandle<? extends TypeElement>> types = rc.getUsedTypes();
-        final Set<String> usedTypes = new HashSet<String>();
+        final Set<String> usedTypes = new HashSet<>();
         for (ElementHandle<? extends TypeElement> type : types) {
             usedTypes.add(type.getBinaryName());
         }
@@ -165,7 +165,7 @@ public class ReferencesCountTest extends NbTestCase {
             }
         };
         final Iterable<? extends ElementHandle<? extends PackageElement>> packages = rc.getUsedPackages();
-        final Set<String> usedPackages = new HashSet<String>();
+        final Set<String> usedPackages = new HashSet<>();
         for (ElementHandle<? extends PackageElement> pkg : packages) {
             usedPackages.add(SourceUtils.getJVMSignature(pkg)[0]);
         }
@@ -314,7 +314,7 @@ public class ReferencesCountTest extends NbTestCase {
         @Override
         public Set<String> getBinaryLibraryPathIds() {
             return Collections.unmodifiableSet(
-                    new HashSet<String>(Arrays.asList(ClassPath.BOOT, ClassPath.COMPILE)));
+                    new HashSet<>(Arrays.asList(ClassPath.BOOT, ClassPath.COMPILE)));
         }
 
         @Override

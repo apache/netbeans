@@ -97,7 +97,7 @@ public class ConvertToVarHintTest {
                         + "import java.util.HashMap;\n"
                         + "public class Test {\n"
                         + "    {\n"
-                        + "        final var map = new HashMap<String,String>();\n"
+                        + "        final var map = new HashMap<>();\n"
                         + "    }\n"
                         + "}\n");
     }
@@ -455,7 +455,7 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "    static Object m1()\n"
                         + "    {\n"
-                        + "        return new ArrayList<String>();\n"
+                        + "        return new ArrayList<>();\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
@@ -471,7 +471,7 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "    static Object m1()\n"
                         + "    {\n"
-                        + "        return new ArrayList<String>();\n"
+                        + "        return new ArrayList<>();\n"
                         + "    }\n"
                         + "}");
     }
@@ -488,7 +488,7 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "    static Object m1()\n"
                         + "    {\n"
-                        + "        return new ArrayList<String>();\n"
+                        + "        return new ArrayList<>();\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
@@ -504,7 +504,7 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "    static Object m1()\n"
                         + "    {\n"
-                        + "        return new ArrayList<String>();\n"
+                        + "        return new ArrayList<>();\n"
                         + "    }\n"
                         + "}");
     }
@@ -576,7 +576,7 @@ public class ConvertToVarHintTest {
                         + "import java.util.HashMap;\n"
                         + "public class Test {\n"
                         + "    void m1() {\n"
-                        + "        var list = new HashMap<String, String>();\n"
+                        + "        var list = new HashMap<>();\n"
                         + "    }\n"
                         + "}");
     } 

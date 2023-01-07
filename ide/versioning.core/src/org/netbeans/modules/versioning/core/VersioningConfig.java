@@ -131,7 +131,7 @@ public class VersioningConfig {
         synchronized (allDisconnectedRepositories) {
             Set<String> disconnectedRepos = allDisconnectedRepositories.get(className);
             if (disconnectedRepos == null) {
-                disconnectedRepos = new HashSet<String>();
+                disconnectedRepos = new HashSet<>();
                 allDisconnectedRepositories.put(className, disconnectedRepos);
             }
             boolean added = disconnectedRepos.add(path);
@@ -165,7 +165,7 @@ public class VersioningConfig {
             if (disconnectedFolder.length == 2) {
                 Set<String> files = disconnectedFolders.get(disconnectedFolder[0]);
                 if (files == null) {
-                    files = new HashSet<String>();
+                    files = new HashSet<>();
                     disconnectedFolders.put(disconnectedFolder[0], files);
                 }
                 files.add(disconnectedFolder[1]);

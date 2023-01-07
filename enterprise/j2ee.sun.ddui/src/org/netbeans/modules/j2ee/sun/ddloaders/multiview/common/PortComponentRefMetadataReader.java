@@ -117,9 +117,9 @@ public class PortComponentRefMetadataReader extends CommonBeanReader {
                 String sei = portComponentRef.getServiceEndpointInterface();
                 if(Utils.notEmpty(sei)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> portComponentRefMap = new HashMap<String, Object>();
+                    Map<String, Object> portComponentRefMap = new HashMap<>();
                     result.put(sei, portComponentRefMap);
                     portComponentRefMap.put(DDBinding.PROP_SEI, sei);
                     portComponentRefMap.put(DDBinding.PROP_NAME, sei); // Also save as name for binding purposes.

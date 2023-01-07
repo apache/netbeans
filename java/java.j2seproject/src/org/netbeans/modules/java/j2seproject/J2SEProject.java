@@ -244,7 +244,7 @@ public final class J2SEProject implements Project {
         
     private static final PropertyProvider UPDATE_PROPERTIES;
     static {
-        Map<String, String> defs = new HashMap<String, String>();
+        Map<String, String> defs = new HashMap<>();
 
         defs.put(ProjectProperties.ANNOTATION_PROCESSING_ENABLED, "true"); //NOI18N
         defs.put(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR, "false"); //NOI18N

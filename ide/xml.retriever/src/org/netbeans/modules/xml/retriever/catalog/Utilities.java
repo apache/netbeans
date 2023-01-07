@@ -228,7 +228,7 @@ public class Utilities {
     }
         
     public static List<FileObject> getFilesOfNSInProj(Project prj, DocumentTypesEnum docType, String nameSpace, List<String> sourceGroupTypeList){
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         Map<FileObject, String> fobj2nsMap = getFiles2NSMappingInProj(prj, docType, sourceGroupTypeList);
         Set<FileObject> fileList = fobj2nsMap.keySet();
         for(FileObject fobj: fileList){
@@ -256,7 +256,7 @@ public class Utilities {
     }
     
     private static List<FileObject> getAllSourceRoots(Project prj, List<String> sourceGroupTypeList){
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         for(String type: sourceGroupTypeList){
             SourceGroup[] srcGrps = ProjectUtils.getSources(prj).getSourceGroups(type);
             if(srcGrps != null){
@@ -312,7 +312,7 @@ public class Utilities {
             return curList;
         }
         if(curList == null)
-            curList = new ArrayList<File>();
+            curList = new ArrayList<>();
         if(startFile.isFile()){
             int index = startFile.getName().lastIndexOf(".");
             if(index != -1){
@@ -340,7 +340,7 @@ public class Utilities {
     }
     
     public static List<String> runXPathQuery(File parsedFile, String xpathExpr) throws Exception{
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(getNamespaceContext());
         
@@ -355,8 +355,8 @@ public class Utilities {
         return result;
     }
     
-    private static Map<String, String> namespaces = new HashMap<String,String>();
-    private static Map<String, String> prefixes = new HashMap<String,String>();
+    private static Map<String, String> namespaces = new HashMap<>();
+    private static Map<String, String> prefixes = new HashMap<>();
     
     private static NamespaceContext getNamespaceContext() {
         //schema related
@@ -724,7 +724,7 @@ public class Utilities {
         
         public HashNamespaceResolver(Map<String,String> nsTable) {
             namespaces = nsTable;
-            prefixes = new HashMap<String,String>();
+            prefixes = new HashMap<>();
             for (Entry<String,String> e : namespaces.entrySet()) {
                 prefixes.put(e.getValue(), e.getKey());
             }

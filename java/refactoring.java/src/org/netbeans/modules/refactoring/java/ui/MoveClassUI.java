@@ -240,7 +240,7 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
             if (files != null && (files.length > 1 ||
                     (files.length == 1 && files[0].isFolder()) ||
                     (files.length == 1 && "package-info".equals(files[0].getName())))) {
-                Set<FileObject> s = new HashSet<FileObject>();
+                Set<FileObject> s = new HashSet<>();
                 s.addAll(Arrays.asList(files));
                 return new MoveClassesUI(s, tar, paste);
             }

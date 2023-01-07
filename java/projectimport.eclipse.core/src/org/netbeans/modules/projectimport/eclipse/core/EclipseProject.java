@@ -75,7 +75,7 @@ public final class EclipseProject implements Comparable {
     private final File prjFile;
     private String jdkDirectory;
     
-    private List<String> importProblems = new ArrayList<String>();
+    private List<String> importProblems = new ArrayList<>();
     
     private Facets projectFacets;
     

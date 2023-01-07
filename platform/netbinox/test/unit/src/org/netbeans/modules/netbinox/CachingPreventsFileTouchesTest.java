@@ -56,7 +56,7 @@ public class CachingPreventsFileTouchesTest extends NbTestCase {
     }
 
     private static void initCheckReadAccess() throws IOException {
-        Set<String> allowedFiles = new HashSet<String>();
+        Set<String> allowedFiles = new HashSet<>();
         CountingSecurityManager.initialize(null, CountingSecurityManager.Mode.CHECK_READ, allowedFiles);
     }
     

@@ -57,15 +57,15 @@ public final class ImportProcessor extends FxNodeVisitor.ModelTraversal {
     /**
      * Explicitly imported names. This list has precedence over star imports.
      */
-    private Map<String, String>     importedNames = new HashMap<String, String>();
+    private Map<String, String>     importedNames = new HashMap<>();
     
     /**
      * For each name introduced by * import, lists one or more package names.
      * The Object value contains String|Set&lt;String>.
      */
-    private Map<String, Object>    packageNames = new HashMap<String, Object>();
+    private Map<String, Object>    packageNames = new HashMap<>();
     
-    private Set<String>            allPackages = new HashSet<String>();
+    private Set<String>            allPackages = new HashSet<>();
     
     /**
      * CompilationInfo used during computation.
@@ -132,7 +132,7 @@ public final class ImportProcessor extends FxNodeVisitor.ModelTraversal {
             }
         }
         
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (String prefix : resolved) {
             String joined = prefix + anyName.substring(dot);
             
@@ -167,7 +167,7 @@ public final class ImportProcessor extends FxNodeVisitor.ModelTraversal {
             return null;
         }
         Set<String> packs = (Set<String>)o;
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (String pn : packs) {
             result.add(pn + "." + simpleName);
         }
@@ -229,7 +229,7 @@ public final class ImportProcessor extends FxNodeVisitor.ModelTraversal {
             packageNames.put(sn, pack);
             return;
         } else if (o instanceof String) {
-            packs = new HashSet<String>();
+            packs = new HashSet<>();
             packs.add((String)o);
             packageNames.put(sn, packs);
         } else if (o instanceof Collection) {

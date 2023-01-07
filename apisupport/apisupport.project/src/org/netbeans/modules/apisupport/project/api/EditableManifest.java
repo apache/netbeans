@@ -116,7 +116,7 @@ public final class EditableManifest {
             }
         }
         mainSection = _mainSection;
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         for (Section s : sections) {
             if (!names.add(s.name)) {
                 throw new IOException("Duplicated section names: " + s.name); // NOI18N
@@ -188,7 +188,7 @@ public final class EditableManifest {
      * @return a list of section names
      */
     public Set<String> getSectionNames() {
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         for (Section s : sections) {
             names.add(s.name);
         }
@@ -345,7 +345,7 @@ public final class EditableManifest {
                     throw new IOException("Cannot have a blank section name"); // NOI18N
                 }
             }
-            Set<String> attrNames = new HashSet<String>();
+            Set<String> attrNames = new HashSet<>();
             Iterator<Line> it = lines.iterator();
             if (!main) {
                 it.next();
@@ -444,7 +444,7 @@ public final class EditableManifest {
         }
         
         public Set<String> getAttributeNames() {
-            Set<String> attrNames = new HashSet<String>();
+            Set<String> attrNames = new HashSet<>();
             Iterator<Line> it = lines.iterator();
             if (name != null) {
                 it.next();

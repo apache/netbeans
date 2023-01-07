@@ -56,7 +56,7 @@ public class SourceJavadocByHash {
             return null;
         }
         String[] split = StringUtils.split(v, "||");
-        List<File> toRet = new ArrayList<File>();
+        List<File> toRet = new ArrayList<>();
         for (String vv : split) {
             File f = FileUtilities.convertStringToFile(vv);
             if (f.isFile()) {

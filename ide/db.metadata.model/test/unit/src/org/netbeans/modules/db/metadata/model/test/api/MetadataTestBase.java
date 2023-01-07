@@ -37,7 +37,7 @@ public class MetadataTestBase extends NbTestCase {
     }
 
     public static <T extends MetadataElement> void assertNames(Set<String> names, Collection<T> elements) {
-        Set<String> computedNames = new HashSet<String>();
+        Set<String> computedNames = new HashSet<>();
         for (MetadataElement element : elements) {
             computedNames.add(element.getName());
         }

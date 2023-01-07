@@ -124,7 +124,7 @@ public final class ListViewWithUpTest extends NbTestCase {
 
         @Override
         protected void addNotify() {
-            List<Integer> arr = new ArrayList<Integer>();
+            List<Integer> arr = new ArrayList<>();
             for (int i = 0; i < 20; i++) {
                 arr.add(i);
             }

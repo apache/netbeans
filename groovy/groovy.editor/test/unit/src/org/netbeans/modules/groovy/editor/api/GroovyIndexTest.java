@@ -84,7 +84,7 @@ public class GroovyIndexTest extends GroovyTestBase {
     }
 
     private List<FileObject> createSourceClassPathsForTest() {
-        List<FileObject> list = new ArrayList<FileObject>();
+        List<FileObject> list = new ArrayList<>();
 
         File folder = new File(getDataDir(), getTestFolderPath());
         list.add(FileUtil.toFileObject(folder));

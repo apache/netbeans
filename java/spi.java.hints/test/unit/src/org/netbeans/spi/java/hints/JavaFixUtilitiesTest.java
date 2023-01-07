@@ -1371,7 +1371,7 @@ public class JavaFixUtilitiesTest extends TestBase {
         assertEquals(2, split.length);
         Map<String, TypeMirror> variablesToTypesTM = new HashMap<String, TypeMirror>();
         String plainRule = PatternCompilerUtilities.parseOutTypesFromPattern(info, split[0], variablesToTypesTM);
-        Map<String, String> variablesToTypes = new HashMap<String, String>();
+        Map<String, String> variablesToTypes = new HashMap<>();
         for (Entry<String, TypeMirror> e : variablesToTypesTM.entrySet()) {
             if (e.getValue() == null) continue;
             variablesToTypes.put(e.getKey(), e.getValue().toString());

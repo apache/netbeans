@@ -418,8 +418,8 @@ class BaseJspEditorSupport extends DataEditorSupport implements EditCookie, Edit
         writeByteOrderMark(charset, stream);
         super.saveFromKitToStream(doc, kit, stream);
     }
-    private static final Set<String> UTF_16_CHARSETS = new HashSet<String>();
-    private static final Set<String> UTF_32_CHARSETS = new HashSet<String>();
+    private static final Set<String> UTF_16_CHARSETS = new HashSet<>();
+    private static final Set<String> UTF_32_CHARSETS = new HashSet<>();
 
     static {
         Collections.addAll(UTF_16_CHARSETS, "UTF-16", "UTF-16LE", "UTF-16BE");

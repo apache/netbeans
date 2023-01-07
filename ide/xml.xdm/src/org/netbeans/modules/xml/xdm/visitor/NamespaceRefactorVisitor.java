@@ -45,7 +45,7 @@ public class NamespaceRefactorVisitor extends ChildVisitor {
     
     // keep track of prefixes used by attributes so we avoid removing 
     // their declaration when the new prefix is default prefix.
-    private Set<String> prefixesUsedByAttributesForDefaultNS = new HashSet<String>();
+    private Set<String> prefixesUsedByAttributesForDefaultNS = new HashSet<>();
     
     private XDMModel model;
     
@@ -194,7 +194,7 @@ public class NamespaceRefactorVisitor extends ChildVisitor {
     public static List<String> refactorAttributeValue(Attribute attr, 
             String namespace, String prefix, List<Node> context, XDMModel model) 
     {
-        ArrayList<String> prefixesUsedForDefaultNS = new ArrayList<String>();
+        ArrayList<String> prefixesUsedForDefaultNS = new ArrayList<>();
         String value = attr.getValue();
         StringBuilder newValue = null;
         Matcher m = p.matcher(value);

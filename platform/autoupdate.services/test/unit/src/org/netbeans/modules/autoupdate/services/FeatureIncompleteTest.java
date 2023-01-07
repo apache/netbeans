@@ -118,7 +118,7 @@ public class FeatureIncompleteTest extends NbTestCase {
 
             Map<String, UpdateItem> res = new HashMap<String, UpdateItem> (); //InstalledModuleProvider.getDefault().getUpdateItems();
 
-            Set<String> deps = new HashSet<String>(items.size());
+            Set<String> deps = new HashSet<>(items.size());
             for (UpdateItem item : items.values()) {
                 String dep;
                 assertNotNull("Impl of " + item + " available", Trampoline.SPI.impl(item));

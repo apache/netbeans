@@ -104,7 +104,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
     
     // global keyboard shortcut
     private boolean kbShortcutEnabled;
-    private final Set<String> keyStrokes = new HashSet<String>();
+    private final Set<String> keyStrokes = new HashSet<>();
     
     // file type context menu item
     private boolean ftContextEnabled;
@@ -336,7 +336,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
                 if (!actionContext) {
                     cmf.add(cmf.createLayerEntry(instanceFullPath, null, null, null, null));
                 } else {
-                    Map<String, Object> attrs = new HashMap<String, Object>();
+                    Map<String, Object> attrs = new HashMap<>();
                     attrs.put("instanceCreate", "methodvalue:org.openide.awt.Actions.context"); // NOI18N
                     attrs.put("delegate", "methodvalue:org.openide.awt.Actions.inject"); // NOI18N
                     attrs.put("injectable", getPackageName() + '.' + className); // NOI18N

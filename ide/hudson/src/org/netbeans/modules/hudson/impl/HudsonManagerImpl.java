@@ -198,7 +198,7 @@ public class HudsonManagerImpl {
                     try {
                         for (String kid : instancePrefs().childrenNames()) {
                             Preferences node = instancePrefs().node(kid);
-                            Map<String, String> m = new HashMap<String, String>();
+                            Map<String, String> m = new HashMap<>();
                             for (String k : node.keys()) {
                                 m.put(k, node.get(k, null));
                             }

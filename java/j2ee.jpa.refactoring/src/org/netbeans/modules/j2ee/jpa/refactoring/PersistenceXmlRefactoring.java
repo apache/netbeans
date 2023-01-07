@@ -105,7 +105,7 @@ public abstract class PersistenceXmlRefactoring extends JavaRefactoringPlugin {
         // move class and safe delete refactorings may be invoked on multiple files
         Collection<? extends FileObject> fosFromLookup = getRefactoring().getRefactoringSource().lookupAll(FileObject.class);
         if (!fosFromLookup.isEmpty()){
-            List<FileObject> result = new ArrayList<FileObject>();
+            List<FileObject> result = new ArrayList<>();
             for (FileObject each : fosFromLookup){
                 if (each.isFolder()){
                     collectChildren(each, result);
@@ -320,7 +320,7 @@ public abstract class PersistenceXmlRefactoring extends JavaRefactoringPlugin {
             return Collections.<FileObject>emptyList();
         }
         
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         
         PersistenceScope[] persistenceScopes = PersistenceUtils.getPersistenceScopes(project);
         for (int i = 0; i < persistenceScopes.length; i++) {

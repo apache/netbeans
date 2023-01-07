@@ -154,7 +154,7 @@ public class CreateLibraryAction extends AbstractAction implements LookupListene
             List<URI> classpathVolume = new ArrayList<URI>();
             List<URI> javadocVolume = new ArrayList<URI>();
             List<URI> sourceVolume = new ArrayList<URI>();
-            Map<String, String> properties = new HashMap<String, String>();
+            Map<String, String> properties = new HashMap<>();
             Map<String, List<URI>> volumes = new HashMap<String, List<URI>>();
             File baseFolder = null;
             File nonDefaultLibBase = null;

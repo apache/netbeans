@@ -129,7 +129,7 @@ public final class MacrosStorage implements StorageDescription<String, MacroDesc
     private static final class Reader extends MacrosReader {
 
         private Map<String, MacroDescription> macrosMap = new HashMap<String, MacroDescription>();
-        private Set<String> removedMacros = new HashSet<String>();
+        private Set<String> removedMacros = new HashSet<>();
         
         // The macro being processed
         private String name = null;
@@ -280,7 +280,7 @@ public final class MacrosStorage implements StorageDescription<String, MacroDesc
         private static final String AL_REMOVE = "remove"; //NOI18N
         
         private Map<String, MacroDescription> macrosMap = new HashMap<String, MacroDescription>();
-        private Set<String> removedMacros = new HashSet<String>();
+        private Set<String> removedMacros = new HashSet<>();
         
         // The macro being processed
         private String name = null;

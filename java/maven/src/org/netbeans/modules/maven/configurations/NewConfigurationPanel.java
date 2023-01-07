@@ -75,7 +75,7 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
     static List<String> split(String profiles) {
         String val = profiles;
         String[] splitted = val.split("[ ,]"); //NOI18N
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         for (String s : splitted) {
             if (s.trim().length() > 0) {
                 toRet.add(s.trim());

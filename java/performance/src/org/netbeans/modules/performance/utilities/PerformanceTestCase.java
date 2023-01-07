@@ -254,7 +254,7 @@ public abstract class PerformanceTestCase extends PerformanceTestCase2 implement
      */
     public PerformanceTestCase(String testName) {
         super(testName);
-        renamedTestCaseName = new HashMap<String, String>();
+        renamedTestCaseName = new HashMap<>();
     }
 
     /**

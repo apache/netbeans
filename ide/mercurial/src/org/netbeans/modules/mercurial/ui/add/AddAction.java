@@ -115,7 +115,7 @@ public class AddAction extends ContextAction {
                                 for (File file : files) {
                                     logger.output(file.getAbsolutePath());
                                 }
-                                Mercurial.getInstance().getFileStatusCache().refreshAllRoots(Collections.<File, Set<File>>singletonMap(root, new HashSet<File>(files)));
+                                Mercurial.getInstance().getFileStatusCache().refreshAllRoots(Collections.<File, Set<File>>singletonMap(root, new HashSet<>(files)));
                             } catch (HgException.HgCommandCanceledException ex) {
                                 // canceled by user, do nothing
                             } catch (HgException ex) {

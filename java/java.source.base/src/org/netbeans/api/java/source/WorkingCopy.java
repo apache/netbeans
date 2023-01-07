@@ -150,7 +150,7 @@ public class WorkingCopy extends CompilationController {
         tree2Tag = new IdentityHashMap<Tree, Object>();
         externalChanges = null;
         textualChanges = new ArrayList<Diff>();
-        userInfo = new HashMap<Integer, String>();
+        userInfo = new HashMap<>();
         introducedTrees = new IdentityHashMap<Tree, Boolean>();
 
         //#208490: force the current ElementOverlay:
@@ -575,7 +575,7 @@ public class WorkingCopy extends CompilationController {
         final Map<Tree, DocCommentTree> tree2Doc = new IdentityHashMap<Tree, DocCommentTree>();
         boolean fillImports = true;
         
-        final Map<Integer, String> userInfo = new HashMap<Integer, String>();
+        final Map<Integer, String> userInfo = new HashMap<>();
         final Set<Tree> oldTrees = new HashSet<Tree>();
 
         final Map<Tree, Boolean> presentInResult = new IdentityHashMap<Tree, Boolean>();

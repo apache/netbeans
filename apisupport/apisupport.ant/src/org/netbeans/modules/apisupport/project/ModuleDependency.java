@@ -208,7 +208,7 @@ public final class ModuleDependency implements Comparable<ModuleDependency> {
         boolean friend = me.isDeclaredAsFriend(dependingModuleCNB);
         Set<String> filterTokens = friend ? filterTokensFriend : filterTokensNotFriend;
         if (filterTokens == null) {
-            filterTokens = new HashSet<String>();
+            filterTokens = new HashSet<>();
             filterTokens.add(me.getCodeNameBase());
             filterTokens.add(me.getLocalizedName());
             filterTokens.add(me.getJarLocation().getAbsolutePath());

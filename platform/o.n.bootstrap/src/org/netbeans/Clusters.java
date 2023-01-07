@@ -60,7 +60,7 @@ final class Clusters implements Stamps.Updater {
 
     static synchronized String[] dirs() {
         if (dirs == null) {
-            List<String> tmp = new ArrayList<String>();
+            List<String> tmp = new ArrayList<>();
             String nbdirs = System.getProperty("netbeans.dirs");
             if (nbdirs != null) {
                 StringTokenizer tok = new StringTokenizer(nbdirs, File.pathSeparator);

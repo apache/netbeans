@@ -92,7 +92,7 @@ public class JaxWsStack implements WSStackImplementation<JaxWs> {
     }
 
 //    public Set<String> getSupportedTools() {
-//        Set<String> supportedTools = new HashSet<String>();
+//        Set<String> supportedTools = new HashSet<>();
 //        if (isWsit()) {
 //            supportedTools.add(WSStack.TOOL_WSGEN);
 //            supportedTools.add(WSStack.TOOL_WSIMPORT);

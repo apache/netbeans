@@ -155,7 +155,7 @@ public class RestClientPhpCodeGenerator extends AbstractRestCodeGenerator {
 
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Collections.<FileObject>emptySet());
+        return new HashSet<>(Collections.<FileObject>emptySet());
     }
     
     @Override
@@ -270,7 +270,7 @@ public class RestClientPhpCodeGenerator extends AbstractRestCodeGenerator {
     }
 
     protected void addImportsToTargetFile() throws IOException {
-        List<String> imports = new ArrayList<String>();
+        List<String> imports = new ArrayList<>();
         imports.add(getBean().getSaasServicePackageName() + "->" + getBean().getSaasServiceName());
         imports.add(REST_CONNECTION_PACKAGE + "->" + REST_RESPONSE);
         addImportsToPhp(getTargetFile(), imports);

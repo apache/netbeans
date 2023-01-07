@@ -64,7 +64,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     private boolean		listen = false;
     private String              currentScheme;
     private Map<String, List<AttributeSet>> schemes = new HashMap<String, List<AttributeSet>>();
-    private Set<String> toBeSaved = new HashSet<String>();
+    private Set<String> toBeSaved = new HashSet<>();
     private boolean             changed = false;
     
     
@@ -250,7 +250,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     }
     
     public void cancel () {
-        toBeSaved = new HashSet<String>();
+        toBeSaved = new HashSet<>();
         schemes = new HashMap<String, List<AttributeSet>>();
         changed = false;
     }
@@ -260,7 +260,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         for(String scheme : toBeSaved) {
             colorModel.setAnnotations(scheme, getAnnotations(scheme));
         }
-        toBeSaved = new HashSet<String>();
+        toBeSaved = new HashSet<>();
         schemes = new HashMap<String, List<AttributeSet>>();
         changed = false;
     }

@@ -82,7 +82,7 @@ public final class ToolbarActionsProvider extends ActionsList implements Instanc
         }
 
         public LegacyToolbarActionsProvider createInstance(List<FileObject> fileObjectList) {
-            ArrayList<FileObject> textBaseFilesList = new ArrayList<FileObject>();
+            ArrayList<FileObject> textBaseFilesList = new ArrayList<>();
 
             for(Object o : fileObjectList) {
                 FileObject fileObject = null;

@@ -174,7 +174,7 @@ public class InnerClasses extends org.netbeans.test.java.XRunner {
                 EnumSet<Modifier> modifiers = EnumSet.of(Modifier.STATIC,Modifier.PUBLIC);
                 Tree extendsTree = make.QualIdent(workingCopy.getElements().getTypeElement("java.util.List"));
                 List<ExpressionTree> implementsList = Collections.<ExpressionTree> singletonList(make.Identifier("Serializable"));
-                Map<String,String> params = new HashMap<String, String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("param1", "String");
                 MethodTree mt = Common.createMethod(make, "method", params);
                 VariableTree vt = Common.createField(make, "variable", EnumSet.of(Modifier.PROTECTED), "double");

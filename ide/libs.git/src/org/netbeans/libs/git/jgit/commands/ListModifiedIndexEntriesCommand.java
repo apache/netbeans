@@ -57,7 +57,7 @@ public class ListModifiedIndexEntriesCommand extends GitCommand {
         this.roots = roots;
         this.monitor = monitor;
         this.listener = listener;
-        this.files = new HashSet<File>();
+        this.files = new HashSet<>();
     }
 
     @Override

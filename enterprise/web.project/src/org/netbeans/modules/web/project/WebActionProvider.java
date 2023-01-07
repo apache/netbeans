@@ -195,11 +195,11 @@ public class WebActionProvider extends BaseActionProvider {
         commands.put(COMMAND_VERIFY, new String[]{"verify"}); // NOI18N
         commands.put(SingleMethod.COMMAND_RUN_SINGLE_METHOD, new String[] {"test-single-method"}); // NOI18N
         commands.put(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD, new String[] {"debug-single-method"}); // NOI18N
-        this.bkgScanSensitiveActions = new HashSet<String>(Arrays.asList(
+        this.bkgScanSensitiveActions = new HashSet<>(Arrays.asList(
             COMMAND_RUN_SINGLE
         ));
 
-        this.needJavaModelActions = new HashSet<String>(Arrays.asList(
+        this.needJavaModelActions = new HashSet<>(Arrays.asList(
             JavaProjectConstants.COMMAND_DEBUG_FIX
         ));
         setServerExecution(true);
@@ -405,7 +405,7 @@ public class WebActionProvider extends BaseActionProvider {
         if (wscs != null) { //project contains ws reference
             List serviceClients = wscs.getServiceClients();
             //we store all ws client names into hash set for later fast searching
-            HashSet<String> scNames = new HashSet<String>();
+            HashSet<String> scNames = new HashSet<>();
             for (Iterator scIt = serviceClients.iterator(); scIt.hasNext();) {
                 WsCompileClientEditorSupport.ServiceSettings serviceClientSettings =
                         (WsCompileClientEditorSupport.ServiceSettings) scIt.next();
@@ -417,7 +417,7 @@ public class WebActionProvider extends BaseActionProvider {
 
             //we find all projects containg a web service
             Set<FileObject> globalPath = GlobalPathRegistry.getDefault().getSourceRoots();
-            HashSet<String> serverNames = new HashSet<String>();
+            HashSet<String> serverNames = new HashSet<>();
             //iteration through all source roots
             for (FileObject sourceRoot : globalPath) {
                 Project serverProject = FileOwnerQuery.getOwner(sourceRoot);
@@ -783,7 +783,7 @@ public class WebActionProvider extends BaseActionProvider {
             throw new IllegalArgumentException("Not a folder: " + dir); // NOI18N
         }
 
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         for (DataObject d : context.lookupAll(DataObject.class)) {
             FileObject f = d.getPrimaryFile();
             boolean matches = FileUtil.toFile(f) != null;

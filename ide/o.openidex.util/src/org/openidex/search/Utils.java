@@ -76,7 +76,7 @@ public final class Utils {
         if (si instanceof SearchInfo.Files){
             return ((SearchInfo.Files)si).filesToSearch();
         }else{
-            Set<FileObject> set = new HashSet<FileObject>();
+            Set<FileObject> set = new HashSet<>();
             for(Iterator<DataObject> iter = si.objectsToSearch(); iter.hasNext();){
                 set.add(iter.next().getPrimaryFile());
             }

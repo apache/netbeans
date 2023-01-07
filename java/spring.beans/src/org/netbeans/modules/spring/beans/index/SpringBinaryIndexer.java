@@ -113,7 +113,7 @@ public class SpringBinaryIndexer extends ConstrainedBinaryIndexer {
 
     private Collection<FileObject> findSpringLibraryDescriptors(Iterable<? extends FileObject> res, String suffix) {
         assert res != null;
-        Collection<FileObject> files = new ArrayList<FileObject>();
+        Collection<FileObject> files = new ArrayList<>();
         for (FileObject file : res) {
             //XXX Version??? spring 2-5 has some xsd's with non 2.5 version
             String fileName = file.getNameExt().toLowerCase();

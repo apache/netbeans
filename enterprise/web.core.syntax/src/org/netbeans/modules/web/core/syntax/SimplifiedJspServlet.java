@@ -84,8 +84,8 @@ public class SimplifiedJspServlet extends JSPProcessor {
     private CharSequence charSequence;
     private final Snapshot snapshot;
     private final ArrayList<Embedding> codeBlocks = new ArrayList<Embedding>();
-    private List<String> localImportsFound = new ArrayList<String>();
-    private List<String> localBeansFound = new ArrayList<String>();
+    private List<String> localImportsFound = new ArrayList<>();
+    private List<String> localBeansFound = new ArrayList<>();
 
     private List<Embedding> header = new LinkedList<Embedding>();
     private List<Embedding> scriptlets = new LinkedList<Embedding>();

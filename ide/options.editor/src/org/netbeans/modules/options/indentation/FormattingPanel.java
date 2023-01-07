@@ -109,7 +109,7 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
         if (this.selector != null) {
             // Languages combobox model
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            ArrayList<String> mimeTypes = new ArrayList<String>();
+            ArrayList<String> mimeTypes = new ArrayList<>();
             mimeTypes.addAll(selector.getMimeTypes());
             Collections.sort(mimeTypes, LanguagesComparator.INSTANCE);
 

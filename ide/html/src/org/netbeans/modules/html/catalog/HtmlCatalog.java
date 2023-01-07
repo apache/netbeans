@@ -92,7 +92,7 @@ public final class HtmlCatalog implements CatalogReader, CatalogDescriptor2, Ent
 
     @Override
     public Iterator getPublicIDs() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (ReaderProvider each : providers){
                result.addAll(each.getIdentifiers());
         }

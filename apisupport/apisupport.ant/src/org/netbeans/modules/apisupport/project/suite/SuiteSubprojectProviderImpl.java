@@ -81,7 +81,7 @@ final class SuiteSubprojectProviderImpl implements SubprojectProvider {
     }
     
     private Set<NbModuleProject> loadProjects() {
-        Set<NbModuleProject> newProjects = new HashSet<NbModuleProject>();
+        Set<NbModuleProject> newProjects = new HashSet<>();
         String modules = eval.getProperty("modules"); // NOI18N
         if (modules != null) {
             for (String piece : PropertyUtils.tokenizePath(modules)) {

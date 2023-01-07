@@ -169,7 +169,7 @@ public class CustomClientPojoCodeGenerator extends SaasClientCodeGenerator {
         
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Collections.<FileObject>emptyList());
+        return new HashSet<>(Collections.<FileObject>emptyList());
     }
     
     private void setJaxbWrapper() {
@@ -236,7 +236,7 @@ public class CustomClientPojoCodeGenerator extends SaasClientCodeGenerator {
     }
 
     protected void addImportsToTargetFile() throws IOException {
-        List<String> imports = new ArrayList<String>();
+        List<String> imports = new ArrayList<>();
         imports.add(getBean().getSaasServicePackageName() + "." + getBean().getSaasServiceName());
         if(getBean().getAuthenticationType() != SaasAuthenticationType.PLAIN)
             imports.add(getBean().getSaasServicePackageName() + "." + getBean().getAuthenticatorClassName());

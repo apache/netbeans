@@ -140,7 +140,7 @@ public final class ModuleManager extends Modules {
             // to a classpath (list of directories and JARs separated by the normal
             // path separator) you may append to the system class loader.
             System.err.println("System class loader patches: " + patches); // NOI18N
-            classLoaderPatches = new ArrayList<File>();
+            classLoaderPatches = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(patches, File.pathSeparator);
             while (tok.hasMoreTokens()) {
                 classLoaderPatches.add(new File(tok.nextToken()));
@@ -658,7 +658,7 @@ public final class ModuleManager extends Modules {
             return allPermissions;
         }
 
-        private final Set<String> JRE_PROVIDED_FACTORIES = new HashSet<String>(Arrays.asList(
+        private final Set<String> JRE_PROVIDED_FACTORIES = new HashSet<>(Arrays.asList(
                 "META-INF/services/javax.xml.parsers.SAXParserFactory", // NOI18N
                 "META-INF/services/javax.xml.parsers.DocumentBuilderFactory", // NOI18N
                 "META-INF/services/javax.xml.transform.TransformerFactory", // NOI18N
@@ -2407,8 +2407,8 @@ public final class ModuleManager extends Modules {
                 
                 map = new HashMap<String, byte[]>();
                 osgi = new HashMap<String, Boolean>();
-                cnbs = new HashMap<String, String>();
-                frags = new HashMap<String, String>();
+                cnbs = new HashMap<>();
+                frags = new HashMap<>();
                 cnt = dis.readInt();
                 for (;;) {
                     String path = Stamps.readRelativePath(dis).replace(otherChar, File.separatorChar);
@@ -2428,7 +2428,7 @@ public final class ModuleManager extends Modules {
                         frags.put(path, fhost);
                     }
                 }
-                toEn = readCnbs(dis, new HashSet<String>());
+                toEn = readCnbs(dis, new HashSet<>());
                 toWi = readCnbs(dis, new ArrayList<String>());
                 dis.close();
             } catch (IOException ex) {
@@ -2522,7 +2522,7 @@ public final class ModuleManager extends Modules {
         }
 
         final synchronized void registerEnable(Set<Module> modules, List<Module> l) {
-            toEnable = new HashSet<String>();
+            toEnable = new HashSet<>();
             for (Module m : modules) {
                 toEnable.add(m.getCodeNameBase());
             }
@@ -2540,7 +2540,7 @@ public final class ModuleManager extends Modules {
                 modules.size() == toEnable.size() &&
                 moduleCount == getModuleCount()
             ) {
-                Set<String> clone = new HashSet<String>(toEnable);
+                Set<String> clone = new HashSet<>(toEnable);
                 for (Module m : modules) {
                     if (!clone.remove(m.getCodeNameBase())) {
                         return null;

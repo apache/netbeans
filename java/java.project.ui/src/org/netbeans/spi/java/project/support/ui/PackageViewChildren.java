@@ -583,7 +583,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
             boolean doUpdate = false;
             
             // Find all entries which have to be updated
-            List<String> needsUpdate = new ArrayList<String>();
+            List<String> needsUpdate = new ArrayList<>();
             synchronized (names2nodes) {
                 for (Iterator<String> it = names2nodes.keySet().iterator(); it.hasNext(); ) {
                     String p = it.next();

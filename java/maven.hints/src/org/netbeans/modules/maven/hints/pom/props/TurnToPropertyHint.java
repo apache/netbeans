@@ -130,7 +130,7 @@ public class TurnToPropertyHint implements SelectionPOMFixProvider {
     }
 
     private Map<String, String> loadAllProperties(Project prj, POMModel mdl, POMExtensibilityElement el, int position) {
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         NbMavenProject nbprj = prj.getLookup().lookup(NbMavenProject.class);
         if (nbprj != null) {
             MavenProject mp = nbprj.getMavenProject();

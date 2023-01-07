@@ -666,7 +666,7 @@ final class Worker implements Runnable {
                             FileSearchAction.SEARCH_OPTIONS_CASE_SENSITIVE :
                             FileSearchAction.SEARCH_OPTIONS_CASE_INSENSITIVE);
             final List<FileDescriptor> files = new ArrayList<FileDescriptor>();
-            final Collection <FileObject> allFolders = new HashSet<FileObject>();
+            final Collection <FileObject> allFolders = new HashSet<>();
             List<SearchFilter> filters = SearchInfoUtils.DEFAULT_FILTERS;
             for (FileObject root : request.getSourceRoots()) {
                 allFolders.clear();

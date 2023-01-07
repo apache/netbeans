@@ -441,11 +441,11 @@ public class Hk2Cookie {
                         } catch (InterruptedException ie) {
                             Logger.getLogger("glassfish")
                                     .log(Level.INFO, ie.getMessage(), ie);
-                            value = new HashMap<String, String>();
+                            value = new HashMap<>();
                         } catch (ExecutionException ee) {
                             Logger.getLogger("glassfish")
                                     .log(Level.INFO, ee.getMessage(), ee);
-                            value = new HashMap<String, String>();
+                            value = new HashMap<>();
                         }
                         retVal.initializeData(name, value);
                     }

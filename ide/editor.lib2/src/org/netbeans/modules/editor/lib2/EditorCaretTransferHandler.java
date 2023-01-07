@@ -447,7 +447,7 @@ public class EditorCaretTransferHandler extends TransferHandler {
 
     private static List<String> splitByLines(String s) {
         StringTokenizer splitByLines = new StringTokenizer(s, "\n", false);
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         while (splitByLines.hasMoreTokens()) {
             lines.add(splitByLines.nextToken());
         }

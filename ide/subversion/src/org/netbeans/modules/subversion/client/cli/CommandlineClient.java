@@ -409,8 +409,8 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
     public ISVNStatus[] getStatus(File[] files) throws SVNClientException {
 
         Map<File, ISVNStatus> unversionedMap = new HashMap<File, ISVNStatus>();
-        List<File> filesForStatus = new ArrayList<File>();
-        List<File> filesForInfo = new ArrayList<File>();
+        List<File> filesForStatus = new ArrayList<>();
+        List<File> filesForInfo = new ArrayList<>();
         for (File f : files) {
             if(!isManaged(f)) {
                 unversionedMap.put(f, new SVNStatusUnversioned(f));
@@ -490,7 +490,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
             }
         }
 
-        List<File> filesForInfo = new ArrayList<File>();
+        List<File> filesForInfo = new ArrayList<>();
         for (Status status : statusValues) {
             if(isManaged(status.getWcStatus())) {
                 filesForInfo.add(new File(status.getPath()));

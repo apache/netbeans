@@ -380,7 +380,7 @@ public class MergeDialogComponent extends TopComponent implements ChangeListener
             panels = mergeTabbedPane.getComponents();
         }
         boolean warning = false;
-        ArrayList<String> unsavedPanelNames = new ArrayList<String>();
+        ArrayList<String> unsavedPanelNames = new ArrayList<>();
         ArrayList<SaveCookie> saveCookies = new ArrayList<SaveCookie>();
         for (int i = 0; i < panels.length; i++) {
             MergePanel panel = (MergePanel) panels[i];

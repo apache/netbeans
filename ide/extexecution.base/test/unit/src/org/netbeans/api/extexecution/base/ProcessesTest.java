@@ -49,7 +49,7 @@ public class ProcessesTest extends NbTestCase {
 
     public void testKillTree() {
         TestProcess process = new TestProcess();
-        Map<String, String> env = new HashMap<String, String>();
+        Map<String, String> env = new HashMap<>();
         env.put("test1", "value1");
         env.put("test2", "value2");
 
@@ -70,7 +70,7 @@ public class ProcessesTest extends NbTestCase {
 
     public void testAnotherImplementation() {
         TestProcess process = new TestProcess();
-        Map<String, String> env = new HashMap<String, String>();
+        Map<String, String> env = new HashMap<>();
         env.put("test1", "value1");
         env.put("test2", "value2");
 

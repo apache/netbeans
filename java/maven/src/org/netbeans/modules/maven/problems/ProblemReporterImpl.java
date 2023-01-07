@@ -82,7 +82,7 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
     private static final Logger LOG = Logger.getLogger(ProblemReporterImpl.class.getName());
     public static final RequestProcessor RP = new RequestProcessor(ProblemReporterImpl.class);
 
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private final Set<ProblemReport> reports;
     private final Set<File> missingArtifacts;
     private final File projectPOMFile;
@@ -109,7 +109,7 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
     /** Creates a new instance of ProblemReporter */
     public ProblemReporterImpl(NbMavenProjectImpl proj) {
         reports = new TreeSet<ProblemReport>(this);
-        missingArtifacts = new HashSet<File>();
+        missingArtifacts = new HashSet<>();
         nbproject = proj;
         projectPOMFile = nbproject.getPOMFile();
     }

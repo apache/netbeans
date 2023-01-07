@@ -414,7 +414,7 @@ public class Utilities {
         if (! cluster.exists ()) {
             return Collections.emptySet ();
         } else {
-            Collection<File> res = new HashSet<File> ();
+            Collection<File> res = new HashSet<> ();
             if (getInstallLater (cluster).exists ()) {
                 res.add (getInstallLater (cluster));
             }

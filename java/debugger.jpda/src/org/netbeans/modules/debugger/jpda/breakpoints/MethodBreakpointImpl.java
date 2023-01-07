@@ -419,7 +419,7 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
                                             MethodEntryRequestWrapper.addInstanceFilter(entryReq, (ObjectReference) ((JDIVariable) v).getJDIValue());
                                         }
                                     }
-                                    entryMethodNames = new HashSet<String>();
+                                    entryMethodNames = new HashSet<>();
                                     EventRequestWrapper.putProperty(entryReq, "methodNames", entryMethodNames);
                                     EventRequestWrapper.putProperty(entryReq, "ReferenceType", referenceType);
                                 }
@@ -452,7 +452,7 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
                                         MethodExitRequestWrapper.addInstanceFilter(exitReq, (ObjectReference) ((JDIVariable) v).getJDIValue());
                                     }
                                 }
-                                exitMethodNames = new HashSet<String>();
+                                exitMethodNames = new HashSet<>();
                                 EventRequestWrapper.putProperty(exitReq, "methodNames", exitMethodNames);
                                 EventRequestWrapper.putProperty(exitReq, "ReferenceType", referenceType);
                             }

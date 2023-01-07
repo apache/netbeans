@@ -332,14 +332,14 @@ public abstract class AbstractMethodController extends EjbMethodController {
             return null;
         }
         // get bean interfaces
-        List<String> beanInterfaces = new ArrayList<String>();
+        List<String> beanInterfaces = new ArrayList<>();
         try {
             beanInterfaces = getInterfaces(ejbClass);
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }
         // get method interfaces
-        List<String> compInterfaces = new ArrayList<String>();
+        List<String> compInterfaces = new ArrayList<>();
         try {
             compInterfaces = getInterfaces(compInterfaceName);
         } catch (IOException ioe) {
@@ -361,7 +361,7 @@ public abstract class AbstractMethodController extends EjbMethodController {
                 return metadata.findResource(Utils.toResourceName(ejbClass));
             }
         });
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         if (ejbClassFO != null) {
             JavaSource javaSource = JavaSource.forFileObject(ejbClassFO);
             try {
@@ -393,7 +393,7 @@ public abstract class AbstractMethodController extends EjbMethodController {
     }
 
     public final List<String> getBeanSuperclasses() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         result.add(ejbClass);
         FileObject ejbClassFO = null;
         try{

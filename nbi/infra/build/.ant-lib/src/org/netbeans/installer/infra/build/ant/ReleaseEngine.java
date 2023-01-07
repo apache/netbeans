@@ -77,7 +77,7 @@ public class ReleaseEngine extends Task {
      */
     public void execute() throws BuildException {
         try {
-            final Map<String, Object> args = new HashMap<String, Object>();
+            final Map<String, Object> args = new HashMap<>();
             
             args.put("archive", archive); // NOI18N
             

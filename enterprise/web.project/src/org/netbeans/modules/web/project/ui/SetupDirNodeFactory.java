@@ -66,7 +66,7 @@ public final class SetupDirNodeFactory implements NodeFactory {
         }
         
         public List<String> keys() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             if (project.getProjectDirectory().getFileObject("setup") != null) { // NOI18N
                 result.add(SETUP_DIR);
             }

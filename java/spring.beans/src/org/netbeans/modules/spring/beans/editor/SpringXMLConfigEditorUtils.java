@@ -90,7 +90,7 @@ public final class SpringXMLConfigEditorUtils {
             return Collections.<String, String>emptyMap();
         }
 
-        Map<String, String> attribs = new HashMap<String, String>();
+        Map<String, String> attribs = new HashMap<>();
         for(int i = 0; i < namedNodeMap.getLength(); i++) {
             Node attribNode = namedNodeMap.item(i);
             attribs.put(attribNode.getNodeName(), attribNode.getNodeValue());

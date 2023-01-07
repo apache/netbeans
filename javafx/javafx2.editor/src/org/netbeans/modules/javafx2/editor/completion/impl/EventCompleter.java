@@ -73,7 +73,7 @@ public class EventCompleter implements Completer, Completer.Factory {
     private void completeShallow(List<CompletionItem> result) {
         String prefix = ctx.getPrefix();
         
-        Set<String> eventNames = new HashSet<String>();
+        Set<String> eventNames = new HashSet<>();
         
         if (prefix.contains("on")) {
             eventNames.addAll(fxBean.getEventNames());

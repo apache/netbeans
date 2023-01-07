@@ -83,13 +83,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test3.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test3.sig",
                                                        "cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { void t() { Undef undef; } }")),
                              Collections.emptyList());
@@ -105,13 +105,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
     }
 
     public void testRepair2() throws Exception {
@@ -121,13 +121,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
 
@@ -138,13 +138,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
 
@@ -155,13 +155,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
 
@@ -172,13 +172,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
                                                        "cache/s1/java/15/classes/test/Test4$1.sig")),
                      createdFiles);
         //TODO: check file content!!!
@@ -191,13 +191,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
                                                        "cache/s1/java/15/classes/test/Test4$1.sig")),
                      createdFiles);
         //TODO: check file content!!!
@@ -210,13 +210,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -228,13 +228,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -249,13 +249,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
     }
 
@@ -269,13 +269,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
                                                        "cache/s1/java/15/classes/test/Test2.sig",
                                                        "cache/s1/java/15/classes/test/Test3.sig")),
                      createdFiles);
@@ -288,13 +288,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
 
@@ -305,13 +305,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -326,13 +326,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -346,13 +346,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -364,13 +364,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -382,13 +382,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -400,13 +400,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/java/lang/Object.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/java/lang/Object.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -419,13 +419,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -439,13 +439,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Additional.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Additional.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         //TODO: check file content!!!
@@ -480,7 +480,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.put(getWorkDir().toURI().relativize(created.toURI()).getPath(), created);
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/AnnUse.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/AnnUse.sig",
                                                        "cache/s1/java/15/classes/test/FirstAnnBroken.sig",
                                                        "cache/s1/java/15/classes/test/FirstTwoAnnBroken.sig",
                                                        "cache/s1/java/15/classes/test/FirstAnnOK.sig",
@@ -521,13 +521,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/package-info.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/package-info.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -539,13 +539,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
                                                             "cache/s1/java/15/classes/test/Test$1.sig")),
                      createdFiles);
         ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getRoot()));
@@ -568,13 +568,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
                                                             "cache/s1/java/15/classes/test/Test$1.sig",
                                                             "cache/s1/java/15/classes/test/Test$2.sig",
                                                             "cache/s1/java/15/classes/test/Test$3.sig",
@@ -607,13 +607,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
     }
 
@@ -632,13 +632,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
                                                        "cache/s1/java/15/classes/test/Test$Inner.sig",
                                                        "cache/s1/java/15/classes/test/Test$1.sig")),
                      createdFiles);
@@ -664,13 +664,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -708,13 +708,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -757,13 +757,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -814,13 +814,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -859,13 +859,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -908,13 +908,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -958,13 +958,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1009,13 +1009,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1072,13 +1072,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$1$1.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
@@ -1141,13 +1141,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1194,13 +1194,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$N.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
@@ -1264,13 +1264,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1312,13 +1312,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1364,13 +1364,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$Prop.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
@@ -1439,13 +1439,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$T.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$T.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
@@ -1518,13 +1518,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$N.sig",
                                                        "cache/s1/java/15/classes/test/Test$1$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$1$2.sig",
@@ -1620,13 +1620,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$2.sig",
                                                        "cache/s1/java/15/classes/test/Test$2$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$1$1.sig",
@@ -1723,13 +1723,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test$1.sig",
                                                        "cache/s1/java/15/classes/test/Test$N.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
@@ -1788,13 +1788,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1840,13 +1840,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/SuperIntf.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/SuperIntf.sig",
                                                        "cache/s1/java/15/classes/test/SuperClass.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
@@ -1903,13 +1903,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
@@ -1945,13 +1945,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
                                                        "cache/s1/java/15/classes/test/ColoredPoint.sig",
                                                        "cache/s1/java/15/classes/test/Point.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
@@ -1979,13 +1979,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
                                                        "cache/s1/java/15/classes/test/ColoredPoint.sig",
                                                        "cache/s1/java/15/classes/test/Point.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
@@ -2013,13 +2013,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
                                                        "cache/s1/java/15/classes/test/ColoredPoint.sig",
                                                        "cache/s1/java/15/classes/test/Point.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
@@ -2047,13 +2047,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertFalse(result.lowMemory);
         assertTrue(result.success);
 
-        Set<String> createdFiles = new HashSet<String>();
+        Set<String> createdFiles = new HashSet<>();
 
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+        assertEquals(new HashSet<>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
                                                        "cache/s1/java/15/classes/test/ColoredPoint.sig",
                                                        "cache/s1/java/15/classes/test/Point.sig",
                                                        "cache/s1/java/15/classes/test/Test.sig")), createdFiles);

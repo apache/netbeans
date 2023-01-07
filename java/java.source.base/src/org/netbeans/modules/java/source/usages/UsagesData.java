@@ -92,7 +92,7 @@ final class UsagesData<T> {
     }
 
     List<String> usagesToStrings() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         for (Map.Entry<T,Set<ClassIndexImpl.UsageType>> entry : usages.entrySet()) {
             result.add (
                 DocumentUtil.encodeUsage(

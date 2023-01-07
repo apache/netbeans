@@ -429,7 +429,7 @@ public class ConvertAnonymousToInner extends AbstractHint {
         ModifiersTree classModifiers = make.Modifiers(modifset);
         
         List<Tree> members = new ArrayList<Tree>();
-        List<VariableTree> constrArguments = new ArrayList<VariableTree>();
+        List<VariableTree> constrArguments = new ArrayList<>();
         List<StatementTree> constrBodyStatements = new ArrayList<StatementTree>();
         List<ExpressionTree> constrRealArguments = new ArrayList<ExpressionTree>();
 	ModifiersTree emptyMods = make.Modifiers(EnumSet.noneOf(Modifier.class));

@@ -70,7 +70,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
             String[] configFiles = JSFConfigUtilities.getConfigFiles(wm);
             if (configFiles.length > 0){
                 FileObject documentBase = wm.getDocumentBase();
-                ArrayList<String> files = new ArrayList<String>();
+                ArrayList<String> files = new ArrayList<>();
                 for (int i = 0; i < configFiles.length; i++){
                     if (documentBase.getFileObject(configFiles[i]) != null)
                         files.add(configFiles[i]);

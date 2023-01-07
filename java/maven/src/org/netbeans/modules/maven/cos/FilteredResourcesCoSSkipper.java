@@ -68,7 +68,7 @@ public class FilteredResourcesCoSSkipper implements CompileOnSaveSkipper {
         File dirFile = FileUtil.normalizeFile(new File(dir));
   //      System.out.println("checkresource dirfile =" + dirFile);
         if (dirFile.exists()) {
-            List<File> toCopy = new ArrayList<File>();
+            List<File> toCopy = new ArrayList<>();
             DirectoryScanner ds = new DirectoryScanner();
             ds.setBasedir(dirFile);
             //includes/excludes

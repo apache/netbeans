@@ -70,7 +70,7 @@ public class ServiceView extends SectionView {
         Collection<Binding> bindings = bs;
         if (bindings == null) {
             bindings = new HashSet<Binding>();
-            Set<FileObject> traversedModels = new HashSet<FileObject>();
+            Set<FileObject> traversedModels = new HashSet<>();
             WSITModelSupport.fillImportedBindings(model, bindings, traversedModels);
         }
         

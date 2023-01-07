@@ -803,7 +803,7 @@ public class JarFileSystem extends AbstractFileSystem {
                     // #144166 - If duplicate entries found in jar, it is logged
                     // and only unique entries are show. It can happen because
                     // Ant's jar task can produce such jars.
-                    Set<String> duplicateCheck = new HashSet<String>();
+                    Set<String> duplicateCheck = new HashSet<>();
                     Set<JarEntry> uniqueEntries = new HashSet<JarEntry>();
                     boolean duplicateReported = false;
                     while (en.hasMoreElements()) {

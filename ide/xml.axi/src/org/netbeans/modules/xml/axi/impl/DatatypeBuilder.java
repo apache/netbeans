@@ -109,7 +109,7 @@ public class DatatypeBuilder extends DeepSchemaVisitor {
                     NumberBase.toNumber(maxExclusive.getValue()));
         } else if(datatype instanceof TimeBase) {
             java.util.List<String> removeList =
-                    new ArrayList<String>();
+                    new ArrayList<>();
             java.util.List<String> currentList =
                     ((TimeBase)datatype).getMaxExclusives();
             if(currentList != null && currentList.size() > 0) {
@@ -139,7 +139,7 @@ public class DatatypeBuilder extends DeepSchemaVisitor {
                     NumberBase.toNumber(maxInclusive.getValue()));
         } else if(datatype instanceof TimeBase) {
             java.util.List<String> removeList =
-                    new ArrayList<String>();
+                    new ArrayList<>();
             java.util.List<String> currentList =
                     ((TimeBase)datatype).getMaxInclusives();
             if(currentList != null && currentList.size() > 0) {
@@ -169,7 +169,7 @@ public class DatatypeBuilder extends DeepSchemaVisitor {
                     NumberBase.toNumber(minExclusive.getValue()));
         } else if(datatype instanceof TimeBase) {
             java.util.List<String> removeList =
-                    new ArrayList<String>();
+                    new ArrayList<>();
             java.util.List<String> currentList =
                     ((TimeBase)datatype).getMinExclusives();
             if(currentList != null && currentList.size() > 0) {
@@ -199,7 +199,7 @@ public class DatatypeBuilder extends DeepSchemaVisitor {
                     NumberBase.toNumber(minInclusive.getValue()));
         } else if(datatype instanceof TimeBase) {
             java.util.List<String> removeList =
-                    new ArrayList<String>();
+                    new ArrayList<>();
             java.util.List<String> currentList =
                     ((TimeBase)datatype).getMinInclusives();
             if(currentList != null && currentList.size() > 0) {

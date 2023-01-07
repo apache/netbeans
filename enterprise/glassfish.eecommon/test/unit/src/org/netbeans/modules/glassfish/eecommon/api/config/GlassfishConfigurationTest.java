@@ -239,7 +239,7 @@ File verifyPrefixCar;
                 JavaEEModule.getConfigDir(moduleRar.getType()));
         final File prefixWar = moduleWar.getDeploymentConfigurationFile(
                 JavaEEModule.getConfigDir(moduleWar.getType()));
-        final Set<File> prefixes = new HashSet<File>(5);
+        final Set<File> prefixes = new HashSet<>(5);
         prefixes.add(prefixCar);
         prefixes.add(prefixEar);
         prefixes.add(prefixEjb);

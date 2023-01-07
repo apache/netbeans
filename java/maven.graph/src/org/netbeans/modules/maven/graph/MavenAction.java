@@ -94,7 +94,7 @@ public abstract class MavenAction extends AbstractAction {
             Dependency dep = model.getProject().findDependencyById(eTarget.getGroupId(), eTarget.getArtifactId(), null);
             if (dep == null) {
                 // now check the active profiles for the dependency..
-                List<String> profileNames = new ArrayList<String>();
+                List<String> profileNames = new ArrayList<>();
                 NbMavenProject nbMavproject = nbProject.getLookup().lookup(NbMavenProject.class);
                 for (Profile prof : nbMavproject.getMavenProject().getActiveProfiles()) {
                     profileNames.add(prof.getId());

@@ -268,7 +268,7 @@ public class WebSocketServerImpl extends SocketServer {
             if ( headerLines.size() >0 ){
                 getContext(key).setRequest(headerLines.get(0));
             }
-            Map<String,String> result = new HashMap<String, String>();
+            Map<String,String> result = new HashMap<>();
             for (String line : headerLines) {
                 int index = line.indexOf(':');
                 if ( index != -1 ){

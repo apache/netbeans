@@ -87,7 +87,7 @@ public class TargetLister {
      * @throws IOException in case there is a problem reading the script (or a subscript)
      */
     public static Set<Target> getTargets(AntProjectCookie script) throws IOException {
-        Set<File> alreadyImported = new HashSet<File>();
+        Set<File> alreadyImported = new HashSet<>();
         Map<String,String> properties = NbCollections.checkedMapByCopy(System.getProperties(), String.class, String.class, false);
         properties.putAll(AntSettings.getProperties()); // #130460
         Script main = new Script(null, script, alreadyImported, properties, Collections.<String,Element>emptyMap());
@@ -259,7 +259,7 @@ public class TargetLister {
         private final List<Script> imports;
         private final String name;
         
-        private static final Set<String> TRUE_VALS = new HashSet<String>(5);
+        private static final Set<String> TRUE_VALS = new HashSet<>(5);
         static {
             TRUE_VALS.add("true"); // NOI18N
             TRUE_VALS.add("yes"); // NOI18N
@@ -337,7 +337,7 @@ public class TargetLister {
                 }
                 Element macro = macroDefs.get(fullname);
                 if (macro != null) {
-                    Map<String,String> newMacroParams = new HashMap<String,String>();
+                    Map<String,String> newMacroParams = new HashMap<>();
                     NodeList macroKids = macro.getChildNodes();
                     for (int j = 0; j < macroKids.getLength(); j++) {
                         if (macroKids.item(j).getNodeType() != Node.ELEMENT_NODE) {
@@ -533,7 +533,7 @@ public class TargetLister {
                         }
                     }
                 }
-                Set<String> toSort = new HashSet<String>(dependOnSiblings.keySet());
+                Set<String> toSort = new HashSet<>(dependOnSiblings.keySet());
                 for (Set<String> sibs : dependOnSiblings.values()) {
                     toSort.addAll(sibs);
                 }
@@ -566,7 +566,7 @@ public class TargetLister {
             // Result in progress, if it is to be a String:
             StringBuffer val = new StringBuffer();
             // Or, result in progress, if it is to be a Set<String>:
-            Set<String> needed = new HashSet<String>();
+            Set<String> needed = new HashSet<>();
             while (true) {
                 int shell = rawval.indexOf('$', idx);
                 if (shell == -1 || shell == rawval.length() - 1) {

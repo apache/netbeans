@@ -707,7 +707,7 @@ public class AnnotationTest extends GeneratorTestBase {
 
     private void performAnnotationWrappingTest(final String annotationSpecification, Map<String, String> adjustPreferences) throws Exception {
         Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
-        Map<String, String> origValues = new HashMap<String, String>();
+        Map<String, String> origValues = new HashMap<>();
         for (String key : adjustPreferences.keySet()) {
             origValues.put(key, preferences.get(key, null));
         }

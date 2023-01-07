@@ -118,7 +118,7 @@ public final class RecommendedTemplatesImpl implements RecommendedTemplates, Pri
     
     public RecommendedTemplatesImpl(Project proj) {
         project = proj;
-        prohibited = new ArrayList<String>();
+        prohibited = new ArrayList<>();
         prohibited.add(NbMavenProject.TYPE_EAR);
         prohibited.add(NbMavenProject.TYPE_EJB);
         prohibited.add(NbMavenProject.TYPE_WAR);

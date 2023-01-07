@@ -88,7 +88,7 @@ class SpringMovePlugin implements RefactoringPlugin {
                     }
                     List<String> packageNames = scope2PackageNames.get(scope);
                     if (packageNames == null) {
-                        packageNames = new ArrayList<String>();
+                        packageNames = new ArrayList<>();
                         scope2PackageNames.put(scope, packageNames);
                     }
                     packageNames.add(oldPackageName);
@@ -99,7 +99,7 @@ class SpringMovePlugin implements RefactoringPlugin {
                     }
                     List<String> classNames = scope2ClassNames.get(scope);
                     if (classNames == null) {
-                        classNames = new ArrayList<String>();
+                        classNames = new ArrayList<>();
                         scope2ClassNames.put(scope, classNames);
                     }
                     classNames.addAll(SpringRefactorings.getTopLevelClassNames(fo));

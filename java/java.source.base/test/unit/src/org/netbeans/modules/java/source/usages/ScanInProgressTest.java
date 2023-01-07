@@ -89,9 +89,9 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
         middle = new CountDownLatch(1);
         rest = new CountDownLatch(2);
 
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             FileObject prj = TestSupport.createTestProject(workDir, "prj" + i);
             URL url = URLMapper.findURL(prj, URLMapper.EXTERNAL);

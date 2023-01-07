@@ -101,7 +101,7 @@ public class TplCompletionQueryTest extends CslTestBase {
     }
 
     private void assertCompletionItemNames(String[] expected, Collection<? extends CompletionItem> ccresult, Match type) {
-        Collection<String> real = new ArrayList<String>();
+        Collection<String> real = new ArrayList<>();
         for (CompletionItem ccp : ccresult) {
             //check only html items
             if (ccp instanceof TplCompletionItem) {

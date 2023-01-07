@@ -253,7 +253,7 @@ public class ClasspathCustomEditorOperator extends NbDialogOperator {
     /** returns complete class path from editor
      * @return String[] class paths */    
     public String[] getClasspathValue() {
-        ArrayList<String> data=new ArrayList<String>();
+        ArrayList<String> data=new ArrayList<>();
         ListModel model=lstClasspath().getModel();
         for (int i=0; i<model.getSize(); i++) {
             data.add(model.getElementAt(i).toString());

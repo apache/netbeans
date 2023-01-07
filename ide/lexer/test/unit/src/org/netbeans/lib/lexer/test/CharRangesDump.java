@@ -38,7 +38,7 @@ public class CharRangesDump {
 
     private UnicodeCharAcceptor acceptor;
 
-    private List<Integer> charRanges = new ArrayList<Integer>();
+    private List<Integer> charRanges = new ArrayList<>();
     
     public CharRangesDump(UnicodeCharAcceptor acceptor) {
         if (acceptor == null) {

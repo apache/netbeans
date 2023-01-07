@@ -893,7 +893,7 @@ binRoots:   for (URL binary : binaries) {
      * We do not want to make a new network connection each time, especially if src.zip supplies the Javadoc anyway.
      * Assume that if one class can be found, they all can.
      */
-    private static final Set<String> knownGoodRoots = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> knownGoodRoots = Collections.synchronizedSet(new HashSet<>());
 
     @NonNull
     private static Collection<? extends CharSequence> getFragment(Element e) {

@@ -809,7 +809,7 @@ public class Element extends NodeImpl implements Node, org.w3c.dom.Element {
         
         //consolidate attribute prefixes and qname values
         List attributes = newChild.getAttributesForRead();
-        ArrayList<String> sparedPrefixes = new ArrayList<String>();
+        ArrayList<String> sparedPrefixes = new ArrayList<>();
         for (int i=0; i<attributes.size(); i++) {
             Attribute attr = (Attribute) attributes.get(i);
             // skip namsspace declaration attributes 
@@ -891,7 +891,7 @@ public class Element extends NodeImpl implements Node, org.w3c.dom.Element {
         if (root != null && cloneNamespacePrefix) {
             allNamespaces = root.getNamespaceMap();
         }
-        Map<String,String> clonePrefixes = new HashMap<String,String>();
+        Map<String,String> clonePrefixes = new HashMap<>();
         Element clone = (Element) super.cloneNode(deep, allNamespaces, clonePrefixes);
         for (Map.Entry e : clonePrefixes.entrySet()) {
 			String prefix = (String) e.getKey();

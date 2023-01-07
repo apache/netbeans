@@ -148,14 +148,14 @@ public class GroovyTestBase extends CslTestBase {
     }
 
     private ClassPath createSourcePath() {
-        List<FileObject> classPathSources = new ArrayList<FileObject>();
+        List<FileObject> classPathSources = new ArrayList<>();
         classPathSources.addAll(additionalSources());
 
         return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[classPathSources.size()]));
     }
 
     private Set<FileObject> additionalSources() {
-        Set<FileObject> sourceClassPath = new HashSet<FileObject>();
+        Set<FileObject> sourceClassPath = new HashSet<>();
 
         for (String sourcePath : additionalSourceClassPath()) {
             sourceClassPath.add(getFO(sourcePath));
@@ -177,7 +177,7 @@ public class GroovyTestBase extends CslTestBase {
     }
 
     protected Set<String> newHashSet(String... strings) {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         set.addAll(Arrays.asList(strings));
         
         return set;

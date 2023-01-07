@@ -238,7 +238,7 @@ public final class ProjectImportModel {
     }
     
     private static File[] convertToFileArray(List<DotClassPathEntry> entries) {
-        List<File> res = new ArrayList<File>();
+        List<File> res = new ArrayList<>();
         for (DotClassPathEntry entry : entries) {
             res.add(new File(entry.getAbsolutePath()));
         }

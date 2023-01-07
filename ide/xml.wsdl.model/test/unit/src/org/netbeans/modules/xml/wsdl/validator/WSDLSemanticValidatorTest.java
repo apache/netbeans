@@ -75,7 +75,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        Set<String> expectedErrors = new HashSet<String>();
+        Set<String> expectedErrors = new HashSet<>();
         validate(uri, expectedErrors);
     }
     
@@ -84,7 +84,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_ERROR_WSDL_DEFINITIONS_NO_TARGETNAMESPACE")));
         validate(uri, expectedErrors);
     }
@@ -94,7 +94,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_ERROR_WSDL_DEFINITIONS_NO_TARGETNAMESPACE")));
         validate(uri, expectedErrors);
     }
@@ -104,7 +104,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MISSING_IMPORTED_DOCUMENT")));
         validate(uri, expectedErrors);
     }
@@ -114,7 +114,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MISSING_IMPORTED_DOCUMENT")));
         validate(uri, expectedErrors);
     }
@@ -125,7 +125,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MISSING_IMPORTED_DOCUMENT")));
         validate(uri, expectedErrors);
     }
@@ -135,7 +135,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_DUPLICATE_OPRATION_INPUT_NAME_IN_PORTTYPE")));
         validate(uri, expectedErrors);
         
@@ -147,7 +147,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MESSAGE_NOT_FOUND_IN_OPERATION_INPUT")));
         validate(uri, expectedErrors);
         
@@ -159,7 +159,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_DUPLICATE_OPRATION_OUTPUT_NAME_IN_PORTTYPE")));
         validate(uri, expectedErrors);
         
@@ -171,7 +171,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MESSAGE_NOT_FOUND_IN_OPERATION_OUTPUT")));
         validate(uri, expectedErrors);
         
@@ -183,7 +183,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_DUPLICATE_OPRATION_FAULT_NAME")));
         validate(uri, expectedErrors);
     }
@@ -193,7 +193,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MESSAGE_NOT_FOUND_IN_OPERATION_FAULT")));
         validate(uri, expectedErrors);
     }
@@ -203,7 +203,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_DUPLICATE_OPRATION_FAULT_NAME")));
         validate(uri, expectedErrors);
     }
@@ -213,7 +213,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MESSAGE_NOT_FOUND_IN_OPERATION_FAULT")));
         validate(uri, expectedErrors);
     }
@@ -223,7 +223,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_FAULT_NOT_ALLOWED_IN_OPERATION")));
         validate(uri, expectedErrors);
     }
@@ -233,7 +233,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_FAULT_NOT_ALLOWED_IN_OPERATION")));
         validate(uri, expectedErrors);
     }
@@ -243,7 +243,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_WARNING_WSDL_MESSAGE_DOES_NOT_HAVE_ANY_PARTS_DEFINED")));
         validate(uri, expectedErrors);
     }
@@ -253,7 +253,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_NO_ELEMENT_OR_TYPE_ATTRIBUTE_DEFINED_IN_MESSAGE_PART")));
         validate(uri, expectedErrors);
     }
@@ -263,7 +263,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_ELEMENT_ATTRIBUTE_DEFINED_IN_MESSAGE_PART_IS_NOT_VALID")));
         validate(uri, expectedErrors);
     }
@@ -273,7 +273,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_TYPE_ATTRIBUTE_DEFINED_IN_MESSAGE_PART_IS_NOT_VALID")));
         validate(uri, expectedErrors);
     }
@@ -283,7 +283,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_BOTH_ELEMENT_OR_TYPE_ATTRIBUTE_DEFINED_IN_MESSAGE_PART")));
         validate(uri, expectedErrors);
     }
@@ -293,7 +293,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MISSING_IMPORTED_DOCUMENT")));
         validate(uri, expectedErrors);
     }
@@ -303,7 +303,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MISSING_PORTTYPE_IN_BINDING")));
         validate(uri, expectedErrors);
     }
@@ -313,7 +313,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         validate(uri, expectedErrors);
     }
     
@@ -322,7 +322,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_INPUT_NAME_IN_PORT_TYPE")));
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_OUTPUT_NAME_IN_PORT_TYPE")));
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_FAULTS_IN_PORT_TYPE")));
@@ -335,7 +335,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_INPUT_NAME_IN_PORT_TYPE")));
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_OUTPUT_NAME_IN_PORT_TYPE")));
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_FAULTS_IN_PORT_TYPE")));
@@ -348,7 +348,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_INPUT_NAME_IN_PORT_TYPE")));
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_OUTPUT_NAME_IN_PORT_TYPE")));
         expectedErrors.add(format(mMessages.getString("VAL_OPERATION_DOES_NOT_MATCH_FAULTS_IN_PORT_TYPE")));
@@ -361,7 +361,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         validate(uri, expectedErrors);
     }
     
@@ -370,7 +370,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         expectedErrors.add(format(mMessages.getString("VAL_MISSING_BINDING_IN_SERVICE_PORT")));
         validate(uri, expectedErrors);
     }
@@ -379,7 +379,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/typesTests/inlineSchemaTests/Z_Flight.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        
         validate(uri, expectedErrors);
     }
@@ -388,7 +388,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/typesTests/inlineSchemaTests/emptyInlineSchema.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        
         validate(uri, expectedErrors);
     }
@@ -397,7 +397,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/typesTests/inlineSchemaTests/MultipleInlineSchemaReferingAttributes.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        
         validate(uri, expectedErrors);
      }
@@ -406,7 +406,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/typesTests/typesMultiTypes_error.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        expectedErrors.add(format(mMessages.getString("VAL_MULTIPLE_TYPES_IN_DEFINITION")));
         
         validate(uri, expectedErrors);
@@ -416,7 +416,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/ptTests/opTests/reqrep/prmOrd_valid.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         
         validate(uri, expectedErrors);
      }
@@ -425,7 +425,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/ptTests/opTests/reqrep/prmOrdBogusPartNames_error.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        expectedErrors.add(format(mMessages.getString("VAL_PARMETER_ORDER_CHECK_PART_EXISTENCE")));
         
         validate(uri, expectedErrors);
@@ -435,7 +435,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/ptTests/opTests/reqrep/prmOrdOpPartMissing_error.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        expectedErrors.add(format(mMessages.getString("VAL_PARMETER_ORDER_CHECK_AT_MOST_ONE_OUTPUT_MESSAGE_PART_MISSING")));
         
         validate(uri, expectedErrors);
@@ -446,7 +446,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
                           
         URL url = getClass().getResource(fileName);                                                                        
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
         
         validate(uri, expectedErrors);
      }
@@ -455,7 +455,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/ptTests/opTests/solrep/prmOrdBogusPartNames_error.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        expectedErrors.add(format(mMessages.getString("VAL_PARMETER_ORDER_CHECK_PART_EXISTENCE")));
         
         validate(uri, expectedErrors);
@@ -465,7 +465,7 @@ public class WSDLSemanticValidatorTest extends TestCase {
         String fileName = "/org/netbeans/modules/xml/wsdl/validator/resources/ptTests/opTests/solrep/prmOrdOutputPartMissing_error.wsdl";
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
-        HashSet<String> expectedErrors = new HashSet<String>();
+        HashSet<String> expectedErrors = new HashSet<>();
        expectedErrors.add(format(mMessages.getString("VAL_PARMETER_ORDER_CHECK_AT_MOST_ONE_OUTPUT_MESSAGE_PART_MISSING")));
         
         validate(uri, expectedErrors);

@@ -322,7 +322,7 @@ public class ClassMemberTest extends GeneratorTestMDRCompat {
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
                         ClassTree classTree = (ClassTree) typeDecl;
                         ModifiersTree mods = make.Modifiers(EnumSet.of(Modifier.PUBLIC));
-                        List<VariableTree> arguments = new ArrayList<VariableTree>();
+                        List<VariableTree> arguments = new ArrayList<>();
                         arguments.add(make.Variable(
                             make.Modifiers(EnumSet.noneOf(Modifier.class)),
                             "prefix",

@@ -167,7 +167,7 @@ public final class AppClientProvider extends J2eeModuleProvider
         ClassPath cp = ClassPathFactory.createClassPath(
                     ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
                     FileUtil.toFile(project.getProjectDirectory()), project.evaluator(), new String[]{"javac.classpath"}));
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (FileObject fo : cp.getRoots()) {
             if (FileUtil.getArchiveFile(fo) == null) {
                 continue;

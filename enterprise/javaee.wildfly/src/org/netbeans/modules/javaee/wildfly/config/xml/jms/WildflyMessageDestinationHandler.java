@@ -38,7 +38,7 @@ public class WildflyMessageDestinationHandler extends DefaultHandler {
 
     private boolean isDestination;
 
-    private final List<String> jndiNames = new ArrayList<String>();
+    private final List<String> jndiNames = new ArrayList<>();
 
     private WildflyMessageDestination currentDestination;
 

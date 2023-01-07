@@ -179,7 +179,7 @@ public final class OnSaveTabPanelController extends OptionsPanelController {
         boolean isChanged = false;
         Preferences prefs = selector.getPreferences(mimeType);
         Preferences savedPrefs = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
-        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<String> hashSet = new HashSet<>();
         try {
             hashSet.addAll(Arrays.asList(prefs.keys()));
             hashSet.addAll(Arrays.asList(savedPrefs.keys()));

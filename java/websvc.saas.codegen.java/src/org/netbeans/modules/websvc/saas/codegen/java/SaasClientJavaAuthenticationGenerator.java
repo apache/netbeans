@@ -170,7 +170,7 @@ public class SaasClientJavaAuthenticationGenerator extends SaasClientAuthenticat
                     saasAuthJS = JavaSourceHelper.createJavaSource(
                             authTemplate + Constants.SERVICE_AUTHENTICATOR + "."+Constants.JAVA_EXT,
                             targetFolder, getBean().getSaasServicePackageName(), authFileName);// NOI18n
-                    Set<FileObject> files = new HashSet<FileObject>(saasAuthJS.getFileObjects());
+                    Set<FileObject> files = new HashSet<>(saasAuthJS.getFileObjects());
                     if (files != null && files.size() > 0) {
                         saasAuthFile = files.iterator().next();
                     }
@@ -367,7 +367,7 @@ public class SaasClientJavaAuthenticationGenerator extends SaasClientAuthenticat
 
                 methodBody += "            if (" + tokenName + " != null) {\n";
                 methodBody += "                try {\n";
-                Map<String, String> tokenMap = new HashMap<String, String>();
+                Map<String, String> tokenMap = new HashMap<>();
                 methodBody += Util.getLoginBody(login, getBean(), groupName, tokenMap);
                 methodBody += "                } catch (IOException ex) {\n";
                 methodBody += "                    Logger.getLogger(" + getBean().getAuthenticatorClassName() + ".class.getName()).log(Level.SEVERE, null, ex);\n";
@@ -431,7 +431,7 @@ public class SaasClientJavaAuthenticationGenerator extends SaasClientAuthenticat
                 }
 
                 String queryParamsCode = "";
-                Map<String, String> tokenMap = new HashMap<String, String>();
+                Map<String, String> tokenMap = new HashMap<>();
                 if (method != null) {
                     String id = method.getId();
                     if (id != null) {

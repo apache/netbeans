@@ -406,7 +406,7 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
     }
 
     private Collection<String> readMimeTypes() {
-        List<String> mimeTypes = new ArrayList<String>();
+        List<String> mimeTypes = new ArrayList<>();
         FileObject[] children = FileUtil.getConfigFile("Loaders").getChildren();  //NOI18N
         for (int i = 0; i < children.length; i++) {
             FileObject child = children[i];

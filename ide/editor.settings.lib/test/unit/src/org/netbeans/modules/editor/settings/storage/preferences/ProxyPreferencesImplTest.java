@@ -562,7 +562,7 @@ public class ProxyPreferencesImplTest extends NbTestCase {
     
     private static class MapPreferences extends AbstractPreferences implements OverridePreferences {
         
-        private Map<String,Object> map = new HashMap<String, Object>();
+        private Map<String,Object> map = new HashMap<>();
 
         public MapPreferences() {
             super(null, ""); // NOI18N

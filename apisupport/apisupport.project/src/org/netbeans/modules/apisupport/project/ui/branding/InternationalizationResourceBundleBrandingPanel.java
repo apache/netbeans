@@ -231,7 +231,7 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
     }
     
     private Set<File> loadPlatformJars() {
-        Set<File> jars = new HashSet<File>();
+        Set<File> jars = new HashSet<>();
         PlatformJarProvider pjp = prj.getLookup().lookup(PlatformJarProvider.class);
         if (pjp != null) {
             try {

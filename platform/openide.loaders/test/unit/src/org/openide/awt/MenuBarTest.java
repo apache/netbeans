@@ -205,9 +205,9 @@ public class MenuBarTest extends NbTestCase implements ContainerListener {
         mb.addContainerListener(this);
         assertEquals("No children now", 0, mb.getComponentCount());
         
-        final List<FileObject> items = new ArrayList<FileObject>();
-        final List<String> toAdd = new ArrayList<String>();
-        final List<String> toRemove = new ArrayList<String>();
+        final List<FileObject> items = new ArrayList<>();
+        final List<String> toAdd = new ArrayList<>();
+        final List<String> toRemove = new ArrayList<>();
         final AtomicInteger numAdds = new AtomicInteger(0);
         final AtomicInteger numRemoves = new AtomicInteger(0);
         class Atom implements FileSystem.AtomicAction {

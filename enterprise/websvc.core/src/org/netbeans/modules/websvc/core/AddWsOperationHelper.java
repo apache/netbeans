@@ -572,7 +572,7 @@ public class AddWsOperationHelper {
                     
                     // add @WebParam annotations
                     List<? extends VariableTree> parameters = method.getParameters();
-                    List<VariableTree> newParameters = new ArrayList<VariableTree>();
+                    List<VariableTree> newParameters = new ArrayList<>();
                     
                     if(needAnnotations && seiClass == null) {
                         for (VariableTree param:parameters) {
@@ -680,7 +680,7 @@ public class AddWsOperationHelper {
             if ( methodElement == null ){
                 isIncomplete = true;
             }
-            Set<String> operationNames = new HashSet<String>();
+            Set<String> operationNames = new HashSet<>();
             List<ExecutableElement> methods = getMethods(controller, classEl);
             for (ExecutableElement m : methods) {
                 String opName = null;

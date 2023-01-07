@@ -58,7 +58,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     private static Mode mode;
 
     static void initWrites() throws IOException {
-        Set<String> allowedFiles = new HashSet<String>();
+        Set<String> allowedFiles = new HashSet<>();
         InputStream is = CountingSecurityManager.class.getResourceAsStream("allowed-file-writes.txt");
         Assert.assertNotNull("file found", is);
         BufferedReader r = new BufferedReader(new InputStreamReader(is));

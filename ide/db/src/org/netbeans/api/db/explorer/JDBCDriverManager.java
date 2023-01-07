@@ -50,7 +50,7 @@ public final class JDBCDriverManager {
     /**
      * The list of listeners.
      */
-    private final Set<JDBCDriverListener> listeners = new HashSet<JDBCDriverListener> ();
+    private final Set<JDBCDriverListener> listeners = new HashSet<> ();
     
     /**
      * 

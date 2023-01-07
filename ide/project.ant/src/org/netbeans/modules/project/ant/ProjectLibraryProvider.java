@@ -383,7 +383,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
         /** with ${base} resolved according to resolveBase; may be empty or have junk defs */
         synchronized Map<String,String> properties(boolean resolveBase) {
             if (properties == null) {
-                properties = new HashMap<String,String>();
+                properties = new HashMap<>();
                 String basedir = mainPropertiesFile.getParent();
                 for (Map.Entry<String,String> entry : loadProperties(mainPropertiesFile).entrySet()) {
                     String value = entry.getValue();
@@ -475,7 +475,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
             String name = match.group(1);
             Map<String,String> subdata = data.get(name);
             if (subdata == null) {
-                subdata = new HashMap<String,String>();
+                subdata = new HashMap<>();
                 data.put(name, subdata);
             }
             subdata.put(match.group(2), entry.getValue());
@@ -486,7 +486,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
             String description = null;
             String displayName = null;
             Map<String,List<URI>> contents = new HashMap<String,List<URI>>();
-            Map<String,String> properties = new HashMap<String, String>();
+            Map<String,String> properties = new HashMap<>();
             for (Map.Entry<String,String> subentry : entry.getValue().entrySet()) {
                 String k = subentry.getKey();
                 if (k.equals("type")) { // NOI18N
@@ -563,9 +563,9 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
             return false;
         }
         assert toFire != null;
-        Set<String> added = new HashSet<String>(newLibraries.keySet());
+        Set<String> added = new HashSet<>(newLibraries.keySet());
         added.removeAll(libraries.keySet());
-        Set<String> removed = new HashSet<String>();
+        Set<String> removed = new HashSet<>();
         for (Map.Entry<String,ProjectLibraryImplementation> entry : libraries.entrySet()) {
             String name = entry.getKey();
             ProjectLibraryImplementation old = entry.getValue();
@@ -586,7 +586,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
                 old.description = nue.description;
                 List<String> props = toFire.get(old);
                 if (props == null) {
-                    props = new ArrayList<String>();
+                    props = new ArrayList<>();
                     toFire.put(old, props);
                 }
                 props.add(LibraryImplementation.PROP_DESCRIPTION);
@@ -595,7 +595,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
                 old.contents = nue.contents;
                 List<String> props = toFire.get(old);
                 if (props == null) {
-                    props = new ArrayList<String>();
+                    props = new ArrayList<>();
                     toFire.put(old, props);
                 }
                 props.add(LibraryImplementation.PROP_CONTENT);
@@ -646,7 +646,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
         if (!"javadoc".equals(type)) {  //NOI18N
             return entries;
         }
-        final Collection<String> result = new ArrayList<String>();
+        final Collection<String> result = new ArrayList<>();
         for (int i=0; i< entries.length; i++) {
             if (i < entries.length - 1 && entries[i].matches("https?")) {
                 // #212877: Definitions.getProperties already converted to \, so have entries=["http", "\\server\path\"]
@@ -801,7 +801,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
                 return;
             }
             contents.put(volumeType, new ArrayList<URI>(path));
-            List<String> value = new ArrayList<String>();
+            List<String> value = new ArrayList<>();
             for (URI entry : path) {
                 String jarFolder = null;
                 if (entry.toString().contains("!/")) { // NOI18N
@@ -1008,7 +1008,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
     public static PropertyProvider createPropertyProvider(final AntProjectHelper helper) {
         class PP implements PropertyProvider, FileChangeListener, AntProjectListener {
             final ChangeSupport cs = new ChangeSupport(this);
-            final Set<File> listeningTo = new HashSet<File>();
+            final Set<File> listeningTo = new HashSet<>();
             {
                 helper.addAntProjectListener(WeakListeners.create(AntProjectListener.class, this, helper));
             }
@@ -1021,9 +1021,9 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
                 }
             }
             public synchronized Map<String,String> getProperties() {
-                Map<String,String> m = new HashMap<String,String>();
+                Map<String,String> m = new HashMap<>();
                 // XXX add an AntProjectListener
-                Set<File> noLongerListeningTo = new HashSet<File>(listeningTo);
+                Set<File> noLongerListeningTo = new HashSet<>(listeningTo);
                 Definitions def = findDefinitions(helper);
                 if (def != null) {
                     m.putAll(def.properties(true));
@@ -1181,7 +1181,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
      * Used from {@link org.netbeans.spi.project.support.ant.SharabilityQueryImpl}.
      */
     public static List<String> getUnsharablePathsWithinProject(AntProjectHelper helper) {
-        List<String> paths = new ArrayList<String>();
+        List<String> paths = new ArrayList<>();
         Definitions defs = findDefinitions(helper);
         if (defs != null) {
             if (defs.privatePropertiesFile != null) {

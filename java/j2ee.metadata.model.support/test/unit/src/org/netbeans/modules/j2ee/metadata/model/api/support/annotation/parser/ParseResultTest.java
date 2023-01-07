@@ -34,7 +34,7 @@ public class ParseResultTest extends NbTestCase {
     }
 
     public void testGetChecksType() {
-        Map<String, Object> values = new HashMap<String, Object>();
+        Map<String, Object> values = new HashMap<>();
         values.put("foo", "fooValue");
         values.put("bar", null);
         ParseResult result = new ParseResult(values);

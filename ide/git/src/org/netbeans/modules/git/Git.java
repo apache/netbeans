@@ -268,8 +268,8 @@ public final class Git {
         return getVCSInterceptor().getSeenRoots(repositoryRoot);
     }
     
-    private Set<File> knownRoots = Collections.synchronizedSet(new HashSet<File>());
-    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<File>(20));
+    private Set<File> knownRoots = Collections.synchronizedSet(new HashSet<>());
+    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<>(20));
 
     public File getTopmostManagedAncestor (File file) {
         return getTopmostManagedAncestor(file, false);
@@ -299,7 +299,7 @@ public final class Git {
                 }
             }
         }
-        Set<File> done = new HashSet<File>();
+        Set<File> done = new HashSet<>();
         File topmost = null;
         for (;file != null; file = file.getParentFile()) {
             if(unversionedParents.contains(file)) {

@@ -271,7 +271,7 @@ public class JspLexerTest extends CslTestBase {
     public void test_QE_tokensTest() throws IOException {
         FileObject file = getTestFile("testfiles/tokensTest.jsp");
 
-        Map<String, String> libs = new HashMap<String, String>();
+        Map<String, String> libs = new HashMap<>();
         libs.put("missing", "/WEB-INF/missing.tld");
         libs.put("tag", "/WEB-INF/tags/");
         libs.put("c", "http://java.sun.com/jstl/core_rt");

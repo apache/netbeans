@@ -128,7 +128,7 @@ public class TypeUtil {
     }
 
     public static Map<String, String> getSimpleAnnotationValues(Annotation annotation) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         String value = annotation.toString();
         int begin = value.indexOf('(') + 1;
         int end = value.lastIndexOf(')');

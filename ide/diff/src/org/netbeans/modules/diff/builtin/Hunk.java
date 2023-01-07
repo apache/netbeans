@@ -33,5 +33,5 @@ public final class Hunk {
     public int baseCount;
     public int modifiedStart; 
     public int modifiedCount;
-    public List<String> lines = new ArrayList<String>(); 
+    public List<String> lines = new ArrayList<>();
 }

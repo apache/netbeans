@@ -126,7 +126,7 @@ public final class CodeTemplatesStorage implements StorageDescription<String, Co
     private static final class Reader extends TemplatesReader {
 
         private Map<String, CodeTemplateDescription> codeTemplatesMap = new HashMap<String, CodeTemplateDescription>();
-        private Set<String> removedTemplates = new HashSet<String>();
+        private Set<String> removedTemplates = new HashSet<>();
         
         // The code template being processed
         private String abbreviation = null;
@@ -279,7 +279,7 @@ public final class CodeTemplatesStorage implements StorageDescription<String, Co
         private static final String AL_REMOVE = "remove"; //NOI18N
         
         private Map<String, CodeTemplateDescription> codeTemplatesMap = new HashMap<String, CodeTemplateDescription>();
-        private Set<String> removedTemplates = new HashSet<String>();
+        private Set<String> removedTemplates = new HashSet<>();
         
         // The code template being processed
         private String abbreviation = null;

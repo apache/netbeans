@@ -293,7 +293,7 @@ public final class MavenCoverageProvider implements CoverageProvider {
         // Not really the total number of lines in the file at all, but close enough - the ones Cobertura recorded.
         int lineCount = 0;
         int executedLineCount = 0;
-        Map<Integer, Integer> detLines = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> detLines = new HashMap<>();
         for (Element line : lines) {
             lineCount++;
             String attr = line.getAttribute(jacoco ? "ci" : "hits");

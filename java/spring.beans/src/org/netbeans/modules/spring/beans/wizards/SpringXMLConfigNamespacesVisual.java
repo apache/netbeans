@@ -196,7 +196,7 @@ private void cbSpringVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
     // End of variables declaration//GEN-END:variables
 
     public String[] getIncludedNamespaces() {
-        List<String> incs = new ArrayList<String>();
+        List<String> incs = new ArrayList<>();
         TableModel model = includesTable.getModel();
 
         for(int i = 0; i < model.getRowCount(); i++) {
@@ -220,7 +220,7 @@ private void cbSpringVersionActionPerformed(java.awt.event.ActionEvent evt) {//G
     private boolean libsInitialized = false;
     private List<Library> springLibs = new ArrayList<Library>();
 
-    private Set<String> usedPrefixes = new HashSet<String>();
+    private Set<String> usedPrefixes = new HashSet<>();
 
     private String generatePrefix(String namespace) {
         String prefix = namespace.substring(namespace.lastIndexOf("/")+1).toLowerCase();

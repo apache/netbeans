@@ -234,7 +234,7 @@ public final class SetExecutionUriAction extends NodeAction {
         try {
             List<ServletInfo> servlets =
                     WebAppMetadataHelper.getServlets(webModule.getMetadataModel());
-            List<String> mappingList = new ArrayList<String>();
+            List<String> mappingList = new ArrayList<>();
             for (ServletInfo si : servlets) {
                 if (className.equals(si.getServletClass())) {
                     mappingList.addAll(si.getUrlPatterns());

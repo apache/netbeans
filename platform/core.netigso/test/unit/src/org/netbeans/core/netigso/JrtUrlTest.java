@@ -45,7 +45,7 @@ public class JrtUrlTest {
     public void initFrameWorkAndThenCreateTheUrl() throws Exception {
         Framework framework;
         for (FrameworkFactory ff : ServiceLoader.load(FrameworkFactory.class)) {
-            Map<String, String> config = new HashMap<String, String>();
+            Map<String, String> config = new HashMap<>();
             framework = ff.newFramework(config);
             framework.init();
             framework.start();

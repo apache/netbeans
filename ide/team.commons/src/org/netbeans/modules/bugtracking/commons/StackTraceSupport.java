@@ -102,7 +102,7 @@ class StackTraceSupport {
            return result;
        }
 
-//       List<Integer> lineBreaks = new ArrayList<Integer>();
+//       List<Integer> lineBreaks = new ArrayList<>();
 //       int pos = -1;
 //       while( (pos = text.indexOf("\n", pos + 1)) > -1) {
 //           lineBreaks.add(pos);
@@ -114,7 +114,7 @@ class StackTraceSupport {
        Matcher m  = ST_PATTERN.matcher(nt);
 
        List<StackTraceElement> st = new ArrayList<StackTraceElement>();
-       subs = new ArrayList<String>();
+       subs = new ArrayList<>();
        int last = -1;       
        int start = -1;
        while( m.find() ) {
@@ -131,7 +131,7 @@ class StackTraceSupport {
                }
                st = new ArrayList<StackTraceElement>();
                start = m.start();
-               subs = new ArrayList<String>();
+               subs = new ArrayList<>();
            }
            StackTraceElement ste = createStackTraceElement(m.group(1), m.group(2), m.group(3));
            if ( ste != null ) {

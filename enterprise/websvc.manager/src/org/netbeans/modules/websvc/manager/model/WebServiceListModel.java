@@ -63,8 +63,8 @@ public class WebServiceListModel {
     private List<WebServiceData> webServices = Collections.synchronizedList(new ArrayList<WebServiceData>());
     private List<WebServiceGroup> webServiceGroups = Collections.synchronizedList(new ArrayList<WebServiceGroup>());
     // To maintain the display names for the webservice/port
-    private Set<String> uniqueDisplayNames = Collections.synchronizedSet(new HashSet<String>());
-    private List<String> partnerServices = new ArrayList<String>();
+    private Set<String> uniqueDisplayNames = Collections.synchronizedSet(new HashSet<>());
+    private List<String> partnerServices = new ArrayList<>();
     private static WebServiceListModel websvcNodeModel = new WebServiceListModel();
     private boolean initialized = false;
     private RestFolderListener partnerServiceListener;

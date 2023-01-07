@@ -34,7 +34,7 @@ public class GoalsProviderImpl implements GoalsProvider {
     
     @Override public Set<String> getAvailableGoals() {
         List<String> groups = EmbedderFactory.getProjectEmbedder().getSettings().getPluginGroups();
-        Set<String> grps = new HashSet<String>(groups);
+        Set<String> grps = new HashSet<>(groups);
         grps.add("org.apache.maven.plugins"); //NOI18N
         grps.add("org.codehaus.mojo"); //NOI18N
         try {

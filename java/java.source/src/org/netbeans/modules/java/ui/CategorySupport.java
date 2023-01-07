@@ -683,7 +683,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
 
     private static class PreviewPreferences extends AbstractPreferences {
         
-        private Map<String,Object> map = new HashMap<String, Object>();
+        private Map<String,Object> map = new HashMap<>();
 
         public PreviewPreferences() {
             super(null, ""); // NOI18N
@@ -760,7 +760,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
         }
 
         protected String[] keysSpi() throws BackingStoreException {
-            Set<String> keys = new HashSet<String>();
+            Set<String> keys = new HashSet<>();
             for(Preferences p : delegates) {
                 keys.addAll(Arrays.asList(p.keys()));
             }

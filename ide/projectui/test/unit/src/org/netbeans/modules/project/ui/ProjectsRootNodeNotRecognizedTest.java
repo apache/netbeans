@@ -65,13 +65,13 @@ public class ProjectsRootNodeNotRecognizedTest extends NbTestCase {
         FileObject foAnother = TestSupport.createTestProject(workDir, "prj_2");
         FileObject foData = foAnother.createData("data", "txt");
 
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         list.add(URLMapper.findURL(foMain, URLMapper.EXTERNAL));
         list.add(URLMapper.findURL(foAnother, URLMapper.EXTERNAL));
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
         icons.add(new ExtIcon());
         icons.add(new ExtIcon());
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add(list.get(0).toExternalForm());
         names.add(list.get(1).toExternalForm());
         
@@ -97,7 +97,7 @@ public class ProjectsRootNodeNotRecognizedTest extends NbTestCase {
 
 
     private static final class TestFactory implements ProjectFactory {
-        static Set<FileObject> refused = new HashSet<FileObject>();
+        static Set<FileObject> refused = new HashSet<>();
 
         public boolean isProject(FileObject projectDirectory) {
             return new TestSupport.TestProjectFactory().isProject(projectDirectory);

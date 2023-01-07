@@ -36,7 +36,7 @@ implements FileChangeListener {
     public RecursiveListener(FileObject source, FileChangeListener fcl, boolean keep) {
         super(source);
         this.fcl = fcl;
-        this.kept = keep ? new HashSet<FileObject>() : null;
+        this.kept = keep ? new HashSet<>() : null;
         addAll(source);
     }
 

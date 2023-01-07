@@ -94,7 +94,7 @@ public class BeanClassFinder {
         this.fileObject = fileObject;
         this.startBean = startBean;
         this.startBeanName = startBeanName;
-        this.walkedBeanNames = new HashSet<String>();
+        this.walkedBeanNames = new HashSet<>();
     }
 
     public String findImplementationClass(boolean immediateAction) {

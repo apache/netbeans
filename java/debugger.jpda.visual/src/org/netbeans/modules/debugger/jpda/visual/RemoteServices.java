@@ -1273,7 +1273,7 @@ public class RemoteServices {
         
         private void addType(String listenerType) {
             if (allTypesList == null) {
-                allTypesList = new ArrayList<String>();
+                allTypesList = new ArrayList<>();
                 allTypesList.add(type);
             }
             allTypesList.add(listenerType);

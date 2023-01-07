@@ -81,7 +81,7 @@ public class FileToRepoMappingStorage {
     }
 
     public Collection<String> getAllFirmlyAssociatedUrls() {
-        HashSet<String> associatedUrls = new HashSet<String>(10);
+        HashSet<String> associatedUrls = new HashSet<>(10);
         try {
             Preferences prefs = getPreferences();
             String[] keys = prefs.keys();

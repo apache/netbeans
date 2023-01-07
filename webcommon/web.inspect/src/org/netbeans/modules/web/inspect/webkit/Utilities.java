@@ -95,7 +95,7 @@ public class Utilities {
                 mediaQuery = CSSUtils.normalizeMediaQuery(mediaQuery);
             }
         }
-        Set<String> properties = new HashSet<String>();
+        Set<String> properties = new HashSet<>();
         for (Property property : rule.getStyle().getProperties()) {
             if (property.getText() == null) {
                 // longhand property that is included in the rule
@@ -717,7 +717,7 @@ public class Utilities {
             }
 
             // Check if attributes are the same
-            Map<String,String> attributes = new HashMap<String,String>();
+            Map<String,String> attributes = new HashMap<>();
             for (org.netbeans.modules.web.webkit.debugging.api.dom.Node.Attribute attribute : domNode.getAttributes()) {
                 String name = attribute.getName().toUpperCase();
                 if (ignoreWhenMatching(name)) {

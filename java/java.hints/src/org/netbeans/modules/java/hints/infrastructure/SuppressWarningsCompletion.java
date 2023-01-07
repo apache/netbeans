@@ -82,7 +82,7 @@ public class SuppressWarningsCompletion implements Processor {
         return Collections.emptySet();
     }
 
-    private static final Set<String> supportedAnnotationTypes = new HashSet<String>(Arrays.asList(SuppressWarnings.class.getName()));
+    private static final Set<String> supportedAnnotationTypes = new HashSet<>(Arrays.asList(SuppressWarnings.class.getName()));
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {

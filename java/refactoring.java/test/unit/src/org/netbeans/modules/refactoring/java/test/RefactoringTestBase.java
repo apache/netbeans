@@ -102,7 +102,7 @@ public class RefactoringTestBase extends NbTestCase {
 
         todo.add(sourceRoot);
 
-        Map<String, String> content = new HashMap<String, String>();
+        Map<String, String> content = new HashMap<>();
 
         FileUtil.refreshFor(FileUtil.toFile(sourceRoot));
 
@@ -201,7 +201,7 @@ public class RefactoringTestBase extends NbTestCase {
     protected void setUp() throws Exception {
         System.setProperty("org.netbeans.modules.java.source.usages.SourceAnalyser.fullIndex", "true");
         Logger.getLogger("").setLevel(Level.SEVERE); //turn off chatty logs
-        MimeTypes.setAllMimeTypes(new HashSet<String>());
+        MimeTypes.setAllMimeTypes(new HashSet<>());
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
                     "org/netbeans/modules/java/source/resources/layer.xml",
                     "org/netbeans/modules/java/editor/resources/layer.xml",

@@ -678,7 +678,7 @@ public final class JavadocImports {
         return false;
     }
     
-    private static final Set<String> ALL_REF_TAG_NAMES = new HashSet<String>(
+    private static final Set<String> ALL_REF_TAG_NAMES = new HashSet<>(
             Arrays.asList("@link", "@linkplain", "@value", "@see", "@throws")); // NOI18N
     
     private static boolean isReferenceTag(Token<JavadocTokenId> tag) {
@@ -700,7 +700,7 @@ public final class JavadocImports {
     private static final class UnresolvedImportScanner extends ErrorAwareTreePathScanner<Void, Void> {
         
         private final CompilationInfo javac;
-        private Set<String> unresolved = new HashSet<String>();
+        private Set<String> unresolved = new HashSet<>();
 
         public UnresolvedImportScanner(CompilationInfo javac) {
             this.javac = javac;

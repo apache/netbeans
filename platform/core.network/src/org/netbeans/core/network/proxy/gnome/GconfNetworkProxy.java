@@ -155,7 +155,7 @@ public class GconfNetworkProxy {
      * @return Map of properties retrieved from gconftool-2.
      */
     private static Map<String, String> getGconfMap(String gconfNode) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         
         String command = GCONF_PATH + GCONF_ARGUMENT_LIST_RECURSIVELY + gconfNode;
         

@@ -79,7 +79,7 @@ public class EjbJarProjectOperations implements DeleteOperationImplementation, C
     
     public List<FileObject> getMetadataFiles() {
         FileObject projectDirectory = project.getProjectDirectory();
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         addFile(projectDirectory, "nbproject", files); // NOI18N
         addFile(projectDirectory, "build.xml", files); // NOI18N
@@ -89,7 +89,7 @@ public class EjbJarProjectOperations implements DeleteOperationImplementation, C
     }
     
     public List<FileObject> getDataFiles() {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         FileObject metaInf = project.getEjbModule().getMetaInf();
         if (metaInf != null) {

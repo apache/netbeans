@@ -162,7 +162,7 @@ public class CreateJobPanel extends JPanel implements ChangeListener {
     }
 
     private void computeTakenNames() {
-        takenNames = new HashSet<String>();
+        takenNames = new HashSet<>();
         if (instance != null) {
             for (HudsonJob job : instance.getJobs()) {
                 takenNames.add(job.getName());

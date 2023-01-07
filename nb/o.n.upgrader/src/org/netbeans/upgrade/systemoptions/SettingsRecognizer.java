@@ -78,7 +78,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
     private String version;
     private String instanceClass;
     private String instanceMethod;
-    private Set<String> instanceOf = new HashSet<String>();
+    private Set<String> instanceOf = new HashSet<>();
     
     private byte[] serialdata;
     private CharArrayWriter chaos = null;
@@ -568,7 +568,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
      * @see "#36718"
      */
     private Set<String> quickParse(InputStream is) throws IOException {
-        Set<String> iofs = new HashSet<String>();   // <String>
+        Set<String> iofs = new HashSet<>();   // <String>
         
         if (!expect(is, MODULE_SETTINGS_INTRO)) {
             err.log("Could not read intro "+source); // NOI18N

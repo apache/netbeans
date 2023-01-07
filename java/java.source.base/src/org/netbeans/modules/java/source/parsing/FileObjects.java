@@ -138,7 +138,7 @@ public class FileObjects {
     private static final Pattern MATCHER_PATCH =
                 Pattern.compile("(.+)=(.+)");  //NOI18N
     //todo: If more clients than btrace will need this, create a SPI.
-    private static final Set<String> javaFlavorExt = new HashSet<String>();
+    private static final Set<String> javaFlavorExt = new HashSet<>();
     static {
         javaFlavorExt.add("btrace");    //NOI18N
         javaFlavorExt.add("jsh");       //NOI18N

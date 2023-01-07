@@ -489,7 +489,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
                 _extraCompilationUnitsExecute.put(pkgroot, ClassPathSupport.createClassPath(new URL[0]));
             } else {
                 class CPI implements ClassPathImplementation, PropertyChangeListener, AntProjectListener {
-                    final Set<String> relevantProperties = new HashSet<String>();
+                    final Set<String> relevantProperties = new HashSet<>();
                     final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
                     String cpS = classpathS;
                     @SuppressWarnings("LeakingThisInConstructor")

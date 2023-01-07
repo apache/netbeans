@@ -74,7 +74,7 @@ class AnnotationGenerator {
         if (mappings == null || mappings.length <= 0)
             return null;
 
-        List<String> patterns = new ArrayList<String>();
+        List<String> patterns = new ArrayList<>();
         for (String s : mappings) {
             patterns.add(s);
         }
@@ -86,7 +86,7 @@ class AnnotationGenerator {
         if (params == null || params.length <= 0)
             return null;
 
-        List<String> initParams = new ArrayList<String>();
+        List<String> initParams = new ArrayList<>();
         for (String[] param : params) {
             initParams.add("@WebInitParam(name=\""+param[0]+"\", value=\""+param[1]+"\")");
         }
@@ -123,9 +123,9 @@ class AnnotationGenerator {
     private static String generMappings(String filterName, List<FilterMappingData> mappings, Map<String, Object> parameters) {
         // Let's compute union of all specified dispatchers -- annotation is more
         // restrictive then DD and only one set of disoatchers may be specified.
-        Set<String> dispatchers = new HashSet<String>();
-        List<String> urlPatterns = new ArrayList<String>();
-        List<String> servletNames = new ArrayList<String>();
+        Set<String> dispatchers = new HashSet<>();
+        List<String> urlPatterns = new ArrayList<>();
+        List<String> servletNames = new ArrayList<>();
         for (FilterMappingData item : mappings) {
             if (item.getName().equals(filterName)) {
                 if (item.getType() == FilterMappingData.Type.URL) {

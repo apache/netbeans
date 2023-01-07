@@ -365,7 +365,7 @@ public final class TestUtil {
 //            FileUtil.createFolder(systemDir);
 //            lfs.setRootDirectory(systemDir);
 //            lfs.setReadOnly(false);
-//            List<FileSystem> layers = new ArrayList<FileSystem>();
+//            List<FileSystem> layers = new ArrayList<>();
 //            layers.add(lfs);
 //            // get layer for the AS/GlassFish
 //            addLayer(layers, "org/netbeans/modules/j2ee/sun/ide/j2ee/layer.xml");

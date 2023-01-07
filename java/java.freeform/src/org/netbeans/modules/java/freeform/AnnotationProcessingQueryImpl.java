@@ -205,7 +205,7 @@ class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryImplemen
             if (result != null) {
                 return result.isEmpty() ? null : result;
             }
-            result = new ArrayList<String>();
+            result = new ArrayList<>();
             if (ap != null) {
                 for (Element e : XMLUtil.findSubElements(ap)) {
                     if (e.getLocalName().equals(EL_PROCESSOR)) {
@@ -254,7 +254,7 @@ class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryImplemen
             if (result != null) {
                 return result;
             }
-            result = new HashMap<String, String>();
+            result = new HashMap<>();
             if (ap != null) {
                 for (Element e : XMLUtil.findSubElements(ap)) {
                     if (e.getLocalName().equals(EL_PROCESSOR_OPTION)) {

@@ -177,7 +177,7 @@ public class PanelSourceFolders extends SettingsPanel implements PropertyChangeL
     }
 
     private void searchClassFiles(File[] folders) throws WizardValidationException {
-        List<File> classFiles = new ArrayList<File>();
+        List<File> classFiles = new ArrayList<>();
         for (File folder : folders) {
             findClassFiles(folder, classFiles);
         }

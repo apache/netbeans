@@ -734,7 +734,7 @@ public class FolderObjTest extends NbTestCase {
         assertTrue(new File(f,"child2").createNewFile());
         final File child3 = new File(f,"child3");
         assertTrue(child3.createNewFile());
-        final List<FileObject> keepThem = new ArrayList<FileObject>();
+        final List<FileObject> keepThem = new ArrayList<>();
         fo.addFileChangeListener(new FileChangeAdapter(){
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1488,8 +1488,8 @@ public class FolderObjTest extends NbTestCase {
         parent.getChildren();
         fs.refresh(true);
 
-        final ArrayList<FileObject> deleted = new ArrayList<FileObject>();
-        final ArrayList<FileObject> created = new ArrayList<FileObject>();
+        final ArrayList<FileObject> deleted = new ArrayList<>();
+        final ArrayList<FileObject> created = new ArrayList<>();
         
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
@@ -1535,12 +1535,12 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(parent);
 
 
-        final ArrayList<String> events = new ArrayList<String>();
+        final ArrayList<String> events = new ArrayList<>();
 
-        final ArrayList<String> deletedIncrement = new ArrayList<String>();
-        final ArrayList<String> createdIncrement = new ArrayList<String>();
+        final ArrayList<String> deletedIncrement = new ArrayList<>();
+        final ArrayList<String> createdIncrement = new ArrayList<>();
         
-        final ArrayList<FileObject> hardRef = new ArrayList<FileObject>();
+        final ArrayList<FileObject> hardRef = new ArrayList<>();
         final FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {

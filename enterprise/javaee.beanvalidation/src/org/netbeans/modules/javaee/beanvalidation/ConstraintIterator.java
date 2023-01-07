@@ -65,13 +65,13 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
         DataObject dTemplate = DataObject.find( template );
         List<String> targetElements = (List<String>) wizard.getProperty(WizardProperties.TARGET_ELEMENTS);
         if (targetElements == null) {
-            targetElements = new ArrayList<String>();
+            targetElements = new ArrayList<>();
         }
         String validatorClassName = (String) wizard.getProperty(WizardProperties.VALIDATOR_CLASS_NAME);
         String validatorType = (String)wizard.getProperty(WizardProperties.VALIDATOR_TYPE);
         boolean generateValidator = validatorClassName !=null;
 
-        HashMap<String, Object> templateProperties = new HashMap<String, Object>();
+        HashMap<String, Object> templateProperties = new HashMap<>();
         templateProperties.put(WizardProperties.TARGET_ELEMENTS, targetElements);
         if (generateValidator) {
             templateProperties.put(WizardProperties.VALIDATOR_CLASS_NAME, validatorClassName);
@@ -199,7 +199,7 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
     private static DataObject createValidator(DataFolder df, FileObject template, String className, String type, String constraintClass) {
         try {
             DataObject dTemplate = DataObject.find(template);
-            HashMap<String, Object> templateProperties = new HashMap<String, Object>();
+            HashMap<String, Object> templateProperties = new HashMap<>();
             templateProperties.put(WizardProperties.VALIDATOR_TYPE, type);
             templateProperties.put(WizardProperties.CONSTRAINT_CLASS_NAME, constraintClass);
             return dTemplate.createFromTemplate(df, className,templateProperties);

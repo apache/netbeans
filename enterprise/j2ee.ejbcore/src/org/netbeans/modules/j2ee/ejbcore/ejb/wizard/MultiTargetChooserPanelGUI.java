@@ -68,7 +68,7 @@ public class MultiTargetChooserPanelGUI extends javax.swing.JPanel implements Ac
     
     private Project project;
     private String expectedExtension;
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private int type;
     private SourceGroup groups[];
     private boolean ignoreRootCombo;

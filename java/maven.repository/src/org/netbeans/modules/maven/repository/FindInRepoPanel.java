@@ -44,7 +44,7 @@ public class FindInRepoPanel extends javax.swing.JPanel implements DocumentListe
         List<QueryField> fq = new ArrayList<QueryField>();
         String q = txtFind.getText().trim();
         String[]  splits = q.split(" "); //NOI118N
-        List<String> fields = new ArrayList<String>();
+        List<String> fields = new ArrayList<>();
         fields.add(QueryField.FIELD_GROUPID);
         fields.add(QueryField.FIELD_ARTIFACTID);
         fields.add(QueryField.FIELD_VERSION);

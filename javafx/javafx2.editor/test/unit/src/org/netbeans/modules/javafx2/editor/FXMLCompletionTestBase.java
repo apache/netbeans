@@ -135,7 +135,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
             "/org/netbeans/modules/defaults/mf-layer.xml",
             "/org/netbeans/modules/xml/text/resources/mf-layer.xml",
         };
-        Collection<URL> allUrls = new ArrayList<URL>();
+        Collection<URL> allUrls = new ArrayList<>();
         for (String u : initUrls) {
             if (u.charAt(0) == '/') {
                 u = u.substring(1);

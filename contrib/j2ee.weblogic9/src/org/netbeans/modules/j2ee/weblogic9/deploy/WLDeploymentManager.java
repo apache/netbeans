@@ -768,7 +768,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
     public void deployOptionalPackages(File[] optionalPackages) {
         CommandBasedDeployer wlDeployer = new CommandBasedDeployer(this);
         if (optionalPackages.length > 0) {
-            Set<File> files = new HashSet<File>(Arrays.asList(optionalPackages));
+            Set<File> files = new HashSet<>(Arrays.asList(optionalPackages));
             ProgressObject po = wlDeployer.deployLibraries(files, getDeployTargets());
             ProgressObjectSupport.waitFor(po);
         }
@@ -984,7 +984,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
 
         @Override
         public URL resolveWebURL() {
-            List<URL> candidates = new ArrayList<URL>();
+            List<URL> candidates = new ArrayList<>();
             String url = getWebURL();
             if (url != null) {
                 try {

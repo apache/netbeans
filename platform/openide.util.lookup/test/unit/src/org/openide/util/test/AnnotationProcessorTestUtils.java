@@ -100,7 +100,7 @@ public class AnnotationProcessorTestUtils {
      * @return true if compilation succeeded, false if it failed
      */
     public static boolean runJavac(File src, String srcIncludes, File dest, File[] cp, OutputStream stderr, String source) {
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
         args.add("-classpath");
         StringBuilder b = new StringBuilder(dest.getAbsolutePath());
         if (cp != null) {

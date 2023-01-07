@@ -422,7 +422,7 @@ public class ReplaceBufferByString {
     /**
      * Methods, which are present on the StringBuffer, but are not available with String. 
      */
-    private static final Set<String> INCOMPATIBLE_METHOD_NAMES = new HashSet<String>(Arrays.<String>asList(
+    private static final Set<String> INCOMPATIBLE_METHOD_NAMES = new HashSet<>(Arrays.<String>asList(
         "append", // NOI18N
         "delete", // NOI18N
         "deleteCharAt", // NOI18N

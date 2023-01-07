@@ -143,7 +143,7 @@ public class MergeEngines {
         }
 
         private List<String> findUrlMappingsForServlet(ServletMapping[] mappings, String servletName) {
-            List<String> mpgs = new ArrayList<String>();
+            List<String> mpgs = new ArrayList<>();
             if (mappings != null) {
                 for (ServletMapping sm : mappings) {
                     if (sm.getServletName().equals(servletName))
@@ -186,7 +186,7 @@ public class MergeEngines {
         }
 
         private List<String> findUrlMappingsForFilter(FilterMapping[] mappings, String filterName) {
-            List<String> mpgs = new ArrayList<String>();
+            List<String> mpgs = new ArrayList<>();
             if (mappings != null) {
                 for (FilterMapping fm : mappings) {
                     if (fm.getFilterName().equals(filterName) && fm.getUrlPattern() != null)

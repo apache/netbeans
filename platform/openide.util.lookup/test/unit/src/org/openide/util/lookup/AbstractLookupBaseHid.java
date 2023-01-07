@@ -358,7 +358,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
             fail ("First object is not first: " + found + " != " + i1);
         }
         
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         list.add (i2);
         list.add (i1);
         ic.set (list, null);
@@ -445,7 +445,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         Runnable r2 = new Runnable () {
             public void run () {}
         };
-        List<Object> l = new ArrayList<Object>();
+        List<Object> l = new ArrayList<>();
 
         l.add (s1);
         l.add (s2);
@@ -479,7 +479,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         Integer i1 = 1;
         Long i2 = 2L;
         
-        List<Object> l = new ArrayList<Object>();
+        List<Object> l = new ArrayList<>();
         l.add (i1);
         l.add (i2);
         ic.set (l, null);
@@ -501,7 +501,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
      */
     public void testSetPairs () {
         // test setPairs method
-        List<Object> li = new ArrayList<Object>();
+        List<Object> li = new ArrayList<>();
         li.addAll (Arrays.asList (INSTANCES));
         ic.set (li, null);
         
@@ -528,7 +528,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
      */
     public void testSetPairsFire () {
         // test setPairs method
-        List<Object> li = new ArrayList<Object>();
+        List<Object> li = new ArrayList<>();
         li.addAll (Arrays.asList (INSTANCES));
         ic.set (li, null);
         
@@ -557,7 +557,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
     public void testSetPairsDoesNotFire () {
         Object tmp = new Object ();
 
-        List<Object> li = new ArrayList<Object>();
+        List<Object> li = new ArrayList<>();
         li.add (tmp);
         li.addAll (Arrays.asList (INSTANCES));
         ic.set (li, null);
@@ -1188,7 +1188,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
     }
     
     public void testAddALotOfPairsIntoTheLookup () throws Exception {
-        List<Integer> arr = new ArrayList<Integer>();
+        List<Integer> arr = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
             arr.add(i);
         }

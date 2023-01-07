@@ -72,7 +72,7 @@ final class JavadocQuery implements JavadocForBinaryQueryImplementation {
                     }
                 }
                 if (rightCU) {
-                    List<URL> resultURLs = new ArrayList<URL>();
+                    List<URL> resultURLs = new ArrayList<>();
                     for (Element javadocTo : XMLUtil.findSubElements(cu)) {
                         if (javadocTo.getLocalName().equals("javadoc-built-to")) { // NOI18N
                             String rawtext = XMLUtil.findText(javadocTo);

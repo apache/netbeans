@@ -64,7 +64,7 @@ class ConnectionCustomEditor extends javax.swing.JPanel {
         setupBrowseButton(propertyDetailsButton);
         setupBrowseButton(methodDetailsButton);
 
-        beanList = new ArrayList<RADComponent>();
+        beanList = new ArrayList<>();
         for (RADComponent radComp : formModel.getAllComponents()) {
             if (valueType.isAssignableFrom(radComp.getBeanClass()))
                 beanList.add(radComp);

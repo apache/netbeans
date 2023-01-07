@@ -1536,7 +1536,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
         if (f != null) {
             String attrFromFO = (String)f.getAttribute(EA_ASSIGNED_LOADER);
             if (attrFromFO == null || (! attrFromFO.equals(getLoader().getClass().getName()))) {
-                Set<FileObject> single = new HashSet<FileObject>(); // Collections.singleton is r/o, this must be writable
+                Set<FileObject> single = new HashSet<>(); // Collections.singleton is r/o, this must be writable
                 single.add(f);
                 if (!DataObjectPool.getPOOL().revalidate(single).isEmpty()) {
                     LOG.info("It was not possible to invalidate data object: " + this); // NOI18N

@@ -244,7 +244,7 @@ public class EntriesCache {
     private Map<String, String> mergeThisDirAttributes(final boolean isDirectory, final String fileName, final EntryAttributes ea) {
         Map<String, String> attributes = ea.get(fileName);
         if(attributes == null) {
-           attributes = new HashMap<String, String>();
+           attributes = new HashMap<>();
            ea.put(fileName, attributes);
         }
         if (!ea.containsKey(SVN_THIS_DIR)) {
@@ -332,7 +332,7 @@ public class EntriesCache {
         int attrIndex = 0;
 
         String entryName = null;
-        Map<String, String> attributes = new HashMap<String, String>();
+        Map<String, String> attributes = new HashMap<>();
 
         String nextLine = attributePool.get(entriesReader.readLine());
         if (nextLine == null && new File(entryFile.getParentFile().getParentFile(), SvnUtils.SVN_WC_DB).exists()) {
@@ -363,7 +363,7 @@ public class EntriesCache {
             if (DELIMITER.equals(nextLine)) {
                 attributes.put(WorkingCopyDetails.VERSION_ATTR_KEY, WorkingCopyDetails.VERSION_14);
                 returnValue.put(entryName, attributes);
-                attributes = new HashMap<String, String>();
+                attributes = new HashMap<>();
                 attrIndex = 0;
                 nextLine = attributePool.get(entriesReader.readLine());
                 continue;
@@ -409,7 +409,7 @@ public class EntriesCache {
 
         public void startElement(String uri, String localName, String qName, Attributes elementAttributes) throws SAXException {
             if (ENTRY_ELEMENT_NAME.equals(qName)) {
-                Map<String, String> attributes = new HashMap<String, String>();
+                Map<String, String> attributes = new HashMap<>();
                 for (int i = 0; i < elementAttributes.getLength(); i++) {
                     String name = attributePool.get(elementAttributes.getQName(i));
                     String value = attributePool.get(elementAttributes.getValue(i));

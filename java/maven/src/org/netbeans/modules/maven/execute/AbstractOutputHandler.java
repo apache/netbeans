@@ -333,7 +333,7 @@ public abstract class AbstractOutputHandler {
     
     //MEVENIDE-637   
     public static List<String> splitMultiLine(String input) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         String[] strs = input.split("\\r|\\n"); //NOI18N
         for (int i = 0; i < strs.length; i++) {
             if(strs[i].length()>0){

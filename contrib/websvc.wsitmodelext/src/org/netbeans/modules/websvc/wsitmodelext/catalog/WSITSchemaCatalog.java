@@ -63,7 +63,7 @@ public class WSITSchemaCatalog implements CatalogReader, CatalogDescriptor2, Ent
      * @return null if cannot proceed, try later.
      */
     public Iterator<String> getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.addAll(getLocalSchemaDefs().keySet());
         return list.listIterator();
     }

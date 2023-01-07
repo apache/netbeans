@@ -229,7 +229,7 @@ public class ComponentPeerTest extends NbTestCase {
             throw new IllegalStateException();
         }
 
-        private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private List<ChangeListener> listeners = new ArrayList<>();
         
         public synchronized void addChangeListener(ChangeListener l) {
             listeners.add(l);

@@ -104,7 +104,7 @@ public class ProjectTemplateAttributesProviderTest extends NbTestCase {
         assertAttribute("default", checked, "license");
         assertAttribute(FEQImpl.ENCODING, checked, "encoding");
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("foo", "bar");
 
         checked = ProjectTemplateAttributesProvider.checkProjectAttrs(map, map, folder);
@@ -124,7 +124,7 @@ public class ProjectTemplateAttributesProviderTest extends NbTestCase {
         assertAttribute(FEQImpl.ENCODING, checked, "encoding");
         assertEquals("bar", checked.get("foo"));
 
-        Map<String, String> projectMap = new HashMap<String, String>();
+        Map<String, String> projectMap = new HashMap<>();
         projectMap.put("license", "gpl");
         projectMap.put("encoding", "UTF-8");
         map.put("project", projectMap);
@@ -156,7 +156,7 @@ public class ProjectTemplateAttributesProviderTest extends NbTestCase {
 
         @Override
         public Map<String, ?> attributesFor(CreateDescriptor desc) {
-            Map<String, Object> m = new HashMap<String, Object>();
+            Map<String, Object> m = new HashMap<>();
             m.put("jedna", 2); // used by Prov2
             m.put("dve", "Honza jde");
             return m;

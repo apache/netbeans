@@ -149,7 +149,7 @@ public abstract class ProjectClassPathModifierImplementation {
     }
     
     private static URL[] convertURIsToURLs(URI[] uris) {
-        List<URL> content = new ArrayList<URL>();
+        List<URL> content = new ArrayList<>();
         for (URI uri : uris) {
             if (!uri.isAbsolute()) {
                 throw new UnsupportedOperationException("default modifier handles only absolute URIs - "+uri); // NOI18N            }

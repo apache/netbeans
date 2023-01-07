@@ -618,7 +618,7 @@ public class JSTestDriverSupport {
             if (split == null) {
                 return null;
             }
-            List<String> r = new ArrayList<String>();
+            List<String> r = new ArrayList<>();
             for (int i = 0; i < split.length; i++) {
                 String s = split[i].trim();
                 if (s.length() > 0) {

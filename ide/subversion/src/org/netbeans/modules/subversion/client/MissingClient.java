@@ -48,7 +48,7 @@ public class MissingClient implements ActionListener, HyperlinkListener {
     
     private final MissingClientPanel panel;
     private static final HashSet<String> ALLOWED_EXECUTABLES =
-            new HashSet<String>(Arrays.asList(new String[] {"svn", "svn.exe"} )); //NOI18N
+            new HashSet<>(Arrays.asList(new String[] {"svn", "svn.exe"} )); //NOI18N
     
     /** Creates a new instance of MissingSvnClient */
     public MissingClient() {

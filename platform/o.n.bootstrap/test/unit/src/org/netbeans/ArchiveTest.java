@@ -107,12 +107,12 @@ public class ArchiveTest extends NbTestCase {
         
         File tmp = new File(new File(cluster, "modules"), dashes + ".jar");
 
-        Map<String,String> attribs = new HashMap<String, String>();
+        Map<String,String> attribs = new HashMap<>();
         for (int i = 0; i < attr.length; i += 2) {
             attribs.put(attr[i], attr[i + 1]);
         }
 
-        Map<String,String> files = new HashMap<String, String>();
+        Map<String,String> files = new HashMap<>();
         files.put("fake/" + cnb, cnb);
 
         tmp.getParentFile().mkdirs();

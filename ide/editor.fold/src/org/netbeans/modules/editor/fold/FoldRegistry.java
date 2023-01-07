@@ -205,7 +205,7 @@ public final class FoldRegistry  {
         public void addChangeListener(ChangeListener l) {
             synchronized (this) {
                 if (listeners == null) {
-                    listeners = new ArrayList<ChangeListener>();
+                    listeners = new ArrayList<>();
                 }
                 listeners.add(l);
             }

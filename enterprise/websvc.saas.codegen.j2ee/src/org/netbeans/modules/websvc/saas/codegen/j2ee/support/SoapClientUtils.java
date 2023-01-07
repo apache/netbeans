@@ -47,7 +47,7 @@ public class SoapClientUtils {
     private static Map<String,String> xsdToJavaTypes = null;
     public static String toJavaType(String xsdType) {
         if ( xsdToJavaTypes == null) {
-            xsdToJavaTypes = new HashMap<String,String>();
+            xsdToJavaTypes = new HashMap<>();
             xsdToJavaTypes.put("string", "java.lang.String"); //NOI18N
             xsdToJavaTypes.put("boolean", "java.lang.Boolean"); //NOI18N
             xsdToJavaTypes.put("date", "java.sql.Date"); //NOI18N

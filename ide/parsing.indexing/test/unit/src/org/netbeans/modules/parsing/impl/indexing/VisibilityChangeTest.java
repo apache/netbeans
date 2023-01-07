@@ -590,7 +590,7 @@ public class VisibilityChangeTest extends IndexingTestBase {
 
     public static class MockVisibilityQuery implements VisibilityQueryImplementation2 {
 
-        private final Set<FileObject> invisibles = Collections.synchronizedSet(new HashSet<FileObject>());
+        private final Set<FileObject> invisibles = Collections.synchronizedSet(new HashSet<>());
         private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
 
         void hide(FileObject... fos) {

@@ -258,7 +258,7 @@ public abstract class AbstractCommandTestCase extends AbstractSvnTestCase {
     }
 
     protected class FileNotifyListener implements ISVNNotifyListener {
-        private Set<File> files = new HashSet<File>();
+        private Set<File> files = new HashSet<>();
         public void setCommand(int arg0) { }
         public void logCommandLine(String arg0) { }
         public void logMessage(String arg0) { }

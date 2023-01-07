@@ -133,7 +133,7 @@ final class OptionsExportModel {
      * @return set of single patterns containing just one # (e.g. [filePattern1#keyPattern1, filePattern2#keyPattern2, filePattern3])
      */
     static Set<String> parsePattern(String pattern) {
-        Set<String> patterns = new HashSet<String>();
+        Set<String> patterns = new HashSet<>();
         if (pattern.contains("#")) {  //NOI18N
             StringBuilder partPattern = new StringBuilder();
             ParserState state = ParserState.START;
@@ -488,7 +488,7 @@ final class OptionsExportModel {
      * @throws IOException if properties cannot be loaded
      */
     private Set<String> matchingKeys(String relativePath, String propertiesPattern) throws IOException {
-        Set<String> matchingKeys = new HashSet<String>();
+        Set<String> matchingKeys = new HashSet<>();
         String[] patterns = propertiesPattern.split("#", 2);
         String filePattern = patterns[0];
         String keyPattern = patterns[1];

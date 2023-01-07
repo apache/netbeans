@@ -510,7 +510,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                             // create parameters
                             List<WsdlParameter> parameters = operation.getParameters();
-                            List<VariableTree> params = new ArrayList<VariableTree>();
+                            List<VariableTree> params = new ArrayList<>();
                             for (WsdlParameter parameter : parameters) {
                                 // create parameter:
                                 // final ObjectOutput arg0
@@ -767,7 +767,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
             return modifiedClass;
         }
 
-        Set<String> operationNames = new HashSet<String>();
+        Set<String> operationNames = new HashSet<>();
         for (Element el : interfaceElements) {
             if (el.getKind() == ElementKind.METHOD) {
                 ExecutableElement methodEl = (ExecutableElement) el;
@@ -818,7 +818,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
                 }
                 // parameters
                 List<? extends VariableTree> params = method.getParameters();
-                List<VariableTree> newParams = new ArrayList<VariableTree>();
+                List<VariableTree> newParams = new ArrayList<>();
                 if (params.size() > 0) {
                     TypeElement paramEl = workingCopy.getElements().getTypeElement("javax.jws.WebParam"); //NOI18N
                     for (VariableTree param: params) {

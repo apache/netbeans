@@ -143,9 +143,9 @@ public final class Clusterize implements WizardDescriptor.ProgressInstantiatingI
     }
 
     void generateConfigFiles() {
-        Set<String> autoload = new HashSet<String>();
-        Set<String> eager = new HashSet<String>();
-        Set<String> enabled = new HashSet<String>();
+        Set<String> autoload = new HashSet<>();
+        Set<String> eager = new HashSet<>();
+        Set<String> enabled = new HashSet<>();
 
         modules.categorize(autoload, eager, enabled);
 

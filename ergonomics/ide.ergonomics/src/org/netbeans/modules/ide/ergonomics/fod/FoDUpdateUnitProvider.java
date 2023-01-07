@@ -119,8 +119,8 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
                 continue;
             }
         }
-        Set<String> baseIDE = new HashSet<String>();
-        Set<String> extra = new HashSet<String>();
+        Set<String> baseIDE = new HashSet<>();
+        Set<String> extra = new HashSet<>();
         for (ModuleInfo mi : notYetProcessed) {
             if (FeatureManager.showInAU(mi)) {
                 if (isPlatformCluster(mi)) {
@@ -159,7 +159,7 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
         Set<String> codeNames, String prefCnb, String displayName, Map<String, UpdateItem> res,
         Set<ModuleInfo> processed
     ) {
-        Set<String> justKits = new HashSet<String>();
+        Set<String> justKits = new HashSet<>();
         justKits.addAll(codeNames);
         String name = "fod." + prefCnb; // NOI18N
         ModuleInfo preferred = null;

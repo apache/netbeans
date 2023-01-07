@@ -67,13 +67,13 @@ public final class ProcessBuilder implements Callable<Process> {
     private String workingDirectory;
 
     /**<i>GuardedBy("this")</i>*/
-    private final List<String> arguments = new ArrayList<String>();
+    private final List<String> arguments = new ArrayList<>();
 
     /**<i>GuardedBy("this")</i>*/
-    private final List<String> paths = new ArrayList<String>();
+    private final List<String> paths = new ArrayList<>();
 
     /**<i>GuardedBy("this")</i>*/
-    private final Map<String, String> envVariables = new HashMap<String, String>();
+    private final Map<String, String> envVariables = new HashMap<>();
 
     /**<i>GuardedBy("this")</i>*/
     private boolean redirectErrorStream;
@@ -229,9 +229,9 @@ public final class ProcessBuilder implements Callable<Process> {
     public Process call() throws IOException {
         String currentExecutable = null;
         String currentWorkingDirectory = null;
-        List<String> currentArguments = new ArrayList<String>();
-        List<String> currentPaths = new ArrayList<String>();
-        Map<String, String> currentEnvVariables = new HashMap<String, String>();
+        List<String> currentArguments = new ArrayList<>();
+        List<String> currentPaths = new ArrayList<>();
+        Map<String, String> currentEnvVariables = new HashMap<>();
         boolean currentRedirectErrorStream = false;
 
         synchronized (this) {

@@ -75,7 +75,7 @@ import org.openide.util.RequestProcessor;
  *         // that would be passed directly to MetadataModel.runReadActionWhenReady()
  *         readHelper = MetadataModelReadHelper.create(model, new MetadataModelAction<EntityMappingsMetadata, List<String>>() {
  *             public List<String> run(EntityMappingsMetadata metadata) throws Exception {
- *                 List<String> result = new ArrayList<String>();
+ *                 List<String> result = new ArrayList<>();
  *                 for (Entity entity : metadata.getRoot().getEntity()) {
  *                     result.add(entity.getName());
  *                 }

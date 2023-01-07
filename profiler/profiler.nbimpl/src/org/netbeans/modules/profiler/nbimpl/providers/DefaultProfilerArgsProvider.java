@@ -48,7 +48,7 @@ public class DefaultProfilerArgsProvider implements StartupExtenderImplementatio
             if (s != null) {
                 Map<String, String> m = ProfilerLauncher.getLastSession().getProperties();
                 if (m != null) {
-                    List<String> args = new ArrayList<String>();
+                    List<String> args = new ArrayList<>();
                     
                     String agentArgs = m.get("agent.jvmargs"); // NOI18N // Always set
                     // remove quoting, expand params to array

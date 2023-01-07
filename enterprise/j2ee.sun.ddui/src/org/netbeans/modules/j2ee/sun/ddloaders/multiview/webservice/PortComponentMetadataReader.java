@@ -122,9 +122,9 @@ public class PortComponentMetadataReader extends CommonBeanReader {
                 String portName = port.getPortComponentName();
                 if(Utils.notEmpty(portName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> portMap = new HashMap<String, Object>();
+                    Map<String, Object> portMap = new HashMap<>();
                     result.put(portName, portMap);
                     portMap.put(DDBinding.PROP_NAME, portName);
                     

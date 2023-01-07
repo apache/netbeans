@@ -171,7 +171,7 @@ public final class AntProjectHelper {
      * Also server as a monitor for {@link #projectXml} and {@link #privateXml} accesses;
      * Xerces' DOM is not thread-safe <em>even for reading<em> (#50198).
      */
-    private final Set<String> modifiedMetadataPaths = new HashSet<String>();
+    private final Set<String> modifiedMetadataPaths = new HashSet<>();
     private Throwable addedProjectXmlPath; // #155010
     
     /**
@@ -605,7 +605,7 @@ public final class AntProjectHelper {
                     pendingHook = p.getLookup().lookupAll(ProjectXmlSavedHook.class);
                     // might still be null
                 }
-                Set<String> toBeCleared = new HashSet<String>();
+                Set<String> toBeCleared = new HashSet<>();
                 try {
                 for (String path : new TreeSet<String>(modifiedMetadataPaths)) {
                     try {
@@ -1341,7 +1341,7 @@ public final class AntProjectHelper {
     static void findDuplicateElements(@NonNull Element parent, FileObject config, boolean shared) {
         NodeList l = parent.getChildNodes();
         int nodeCount = l.getLength();
-        Set<String> known = new HashSet<String>();
+        Set<String> known = new HashSet<>();
         for (int i = 0; i < nodeCount; i++) {
             if (l.item(i).getNodeType() == Node.ELEMENT_NODE) {
                 Node node = l.item(i);

@@ -334,7 +334,7 @@ public final class FileChooserAccessory extends javax.swing.JPanel
     }
 
     private List<String> getRelativeFiles(List<File> files) {
-        List<String> fs = new ArrayList<String>();
+        List<String> fs = new ArrayList<>();
         for (File file : files) {
             String s = PropertyUtils.relativizeFile(baseFolder, file);
             if (s != null) {
@@ -352,7 +352,7 @@ public final class FileChooserAccessory extends javax.swing.JPanel
     }
 
     private List<String> getVariableBasedFiles(List<File> files) {
-        List<String> fs = new ArrayList<String>();
+        List<String> fs = new ArrayList<>();
         for (File file : files) {
             String s = getVariablesModel().getRelativePath(file, false);
             if (s != null) {
@@ -364,7 +364,7 @@ public final class FileChooserAccessory extends javax.swing.JPanel
 
     @Messages({"# {0} - file location", "FileChooserAccessory_no_such_file=Cannot copy nonexistent path {0} to libraries folder."})
     private void copyFiles(List<File> files, FileObject newRoot) throws IOException {
-        List<File> fs = new ArrayList<File>();
+        List<File> fs = new ArrayList<>();
         for (File file : files) {
             FileObject fo = FileUtil.toFileObject(file);
             if (fo == null) {

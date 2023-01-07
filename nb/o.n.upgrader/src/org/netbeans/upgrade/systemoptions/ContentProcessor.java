@@ -69,7 +69,7 @@ class ContentProcessor  {
     }
     
     private final Map<String, String> processProperties(final Map<String, Object> properties, boolean types) {
-        Map<String, String> allProps = new HashMap<String, String>();
+        Map<String, String> allProps = new HashMap<>();
         for (Iterator<Map.Entry<String, Object>> it = properties.entrySet().iterator(); it.hasNext();) {
             Map.Entry<String, Object> entry = it.next();
             String name = entry.getKey();
@@ -80,7 +80,7 @@ class ContentProcessor  {
     }
     
     private final  Map<String, Object> parseProperties(final Iterator<Object> it) { // sequences String, Object, SerParser.ObjectWrapper
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         for (; it.hasNext();) {
             Object name = it.next();
             if ("null".equals(name) || name == null) {

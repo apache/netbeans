@@ -58,8 +58,8 @@ class ResourceJavaScript extends TokenReplacer {
         this.jsFolder = jsFolder;
         pkg = "";
         object = "";
-        Map<String, String> tokens = new HashMap<String, String>();
-        entities = new HashMap<String, String>();
+        Map<String, String> tokens = new HashMap<>();
+        entities = new HashMap<>();
         
         StringBuilder restMethods = new StringBuilder();
         StringBuilder stubsMethods = new StringBuilder();
@@ -76,12 +76,12 @@ class ResourceJavaScript extends TokenReplacer {
     }
 
     public FileObject generate() throws IOException{
-        Set<String> entityFiles = new HashSet<String>();
+        Set<String> entityFiles = new HashSet<>();
         for( String entityName : entities.keySet() ){
             if ( ignoredEntities.contains( entityName) ){
                 continue;
             }
-            Map<String,String> tokens = new HashMap<String, String>();
+            Map<String,String> tokens = new HashMap<>();
             tokens.put(ENTITY_NAME_VAR, entityName);
             FileObject entity = createResource(ClientStubsGenerator.JS_ENTITY_TEMPLATE, 
                     entityName ,tokens );
@@ -130,7 +130,7 @@ class ResourceJavaScript extends TokenReplacer {
     protected void createRestMethods(Resource r, String object, String pkg, 
             StringBuilder restMethods, StringBuilder stubMethods) {
         String rjSupport =  RJSSUPPORT+".";
-        Set<String> methodNames = new HashSet<String>();
+        Set<String> methodNames = new HashSet<>();
         Map<String,Method> httpMethods = new HashMap<String, Method>();
         for (Method method : r.getMethods()) {
             createStubMethod(method, rjSupport , pkg, methodNames , stubMethods );

@@ -146,7 +146,7 @@ public class VariablesFormatterFilter extends VariablesFilterAdapter {
     
     public String[] getSupportedTypes () {
         VariablesFormatter[] formatters = getFormatters();
-        List<String> types = new ArrayList<String>();
+        List<String> types = new ArrayList<>();
         for (int i = 0; i < formatters.length; i++) {
             String[] ts = formatters[i].getClassTypes();
             for (String t : ts) {
@@ -158,7 +158,7 @@ public class VariablesFormatterFilter extends VariablesFilterAdapter {
     
     public String[] getSupportedAncestors () {
         VariablesFormatter[] formatters = getFormatters();
-        List<String> types = new ArrayList<String>();
+        List<String> types = new ArrayList<>();
         for (int i = 0; i < formatters.length; i++) {
             if (formatters[i].isIncludeSubTypes()) {
                 String[] ts = formatters[i].getClassTypes();

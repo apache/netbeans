@@ -442,7 +442,7 @@ public class SaasUtil {
     }
 
     public static Set<String> getMediaTypesFromJAXBElement(List<JAXBElement<Representation>> repElements) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (JAXBElement<Representation> repElement : repElements) {
             result.add(repElement.getValue().getMediaType());
         }
@@ -450,7 +450,7 @@ public class SaasUtil {
     }
 
     public static Set<String> getMediaTypes(List<Representation> repTypes) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (Representation repType : repTypes) {
             result.add(repType.getMediaType());
         }

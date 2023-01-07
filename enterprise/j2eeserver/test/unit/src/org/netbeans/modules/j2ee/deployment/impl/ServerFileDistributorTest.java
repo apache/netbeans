@@ -49,7 +49,7 @@ public class ServerFileDistributorTest extends ServerRegistryTestBase {
     protected void setUp() throws Exception {
         super.setUp();
         ServerRegistry registry = ServerRegistry.getInstance();
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(TestDeploymentManager.MULTIPLE_TARGETS, "false");
         props.put(TestDeploymentManager.WORK_DIR, getWorkDirPath());
         registry.addInstance(URL, "user", "password", "TestInstance", true, false, props); // NOI18N

@@ -199,7 +199,7 @@ final class LibrariesNode extends AbstractNode {
 
                             public Void run() throws IOException {
                                 ProjectXMLManager pxm = new ProjectXMLManager(project);
-                                final List<Object> keys = new ArrayList<Object>();
+                                final List<Object> keys = new ArrayList<>();
                                 keys.add(JDK_PLATFORM_NAME);
                                 
                                 SortedSet<String> binOrigs = new TreeSet<String>();
@@ -466,7 +466,7 @@ final class LibrariesNode extends AbstractNode {
                                         }
                                     }
                                     
-                                    Set<String> disabledModules = new HashSet<String>(Arrays.asList(suiteProps.getDisabledModules()));
+                                    Set<String> disabledModules = new HashSet<>(Arrays.asList(suiteProps.getDisabledModules()));
                                     Set<ModuleDependency> dependenciesToIter = new HashSet<ModuleDependency>(Arrays.asList(newDeps));
                                     List<ClusterInfo> updatedClusterPath = null;
                                     boolean changed = false;

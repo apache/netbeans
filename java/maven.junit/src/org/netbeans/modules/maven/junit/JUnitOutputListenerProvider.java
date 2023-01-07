@@ -107,10 +107,10 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         outDirPattern = Pattern.compile ("(?:\\[INFO\\] )?Surefire report directory\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         outDirPattern2 = Pattern.compile("(?:\\[INFO\\] )?Setting reports dir\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         this.config = config;
-        usedNames = new HashSet<String>();
+        usedNames = new HashSet<>();
         startTimeStamp = System.currentTimeMillis();
-        runningTestClasses = new ArrayList<String>();
-        runningTestClassesInParallel = new ArrayList<String>();
+        runningTestClasses = new ArrayList<>();
+        runningTestClassesInParallel = new ArrayList<>();
         surefireRunningInParallel = isSurefireRunningInParallel();
     }
     
@@ -418,7 +418,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 				if (tc.getClassName() != null) {
 				    Collection<String> lst = methods.get(tc.getClassName());
 				    if (lst == null) {
-					lst = new ArrayList<String>();
+					lst = new ArrayList<>();
 					methods.put(tc.getClassName(), lst);
                                         windowslimitcount = windowslimitcount + tc.getClassName().length() + 1; // + 1 for ,
 				    }
@@ -581,7 +581,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         }
         if (text != null) {
             String[] strs = StringUtils.split(text, "\n");
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             if (message != null) {
                 lines.add(message);
             }
@@ -749,7 +749,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 
     private void logText(String text, Testcase test, boolean failure) {
         StringTokenizer tokens = new StringTokenizer(text, "\n"); //NOI18N
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         while (tokens.hasMoreTokens()) {
             lines.add(tokens.nextToken());
         }

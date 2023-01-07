@@ -112,7 +112,7 @@ public class MarkOccurrencesSupport implements CaretListener {
                     annotations = new ArrayList<LanguagesAnnotation> ();
                     highlights = new ArrayList<Highlight> ();
                     Iterator<ASTItem> it = ussages.iterator ();
-                    HashSet<Integer> lines = new HashSet<Integer>();
+                    HashSet<Integer> lines = new HashSet<>();
                     while (it.hasNext ()) {
                         ASTItem i = it.next ();
                         Highlight h = highlighting.highlight (i.getOffset (), i.getEndOffset (), getHighlightAS ());

@@ -97,7 +97,7 @@ public class GroovyCompletionResult extends DefaultCompletionResult {
 
         private ImportCollector(ModuleNode moduleNode) {
             this.moduleNode = moduleNode;
-            this.imports = new ArrayList<String>();
+            this.imports = new ArrayList<>();
         }
 
         public static List<String> collect(ModuleNode root) {

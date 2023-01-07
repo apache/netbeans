@@ -89,7 +89,7 @@ public class LucenePerformanceTest extends NbTestCase {
         }        
         
         
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         startTime = System.currentTimeMillis();
         final Pair<StoppableConvertor<Term,String>,Term> filter = QueryUtil.createPackageFilter("", true);
         index.queryTerms(result, filter.second(), filter.first(), null);
@@ -203,7 +203,7 @@ public class LucenePerformanceTest extends NbTestCase {
                         result.put(key,value);
                     }
                     key = line;
-                    value = new ArrayList<String>();
+                    value = new ArrayList<>();
                 }
                 else {
                     value.add(line.substring(1));

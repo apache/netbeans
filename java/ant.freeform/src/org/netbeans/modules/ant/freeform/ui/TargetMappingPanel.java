@@ -608,7 +608,7 @@ public class TargetMappingPanel extends JPanel implements ActionListener, HelpCt
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
         FreeformProjectGenerator.CustomTarget ct = new FreeformProjectGenerator.CustomTarget();
-        ct.targets = new ArrayList<String>();
+        ct.targets = new ArrayList<>();
         ct.script = antScript;
         custTargets.add(ct);
         customTargetsModel.fireTableDataChanged();

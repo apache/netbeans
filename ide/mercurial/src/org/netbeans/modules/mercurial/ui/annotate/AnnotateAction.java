@@ -233,7 +233,7 @@ public class AnnotateAction extends ContextAction {
     }
 
     private static List<String> getRevisionNumbers (AnnotateLine[] lines) {
-        Set<String> revisions = new HashSet<String>(lines.length);
+        Set<String> revisions = new HashSet<>(lines.length);
         for (AnnotateLine line : lines) {
             if (!(line instanceof FakeAnnotationLine)) {
                 String revision = line.getRevision();

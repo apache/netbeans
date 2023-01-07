@@ -231,7 +231,7 @@ class CountedModel implements TreeModel, ExtendedNodeModel, CheckNodeModel, Tabl
         countCall("setValueAt", node, columnID, value);
         Map<String, Object> values = changedValues.get(node);
         if (values == null) {
-            values = new HashMap<String, Object>();
+            values = new HashMap<>();
             changedValues.put(node, values);
         }
         values.put(columnID, value);

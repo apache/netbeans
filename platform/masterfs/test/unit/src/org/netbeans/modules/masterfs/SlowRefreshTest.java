@@ -113,7 +113,7 @@ public class SlowRefreshTest extends NbTestCase {
 
         Runnable r = (Runnable)obj;
         class AE extends ActionEvent {
-            List<FileObject> files = new ArrayList<FileObject>();
+            List<FileObject> files = new ArrayList<>();
 
             public AE() {
                 super("", 0, "");

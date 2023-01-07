@@ -91,7 +91,7 @@ public class RefTestBase extends NbTestCase {
 
         todo.add(sourceRoot);
 
-        Map<String, String> content = new HashMap<String, String>();
+        Map<String, String> content = new HashMap<>();
         
         FileUtil.refreshFor(FileUtil.toFile(sourceRoot));
 
@@ -163,7 +163,7 @@ public class RefTestBase extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         Logger.getLogger("").setLevel(Level.SEVERE);
-        MimeTypes.setAllMimeTypes(new HashSet<String>());
+        MimeTypes.setAllMimeTypes(new HashSet<>());
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
             "org/netbeans/modules/java/source/resources/layer.xml",
             "org/netbeans/modules/java/editor/resources/layer.xml",

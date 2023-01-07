@@ -98,7 +98,7 @@ public class TestBase2 extends CslTestBase {
             path = "";
         }
         String[] st = PropertyUtils.tokenizePath(path);
-        List<FileObject> fos = new ArrayList<FileObject>();
+        List<FileObject> fos = new ArrayList<>();
         for (int i=0; i<st.length; i++) {
             String token = st[i];
             File f = new File(token);

@@ -136,8 +136,8 @@ public class JavaEEServerModuleFactory implements PayaraModuleFactory {
     
     private static boolean ensureEclipseLinkSupport(PayaraServer server) {
         String payaraHome = server.getServerHome();
-        List<URL> libraryList = new ArrayList<URL>();
-        List<URL> docList = new ArrayList<URL>();
+        List<URL> libraryList = new ArrayList<>();
+        List<URL> docList = new ArrayList<>();
         try {
             File f = ServerUtilities.getJarName(payaraHome, EL_CORE_JAR_MATCHER);
             if (f != null && f.exists()) {

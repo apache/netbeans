@@ -65,7 +65,7 @@ import org.openide.util.WeakListeners;
 public final class CvsInstaller extends VersioningSystem {
     
     public static final Logger LOG = Logger.getLogger(CvsInstaller.class.getName());
-    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<File>(20));
+    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<>(20));
     public static final String FILENAME_CVS = "CVS"; //NOI18N
     public static final String FILENAME_CVS_REPOSITORY = FILENAME_CVS + "/Repository"; // NOI18N
     public static final String FILENAME_CVS_ENTRIES = FILENAME_CVS + "/Entries"; // NOI18N
@@ -111,7 +111,7 @@ public final class CvsInstaller extends VersioningSystem {
             }
         }
 
-        Set<File> done = new HashSet<File>();
+        Set<File> done = new HashSet<>();
         File topmost = null;
         for (; file != null; file = file.getParentFile()) {
             if(unversionedParents.contains(file)) {

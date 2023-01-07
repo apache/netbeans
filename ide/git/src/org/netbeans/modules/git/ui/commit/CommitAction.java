@@ -262,8 +262,8 @@ public class CommitAction extends SingleRepositoryAction {
         }
         
         private void populateCandidates (List<File> addCandidates, List<File> deleteCandidates, Collection<File> commitCandidates) {
-            List<String> excPaths = new ArrayList<String>();
-            List<String> incPaths = new ArrayList<String>();
+            List<String> excPaths = new ArrayList<>();
+            List<String> incPaths = new ArrayList<>();
 
             Iterator<GitLocalFileNode> it = commitFiles.iterator();
             while (it.hasNext()) {

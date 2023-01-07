@@ -101,7 +101,7 @@ public final class AutoupdateSupport {
                              "{0} repository [{1}] has version {2}. ", // NOI18N
                              new Object[] {pluginName, url, serverVersion});
                     if(loggedUrls == null) {
-                        loggedUrls = new HashSet<String>();
+                        loggedUrls = new HashSet<>();
                     } 
                     loggedUrls.add(url);
                 }

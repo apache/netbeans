@@ -192,8 +192,8 @@ public class TreeModelEditor extends PropertyEditorSupport
      */
     TreeModel createTreeModel(String txt) {
         StringTokenizer st = new StringTokenizer(txt, "\n"); // NOI18N
-        List<Integer> indents = new ArrayList<Integer>();
-        List<String> names = new ArrayList<String>();
+        List<Integer> indents = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         while (st.hasMoreTokens()) {
             String line = st.nextToken();
             String name = line.trim();

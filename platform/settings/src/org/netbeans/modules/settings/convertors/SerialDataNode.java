@@ -237,7 +237,7 @@ public final class SerialDataNode extends DataNode {
     }
 
     private Collection<String> createSupportedPropertyNames(BeanNode.Descriptor descr) {
-        ArrayList<String> supportedPropertyNames = new ArrayList<String>();
+        ArrayList<String> supportedPropertyNames = new ArrayList<>();
         if (descr.property != null) {
             for (int i = 0; i < descr.property.length; i++) {
                 Node.Property property = descr.property[i];

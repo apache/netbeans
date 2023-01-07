@@ -66,7 +66,7 @@ public class JavaSourceTaskFactoryTest extends NbTestCase {
     }
     
     private List<FileObject> files;
-    private List<FileObject> filesWithTasks = new ArrayList<FileObject>();
+    private List<FileObject> filesWithTasks = new ArrayList<>();
     private Map<FileObject, CancellableTask<CompilationInfo>> file2Task = new HashMap();
     
     private Map<FileObject, CancellableTask<CompilationInfo>> addedTasks = new HashMap<FileObject, CancellableTask<CompilationInfo>>();

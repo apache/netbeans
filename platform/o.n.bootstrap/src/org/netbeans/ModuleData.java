@@ -166,7 +166,7 @@ class ModuleData {
                 String friends = attr.getValue("OpenIDE-Module-Friends"); // NOI18N
                 if (friends != null) {
                     StringTokenizer tok = new StringTokenizer(friends, ", "); // NOI18N
-                    set = new HashSet<String>();
+                    set = new HashSet<>();
                     while (tok.hasMoreTokens()) {
                         String piece = tok.nextToken();
                         if (piece.indexOf('/') != -1) {
@@ -209,7 +209,7 @@ class ModuleData {
         } catch (IllegalArgumentException iae) {
             throw (InvalidException) new InvalidException("While parsing " + codeName + " a dependency attribute: " + iae.toString()).initCause(iae); // NOI18N
         }
-        this.coveredPackages = new HashSet<String>();
+        this.coveredPackages = new HashSet<>();
         this.agentClass = attr.getValue("Agent-Class");
     }
     
@@ -242,7 +242,7 @@ class ModuleData {
         this.publicPackages = null;
         this.provides = computeProvides(m, mf.getMainAttributes(), false, true);
         this.dependencies = computeImported(mf.getMainAttributes());
-        this.coveredPackages = new HashSet<String>();
+        this.coveredPackages = new HashSet<>();
         this.agentClass = getMainAttribute(mf, "Agent-Class"); // NOI18N
         this.fragmentHostCodeName = null;
     }
@@ -252,12 +252,12 @@ class ModuleData {
             this.codeName = dis.readUTF();
             this.codeNameBase = dis.readUTF();
             this.codeNameRelease = dis.readInt();
-            this.coveredPackages = readStrings(dis, new HashSet<String>(), true);
+            this.coveredPackages = readStrings(dis, new HashSet<>(), true);
             this.dependencies = (Dependency[]) dis.readObject();
             this.implVersion = dis.readUTF();
             this.buildVersion = dis.readUTF();
             this.provides = readStrings(dis);
-            this.friendNames = readStrings(dis, new HashSet<String>(), false);
+            this.friendNames = readStrings(dis, new HashSet<>(), false);
             this.specVers = new SpecificationVersion(dis.readUTF());
             this.publicPackages = Module.PackageExport.read(dis);
             this.agentClass = dis.readUTF();
@@ -497,7 +497,7 @@ class ModuleData {
         return set;
     }
     private String[] readStrings(ObjectInput dis) throws IOException {
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         readStrings(dis, arr, false);
         return arr.toArray(new String[arr.size()]);
     }

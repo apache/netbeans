@@ -75,7 +75,7 @@ public class NbArtifactFixer implements ArtifactFixer {
         //#234586
         Set<String> gavSet = gav.get();
         if (gavSet == null) {
-            gavSet = new HashSet<String>();
+            gavSet = new HashSet<>();
             gav.set(gavSet);
         }
         String id = artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getVersion();

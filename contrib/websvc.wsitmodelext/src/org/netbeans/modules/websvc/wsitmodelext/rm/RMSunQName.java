@@ -64,7 +64,7 @@ public enum RMSunQName implements SchemaLocationProvider {
     private final QName qName;
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         hmap.put(RMSUN_NS_URI, local ? RMSUN_NS_LOCAL : RMSUN_NS_EXT);
         return hmap;
     }

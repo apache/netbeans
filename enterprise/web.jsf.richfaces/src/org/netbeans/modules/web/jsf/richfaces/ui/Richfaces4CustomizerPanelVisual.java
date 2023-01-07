@@ -96,7 +96,7 @@ public final class Richfaces4CustomizerPanelVisual extends javax.swing.JPanel im
 
     public void initLibraries(final boolean firstInit) {
         long time = System.currentTimeMillis();
-        final List<String> registeredRichfaces = new ArrayList<String>();
+        final List<String> registeredRichfaces = new ArrayList<>();
 
         RequestProcessor.getDefault().post(new Runnable() {
 

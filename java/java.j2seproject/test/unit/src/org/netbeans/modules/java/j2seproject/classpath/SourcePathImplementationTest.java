@@ -191,8 +191,8 @@ public class SourcePathImplementationTest extends NbTestCase {
     }
 
     private static class TestListener implements PropertyChangeListener {
-        private Set<String> events = new HashSet<String>();
-        private Set<String> forbiddenEvents = new HashSet<String>();
+        private Set<String> events = new HashSet<>();
+        private Set<String> forbiddenEvents = new HashSet<>();
 
         public void propertyChange(PropertyChangeEvent evt) {
             String propName = evt.getPropertyName();

@@ -49,7 +49,7 @@ public class WsdlSaasNodeChildren extends SaasNodeChildren<Object> {
         State state = getSaas().getState();
     
         if (state == Saas.State.READY) {
-            ArrayList<Object> keys = new ArrayList<Object>();
+            ArrayList<Object> keys = new ArrayList<>();
             List<WsdlSaasPort> ports = getSaas().getPorts();
             Collections.sort(ports);
             keys.addAll(ports);

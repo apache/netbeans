@@ -55,7 +55,7 @@ public final class JarBuilder {
      */
     public JarBuilder classpath(File... cp) {
         if (classpath == null) {
-            classpath = new ArrayList<File>();
+            classpath = new ArrayList<>();
         }
         classpath.addAll(Arrays.asList(cp));
         return this;

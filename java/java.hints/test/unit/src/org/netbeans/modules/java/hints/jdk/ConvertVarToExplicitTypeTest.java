@@ -175,7 +175,7 @@ public class ConvertVarToExplicitTypeTest {
                         + "import java.util.HashMap;\n"
                         + "public class Test {\n"
                         + "    {\n"
-                        + "        final var map = new HashMap<String, String>();\n"
+                        + "        final var map = new HashMap<>();\n"
                         + "    }\n"
                         + "}\n")
                 .sourceLevel("1.10")
@@ -187,7 +187,7 @@ public class ConvertVarToExplicitTypeTest {
                         + "import java.util.HashMap;\n"
                         + "public class Test {\n"
                         + "    {\n"
-                        + "        final HashMap<String, String> map = new HashMap<String, String>();\n"
+                        + "        final HashMap<String, String> map = new HashMap<>();\n"
                         + "    }\n"
                         + "}\n");
     }
@@ -305,7 +305,7 @@ public class ConvertVarToExplicitTypeTest {
                         + "    }\n"
                         + "    Object t()\n"
                         + "    {\n"
-                        + "        return new ArrayList<String>();\n"
+                        + "        return new ArrayList<>();\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
@@ -321,7 +321,7 @@ public class ConvertVarToExplicitTypeTest {
                         + "    }\n"
                         + "    Object t()\n"
                         + "    {\n"
-                        + "        return new ArrayList<String>();\n"
+                        + "        return new ArrayList<>();\n"
                         + "    }\n"
                         + "}");
     }

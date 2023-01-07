@@ -352,7 +352,7 @@ public class PageFlowController {
     private static final String CASE_STRING = "case";
 
     private int getNewCaseNumber(NavigationRule navRule) {
-        Collection<String> caseOutcomes = new HashSet<String>();
+        Collection<String> caseOutcomes = new HashSet<>();
         List<NavigationCase> navCases = navRule.getNavigationCases();
         for (NavigationCase navCase : navCases) {
             caseOutcomes.add(navCase.getFromOutcome());
@@ -614,7 +614,7 @@ public class PageFlowController {
 
     private Collection<String> getFacesConfigPageNames(Collection<NavigationRule> navRules) {
         // Get all the pages in the faces config.  But don't list them twice.
-        Collection<String> pages = new HashSet<String>();
+        Collection<String> pages = new HashSet<>();
         for (NavigationRule navRule : navRules) {
             String pageName = FacesModelUtility.getFromViewIdFiltered(navRule);
             pages.add(pageName);
@@ -691,7 +691,7 @@ public class PageFlowController {
 
     private void createAllProjectPages(Collection<String> pagesInConfig) {
 
-        Collection<String> pages = new HashSet<String>(pagesInConfig);
+        Collection<String> pages = new HashSet<>(pagesInConfig);
 
         //Create all pages in the project...
         FileObject[] webFilesTmp = webFiles.toArray(new FileObject[0]);//Use copy because you may need to remove these files.
@@ -737,7 +737,7 @@ public class PageFlowController {
     }
 
     private void createFacesConfigPages(Collection<String> pagesInConfig) {
-        Collection<String> pages = new HashSet<String>(pagesInConfig);
+        Collection<String> pages = new HashSet<>(pagesInConfig);
 
         for (String pageName : pages) {
             if (pageName != null) {
@@ -843,7 +843,7 @@ public class PageFlowController {
         LOGGER.finest("PageName2Page: clear");
         Set<String> keys;
         synchronized (pageName2Page) {
-            keys = new HashSet<String>(pageName2Page.keySet());
+            keys = new HashSet<>(pageName2Page.keySet());
         }
         for (String key : keys) {
             removePageName2Page(key, true);

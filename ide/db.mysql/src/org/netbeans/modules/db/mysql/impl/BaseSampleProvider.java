@@ -62,7 +62,7 @@ public class BaseSampleProvider implements SampleProvider {
     }
     
     static {
-        SAMPLES = new ArrayList<String>();
+        SAMPLES = new ArrayList<>();
         SAMPLES.add("sample");
         SAMPLES.add("vir");
         SAMPLES.add("travel");

@@ -238,7 +238,7 @@ public class StatusCommand extends SvnCommand {
         public void startElement(String uri, String localName, String qName, Attributes elementAttributes) throws SAXException {            
             tag = qName.trim();                
             if (ENTRY_ELEMENT_NAME.equals(qName)) {                        
-                values = new HashMap<String, String>();
+                values = new HashMap<>();
                 String path = elementAttributes.getValue(PATH_ATTRIBUTE);
                 path = Paths.get(path).toAbsolutePath().normalize().toString();
                 values.put(PATH_ATTRIBUTE,      path);

@@ -163,7 +163,7 @@ public class HintTestBase {
     private final FileObject cache;
     private final Preferences testPreferences;
     private final HintsSettings hintSettings;
-    private final List<FileObject> checkCompilable = new ArrayList<FileObject>();
+    private final List<FileObject> checkCompilable = new ArrayList<>();
     private String sourceLevel = "1.5";
     private Character caretMarker;
     private FileObject testFile;
@@ -174,9 +174,9 @@ public class HintTestBase {
     private HintTestBase(FileObject sourceRoot) throws Exception {
         Set<String> amt = MimeTypes.getAllMimeTypes();
         if (amt == null) {
-            amt = new HashSet<String>();
+            amt = new HashSet<>();
         } else {
-            amt = new HashSet<String>(amt);
+            amt = new HashSet<>(amt);
         }
         amt.add("text/x-java");
         MimeTypes.setAllMimeTypes(amt);
@@ -630,7 +630,7 @@ public class HintTestBase {
         if (bootClassPath == null) {
             try {
                 String cp = System.getProperty("sun.boot.class.path");
-                List<URL> urls = new ArrayList<URL>();
+                List<URL> urls = new ArrayList<>();
                 String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
 
                 for (String path : paths) {
@@ -759,7 +759,7 @@ public class HintTestBase {
          * @throws AssertionError if the given warnings do not match the actual warnings
          */
         public HintOutput assertContainsWarnings(String... warnings) {
-            Set<String> goldenSet = new HashSet<String>(Arrays.asList(warnings));
+            Set<String> goldenSet = new HashSet<>(Arrays.asList(warnings));
             List<String> errorsNames = new LinkedList<String>();
 
             for (ErrorDescription d : errors) {
@@ -782,7 +782,7 @@ public class HintTestBase {
          * @throws AssertionError if the given warnings do not match the actual warnings
          */
         public HintOutput assertNotContainsWarnings(String... warnings) {
-            Set<String> goldenSet = new HashSet<String>(Arrays.asList(warnings));
+            Set<String> goldenSet = new HashSet<>(Arrays.asList(warnings));
             List<String> errorsNames = new LinkedList<String>();
 
             boolean fail = false;
@@ -1203,7 +1203,7 @@ public class HintTestBase {
         return realP;
     }
 
-    private static Set<String> usedPaths = new HashSet<String>();
+    private static Set<String> usedPaths = new HashSet<>();
     
     private static String abbrevDots(String dotted) {
         StringBuilder sb = new StringBuilder();

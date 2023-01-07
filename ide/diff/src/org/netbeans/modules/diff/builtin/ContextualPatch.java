@@ -179,7 +179,7 @@ public final class ContextualPatch {
         patch.targetFile = computeTargetFile(patch);
         if (patch.sourceFile != null && patch.sourceFile.exists()) {
             if (patch.binary) {
-                target = new ArrayList<String>();
+                target = new ArrayList<>();
             } else {
                 target = readFile(patch.sourceFile);
                 if (patchCreatesNewFileThatAlreadyExists(patch, target)) return;
@@ -188,7 +188,7 @@ public final class ContextualPatch {
             target = readFile(patch.targetFile);
             if (patchCreatesNewFileThatAlreadyExists(patch, target)) return;
         } else {
-            target = new ArrayList<String>();
+            target = new ArrayList<>();
         }
         if (!patch.binary) {
             for (Hunk hunk : patch.hunks) {
@@ -363,7 +363,7 @@ public final class ContextualPatch {
             r = new BufferedReader(new FileReader(target));
         }
         try {
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             String line;
             while ((line = r.readLine()) != null) {
                 lines.add(line);

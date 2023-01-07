@@ -422,7 +422,7 @@ public class FileObjectCrawlerTest extends NbTestCase {
         Random r = new Random(System.currentTimeMillis());
         for (int runCount=0; runCount<TEST_COUNT; runCount++) {
             System.out.println("Run: " + runCount);
-            final Set<FileObject> testSet = new HashSet<FileObject>();
+            final Set<FileObject> testSet = new HashSet<>();
             while (testSet.size() < SINGLE_TEST_SET_SIZE) {
                 final String s = paths[r.nextInt(paths.length)];
                 FileObject fo = root.getFileObject(s);
@@ -452,7 +452,7 @@ public class FileObjectCrawlerTest extends NbTestCase {
     }
 
     private static Collection<String> generateRandomTree(String prefix, int depth, int childCount) {
-        final Collection<String> res = new ArrayList<String>();
+        final Collection<String> res = new ArrayList<>();
         if (depth > 0) {
             for (int i=0; i< childCount; i++) {
                 res.addAll(generateRandomTree(String.format("%sdir%d/",prefix,i), depth-1, childCount));
@@ -466,7 +466,7 @@ public class FileObjectCrawlerTest extends NbTestCase {
     }
 
     private static String[] crawl(final Set<FileObject> files, final FileObject root) {
-        final Set<String> collector = new HashSet<String>();
+        final Set<String> collector = new HashSet<>();
         for (FileObject fo : files) {
             crawl(fo, root, collector);
         }
@@ -485,11 +485,11 @@ public class FileObjectCrawlerTest extends NbTestCase {
 
 
     protected void assertCollectedFiles(String message, Collection<Indexable> resources, String... expectedPaths) throws IOException {
-        List<String> collectedPaths = new ArrayList<String>();
+        List<String> collectedPaths = new ArrayList<>();
         for(Indexable ii : resources) {
             collectedPaths.add(ii.getRelativePath());
         }
-        List<String> expectedPathsFiltered = new ArrayList<String>();
+        List<String> expectedPathsFiltered = new ArrayList<>();
         for(String path : expectedPaths) {
             if (!path.endsWith("/")) { // crawler only collects files
                 expectedPathsFiltered.add(path);

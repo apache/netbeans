@@ -54,7 +54,7 @@ public abstract class NativeUtils {
     /////////////////////////////////////////////////////////////////////////////////
     // Static    
     protected static boolean nativeLibraryLoaded;
-    private static HashSet<File> forbiddenDeletingFiles = new HashSet<File>();
+    private static HashSet<File> forbiddenDeletingFiles = new HashSet<>();
     private static List <LauncherResource> uninstallerJVMs = new ArrayList <LauncherResource> ();
     private static Platform currentPlatform;    
     public static final String NATIVE_RESOURCE_SUFFIX = "native/"; // NOI18N

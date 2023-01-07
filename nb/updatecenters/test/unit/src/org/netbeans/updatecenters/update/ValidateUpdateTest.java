@@ -47,11 +47,11 @@ public class ValidateUpdateTest extends NbTestCase {
 
     public static void initLists() {
         installedPlugins = null;
-        installedPlugins = new ArrayList<UpdateElement>();
+        installedPlugins = new ArrayList<>();
         newPlugins = null;
-        newPlugins = new ArrayList<UpdateElement>();
+        newPlugins = new ArrayList<>();
         updatePlugins = null;
-        updatePlugins = new ArrayList<UpdateElement>();
+        updatePlugins = new ArrayList<>();
     }
 
     @Override

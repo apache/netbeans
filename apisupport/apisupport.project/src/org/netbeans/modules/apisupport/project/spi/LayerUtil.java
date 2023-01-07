@@ -81,7 +81,7 @@ public class LayerUtil {
         }
         String layer = mm.getLayer();
         String generatedLayer = mm.getGeneratedLayer();
-        List<URL> urls = new ArrayList<URL>(2);
+        List<URL> urls = new ArrayList<>(2);
         URI juri = Utilities.toURI(jar);
         for (String path : new String[] {layer, generatedLayer}) {
             if (path != null) {
@@ -109,7 +109,7 @@ public class LayerUtil {
         return filePath.replaceAll("[^-a-zA-Z0-9_./]", "");    // NOI18N
     }
 
-    private static final Set<String> XML_LIKE_TYPES = new HashSet<String>();
+    private static final Set<String> XML_LIKE_TYPES = new HashSet<>();
     static {
         XML_LIKE_TYPES.add(".settings"); // NOI18N
         XML_LIKE_TYPES.add(".wstcref"); // NOI18N

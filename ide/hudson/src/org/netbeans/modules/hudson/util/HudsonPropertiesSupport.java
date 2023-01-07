@@ -31,7 +31,7 @@ import org.netbeans.api.annotations.common.NonNull;
  */
 public final class HudsonPropertiesSupport {
     
-    private Map<String, Object> properties = new HashMap<String, Object>();
+    private Map<String, Object> properties = new HashMap<>();
     
     public HudsonPropertiesSupport() {}
     

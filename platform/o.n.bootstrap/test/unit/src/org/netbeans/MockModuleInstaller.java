@@ -29,8 +29,8 @@ import java.util.Set;
 public class MockModuleInstaller extends ModuleInstaller {
 
     // For examining results of what happened:
-    public final List<String> actions = new ArrayList<String>();
-    public final List<Object> args = new ArrayList<Object>();
+    public final List<String> actions = new ArrayList<>();
+    public final List<Object> args = new ArrayList<>();
     public final Map<String, String[]> provides = new HashMap<>();
 
     public void clear() {

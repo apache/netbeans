@@ -699,7 +699,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
         if(visibleColumns.length <= 1) {
             return Collections.emptyMap();
         }
-        Map<String, Integer> ret = new HashMap<String, Integer>();
+        Map<String, Integer> ret = new HashMap<>();
         for (int i = 0; i < visibleColumns.length; i=i+2) {
             try {
                 ret.put(visibleColumns[i], Integer.parseInt(visibleColumns[i + 1]));

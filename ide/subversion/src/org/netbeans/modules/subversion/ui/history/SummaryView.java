@@ -292,7 +292,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
     }
     
     private static SummaryViewMaster createViewSummaryMaster (final SearchHistoryPanel master) {
-        final Map<String, String> colors = new HashMap<String, String>();
+        final Map<String, String> colors = new HashMap<>();
         colors.put("A", SvnUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_LOCALLY_FILE.getActualColor()));
         colors.put("C", SvnUtils.getColorString(AnnotationColorProvider.getInstance().COPIED_LOCALLY_FILE.getActualColor()));
         colors.put("R", SvnUtils.getColorString(AnnotationColorProvider.getInstance().COPIED_LOCALLY_FILE.getActualColor()));

@@ -322,7 +322,7 @@ public final class Watcher extends BaseAnnotationProvider {
                     String path = NotifierAccessor.getDefault().nextEvent(impl);
                     LOG.log(Level.FINEST, "nextEvent: {0}", path); 
                     if (path == null) { // all dirty
-                        Set<FileObject> set = new HashSet<FileObject>();
+                        Set<FileObject> set = new HashSet<>();
                         synchronized (LOCK) {
                             for (NotifierKeyRef kr : getReferences()) {
                                 final FileObject ref = kr.get();

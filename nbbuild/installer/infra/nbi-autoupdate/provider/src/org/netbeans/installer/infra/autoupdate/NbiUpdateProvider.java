@@ -207,7 +207,7 @@ public class NbiUpdateProvider implements UpdateProvider {
                     updateItem = UpdateItem.createInstalledNativeComponent(
                             codename, // codename
                             version, // version
-                            // new HashSet<String>(), // dependencides
+                            // new HashSet<>(), // dependencides
                             null, // dependencies
                             product.getDisplayName(), // display name
                             product.getDescription(), // description
@@ -217,7 +217,7 @@ public class NbiUpdateProvider implements UpdateProvider {
                             codename, // codename
                             version, // version
                             Long.toString(product.getDownloadSize()), // size
-                            // new HashSet<String>(), // dependencides
+                            // new HashSet<>(), // dependencides
                             null, // dependencies
                             product.getDisplayName(), // display name
                             product.getDescription(), // description

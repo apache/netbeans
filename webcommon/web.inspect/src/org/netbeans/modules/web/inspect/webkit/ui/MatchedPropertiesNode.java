@@ -70,7 +70,7 @@ public class MatchedPropertiesNode extends AbstractNode {
      * Initializes the children of this node.
      */
     private void initChildren() {
-        Set<String> properties = new HashSet<String>();
+        Set<String> properties = new HashSet<>();
         Children.Array children = (Children.Array)getChildren();
         List<MatchedPropertyNode> nodes = new ArrayList<MatchedPropertyNode>();
         for (Rule rule : matchedStyles.getMatchedRules()) {

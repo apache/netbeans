@@ -175,9 +175,9 @@ public abstract class TestBase extends NbTestCase {
     // XXX copied from AntBasedTestUtil in ant/project
     protected static final class TestPCL implements PropertyChangeListener {
         
-        public final Set<String> changed = new HashSet<String>();
-        public final Map<String,String> newvals = new HashMap<String,String>();
-        public final Map<String,String> oldvals = new HashMap<String,String>();
+        public final Set<String> changed = new HashSet<>();
+        public final Map<String,String> newvals = new HashMap<>();
+        public final Map<String,String> oldvals = new HashMap<>();
         
         public TestPCL() {}
         

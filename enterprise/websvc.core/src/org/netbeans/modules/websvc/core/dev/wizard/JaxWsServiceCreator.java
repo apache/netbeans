@@ -724,7 +724,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
                 allBeanInterfaceElements = beanInterface.getEnclosedElements();
             }
 
-            Set<String> operationNames = new HashSet<String>();
+            Set<String> operationNames = new HashSet<>();
             for (Element el : allBeanInterfaceElements) {
                 if (el.getKind() == ElementKind.METHOD && 
                         el.getModifiers().contains(Modifier.PUBLIC)) 
@@ -810,7 +810,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
                     }
                     // parameters
                     List<? extends VariableTree> params = method.getParameters();
-                    List<VariableTree> newParams = new ArrayList<VariableTree>();
+                    List<VariableTree> newParams = new ArrayList<>();
                     if (params.size() > 0) {
                         TypeElement paramEl = workingCopy.getElements().
                             getTypeElement("javax.jws.WebParam"); //NOI18N

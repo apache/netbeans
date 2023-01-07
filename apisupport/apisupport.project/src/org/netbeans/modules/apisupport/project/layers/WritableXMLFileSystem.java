@@ -230,8 +230,8 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             //System.err.println("children <" + f + ">: none, no such element");
             return new String[] {};
         }
-        ArrayList<String> kids = new ArrayList<String>();
-        Set<String> allNames = new HashSet<String>();
+        ArrayList<String> kids = new ArrayList<>();
+        Set<String> allNames = new HashSet<>();
         Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
             TreeElement sub = it.next();
@@ -554,7 +554,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         if (el == null) {
             return Enumerations.empty();
         }
-        java.util.List<String> l = new ArrayList<String>(10);
+        java.util.List<String> l = new ArrayList<>(10);
         Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
             TreeElement sub = it.next();

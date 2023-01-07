@@ -93,7 +93,7 @@ public class EnableJ2EEEnablesJavaTest extends NbTestCase {
         cc.getSupport().doOperation(null);
 
 
-        Set<String> expectedNames = new HashSet<String>(java.getCodeNames());
+        Set<String> expectedNames = new HashSet<>(java.getCodeNames());
         for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
             if (mi.isEnabled()) {
                 expectedNames.remove(mi.getCodeNameBase());

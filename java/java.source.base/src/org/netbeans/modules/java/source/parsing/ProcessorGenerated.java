@@ -221,7 +221,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
             }
             if (!genResources.isEmpty()) {
                 final File resFile = new File (classCache,FileObjects.RESOURCES);
-                final Set<String> currentResources = new HashSet<String>();
+                final Set<String> currentResources = new HashSet<>();
                 final StringBuilder sb = readResources(resFile, currentResources);
                 boolean changed = false;
                 for (javax.tools.FileObject file : genResources) {
@@ -248,7 +248,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
             @NonNull Set<? super String> currentResources) {
         if (cachedFile == null) {
             cachedValue = readFile(file);
-            cachedResources = new HashSet<String>(Arrays.asList(cachedValue.toString().split("\n")));  //NOI18N
+            cachedResources = new HashSet<>(Arrays.asList(cachedValue.toString().split("\n")));  //NOI18N
             cachedFile = file;
         }        
         assert cachedValue != null;

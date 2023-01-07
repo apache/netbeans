@@ -50,7 +50,7 @@ import org.openide.util.Lookup;
 public final class FeatureInfo {
     private final URL delegateLayer;
     private final Set<String> cnbs;
-    private final Map<String,String> nbproject = new HashMap<String,String>();
+    private final Map<String,String> nbproject = new HashMap<>();
     private final Map<Object[],String> files = new HashMap<Object[],String>();
     private Properties properties;
     final String clusterName;
@@ -302,7 +302,7 @@ public final class FeatureInfo {
             return p;
         }
 
-        Set<String> codeNames = new HashSet<String>(getCodeNames());
+        Set<String> codeNames = new HashSet<>(getCodeNames());
         for (ModuleInfo moduleInfo : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
             codeNames.remove(moduleInfo.getCodeNameBase());
         }
@@ -356,7 +356,7 @@ public final class FeatureInfo {
         files.put(new Object[] { file, xpath }, clazz);
     }
     static Map<String,String> nbprojectTypes() {
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
 
         for (FeatureInfo info : FeatureManager.features()) {
             map.putAll(info.nbproject);
@@ -365,7 +365,7 @@ public final class FeatureInfo {
     }
 
     static Map<String,String> projectFiles() {
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
 
         for (FeatureInfo info : FeatureManager.features()) {
             for (Map.Entry<Object[], String> e : info.files.entrySet()) {
@@ -378,7 +378,7 @@ public final class FeatureInfo {
     }
 
     private static String[] safeXPathSplit(String xpathList) {
-        List<String> xpaths = new ArrayList<String>();
+        List<String> xpaths = new ArrayList<>();
         boolean inSelector = false;
         int start = 0, i=0;
         for (i=0; i<xpathList.length(); i++) {

@@ -177,7 +177,7 @@ public class ImportChooserInnerPanel extends javax.swing.JPanel{
     }
     
     public List<String> getSelections() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         
         for( int i=0; i<combos.length; i++ ) {
             result.add(combos[i].getSelectedItem().toString());

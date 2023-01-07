@@ -92,7 +92,7 @@ public class ConnectUsingDriverAction extends BaseAction {
         @Override
         protected boolean retrieveSchemas(SchemaPanel schemaPanel, DatabaseConnection dbcon, String defaultSchema) {
             fireConnectionStep(NbBundle.getMessage (ConnectUsingDriverAction.class, "ConnectionProgress_Schemas")); // NOI18N
-            List<String> schemas = new ArrayList<String>();
+            List<String> schemas = new ArrayList<>();
             try {
                 DatabaseMetaData dbMetaData = dbcon.getJDBCConnection().getMetaData();
                 if (dbMetaData.supportsSchemasInTableDefinitions()) {

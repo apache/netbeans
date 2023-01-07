@@ -139,7 +139,7 @@ public class ClusterUpdateProvider implements UpdateProvider {
         if (cluster == null || ! cluster.exists ()) {
             return Collections.emptySet ();
         }
-        Collection<File> res = new HashSet<File> ();
+        Collection<File> res = new HashSet<> ();
         File config = new File (new File (cluster, "config"), "Modules"); // NOI18N
         if (config.listFiles () == null) {
             return Collections.emptySet ();

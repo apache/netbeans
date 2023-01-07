@@ -78,7 +78,7 @@ public class InstallSupportImpl {
     private static final Logger LOG = Logger.getLogger (InstallSupportImpl.class.getName ());
     
     private Map<UpdateElementImpl, File> element2Clusters = null;
-    private final Set<File> downloadedFiles = new HashSet<File> ();
+    private final Set<File> downloadedFiles = new HashSet<> ();
     private Boolean isGlobal;
     private boolean useUserdirAsFallback;
     private int wasDownloaded = 0;

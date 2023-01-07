@@ -142,7 +142,7 @@ public class GsfFoldManager implements FoldManager {
     public static final FoldType OTHER_CODEBLOCKS_FOLD_TYPE = FoldType.TAG.derive("othercodeblocks", FT_label_othercodeblocks(), 
             TEMPLATE_CODEBLOCK);
     
-    private static final Set<String> LEGACY_FOLD_TAGS = new HashSet<String>(11);
+    private static final Set<String> LEGACY_FOLD_TAGS = new HashSet<>(11);
     
     static {
         LEGACY_FOLD_TAGS.add(OTHER_CODEBLOCKS_FOLD_TYPE.code());

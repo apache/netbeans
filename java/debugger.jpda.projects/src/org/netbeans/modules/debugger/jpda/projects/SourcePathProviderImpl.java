@@ -179,7 +179,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             if (disabledRoots != null && !disabledRoots.isEmpty()) {
                 List<FileObject> enabledSourcePath = new ArrayList<FileObject>(
                         Arrays.asList(smartSteppingSourcePath.getRoots()));
-                for (FileObject fo : new HashSet<FileObject>(enabledSourcePath)) {
+                for (FileObject fo : new HashSet<>(enabledSourcePath)) {
                     if (disabledRoots.contains(getRoot(fo))) {
                         enabledSourcePath.remove(fo);
                     }
@@ -189,7 +189,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             }
 
             projectSourceRoots = getSourceRoots(originalSourcePath);
-            //Set<FileObject> preferredRoots = new HashSet<FileObject>();
+            //Set<FileObject> preferredRoots = new HashSet<>();
             //preferredRoots.addAll(Arrays.asList(originalSourcePath.getRoots()));
             /*
             Set<FileObject> globalRoots = new TreeSet<FileObject>(new FileObjectComparator());
@@ -208,7 +208,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                     listeningCP = ((ClassPath) properties.get ("sourcepath")).toString(ClassPath.PathConversionMode.SKIP);
                     isSourcepath = true;
                 }
-                srcRootsToListenForArtifactsUpdates = new HashSet<FileObject>();
+                srcRootsToListenForArtifactsUpdates = new HashSet<>();
                 for (String cp : listeningCP.split(File.pathSeparator)) {
                     logger.log(Level.FINE, "Listening cp = ''{0}''", cp);
                     File f = new File(cp);
@@ -241,11 +241,11 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                     WeakListeners.propertyChange(pathRegistryListener,
                                                  JavaPlatformManager.getDefault()));
             
-            List<FileObject> allSourceRoots = new ArrayList<FileObject>();
-            Set<FileObject> preferredRoots = new HashSet<FileObject>();
-            Set<FileObject> addedBinaryRoots = new HashSet<FileObject>();
+            List<FileObject> allSourceRoots = new ArrayList<>();
+            Set<FileObject> preferredRoots = new HashSet<>();
+            Set<FileObject> addedBinaryRoots = new HashSet<>();
             Project mainProject = OpenProjects.getDefault().getMainProject();
-            platformSourceRoots = new HashSet<String>();
+            platformSourceRoots = new HashSet<>();
             if (mainProject != null) {
                 SourceGroup[] sgs = ProjectUtils.getSources(mainProject).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                 for (SourceGroup sg : sgs) {
@@ -328,14 +328,14 @@ public class SourcePathProviderImpl extends SourcePathProvider {
 
                 projectSourceRoots = getSourceRoots(originalSourcePath);
 
-                srcRootsToListenForArtifactsUpdates = new HashSet<FileObject>(allSourceRoots);
+                srcRootsToListenForArtifactsUpdates = new HashSet<>(allSourceRoots);
 
                 smartSteppingSourcePath = originalSourcePath;
 
                 if (disabledRoots != null && !disabledRoots.isEmpty()) {
                     List<FileObject> enabledSourcePath = new ArrayList<FileObject>(
                             Arrays.asList(smartSteppingSourcePath.getRoots()));
-                    for (FileObject fo : new HashSet<FileObject>(enabledSourcePath)) {
+                    for (FileObject fo : new HashSet<>(enabledSourcePath)) {
                         if (disabledRoots.contains(getRoot(fo))) {
                             enabledSourcePath.remove(fo);
                         }
@@ -535,7 +535,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
     }
 
     public static void storeSourceRootsOrder(String projectRoot, String[] roots, int[] permutation) {
-        Map<String, Integer> sourceOrder = new HashMap<String, Integer>();
+        Map<String, Integer> sourceOrder = new HashMap<>();
         if (roots.length != permutation.length) {
             throw new IllegalArgumentException("Incompatible array length: roots = "+roots.length+", permutation = "+permutation.length);
         }
@@ -692,7 +692,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
         List<FileObject> fos;
         relativePath = normalize(relativePath);
         if (originalSourcePath == null) {
-            fos = new ArrayList<FileObject>();
+            fos = new ArrayList<>();
             for (ClassPath cp : GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE)) {
                 fos.addAll(cp.findAllResources(relativePath));
             }
@@ -815,7 +815,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
     
     private static Set<String> getSourceRootsSet(ClassPath classPath) {
         FileObject[] sourceRoots = classPath.getRoots();
-        Set<String> roots = new HashSet<String>(sourceRoots.length);
+        Set<String> roots = new HashSet<>(sourceRoots.length);
         for (FileObject fo : sourceRoots) {
             String root = getRoot(fo);
             if (root != null) {
@@ -850,7 +850,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
     }
 
     public synchronized Set<FileObject> getSourceRootsFO() {
-        return new HashSet<FileObject>(Arrays.asList(smartSteppingSourcePath.getRoots()));
+        return new HashSet<>(Arrays.asList(smartSteppingSourcePath.getRoots()));
     }
     
     /**
@@ -893,7 +893,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             srcRoots = unorderedOriginalRoots;
         }
         projectSourceRoots = getSourceRoots(originalSourcePath);
-        Set<String> smartSteppingRoots = new HashSet<String>(Arrays.asList(getSourceRoots(smartSteppingSourcePath)));
+        Set<String> smartSteppingRoots = new HashSet<>(Arrays.asList(getSourceRoots(smartSteppingSourcePath)));
         String[] orderedSmartSteppingRoots = new String[smartSteppingRoots.size()];
         int i = 0;
         for (String root : projectSourceRoots) {
@@ -1036,8 +1036,8 @@ public class SourcePathProviderImpl extends SourcePathProvider {
         for (FileObject fo : sourcePath) {
             newSteppingRoots.remove(getRoot(fo));
         }
-        Set<FileObject> removedSteppingRoots = new HashSet<FileObject>();
-        Set<FileObject> removedOriginalRoots = new HashSet<FileObject>();
+        Set<FileObject> removedSteppingRoots = new HashSet<>();
+        Set<FileObject> removedOriginalRoots = new HashSet<>();
         for (FileObject fo : sourcePath) {
             String spr = getRoot(fo);
             if (!newRoots.contains(spr)) {
@@ -1099,9 +1099,9 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                         sourcePath.toArray(new FileObject[0]));
             newCP_ptr[0] = smartSteppingSourcePath;
         }
-        Set<FileObject> disabledRoots = new HashSet<FileObject>(sourcePathOriginal);
+        Set<FileObject> disabledRoots = new HashSet<>(sourcePathOriginal);
         disabledRoots.removeAll(sourcePath);
-        Set<String> disabledSourceRoots = new HashSet<String>();
+        Set<String> disabledSourceRoots = new HashSet<>();
         for (FileObject fo : disabledRoots) {
             disabledSourceRoots.add(getRoot(fo));
         }
@@ -1404,7 +1404,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
     }
 
     private static List<URL> getURLRoots(ClassPath cp) {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         for (Entry entry : cp.entries()) {
             URL url = entry.getURL();
             urls.add(url);
@@ -1546,7 +1546,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             if (!ClassPath.SOURCE.equals(event.getId())) {
                 return null;
             }
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             for (ClassPath cp : event.getChangedPaths()) {
                 for (Entry entry : cp.entries()) {
                     URL url = entry.getURL();

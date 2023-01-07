@@ -160,7 +160,7 @@ public class StatusTestHidden extends AbstractCommandTestCase {
 
     private void assertFiles (ISVNStatus[] sNb, File[] files) {
         int foundFiles = 0;
-        HashSet<File> fileSet = new HashSet<File>(Arrays.asList(files));
+        HashSet<File> fileSet = new HashSet<>(Arrays.asList(files));
         for (ISVNStatus status : sNb) {
             if (fileSet.contains(status.getFile())) {
                 ++foundFiles;

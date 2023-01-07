@@ -49,7 +49,7 @@ public class FilesystemBugsTest extends NbTestCase {
     public void testNotifyOfSubFoldersAfterDelete23929() throws Exception {
         counter = 0;
         // store references to FileObject to prevent garbage collection
-        ArrayList<FileObject> garbageCollectorDefense = new ArrayList<FileObject>();
+        ArrayList<FileObject> garbageCollectorDefense = new ArrayList<>();
         if (canGenWriteFolder()) {
             // create tree an register listener
             //

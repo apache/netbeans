@@ -224,7 +224,7 @@ public final class FileUtils {
     }
     public static List<String> readStringList(
             final File file, String charset) throws IOException {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         for (String line: StringUtils.splitByLines((readFile(file,charset)))) {
             list.add(line);
         }
@@ -232,7 +232,7 @@ public final class FileUtils {
     }
     public static List<String> readStringList(
             final File file) throws IOException {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         for (String line: StringUtils.splitByLines((readFile(file)))) {
             list.add(line);
         }
@@ -703,7 +703,7 @@ public final class FileUtils {
             final Object replacement,
             final boolean regexp,
             final String charset) throws IOException {
-        final Map<String, Object> replacementMap = new HashMap<String, Object>();
+        final Map<String, Object> replacementMap = new HashMap<>();
         
         replacementMap.put(token, replacement);
         

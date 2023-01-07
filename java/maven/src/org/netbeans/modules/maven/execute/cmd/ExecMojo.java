@@ -88,7 +88,7 @@ public class ExecMojo extends ExecutionEventObject {
         }
         JSONArray urls = (JSONArray)mojo.get("urls");
         if (urls != null) {
-            List<URL> urlList = new ArrayList<URL>();
+            List<URL> urlList = new ArrayList<>();
             Iterator it = urls.iterator();
             while (it.hasNext()) {
                 String url = (String) it.next();

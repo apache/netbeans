@@ -109,7 +109,7 @@ public final class NewTestSuiteWizardIterator implements WizardDescriptor.Instan
             suiteName = "All tests for " + projectName;
         }
         
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put("suiteName", projectName);
         props.put("testName", suiteName);
         props.put("pkg", pkgName);

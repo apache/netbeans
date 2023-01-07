@@ -67,7 +67,7 @@ public class SingletonSetupPanelVisual extends javax.swing.JPanel
     /** Creates new form CrudSetupPanel */
     public SingletonSetupPanelVisual(String name) {
         setName(name);
-        this.listeners = new ArrayList<ChangeListener>();
+        this.listeners = new ArrayList<>();
         initComponents();
         packageComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 

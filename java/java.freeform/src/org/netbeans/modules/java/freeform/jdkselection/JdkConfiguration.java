@@ -138,7 +138,7 @@ public class JdkConfiguration {
 
     private void rebindAllActions(Element generalDataE, Document nbjdkDoc) {
         Element projectE = nbjdkDoc.getDocumentElement();
-        Set<String> targetsCreated = new HashSet<String>();
+        Set<String> targetsCreated = new HashSet<>();
         // XXX remove any definition of ${ant.script}, which will by now be obsolete
         Element ideActionsE = XMLUtil.findElement(generalDataE, "ide-actions", Util.NAMESPACE);
         if (ideActionsE != null) {
@@ -175,7 +175,7 @@ public class JdkConfiguration {
         scriptE = actionE.getOwnerDocument().createElementNS(Util.NAMESPACE, "script"); // NOI18N
         scriptE.appendChild(actionE.getOwnerDocument().createTextNode(NBJDK_XML));
         actionE.insertBefore(scriptE, actionE.getFirstChild());
-        List<String> targetNames = new ArrayList<String>();
+        List<String> targetNames = new ArrayList<>();
         for (Element targetE : XMLUtil.findSubElements(actionE)) {
             if (!targetE.getLocalName().equals("target")) { // NOI18N
                 continue;

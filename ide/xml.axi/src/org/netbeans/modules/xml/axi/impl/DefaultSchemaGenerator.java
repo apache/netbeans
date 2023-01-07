@@ -557,7 +557,7 @@ public abstract class DefaultSchemaGenerator extends SchemaGenerator {
     
     protected void prepareFixGlobalElementNames(final Element element, final GlobalElement e,
             final ElementReference eref) {
-        java.util.List<Object> scs = new ArrayList<Object>();
+        java.util.List<Object> scs = new ArrayList<>();
         scs.add(element);
         scs.add(e);
         scs.add(eref);

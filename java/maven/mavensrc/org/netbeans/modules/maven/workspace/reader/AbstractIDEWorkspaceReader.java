@@ -81,7 +81,7 @@ public class AbstractIDEWorkspaceReader {
 
     public List<String> findVersions(String groupId, String artifactId) {
         String id = groupId + ":" + artifactId + ":";
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         for (String s : mappings.keySet()) {
             if (s.startsWith(id)) {
                 toRet.add(s.substring(id.length()));

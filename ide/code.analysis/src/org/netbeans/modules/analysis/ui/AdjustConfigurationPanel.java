@@ -330,7 +330,7 @@ public class AdjustConfigurationPanel extends javax.swing.JPanel implements Prop
     //XXX: should move MP to some generic API, copied on several places (java.hints, findbugs, etc.)
     private static class ModifiedPreferences extends AbstractPreferences {
 
-        private final Map<String,Object> properties = new HashMap<String, Object>();
+        private final Map<String,Object> properties = new HashMap<>();
         private final Map<String,ModifiedPreferences> subNodes = new HashMap<String, ModifiedPreferences>();
 
         public ModifiedPreferences(ModifiedPreferences parent, String name) {

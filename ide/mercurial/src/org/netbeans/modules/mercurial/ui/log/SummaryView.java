@@ -299,7 +299,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
     }
 
     private static SummaryViewMaster createViewSummaryMaster (final SearchHistoryPanel master) {
-        final Map<String, String> colors = new HashMap<String, String>();
+        final Map<String, String> colors = new HashMap<>();
         colors.put("A", HgUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_LOCALLY_FILE.getActualColor()));
         colors.put("C", HgUtils.getColorString(AnnotationColorProvider.getInstance().COPIED_LOCALLY_FILE.getActualColor()));
         colors.put("R", HgUtils.getColorString(AnnotationColorProvider.getInstance().MOVED_LOCALY_FILE.getActualColor()));
@@ -588,7 +588,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
     }
 
     private static void revertImpl(RepositoryRevision[] revisions, RepositoryRevision.Event[] events, HgProgressSupport progress) {
-        List<File> revertFiles = new ArrayList<File>();
+        List<File> revertFiles = new ArrayList<>();
         boolean doBackup = HgModuleConfig.getDefault().getBackupOnRevertModifications();
         if (revisions != null) {
             for (RepositoryRevision revision : revisions) {

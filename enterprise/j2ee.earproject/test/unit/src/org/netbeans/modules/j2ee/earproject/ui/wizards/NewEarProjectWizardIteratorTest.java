@@ -113,7 +113,7 @@ public class NewEarProjectWizardIteratorTest extends EarTestCase {
                 j2eeProfile, TestUtil.SERVER_URL, warName, jarName,
                 carName, mainClass, platformName, sourceLevel, null, null, false);
         
-        Set<FileObject> expResult = new HashSet<FileObject>();
+        Set<FileObject> expResult = new HashSet<>();
         FileObject testEAFO = FileUtil.toFileObject(new File(getWorkDir(), "testEA"));
         assertNotNull("testEA directory", testEAFO);
         expResult = Collections.singleton(testEAFO);
@@ -141,7 +141,7 @@ public class NewEarProjectWizardIteratorTest extends EarTestCase {
                 j2eeProfile, TestUtil.SERVER_URL, warName, jarName,
                 carName, mainClass, platformName, sourceLevel, null, null, false);
         
-        Set<FileObject> expResult = new HashSet<FileObject>();
+        Set<FileObject> expResult = new HashSet<>();
         File testEA = new File(getWorkDir(), "testEA");
         FileObject testEAFO = FileUtil.toFileObject(testEA);
         assertNotNull("testEA directory", testEAFO);
@@ -173,7 +173,7 @@ public class NewEarProjectWizardIteratorTest extends EarTestCase {
                 j2eeProfile, TestUtil.SERVER_URL, warName, jarName,
                 carName, mainClass, platformName, sourceLevel, null, null, false);
         
-        Set<FileObject> expResult = new HashSet<FileObject>();
+        Set<FileObject> expResult = new HashSet<>();
         File testEA = new File(getWorkDir(), "testEA");
         FileObject testEAFO = FileUtil.toFileObject(testEA);
         assertNotNull("testEA directory", testEAFO);

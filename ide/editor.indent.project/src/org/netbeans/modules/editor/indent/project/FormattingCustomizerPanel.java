@@ -145,7 +145,7 @@ public final class FormattingCustomizerPanel extends javax.swing.JPanel implemen
                     pf.applyChanges();
 
                     // Find mimeTypes that do not have a customizer
-                    Set<String> mimeTypes = new HashSet<String>(EditorSettings.getDefault().getAllMimeTypes());
+                    Set<String> mimeTypes = new HashSet<>(EditorSettings.getDefault().getAllMimeTypes());
                     mimeTypes.removeAll(selector.getMimeTypes());
 
                     // and make sure that they do NOT override basic settings from All Languages
@@ -648,7 +648,7 @@ private void editGlobalButtonActionPerformed(java.awt.event.ActionEvent evt) {//
         // --------------------------------------------------------------------
 
         private final Project project;
-        private final Set<String> accessedMimeTypes = new HashSet<String>();
+        private final Set<String> accessedMimeTypes = new HashSet<>();
         private ProxyPreferences projectPrefs;
 
     } // End of ProjectPreferencesFactory class

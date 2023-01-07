@@ -173,9 +173,9 @@ public class ChangeTypeTest extends ErrorHintsTestBase {
 
     public void testGenericsEscaped() throws Exception {
         performFixTest("test/Test.java",
-                       "package test; import java.util.*; public class Test {public void foo() { List<Number> l = |new ArrayList<String>(); } }",
+                       "package test; import java.util.*; public class Test {public void foo() { List<Number> l = |new ArrayList<>(); } }",
                        "Change type of l to ArrayList&lt;String>",
-                       "package test; import java.util.*; public class Test {public void foo() { ArrayList<String> l = new ArrayList<String>(); } }");
+                       "package test; import java.util.*; public class Test {public void foo() { ArrayList<String> l = new ArrayList<>(); } }");
     }
 
     public void test235716FixType() throws Exception {

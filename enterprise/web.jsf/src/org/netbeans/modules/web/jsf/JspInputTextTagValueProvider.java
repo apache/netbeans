@@ -46,7 +46,7 @@ public class JspInputTextTagValueProvider implements InputTextTagValueProvider {
 //        if(!JspUtils.isJSPOrTagFile(fobj)) {
 //            return null;
 //        }
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         //try if in a JSP...
         JspContextInfo contextInfo = JspContextInfo.getContextInfo(fobj);
         if (contextInfo != null) {

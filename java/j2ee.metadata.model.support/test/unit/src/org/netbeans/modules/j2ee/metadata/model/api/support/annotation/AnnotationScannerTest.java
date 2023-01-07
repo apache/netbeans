@@ -71,7 +71,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
         IndexingManager.getDefault().refreshIndexAndWait(srcFO.getURL(), null);
         ClasspathInfo cpi = ClasspathInfo.create(srcFO);
         final AnnotationModelHelper helper = AnnotationModelHelper.create(cpi);
-        final Set<String> types = new HashSet<String>();
+        final Set<String> types = new HashSet<>();
         helper.runJavaSourceTask(new Callable<Void>() {
             public Void call() throws InterruptedException {
                 helper.getAnnotationScanner().findAnnotations("javax.persistence.Entity", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() {
@@ -91,7 +91,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
         // Logger.getLogger(AnnotationScanner.class.getName()).setLevel(Level.FINEST);
         final int ENTITY_COUNT = 500;
         String template = TestUtilities.copyStreamToString(getClass().getResourceAsStream("Table.javax"));
-        Map<String, String> args = new HashMap<String, String>();
+        Map<String, String> args = new HashMap<>();
         MapFormat format = new MapFormat(args);
         format.setLeftBrace("__");
         format.setRightBrace("__");
@@ -156,7 +156,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
     
     public void testScanAnnotationsOnClassesMethodsFields() throws Exception {
         final AnnotationModelHelper helper = AnnotationModelHelper.create(createClasspathInfoForScanningAnnotations());
-        final Set<String> elements = new HashSet<String>();
+        final Set<String> elements = new HashSet<>();
         
         helper.runJavaSourceTask(new Callable<Void>() {
             public Void call() throws InterruptedException{
@@ -179,7 +179,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
     
     public void testScanAnnotationsOnMethodsFields() throws Exception {
         final AnnotationModelHelper helper = AnnotationModelHelper.create(createClasspathInfoForScanningAnnotations());
-        final Set<String> elements = new HashSet<String>();
+        final Set<String> elements = new HashSet<>();
         
         helper.runJavaSourceTask(new Callable<Void>() {
             public Void call() throws InterruptedException {
@@ -201,7 +201,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
     
     public void testScanAnnotationsOnClasses() throws Exception {
         final AnnotationModelHelper helper = AnnotationModelHelper.create(createClasspathInfoForScanningAnnotations());
-        final Set<String> elements = new HashSet<String>();
+        final Set<String> elements = new HashSet<>();
         
         helper.runJavaSourceTask(new Callable<Void>() {
             public Void call() throws InterruptedException {
@@ -223,7 +223,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
     
     public void testScanAnnotationsOnMethods() throws Exception {
         final AnnotationModelHelper helper = AnnotationModelHelper.create(createClasspathInfoForScanningAnnotations());
-        final Set<String> elements = new HashSet<String>();
+        final Set<String> elements = new HashSet<>();
         
         helper.runJavaSourceTask(new Callable<Void>() {
             public Void call() throws InterruptedException {
@@ -245,7 +245,7 @@ public class AnnotationScannerTest extends PersistenceTestCase {
     
     public void testScanAnnotationsOnFields() throws Exception {
         final AnnotationModelHelper helper = AnnotationModelHelper.create(createClasspathInfoForScanningAnnotations());
-        final Set<String> elements = new HashSet<String>();
+        final Set<String> elements = new HashSet<>();
         
         helper.runJavaSourceTask(new Callable<Void>() {
             public Void call() throws InterruptedException {

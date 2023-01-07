@@ -242,7 +242,7 @@ public final class HintsControllerImpl {
         Logger.getLogger(HintsControllerImpl.class.getName()).log(Level.INFO, "Incorrect span, please attach your messages.log to issue #112566. start=" + start + ", end=" + end, new Exception());
     }
 
-    private static List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private static List<ChangeListener> listeners = new ArrayList<>();
     
     public static synchronized void addChangeListener(ChangeListener l) {
         listeners.add(l);

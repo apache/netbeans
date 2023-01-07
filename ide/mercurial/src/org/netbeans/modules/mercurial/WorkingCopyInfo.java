@@ -154,7 +154,7 @@ public class WorkingCopyInfo {
                 for (HgLogMessage oldParent : oldParents) {
                     if (oldParent.getCSetShortID().equals(newParent.getCSetShortID())
                             && oldParent.getTags().length == newParent.getTags().length
-                            && new HashSet<String>(Arrays.asList(oldParent.getTags())).equals(new HashSet<String>(Arrays.asList(newParent.getTags())))) {
+                            && new HashSet<>(Arrays.asList(oldParent.getTags())).equals(new HashSet<>(Arrays.asList(newParent.getTags())))) {
                         contains = true;
                         break;
                     }

@@ -242,10 +242,10 @@ public final class JavaAntLoggerTest extends NbTestCase {
         
     }
     
-    private static final List<String> nonhyperlinkedOut = new ArrayList<String>();
-    private static final List<String> nonhyperlinkedErr = new ArrayList<String>();
-    private static final List<String> hyperlinkedOut = new ArrayList<String>();
-    private static final List<String> hyperlinkedErr = new ArrayList<String>();
+    private static final List<String> nonhyperlinkedOut = new ArrayList<>();
+    private static final List<String> nonhyperlinkedErr = new ArrayList<>();
+    private static final List<String> hyperlinkedOut = new ArrayList<>();
+    private static final List<String> hyperlinkedErr = new ArrayList<>();
     
     private static final class OW extends OutputWriter {
         

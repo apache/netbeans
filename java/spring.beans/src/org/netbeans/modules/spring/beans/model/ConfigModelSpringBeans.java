@@ -47,7 +47,7 @@ public class ConfigModelSpringBeans implements SpringBeans {
 
     public SpringBean findBean(String name) {
         assert ExclusiveAccess.getInstance().isCurrentThreadAccess() : "The SpringBeans instance has escaped the Action.run() method";
-        return findBean(name, new HashSet<String>());
+        return findBean(name, new HashSet<>());
     }
     
     private SpringBean findBean(String name, Set<String> visitedNames) {
@@ -94,7 +94,7 @@ public class ConfigModelSpringBeans implements SpringBeans {
 
     public Set<String> getAliases() {
         assert ExclusiveAccess.getInstance().isCurrentThreadAccess() : "The SpringBeans instance has escaped the Action.run() method";
-        Set<String> aliases = new HashSet<String>(file2BeanSource.size() * 5);
+        Set<String> aliases = new HashSet<>(file2BeanSource.size() * 5);
         for (SpringBeanSource beanSource : file2BeanSource.values()) {
             aliases.addAll(beanSource.getAliases());
         }

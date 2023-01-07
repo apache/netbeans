@@ -121,7 +121,7 @@ public class AmazonJ2eePlatformImpl2 extends J2eePlatformImpl2 {
     public File[] getPlatformRoots() {
 //        Library l = LibraryManager.getDefault().getLibrary("javaee-api-6.0");
 //        assert l != null;
-//        List<File> res = new ArrayList<File>();
+//        List<File> res = new ArrayList<>();
 //        for (URL url : l.getContent("classpath")) {
 //            FileObject fo = URLMapper.findFileObject(url);
 //            fo = FileUtil.getArchiveFile(fo);
@@ -145,7 +145,7 @@ public class AmazonJ2eePlatformImpl2 extends J2eePlatformImpl2 {
 
     @Override
     public Set getSupportedJavaPlatformVersions() {
-        return new HashSet<String>(Arrays.asList(new String[] {"1.6","1.5"}));
+        return new HashSet<>(Arrays.asList(new String[] {"1.6","1.5"}));
     }
 
     @Override

@@ -383,10 +383,10 @@ public class RelatedCMPHelper {
         
         private String catalog; // for all the tables
         private String schema; // for all the tables
-        private final Set<String> tableNames = new HashSet<String>();
+        private final Set<String> tableNames = new HashSet<>();
         private final Map<String, FileObject> rootFolders = new HashMap<String, FileObject>();
-        private final Map<String, String> packageNames = new HashMap<String, String>();
-        private final Map<String, String> classNames = new HashMap<String, String>();
+        private final Map<String, String> packageNames = new HashMap<>();
+        private final Map<String, String> classNames = new HashMap<>();
         private final Map<String, UpdateType> updateTypes = new HashMap<String, UpdateType>();
         private final Map<String, Set<List<String>>> allUniqueConstraints = new HashMap<String, Set<List<String>>>();
         

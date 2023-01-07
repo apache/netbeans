@@ -47,7 +47,7 @@ public class FastImportTest extends GroovyTestBase {
 
     @Override
     protected Set<String> additionalSourceClassPath() {
-        HashSet<String> sourceClassPath = new HashSet<String>();
+        HashSet<String> sourceClassPath = new HashSet<>();
         sourceClassPath.add("/testfiles/ccresult");
 
         return sourceClassPath;

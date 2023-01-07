@@ -69,7 +69,7 @@ public class StrutsCatalog implements CatalogReader, CatalogDescriptor2, org.xml
      * @return null if cannot proceed, try later.
      */
     public java.util.Iterator getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(STRUTS_ID_1_0);
         list.add(STRUTS_ID_1_1);
         list.add(STRUTS_ID_1_2);

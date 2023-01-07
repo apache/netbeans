@@ -102,7 +102,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     private EjbJarProxy ejbJar;
 
     //@GuardedBy(srcRoots)
-    private final List<FileObject> srcRoots = new ArrayList<FileObject>();
+    private final List<FileObject> srcRoots = new ArrayList<>();
     //@GuardedBy(srcRoots)
     private boolean initialized = false;
 

@@ -100,7 +100,7 @@ public class NewVarCompletion extends BaseCompletion {
     private List<String> getNewVarNameSuggestion(CompletionSurrounding ctx) {
         LOG.log(Level.FINEST, "getNewVarNameSuggestion()"); // NOI18N
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         if (ctx == null || ctx.before1 == null) {
             return result;

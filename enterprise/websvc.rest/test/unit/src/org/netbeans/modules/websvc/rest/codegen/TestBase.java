@@ -56,7 +56,7 @@ public abstract class TestBase extends NbTestCase {
     public static final String PACKAGE_ACME = "com.acme";
     public static final String USER_DIR = "netbeans.user";
     
-    protected List<FileObject> entityFOs = new ArrayList<FileObject>();
+    protected List<FileObject> entityFOs = new ArrayList<>();
     protected FileObject entityClassDirFO;
     protected FileObject genSourceRoot;
     protected ClassPath compileClassPath = null;

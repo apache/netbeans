@@ -69,7 +69,7 @@ public final class Utils {
         return EXTENDERS.contains(ch);
     }
 
-    private static final HashSet<Integer> BASECHARS = new HashSet<Integer>();
+    private static final HashSet<Integer> BASECHARS = new HashSet<>();
     private static final int[] BASECHARS_VALUES = new int[] {
         0x0386 , 0x038C , 0x03DA , 0x03DC , 0x03DE , 0x03E0 , 0x0559 , 0x06D5 , 
         0x093D , 0x09B2 , 0x0A5E , 0x0A8D , 0x0ABD , 0x0AE0 , 0x0B3D , 0x0B9C ,
@@ -130,7 +130,7 @@ public final class Utils {
         }
     }
     
-    private static final HashSet<Integer> COMBININGS = new HashSet<Integer>();
+    private static final HashSet<Integer> COMBININGS = new HashSet<>();
     private static final int[] COMBININGS_VALUES = new int [] {
          0x05BF , 0x05C4 , 0x0670 , 0x093C , 0x094D , 0x09BC , 0x09BE , 0x09BF ,
          0x09D7 , 0x0A02 , 0x0A3C , 0x0A3E , 0x0A3F , 0x0ABC , 0x0B3C , 0x0BD7 , 
@@ -167,7 +167,7 @@ public final class Utils {
         }
     }
     
-    static HashSet<Integer> EXTENDERS = new HashSet<Integer>();
+    static HashSet<Integer> EXTENDERS = new HashSet<>();
     static {
         EXTENDERS.add(0x00B7); 
         EXTENDERS.add(0x02D0); 
@@ -182,7 +182,7 @@ public final class Utils {
         addRange(EXTENDERS, 0x30FC, 0x30FE);
     }
     
-    static HashSet<Integer> IDEOGHAPHICS = new HashSet<Integer>();
+    static HashSet<Integer> IDEOGHAPHICS = new HashSet<>();
     static {
         addRange(IDEOGHAPHICS, 0x4E00, 0x9FA5);
         IDEOGHAPHICS.add(0x3007);

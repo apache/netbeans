@@ -239,13 +239,13 @@ public final class ComputeImports {
             setVisitor(null);
         }
         
-        Set<String> unresolvedNames = new HashSet<String>(v.unresolved);
+        Set<String> unresolvedNames = new HashSet<>(v.unresolved);
         
         unresolvedNames.addAll(forcedUnresolved);
         
         unresolvedNames.addAll(JavadocImports.computeUnresolvedImports(info));
         
-        Set<String> unresolvedNonTypes = new HashSet<String>(v.unresolvedNonTypes);
+        Set<String> unresolvedNonTypes = new HashSet<>(v.unresolvedNonTypes);
 
         unresolvedNonTypes.addAll(forcedUnresolved);
 

@@ -410,7 +410,7 @@ public final class HttpServerSettings {
     /** Returns a list of addresses which have been granted access to the web server,
     * including the localhost. Addresses are represented as strings. */
     Set<String> getGrantedAddressesSet() {
-        HashSet<String> addr = new HashSet<String>();
+        HashSet<String> addr = new HashSet<>();
         try {
             addr.add(InetAddress.getByName("localhost").getHostAddress()); // NOI18N
             addr.add(InetAddress.getLocalHost().getHostAddress());

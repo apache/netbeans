@@ -553,7 +553,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 }
             }
             TableModel mdl = tblAdditionalProps.getModel();
-            HashMap<String, String> map = new HashMap<String, String>();
+            HashMap<String, String> map = new HashMap<>();
             for (int i = 0; i < mdl.getRowCount(); i++) {
                 map.put((String)mdl.getValueAt(i, 0), (String)mdl.getValueAt(i, 1));
             }

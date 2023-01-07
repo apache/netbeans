@@ -655,7 +655,7 @@ public class ETable extends JTable {
             if (colModel instanceof ETableColumnModel) {
                 ETableColumnModel etcm = (ETableColumnModel)colModel;
                 etcm.hiddenColumns = new ArrayList<TableColumn>();
-                etcm.hiddenColumnsPosition = new ArrayList<Integer>();
+                etcm.hiddenColumnsPosition = new ArrayList<>();
                 etcm.clearSortedColumns();
             }
 
@@ -2051,7 +2051,7 @@ public class ETable extends JTable {
      * Searches the rows by comparing the values with the given prefix.
      */
     private List<Integer> doSearch(String prefix) {
-        List<Integer> results = new ArrayList<Integer>();
+        List<Integer> results = new ArrayList<>();
         
         int startIndex = 0;
         int size = getRowCount();

@@ -891,7 +891,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         return realP;
     }
 
-    private static Set<String> usedPaths = new HashSet<String>();
+    private static Set<String> usedPaths = new HashSet<>();
     
     private static String abbrevDots(String dotted) {
         StringBuilder sb = new StringBuilder();

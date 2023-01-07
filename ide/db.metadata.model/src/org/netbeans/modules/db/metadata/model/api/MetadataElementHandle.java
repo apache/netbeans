@@ -76,7 +76,7 @@ public class MetadataElementHandle<T extends MetadataElement> {
      */
     public static <T extends MetadataElement> MetadataElementHandle<T> create(T element) {
         Parameters.notNull("element", element);
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         List<Kind> kinds = new ArrayList<Kind>();
         MetadataElement current = element;
         while (current != null) {

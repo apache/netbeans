@@ -102,7 +102,7 @@ public final class ImageUtilities {
     /** Resource paths for which we have had to strip initial slash.
      * @see "#20072"
      */
-    private static final Set<String> extraInitialSlashes = new HashSet<String>();
+    private static final Set<String> extraInitialSlashes = new HashSet<>();
     private static final CachedLookupLoader<ClassLoader> classLoaderLoader =
             new CachedLookupLoader<ClassLoader>(ClassLoader.class);
     private static final CachedLookupLoader<SVGLoader> svgLoaderLoader =

@@ -187,8 +187,8 @@ public class UpdateAction extends ContextAction {
 
     private static void update (File checkoutRoot, File[] roots, final SvnProgressSupport progress, String contextDisplayName, SVNUrl repositoryUrl, final SVNRevision revision) {
         File[][] split = Utils.splitFlatOthers(roots);
-        final List<File> recursiveFiles = new ArrayList<File>();
-        final List<File> flatFiles = new ArrayList<File>();
+        final List<File> recursiveFiles = new ArrayList<>();
+        final List<File> flatFiles = new ArrayList<>();
         
         // recursive files
         for (int i = 0; i<split[1].length; i++) {
@@ -242,7 +242,7 @@ public class UpdateAction extends ContextAction {
             if (!l.existedFiles.isEmpty() || !l.conflictedFiles.isEmpty()) {
                 // status of replaced files should be refreshed
                 // because locally added files can be replaced with those in repository and their status would be still the same in the cache
-                HashSet<File> filesToRefresh = new HashSet<File>(l.existedFiles);
+                HashSet<File> filesToRefresh = new HashSet<>(l.existedFiles);
                 filesToRefresh.addAll(l.conflictedFiles);
                 Subversion.getInstance().getStatusCache().refreshAsync(filesToRefresh.toArray(new File[filesToRefresh.size()]));
             }
@@ -491,8 +491,8 @@ public class UpdateAction extends ContextAction {
     private static class UpdateNotifyListener implements ISVNNotifyListener {
         private static Pattern conflictFilePattern = Pattern.compile("(C...|.C..|..C.|...C) ?(.+)"); //NOI18N
         private static Pattern existedFilePattern = Pattern.compile("E    ?(.+)"); //NOI18N
-        HashSet<File> conflictedFiles = new HashSet<File>();
-        HashSet<File> existedFiles = new HashSet<File>();
+        HashSet<File> conflictedFiles = new HashSet<>();
+        HashSet<File> existedFiles = new HashSet<>();
         public void logMessage(String msg) {
             catchMessage(msg);
         }

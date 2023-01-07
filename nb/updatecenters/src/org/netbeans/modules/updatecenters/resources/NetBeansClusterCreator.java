@@ -80,7 +80,7 @@ public final class NetBeansClusterCreator extends AutoupdateClusterCreator {
     
     protected @Override File[] registerCluster(String clusterName, File cluster) throws IOException {
         AtomicReference<File> parent = new AtomicReference<File>();
-        List<File> clusters = new ArrayList<File>();
+        List<File> clusters = new ArrayList<>();
         File conf = findConf(parent, clusters);
         assert conf != null;
         clusters.add(cluster);

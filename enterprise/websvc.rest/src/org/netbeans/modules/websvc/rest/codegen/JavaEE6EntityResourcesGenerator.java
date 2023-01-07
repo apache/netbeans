@@ -50,7 +50,7 @@ public class JavaEE6EntityResourcesGenerator extends EntityResourcesGenerator {
         new PersistenceHelper(getProject()).configure(getModel().getBuilder().
                 getAllEntityNames(),!RestUtils.hasJTASupport(getProject()));
         
-        Set<String> entities = new HashSet<String>();
+        Set<String> entities = new HashSet<>();
         for (EntityClassInfo info : getModel().getEntityInfos()) {
             String entity = info.getEntityFqn();
             entities.add( entity );
@@ -74,7 +74,7 @@ public class JavaEE6EntityResourcesGenerator extends EntityResourcesGenerator {
         
         finishProgressReporting();
 
-        return new HashSet<FileObject>();
+        return new HashSet<>();
     }
 
 }

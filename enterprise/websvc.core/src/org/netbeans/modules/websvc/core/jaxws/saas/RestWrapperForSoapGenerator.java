@@ -159,7 +159,7 @@ public class RestWrapperForSoapGenerator {
         targetSource.runModificationTask(task).commit();
 
 
-        return new HashSet<FileObject>(Collections.<FileObject>emptyList());
+        return new HashSet<>(Collections.<FileObject>emptyList());
     }
 
     private void addQNameImport(WorkingCopy copy) {
@@ -242,7 +242,7 @@ public class RestWrapperForSoapGenerator {
     }
 
     private String[] getHttpParamTypes(List<WsdlParameter> queryParams) {
-        List<String> types = new ArrayList<String>();
+        List<String> types = new ArrayList<>();
         for (WsdlParameter queryParam : queryParams) {
             String paramTypeName = queryParam.getTypeName();
             if (!queryParam.isHolder()) {
@@ -257,7 +257,7 @@ public class RestWrapperForSoapGenerator {
     }
 
     private String[] getHttpParamNames(List<WsdlParameter> queryParams) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (WsdlParameter queryParam : queryParams) {
             if (!queryParam.isHolder()) {
                 names.add(queryParam.getName());
@@ -631,7 +631,7 @@ public class RestWrapperForSoapGenerator {
     }
 
     private Object[] getOperationAnnotationAttrs(String operationName, String returnType, String[] parameterTypes) {
-        List<Object> attributes = new ArrayList<Object>();
+        List<Object> attributes = new ArrayList<>();
         attributes.add(null);
         if (!returnType.equals("void")) {
             if (getPrimitiveType(returnType) == null) {

@@ -242,8 +242,8 @@ public class SyntaxHighlightingTest extends NbTestCase {
     public void testDistro() {
         TokenHierarchy th = TokenHierarchy.get(document);
         TokenSequence ts = th.tokenSequence();
-        HashMap<String, Integer> distro = new HashMap<String, Integer>();
-        HashMap<String, Integer> flyweightDistro = new HashMap<String, Integer>();
+        HashMap<String, Integer> distro = new HashMap<>();
+        HashMap<String, Integer> flyweightDistro = new HashMap<>();
         iterateOver(ts, distro, flyweightDistro);
         
         {

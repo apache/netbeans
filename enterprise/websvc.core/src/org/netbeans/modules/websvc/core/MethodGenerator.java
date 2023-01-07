@@ -93,7 +93,7 @@ public class MethodGenerator {
 
                         // create parameters
                         List<WsdlParameter> parameters = wsdlOperation.getParameters();
-                        List<VariableTree> params = new ArrayList<VariableTree>();
+                        List<VariableTree> params = new ArrayList<>();
                         for (WsdlParameter parameter:parameters) {
                             // create parameter:
                             params.add(make.Variable(

@@ -54,7 +54,7 @@ public class FindNamespaceVisitor extends ChildVisitor {
     }
     
     protected void visitNode(Node node) {
-        Map<String,String> namespaces = new HashMap<String,String>();
+        Map<String,String> namespaces = new HashMap<>();
         if((node instanceof Element) || (node instanceof Attribute)) {
             nodeCtr++;
             boolean found = false;
@@ -95,7 +95,7 @@ public class FindNamespaceVisitor extends ChildVisitor {
         ancestorNamespaceMaps.remove(namespaces);
     }
 
-    private Map<Integer,String> namespaceMap = new HashMap<Integer,String>();
+    private Map<Integer,String> namespaceMap = new HashMap<>();
     private Document root = null;
     private List<Map<String,String>> ancestorNamespaceMaps = new ArrayList<Map<String,String>>();
     int nodeCtr;

@@ -50,12 +50,12 @@ public class NbInstallerHideClasspathPackagesTest extends SetupHid {
         contents.put("javax/swing/text/Document.class", "overrides");
         contents.put("javax/naming/Context.class", "overrides");
         contents.put("javax/naming/spi/Resolver.class", "ignored");
-        Map<String,String> mani = new HashMap<String,String>();
+        Map<String,String> mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m1");
         mani.put("OpenIDE-Module-Hide-Classpath-Packages", "javax.swing.**, javax.naming.*");
         createJar(m1j, contents, mani);
         File m2j = new File(getWorkDir(), "m2.jar");
-        mani = new HashMap<String,String>();
+        mani = new HashMap<>();
         mani.put("OpenIDE-Module", "m2");
         mani.put("OpenIDE-Module-Module-Dependencies", "m1");
         // Just to check early attempts to load packages:

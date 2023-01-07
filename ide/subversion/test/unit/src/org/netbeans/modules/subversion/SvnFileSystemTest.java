@@ -157,7 +157,7 @@ public class SvnFileSystemTest extends FileSystemFactoryHid {
     private void commit(List<File> files, String testName) throws IOException {
         try {   
             ISVNClientAdapter client = getClient(getRepoUrl());
-            List<File> filesToAdd = new ArrayList<File>();
+            List<File> filesToAdd = new ArrayList<>();
             for (File file : files) {
                 
                 ISVNStatus status = getStatus(file);

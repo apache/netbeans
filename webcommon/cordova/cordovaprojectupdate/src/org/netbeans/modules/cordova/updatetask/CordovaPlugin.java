@@ -29,7 +29,7 @@ public class CordovaPlugin {
     private String id;
     private String url;
 
-    private static final Map<String, String> wellKnowNames = new HashMap<String, String>();
+    private static final Map<String, String> wellKnowNames = new HashMap<>();
 
     static {
         wellKnowNames.put("cordova-plugin-device", "Device API");

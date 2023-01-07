@@ -196,7 +196,7 @@ public final class ClassPathUiSupport {
             }
         }
         Set<Library> addedLibs = new HashSet<Library>(Arrays.asList(libraries));
-        List<Integer> indexes = new ArrayList<Integer>();
+        List<Integer> indexes = new ArrayList<>();
         for (int i=0; i<listModel.getSize(); i++) {
             ClassPathSupport.Item item = (ClassPathSupport.Item)listModel.get(i);
             if (item != null && item.getType() == ClassPathSupport.Item.TYPE_LIBRARY && !item.isBroken()) {

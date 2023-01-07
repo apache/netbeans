@@ -455,7 +455,7 @@ public final class LogRecords {
                 values.put(current, v);
                 if (current == Elem.PARAM) {
                     if (params == null) {
-                        params = new ArrayList<String>();
+                        params = new ArrayList<>();
                     }
                     params.add(v);
                     if (params.size() > 1500) {

@@ -230,7 +230,7 @@ public final class _RetoucheUtil {
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 String validName = convertToJavaIdentifier(memberName, defaultValue);
-                List<String> existingMethodNames = new ArrayList<String>();
+                List<String> existingMethodNames = new ArrayList<>();
                 TypeElement typeElement = controller.getElements().getTypeElement(className);
                 if (typeElement == null) {
                     result[0] = validName;

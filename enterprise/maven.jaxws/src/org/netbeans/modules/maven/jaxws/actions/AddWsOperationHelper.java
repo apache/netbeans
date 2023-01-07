@@ -264,7 +264,7 @@ public class AddWsOperationHelper {
                         
                         // add @WebParam annotations
                         List<? extends VariableTree> parameters = method.getParameters();
-                        List<VariableTree> newParameters = new ArrayList<VariableTree>();
+                        List<VariableTree> newParameters = new ArrayList<>();
                         
                         if(createAnnotations && seiClass[0] == null) {
                             for (VariableTree param:parameters) {
@@ -397,7 +397,7 @@ public class AddWsOperationHelper {
         throws IOException {
         
         TypeElement methodElement = controller.getElements().getTypeElement("javax.jws.WebMethod"); //NOI18N
-        Set<String> operationNames = new HashSet<String>();
+        Set<String> operationNames = new HashSet<>();
         if (methodElement != null) {
             List<ExecutableElement> methods = getMethods(controller,classEl);
             for (ExecutableElement m:methods) {

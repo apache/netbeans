@@ -88,7 +88,7 @@ public class FreeformSharabilityQuery implements SharabilityQueryImplementation2
     private boolean isExported(final File file) {
         Set<File> _exported = this.exported;
         if (_exported == null) {
-            final Set<File> _exportedFinal = _exported = new HashSet<File>();
+            final Set<File> _exportedFinal = _exported = new HashSet<>();
             ProjectManager.mutex().readAccess(new Runnable() {
                 public void run () {
                     final Element root = project.getPrimaryConfigurationData();

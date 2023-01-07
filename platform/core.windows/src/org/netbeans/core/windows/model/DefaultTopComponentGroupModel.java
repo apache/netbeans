@@ -42,21 +42,21 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     private boolean opened;
 
     /** All TopComponent IDs belonging to this group. */
-    private final Set<String> topComponents = new HashSet<String>(3);
+    private final Set<String> topComponents = new HashSet<>(3);
     // XXX Helper
     /** All TopComponent IDs which were opened by this group (at the moment
      * when group was opening). When group is closed this set should be empty. */
-    private final Set<String> openedTopComponents = new HashSet<String>(3);
+    private final Set<String> openedTopComponents = new HashSet<>(3);
     
     /** All TopComponent IDs which were already opened before this group was 
      * opened (at the moment when group was opening). When group is closed this 
      * set should be empty. */
-    private final Set<String> openedBeforeTopComponents = new HashSet<String>(3);
+    private final Set<String> openedBeforeTopComponents = new HashSet<>(3);
     
     /** TopComponent IDs with opening flag. */
-    private final Set<String> openingTopComponents = new HashSet<String>(3);
+    private final Set<String> openingTopComponents = new HashSet<>(3);
     /** TopComponent IDs with closing flag. */
-    private final Set<String> closingTopComponents = new HashSet<String>(3);
+    private final Set<String> closingTopComponents = new HashSet<>(3);
     
     private final Object LOCK_OPENED = new Object();
     
@@ -112,7 +112,7 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     public Set<TopComponent> getTopComponents() {
         Set<String> s;
         synchronized(LOCK_TOPCOMPONENTS) {
-            s = new HashSet<String>(topComponents);
+            s = new HashSet<>(topComponents);
         }
         
         Set<TopComponent> result = new HashSet<TopComponent>(s.size());
@@ -129,7 +129,7 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     public Set<TopComponent> getOpenedTopComponents() {
         Set<String> s;
         synchronized(LOCK_OPENED) {
-            s = new HashSet<String>(openedTopComponents);
+            s = new HashSet<>(openedTopComponents);
         }
         
         Set<TopComponent> result = new HashSet<TopComponent>(s.size());
@@ -146,7 +146,7 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     public Set<TopComponent> getOpenedBeforeTopComponents() {
         Set<String> s;
         synchronized(LOCK_OPENED) {
-            s = new HashSet<String>(openedBeforeTopComponents);
+            s = new HashSet<>(openedBeforeTopComponents);
         }
         
         Set<TopComponent> result = new HashSet<TopComponent>(s.size());
@@ -163,7 +163,7 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     public Set<TopComponent> getOpeningTopComponents() {
         Set<String> s;
         synchronized(LOCK_TOPCOMPONENTS) {
-            s = new HashSet<String>(openingTopComponents);
+            s = new HashSet<>(openingTopComponents);
         }
         
         Set<TopComponent> result = new HashSet<TopComponent>(s.size());
@@ -180,7 +180,7 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     public Set<TopComponent> getClosingTopComponents() {
         Set<String> s;
         synchronized(LOCK_TOPCOMPONENTS) {
-            s = new HashSet<String>(closingTopComponents);
+            s = new HashSet<>(closingTopComponents);
         }
         
         Set<TopComponent> result = new HashSet<TopComponent>(s.size());
@@ -269,23 +269,23 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     // XXX>>
     public Set<String> getTopComponentsIDs() {
         synchronized(LOCK_TOPCOMPONENTS) {
-            return new HashSet<String>(topComponents);
+            return new HashSet<>(topComponents);
         }
     }
     
     public Set<String> getOpeningSetIDs() {
         synchronized(LOCK_TOPCOMPONENTS) {
-            return new HashSet<String>(openingTopComponents);
+            return new HashSet<>(openingTopComponents);
         }
     }
     public Set<String> getClosingSetIDs() {
         synchronized(LOCK_TOPCOMPONENTS) {
-            return new HashSet<String>(closingTopComponents);
+            return new HashSet<>(closingTopComponents);
         }
     }
     public Set<String> getOpenedTopComponentsIDs() {
         synchronized(LOCK_TOPCOMPONENTS) {
-            return new HashSet<String>(openedTopComponents);
+            return new HashSet<>(openedTopComponents);
         }
     }
     // XXX<<

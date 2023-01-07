@@ -49,7 +49,7 @@ public final class InputOutputManager {
     private static final Map<InputOutput, InputOutputData> AVAILABLE =
             new WeakHashMap<InputOutput, InputOutputData>();
 
-    private static final Set<String> ACTIVE_DISPLAY_NAMES = new HashSet<String>();
+    private static final Set<String> ACTIVE_DISPLAY_NAMES = new HashSet<>();
 
     private InputOutputManager() {
         super();

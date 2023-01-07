@@ -73,7 +73,7 @@ public class LocalHistory {
     private final ListenersSupport listenerSupport = new ListenersSupport(this);
     
     private final Set<String> userDefinedRoots;
-    private final Set<String> roots = new HashSet<String>();
+    private final Set<String> roots = new HashSet<>();
        
     private Pattern includeFiles = null;
     private Pattern excludeFiles = null;
@@ -91,9 +91,9 @@ public class LocalHistory {
     public static final Logger LOG = Logger.getLogger("org.netbeans.modules.localhistory"); // NOI18N
 
     /** holds all files which are actually opened */
-    private final Set<String> openedFiles = new HashSet<String>();
+    private final Set<String> openedFiles = new HashSet<>();
     /** holds all files which where opened at some time during this nb session and changed */
-    private final Set<String> touchedFiles = new HashSet<String>();
+    private final Set<String> touchedFiles = new HashSet<>();
     
     private LocalHistoryVCS lhvcs;
     private RequestProcessor parallelRP;
@@ -113,7 +113,7 @@ public class LocalHistory {
             userDefinedRoots = Collections.emptySet();
         } else {
             String[] paths = rootPaths.split(";");
-            userDefinedRoots = new HashSet<String>(paths.length);
+            userDefinedRoots = new HashSet<>(paths.length);
             for(String root : paths) {
                 addRootFile(userDefinedRoots, root);   
             }            
@@ -154,7 +154,7 @@ public class LocalHistory {
     }
     
     private void setRoots(Project[] projects) {        
-        Set<String> newRoots = new HashSet<String>();
+        Set<String> newRoots = new HashSet<>();
         for(Project project : projects) {
             Sources sources = ProjectUtils.getSources(project);
             SourceGroup[] groups = sources.getSourceGroups(Sources.TYPE_GENERIC);

@@ -73,7 +73,7 @@ public class Generate {
     private static final Set<Class> SILENT_EXCEPTIONS = Collections.unmodifiableSet(new LinkedHashSet<Class>(Arrays.asList(new Class[] {
            com.sun.jdi.InternalException.class, com.sun.jdi.ObjectCollectedException.class, com.sun.jdi.VMDisconnectedException.class })));
 
-    private static final Set<String> NOT_USED_CLASSES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> NOT_USED_CLASSES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[] {
             com.sun.jdi.Accessible.class.getName(), com.sun.jdi.Bootstrap.class.getName(),
             com.sun.jdi.ClassLoaderReference.class.getName(),
             com.sun.jdi.PathSearchingVirtualMachine.class.getName(),
@@ -319,7 +319,7 @@ public class Generate {
         Map<String, List<String>> higherVersionMethods = getHigherVersionMethods(rootResource, jdkVersion);
         int[] higherVersionMethodIndexes = new int[higherVersionMethods.size()];
 
-        Set<String> higherVersionClasses = new HashSet<String>();
+        Set<String> higherVersionClasses = new HashSet<>();
         int[] indexes = new int[higherVersionMethods.size()];
         for (Class c : classes) {
             if (c.getDeclaredMethods().length == 0) {
@@ -733,7 +733,7 @@ public class Generate {
         System.err.println("  Method: "+methodLine+" from JDK "+jdkVersion);
         int index = methodLine.indexOf('(');
         String mName = methodLine.substring(0, index);
-        List<String> paramTypes = new ArrayList<String>();
+        List<String> paramTypes = new ArrayList<>();
         index++;
         int index2 = index;
         char c;
@@ -767,7 +767,7 @@ public class Generate {
         } else {
             defaultReturn = methodLine.substring(index, index2).trim();
             index = index2 + " throws ".length();
-            exceptionTypes = new ArrayList<String>();
+            exceptionTypes = new ArrayList<>();
             for (index2 = index; index2 < methodLine.length(); index2++) {
                 if (methodLine.charAt(index2) == ',') {
                     exceptionTypes.add(methodLine.substring(index, index2).trim());
@@ -1017,7 +1017,7 @@ public class Generate {
     }
 
     private static List<String> readMethodsLog(File resource) throws IOException {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         BufferedReader log = new BufferedReader(new FileReader(resource));
         String line;
         while ((line = log.readLine()) != null) {

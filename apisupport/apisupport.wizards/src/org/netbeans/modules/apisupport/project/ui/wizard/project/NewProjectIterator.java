@@ -285,7 +285,7 @@ public final class NewProjectIterator extends BasicWizardIterator {
         // assuming we got 1-sized array, should be enforced by UI.
         SourceGroup[] grps = srcs.getSourceGroups(Sources.TYPE_GENERIC);
         SourceGroup group = grps[0];
-        Collection<FileObject> files = new ArrayList<FileObject>();
+        Collection<FileObject> files = new ArrayList<>();
         collectFiles(group.getRootFolder(), files,
                 SharabilityQuery.getSharability(group.getRootFolder()));
         createZipFile(target, group.getRootFolder(), files);

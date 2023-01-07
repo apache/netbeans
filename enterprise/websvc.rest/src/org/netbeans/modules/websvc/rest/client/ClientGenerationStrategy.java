@@ -154,7 +154,7 @@ abstract class ClientGenerationStrategy {
         ModifiersTree methodModifier = maker.Modifiers(
                 Collections.<Modifier>singleton(Modifier.PUBLIC));
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         
         Tree argTypeTree = maker.Identifier("String"); //NOI18N
         ModifiersTree fieldModifier = maker.Modifiers(
@@ -531,7 +531,7 @@ abstract class ClientGenerationStrategy {
         String p = normalizePath(path); //NOI18N
         PathFormat pathFormat = new PathFormat();
         StringBuilder buf = new StringBuilder();
-        List<String> arguments = new ArrayList<String>();
+        List<String> arguments = new ArrayList<>();
         for (int i=0 ; i<p.length() ; i++) {
             char ch = p.charAt(i);
             if (ch == '{') { //NOI18N

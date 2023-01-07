@@ -148,7 +148,7 @@ public class MavenPlatformJarProvider implements PlatformJarProvider {
     }
 
     private Set<File> allModulesIn(File ide) {
-        Set<File> jars = new HashSet<File>();
+        Set<File> jars = new HashSet<>();
         File[] clusters = ide.listFiles();
         if (clusters != null) {
             for (File cluster : clusters) {

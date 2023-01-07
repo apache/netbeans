@@ -256,7 +256,7 @@ public class ProjectWhiteListQueryImplementation implements WhiteListQueryImplem
         
         private TreeSet<String> privatePackages;
         
-        private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private final List<ChangeListener> listeners = new ArrayList<>();
         
         private final Object IMPL_LOCK = new Object();
         
@@ -302,7 +302,7 @@ public class ProjectWhiteListQueryImplementation implements WhiteListQueryImplem
                 this.privatePackages = privatePackages;
             }
 
-            ArrayList<ChangeListener> changes = new ArrayList<ChangeListener>();
+            ArrayList<ChangeListener> changes = new ArrayList<>();
 
             synchronized (listeners) {
                 changes.addAll(listeners);

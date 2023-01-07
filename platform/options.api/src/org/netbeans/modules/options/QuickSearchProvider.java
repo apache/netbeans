@@ -109,7 +109,7 @@ public class QuickSearchProvider implements SearchProvider {
         for(FileObject keywordsFO : keywordsFOs.getChildren()) {
 	    String location = keywordsFO.getAttribute("location").toString(); //NOI18N
 	    String tabTitle = keywordsFO.getAttribute("tabTitle").toString(); //NOI18N
-	    Set<String> keywords = new HashSet<String>();
+	    Set<String> keywords = new HashSet<>();
 	    Enumeration<String> attributes = keywordsFO.getAttributes();
 	    while (attributes.hasMoreElements()) {
 		String attribute = attributes.nextElement();
@@ -138,7 +138,7 @@ public class QuickSearchProvider implements SearchProvider {
 	if (mergedKeywords == null) {
 	    return initialKeywords;
 	} else {
-	    Set<String> toAdd = new HashSet<String>();
+	    Set<String> toAdd = new HashSet<>();
 	    for (String keyword : initialKeywords) {
 		for(String s : keyword.split(",")) {
 		    if (!mergedKeywords.contains(s)) {

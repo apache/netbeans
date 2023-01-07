@@ -331,7 +331,7 @@ public class JaxWsUtils {
                             providerAnnotation);
 
                     String type = "javax.xml.transform.Source";     // NOI18N
-                    List<VariableTree> params = new ArrayList<VariableTree>();
+                    List<VariableTree> params = new ArrayList<>();
                     params.add(make.Variable(
                             make.Modifiers(
                             Collections.<Modifier>emptySet(),
@@ -578,7 +578,7 @@ public class JaxWsUtils {
 
                         // create parameters
                         List<WsdlParameter> parameters = operation.getParameters();
-                        List<VariableTree> params = new ArrayList<VariableTree>();
+                        List<VariableTree> params = new ArrayList<>();
                         for (WsdlParameter parameter : parameters) {
                             // create parameter:
                             // final ObjectOutput arg0

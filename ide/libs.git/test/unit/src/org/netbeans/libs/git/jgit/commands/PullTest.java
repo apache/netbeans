@@ -190,7 +190,7 @@ public class PullTest extends AbstractGitTestCase {
         assertEquals(1, updates.size());
         assertUpdate(updates.get("origin/master"), "origin/master", "master", commitId, masterInfo.getRevision(), new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.FAST_FORWARD);
         assertEquals(MergeStatus.MERGED, result.getMergeResult().getMergeStatus());
-        assertEquals(new HashSet<String>(Arrays.asList(commitId, localCommitId)), new HashSet<String>(Arrays.asList(result.getMergeResult().getMergedCommits())));
+        assertEquals(new HashSet<>(Arrays.asList(commitId, localCommitId)), new HashSet<>(Arrays.asList(result.getMergeResult().getMergedCommits())));
         assertTrue(f.exists());
         assertTrue(f2.exists());
     }
@@ -215,7 +215,7 @@ public class PullTest extends AbstractGitTestCase {
         assertEquals(1, updates.size());
         assertUpdate(updates.get("origin/master"), "origin/master", "master", commitId, masterInfo.getRevision(), new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.FAST_FORWARD);
         assertEquals(MergeStatus.CONFLICTING, result.getMergeResult().getMergeStatus());
-        assertEquals(new HashSet<File>(Arrays.asList(f)), new HashSet<File>(result.getMergeResult().getConflicts()));
+        assertEquals(new HashSet<>(Arrays.asList(f)), new HashSet<>(result.getMergeResult().getConflicts()));
         assertEquals("<<<<<<< HEAD\nhi, i am new\n=======\nremote change\n>>>>>>> branch 'master' of " + new URIish(otherWT.toURI().toString()).toString(), read(f)); // this should be fixed in JGit
     }
 
@@ -241,7 +241,7 @@ public class PullTest extends AbstractGitTestCase {
         assertEquals(1, updates.size());
         assertUpdate(updates.get("origin/" + BRANCH_NAME), "origin/" + BRANCH_NAME, BRANCH_NAME, commitId, branch.getId(), new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.FAST_FORWARD);
         assertEquals(MergeStatus.MERGED, result.getMergeResult().getMergeStatus());
-        assertEquals(new HashSet<String>(Arrays.asList(commitId, localCommitId)), new HashSet<String>(Arrays.asList(result.getMergeResult().getMergedCommits())));
+        assertEquals(new HashSet<>(Arrays.asList(commitId, localCommitId)), new HashSet<>(Arrays.asList(result.getMergeResult().getMergedCommits())));
         assertTrue(f.exists());
         assertTrue(f2.exists());
     }

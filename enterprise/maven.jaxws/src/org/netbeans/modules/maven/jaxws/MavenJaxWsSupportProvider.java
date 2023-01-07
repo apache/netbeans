@@ -373,7 +373,7 @@ public class MavenJaxWsSupportProvider extends ProjectOpenedHook
             }
             // compare new services with existing
             // looking for common services (implementationClass)
-            Set<String> commonServices = new HashSet<String>();
+            Set<String> commonServices = new HashSet<>();
             Set<String> keys1 = oldServices.keySet();
             Set<String> keys2 = newServices.keySet();
             for (String key : keys1) {

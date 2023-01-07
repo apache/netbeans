@@ -648,7 +648,7 @@ public class PackageViewTest extends NbTestCase {
         //Verify that the files was added, the used PasteType is DataFolder's PasteType
         files = rn1.getLookup().lookup(DataObject.class).getPrimaryFile().getChildren();
         assertEquals("Invalid final file count",4,files.length);
-        Set<String> s = new HashSet<String>();
+        Set<String> s = new HashSet<>();
         s.add(fileNodes[0].getLookup().lookup(DataObject.class).getPrimaryFile().getNameExt());
         s.add(fileNodes[1].getLookup().lookup(DataObject.class).getPrimaryFile().getNameExt());
         for (FileObject f : files) {
@@ -1270,7 +1270,7 @@ public class PackageViewTest extends NbTestCase {
         if (n.isLeaf()) {
             return name;
         } else {
-            List<String> kidNames = new ArrayList<String>();
+            List<String> kidNames = new ArrayList<>();
             for (Node kid : n.getChildren().getNodes(true)) {
                 kidNames.add(printTree(kid));
             }

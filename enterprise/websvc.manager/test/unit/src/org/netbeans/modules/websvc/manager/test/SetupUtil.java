@@ -211,7 +211,7 @@ public class SetupUtil {
         public MainFS() {
             ALL.addLookupListener(this);
             
-            List<URL> layerUrls = new ArrayList<URL>();
+            List<URL> layerUrls = new ArrayList<>();
             ClassLoader l = Thread.currentThread().getContextClassLoader();
             try {
                 for (URL manifest : NbCollections.iterable(l.getResources("META-INF/MANIFEST.MF"))) { // NOI18N
@@ -236,7 +236,7 @@ public class SetupUtil {
         }
         
         private FileSystem[] computeDelegates() {
-            List<FileSystem> arr = new ArrayList<FileSystem>();
+            List<FileSystem> arr = new ArrayList<>();
             arr.add(MEMORY);
             arr.add(layers);
             arr.add(configRoot);

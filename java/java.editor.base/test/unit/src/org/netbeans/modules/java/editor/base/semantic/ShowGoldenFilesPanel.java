@@ -232,7 +232,7 @@ public class ShowGoldenFilesPanel extends javax.swing.JPanel {
             name2Test.put(t.getHighlightTestData(), t);
         }
         
-        Set<String> missingNames = new HashSet<String>(name2Golden.keySet());
+        Set<String> missingNames = new HashSet<>(name2Golden.keySet());
         
         missingNames.removeAll(name2Test.keySet());
         
@@ -240,7 +240,7 @@ public class ShowGoldenFilesPanel extends javax.swing.JPanel {
             missing.add(name2Golden.get(m));
         }
         
-        Set<String> addedNames = new HashSet<String>(name2Test.keySet());
+        Set<String> addedNames = new HashSet<>(name2Test.keySet());
         
         addedNames.removeAll(name2Golden.keySet());
         

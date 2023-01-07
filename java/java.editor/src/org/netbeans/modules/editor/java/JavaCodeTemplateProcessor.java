@@ -90,7 +90,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
     private List<Element> typeVars = null;
     private final Map<CodeTemplateParameter, String> param2hints = new HashMap<>();
     private final Map<CodeTemplateParameter, TypeMirror> param2types = new HashMap<>();
-    private final Set<String> autoImportedTypeNames = Collections.synchronizedSet(new HashSet<String>());
+    private final Set<String> autoImportedTypeNames = Collections.synchronizedSet(new HashSet<>());
     private final AtomicReference<RequestProcessor.Task> task = new AtomicReference<>();
     
     private JavaCodeTemplateProcessor(CodeTemplateInsertRequest request) {

@@ -74,9 +74,9 @@ public class ProjectsRootNodeTest extends NbTestCase {
     public void testBehaviourOfProjectsLogicNode() throws Exception {
         MockLookup.setInstances(new TestSupport.TestProjectFactory());
         CountDownLatch down = new CountDownLatch(1);
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         clearWorkDir();
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         assertNotNull(workDir);
@@ -252,7 +252,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
                 return new S();
             }
             void fireChange(boolean icon, boolean name, FileObject... files) {
-                fireFileStatusChanged(new FileStatusEvent(this, new HashSet<FileObject>(Arrays.asList(files)), icon, name));
+                fireFileStatusChanged(new FileStatusEvent(this, new HashSet<>(Arrays.asList(files)), icon, name));
             }
         }
         TestFS fs = new TestFS();
@@ -310,7 +310,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
         assertEquals("Prj *", node.getDisplayName());
         assertEquals("Prj <mod>", node.getHtmlDisplayName());
         assertFalse(node.getIcon(BeanInfo.ICON_COLOR_16x16) instanceof BadgedImage);
-        assertEquals(new HashSet<FileObject>(Arrays.asList(k1, k2)), fs.badgedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(k1, k2)), fs.badgedFiles);
         fs.badging = true;
         fs.fireChange(true, false, k2);
         node.task.waitFinished();
@@ -319,7 +319,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
         assertEquals("Prj *", node.getDisplayName());
         assertEquals("Prj <mod>", node.getHtmlDisplayName());
         assertTrue(node.getIcon(BeanInfo.ICON_COLOR_16x16) instanceof BadgedImage);
-        assertEquals(new HashSet<FileObject>(Arrays.asList(k1, k2)), fs.badgedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(k1, k2)), fs.badgedFiles);
         FileObject k3 = root.createData("again");
         fs.nameBadge = " +";
         fs.fireChange(false, true, k3);
@@ -329,7 +329,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
         assertEquals("Prj +", node.getDisplayName());
         assertEquals("Prj <mod>", node.getHtmlDisplayName());
         assertTrue(node.getIcon(BeanInfo.ICON_COLOR_16x16) instanceof BadgedImage);
-        assertEquals(new HashSet<FileObject>(Arrays.asList(k1, k2, k3)), fs.badgedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(k1, k2, k3)), fs.badgedFiles);
     }
 
     public void testIconAnnotated() throws IOException, Exception {

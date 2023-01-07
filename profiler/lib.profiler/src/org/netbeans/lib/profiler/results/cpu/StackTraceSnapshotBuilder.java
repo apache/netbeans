@@ -228,7 +228,7 @@ public class StackTraceSnapshotBuilder {
     }
     
     final List<Long> threadIds = new ArrayList<Long>();
-    final List<String> threadNames = new ArrayList<String>();
+    final List<String> threadNames = new ArrayList<>();
     final List<byte[]> threadCompactData = new ArrayList<byte[]>();
     final List<MethodInfo> methodInfos = new ArrayList<MethodInfo>();
     final Map<MethodInfo,Integer> methodInfoMap = new HashMap<MethodInfo,Integer>();
@@ -269,7 +269,7 @@ public class StackTraceSnapshotBuilder {
           new AtomicReference<Map<Long, SampledThreadInfo>>(Collections.<Long, SampledThreadInfo>emptyMap());
     int stackTraceCount = 0;
     //    int builderBatchSize;
-    final Set<String> ignoredThreadNames = new HashSet<String>();
+    final Set<String> ignoredThreadNames = new HashSet<>();
     final Map<Long,Long> threadtimes = new HashMap();
     
     {

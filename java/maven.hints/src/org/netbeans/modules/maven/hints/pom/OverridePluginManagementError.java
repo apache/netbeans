@@ -135,7 +135,7 @@ public class OverridePluginManagementError implements POMErrorFixProvider {
 
     private Map<String, String> collectManaged(Project prj) {
         NbMavenProject project = prj.getLookup().lookup(NbMavenProject.class);
-        Map<String, String> toRet = new HashMap<String, String>();
+        Map<String, String> toRet = new HashMap<>();
         if (project == null) { //#154462
             return toRet;
         }

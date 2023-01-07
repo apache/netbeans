@@ -69,7 +69,7 @@ public class BatchProblemNotifier {
         ProblemReporterImpl pr = p.getProblemReporter();
         Set<File> missingArtifacts = pr.getMissingArtifactFiles();
         if (!missingArtifacts.isEmpty()) {
-            Set<File> files = new HashSet<File>();
+            Set<File> files = new HashSet<>();
             for (File file : missingArtifacts) {
                 if (file != null) {
                     files.add(file);

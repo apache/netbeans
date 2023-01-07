@@ -207,7 +207,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         private String generateUniqueName(final String name) {
             String uniqueName = name;
             int suffix = 1;
-            Set<String> names = new HashSet<String>();
+            Set<String> names = new HashSet<>();
             for (WsimportOption option : options) {
                 names.add(option.getWsimportOptionName());
             }

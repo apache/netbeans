@@ -36,7 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class DesktopTemplateAttributes implements CreateFromTemplateAttributes {
     @Override
     public Map<String, ?> attributesFor(CreateDescriptor desc) {
-        Map<String, Object> vals = new HashMap<String, Object>();
+        Map<String, Object> vals = new HashMap<>();
         Date d = new Date();
         vals.put("user", // NOI18N
                 System.getProperty("user.name") // NOI18N

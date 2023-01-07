@@ -32,22 +32,22 @@ import org.openide.filesystems.FileUtil;
  */
 public class TestVCSInterceptor extends VCSInterceptor {
 
-    private final List<File>    beforeCreateFiles = new ArrayList<File>();
-    private final List<File>    doCreateFiles = new ArrayList<File>();
-    private final List<File>    createdFiles = new ArrayList<File>();
-    private final List<File>    beforeDeleteFiles = new ArrayList<File>();
-    private final List<File>    doDeleteFiles = new ArrayList<File>();
-    private final List<File>    deletedFiles = new ArrayList<File>();
-    private final List<File>    beforeMoveFiles = new ArrayList<File>();
-    private final List<File>    afterMoveFiles = new ArrayList<File>();
-    private final List<File>    beforeCopyFiles = new ArrayList<File>();
-    private final List<File>    afterCopyFiles = new ArrayList<File>();
-    private final List<File>    doCopyFiles = new ArrayList<File>();
-    private final List<File>    beforeEditFiles = new ArrayList<File>();
-    private final List<File>    beforeChangeFiles = new ArrayList<File>();
-    private final List<File>    afterChangeFiles = new ArrayList<File>();
-    private final List<File>    isMutableFiles = new ArrayList<File>();
-    private final List<File>    refreshRecursivelyFiles = new ArrayList<File>();
+    private final List<File>    beforeCreateFiles = new ArrayList<>();
+    private final List<File>    doCreateFiles = new ArrayList<>();
+    private final List<File>    createdFiles = new ArrayList<>();
+    private final List<File>    beforeDeleteFiles = new ArrayList<>();
+    private final List<File>    doDeleteFiles = new ArrayList<>();
+    private final List<File>    deletedFiles = new ArrayList<>();
+    private final List<File>    beforeMoveFiles = new ArrayList<>();
+    private final List<File>    afterMoveFiles = new ArrayList<>();
+    private final List<File>    beforeCopyFiles = new ArrayList<>();
+    private final List<File>    afterCopyFiles = new ArrayList<>();
+    private final List<File>    doCopyFiles = new ArrayList<>();
+    private final List<File>    beforeEditFiles = new ArrayList<>();
+    private final List<File>    beforeChangeFiles = new ArrayList<>();
+    private final List<File>    afterChangeFiles = new ArrayList<>();
+    private final List<File>    isMutableFiles = new ArrayList<>();
+    private final List<File>    refreshRecursivelyFiles = new ArrayList<>();
 
     public TestVCSInterceptor() {
     }

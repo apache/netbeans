@@ -747,7 +747,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         FileObject root;
 
         private IT (FileObject f) {
-            this.ch = new ArrayList<FileObject>();
+            this.ch = new ArrayList<>();
             ch.add (f);
             this.root = f;
         }

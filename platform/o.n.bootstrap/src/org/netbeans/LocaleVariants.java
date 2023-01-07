@@ -213,7 +213,7 @@ final class LocaleVariants implements Stamps.Updater {
         if (suffixes == null ||
                 Locale.getDefault() != lastLocale ||
                 !BaseUtilities.compareObjects(NbBundle.getBranding(), lastBranding)) {
-            List<String> _suffixes = new ArrayList<String>();
+            List<String> _suffixes = new ArrayList<>();
             Iterator<String> it = NbBundle.getLocalizingSuffixes();
             while (it.hasNext()) {
                 _suffixes.add(it.next());

@@ -258,9 +258,9 @@ public class J2eeProjectSupport {
      */
     public static Set<String> getFileSet(Project p) {
         File f = FileUtil.toFile(p.getProjectDirectory());
-        Set<String> dummy = new HashSet<String>();
+        Set<String> dummy = new HashSet<>();
         visitAllDirsAndFiles(f, dummy);
-        Set<String> retVal = new HashSet<String>(dummy.size());
+        Set<String> retVal = new HashSet<>(dummy.size());
         Iterator<String> i = dummy.iterator();
         while (i.hasNext()) {
             String s = i.next().substring(f.getAbsolutePath().length() + 1);
@@ -273,9 +273,9 @@ public class J2eeProjectSupport {
 
     public static Set<String> getFileSet(String projectRoot) {
         File f = new File(projectRoot);
-        Set<String> dummy = new HashSet<String>();
+        Set<String> dummy = new HashSet<>();
         visitAllDirsAndFiles(f, dummy);
-        Set<String> retVal = new HashSet<String>(dummy.size());
+        Set<String> retVal = new HashSet<>(dummy.size());
         Iterator<String> i = dummy.iterator();
         while (i.hasNext()) {
             String s = i.next().substring(f.getAbsolutePath().length() + 1);

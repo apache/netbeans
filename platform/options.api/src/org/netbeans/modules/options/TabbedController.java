@@ -305,7 +305,7 @@ public class TabbedController extends OptionsPanelController {
         Lookup lookup = Lookups.forPath(tabFolder);
         options = lookup.lookup(new Lookup.Template<AdvancedOption>( AdvancedOption.class ));
         tabTitle2controller = new HashMap<String, OptionsPanelController>();
-        id2tabTitle = new HashMap<String, String>();
+        id2tabTitle = new HashMap<>();
         synchronized (tabTitle2Option) {
             for (Lookup.Item<AdvancedOption> item : options.allItems()) {
                 AdvancedOption option = item.getInstance();

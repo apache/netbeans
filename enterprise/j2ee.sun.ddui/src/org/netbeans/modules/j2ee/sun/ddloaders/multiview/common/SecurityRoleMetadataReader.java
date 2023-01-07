@@ -60,9 +60,9 @@ public class SecurityRoleMetadataReader extends CommonBeanReader {
                 String securityRoleName = securityRole.getRoleName();
                 if(Utils.notEmpty(securityRoleName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> securityRoleMap = new HashMap<String, Object>();
+                    Map<String, Object> securityRoleMap = new HashMap<>();
                     result.put(securityRoleName, securityRoleMap);
                     securityRoleMap.put(DDBinding.PROP_NAME, securityRoleName);
                 }

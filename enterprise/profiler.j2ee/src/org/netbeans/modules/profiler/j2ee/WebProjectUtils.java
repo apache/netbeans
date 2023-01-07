@@ -120,7 +120,7 @@ public class WebProjectUtils {
     }
 
     public static Collection<FileObject> getDeploymentDescriptorFileObjects(Project project, boolean subprojects) {
-        Collection<FileObject> descriptors = new ArrayList<FileObject>();
+        Collection<FileObject> descriptors = new ArrayList<>();
 
         for (WebModule wm : getWebModules(project, subprojects)) {
             FileObject d = wm.getDeploymentDescriptor();
@@ -131,7 +131,7 @@ public class WebProjectUtils {
     }
 
     public static Collection<FileObject> getDocumentBaseFileObjects(Project project, boolean subprojects) {
-        Collection<FileObject> basefos = new ArrayList<FileObject>();
+        Collection<FileObject> basefos = new ArrayList<>();
 
         for (WebModule wm : getWebModules(project, subprojects)) {
             FileObject d = wm.getDocumentBase();
@@ -142,7 +142,7 @@ public class WebProjectUtils {
     }
 
     public static Collection<File> getDocumentBaseFiles(Project project, boolean subprojects) {
-        Collection<File> basefiles = new ArrayList<File>();
+        Collection<File> basefiles = new ArrayList<>();
 
         for (FileObject basefo : getDocumentBaseFileObjects(project, subprojects)) {
             basefiles.add(FileUtil.toFile(basefo));
@@ -163,7 +163,7 @@ public class WebProjectUtils {
         NodeList filtersList = getFilters(deploymentDescriptorDocument);
         NodeList filterMappingsList = getFilterMappings(deploymentDescriptorDocument);
 
-        Collection<String> mappedFilterNames = new HashSet<String>();
+        Collection<String> mappedFilterNames = new HashSet<>();
 
         for (int i = 0; i < filterMappingsList.getLength(); i++) {
             String mappedFilterName = getElementContent((Element) filterMappingsList.item(i), "filter-name"); // NOI18N
@@ -356,7 +356,7 @@ public class WebProjectUtils {
         NodeList servletsList = getServlets(deploymentDescriptorDocument);
         NodeList servletMappingsList = getServletMappings(deploymentDescriptorDocument);
 
-        Collection<String> mappedServletNames = new HashSet<String>();
+        Collection<String> mappedServletNames = new HashSet<>();
 
         for (int i = 0; i < servletMappingsList.getLength(); i++) {
             String mappedServletName = getElementContent((Element) servletMappingsList.item(i), "servlet-name"); // NOI18N

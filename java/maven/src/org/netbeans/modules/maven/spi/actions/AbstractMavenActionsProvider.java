@@ -86,7 +86,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
      * @return 
      */
     protected static FileObject[] extractFileObjectsfromLookup(Lookup lookup) {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         Iterator<? extends DataObject> it = lookup.lookupAll(DataObject.class).iterator();
         while (it.hasNext()) {
             DataObject d = it.next();
@@ -144,7 +144,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
         @SuppressWarnings("unchecked")
         Map<String, String> replaceMap = lookup.lookup(Map.class);
         if (replaceMap == null) { //#159698
-            replaceMap = new HashMap<String, String>();
+            replaceMap = new HashMap<>();
             Logger.getLogger(AbstractMavenActionsProvider.class.getName()).log(Level.FINE, "Missing replace tokens map when executing maven build. Could lead to problems with execution. See issue #159698 for details.", new Exception()); //NOI18N
         }
         FileObject fo = null;
@@ -209,7 +209,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
      */
     @Override
     public Set<String> getSupportedDefaultActions() {
-        HashSet<String> toRet = new HashSet<String>();
+        HashSet<String> toRet = new HashSet<>();
         ActionToGoalMapping raw = getRawMappings();
         for (NetbeansActionMapping nb : raw.getActions()) {
             String name = nb.getActionName();

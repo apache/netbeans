@@ -288,7 +288,7 @@ public class WebSocketEndpointIterator
     private Set<FileObject> getTestRoots( Project project ){
         SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(
                 JavaProjectConstants.SOURCES_TYPE_JAVA);
-        Set<FileObject> result = new HashSet<FileObject>();
+        Set<FileObject> result = new HashSet<>();
         for (SourceGroup sourceGroup : sourceGroups) {
             result.addAll(getTestRoots(sourceGroup));
         }
@@ -305,7 +305,7 @@ public class WebSocketEndpointIterator
         if (sourceRoots.isEmpty()){
             return Collections.emptySet();
         }
-        return new HashSet<FileObject>( sourceRoots);
+        return new HashSet<>( sourceRoots);
     }
     
     private static List<FileObject> getFileObjects(URL[] urls) {

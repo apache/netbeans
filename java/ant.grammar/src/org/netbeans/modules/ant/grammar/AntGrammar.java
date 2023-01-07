@@ -435,7 +435,7 @@ class AntGrammar implements GrammarQuery {
             LOG.fine("...unknown type");
             return Enumerations.empty();
         }
-        List<String> choices = new ArrayList<String>();
+        List<String> choices = new ArrayList<>();
 
         switch (type.kind) {
         case PROJECT:

@@ -87,7 +87,7 @@ public class ActionsList {
     private static Pair convertImpl(List<FileObject> keys, boolean ignoreFolders,
             boolean prohibitSeparatorsAndActionNames)
     {
-        List<Object> all = new ArrayList<Object>();
+        List<Object> all = new ArrayList<>();
         List<Action> actions = new ArrayList<Action>();
 
         for (FileObject item : keys) {

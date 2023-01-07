@@ -574,7 +574,7 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
     private static class ModifiedPreferences extends AbstractPreferences {
         private static final String MODIFIED_HINT_SETTINGS_MARKER = "MODIFIED_HINT_SETTINGS";
         
-        private Map<String,Object> map = new HashMap<String, Object>();
+        private Map<String,Object> map = new HashMap<>();
         private final Map<String,String> mapSaved = new HashMap<>();
 
         public ModifiedPreferences( Preferences node ) {

@@ -366,8 +366,8 @@ class LanguagesNavigatorModel implements TreeModel {
             int index = 0;
             int lastIndex = 0;
             int insertPos = 0;
-            List<Integer> removed = new ArrayList<Integer>();
-            List<Integer> inserted = new ArrayList<Integer>();
+            List<Integer> removed = new ArrayList<>();
+            List<Integer> inserted = new ArrayList<>();
             for (ASTNavigatorNode node : newChildren) {
                 ASTNavigatorNode found = null;
                 for (int x = index; x < nodes.size(); x++) {

@@ -69,7 +69,7 @@ public class ImportUtilsTest extends GroovyTestBase {
 
         @Override
         public Set<String> getDefaultImportPackages() {
-            Set<String> additionalImports = new HashSet<String>();
+            Set<String> additionalImports = new HashSet<>();
             additionalImports.add("test.whatever");
             additionalImports.add("test.somethingelse");
             
@@ -78,7 +78,7 @@ public class ImportUtilsTest extends GroovyTestBase {
 
         @Override
         public Set<String> getDefaultImportClasses() {
-            Set<String> additionalImports = new HashSet<String>();
+            Set<String> additionalImports = new HashSet<>();
             additionalImports.add("abc.efd.Oops");
             additionalImports.add("qwe.rty.Psst");
             

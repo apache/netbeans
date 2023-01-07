@@ -43,7 +43,7 @@ public class GestureSubmitter {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
 //    public static void logConfig(ProfilingSettings settings, InstrumentationFilter filter) {
-//        List<Object> paramList = new ArrayList<Object>();
+//        List<Object> paramList = new ArrayList<>();
 //
 //        fillParamsForProfiling(settings, paramList);
 //
@@ -51,7 +51,7 @@ public class GestureSubmitter {
 //    }
 
     public static void logProfileApp(Lookup.Provider p, ProfilingSettings ps) {
-        List<Object> paramList = new ArrayList<Object>();
+        List<Object> paramList = new ArrayList<>();
 
         fillProjectParam(p, paramList);
         fillParamsForProfiling(ps, paramList);
@@ -60,7 +60,7 @@ public class GestureSubmitter {
     }
     
     public static void logAttachApp(Lookup.Provider p, ProfilingSettings ps, AttachSettings as) {
-        List<Object> paramList = new ArrayList<Object>();
+        List<Object> paramList = new ArrayList<>();
 
         fillProjectParam(p, paramList);
         fillParamsForProfiling(ps, paramList);
@@ -70,7 +70,7 @@ public class GestureSubmitter {
     }
     
     public static void logAttachExternal(ProfilingSettings ps, AttachSettings as) {
-        List<Object> paramList = new ArrayList<Object>();
+        List<Object> paramList = new ArrayList<>();
 
         fillParamsForProfiling(ps, paramList);
         fillParamsForAttach(as, paramList);
@@ -79,7 +79,7 @@ public class GestureSubmitter {
     }
 
 //    public static void logProfileClass(Lookup.Provider profiledProject, SessionSettings session) {
-//        List<Object> paramList = new ArrayList<Object>();
+//        List<Object> paramList = new ArrayList<>();
 //
 //        fillProjectParam(profiledProject, paramList);
 //        fillParamsForSession(session, paramList);
@@ -88,7 +88,7 @@ public class GestureSubmitter {
 //    }
 
 //    public static void logAttach(Lookup.Provider profiledProject, AttachSettings attach) {
-//        List<Object> paramList = new ArrayList<Object>();
+//        List<Object> paramList = new ArrayList<>();
 //
 //        fillProjectParam(profiledProject, paramList);
 //        fillParamsForAttach(attach, paramList);

@@ -61,7 +61,7 @@ class AllLibrariesCustomizer extends JPanel implements HelpCtx.Provider {
     
     @Messages("LABEL_Global_Libraries=Global Libraries")
     private void initModel() {
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         items.add(LABEL_Global_Libraries());
         for (LibraryManager man : LibraryManager.getOpenManagers()) {
             if (man.getLocation() == null) {

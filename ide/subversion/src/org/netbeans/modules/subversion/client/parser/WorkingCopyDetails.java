@@ -383,7 +383,7 @@ public class WorkingCopyDetails {
         }
         boolean returnValue = false;
 
-        List<String> keywordsList = new ArrayList<String>();
+        List<String> keywordsList = new ArrayList<>();
         
         rawKeywords = rawKeywords.replace("\n", " ");
         rawKeywords = rawKeywords.replace("\t", " ");        
@@ -437,7 +437,7 @@ public class WorkingCopyDetails {
     }
 
     private List<String> normalizeKeywords(String[] keywords) {
-        List<String> keywordsList = new ArrayList<String>();
+        List<String> keywordsList = new ArrayList<>();
         for (int i = 0; i < keywords.length; i++) {
             String kw = keywords[i].toLowerCase().trim();
             if(kw.equals("date") || kw.equals("lastchangeddate")) {                                         // NOI18N

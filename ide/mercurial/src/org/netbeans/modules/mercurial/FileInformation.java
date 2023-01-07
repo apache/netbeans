@@ -191,8 +191,8 @@ public class FileInformation extends VCSFileInformation implements Serializable 
      */ 
     private final boolean   isDirectory;
 
-    private final HashSet<File> modifiedChildren = new HashSet<File>();
-    private final HashSet<File> conflictedChildren = new HashSet<File>();
+    private final HashSet<File> modifiedChildren = new HashSet<>();
+    private final HashSet<File> conflictedChildren = new HashSet<>();
 
     private boolean seenInUI;
 
@@ -360,9 +360,9 @@ public class FileInformation extends VCSFileInformation implements Serializable 
         HashSet<File> children;
         synchronized (modifiedChildren) {
             if (onlyConflicted) {
-                children = new HashSet<File>(conflictedChildren);
+                children = new HashSet<>(conflictedChildren);
             } else {
-                children = new HashSet<File>(modifiedChildren);
+                children = new HashSet<>(modifiedChildren);
             }
         }
         return children;

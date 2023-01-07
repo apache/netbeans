@@ -137,7 +137,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
             if (factory != null) {
                 List<File> lf = files2Factory.get(factory);
                 if (lf == null) {
-                    lf = new ArrayList<File>();
+                    lf = new ArrayList<>();
                     files2Factory.put(factory, lf);
                 } else {
                     File tmp = file;

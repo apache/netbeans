@@ -61,7 +61,7 @@ public class testCCClever extends cc {
         eoPHP.setCaretPosition("// put your code here", false);
         TypeCode(eoPHP, "\n");
         TypeCode(eoPHP, "try{}catch(");
-        ArrayList<String> cc = new ArrayList<String>();
+        ArrayList<String> cc = new ArrayList<>();
         CompletionJListOperator comp = null;
 
         try {

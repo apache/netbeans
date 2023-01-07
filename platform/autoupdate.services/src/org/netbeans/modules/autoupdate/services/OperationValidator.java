@@ -370,7 +370,7 @@ abstract class OperationValidator {
                     mm = m.getManager();
                 }
             }
-            List<UpdateElement> retval = new ArrayList<UpdateElement>();
+            List<UpdateElement> retval = new ArrayList<>();
             Set<Dependency> brokenDeps = new HashSet<Dependency>();
             if (mm != null) {
                 List<Module> toEnable = getModulesToEnable(mm, modules);

@@ -88,7 +88,7 @@ public class GenerateCodeOperator {
      * @return true if both list are the same, false otherwise
      */
     public static boolean containsItems(EditorOperator editor, String ... items) {
-        Set<String> actItems = new HashSet<String>();
+        Set<String> actItems = new HashSet<>();
         List<String> expItems = Arrays.asList(items);
         editor.pushKey(KeyEvent.VK_INSERT, KeyEvent.ALT_DOWN_MASK);
         JDialogOperator jdo = new JDialogOperator();        
@@ -112,7 +112,7 @@ public class GenerateCodeOperator {
      * @return true if all requested item are pressent, to exact match use {@link #containsItems(org.netbeans.jellytools.EditorOperator, java.lang.String[]) containsItems}
      */
     public static boolean checkItems(EditorOperator editor, String ... items) {        
-        Set<String> expItems = new HashSet<String>(Arrays.asList(items));
+        Set<String> expItems = new HashSet<>(Arrays.asList(items));
         editor.pushKey(KeyEvent.VK_INSERT, KeyEvent.ALT_DOWN_MASK);
         JDialogOperator jdo = new JDialogOperator();
         JListOperator list = new JListOperator(jdo);

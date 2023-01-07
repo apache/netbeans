@@ -399,7 +399,7 @@ public class XmlLexerParser implements ContentLocator {
         this.errors = leftErrors;
     }
     
-    private Map<String, String> prefix2Uri = new HashMap<String, String>();
+    private Map<String, String> prefix2Uri = new HashMap<>();
     
     private void processPrefixMappings() throws SAXException {
         Map<String, String> savedPrefixMap = prefix2Uri;
@@ -435,9 +435,9 @@ public class XmlLexerParser implements ContentLocator {
      * 
      */
     private void startLevel() {
-        this.attrNames = new ArrayList<String>();
+        this.attrNames = new ArrayList<>();
         this.attrOffsets = new HashMap<String, int[]>();
-        this.attrs = new HashMap<String, String>();
+        this.attrs = new HashMap<>();
 
         this.currentLevel = new Level();
         currentLevel.tagQName = qName;
@@ -827,7 +827,7 @@ public class XmlLexerParser implements ContentLocator {
         if (currentToken != null) {
             if (matchedTokens.isEmpty()) {
                 matchedTokens = new ArrayList<Token<XMLTokenId>>();
-                tokenOffsets = new ArrayList<Integer>();
+                tokenOffsets = new ArrayList<>();
             }
             tokenOffsets.add(seq.offset());
             matchedTokens.add(currentToken);

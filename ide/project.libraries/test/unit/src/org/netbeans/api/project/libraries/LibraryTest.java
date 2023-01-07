@@ -60,13 +60,13 @@ public class LibraryTest extends NbTestCase {
         impls[0].setDescription("NewLibrary1Description");
         pcl.assertEvents(Library.PROP_DESCRIPTION);
         LibraryManagerTest.assertLibsEquals (new Library[] {libs[0]}, new LibraryImplementation[] {impls[0]});
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         urls.add (new URL ("file:/lib/libnew1.so"));
         urls.add (new URL ("file:/lib/libnew2.so"));
         impls[0].setContent ("bin",urls);        
         pcl.assertEvents(Library.PROP_CONTENT);
         LibraryManagerTest.assertLibsEquals (new Library[] {libs[0]}, new LibraryImplementation[] {impls[0]});
-        urls = new ArrayList<URL>();
+        urls = new ArrayList<>();
         urls.add (new URL ("file:/src/new/src/"));
         impls[0].setContent ("src",urls);        
         pcl.assertEvents(Library.PROP_CONTENT);

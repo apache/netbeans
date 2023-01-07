@@ -33,7 +33,7 @@ public class TestLineProcessor implements LineProcessor {
 
     private final boolean clearLinesOnReset;
 
-    private List<String> linesProcessed = new ArrayList<String>();
+    private List<String> linesProcessed = new ArrayList<>();
 
     private int resetCount = 0;
 

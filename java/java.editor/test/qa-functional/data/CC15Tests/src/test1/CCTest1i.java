@@ -7,7 +7,7 @@ public class CCTest1i {
 
     
     public static void main(String[] args) {
-        l = new ArrayList<String>(); //Check the CC after <
+        l = new ArrayList<>(); //Check the CC after <
 	
         l.add("Hello, world"); //Check the signature of the method provided by the CC
 	

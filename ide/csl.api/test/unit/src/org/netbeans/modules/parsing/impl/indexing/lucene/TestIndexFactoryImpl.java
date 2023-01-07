@@ -126,7 +126,7 @@ public class TestIndexFactoryImpl implements IndexFactoryImpl {
         public void removeDocument(String relativePath) {
             original.removeDocument(relativePath);
 
-            Collection<String> toRemove = new HashSet<String>();
+            Collection<String> toRemove = new HashSet<>();
             for(String rp : documents.keySet()) {
                 if (rp.equals(relativePath)) {
                     toRemove.add(rp);
@@ -204,10 +204,10 @@ public class TestIndexFactoryImpl implements IndexFactoryImpl {
 
     public static final class TestIndexDocumentImpl implements IndexDocument {
 
-        public final List<String> indexedKeys = new ArrayList<String>();
-        public final List<String> indexedValues = new ArrayList<String>();
-        public final List<String> unindexedKeys = new ArrayList<String>();
-        public final List<String> unindexedValues = new ArrayList<String>();
+        public final List<String> indexedKeys = new ArrayList<>();
+        public final List<String> indexedValues = new ArrayList<>();
+        public final List<String> unindexedKeys = new ArrayList<>();
+        public final List<String> unindexedValues = new ArrayList<>();
 
         private final Indexable indexable;
         private final IndexDocument original;

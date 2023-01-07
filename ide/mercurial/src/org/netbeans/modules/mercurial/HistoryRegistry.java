@@ -71,7 +71,7 @@ public class HistoryRegistry {
         HgLogMessage[] history = 
                 HgCommand.getLogMessages(
                     repository,
-                    new HashSet<File>(Arrays.asList(files)), 
+                    new HashSet<>(Arrays.asList(files)), 
                     fromRevision, 
                     toRevision, 
                     false, // show merges

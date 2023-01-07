@@ -387,8 +387,8 @@ public class GeneralHTMLProject extends JellyTestCase {
 
         for (int i = 0; i < nodesSize; i++) {
             node = nodes.get(i);
-            parents = new ArrayList<String>();
-            parentsPlain = new ArrayList<String>();
+            parents = new ArrayList<>();
+            parentsPlain = new ArrayList<>();
             elements[i] = new HTMLElement(node.getName().toLowerCase(), node.getDisplayName());
             while (node.getParentNode() != null) {
                 node = node.getParentNode();

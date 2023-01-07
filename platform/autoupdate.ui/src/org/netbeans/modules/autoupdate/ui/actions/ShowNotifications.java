@@ -76,7 +76,7 @@ public class ShowNotifications {
     private static boolean add(String notification) {
         synchronized (ShowNotifications.class) {
             final Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate/ui"); // NOI18N
-            List<String> alreadyShown = new ArrayList<String>();
+            List<String> alreadyShown = new ArrayList<>();
             for (String s : p.get(PROP, "").split(SEPARATOR)) {
                 if (s.length() > 0) {
                     alreadyShown.add(s);

@@ -74,7 +74,7 @@ public final class TimerOptions {
     public static String validate(String scheduleString) {
         String[] sections = splitScheduleSections(omitNewLines(scheduleString));
 
-        Map<String, String> actualSchedule = new HashMap<String, String>();
+        Map<String, String> actualSchedule = new HashMap<>();
         if (!parseSectionsIntoMap(sections, actualSchedule)) {
             return NbBundle.getMessage(TimerOptions.class, "ERR_TO_UnparsableSchedule"); //NOI18N
         }
@@ -101,7 +101,7 @@ public final class TimerOptions {
 
     private static String[] splitScheduleSections(String scheduleValue) {
         String[] sections = scheduleValue.split(","); //NOI18N
-        List<String> finalSections = new ArrayList<String>();
+        List<String> finalSections = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < sections.length; i++) {
             sb.append(sections[i]);
@@ -141,7 +141,7 @@ public final class TimerOptions {
     }
 
     private static String invalidAttributes(Set<String> actualAttributes) {
-        Set<String> copy = new HashSet<String>(actualAttributes);
+        Set<String> copy = new HashSet<>(actualAttributes);
         copy.removeAll(SCHEDULE_ATTRIBUTES);
 
         if (copy.isEmpty()) {

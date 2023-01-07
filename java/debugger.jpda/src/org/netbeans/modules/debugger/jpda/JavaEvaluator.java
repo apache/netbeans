@@ -123,7 +123,7 @@ public class JavaEvaluator implements Evaluator<JavaExpression> {
         // TODO: get imports from the source file
         CallStackFrameImpl csfi = (CallStackFrameImpl) csf;
         List<String> imports = new ImportsLazyList(csfi);
-        List<String> staticImports = new ArrayList<String>();
+        List<String> staticImports = new ArrayList<>();
         try {
             JPDAThreadImpl trImpl = (JPDAThreadImpl) csf.getThread();
             EvaluationContext context;
@@ -213,7 +213,7 @@ public class JavaEvaluator implements Evaluator<JavaExpression> {
         }
 
         private List<String> createImports() {
-            List<String> im = new ArrayList<String>();
+            List<String> im = new ArrayList<>();
             im.add ("java.lang.*");    // NOI18N
             try {
                 String[] frameImports = EditorContextBridge.getContext().getImports (

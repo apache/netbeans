@@ -399,7 +399,7 @@ public class HgUtils {
             // get cached patterns
             Set<String> ignores = notSharable.get(topFile);
             if (ignores == null) {
-                ignores = new HashSet<String>();
+                ignores = new HashSet<>();
             }
             String patternCandidate = ignoredPath;
             // test for duplicate patterns
@@ -939,7 +939,7 @@ itor tabs #66700).
      * @return repository roots
      */
     public static Set<File> getRepositoryRoots (Set<File> roots) {
-        Set<File> ret = new HashSet<File>();
+        Set<File> ret = new HashSet<>();
 
         // filter managed roots
         for (File file : roots) {
@@ -1053,7 +1053,7 @@ itor tabs #66700).
                 File r = Mercurial.getInstance().getRepositoryRoot(file);
                 Set<File> repositoryRoots = sortedRoots.get(r);
                 if (repositoryRoots == null) {
-                    repositoryRoots = new HashSet<File>();
+                    repositoryRoots = new HashSet<>();
                     sortedRoots.put(r, repositoryRoots);
                 }
                 repositoryRoots.add(file);
@@ -1202,7 +1202,7 @@ itor tabs #66700).
      */
     public static File [] getModifiedFiles(VCSContext context, int includeStatus, boolean testCommitExclusions) {
         File[] all = Mercurial.getInstance().getFileStatusCache().listFiles(context, includeStatus);
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (int i = 0; i < all.length; i++) {
             File file = all[i];
             if (!testCommitExclusions || !HgModuleConfig.getDefault().isExcludedFromCommit(file.getAbsolutePath())) {
@@ -1507,7 +1507,7 @@ itor tabs #66700).
         if (ignored.size() > 10 && !roots.contains(repository)) {
             // we could optimize and return only a subset of ignored files/folders
             // there are applicable to the selected context
-            Set<String> acceptedPaths = new HashSet<String>(ignored.size());
+            Set<String> acceptedPaths = new HashSet<>(ignored.size());
             for (File root : roots) {
                 String relPath = getRelativePath(root, repository);
                 for (String ignoredPath : ignored) {
@@ -1901,7 +1901,7 @@ itor tabs #66700).
                     if (Mercurial.LOG.isLoggable(Level.FINER)) {
                         Mercurial.LOG.log(Level.FINER, "Running block with disabled indexing: on {0}", Arrays.asList(files)); //NOI18N
                     }
-                    indexingFiles.set(new HashSet<File>(Arrays.asList(files)));
+                    indexingFiles.set(new HashSet<>(Arrays.asList(files)));
                     return IndexingBridge.getInstance().runWithoutIndexing(callable, files);
                 } finally {
                     indexingFiles.remove();

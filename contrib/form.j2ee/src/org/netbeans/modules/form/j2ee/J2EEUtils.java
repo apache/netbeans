@@ -954,8 +954,8 @@ public class J2EEUtils {
                             }
                         }
                     }
-                    Map<String, String> variables = new HashMap<String, String>();
-                    Map<String, String> methods = new HashMap<String, String>();
+                    Map<String, String> variables = new HashMap<>();
+                    Map<String, String> methods = new HashMap<>();
                     Element classElement = cc.getTrees().getElement(cc.getTrees().getPath(cu, clazz));
                     for (VariableElement variable : ElementFilter.fieldsIn(classElement.getEnclosedElements())) {
                         String name = variable.getSimpleName().toString();
@@ -1033,7 +1033,7 @@ public class J2EEUtils {
                     }
                     boolean all = (columns == null);
                     List<String> props = new LinkedList<String>();
-                    Map<String,String> columnToProperty = all ? null : new HashMap<String,String>();
+                    Map<String,String> columnToProperty = all ? null : new HashMap<>();
                     Attributes attrs = entity.getAttributes();
                     for (Id id : attrs.getId()) {
                         String propName = J2EEUtils.fieldToProperty(id.getName());

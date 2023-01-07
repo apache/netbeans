@@ -262,7 +262,7 @@ public class ClasspathsTest extends TestBase {
         List<JavaProjectGenerator.JavaCompilationUnit> units = JavaProjectGenerator.getJavaCompilationUnits(helper2, aux);
         assertEquals("two compilation units", 2, units.size());
         JavaProjectGenerator.JavaCompilationUnit cu = new JavaProjectGenerator.JavaCompilationUnit();
-        cu.packageRoots = new ArrayList<String>();
+        cu.packageRoots = new ArrayList<>();
         cu.packageRoots.add("${src.dir}");
         cu.packageRoots.add("${ant.src.dir}");
         cu.classpath = new ArrayList<JavaProjectGenerator.JavaCompilationUnit.CP>();
@@ -284,9 +284,9 @@ public class ClasspathsTest extends TestBase {
         assertEquals("original classpath is empty now", 0, cpAnt.entries().size());
         assertEquals("classpath for src/ and antsrc/ are the same. " + cpAnt2 + " "+cpSrc2, cpAnt2, cpSrc2);
         
-        assertEquals("ROOTS fired", new HashSet<String>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), srcL.changed);
+        assertEquals("ROOTS fired", new HashSet<>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), srcL.changed);
         srcL.reset();
-        assertEquals("ROOTS fired", new HashSet<String>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), antL.changed);
+        assertEquals("ROOTS fired", new HashSet<>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), antL.changed);
         antL.reset();
         
         compile = gpr.getPaths(ClassPath.COMPILE);

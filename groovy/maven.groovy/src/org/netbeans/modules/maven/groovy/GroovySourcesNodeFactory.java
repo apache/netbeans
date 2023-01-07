@@ -91,7 +91,7 @@ public class GroovySourcesNodeFactory implements NodeFactory {
         }
 
         private Set<FileObject> getJavaRoots() {
-            Set<FileObject> javaRoots = new HashSet<FileObject>();
+            Set<FileObject> javaRoots = new HashSet<>();
             for (SourceGroup sourceGroup : sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                 javaRoots.add(sourceGroup.getRootFolder());
             }

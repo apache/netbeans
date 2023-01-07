@@ -41,9 +41,9 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
  * @author Jaroslav Bachorik
  */
 public class OQLCompletionProvider implements CompletionProvider {
-    private final Set<String> keywords = new HashSet<String>();
-    private final Set<String> functions = new HashSet<String>();
-    private final Set<String> heapMethods = new HashSet<String>();
+    private final Set<String> keywords = new HashSet<>();
+    private final Set<String> functions = new HashSet<>();
+    private final Set<String> heapMethods = new HashSet<>();
     
     public OQLCompletionProvider() {
         keywords.add("select"); // NOI18N
@@ -234,8 +234,8 @@ public class OQLCompletionProvider implements CompletionProvider {
                         }
                         String regexBody = tokentext.replace("[", "\\[").replace("]", "\\]").replace("$", "\\$"); // NOI18N
                         String prefix = "^" + regexBody + ".*"; // NOI18N
-                        Set<String> pkgCompletions = new HashSet<String>();
-                        Set<String> completions = new HashSet<String>();
+                        Set<String> pkgCompletions = new HashSet<>();
+                        Set<String> completions = new HashSet<>();
 
                         Iterator<JavaClass> clzs = e.getHeap().getJavaClassesByRegExp(regex).iterator();
                         while(clzs.hasNext()) {
@@ -275,7 +275,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                             }
                         }
 
-                        Set<String> usedTypeNames = new HashSet<String>();
+                        Set<String> usedTypeNames = new HashSet<>();
                         for(String completion : completions) {
                             StringTokenizer tok = new StringTokenizer(completion);
                             String sortPre = tok.nextToken();

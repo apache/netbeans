@@ -40,7 +40,7 @@ public class NodeLookupDelayedTest extends NbTestCase {
 
     
     public void testDelayedChangeIsNotified() {
-        final Collection<String> pros = new HashSet<String>();
+        final Collection<String> pros = new HashSet<>();
         DelayedNode dn = new DelayedNode();
         dn.addNodeListener(new NodeListener() {
             @Override

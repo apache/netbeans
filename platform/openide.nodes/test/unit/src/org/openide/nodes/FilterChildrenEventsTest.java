@@ -174,7 +174,7 @@ public class FilterChildrenEventsTest extends NbTestCase {
     }
     static class Chldrn extends FilterNode.Children
     implements Runnable {
-        final Set<String> toHide = new HashSet<String>();
+        final Set<String> toHide = new HashSet<>();
 
         public Chldrn (Node node) {
             super (node);

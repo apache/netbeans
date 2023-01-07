@@ -44,7 +44,7 @@ public class SuppressWarningsFixer implements ErrorRule<Void> {
     private static final Map<String, String> KEY2SUPRESS_KEY;
     
     static {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         
         String uncheckedKey = "unchecked";
         

@@ -46,7 +46,7 @@ public class J2eePlatformTest extends ServerRegistryTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(TestDeploymentManager.PLATFORM_ROOT_PROPERTY, getWorkDirPath());
 
         InstanceProperties.createInstanceProperties(TEST_URL,

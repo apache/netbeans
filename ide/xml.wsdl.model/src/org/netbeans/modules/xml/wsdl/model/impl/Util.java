@@ -36,7 +36,7 @@ public class Util {
     public static List<String> parse(String s) {
         if (s == null) return null;
         StringTokenizer st = new StringTokenizer(s, SEP);
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         while(st.hasMoreTokens()) {
             result.add(st.nextToken());
         }

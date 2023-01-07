@@ -51,7 +51,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
     private static final String TEST_TASK_NAME       = "testTaskName";      //NOI18N
     private static final String CLEAN_TEST_TASK_NAME = "cleanTestTaskName"; //NOI18N
 
-    private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+    private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             SELECTED_CLASS,
             SELECTED_CLASS_NAME,
             SELECTED_METHOD,

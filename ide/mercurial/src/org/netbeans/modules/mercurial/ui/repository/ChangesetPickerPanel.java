@@ -489,7 +489,7 @@ private void btnFetchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
         OutputLogger logger = Mercurial.getInstance().getLogger(Mercurial.MERCURIAL_OUTPUT_TAB_TITLE);
         MessageInfoFetcher fetcher = getMessageInfoFetcher();
-        HgLogMessage[] fetchedMessages = fetcher.getMessageInfo(repository, roots == null ? null : new HashSet<File>(Arrays.asList(roots)), fetchRevisionLimit, logger);
+        HgLogMessage[] fetchedMessages = fetcher.getMessageInfo(repository, roots == null ? null : new HashSet<>(Arrays.asList(roots)), fetchRevisionLimit, logger);
         if (!supp.isCanceled() && fetchedMessages.length > 0) {
             WorkingCopyInfo wcInfo = WorkingCopyInfo.getInstance(repository);
             wcInfo.refresh();

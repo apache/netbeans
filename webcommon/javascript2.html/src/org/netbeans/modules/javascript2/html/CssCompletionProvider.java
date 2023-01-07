@@ -83,7 +83,7 @@ public class CssCompletionProvider implements CompletionProvider {
             return;
         }
         Project project = FileOwnerQuery.getOwner(fo);
-        HashSet<String> unique = new HashSet<String>();
+        HashSet<String> unique = new HashSet<>();
         try {
             CssIndex cssIndex = CssIndex.create(project);
             Map<FileObject, Collection<String>> findIdsByPrefix = cssIndex.findIdsByPrefix(prefix);
@@ -111,7 +111,7 @@ public class CssCompletionProvider implements CompletionProvider {
             return;
         }
         Project project = FileOwnerQuery.getOwner(fo);
-        HashSet<String> unique = new HashSet<String>();
+        HashSet<String> unique = new HashSet<>();
         try {
             CssIndex cssIndex = CssIndex.create(project);
             Map<FileObject, Collection<String>> findIdsByPrefix = cssIndex.findClassesByPrefix(prefix);

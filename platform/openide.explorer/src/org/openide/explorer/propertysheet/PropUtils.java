@@ -736,7 +736,7 @@ final class PropUtils {
      */
     private static java.util.List<String> getMissing() {
         if (missing == null) {
-            missing = new ArrayList<String>();
+            missing = new ArrayList<>();
         }
 
         return missing;

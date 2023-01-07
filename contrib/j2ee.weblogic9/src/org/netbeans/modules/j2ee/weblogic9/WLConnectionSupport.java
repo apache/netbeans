@@ -148,7 +148,7 @@ public final class WLConnectionSupport {
                 String password = deploymentManager.getInstanceProperties().getProperty(
                         InstanceProperties.PASSWORD_ATTR);
 
-                Map<String, Object> env = new HashMap<String, Object>();
+                Map<String, Object> env = new HashMap<>();
                 env.put(JMXConnectorFactory.PROTOCOL_PROVIDER_PACKAGES,
                              "weblogic.management.remote"); // NOI18N
                 env.put(javax.naming.Context.SECURITY_PRINCIPAL, username);

@@ -172,7 +172,7 @@ public class RefreshWorkTest  extends IndexingTestBase {
         assertTrue("Expecting " + rootCUrl + " to be scanned", indexer.indexedFiles.containsKey(rootCUrl));
 
         Set<String> files = indexer.indexedFiles.get(rootCUrl);
-        assertEquals("Wrong files scanned", new HashSet<String>(Arrays.asList(new String [] {
+        assertEquals("Wrong files scanned", new HashSet<>(Arrays.asList(new String [] {
             "org/pckg1/pckg2/file1.txt",
             "org/pckg1/pckg2/file2.txt"
         })), files);
@@ -204,7 +204,7 @@ public class RefreshWorkTest  extends IndexingTestBase {
         assertTrue("Expecting " + rootCUrl + " to be scanned", indexer.indexedFiles.containsKey(rootCUrl));
 
         Set<String> files = indexer.indexedFiles.get(rootCUrl);
-        assertEquals("Wrong files scanned", new HashSet<String>(Arrays.asList(new String [] {
+        assertEquals("Wrong files scanned", new HashSet<>(Arrays.asList(new String [] {
             "org/pckg1/pckg2/file1.txt"
         })), files);
     }
@@ -224,7 +224,7 @@ public class RefreshWorkTest  extends IndexingTestBase {
 
             Set<String> indexables = indexedFiles.get(context.getRootURI());
             if (indexables == null) {
-                indexables = new HashSet<String>();
+                indexables = new HashSet<>();
                 indexedFiles.put(context.getRootURI(), indexables);
             }
             indexables.addAll(list);

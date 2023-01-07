@@ -111,7 +111,7 @@ public final class ReferenceHelper {
     
     /** Set of property names which values can be used as additional base
      * directories. */
-    private Set<String> extraBaseDirectories = new HashSet<String>();
+    private Set<String> extraBaseDirectories = new HashSet<>();
     
     private final AntProjectHelper h;
     final PropertyEvaluator eval;
@@ -1347,10 +1347,10 @@ public final class ReferenceHelper {
         
         File projectDir = FileUtil.toFile(h.getProjectDirectory());
         
-        List<String> pubRemove = new ArrayList<String>();
-        List<String> privRemove = new ArrayList<String>();
-        Map<String,String> pubAdd = new HashMap<String,String>();
-        Map<String,String> privAdd = new HashMap<String,String>();
+        List<String> pubRemove = new ArrayList<>();
+        List<String> privRemove = new ArrayList<>();
+        Map<String,String> pubAdd = new HashMap<>();
+        Map<String,String> privAdd = new HashMap<>();
         
         for (Map.Entry<String,String> e : pub.entrySet()) {
             String    key  = e.getKey();

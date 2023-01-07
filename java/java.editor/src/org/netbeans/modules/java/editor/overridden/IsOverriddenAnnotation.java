@@ -90,7 +90,7 @@ public class IsOverriddenAnnotation extends Annotation {
     }
     
     public String debugDump(boolean includePosition) {
-        List<String> elementNames = new ArrayList<String>();
+        List<String> elementNames = new ArrayList<>();
         
         for(ElementDescription desc : declarations) {
             elementNames.add(desc.getDisplayName());

@@ -231,7 +231,7 @@ public final class CodeEvaluator {
                 editItemsList = (ArrayList<String>)
                     Properties.getDefault().getProperties(engineName).
                     getCollection("EvaluatorItems", new ArrayList());           // NOI18N
-                editItemsSet = new HashSet<String>(editItemsList);
+                editItemsSet = new HashSet<>(editItemsList);
             }
             return editItemsList;
         }

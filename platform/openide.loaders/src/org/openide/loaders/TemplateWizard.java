@@ -908,7 +908,7 @@ public class TemplateWizard extends WizardDescriptor {
             String n = wiz.getTargetName ();
             DataFolder folder = wiz.getTargetFolder ();
             DataObject template = wiz.getTemplate ();
-            Map<String,Object> wizardProps = new HashMap<String, Object>();
+            Map<String,Object> wizardProps = new HashMap<>();
             for (Map.Entry<String, ? extends Object> entry : wiz.getProperties().entrySet()) {
                 wizardProps.put("wizard." + entry.getKey(), entry.getValue()); // NOI18N
             }

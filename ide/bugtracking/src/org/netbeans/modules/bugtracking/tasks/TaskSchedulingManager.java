@@ -70,7 +70,7 @@ public final class TaskSchedulingManager {
 
     private TaskSchedulingManager() {
         support = new PropertyChangeSupport(this);
-        initializedRepositories = Collections.synchronizedSet(new HashSet<String>());
+        initializedRepositories = Collections.synchronizedSet(new HashSet<>());
         scheduledTasks = Collections.synchronizedMap(new WeakHashMap<IssueImpl, IssueScheduleInfo>());
         persistedTasks = new HashMap<String, Set<String>>();
         issuesToHandle = new LinkedHashSet<IssueImpl>();
@@ -166,7 +166,7 @@ public final class TaskSchedulingManager {
      * @return array of tasks with scheduling info set.
      */
     public IssueImpl[] getScheduledTasks(IssueScheduleInfo restrictionInterval, RepositoryImpl... repositories) {
-        Set<String> repositoryIds = new HashSet<String>(repositories.length);
+        Set<String> repositoryIds = new HashSet<>(repositories.length);
         for (RepositoryImpl repo : repositories) {
             repositoryIds.add(repo.getId());
         }
@@ -219,7 +219,7 @@ public final class TaskSchedulingManager {
     }
 
     private void persist() {
-        Map<String, String> toPersist = new HashMap<String, String>();
+        Map<String, String> toPersist = new HashMap<>();
         synchronized (persistedTasks) {
             for (Map.Entry<String, Set<String>> e : persistedTasks.entrySet()) {
                 StringBuilder sb = new StringBuilder();
@@ -289,7 +289,7 @@ public final class TaskSchedulingManager {
         synchronized (persistedTasks) {
             Set<String> tasks = persistedTasks.get(repositoryId);
             if (tasks == null) {
-                tasks = Collections.synchronizedSet(new HashSet<String>());
+                tasks = Collections.synchronizedSet(new HashSet<>());
                 persistedTasks.put(repositoryId, tasks);
             }
             return tasks;

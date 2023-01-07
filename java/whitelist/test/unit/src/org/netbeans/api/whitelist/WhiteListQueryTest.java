@@ -266,7 +266,7 @@ public class WhiteListQueryTest extends NbTestCase {
     }
 
     private static void assertViolations(final String[] expected, final List<? extends RuleDescription> result) {
-        final Set<String> ws = new HashSet<String>();
+        final Set<String> ws = new HashSet<>();
         for (RuleDescription rd : result) {
             ws.add(rd.getRuleName());
         }
@@ -301,7 +301,7 @@ public class WhiteListQueryTest extends NbTestCase {
             this.wlName = wlName;
             this.rName = rName;
             this.rDesc = rDesc;
-            final Set<String> fp = new HashSet<String>();
+            final Set<String> fp = new HashSet<>();
             for (String forPkg : forbiddenPkgs) {
                 fp.add(forPkg+'.');
             }

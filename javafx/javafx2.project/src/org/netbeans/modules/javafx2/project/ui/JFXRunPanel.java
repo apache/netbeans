@@ -1114,7 +1114,7 @@ private void buttonWorkDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     NotifyDescriptor.WARNING_MESSAGE));
             return false;
         }
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         if (!name.equals(config)) {
             m.put("$label", name); // NOI18N
         }

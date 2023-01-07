@@ -652,10 +652,10 @@ public class MavenNbModuleImpl implements NbModuleProvider {
 
     @Override public FileSystem getEffectiveSystemFilesystem() throws IOException {
         FileSystem projectLayer = LayerHandle.forProject(project).layer(false);
-        Collection<FileSystem> platformLayers = new ArrayList<FileSystem>();
+        Collection<FileSystem> platformLayers = new ArrayList<>();
         PlatformJarProvider pjp = project.getLookup().lookup(PlatformJarProvider.class);
         if (pjp != null) {
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             for (File jar : pjp.getPlatformJars()) {
                 // XXX use LayerHandle.forProject on this and sister modules instead
                 urls.addAll(LayerUtil.layersOf(jar));

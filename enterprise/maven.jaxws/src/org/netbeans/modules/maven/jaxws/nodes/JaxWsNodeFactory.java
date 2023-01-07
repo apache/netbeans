@@ -68,7 +68,7 @@ public class JaxWsNodeFactory implements NodeFactory {
         
         private final Project project;
         private JAXWSLightSupport jaxwsSupport;
-        private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private final List<ChangeListener> listeners = new ArrayList<>();
         private Lookup.Result<JAXWSLightSupportProvider> lookupResult;
         private final AtomicReference<List<String>> nodeList; 
         
@@ -130,7 +130,7 @@ public class JaxWsNodeFactory implements NodeFactory {
         }
         
         private void fireChange() {
-            ArrayList<ChangeListener> list = new ArrayList<ChangeListener>();
+            ArrayList<ChangeListener> list = new ArrayList<>();
             synchronized (this) {
                 list.addAll(listeners);
             }

@@ -651,8 +651,8 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                         // Find existing fields and methods
                         int idx = 0;
                         int fieldIndex = 0;
-                        Set<String> methods = new HashSet<String>();
-                        Set<String> fields = new HashSet<String>();
+                        Set<String> methods = new HashSet<>();
+                        Set<String> fields = new HashSet<>();
                         for (Tree member : clazz.getMembers()) {
                             idx++;
                             if (Tree.Kind.VARIABLE == member.getKind()) {
@@ -795,8 +795,8 @@ public class MasterDetailWizard implements WizardDescriptor.InstantiatingIterato
                     // Find existing fields and methods
                     int idx = 0;
                     int fieldIndex = 0;
-                    Set<String> methods = new HashSet<String>();
-                    Set<String> fields = new HashSet<String>();
+                    Set<String> methods = new HashSet<>();
+                    Set<String> fields = new HashSet<>();
                     for (Tree member : clazz.getMembers()) {
                         idx++;
                         if (Tree.Kind.VARIABLE == member.getKind()) {

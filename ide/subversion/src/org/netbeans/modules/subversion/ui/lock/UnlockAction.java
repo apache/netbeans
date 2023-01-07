@@ -93,7 +93,7 @@ public class UnlockAction extends ContextAction {
             protected void perform () {
                 try {
                     SvnClient client = Subversion.getInstance().getClient(url, this);
-                    Map<File, String> paths = new HashMap<File, String>();
+                    Map<File, String> paths = new HashMap<>();
                     for (File f : files) {
                         paths.put(f, f.getAbsolutePath());
                     }
@@ -149,7 +149,7 @@ public class UnlockAction extends ContextAction {
     
     private static class LockedFilesListener implements ISVNNotifyListener {
         private final Map<File, String> paths;
-        private final Set<File> lockedFiles = new HashSet<File>();
+        private final Set<File> lockedFiles = new HashSet<>();
         private boolean authError;
 
         public LockedFilesListener (Map<File, String> paths) {

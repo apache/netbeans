@@ -170,7 +170,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     }
     
     public void testAreAttributesFine () {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         FileObject root = FileUtil.getConfigRoot();
         Enumeration<? extends FileObject> files = Enumerations.concat(Enumerations.singleton(root), root.getChildren(true));
@@ -242,7 +242,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     
     public void testValidShadows () {
         // might be better to move into editor/options tests as it is valid only if there are options
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         FileObject root = FileUtil.getConfigRoot();
         
@@ -302,7 +302,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     
     @RandomlyFails
     public void testContentCanBeRead () {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         byte[] buffer = new byte[4096];
         
         Enumeration<? extends FileObject> files = FileUtil.getConfigRoot().getChildren(true);
@@ -343,7 +343,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     }
     
     public void testInstantiateAllInstances () {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         Enumeration<? extends FileObject> files = FileUtil.getConfigRoot().getChildren(true);
         while (files.hasMoreElements()) {
@@ -392,7 +392,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     }
 
     public void testActionInstancesOnlyInActionsFolder() {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
 
         Enumeration<? extends FileObject> files = FileUtil.getConfigRoot().getChildren(true);
         FILE: while (files.hasMoreElements()) {
@@ -517,7 +517,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
         Map<String,Set<String>> directDeps = new HashMap<String,Set<String>>();
         StringBuffer sb = new StringBuffer();
         Map<String,URL> hiddenFiles = new HashMap<String, URL>();
-        Set<String> allFiles = new HashSet<String>();
+        Set<String> allFiles = new HashSet<>();
         final String suffix = "_hidden";
 
         Enumeration<URL> en = l.getResources("META-INF/MANIFEST.MF");
@@ -536,7 +536,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
             }
             String depsS = mf.getMainAttributes().getValue("OpenIDE-Module-Module-Dependencies");
             if (depsS != null) {
-                Set<String> deps = new HashSet<String>();
+                Set<String> deps = new HashSet<>();
                 for (Dependency d : Dependency.create(Dependency.TYPE_MODULE, depsS)) {
                     deps.add(d.getName().replaceFirst("/.+$", ""));
                 }
@@ -631,7 +631,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
             if (new HashSet<ContentAndAttrs>(overrides.values()).size() == 1) {
                 // All the same. Check whether these are parallel declarations (e.g. CND debugger vs. Java debugger), or vertical.
                 for (String overrider : overriders) {
-                    Set<String> deps = new HashSet<String>(directDeps.get(overrider));
+                    Set<String> deps = new HashSet<>(directDeps.get(overrider));
                     deps.retainAll(overriders);
                     if (!deps.isEmpty()) {
                         sb.append(file).append(" is pointlessly overridden in ").append(overrider).
@@ -711,7 +711,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
         ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
         assertNotNull ("In the IDE mode, there always should be a classloader", l);
         
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         Enumeration<URL> en = l.getResources("META-INF/MANIFEST.MF");
         while (en.hasMoreElements ()) {
             URL u = en.nextElement();
@@ -753,7 +753,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     }
 
     private static class TestHandler extends Handler {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         TestHandler () {}
         
@@ -825,7 +825,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
         assertNoFailures();
     }
     private static void loadChildren(FileObject folder) {
-        List<FileObject> kids = new ArrayList<FileObject>();
+        List<FileObject> kids = new ArrayList<>();
         for (DataObject kid : DataFolder.findFolder(folder).getChildren()) {
             kids.add(kid.getPrimaryFile());
         }
@@ -916,13 +916,13 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     }
 
     public void testKeymapOverrides() throws Exception { // #170677
-        List<String> warnings = new ArrayList<String>();
+        List<String> warnings = new ArrayList<>();
         FileObject keymapRoot = FileUtil.getConfigFile("Keymaps");
         if (keymapRoot == null) {
             return;
         }
         FileObject[] keymaps = keymapRoot.getChildren();
-        Map<String,Integer> definitionCountById = new HashMap<String,Integer>();
+        Map<String,Integer> definitionCountById = new HashMap<>();
         assertTrue("Too many keymaps for too little bitfield", keymaps.length < 31);
         int keymapFlag = 1;
         for (FileObject keymap : keymaps) {
@@ -964,7 +964,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     
     /* XXX too many failures for now, some spurious; use regex, or look for unloc files/folders with loc siblings?
     public void testLocalizedFolderNames() throws Exception {
-        List<String> warnings = new ArrayList<String>();
+        List<String> warnings = new ArrayList<>();
         for (String folder : new String[] {
             "Actions", // many legit failures!
             "OptionsDialog/Actions", // XXX #71280
@@ -998,7 +998,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     */
 
     public void testTemplates() throws Exception { // #167205
-        List<String> warnings = new ArrayList<String>();
+        List<String> warnings = new ArrayList<>();
         for (FileObject f : NbCollections.iterable(FileUtil.getConfigFile("Templates").getData(true))) {
             if (!Boolean.TRUE.equals(f.getAttribute("template"))) {
                 continue; // will not appear in Template Manager

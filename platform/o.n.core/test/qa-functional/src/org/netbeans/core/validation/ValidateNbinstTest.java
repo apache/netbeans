@@ -149,7 +149,7 @@ public class ValidateNbinstTest extends NbTestCase {
     }
 
     private static class TestHandler extends Handler {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         TestHandler () {}
         

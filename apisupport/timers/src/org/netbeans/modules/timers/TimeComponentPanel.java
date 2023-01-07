@@ -63,7 +63,7 @@ public class TimeComponentPanel extends javax.swing.JPanel implements PropertyCh
         initComponents();
         times.addMouseListener(new PopupAdapter());
         jList1.addMouseListener(new ListPopupAdapter());
-        key2RowNumber = new HashMap<String, Integer>();
+        key2RowNumber = new HashMap<>();
         TimesCollectorPeer.getDefault().addPropertyChangeListener(this);
         fillIn();
     }

@@ -172,7 +172,7 @@ public class KeymapModelTest extends TestCase {
     public void testChangeKeymap() {
         String profile = "test";
         Map<ShortcutAction, Set<String>> actionToShortcuts = new HashMap<ShortcutAction, Set<String>>();
-        HashSet<String> hs = new HashSet<String>();
+        HashSet<String> hs = new HashSet<>();
         hs.add("CS-B");
         actionToShortcuts.put(GlobalLookup.km1.sa1, hs);
         KeymapModel instance = new KeymapModel();
@@ -251,7 +251,7 @@ public class KeymapModelTest extends TestCase {
 
         public Map<ShortcutAction, Set<String>> getKeymap(String profileName) {
             Map<ShortcutAction, Set<String>> m = new HashMap<ShortcutAction, Set<String>>();
-            Set<String> ss = new HashSet<String>();
+            Set<String> ss = new HashSet<>();
             ss.add("CS-A");
             m.put(sa1, ss);
             return m;
@@ -262,7 +262,7 @@ public class KeymapModelTest extends TestCase {
         }
 
         public List<String> getProfiles() {
-            List<String> al = new ArrayList<String>();
+            List<String> al = new ArrayList<>();
             al.add("test");
             return al;
         }

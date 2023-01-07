@@ -76,7 +76,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
 
     public AbstractGroovyActionProvider(Project project) {
         this.project = project;
-        this.supportedActions = new HashMap<String, String>();
+        this.supportedActions = new HashMap<>();
 
         supportedActions.put(COMMAND_COMPILE_SINGLE, "compile-single"); // NOI18N
         supportedActions.put(COMMAND_TEST_SINGLE, "test-single");       // NOI18N
@@ -296,7 +296,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
 
     private static FileObject[] getTestSourceRoots(Project project) {
         List<String> names = getTestRootsNames(project);
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         for (String name : names) {
             // FileObject JavaDoc says that path delimited should be always '/'
             // See issue #238330 for more details
@@ -309,7 +309,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
     }
 
     private static List<String> getTestRootsNames(Project project) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         FileObject projectProperties = getPropertiesFO(project);
         if (projectProperties != null) {

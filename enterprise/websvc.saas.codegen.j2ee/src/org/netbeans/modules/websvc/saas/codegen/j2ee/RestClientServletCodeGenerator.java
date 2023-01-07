@@ -147,14 +147,14 @@ public class RestClientServletCodeGenerator extends RestClientPojoCodeGenerator 
     protected void addImportsToTargetFile() throws IOException {
         super.addImportsToTargetFile();
         if (getDropFileType() == Constants.DropFileType.RESOURCE) {
-            List<String> imports = new ArrayList<String>();
+            List<String> imports = new ArrayList<>();
             imports.add(Constants.JAVA_ANNOTATION_PACKAGE + Constants.JAVA_ANNOTATION_RESOURCE);
             imports.add(Constants.HTTP_SERVLET_PACKAGE + Constants.HTTP_SERVLET_REQUEST_CLASS);
             imports.add(Constants.HTTP_SERVLET_PACKAGE + Constants.HTTP_SERVLET_RESPONSE_CLASS);
             JavaUtil.addImportsToSource(getTargetSource(), imports);
 
             //Also add injection member variables
-            Map<String, String> fieldsMap = new HashMap<String, String>();
+            Map<String, String> fieldsMap = new HashMap<>();
             JavaSourceHelper.getAvailableFieldSignature(getTargetSource(), fieldsMap);
             String[] annotations = new String[]{Constants.JAVA_ANNOTATION_PACKAGE+Constants.JAVA_ANNOTATION_RESOURCE};
             Object[] annotationAttrs = new Object[]{null};
@@ -175,7 +175,7 @@ public class RestClientServletCodeGenerator extends RestClientPojoCodeGenerator 
 
         if (getBean().getAuthenticationType() == SaasAuthenticationType.SESSION_KEY ||
                 getBean().getAuthenticationType() == SaasAuthenticationType.HTTP_BASIC) {
-            List<String> imports = new ArrayList<String>();
+            List<String> imports = new ArrayList<>();
             imports.add(Constants.HTTP_SERVLET_PACKAGE + Constants.HTTP_SERVLET_REQUEST_CLASS);
             imports.add(Constants.HTTP_SERVLET_PACKAGE + Constants.HTTP_SERVLET_RESPONSE_CLASS);
             JavaUtil.addImportsToSource(getSaasServiceSource(), imports);

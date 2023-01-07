@@ -197,7 +197,7 @@ public class CopyTest extends AbstractGitTestCase {
         GitClient client = getClient(workDir);
         client.addNotificationListener(m);
         client.copyAfter(folder, target, m);
-        assertEquals(new HashSet<File>(Arrays.asList(copy1, copy11, copy21)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(copy1, copy11, copy21)), m.notifiedFiles);
         Map<File, GitStatus> statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, file2, false, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_ADDED, false);

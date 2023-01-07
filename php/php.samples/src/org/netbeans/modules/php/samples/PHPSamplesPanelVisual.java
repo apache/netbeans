@@ -248,7 +248,7 @@ public class PHPSamplesPanelVisual extends JPanel implements DocumentListener {
 
             File[] files = projectLocation.listFiles();
             assert files != null : projectLocation;
-            HashSet<String> filesSet = new HashSet<String>();
+            HashSet<String> filesSet = new HashSet<>();
             for (int i = 0; i < files.length; i++) {
                 File file = files[i];
                 String fileName = file.getName();

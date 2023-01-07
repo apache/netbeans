@@ -137,7 +137,7 @@ public class RADIO implements ActiveEditorDrop {
             return new String[]{};
         }
 
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         //search for the input tags
         HtmlSource source = new HtmlSource(code);
         Iterator<Element> elements = new ElementsIterator(source);

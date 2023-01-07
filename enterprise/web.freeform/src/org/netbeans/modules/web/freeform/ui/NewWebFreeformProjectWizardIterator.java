@@ -125,7 +125,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
             throw ioe[0];
         }
         File nbProjectFolder = (File)wiz.getProperty(NewFreeformProjectSupport.PROP_PROJECT_FOLDER);
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
         resultSet.add(FileUtil.toFileObject(nbProjectFolder));
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(nbProjectFolder));
         if (p != null) {
@@ -150,7 +150,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
         index = 0;
         panels = createPanels();
         
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent();
             assert c instanceof JComponent;

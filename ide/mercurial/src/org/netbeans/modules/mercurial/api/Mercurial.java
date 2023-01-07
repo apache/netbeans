@@ -242,19 +242,19 @@ public class Mercurial {
             org.netbeans.modules.mercurial.Mercurial.LOG.log(Level.WARNING, "Mercurial client is unavailable");
             return;
         }
-        Set<File> repositories = HgUtils.getRepositoryRoots(new HashSet<File>(Arrays.asList(roots)));
+        Set<File> repositories = HgUtils.getRepositoryRoots(new HashSet<>(Arrays.asList(roots)));
         org.netbeans.modules.mercurial.Mercurial hg = org.netbeans.modules.mercurial.Mercurial.getInstance();
         if (repositories.size() == 0) {
             // this is necessary because kenai seems to copy metadata from a temp folder and the project would be treated as unversioned
             hg.versionedFilesChanged();
-            repositories = HgUtils.getRepositoryRoots(new HashSet<File>(Arrays.asList(roots)));
+            repositories = HgUtils.getRepositoryRoots(new HashSet<>(Arrays.asList(roots)));
         }
         if (repositories.size() != 1) {
             org.netbeans.modules.mercurial.Mercurial.LOG.log(Level.WARNING, "Committing for {0} repositories", repositories.size());
             return;
         }
         final File repository = repositories.iterator().next();
-        final Set<File> rootFiles = new HashSet<File>(Arrays.asList(roots));
+        final Set<File> rootFiles = new HashSet<>(Arrays.asList(roots));
 
         FileStatusCache cache = hg.getFileStatusCache();
         cache.refreshAllRoots(Collections.singletonMap(repository, rootFiles));

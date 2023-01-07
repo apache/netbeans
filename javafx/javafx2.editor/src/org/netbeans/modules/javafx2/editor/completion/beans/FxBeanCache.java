@@ -158,7 +158,7 @@ class FxBeanCache implements ChangeListener {
             
     private static class ClasspathCache implements ClassIndexListener {
         private final Map<String, FxBean>     classInfos = new HashMap<String, FxBean>();
-        private final Map<String, Object> dependencies = new HashMap<String, Object>();
+        private final Map<String, Object> dependencies = new HashMap<>();
         
         private ClasspathCache(ClasspathInfo cpInfo) {
             cpInfo.getClassIndex().addClassIndexListener(
@@ -207,7 +207,7 @@ class FxBeanCache implements ChangeListener {
                 if (to.equals(o)) {
                     return;
                 }
-                deps = new HashSet<String>();
+                deps = new HashSet<>();
                 deps.add((String)o);
                 dependencies.put(from, deps);
             } else {
@@ -217,7 +217,7 @@ class FxBeanCache implements ChangeListener {
         }
         
         private void clearFrom(TypesEvent event) {
-            Collection<String> fqns = new ArrayList<String>();
+            Collection<String> fqns = new ArrayList<>();
             for (ElementHandle<TypeElement> t : event.getTypes()) {
                 fqns.add(t.getQualifiedName());
             }
@@ -230,7 +230,7 @@ class FxBeanCache implements ChangeListener {
         
         @SuppressWarnings("unchecked")
         public synchronized void clearFrom(Collection<String> roots) {
-            Set<String> allDeps = new HashSet<String>();
+            Set<String> allDeps = new HashSet<>();
             Deque<String> process = new LinkedList<String>();
             process.addAll(roots);
             while (!process.isEmpty()) {

@@ -614,7 +614,7 @@ public class EditorOperator extends TopComponentOperator {
 
             @Override
             public Object launch() {
-                ArrayList<Object> result = new ArrayList<Object>();
+                ArrayList<Object> result = new ArrayList<>();
                 try {
                     Class annotationsClass = Class.forName("org.netbeans.editor.Annotations");
                     Method getLineAnnotationsMethod = annotationsClass.getDeclaredMethod("getLineAnnotations", new Class[]{int.class});
@@ -645,7 +645,7 @@ public class EditorOperator extends TopComponentOperator {
 
             @Override
             public Object launch() {
-                ArrayList<Object> result = new ArrayList<Object>();
+                ArrayList<Object> result = new ArrayList<>();
                 try {
                     Class annotationsClass = Class.forName("org.netbeans.editor.Annotations");
                     Field lineAnnotationsArrayField = annotationsClass.getDeclaredField("lineAnnotationsArray");
@@ -685,7 +685,7 @@ public class EditorOperator extends TopComponentOperator {
         Method getAnnotationsMethod = lineAnnotationsClass.getDeclaredMethod("getAnnotations", (Class[]) null);
         getAnnotationsMethod.setAccessible(true);
         Iterator annotations = (Iterator) getAnnotationsMethod.invoke(lineAnnotations, (Object[]) null);
-        ArrayList<Object> result = new ArrayList<Object>();
+        ArrayList<Object> result = new ArrayList<>();
         for (Iterator it = annotations; it.hasNext();) {
             result.add(delegateField.get(it.next()));
         }

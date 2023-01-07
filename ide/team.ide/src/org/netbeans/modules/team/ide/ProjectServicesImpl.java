@@ -106,7 +106,7 @@ public class ProjectServicesImpl implements ProjectServices {
         if(nodes == null) {
             return null;
         }        
-        List<FileObject> ret = new ArrayList<FileObject>();
+        List<FileObject> ret = new ArrayList<>();
         for(Node node : nodes) {
             Lookup nodeLookup = node.getLookup();
             Collection<? extends Project> projects = nodeLookup.lookupAll(Project.class);
@@ -132,7 +132,7 @@ public class ProjectServicesImpl implements ProjectServices {
         if(projects == null) {
             return null;
         }
-        List<FileObject> ret = new ArrayList<FileObject>();
+        List<FileObject> ret = new ArrayList<>();
         for (Project project : projects) {
             ret.add(project.getProjectDirectory());
         }

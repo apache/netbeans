@@ -97,7 +97,7 @@ public class ElementOverlay {
     
     private final Map<String, List<String>> class2Enclosed = new HashMap<String, List<String>>();
     private final Map<String, Collection<String>> class2SuperElementTrees = new HashMap<String, Collection<String>>();
-    private final Set<String> packages = new HashSet<String>();
+    private final Set<String> packages = new HashSet<>();
     private final Map<String, Set<Modifier>> classes = new HashMap<String, Set<Modifier>>();
     private final Map<String, Element> elementCache = new HashMap<String, Element>();
 

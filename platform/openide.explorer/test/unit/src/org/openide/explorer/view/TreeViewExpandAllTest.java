@@ -48,7 +48,7 @@ public class TreeViewExpandAllTest extends NbTestCase {
     public TreeViewExpandAllTest(String name) {
         super(name);
     }
-    Set<Integer> expandedNodesIndexes = new HashSet<Integer>();
+    Set<Integer> expandedNodesIndexes = new HashSet<>();
 
     boolean lazy;
     public void testExpandAllEager() throws InterruptedException, InvocationTargetException {
@@ -78,7 +78,7 @@ public class TreeViewExpandAllTest extends NbTestCase {
             }
         });
         // Whole expanded tree should have nodes O-6
-        assertEquals(new HashSet<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5, 6)), expandedNodesIndexes);
+        assertEquals(new HashSet<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6)), expandedNodesIndexes);
     }
 
     private static final class ExplorerWindow extends JFrame implements ExplorerManager.Provider {

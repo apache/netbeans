@@ -59,7 +59,7 @@ public class UninstallUtils {
      */
     public static Set<File> getFilesToDeteleAfterUninstallation() {
         if (filesToDelete == null) {
-            filesToDelete = new HashSet<File>();
+            filesToDelete = new HashSet<>();
 
             filesToDelete.addAll(getUpdatedFiles());
 
@@ -87,7 +87,7 @@ public class UninstallUtils {
      */
     public static List<File> getEmptyFolders() {
         if (emptyFolders == null) {
-            emptyFolders = new ArrayList<File>();
+            emptyFolders = new ArrayList<>();
             for (File clusterRoot : getClustersRoots()) {
                 isFolderEmpty(clusterRoot);
             }
@@ -117,7 +117,7 @@ public class UninstallUtils {
                 }
             };
 
-            updatedFiles = new HashSet<File>();
+            updatedFiles = new HashSet<>();
 
             for (File clusterRoot : clustersRootsList) {
                 File clusterUpdateTrackingFolder = new File(clusterRoot, UPDATE_TRACKING_LOCATION);
@@ -163,7 +163,7 @@ public class UninstallUtils {
                         return file.isDirectory();
                     }
                 };
-                clustersRoots = new HashSet<File>(Arrays.asList(installationLoc.listFiles(onlyDirFilter)));
+                clustersRoots = new HashSet<>(Arrays.asList(installationLoc.listFiles(onlyDirFilter)));
             } else {
                 clustersRoots = Collections.emptySet();
             }
@@ -180,7 +180,7 @@ public class UninstallUtils {
      */
     private static List<File> getAllDescendantsRecursively(File folder) {
         if (folder != null && folder.isDirectory()) {
-            List<File> descendants = new ArrayList<File>();
+            List<File> descendants = new ArrayList<>();
             for (File actualFile : folder.listFiles()) {
                 if (actualFile.isDirectory()) {
                     descendants.addAll(getAllDescendantsRecursively(actualFile));

@@ -524,10 +524,10 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
         }
         
         final Installer inst = tmpInst;
-        List<UpdateElement> signedVerified = new ArrayList<UpdateElement>();
-        List<UpdateElement> signedUnverified = new ArrayList<UpdateElement>();
-        List<UpdateElement> unsigned = new ArrayList<UpdateElement>();
-        List<UpdateElement> modified = new ArrayList<UpdateElement>();
+        List<UpdateElement> signedVerified = new ArrayList<>();
+        List<UpdateElement> signedUnverified = new ArrayList<>();
+        List<UpdateElement> unsigned = new ArrayList<>();
+        List<UpdateElement> modified = new ArrayList<>();
         int trustedCount = 0;
         Map<Object, String> certs = new HashMap<>();
         for (UpdateElement el : model.getAllUpdateElements ()) {

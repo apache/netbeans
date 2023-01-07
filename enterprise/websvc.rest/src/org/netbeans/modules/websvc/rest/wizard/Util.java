@@ -434,7 +434,7 @@ public class Util {
     
     public static boolean isValidUri(String uri) {
         StringTokenizer segments = new StringTokenizer(uri, "/ "); //NOI18N
-        Set<String> uriParts = new HashSet<String>();
+        Set<String> uriParts = new HashSet<>();
         while (segments.hasMoreTokens()) {
             String segment = segments.nextToken();
             if (segment.startsWith("{")) { //NOI18N
@@ -509,7 +509,7 @@ public class Util {
                     ModifiersTree modifiersTree = JavaSourceHelper.createModifiersTree(
                             workingCopy,new Modifier[]{Modifier.PRIVATE} , 
                             null, null);
-                    List<VariableTree> vars = new ArrayList<VariableTree>();
+                    List<VariableTree> vars = new ArrayList<>();
                     
                     VariableTree var = maker.Variable(maker.Modifiers(
                             EnumSet.noneOf(Modifier.class)), 
@@ -675,7 +675,7 @@ public class Util {
             EntityResourceBeanModel model, FileObject targetFolder, 
             String resourcePackage, FacadeGenerator generator ) throws IOException
     {
-        Map<String,String> beanMap = new HashMap<String,String>();
+        Map<String,String> beanMap = new HashMap<>();
         for (EntityClassInfo classInfo : model.getEntityInfos()) {
             EntityClassInfo.FieldInfo fieldInfo = classInfo.getIdFieldInfo();
             if (fieldInfo != null) {
@@ -683,7 +683,7 @@ public class Util {
             }
         }
 
-        Map<String, String> selectedEntityNames = new HashMap<String, String>();
+        Map<String, String> selectedEntityNames = new HashMap<>();
         for( String entity : entities ){
             String primaryKeyType = beanMap.get(entity);
             selectedEntityNames.put(entity,
@@ -702,7 +702,7 @@ public class Util {
     public static Set<String> getEntities(Project project, Set<FileObject> files) 
         throws IOException 
     {
-        final Set<String> entities = new HashSet<String>();
+        final Set<String> entities = new HashSet<>();
         for (FileObject file : files) {
             final JavaSource source = JavaSource.forFileObject(file);
             if (source == null) {
@@ -751,7 +751,7 @@ public class Util {
 
     
     public static Map<String, String> initEntityNames(Project project) throws IOException {
-        final Map<String, String> entityNames = new HashMap<String, String>();
+        final Map<String, String> entityNames = new HashMap<>();
         
         //XXX should probably be using MetadataModelReadHelper. needs a progress indicator as well (#113874).
             EntityClassScope entityClassScope = EntityClassScope.

@@ -117,7 +117,7 @@ public class JPAGenTest extends SourceTestSupport{
         SchemaElement schema = getSampleSchema();
         TableProvider tableProvider = new DBSchemaTableProvider(schema, generator);
         
-        Set<String> tables = new HashSet<String>();
+        Set<String> tables = new HashSet<>();
         for (Table each : tableProvider.getTables()){
             if(each.getName().equals("CUSTOMER")){
                 tables.add(each.getName());
@@ -145,7 +145,7 @@ public class JPAGenTest extends SourceTestSupport{
 //    public void testGenerateRelatedEntitiesFromSampleSchema() throws IOException{
 //        SchemaElement schema = getSampleSchema();
 //
-//        Set<String> relatedTables = new HashSet<String>();
+//        Set<String> relatedTables = new HashSet<>();
 //        relatedTables.add("PRODUCT");
 //        relatedTables.add("PRODUCT_CODE");
 //        relatedTables.add("MANUFACTURER");

@@ -46,7 +46,7 @@ import org.openide.util.Exceptions;
 public class J2SELibraryClassPathProvider implements ClassPathProvider {
     
     private static final Set<? extends String> SUPPORTED_CLASS_PATH_TYPES =
-            new HashSet<String>(Arrays.asList(new String[]{
+            new HashSet<>(Arrays.asList(new String[]{
                 ClassPath.SOURCE,
                 ClassPath.BOOT,
                 ClassPath.COMPILE,
@@ -123,7 +123,7 @@ public class J2SELibraryClassPathProvider implements ClassPathProvider {
         final URL archiveFileURL = FileUtil.getArchiveFile(foURL);
         final boolean isInArchive = archiveFileURL != null;
         final FileObject ownerFo = isInArchive ? URLMapper.findFileObject(archiveFileURL) : null;
-        final Set<FileObject> candidates = new HashSet<FileObject>();
+        final Set<FileObject> candidates = new HashSet<>();
         for (URL root : roots) {
             if ("jar".equals(root.getProtocol())) {  //NOI18N
                 if (isInArchive && ownerFo != null) {

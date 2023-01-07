@@ -117,5 +117,5 @@ public class DefaultElementIdentity implements ElementIdentity {
     // Member variables
     ////////////////////////////////////////////////////////////////////////////////
     
-    private List<String> identifiers = new ArrayList<String>();
+    private List<String> identifiers = new ArrayList<>();
 }

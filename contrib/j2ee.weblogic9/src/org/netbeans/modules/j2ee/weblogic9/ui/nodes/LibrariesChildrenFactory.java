@@ -75,7 +75,7 @@ public class LibrariesChildrenFactory extends ChildFactory<ResourceNode>
                 @Override
                 public Map<String,String> call( MBeanServerConnection con,
                         ObjectName service) throws Exception {
-                    Map<String,String> map = new HashMap<String, String>();
+                    Map<String,String> map = new HashMap<>();
 
                     ObjectName domainConfig = (ObjectName) con
                             .getAttribute(service,

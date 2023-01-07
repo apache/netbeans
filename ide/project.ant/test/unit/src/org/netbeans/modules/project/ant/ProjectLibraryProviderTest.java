@@ -191,7 +191,7 @@ public class ProjectLibraryProviderTest extends NbTestCase {
         setLibraryContent(lib, "classpath", new URI("jgraph.jar!/"), new URI("../extra%20libs/jgraph-extras.jar!/"));
         setLibraryContent(lib, "src", new URL(base, "separate/jgraph-src/").toURI(), new URL(base, "jgraph-other-src/").toURI());
         setLibraryContent(lib, "javadoc", new URI("jar:" + base + "separate/jgraph-api.zip!/"), new URI("../separate/jgraph-api.zip!/docs/api/"));
-        Map<String,String> m = new HashMap<String,String>();
+        Map<String,String> m = new HashMap<>();
         File separate = new File(getWorkDir(), "separate");
         m.put("libs.jgraph.classpath", "${base}/jgraph.jar"+File.pathSeparatorChar+"${base}/../extra libs/jgraph-extras.jar");
         m.put("libs.jgraph.src", new File(separate, "jgraph-src").getAbsolutePath().replace('\\', '/') + File.pathSeparator + 
@@ -217,7 +217,7 @@ public class ProjectLibraryProviderTest extends NbTestCase {
         assertEquals("[<none>, " + base + "lib2.properties]", openedLibraryManagers());
     }
     private static String openedLibraryManagers() {
-        List<String> urls = new ArrayList<String>();
+        List<String> urls = new ArrayList<>();
         for (LibraryManager mgr : LibraryManager.getOpenManagers()) {
             URL u = mgr.getLocation();
             urls.add(u != null ? u.toExternalForm() : "<none>");
@@ -280,7 +280,7 @@ public class ProjectLibraryProviderTest extends NbTestCase {
         lib = mgr.createURILibrary("j2me", "gps", Collections.<String,List<URI>>emptyMap());
         assertEquals("j2me", lib.getType());
         assertEquals("gps", lib.getName());
-        Map<String,String> expected = new HashMap<String,String>();
+        Map<String,String> expected = new HashMap<>();
         expected.put("libs.javahelp.classpath", "${base}/jh.jar"+File.pathSeparatorChar+"${base}/jh-search.jar");
         expected.put("libs.javahelp.javadoc", "${base}/jh-api");
         expected.put("libs.gps.type", "j2me");

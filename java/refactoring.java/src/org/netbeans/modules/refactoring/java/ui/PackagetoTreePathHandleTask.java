@@ -48,7 +48,7 @@ abstract class PackagetoTreePathHandleTask implements Runnable, CancellableTask<
 
     private static final String JAVA_EXTENSION = "java";
     public CompilationInfo cinfo;
-    private final Collection<FileObject> javaFileObjects = new HashSet<FileObject>();
+    private final Collection<FileObject> javaFileObjects = new HashSet<>();
     private final Collection<TreePathHandle> handles = new ArrayList<TreePathHandle>();
     
     public PackagetoTreePathHandleTask(Collection<? extends Node> nodes) {
@@ -116,7 +116,7 @@ abstract class PackagetoTreePathHandleTask implements Runnable, CancellableTask<
     protected abstract RefactoringUI createRefactoringUI(Collection<TreePathHandle> handles, CompilationInfo info);
 
     public static Collection<FileObject> findJavaSourceFiles(FileObject pkg) {
-        Collection<FileObject> javaSrcFiles = new ArrayList<FileObject>();
+        Collection<FileObject> javaSrcFiles = new ArrayList<>();
         addSourcesInPackage(pkg, javaSrcFiles);
         return javaSrcFiles;
     }

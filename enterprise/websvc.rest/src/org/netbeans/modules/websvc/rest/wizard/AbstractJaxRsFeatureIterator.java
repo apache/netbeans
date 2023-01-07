@@ -203,7 +203,7 @@ abstract class AbstractJaxRsFeatureIterator implements
             String body)
     {
         ModifiersTree modifiers = maker.Modifiers(EnumSet.of(Modifier.PUBLIC));
-        List<VariableTree> params=new ArrayList<VariableTree>();
+        List<VariableTree> params=new ArrayList<>();
         ModifiersTree noModifier = maker.Modifiers(Collections.<Modifier>emptySet());
         for(Entry<String,String> entry: methodParams.entrySet()){
             String paramName = entry.getKey();

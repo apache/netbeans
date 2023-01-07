@@ -897,7 +897,7 @@ public final class CompletionContext {
         return pref;
     }
     
-    private Map<String, String> rootNamespacePrefixes = new HashMap<String, String>();
+    private Map<String, String> rootNamespacePrefixes = new HashMap<>();
     
     private static final String NAMESPACE_PREFIX = "xmlns:"; // NOI18N
     

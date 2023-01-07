@@ -63,7 +63,7 @@ public final class CompoundFolderChildren implements FileChangeListener {
     }
     
     public CompoundFolderChildren(String [] paths, boolean includeSubfolders) {
-        prefixes = new ArrayList<String>();
+        prefixes = new ArrayList<>();
         for (String path : paths) {
             prefixes.add(path.endsWith("/") ? path : path + "/"); // NOI18N
         }
@@ -124,7 +124,7 @@ public final class CompoundFolderChildren implements FileChangeListener {
             }
             mergedLayers = new MultiFileSystem(layers.toArray(new FileSystem[layers.size()])).getRoot();
             mergedLayers.addFileChangeListener(this); // need not be weak since only we hold this FS
-            List<FileObject> unsorted = new ArrayList<FileObject>();
+            List<FileObject> unsorted = new ArrayList<>();
             for (FileObject f : mergedLayers.getChildren()) {
                 if ((includeSubfolders || f.isData()) && !Boolean.TRUE.equals(f.getAttribute(HIDDEN_ATTR_NAME))) {
                     f.addFileChangeListener(this);

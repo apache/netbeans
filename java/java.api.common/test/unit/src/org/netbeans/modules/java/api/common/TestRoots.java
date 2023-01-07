@@ -33,7 +33,7 @@ public class TestRoots extends Roots {
 
     public static final String TYPE_TEST = "test"; //NOI18N
 
-    private final Map<String,String> props = new HashMap<String, String>();
+    private final Map<String,String> props = new HashMap<>();
     private final AntProjectHelper helper;
 
     public TestRoots (final AntProjectHelper helper) {

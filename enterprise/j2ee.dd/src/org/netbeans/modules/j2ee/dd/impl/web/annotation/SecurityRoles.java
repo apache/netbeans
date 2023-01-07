@@ -36,7 +36,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.Pa
  * @author Petr Slechta
  */
 public class SecurityRoles extends PersistentObject implements Refreshable {
-    private List<String> roles = new ArrayList<String>();
+    private List<String> roles = new ArrayList<>();
 
     public SecurityRoles(AnnotationModelHelper helper, TypeElement typeElement) {
         super(helper, typeElement);

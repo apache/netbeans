@@ -129,7 +129,7 @@ final class ProfileProblemsProviderImpl implements ProjectProblemsProvider, Prop
         this.referenceHelper = referenceHelper;
         this.evaluator = evaluator;
         this.profileProperty = profileProperty;
-        this.classPathProperties = new HashSet<String>(
+        this.classPathProperties = new HashSet<>(
                 Arrays.asList(classPathProperties));
         this.problemsProviderSupport = new ProjectProblemsProviderSupport(this);
         this.foreignSlResults = Collections.synchronizedCollection(new ArrayList<SourceLevelQuery.Result>());

@@ -496,7 +496,7 @@ final class RepositoryRevision {
                 return Collections.<Event>emptyList();
             } else {
                 List<Event> events = new ArrayList<Event>(paths.length);
-                Set<String> removedPaths = new HashSet<String>(paths.length);
+                Set<String> removedPaths = new HashSet<>(paths.length);
                 for (ISVNLogMessageChangePath path : paths) {
                     if (path.getAction() == 'D') {
                         removedPaths.add(path.getPath());

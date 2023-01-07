@@ -56,10 +56,10 @@ public final class WorkingCopyAttributesCache {
     }
 
     private WorkingCopyAttributesCache () {
-        unsupportedWorkingCopies = new HashSet<String>(5);
-        tooOldClientForWorkingCopies = new HashSet<String>(5);
-        tooOldWorkingCopies = new HashSet<String>(5);
-        askedToUpgradeWorkingCopies = new HashSet<String>(5);
+        unsupportedWorkingCopies = new HashSet<>(5);
+        tooOldClientForWorkingCopies = new HashSet<>(5);
+        tooOldWorkingCopies = new HashSet<>(5);
+        askedToUpgradeWorkingCopies = new HashSet<>(5);
     }
 
     private void init () {

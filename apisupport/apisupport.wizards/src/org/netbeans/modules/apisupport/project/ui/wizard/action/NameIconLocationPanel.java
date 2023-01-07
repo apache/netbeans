@@ -186,7 +186,7 @@ final class NameIconLocationPanel extends BasicWizardIterator.Panel {
     private static Set<File> getPossibleIcons(final String iconPath) {
         File icon = new File(iconPath);
         String[] resultSuffixes = { "16", "24", "" }; // NOI18N
-        Set<File> results = new HashSet<File>();
+        Set<File> results = new HashSet<>();
         String iconName = icon.getName();
         int idx = iconName.lastIndexOf('.');
         String name = (idx != -1) ? iconName.substring(0,idx) : iconName;

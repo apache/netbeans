@@ -49,7 +49,7 @@ public class PrimitiveArrayInstanceImpl extends InstanceImpl implements Primitiv
     @Override
     public List<String> getValues() {
         Variable[] values = array.getFields(0, getLength());
-        List<String> strValues = new ArrayList<String>();
+        List<String> strValues = new ArrayList<>();
         for (Variable value: values) {
             String strVal = value.getValue();
             if (strVal.length() >= 3 && strVal.startsWith("'") && strVal.endsWith("'")) {

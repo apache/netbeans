@@ -60,7 +60,7 @@ public class EmptyCancelForCancellableTask extends AbstractHint {
         return EnumSet.of(Kind.METHOD);
     }
 
-    private static Set<String> typesToCheck = new HashSet<String>(
+    private static Set<String> typesToCheck = new HashSet<>(
             Arrays.asList(
                 "org.netbeans.api.java.source.CancellableTask<org.netbeans.api.java.source.CompilationInfo>", //NOI18N
                 "org.netbeans.modules.java.hints.spi.Rule" //NOI18N

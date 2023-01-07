@@ -382,7 +382,7 @@ public final class NbMavenProjectImpl implements Project {
     }
 
     public List<String> getCurrentActiveProfiles() {
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         toRet.addAll(configProvider.getActiveConfiguration().getActivatedProfiles());
         return toRet;
     }
@@ -805,7 +805,7 @@ public final class NbMavenProjectImpl implements Project {
 
     public File[] getOtherRoots(boolean test) {
         URI uri = FileUtilities.getDirURI(getProjectDirectory(), test ? "src/test" : "src/main"); //NOI18N
-        Set<File> toRet = new HashSet<File>();
+        Set<File> toRet = new HashSet<>();
         File fil = Utilities.toFile(uri);
         if (fil.exists()) {
             try {

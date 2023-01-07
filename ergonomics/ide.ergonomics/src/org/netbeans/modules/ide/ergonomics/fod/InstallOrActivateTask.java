@@ -42,7 +42,7 @@ import org.openide.util.Lookup;
 final class InstallOrActivateTask implements Runnable, FileChangeListener {
     private final ModulesInstaller installer;
     private final ModulesActivator activator;
-    private final List<FileObject> changed = new ArrayList<FileObject>();
+    private final List<FileObject> changed = new ArrayList<>();
 
     InstallOrActivateTask(ModulesInstaller installer) {
         this.installer = installer;

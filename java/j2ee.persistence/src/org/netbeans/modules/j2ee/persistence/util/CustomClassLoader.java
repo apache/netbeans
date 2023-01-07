@@ -166,7 +166,7 @@ public class CustomClassLoader extends URLClassLoader {
         if (packageName != null) {
             preferred = package2File.get(packageName);
         }
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         if (preferred != null) {
             files.add(preferred);
         }

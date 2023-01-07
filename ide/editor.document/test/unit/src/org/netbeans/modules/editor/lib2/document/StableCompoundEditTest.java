@@ -36,7 +36,7 @@ public class StableCompoundEditTest extends NbTestCase {
     
     public StableCompoundEditTest(String testName) {
         super(testName);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimpleUndo");
 //        includes.add("testSimplePositionSharingMods");
 //        includes.add("testEndPosition");

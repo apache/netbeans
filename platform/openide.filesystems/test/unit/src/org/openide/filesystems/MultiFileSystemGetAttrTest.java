@@ -112,7 +112,7 @@ public class MultiFileSystemGetAttrTest extends NbTestCase {
     }
 
     public static class MyLFS extends LocalFileSystem implements AbstractFileSystem.Attr {
-        ArrayList<String> rootQueries = new ArrayList<String>();
+        ArrayList<String> rootQueries = new ArrayList<>();
 
         @SuppressWarnings("LeakingThisInConstructor")
         public MyLFS() {

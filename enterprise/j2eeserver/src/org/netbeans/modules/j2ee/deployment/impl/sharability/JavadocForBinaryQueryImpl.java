@@ -74,7 +74,7 @@ public class JavadocForBinaryQueryImpl implements JavadocForBinaryQueryImplement
 
             public synchronized URL[] getRoots() {
                 if (this.cachedRoots == null) {
-                    List<URL> result = new ArrayList<URL>();
+                    List<URL> result = new ArrayList<>();
                     for (URL u : lib.getContent(ServerLibraryTypeProvider.VOLUME_JAVADOC)) {
                         result.add(getIndexFolder(u));
                     }

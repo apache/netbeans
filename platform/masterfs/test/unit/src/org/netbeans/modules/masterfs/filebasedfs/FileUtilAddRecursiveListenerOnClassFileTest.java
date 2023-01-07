@@ -95,7 +95,7 @@ public class FileUtilAddRecursiveListenerOnClassFileTest extends NbTestCase {
     
     private static final class L implements FileChangeListener {
         List<FileEvent> ev = new ArrayList<FileEvent>();
-        List<String> msgs = new ArrayList<String>();
+        List<String> msgs = new ArrayList<>();
 
         @Override
         public void fileFolderCreated(FileEvent fe) {

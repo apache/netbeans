@@ -84,7 +84,7 @@ public class SuperClassInterfaces extends org.netbeans.test.java.XRunner {
     public boolean go(Object o, java.io.PrintWriter log) throws Exception {
         FileObject fo = (FileObject) o;
         JavaSource js = JavaSource.forFileObject(fo);                                
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("java.util.List");
         list.add("java.io.Closeable");        
         Common.addExtendImplementClause(js, "java.io.File", list);

@@ -65,7 +65,7 @@ public final class JavadocForBinaryImpl implements JavadocForBinaryQueryImplemen
         }
         String cnbdashes = cnb.replace('.', '-');
         try {
-            final List<URL> candidates = new ArrayList<URL>();
+            final List<URL> candidates = new ArrayList<>();
             NbPlatform platform = project.getPlatform(false);
             if (platform == null) {
                 return null;

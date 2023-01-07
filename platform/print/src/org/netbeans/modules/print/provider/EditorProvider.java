@@ -102,7 +102,7 @@ public final class EditorProvider extends ComponentProvider {
         if ( !action.getClass().getName().contains(".print.")) { // NOI18N
             return null;
         }
-        List<Object> source = new ArrayList<Object>();
+        List<Object> source = new ArrayList<>();
         source.add(document);
         source.add(Integer.valueOf(start));
         source.add(Integer.valueOf(end));

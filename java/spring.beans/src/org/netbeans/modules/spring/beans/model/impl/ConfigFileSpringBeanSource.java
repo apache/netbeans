@@ -61,7 +61,7 @@ public class ConfigFileSpringBeanSource implements SpringBeanSource {
 
     private final Map<String, ConfigFileSpringBean> id2Bean = new HashMap<String, ConfigFileSpringBean>();
     private final Map<String, ConfigFileSpringBean> name2Bean = new HashMap<String, ConfigFileSpringBean>();
-    private final Map<String, String> alias2Name = new HashMap<String, String>();
+    private final Map<String, String> alias2Name = new HashMap<>();
     private final List<ConfigFileSpringBean> beans = new ArrayList<ConfigFileSpringBean>();
 
     /**
@@ -142,7 +142,7 @@ public class ConfigFileSpringBeanSource implements SpringBeanSource {
 
             // prefixesMap caches the prefixes for tag nemes
             // see the issue 154518
-            Map<String, String> prefixesMap = new HashMap<String, String>();
+            Map<String, String> prefixesMap = new HashMap<>();
 
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node node = childNodes.item(i);

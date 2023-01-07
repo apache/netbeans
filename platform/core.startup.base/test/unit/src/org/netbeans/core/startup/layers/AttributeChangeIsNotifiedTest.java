@@ -77,7 +77,7 @@ public class AttributeChangeIsNotifiedTest extends NbTestCase {
         File f3 = changeOfAnAttributeInLayerIsFiredgenerateLayer("NoChange", "nochange");
 
         {
-            List<URL> list = new ArrayList<URL>();
+            List<URL> list = new ArrayList<>();
             list.add(Utilities.toURI(f1).toURL());
             list.add(Utilities.toURI(f3).toURL());
             fs.setURLs (list);
@@ -98,7 +98,7 @@ public class AttributeChangeIsNotifiedTest extends NbTestCase {
         assertAttr("Imutable value is nochange", nochange, "value", "nochange");
         
         {
-            List<URL> list = new ArrayList<URL>();
+            List<URL> list = new ArrayList<>();
             list.add(Utilities.toURI(f2).toURL());
             list.add(Utilities.toURI(f3).toURL());
             fs.setURLs (list);

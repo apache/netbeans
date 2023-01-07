@@ -243,7 +243,7 @@ public class RefactoringResultOperator extends TopComponentOperator {
     private Set<FileObject> browseForFileObjects(javax.swing.tree.TreeModel model) {
         Queue<CheckNode> q = new LinkedList<CheckNode>();
         q.add((CheckNode) model.getRoot());
-        Set<FileObject> result = new HashSet<FileObject>();
+        Set<FileObject> result = new HashSet<>();
         while (!q.isEmpty()) {
             CheckNode node = q.remove();
             Object uo = node.getUserObject();

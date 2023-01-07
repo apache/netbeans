@@ -276,7 +276,7 @@ public class CssTestBase extends CslTestBase {
     }
 
     private Collection<String> convert(Set<ValueGrammarElement> toto) {
-        Collection<String> x = new HashSet<String>();
+        Collection<String> x = new HashSet<>();
         for (ValueGrammarElement e : toto) {
             x.add(e.getValue().toString());
         }

@@ -395,7 +395,7 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
             selectedServerInstanceID = serverInstanceWrapper.getServerInstanceID();
         }
         ProfileItem lastSelectedJ2eeProfile = (ProfileItem) j2eeSpecComboBox.getSelectedItem();
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put("suggested-name", (String)wizard.wizardDescriptor.getProperty(ProjectLocationWizardPanel.NAME));
         String newServerInstanceID = ServerManager.showAddServerInstanceWizard(props);
         if (newServerInstanceID != null) {

@@ -252,7 +252,7 @@ class RestScanTask {
         if ( isCancelled()){
             return Collections.emptyList();
         }
-        Set<String> restFqns = new HashSet<String>();
+        Set<String> restFqns = new HashSet<>();
         if (isCancelled()) {
             return Collections.emptyList();
         }

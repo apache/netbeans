@@ -73,11 +73,11 @@ public class FileStatusCache {
     private final Map<File, FileInformation> cachedFiles;
     private final LinkedHashSet<File> upToDateFiles = new LinkedHashSet<File>(MAX_COUNT_UPTODATE_FILES);
     private final RequestProcessor rp = new RequestProcessor("Mercurial.cacheNG", 1, true);
-    private final HashSet<File> nestedRepositories = new HashSet<File>(2); // mainly for logging
+    private final HashSet<File> nestedRepositories = new HashSet<>(2); // mainly for logging
 
     FileStatusCache (Mercurial hg) {
         this.hg = hg;
-        cachedFiles = new HashMap<File, FileInformation>();
+        cachedFiles = new HashMap<>();
     }
 
     /**
@@ -342,7 +342,7 @@ public class FileStatusCache {
     private Map<File, FileInformation> getModifiedFiles (File root, int includeStatus) {
         boolean check = false;
         assert check = true;
-        Map<File, FileInformation> modifiedFiles = new HashMap<File, FileInformation>();
+        Map<File, FileInformation> modifiedFiles = new HashMap<>();
         FileInformation info = getCachedStatus(root);
         if ((info.getStatus() & includeStatus) != 0) {
             modifiedFiles.put(root, info);
@@ -438,7 +438,7 @@ public class FileStatusCache {
             }
             Set<File> filesUnderRoot = rootFiles.get(repository);
             if (filesUnderRoot == null) {
-                filesUnderRoot = new HashSet<File>();
+                filesUnderRoot = new HashSet<>();
                 rootFiles.put(repository, filesUnderRoot);
             }
             HgUtils.prepareRootFiles(repository, filesUnderRoot, file);
@@ -712,7 +712,7 @@ public class FileStatusCache {
     }
 
     private Set<File> listFilesIntern(File[] roots, int includeStatus) {
-        Set<File> listedFiles = new HashSet<File>();
+        Set<File> listedFiles = new HashSet<>();
         for (File root : roots) {
             if (VersioningSupport.isFlat(root)) {
                 for (File listed : listFiles(root)) {

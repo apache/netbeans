@@ -106,7 +106,7 @@ public class RestServicesNodeFactory implements NodeFactory {
                 }
             }
         });
-        private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private List<ChangeListener> listeners = new ArrayList<>();
 
         public RestNodeList(Project proj) {
             this.project = proj;
@@ -116,7 +116,7 @@ public class RestServicesNodeFactory implements NodeFactory {
         public List<String> keys() {
             final String keys = result.get();
             if (keys != null) {
-                List<String> tmpResult = new ArrayList<String>();
+                List<String> tmpResult = new ArrayList<>();
                 if (KEY_SERVICES.equals(keys)) {
                     tmpResult.add(KEY_SERVICES);
                 }
@@ -150,7 +150,7 @@ public class RestServicesNodeFactory implements NodeFactory {
         }
 
         private void fireChange() {
-            ArrayList<ChangeListener> list = new ArrayList<ChangeListener>();
+            ArrayList<ChangeListener> list = new ArrayList<>();
             synchronized (this) {
                 list.addAll(listeners);
             }

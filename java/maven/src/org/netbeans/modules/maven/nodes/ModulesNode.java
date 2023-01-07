@@ -301,7 +301,7 @@ public class ModulesNode extends AbstractNode {
             if (c.showOpenDialog(Utilities.findDialogParent()) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
-            final List<String> mods = new ArrayList<String>();
+            final List<String> mods = new ArrayList<>();
             for (File d : c.getSelectedFiles()) {
                 String mod = FileUtilities.relativizeFile(basedir, d);
                 if (mod != null && !mod.equals(".")) {

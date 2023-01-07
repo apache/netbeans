@@ -45,16 +45,16 @@ public class HttpParams {
     private boolean hasOptionalQueryParams = false;
     private boolean hasDefaultQueryParams = false;
 
-    private List<String> formParams = new ArrayList<String>();
-    private Map<String, String> fixedFormParams = new HashMap<String,String>();
+    private List<String> formParams = new ArrayList<>();
+    private Map<String, String> fixedFormParams = new HashMap<>();
 
-    private List<String> headerParams = new ArrayList<String>();
-    private Map<String, String> fixedHeaderParams = new HashMap<String,String>();
+    private List<String> headerParams = new ArrayList<>();
+    private Map<String, String> fixedHeaderParams = new HashMap<>();
 
-    private Map<String, String> defaultQueryParams = new HashMap<String,String>();
-    private List<String> requiredQueryParams = new ArrayList<String>();
-    private List<String> optionalQueryParams = new ArrayList<String>();
-    private Map<String, String> fixedQueryParams = new HashMap<String,String>();
+    private Map<String, String> defaultQueryParams = new HashMap<>();
+    private List<String> requiredQueryParams = new ArrayList<>();
+    private List<String> optionalQueryParams = new ArrayList<>();
+    private Map<String, String> fixedQueryParams = new HashMap<>();
 
 
     HttpParams(WadlSaasResource saasResource) {

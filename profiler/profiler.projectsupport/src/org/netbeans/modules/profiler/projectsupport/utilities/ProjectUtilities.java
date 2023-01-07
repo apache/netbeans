@@ -283,7 +283,7 @@ public class ProjectUtilities {
      * @return an array of FileObjects that are the source roots for this project
      */
     public static FileObject[] getSourceRoots(final Lookup.Provider project, final boolean traverse) {
-        Set<FileObject> set = new HashSet<FileObject>();
+        Set<FileObject> set = new HashSet<>();
         Set<Lookup.Provider> projects = new HashSet<Lookup.Provider>();
 
         projects.add(project);
@@ -378,7 +378,7 @@ public class ProjectUtilities {
         }
 
         if (storage[0] == null || storage[0].length == 0) {
-            Collection<String> packages1 = new ArrayList<String>();
+            Collection<String> packages1 = new ArrayList<>();
 
             for (FileObject root : getSourceRoots(project, false)) {
                 addSubpackages(packages1, "", root); //NOI18N
@@ -389,7 +389,7 @@ public class ProjectUtilities {
 
         if (subprojects && (storage[1] == null || storage[1].length == 0)) {
             FileObject[] srcRoots2 = getSourceRoots(project, true); // TODO: should be computed based on already known srcRoots1
-            ArrayList<String> packages2 = new ArrayList<String>();
+            ArrayList<String> packages2 = new ArrayList<>();
 
             for (FileObject root : srcRoots2) {
                 addSubpackages(packages2, "", root); //NOI18N
@@ -606,7 +606,7 @@ public class ProjectUtilities {
     }
     
     private static Collection<String> getDefaultPackageClassNamesSet(Project project) {
-        final Collection<String> classNames = new ArrayList<String>();
+        final Collection<String> classNames = new ArrayList<>();
 
         JavaSource js = getSources(project);
         final Set<ElementHandle<TypeElement>> types = getProjectTypes(project, js);

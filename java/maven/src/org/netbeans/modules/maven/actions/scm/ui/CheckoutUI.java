@@ -347,7 +347,7 @@ public class CheckoutUI extends javax.swing.JPanel {
     public RunConfig getRunConfig() {
         BeanRunConfig brc = new BeanRunConfig();
         brc.setExecutionDirectory(getCheckoutDirectory().getParentFile());
-        List<String> goals = new ArrayList<String>();
+        List<String> goals = new ArrayList<>();
         goals.add(MavenCommandSettings.getDefault().getCommand(MavenCommandSettings.COMMAND_SCM_CHECKOUT));//NOI18N
         brc.setGoals(goals);
         brc.setTaskDisplayName(NbBundle.getMessage(CheckoutUI.class, "LBL_Checkout", project.getArtifactId() + " : " + project.getVersion()));

@@ -78,7 +78,7 @@ public class LaunchingSessionProvider extends SessionProvider {
         
         // 1) finds all already used indexes and puts them to HashSet
         int i, k = ds.length;
-        HashSet<Integer> m = new HashSet<Integer>();
+        HashSet<Integer> m = new HashSet<>();
         for (i = 0; i < k; i++) {
             String pn = ds [i].getName ();
             if (!pn.startsWith (sessionName)) continue;

@@ -192,7 +192,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
 
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Arrays.asList(result));
+        return new HashSet<>(Arrays.asList(result));
     }
     
     public void init(SaasMethod method, Document doc) throws IOException {
@@ -320,20 +320,20 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
   
     protected String[] getGetParamNames(List<ParameterInfo> queryParams) {
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
         params.addAll(Arrays.asList(getParamNames(queryParams)));
         return params.toArray(new String[params.size()]);
     }
     
     protected String[] getGetParamTypes(List<ParameterInfo> queryParams) {
-        ArrayList<String> types = new ArrayList<String>();
+        ArrayList<String> types = new ArrayList<>();
         types.addAll(Arrays.asList(getParamTypeNames(queryParams)));
         return types.toArray(new String[types.size()]);
     }
     
     
     protected String[] getParamNames(List<ParameterInfo> params) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         
         for (ParameterInfo param : params) {
             results.add(getParameterName(param, true, true, true));
@@ -343,7 +343,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
     
     protected String[] getParamTypeNames(List<ParameterInfo> params) {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         
         for (ParameterInfo param : params) {
             results.add(param.getTypeName());
@@ -376,7 +376,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
     
     protected Object[] getParamValues(List<ParameterInfo> params) {
-        List<Object> results = new ArrayList<Object>();
+        List<Object> results = new ArrayList<>();
         
         for (ParameterInfo param : params) {
             Object defaultValue = null;

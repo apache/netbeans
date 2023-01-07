@@ -47,7 +47,7 @@ public class JAXBWizBindingCfgPanel implements WizardDescriptor.Panel,
     private static final String WIZ_NEW_FILE_TITLE = "NewFileWizard_Title"; //NOI18N
 
     private WizardDescriptor wd = null;
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();  
+    private List<ChangeListener> listeners = new ArrayList<>();  
     private JAXBBindingInfoPnl bindingInfoPnl = null;
     private List<String> existingSchemaNames = null;
     private File projDir = null;
@@ -297,7 +297,7 @@ public class JAXBWizBindingCfgPanel implements WizardDescriptor.Panel,
         Map<String, Boolean> options =  this.bindingInfoPnl.getOptions();
         wdNew.putProperty(JAXBWizModuleConstants.XJC_OPTIONS, options);
         
-        List<String> xsdFileList = new ArrayList<String>();
+        List<String> xsdFileList = new ArrayList<>();
         String schemaLoc = this.bindingInfoPnl.getSchemaFile();
         if (schemaLoc == null){
             xsdFileList.add(this.bindingInfoPnl.getSchemaURL());            

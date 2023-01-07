@@ -69,7 +69,7 @@ public class SampleWizardIterator extends AbstractWizardIterator {
         unZipFile(template.getInputStream(), projectFolder);
         ProjectManager.getDefault().clearNonProjectCache();
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("${project.name}", targetName);                             // NOI18N
         replaceTokens(projectFolder, map , "nbproject/project.properties"); // NOI18N
 

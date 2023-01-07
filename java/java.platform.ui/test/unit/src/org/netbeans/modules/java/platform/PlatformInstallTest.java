@@ -74,7 +74,7 @@ public class PlatformInstallTest extends NbTestCase {
         if (result.size() != expectedClasses.length) {
             assertTrue(result.toString(), false);
         }
-        final Set<String> expected = new HashSet<String>(Arrays.asList(expectedClasses));
+        final Set<String> expected = new HashSet<>(Arrays.asList(expectedClasses));
         for (GeneralPlatformInstall i : result) {
             assertTrue(result.toString(), expected.remove(i.getClass().getName()));
         }

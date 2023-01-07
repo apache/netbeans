@@ -63,7 +63,7 @@ public class MergeTest extends AbstractGitTestCase {
         client.checkoutRevision("master", true, GitUtils.NULL_PROGRESS_MONITOR);
         assertEquals("", read(f));
         
-        final Set<File> notifiedFiles = new HashSet<File>();
+        final Set<File> notifiedFiles = new HashSet<>();
         client.addNotificationListener(new FileListener() {
             @Override
             public void notifyFile (File file, String relativePathToRoot) {

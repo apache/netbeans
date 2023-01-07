@@ -122,7 +122,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
                 "com.sun.jersey.api.client.Client"); // NOI18N
         boolean isSubresource = (pf.getArguments().length>0);
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (isSubresource) {
             for (String arg : pf.getArguments()) {
                 Tree argTypeTree = maker.Identifier("String"); //NOI18N
@@ -182,7 +182,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
         ModifiersTree methodModifier = maker.Modifiers(
                 Collections.<Modifier>singleton(Modifier.PUBLIC));
         
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         for (String arg : pf.getArguments()) {
             Tree argTypeTree = maker.Identifier("String"); // NOI18N
             ModifiersTree fieldModifier = maker.Modifiers(Collections
@@ -252,7 +252,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
         List<TypeParameterTree> typeParams = Collections.<TypeParameterTree>
             singletonList(maker.TypeParameter("T", Collections.<ExpressionTree>emptyList()));
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (classParam != null) {
             paramList.add(classParam);
         }
@@ -317,7 +317,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
 
         List<Response> response = saasMethod.getWadlMethod().getResponse();
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         ExpressionTree responseTree = null;
         List<TypeParameterTree> typeParams = null;
         String bodyParam1 = "";
@@ -424,7 +424,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
                 mvMapEl == null ?
                     copy.getTreeMaker().Identifier(mvMapClass) :
                     copy.getTreeMaker().QualIdent(mvMapEl);
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         ModifiersTree paramModifier = maker.Modifiers(Collections.<Modifier>emptySet());
         paramList.add(maker.Variable(paramModifier, "paramNames", maker.Identifier("String[]"), null)); //NOI18N
         paramList.add(maker.Variable(paramModifier, "paramValues", maker.Identifier("String[]"), null)); //NOI18N
@@ -516,7 +516,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
                             Collections.<ExpressionTree>emptyList())); //NOI18N
         }
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (classParam != null) {
             paramList.add(classParam);
         }
@@ -626,7 +626,7 @@ class JerseyGenerationStrategy extends ClientGenerationStrategy {
 
         // create param list
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (classParam != null) {
             paramList.add(classParam);
        

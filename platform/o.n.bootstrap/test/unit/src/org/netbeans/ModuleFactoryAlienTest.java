@@ -319,7 +319,7 @@ public class ModuleFactoryAlienTest extends SetupHid {
 
         public Loader(AlienModule mf) throws MalformedURLException {
             super(new ClassLoader[0], true);
-            Set<String> pkgs = new HashSet<String>();
+            Set<String> pkgs = new HashSet<>();
             pkgs.add(mf.getManifest().getMainAttributes().getValue("AlienExport"));
             addCoveredPackages(pkgs);
             this.am = mf;

@@ -382,7 +382,7 @@ class Wadl2JavaHelper {
         for (MethodDescriptor m : securityParams.getMethodDescriptors()) {
             ModifiersTree methodModifiers = maker.Modifiers(getModifiers(m.getModifiers()));
             // add params
-            List<VariableTree> paramList = new ArrayList<VariableTree>();
+            List<VariableTree> paramList = new ArrayList<>();
             String pList = m.getParamNames();
             if (pList != null) {
                 List<String> paramN = getList(pList);
@@ -430,7 +430,7 @@ class Wadl2JavaHelper {
     }
 
     private static List<String> getList(String s) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         StringTokenizer tokens = new StringTokenizer(s, ",");
         while (tokens.hasMoreTokens()) {
             list.add(tokens.nextToken().trim());
@@ -517,7 +517,7 @@ class Wadl2JavaHelper {
             for (MethodDescriptor m : classDescriptor.getMethodDescriptor()) {
                 ModifiersTree methodModifiers = maker.Modifiers(getModifiers(m.getModifiers()));
                 // add params
-                List<VariableTree> paramList = new ArrayList<VariableTree>();
+                List<VariableTree> paramList = new ArrayList<>();
                 String pList = m.getParamNames();
                 if (pList != null) {
                     List<String> paramN = getList(pList);

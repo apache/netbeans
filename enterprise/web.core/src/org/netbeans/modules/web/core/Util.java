@@ -196,7 +196,7 @@ public class Util {
     }
 
     private static List<FileObject> getFileObjects(URL[] urls) {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         for (int i = 0; i < urls.length; i++) {
             FileObject sourceRoot = URLMapper.findFileObject(urls[i]);
             if (sourceRoot != null) {
@@ -261,12 +261,12 @@ public class Util {
         private boolean insideEl, insideTag;
 
         TLDVersionHandler(String[] elNames, String tagName) {
-            this.elNames=new HashSet<String>();
+            this.elNames=new HashSet<>();
             for (int i=0;i<elNames.length;i++) {
                 this.elNames.add(elNames[i]);
             }
             this.tagName=tagName;
-            values = new HashSet<String>();
+            values = new HashSet<>();
         }
         @Override
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {

@@ -361,7 +361,7 @@ final class XMLSettingsSupport {
         private String version;
         private String instanceClass;
         private String instanceMethod;
-        private Set<String> instanceOf = new HashSet<String>();
+        private Set<String> instanceOf = new HashSet<>();
         
         private byte[] serialdata;
         private CharArrayWriter chaos = null;
@@ -857,7 +857,7 @@ final class XMLSettingsSupport {
          * @see "#36718"
          */
         private Set<String> quickParse(InputStream is) throws IOException {
-            Set<String> iofs = new HashSet<String>();
+            Set<String> iofs = new HashSet<>();
 
             if (!expect(is, MODULE_SETTINGS_INTRO)) {
                 err.fine("Could not read intro "+source); // NOI18N

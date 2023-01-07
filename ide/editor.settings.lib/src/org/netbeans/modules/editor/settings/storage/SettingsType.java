@@ -139,7 +139,7 @@ public final class SettingsType {
                 Collection<? extends StorageDescription> allInstances = lookupResult.allInstances();
                 
                 // determine all IDs
-                Collection<String> allIds = new HashSet<String>();
+                Collection<String> allIds = new HashSet<>();
                 for(StorageDescription sd : allInstances) {
                     allIds.add(sd.getId());
                 }

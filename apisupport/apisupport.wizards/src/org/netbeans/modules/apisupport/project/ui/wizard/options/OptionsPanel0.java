@@ -77,7 +77,7 @@ final class OptionsPanel0 extends BasicWizardIterator.Panel {
      * @return array of IDs
      */
     private String[] getPrimaryIdsFromLayer() {
-        ArrayList<String> primaryIds = new ArrayList<String>();
+        ArrayList<String> primaryIds = new ArrayList<>();
         try {
             FileSystem layerFS = data.getProject().getLookup().lookup(NbModuleProvider.class).getEffectiveSystemFilesystem();
             FileObject optionsDialogFO = layerFS.findResource("OptionsDialog"); //NOI18N

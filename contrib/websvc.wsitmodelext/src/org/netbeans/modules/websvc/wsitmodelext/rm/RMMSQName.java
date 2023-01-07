@@ -64,7 +64,7 @@ public enum RMMSQName implements SchemaLocationProvider {
     private final QName qName;
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         hmap.put(RMMS_NS_URI, local ? RMMS_NS_LOCAL : RMMS_NS_EXT);
         return hmap;
     }

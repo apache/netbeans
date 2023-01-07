@@ -305,7 +305,7 @@ public class RequestProcessor180386Test extends NbTestCase {
             }
             List<C> callables = new ArrayList<C>(count);
             List<Future<String>> fs;
-            Set<String> names = new HashSet<String>(count);
+            Set<String> names = new HashSet<>(count);
             for (int i = 0; i < count; i++) {
                 String name = "R" + i;
                 names.add(name);
@@ -323,7 +323,7 @@ public class RequestProcessor180386Test extends NbTestCase {
             for (C c : callables) {
                 assertTrue (c.ran);
             }
-            Set<String> s = new HashSet<String>(count);
+            Set<String> s = new HashSet<>(count);
             for (Future<String> f : fs) {
                 s.add(f.get());
             }
@@ -364,7 +364,7 @@ public class RequestProcessor180386Test extends NbTestCase {
             special.iAmSpecial = true;
             callables.add(special);
             List<Future<String>> fs;
-            Set<String> names = new HashSet<String>(count);
+            Set<String> names = new HashSet<>(count);
             for (int i = 0; i < count; i++) {
                 String name = "R" + i;
                 names.add(name);
@@ -408,7 +408,7 @@ public class RequestProcessor180386Test extends NbTestCase {
         }
         List<C> l = new ArrayList<C>(count);
         List<Future<String>> fs;
-        Set<String> names = new HashSet<String>(count);
+        Set<String> names = new HashSet<>(count);
         for (int i = 0; i < count; i++) {
             String name = "R" + i;
             names.add(name);
@@ -417,7 +417,7 @@ public class RequestProcessor180386Test extends NbTestCase {
         }
         fs = rp.invokeAll(l);
         assertNotNull(fs);
-        Set<String> s = new HashSet<String>(count);
+        Set<String> s = new HashSet<>(count);
         for (Future<String> f : fs) {
             s.add(f.get());
         }
@@ -445,7 +445,7 @@ public class RequestProcessor180386Test extends NbTestCase {
             }
         }
         List<C> l = new ArrayList<C>(count);
-        Set<String> names = new HashSet<String>(count);
+        Set<String> names = new HashSet<>(count);
         for (int i = 0; i < count; i++) {
             String name = "R" + i;
             names.add(name);
@@ -483,7 +483,7 @@ public class RequestProcessor180386Test extends NbTestCase {
             }
         }
         List<C> l = new ArrayList<C>(count);
-        Set<String> names = new HashSet<String>(count);
+        Set<String> names = new HashSet<>(count);
         for (int i = 0; i < count; i++) {
             String name = "R" + i;
             names.add(name);
@@ -529,7 +529,7 @@ public class RequestProcessor180386Test extends NbTestCase {
             }
         }
         List<C> l = new ArrayList<C>(count);
-        Set<String> names = new HashSet<String>(count);
+        Set<String> names = new HashSet<>(count);
         for (int i = 0; i < count; i++) {
             String name = "R" + i;
             names.add(name);
@@ -762,7 +762,7 @@ public class RequestProcessor180386Test extends NbTestCase {
         }
         List<C> l = new ArrayList<C>(count);
         List<Future<String>> fs;
-        Set<String> names = new HashSet<String>(count);
+        Set<String> names = new HashSet<>(count);
         for (int i = 0; i < count; i++) {
             String name = "R" + i;
             names.add(name);
@@ -771,7 +771,7 @@ public class RequestProcessor180386Test extends NbTestCase {
         }
         fs = rp.invokeAll(l);
         assertNotNull(fs);
-        Set<String> s = new HashSet<String>(count);
+        Set<String> s = new HashSet<>(count);
         for (Future<String> f : fs) {
             s.add(f.get());
         }

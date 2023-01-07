@@ -224,7 +224,7 @@ public class RestResourceGenerator {
     }
 
     private String getPackageName(String name) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         String pName = name;
         int suffix = 0;
         Project project = FileOwnerQuery.getOwner(this.folder);

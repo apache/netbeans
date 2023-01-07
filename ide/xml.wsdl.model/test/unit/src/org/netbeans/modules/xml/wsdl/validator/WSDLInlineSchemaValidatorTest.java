@@ -83,7 +83,7 @@ public class WSDLInlineSchemaValidatorTest extends TestCase {
         URL url = getClass().getResource(fileName);
         URI uri = url.toURI();
         
-        Set<String> expectedErrors = new HashSet<String>();
+        Set<String> expectedErrors = new HashSet<>();
         validate(uri, expectedErrors);
         
     }

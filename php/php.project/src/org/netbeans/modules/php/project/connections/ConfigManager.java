@@ -125,7 +125,7 @@ public final class ConfigManager {
 
     public synchronized Configuration createNew(String name, String displayName) {
         assert !exists(name);
-        configs.put(name, new HashMap<String, String>());
+        configs.put(name, new HashMap<>());
         Configuration retval  = new Configuration(name);
         if (!name.equals(displayName)) {
             retval.putValue(PROP_DISPLAY_NAME, displayName);

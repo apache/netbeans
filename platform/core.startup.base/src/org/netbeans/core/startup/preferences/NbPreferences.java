@@ -43,7 +43,7 @@ public abstract class NbPreferences extends AbstractPreferences implements  Chan
     private static Preferences USER_ROOT;
     private static Preferences SYSTEM_ROOT;
     private ThreadLocal<Boolean> localThread = new ThreadLocal<Boolean>();
-    private ArrayList<String> keyEntries = new ArrayList<String>();
+    private ArrayList<String> keyEntries = new ArrayList<>();
     /*private*/ HashMap<String, ArrayList<String>> cachedKeyValues = new HashMap<String, ArrayList<String>>();
     
     /*private*/EditableProperties properties;
@@ -158,7 +158,7 @@ public abstract class NbPreferences extends AbstractPreferences implements  Chan
             }
             ArrayList<String> cachedValues = cachedKeyValues.get(key);
             if (cachedValues == null) {
-                cachedValues = new ArrayList<String>();
+                cachedValues = new ArrayList<>();
             }
             if (triggeredByStateChangedEvent) {
                 if (cachedValues.contains(value)) {
@@ -308,7 +308,7 @@ public abstract class NbPreferences extends AbstractPreferences implements  Chan
         synchronized(lock){
             Boolean previewState = localThread.get();
             EditableProperties ep = null;
-            ArrayList<String> entries2add = new ArrayList<String>();
+            ArrayList<String> entries2add = new ArrayList<>();
             try {
                 localThread.set(Boolean.TRUE);
                 ep = fileStorage.load();
@@ -323,7 +323,7 @@ public abstract class NbPreferences extends AbstractPreferences implements  Chan
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             } finally {
-		ArrayList<String> entries2remove = new ArrayList<String>();
+		ArrayList<String> entries2remove = new ArrayList<>();
                 for(String key : keyEntries) {
                     if (!entries2add.contains(key)) {
                         if (super.isRemoved()) {

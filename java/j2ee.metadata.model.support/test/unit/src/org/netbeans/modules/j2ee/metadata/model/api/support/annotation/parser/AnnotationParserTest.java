@@ -207,10 +207,10 @@ public class AnnotationParserTest extends JavaSourceTestCase {
                 TypeElement annotated = elements.getTypeElement("Annotated");
                 AnnotationMirror annotation = annotated.getAnnotationMirrors().iterator().next();
                 AnnotationParser parser = AnnotationParser.create(helper);
-                List<String> defaultValue = new ArrayList<String>(), defaultValue2 = new ArrayList<String>(), defaultValue3 = new ArrayList<String>();
+                List<String> defaultValue = new ArrayList<String>(), defaultValue2 = new ArrayList<String>(), defaultValue3 = new ArrayList<>();
                 ArrayValueHandler arrayHandler = new ArrayValueHandler() {
                     public Object handleArray(List<AnnotationValue> array) {
-                        List<String> result = new ArrayList<String>();
+                        List<String> result = new ArrayList<>();
                         for (AnnotationValue arrayMember : array) {
                             result.add((String)arrayMember.getValue());
                         }
@@ -256,17 +256,17 @@ public class AnnotationParserTest extends JavaSourceTestCase {
                 final AnnotationParser swParser = AnnotationParser.create(helper);
                 swParser.expectStringArray("value", new ArrayValueHandler() {
                     public Object handleArray(List<AnnotationValue> arrayMembers) {
-                        List<String> result = new ArrayList<String>();
+                        List<String> result = new ArrayList<>();
                         for (AnnotationValue arrayMember : arrayMembers) {
                             result.add((String)arrayMember.getValue());
                         }
                         return result;
                     }
                 }, AnnotationParser.defaultValue(Collections.emptyList()));
-                List<String> defaultValue = new ArrayList<String>();
+                List<String> defaultValue = new ArrayList<>();
                 ArrayValueHandler arrayHandler = new ArrayValueHandler() {
                     public Object handleArray(List<AnnotationValue> array) {
-                        List<String> result = new ArrayList<String>();
+                        List<String> result = new ArrayList<>();
                         for (AnnotationValue arrayMember : array) {
                             AnnotationMirror swAnotation = (AnnotationMirror)arrayMember.getValue();
                             @SuppressWarnings("unchecked")

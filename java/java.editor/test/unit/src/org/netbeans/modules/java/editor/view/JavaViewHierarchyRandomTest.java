@@ -80,7 +80,7 @@ public class JavaViewHierarchyRandomTest extends NbTestCase {
 
     public JavaViewHierarchyRandomTest(String testName) {
         super(testName);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testToolTipView");
 //        includes.add("testSimpleBadListener");
 //        includes.add("testRemoveNewline");

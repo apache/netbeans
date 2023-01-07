@@ -115,11 +115,11 @@ public class Reindenter implements IndentTask {
     public void reindent() throws BadLocationException {
         ts = null;
         currentEmbeddingLength = -1;
-        newIndents = new HashMap<Integer, Integer>();
+        newIndents = new HashMap<>();
         cs = CodeStyle.getDefault(context.document());
         for (Region region : context.indentRegions()) {
             if (initRegionData(region)) {
-                HashSet<Integer> linesToAddStar = new HashSet<Integer>();
+                HashSet<Integer> linesToAddStar = new HashSet<>();
                 Map<Integer, Integer> oldIndents = new HashMap<>();
                 LinkedList<Integer> startOffsets = getStartOffsets(region);
                 for (ListIterator<Integer> it = startOffsets.listIterator(); it.hasNext();) {

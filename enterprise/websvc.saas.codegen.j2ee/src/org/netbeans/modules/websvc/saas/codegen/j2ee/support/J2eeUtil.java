@@ -206,7 +206,7 @@ public class J2eeUtil {
         if (loginFiles[0] != null && callbackFiles[0] != null) {
             loginFile = loginFiles[0];
             callbackFile = callbackFiles[0];
-            Map<String, String> filesMap = new HashMap<String, String>();
+            Map<String, String> filesMap = new HashMap<>();
             filesMap.put(loginFile.getName(), saasServicePackageName + "." + loginFile.getName());
             filesMap.put(callbackFile.getName(), saasServicePackageName + "." + callbackFile.getName());
             addAuthorizationClassesToWebDescriptor(project, filesMap);
@@ -233,7 +233,7 @@ public class J2eeUtil {
                 loginJS[0] = JavaSourceHelper.createJavaSource(
                         SaasClientCodeGenerator.TEMPLATES_SAAS + authType.getClassIdentifier() + fileId + "." + Constants.JAVA_EXT,
                         targetFolder, saasServicePackageName, authFileName);// NOI18n
-                Set<FileObject> files = new HashSet<FileObject>(loginJS[0].getFileObjects());
+                Set<FileObject> files = new HashSet<>(loginJS[0].getFileObjects());
                 if (files != null && files.size() > 0) {
                     loginFile[0] = files.iterator().next();
                 }
@@ -249,7 +249,7 @@ public class J2eeUtil {
                 callbackJS[0] = JavaSourceHelper.createJavaSource(
                         SaasClientCodeGenerator.TEMPLATES_SAAS + authType.getClassIdentifier() + fileId + "." + Constants.JAVA_EXT,
                         targetFolder, saasServicePackageName, authFileName);// NOI18n
-                files = new HashSet<FileObject>(callbackJS[0].getFileObjects());
+                files = new HashSet<>(callbackJS[0].getFileObjects());
                 if (files != null && files.size() > 0) {
                     callbackFile[0] = files.iterator().next();
                 }
@@ -302,7 +302,7 @@ public class J2eeUtil {
                                 addServletAnnotation(source, fileName, "/"+fileName); //NOI18N
                             }
 
-                            Set<FileObject> files = new HashSet<FileObject>(source.getFileObjects());
+                            Set<FileObject> files = new HashSet<>(source.getFileObjects());
                             if (files != null && files.size() > 0) {
                                 fObj = files.iterator().next();
                             }
@@ -456,7 +456,7 @@ public class J2eeUtil {
     
     public static String getJspImports(Document doc, int start, String svcPkg) throws IOException {
         String[] imports = new String[] {SaasClientCodeGenerator.REST_CONNECTION_PACKAGE+".*", svcPkg+".*"};
-        List<String> importsToAdd = new ArrayList<String>();
+        List<String> importsToAdd = new ArrayList<>();
         String code = "";
         List<String> existingImports = getExistingJspImports(
                 NbEditorUtilities.getFileObject(doc));

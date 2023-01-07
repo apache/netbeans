@@ -163,7 +163,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
         DataObject dobj = null;
 
         if (isAnnotate && (Utilities.isJavaEE6Plus(wizard) || (JSFUtils.isJSF20Plus(wm, true) && JSFUtils.isJavaEE5(wizard)))) {
-            Map<String, Object> templateProperties = new HashMap<String, Object>();
+            Map<String, Object> templateProperties = new HashMap<>();
             String targetName = Templates.getTargetName(wizard);
             CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
             if (cdiUtil != null && cdiUtil.isCdiEnabled()) {

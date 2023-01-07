@@ -55,7 +55,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
     public void testCreateProperties() throws InstanceCreationException {
         String url = TEST_URL_PREFIX + "createProperties";
 
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
         expected.put(InstanceProperties.URL_ATTR, url);
         expected.put(InstanceProperties.USERNAME_ATTR, TEST_USERNAME);
         expected.put(InstanceProperties.PASSWORD_ATTR, TEST_PASSWORD);
@@ -81,7 +81,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
     }
 
     public void testCreatePropertiesWithDefaults() throws InstanceCreationException {
-        Map<String, String> defaults = new HashMap<String, String>();
+        Map<String, String> defaults = new HashMap<>();
         defaults.put("property1", "value1");
         defaults.put("property2", "value2");
         defaults.put("property3", "value3");
@@ -92,7 +92,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
 
         String url = TEST_URL_PREFIX + "createPropertiesExtended";
 
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
         expected.put(InstanceProperties.URL_ATTR, url);
         expected.put(InstanceProperties.USERNAME_ATTR, TEST_USERNAME);
         expected.put(InstanceProperties.PASSWORD_ATTR, TEST_PASSWORD);
@@ -123,7 +123,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
 
     public void testCreatePropertiesWithoutFSEvents() throws InstanceCreationException, IOException {
         final String url = "unknown:CreateInstanceWithoutUI";
-        final Map<String, String> expected = new HashMap<String, String>();
+        final Map<String, String> expected = new HashMap<>();
         expected.put(InstanceProperties.URL_ATTR, url);
         expected.put(InstanceProperties.USERNAME_ATTR, TEST_USERNAME);
         expected.put(InstanceProperties.PASSWORD_ATTR, TEST_PASSWORD);
@@ -217,7 +217,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
 
         private final String name;
 
-        private final Map<String, String> expected = new HashMap<String, String>();
+        private final Map<String, String> expected = new HashMap<>();
 
         public TestInstanceListener(String name, Map<String, String> expected) {
             this.name = name;

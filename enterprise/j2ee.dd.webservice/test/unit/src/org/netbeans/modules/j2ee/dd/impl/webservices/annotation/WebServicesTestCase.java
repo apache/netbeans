@@ -44,7 +44,7 @@ public class WebServicesTestCase extends JavaSourceTestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        List<URL> roots = new ArrayList<URL>();
+        List<URL> roots = new ArrayList<>();
         java.security.CodeSource codeSource = javax.ejb.Stateless.class.getProtectionDomain().getCodeSource();
         if (codeSource != null) {
             roots.add(FileUtil.getArchiveRoot(codeSource.getLocation()));

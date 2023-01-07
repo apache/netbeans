@@ -486,7 +486,7 @@ class CodeSupport {
     // temporary reduced implementation
     static final class DefaultCodeGroup implements CodeGroup {
 
-        private List<Object/*CodeStatement or CodeGroup*/> statements = new ArrayList<Object>();
+        private List<Object/*CodeStatement or CodeGroup*/> statements = new ArrayList<>();
 
         @Override
         public void addStatement(CodeStatement statement) {

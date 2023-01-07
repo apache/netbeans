@@ -181,8 +181,8 @@ public class SQLStatementGeneratorTest extends NbTestCase {
         }
 
         StringBuilder resultSQL = new StringBuilder();
-        List<Integer> resultTypes = new ArrayList<Integer>();
-        List<Object> resultObject = new ArrayList<Object>();
+        List<Integer> resultTypes = new ArrayList<>();
+        List<Object> resultObject = new ArrayList<>();
         ssg.generateWhereCondition(table, resultSQL, resultTypes, resultObject, 0, model);
 
         assertEquals("\"TINYINTC\" = ?  AND \"SMALLINTC\" = ? ", resultSQL.toString());
@@ -220,8 +220,8 @@ public class SQLStatementGeneratorTest extends NbTestCase {
         }
 
         StringBuilder resultSQL = new StringBuilder();
-        List<Integer> resultTypes = new ArrayList<Integer>();
-        List<Object> resultObject = new ArrayList<Object>();
+        List<Integer> resultTypes = new ArrayList<>();
+        List<Object> resultObject = new ArrayList<>();
         ssg.generateWhereCondition(table, resultSQL, resultTypes, resultObject, 0, model);
 
         assertEquals("\"SMALLINTC\" = ?  AND \"VARCHARC\" = ? ", resultSQL.toString());

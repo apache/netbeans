@@ -1552,7 +1552,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         @Override
         public String[] getPrivilegedTemplates() {
             checkEnvironment();
-            List<String> privileged = new ArrayList<String>();
+            List<String> privileged = new ArrayList<>();
             if (isArchive) {
                 privileged.addAll(Arrays.asList(PRIVILEGED_NAMES_ARCHIVE));
             } else if (isEE5) {

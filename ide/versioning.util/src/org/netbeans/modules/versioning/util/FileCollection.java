@@ -33,7 +33,7 @@ public class FileCollection {
     
     private static final char FLAT_FOLDER_MARKER = '*';
     
-    private final Set<File> storage = new HashSet<File>(1);
+    private final Set<File> storage = new HashSet<>(1);
     
     public synchronized void load(Preferences prefs, String key) {
         List<String> paths = Utils.getStringList(prefs, key);

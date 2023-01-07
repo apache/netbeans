@@ -101,7 +101,7 @@ public class FreeformProjectGenerator {
                     Element props = doc.createElementNS(FreeformProjectType.NS_GENERAL, "properties"); // NOI18N
                     File locationF = FileUtil.toFile(locationFO);
                     File dirF = FileUtil.toFile(dirFO);
-                    Map<String,String> properties = new HashMap<String,String>();
+                    Map<String,String> properties = new HashMap<>();
                     if (!locationFO.equals(dirFO)) {
                         Element property = doc.createElementNS(FreeformProjectType.NS_GENERAL, "property"); // NOI18N
                         property.setAttribute("name", ProjectConstants.PROP_PROJECT_LOCATION); // NOI18N
@@ -182,7 +182,7 @@ public class FreeformProjectGenerator {
         for (Element actionEl : XMLUtil.findSubElements(actionsEl)) {
             TargetMapping tm = new TargetMapping();
             tm.name = actionEl.getAttribute("name"); // NOI18N
-            List<String> targetNames = new ArrayList<String>();
+            List<String> targetNames = new ArrayList<>();
             EditableProperties props = new EditableProperties(false);
             for (Element subEl : XMLUtil.findSubElements(actionEl)) {
                 if (subEl.getLocalName().equals("target")) { // NOI18N
@@ -386,7 +386,7 @@ public class FreeformProjectGenerator {
                 continue;
             }
             CustomTarget ct = new CustomTarget();
-            List<String> targetNames = new ArrayList<String>();
+            List<String> targetNames = new ArrayList<>();
             EditableProperties props = new EditableProperties(false);
             for (Element subEl : XMLUtil.findSubElements(actionEl)) {
                 if (subEl.getLocalName().equals("target")) { // NOI18N

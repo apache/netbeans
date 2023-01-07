@@ -37,7 +37,7 @@ public class TplSyntax {
     /**
      * List of all tags which introduce block of code.
      */
-    public static final Set<String> BLOCK_TAGS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+    public static final Set<String> BLOCK_TAGS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             "block", //NOI18N
             "capture", //NOI18N
             "for", //NOI18N
@@ -54,7 +54,7 @@ public class TplSyntax {
     /**
      * List of all tags which are else-typed.
      */
-    public static final Set<String> ELSE_TAGS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+    public static final Set<String> ELSE_TAGS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             "foreachelse", //NOI18N
             "elseif", //NOI18N
             "else", //NOI18N
@@ -64,9 +64,9 @@ public class TplSyntax {
      */
     public static final Map<String, Set<String>> RELATED_TAGS = Collections.unmodifiableMap(new HashMap<String, Set<String>>() {
         {
-            put("if", new HashSet<String>(Arrays.asList("else", "elseif"))); //NOI18N
-            put("foreach", new HashSet<String>(Arrays.asList("foreachelse"))); //NOI18N
-            put("section", new HashSet<String>(Arrays.asList("sectionelse"))); //NOI18N
+            put("if", new HashSet<>(Arrays.asList("else", "elseif"))); //NOI18N
+            put("foreach", new HashSet<>(Arrays.asList("foreachelse"))); //NOI18N
+            put("section", new HashSet<>(Arrays.asList("sectionelse"))); //NOI18N
         }
     });
 

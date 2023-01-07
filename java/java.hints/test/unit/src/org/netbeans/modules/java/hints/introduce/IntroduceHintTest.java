@@ -158,7 +158,7 @@ public class IntroduceHintTest extends NbTestCase {
     }
     @RandomlyFails
     public void test121420() throws Exception {
-        performFixTest("package test; import java.util.ArrayList; public class Test {public void test() { |new ArrayList<String>()|; }}", "package test; import java.util.ArrayList; public class Test {public void test() { ArrayList<String> arrayList = new ArrayList<String>(); }}", new DialogDisplayerImpl(null, false, false, true), 5, 0);
+        performFixTest("package test; import java.util.ArrayList; public class Test {public void test() { |new ArrayList<String>()|; }}", "package test; import java.util.ArrayList; public class Test {public void test() { ArrayList<String> arrayList = new ArrayList<>(); }}", new DialogDisplayerImpl(null, false, false, true), 5, 0);
     }
     @RandomlyFails
     public void test142424() throws Exception {
@@ -397,7 +397,7 @@ public class IntroduceHintTest extends NbTestCase {
 //    }
     @RandomlyFails
     public void testSimple4() throws Exception {
-        performSimpleSelectionVerificationTest("package test; import java.util.ArrayList; public class Test {public void test() {Object o = new ArrayList<String>();}}", 141 - 49, 164 - 49, true);
+        performSimpleSelectionVerificationTest("package test; import java.util.ArrayList; public class Test {public void test() {Object o = new ArrayList<>();}}", 141 - 49, 164 - 49, true);
     }
     @RandomlyFails
     public void testConstant1() throws Exception {

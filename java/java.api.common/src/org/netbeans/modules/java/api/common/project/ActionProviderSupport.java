@@ -128,7 +128,7 @@ final class ActionProviderSupport {
     private static final Pattern SRCDIRJAVA = Pattern.compile("\\.java$"); // NOI18N
     private static final String SUBST = "Test.java"; // NOI18N
     private static final String SUBSTNG = "NGTest.java"; // NOI18N
-    private static final Set<String> NO_SYNC_COMMANDS = Collections.unmodifiableSet(new HashSet<String>(
+    private static final Set<String> NO_SYNC_COMMANDS = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList(new String[]{
                 COMMAND_BUILD,
                 COMMAND_CLEAN,

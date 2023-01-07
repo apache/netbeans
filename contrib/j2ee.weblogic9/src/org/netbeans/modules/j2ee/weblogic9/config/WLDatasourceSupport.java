@@ -108,7 +108,7 @@ public class WLDatasourceSupport {
         try {
             ObjectName[] adminServers = (ObjectName[]) con
                     .getAttribute(service, "ServerRuntimes"); // NOI18N
-            Set<String> adminNames = new HashSet<String>();
+            Set<String> adminNames = new HashSet<>();
             for (ObjectName adminServer : adminServers) {
                 adminNames.add(con.getAttribute(adminServer, "Name").toString()); // NOI18N
             }
@@ -200,8 +200,8 @@ public class WLDatasourceSupport {
                 JdbcHandler handler = new JdbcHandler(domain);
                 parser.parse(new BufferedInputStream(inputFile.getInputStream()), handler);
 
-                Map<File, Boolean> confs = new HashMap<File, Boolean>();
-                Set<String> nameOnly = new HashSet<String>();
+                Map<File, Boolean> confs = new HashMap<>();
+                Set<String> nameOnly = new HashSet<>();
 
                 // load by path in config.xml
                 for (JdbcResource resource : handler.getResources()) {
@@ -240,7 +240,7 @@ public class WLDatasourceSupport {
             }
         } else if (inputFile.isFolder()) {
             File file = FileUtil.toFile(inputFile);
-            Map<File, Boolean> confs = new HashMap<File, Boolean>();
+            Map<File, Boolean> confs = new HashMap<>();
             for (File jdbcFile : file.listFiles(JDBC_FILE_FILTER)) {
                 confs.put(jdbcFile, systemDefault);
             }

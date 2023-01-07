@@ -133,7 +133,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     private static Map<EventListenerList,Reference<Lookup>> lookups = new WeakHashMap<EventListenerList,Reference<Lookup>>(37);
 
     /** class.property names we have warned about for #31413 */
-    private static final Set<String> warnedBadProperties = new HashSet<String>(100);
+    private static final Set<String> warnedBadProperties = new HashSet<>(100);
 
     /** template for changes in cookies */
     private static final Lookup.Template<Node.Cookie> TEMPL_COOKIE = new Lookup.Template<Node.Cookie>(Node.Cookie.class);
@@ -1499,7 +1499,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
          * <a href="http://openide.netbeans.org/issues/show_bug.cgi?id=51907">
          * discussion in issuezilla</a>
          */
-        private static final Set<String> warnedNames = new HashSet<String>();
+        private static final Set<String> warnedNames = new HashSet<>();
 
         /** type that this property works with */
         private Class<T> type;

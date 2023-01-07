@@ -542,7 +542,7 @@ public final class ClassPath {
      */
     public final @CheckForNull FileObject findOwnerRoot(FileObject resource) {
 	FileObject[] roots = getRoots();
-        Set<FileObject> rootsSet = new HashSet<FileObject>(Arrays.asList(roots));
+        Set<FileObject> rootsSet = new HashSet<>(Arrays.asList(roots));
         for (FileObject f = resource; f != null; f = f.getParent()) {
             if (rootsSet.contains(f)) {
                 return f;

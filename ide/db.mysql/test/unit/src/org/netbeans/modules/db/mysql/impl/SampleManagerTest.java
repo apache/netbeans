@@ -119,7 +119,7 @@ public class SampleManagerTest extends TestBase {
             }
 
             public List<String> getSampleNames() {
-                List<String> samples = new ArrayList<String>();
+                List<String> samples = new ArrayList<>();
                 samples.add(sampleName);
                 return samples;
             }
@@ -164,7 +164,7 @@ public class SampleManagerTest extends TestBase {
     }
 
     private static class TestSampleProvider implements SampleProvider {
-        private static List<String> SAMPLE_NAMES = new ArrayList<String>();
+        private static List<String> SAMPLE_NAMES = new ArrayList<>();
 
         static {
             SAMPLE_NAMES.add(SAMPLE_NAME);
@@ -208,7 +208,7 @@ public class SampleManagerTest extends TestBase {
     }
 
     private static class TestSampleProvider2 implements SampleProvider {
-        private static List<String> SAMPLE_NAMES = new ArrayList<String>();
+        private static List<String> SAMPLE_NAMES = new ArrayList<>();
 
         static {
             SAMPLE_NAMES.add(SAMPLE_NAME2);

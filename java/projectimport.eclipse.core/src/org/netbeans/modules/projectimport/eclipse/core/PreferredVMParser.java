@@ -111,7 +111,7 @@ final class PreferredVMParser extends DefaultHandler {
                     // default vm id seems to be after the last comma
                     String defaultVMAttr = attributes.getValue(DEFAULT_VM_ATTR);
                     defaultId = defaultVMAttr.substring(defaultVMAttr.lastIndexOf(',') + 1);
-                    jdks = new HashMap<String,String>();
+                    jdks = new HashMap<>();
                 } else {
                     throw (new SAXException("First element has to be " // NOI18N
                             + VM_SETTINGS + ", but is " + localName)); // NOI18N

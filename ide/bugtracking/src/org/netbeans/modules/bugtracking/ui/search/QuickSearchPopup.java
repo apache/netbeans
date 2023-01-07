@@ -610,7 +610,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     clearModel();
 
                     currentHitlist = new ArrayList<PopupItem>();
-                    Set<String> ids = new HashSet<String>();
+                    Set<String> ids = new HashSet<>();
                     addIssues(getByIdOrSummary(getOpenIssues(repository), criteria), ids);
 
                     Collection<IssueImpl> issues = repository.simpleSearch(criteria);

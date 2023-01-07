@@ -374,7 +374,7 @@ public class SvnConfigFiles {
     
     private static List<String> parseGlobalIgnores(String ignores) {
         StringTokenizer st = new StringTokenizer(ignores, " ");                 // NOI18N
-        List<String> ret = new ArrayList<String>(10);
+        List<String> ret = new ArrayList<>(10);
         while (st.hasMoreTokens()) {
             String entry = st.nextToken();
             if (!entry.equals(""))                                              // NOI18N

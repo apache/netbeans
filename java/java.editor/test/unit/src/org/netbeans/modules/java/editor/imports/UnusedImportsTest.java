@@ -304,7 +304,7 @@ public class UnusedImportsTest extends NbTestCase {
                                                                                          "public class ConstructorsAreMethods {\n" +
                                                                                          "    \n" +
                                                                                          "    public static void main(String[] args) {\n" +
-                                                                                         "        List<String> s = new ArrayList<String>();\n" +
+                                                                                         "        List<String> s = new ArrayList<>();\n" +
                                                                                          "    }\n" +
                                                                                          "    \n" +
                                                                                          "}\n" +
@@ -319,7 +319,7 @@ public class UnusedImportsTest extends NbTestCase {
                                                                                           "public class ConstructorsAreMethods3 {\n" +
                                                                                           "    \n" +
                                                                                           "    public ConstructorsAreMethods3() {\n" +
-                                                                                          "        new HashSet<String>();\n" +
+                                                                                          "        new HashSet<>();\n" +
                                                                                           "    }\n" +
                                                                                           "    \n" +
                                                                                           "}\n" +

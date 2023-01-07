@@ -162,7 +162,7 @@ public class LayerHints implements UpToDateStatusProviderFactory {
             RunnableFuture<Map<String,Integer>> linesFuture = new FutureTask<Map<String,Integer>>(new Callable<Map<String,Integer>>() {
                 public @Override Map<String,Integer> call() throws Exception {
                     // Adapted from OpenLayerFilesAction.openLayerFileAndFind:
-                    final Map<String,Integer> lines = new HashMap<String,Integer>();
+                    final Map<String,Integer> lines = new HashMap<>();
                     LOG.log(Level.FINE, "parsing {0}", layerURL);
                     XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
                     reader.setContentHandler(new DefaultHandler2() {

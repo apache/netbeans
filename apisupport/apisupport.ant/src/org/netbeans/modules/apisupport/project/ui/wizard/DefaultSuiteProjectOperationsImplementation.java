@@ -170,7 +170,7 @@ public final class DefaultSuiteProjectOperationsImplementation {
         
         final List<FileObject> metadataFiles = ProjectOperations.getMetadataFiles(project);
         final List<FileObject> dataFiles = ProjectOperations.getDataFiles(project);
-        final List<FileObject> allFiles = new ArrayList<FileObject>();
+        final List<FileObject> allFiles = new ArrayList<>();
         
         allFiles.addAll(metadataFiles);
         allFiles.addAll(dataFiles);
@@ -189,7 +189,7 @@ public final class DefaultSuiteProjectOperationsImplementation {
         
         final SubprojectProvider suiteProvider = project.getLookup().lookup(SubprojectProvider.class);
         final Set<Project> subProjects = (Set<Project>) suiteProvider.getSubprojects();
-        final Set<NbModuleProject> subModules = new HashSet<NbModuleProject>();
+        final Set<NbModuleProject> subModules = new HashSet<>();
         for(Project prjIter:subProjects) {
             NbModuleProject nbModulePrj = prjIter.getLookup().lookup(NbModuleProject.class);
             if(nbModulePrj != null) {
@@ -217,7 +217,7 @@ public final class DefaultSuiteProjectOperationsImplementation {
                     for(NbModuleProject modulePrjIter:subModules) {
                         close(modulePrjIter);
                     }
-                    subModulesAllFiles = new HashMap<NbModuleProject, List<FileObject>>();
+                    subModulesAllFiles = new HashMap<>();
                     subModulesAllFiles.putAll(subModulesDataFiles);
                     subModulesMetadataFiles = getSubModulesMetadataFiles(subModules, subModulesAllFiles);
                 } 
@@ -243,11 +243,11 @@ public final class DefaultSuiteProjectOperationsImplementation {
      * @see DataFilesProviderImplementation#getMetadataFiles
      */
     private static Map<NbModuleProject,List<FileObject>> getSubModulesMetadataFiles(Set<NbModuleProject> subModules, Map<NbModuleProject,List<FileObject>> subModulesAllFiles) {
-        Map<NbModuleProject,List<FileObject>> result = new HashMap<NbModuleProject, List<FileObject>>();
+        Map<NbModuleProject,List<FileObject>> result = new HashMap<>();
         List<FileObject> files;
         
         for(NbModuleProject modulePrjIter:subModules){
-            files = new ArrayList<FileObject>();
+            files = new ArrayList<>();
             for (DataFilesProviderImplementation i : modulePrjIter.getLookup().lookupAll(DataFilesProviderImplementation.class)) {
                 files.addAll(i.getMetadataFiles());
                 assert !files.contains(null) : "Nulls in " + result + " from " + i;
@@ -279,11 +279,11 @@ public final class DefaultSuiteProjectOperationsImplementation {
      * @see DataFilesProviderImplementation#getDataFiles
      */
     private static Map<NbModuleProject,List<FileObject>> getSubModulesDataFiles(Set<NbModuleProject> subModules) {
-        Map<NbModuleProject,List<FileObject>> result = new HashMap<NbModuleProject, List<FileObject>>();
+        Map<NbModuleProject,List<FileObject>> result = new HashMap<>();
         List<FileObject> files;
         
         for(NbModuleProject modulePrjIter:subModules){
-            files = new ArrayList<FileObject>();
+            files = new ArrayList<>();
             for (DataFilesProviderImplementation i : modulePrjIter.getLookup().lookupAll(DataFilesProviderImplementation.class)) {
                 files.addAll(i.getDataFiles());
                 assert !files.contains(null) : "Nulls in " + result + " from " + i;

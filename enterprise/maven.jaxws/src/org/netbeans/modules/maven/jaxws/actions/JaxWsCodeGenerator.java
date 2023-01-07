@@ -806,7 +806,7 @@ public class JaxWsCodeGenerator {
                 }
                 // compute the service field name
                 if (generateWsRefInjection[0]) {
-                    Set<String> serviceFieldNames = new HashSet<String>();
+                    Set<String> serviceFieldNames = new HashSet<>();
                     boolean injectionExists = false;
                     int memberOrder = 0;
                     for (Tree member : javaClass.getMembers()) {

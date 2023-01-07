@@ -1058,7 +1058,7 @@ public class ReferenceHelperTest extends NbTestCase {
     private void assertReferenceXmlFragment(String namespace, String... scriptLocations) {
         Element refs = p.getLookup().lookup(AuxiliaryConfiguration.class).getConfigurationFragment(ReferenceHelper.REFS_NAME, namespace, true);
         assertNotNull(refs);
-        List<String> actualScriptLocations = new ArrayList<String>();
+        List<String> actualScriptLocations = new ArrayList<>();
         for (Element ref : XMLUtil.findSubElements(refs)) {
             Element script = XMLUtil.findElement(ref, "script", namespace);
             actualScriptLocations.add(XMLUtil.findText(script));

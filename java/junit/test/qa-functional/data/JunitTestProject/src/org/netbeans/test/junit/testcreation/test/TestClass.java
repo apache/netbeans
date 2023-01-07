@@ -73,7 +73,7 @@ public class TestClass {
     }
 
     public static List <String> getStrings(T arg){
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public Map <String, T> getString2T(){

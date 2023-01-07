@@ -154,7 +154,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
     // <?xml version="1.0"?>
     // <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
     // <filesystem>...</filesystem>
-    private static final Map<String, String> DTD_MAP = new HashMap<String, String>();
+    private static final Map<String, String> DTD_MAP = new HashMap<>();
 
     static {
         DTD_MAP.put("-//NetBeans//DTD Filesystem 1.0//EN", "org/openide/filesystems/filesystem.dtd"); //NOI18N
@@ -574,7 +574,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
         private java.util.List<String> names;
         private byte[] content;
         private int weight = Integer.MIN_VALUE; // initially unset
-        private java.util.List<URL> urlContext = new ArrayList<URL>();
+        private java.util.List<URL> urlContext = new ArrayList<>();
         private XMLMapAttr foAttrs;
         private boolean isFolder;
         private String uri;
@@ -585,14 +585,14 @@ public final class XMLFileSystem extends AbstractFileSystem {
 
             if (isFolder) {
                 children = new ArrayList<ResourceElem>();
-                names = new ArrayList<String>();
+                names = new ArrayList<>();
             }
         }
 
         ResourceElem addChild(String name, ResourceElem child) {
             if (!isFolder) {
                 children = new ArrayList<ResourceElem>();
-                names = new ArrayList<String>();
+                names = new ArrayList<>();
                 content = null;
                 isFolder = true;
             }
@@ -887,7 +887,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
             if (foAttrs == null) {
                 return Enumerations.empty();
             } else {
-                Set<String> s = new HashSet<String>(foAttrs.keySet());
+                Set<String> s = new HashSet<>(foAttrs.keySet());
 
                 return Collections.enumeration(s);
             }
@@ -1047,7 +1047,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
             return 0;
         }
 
-        private static final Set<String> NETWORK_PROTOCOLS = new HashSet<String>(Arrays.asList("http", "https", "ftp")); // NOI18N
+        private static final Set<String> NETWORK_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https", "ftp")); // NOI18N
         /** One item cache to eliminate File.lastModified queries (see #160390). */
         private static File lastFile = null;
         private static Date lastFileDate = null;

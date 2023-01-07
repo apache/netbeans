@@ -212,7 +212,7 @@ public class OWSMPoliciesCodeGenerator implements JaxWsPoliciesCodeGenerator {
             Set<String> ids )
     {
         Collection<String> clientIds = new LinkedList<String>();
-        Set<String> otherIds = new HashSet<String>(ids );
+        Set<String> otherIds = new HashSet<>(ids );
         otherIds.remove( id );
 
         Map<String,OWSMPolicyCodeGenerator> map = new HashMap<String, 

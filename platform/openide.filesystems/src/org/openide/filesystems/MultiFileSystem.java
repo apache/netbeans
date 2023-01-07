@@ -579,7 +579,7 @@ public class MultiFileSystem extends FileSystem {
     boolean canHaveRootAttributeOnReadOnlyFS(String name) {
         Set<String> tmp = rootAttributes;
         if (tmp == null) {
-            tmp = new HashSet<String>();
+            tmp = new HashSet<>();
             for (FileSystem fs : getDelegates()) {
                 if (fs == null) {
                     continue;

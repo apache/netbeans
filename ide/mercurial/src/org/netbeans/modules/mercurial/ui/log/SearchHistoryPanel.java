@@ -425,7 +425,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         long toRevision = Long.MIN_VALUE;
         HgLogMessage from = null;
         HgLogMessage to = null;
-        Set<File> filesToDiff = new HashSet<File>();
+        Set<File> filesToDiff = new HashSet<>();
         
         for (RepositoryRevision revision : revisions) {
             long rev = Long.parseLong(revision.getLog().getRevisionNumber());
@@ -862,7 +862,7 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                     @Override
                     public void run () {
                         if (!isCanceled()) {
-                            Set<String> visibleRevisions = new HashSet<String>(results.size());
+                            Set<String> visibleRevisions = new HashSet<>(results.size());
                             for (RepositoryRevision rev : results) {
                                 visibleRevisions.add(rev.getLog().getCSetShortID());
                             }

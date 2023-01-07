@@ -113,7 +113,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                     rev2LMMap.put(r, m);
                     Set<File> s = rev2FileMap.get(r);
                     if(s == null) {
-                        s = new HashSet<File>();
+                        s = new HashSet<>();
                         rev2FileMap.put(r, s);
                     }
                     s.add(file);

@@ -400,7 +400,7 @@ public class CallEjbGenerator {
         String componentName = ejbReference.getComponentName(refIType);
         String homeName = ejbReference.getHomeName(refIType);
         boolean isLocal = !refIType.equals(refIType.REMOTE);
-        List<String> exceptions = new ArrayList<String>();
+        List<String> exceptions = new ArrayList<>();
         boolean isTargetJavaSE = Utils.isTargetJavaSE(fileObject, className);
         String sessionCreate = "";
         if (isSession) {

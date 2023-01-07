@@ -822,7 +822,7 @@ public class JFXDeploymentPanel extends javax.swing.JPanel implements HelpCtx.Pr
     
     private static List<String> tokenize(String sequence, String delimiter) {
         StringTokenizer st = new StringTokenizer(sequence, delimiter);
-        List<String> r = new ArrayList<String>();
+        List<String> r = new ArrayList<>();
         while(st.hasMoreTokens()) {
             String next = st.nextToken();
             r.add(next.equals(EMPTY_STRING) ? "" : next); // NOI18N

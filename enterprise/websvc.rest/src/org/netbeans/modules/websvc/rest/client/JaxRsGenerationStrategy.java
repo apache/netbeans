@@ -142,7 +142,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
                 Collections.<Modifier>singleton(Modifier.PUBLIC));
         boolean isSubresource = (pf.getArguments().length>0);
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (isSubresource) {
             for (String arg : pf.getArguments()) {
                 Tree argTypeTree = maker.Identifier("String"); //NOI18N
@@ -200,7 +200,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
         ModifiersTree methodModifier = maker.Modifiers(
                 Collections.<Modifier>singleton(Modifier.PUBLIC));
         
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         for (String arg : pf.getArguments()) {
             Tree argTypeTree = maker.Identifier("String"); // NOI18N
             ModifiersTree fieldModifier = maker.Modifiers(Collections
@@ -282,7 +282,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
         
         // create param list
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         String bodyParam = "null";
         if (methodPrefix.equals("delete")) { // NOI18N
             bodyParam = "";
@@ -431,7 +431,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
                             Collections.<ExpressionTree>emptyList())); //NOI18N
         }
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (classParam != null) {
             paramList.add(classParam);
         }
@@ -509,7 +509,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
         List<TypeParameterTree> typeParams = Collections.<TypeParameterTree>
             singletonList(maker.TypeParameter("T", Collections.<ExpressionTree>emptyList()));
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         if (classParam != null) {
             paramList.add(classParam);
         }
@@ -589,7 +589,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
 
         List<Response> response = saasMethod.getWadlMethod().getResponse();
 
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         ExpressionTree responseTree = null;
         List<TypeParameterTree> typeParams = null;
         String bodyParam1 = "";
@@ -716,7 +716,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
                 mvMapEl ==null ? 
                     copy.getTreeMaker().Identifier("javax.ws.rs.core.Form"):    //NOI18N
                         copy.getTreeMaker().QualIdent(mvMapEl);
-        List<VariableTree> paramList = new ArrayList<VariableTree>();
+        List<VariableTree> paramList = new ArrayList<>();
         ModifiersTree paramModifier = maker.Modifiers(Collections.<Modifier>emptySet());
         paramList.add(maker.Variable(paramModifier, "paramNames", maker.Identifier("String[]"), null)); //NOI18N
         paramList.add(maker.Variable(paramModifier, "paramValues", maker.Identifier("String[]"), null)); //NOI18N

@@ -56,7 +56,7 @@ public class FreeformProjectOperations implements DeleteOperationImplementation,
     
     public List<FileObject> getMetadataFiles() {
         FileObject projectDirectory = project.getProjectDirectory();
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         addFile(projectDirectory, "nbproject", files); // NOI18N
         
@@ -67,7 +67,7 @@ public class FreeformProjectOperations implements DeleteOperationImplementation,
         Element genldata = project.getPrimaryConfigurationData();
         Element foldersEl = XMLUtil.findElement(genldata, "folders", FreeformProjectType.NS_GENERAL); // NOI18N
         List<Element> folders = foldersEl != null ? XMLUtil.findSubElements(foldersEl) : Collections.<Element>emptyList();
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
 
         for (Element el : folders) {
             if ("source-folder".equals(el.getLocalName()) && FreeformProjectType.NS_GENERAL.equals(el.getNamespaceURI())) { // NOI18N

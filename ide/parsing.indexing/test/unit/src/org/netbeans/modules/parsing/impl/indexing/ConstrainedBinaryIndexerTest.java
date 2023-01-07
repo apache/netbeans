@@ -488,7 +488,7 @@ public class ConstrainedBinaryIndexerTest extends IndexingTestBase {
             @NullAllowed final String[] resourcePredicate,
             @NullAllowed final String[] mimePredicate,
             @NullAllowed final String regExpPredixate) {
-        final Map<String,Object> attrs = new HashMap<String, Object>();
+        final Map<String,Object> attrs = new HashMap<>();
         attrs.put("name", "mockIndexer");   //NOI18N
         attrs.put("version", 1);            //NOI18N
         attrs.put("delegate",indexer);      //NOI18N
@@ -610,7 +610,7 @@ public class ConstrainedBinaryIndexerTest extends IndexingTestBase {
                 if (names == null) {
                     return false;
                 }
-                names = new HashSet<String>(names);
+                names = new HashSet<>(names);
                 for (FileObject fo : res.getValue()) {
                     if (!names.remove(fo.getPath())) {
                         return false;

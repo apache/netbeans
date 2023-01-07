@@ -286,7 +286,7 @@ final class ClassPathProviderMerger implements LookupMerger<ClassPathProvider> {
         }
 
         public URL[] getRoots() {
-            ArrayList<URL> urls = new ArrayList<URL>();
+            ArrayList<URL> urls = new ArrayList<>();
             for (ClassPath.Entry ent : classpath.entries()) {
                 urls.add(ent.getURL());
             }

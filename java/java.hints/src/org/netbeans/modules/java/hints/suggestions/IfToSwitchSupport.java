@@ -583,7 +583,7 @@ public class IfToSwitchSupport {
             copy.rewrite(it.getLeaf(), nue); //XXX
 
             TreePath topLevelMethod = Utilities.findTopLevelBlock(it);
-            final Set<String> seenLabels = new HashSet<String>();
+            final Set<String> seenLabels = new HashSet<>();
 
             new ErrorAwareTreeScanner<Void, Void>() {
                 @Override public Void visitLabeledStatement(LabeledStatementTree node, Void p) {

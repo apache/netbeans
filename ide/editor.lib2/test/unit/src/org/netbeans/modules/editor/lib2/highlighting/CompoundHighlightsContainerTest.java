@@ -450,7 +450,7 @@ public class CompoundHighlightsContainerTest extends NbTestCase {
     } // End of SimplePosition class
 
     private static final class TestHighlighsContainer extends AbstractHighlightsContainer {
-        public final List<Integer> queries = new ArrayList<Integer>();
+        public final List<Integer> queries = new ArrayList<>();
 
         @Override
         public HighlightsSequence getHighlights(int startOffset, int endOffset) {

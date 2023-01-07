@@ -43,7 +43,7 @@ public final class RepositoryInfo {
 
     private static final String DELIMITER         = "<=>";                      // NOI18N    
     
-    private final Map<String, String> map = new HashMap<String, String>();
+    private final Map<String, String> map = new HashMap<>();
     
     private static final String PROPERTY_ID = "id";                             // NOI18N    
     private static final String PROPERTY_CONNECTOR_ID = "connectorId";          // NOI18N    
@@ -282,7 +282,7 @@ public final class RepositoryInfo {
 
     private static Map<String, String> fromString(String string) {
         String[] values = string.split(DELIMITER);
-        Map<String, String> m = new HashMap<String, String>(); 
+        Map<String, String> m = new HashMap<>();
         for (int i = 0; i < values.length; i = i + 2) {
             String key = values[i];
             String value = i < values.length - 1 ? values[i + 1] : "";

@@ -127,7 +127,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
         
         String parentMime = MimePath.parse(mime).getInheritedType();
         if (parentMime != null) {
-            parentFoldTypes = new HashSet<String>(13);
+            parentFoldTypes = new HashSet<>(13);
             for (FoldType ft : FoldUtilities.getFoldTypes(parentMime).values()) {
                 parentFoldTypes.add(ft.code());
             }
@@ -164,7 +164,7 @@ implements PreferenceChangeListener, ChangeListener, CustomizerWithDefaults, Ite
      */
     private void filterUsedMimeTypes() {
         Set<String> mimeTypes = EditorSettings.getDefault().getAllMimeTypes();
-        Set<String> codes = new HashSet<String>();
+        Set<String> codes = new HashSet<>();
         for (String mt : mimeTypes) {
             Collection<? extends FoldType> fts = FoldUtilities.getFoldTypes(mt).values();
             for (FoldType ft : fts) {

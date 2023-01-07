@@ -319,7 +319,7 @@ public class ParameterNameProviderImpl {
                     }
 
                     private void setParamNames(String signature, String names, boolean isCtor) {
-                        ArrayList<String> paramTypes = new ArrayList<String>();
+                        ArrayList<String> paramTypes = new ArrayList<>();
                         int idx = -1;
                         for(int i = 0; i < signature.length(); i++) {
                             switch(signature.charAt(i)) {
@@ -338,7 +338,7 @@ public class ParameterNameProviderImpl {
                             }
                         }
                         String methodName = null;
-                        ArrayList<String> paramNames = new ArrayList<String>();
+                        ArrayList<String> paramNames = new ArrayList<>();
                         idx = -1;
                         for(int i = 0; i < names.length(); i++) {
                             switch(names.charAt(i)) {

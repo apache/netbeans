@@ -107,8 +107,8 @@ public class SignJarsTask extends Task {
     public void execute() throws BuildException {
         
         Map<Set<String>,List<File>> signersMap = new HashMap(); // Set<signerName> -> List<jarPath>
-        List<File> files2sign = new ArrayList<File>();
-        List<File> alreadySigned = new ArrayList<File>();
+        List<File> files2sign = new ArrayList<>();
+        List<File> alreadySigned = new ArrayList<>();
         
         Iterator it = filesets.iterator();
         while (it.hasNext()) {
@@ -136,7 +136,7 @@ public class SignJarsTask extends Task {
                             if (lst != null) {
                                 lst.add(fl);
                             } else {
-                                List<File> nlst = new ArrayList<File>();
+                                List<File> nlst = new ArrayList<>();
                                 nlst.add(fl);
                                 signersMap.put(sgs, nlst);
                             }
@@ -206,7 +206,7 @@ public class SignJarsTask extends Task {
      */
     private static Set<String> getSignatures(File f) throws IOException {
         ZipFile jarFile = null;
-        Set<String> signatures = new HashSet<String>(3);
+        Set<String> signatures = new HashSet<>(3);
         try {
             jarFile = new ZipFile(f);
             for (Enumeration<ZipEntry> en = (Enumeration<ZipEntry>) jarFile.entries(); en.hasMoreElements(); ) {

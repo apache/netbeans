@@ -135,7 +135,7 @@ final class MIMESupport extends Object {
         /** resolvers that were here before we cleaned them */
         private static MIMEResolver[] previousResolvers;
         /** Set used to print just one warning per resolver. */
-        private static final Set<String> warningPrinted = new HashSet<String>();
+        private static final Set<String> warningPrinted = new HashSet<>();
 
         String mimeType;
         java.util.Date lastModified;

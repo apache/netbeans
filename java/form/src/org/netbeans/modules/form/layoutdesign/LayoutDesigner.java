@@ -341,11 +341,11 @@ public final class LayoutDesigner implements LayoutConstants {
 
     public void dumpTestcode(DataObject form) {
         LayoutTestUtils.dumpTestcode(testCode, form, getModelCounter());
-        testCode = new ArrayList<String>();
-        testCode0 = new ArrayList<String>();
-        beforeMove = new ArrayList<String>();
-        move1 = new ArrayList<String>();
-        move2 = new ArrayList<String>();
+        testCode = new ArrayList<>();
+        testCode0 = new ArrayList<>();
+        beforeMove = new ArrayList<>();
+        move1 = new ArrayList<>();
+        move2 = new ArrayList<>();
         isMoving = false;
     }
     
@@ -595,9 +595,9 @@ public final class LayoutDesigner implements LayoutConstants {
             if (!isMoving) {
                 isMoving = true;
                 // backup all current entries and clear the testcode list
-                beforeMove = new ArrayList<String>();
+                beforeMove = new ArrayList<>();
                 beforeMove.addAll(testCode);
-                testCode = new ArrayList<String>();
+                testCode = new ArrayList<>();
 		lastMovePoint = new Point(0,0);
             }
 
@@ -607,9 +607,9 @@ public final class LayoutDesigner implements LayoutConstants {
 		testCode0 = testCode;
 	    }
 
-            move2 = new ArrayList<String>();
+            move2 = new ArrayList<>();
             move2.add("// > MOVE");
-            testCode = new ArrayList<String>();
+            testCode = new ArrayList<>();
         }
 
         if (!dragger.isResizing() && (!lockDimension || dragger.getTargetContainer() == null)) {
@@ -4478,13 +4478,13 @@ public final class LayoutDesigner implements LayoutConstants {
     static final String TEST_SWITCH = "netbeans.form.layout_test"; // NOI18N
 
     /* stores test code lines */
-    public List<String> testCode = new ArrayList<String>();
+    public List<String> testCode = new ArrayList<>();
 
     // these below are used for removing unwanted move entries, otherwise the code can exceed 10000 lines in a few seconds of form editor work ;O)
-    private List<String> testCode0 = new ArrayList<String>();
-    private List<String> beforeMove = new ArrayList<String>();
-    private List<String> move1 = new ArrayList<String>();
-    private List<String> move2 = new ArrayList<String>();
+    private List<String> testCode0 = new ArrayList<>();
+    private List<String> beforeMove = new ArrayList<>();
+    private List<String> move1 = new ArrayList<>();
+    private List<String> move2 = new ArrayList<>();
     private boolean isMoving = false;
     
     private int modelCounter = -1;

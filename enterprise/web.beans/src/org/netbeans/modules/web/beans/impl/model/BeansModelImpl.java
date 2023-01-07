@@ -86,7 +86,7 @@ public class BeansModelImpl implements BeansModel {
      * @see org.netbeans.modules.web.beans.api.model.BeansModel#getAlternativeClasses()
      */
     public Set<String> getAlternativeClasses() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for( WebBeansModel model : getModels() ){
             Beans beans = model.getBeans();
             if ( beans == null ){
@@ -108,7 +108,7 @@ public class BeansModelImpl implements BeansModel {
      * @see org.netbeans.modules.web.beans.api.model.BeansModel#getAlternativeStereotypes()
      */
     public Set<String> getAlternativeStereotypes() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for( WebBeansModel model : getModels() ){
             Beans beans = model.getBeans();
             if ( beans == null ){
@@ -230,11 +230,11 @@ public class BeansModelImpl implements BeansModel {
                     }
                     FileObject[] roots = getUnit().getCompilePath()
                             .getRoots();
-                    Set<FileObject> rootsSet = new HashSet<FileObject>(Arrays
+                    Set<FileObject> rootsSet = new HashSet<>(Arrays
                             .asList(roots));
-                    Set<FileObject> oldRoots = new HashSet<FileObject>(
+                    Set<FileObject> oldRoots = new HashSet<>(
                             myCompileRootToModel.keySet());
-                    Set<FileObject> intersection = new HashSet<FileObject>(
+                    Set<FileObject> intersection = new HashSet<>(
                             rootsSet);
                     intersection.retainAll(oldRoots);
                     oldRoots.removeAll(rootsSet);

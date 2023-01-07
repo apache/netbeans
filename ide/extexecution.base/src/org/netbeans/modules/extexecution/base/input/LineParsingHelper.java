@@ -50,7 +50,7 @@ public final class LineParsingHelper {
         lines += input.toString();
         int tlLength = (trailingLine != null ? trailingLine.length() : 0);
         int start = 0;
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         int length = input.length();
         for (int i = 0; i < length; i++) { // going through the text read and searching for the new line
             //we see '\n' or '\r', *not* '\r\n'

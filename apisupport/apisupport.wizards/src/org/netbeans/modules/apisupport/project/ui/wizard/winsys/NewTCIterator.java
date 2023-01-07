@@ -276,7 +276,7 @@ public final class NewTCIterator extends BasicWizardIterator {
         }
 
         if (name != null) {
-            Map<String,String> replaceTokens = new HashMap<String,String>();
+            Map<String,String> replaceTokens = new HashMap<>();
             replaceTokens.put("TEMPLATENAME", name);//NOI18N
             replaceTokens.put("PACKAGENAME", packageName);//NOI18N
             replaceTokens.put("MODE", mode); //NOI18N
@@ -409,7 +409,7 @@ public final class NewTCIterator extends BasicWizardIterator {
         
         final Map<String, String> newModes = model.getNewModes();
         if (newModes != null) {
-            Set<String> files = new HashSet<String>();
+            Set<String> files = new HashSet<>();
             FileObject parent = model.sfs.findResource("Windows2/Modes");
             for (String wsmode : newModes.keySet()) {
                 files.add(LayerUtil.findGeneratedName(parent, wsmode + ".wsmode"));

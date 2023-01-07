@@ -153,7 +153,7 @@ public class GeneralJSP extends J2eeTestCase {
     }
 
     protected void checkCompletionItemsJsp(CompletionJListOperator jlist, String[] asIdeal, int maxItems) throws Exception {
-        Set<String> actual = new HashSet<String>();
+        Set<String> actual = new HashSet<>();
         List list = jlist.getCompletionItems();
         StringBuilder suggestions = new StringBuilder();
         String _t;

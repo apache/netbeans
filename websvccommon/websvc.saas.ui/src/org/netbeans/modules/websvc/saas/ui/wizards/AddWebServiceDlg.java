@@ -81,7 +81,7 @@ public class AddWebServiceDlg extends JPanel implements ActionListener {
         "true", "false", "null" // NOI18N
 
     };
-    private static final Set<String> KEYWORD_SET = new HashSet<String>(KEYWORDS.length * 2);
+    private static final Set<String> KEYWORD_SET = new HashSet<>(KEYWORDS.length * 2);
     
 
     static {

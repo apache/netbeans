@@ -68,7 +68,7 @@ public final class GrailsPlatform {
 
     private static final ClassPath EMPTY_CLASSPATH = ClassPathSupport.createClassPath(new URL[] {});
 
-    private static final Set<String> GUARDED_COMMANDS = new HashSet<String>();
+    private static final Set<String> GUARDED_COMMANDS = new HashSet<>();
 
     static {
         Collections.addAll(GUARDED_COMMANDS, "run-app", "run-app-https", "run-war", "shell"); //NOI18N
@@ -164,7 +164,7 @@ public final class GrailsPlatform {
                 return classpath;
             }
 
-            List<File> jars = new ArrayList<File>();
+            List<File> jars = new ArrayList<>();
 
             File distDir = new File(grailsHome, "dist"); // NOI18N
             File[] files = distDir.listFiles();
@@ -200,7 +200,7 @@ public final class GrailsPlatform {
     }
     
     private List<File> getJarsRecursively(File parentDir) {
-        List<File> jars = new ArrayList<File>();
+        List<File> jars = new ArrayList<>();
         if (parentDir != null) {
             for (File file : parentDir.listFiles()) {
                 if (file.isDirectory()) {

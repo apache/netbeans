@@ -453,7 +453,7 @@ public class QuerySupportTest extends IndexingTestBase {
     }
 
     private void assertEquals(FileObject[] expected, Collection<FileObject> res) {
-        final Set<FileObject> set = new HashSet<FileObject>();
+        final Set<FileObject> set = new HashSet<>();
         Collections.addAll(set, expected);
         for (FileObject fo : res) {
             assertTrue(
@@ -496,7 +496,7 @@ public class QuerySupportTest extends IndexingTestBase {
 
         @Override
         public Set<String> getBinaryLibraryPathIds() {
-            return new HashSet<String>(Arrays.asList(BOOT, COMPILE));
+            return new HashSet<>(Arrays.asList(BOOT, COMPILE));
         }
 
         @Override

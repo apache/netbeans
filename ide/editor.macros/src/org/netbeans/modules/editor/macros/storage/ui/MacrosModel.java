@@ -80,7 +80,7 @@ public final class MacrosModel {
         mimeType2Macros = new HashMap<MimePath, Map<String, Macro>>();
         allMacrosList = new ArrayList<Macro>();
         
-        Set<String> allMimeTypes = new HashSet<String>();
+        Set<String> allMimeTypes = new HashSet<>();
         allMimeTypes.add(""); //NOI18N
         allMimeTypes.addAll(EditorSettings.getDefault().getAllMimeTypes());
         

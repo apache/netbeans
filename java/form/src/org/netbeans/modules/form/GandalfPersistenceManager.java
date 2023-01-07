@@ -618,7 +618,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                                 findSubNode(node, XML_NON_VISUAL_COMPONENTS);
         org.w3c.dom.NodeList childNodes = nonVisualsNode == null ? null :
                                           nonVisualsNode.getChildNodes();
-        List<RADComponent> list = new ArrayList<RADComponent>();
+        List<RADComponent> list = new ArrayList<>();
 
         if (childNodes != null) {
             for (int i = 0; i < childNodes.getLength(); i++) {
@@ -937,7 +937,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
         childNodes = subCompsNode != null ?
                      subCompsNode.getChildNodes() : null;
         if (childNodes != null) {
-            List<RADComponent> list = new ArrayList<RADComponent>();
+            List<RADComponent> list = new ArrayList<>();
             for (int i=0, n=childNodes.getLength(); i < n; i++) {
                 org.w3c.dom.Node componentNode = childNodes.item(i);
                 if (componentNode.getNodeType() == org.w3c.dom.Node.TEXT_NODE)
@@ -970,7 +970,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
 
             if (convIndex == LAYOUT_NATURAL) {
                 LayoutModel layoutModel = formModel.getLayoutModel();
-                Map<String, String> nameToIdMap = new HashMap<String, String>();
+                Map<String, String> nameToIdMap = new HashMap<>();
                 for (int i=0; i<childComponents.length; i++) {
                     RADComponent comp = childComponents[i];
                     nameToIdMap.put(comp.getName(), comp.getId());
@@ -3371,7 +3371,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
         if (layoutSupport == null) {
 //            raiseFormatVersion(NB42_VERSION);
             RADVisualComponent[] subComponents = container.getSubComponents();
-            Map<String,String> idToNameMap = new HashMap<String,String>();
+            Map<String,String> idToNameMap = new HashMap<>();
             for (int i=0; i<subComponents.length; i++) {
                 RADVisualComponent comp = subComponents[i];
                 idToNameMap.put(comp.getId(), comp.getName());
@@ -6063,7 +6063,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
     {
         String nodeName = node.getNodeName();
 
-        List<String> path = new ArrayList<String>();
+        List<String> path = new ArrayList<>();
         boolean leaf = true;
         boolean layout = false;
         boolean layoutConstr = false;

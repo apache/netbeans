@@ -368,7 +368,7 @@ private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         }
         
         private String generateUniqueName(String name) {
-            List<Integer> numberSuffixes = new ArrayList<Integer>();
+            List<Integer> numberSuffixes = new ArrayList<>();
             for (MethodModel.Variable variable : parameters) {
                 if (!name.equals(variable.getName()) && variable.getName().startsWith(name)) {
                     String suffix = variable.getName().substring(name.length());

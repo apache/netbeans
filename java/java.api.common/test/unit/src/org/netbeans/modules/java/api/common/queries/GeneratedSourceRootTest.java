@@ -135,8 +135,8 @@ public class GeneratedSourceRootTest extends NbTestCase {
         // check also dynamic changes in set of gensrc roots:
         FileObject moreStuff = FileUtil.createFolder(d, "build/generated-sources/morestuff");
         FileObject ygen = FileUtil.createData(moreStuff, "net/nowhere/YGen.java");
-        assertEquals(new HashSet<FileObject>(Arrays.asList(src, stuff, moreStuff)),
-                new HashSet<FileObject>(Arrays.asList(SourceForBinaryQuery.findSourceRoots(classes).getRoots())));
+        assertEquals(new HashSet<>(Arrays.asList(src, stuff, moreStuff)),
+                new HashSet<>(Arrays.asList(SourceForBinaryQuery.findSourceRoots(classes).getRoots())));
         assertEquals(Arrays.asList(classes, distJar), Arrays.asList(BinaryForSourceQuery.findBinaryRoots(moreStuff.toURL()).getRoots()));
         // XXX should previously created Result objects fire changes? ideally yes, but probably unnecessary
         assertEquals("1.6", SourceLevelQuery.getSourceLevel(moreStuff));

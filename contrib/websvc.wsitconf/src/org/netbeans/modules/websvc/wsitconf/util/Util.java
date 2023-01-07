@@ -170,7 +170,7 @@ public class Util {
     }
 
     private static List<FileObject> getFileObjects(URL[] urls) {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         for (int i = 0; i < urls.length; i++) {
             FileObject sourceRoot = URLMapper.findFileObject(urls[i]);
             if (sourceRoot != null) {

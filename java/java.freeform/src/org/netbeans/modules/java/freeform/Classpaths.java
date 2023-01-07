@@ -323,7 +323,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
     }
     
     static List<String> findPackageRootNames(Element compilationUnitEl) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (Element e : XMLUtil.findSubElements(compilationUnitEl)) {
             if (!e.getLocalName().equals("package-root")) { // NOI18N
                 continue;

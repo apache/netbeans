@@ -97,7 +97,7 @@ class SubversionHyperlink implements OutputListener {
 
     public @Override void outputLineCleared(OutputEvent ev) {}
 
-    private static Set<String> knownRepos = new HashSet<String>();
+    private static Set<String> knownRepos = new HashSet<>();
     /**
      * Trial-and-error way to find the repository root.
      * @param module {@code http://whatever/svnroot/somerepo/trunk/subdir}

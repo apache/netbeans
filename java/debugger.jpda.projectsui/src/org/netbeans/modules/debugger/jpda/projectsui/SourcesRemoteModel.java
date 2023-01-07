@@ -68,8 +68,8 @@ NodeActionsProvider {
 
     private Vector<ModelListener>   listeners = new Vector<ModelListener>();
     // set of filters
-    private Set<String>             disabledSourceRoots = new HashSet<String>();
-    private List<String>            additionalSourceRoots = new ArrayList<String>();
+    private Set<String>             disabledSourceRoots = new HashSet<>();
+    private List<String>            additionalSourceRoots = new ArrayList<>();
     private String[]                unorderedOriginalSourceRoots;
     private String[]                sortedOriginalSourceRoots;
     private int[]                   sourcePathPermutation;

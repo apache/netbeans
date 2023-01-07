@@ -47,7 +47,7 @@ public class ViewUpdatesExtraFactoryTest extends NbTestCase {
     public ViewUpdatesExtraFactoryTest(String testName) {
         super(testName);
 
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testExtraHighlightSpansNewline");
 //        filterTests(includes);
     }

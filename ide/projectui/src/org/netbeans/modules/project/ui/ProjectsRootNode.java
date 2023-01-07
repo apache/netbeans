@@ -743,7 +743,7 @@ public class ProjectsRootNode extends AbstractNode {
                 }
             }
             Map<SourceGroup,PropertyChangeListener> _groupsListeners = new HashMap<SourceGroup, PropertyChangeListener>();
-            Set<FileObject> roots = new HashSet<FileObject>();
+            Set<FileObject> roots = new HashSet<>();
             for (SourceGroup group : groups) {
                 PropertyChangeListener pcl = WeakListeners.propertyChange(this, group);
                 _groupsListeners.put(group, pcl);

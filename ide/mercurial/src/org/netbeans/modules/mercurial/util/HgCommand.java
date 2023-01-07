@@ -371,7 +371,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         MAX_COMMANDLINE_SIZE = maxCmdSize;
     }
 
-    private static final HashSet<String> WORKING_COPY_PARENT_MODIFYING_COMMANDS = new HashSet<String>(Arrays.asList(
+    private static final HashSet<String> WORKING_COPY_PARENT_MODIFYING_COMMANDS = new HashSet<>(Arrays.asList(
         HG_BACKOUT_CMD,
         HG_CLONE_CMD,
         HG_COMMIT_CMD,
@@ -394,7 +394,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         HG_UPDATE_ALL_CMD
     ));
 
-    private static final HashSet<String> REPOSITORY_NOMODIFICATION_COMMANDS = new HashSet<String>(Arrays.asList(
+    private static final HashSet<String> REPOSITORY_NOMODIFICATION_COMMANDS = new HashSet<>(Arrays.asList(
         HG_ANNOTATE_CMD,
         HG_BRANCH_CMD,
         HG_BRANCHES_CMD,
@@ -431,7 +431,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
         public CommandParameters (String commandName) {
             this.commandName = commandName;
-            this.arguments = new ArrayList<String>();
+            this.arguments = new ArrayList<>();
         }
 
         public CommandParameters add (String parameter) {
@@ -479,8 +479,8 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doMerge(File repository, String revStr) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
-        List<String> env = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
+        List<String> env = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_MERGE_CMD);
@@ -518,7 +518,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     })
     public static List<String> doUpdateAll(File repository, boolean bForce, String revision, boolean bThrowException) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_UPDATE_ALL_CMD);
@@ -572,7 +572,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doRollback(File repository, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_ROLLBACK_CMD);
@@ -588,8 +588,8 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static List<String> doBackout(File repository, String revision,
             boolean doMerge, String commitMsg, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> env = new ArrayList<String>();
-        List<String> command = new ArrayList<String>();
+        List<String> env = new ArrayList<>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_BACKOUT_CMD);
@@ -628,7 +628,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static List<String> doStrip(File repository, String revision,
             boolean doForceMultiHead, boolean doBackup, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_STRIP_CMD);
@@ -656,7 +656,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
         public static List<String> doVerify(File repository, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_VERIFY_CMD);
@@ -704,7 +704,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doPull (File repository, String revision, String branch, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_PULL_CMD);
@@ -728,7 +728,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         String defaultPull = new HgConfigFiles(repository).getDefaultPull(false);
         String proxy = getGlobalProxyIfNeeded(defaultPull, true, logger);
         if(proxy != null){
-            List<String> env = new ArrayList<String>();
+            List<String> env = new ArrayList<>();
             env.add(HG_PROXY_ENV + proxy);
             list = execEnv(command, env);
         }else{
@@ -755,7 +755,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doUnbundle(File repository, File bundle, boolean update, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_UNBUNDLE_CMD);
@@ -791,7 +791,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doIncoming(File repository, String revision, String branch, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<Object> command = new ArrayList<Object>();
+        List<Object> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_INCOMING_CMD);
@@ -811,7 +811,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         String defaultPull = new HgConfigFiles(repository).getDefaultPull(false);
         String proxy = getGlobalProxyIfNeeded(defaultPull, false, null);
         if(proxy != null){
-            List<String> env = new ArrayList<String>();
+            List<String> env = new ArrayList<>();
             env.add(HG_PROXY_ENV + proxy);
             cmdOutput = execEnv(command, env);
         }else{
@@ -956,8 +956,8 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doView(File repository, OutputLogger logger) throws HgException {
         if (repository == null) return null;
-        List<String> command = new ArrayList<String>();
-        List<String> env = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
+        List<String> env = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_VIEW_CMD);
@@ -1081,7 +1081,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static List<HgLogMessage> processLogMessages (File root, List<File> files, List<String> list, boolean revertOrder) {
         List<HgLogMessage> messages = new ArrayList<HgLogMessage>();
         String rev, author, username, desc, date, id, parents, fm, fa, fd, fc, branches, tags;
-        List<String> filesShortPaths = new ArrayList<String>();
+        List<String> filesShortPaths = new ArrayList<>();
 
         String rootPath = root.getAbsolutePath();
         if (!rootPath.endsWith(File.separator)) {
@@ -1363,7 +1363,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static Boolean hasHistory(File repository) {
         if (repository == null ) return false;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_LOG_CMD);
@@ -1397,7 +1397,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (repository == null ) return null;
         if (revision == null ) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_LOG_CMD);
@@ -1451,7 +1451,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     private static List<String> doLog(File repository, List<File> files,
             String from, String to, String headRev, boolean bShowMerges, boolean bGetFileInfo, boolean getAllParents, int limit, List<String> branchNames, OutputLogger logger) throws HgException {
-        List<String> dateConstraints = new ArrayList<String>();
+        List<String> dateConstraints = new ArrayList<>();
         String dateStr = handleRevDates(from, to);
         if (dateStr != null) {
             dateConstraints.add(HG_FLAG_DATE_CMD);
@@ -1494,7 +1494,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (repository == null ) return null;
         if (files != null && files.isEmpty()) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_LOG_CMD);
@@ -1576,7 +1576,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static HgLogMessage doTip(File repository, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_TIP_CMD);
@@ -1625,7 +1625,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             }
         }
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_OUT_CMD);
@@ -1657,7 +1657,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             List<String> list;
             String proxy = getGlobalProxyIfNeeded(defaultPush, false, null);
             if(proxy != null){
-                List<String> env = new ArrayList<String>();
+                List<String> env = new ArrayList<>();
                 env.add(HG_PROXY_ENV + proxy);
                 list = execEnv(command, env);
             }else{
@@ -1749,7 +1749,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             }
         }
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_INCOMING_CMD);
@@ -1781,7 +1781,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             List<String> list;
             String proxy = getGlobalProxyIfNeeded(defaultPull, false, null);
             if (proxy != null) {
-                List<String> env = new ArrayList<String>();
+                List<String> env = new ArrayList<>();
                 env.add(HG_PROXY_ENV + proxy);
                 list = execEnv(command, env);
             } else {
@@ -1808,7 +1808,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
     public static List<HgLogMessage> getBundleChangesets (File repository, File bundleFile, OutputLogger logger) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_INCOMING_CMD);
@@ -2071,7 +2071,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (repository == null) return;
         if (file == null) return;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_CAT_CMD);
@@ -2144,7 +2144,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
     private static HgRevision getCommonAncestor(String rootURL, String rev1, String rev2, boolean bUseIndex, OutputLogger logger) throws HgException {
         if (rootURL == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_COMMONANCESTOR_CMD);
@@ -2186,7 +2186,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static void doCreate(File root, OutputLogger logger) throws HgException {
         if (root == null ) return;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_CREATE_CMD);
@@ -2257,7 +2257,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 Mercurial.LOG.log(Level.SEVERE, null, ex);
                 break;
             }
-            List<Object> command = new ArrayList<Object>();
+            List<Object> command = new ArrayList<>();
 
             command.add(getHgCommand());
             command.add(HG_CLONE_CMD);
@@ -2267,7 +2267,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
             String proxy = getGlobalProxyIfNeeded(url.toUrlStringWithoutUserInfo(), true, logger);
             if (proxy != null) {
-                List<String> env = new ArrayList<String>();
+                List<String> env = new ArrayList<>();
                 env.add(HG_PROXY_ENV + proxy);
                 list = execEnv(command, env);
             } else {
@@ -2337,7 +2337,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static void doCommit(File repository, List<File> commitFiles, String commitMessage, String user,
             boolean closeBranch, OutputLogger logger)  throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_COMMIT_CMD);
@@ -2446,7 +2446,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     private static void doRename(File repository, File sourceFile, File destFile, boolean bAfter, OutputLogger logger)  throws HgException {
         if (repository == null) return;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_RENAME_CMD);
@@ -2500,7 +2500,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static void doCopy (File repository, File sourceFile, File destFile, boolean bAfter, OutputLogger logger)  throws HgException {
         if (repository == null) return;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_COPY_CMD);
@@ -2536,7 +2536,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static void doAdd(File repository, List<File> addFiles, OutputLogger logger)  throws HgException {
         if (repository == null) return;
         if (addFiles.isEmpty()) return;
-        List<String> basicCommand = new ArrayList<String>();
+        List<String> basicCommand = new ArrayList<>();
         basicCommand.add(getHgCommand());
         basicCommand.add(HG_ADD_CMD);
         basicCommand.add(HG_OPT_REPOSITORY);
@@ -2570,7 +2570,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (repository == null) return;
         if (revertFiles.isEmpty()) return;
 
-        final List<String> command = new ArrayList<String>();
+        final List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_REVERT_CMD);
@@ -2603,7 +2603,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static void doPurge (File repository, List<File> revertFiles, List<String> excludedPaths, OutputLogger logger) throws HgException {
         if (repository == null) return;
 
-        final List<String> command = new ArrayList<String>();
+        final List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_PURGE_CMD);
@@ -2641,7 +2641,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         // We do not look for file to ignore as we should not here
         // with a file to be ignored.
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_ADD_CMD);
@@ -2665,7 +2665,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<String> doAnnotate(File repository, File file, String revision, OutputLogger logger) throws HgException {
         if (repository == null) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_ANNOTATE_CMD);
@@ -2717,7 +2717,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static String getBranch (File repository) throws HgException {
         if (repository == null) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_BRANCH_CMD);
@@ -2797,7 +2797,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static void markBranch (File repository, String branchName, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(HG_BRANCH_CMD);
         command.add(HG_OPT_REPOSITORY);
@@ -2827,7 +2827,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static void createTag (File repository, String tagName, String message, String revision, boolean isLocal, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(HG_TAG_CMD);
         command.add(HG_OPT_REPOSITORY);
@@ -2855,7 +2855,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static void removeTag (File repository, String tagName, boolean isLocal, String message, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(HG_TAG_CMD);
         command.add(HG_OPT_REPOSITORY);
@@ -2883,7 +2883,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     private static List<String> getHeadInfo (String repository, boolean topo, String template, boolean useStyle) throws HgException {
         if (repository == null) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_HEADS_CMD);
@@ -2924,7 +2924,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     private static List<String> getBranches (File repository) throws HgException {
         if (repository == null) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_BRANCHES_CMD);
@@ -2936,7 +2936,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     private static List<String> getTags (File repository) throws HgException {
         if (repository == null) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_TAGS_CMD);
@@ -2962,7 +2962,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
         if (repository == null) return null;
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_LOG_CMD);
@@ -3014,7 +3014,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     public static List<HgLogMessage> getParents (File repository, File file, String revision) throws HgException {
         if (repository == null ) return null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(HG_PARENT_CMD);
         command.add(HG_OPT_REPOSITORY);
@@ -3086,7 +3086,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     public static void doRemove(File repository, List<File> removeFiles, OutputLogger logger)  throws HgException {
         if (repository == null) return;
         if (removeFiles.isEmpty()) return;
-        List<String> basicCommand = new ArrayList<String>();
+        List<String> basicCommand = new ArrayList<>();
         basicCommand.add(getHgCommand());
         basicCommand.add(HG_REMOVE_CMD);
         basicCommand.add(HG_OPT_REPOSITORY);
@@ -3112,7 +3112,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      * @throws org.netbeans.modules.mercurial.HgException
      */
     public static void doRemove(File repository, File f, OutputLogger logger)  throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_REMOVE_CMD);
@@ -3156,7 +3156,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             Mercurial.LOG.log(Level.WARNING, "File.mkdir() for : {0} threw SecurityException {1}", new Object[]{parentTarget.getAbsolutePath(), e.getMessage()}); // NOI18N
             throw (new HgException (NbBundle.getMessage(HgCommand.class, "MSG_UNABLE_TO_CREATE_PARENT_DIR"))); // NOI18N
         }
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_EXPORT_CMD);
@@ -3199,7 +3199,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             Mercurial.LOG.log(Level.WARNING, "File.mkdir() for : {0} threw SecurityException {1}", new Object[]{parentTarget.getAbsolutePath(), e.getMessage()}); // NOI18N
             throw (new HgException (NbBundle.getMessage(HgCommand.class, "MSG_UNABLE_TO_CREATE_PARENT_DIR"))); // NOI18N
         }
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_BUNDLE_CMD);
@@ -3247,7 +3247,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             Mercurial.LOG.log(Level.WARNING, "File.mkdir() for : {0} threw SecurityException {1}", new Object[]{parentTarget.getAbsolutePath(), e.getMessage()}); // NOI18N
             throw (new HgException (NbBundle.getMessage(HgCommand.class, "MSG_UNABLE_TO_CREATE_PARENT_DIR"))); // NOI18N
         }
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_LOG_CMD);
@@ -3292,7 +3292,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      * @throws org.netbeans.modules.mercurial.HgException
      */
     public static List<String> doImport (File repository, File patchFile, boolean commit, OutputLogger logger)  throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_IMPORT_CMD);
@@ -3320,7 +3320,7 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     protected static List<String> getUnresolvedFiles (File repository, List<String> attributes) throws HgException {
         assert attributes != null;
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_RESOLVE_CMD);
@@ -3356,7 +3356,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             return new QPatch[0];
         }
         
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QSERIES_CMD);
@@ -3422,7 +3422,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static Queue[] qListQueues (File repository) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QQUEUE_CMD);
@@ -3446,7 +3446,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static void qSwitchQueue (File repository, String queueName, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QQUEUE_CMD);
@@ -3466,7 +3466,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static List<String> qPushPatches (File repository, String onTopPatch, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QPUSH_CMD);
@@ -3491,7 +3491,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static void qPopPatches (File repository, String onTopPatch, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QPOP_CMD);
@@ -3515,7 +3515,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     public static List<String> qGoToPatch (File repository, String patch, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QGOTO_CMD);
@@ -3582,7 +3582,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
     private static void qCreateRefreshPatch (File repository, Collection<File> includedFiles, Collection<File> excludedFiles,
             String patchId, String commitMessage, String user, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(patchId == null ? HG_QREFRESH_PATCH : HG_QCREATE_CMD);
         command.add(HG_CONFIG_OPTION_CMD);
@@ -3679,7 +3679,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
     
     public static void qFinishPatches (File repository, String patch, OutputLogger logger) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_QFINISH_CMD);
@@ -3786,7 +3786,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     private static void logCommand (List<? extends Object> command) {
         if (Mercurial.LOG.isLoggable(Level.FINE)) {
             if (command.size() > 10) {
-                List<String> smallCommand = new ArrayList<String>();
+                List<String> smallCommand = new ArrayList<>();
                 int count = 0;
                 for (Iterator i = command.iterator(); i.hasNext();) {
                     smallCommand.add((String)i.next());
@@ -3800,7 +3800,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     private static List<String> exec (List<? extends Object> command, ProcessBuilder pb) throws HgException {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         BufferedReader input = null;
         BufferedReader error = null;
         Process proc = null;
@@ -3814,9 +3814,9 @@ public abstract class HgCommand<T> implements Callable<T> {
                     ? new InputStreamReader(proc.getErrorStream())
                     : new InputStreamReader(proc.getErrorStream(), ENCODING));
             final BufferedReader errorReader = error;
-            final List<String> errorOutput = new ArrayList<String>();
+            final List<String> errorOutput = new ArrayList<>();
             final BufferedReader inputReader = input;
-            final List<String> inputOutput = new ArrayList<String>();
+            final List<String> inputOutput = new ArrayList<>();
             Thread errorThread = new Thread(new Runnable () {
                 @Override
                 public void run() {
@@ -4061,12 +4061,12 @@ public abstract class HgCommand<T> implements Callable<T> {
      */
     protected static List<String> exec(List<? extends Object> command) throws HgException{
         if(!Mercurial.getInstance().isAvailable()){
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         return execEnv(command, null);
     }
     private static List<String> execForVersionCheck() throws HgException{
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(HG_VERSION_CMD);
 
@@ -4353,7 +4353,7 @@ public abstract class HgCommand<T> implements Callable<T> {
     }
 
     private static List<String> getFilesWithPerformanceWarning (List<String> list) {
-        List<String> fileList = new ArrayList<String>();
+        List<String> fileList = new ArrayList<>();
         for (String line : list) {
             int pos;
             if ((pos = line.indexOf(HG_WARNING_PERFORMANCE_FILES_OVER)) > 0 && line.contains(HG_WARNING_PERFORMANCE_CAUSE_PROBLEMS)) {
@@ -4387,7 +4387,7 @@ public abstract class HgCommand<T> implements Callable<T> {
             return;
         }
 
-        final List<String> command = new ArrayList<String>();
+        final List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_RESOLVE_CMD);
@@ -4450,7 +4450,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         // temporary folder will be deleted manually
         File tmpFolder = Utils.getTempFolder(false);
         File tmpTarget = new File(tmpFolder, "rep");                    //NOI18N
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
 
         command.add(getHgCommand());
         command.add(HG_CLONE_CMD);
@@ -4609,8 +4609,8 @@ public abstract class HgCommand<T> implements Callable<T> {
         return repositoryFile;
     }
 
-    private static final Set<File> loggedRepositories = new HashSet<File>();
-    private static final Set<String> noLogCommands = new HashSet<String>(Arrays.asList(
+    private static final Set<File> loggedRepositories = new HashSet<>();
+    private static final Set<String> noLogCommands = new HashSet<>(Arrays.asList(
         HG_BRANCH_CMD,
         HG_BRANCHES_CMD,
         HG_CAT_CMD,
@@ -4676,7 +4676,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
     protected static List<String> getListOfChangedFiles (File repository, List<String> attributes,
             String rev1, String rev2) throws HgException {
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(getHgCommand());
         command.add(HG_DIFF_CMD);
         command.add(HG_OPT_STAT);
@@ -4741,7 +4741,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         public InterRepositoryCommand () {
             hgCommand = getHgCommand();
             outputDetails = true;
-            additionalOptions = new ArrayList<String>();
+            additionalOptions = new ArrayList<>();
             urlPathProperties = new String[0];
         }
 
@@ -4799,7 +4799,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                         Mercurial.LOG.log(Level.SEVERE, null, ex);
                         break;
                     }
-                    List<Object> command = new ArrayList<Object>();
+                    List<Object> command = new ArrayList<>();
 
                     command.add(hgCommand);
                     command.add(hgCommandType);
@@ -4812,7 +4812,7 @@ public abstract class HgCommand<T> implements Callable<T> {
 
                     String proxy = getGlobalProxyIfNeeded(defaultUrl, outputDetails, logger);
                     if (proxy != null) {
-                        List<String> env = new ArrayList<String>();
+                        List<String> env = new ArrayList<>();
                         env.add(HG_PROXY_ENV + proxy);
                         list = execEnv(command, env);
                     } else {
@@ -4911,7 +4911,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         ListIterator<File> iterator = files.listIterator();
         while (iterator.hasNext()) {
             // each loop will call one add command
-            List<String> commandAttributes = new ArrayList<String>();
+            List<String> commandAttributes = new ArrayList<>();
             commandSize = basicCommandSize;
             boolean fileAdded = false;
             while (iterator.hasNext()) {

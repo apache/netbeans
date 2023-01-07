@@ -43,7 +43,7 @@ final class OptionAnnotationProcessorImpl extends LayerGeneratingProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         set.add(Arg.class.getName());
         return set;
     }

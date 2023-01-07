@@ -53,7 +53,7 @@ import org.openide.util.NbBundle;
  */
 public class AddConstructor implements ErrorRule<Void> {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> ERROR_CODES = new HashSet<>(Arrays.asList(
             "compiler.err.cant.apply.symbol", "compiler.err.cant.apply.symbols")); // NOI18N
     
     @Override

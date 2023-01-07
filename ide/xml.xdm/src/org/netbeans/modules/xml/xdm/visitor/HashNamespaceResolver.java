@@ -32,7 +32,7 @@ public class HashNamespaceResolver implements NamespaceContext {
 	
 	public HashNamespaceResolver(Map<String,String> nsTable) {
 		namespaces = nsTable;
-		prefixes = new HashMap<String,String>();
+		prefixes = new HashMap<>();
 		for (Entry<String,String> e : namespaces.entrySet()) {
 			prefixes.put(e.getValue(), e.getKey());
 		}

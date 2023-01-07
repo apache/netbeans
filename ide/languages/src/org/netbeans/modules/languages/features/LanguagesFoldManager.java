@@ -235,7 +235,7 @@ public class LanguagesFoldManager extends ASTEvaluator implements FoldManager {
                     List<Fold> existingFolds = new ArrayList<Fold> ();
                     collectFolds(fold, existingFolds);
 
-                    List<FoldItem> generated = folds != null ? folds : new ArrayList<FoldItem>();
+                    List<FoldItem> generated = folds != null ? folds : new ArrayList<>();
                     
                     //...and generate a list of new folds and a list of folds to be removed
                     final HashSet newborns = new HashSet(generated.size() / 2);

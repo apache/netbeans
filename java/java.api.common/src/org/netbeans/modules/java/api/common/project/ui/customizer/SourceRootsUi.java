@@ -234,7 +234,7 @@ public final class SourceRootsUi {
             this.removeButton = removeButton;
             this.upButton = upButton;
             this.downButton = downButton;
-            this.ownedFolders = new HashSet<File>();
+            this.ownedFolders = new HashSet<>();
 
             this.project = master;
             this.sourceRoots = sourceRoots;
@@ -336,8 +336,8 @@ public final class SourceRootsUi {
             int lastIndex = si == null || si.length == 0 ? -1 : si[si.length - 1];
             ListSelectionModel selectionModel = this.rootsList.getSelectionModel();
             selectionModel.clearSelection();
-            Set<File> rootsFromOtherProjects = new HashSet<File>();
-            Set<File> rootsFromRelatedSourceRoots = new HashSet<File>();
+            Set<File> rootsFromOtherProjects = new HashSet<>();
+            Set<File> rootsFromRelatedSourceRoots = new HashSet<>();
             String type = RootsAccessor.getInstance().getType(sourceRoots);
             boolean isModule = JavaProjectConstants.SOURCES_TYPE_MODULES.equals(type);
 out:        for( int i = 0; i < files.length; i++ ) {

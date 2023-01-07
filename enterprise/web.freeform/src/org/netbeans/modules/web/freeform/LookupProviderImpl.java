@@ -270,7 +270,7 @@ public class LookupProviderImpl implements LookupProvider {
                 return null;
             }
             List<Element> webModules = XMLUtil.findSubElements(web);
-            List<FileObject> roots = new ArrayList<FileObject>();
+            List<FileObject> roots = new ArrayList<>();
             for (Element webModulesEl : webModules) {
                 assert webModulesEl.getLocalName().equals("web-module") : webModulesEl; // NOI18N
                 roots.add(FileUtil.toFileObject(getFile(webModulesEl, "doc-root", proj, evaluator))); // NOI18N

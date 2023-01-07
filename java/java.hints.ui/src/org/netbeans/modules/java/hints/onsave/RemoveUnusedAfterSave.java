@@ -115,7 +115,7 @@ public class RemoveUnusedAfterSave implements OnSaveTask {
             
             if (javaSource == null) return null;
             
-            Set<String> toRun = new HashSet<String>();
+            Set<String> toRun = new HashSet<>();
             Preferences settings = MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(Preferences.class);
 
             for (Entry<String, Boolean> e : id2DefaultState.entrySet()) {

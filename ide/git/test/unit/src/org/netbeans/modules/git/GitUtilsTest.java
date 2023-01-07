@@ -37,8 +37,8 @@ public class GitUtilsTest extends NbTestCase {
     }
 
     public void testPrepareRootFiles () throws IOException {
-        Set<File> roots = new HashSet<File>();
-        Set<File> expectedRoots = new HashSet<File>();
+        Set<File> roots = new HashSet<>();
+        Set<File> expectedRoots = new HashSet<>();
         File repository = getWorkDir();
 
         // single file

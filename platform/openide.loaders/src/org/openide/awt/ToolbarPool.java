@@ -476,7 +476,7 @@ public final class ToolbarPool extends JComponent implements Accessible {
             final int length = cookies.length;
 
             final Map<String, Toolbar> toolbars = new TreeMap<String, Toolbar> ();
-            final ArrayList<String> toolbarNames = new ArrayList<String>();
+            final ArrayList<String> toolbarNames = new ArrayList<>();
             final Map<String, Configuration> conf = new TreeMap<String, Configuration> ();
 
             for (int i = 0; i < length; i++) {

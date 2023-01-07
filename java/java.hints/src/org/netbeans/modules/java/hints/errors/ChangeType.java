@@ -124,10 +124,10 @@ public final class ChangeType implements ErrorRule<Void> {
     }
 
     // Initialize the compiler error codes to which this hint responds.
-    private static Set<String> codes = new HashSet<String>();
+    private static Set<String> codes = new HashSet<>();
     static
     {
-        codes = new HashSet<String>();
+        codes = new HashSet<>();
         codes.add("compiler.err.prob.found.req"); // NOI18N
         codes.add("compiler.err.incomparable.types"); // NOI18N
         codes = Collections.unmodifiableSet(codes);

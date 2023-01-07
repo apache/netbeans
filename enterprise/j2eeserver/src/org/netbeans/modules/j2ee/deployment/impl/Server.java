@@ -313,7 +313,7 @@ public class Server implements Node.Cookie {
                 if (allNames == null || allNames.length == 0) {
                     continue;
                 }
-                List<String> filepaths = new ArrayList<String>();
+                List<String> filepaths = new ArrayList<>();
                 for (int i = 0; i < allNames.length; i++) {
                     if (allNames[i] == null) {
                         continue;

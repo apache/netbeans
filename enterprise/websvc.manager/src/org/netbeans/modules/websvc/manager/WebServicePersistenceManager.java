@@ -306,7 +306,7 @@ public class WebServicePersistenceManager implements ExceptionListener {
             return;
         }
 
-        Map<String, String> currentUrls = new HashMap<String, String>(); //url->name
+        Map<String, String> currentUrls = new HashMap<>(); //url->name
 
         List<String> partnerUrls = WebServiceListModel.getInstance().getPartnerServices();
 

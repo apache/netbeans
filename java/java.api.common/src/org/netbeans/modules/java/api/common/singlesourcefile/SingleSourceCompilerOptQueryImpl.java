@@ -60,7 +60,7 @@ public class SingleSourceCompilerOptQueryImpl implements CompilerOptionsQueryImp
         public List<? extends String> getArguments() {
 
             Object vmOptionsObj = file.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
-            return vmOptionsObj != null ? parseLine((String) vmOptionsObj) : new ArrayList<String>();
+            return vmOptionsObj != null ? parseLine((String) vmOptionsObj) : new ArrayList<>();
         }
 
         @Override

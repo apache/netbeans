@@ -65,7 +65,7 @@ public class CreateDomain extends Thread {
         this.pword = pword;
         this.platformLocation = platformLocation;
         this.ip = ip;
-        this.map = new HashMap<String,String>();
+        this.map = new HashMap<>();
         this.gip = gip;
         map.putAll(ip);
         this.register = register;

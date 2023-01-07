@@ -59,7 +59,7 @@ public class CopyResourcesOnSave extends FileChangeAdapter {
     private static final Logger LOG = Logger.getLogger(CopyResourcesOnSave.class.getName());
     
     private final NbMavenProject nbproject;
-    private final Set<File> resourceUris = new HashSet<File>();
+    private final Set<File> resourceUris = new HashSet<>();
     private final Project project;
     private final PropertyChangeListener pchl = new PropertyChangeListener() {
 
@@ -97,8 +97,8 @@ public class CopyResourcesOnSave extends FileChangeAdapter {
             List<Resource> resources = new ArrayList<Resource>();
             resources.addAll(nbproject.getMavenProject().getResources());
             resources.addAll(nbproject.getMavenProject().getTestResources());
-            Set<File> old = new HashSet<File>(resourceUris);
-            Set<File> added = new HashSet<File>();
+            Set<File> old = new HashSet<>(resourceUris);
+            Set<File> added = new HashSet<>();
             
                 for (Resource res : resources) {
                     String dir = res.getDirectory();

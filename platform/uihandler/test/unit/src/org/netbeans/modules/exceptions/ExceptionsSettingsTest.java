@@ -39,7 +39,7 @@ public class ExceptionsSettingsTest extends NbTestCase {
     
     public static Test suite() {
         NbTestSuite suite = new NbTestSuite();
-        List<String> orderedMethods = new ArrayList<String>();
+        List<String> orderedMethods = new ArrayList<>();
         orderedMethods.add("testGuestGetsChanged1");
         orderedMethods.add("testGuestGetsChanged2");
     

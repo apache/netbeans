@@ -312,7 +312,7 @@ public final class Stamps {
     private static void stamp(boolean checkStampFile, AtomicLong result, AtomicReference<File> newestFile) {
         StringBuilder sb = new StringBuilder();
         
-        Set<File> processedDirs = new HashSet<File>();
+        Set<File> processedDirs = new HashSet<>();
         String[] relativeDirs = Clusters.relativeDirsWithHome();
         String home = System.getProperty ("netbeans.home"); // NOI18N
         if (home != null) {
@@ -330,7 +330,7 @@ public final class Stamps {
         File user = Places.getUserDirectory();
         if (user != null) {
             AtomicInteger crc = new AtomicInteger();
-            stampForCluster(user, result, newestFile, new HashSet<File>(), false, false, crc);
+            stampForCluster(user, result, newestFile, new HashSet<>(), false, false, crc);
             sb.append("user=").append(result.longValue()).append('\n');
             sb.append("crc=").append(crc.intValue()).append('\n');
             sb.append("locale=").append(Locale.getDefault()).append('\n');
@@ -816,7 +816,7 @@ public final class Stamps {
         public Worker() {
             super("Flushing caches");
             storages = new LinkedList<Stamps.Store>();
-            processing = new HashSet<String>();
+            processing = new HashSet<>();
             setPriority(MIN_PRIORITY);
         }
         
@@ -995,7 +995,7 @@ public final class Stamps {
     }
 
     static String findRelativePath(String file) {
-        List<String> arrayList = new ArrayList<String>();
+        List<String> arrayList = new ArrayList<>();
         try {
             produceRelativePath(file, arrayList);
         } catch (IOException ex) {

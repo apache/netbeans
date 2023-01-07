@@ -68,7 +68,7 @@ public final class EnumValueCompleter implements Completer, Completer.Factory {
 
     @Override
     public List<CompletionItem> complete() {
-        List<String> valueStrings = new ArrayList<String>();
+        List<String> valueStrings = new ArrayList<>();
         if (isBooleanType()) {
             valueStrings.add(Boolean.FALSE.toString());
             valueStrings.add(Boolean.TRUE.toString());

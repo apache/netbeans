@@ -44,7 +44,7 @@ public class GrammarResolverListenerTest extends CssTestBase {
     public void testParseSimpleAmbiguousGrammar() {
         PropertyDefinition pm = Properties.getPropertyDefinition( "border-color");
         GrammarResolver gr = new GrammarResolver(pm.getGrammarElement(null));
-        final Collection<String> resolvedTokens = new ArrayList<String>();
+        final Collection<String> resolvedTokens = new ArrayList<>();
         final AtomicBoolean started = new AtomicBoolean(false);
         final AtomicBoolean finished = new AtomicBoolean(false);
         

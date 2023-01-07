@@ -213,7 +213,7 @@ public class RunAnalysis {
 
     
     static Map<Project, Map<FileObject, ClassPath>> projects2RegisteredContent(AtomicBoolean cancel) {
-        Set<String> sourceIds = new HashSet<String>();
+        Set<String> sourceIds = new HashSet<>();
 
         for (PathRecognizer pr : Lookup.getDefault().lookupAll(PathRecognizer.class)) {
             Set<String> ids = pr.getSourcePathIds();
@@ -275,11 +275,11 @@ public class RunAnalysis {
     private static @NonNull Scope augment(@NonNull Scope source, @NullAllowed Collection<FileObject> sourceRoots,
                                         @NullAllowed Collection<NonRecursiveFolder> folders,
                                         @NullAllowed Collection<FileObject> files) {
-        Collection<FileObject> sourceRootsSet = new HashSet<FileObject>(source.getSourceRoots());
+        Collection<FileObject> sourceRootsSet = new HashSet<>(source.getSourceRoots());
         if (sourceRoots != null) {
             sourceRootsSet.addAll(sourceRoots);
         }
-        Collection<FileObject> filesSet = new HashSet<FileObject>(source.getFiles());
+        Collection<FileObject> filesSet = new HashSet<>(source.getFiles());
         if (files != null) {
             filesSet.addAll(files);
         }

@@ -493,7 +493,7 @@ public class J2eeTestCase extends JellyTestCase {
      * @return class loader
      */
     private static URLClassLoader getLoader(Server server) throws MalformedURLException {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         for(File file : getJars(server)) {
             urls.add(file.toURI().toURL());
         }        
@@ -507,7 +507,7 @@ public class J2eeTestCase extends JellyTestCase {
      * @return list of jars
      */
     private static List<File> getJars(Server server) {
-        List<File> jars = new ArrayList<File>();
+        List<File> jars = new ArrayList<>();
         jars.add(new File(findCluster("platform"), "core/core-base.jar"));
         jars.add(new File(findCluster("platform"), "core/core.jar"));
         jars.add(new File(findCluster("platform"), "lib/boot.jar"));
@@ -539,7 +539,7 @@ public class J2eeTestCase extends JellyTestCase {
      */
     private static int registerServer(Server server, String mainClass, String clusterDir, String serverHome) throws Exception {
         String jvm = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add(jvm);
         command.add("-cp");
         command.add(getClassPath(server));
@@ -577,7 +577,7 @@ public class J2eeTestCase extends JellyTestCase {
      * @return a tokenization of that path into components
      */
     private static String[] tokenizePath(String path) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
         char dosHack = '\0';
         char lastDelim = '\0';

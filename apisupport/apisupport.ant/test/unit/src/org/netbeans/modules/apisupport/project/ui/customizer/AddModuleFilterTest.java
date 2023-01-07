@@ -84,7 +84,7 @@ public class AddModuleFilterTest extends TestBase {
     }
     
     public void testMatchOrdering() throws Exception { // #71995
-        List<String> matches = new ArrayList<String>();
+        List<String> matches = new ArrayList<>();
         for (ModuleDependency dep : filter.getMatches(null, "systemaction", false)) {
             matches.add(dep.getModuleEntry().getCodeNameBase());
         }
@@ -96,11 +96,11 @@ public class AddModuleFilterTest extends TestBase {
     }
     
     private void assertMatches(String text, String[] cnbs) {
-        Set<String> matchedCNBs = new HashSet<String>();
+        Set<String> matchedCNBs = new HashSet<>();
         for (ModuleDependency dep : filter.getMatches(null, text, false)) {
             matchedCNBs.add(dep.getModuleEntry().getCodeNameBase());
         }
-        assertEquals("correct matches for '" + text + "'", new HashSet<String>(Arrays.asList(cnbs)), matchedCNBs);
+        assertEquals("correct matches for '" + text + "'", new HashSet<>(Arrays.asList(cnbs)), matchedCNBs);
     }
     
 }

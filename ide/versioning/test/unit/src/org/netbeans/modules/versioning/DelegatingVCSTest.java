@@ -147,7 +147,7 @@ public class DelegatingVCSTest extends NbTestCase {
     }
     
     public void testDelegatesAllMethods() {
-        Set<String> ignoredMethods = new HashSet<String>();
+        Set<String> ignoredMethods = new HashSet<>();
         ignoredMethods.add("addPropertyChangeListener");
         ignoredMethods.add("removePropertyChangeListener");
         ignoredMethods.add("moveChangeListeners");
@@ -158,7 +158,7 @@ public class DelegatingVCSTest extends NbTestCase {
         ignoredMethods.add("getProperty");
         ignoredMethods.add("putProperty");
         
-        Set<String> overridenMethods = new HashSet<String>();
+        Set<String> overridenMethods = new HashSet<>();
         for (Method method : DelegatingVCS.class.getDeclaredMethods()) {
             overridenMethods.add(method.getName());
         }

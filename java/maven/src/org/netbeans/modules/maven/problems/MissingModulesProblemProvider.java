@@ -62,7 +62,7 @@ public class MissingModulesProblemProvider implements ProjectProblemsProvider {
     })
     @ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = "org-netbeans-modules-maven")
     public static ProjectProblemsProvider j2ee(Project project) {
-        Set<String> packs = new HashSet<String>();
+        Set<String> packs = new HashSet<>();
         packs.add(NbMavenProject.TYPE_WAR);
         packs.add(NbMavenProject.TYPE_EAR);
         packs.add(NbMavenProject.TYPE_EJB);
@@ -77,7 +77,7 @@ public class MissingModulesProblemProvider implements ProjectProblemsProvider {
     })
     @ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = "org-netbeans-modules-maven")
     public static ProjectProblemsProvider apisupport(Project project) {
-        Set<String> packs = new HashSet<String>();
+        Set<String> packs = new HashSet<>();
         packs.add(NbMavenProject.TYPE_NBM);
         packs.add(NbMavenProject.TYPE_NBM_APPLICATION);
         return new MissingModulesProblemProvider(project, packs, "org.netbeans.modules.maven.apisupport", "org.netbeans.modules.apisupport.kit", ERR_MissingApisupportModule(), MSG_MissingApisupportModule());

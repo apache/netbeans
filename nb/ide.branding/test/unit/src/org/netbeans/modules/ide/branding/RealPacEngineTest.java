@@ -47,7 +47,7 @@ public class RealPacEngineTest extends NbTestCase {
         assertEquals("No error: " + err, 0, err.length());
         assertNotNull("Engine found", eng);
         
-        List<String> allowedEngines = new ArrayList<String>();
+        List<String> allowedEngines = new ArrayList<>();
         allowedEngines.add("GraalVM:js");
         allowedEngines.add("Oracle Nashorn");
         assertTrue("Allowed engine", allowedEngines.contains(eng.getFactory().getEngineName()));

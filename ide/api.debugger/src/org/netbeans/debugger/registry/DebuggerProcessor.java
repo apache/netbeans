@@ -64,7 +64,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class DebuggerProcessor extends LayerGeneratingProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             ActionsProvider.Registration.class.getCanonicalName(),
             ActionsProvider.Registrations.class.getCanonicalName(),
             DebuggerEngineProvider.Registration.class.getCanonicalName(),

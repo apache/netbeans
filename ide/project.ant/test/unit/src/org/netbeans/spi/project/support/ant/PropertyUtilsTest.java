@@ -251,7 +251,7 @@ public class PropertyUtilsTest extends NbTestCase {
     }
     
     public void testFixedPropertyProvider() throws Exception {
-        Map<String,String> defs = new HashMap<String,String>();
+        Map<String,String> defs = new HashMap<>();
         defs.put("key1", "val1");
         defs.put("key2", "val2");
         PropertyProvider pp = PropertyUtils.fixedPropertyProvider(defs);
@@ -291,7 +291,7 @@ public class PropertyUtilsTest extends NbTestCase {
         } finally {
             os.close();
         }
-        Map<String,String> m = new HashMap<String,String>();
+        Map<String,String> m = new HashMap<>();
         m.put("a", "aval");
         m.put("b", "bval");
         l.msg("got a change when file was changed").assertEvent();

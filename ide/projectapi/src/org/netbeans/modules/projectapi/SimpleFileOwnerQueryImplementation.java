@@ -62,7 +62,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     private static final String projectScanRoot;
     
     static {
-        Set<String> files = new HashSet<String>();
+        Set<String> files = new HashSet<>();
         String root = null;
         try {
             root = System.getProperty("project.limitScanRoot"); // NOI18N

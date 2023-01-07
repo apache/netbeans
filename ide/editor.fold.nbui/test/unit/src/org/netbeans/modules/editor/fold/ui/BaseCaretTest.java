@@ -120,7 +120,7 @@ public class BaseCaretTest extends NbTestCase {
     }
 
     public static void prepareTest(String[] additionalLayers, Object[] additionalLookupContent) throws IOException, SAXException, PropertyVetoException {
-        Collection<URL> allUrls = new ArrayList<URL>();
+        Collection<URL> allUrls = new ArrayList<>();
         for (String u : additionalLayers) {
             if (u.charAt(0) == '/') {
                 u = u.substring(1);
@@ -327,7 +327,7 @@ public class BaseCaretTest extends NbTestCase {
     }
     
     private static class P extends AbstractPreferences {
-        private Map<String, String>  m = new HashMap<String, String>();
+        private Map<String, String>  m = new HashMap<>();
 
         public P(AbstractPreferences parent, String name) {
             super(parent, name);

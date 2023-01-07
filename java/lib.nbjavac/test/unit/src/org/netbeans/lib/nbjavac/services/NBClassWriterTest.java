@@ -114,13 +114,13 @@ public class NBClassWriterTest extends NbTestCase {
         NBClassWriter.preRegister(ct.getContext());
         
         PackageElement pack = ct.getElements().getPackageElement(packageName);
-        Set<String> actualClassNames = new HashSet<String>();
+        Set<String> actualClassNames = new HashSet<>();
 
         for (TypeElement te : ElementFilter.typesIn(pack.getEnclosedElements())) {
             actualClassNames.add(ct.getElements().getBinaryName(te).toString());
         }
 
-        if (!new HashSet<String>(Arrays.asList(expectedClassNames)).equals(actualClassNames)) {
+        if (!new HashSet<>(Arrays.asList(expectedClassNames)).equals(actualClassNames)) {
             throw new AssertionError(actualClassNames.toString());
         }
     }

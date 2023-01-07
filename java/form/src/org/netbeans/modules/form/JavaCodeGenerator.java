@@ -1701,7 +1701,7 @@ class JavaCodeGenerator extends CodeGenerator {
     String getBindingDescriptionVariable(Class descriptionType, StringBuilder buf, boolean create) {
         String variable = null;
         if (bindingVariables == null) {
-            bindingVariables = new HashMap<String,String>();
+            bindingVariables = new HashMap<>();
         } else {
             variable = bindingVariables.get(descriptionType.getName());
         }
@@ -2292,8 +2292,8 @@ class JavaCodeGenerator extends CodeGenerator {
                         String propCode = generatePropertyBeanInitialization(subProp, val, initCodeWriter, null);
                         if (propCode != null) {
                             if (subBeanPropNames == null) {
-                                subBeanPropNames = new ArrayList<String>();
-                                subBeanPropCodes = new ArrayList<String>();
+                                subBeanPropNames = new ArrayList<>();
+                                subBeanPropCodes = new ArrayList<>();
                             }
                             subBeanPropNames.add(subProp.getName());
                             subBeanPropCodes.add(propCode);
@@ -2569,7 +2569,7 @@ class JavaCodeGenerator extends CodeGenerator {
     private Set<String> addFieldVariables(CodeWriter variablesWriter)
         throws IOException
     {
-        Set<String> variableNames = new HashSet<String>();
+        Set<String> variableNames = new HashSet<>();
         Iterator<CodeVariable> it = getSortedVariables(CodeVariable.FIELD, CodeVariable.SCOPE_MASK);
 
         while (it.hasNext()) {
@@ -3879,7 +3879,7 @@ class JavaCodeGenerator extends CodeGenerator {
         if (repeatedCodeVariables != null) {
             variable = repeatedCodeVariables.get(codeToSubst);
         } else {
-            repeatedCodeVariables = new HashMap<String,String>();
+            repeatedCodeVariables = new HashMap<>();
             variable = null;
         }
         if (variable == null) {

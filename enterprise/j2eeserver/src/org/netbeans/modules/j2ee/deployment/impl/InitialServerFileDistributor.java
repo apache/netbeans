@@ -130,7 +130,7 @@ public class InitialServerFileDistributor extends ServerProgress {
     // are typically jars coresponding to already existing exploded directory and we
     // don't want to deploy them  -->  see also #199096 and #222924 for more details
     private Set<String> collectChildModuleNames(J2eeModule source) {
-        final Set<String> childModuleNames = new HashSet<String>();
+        final Set<String> childModuleNames = new HashSet<>();
         if (source instanceof J2eeApplication) {
             for (J2eeModule module : ((J2eeApplication) source).getModules()) {
 

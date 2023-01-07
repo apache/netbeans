@@ -200,7 +200,7 @@ public class PackageView {
         
         boolean hasSubfolders = false;
         boolean hasFiles = false;
-        List<FileObject> folders = new ArrayList<FileObject>();
+        List<FileObject> folders = new ArrayList<>();
         for (FileObject kid : fo.getChildren()) {
             // XXX could use PackageDisplayUtils.isSignificant here
             if (kid.isValid() && VisibilityQuery.getDefault().isVisible(kid) && group.contains(kid)) {

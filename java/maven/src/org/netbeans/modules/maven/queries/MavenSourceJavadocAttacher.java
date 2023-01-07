@@ -133,7 +133,7 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
                 }
                 if (file.isFile()) {
                     List<RepositoryForBinaryQueryImpl.Coordinates> coordinates2 = RepositoryForBinaryQueryImpl.getJarMetadataCoordinates(result);
-                    List<URL> res = new ArrayList<URL>();
+                    List<URL> res = new ArrayList<>();
                     if (coordinates2 != null) {
                         for (RepositoryForBinaryQueryImpl.Coordinates coordinate : coordinates2) {
                             if (Boolean.TRUE.equals(cancel.call())) {

@@ -344,7 +344,7 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
         String moduleName = module.getAttributeValue("name");
         @SuppressWarnings("unchecked")
         List<Element> propElements = module.getChildren("property");
-        Map<String, String> moduleProps = new HashMap<String, String>();
+        Map<String, String> moduleProps = new HashMap<>();
         for (Element prp : propElements) {
             String name = prp.getAttributeValue("name");
             String value = prp.getAttributeValue("value");

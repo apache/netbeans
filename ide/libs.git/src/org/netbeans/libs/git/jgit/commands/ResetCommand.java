@@ -226,7 +226,7 @@ public class ResetCommand extends GitCommand {
     }
 
     private void deleteFile (File file, File[] roots) {
-        Set<File> rootFiles = new HashSet<File>(Arrays.asList(roots));
+        Set<File> rootFiles = new HashSet<>(Arrays.asList(roots));
         File[] children;
         while (file != null && !rootFiles.contains(file) && ((children = file.listFiles()) == null || children.length == 0)) {
             // file is an empty folder

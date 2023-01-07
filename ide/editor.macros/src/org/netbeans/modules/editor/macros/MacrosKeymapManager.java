@@ -57,7 +57,7 @@ public final class MacrosKeymapManager extends KeymapManager {
                 macroActions.add(macro);
                 
                 // Compute all macro's shortcuts
-                Set<String> shortcuts = new HashSet<String>();
+                Set<String> shortcuts = new HashSet<>();
                 for(MultiKeyBinding mkb : macro.getShortcuts()) {
                     // keyStrokesToString uses $, but it's an API and I cannot change its behaviour
                     String shortcut = StorageSupport.keyStrokesToString(mkb.getKeyStrokeList(), true);

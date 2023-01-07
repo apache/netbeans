@@ -44,7 +44,7 @@ public class StringListImpl extends POMComponentImpl implements StringList {
     @Override
     public List<String> getListChildren() {
         List<POMExtensibilityElement> el = getChildren(POMExtensibilityElement.class);
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         for (POMExtensibilityElement elem : el) {
             if (elem.getQName().getLocalPart().equals(childname.getQName().getLocalPart())) {
                 toRet.add(elem.getElementText());

@@ -290,7 +290,7 @@ public class SpecializesTest extends CommonTestCase {
                 TypeMirror mirror = model.resolveType( "foo.CustomClass" );
                 Element clazz = ((DeclaredType)mirror).asElement();
                 List<? extends Element> children = clazz.getEnclosedElements();
-                Set<String> names = new HashSet<String>();
+                Set<String> names = new HashSet<>();
                 for (Element element : children) {
                     if ( element instanceof VariableElement ){
                         names.add( element.getSimpleName().toString());
@@ -568,7 +568,7 @@ public class SpecializesTest extends CommonTestCase {
                 TypeMirror mirror = model.resolveType( "foo.CustomClass" );
                 Element clazz = ((DeclaredType)mirror).asElement();
                 List<? extends Element> children = clazz.getEnclosedElements();
-                Set<String> names = new HashSet<String>();
+                Set<String> names = new HashSet<>();
                 for (Element element : children) {
                     if ( element instanceof VariableElement ){
                         names.add( element.getSimpleName().toString());

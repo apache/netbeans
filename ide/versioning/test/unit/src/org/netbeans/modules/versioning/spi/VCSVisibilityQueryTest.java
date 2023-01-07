@@ -92,7 +92,7 @@ public class VCSVisibilityQueryTest extends NbTestCase {
         File f1 = createVersionedFile("f1", true);
         File f2 = createVersionedFile("f2", true);
         
-        final List<String> received = new ArrayList<String>();
+        final List<String> received = new ArrayList<>();
         ChangeListener list;
         VisibilityQuery.getDefault().addChangeListener(list = new ChangeListener() {
             @Override

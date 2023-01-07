@@ -106,7 +106,7 @@ public class RemoteFiles {
     
     public synchronized List<URL> getRemoteFiles() {
         if (urls == null) {
-            urls = new ArrayList<URL>();
+            urls = new ArrayList<>();
             // first time asked for remote files: return empty array and
             // initialize index etc and fire even when real data are available:
             update();
@@ -149,7 +149,7 @@ public class RemoteFiles {
 
     // #217664 - for now filter out all remote files which are not JavaScript or CSS files:
     private List<URL> filter(List<URL> allRemoteDependencies) {
-        List<URL> res = new ArrayList<URL>();
+        List<URL> res = new ArrayList<>();
         for (URL u : allRemoteDependencies) {
             String uu = u.toExternalForm().toLowerCase();
             // XXX mime type should be used

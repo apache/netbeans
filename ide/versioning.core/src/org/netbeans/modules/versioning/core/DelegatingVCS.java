@@ -84,7 +84,7 @@ public class DelegatingVCS extends VersioningSystem implements VCSSystemProvider
         this.delegate = delegate;
         String serviceName = "Services/VersioningSystem/"+delegate.getClass().getName().replace('.', '-')+".instance"; // NOI18N
         FileObject serviceFO = FileUtil.getConfigFile(serviceName); // NOI18N
-        metadataFolderNames = new HashSet<String>();
+        metadataFolderNames = new HashSet<>();
         int i = 0;
         while(true) {
             String name = (String) serviceFO.getAttribute("metadataFolderName" + i++); // NOI18N
@@ -97,7 +97,7 @@ public class DelegatingVCS extends VersioningSystem implements VCSSystemProvider
             }
             metadataFolderNames.add(name);
         }
-        HashMap<String,String> aMap = new HashMap<String,String>();
+        HashMap<String,String> aMap = new HashMap<>();
         aMap.put("actionsCategory", (String) serviceFO.getAttribute("actionsCategory")); // NOI18N
         map = aMap;
         this.displayName = (String) serviceFO.getAttribute("displayName"); // NOI18N
@@ -242,7 +242,7 @@ public class DelegatingVCS extends VersioningSystem implements VCSSystemProvider
 
     private Collection<String> getMetadataFolderNames() {
         if(metadataFolderNames == null) {
-            metadataFolderNames = new HashSet<String>();
+            metadataFolderNames = new HashSet<>();
             int i = 0;
             while(true) {
                 String name = (String) map.get("metadataFolderName" + i++);

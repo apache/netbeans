@@ -50,7 +50,7 @@ public final class RefactoringElementsBag {
     
     private final List<RefactoringElementImplementation> delegate;
     private final RefactoringSession session;
-    private Collection<FileObject> readOnlyFiles = new HashSet<FileObject>();
+    private Collection<FileObject> readOnlyFiles = new HashSet<>();
     
     /**
      * Creates an instance of RefactoringElementsBag

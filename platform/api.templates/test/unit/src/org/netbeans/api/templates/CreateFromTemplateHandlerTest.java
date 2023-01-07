@@ -73,9 +73,9 @@ public class CreateFromTemplateHandlerTest extends NbTestCase {
     }
     
     protected void setUp() throws Exception {
-        Hand.acceptObject = new ArrayList<FileObject>();
-        Hand.fileObject = new ArrayList<FileObject>();
-        Hand.origObject = new ArrayList<FileObject>();
+        Hand.acceptObject = new ArrayList<>();
+        Hand.fileObject = new ArrayList<>();
+        Hand.origObject = new ArrayList<>();
         Hand.name = null;
         Hand.parameters = null;
         

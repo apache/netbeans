@@ -180,7 +180,7 @@ public final class FxXmlSymbols {
     private static final Set<String> fxReservedAttributes;
     
     static {
-        Set<String> h = new HashSet<String>();
+        Set<String> h = new HashSet<>();
         h.add(FX_ATTR_CONSTANT);
         h.add(FX_ATTR_ID);
         h.add(FX_VALUE);

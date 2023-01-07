@@ -62,7 +62,7 @@ public enum MtomQName implements SchemaLocationProvider {
     private final QName qName;
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         hmap.put(MTOM_NS_URI, local ? MTOM_NS_URI_LOCAL : MTOM_NS_URI_EXT);
         return hmap;
     }

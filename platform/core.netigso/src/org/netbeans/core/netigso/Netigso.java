@@ -206,12 +206,12 @@ implements Cloneable, Stamps.Updater {
         if (pkgAdm == null) {
             return null;
         }
-        Set<String> allCnbs = new HashSet<String>(allModules.size() * 2);
+        Set<String> allCnbs = new HashSet<>(allModules.size() * 2);
         for (ModuleInfo m : allModules) {
             allCnbs.add(m.getCodeNameBase());
         }
         
-        Set<String> needEnablement = new HashSet<String>();
+        Set<String> needEnablement = new HashSet<>();
         for (Bundle b : f.getBundleContext().getBundles()) {
             String loc = b.getLocation();
             if (loc.startsWith("netigso://")) {
@@ -269,7 +269,7 @@ implements Cloneable, Stamps.Updater {
                 throw new IOException("Not found bundle:" + m.getCodeNameBase());
             }
             NetigsoLoader l = new NetigsoLoader(b, m, jar);
-            Set<String> pkgs = new HashSet<String>();
+            Set<String> pkgs = new HashSet<>();
             String[] knownPkgs = registered.get(m.getCodeNameBase());
             Object exported = b.getHeaders("").get("Export-Package");
             if (knownPkgs == EMPTY) {
@@ -756,7 +756,7 @@ implements Cloneable, Stamps.Updater {
         return exported.toString();
     }
     private static Set<String> findRecursivePkgs(Module m, PackageExport packageExport)  {
-        Set<String> pkgs = new HashSet<String>();
+        Set<String> pkgs = new HashSet<>();
         for (File f : m.getAllJars()) {
             JarFile jf = null;
             try {

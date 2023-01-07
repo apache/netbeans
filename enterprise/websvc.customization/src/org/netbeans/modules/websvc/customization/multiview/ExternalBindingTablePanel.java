@@ -130,7 +130,7 @@ public class ExternalBindingTablePanel extends DefaultTablePanel{
     }
     
     public Set<String> getRemovedBindings(){
-        Set<String> bindingsRemoved = new HashSet<String>();
+        Set<String> bindingsRemoved = new HashSet<>();
         Binding[] bindingsInModel = null;
         Client client = (Client)node.getLookup().lookup(Client.class);
         if(client != null){
@@ -268,8 +268,8 @@ public class ExternalBindingTablePanel extends DefaultTablePanel{
         }
         
         public void setData(Node node){
-            children = new ArrayList<String>();
-            List<String> list = new ArrayList<String>();
+            children = new ArrayList<>();
+            List<String> list = new ArrayList<>();
             Client client = (Client)node.getLookup().lookup(Client.class);
             if(client != null){
                 Binding[] bindings = client.getBindings();

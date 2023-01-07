@@ -403,7 +403,7 @@ public class MenuEditLayer extends JPanel {
                         return;
                     }
                     Node[] newNodes = (Node[])evt.getNewValue();
-                    List<RADComponent> selectedNodes = new ArrayList<RADComponent>();
+                    List<RADComponent> selectedNodes = new ArrayList<>();
 
                     for(Node n : newNodes) {
                         if(n instanceof RADComponentNode) {
@@ -740,7 +740,7 @@ public class MenuEditLayer extends JPanel {
     }
     
     
-    private List<RADComponent> selectedComponents = new ArrayList<RADComponent>();
+    private List<RADComponent> selectedComponents = new ArrayList<>();
     
     
     boolean isComponentSelected() {
@@ -748,7 +748,7 @@ public class MenuEditLayer extends JPanel {
     }
     
     void setSelectedRADComponent(RADComponent comp) {
-        List<RADComponent> comps = new ArrayList<RADComponent>();
+        List<RADComponent> comps = new ArrayList<>();
         comps.add(comp);
         setSelectedRADComponents(comps);
         formDesigner.setSelectedComponent(comp);
@@ -756,7 +756,7 @@ public class MenuEditLayer extends JPanel {
     
     void addSelectedRADComponent(RADComponent comp) {
         if (!selectedComponents.contains(comp)) {
-            List<RADComponent> comps = new ArrayList<RADComponent>();
+            List<RADComponent> comps = new ArrayList<>();
             comps.addAll(selectedComponents);
             comps.add(comp);
             setSelectedRADComponents(comps);
@@ -768,7 +768,7 @@ public class MenuEditLayer extends JPanel {
     void toggleSelectedRADComponent(RADComponent comp) {
         if (selectedComponents.contains(comp)) { // component is already selected so remove it from selection
             selectedComponents.remove(comp);
-            List<RADComponent> comps = new ArrayList<RADComponent>();
+            List<RADComponent> comps = new ArrayList<>();
             comps.addAll(selectedComponents);
             setSelectedRADComponents(comps);
             formDesigner.removeComponentFromSelection(comp);
@@ -888,7 +888,7 @@ public class MenuEditLayer extends JPanel {
             }
         }
         
-        List<RADComponent> path = new ArrayList<RADComponent>();
+        List<RADComponent> path = new ArrayList<>();
         RADComponent temp = rad.getParentComponent();
         while(true) {
             if(temp == null) break;

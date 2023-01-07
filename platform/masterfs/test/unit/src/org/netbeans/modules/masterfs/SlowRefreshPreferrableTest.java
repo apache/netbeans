@@ -72,7 +72,7 @@ public class SlowRefreshPreferrableTest extends NbTestCase {
 
     public void testRefreshPrefersSuggestedFolders() throws Exception {
         long lm = System.currentTimeMillis();
-        List<FileObject> all = new ArrayList<FileObject>();
+        List<FileObject> all = new ArrayList<>();
         FileObject fld = testFolder;
         for (int i = 0; i < 20; i++) {
             all.add(fld.createData("text" + i + ".txt"));
@@ -131,7 +131,7 @@ public class SlowRefreshPreferrableTest extends NbTestCase {
 
         final Runnable r = (Runnable)obj;
         class AE extends ActionEvent implements Runnable {
-            List<FileObject> files = new ArrayList<FileObject>();
+            List<FileObject> files = new ArrayList<>();
             int goingIdle;
             int cnt;
             

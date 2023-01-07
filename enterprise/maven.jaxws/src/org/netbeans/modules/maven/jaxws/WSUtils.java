@@ -257,8 +257,8 @@ public class WSUtils {
         }
         StringTokenizer tokens = new StringTokenizer(base,"/"); //NOI18N
         if (tokens.countTokens() > 0) {
-            List<String> packageParts = new ArrayList<String>();
-            List<String> nsParts = new ArrayList<String>();
+            List<String> packageParts = new ArrayList<>();
+            List<String> nsParts = new ArrayList<>();
             while (tokens.hasMoreTokens()) {
                 String part = tokens.nextToken();
                 if (part.length() >= 0) {
@@ -269,7 +269,7 @@ public class WSUtils {
                 StringTokenizer tokens1 = new StringTokenizer(nsParts.get(0),"."); //NOI18N
                 int countTokens = tokens1.countTokens();
                 if (countTokens > 0) {
-                    List<String> list = new ArrayList<String>();
+                    List<String> list = new ArrayList<>();
                     while(tokens1.hasMoreTokens()) {
                         list.add(tokens1.nextToken());
                     }
@@ -371,7 +371,7 @@ public class WSUtils {
     private static void doUpdateClients(Project prj, JAXWSLightSupport jaxWsSupport) {
         // get old clients
         List<JaxWsService> oldClients = new ArrayList<JaxWsService>();
-        Set<String> oldNames = new HashSet<String>();
+        Set<String> oldNames = new HashSet<>();
         for (JaxWsService s : jaxWsSupport.getServices()) {
             if (!s.isServiceProvider()) {
                 oldClients.add(s);
@@ -381,7 +381,7 @@ public class WSUtils {
         FileObject wsdlFolder = jaxWsSupport.getWsdlFolder(false);
         if (wsdlFolder != null) {
             List<JaxWsService> newClients = getJaxWsClients(prj);
-            Set<String> commonNames = new HashSet<String>();
+            Set<String> commonNames = new HashSet<>();
             for (JaxWsService client : newClients) {
                 String id = client.getId();
                 if (oldNames.contains(id)) {
@@ -1041,7 +1041,7 @@ public class WSUtils {
 
     public static String getUniqueId(String id, List<JaxWsService> services) {
         String result = id;
-        Set<String> serviceIdSet = new HashSet<String>();
+        Set<String> serviceIdSet = new HashSet<>();
         for (JaxWsService s : services) {
             String serviceId = s.getId();
             if (serviceId != null) {

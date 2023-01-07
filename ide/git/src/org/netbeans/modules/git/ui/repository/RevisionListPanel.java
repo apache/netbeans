@@ -288,7 +288,7 @@ public class RevisionListPanel extends javax.swing.JPanel implements ActionListe
     private class ListHistoryProgressSupport extends GitProgressSupport.NoOutputLogging implements RevisionInfoListener, ListSelectionListener {
         
         private final List<GitRevisionInfo> revisions = new LinkedList<GitRevisionInfo>();
-        private final Set<String> displayedRevisions = new HashSet<String>(10);
+        private final Set<String> displayedRevisions = new HashSet<>(10);
         private boolean reselected;
         private GitRevisionInfoDelegate selectedRevision;
         private int limit;

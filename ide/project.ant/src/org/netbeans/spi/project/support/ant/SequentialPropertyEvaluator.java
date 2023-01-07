@@ -163,7 +163,7 @@ final class SequentialPropertyEvaluator implements PropertyEvaluator, ChangeList
         Map<String, String> _defs = defs != null ? defs : Collections.<String, String>emptyMap();
         Map<String, String> _newdefs = newdefs != null ? newdefs : Collections.<String, String>emptyMap();
         if (!_defs.equals(_newdefs)) {
-            Set<String> props = new HashSet<String>(_defs.keySet());
+            Set<String> props = new HashSet<>(_defs.keySet());
             props.addAll(_newdefs.keySet());
             List<PropertyChangeEvent> events = new LinkedList<PropertyChangeEvent>();
             for (String prop : props) {
@@ -208,7 +208,7 @@ final class SequentialPropertyEvaluator implements PropertyEvaluator, ChangeList
         // Result in progress, if it is to be a String:
         StringBuilder val = new StringBuilder();
         // Or, result in progress, if it is to be a Set<String>:
-        Set<String> needed = new HashSet<String>();
+        Set<String> needed = new HashSet<>();
         while (true) {
             int shell = rawval.indexOf('$', idx);
             if (shell == -1 || shell == rawval.length() - 1) {
@@ -301,7 +301,7 @@ final class SequentialPropertyEvaluator implements PropertyEvaluator, ChangeList
                     }
                 }
             }
-            Set<String> toSort = new HashSet<String>(dependOnSiblings.keySet());
+            Set<String> toSort = new HashSet<>(dependOnSiblings.keySet());
             for (Set<String> s : dependOnSiblings.values()) {
                 toSort.addAll(s);
             }

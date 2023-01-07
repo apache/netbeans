@@ -38,7 +38,7 @@ import org.openide.util.Mutex;
 public class DefaultConfigFileManagerImpl implements ConfigFileManagerImplementation {
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
-    private List<File> files = new ArrayList<File>();
+    private List<File> files = new ArrayList<>();
     private List<ConfigFileGroup> groups = new ArrayList<ConfigFileGroup>();
 
     public DefaultConfigFileManagerImpl(ConfigFileGroup... groups) {

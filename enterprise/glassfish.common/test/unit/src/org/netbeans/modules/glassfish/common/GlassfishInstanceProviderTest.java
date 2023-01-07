@@ -65,7 +65,7 @@ public class GlassfishInstanceProviderTest {
 //        // prop-first-run
 //        String firstRunValue = "false";
 //        String candidate = "/a";
-//        Collection<String> registeredInstalls = new HashSet<String>();
+//        Collection<String> registeredInstalls = new HashSet<>();
 //        boolean expResult = true;
 //        boolean result = GlassfishInstanceProvider.computeNeedToRegister(firstRunValue, candidate, registeredInstalls);
 //        assertEquals(expResult, result);

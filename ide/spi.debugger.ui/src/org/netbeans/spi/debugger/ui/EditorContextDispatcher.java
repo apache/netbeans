@@ -335,7 +335,7 @@ public final class EditorContextDispatcher {
                                 mimeTypes = Collections.singleton(mimeType);
                             } else {
                                 if (mimeTypes.size() == 1) {
-                                    mimeTypes = new HashSet<String>(mimeTypes);
+                                    mimeTypes = new HashSet<>(mimeTypes);
                                 }
                                 mimeTypes.add(mimeType);
                             }

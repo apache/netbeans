@@ -32,7 +32,7 @@ public class WildflyMessageDestination implements MessageDestination {
     public static final String QUEUE_PREFIX = "queue/";
     public static final String TOPIC_PREFIX = "topic/";
     private final String name;
-    private final Set<String> jndiNames = new HashSet<String>(1);
+    private final Set<String> jndiNames = new HashSet<>(1);
     private final Type type;
 
     public WildflyMessageDestination(String name, Type type) {

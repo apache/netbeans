@@ -61,7 +61,7 @@ public class FreeformTemplateAttributesProvider implements CreateFromTemplateAtt
         if (licenseEl == null && charset == null) {
             return null;
         } else {
-            Map<String, String> values = new HashMap<String, String>();
+            Map<String, String> values = new HashMap<>();
             if (licenseEl != null) {
                 values.put("license", evaluator.evaluate(XMLUtil.findText(licenseEl))); // NOI18N
             }

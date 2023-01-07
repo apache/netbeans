@@ -172,7 +172,7 @@ public class CordovaSampleIterator implements ProgressInstantiatingIterator<Wiza
                 
         ProjectManager.getDefault().clearNonProjectCache();
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("CordovaMapsSample", targetName);                             // NOI18N
         ConfigUtils.replaceTokens(projectFolder, map , "nbproject/project.xml"); // NOI18N
         

@@ -77,7 +77,7 @@ public class GrailsProjectWizardIterator implements WizardDescriptor.ProgressIns
 
     @Override
     public Set instantiate(final ProgressHandle handle) throws IOException {
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
 
         handle.start(100);
         try {
@@ -144,7 +144,7 @@ public class GrailsProjectWizardIterator implements WizardDescriptor.ProgressIns
 
     @Override
     public Set instantiate() throws IOException {
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
         return resultSet;
     }
 

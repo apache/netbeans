@@ -71,7 +71,7 @@ public class OperationsImpl implements DeleteOperationImplementation, MoveOperat
     
     protected List<FileObject> getFiles(String ... fileNames) {
         FileObject projectDirectory = project.getProjectDirectory();
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         
         for (String fileName : fileNames) {
             addFile(projectDirectory, fileName, files);

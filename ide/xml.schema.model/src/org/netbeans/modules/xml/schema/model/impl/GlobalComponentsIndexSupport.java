@@ -353,7 +353,7 @@ public class GlobalComponentsIndexSupport implements Runnable {
 
         public JUnitTestSupport(GlobalComponentsIndexSupport indexSupport) {
             mIndexSupport = indexSupport;
-            mMsgLog = new ArrayList<String>();
+            mMsgLog = new ArrayList<>();
         }
 
         public void log(String msg) {

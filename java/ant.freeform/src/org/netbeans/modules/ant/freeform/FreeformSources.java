@@ -86,7 +86,7 @@ final class FreeformSources implements Sources, AntProjectListener {
         Element genldata = project.getPrimaryConfigurationData();
         Element foldersE = XMLUtil.findElement(genldata, "folders", FreeformProjectType.NS_GENERAL); // NOI18N
         if (foldersE != null) {
-            final List<File> newFiles = new ArrayList<File>();
+            final List<File> newFiles = new ArrayList<>();
             for (Element folderE : XMLUtil.findSubElements(foldersE)) {
                 Element locationE = XMLUtil.findElement(folderE, "location", FreeformProjectType.NS_GENERAL); // NOI18N
                 final String location = XMLUtil.findText(locationE);
@@ -149,9 +149,9 @@ final class FreeformSources implements Sources, AntProjectListener {
 
     private void updateFileListeners(final List<? extends File> newFiles) {       
         synchronized (listenOnFiles) {
-            final Set<File> toRemove = new HashSet<File>(listenOnFiles.keySet());
+            final Set<File> toRemove = new HashSet<>(listenOnFiles.keySet());
             toRemove.removeAll(newFiles);
-            final Set<File> toAdd = new HashSet<File>(newFiles);
+            final Set<File> toAdd = new HashSet<>(newFiles);
             toAdd.removeAll(listenOnFiles.keySet());
             for (final File file : toRemove) {
                 final FileChangeListener fcl = listenOnFiles.remove(file);

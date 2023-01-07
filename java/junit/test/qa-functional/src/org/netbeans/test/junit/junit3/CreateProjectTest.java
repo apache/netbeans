@@ -127,7 +127,7 @@ public class CreateProjectTest extends ExtJellyTestCaseForJunit3 {
         // testing Junit3testprojectSuite.java
         openAc.perform(new Node(prn, "Test Packages|junit3testproject|Junit3testprojectSuite.java"));
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("import junit.framework.");
 
         lines.add("public static Test suite()");
@@ -145,7 +145,7 @@ public class CreateProjectTest extends ExtJellyTestCaseForJunit3 {
         // testing MainTest.java
         openAc.perform(new Node(prn, "Test Packages|junit3testproject|MainTest.java"));
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("import junit.framework.");
         lines.add("protected void setUp() throws Exception");
         lines.add("protected void tearDown() throws Exception");
@@ -192,7 +192,7 @@ public class CreateProjectTest extends ExtJellyTestCaseForJunit3 {
         // testing MainTest.java
         openAc.perform(new Node(prn, "Test Packages|junit3testproject|MainTest.java"));
 
-        ArrayList<String> linesYes = new ArrayList<String>();
+        ArrayList<String> linesYes = new ArrayList<>();
         linesYes.add("import junit.framework.");
         linesYes.add("Main.main(args);");
         linesYes.add("fail(\"The test case is a prototype.\");");

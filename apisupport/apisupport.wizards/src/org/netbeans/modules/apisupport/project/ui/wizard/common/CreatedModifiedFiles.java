@@ -636,7 +636,7 @@ public final class CreatedModifiedFiles {
             FileObject service = FileUtil.createData(
                     getProject().getProjectDirectory(), interfaceClassPath);
 
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             InputStream serviceIS = service.getInputStream();
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(serviceIS, StandardCharsets.UTF_8));
@@ -929,7 +929,7 @@ public final class CreatedModifiedFiles {
         public final void setAttribute(final String name, final String value, final String section) {
             Map<String, String> attribs = attributesToAdd.get(section);
             if (attribs == null) {
-                attribs = new HashMap<String, String>();
+                attribs = new HashMap<>();
                 attributesToAdd.put(section, attribs);
             }
             attribs.put(name, value);
@@ -1049,7 +1049,7 @@ public final class CreatedModifiedFiles {
 
         protected final Map<String, String> getProperties() {
             if (properties == null) {
-                this.properties = new HashMap<String, String>();
+                this.properties = new HashMap<>();
             }
             return properties;
         }

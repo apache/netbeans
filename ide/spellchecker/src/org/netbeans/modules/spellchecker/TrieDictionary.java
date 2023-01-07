@@ -120,7 +120,7 @@ public class TrieDictionary implements Dictionary {
     }
 
     public List<String> findValidWordsForPrefix(CharSequence word) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         int node = findNode(word, 0, 4);
         
         if (node == (-1))

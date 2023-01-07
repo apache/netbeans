@@ -848,7 +848,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         public SummaryListModel (List<? extends LogEntry> entries, boolean hasMoreResults) {
             allResults = new ArrayList<Item>(initializeResults(entries, master.hasMoreResults()));
             dispResults = new ArrayList<Item>(allResults.size());
-            revisions = new HashSet<String>();
+            revisions = new HashSet<>();
             for (LogEntry entry : entries) {
                 revisions.add(entry.getRevision());
             }

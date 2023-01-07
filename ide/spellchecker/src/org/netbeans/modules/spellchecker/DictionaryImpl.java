@@ -204,7 +204,7 @@ public class DictionaryImpl implements Dictionary {
     
     protected synchronized List<String> getDictionary() {
         if (dictionary == null)
-            dictionary = new ArrayList<String>();
+            dictionary = new ArrayList<>();
         
 //            System.err.println("returning dictionary=" + System.identityHashCode(dictionary));
         return dictionary;
@@ -362,7 +362,7 @@ public class DictionaryImpl implements Dictionary {
     public List<String> getSimilarWords(String word) {
         if (getDictionary().isEmpty()) return Collections.<String>emptyList();
         List<Pair> proposal = dynamicProgramming(word, getDictionaryText(), 5);
-        List<String> result   = new ArrayList<String>();
+        List<String> result   = new ArrayList<>();
         
         //future:
 //            if (Character.isLowerCase(word.charAt(0)))

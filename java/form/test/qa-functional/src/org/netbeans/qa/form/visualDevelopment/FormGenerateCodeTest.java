@@ -114,7 +114,7 @@ public class FormGenerateCodeTest extends ExtJellyTestCase {
         ComponentInspectorOperator inspector = new ComponentInspectorOperator();
 
 
-        HashMap<String, String> task = new HashMap<String, String>();
+        HashMap<String, String> task = new HashMap<>();
         task.put("Set Layout|Absolute Layout", "setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());"); // NOI18N
         task.put("Set Layout|Box Layout", "setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));"); // NOI18N
         task.put("Set Layout|Card Layout", "setLayout(new java.awt.CardLayout());"); // NOI18N
@@ -165,7 +165,7 @@ public class FormGenerateCodeTest extends ExtJellyTestCase {
             public void run() {
                 ComponentInspectorOperator inspector = new ComponentInspectorOperator();
                 String nodeName = "JFrame"; // NOI18N
-                ArrayList<String> cmds = new ArrayList<String>();
+                ArrayList<String> cmds = new ArrayList<>();
                 cmds.add("Add From Palette|Swing Controls|Label"); // NOI18N
                 cmds.add("Add From Palette|AWT|Label"); // NOI18N
                 Node node = new Node(inspector.treeComponents(), nodeName);
@@ -194,7 +194,7 @@ public class FormGenerateCodeTest extends ExtJellyTestCase {
                 ComponentInspectorOperator inspector = new ComponentInspectorOperator();
                 Node frameNode = new Node(inspector.treeComponents(), "JFrame"); // NOI18N
 
-                ArrayList<String> containers = new ArrayList<String>();
+                ArrayList<String> containers = new ArrayList<>();
                 containers.add("Add From Palette|Swing Containers|Panel"); // NOI18N
                 containers.add("Add From Palette|Swing Containers|Tabbed Pane"); // NOI18N
                 containers.add("Add From Palette|Swing Containers|Scroll Pane"); // NOI18N
@@ -207,7 +207,7 @@ public class FormGenerateCodeTest extends ExtJellyTestCase {
         });
 
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("jPanel1 = new javax.swing.JPanel();"); // NOI18N
         lines.add("jTabbedPane1 = new javax.swing.JTabbedPane();"); // NOI18N
         lines.add("jScrollPane1 = new javax.swing.JScrollPane();"); // NOI18N
@@ -342,7 +342,7 @@ public class FormGenerateCodeTest extends ExtJellyTestCase {
                 Node frameNode = new Node(inspector.treeComponents(), "Frame"); // NOI18N
 
 
-                ArrayList<String> containers = new ArrayList<String>();
+                ArrayList<String> containers = new ArrayList<>();
                 containers.add("Add From Palette|AWT|Panel"); // NOI18N
                 containers.add("Add From Palette|AWT|Scroll Pane"); // NOI18N
                 runPopupOverNode(containers, frameNode);
@@ -480,7 +480,7 @@ public class FormGenerateCodeTest extends ExtJellyTestCase {
             editor.ok();
         }
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         lines.add("jToggleButton1.setBorder(javax.swing.BorderFactory.");
         lines.add("jLabel1.setBorder(javax.swing.BorderFactory.");
         lines.add("jButton1.setBorder(javax.swing.BorderFactory.");

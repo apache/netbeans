@@ -131,7 +131,7 @@ public class CSSUtils {
      * @return list of possible (base) names of the given property.
      */
     private static List<String> possiblePropertyNames(String name) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add(name);
         
         // -moz-color => color
@@ -320,7 +320,7 @@ public class CSSUtils {
         while (st.hasMoreTokens()) {
             String mediaQuery = st.nextToken();
             int index;
-            List<String> parts = new ArrayList<String>();
+            List<String> parts = new ArrayList<>();
             while ((index = mediaQuery.indexOf("and")) != -1) { // NOI18N
                 String part = mediaQuery.substring(0,index);
                 mediaQuery = mediaQuery.substring(index+3);

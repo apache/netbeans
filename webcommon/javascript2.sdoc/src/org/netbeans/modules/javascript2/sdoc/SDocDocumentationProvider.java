@@ -51,7 +51,7 @@ public class SDocDocumentationProvider implements JsDocumentationProvider {
     @Override
     public synchronized Set getSupportedTags() {
         if (supportedTags == null) {
-            supportedTags = new HashSet<String>(SDocElementType.values().length);
+            supportedTags = new HashSet<>(SDocElementType.values().length);
             for (SDocElementType type : SDocElementType.values()) {
                 supportedTags.add(type.toString());
             }

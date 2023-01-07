@@ -57,7 +57,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("application");    // NOI18N
             list.add("page");           // NOI18N
             list.add("request");        // NOI18N
@@ -75,7 +75,7 @@ public class AttrSupports {
 
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("scriptless");    // NOI18N
             list.add("tagdependent");           // NOI18N
             list.add("empty");        // NOI18N
@@ -92,7 +92,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("1.2");    // NOI18N
             list.add("2.0");           // NOI18N
             return list;
@@ -108,7 +108,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("bean");    // NOI18N
             list.add("applet");           // NOI18N
             return list;
@@ -124,7 +124,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("AT_BEGIN");    // NOI18N
             list.add("AT_END");           // NOI18N
             list.add("NESTED");        // NOI18N
@@ -141,7 +141,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("false");    // NOI18N
             list.add("no");           // NOI18N
             list.add("true");        // NOI18N
@@ -222,7 +222,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             PageInfo.BeanData[] beanData = sup.getBeanData();
             if(beanData != null) {
                 for (int i = 0; i < beanData.length; i++) {
@@ -242,7 +242,7 @@ public class AttrSupports {
         }
         
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item, boolean setter) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             String namePropertyValue = (String)item.getAttributes().get("name");    // NOI18N
             if (namePropertyValue != null) {
                 String className = null;
@@ -328,7 +328,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             Map map = sup.getTagLibraryMappings();
             if (map != null) {
                 Iterator iterator = map.keySet().iterator();
@@ -352,7 +352,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             FileObject orig = sup.getFileObject();
             FileObject documentBase = JspUtils.guessWebModuleRoot(orig);
             if (documentBase != null) {
@@ -483,7 +483,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("false");   // NOI18N
             list.add("true");    // NOI18N
             return list;
@@ -499,7 +499,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("java");    // NOI18N
             return list;
         }
@@ -514,7 +514,7 @@ public class AttrSupports {
         
         @Override
         protected List<String> possibleValues(JspSyntaxSupport sup, SyntaxElement.TagDirective item) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             Iterator<String> iter = java.nio.charset.Charset.availableCharsets().keySet().iterator();
             
             while (iter.hasNext())

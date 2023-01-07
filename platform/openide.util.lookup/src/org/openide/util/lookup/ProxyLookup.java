@@ -220,7 +220,7 @@ public class ProxyLookup extends Lookup {
 
 
         // this cannot be done from the synchronized block
-        final ArrayList<Object> evAndListeners = new ArrayList<Object>();
+        final ArrayList<Object> evAndListeners = new ArrayList<>();
         for (Reference<R> ref : arr) {
             R<?> r = ref.get();
             if (r != null) {

@@ -188,7 +188,7 @@ public class CallEjbPanel extends javax.swing.JPanel {
     // lazy initialization
     private Set<String> getRefNameSet() throws IOException {
         if (refNameSet == null) {
-            refNameSet = new HashSet<String>();
+            refNameSet = new HashSet<>();
             // This is working only for EJB project. Will need some enhancement in EnterpriseReferenceContainer API?
             org.netbeans.modules.j2ee.api.ejbjar.EjbJar ejbModule = org.netbeans.modules.j2ee.api.ejbjar.EjbJar.getEjbJar(srcFile);
             if (ejbModule != null) {
@@ -463,7 +463,7 @@ public class CallEjbPanel extends javax.swing.JPanel {
         if (ejbModule != null) {
             Map<String, String> names = ejbModule.getMetadataModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Map<String, String>>() {
                 public Map<String, String> run(EjbJarMetadata metadata) throws Exception {
-                    Map<String, String> result = new HashMap<String, String>();
+                    Map<String, String> result = new HashMap<>();
                     EntityAndSession ejb = (EntityAndSession) metadata.findByEjbClass(elementHandle.getQualifiedName());
                     if (ejb != null) {
                         result.put(EntityAndSession.HOME, ejb.getHome());

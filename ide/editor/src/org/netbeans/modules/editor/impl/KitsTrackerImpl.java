@@ -51,7 +51,7 @@ import org.openide.loaders.DataObject;
 public final class KitsTrackerImpl extends KitsTracker {
         
     private static final Logger LOG = Logger.getLogger(KitsTrackerImpl.class.getName());
-    private static final Set<String> ALREADY_LOGGED = Collections.synchronizedSet(new HashSet<String>(10));
+    private static final Set<String> ALREADY_LOGGED = Collections.synchronizedSet(new HashSet<>(10));
     private static final Logger TIMER = Logger.getLogger("TIMER");
     
     public KitsTrackerImpl() {
@@ -177,12 +177,12 @@ public final class KitsTrackerImpl extends KitsTracker {
     // The map of mime type -> kit class
     private final Map<String, FileObject> mimeType2kitClass = new HashMap<String, FileObject>();
     private final Map<Class, List<String>> kitClass2mimeTypes = new HashMap<Class, List<String>>();
-    private final Set<String> knownMimeTypes = new HashSet<String>();
+    private final Set<String> knownMimeTypes = new HashSet<>();
     private List<FileObject> eventSources = null;
     private boolean needsReloading = true;
     private boolean mimeType2kitClassLoaded = false;
 
-    private static final Set<String> WELL_KNOWN_PARENTS = new HashSet<String>(Arrays.asList(new String [] {
+    private static final Set<String> WELL_KNOWN_PARENTS = new HashSet<>(Arrays.asList(new String [] {
         "java.lang.Object", //NOI18N
         "javax.swing.text.EditorKit", //NOI18N
         "javax.swing.text.DefaultEditorKit", //NOI18N
@@ -193,7 +193,7 @@ public final class KitsTrackerImpl extends KitsTracker {
         "org.netbeans.modules.xml.text.syntax.UniKit", //NOI18N
     }));
 
-    private static final Set<String> DYNAMIC_LANGUAGES = new HashSet<String>(Arrays.asList(new String [] {
+    private static final Set<String> DYNAMIC_LANGUAGES = new HashSet<>(Arrays.asList(new String [] {
         // Schliemann and GSF kits are provided on the fly by the frameworks' MimeDataProvider
         "org.netbeans.modules.languages.dataobject.LanguagesEditorKit", //NOI18N
         "org.netbeans.modules.gsf.GsfEditorKitFactory$GsfEditorKit", //NOI18N
@@ -279,8 +279,8 @@ public final class KitsTrackerImpl extends KitsTracker {
     }
 
     private static FileObject findKitRegistration(FileObject folder) {
-        Set<FileObject> filesWithInstanceOfAttribute = new HashSet<FileObject>();
-        Set<FileObject> otherFiles = new HashSet<FileObject>();
+        Set<FileObject> filesWithInstanceOfAttribute = new HashSet<>();
+        Set<FileObject> otherFiles = new HashSet<>();
 
         for(FileObject f : folder.getChildren()) {
             if (f.getAttribute("instanceOf") != null) { //NOI18N
@@ -388,8 +388,8 @@ public final class KitsTrackerImpl extends KitsTracker {
 
     private Object updateAndGet(Object kitClassOrMimeType) {
         boolean reload;
-        Set<String> reloadedSet = new HashSet<String>();
-        List<FileObject> newEventSources = new ArrayList<FileObject>();
+        Set<String> reloadedSet = new HashSet<>();
+        List<FileObject> newEventSources = new ArrayList<>();
         
         synchronized (mimeType2kitClass) {
             reload = needsReloading;
@@ -427,7 +427,7 @@ public final class KitsTrackerImpl extends KitsTracker {
             
             // Compute the list
             if (kitClassOrMimeType == null) {
-                Set<String> set = new HashSet<String>(knownMimeTypes);
+                Set<String> set = new HashSet<>(knownMimeTypes);
 
                 TIMER.log(Level.FINE, "[M] Mime types", new Object [] { this, set.size() }); //NOI18N
                 return set;
@@ -466,7 +466,7 @@ public final class KitsTrackerImpl extends KitsTracker {
                     Class kitClass = (Class) kitClassOrMimeType;
                     List<String> list = kitClass2mimeTypes.get(kitClass);
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                         kitClass2mimeTypes.put(kitClass, list);
 
                         // If kitClass is not registered for any mime type, we have

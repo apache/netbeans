@@ -112,7 +112,7 @@ public final class SpringScope {
      */
     public List<SpringConfigModel> getAllConfigModels() {
         final List<ConfigFileGroup> groups = new ArrayList<ConfigFileGroup>();
-        final List<File> files = new ArrayList<File>();
+        final List<File> files = new ArrayList<>();
         // Avoid race conditions.
         configFileManager.mutex().readAccess(new Runnable() {
             public void run() {
@@ -121,7 +121,7 @@ public final class SpringScope {
             }
         });
         List<SpringConfigModel> result = new ArrayList<SpringConfigModel>(groups.size());
-        Set<File> modelFiles = new HashSet<File>(groups.size() * 2);
+        Set<File> modelFiles = new HashSet<>(groups.size() * 2);
         // Create models for all config groups, and then for all known config files
         // not included in a group.
         for (ConfigFileGroup group : groups) {

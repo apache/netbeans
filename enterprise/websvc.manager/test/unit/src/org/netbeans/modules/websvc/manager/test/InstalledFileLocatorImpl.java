@@ -42,7 +42,7 @@ public class InstalledFileLocatorImpl extends InstalledFileLocator {
 
         File installRoot = endorsedDir;
         File[] subdirs = installRoot.listFiles();
-        baseDirs = new ArrayList<File>();
+        baseDirs = new ArrayList<>();
 
         for (int i = 0; subdirs != null && i < subdirs.length; i++) {
             if (subdirs[i].isDirectory()) {

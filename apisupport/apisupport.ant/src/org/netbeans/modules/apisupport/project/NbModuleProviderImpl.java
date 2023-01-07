@@ -169,7 +169,7 @@ class NbModuleProviderImpl implements NbModuleProvider {
             if (suite == null) {
                 throw new IOException("Could not load suite for " + prj); // NOI18N
             }
-            List<FileSystem> readOnlyLayers = new ArrayList<FileSystem>();
+            List<FileSystem> readOnlyLayers = new ArrayList<>();
             Set<NbModuleProject> modules = SuiteUtils.getSubProjects(suite);
             for (NbModuleProject sister : modules) {
                 if (sister == prj) {
@@ -186,7 +186,7 @@ class NbModuleProviderImpl implements NbModuleProvider {
             readOnlyLayers.addAll(getCachedLayers(plaf != null ? plaf.getDestDir() : null, jars));
             return LayerUtil.mergeFilesystems(projectLayer, readOnlyLayers);
         case NETBEANS_ORG:
-            List<URL> otherLayerURLs = new ArrayList<URL>();
+            List<URL> otherLayerURLs = new ArrayList<>();
             for (NbModuleProject p2 : getProjectsForNetBeansOrgProject()) {
                 if (p2.getManifest() == null) {
                     //profiler for example.
@@ -226,7 +226,7 @@ class NbModuleProviderImpl implements NbModuleProvider {
 
     private Set<NbModuleProject> getProjectsForNetBeansOrgProject() throws IOException {
         ModuleList list = prj.getModuleList();
-        Set<NbModuleProject> projects = new HashSet<NbModuleProject>();
+        Set<NbModuleProject> projects = new HashSet<>();
         projects.add(prj);
         for (ModuleEntry other : list.getAllEntries()) {
             if (other.getClusterDirectory().getName().equals("extra")) {

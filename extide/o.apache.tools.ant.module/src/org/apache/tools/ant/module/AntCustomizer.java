@@ -85,7 +85,7 @@ public class AntCustomizer extends JPanel implements ActionListener {
                     // *@%!* NbClassPath.getClassPath semantics.
                     cp = cp.substring(1, cp.length() - 1);
                 }
-                classpath = new ArrayList<File>();
+                classpath = new ArrayList<>();
                 for (String f : cp.split(Pattern.quote(File.pathSeparator))) {
                     if(!f.trim().isEmpty()) {
                         classpath.add(new File(f));

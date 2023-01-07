@@ -830,7 +830,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
             FormModel formModel = formDesigner.getFormModel();
             LayoutModel layoutModel = formModel.getLayoutModel();
             if (layoutModel != null) {
-                Map<String,String> idToNameMap = new HashMap<String,String>();
+                Map<String,String> idToNameMap = new HashMap<>();
                 for (RADComponent comp : formModel.getAllComponents()) {
                     if (comp != formModel.getTopRADComponent())
                         idToNameMap.put(comp.getId(), comp.getName());
@@ -845,7 +845,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
                 FormModel formModel = formDesigner.getFormModel();
                 LayoutModel layoutModel = formModel.getLayoutModel();
                 if (layoutModel != null) {
-                    Map<String,String> idToNameMap = new HashMap<String,String>();
+                    Map<String,String> idToNameMap = new HashMap<>();
                     for (RADComponent comp : formModel.getAllComponents()) {
                         idToNameMap.put(comp.getId(), comp.getName());
                     }
@@ -2346,7 +2346,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         public void drop(Point endPoint) {
             if (startPoint != null && endPoint != null) {
                 lastPoint = endPoint;
-                java.util.List<RADComponent> toSelect = new ArrayList<RADComponent>();
+                java.util.List<RADComponent> toSelect = new ArrayList<>();
                 collectSelectedComponents(
                     getRectangle(),
                     formDesigner.getComponentLayer().getComponentContainer(),

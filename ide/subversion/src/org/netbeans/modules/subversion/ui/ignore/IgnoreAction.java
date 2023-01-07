@@ -161,7 +161,7 @@ public class IgnoreAction extends ContextAction {
                                 Subversion.LOG.log(Level.WARNING, IgnoreAction.class.toString() + ": file does exist: " + parent.getAbsolutePath()); // NOI18N
                             }
                         } else {
-                            Set<String> currentPatterns = new HashSet<String>(c);
+                            Set<String> currentPatterns = new HashSet<>(c);
                             if (actionStatus == IGNORING) {
                                 ensureVersioned(parent);
                                 currentPatterns.addAll(patterns);
@@ -194,7 +194,7 @@ public class IgnoreAction extends ContextAction {
             if (parent == null) continue;
             Set<String> names = map.get(parent);
             if (names == null) {
-                names = new HashSet<String>(5);
+                names = new HashSet<>(5);
                 map.put(parent, names);
             }
             names.add(file.getName());

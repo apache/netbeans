@@ -116,7 +116,7 @@ public class AntFilesHelper {
     }
     
     public boolean cleanupLastExtensionVersions() {
-        List<String> extensionNames = new ArrayList<String>();
+        List<String> extensionNames = new ArrayList<>();
         String lastVersion = REST_ANT_EXT_NAME_BASE;
         if (extender.getExtension(lastVersion) != null) {
             extensionNames.add(lastVersion);

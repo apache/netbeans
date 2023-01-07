@@ -144,7 +144,7 @@ public class InstallationDetailsDialog extends NbiDialog {
         private void initComponentProperties(Product component) {
             List<String> properties = propertiesMap.get(component);
             if (properties == null) {
-                properties = new ArrayList<String>();
+                properties = new ArrayList<>();
                 
                 switch (component.getDetailedStatus()) {
                     case INSTALLED_WITH_WARNINGS:

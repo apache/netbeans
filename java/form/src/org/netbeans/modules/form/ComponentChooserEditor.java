@@ -307,7 +307,7 @@ public class ComponentChooserEditor implements PropertyEditor,
 
     protected List getComponents() {
         if (components == null)
-            components = new ArrayList<RADComponent>();
+            components = new ArrayList<>();
         else
             components.clear();
 

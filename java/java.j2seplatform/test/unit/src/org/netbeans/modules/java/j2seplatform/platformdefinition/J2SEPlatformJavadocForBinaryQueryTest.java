@@ -75,7 +75,7 @@ public class J2SEPlatformJavadocForBinaryQueryTest extends NbTestCase {
         assertEquals(1, urls.length);
         assertTrue(urls[0].toString(), urls[0].toString().startsWith("https://docs.oracle.com/"));
 
-        List<URL> l = new ArrayList<URL>();
+        List<URL> l = new ArrayList<>();
         File javadocFile = getBaseDir();
         File api = new File (javadocFile,"api");
         File index = new File (api,"index-files");

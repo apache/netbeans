@@ -210,7 +210,7 @@ public class FreeformSourcesTest extends TestBase {
             "Roots: " + Arrays.toString(expected) + " SourceGroups: " + Arrays.toString(sgs),
             expected.length,
             sgs.length);
-        final Set<FileObject> fos = new HashSet<FileObject>(Arrays.asList(expected));
+        final Set<FileObject> fos = new HashSet<>(Arrays.asList(expected));
         for (SourceGroup sg : sgs) {
             assertTrue(
                 "Roots: " + Arrays.toString(expected) + " SourceGroups: " + Arrays.toString(sgs),

@@ -122,7 +122,7 @@ final class FileObjectKeeper implements FileChangeListener {
          }
 
          File file = Watcher.wrap(root.getFileName().getFile(), root);
-         List<File> arr = new ArrayList<File>();
+         List<File> arr = new ArrayList<>();
          long ts = root.getProvidedExtensions().refreshRecursively(file, previous, arr);
          try {
              for (File f : arr) {
@@ -224,7 +224,7 @@ final class FileObjectKeeper implements FileChangeListener {
                     new Object[] {RECURSION_LIMIT, obj});
             return true;
         }
-        List<File> it = new ArrayList<File>();
+        List<File> it = new ArrayList<>();
         listenTo(obj, true, it);
         FileObjectFactory factory = knownFactory;
         for (File f : it) {
@@ -307,7 +307,7 @@ final class FileObjectKeeper implements FileChangeListener {
      */
     private void fileFolderCreatedRecursion(FolderObj obj,
             FileObjectFactory knownFactory) {
-        List<File> it = new ArrayList<File>();
+        List<File> it = new ArrayList<>();
         listenTo(obj, true, it);
         FileObjectFactory factory = knownFactory;
         for (File f : it) {

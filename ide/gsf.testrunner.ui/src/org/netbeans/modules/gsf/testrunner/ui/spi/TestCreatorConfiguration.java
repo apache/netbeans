@@ -187,7 +187,7 @@ public abstract class TestCreatorConfiguration {
         public Context(boolean multipleClasses, Callback callback) {
             this.multipleClasses = multipleClasses;
             this.callback = callback;
-            this.properties = new HashMap<String, Object>();
+            this.properties = new HashMap<>();
         }
 
         /**

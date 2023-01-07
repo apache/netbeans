@@ -157,7 +157,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
     }
 
     private Map<String, String> suggestWebSocketMethod() {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         result.put("javax.websocket.OnMessage", "onMessage"); // NOI18N
         result.put("javax.websocket.OnOpen", "onOpen"); // NOI18N
         result.put("javax.websocket.OnClose", "onClose"); // NOI18N
@@ -168,7 +168,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
     private Collection<String> getAnnotationsFqn(Element element) {
         List<? extends AnnotationMirror> annotations = element
                 .getAnnotationMirrors();
-        Collection<String> result = new HashSet<String>();
+        Collection<String> result = new HashSet<>();
         for (AnnotationMirror annotation : annotations) {
             Element annotationElement = annotation.getAnnotationType()
                     .asElement();
@@ -250,7 +250,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
                 }
                 Map<String, String> webSocketMethod = suggestWebSocketMethod();
                 Set<String> wsAnnotations = webSocketMethod.keySet();
-                Set<String> existedMethods = new HashSet<String>();
+                Set<String> existedMethods = new HashSet<>();
                 for (ExecutableElement method : methods) {
                     if (stop) {
                         return;

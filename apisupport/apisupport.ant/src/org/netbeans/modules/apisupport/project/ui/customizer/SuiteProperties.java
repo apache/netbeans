@@ -369,8 +369,8 @@ public final class SuiteProperties extends ModuleProperties {
     }
 
     private void storeClusterPath(EditableProperties ep) {
-        ArrayList<String> cp = new ArrayList<String>();
-        ArrayList<String> cpwdc = new ArrayList<String>();
+        ArrayList<String> cp = new ArrayList<>();
+        ArrayList<String> cpwdc = new ArrayList<>();
         boolean anyDisabled = false;
         for (ClusterInfo ci : clusterPath) {
             if (ci.isPlatformCluster()) {

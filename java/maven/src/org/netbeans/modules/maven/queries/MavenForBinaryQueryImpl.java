@@ -156,7 +156,7 @@ public class MavenForBinaryQueryImpl extends AbstractMavenForBinaryQueryImpl {
         
         public BinResult(URL urlParam) {
             url = urlParam;
-            listeners = new ArrayList<ChangeListener>();
+            listeners = new ArrayList<>();
         }
         
         public @Override FileObject[] getRoots() {
@@ -194,7 +194,7 @@ public class MavenForBinaryQueryImpl extends AbstractMavenForBinaryQueryImpl {
         }
         
         void fireChanged() {
-            List<ChangeListener> lists = new ArrayList<ChangeListener>();
+            List<ChangeListener> lists = new ArrayList<>();
             synchronized(listeners) {
                 lists.addAll(listeners);
             }
@@ -219,7 +219,7 @@ public class MavenForBinaryQueryImpl extends AbstractMavenForBinaryQueryImpl {
         
         public DocResult(URL urlParam) {
             url = urlParam;
-            listeners = new ArrayList<ChangeListener>();
+            listeners = new ArrayList<>();
         }
         public @Override void addChangeListener(ChangeListener changeListener) {
             synchronized (listeners) {
@@ -234,7 +234,7 @@ public class MavenForBinaryQueryImpl extends AbstractMavenForBinaryQueryImpl {
         }
         
         void fireChanged() {
-            List<ChangeListener> lists = new ArrayList<ChangeListener>();
+            List<ChangeListener> lists = new ArrayList<>();
             synchronized(listeners) {
                 lists.addAll(listeners);
             }

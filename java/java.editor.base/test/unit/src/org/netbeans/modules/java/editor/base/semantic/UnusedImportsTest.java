@@ -377,13 +377,13 @@ public class UnusedImportsTest extends NbTestCase {
         doc.putProperty(Language.class, JavaTokenId.language());
         List<TreePathHandle> unused = UnusedImports.computeUnusedImports(ci);
 
-        Set<String> out = new HashSet<String>();
+        Set<String> out = new HashSet<>();
 
         for (TreePathHandle h : unused) {
             out.add(h.resolve(ci).getLeaf().toString());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList(golden)), out);
+        assertEquals(new HashSet<>(Arrays.asList(golden)), out);
     }
 
     @Override

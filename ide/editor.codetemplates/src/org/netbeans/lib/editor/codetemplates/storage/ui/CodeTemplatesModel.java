@@ -55,8 +55,8 @@ final class CodeTemplatesModel {
     // A mime type is something like text/x-java and a language is a localized name of
     // the programming language denoted by a mime type (e.g. Java).
     
-    private final List<String> languages = new ArrayList<String>();
-    private final Map<String, String> languageToMimeType = new HashMap<String, String>();
+    private final List<String> languages = new ArrayList<>();
+    private final Map<String, String> languageToMimeType = new HashMap<>();
     private final Map<String,TM> languageToModel = new HashMap<String,TM>();
     private final Map<TM, String> modelToLanguage = new HashMap<TM, String>();
     

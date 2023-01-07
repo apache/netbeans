@@ -842,7 +842,7 @@ public final class IndexSearch
         private SearchTask(IndexSearch indexSearch) {
             this.indexSearch = indexSearch;
             task = RP.create(this);
-            this.queries = new ArrayList<String>();
+            this.queries = new ArrayList<>();
         }
 
 

@@ -79,7 +79,7 @@ public class WellKnownSchemaCatalog implements CatalogReader, CatalogDescriptor2
     private Map<String, String> captureSystemIds;
 
     public WellKnownSchemaCatalog() {
-        Map m = new HashMap<String, String>();
+        Map m = new HashMap<>();
         m.put(XML_INSTANCE_URI, XML_INSTANCE_LOCAL);
         m.put(XML_SCHEMA_URI, XML_SCHEMA_LOCAL);
         m.put(XML_NAMESPACE_URI, XML_NAMESPACE_LOCAL);
@@ -87,7 +87,7 @@ public class WellKnownSchemaCatalog implements CatalogReader, CatalogDescriptor2
         
         publicIdMap = Collections.unmodifiableMap(m);
         
-        m = new HashMap<String, String>();
+        m = new HashMap<>();
         m.put(XML_NAMESPACE_LOCATION, XML_NAMESPACE_LOCAL);
         m.put(XML_SCHEMA_LOCATION, XML_SCHEMA_LOCAL);
         captureSystemIds = Collections.unmodifiableMap(m);

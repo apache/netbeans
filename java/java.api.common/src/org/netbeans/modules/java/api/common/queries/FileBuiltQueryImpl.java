@@ -94,8 +94,8 @@ final class FileBuiltQueryImpl implements FileBuiltQueryImplementation, Property
 
 
     private FileBuiltQueryImplementation createDelegate() {
-        List<String> from = new ArrayList<String>();
-        List<String> to = new ArrayList<String>();
+        List<String> from = new ArrayList<>();
+        List<String> to = new ArrayList<>();
         for (String r : sourceRoots.getRootProperties()) {
             from.add("${" + r + "}/*.java"); // NOI18N
             to.add("${build.classes.dir}/*.class"); // NOI18N

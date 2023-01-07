@@ -65,7 +65,7 @@ public class SaasGroupNodeChildren extends Children.Keys<Object> implements Prop
     }
 
     protected void updateKeys() {
-        ArrayList<Object> keys = new ArrayList<Object>();
+        ArrayList<Object> keys = new ArrayList<>();
         List<SaasGroup> groups = group.getChildrenGroups();
         Collections.sort(groups);
         keys.addAll(groups);

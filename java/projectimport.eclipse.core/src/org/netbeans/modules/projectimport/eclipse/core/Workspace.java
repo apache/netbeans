@@ -291,7 +291,7 @@ public final class Workspace {
     }
     
     private List<String> parseLibDefinition(String s) {
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(s, ";"); //NOI18N
         while (st.hasMoreTokens()) {
             String token = st.nextToken();

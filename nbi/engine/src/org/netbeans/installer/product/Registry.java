@@ -123,7 +123,7 @@ public class Registry implements PropertyContainer {
     public Registry() {
         localRegistryStubUri = DEFAULT_LOCAL_PRODUCT_REGISTRY_STUB_URI;
         bundledRegistryUri = DEFAULT_BUNDLED_PRODUCT_REGISTRY_URI;
-        remoteRegistryUris = new ArrayList<String>();
+        remoteRegistryUris = new ArrayList<>();
         registrySchemaUri = DEFAULT_PRODUCT_REGISTRY_SCHEMA_URI;
         
         stateFileSchemaUri = DEFAULT_STATE_FILE_SCHEMA_URI;

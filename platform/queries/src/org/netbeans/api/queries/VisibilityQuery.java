@@ -51,7 +51,7 @@ public final class VisibilityQuery {
     private final ResultListener resultListener = new ResultListener();
     private final VqiChangedListener vqiListener = new VqiChangedListener ();
 
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private Lookup.Result<VisibilityQueryImplementation> vqiResult = null;
     private List<VisibilityQueryImplementation> cachedVqiInstances = null;
 

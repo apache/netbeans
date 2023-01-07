@@ -176,14 +176,14 @@ public class BinaryAnalyserTest extends NbTestCase {
         final Changes changes = a.analyse(Utilities.toURI(classFolder).toURL());
         assertTrue(changes.done);
 
-        Set<String> removedClasses = new HashSet<String>();
+        Set<String> removedClasses = new HashSet<>();
 
         for (ElementHandle<TypeElement> eh : changes.removed) {
             removedClasses.add(eh.getBinaryName());
         }
 
         assertEquals(origClasses, removedClasses);
-        assertEquals(new HashSet<String>(), listClasses(index));
+        assertEquals(new HashSet<>(), listClasses(index));
     }
 
     public void testDeleteClassFolder() throws Exception {
@@ -209,14 +209,14 @@ public class BinaryAnalyserTest extends NbTestCase {
         final Changes changes = a.analyse(Utilities.toURI(classFolder).toURL());
         assertTrue(changes.done);
 
-        Set<String> removedClasses = new HashSet<String>();
+        Set<String> removedClasses = new HashSet<>();
 
         for (ElementHandle<TypeElement> eh : changes.removed) {
             removedClasses.add(eh.getBinaryName());
         }
 
         assertEquals(origClasses, removedClasses);
-        assertEquals(new HashSet<String>(), listClasses(index));
+        assertEquals(new HashSet<>(), listClasses(index));
     }
 
     public void testTransactionalFlush() throws Exception {
@@ -470,7 +470,7 @@ public class BinaryAnalyserTest extends NbTestCase {
     }
 
     private Set<String> listClasses(Index index) throws IOException, InterruptedException {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         index.query(
                 result,
                 DocumentUtil.binaryNameConvertor(),

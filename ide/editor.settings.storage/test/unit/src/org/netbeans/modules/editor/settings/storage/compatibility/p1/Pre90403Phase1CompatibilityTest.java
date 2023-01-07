@@ -106,7 +106,7 @@ public class Pre90403Phase1CompatibilityTest extends NbTestCase {
     }
     
     public void testColorings() {
-        Set<String> mimeTypes = new HashSet<String>(EditorSettings.getDefault().getMimeTypes());
+        Set<String> mimeTypes = new HashSet<>(EditorSettings.getDefault().getMimeTypes());
         mimeTypes.add("");
         Set<String> profiles = EditorSettings.getDefault().getFontColorProfiles();
         
@@ -145,7 +145,7 @@ public class Pre90403Phase1CompatibilityTest extends NbTestCase {
     
     public void testKeybindings() {
         MimeTypesTracker tracker = MimeTypesTracker.get(KeyMapsStorage.ID, "Editors");
-        Set<String> mimeTypes = new HashSet<String>(tracker.getMimeTypes());
+        Set<String> mimeTypes = new HashSet<>(tracker.getMimeTypes());
         Set<String> profiles = EditorSettings.getDefault().getKeyMapProfiles();
         
         for(String profile : profiles) {

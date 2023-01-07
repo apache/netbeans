@@ -265,7 +265,7 @@ public final class TreeGraphLayout<N,E> extends GraphLayout<N,E> {
          * @since 2.25
          */
         private Map<Integer, Integer> getMaxSpaceForEveryLevel(UniversalGraph<N, E> graph) {
-            Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> map = new HashMap<>();
             calculateMaxSpace(graph, map, 0);
             return map;
         }

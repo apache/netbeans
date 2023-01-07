@@ -381,8 +381,8 @@ public class VersioningAnnotationProvider {
                     return;
                 }
                 for (Map.Entry<FileSystem, Set<FileObject>> e : filesToRefresh.entrySet()) {
-                    Set<FileObject> files = new HashSet<FileObject>();
-                    Set<FileObject> folders = new HashSet<FileObject>();
+                    Set<FileObject> files = new HashSet<>();
+                    Set<FileObject> folders = new HashSet<>();
                     Set<FileObject> set = e.getValue();
                     for(FileObject fo : set) {
                         if(fo.isFolder()) {
@@ -392,7 +392,7 @@ public class VersioningAnnotationProvider {
                         }
                     }        
                     set.clear();
-                    e.setValue(new HashSet<FileObject>());
+                    e.setValue(new HashSet<>());
                     if(files.size() > 0) {
                         fileEvents.add(new VCSAnnotationEvent(files, true, true));
                     }
@@ -410,9 +410,9 @@ public class VersioningAnnotationProvider {
             synchronized(parentsToRefresh) {
                 for (Map.Entry<FileSystem, Set<FileObject>> e : parentsToRefresh.entrySet()) {
                     Set<FileObject> set = e.getValue();
-                    Set<FileObject> files = new HashSet<FileObject>(set);
+                    Set<FileObject> files = new HashSet<>(set);
                     parentEvents.add(new VCSAnnotationEvent(files, true, false));                                        
-                    e.setValue(new HashSet<FileObject>()); 
+                    e.setValue(new HashSet<>()); 
                     set.clear();                    
                 }                                
             }       
@@ -448,7 +448,7 @@ public class VersioningAnnotationProvider {
         synchronized (map) {                        
             Set<FileObject> set = map.get(fs);
             if(set == null) {
-                set = new HashSet<FileObject>();
+                set = new HashSet<>();
                 map.put(fs, set);
             }
             set.add(fo);
@@ -495,7 +495,7 @@ public class VersioningAnnotationProvider {
         private final LinkedHashSet<ItemKey<T, KEY>> filesToAnnotate;
         private final RequestProcessor.Task annotationRefreshTask;
         private final String type;
-        private HashSet<FileObject> refreshedFiles = new HashSet<FileObject>();
+        private HashSet<FileObject> refreshedFiles = new HashSet<>();
         private boolean allCleared;
 
         Cache(String type) {
@@ -768,7 +768,7 @@ public class VersioningAnnotationProvider {
                     clearEvents();
                     T newValue = annotate(initialValue, files);
                     boolean isNonRecursive = files instanceof NonRecursiveFolder;
-                    files = new HashSet<FileObject>(files);
+                    files = new HashSet<>(files);
                     boolean fireEvent = setValue(new ItemKey<T, KEY>(files, refreshCandidate.keyPart, isNonRecursive, initialValue), newValue);
                     if (fireEvent) {
                         Set<VCSFileProxy> filesToRefresh = new HashSet<VCSFileProxy>(files.size());
@@ -790,7 +790,7 @@ public class VersioningAnnotationProvider {
 
         private void clearEvents() {
             synchronized (writeLock) {
-                refreshedFiles = new HashSet<FileObject>();
+                refreshedFiles = new HashSet<>();
                 allCleared = false;
             }
         }

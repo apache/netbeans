@@ -453,7 +453,7 @@ public class ProjectHelper {
     
     private static Map<String, String> getOrigNewLocationMap(Schema oSchema,
             String newName, String schemasRootFolder){
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
         String replace = schemasRootFolder + "/" + oSchema.getName(); //NOI18N
         String replaceWith = schemasRootFolder + "/" + newName; //NOI18N
         
@@ -511,7 +511,7 @@ public class ProjectHelper {
         
         Map<String, String> res2Skip = null;
         Map<String, String> tobeRemoved = null;
-        List<String> newProjFiles = new ArrayList<String>();
+        List<String> newProjFiles = new ArrayList<>();
         String oSchemaName = null;
 
         FileObject projFO = project.getProjectDirectory();
@@ -542,7 +542,7 @@ public class ProjectHelper {
             //FileUtil.getRelativePath(projFO, newFileFO)
             res2Skip = getOrigNewLocationMap(oSchema, schema.getName(),
                     FileUtil.getRelativePath(projFO, projectSchemaDir));
-            tobeRemoved = new HashMap<String, String>();
+            tobeRemoved = new HashMap<>();
             tobeRemoved.putAll(res2Skip) ;
 
             oSchemaName = oSchema.getName();
@@ -571,8 +571,8 @@ public class ProjectHelper {
                 }
             }
         } else {
-            res2Skip = new HashMap<String, String>();
-            tobeRemoved = new HashMap<String, String>();
+            res2Skip = new HashMap<>();
+            tobeRemoved = new HashMap<>();
         }
 
         
@@ -886,7 +886,7 @@ public class ProjectHelper {
      * Returns list of String Schema/Binding names used in the project.
      **/
     public static List<String> getSchemaNames(Project project) {
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         Schemas scs = getXMLBindingSchemas(project);
         if (scs != null) {
             Schema[] schemas = scs.getSchema();
@@ -1214,7 +1214,7 @@ public class ProjectHelper {
     }
 
     private static List<URL> getJaxbApiJars() throws IOException {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         File apiJar = InstalledFileLocator.getDefault().locate("modules/ext/jaxb/api/jaxb-api.jar", null, false); // NOI18N
         if (apiJar != null) {
             URL url = apiJar.toURI().toURL();

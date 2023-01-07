@@ -89,7 +89,7 @@ public class WebServiceMetadataReader extends CommonBeanReader {
     private void filterInvalidServices(Map<String, Object> annotationMap, Object moduleType) {
         String invalidBindingType = J2eeModule.Type.WAR.equals(moduleType) ? DDBinding.PROP_EJB_LINK : DDBinding.PROP_SERVLET_LINK;
         
-        List<String> servicesToRemove = new ArrayList<String>();
+        List<String> servicesToRemove = new ArrayList<>();
         for(Map.Entry<String, Object> serviceEntry: annotationMap.entrySet()) {
             Object serviceValue = serviceEntry.getValue();
             if(serviceValue instanceof Map<?, ?>) {
@@ -135,15 +135,15 @@ public class WebServiceMetadataReader extends CommonBeanReader {
                 String webServiceDescName = webServiceDesc.getWebserviceDescriptionName();
                 if(Utils.notEmpty(webServiceDescName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> webServiceDescMap = new HashMap<String, Object>();
+                    Map<String, Object> webServiceDescMap = new HashMap<>();
                     result.put(webServiceDescName, webServiceDescMap);
                     webServiceDescMap.put(DDBinding.PROP_NAME, webServiceDescName);
                     
                     PortComponent [] ports = webServiceDesc.getPortComponent();
                     if(ports != null && ports.length > 0) {
-                        Map<String, Object> portGroupMap = new HashMap<String, Object>();
+                        Map<String, Object> portGroupMap = new HashMap<>();
                         webServiceDescMap.put(DDBinding.PROP_PORTCOMPONENT, portGroupMap);
                         for(PortComponent port: ports) {
                             String portName = port.getPortComponentName();

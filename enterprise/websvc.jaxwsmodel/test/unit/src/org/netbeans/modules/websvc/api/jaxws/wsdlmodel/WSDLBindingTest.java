@@ -189,16 +189,16 @@ public class WSDLBindingTest extends NbTestCase {
     }
     
     private void initLists() {
-        serviceNames = new ArrayList<String>();
-        serviceJavaNames = new ArrayList<String>();
-        portNames = new ArrayList<String>();
-        portJavaNames = new ArrayList<String>();
-        portGetters = new ArrayList<String>();
-        opNames = new ArrayList<String>();
-        opJavaNames = new ArrayList<String>();
-        opTypes = new ArrayList<String>();
-        paramNames = new ArrayList<String>();
-        paramTypes = new ArrayList<String>();
+        serviceNames = new ArrayList<>();
+        serviceJavaNames = new ArrayList<>();
+        portNames = new ArrayList<>();
+        portJavaNames = new ArrayList<>();
+        portGetters = new ArrayList<>();
+        opNames = new ArrayList<>();
+        opJavaNames = new ArrayList<>();
+        opTypes = new ArrayList<>();
+        paramNames = new ArrayList<>();
+        paramTypes = new ArrayList<>();
     }
     
     private void initResults() {

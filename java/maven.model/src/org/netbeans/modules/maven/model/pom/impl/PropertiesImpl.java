@@ -58,7 +58,7 @@ public class PropertiesImpl extends POMComponentImpl implements Properties {
 
     @Override
     public Map<String, String> getProperties() {
-        Map<String, String> toRet = new HashMap<String, String>();
+        Map<String, String> toRet = new HashMap<>();
         List<POMComponent> chlds = getChildren();
         for (POMComponent pc : chlds) {
             Element el = pc.getPeer();

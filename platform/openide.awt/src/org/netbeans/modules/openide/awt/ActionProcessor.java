@@ -80,7 +80,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> hash = new HashSet<String>();
+        Set<String> hash = new HashSet<>();
         hash.add(ActionRegistration.class.getCanonicalName());
         hash.add(ActionID.class.getCanonicalName());
         hash.add(ActionReference.class.getCanonicalName());

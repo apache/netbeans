@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
 public final class SourceUtilsTestUtil extends ProxyLookup {
     
     private static SourceUtilsTestUtil DEFAULT_LOOKUP = null;
-    private static final Set<String> NB_JAVAC = Collections.unmodifiableSet(new HashSet<String>(
+    private static final Set<String> NB_JAVAC = Collections.unmodifiableSet(new HashSet<>(
         Arrays.asList("nb-javac-api.jar","nb-javac-impl.jar", "vanilla-javac-api.jar")));    //NOI18N
     
     public SourceUtilsTestUtil() {
@@ -165,9 +165,9 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
 
         Set<String> amt = MimeTypes.getAllMimeTypes();
         if (amt == null) {
-            amt = new HashSet<String>();
+            amt = new HashSet<>();
         } else {
-            amt = new HashSet<String>(amt);
+            amt = new HashSet<>(amt);
         }
         amt.add("text/x-java");
         MimeTypes.setAllMimeTypes(amt);

@@ -319,7 +319,7 @@ public class PatternsTest extends RestTestBase {
         }
         wo.btFinish().requestFocus();
         wo.finish();
-        Set<File> createdFiles = new HashSet<File>();
+        Set<File> createdFiles = new HashSet<>();
         switch (pattern) {
             case Singleton:
                 if (name != null) {

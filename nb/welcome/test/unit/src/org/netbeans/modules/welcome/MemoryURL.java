@@ -84,7 +84,7 @@ public class MemoryURL extends URLStreamHandler {
         public MC(URL u) {
             super(u);
             outputs.put(u.toExternalForm(), this);
-            params = new HashMap<String,String>();
+            params = new HashMap<>();
         }
 
         public void connect() throws IOException {

@@ -310,7 +310,7 @@ public class EmbeddedIndexerTest extends IndexingTestBase {
     }
 
     private static Map<? extends Integer, ? extends Integer> countModes(@NonNull final Collection<? extends IndexResult> docs)  {
-        final Map<Integer,Integer> res = new HashMap<Integer, Integer>();
+        final Map<Integer,Integer> res = new HashMap<>();
         for (IndexResult doc : docs) {
             final String value = doc.getValue("mode");  //NOI18N
             if (value != null) {

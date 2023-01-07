@@ -87,7 +87,7 @@ public class LineConvertorsTest extends NbTestCase {
         lines.addAll(convertor.convert("myline: myfile02.txt other stuff"));
         lines.addAll(convertor.convert("otherline: http://www.netbeans.org"));
 
-        List<String> ignored = new ArrayList<String>();
+        List<String> ignored = new ArrayList<>();
         Collections.addAll(ignored, "otherline: something.txt", "total mess",
                 "otherline: http://www.netbeans.org");
         assertEquals(ignored, fallback.getLines());
@@ -115,7 +115,7 @@ public class LineConvertorsTest extends NbTestCase {
         lines.addAll(convertor.convert("otherline: http://www.netbeans.org"));
         lines.addAll(convertor.convert("myline: myfile01.txt specific"));
 
-        List<String> ignored = new ArrayList<String>();
+        List<String> ignored = new ArrayList<>();
         Collections.addAll(ignored, "otherline: something.txt", "total mess",
                 "myline: myfile02.txt other stuff", "otherline: http://www.netbeans.org");
         assertEquals(ignored, fallback.getLines());
@@ -153,7 +153,7 @@ public class LineConvertorsTest extends NbTestCase {
             });
         }
 
-        List<String> paths = new ArrayList<String>();
+        List<String> paths = new ArrayList<>();
         Collections.addAll(paths, "myfile01.txt", "myfile02.txt");
         assertEquals(paths, locator.getPaths());
     }
@@ -169,7 +169,7 @@ public class LineConvertorsTest extends NbTestCase {
         lines.addAll(convertor.convert("https://www.netbeans.org"));
         lines.addAll(convertor.convert("nourl3"));
 
-        List<String> ignored = new ArrayList<String>();
+        List<String> ignored = new ArrayList<>();
         Collections.addAll(ignored, "nourl1", "nourl2", "nourl3");
         assertEquals(ignored, fallback.getLines());
 
@@ -217,7 +217,7 @@ public class LineConvertorsTest extends NbTestCase {
 
     private static class TestConvertor implements LineConvertor {
 
-        private final List<String> lines = new ArrayList<String>();
+        private final List<String> lines = new ArrayList<>();
 
         public List<ConvertedLine> convert(String line) {
             lines.add(line);
@@ -231,7 +231,7 @@ public class LineConvertorsTest extends NbTestCase {
 
     private static class TestFileLocator implements LineConvertors.FileLocator {
 
-        private final List<String> paths = new ArrayList<String>();
+        private final List<String> paths = new ArrayList<>();
 
         public FileObject find(String filename) {
             paths.add(filename);

@@ -48,7 +48,7 @@ public final class JndiNamespacesDefinition {
      */
     public static final String GLOBAL_NAMESPACE = "java:global"; // NOI18N
 
-    private static final Set<String> PREFIXES = new HashSet<String>();
+    private static final Set<String> PREFIXES = new HashSet<>();
 
     private static final String DEFAULT_PREFIX = "java:comp/env/"; // NOI18N
 

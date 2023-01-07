@@ -76,7 +76,7 @@ public final class DefaultProcessor extends OptionProcessor {
     }
     
     public static OptionProcessor create(Class<?> clazz, Object instance) {
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> map = new HashMap<>();
         map.put("class", clazz.getName());
         if (instance != null) {
             map.put("instance", instance);

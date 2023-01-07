@@ -116,7 +116,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
         }
 
         public List<String> keys() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(CONF_FILES);
             return result;
         }
@@ -288,7 +288,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
                 }
             }
             groupsListeners = new HashMap<SourceGroup, PropertyChangeListener>();
-            Set<FileObject> roots = new HashSet<FileObject>();
+            Set<FileObject> roots = new HashSet<>();
             Iterator it = groups.iterator();
             while (it.hasNext()) {
                 SourceGroup group = (SourceGroup) it.next();
@@ -404,7 +404,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
         @Override
         protected boolean createKeys( List<FileObject> keys ) {
             boolean result = false;
-            myKeys = new HashSet<FileObject>( );
+            myKeys = new HashSet<>( );
             if ( addWellKnownFiles( ) ){
                 result = true;
             }
@@ -770,7 +770,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
 
         private ConfFilesChildren(ProjectWebModule pwm) {
             this.pwm = pwm;
-            keys = new HashSet<FileObject>();
+            keys = new HashSet<>();
         }
 
         public static Children forProject(Project project) {

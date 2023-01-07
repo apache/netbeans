@@ -65,7 +65,7 @@ class OSGiRepository extends Repository {
     }
 
     private static URL[] layersFor(List<Bundle> bundles) {
-        List<URL> layers = new ArrayList<URL>(2);
+        List<URL> layers = new ArrayList<>(2);
         for (Bundle b : bundles) {
             if (b.getSymbolicName().equals("org.netbeans.modules.autoupdate.ui")) { // NOI18N
                 // Won't work anyway, so don't even try.
@@ -189,7 +189,7 @@ class OSGiRepository extends Repository {
         }
 
         private void resetAll() {
-            List<FileSystem> delegates = new ArrayList<FileSystem>();
+            List<FileSystem> delegates = new ArrayList<>();
             delegates.add(userdir);
             Collection<? extends FileSystem> dyn = dynamic.allInstances();
             LOG.log(Level.FINE, "dyn={0}", dyn);

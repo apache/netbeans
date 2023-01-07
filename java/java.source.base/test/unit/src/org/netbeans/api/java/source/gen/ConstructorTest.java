@@ -79,7 +79,7 @@ public class ConstructorTest extends GeneratorTestBase {
 
                         ModifiersTree mods = make.Modifiers(EnumSet.of(Modifier.PUBLIC));
 
-                        List<VariableTree> arguments = new ArrayList<VariableTree>();
+                        List<VariableTree> arguments = new ArrayList<>();
                         arguments.add(make.Variable(
                                 make.Modifiers(EnumSet.noneOf(Modifier.class)),
                                 "a",
@@ -120,7 +120,7 @@ public class ConstructorTest extends GeneratorTestBase {
                 ClassTree topLevel = (ClassTree) cut.getTypeDecls().iterator().next();
 
                 ModifiersTree mods = make.Modifiers(EnumSet.of(Modifier.PUBLIC));
-                List<VariableTree> arguments = new ArrayList<VariableTree>();
+                List<VariableTree> arguments = new ArrayList<>();
                 arguments.add(make.Variable(
                         make.Modifiers(EnumSet.noneOf(Modifier.class)),
                         "a",

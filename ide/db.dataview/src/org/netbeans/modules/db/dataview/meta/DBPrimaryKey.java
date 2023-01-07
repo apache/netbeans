@@ -43,7 +43,7 @@ public final class DBPrimaryKey extends DBObject<DBTable> {
     public DBPrimaryKey(ResultSet rs) throws SQLException {
         assert rs != null;
 
-        Map<Integer,String> pkColumns = new HashMap<Integer,String>();
+        Map<Integer,String> pkColumns = new HashMap<>();
 
         while (rs.next()) {
             int keySeq = rs.getShort(RS_KEY_SEQ);
@@ -58,7 +58,7 @@ public final class DBPrimaryKey extends DBObject<DBTable> {
             }
         }
 
-        columnNames = new ArrayList<String>();
+        columnNames = new ArrayList<>();
 
         List<Integer> columnEntries = new ArrayList<Integer>(pkColumns.keySet());
         Collections.sort(columnEntries);

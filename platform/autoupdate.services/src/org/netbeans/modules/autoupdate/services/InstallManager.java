@@ -58,7 +58,7 @@ public class InstallManager extends InstalledFileLocator{
     private static final int MAX_COUNT_OF_WARNINGS = 5;
 
     private static final Logger ERR = Logger.getLogger ("org.netbeans.modules.autoupdate.services.InstallManager");
-    private static final List<File> clusters = new ArrayList<File>();
+    private static final List<File> clusters = new ArrayList<>();
     
     static File findTargetDirectory (UpdateElement installed, UpdateElementImpl update, Boolean globalOrLocal, boolean useUserdirAsFallback) throws OperationException {
         File res;
@@ -380,7 +380,7 @@ public class InstallManager extends InstalledFileLocator{
                 ext = name.substring(i);
             }
             String[] suffixes = org.netbeans.Util.getLocalizingSuffixesFast();
-            Set<File> files = new HashSet<File>();
+            Set<File> files = new HashSet<>();
             for (String suffixe : suffixes) {
                 String locName = baseName + suffixe + ext;
                 files.addAll(locateExactPath(prefix, locName));
@@ -394,7 +394,7 @@ public class InstallManager extends InstalledFileLocator{
 
     /** Search all top dirs for a file. */
     private static Set<File> locateExactPath(String prefix, String name) {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         synchronized(InstallManager.class) {
             File[] dirs = clusters.toArray(new File[clusters.size()]);
             for (File dir : dirs) {

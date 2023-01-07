@@ -105,7 +105,7 @@ public class ManifestManagerTest extends NbTestCase {
         Manifest mf = new Manifest();
         mf.getMainAttributes().putValue("OpenIDE-Module", "platform.module");
         mf.getMainAttributes().putValue("OpenIDE-Module-Layer", "platform/module/layer.xml");
-        Map<String, String> contents = new HashMap<String, String>();
+        Map<String, String> contents = new HashMap<>();
         contents.put("platform/module/Bundle.properties", "folder/file=English");
         contents.put("platform/module/layer.xml", "<filesystem><folder name=\"folder\"><file name=\"file\"><attr name=\"SystemFileSystem.localizingBundle\" stringvalue=\"platform.module.Bundle\"/></file></folder></filesystem>");
         File jar = new File(getWorkDir(), "test.jar");

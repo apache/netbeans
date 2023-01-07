@@ -62,7 +62,7 @@ public class AnalysisPluginImpl implements JobScanner {
     private static final String[] PLUGINS = {"checkstyle", "pmd", "warnings", "dry"};
 
     @Override public void findTasks(Project p, HudsonJob job, int buildNumber, TaskAdder callback) throws IOException {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         roots.add(p.getProjectDirectory());
         // Also add Java source roots; otherwise e.g. /tmp/clover2054820708001846544.tmp/org/apache/hadoop/fs/TestFileSystemCaching.java would never be found:
         for (SourceGroup g : ProjectUtils.getSources(p).getSourceGroups(/* JavaProjectConstants.SOURCES_TYPE_JAVA */"java")) {

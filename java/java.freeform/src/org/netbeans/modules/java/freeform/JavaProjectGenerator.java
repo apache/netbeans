@@ -369,10 +369,10 @@ public class JavaProjectGenerator {
         }
         for (Element cuEl : XMLUtil.findSubElements(data)) {
             JavaCompilationUnit cu = new JavaCompilationUnit();
-            List<String> outputs = new ArrayList<String>();
-            List<String> javadoc = new ArrayList<String>();
+            List<String> outputs = new ArrayList<>();
+            List<String> javadoc = new ArrayList<>();
             List<JavaCompilationUnit.CP> cps = new ArrayList<JavaCompilationUnit.CP>();
-            List<String> packageRoots = new ArrayList<String>();
+            List<String> packageRoots = new ArrayList<>();
             for (Element el : XMLUtil.findSubElements(cuEl)) {
                 if (el.getLocalName().equals("package-root")) { // NOI18N
                     packageRoots.add(XMLUtil.findText(el));
@@ -407,7 +407,7 @@ public class JavaProjectGenerator {
                     JavaProjectNature.namespaceAtLeast(el.getNamespaceURI(), JavaProjectNature.NS_JAVA_3)) {
                     cu.annotationPorocessing = new JavaCompilationUnit.AnnotationProcessing();
                     cu.annotationPorocessing.trigger = EnumSet.<AnnotationProcessingQuery.Trigger>noneOf(AnnotationProcessingQuery.Trigger.class);
-                    cu.annotationPorocessing.processors = new ArrayList<String>();
+                    cu.annotationPorocessing.processors = new ArrayList<>();
                     cu.annotationPorocessing.processorParams = new LinkedHashMap<String, String>();
                     for (Element apEl : XMLUtil.findSubElements(el)) {
                         final String localName = apEl.getLocalName();
@@ -729,7 +729,7 @@ public class JavaProjectGenerator {
     public static List<String> guessSubprojects(PropertyEvaluator evaluator,
             List<JavaCompilationUnit> javaCompilationUnits, File projectBase, File freeformBase) {
         //assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
-        Set<String> subprojs = new HashSet<String>();
+        Set<String> subprojs = new HashSet<>();
         for (JavaCompilationUnit cu : javaCompilationUnits) {
             if (cu.classpath != null) {
                 for (JavaCompilationUnit.CP cp : cu.classpath) {
@@ -786,7 +786,7 @@ public class JavaProjectGenerator {
     public static List<String> guessBuildFolders(PropertyEvaluator evaluator,
             List<JavaCompilationUnit> javaCompilationUnits, File projectBase, File freeformBase) {
 
-        List<String> buildFolders = new ArrayList<String>();
+        List<String> buildFolders = new ArrayList<>();
         for (JavaCompilationUnit cu : javaCompilationUnits) {
             if (cu.output != null) {
                 for (String output : cu.output) {
@@ -873,7 +873,7 @@ public class JavaProjectGenerator {
     public static List<String> getBuildFiles(PropertyEvaluator evaluator,
             List<JavaCompilationUnit> compUnits, File projectBase, File freeformBase) {
         
-        List<String> buildFiles = new ArrayList<String>();
+        List<String> buildFiles = new ArrayList<>();
         for (JavaCompilationUnit cu : compUnits) {
             if (cu.output != null) {
                 for (String output : cu.output) {
@@ -931,7 +931,7 @@ public class JavaProjectGenerator {
         for (Element actionEl : XMLUtil.findSubElements(actionsEl)) {
             TargetMapping tm = new TargetMapping();
             tm.name = actionEl.getAttribute("name"); // NOI18N
-            List<String> targetNames = new ArrayList<String>();
+            List<String> targetNames = new ArrayList<>();
             EditableProperties props = new EditableProperties(false);
             for (Element subEl : XMLUtil.findSubElements(actionEl)) {
                 if (subEl.getLocalName().equals("target")) { // NOI18N

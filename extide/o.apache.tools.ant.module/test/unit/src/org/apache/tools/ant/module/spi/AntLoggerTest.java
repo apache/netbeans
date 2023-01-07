@@ -228,13 +228,13 @@ public class AntLoggerTest extends NbTestCase {
         public synchronized void reset() {
             interestedInSessionFlag = false;
             interestedInAllScriptsFlag = false;
-            interestingScripts = new HashSet<File>();
+            interestingScripts = new HashSet<>();
             interestingTargets = AntLogger.NO_TARGETS;
             interestingTasks = AntLogger.NO_TASKS;
             interestingLogLevels = new int[0];
             collectLineNumbersForTargets = false;
-            targetsStarted = new ArrayList<String>();
-            messages = new ArrayList<String>();
+            targetsStarted = new ArrayList<>();
+            messages = new ArrayList<>();
             antEventDetailsOK = false;
             referenceValue = null;
             hasReference = false;

@@ -52,7 +52,7 @@ public class MoveFileRefactoringUI  implements RefactoringUI, RefactoringUIBypas
 
     public MoveFileRefactoringUI(RefactoringElement element) {
         fo = element.getFileObject();
-        Collection<Object> lookupContent = new ArrayList<Object>();
+        Collection<Object> lookupContent = new ArrayList<>();
         lookupContent.add(element);
         refactoring = new MoveRefactoring(Lookups.fixed(lookupContent.toArray()));
     }

@@ -259,7 +259,7 @@ public final class JFXProjectProperties {
         return browserPaths;
     }
     public void resetBrowserPaths() {
-        this.browserPaths = new HashMap<String, String>();
+        this.browserPaths = new HashMap<>();
     }
     public void setBrowserPaths(Map<String, String> browserPaths) {
         this.browserPaths = browserPaths;
@@ -861,7 +861,7 @@ public final class JFXProjectProperties {
         }
         
         public void addRow() {
-            Map<String,String> emptyMap = new HashMap<String,String>();
+            Map<String,String> emptyMap = new HashMap<>();
             for (String  suffix : propSuffixes) {
                 emptyMap.put(suffix, "");
             }
@@ -1476,7 +1476,7 @@ public final class JFXProjectProperties {
         JavaPlatform platform = JavaFXPlatformUtils.findJavaPlatform(plat);
         final File prjDir = FileUtil.toFile(prj.getProjectDirectory());
         final File bcDir = bc == null ? null : PropertyUtils.resolveFile(prjDir, bc);
-        final List<File> lazyFileList = new ArrayList<File>();
+        final List<File> lazyFileList = new ArrayList<>();
         String[] paths;
         if (lz != null) {
             paths = PropertyUtils.tokenizePath(lz);            
@@ -1487,7 +1487,7 @@ public final class JFXProjectProperties {
         paths = rcp != null ? PropertyUtils.tokenizePath(rcp) : new String[0];
         String mainJar = eval.getProperty(DIST_JAR);
         final File mainFile = mainJar != null ? PropertyUtils.resolveFile(prjDir, mainJar) : null;
-        List<FileObject> preloaders = new ArrayList<FileObject>();
+        List<FileObject> preloaders = new ArrayList<>();
         try {
             for(PreloaderArtifact pa : getPreloaderArtifactsFromConfigs(configs)) {
                 preloaders.addAll(Arrays.asList(pa.getFileObjects()));
@@ -1768,7 +1768,7 @@ public final class JFXProjectProperties {
 
         @Override
         final FileObject[] getFileObjects() {
-            List<FileObject> l = new ArrayList<FileObject>();
+            List<FileObject> l = new ArrayList<>();
             for(AntArtifact a : artifacts) {
                 l.addAll(Arrays.asList(a.getArtifactFiles()));
             }
@@ -1860,7 +1860,7 @@ public final class JFXProjectProperties {
             registerStaticProperties(new String[] {
                 RUN_AS});
             
-            Map<String, String> substituteMissing = new HashMap<String, String>();
+            Map<String, String> substituteMissing = new HashMap<>();
             substituteMissing.put(RUN_APP_WIDTH, DEFAULT_APP_WIDTH);
             substituteMissing.put(RUN_APP_HEIGHT, DEFAULT_APP_HEIGHT);
             registerDefaultsIfMissing(substituteMissing);

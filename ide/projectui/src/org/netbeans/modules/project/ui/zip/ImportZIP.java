@@ -136,7 +136,7 @@ public class ImportZIP extends JPanel {
         });
         handle.start();
         try {
-            List<File> folders = new ArrayList<File>();
+            List<File> folders = new ArrayList<>();
             InputStream is = new FileInputStream(zip);
             try {
                 ZipInputStream zis = new ZipInputStream(is);

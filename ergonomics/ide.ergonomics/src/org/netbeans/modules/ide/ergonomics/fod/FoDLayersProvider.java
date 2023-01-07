@@ -56,7 +56,7 @@ implements LookupListener, Runnable {
     protected void registerLayers(Collection<? super URL> context) {
         boolean empty = true;
         LOG.fine("collecting layers"); // NOI18N
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         urls.add(0, FoDLayersProvider.class.getResource("common.xml")); // NOI18N
         for (FeatureInfo info : FeatureManager.features()) {
             if (!info.isPresent()) {

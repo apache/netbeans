@@ -288,7 +288,7 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
         private final Map<String,Integer> strings;
         BinaryWriter(OutputStream os, MemFolder root, int fsSize, Map<String,int[]> strings) throws IOException {
             this.os = os;
-            HashMap<String, Integer> map = new HashMap<String, Integer>();
+            HashMap<String, Integer> map = new HashMap<>();
             this.strings = Collections.unmodifiableMap(map);
             urls = writeBaseUrls (root, fsSize, strings, map);
             position = 0;
@@ -405,7 +405,7 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
                 }
             }
             Collections.sort(lst, new C());
-            List<String> res = new ArrayList<String>();
+            List<String> res = new ArrayList<>();
             for (Entry<String, int[]> entry : lst) {
                 res.add(entry.getKey());
             }

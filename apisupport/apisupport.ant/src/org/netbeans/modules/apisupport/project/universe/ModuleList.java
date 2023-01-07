@@ -242,7 +242,7 @@ public final class ModuleList {
 
     public static URL[] getSourceRootsForExternalModule(File binaryRootF) {
         Set<ModuleEntry> candidates = getKnownEntries(binaryRootF);
-        List<URL> roots = new ArrayList<URL>();
+        List<URL> roots = new ArrayList<>();
 
         for (ModuleEntry entry : candidates) {
             if (entry instanceof BinaryClusterEntry) {
@@ -255,7 +255,7 @@ public final class ModuleList {
 
     public static URL[] getJavadocRootsForExternalModule(File binaryRootF) {
         Set<ModuleEntry> candidates = getKnownEntries(binaryRootF);
-        List<URL> roots = new ArrayList<URL>();
+        List<URL> roots = new ArrayList<>();
 
         for (ModuleEntry entry : candidates) {
             if (entry instanceof BinaryClusterEntry) {
@@ -418,7 +418,7 @@ public final class ModuleList {
             throw new IOException("Neither ${clusters.list} nor ${cluster.config} + ${clusters.config.<cfg>.list} found in "    // NOI18N
                     + getClusterPropertiesFile(home));
         }
-        Set<File> knownProjects = new HashSet<File>();
+        Set<File> knownProjects = new HashSet<>();
         for (ModuleEntry known : entries.values()) {
             knownProjects.add(known.getSourceLocation());
         }
@@ -446,7 +446,7 @@ public final class ModuleList {
     }
     
     /** Only useful for pre-Hg layout. */
-    public static final Set<String> EXCLUDED_DIR_NAMES = new HashSet<String>();
+    public static final Set<String> EXCLUDED_DIR_NAMES = new HashSet<>();
     static {
         EXCLUDED_DIR_NAMES.add("CVS"); // NOI18N
         EXCLUDED_DIR_NAMES.add("nbproject"); // NOI18N
@@ -587,7 +587,7 @@ public final class ModuleList {
      * And anything in the release/ directory is added.
      */
     private static Set<File> findSourceNBMFiles(ModuleEntry entry, PropertyEvaluator eval) throws IOException {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         files.add(entry.getJarLocation());
         File cluster = entry.getClusterDirectory();
         String cnbd = entry.getCodeNameBase().replace('.', '-');
@@ -876,7 +876,7 @@ public final class ModuleList {
             }
         }
         @Override protected Set<String> computePublicClassNamesInMainModule() {
-            return new HashSet<String>();
+            return new HashSet<>();
         }
     }
     
@@ -973,7 +973,7 @@ public final class ModuleList {
      * Note that update_tracking/*.xml is added as well as files it lists.
      */
     private static Set<File> findBinaryNBMFiles(File cluster, String cnb, File jar) throws IOException {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         files.add(jar);
         File tracking = new File(new File(cluster, "update_tracking"), cnb.replace('.', '-') + ".xml"); // NOI18N
         if (tracking.isFile()) {
@@ -1097,7 +1097,7 @@ public final class ModuleList {
         providers.add(loadPropertiesFile(new File(basedir, "nbproject" + File.separatorChar + "private" + File.separatorChar + "private.properties"))); // NOI18N
         providers.add(loadPropertiesFile(new File(basedir, "nbproject" + File.separatorChar + "project.properties"))); // NOI18N
         // Implicit stuff.
-        Map<String,String> defaults = new HashMap<String,String>();
+        Map<String,String> defaults = new HashMap<>();
         if (type == NbModuleType.NETBEANS_ORG) {
             defaults.put("nb_all", root.getAbsolutePath()); // NOI18N
             defaults.put(NETBEANS_DEST_DIR, findNetBeansOrgDestDir(root).getAbsolutePath());
@@ -1245,7 +1245,7 @@ public final class ModuleList {
         // #163744: can happen with symlinks       assert path.indexOf("..") == -1 : path;
                 Map<String,String> clusterLocationsHere = clusterLocations.get(nbroot);
                 if (clusterLocationsHere == null) {
-                    clusterLocationsHere = new HashMap<String,String>();
+                    clusterLocationsHere = new HashMap<>();
                     Map<String,String> clusterDefs = getClusterProperties(nbroot);
                     for (Map.Entry<String,String> entry : clusterDefs.entrySet()) {
                         String key = entry.getKey();
@@ -1352,7 +1352,7 @@ public final class ModuleList {
             lazyNetBeansOrgList = 2;
             File nbdestdir = findNetBeansOrgDestDir(home);
             Map<String,ModuleEntry> _entries = new HashMap<String,ModuleEntry>(entries); // #68513: possible race condition
-            Set<File> knownProjects = new HashSet<File>();
+            Set<File> knownProjects = new HashSet<>();
             for (ModuleEntry known : entries.values()) {
                 knownProjects.add(known.getSourceLocation());
             }

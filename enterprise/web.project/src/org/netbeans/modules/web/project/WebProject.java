@@ -540,7 +540,7 @@ public final class WebProject implements Project {
     private static final PropertyProvider UPDATE_PROPERTIES;
 
     static {
-        Map<String, String> defs = new HashMap<String, String>();
+        Map<String, String> defs = new HashMap<>();
 
         defs.put(ProjectProperties.ANNOTATION_PROCESSING_ENABLED, "true"); //NOI18N
         defs.put(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR, "true"); //NOI18N
@@ -1489,8 +1489,8 @@ public final class WebProject implements Project {
             return;
         }
 
-        privilegedTemplatesEE5 = new ArrayList<String>();
-        privilegedTemplates = new ArrayList<String>();
+        privilegedTemplatesEE5 = new ArrayList<>();
+        privilegedTemplates = new ArrayList<>();
 
         for (WebPrivilegedTemplates webPrivililegedTemplates : Lookups.forPath(WEBTEMPLATE_PATH).lookupAll(WebPrivilegedTemplates.class)) {
             String[] addedTemplates = webPrivililegedTemplates.getPrivilegedTemplates(apiWebModule);
@@ -1550,7 +1550,7 @@ public final class WebProject implements Project {
             if (isArchive) {
                 return PRIVILEGED_NAMES_ARCHIVE;
             } else {
-                Set<String> set = new HashSet<String>();
+                Set<String> set = new HashSet<>();
                 if (projectCap.isEjb31LiteSupported()) {
                     set.addAll(getPrivilegedTemplatesEE5());
                     if (projectCap.isEjb31Supported() || projectCap.isEjb40Supported() 

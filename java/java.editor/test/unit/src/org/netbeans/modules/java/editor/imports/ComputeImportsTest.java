@@ -71,7 +71,7 @@ import org.openide.loaders.DataObject;
  */
 public class ComputeImportsTest extends NbTestCase {
     
-    private static final Set<String> IGNORE_CLASSES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> IGNORE_CLASSES = new HashSet<>(Arrays.asList(new String[] {
         "com.sun.tools.javac.util.List",
         "com.sun.tools.javac.code.Attribute.RetentionPolicy",
         "com.sun.tools.classfile.Opcode.Set",
@@ -352,7 +352,7 @@ public class ComputeImportsTest extends NbTestCase {
         Collections.sort(keys);
         
         for (String key : keys) {
-            List<String> fqns = new ArrayList<String>();
+            List<String> fqns = new ArrayList<>();
             
             for (Element t : set.get(key)) {
                 String fqn;

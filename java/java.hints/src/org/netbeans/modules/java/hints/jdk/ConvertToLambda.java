@@ -56,7 +56,7 @@ import org.openide.util.NbBundle;
 public class ConvertToLambda {
 
     public static final String ID = "Javac_canUseLambda"; //NOI18N
-    public static final Set<String> CODES = new HashSet<String>(Arrays.asList("compiler.warn.potential.lambda.found")); //NOI18N
+    public static final Set<String> CODES = new HashSet<>(Arrays.asList("compiler.warn.potential.lambda.found")); //NOI18N
 
     static final boolean DEF_PREFER_MEMBER_REFERENCES = true;
 

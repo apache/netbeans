@@ -86,7 +86,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
     private String[] getHtmlTagNames() {
         HtmlModel model = HtmlModelFactory.getModel(HtmlVersion.HTML5);
         Collection<HtmlTag> tags = model.getAllTags();
-        Collection<String> tagNames = new ArrayList<String>();
+        Collection<String> tagNames = new ArrayList<>();
         for(HtmlTag tag : tags) {
             tagNames.add(tag.getName());
         }

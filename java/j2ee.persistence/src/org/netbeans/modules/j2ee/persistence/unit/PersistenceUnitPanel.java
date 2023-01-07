@@ -1089,7 +1089,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
             return;
         }
         String[] existingClassNames = persistenceUnit.getClass2();
-        Set<String> ignoreClassNames = new HashSet<String>(Arrays.asList(existingClassNames));
+        Set<String> ignoreClassNames = new HashSet<>(Arrays.asList(existingClassNames));
         List<String> addedClassNames = AddEntityDialog.open(entityClassScope, ignoreClassNames);
         for (String entityClass : addedClassNames) {
             if (dObj.addClass(persistenceUnit, entityClass, true)){

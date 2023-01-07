@@ -544,7 +544,7 @@ public class BinaryAnalyser {
                     in.close();
                 }
             }
-            timeStamps = Pair.<LongHashMap<String>,Set<String>>of(map,new HashSet<String>(map.keySet()));
+            timeStamps = Pair.<LongHashMap<String>,Set<String>>of(map,new HashSet<>(map.keySet()));
         }
         return timeStamps;
     }

@@ -85,7 +85,7 @@ public class ClasspathInfoFactory {
         FileObject someFile = sourceRoots.length>0 ? sourceRoots[0] : prj.getProjectDirectory();
         ClassPath cpCompile = cpEmpty;
         if (includeLibraries) {
-            java.util.List<URL> urlList = new ArrayList<URL>();
+            java.util.List<URL> urlList = new ArrayList<>();
             cpCompile = ClassPath.getClassPath(someFile, ClassPath.COMPILE);
             cpCompile = cpCompile != null ? cpCompile : cpEmpty;
             

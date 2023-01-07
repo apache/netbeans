@@ -63,19 +63,19 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
 public final class SvnProperties implements ActionListener {
 
     /** Subversion properties that may be set only on directories */
-    private static final HashSet<String> DIR_ONLY_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final HashSet<String> DIR_ONLY_PROPERTIES = new HashSet<>(Arrays.asList(new String[] {
                                                             "svn:ignore",
                                                             "svn:externals"}));
  
     /** Subversion properties that may be set only on files (not directories) */
-    private static final HashSet<String> FILE_ONLY_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final HashSet<String> FILE_ONLY_PROPERTIES = new HashSet<>(Arrays.asList(new String[] {
                                                             "svn:eol-style",
                                                             "svn:executable",
                                                             "svn:keywords",
                                                             "svn:needs-lock",
                                                             "svn:mime-type"}));
 
-    private static final HashSet<String> MIXED_PROPERTIES = new HashSet<String>(DIR_ONLY_PROPERTIES.size() + FILE_ONLY_PROPERTIES.size());
+    private static final HashSet<String> MIXED_PROPERTIES = new HashSet<>(DIR_ONLY_PROPERTIES.size() + FILE_ONLY_PROPERTIES.size());
     static {
         MIXED_PROPERTIES.addAll(DIR_ONLY_PROPERTIES);
         MIXED_PROPERTIES.addAll(FILE_ONLY_PROPERTIES);
@@ -87,8 +87,8 @@ public final class SvnProperties implements ActionListener {
     private SvnProgressSupport support;
     private boolean loadedFromFile;
     private File loadedValueFile;
-    private final Set<File> folders = new HashSet<File>();
-    private final Set<File> files = new HashSet<File>();
+    private final Set<File> folders = new HashSet<>();
+    private final Set<File> files = new HashSet<>();
     private final Map<String, Set<File>> filesPerProperty = new HashMap<String, Set<File>>();
 
     /** Creates a ew instance of SvnProperties */
@@ -280,7 +280,7 @@ public final class SvnProperties implements ActionListener {
                 protected void perform() {
                     try {
                         SvnClient client = Subversion.getInstance().getClient(false);
-                        properties = new HashMap<String, String>();
+                        properties = new HashMap<>();
                         for (File f : roots) {
                             ISVNStatus status = SvnUtils.getSingleStatus(client, f);
                             if (!status.getTextStatus().equals(SVNStatusKind.UNVERSIONED)) {
@@ -327,7 +327,7 @@ public final class SvnProperties implements ActionListener {
                         properties.put(propName, propValue);
                         Set<File> filesPerProp = filesPerProperty.get(propName);
                         if (filesPerProp == null) {
-                            filesPerProp = new HashSet<File>();
+                            filesPerProp = new HashSet<>();
                             filesPerProperty.put(propName, filesPerProp);
                         }
                         filesPerProp.add(file);
@@ -363,7 +363,7 @@ public final class SvnProperties implements ActionListener {
                         return;
                     }
                     boolean recursively = panel.cbxRecursively.isSelected();
-                    Set<File> toRefresh = new HashSet<File>();
+                    Set<File> toRefresh = new HashSet<>();
                     try {
                         String propName = getPropertyName();
                         for (File root : getAllowedFiles(propName, recursively)) {
@@ -417,7 +417,7 @@ public final class SvnProperties implements ActionListener {
 
     private File[] getFilesWithProperty (String propertyName) {
         Set<File> filesWithProperty = filesPerProperty.get(propertyName);
-        Set<File> fileList = new HashSet<File>();
+        Set<File> fileList = new HashSet<>();
         if (filesWithProperty != null) {
             fileList.addAll(filesWithProperty);
         }
@@ -472,7 +472,7 @@ public final class SvnProperties implements ActionListener {
                     }
 
                     boolean recursively = panel.cbxRecursively.isSelected();
-                    Set<File> toRefresh = new HashSet<File>();
+                    Set<File> toRefresh = new HashSet<>();
                     try {
                         SvnPropertiesNode[] svnPropertiesNodes = propTable.getNodes();
                         List<SvnPropertiesNode> lstSvnPropertiesNodes = Arrays.asList(svnPropertiesNodes);

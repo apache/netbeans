@@ -631,7 +631,7 @@ public class WebProjectWebServicesSupport implements WebServicesSupportImpl {
         EditableProperties projectProperties = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         
         { // Block that adjusts wscompile.client.classpath as necessary.
-            HashSet<String> wscJars = new HashSet<String>();
+            HashSet<String> wscJars = new HashSet<>();
             boolean newWscJars = false;
             String wscClientClasspath = projectProperties.getProperty(WSCOMPILE_CLASSPATH);
             if(wscClientClasspath != null) {

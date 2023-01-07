@@ -109,7 +109,7 @@ public class SceneElementComparator implements Comparator<SceneElement> {
 
     public static PageFlowSceneElement getNextSelectableElement(PageFlowScene scene, boolean reverse, boolean nodesSelectable, boolean edgesSelectable, boolean pinsSelectable) {
         List<Object> selectedObjs = new ArrayList<Object>(scene.getSelectedObjects());
-        List<Object> objs = new ArrayList<Object>();
+        List<Object> objs = new ArrayList<>();
         List<SceneElement> sortedElements = new ArrayList<SceneElement>();
 
         if (nodesSelectable) {

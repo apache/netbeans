@@ -250,7 +250,7 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
     static Set<String> getQualifiers(Element element , 
             AnnotationModelHelper helper , boolean event )
     {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         AnnotationHandleStrategy strategy = new AnnotationHandleStrategy(){
 
             @Override

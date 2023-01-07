@@ -821,7 +821,7 @@ public class ConfigManager {
                 return;
             }
             uris = new HashSet<URI>(documentInfos.length);
-            jarNames = new HashSet<String>(documentInfos.length);
+            jarNames = new HashSet<>(documentInfos.length);
             for (DocumentInfo docInfo : documentInfos) {
                 URI sourceURI = docInfo.getSourceURI();
                 Matcher m = JAR_PATTERN.matcher(sourceURI.toString());

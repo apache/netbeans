@@ -235,7 +235,7 @@ public class NonProjectJ2eeModule implements J2eeModuleImplementation2 {
         private FileObject root;
         
         private ContentIterator(FileObject f) {
-            this.ch = new ArrayList<FileObject>();
+            this.ch = new ArrayList<>();
             ch.add(f);
             this.root = f;
         }

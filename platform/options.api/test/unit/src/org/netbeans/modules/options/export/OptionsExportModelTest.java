@@ -109,10 +109,10 @@ public class OptionsExportModelTest extends NbTestCase {
                     {"Category0", "Item00", "dir0/subdir0/.*", null}
                 });
         File targetZipFile = new File(getWorkDir(), "export.zip");
-        ArrayList<String> enabledItems = new ArrayList<String>();
+        ArrayList<String> enabledItems = new ArrayList<>();
         model.doExport(targetZipFile, enabledItems);
         LOGGER.finest(OptionsExportModel.listZipFile(targetZipFile).toString());
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         expected.add("dir0/subdir0/file1.properties");
         assertFiles(expected, OptionsExportModel.listZipFile(targetZipFile));
@@ -146,14 +146,14 @@ public class OptionsExportModelTest extends NbTestCase {
                     {"Category0", "Item00", "dir0/subdir0/file0[.]properties#key1#|dir1/subdir1/file1[.]properties", null}
                 });
         File targetZipFile = new File(getWorkDir(), "export.zip");
-        ArrayList<String> enabledItems = new ArrayList<String>();
+        ArrayList<String> enabledItems = new ArrayList<>();
         model.doExport(targetZipFile, enabledItems);
         LOGGER.finest(OptionsExportModel.listZipFile(targetZipFile).toString());
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         expected.add("dir1/subdir1/file1.properties");
         assertFiles(expected, OptionsExportModel.listZipFile(targetZipFile));
-        List<String> expectedKeys = new ArrayList<String>();
+        List<String> expectedKeys = new ArrayList<>();
         expectedKeys.add("key1");
         assertProperties(expectedKeys, "dir0/subdir0/file0.properties", targetZipFile);
 
@@ -246,7 +246,7 @@ public class OptionsExportModelTest extends NbTestCase {
         File targetUserdir = new File(getWorkDir(), "userdir");
         targetUserdir.mkdir();
         model.doImport(targetUserdir);
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         expected.add("dir0/subdir0/file1.properties");
         assertFiles(expected, OptionsExportModel.getRelativePaths(targetUserdir));
@@ -272,7 +272,7 @@ public class OptionsExportModelTest extends NbTestCase {
         File targetUserdir = new File(getWorkDir(), "userdir");
         targetUserdir.mkdir();
         model.doImport(targetUserdir);
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         expected.add("dir0/subdir0/file1.properties");
         assertFiles(expected, OptionsExportModel.getRelativePaths(targetUserdir));
@@ -297,11 +297,11 @@ public class OptionsExportModelTest extends NbTestCase {
                     {"Category0", "Item00", "dir0/subdir0/.*", null},
                 });
         File targetZipFile = new File(getWorkDir(), "export.zip");
-        ArrayList<String> enabledItems = new ArrayList<String>();
+        ArrayList<String> enabledItems = new ArrayList<>();
         enabledItems.add("Category0Item01");
         model.doExport(targetZipFile, enabledItems);
         LOGGER.info(OptionsExportModel.listZipFile(targetZipFile).toString());
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         expected.add("dir0/subdir0/file1.properties");
         assertFiles(expected, OptionsExportModel.listZipFile(targetZipFile));
@@ -330,7 +330,7 @@ public class OptionsExportModelTest extends NbTestCase {
     public void test244640() throws Exception {
         createModel(new String[][]{
             {"Category0", "Item00", "dir0/subdir0/.*", null},});
-        ArrayList<String> enabledItems = new ArrayList<String>();
+        ArrayList<String> enabledItems = new ArrayList<>();
         enabledItems.add("Category0Item01");
 
         File targetZipFile = new File(getWorkDir(), "export.zip");
@@ -346,7 +346,7 @@ public class OptionsExportModelTest extends NbTestCase {
     public void testGetBuildNumberDuringExport() throws Exception {
         createModel(new String[][]{
             {"Category0", "Item00", "dir0/subdir0/.*", null},});
-        ArrayList<String> enabledItems = new ArrayList<String>();
+        ArrayList<String> enabledItems = new ArrayList<>();
         enabledItems.add("Category0Item01");
 
         File targetZipFile = new File(getWorkDir(), "export.zip");
@@ -363,7 +363,7 @@ public class OptionsExportModelTest extends NbTestCase {
     public void testParseBuildNumber() throws Exception {
         createModel(new String[][]{
             {"Category0", "Item00", "dir0/subdir0/.*", null},});
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("ProductVersion=NetBeans IDE 8.0.1 (Build 201408251540)", "201408251540");
         map.put("ProductVersion=NetBeans IDE 8.0.1 (Build 20141127-4fefcedaef32)", "201411272359");
         map.put("ProductVersion=OptionsImport 201408251545", "201408251545");
@@ -388,11 +388,11 @@ public class OptionsExportModelTest extends NbTestCase {
         File targetUserdir = new File(getWorkDir(), "userdir");
         targetUserdir.mkdir();
         model.doImport(targetUserdir);
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         expected.add("dir1/subdir1/file1.properties");
         assertFiles(expected, OptionsExportModel.getRelativePaths(targetUserdir));
-        List<String> expectedKeys = new ArrayList<String>();
+        List<String> expectedKeys = new ArrayList<>();
         expectedKeys.add("key1");
         assertProperties(expectedKeys, "dir0/subdir0/file0.properties", targetUserdir);
 
@@ -405,7 +405,7 @@ public class OptionsExportModelTest extends NbTestCase {
         targetUserdir = new File(getWorkDir(), "userdir1");
         model.doImport(targetUserdir);
         assertFiles(expected, OptionsExportModel.getRelativePaths(targetUserdir));
-        expectedKeys = new ArrayList<String>();
+        expectedKeys = new ArrayList<>();
         expectedKeys.add("key1");
         assertProperties(expectedKeys, "dir0/subdir0/file0.properties", targetUserdir);
 
@@ -427,7 +427,7 @@ public class OptionsExportModelTest extends NbTestCase {
         properties.store(out, null);
         out.close();
         model.doImport(targetUserdir);
-        expected = new ArrayList<String>();
+        expected = new ArrayList<>();
         expected.add("dir0/subdir0/file0.properties");
         assertFiles(expected, OptionsExportModel.getRelativePaths(targetUserdir));
         Properties expectedProperties = new Properties();

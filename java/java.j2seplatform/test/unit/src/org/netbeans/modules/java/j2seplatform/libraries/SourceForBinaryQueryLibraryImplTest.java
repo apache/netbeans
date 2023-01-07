@@ -179,7 +179,7 @@ public class SourceForBinaryQueryLibraryImplTest extends NbTestCase {
         SFBQResultListener l = new SFBQResultListener ();        
         result.addChangeListener(l);
         LibraryImplementation impl = getLibrary("library4");
-        List<URL> srcList = new ArrayList<URL>();
+        List<URL> srcList = new ArrayList<>();
         File baseDir = new File(getBase());
         File libDir = new File(baseDir,"library4");
         File srcDir = new File(libDir,"src4");

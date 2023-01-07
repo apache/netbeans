@@ -436,7 +436,7 @@ public class CompletionTest extends J2eeTestCase {
      */
     protected boolean dumpCompletion(CompletionJListOperator comp, TestStep step,
             final JEditorPane editor, boolean printDirectly) throws Exception {
-        List<String> finalItems = new ArrayList<String>();
+        List<String> finalItems = new ArrayList<>();
         if (comp != null) {
             // dump CC result to golden file
             Iterator items = comp.getCompletionItems().iterator();

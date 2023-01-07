@@ -171,7 +171,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
     
     
     static List<String> createComboContent(List<ProjectModel.CompilationUnitKey> compilationUnitKeys, PropertyEvaluator evaluator, File nbProjectFolder) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (ProjectModel.CompilationUnitKey cul : compilationUnitKeys) {
             String name;
             if (cul.locations.size() == 1) {

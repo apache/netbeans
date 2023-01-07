@@ -45,7 +45,7 @@ public class TldPackageRename extends BaseTldRename{
 
     
     protected List<RenameItem> getAffectedClasses() {
-        List<FileObject> affectedClasses = new ArrayList<FileObject>();
+        List<FileObject> affectedClasses = new ArrayList<>();
         RefactoringUtil.collectChildren(pkg, affectedClasses);
         List<RenameItem> result = new ArrayList<RenameItem>();
         for (FileObject affected : affectedClasses){

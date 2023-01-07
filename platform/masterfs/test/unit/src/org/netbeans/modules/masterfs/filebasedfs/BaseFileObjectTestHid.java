@@ -63,8 +63,8 @@ import org.openide.util.io.NbMarshalledObject;
 
 
 public class BaseFileObjectTestHid extends TestBaseHid{
-    public static final HashSet<String> AUTOMOUNT_SET = new HashSet<String>(Arrays.asList("set", "shared", "net", "java", "share", "home", "ws", "ade_autofs"));
-    private static final Set<String> REMOTE_FSTYPES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+    public static final HashSet<String> AUTOMOUNT_SET = new HashSet<>(Arrays.asList("set", "shared", "net", "java", "share", "home", "ws", "ade_autofs"));
+    private static final Set<String> REMOTE_FSTYPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
     "nfs", "nfs4","autofs")));  //NOI18N
     private static final boolean CHECK_REMOTE_FSTYPES = true;
     private FileObject root;
@@ -432,7 +432,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
 
         FileSystem fs = fo.getFileSystem();
         assertNotNull(fs);
-        final Set<FileObject> s = new HashSet<FileObject>();
+        final Set<FileObject> s = new HashSet<>();
         fs.addFileChangeListener(new FileChangeAdapter(){
             @Override
             public void fileFolderCreated(FileEvent fe) {
@@ -466,7 +466,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         FileUtil.createData(testFo, "f");        
         FileObject[] childs = testFo.getChildren();
         assertEquals(6, childs.length);
-        final List<FileObject> l = new ArrayList<FileObject>();
+        final List<FileObject> l = new ArrayList<>();
         FileChangeListener fclFS = new FileChangeAdapter(){
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -850,8 +850,8 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         assertNotNull(fs);        
         FileObject main = root.createData("Main.java");
         FileUtil.createData(root,"subpackage/newclass.java");
-        final List<FileObject> fileObjects = new ArrayList<FileObject>();
-        final Set<FileObject> allSubPackages = new HashSet<FileObject>();
+        final List<FileObject> fileObjects = new ArrayList<>();
+        final Set<FileObject> allSubPackages = new HashSet<>();
         final TestListener tl = new TestListener(fileObjects);
         fs.addFileChangeListener(tl);
         try {
@@ -1223,7 +1223,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         }
         
 
-        ArrayList<FileObject> all = new ArrayList<FileObject>();
+        ArrayList<FileObject> all = new ArrayList<>();
         FileObject jfsRoot = jfs.getRoot();
         Enumeration<? extends FileObject> en = jfsRoot.getChildren(true);
         while (en.hasMoreElements()) {
@@ -1232,7 +1232,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
 
         assertTrue (all.size() > 0); 
         
-        final ArrayList<FileObject> deleted = new ArrayList<FileObject>();
+        final ArrayList<FileObject> deleted = new ArrayList<>();
         jfs.addFileChangeListener(new FileChangeAdapter() {
             @Override
             public void fileDeleted(FileEvent fe) {

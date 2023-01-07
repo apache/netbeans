@@ -137,7 +137,7 @@ public class StringArrayCustomEditor extends javax.swing.JPanel {
 
     public void updateValue () {
         String lastToken = EMPTY_STRING;
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         String text = textArea.getText();
         
         // input ends with empty line > spacer added

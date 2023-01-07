@@ -78,7 +78,7 @@ public class RenameFormClassTest extends ExtJellyTestCase {
         openFile(CLASS_NEW_NAME);
         FormDesignerOperator designer = new FormDesignerOperator(CLASS_OLD_NAME);
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
 
         // new class name
         lines.add("public class FrameWithBundleRenamed"); // NOI18N

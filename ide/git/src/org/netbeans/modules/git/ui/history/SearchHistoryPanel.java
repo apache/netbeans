@@ -865,7 +865,7 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                     @Override
                     public void run () {
                         if (!isCanceled()) {
-                            Set<String> visibleRevisions = new HashSet<String>(results.size());
+                            Set<String> visibleRevisions = new HashSet<>(results.size());
                             for (RepositoryRevision rev : results) {
                                 visibleRevisions.add(rev.getLog().getRevision());
                             }

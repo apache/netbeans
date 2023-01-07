@@ -154,7 +154,7 @@ public class JavadocAndSourceRootDetection {
         if (!folder.isFolder()) {
             throw new IllegalArgumentException("The parameter: " + FileUtil.getFileDisplayName(folder) + " has to be a directory.");    //NOI18N
         }
-        final Set<FileObject> result = new HashSet<FileObject>();
+        final Set<FileObject> result = new HashSet<>();
         findAllSourceRoots(folder, result, canceled, 0);
         return Collections.unmodifiableSet(result);
     }

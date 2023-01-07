@@ -32,7 +32,7 @@ import java.util.prefs.Preferences;
  */
 class TypesFilter {
     
-    private Set<String> enabledProviders = new HashSet<String>();
+    private Set<String> enabledProviders = new HashSet<>();
     private int countLimit = 100;
     
     public TypesFilter() {

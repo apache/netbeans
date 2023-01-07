@@ -119,7 +119,7 @@ public class SourcesNodeFactory implements NodeFactory {
             System.arraycopy(sourceGroups, 0, groups, 0, sourceGroups.length);
 
             List<SourceGroup> keysList = new ArrayList<>(groups.length);
-            //Set<FileObject> roots = new HashSet<FileObject>();
+            //Set<FileObject> roots = new HashSet<>();
             FileObject fileObject;
             for (int i = 0; i < groups.length; i++) {
                 fileObject = groups[i].getRootFolder();

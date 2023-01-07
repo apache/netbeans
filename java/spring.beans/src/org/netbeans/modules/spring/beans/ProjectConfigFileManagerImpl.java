@@ -98,7 +98,7 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
                     }
                     assert files != null;
                 }
-                List<File> result = new ArrayList<File>();
+                List<File> result = new ArrayList<>();
                 for (File file : files) {
                     if (file.exists()) {
                         result.add(file);
@@ -127,7 +127,7 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
                 }
                 List<ConfigFileGroup> result = new ArrayList<ConfigFileGroup>(groups.size());
                 result.addAll(groups);
-                removeUnknownFiles(result, new HashSet<File>(files));
+                removeUnknownFiles(result, new HashSet<>(files));
                 return result;
             }
         });
@@ -167,7 +167,7 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
             files = Collections.emptyList();
             groups = Collections.emptyList();
         }
-        List<File> newFiles = new ArrayList<File>();
+        List<File> newFiles = new ArrayList<>();
         List<ConfigFileGroup> newGroups = new ArrayList<ConfigFileGroup>();
         Element springConfigEl = auxConfig.getConfigurationFragment(SPRING_DATA, SPRING_DATA_NS, true);
         if (springConfigEl != null) {
@@ -183,7 +183,7 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
                 list = configFileGroupsEl.getElementsByTagNameNS(SPRING_DATA_NS, CONFIG_FILE_GROUP);
                 readGroups(list, projectDir, newGroups);
             }
-            List<File> modifiedList = removeUnknownFiles(newGroups, new HashSet<File>(newFiles));
+            List<File> modifiedList = removeUnknownFiles(newGroups, new HashSet<>(newFiles));
             if (modifiedList.size()>0) {
                 newFiles = modifiedList;
             }
@@ -193,7 +193,7 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
     }
 
     private void readFiles(NodeList configFileEls, File basedir, List<File> files) {
-        Set<File> addedFiles = new HashSet<File>(); // For removing any duplicates.
+        Set<File> addedFiles = new HashSet<>(); // For removing any duplicates.
         for (int i = 0; i < configFileEls.getLength(); i++) {
             Element configFileEl = (Element)configFileEls.item(i);
             File file = ConfigFiles.resolveFile(basedir, configFileEl.getTextContent());
@@ -216,7 +216,7 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
 
     private List<File> removeUnknownFiles(List<ConfigFileGroup> newGroups, Set<File> knownFiles) {
         boolean modified = false;
-        List<File> fileList = new ArrayList<File>();
+        List<File> fileList = new ArrayList<>();
         for (int i = 0; i < newGroups.size(); i++) {
             ConfigFileGroup group = newGroups.get(i);
             for (File file : group.getFiles()) {

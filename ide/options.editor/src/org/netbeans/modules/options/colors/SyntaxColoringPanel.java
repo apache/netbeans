@@ -825,7 +825,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     private void setToBeSaved(String currentProfile, String currentLanguage) {
         Set<String> s = toBeSaved.get(currentProfile);
         if (s == null) {
-            s = new HashSet<String>();
+            s = new HashSet<>();
             toBeSaved.put(currentProfile, s);
         }
         s.add(currentLanguage);
@@ -940,7 +940,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     private Map<String, String> languageToMimeType;
     private Map<String, String> getLanguageToMimeTypeMap() {
         if (languageToMimeType == null) {
-            languageToMimeType = new HashMap<String, String>();
+            languageToMimeType = new HashMap<>();
             Set<String> mimeTypes = EditorSettings.getDefault().getMimeTypes();
             for(String mimeType : mimeTypes) {
                 String name = EditorSettings.getDefault().getLanguageName (mimeType);
@@ -1196,7 +1196,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         }
     }
     
-    private static Map<String, String> convertALC = new HashMap<String, String>();
+    private static Map<String, String> convertALC = new HashMap<>();
     
     static {
         convertALC.put("character", "char"); //NOI18N

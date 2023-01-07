@@ -46,7 +46,7 @@ class EntrySupportLazy extends EntrySupport {
      * mutate, the reference to different states, however may -
      * in future.
      */
-    protected final AtomicReference<EntrySupportLazyState> internal = new AtomicReference<EntrySupportLazyState>(EntrySupportLazyState.UNINITIALIZED);
+    protected final AtomicReference<EntrySupportLazyState> internal = new AtomicReference<>(EntrySupportLazyState.UNINITIALIZED);
     
     //private static final boolean LOG_ENABLED = LOGGER.isLoggable(Level.FINER);
 
@@ -390,11 +390,11 @@ class EntrySupportLazy extends EntrySupport {
         }
         
         EntrySupportLazyState state = stateHolder[0];
-        final Map<Entry,EntryInfo> new2Info = new HashMap<Entry, EntryInfo>(state.getEntryToInfo());
+        final Map<Entry,EntryInfo> new2Info = new HashMap<>(state.getEntryToInfo());
         // recompute indexes
         int index = 0;
         int changedIndex = -1;
-        List<Entry> arr = new ArrayList<Entry>();
+        List<Entry> arr = new ArrayList<>();
         for (Entry tmpEntry : state.getEntries()) {
             EntryInfo tmpInfo = null;
             if (tmpEntry.equals(entry)) {
@@ -450,8 +450,8 @@ class EntrySupportLazy extends EntrySupport {
                 int addIdx = 0;
                 int inx = 0;
                 boolean createNodes = toAdd.size() == 2 && prefetchCount > 0;
-                ArrayList<Entry> newStateVisibleEntries = new ArrayList<Entry>();
-                Map<Entry, EntryInfo> newState2Info = new HashMap<Entry, EntryInfo>(state.getEntryToInfo());
+                ArrayList<Entry> newStateVisibleEntries = new ArrayList<>();
+                Map<Entry, EntryInfo> newState2Info = new HashMap<>(state.getEntryToInfo());
                 for (int i = 0; i < newStateEntries.size(); i++) {
                     Entry entry = newStateEntries.get(i);
                     EntryInfo info = newState2Info.get(entry);
@@ -522,8 +522,8 @@ class EntrySupportLazy extends EntrySupport {
             } else {
                 if (reorderedEntries == null) {
                     reorderedEntries = new LinkedList<Entry>();
-                    newVisible = new ArrayList<Entry>();
-                    new2Infos = new HashMap<Entry, EntryInfo>(old2Infos);
+                    newVisible = new ArrayList<>();
+                    new2Infos = new HashMap<>(old2Infos);
                 }
                 reorderedEntries.add(entry);
                 if (info.isHidden()) {
@@ -648,7 +648,7 @@ class EntrySupportLazy extends EntrySupport {
             if (!state.isMustNotify() && !state.isInited()) {
                 ArrayList<Entry> newStateEntries = new ArrayList<Entry>(newEntries);
                 ArrayList<Entry> newStateVisibleEntries = new ArrayList<Entry>(newEntries);
-                Map<Entry, EntryInfo> newState2Info = new HashMap<Entry, EntryInfo>();
+                Map<Entry, EntryInfo> newState2Info = new HashMap<>();
                 {
                     Map<Entry, EntryInfo> oldState2Info = state.getEntryToInfo();
                     for (Entry entry : newEntries) {
@@ -753,9 +753,9 @@ class EntrySupportLazy extends EntrySupport {
         List<Entry> previousEntries = state.getVisibleEntries();
         Map<Entry, EntryInfo> previousInfos = null;
         Map<Entry, EntryInfo> new2Infos = null;
-        List<Entry> newEntries = justHide ? null : new ArrayList<Entry>();
+        List<Entry> newEntries = justHide ? null : new ArrayList<>();
         Node[] removedNodes = null;
-        ArrayList<Entry> newStateVisibleEntries = new ArrayList<Entry>();
+        ArrayList<Entry> newStateVisibleEntries = new ArrayList<>();
         Map<Entry, EntryInfo> oldState2Info = state.getEntryToInfo();
         for (Entry entry : state.getEntries()) {
             EntryInfo info = oldState2Info.get(entry);
@@ -772,7 +772,7 @@ class EntrySupportLazy extends EntrySupport {
                 if (info.isHidden()) {
                     if (!justHide) {
                         if (new2Infos == null) {
-                            new2Infos = new HashMap<Entry, EntryInfo>(oldState2Info);
+                            new2Infos = new HashMap<>(oldState2Info);
                         }
                         new2Infos.remove(entry);
                     }
@@ -780,7 +780,7 @@ class EntrySupportLazy extends EntrySupport {
                 }
                 idxs[removedIdx++] = info.getIndex();
                 if (previousInfos == null) {
-                    previousInfos = new HashMap<Entry, EntryInfo>(oldState2Info);
+                    previousInfos = new HashMap<>(oldState2Info);
                 }
                 Node node = info.currentNode();
                 if (!info.isHidden() && node != null && !isDummyNode(node)) {
@@ -790,7 +790,7 @@ class EntrySupportLazy extends EntrySupport {
                     removedNodes[removedNodesIdx++] = node;
                 }
                 if (new2Infos == null) {
-                    new2Infos = new HashMap<Entry, EntryInfo>(oldState2Info);
+                    new2Infos = new HashMap<>(oldState2Info);
                 }
                 if (justHide) {
                     EntryInfo dup = newEntryInfo != null ? newEntryInfo : info.changeNode(null);
@@ -801,7 +801,7 @@ class EntrySupportLazy extends EntrySupport {
                 }
             } else {
                 if (new2Infos == null) {
-                    new2Infos = new HashMap<Entry, EntryInfo>(oldState2Info);
+                    new2Infos = new HashMap<>(oldState2Info);
                 }
                 if (!info.isHidden()) {
                     newStateVisibleEntries.add(info.entry());
@@ -828,7 +828,7 @@ class EntrySupportLazy extends EntrySupport {
         if (removedIdx < idxs.length) {
             idxs = (int[]) resizeArray(idxs, removedIdx);
         }
-        List<Node> curSnapshot = createSnapshot(newStateVisibleEntries, new HashMap<Entry, EntryInfo>(new2Infos), delayed);
+        List<Node> curSnapshot = createSnapshot(newStateVisibleEntries, new HashMap<>(new2Infos), delayed);
         List<Node> prevSnapshot = createSnapshot(previousEntries, previousInfos, false);
         fireSubNodesChangeIdx(false, idxs, entryToRemove, curSnapshot, prevSnapshot);
         if (removedNodesIdx > 0) {
@@ -858,7 +858,7 @@ class EntrySupportLazy extends EntrySupport {
 
     LazySnapshot createSnapshot() {
         EntrySupportLazyState state = internal.get();
-        return createSnapshot(state.getVisibleEntries(), new HashMap<Entry, EntryInfo>(state.getEntryToInfo()), false);
+        return createSnapshot(state.getVisibleEntries(), new HashMap<>(state.getEntryToInfo()), false);
     }
 
     protected LazySnapshot createSnapshot(List<Entry> entries, Map<Entry, EntryInfo> e2i, boolean delayed) {

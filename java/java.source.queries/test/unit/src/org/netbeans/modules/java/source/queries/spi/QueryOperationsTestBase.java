@@ -149,8 +149,8 @@ public abstract class QueryOperationsTestBase extends TestCase {
         "import javax.swing.DefaultComboBoxModel;\n"+
         "\n"+
         "public class Test7{\n"+
-        "    Map<String, String> m1 = new HashMap<String, String>();\n"+
-        "    Map<String, String> m2 = new HashMap<String, String>();\n"+
+        "    Map<String, String> m1 = new HashMap<>();\n"+
+        "    Map<String, String> m2 = new HashMap<>();\n"+
         "    public void run() {\n"+
         "        final java.util.Map<String,String> res = new java.util.HashMap<String,String>(m1);\n"+
         "    }\n"+

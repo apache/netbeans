@@ -338,7 +338,7 @@ public final class ColoringMap {
     }
 
     private static List<String> findLegacyNonTokenColoringNames(MimePath mimePath) {
-        List<String> legacyNonTokenColoringNames = new ArrayList<String>();
+        List<String> legacyNonTokenColoringNames = new ArrayList<>();
 
         Preferences prefs = MimeLookup.getLookup(mimePath).lookup(Preferences.class);
         if (prefs != null) {

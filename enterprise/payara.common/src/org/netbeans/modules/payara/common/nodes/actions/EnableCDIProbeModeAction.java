@@ -100,7 +100,7 @@ public class EnableCDIProbeModeAction extends NodeAction {
         }
     }
 
-    private List<String> targets = new ArrayList<String>();
+    private List<String> targets = new ArrayList<>();
 
     @Override
     protected boolean enable(Node[] nodes) {

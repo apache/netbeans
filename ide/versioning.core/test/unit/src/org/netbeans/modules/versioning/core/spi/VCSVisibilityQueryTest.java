@@ -94,7 +94,7 @@ public class VCSVisibilityQueryTest extends NbTestCase {
     }
     
     public void testFireForFiles() throws IOException {
-        final List<String> received = new ArrayList<String>();
+        final List<String> received = new ArrayList<>();
         ChangeListener list;
         VisibilityQuery.getDefault().addChangeListener(list = new ChangeListener() {
             @Override

@@ -598,7 +598,7 @@ public class CommonTestsCfgOfCreate extends SelfResizingPanel implements ChangeL
     }
     
     public void addTestingFrameworks(ArrayList<String> testingFrameworksToAdd) {
-        testingFrameworks = new ArrayList<String>();
+        testingFrameworks = new ArrayList<>();
         for(String testingFramework : testingFrameworksToAdd) {
             testingFrameworks.add(testingFramework);
         }

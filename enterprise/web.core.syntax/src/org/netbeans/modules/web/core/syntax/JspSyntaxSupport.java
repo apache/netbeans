@@ -410,7 +410,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     /** Filters list of strings so only strings starting
      * with a given prefix are returned in the new List. */
     public static final List<Object> filterList(List<? extends Object> toFilter, String prefix) {
-        List<Object> newList = new ArrayList<Object>();
+        List<Object> newList = new ArrayList<>();
         Object item;
         for (int i = 0; i < toFilter.size(); i++) {
             item = toFilter.get(i);
@@ -432,7 +432,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
      /** Filters list of strings so only strings starting
      * with a given prefix are returned in the new List. */
     public static final List<String> filterStrings(List<String> toFilter, String prefix) {
-        List<String> newList = new ArrayList<String>();
+        List<String> newList = new ArrayList<>();
         for(String val : toFilter) {
             if(val.startsWith(prefix)) {
                 newList.add(val);
@@ -1666,7 +1666,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
         Stack<String> stack = new Stack<String>();
         List<JspCompletionItem> result = new ArrayList<JspCompletionItem>();
-        Set<String> found = new HashSet<String>();
+        Set<String> found = new HashSet<>();
 
         if( elem != null ) {
             elem = elem.getPrevious();  // we need smtg. before our </

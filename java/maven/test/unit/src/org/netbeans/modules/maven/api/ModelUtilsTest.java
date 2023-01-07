@@ -187,7 +187,7 @@ public class ModelUtilsTest extends NbTestCase {
     
     
     public void testCheckLibraries() throws Exception {
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(ModelUtils.LIBRARY_PROP_DEPENDENCIES, "a:b:1:jar b:a:2:jar\n  c:d:3:jar\t\t\td:f:4:jar");
         Descriptor res = ModelUtils.checkLibraries(props);
         assertNotNull(res);

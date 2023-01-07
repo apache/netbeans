@@ -154,13 +154,13 @@ public class BatchSearchTest extends NbTestCase {
 
         assertFalse(resources.hasNext());
 
-        Set<String> snipets = new HashSet<String>();
+        Set<String> snipets = new HashSet<>();
 
         for (int[] span : r.getCandidateSpans()) {
             snipets.add(code.substring(span[0], span[1]));
         }
 
-        Set<String> golden = new HashSet<String>(Arrays.asList("c.i().getFileObject(\"\")"));
+        Set<String> golden = new HashSet<>(Arrays.asList("c.i().getFileObject(\"\")"));
         assertEquals(golden, snipets);
     }
 
@@ -222,7 +222,7 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Iterable<String>> output = new HashMap<String, Iterable<String>>();
 
         for (Entry<FileObject, Collection<? extends Resource>> e : result.getResourcesWithRoots().entrySet()) {
-            Collection<String> resourcesRepr = new HashSet<String>();
+            Collection<String> resourcesRepr = new HashSet<>();
 
             for (Resource r : e.getValue()) {
                 resourcesRepr.add(r.getRelativePath());
@@ -233,13 +233,13 @@ public class BatchSearchTest extends NbTestCase {
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), new HashSet<>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
 
         assertEquals(golden, output);
 
         //check verification:
-        final Set<FileObject> added = new HashSet<FileObject>();
-        final Set<FileObject> removed = new HashSet<FileObject>();
+        final Set<FileObject> added = new HashSet<>();
+        final Set<FileObject> removed = new HashSet<>();
 
         GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(new GlobalPathRegistryListener() {
             @Override
@@ -268,8 +268,8 @@ public class BatchSearchTest extends NbTestCase {
         verifiedGolden.put(data.toURL().toExternalForm(), verifiedGoldenPart);
 
         assertEquals(verifiedGolden, verifiedOutput);
-        assertEquals(new HashSet<FileObject>(Arrays.asList(dataSrc1, dataSrc2)), added);
-        assertEquals(new HashSet<FileObject>(Arrays.asList(dataSrc1, dataSrc2)), removed);
+        assertEquals(new HashSet<>(Arrays.asList(dataSrc1, dataSrc2)), added);
+        assertEquals(new HashSet<>(Arrays.asList(dataSrc1, dataSrc2)), removed);
     }
 
     public void testBatchSearchFolderNoIndex() throws Exception {
@@ -288,7 +288,7 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Iterable<String>> output = toDebugOutput(result);
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), new HashSet<>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
 
         assertEquals(golden, output);
     }
@@ -319,7 +319,7 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Iterable<String>> output = new HashMap<String, Iterable<String>>();
 
         for (Entry<FileObject, Collection<? extends Resource>> e : result.getResourcesWithRoots().entrySet()) {
-            Collection<String> resourcesRepr = new HashSet<String>();
+            Collection<String> resourcesRepr = new HashSet<>();
 
             for (Resource r : e.getValue()) {
                 resourcesRepr.add(r.getRelativePath());
@@ -408,7 +408,7 @@ public class BatchSearchTest extends NbTestCase {
     public static synchronized List<URL> getBootClassPath() {
         if (bootClassPath == null) {
             String cp = System.getProperty("sun.boot.class.path");
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
 
             for (String path : paths) {

@@ -70,7 +70,7 @@ public final class DefaultPathRecognizer extends PathRecognizer {
         Set<String> binaryLibraryPathIds = readIdsAttribute(fileAttributes, "binaryLibraryPathIds"); //NOI18N
 
         // mime types
-        Set<String> mimeTypes = new HashSet<String>();
+        Set<String> mimeTypes = new HashSet<>();
         Object mts = fileAttributes.get("mimeTypes"); //NOI18N
         if (mts instanceof String) {
             String [] arr = ((String) mts).split(","); //NOI18N

@@ -90,7 +90,7 @@ final class WorkspaceParser {
 
     private void parseLaunchingPreferences() throws IOException, ProjectImporterException {
         if (!workspace.getLaunchingPrefsFile().exists()) {
-            workspace.setJREContainers(new HashMap<String, String>());
+            workspace.setJREContainers(new HashMap<>());
             return;
         }
         for (Map.Entry<String,String> entry : EclipseUtils.loadProperties(workspace.getLaunchingPrefsFile()).entrySet()) {
@@ -110,9 +110,9 @@ final class WorkspaceParser {
                 workspace.addVariable(var);
             } else if (key.startsWith(USER_LIBRARY_PREFIX) && !value.startsWith(IGNORED_CP_ENTRY)) { // #73542
                 String libName = key.substring(USER_LIBRARY_PREFIX_LENGTH);
-                List<String> jars = new ArrayList<String>();
-                List<String> javadocs = new ArrayList<String>();
-                List<String> sources = new ArrayList<String>();
+                List<String> jars = new ArrayList<>();
+                List<String> javadocs = new ArrayList<>();
+                List<String> sources = new ArrayList<>();
                 UserLibraryParser.getJars(libName, value, jars, javadocs, sources);
                 workspace.addUserLibrary(libName, jars, javadocs, sources);
             } // else we don't use other properties in the meantime
@@ -138,7 +138,7 @@ final class WorkspaceParser {
         }
         for (Element el : XMLUtil.findSubElements(root)) {
             String libraryName = el.getAttribute("Name"); // NOI18N
-            List<String> jars = new ArrayList<String>();
+            List<String> jars = new ArrayList<>();
             for (Element file : XMLUtil.findSubElements(el)) {
                 String path = file.getAttribute("SourceLocation"); // NOI18N
                 if (!"false".equals(file.getAttribute("RelativeToWorkspace"))) { // NOI18N
@@ -172,7 +172,7 @@ final class WorkspaceParser {
             }
         };
         
-        Set<File> projectsDirs = new HashSet<File>();
+        Set<File> projectsDirs = new HashSet<>();
         // let's find internal projects
         File[] innerDirs = workspace.getDirectory().listFiles(dirFilter);
         for (int i = 0; i < innerDirs.length; i++) {
@@ -311,7 +311,7 @@ final class WorkspaceParser {
                 }
                 Element launchConfiguration = doc.getDocumentElement();
                 String type = launchConfiguration.getAttribute("type"); // NOI18N
-                Map<String,String> attrs = new HashMap<String,String>();
+                Map<String,String> attrs = new HashMap<>();
                 NodeList nl = launchConfiguration.getElementsByTagName("stringAttribute"); // NOI18N
                 for (int i = 0; i < nl.getLength(); i++) {
                     Element stringAttribute = (Element) nl.item(i);

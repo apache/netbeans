@@ -92,7 +92,7 @@ public class WebProjectRestSupport extends RestSupport {
         throws IOException 
    {
         FileObject fileObject = MiscUtilities.generateTestClient(testdir);
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         map.put(BASE_URL_TOKEN, url );
         MiscUtilities.modifyFile( fileObject , map );
         return fileObject;

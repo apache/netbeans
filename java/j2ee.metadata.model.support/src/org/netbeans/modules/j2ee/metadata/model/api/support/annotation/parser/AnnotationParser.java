@@ -307,7 +307,7 @@ public final class AnnotationParser {
      * @return the parse result; never null.
      */
     public ParseResult parse(AnnotationMirror annotation) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         if (annotation != null) {
             for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> elementEntry : annotation.getElementValues().entrySet()) {
                 ExecutableElement element = elementEntry.getKey();

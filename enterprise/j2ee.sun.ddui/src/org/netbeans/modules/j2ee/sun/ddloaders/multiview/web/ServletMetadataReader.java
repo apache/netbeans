@@ -53,14 +53,14 @@ public class ServletMetadataReader implements MetadataModelAction<WebAppMetadata
      *  with the same structure (and thus ad infinitum)
      */
     private static Map<String, Object> genProperties(WebApp webApp) {
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         if(webApp != null) {
             Servlet [] servlets = webApp.getServlet();
             if(servlets != null) {
                 for(Servlet servlet: servlets) {
                     String servletName = servlet.getServletName();
                     if(Utils.notEmpty(servletName)) {
-                        Map<String, Object> servletMap = new HashMap<String, Object>();
+                        Map<String, Object> servletMap = new HashMap<>();
                         data.put(servletName, servletMap);
                         servletMap.put(DDBinding.PROP_NAME, servletName);
 

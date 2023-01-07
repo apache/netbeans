@@ -118,7 +118,7 @@ public class Type implements IType{
         if(enumConstants == null){
             Element elt = po != null ? getTypeElement(po) : element;
             if(elt != null){
-                ArrayList<String> constants = new ArrayList<String>();
+                ArrayList<String> constants = new ArrayList<>();
                 for( Element el:elt.getEnclosedElements() ){
                     if(el.getKind() == ElementKind.ENUM_CONSTANT){
                         constants.add(el.getSimpleName().toString());

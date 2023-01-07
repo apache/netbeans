@@ -627,7 +627,7 @@ final class NbBuildLogger implements BuildListener, LoggerTrampoline.AntSessionI
                     if (currentlyParsedMainScript != null && currentlyParsedImportedScript != null) {
                         Map<String,String> targetLocations = knownImportedTargets.get(currentlyParsedMainScript);
                         if (targetLocations == null) {
-                            targetLocations = new HashMap<String,String>();
+                            targetLocations = new HashMap<>();
                             knownImportedTargets.put(currentlyParsedMainScript, targetLocations);
                         }
                         targetLocations.put(matcher.group(1), currentlyParsedImportedScript);
@@ -902,7 +902,7 @@ final class NbBuildLogger implements BuildListener, LoggerTrampoline.AntSessionI
     }
     
     private static Map<String,String> getAttributeMapOfRuntimeConfigurable(RuntimeConfigurable rc) {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         if (runtimeConfigurableGetAttributeMap != null) {
             try {
                 for (Map.Entry<?,?> entry : ((Map<?,?>) runtimeConfigurableGetAttributeMap.invoke(rc)).entrySet()) {
@@ -1191,7 +1191,7 @@ final class NbBuildLogger implements BuildListener, LoggerTrampoline.AntSessionI
             verifyRunning();
             Project project = getProjectIfPropertiesDefined();
             if (project != null) {
-                Set<String> s = new HashSet<String>();
+                Set<String> s = new HashSet<>();
                 s.addAll(NbCollections.checkedSetByFilter(project.getProperties().keySet(), String.class, true));
                 s.addAll(NbCollections.checkedSetByFilter(project.getReferences().keySet(), String.class, true));
                 return s;

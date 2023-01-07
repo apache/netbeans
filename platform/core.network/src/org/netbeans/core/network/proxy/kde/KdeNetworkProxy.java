@@ -150,7 +150,7 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
                 continue;
             }
             fileExists = true;
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             boolean groupFound = false;
             
             try (BufferedReader br = Files.newBufferedReader(p)) {

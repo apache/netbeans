@@ -210,7 +210,7 @@ public final class Task {
                 Logger.getLogger( Task.class.getName() ).log( Level.INFO, 
                         NbBundle.getMessage( Task.class, "Err_UnknownGroupName" ), groupName ); //NOI18N
                 if( null == unknownTaskGroups )
-                    unknownTaskGroups = new HashSet<String>(10);
+                    unknownTaskGroups = new HashSet<>(10);
                 unknownTaskGroups.add( groupName );
             }
             

@@ -50,7 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class MultiViewProcessor extends LayerGeneratingProcessor {
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             MultiViewElement.Registration.class.getCanonicalName()
         ));
     }

@@ -147,7 +147,7 @@ public abstract class CommonLauncher extends Launcher {
         InputStream is = ResourceUtils.getResource(EngineResources.ENGINE_CONTENTS_LIST);
         String[] resources = StringUtils.splitByLines(StreamUtils.readStream(is));
         is.close();
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         LogManager.log("... total engine resources: " + resources.length); //NOI18N
         for (String res : resources) {
             if (res.startsWith(prefix + baseName) &&

@@ -76,7 +76,7 @@ public class WLServerLibraryManager implements ServerLibraryManager {
     public void deployLibraries(Set<ServerLibraryDependency> libraries) throws ConfigurationException {
         Set<ServerLibraryDependency> notHandled = filterDeployed(libraries);
 
-        Set<File> toDeploy = new HashSet<File>();
+        Set<File> toDeploy = new HashSet<>();
         Map<ServerLibrary, File> deployable = support.getDeployableFiles();
         for (Iterator<ServerLibraryDependency> it = notHandled.iterator(); it.hasNext(); ) {
             ServerLibraryDependency range = it.next();

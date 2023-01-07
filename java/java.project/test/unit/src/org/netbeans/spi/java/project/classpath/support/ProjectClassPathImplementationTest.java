@@ -84,21 +84,21 @@ public class ProjectClassPathImplementationTest extends NbTestCase {
                 FileUtil.toFile(helper.getProjectDirectory()), evaluator, new String[] {PROP_NAME_1, PROP_NAME_2});
         ClassPath cp = ClassPathFactory.createClassPath(cpImpl);
         FileObject[] fo = cp.getRoots();
-        List<FileObject> expected = new ArrayList<FileObject>();
+        List<FileObject> expected = new ArrayList<>();
         expected.addAll(Arrays.asList(cpRoots1));
         expected.addAll(Arrays.asList(cpRoots2));
         assertEquals ("Wrong ClassPath roots",expected, Arrays.asList(fo));   //NOI18N
         cpRoots1 = new FileObject[] {cpRoots1[0]};
         setClassPath(new String[] {PROP_NAME_1}, new FileObject[][]{cpRoots1});
         fo = cp.getRoots();
-        expected = new ArrayList<FileObject>();
+        expected = new ArrayList<>();
         expected.addAll(Arrays.asList(cpRoots1));
         expected.addAll(Arrays.asList(cpRoots2));
         assertEquals ("Wrong ClassPath roots",expected, Arrays.asList(fo));   //NOI18N
         cpRoots2 = new FileObject[] {cpRoots2[0]};
         setClassPath(new String[] {PROP_NAME_2}, new FileObject[][]{cpRoots2});
         fo = cp.getRoots();
-        expected = new ArrayList<FileObject>();
+        expected = new ArrayList<>();
         expected.addAll(Arrays.asList(cpRoots1));
         expected.addAll(Arrays.asList(cpRoots2));
         assertEquals ("Wrong ClassPath roots",expected, Arrays.asList(fo));   //NOI18N

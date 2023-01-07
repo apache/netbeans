@@ -496,7 +496,7 @@ public class AbstractLookup extends Lookup implements Serializable {
                 return;
             }
 
-            evAndListeners = new ArrayList<Object>();
+            evAndListeners = new ArrayList<>();
             {
                 for (R<?> result : allAffectedResults) {
                     result.collectFires(evAndListeners);

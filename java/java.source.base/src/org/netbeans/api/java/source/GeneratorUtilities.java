@@ -801,7 +801,7 @@ public final class GeneratorUtilities {
 
         Tree returnType = make.Type(et.getReturnType());
 
-        List<VariableTree> params = new ArrayList<VariableTree>();
+        List<VariableTree> params = new ArrayList<>();
         boolean isVarArgs = method.isVarArgs();
         Iterator<? extends VariableElement> formArgNames = method.getParameters().iterator();
         Iterator<? extends TypeMirror> formArgTypes = et.getParameterTypes().iterator();
@@ -859,7 +859,7 @@ public final class GeneratorUtilities {
         TreeMaker make = copy.getTreeMaker();
         CodeStyle cs = DiffContext.getCodeStyle(copy);
         Set<Modifier> mods = EnumSet.of(clazz.getKind() == ElementKind.ENUM ? Modifier.PRIVATE : Modifier.PUBLIC);
-        List<VariableTree> parameters = new ArrayList<VariableTree>();
+        List<VariableTree> parameters = new ArrayList<>();
         LinkedList<StatementTree> statements = new LinkedList<StatementTree>();
         ModifiersTree parameterModifiers = make.Modifiers(EnumSet.noneOf(Modifier.class));
         List<ExpressionTree> throwsList = new LinkedList<ExpressionTree>();
@@ -922,7 +922,7 @@ public final class GeneratorUtilities {
         TreeMaker make = copy.getTreeMaker();
         CodeStyle cs = DiffContext.getCodeStyle(copy);
         Set<Modifier> mods = EnumSet.of(copy.getTreeUtilities().isEnum(clazz) ? Modifier.PRIVATE : Modifier.PUBLIC);
-        List<VariableTree> parameters = new ArrayList<VariableTree>();
+        List<VariableTree> parameters = new ArrayList<>();
         List<StatementTree> statements = new ArrayList<StatementTree>();
         ModifiersTree parameterModifiers = make.Modifiers(EnumSet.noneOf(Modifier.class));
         for (VariableTree vt : fields) {
@@ -1092,7 +1092,7 @@ public final class GeneratorUtilities {
         assert cut != null && toImport != null && toImport.size() > 0;
 
         ArrayList<Element> elementsToImport = new ArrayList<Element>(toImport.size());
-        Set<String> staticImportNames = new HashSet<String>();
+        Set<String> staticImportNames = new HashSet<>();
         for (Element e : toImport) {
             if (e == null) {
                 continue;

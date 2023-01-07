@@ -78,7 +78,7 @@ class BinaryHeapModel implements HeapModel {
     }
 
     public Collection<String> getRoots() {
-        ArrayList<String> all = new ArrayList<String>();
+        ArrayList<String> all = new ArrayList<>();
 
         int actOffset = refsOffset;
         while (actOffset < objsOffset) {

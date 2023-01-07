@@ -55,7 +55,7 @@ import org.openide.filesystems.URLMapper;
  */
 public class APIIsSelfContainedTest extends NbTestCase {
 
-    private List<String> violations = new ArrayList<String>();
+    private List<String> violations = new ArrayList<>();
     
     /**
      * Creates a new instance of APIIsSelfContained

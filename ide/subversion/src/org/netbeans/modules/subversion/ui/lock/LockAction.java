@@ -105,7 +105,7 @@ public class LockAction extends ContextAction {
         if (unlocked.isEmpty()) {
             return;
         }
-        final LockParams lock = new LockParams(cache.containsFiles(new HashSet<File>(unlocked), FileInformation.STATUS_LOCKED_REMOTELY, true));
+        final LockParams lock = new LockParams(cache.containsFiles(new HashSet<>(unlocked), FileInformation.STATUS_LOCKED_REMOTELY, true));
         if (lock.show()) {
             final SVNUrl url;
             final File[] files = unlocked.toArray(new File[unlocked.size()]);
@@ -120,7 +120,7 @@ public class LockAction extends ContextAction {
                 protected void perform () {
                     try {
                         SvnClient client = Subversion.getInstance().getClient(url, this);
-                        Map<File, String> relativePaths = new HashMap<File, String>(files.length);
+                        Map<File, String> relativePaths = new HashMap<>(files.length);
                         for (File f : files) {
                             String path = SvnUtils.getRelativePath(f);
                             if (path != null) {
@@ -182,7 +182,7 @@ public class LockAction extends ContextAction {
     private static class LockedFilesListener implements ISVNNotifyListener {
         private String msg;
         private final Map<File, String> relativePaths;
-        private final Set<File> lockedFiles = new HashSet<File>();
+        private final Set<File> lockedFiles = new HashSet<>();
         private boolean authError;
 
         public LockedFilesListener (Map<File, String> relativePaths) {

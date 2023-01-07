@@ -174,7 +174,7 @@ public class FodDataObjectLineSetTest extends NbTestCase {
             fail("New object shall be created for all objects: " + newObj2);
         }
 
-        DataObject folder = FodDataObjectFactory.create(fo).findDataObject(fo.getParent(), new HashSet<FileObject>());
+        DataObject folder = FodDataObjectFactory.create(fo).findDataObject(fo.getParent(), new HashSet<>());
         assertNull("Folders are not recognized", folder);
     }
 

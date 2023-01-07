@@ -72,7 +72,7 @@ public class MergeTest extends AbstractHgTestCase {
         final List<String> list = HgCommand.doFetch(newRepo, new HgURL(getWorkTreeDir()), null, true, NULL_LOGGER);
         assertFalse(list.isEmpty());
         Logger LOG = Logger.getLogger(MergeAction.class.getName());
-        final Set<String> conflictedPaths = new HashSet<String>();
+        final Set<String> conflictedPaths = new HashSet<>();
         final boolean[] conflictsFound = new boolean[1];
         LOG.setLevel(Level.ALL);
         LOG.addHandler(new Handler() {

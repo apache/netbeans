@@ -177,7 +177,7 @@ class DiffTreeTable extends OutlineView {
 
     private static class MessageRenderer implements TableCellRenderer {
         private final TableCellRenderer delegate;
-        private final Map<String, String> tooltips = new HashMap<String, String>();
+        private final Map<String, String> tooltips = new HashMap<>();
 
         public MessageRenderer (TableCellRenderer delegate) {
             this.delegate = delegate;

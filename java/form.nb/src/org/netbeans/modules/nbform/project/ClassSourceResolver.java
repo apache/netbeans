@@ -240,7 +240,7 @@ public class ClassSourceResolver implements ClassSource.Resolver {
         public List<URL> getClasspath() {
             Sources sources = ProjectUtils.getSources(project);
             SourceGroup[] sgs = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-            List<URL> list = new ArrayList<URL>();
+            List<URL> list = new ArrayList<>();
             for (SourceGroup sg : sgs) {
                 ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
                 if (cp != null) {

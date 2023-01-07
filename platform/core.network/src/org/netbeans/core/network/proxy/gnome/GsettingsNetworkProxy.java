@@ -156,7 +156,7 @@ public class GsettingsNetworkProxy {
      * @return Map of properties retrieved from GSettings.
      */
     private static Map<String, String> getGsettingsMap() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         
         String command = GSETTINGS_PATH + GSETTINGS_ARGUMENT_LIST_RECURSIVELY + GSETTINGS_PROXY_SCHEMA;
         

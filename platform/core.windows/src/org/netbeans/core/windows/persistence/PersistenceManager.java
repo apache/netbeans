@@ -137,14 +137,14 @@ public final class PersistenceManager implements PropertyChangeListener {
     
     /** Contains already used TopComponent ID. It is used to make sure unique
      * ID is created for every TopComponent instance */
-    private Set<String> globalIDSet = new HashSet<String>(30);
+    private Set<String> globalIDSet = new HashSet<>(30);
 
     /** Contains ids of non persistent TC so we are able to decide if tc is not persistent
      * during winsys save even if TC instance was gc'ed.
      * Used to filer unwanted TC during winsys save.
      * Ids are added when Id is assigned to TC.
      */
-    private Set<String> topComponentNonPersistentID = new HashSet<String>(30);
+    private Set<String> topComponentNonPersistentID = new HashSet<>(30);
     
     /** Contains ids of persistent only opened TC so we are able to decide if tc is persistent only opened
      * during winsys save even if TC instance was gc'ed.
@@ -152,7 +152,7 @@ public final class PersistenceManager implements PropertyChangeListener {
      * Ids are added during TC deserialization or when Id is assigned to TC when TC
      * instance is created during runtime eg. when new editor is opened.
      */
-    private Set<String> topComponentPersistentOnlyOpenedID = new HashSet<String>(30);
+    private Set<String> topComponentPersistentOnlyOpenedID = new HashSet<>(30);
     
     /** Map between string ids and weakly hold top components */
     private final Map<String, Reference<TopComponent>> id2TopComponentMap = 
@@ -170,7 +170,7 @@ public final class PersistenceManager implements PropertyChangeListener {
     /** A set of used TcIds. Used to clean unused settings files
      * (ie. not referenced from tcRef or tcGroup). Cleaning is performed
      * when window system is loaded. */
-    private final Set<String> usedTcIds = new HashSet<String>(10); // <String>
+    private final Set<String> usedTcIds = new HashSet<>(10); // <String>
     
     /** Lock for synchronizing access to IDs. */
     private final Object LOCK_IDS = new Object();
@@ -216,7 +216,7 @@ public final class PersistenceManager implements PropertyChangeListener {
         reset();
         topComponent2IDMap.clear();
         topComponentNonPersistent2IDMap.clear();
-        globalIDSet = new HashSet<String>(30);
+        globalIDSet = new HashSet<>(30);
         id2TopComponentMap.clear();
         id2TopComponentNonPersistentMap.clear();
         dataobjectToTopComponentMap.clear();
@@ -622,7 +622,7 @@ public final class PersistenceManager implements PropertyChangeListener {
         }
         return null;
     }
-    private final Set<String> warnedIDs = Collections.synchronizedSet(new HashSet<String>());
+    private final Set<String> warnedIDs = Collections.synchronizedSet(new HashSet<>());
     /** Avoid printing dozens of warnings about the same ID in one IDE session. */
     private Level warningLevelForDeserTC(String id) {
         return warnedIDs.add(id) ? Level.INFO : Level.FINE;
@@ -1241,7 +1241,7 @@ public final class PersistenceManager implements PropertyChangeListener {
         //long start, end, diff;
         //start = System.currentTimeMillis();
         if (DEBUG) Debug.log(PersistenceManager.class, "copySettingsFiles ENTER");
-        Set<String> localSet = new HashSet<String>(100);
+        Set<String> localSet = new HashSet<>(100);
         FileObject [] filesLocal = getComponentsLocalFolder().getChildren();
         for (int i = 0; i < filesLocal.length; i++) {
             if (!filesLocal[i].isFolder() && "settings".equals(filesLocal[i].getExt())) { // NOI18N

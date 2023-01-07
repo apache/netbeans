@@ -190,7 +190,7 @@ public class NbProblemDisplayerTest extends NbTestCase {
         private static final Inst INST = new Inst();
         private static final ModuleManager MGR = new ModuleManager(INST, new NbEvents());
 
-        private Map<String,String> attrs = new HashMap<String,String>();
+        private Map<String,String> attrs = new HashMap<>();
         private Set<Dependency> problems = new HashSet<Dependency>();
         private final Manifest manifest;
 

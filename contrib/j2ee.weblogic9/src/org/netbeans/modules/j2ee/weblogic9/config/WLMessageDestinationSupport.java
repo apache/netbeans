@@ -113,8 +113,8 @@ public class WLMessageDestinationSupport {
                 JmsHandler handler = new JmsHandler(domain);
                 parser.parse(new BufferedInputStream(inputFile.getInputStream()), handler);
 
-                Map<File, Boolean> confs = new HashMap<File, Boolean>();
-                Set<String> nameOnly = new HashSet<String>();
+                Map<File, Boolean> confs = new HashMap<>();
+                Set<String> nameOnly = new HashSet<>();
 
                 // load by path in config.xml
                 for (JmsResource resource : handler.getResources()) {
@@ -154,7 +154,7 @@ public class WLMessageDestinationSupport {
         // directory project
         } else if (inputFile.isFolder()) {
             File file = FileUtil.toFile(inputFile);
-            Map<File, Boolean> confs = new HashMap<File, Boolean>();
+            Map<File, Boolean> confs = new HashMap<>();
             for (File jdbcFile : file.listFiles(JMS_FILE_FILTER)) {
                 confs.put(jdbcFile, systemDefault);
             }

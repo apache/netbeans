@@ -218,7 +218,7 @@ public class AddPropertyDialog extends javax.swing.JPanel implements ExplorerMan
                 addPluginNode(groupId, artifactid, version, mojo, rootChilds);
             }
 
-            Set<String> extensionsids = new HashSet<String>();
+            Set<String> extensionsids = new HashSet<>();
             if (project != null) {
                 List<Plugin> plgns = project.getOriginalMavenProject().getBuildPlugins();
                 if (plgns != null) {

@@ -250,13 +250,13 @@ public class JavacParserTest extends NbTestCase {
                 assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
                 assertEquals(parameter.getDiagnostics().toString(), 2, parameter.getDiagnostics().size());
 
-                Set<String> codes = new HashSet<String>();
+                Set<String> codes = new HashSet<>();
 
                 for (Diagnostic d : parameter.getDiagnostics()) {
                     codes.add(d.getCode());
                 }
 
-                assertEquals(new HashSet<String>(Arrays.asList("compiler.warn.missing.SVUID", "compiler.err.does.not.override.abstract")), codes);
+                assertEquals(new HashSet<>(Arrays.asList("compiler.warn.missing.SVUID", "compiler.err.does.not.override.abstract")), codes);
             }
         }, true);
         

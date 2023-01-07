@@ -153,8 +153,8 @@ public class RepositoryTest extends NbTestCase implements TestConstants {
 
         issues = repo.simpleSearch(summary2);
         assertEquals(2, issues.size());
-        List<String> summaries = new ArrayList<String>();
-        List<String> ids = new ArrayList<String>();
+        List<String> summaries = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for(BugzillaIssue issue : issues) {
             summaries.add(issue.getSummary());
             ids.add(issue.getID());

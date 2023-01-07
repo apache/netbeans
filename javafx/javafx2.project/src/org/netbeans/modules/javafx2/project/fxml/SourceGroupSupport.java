@@ -124,7 +124,7 @@ public class SourceGroupSupport {
     }
     
     public File[] getSourceGroupsAsFiles() {
-        List<File> list = new ArrayList<File>();
+        List<File> list = new ArrayList<>();
         for(SourceGroupProxy p : groups) {
             list.add(FileUtil.toFile(p.getRootFolder()));
         }
@@ -260,7 +260,7 @@ public class SourceGroupSupport {
             this.project = project;
             this.root = project.getProjectDirectory();
             this.displayName = displayName;
-            this.packageProxy = new ArrayList<String>();
+            this.packageProxy = new ArrayList<>();
             this.packageProxy.addAll(Arrays.asList(packageProxy));
         }
         

@@ -86,9 +86,9 @@ public class SettingsPanel extends javax.swing.JPanel {
     private final MavenOptionController controller;
     private final TextValueCompleter completer;
     private final ActionListener   listItemChangedListener;
-    private final List<String>       userDefinedMavenRuntimes = new ArrayList<String>();
-    private final List<String>       userDefinedMavenRuntimesStored = new ArrayList<String>();
-    private final List<String>       predefinedRuntimes = new ArrayList<String>();
+    private final List<String>       userDefinedMavenRuntimes = new ArrayList<>();
+    private final List<String>       userDefinedMavenRuntimesStored = new ArrayList<>();
+    private final List<String>       predefinedRuntimes = new ArrayList<>();
     private final DefaultComboBoxModel mavenHomeDataModel = new DefaultComboBoxModel();
     private final DefaultComboBoxModel jdkHomeDataModel = new DefaultComboBoxModel();
     private String             mavenRuntimeHome = null;
@@ -1037,7 +1037,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             File projectDir = chooser.getSelectedFile();
             String newRuntimePath = FileUtil.normalizeFile(projectDir).getAbsolutePath();
             boolean existed = false;
-            List<String> runtimes = new ArrayList<String>();
+            List<String> runtimes = new ArrayList<>();
             runtimes.addAll(predefinedRuntimes);
             runtimes.addAll(userDefinedMavenRuntimes);
             for (String runtime : runtimes) {
@@ -1065,8 +1065,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     public void setValues() {
         txtOptions.setText(MavenSettings.getDefault().getDefaultOptions());
 
-        final List<String> predefined = new ArrayList<String>();
-        final List<String> user = new ArrayList<String>();
+        final List<String> predefined = new ArrayList<>();
+        final List<String> user = new ArrayList<>();
         RP.post(new Runnable() {
 
             @Override
@@ -1190,7 +1190,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         MavenSettings.getDefault().setDefaultOptions(txtOptions.getText().trim());
         MavenSettings.getDefault().setDefaultJdk(findSelectedJdkName());
         // remember only user-defined runtimes of RUNTIME_COUNT_LIMIT count at the most
-        List<String> runtimes = new ArrayList<String>();
+        List<String> runtimes = new ArrayList<>();
         for (int i = 0; i < userDefinedMavenRuntimes.size() && i < RUNTIME_COUNT_LIMIT; ++i) {
             runtimes.add(0, userDefinedMavenRuntimes.get(userDefinedMavenRuntimes.size() - 1 - i));
         }
@@ -1259,7 +1259,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged = !MavenSettings.getDefault().getDefaultOptions().equals(txtOptions.getText().trim());
 
         // remember only user-defined runtimes of RUNTIME_COUNT_LIMIT count at the most
-        List<String> runtimes = new ArrayList<String>();
+        List<String> runtimes = new ArrayList<>();
         for (int i = 0; i < userDefinedMavenRuntimes.size() && i < RUNTIME_COUNT_LIMIT; ++i) {
             runtimes.add(0, userDefinedMavenRuntimes.get(userDefinedMavenRuntimes.size() - 1 - i));
         }

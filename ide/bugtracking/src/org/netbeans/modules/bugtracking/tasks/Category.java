@@ -142,7 +142,7 @@ public class Category {
             if (map.containsKey(repositoryKey)) {
                 map.get(repositoryKey).add(issue.getID());
             } else {
-                ArrayList<String> list = new ArrayList<String>();
+                ArrayList<String> list = new ArrayList<>();
                 list.add(issue.getID());
                 map.put(repositoryKey, list);
             }

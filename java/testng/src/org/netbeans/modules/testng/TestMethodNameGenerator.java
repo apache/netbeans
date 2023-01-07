@@ -73,7 +73,7 @@ final class TestMethodNameGenerator {
         existingMethods = (tstClassElem != null)
                           ? getExistingMethods(tstClassElem)
                           : Collections.<ExecutableElement>emptyList();
-        reservedNames = new HashSet<String>((existingMethods.size() * 3 + 1) / 2);
+        reservedNames = new HashSet<>((existingMethods.size() * 3 + 1) / 2);
 
         testMethodNames = new String[srcMethods.size()];
     }

@@ -61,10 +61,10 @@ class ModuleChangeHandler implements FileChangeListener {
     private FileObject groupsModuleFolder;
 
     /** Keep FileObjects for folders in modes folder. */
-    private Set<FileObject> modesModuleChildren = new HashSet<FileObject>();
+    private Set<FileObject> modesModuleChildren = new HashSet<>();
 
     /** Keep FileObjects for folders in groups folder. */
-    private Set<FileObject> groupsModuleChildren = new HashSet<FileObject>();
+    private Set<FileObject> groupsModuleChildren = new HashSet<>();
     
     private FileObject componentsModuleFolder;
     
@@ -435,7 +435,7 @@ class ModuleChangeHandler implements FileChangeListener {
     private void addTCRef (final String modeName, String tcRefName) {
         if (DEBUG) Debug.log(ModuleChangeHandler.class, "addTCRef modeName:" + modeName + " tcRefName:" + tcRefName);
         WindowManagerParser wmParser = PersistenceManager.getDefault().getWindowManagerParser();
-        List<String> tcRefNameList = new ArrayList<String>(10);
+        List<String> tcRefNameList = new ArrayList<>(10);
         final TCRefConfig tcRefConfig = wmParser.addTCRef(modeName, tcRefName, tcRefNameList);
         try {
             //xml file system warmup to avoid blocking of EDT when deserializing the component

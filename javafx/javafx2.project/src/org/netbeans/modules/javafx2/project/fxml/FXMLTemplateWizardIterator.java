@@ -195,7 +195,7 @@ public class FXMLTemplateWizardIterator implements WizardDescriptor.Instantiatin
 
     @Override
     public Set instantiate() throws IOException, IllegalArgumentException {
-        Set<FileObject> set = new HashSet<FileObject>(3);
+        Set<FileObject> set = new HashSet<>(3);
         FileObject dirFXML = supportFXML.getCurrentPackageFolder(true);
         DataFolder dfFXML = DataFolder.findFolder(dirFXML);        
         String targetNameFXML = supportFXML.getCurrentFileName();
@@ -269,7 +269,7 @@ public class FXMLTemplateWizardIterator implements WizardDescriptor.Instantiatin
             }
         }
         
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         if (controllerFullName != null) {
             params.put("controller", controllerFullName); // NOI18N
         }

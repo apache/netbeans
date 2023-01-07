@@ -90,7 +90,7 @@ public class InternalVSEMetaDataImpl implements VisualSQLEditorMetaData {
         if (schemas != null) {
             return schemas;
         }
-        schemas = new ArrayList<String>();
+        schemas = new ArrayList<>();
        schemas.add(dbconn.getSchema());
         return schemas;
     }
@@ -118,7 +118,7 @@ public class InternalVSEMetaDataImpl implements VisualSQLEditorMetaData {
                 Log.getLogger().finest("  schema: " + schema);
                 ResultSet rs = databaseMetaData.getTables(null, schema, "%", new String[]{"TABLE", "VIEW"}); // NOI18N
                 while (rs.next()) {
-                    ArrayList<String> table = new ArrayList<String>();
+                    ArrayList<String> table = new ArrayList<>();
                     table.add(rs.getString("TABLE_SCHEM"));
                     table.add(rs.getString("TABLE_NAME"));
                     allTables.add(table);
@@ -128,7 +128,7 @@ public class InternalVSEMetaDataImpl implements VisualSQLEditorMetaData {
             Log.getLogger().finest(" all schemas");
             ResultSet rs = databaseMetaData.getTables(null, null, "%", new String[]{"TABLE", "VIEW"}); // NOI18N
             while (rs.next()) {
-                ArrayList<String> table = new ArrayList<String>();
+                ArrayList<String> table = new ArrayList<>();
                 table.add(rs.getString("TABLE_SCHEM"));
                 table.add(rs.getString("TABLE_NAME"));
                 allTables.add(table);
@@ -157,7 +157,7 @@ public class InternalVSEMetaDataImpl implements VisualSQLEditorMetaData {
         if (columnNames != null) {
             return columnNames;
         }
-        columnNames = new ArrayList<String>();
+        columnNames = new ArrayList<>();
         ResultSet rs = databaseMetaData.getColumns(null, schema, table, "%"); // NOI18N
         if (rs != null) {
             while (rs.next()) {

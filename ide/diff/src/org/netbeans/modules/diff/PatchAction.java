@@ -195,8 +195,8 @@ public class PatchAction extends NodeAction {
         }
         
         if (successful.size() > 0) {
-            List<FileObject> binaries = new ArrayList<FileObject>();
-            List<FileObject> appliedFiles = new ArrayList<FileObject>();
+            List<FileObject> binaries = new ArrayList<>();
+            List<FileObject> appliedFiles = new ArrayList<>();
             Map<FileObject, FileObject> backups = new HashMap<FileObject, FileObject>();
             for (ContextualPatch.PatchReport patchReport : successful) {
                 FileObject fo = FileUtil.toFileObject(patchReport.getFile());

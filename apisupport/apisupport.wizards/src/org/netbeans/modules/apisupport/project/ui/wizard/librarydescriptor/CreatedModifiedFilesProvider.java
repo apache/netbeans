@@ -110,7 +110,7 @@ final class CreatedModifiedFilesProvider {
     }
 
     private static Map<String, String> getTokens(CreatedModifiedFiles fileSupport, Project project, NewLibraryDescriptor.DataModel data) {
-        Map<String, String> retval = new HashMap<String, String>();
+        Map<String, String> retval = new HashMap<>();
         Library library = data.getLibrary();
         retval.put("NAME", data.getLibraryName());//NOI18N
         String packagePlusBundle = getPackagePlusBundle(project);

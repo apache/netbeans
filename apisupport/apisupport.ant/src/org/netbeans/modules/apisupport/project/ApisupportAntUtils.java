@@ -177,7 +177,7 @@ public class ApisupportAntUtils {
                 ManifestManager.getInstance(manifest, false).getLocalizingBundle();
         try {
             if (locBundleResource != null) {
-                List<FileObject> bundleFOs = new ArrayList<FileObject>();
+                List<FileObject> bundleFOs = new ArrayList<>();
                 for (String resource : getPossibleResources(locBundleResource)) {
                     FileObject bundleFO = sourceDir.getFileObject(resource);
                     if (bundleFO != null) {
@@ -487,7 +487,7 @@ public class ApisupportAntUtils {
         protected abstract Collection<String> inputProperties();
         @Override
         public final Map<String,String> getProperties() {
-            Map<String,String> vals = new HashMap<String, String>();
+            Map<String,String> vals = new HashMap<>();
             for (String k : inputProperties()) {
                 vals.put(k, eval.getProperty(k));
             }
@@ -605,7 +605,7 @@ public class ApisupportAntUtils {
         
         SortedSet<String> availablePublicPackages = new TreeSet<String>();
         // find all available public packages in a source root
-        Set<FileObject> pkgs = new HashSet<FileObject>();
+        Set<FileObject> pkgs = new HashSet<>();
         FileObject srcDirFO = project.getSourceDirectory();
         scanForPackages(pkgs, srcDirFO, "java"); // NOI18N
         for (FileObject pkg : pkgs) {
@@ -653,7 +653,7 @@ public class ApisupportAntUtils {
             // Not really a JAR?
             return;
         }
-        Set<FileObject> pkgs = new HashSet<FileObject>();
+        Set<FileObject> pkgs = new HashSet<>();
         scanForPackages(pkgs, root, "class"); // NOI18N
         for (FileObject pkg : pkgs) {
             if (root.equals(pkg)) { // default package #71532
@@ -805,7 +805,7 @@ public class ApisupportAntUtils {
     
     static void addModuleToTargetPlatform(final Project suiteProject, final SuiteProperties suiteProps, String codeNameBase) {
         if(suiteProps != null) {
-            Set<String> disabledModules = new HashSet<String>(Arrays.asList(suiteProps.getDisabledModules()));
+            Set<String> disabledModules = new HashSet<>(Arrays.asList(suiteProps.getDisabledModules()));
             for(String disableModuleIter:disabledModules) {
                 if(codeNameBase.equals(disableModuleIter)) {
                     disabledModules.remove(codeNameBase);
@@ -845,7 +845,7 @@ public class ApisupportAntUtils {
                     ClusterInfo newClusterInfo = ClusterInfo.create(clusterDirectory, 
                         true, true);
                     clusterInfoSet.add(newClusterInfo);
-                    Set<String> disabledModules = new HashSet<String>(Arrays.asList(suiteProps.getDisabledModules()));
+                    Set<String> disabledModules = new HashSet<>(Arrays.asList(suiteProps.getDisabledModules()));
                     for(ModuleEntry entryIter:moduleList) {
                         if(entryIter.getClusterDirectory().equals(clusterDirectory)) {
                             disabledModules.add(entryIter.getCodeNameBase());

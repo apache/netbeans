@@ -563,7 +563,7 @@ public class CommitPanel extends AutoResizingPanel implements PreferenceChangeLi
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == tabbedPane && tabbedPane.getSelectedComponent() == basePanel) {
-            commitTable.setModifiedFiles(new HashSet<File>(getModifiedFiles().keySet()));
+            commitTable.setModifiedFiles(new HashSet<>(getModifiedFiles().keySet()));
         }
     }
 

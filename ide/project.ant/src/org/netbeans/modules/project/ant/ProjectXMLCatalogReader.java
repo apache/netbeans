@@ -130,7 +130,7 @@ public class ProjectXMLCatalogReader implements CatalogReader, CatalogDescriptor
     /** Load ProjectXMLCatalog/**.xsd. Cache the combined schema between runs if the content has not changed. */
     private static synchronized Schema projectXmlCombinedSchema() {
         int hash = 0; // compute hash regardless of ordering of schemas, hence XOR
-        List<FileObject> schemas = new ArrayList<FileObject>();
+        List<FileObject> schemas = new ArrayList<>();
         FileObject root = FileUtil.getConfigFile(CATALOG);
         if (root != null) {
             for (FileObject f : NbCollections.iterable(root.getChildren(true))) {

@@ -179,7 +179,7 @@ public class WrappedTextViewTest extends NbTestCase {
 
                 text.paint(img.getGraphics());
                 errorsFound = false;
-                errors = new ArrayList<String>();
+                errors = new ArrayList<>();
 
                 System.out.println("...scanning " + (text.getWidth() * text.getHeight() + " pixels to make sure viewToModel() matches modeltoView().  Expect it to take about 10 minutes."));
 

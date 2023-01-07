@@ -151,7 +151,7 @@ public class LibraryMetadata {
     }
 
     private static String[] readFromXML_parseAttrValues(Element typeNode){
-        Collection<String> result = new ArrayList<String>();
+        Collection<String> result = new ArrayList<>();
         NodeList typeLst = typeNode.getElementsByTagName("val"); //NOI18N
 
         for (int i = 0; i < typeLst.getLength(); i++) {

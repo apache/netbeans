@@ -67,11 +67,11 @@ public final class ExternalProcessBuilder implements Callable<Process> {
 
     private final boolean redirectErrorStream;
 
-    private final List<String> arguments = new ArrayList<String>();
+    private final List<String> arguments = new ArrayList<>();
 
-    private final List<File> paths = new ArrayList<File>();
+    private final List<File> paths = new ArrayList<>();
 
-    private final Map<String, String> envVariables = new HashMap<String, String>();
+    private final Map<String, String> envVariables = new HashMap<>();
 
     /**
      * Creates the new builder that will create the process by running
@@ -323,11 +323,11 @@ public final class ExternalProcessBuilder implements Callable<Process> {
 
         private boolean redirectErrorStream;
 
-        private List<String> arguments = new ArrayList<String>();
+        private List<String> arguments = new ArrayList<>();
 
-        private List<File> paths = new ArrayList<File>();
+        private List<File> paths = new ArrayList<>();
 
-        private Map<String, String> envVariables = new HashMap<String, String>();
+        private Map<String, String> envVariables = new HashMap<>();
 
         public BuilderData(String executable) {
             this.executable = executable;

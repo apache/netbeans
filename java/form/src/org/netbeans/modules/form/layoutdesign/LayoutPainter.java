@@ -192,7 +192,7 @@ public class LayoutPainter implements LayoutConstants {
             List<String> lH = linkGroupsH.get(linkIdH);
             List<String> lV = linkGroupsV.get(linkIdV);
 
-            Set<String> merged = new HashSet<String>(); 
+            Set<String> merged = new HashSet<>(); 
             for (int i=0; i < lH.size(); i++) {
                 merged.add(lH.get(i));
             }

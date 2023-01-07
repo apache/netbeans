@@ -149,7 +149,7 @@ public class Utils {
 //        }
     }
     
-    private static final Set<String> ALREADY_LOGGED = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> ALREADY_LOGGED = Collections.synchronizedSet(new HashSet<>());
     public static void logOnce(Logger logger, Level level, String msg, Throwable t) {
         if (!ALREADY_LOGGED.contains(msg)) {
             ALREADY_LOGGED.add(msg);

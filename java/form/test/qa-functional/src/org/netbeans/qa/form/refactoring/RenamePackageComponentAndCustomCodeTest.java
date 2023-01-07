@@ -103,7 +103,7 @@ public class RenamePackageComponentAndCustomCodeTest extends ExtJellyTestCase {
         openFile(FORM_NAME);
         FormDesignerOperator designer = new FormDesignerOperator(FORM_NAME);
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         
         // custom components refatoring
         lines.add("customButton1 = new data.renamedcomponents.CustomButtonRenamed();"); // NOI18N

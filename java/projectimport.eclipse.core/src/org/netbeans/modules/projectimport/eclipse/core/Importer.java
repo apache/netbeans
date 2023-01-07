@@ -55,7 +55,7 @@ final class Importer {
     
     private int nOfProcessed;
     private String progressInfo;
-    private List<String> warnings = new ArrayList<String>();
+    private List<String> warnings = new ArrayList<>();
     
     private Task task = null;
     
@@ -127,7 +127,7 @@ final class Importer {
     private Project importProject(final EclipseProject eclProject, final List<String> importProblems) {
         assert eclProject != null : "Eclipse project cannot be null"; // NOI18N
 
-        final List<String> projectImportProblems = new ArrayList<String>();
+        final List<String> projectImportProblems = new ArrayList<>();
 
         // add problems which appeared during project opening/parsing
         projectImportProblems.addAll(eclProject.getImportProblems());

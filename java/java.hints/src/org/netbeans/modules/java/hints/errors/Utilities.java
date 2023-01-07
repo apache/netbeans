@@ -1123,7 +1123,7 @@ public class Utilities {
         List<TypeMirror> argumentTypes = new LinkedList<TypeMirror>();
         List<String>     argumentNames = new LinkedList<String>();
         List<Element>    usedLocalTypeVariables = new ArrayList<Element>();
-        Set<String>      usedArgumentNames = new HashSet<String>();
+        Set<String>      usedArgumentNames = new HashSet<>();
         
         TreePath enclosingMethod = invocation;
         
@@ -1813,7 +1813,7 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(8);
+    private static final Set<String> PRIMITIVE_NAMES = new HashSet<>(8);
     
     static {
         PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N

@@ -210,7 +210,7 @@ public class PushAction extends SingleRepositoryAction {
                         newBranches.add(b.getRemoteName());
                     }
                 }
-                final Set<String> toDelete = new HashSet<String>();
+                final Set<String> toDelete = new HashSet<>();
                 for(ListIterator<String> it = fetchRefSpecs.listIterator(); it.hasNext(); ) {
                     String refSpec = it.next();
                     if (refSpec.startsWith(GitUtils.REF_SPEC_DEL_PREFIX)) {
@@ -390,7 +390,7 @@ public class PushAction extends SingleRepositoryAction {
 
             private List<GitRevisionInfo> getOutgoingRevisions (Collection<PushMapping> pushMappings) throws GitException {
                 List<GitRevisionInfo> revisionList = new LinkedList<GitRevisionInfo>();
-                Set<String> visitedRevisions = new HashSet<String>();
+                Set<String> visitedRevisions = new HashSet<>();
                 GitClient client = Git.getInstance().getClient(getRepositoryRoot()); // do not use progresssupport's client, that one logs into output
                 try {
                     for (PushMapping mapping : pushMappings) {
@@ -414,7 +414,7 @@ public class PushAction extends SingleRepositoryAction {
 
             private List<GitRevisionInfo> getPushedRevisions (Map<String, GitTransportUpdate> remoteRepositoryUpdates) throws GitException {
                 List<GitRevisionInfo> revisionList = new LinkedList<GitRevisionInfo>();
-                Set<String> visitedRevisions = new HashSet<String>();
+                Set<String> visitedRevisions = new HashSet<>();
                 GitClient client = Git.getInstance().getClient(getRepositoryRoot()); // do not use progresssupport's client, that one logs into output
                 try {
                     for (Map.Entry<String, GitTransportUpdate> update : remoteRepositoryUpdates.entrySet()) {

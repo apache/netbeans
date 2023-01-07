@@ -74,7 +74,7 @@ final class ActionTypePanel extends BasicWizardIterator.Panel {
     private String[] getCookieClasses() {
         StringTokenizer classesST  = new StringTokenizer(
                 cookieClass.getEditor().getItem().toString(), ", "); // NOI18N
-        Collection<String> classes = new ArrayList<String>();
+        Collection<String> classes = new ArrayList<>();
         while (classesST.hasMoreTokens()) {
             String clazz = classesST.nextToken().trim();
             String fqcn = NAME_TO_FQCN.get(clazz);

@@ -77,7 +77,7 @@ public class TemplateAttributesProvider implements CreateFromTemplateAttributesP
                 // OK, ignore
             }
         }
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, String> values = new HashMap<>();
         if (license != null) {
             values.put("license", license);
         }

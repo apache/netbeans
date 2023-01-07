@@ -141,7 +141,7 @@ public final class VersioningSupport {
      * @param files 
      */
     public static void refreshFor(VCSFileProxy[] files) {
-        Set<File> fileList = new HashSet<File>();
+        Set<File> fileList = new HashSet<>();
         Map<VCSFileProxyOperations, Set<VCSFileProxy>> proxyMap = new HashMap<VCSFileProxyOperations, Set<VCSFileProxy>>();
         for(VCSFileProxy file : files) {
             File javaFile = file.toFile();

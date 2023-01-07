@@ -894,8 +894,8 @@ public class POMModelVisitor implements org.netbeans.modules.maven.model.pom.POM
 
     private void doVisit(List<POMExtensibilityElement> elems) {
         //#211429
-        Set<String> shortvalues = new HashSet<String>();
-        Set<String> duplicateValues = new HashSet<String>();
+        Set<String> shortvalues = new HashSet<>();
+        Set<String> duplicateValues = new HashSet<>();
         for (POMExtensibilityElement el : elems) {
             String shortKey = el.getQName().getLocalPart();
             if (!shortvalues.add(shortKey)) {
@@ -1745,7 +1745,7 @@ public class POMModelVisitor implements org.netbeans.modules.maven.model.pom.POM
                 for (String c : lst) {
                     List<String> currentCut = cut.get(c);
                     if (currentCut == null) {
-                        currentCut = new ArrayList<String>();
+                        currentCut = new ArrayList<>();
                         cut.put(c, currentCut);
                     }
                     fillValues(level, currentCut, c);

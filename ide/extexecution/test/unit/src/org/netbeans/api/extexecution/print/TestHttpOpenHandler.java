@@ -31,7 +31,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=HttpOpenHandler.class)
 public class TestHttpOpenHandler implements HttpOpenHandler {
 
-    private final List<URL> opened = new ArrayList<URL>();
+    private final List<URL> opened = new ArrayList<>();
 
     @Override
     public void open(URL url) {

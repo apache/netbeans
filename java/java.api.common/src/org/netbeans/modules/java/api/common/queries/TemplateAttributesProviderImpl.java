@@ -59,7 +59,7 @@ class TemplateAttributesProviderImpl implements CreateFromTemplateAttributesProv
 
     @Override
     public Map<String, ?> attributesFor(DataObject template, DataFolder target, String name) {
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, String> values = new HashMap<>();
         EditableProperties priv  = helper.getProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH);
         EditableProperties props = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         String licensePath = priv.getProperty("project.licensePath");

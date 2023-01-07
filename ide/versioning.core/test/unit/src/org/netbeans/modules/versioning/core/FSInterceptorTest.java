@@ -68,7 +68,7 @@ public class FSInterceptorTest extends NbTestCase {
      * @throws IOException
      */
     public void testTestInterceptorComplete() throws IOException {
-        Set<String> testInterceptorMethods = new HashSet<String>();
+        Set<String> testInterceptorMethods = new HashSet<>();
         Method[]  methods = TestInterceptor.class.getDeclaredMethods();
         for (Method method : methods) {
             if((method.getModifiers() & Modifier.PUBLIC) != 0) {
@@ -89,7 +89,7 @@ public class FSInterceptorTest extends NbTestCase {
     }  
 
     public static class TestInterceptor extends VCSInterceptor {
-        Set<String> methodNames = new HashSet<String>();
+        Set<String> methodNames = new HashSet<>();
         static TestInterceptor instance;
         public TestInterceptor() {
             instance = this;
@@ -252,7 +252,7 @@ public class FSInterceptorTest extends NbTestCase {
     }
 
     private static class LogHandler extends Handler {
-        Set<String> methodNames = new HashSet<String>();
+        Set<String> methodNames = new HashSet<>();
         @Override
         public void publish(LogRecord record) {            
             String msg = record.getMessage();

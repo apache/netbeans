@@ -34,7 +34,7 @@ import org.netbeans.modules.websvc.saas.codegen.model.ParameterInfo;
  */
 public class UniqueVariableNameFinder {
 
-    private Map<String, Integer> varDeclMap = new HashMap<String, Integer>();
+    private Map<String, Integer> varDeclMap = new HashMap<>();
 
     public UniqueVariableNameFinder() {
     }

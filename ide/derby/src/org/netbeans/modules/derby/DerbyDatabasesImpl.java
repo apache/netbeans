@@ -328,7 +328,7 @@ public final class DerbyDatabasesImpl {
             LOG.log(Level.FINE, "Failed to refresh filesystem", ex);
         }
         Enumeration<? extends FileObject> children = databaseHomeFO.getChildren(false);
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         while (children.hasMoreElements()) {
             FileObject candidate = children.nextElement();
             if (Util.isDerbyDatabase(candidate)) {

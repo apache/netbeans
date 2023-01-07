@@ -125,7 +125,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
                         boolean transitiveChanged = !oldNotNew2.isEmpty() || !newNotOld2.isEmpty();
                         if (privateChanged || transitiveChanged) {
                             ClassPath[] cps = project.getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectClassPaths(ClassPath.SOURCE);
-                            Set<FileObject> fos = new HashSet<FileObject>();
+                            Set<FileObject> fos = new HashSet<>();
                             for (ClassPath cp : cps) {
                                 fos.addAll(Arrays.asList(cp.getRoots()));
                             }
@@ -178,7 +178,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     
 
     private Set<String> getAllPackages(FileObject root) {       
-        Set<String> toRet = new HashSet<String>();
+        Set<String> toRet = new HashSet<>();
         processFolder(root, root, toRet);
         toRet.remove("");
         return toRet;
@@ -216,8 +216,8 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
         NbMavenProject mvn = project.getLookup().lookup(NbMavenProject.class);
         
         MavenProject mp = mvn.getMavenProject();
-        final Set<String> privatePackages = new HashSet<String>();
-        final Set<String> transitivePackages = new HashSet<String>();
+        final Set<String> privatePackages = new HashSet<>();
+        final Set<String> transitivePackages = new HashSet<>();
                 
         for (Artifact a : mp.getCompileArtifacts()) {
             if (a.getFile() != null) {
@@ -260,8 +260,8 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
 //        }
         //these two are here to remove duplicates, if a package is both private (in one module) and public (in another module)
         // consider the package public for our purposes. better a false negative than false positive here..
-        Set<String> nonPrivatePackages = new HashSet<String>();
-        Set<String> nonTransitivePackages = new HashSet<String>();
+        Set<String> nonPrivatePackages = new HashSet<>();
+        Set<String> nonTransitivePackages = new HashSet<>();
         //direct cp is always visible..
         for (Wrapper dir : directCPs) {
             nonTransitivePackages.addAll(dir.allPackages);
@@ -269,7 +269,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
         }
         directCPs.clear();
         for (NBMWrapper nbm : nbms ) {
-            Set<String> allPackages = new HashSet<String>(nbm.allPackages);
+            Set<String> allPackages = new HashSet<>(nbm.allPackages);
             //merge unknowns into their respective wrapper modules..
             if (nbm.hasMavenCPDefined()) {
                 Iterator<Wrapper> it = unknown.iterator();
@@ -313,7 +313,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
         //now remove all packages from bootclasspath that clash with private/transitive packages..
         // happens for javax.swing for example which is part of the tabcontrol module
         ClassPath boot = project.getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectSourcesClassPath(ClassPath.BOOT);
-        Set<String> bootCP = new HashSet<String>();
+        Set<String> bootCP = new HashSet<>();
         for (FileObject fo : boot.getRoots()) {
             bootCP.addAll(getAllPackages(fo));
         }
@@ -382,7 +382,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     }
     
     private static class MavenWhiteListImplementation implements WhiteListImplementation {
-        private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private final List<ChangeListener> listeners = new ArrayList<>();
         @NonNull
         private Set<String> privatePackages;
         @NonNull
@@ -439,7 +439,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
                 this.privatePackages = privatePackages;
                 this.transitivePackages = transitivePackages;
             }
-            ArrayList<ChangeListener> changes = new ArrayList<ChangeListener>();
+            ArrayList<ChangeListener> changes = new ArrayList<>();
             synchronized (listeners) {
                 changes.addAll(listeners);
             }
@@ -490,14 +490,14 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
         boolean isImplementationDependency;
         final List<String> friends;
         final List<String> mavenCP;
-        private final Set<String> eqPublic = new HashSet<String>();
-        private final Set<String> subPublic = new HashSet<String>();
+        private final Set<String> eqPublic = new HashSet<>();
+        private final Set<String> subPublic = new HashSet<>();
 
         public NBMWrapper(Artifact art, Set<String> allPackages, String[] publicPackages, String[] friends, String[] mavenCP) {
             super(art, allPackages);
             this.friends = friends != null ? Arrays.asList(friends) : Collections.<String>emptyList();
             this.mavenCP = mavenCP != null ? Arrays.asList(mavenCP) : Collections.<String>emptyList();
-            Set<String> packs = new HashSet<String>();
+            Set<String> packs = new HashSet<>();
             if (publicPackages == null) {
                 //no public packages.
             } else {

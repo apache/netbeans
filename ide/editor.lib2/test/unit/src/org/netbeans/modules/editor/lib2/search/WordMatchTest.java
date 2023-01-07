@@ -37,7 +37,7 @@ public class WordMatchTest extends NbTestCase {
     
     public WordMatchTest(String name) {
         super(name);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimple1");
 //        includes.add("testSimpleUndoRedo");
 //        includes.add("testCustomBounds");

@@ -101,7 +101,7 @@ public class EnableModulesAction extends NodeAction {
         }
     }
 
-    private List<String> targets = new ArrayList<String>();
+    private List<String> targets = new ArrayList<>();
 
     @Override
     protected boolean enable(Node[] nodes) {
@@ -131,7 +131,7 @@ public class EnableModulesAction extends NodeAction {
     }
 
     static String getDup(List<String> targets) {
-        Map<String,String> uniqTargets = new HashMap<String,String>();
+        Map<String,String> uniqTargets = new HashMap<>();
         if (null == targets) {
             return null;
         }

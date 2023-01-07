@@ -386,8 +386,8 @@ public final class J2EEProjectProperties {
     }
 
     public static Map<String, String> extractPlatformLibrariesRoot(J2eePlatform j2eePlatform) {
-        Set<FileObject> toCheck = new HashSet<FileObject>();
-        Map<String, String> roots = new HashMap<String, String>();
+        Set<FileObject> toCheck = new HashSet<>();
+        Map<String, String> roots = new HashMap<>();
         File serverFile = j2eePlatform.getServerHome();
         if (serverFile != null) {
             serverFile = FileUtil.normalizeFile(serverFile);
@@ -504,7 +504,7 @@ public final class J2EEProjectProperties {
         if (classpathEntries == null) {
             return "";
         }
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (URL url : classpathEntries) {
             try {
                 File file = new File(url.toURI()).getAbsoluteFile();

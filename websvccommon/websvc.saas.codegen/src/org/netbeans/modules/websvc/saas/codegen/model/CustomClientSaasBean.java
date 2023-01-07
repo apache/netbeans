@@ -88,13 +88,13 @@ public class CustomClientSaasBean extends SaasBean {
         } 
         
         templates = new HashMap<String, Map<String, String>>();
-        libs = new HashMap<String, String>();
+        libs = new HashMap<>();
         CodeGen codegen = m.getSaas().getSaasMetadata().getCodeGen();
         if(codegen != null) {
             List<Artifacts> artifactsList = codegen.getArtifacts();
             if(artifactsList != null) {
                 for(Artifacts artifacts: artifactsList) {
-                    Map<String, String> artifactMap = new HashMap<String, String>();
+                    Map<String, String> artifactMap = new HashMap<>();
                     String targets = artifacts.getTargets();
                     for(String target:targets.split(",")) {
                         addArtifactTemplates(target, artifactMap);

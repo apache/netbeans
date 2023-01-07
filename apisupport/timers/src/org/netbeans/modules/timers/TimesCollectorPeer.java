@@ -125,7 +125,7 @@ public final class TimesCollectorPeer {
     }
     
     public synchronized Collection<Object> getFiles() {
-        List<Object> result = new ArrayList<Object>();
+        List<Object> result = new ArrayList<>();
         
         for (Reference<Object> r : files) {
             Object f = r.get();

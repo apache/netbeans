@@ -70,7 +70,7 @@ public class HibernateFrameworkProvider extends WebFrameworkProvider {
     }
     
     private List<FileObject> getDefaultHibernateConfigFiles(WebModule wm) {
-        List<FileObject> configFiles = new ArrayList<FileObject>();
+        List<FileObject> configFiles = new ArrayList<>();
         Project enclosingProject = Util.getEnclosingProjectFromWebModule(wm);
         // Check for non supported project or non Hibernate aware web projects.
         if(enclosingProject == null) {

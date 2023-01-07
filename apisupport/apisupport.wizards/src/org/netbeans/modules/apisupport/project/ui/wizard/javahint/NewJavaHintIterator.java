@@ -152,7 +152,7 @@ public class NewJavaHintIterator extends BasicWizardIterator {
 
         String hintPath = model.getDefaultPackagePath(className + ".java", false); // NOI18N
 
-        Map<String,String> replaceTokens = new HashMap<String,String>();
+        Map<String,String> replaceTokens = new HashMap<>();
         replaceTokens.put("CLASS_NAME", className); // NOI18N
         replaceTokens.put("PACKAGE_NAME", model.getPackageName()); // NOI18N
         replaceTokens.put("GENERATE_FIX", model.isDoFix() ? "true" : null); // NOI18N

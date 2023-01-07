@@ -104,7 +104,7 @@ public class WsdlOperation implements WSOperation{
     }
 
     public Iterator<String> getExceptions() {
-        List<String> exceptions = new ArrayList<String>();
+        List<String> exceptions = new ArrayList<>();
         Collection<Fault> faults = operation.getFaults();
         for(Fault fault : faults){
             exceptions.add(fault.getMessage().getQName().getLocalPart());

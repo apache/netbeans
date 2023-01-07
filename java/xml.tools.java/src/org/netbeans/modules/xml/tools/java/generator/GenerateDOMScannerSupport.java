@@ -196,7 +196,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
                         //add document field
                         Tree tree = make.Identifier(DOM_DOCUMENT);
                         VariableTree var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), VARIABLE_DOCUMENT, tree, null);
-                        List<VariableTree> varTree = new ArrayList<VariableTree>();
+                        List<VariableTree> varTree = new ArrayList<>();
                         varTree.add(var);
                         ClassTree modifiedClass = genUtils.addClassFields(javaClass, varTree);
                         commentText = "org.w3c.dom.Document document";
@@ -250,7 +250,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
                         mods = make.Modifiers(EnumSet.noneOf(Modifier.class));
                         tree = make.Identifier(DOM_ELEMENT);
                         var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), VARIABLE_ELEMENT, tree, null);
-                        varTree = new ArrayList<VariableTree>();
+                        varTree = new ArrayList<>();
                         varTree.add(var);
                         while (it.hasNext()) {
                             TreeElementDecl next = it.next();

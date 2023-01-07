@@ -64,7 +64,7 @@ public class GroovyReplaceTokenProvider implements ReplaceTokenProvider, ActionC
             for (SourceGroup group : ProjectUtils.getSources(project).getSourceGroups(GroovySourcesImpl.TYPE_GROOVY)) {
                 String relPath = FileUtil.getRelativePath(group.getRootFolder(), fo);
                 if (relPath != null) {
-                    Map<String,String> replaceMap = new HashMap<String,String>();
+                    Map<String,String> replaceMap = new HashMap<>();
                     replaceMap.put(CLASSNAME_EXT, fo.getNameExt());
                     replaceMap.put(CLASSNAME, fo.getName());
                     String pack = FileUtil.getRelativePath(group.getRootFolder(), fo.getParent());

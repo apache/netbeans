@@ -91,7 +91,7 @@ public final class ExcludeFromCommitAction extends ContextAction {
             public void perform() {
                 SvnModuleConfig config = SvnModuleConfig.getDefault();
                 int status = getActionStatus(nodes);
-                List<File> files = new ArrayList<File>();
+                List<File> files = new ArrayList<>();
                 for (Node node : nodes) {
                     File aFile = node.getLookup().lookup(File.class);
                     FileObject fo = node.getLookup().lookup(FileObject.class);

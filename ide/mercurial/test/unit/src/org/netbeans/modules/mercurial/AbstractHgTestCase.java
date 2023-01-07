@@ -116,7 +116,7 @@ public abstract class AbstractHgTestCase extends NbTestCase {
 
     protected void commitIntoRepository (File repository, File... files) throws HgException, IOException {
 
-        List<File> filesToAdd = new ArrayList<File>();
+        List<File> filesToAdd = new ArrayList<>();
         FileInformation status;
         for (File file : files) {
             if(findStatus(HgCommand.getStatus(repository, Collections.singletonList(file), null, null),
@@ -126,7 +126,7 @@ public abstract class AbstractHgTestCase extends NbTestCase {
         }
 
         HgCommand.doAdd(repository, filesToAdd, null);
-        List<File> filesToCommit = new ArrayList<File>();
+        List<File> filesToCommit = new ArrayList<>();
         for (File file : files) {
             if(file.isFile()) {
                 filesToCommit.add(file);

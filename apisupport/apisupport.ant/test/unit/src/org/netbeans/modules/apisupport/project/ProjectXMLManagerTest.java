@@ -105,7 +105,7 @@ public class ProjectXMLManagerTest extends TestBase {
         Set<ModuleDependency> deps = testingPXM.getDirectDependencies();
         assertEquals("number of dependencies", 2, deps.size());
         
-        Set<String> assumedCNBs = new HashSet<String>(ASSUMED_CNBS);
+        Set<String> assumedCNBs = new HashSet<>(ASSUMED_CNBS);
         for (ModuleDependency md : deps) {
             if (md.getModuleEntry().getCodeNameBase().equals(DIALOGS)) {
                 assertNotNull("module entry", md.getModuleEntry());
@@ -148,7 +148,7 @@ public class ProjectXMLManagerTest extends TestBase {
         
         final Set<ModuleDependency> newDeps = testingPXM.getDirectDependencies();
         assertEquals("number of dependencies", 1, newDeps.size());
-        Set<String> newCNBs = new HashSet<String>();
+        Set<String> newCNBs = new HashSet<>();
         newCNBs.add(ANT_PROJECT_SUPPORT);
         for (ModuleDependency md : newDeps) {
             String cnbToRemove = md.getModuleEntry().getCodeNameBase();
@@ -227,7 +227,7 @@ public class ProjectXMLManagerTest extends TestBase {
         
         Set<ModuleDependency> deps = testingPXM.getDirectDependencies();
         
-        Set<String> assumedCNBs = new HashSet<String>(ASSUMED_CNBS);
+        Set<String> assumedCNBs = new HashSet<>(ASSUMED_CNBS);
         assumedCNBs.add("org.netbeans.modules.java.project");
         assumedCNBs.add("org.netbeans.modules.java.j2seplatform");
         
@@ -366,13 +366,13 @@ public class ProjectXMLManagerTest extends TestBase {
     public void testReplacePublicPackages() throws Exception {
         final NbModuleProject testingProject = generateTestingProject();
         final ProjectXMLManager testingPXM = new ProjectXMLManager(testingProject);
-        Map<String,String> cpext = new HashMap<String,String>();
+        Map<String,String> cpext = new HashMap<>();
         cpext.put("ext/a.jar", null);
         cpext.put("ext/b.jar", null);
         testingPXM.replaceClassPathExtensions(cpext); // exercising #184377
         ManifestManager.PackageExport[] publicPackages = testingPXM.getPublicPackages();
         assertEquals("number of public packages", 1, publicPackages.length);
-        final Set<String> newPP = new HashSet<String>();
+        final Set<String> newPP = new HashSet<>();
         Collections.addAll(newPP, publicPackages[0].getPackage(), "org.netbeans.examples.modules._.čau99");
         
         // apply and save project
@@ -396,14 +396,14 @@ public class ProjectXMLManagerTest extends TestBase {
         final ProjectXMLManager testingPXM = new ProjectXMLManager(testingProject);
         assertEquals("one friend", 1, testingPXM.getFriends().length);
         assertEquals("friend org.module.examplemodule", "org.module.examplemodule", testingPXM.getFriends()[0]);
-        final Set<String> newFriends = new HashSet<String>();
+        final Set<String> newFriends = new HashSet<>();
         Collections.addAll(newFriends, "org.exampleorg.somefriend", "org.exampleorg.anotherfriend" );
         
         // apply and save project
         boolean result = ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Boolean>() {
             public Boolean run() throws IOException {
                 ManifestManager.PackageExport pkgs[] = testingPXM.getPublicPackages();
-                Set<String> packagesToExpose = new HashSet<String>();
+                Set<String> packagesToExpose = new HashSet<>();
                 for (int i = 0; i < pkgs.length; i++) {
                     packagesToExpose.add(pkgs[i].getPackage());
                 }
@@ -446,7 +446,7 @@ public class ProjectXMLManagerTest extends TestBase {
     public void testReplaceClassPathExtensions() throws Exception {
         final NbModuleProject testingProject = generateTestingProject();
         final ProjectXMLManager testingPXM = new ProjectXMLManager(testingProject);
-        final Map<String, String> newCPE = new HashMap<String, String>();
+        final Map<String, String> newCPE = new HashMap<>();
         newCPE.put("ext/testing.jar", "release/modules/ext/testing.jar");
         newCPE.put("ext/jFreeChart-1.0.13.jar", "release/modules/ext/jFreeChart-1.0.13.jar");
         // apply and save project

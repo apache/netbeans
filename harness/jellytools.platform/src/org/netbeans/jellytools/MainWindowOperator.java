@@ -397,7 +397,7 @@ public class MainWindowOperator extends JFrameOperator {
         
         /** Creates new instance. */
         public StatusTextTracer() {
-            this.statusTextHistory = new ArrayList<String>();
+            this.statusTextHistory = new ArrayList<>();
         }
         
         /** Starts to register all status messages into history array.

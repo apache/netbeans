@@ -153,7 +153,7 @@ public class ClassPathProviderImplTest extends TestBase {
         fail(failMsg);
     }
     
-    private static final Set<String> TESTLIBS = new HashSet<String>(/* no more default test libs after issue #171616 */);
+    private static final Set<String> TESTLIBS = new HashSet<>(/* no more default test libs after issue #171616 */);
     
     private Set<String> urlsOfCp4Tests(ClassPath cp) throws Exception {
         Set<String> s = new TreeSet<String>();
@@ -216,7 +216,7 @@ public class ClassPathProviderImplTest extends TestBase {
 //        assertEquals("right EXECUTE classpath (COMPILE plus classes)", expectedRoots, urlsOfCp(cp));
 //        cp = ClassPath.getClassPath(src, ClassPath.SOURCE);
 //        assertNotNull("have a SOURCE classpath", cp);
-//        assertEquals("right SOURCE classpath", Collections.singleton(src), new HashSet<FileObject>(Arrays.asList(cp.getRoots())));
+//        assertEquals("right SOURCE classpath", Collections.singleton(src), new HashSet<>(Arrays.asList(cp.getRoots())));
 //    }
 
     /**
@@ -243,7 +243,7 @@ public class ClassPathProviderImplTest extends TestBase {
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_SPECIFICATION_VERSION, "1.0");
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_IMPLEMENTATION_VERSION, "foo-1");
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE_LOCALIZING_BUNDLE, "foo/Bundle.properties");
-        Map<String,String> contents = new HashMap<String,String>();
+        Map<String,String> contents = new HashMap<>();
         contents.put("foo/Bundle.properties", "OpenIDE-Module-Name=Foo Module");
         fooJar = new File(new File(new File(install, "somecluster"), "modules"), "foo.jar");
         TestBase.createJar(fooJar, contents, mani);
@@ -447,7 +447,7 @@ public class ClassPathProviderImplTest extends TestBase {
         assertEquals("right EXECUTE classpath (COMPILE plus classes plus JAR)", expectedRoots, urlsOfCp(cp));
         cp = ClassPath.getClassPath(srcbridge, ClassPath.SOURCE);
         assertNotNull("have a SOURCE classpath", cp);
-        assertEquals("right SOURCE classpath", Collections.singleton(srcbridge), new HashSet<FileObject>(Arrays.asList(cp.getRoots())));
+        assertEquals("right SOURCE classpath", Collections.singleton(srcbridge), new HashSet<>(Arrays.asList(cp.getRoots())));
     }
      */
 

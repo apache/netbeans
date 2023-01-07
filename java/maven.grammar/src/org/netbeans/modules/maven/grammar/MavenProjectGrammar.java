@@ -306,7 +306,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
         });
 
         List<GrammarResult> toReturn = new ArrayList<GrammarResult>();
-        Collection<String> params = new HashSet<String>();
+        Collection<String> params = new HashSet<>();
 
         while (it.hasNext()) {
             Element el = it.next();
@@ -367,7 +367,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 }
                 FileObject fo = getEnvironment().getFileObject();
                 if (fo != null) {
-                    List<String> set = new ArrayList<String>();
+                    List<String> set = new ArrayList<>();
                     set.add("basedir");
                     set.add("project.build.finalName");
                     set.add("project.version");
@@ -451,7 +451,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 Result<NBVersionInfo> result = RepositoryQueries.getVersionsResult(hold.getGroupId(), hold.getArtifactId(), RepositoryPreferences.getInstance().getRepositoryInfos());
                 List<NBVersionInfo> verStrings = result.getResults();
                 Collection<GrammarResult> elems = new ArrayList<GrammarResult>();
-                Set<String> uniques = new HashSet<String>();
+                Set<String> uniques = new HashSet<>();
                 for (NBVersionInfo vers : verStrings) {
                     if (!uniques.contains(vers.getVersion()) && vers.getVersion().startsWith(virtualTextCtx.getCurrentPrefix())) {
                         uniques.add(vers.getVersion());
@@ -533,7 +533,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 List<NBVersionInfo> elems = result.getResults();
                 List<GrammarResult> texts = new ArrayList<GrammarResult>();
                 String currprefix = virtualTextCtx.getCurrentPrefix();
-                Set<String> uniques = new HashSet<String>();
+                Set<String> uniques = new HashSet<>();
                 for (NBVersionInfo elem : elems) {
                     if (!uniques.contains(elem.getClassifier()) && elem.getClassifier() != null && elem.getClassifier().startsWith(currprefix)) {
                         texts.add(new MyTextElement(elem.getClassifier(), currprefix));
@@ -646,7 +646,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
 
   /*Return repo url's*/
     private List<String> getRepoUrls() {
-        List<String> repos = new ArrayList<String>();
+        List<String> repos = new ArrayList<>();
 
         List<RepositoryInfo> ris = RepositoryPreferences.getInstance().getRepositoryInfos();
         for (RepositoryInfo ri : ris) {

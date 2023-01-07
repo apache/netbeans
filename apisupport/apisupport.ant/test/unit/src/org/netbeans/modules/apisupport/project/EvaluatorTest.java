@@ -141,7 +141,7 @@ public class EvaluatorTest extends TestBase {
     }
 
     private class ModuleListLogHandler extends Handler {
-        private Set<String> scannedDirs = Collections.synchronizedSet(new HashSet<String>(1000));
+        private Set<String> scannedDirs = Collections.synchronizedSet(new HashSet<>(1000));
         String error;
 
         @Override

@@ -57,7 +57,7 @@ public class OpenInEditorActionProvider extends ExternalCommandActionProvider {
 
         command = command.substring(Term.ExternalCommandsConstants.IDE_OPEN.length() + 1).trim();
 
-        List<String> paths = new ArrayList<String>();
+        List<String> paths = new ArrayList<>();
         Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(command); //NOI18N
         while (m.find()) {
             paths.add(m.group(1));

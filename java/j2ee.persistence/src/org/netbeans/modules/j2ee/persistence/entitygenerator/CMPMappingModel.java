@@ -38,9 +38,9 @@ public class CMPMappingModel {
     private Map <String, JoinTableColumnMapping> joinTableColumnMappings;
     
     public CMPMappingModel() {
-        cmpFieldMapping = new HashMap<String, String>();
+        cmpFieldMapping = new HashMap<>();
         cmrFieldMapping = new HashMap<String, ColumnData[]>();
-        cmrJoinMapping = new HashMap<String, String>();
+        cmrJoinMapping = new HashMap<>();
         joinTableColumnMappings = new HashMap<>();
     }
     

@@ -207,7 +207,7 @@ public final class OutlineViewSynchronizationTest extends NbTestCase {
      */
     private static class LoggingPropertyChangeListener implements PropertyChangeListener {
 
-        private List<String> events = new ArrayList<String>();
+        private List<String> events = new ArrayList<>();
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {

@@ -193,7 +193,7 @@ class InsertTask implements CancellableTask<WorkingCopy> {
     }
     
     public static Collection<String> getImports(CompilationController controller) {
-        Set<String> imports = new HashSet<String>();
+        Set<String> imports = new HashSet<>();
         CompilationUnitTree cu = controller.getCompilationUnit();
         
         if (cu != null) {

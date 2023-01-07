@@ -264,7 +264,7 @@ public class DirectorySelectorCombo extends javax.swing.JPanel {
     noneText = Bundle.DirectorySelectorCombo_NoneString(); 
     actionText = Bundle.DirectorySelectorCombo_ActionString(); 
     itemCountLimit = 2;
-    supportedExtensions = new HashSet<String>();
+    supportedExtensions = new HashSet<>();
   }
   
   private void changeModel() {

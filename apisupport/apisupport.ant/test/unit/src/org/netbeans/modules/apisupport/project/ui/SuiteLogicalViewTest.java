@@ -85,7 +85,7 @@ public class SuiteLogicalViewTest extends TestBase {
         ep.setProperty("app.title", "Sweetness is Now!");
         p.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
         TestBase.waitForNodesUpdate();
-        assertEquals(new HashSet<String>(Arrays.asList(Node.PROP_NAME, Node.PROP_DISPLAY_NAME)), nl.changed);
+        assertEquals(new HashSet<>(Arrays.asList(Node.PROP_NAME, Node.PROP_DISPLAY_NAME)), nl.changed);
         assertEquals("Sweetness is Now!", n.getName());
         assertEquals("Sweetness is Now!", n.getDisplayName());
     }
@@ -128,7 +128,7 @@ public class SuiteLogicalViewTest extends TestBase {
     }
     
     private static final class NL extends NodeAdapter {
-        public final Set<String> changed = new HashSet<String>();
+        public final Set<String> changed = new HashSet<>();
         public @Override void propertyChange(PropertyChangeEvent evt) {
             changed.add(evt.getPropertyName());
         }

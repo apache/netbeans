@@ -179,7 +179,7 @@ public class LibrariesStorageTest extends NbTestCase {
         assertTrue(lib3.getProperties().isEmpty());
         
         LibraryImplementation3 newLib = new TestLibrary ((TestLibrary)lib3);
-        Map<String,String> props = new HashMap<String, String>();
+        Map<String,String> props = new HashMap<>();
         props.put("test_prop","test_value");    //NOI18N
         newLib.setProperties(props);
         this.storage.updateLibrary(lib3,newLib);
@@ -193,7 +193,7 @@ public class LibrariesStorageTest extends NbTestCase {
 
     static class TestListener implements PropertyChangeListener {
         
-        private List<String> eventNames = new ArrayList<String>();
+        private List<String> eventNames = new ArrayList<>();
         
         public List<String> getEventNames () {
             return this.eventNames;

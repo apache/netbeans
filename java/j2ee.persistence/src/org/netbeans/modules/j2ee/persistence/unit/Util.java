@@ -83,7 +83,7 @@ public class Util {
             return availProps;
         }
 
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public static SourceGroup[] getJavaSourceGroups(PUDataObject dObj) throws java.io.IOException {

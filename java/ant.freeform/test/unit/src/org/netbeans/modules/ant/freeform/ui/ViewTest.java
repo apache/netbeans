@@ -245,7 +245,7 @@ public class ViewTest extends TestBase {
     }
     
     private static final class TestNL implements NodeListener {
-        private final Set<String> changes = new HashSet<String>();
+        private final Set<String> changes = new HashSet<>();
         public TestNL() {}
         public synchronized void childrenRemoved(NodeMemberEvent ev) {
             changes.add("childrenRemoved");
@@ -264,7 +264,7 @@ public class ViewTest extends TestBase {
         }
         /** Get a set of all change event names since the last call. Clears set too. */
         public synchronized Set<String> probeChanges() {
-            Set<String> _changes = new HashSet<String>(changes);
+            Set<String> _changes = new HashSet<>(changes);
             changes.clear();
             return _changes;
         }

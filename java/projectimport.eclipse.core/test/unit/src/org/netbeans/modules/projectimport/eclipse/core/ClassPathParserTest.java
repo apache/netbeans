@@ -71,7 +71,7 @@ public class ClassPathParserTest extends NbTestCase {
     }
     
     public void testParseExternalSourceRoots() throws Exception {
-        Set<String> natures = new HashSet<String>();
+        Set<String> natures = new HashSet<>();
         List<Link> links = new ArrayList<Link>();
         Set<Variable> variables = new HashSet<Variable>();
         variables.add(new Variable("SOME_ROOT", "/tmp"));

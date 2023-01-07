@@ -43,7 +43,7 @@ final class TopComponentSubModel {
     /** List of opened TopComponents. */
     private final List<TopComponent> openedTopComponents = new ArrayList<TopComponent>(10);
     /** List of all TopComponent IDs (both opened and closed). */
-    private final List<String> tcIDs = new ArrayList<String>(10);
+    private final List<String> tcIDs = new ArrayList<>(10);
     /** kind of mode model this sub model is part of */
     private final int kind;
     /** Selected TopComponent ID. Has to be present in openedTopComponenets. */

@@ -90,7 +90,7 @@ public final class Actions implements ActionProvider {
      * Some routine global actions for which we can supply a display name.
      * These are IDE-specific.
      */
-    private static final Set<String> COMMON_IDE_GLOBAL_ACTIONS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> COMMON_IDE_GLOBAL_ACTIONS = new HashSet<>(Arrays.asList(
         ActionProvider.COMMAND_DEBUG,
         ActionProvider.COMMAND_PROFILE,
         ActionProvider.COMMAND_DELETE,
@@ -103,7 +103,7 @@ public final class Actions implements ActionProvider {
      * does not really have a binding, they are prompted for one when
      * the action is "run".
      */
-    private static final Set<String> COMMON_NON_IDE_GLOBAL_ACTIONS = new HashSet<String>(Arrays.asList(
+    private static final Set<String> COMMON_NON_IDE_GLOBAL_ACTIONS = new HashSet<>(Arrays.asList(
         ActionProvider.COMMAND_BUILD,
         ActionProvider.COMMAND_CLEAN,
         ActionProvider.COMMAND_REBUILD,
@@ -325,7 +325,7 @@ public final class Actions implements ActionProvider {
             final Element actionEl,
             final Lookup context) {
 
-        final List<String> targetNames = new ArrayList<String>();
+        final List<String> targetNames = new ArrayList<>();
         final Properties props = new Properties();
         final Union2<FileObject,String> scriptFile = ProjectManager.mutex().readAccess(new Mutex.Action<Union2<FileObject,String>>() {
             @Override

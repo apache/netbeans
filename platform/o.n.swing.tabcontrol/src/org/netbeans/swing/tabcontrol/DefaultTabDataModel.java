@@ -251,7 +251,7 @@ public class DefaultTabDataModel implements TabDataModel {
                 //merge of the change data and fire that
                 int size = (iconsToFire != null ? iconsToFire.length : 0)
                         + (txtToFire != null ? txtToFire.length : 0);
-                Set<Integer> allIndicesToFire = new HashSet<Integer>(size);
+                Set<Integer> allIndicesToFire = new HashSet<>(size);
                 Integer[] o;
                 if (iconsToFire != null) {
                     o = toObjectArray(iconsToFire);

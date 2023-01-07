@@ -56,7 +56,7 @@ public class PlainTokenListTest extends NbTestCase {
         
         doc.insertString(0, documentContent, null);
         
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         TokenList l = new PlainTokenList(doc);
         
         l.setStartOffset(0);

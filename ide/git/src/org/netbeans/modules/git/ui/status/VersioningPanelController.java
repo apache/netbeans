@@ -533,7 +533,7 @@ class VersioningPanelController implements ActionListener, PropertyChangeListene
         }
     }
 
-    private final Map<File, FileStatusCache.ChangedEvent> changes = new HashMap<File, FileStatusCache.ChangedEvent>();
+    private final Map<File, FileStatusCache.ChangedEvent> changes = new HashMap<>();
     /**
      * Eliminates unnecessary cache.listFiles call as well as the whole node creation process ()
      */

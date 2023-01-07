@@ -173,14 +173,14 @@ public abstract class CommandHttpTest extends CommandTest {
                 GFPROP_GLASSFISH_ARGS);
         List<String> javaArgs = javaArgsProperty != null
                 ? Arrays.asList(javaArgsProperty.split(" +"))
-                : new ArrayList<String>();
+                : new ArrayList<>();
         List<String> glassFishArgs = glassFishArgsProperty != null
                 ? Arrays.asList(glassFishArgsProperty.split(" +"))
-                : new ArrayList<String>();
+                : new ArrayList<>();
         StartupArgsEntity startupArgs = new StartupArgsEntity(
                 glassFishArgs,
                 javaArgs,
-                new HashMap<String, String>(),
+                new HashMap<>(),
                 getJdkProperty(JDKPROP_HOME));
         GlassFishServer server = glassFishServer();
         restoreDomain(server, getGlassFishProperty(BACKUP_DOMAIN));

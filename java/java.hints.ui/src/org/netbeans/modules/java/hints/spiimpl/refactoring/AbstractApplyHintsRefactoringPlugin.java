@@ -144,7 +144,7 @@ public abstract class AbstractApplyHintsRefactoringPlugin extends ProgressProvid
                 Set<FileObject> aff = affectedFiles.get(file);
                 
                 if (aff == null) {
-                    affectedFiles.put(file, aff = new HashSet<FileObject>());
+                    affectedFiles.put(file, aff = new HashSet<>());
                 }
                 
                 aff.addAll(changesPerFixEntry.getValue().getModifiedFileObjects());
@@ -366,7 +366,7 @@ public abstract class AbstractApplyHintsRefactoringPlugin extends ProgressProvid
         @Override
         public synchronized void commit() {
             if (delegate == null) {
-                Set<FileObject> toRecompute = new HashSet<FileObject>();
+                Set<FileObject> toRecompute = new HashSet<>();
                 
                 for (ModificationResult mr : completeModificationResult) {
                     for (FileObject modified : mr.getModifiedFileObjects()) {

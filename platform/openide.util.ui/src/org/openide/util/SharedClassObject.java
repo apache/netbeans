@@ -86,7 +86,7 @@ public abstract class SharedClassObject extends Object implements Externalizable
     /** Set of classes to not warn about any more.
      * Names only.
      */
-    private static final Set<String> alreadyWarnedAboutDupes = new HashSet<String>();
+    private static final Set<String> alreadyWarnedAboutDupes = new HashSet<>();
     private static final Logger err = Logger.getLogger("org.openide.util.SharedClassObject"); // NOI18N
 
     /** data entry for this class */

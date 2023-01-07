@@ -35,8 +35,8 @@ import org.netbeans.core.windows.ModeImpl;
 public class DockingStatus {
     
     protected Model model;
-    protected List<String> docked = new ArrayList<String>(10);
-    protected List<String> slided = new ArrayList<String>(10);
+    protected List<String> docked = new ArrayList<>(10);
+    protected List<String> slided = new ArrayList<>(10);
     private boolean marked = false;
     
     /** Creates a new instance of DockingStatus */

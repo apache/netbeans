@@ -382,7 +382,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         }
     }
     
-    private static final Set<String> INVALID_METHOD_INVOCATION = new HashSet<String>(Arrays.asList(
+    private static final Set<String> INVALID_METHOD_INVOCATION = new HashSet<>(Arrays.asList(
         "compiler.err.prob.found.req",
         "compiler.err.cant.apply.symbol",
         "compiler.err.cant.apply.symbol.1",
@@ -390,7 +390,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         "compiler.err.cant.resolve.location.args"
     ));
     
-    private static final Set<String> CANNOT_RESOLVE = new HashSet<String>(Arrays.asList(
+    private static final Set<String> CANNOT_RESOLVE = new HashSet<>(Arrays.asList(
             "compiler.err.cant.resolve",
             "compiler.err.cant.resolve.location",
             "compiler.err.cant.resolve.location.args",
@@ -398,7 +398,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             "compiler.err.type.error"
     ));
     
-    private static final Set<String> UNDERLINE_IDENTIFIER = new HashSet<String>(Arrays.asList(
+    private static final Set<String> UNDERLINE_IDENTIFIER = new HashSet<>(Arrays.asList(
             "compiler.err.local.var.accessed.from.icls.needs.final",
             "compiler.err.var.might.not.have.been.initialized",
             "compiler.err.report.access",
@@ -410,7 +410,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             "compiler.err.class.public.should.be.in.file"
     ));
     
-    private static final Set<String> USE_PROVIDED_SPAN = new HashSet<String>(Arrays.asList(
+    private static final Set<String> USE_PROVIDED_SPAN = new HashSet<>(Arrays.asList(
             "compiler.err.method.does.not.override.superclass",
             "compiler.err.illegal.unicode.esc",
             "compiler.err.unreported.exception.need.to.catch.or.throw"

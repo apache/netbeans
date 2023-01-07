@@ -59,7 +59,7 @@ public class GrailsTargetChooserPanelGUI extends javax.swing.JPanel implements A
     
     private Project project;
     private String expectedExtension;
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private SourceGroup group;
     
     /** Creates new form SimpleTargetChooserGUI */

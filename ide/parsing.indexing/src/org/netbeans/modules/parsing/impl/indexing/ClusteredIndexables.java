@@ -457,7 +457,7 @@ public final class ClusteredIndexables {
                     deleteFromIndex == null;
                 assert dataRef == null;
                 toAdd = new DocumentStore(DATA_CACHE_SIZE);
-                toDeleteOutOfOrder = new ArrayList<String>();
+                toDeleteOutOfOrder = new ArrayList<>();
                 deleteFromDeleted = new BitSet();
                 deleteFromIndex = new BitSet();
                 dataRef = new ClearReference(
@@ -760,7 +760,7 @@ public final class ClusteredIndexables {
 
         @Override
         public String[] getValues(String key) {
-            final List<String> result = new ArrayList<String>();
+            final List<String> result = new ArrayList<>();
             for (Fieldable field : fields) {
                 if (field.name().equals(key)) {
                     result.add(field.stringValue());

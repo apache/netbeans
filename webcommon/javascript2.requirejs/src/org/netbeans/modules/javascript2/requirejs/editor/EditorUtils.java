@@ -224,7 +224,7 @@ public class EditorUtils {
         }
         if (token.id() == JsTokenId.IDENTIFIER && DEFINE.equals(token.text().toString())) {
             // we are probably found the define method
-            List<String> paths = new ArrayList<String>();
+            List<String> paths = new ArrayList<>();
             token = LexUtilities.findNextToken(ts, Arrays.asList(JsTokenId.BRACKET_LEFT_BRACKET, JsTokenId.KEYWORD_FUNCTION, JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_PAREN));
             if (token.id() == JsTokenId.BRACKET_LEFT_BRACKET) {
                 do {

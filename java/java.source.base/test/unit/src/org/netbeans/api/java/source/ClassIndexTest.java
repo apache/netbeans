@@ -568,11 +568,11 @@ public class ClassIndexTest extends NbTestCase {
         assertNotNull(ci);
         Iterable<Symbols> result = ci.getDeclaredSymbols("foo", NameKind.SIMPLE_NAME,
             EnumSet.<ClassIndex.SearchScope>of(ClassIndex.SearchScope.SOURCE));
-        Set<String> actualResult = new HashSet<String>();
+        Set<String> actualResult = new HashSet<>();
         for (Symbols s : result) {
             actualResult.add(s.getEnclosingType().getQualifiedName() + ":" + s.getSymbols().toString());
         }
-        assertEquals(new HashSet<String>(Arrays.asList("test.foo:[foo]", "test.Test:[foo]")), actualResult);
+        assertEquals(new HashSet<>(Arrays.asList("test.foo:[foo]", "test.Test:[foo]")), actualResult);
     }
     
     private FileObject createJavaFile (
@@ -612,7 +612,7 @@ public class ClassIndexTest extends NbTestCase {
     }
 
     private void assertFiles(final Collection<FileObject> expected, final Collection<FileObject> result) {
-        final Set<FileObject> expSet = new HashSet<FileObject>(expected);
+        final Set<FileObject> expSet = new HashSet<>(expected);
         for (FileObject fo : result) {
             if (!expSet.remove(fo)) {
                 throw new AssertionError("Expected: " + expected +" Result: " + result);

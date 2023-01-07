@@ -626,7 +626,7 @@ public class ClassPathTest extends NbTestCase {
         
         final String classPathProp = System.getProperty("java.class.path");     //NOI18N
         roots = new ArrayList<URL> ();
-        List<URL> roots2 = new ArrayList<URL>();
+        List<URL> roots2 = new ArrayList<>();
         tk = new StringTokenizer (classPathProp,File.pathSeparator);
         while (tk.hasMoreTokens()) {
             final String path = tk.nextToken();

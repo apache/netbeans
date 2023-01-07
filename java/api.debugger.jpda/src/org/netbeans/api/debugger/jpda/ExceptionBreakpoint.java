@@ -270,7 +270,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
             public FileObject[] getFiles() {
                 String[] filters = getClassFilters();
                 String[] exfilters = getClassExclusionFilters();
-                List<FileObject> files = new ArrayList<FileObject>();
+                List<FileObject> files = new ArrayList<>();
                 for (int i = 0; i < filters.length; i++) {
                     // TODO: annotate also other matched classes
                     if (!filters[i].startsWith("*") && !filters[i].endsWith("*")) {

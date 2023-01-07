@@ -156,9 +156,9 @@ public class KeymapModel {
         
         private Set<String> categories;
         
-        private Set<String> allActionIds = new HashSet<String>();
+        private Set<String> allActionIds = new HashSet<>();
 
-        private Set<String> duplicateIds = new HashSet<String>();
+        private Set<String> duplicateIds = new HashSet<>();
 
         private Map<String,Set<ShortcutAction>> categoryToActions = 
             new HashMap<String,Set<ShortcutAction>>();
@@ -171,7 +171,7 @@ public class KeymapModel {
                 return;
             }
             List<Map<String, Set<ShortcutAction>>> mgrActions = new ArrayList<Map<String, Set<ShortcutAction>>>();
-            Set<String> categoryIds = new HashSet<String>();
+            Set<String> categoryIds = new HashSet<>();
             Map<String, Set<ShortcutAction>> cats = new HashMap<String, Set<ShortcutAction>>();
             Collection<? extends KeymapManager> mgrInstances = getKeymapManagerInstances();
             for (KeymapManager m : mgrInstances) {
@@ -180,8 +180,8 @@ public class KeymapModel {
                 categoryIds.addAll(a.keySet());
             }
 
-            Set<String> allIds = new HashSet<String>();
-            Set<String> duplIds = new HashSet<String>();
+            Set<String> allIds = new HashSet<>();
+            Set<String> duplIds = new HashSet<>();
             categoryIds.add(""); // NOI18N
             for (String category : categoryIds) {
                 Iterator<? extends KeymapManager> mgrIt = mgrInstances.iterator();
@@ -218,7 +218,7 @@ public class KeymapModel {
      */
     private class PL implements Runnable { 
         private volatile PL current;
-        private Map<String, String> profilesMap = new HashMap<String, String>();
+        private Map<String, String> profilesMap = new HashMap<>();
         private String currentProfile;
         private Map<String, Boolean> customProfiles = new HashMap<String, Boolean>();
         

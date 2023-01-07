@@ -169,7 +169,7 @@ public abstract class AbstractDecoratorAnalyzer<T> {
             getAnnotationsByType(qualifiers);
         boolean hasOnlyDefault = false;
         if ( qualifiersFqns.keySet().contains(AnnotationUtil.DEFAULT_FQN)){
-            HashSet<String> fqns = new HashSet<String>(qualifiersFqns.keySet());
+            HashSet<String> fqns = new HashSet<>(qualifiersFqns.keySet());
             fqns.remove( AnnotationUtil.NAMED );
             fqns.remove( AnnotationUtil.ANY );
             hasOnlyDefault = fqns.size() == 1;

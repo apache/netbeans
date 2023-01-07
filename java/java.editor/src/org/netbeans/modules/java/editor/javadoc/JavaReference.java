@@ -324,7 +324,7 @@ public final class JavaReference {
 
         ParameterParseMachine(String parameters) {
             this.parameters = parameters;
-            this.paramList = new ArrayList<String>();
+            this.paramList = new ArrayList<>();
             typeId = new StringBuilder();
         }
 

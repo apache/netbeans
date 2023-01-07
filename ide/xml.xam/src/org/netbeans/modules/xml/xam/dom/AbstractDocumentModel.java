@@ -218,7 +218,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
     private Set<String> elementNames = null;
     public Set<String> getElementNames() {
         if (elementNames == null) {
-            elementNames = new HashSet<String>();
+            elementNames = new HashSet<>();
             Set<QName> qnames = getQNames();
             for (QName q : qnames) {
                 elementNames.add(q.getLocalPart());

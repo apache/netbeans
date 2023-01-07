@@ -561,7 +561,7 @@ public class JaxWsCodeGenerator  {
         Map<String,Object> context = (Map<String,Object>)wsClientNode.getValue(
                 JaxWsClientNode.CONTEXT);
         if ( context == null ){
-            context = new HashMap<String, Object>();
+            context = new HashMap<>();
             wsClientNode.setValue(JaxWsClientNode.CONTEXT, context);
         }
 
@@ -596,14 +596,14 @@ public class JaxWsCodeGenerator  {
             List<WsdlParameter> arguments = operation.getParameters();
             returnTypeName = operation.getReturnTypeName();
             Iterator<String> it = operation.getExceptions();
-            List<String> exceptionList = new ArrayList<String>();
+            List<String> exceptionList = new ArrayList<>();
             while (it.hasNext()) {
                 exceptionList.add(it.next());
             }
             StringBuffer argumentBuffer1 = new StringBuffer();
             StringBuffer argumentBuffer2 = new StringBuffer();
-            List<String> paramTypesList = new ArrayList<String>();
-            List<String> paramNamesList = new ArrayList<String>();
+            List<String> paramTypesList = new ArrayList<>();
+            List<String> paramNamesList = new ArrayList<>();
             int argSize = arguments.size();
             for (int i = 0; i < argSize; i++) {
                 String argumentTypeName = ((WsdlParameter) arguments.get(i)).getTypeName();

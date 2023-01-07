@@ -199,7 +199,7 @@ public class ConditionsPanel extends javax.swing.JPanel {
             return new String[] {};
         }
         StringTokenizer tokenizer = new StringTokenizer(filterStr, ", \t"); // NOI18N
-        ArrayList<String> strsList = new ArrayList<String>();
+        ArrayList<String> strsList = new ArrayList<>();
         while (tokenizer.hasMoreTokens()) {
             String str = tokenizer.nextToken();
             if (str.length() > 0) {

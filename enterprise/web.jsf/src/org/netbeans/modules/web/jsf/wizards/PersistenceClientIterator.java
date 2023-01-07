@@ -440,7 +440,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                     continue;
                 }
                 FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES2[i] + "."+JAVA_EXT);//NOI18N
-                HashMap<String, Object> params = new HashMap<String, Object>();
+                HashMap<String, Object> params = new HashMap<>();
                 params.put("packageName", utilPackage);
                 params.put("comment", Boolean.FALSE); // NOI18N
                 JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
@@ -500,7 +500,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             progressPanel.setText(progressMsg);
 
             FileObject template = FileUtil.getConfigRoot().getFileObject(JsfTemplateUtils.BASE_TPL_PATH + "/" + templateStyle + "/" + WizardProperties.CONTROLLER_TEMPLATE);
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             String controllerClassName = controllerFileObjects[i].getName();
             String managedBean = controllerClassName.substring(0, 1).toLowerCase() + controllerClassName.substring(1);
             params.put("managedBeanName", managedBean);
@@ -551,7 +551,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         progressPanel.setText(progressMsg);
 
         FileObject template = FileUtil.getConfigRoot().getFileObject(JsfTemplateUtils.BASE_TPL_PATH + "/" + templateStyle + "/" + WizardProperties.BUNDLE_TEMPLATE);
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("projectName", ProjectUtils.getInformation(project).getDisplayName());
         params.put("entities", bundleData);
         params.put("comment", Boolean.FALSE);
@@ -784,7 +784,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         JSFFrameworkProvider fp = new JSFFrameworkProvider();
         String[] names;
         ArrayList<WizardDescriptor.Panel> panelsList = new ArrayList<WizardDescriptor.Panel>();
-        ArrayList<String> namesList = new ArrayList<String>();
+        ArrayList<String> namesList = new ArrayList<>();
         panelsList.add(secondPanel);
         panelsList.add(thirdPanel);
         namesList.add(NbBundle.getMessage(PersistenceClientIterator.class, "LBL_EntityClasses"));

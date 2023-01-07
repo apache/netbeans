@@ -68,9 +68,9 @@ public class MessageDestinationRefMetadataReader extends CommonBeanReader {
                 String msgDestRefName = msgDestRef.getMessageDestinationRefName();
                 if(Utils.notEmpty(msgDestRefName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> msgDestRefMap = new HashMap<String, Object>();
+                    Map<String, Object> msgDestRefMap = new HashMap<>();
                     result.put(msgDestRefName, msgDestRefMap);
                     msgDestRefMap.put(DDBinding.PROP_NAME, msgDestRefName);
                 }

@@ -57,7 +57,7 @@ public class LicenseApprovalPanel extends javax.swing.JPanel {
         if (license4plugins == null && license4plugins.isEmpty ()) {
             return Collections.emptyList ();
         }
-		Set<String> licenses = new HashSet<String>();
+		Set<String> licenses = new HashSet<>();
 		for (UpdateElement el : license4plugins) {
 			licenses.add(el.getLicence());
 		}
@@ -69,7 +69,7 @@ public class LicenseApprovalPanel extends javax.swing.JPanel {
         if (license4plugins == null && license4plugins.isEmpty()) {
             return Collections.emptyList();
         }
-        Set<String> licenseIds = new HashSet<String>();
+        Set<String> licenseIds = new HashSet<>();
         for (UpdateElement el : license4plugins) {
             licenseIds.add(el.getLicenseId());
         }
@@ -80,7 +80,7 @@ public class LicenseApprovalPanel extends javax.swing.JPanel {
         for (UpdateElement el : model.getAllUpdateElements()) {
             if (el.getLicence() != null) {
                 if (license4plugins == null) {
-                    license4plugins = new ArrayList<UpdateElement>();
+                    license4plugins = new ArrayList<>();
                 }
 
                 if (! OperationType.UPDATE.equals(model.getOperation()) || ! Utilities.isLicenseIdApproved(el.getLicenseId())) {
@@ -214,7 +214,7 @@ public class LicenseApprovalPanel extends javax.swing.JPanel {
 
 	private void writeLicenses(InstallUnitWizardModel model) {
 		goOverLicenses(model);
-		List<String> pluginsModel = new ArrayList<String>();
+		List<String> pluginsModel = new ArrayList<>();
 		String fmt = NbBundle.getMessage(LicenseApprovalPanel.class,
 				"LicenseApprovalPanel_cbPlugins_ItemFormat");
 		for (UpdateElement el : license4plugins) {

@@ -123,7 +123,7 @@ public final class ActionToGoalUtils {
 //                        brc.setExecutionDirectory(FileUtil.toFile(project.getProjectDirectory()));
 //                        brc.setProject(project);
 //                        StringTokenizer tok = new StringTokenizer(goal, " ", false); //NOI18N
-//                        List<String> toRet = new ArrayList<String>();
+//                        List<String> toRet = new ArrayList<>();
 //                        while (tok.hasMoreTokens()) {
 //                            toRet.add(tok.nextToken());
 //                        }
@@ -157,7 +157,7 @@ public final class ActionToGoalUtils {
             if (rc instanceof ModelRunConfig && ((ModelRunConfig)rc).isFallback()) {
                 return rc;
             }
-            List<String> acts = new ArrayList<String>(); 
+            List<String> acts = new ArrayList<>(); 
             acts.addAll(rc.getActivatedProfiles());
             acts.addAll(requested.getActivatedProfiles());
             rc.setActivatedProfiles(acts);
@@ -281,7 +281,7 @@ public final class ActionToGoalUtils {
     private static NetbeansActionMapping[] getActiveCustomMappingsImpl(NbMavenProjectImpl project, boolean forFiles) {
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
         List<NetbeansActionMapping> toRet = new ArrayList<NetbeansActionMapping>();
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         // first add all project specific custom actions.
         for (NetbeansActionMapping map : configs.getActiveConfiguration().getCustomMappings()) {
             toRet.add(map);

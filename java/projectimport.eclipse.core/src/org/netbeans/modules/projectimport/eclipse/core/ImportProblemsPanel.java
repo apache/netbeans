@@ -59,7 +59,7 @@ public class ImportProblemsPanel extends javax.swing.JPanel {
     }
     
     public static List<String> indentAllButFirst(List<String> importProblems) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         boolean first = true;
         for (String s : importProblems) {
             l.add((first ? "" : " ") + s); //NOI18N

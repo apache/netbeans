@@ -42,7 +42,7 @@ public class InputProcessorsTest extends NbTestCase {
         PROXY_CHARS_CHUNK1, PROXY_CHARS_CHUNK2
     };
 
-    private static final List<String> BRIDGE_TEST_LINES = new ArrayList<String>();
+    private static final List<String> BRIDGE_TEST_LINES = new ArrayList<>();
 
     private static final char[][] BRIDGE_TEST_CHARS;
 

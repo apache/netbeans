@@ -180,7 +180,7 @@ public final class JFXProjectUtils {
             assert s.length > 0;
             List<String> l = null;
             if(s.length > 1) {
-                l = new ArrayList<String>();
+                l = new ArrayList<>();
                 for(int j = 1; j < s.length; j++) {
                     l.add(s[j]);
                 }
@@ -231,7 +231,7 @@ public final class JFXProjectUtils {
     public static Set<FileObject> getSourceRoots(@NonNull Project project) {
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] srcGroups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        final Set<FileObject> sourceRoots = new HashSet<FileObject>();
+        final Set<FileObject> sourceRoots = new HashSet<>();
         for (SourceGroup srcGroup : srcGroups) {
             sourceRoots.add(srcGroup.getRootFolder());
         }
@@ -245,7 +245,7 @@ public final class JFXProjectUtils {
      * @return set of class names
      */
     public static Set<String> getMainClassNames(@NonNull Project project) {
-        final Set<String> mainClassNames = new HashSet<String>();
+        final Set<String> mainClassNames = new HashSet<>();
         FileObject sourceRoots[] = getSourceRoots(project).toArray(new FileObject[0]);
         for (ElementHandle<TypeElement> elemHandle : SourceUtils.getMainClasses(sourceRoots)) {
             mainClassNames.add(elemHandle.getQualifiedName());
@@ -302,7 +302,7 @@ public final class JFXProjectUtils {
             return null;
         }
         boolean jfxrtExists = false;
-        List<URL> toLoad = new ArrayList<URL>();
+        List<URL> toLoad = new ArrayList<>();
         try {
             assert jarF.exists();
             toLoad.add(jarF.toURI().toURL());
@@ -317,7 +317,7 @@ public final class JFXProjectUtils {
         }        
         URLClassLoader clazzLoader = URLClassLoader.newInstance(toLoad.toArray(new URL[0]));
 
-        final Set<String> appClassNames = new HashSet<String>();
+        final Set<String> appClassNames = new HashSet<>();
         JarFile jf;
         try {
             jf = new JarFile(jarF);
@@ -975,7 +975,7 @@ public final class JFXProjectUtils {
      */
     public static FileObject updateJfxImpl(final @NonNull Project proj) throws IOException {
         final FileObject projDir = proj.getProjectDirectory();
-        final List<FileObject> updates = new ArrayList<FileObject>();
+        final List<FileObject> updates = new ArrayList<>();
         try {
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
                 @Override
@@ -1326,7 +1326,7 @@ public final class JFXProjectUtils {
      * @return array of artifacts
      */
     public static String[] getPaths(@NonNull final Collection<String> artifacts) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         Iterator<String> i = artifacts.iterator();
         while(i.hasNext()) {
             String s = i.next();
@@ -1540,7 +1540,7 @@ public final class JFXProjectUtils {
         final String endorsedCp = ep.get(ProjectProperties.ENDORSED_CLASSPATH);
         if (endorsedCp != null && !endorsedCp.isEmpty()) {
             String[] cpElements = PropertyUtils.tokenizePath(endorsedCp);
-            List<String> updatedEndorsedCpList = new ArrayList<String>();
+            List<String> updatedEndorsedCpList = new ArrayList<>();
             for (String element : cpElements) {
                 if (!element.startsWith("${javafx.runtime}/")) { //NOI18N
                     updatedEndorsedCpList.add(element);
@@ -1609,7 +1609,7 @@ public final class JFXProjectUtils {
      */
     public static Map<String,String> getDefaultBrowserInfo() {
         Lookup.Result<ExtWebBrowser> allBrowsers = Lookup.getDefault().lookupResult(ExtWebBrowser.class);
-        Map<String,String> browserPaths = new HashMap<String, String>();
+        Map<String,String> browserPaths = new HashMap<>();
         for(Lookup.Item<ExtWebBrowser> browser : allBrowsers.allItems()) {
             String name = browser.getDisplayName();
             if(name != null && name.toLowerCase().contains("default")) { // NOI18N
@@ -1648,7 +1648,7 @@ public final class JFXProjectUtils {
      * @return copy of map2Copy
      */
     public static Map<String,String> copyMap(Map<String,String> map2Copy) {
-        Map<String,String> newMap = new HashMap<String,String>();
+        Map<String,String> newMap = new HashMap<>();
         if(map2Copy != null) {
             for(Map.Entry<String, String> entry : map2Copy.entrySet()) {
                 String key = entry.getKey();

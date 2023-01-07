@@ -347,7 +347,7 @@ public class PluginPropertyUtils {
                     Xpp3Dom dom = conf; // MNG-4862
                     Xpp3Dom source = dom.getChild(multiProperty);
                     if (source != null) {
-                        List<String> toRet = new ArrayList<String>();
+                        List<String> toRet = new ArrayList<>();
                         Xpp3Dom[] childs = source.getChildren(singleProperty);
                         for (Xpp3Dom ch : childs) {
                             String chvalue = ch.getValue() == null ? "" : ch.getValue().trim();  //NOI18N

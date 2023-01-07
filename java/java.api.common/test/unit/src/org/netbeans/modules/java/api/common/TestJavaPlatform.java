@@ -43,7 +43,7 @@ public final class TestJavaPlatform extends J2SEPlatformImpl {
                 name,
                 PropertyUtils.getUsablePropertyName(name),
                 Collections.singletonList(installFolder.toURL()),
-                new HashMap<String, String>(),
+                new HashMap<>(),
                 sysProps,
                 Collections.emptyList(),
                 Collections.emptyList());

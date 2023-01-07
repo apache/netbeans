@@ -39,7 +39,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class CompositeCategoryProviderAnnotationProcessor extends LayerGeneratingProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             Registration.class.getCanonicalName(),
             Registrations.class.getCanonicalName()
         ));

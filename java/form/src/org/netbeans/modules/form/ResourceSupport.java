@@ -1417,7 +1417,7 @@ public class ResourceSupport {
 
     private String getPropertyPath(FormProperty property, String compName) {
         String propertyName = property.getName();
-        List<Object> parents = new ArrayList<Object>();
+        List<Object> parents = new ArrayList<>();
         do {
             FormPropertyContext propContext = property.getPropertyContext();
             Object parent = propContext.getOwner();

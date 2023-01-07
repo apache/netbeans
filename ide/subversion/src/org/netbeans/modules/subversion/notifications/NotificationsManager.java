@@ -78,7 +78,7 @@ public class NotificationsManager {
     private Map<File, Long> notifiedFiles = Collections.synchronizedMap(new HashMap<File, Long>());
 
     private NotificationsManager () {
-        files = new HashSet<File>();
+        files = new HashSet<>();
         rp = new RequestProcessor("SubversionNotifications", 1, true);  //NOI18N
         notificationTask = rp.create(new NotificationTask());
         cache = Subversion.getInstance().getStatusCache();
@@ -198,7 +198,7 @@ public class NotificationsManager {
         public void run() {
             HashSet<File> filesToScan;
             synchronized (files) {
-                filesToScan = new HashSet<File>(files);
+                filesToScan = new HashSet<>(files);
                 files.clear();
             }
             removeDirectories(filesToScan);
@@ -328,7 +328,7 @@ public class NotificationsManager {
             private final Long revision;
 
             Notification(Long revision) {
-                files = new HashSet<File>();
+                files = new HashSet<>();
                 this.revision = revision;
             }
 
@@ -352,7 +352,7 @@ public class NotificationsManager {
                 if (repositoryUrl != null) {
                     HashSet<File> filesPerRepository = filesByRepository.get(repositoryUrl);
                     if (filesPerRepository == null) {
-                        filesPerRepository = new HashSet<File>();
+                        filesPerRepository = new HashSet<>();
                         filesByRepository.put(repositoryUrl, filesPerRepository);
                     }
                     filesPerRepository.add(file);

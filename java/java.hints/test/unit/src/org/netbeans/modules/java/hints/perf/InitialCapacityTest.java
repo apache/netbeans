@@ -67,7 +67,7 @@ public class InitialCapacityTest extends NbTestCase {
                        "         new HashMap<Object, Object>();\n" +
                        "         new HashMap<Object, Object>(m);\n" +
                        "         new HashMap<Object, Object>(1);\n" +
-                       "         new ArrayList<Object>();\n" +
+                       "         new ArrayList<>();\n" +
                        "         new ArrayList<Object>(l);\n" +
                        "         new ArrayList<Object>(1);\n" +
                        "     }\n" +

@@ -51,8 +51,8 @@ public final class DBForeignKey extends DBObject<DBTable> {
     private String pkSchema;
     private String pkTable;
     private int updateRule;
-    private List<String> fkColumnNames = new ArrayList<String>();
-    private List<String> pkColumnNames = new ArrayList<String>();
+    private List<String> fkColumnNames = new ArrayList<>();
+    private List<String> pkColumnNames = new ArrayList<>();
 
     /**
      * Creates a List of ForeignKeyColumn instances from the given ResultSet.

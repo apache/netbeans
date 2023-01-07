@@ -54,7 +54,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  */
 public class MicronautJavaConfigPropertiesCompletion implements Processor {
 
-    private static final Set<String> supportedAnnotationTypes = new HashSet<String>(Arrays.asList("io.micronaut.context.annotation.Property", "io.micronaut.context.annotation.Value"));
+    private static final Set<String> supportedAnnotationTypes = new HashSet<>(Arrays.asList("io.micronaut.context.annotation.Property", "io.micronaut.context.annotation.Value"));
     private Reference<ProcessingEnvironment> processingEnv;
 
     @Override

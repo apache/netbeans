@@ -106,7 +106,7 @@ final class TypeNameIdGenerator {
         List<String> briefTypeNames = new ArrayList<String>(uniqueTypesCountExp);
 
         Collection<String> processedTypes
-                = new HashSet<String>((paramTypes.size() * 3 + 1) / 2);
+                = new HashSet<>((paramTypes.size() * 3 + 1) / 2);
 
         final Map<String, Object> briefTypeIdsUsage
                 = new HashMap<String, Object>(typesCount * 3 / 2);
@@ -114,7 +114,7 @@ final class TypeNameIdGenerator {
         final BitSet briefTypeIdsRegistered = new BitSet(typesCount);
         int registeredTypeIdsCount = 0;
         int conflictingTypeIdsCount = 0;
-        Collection<String> reservedTypeIds = new HashSet<String>(13);
+        Collection<String> reservedTypeIds = new HashSet<>(13);
 
         int index = 0;
         for (TypeMirror type : paramTypes) {

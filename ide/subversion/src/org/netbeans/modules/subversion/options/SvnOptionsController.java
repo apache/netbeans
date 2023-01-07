@@ -67,8 +67,8 @@ public final class SvnOptionsController extends OptionsPanelController implement
     private final SvnOptionsPanel panel;
     private Repository repository;
     private final AnnotationSettings annotationSettings;
-    private static final HashSet<String> allowedExecutables = new HashSet<String>(Arrays.asList(new String[] {"svn", "svn.exe"} )); //NOI18N
-    private static final HashSet<String> allowedLibs = new HashSet<String>(Arrays.asList(new String[] {"libsvnjavahl-1.dll", "libsvnjavahl-1.so"} )); //NOI18N
+    private static final HashSet<String> allowedExecutables = new HashSet<>(Arrays.asList(new String[] {"svn", "svn.exe"} )); //NOI18N
+    private static final HashSet<String> allowedLibs = new HashSet<>(Arrays.asList(new String[] {"libsvnjavahl-1.dll", "libsvnjavahl-1.so"} )); //NOI18N
     private Object currentClient;
         
     public SvnOptionsController() {        
@@ -124,7 +124,7 @@ public final class SvnOptionsController extends OptionsPanelController implement
     
     @Override
     public boolean acceptKeywords (List<String> keywords) {
-        Set<String> allKeywords = new HashSet<String>(panel.getKeywords());
+        Set<String> allKeywords = new HashSet<>(panel.getKeywords());
         allKeywords.retainAll(keywords);
         return !allKeywords.isEmpty();
     }

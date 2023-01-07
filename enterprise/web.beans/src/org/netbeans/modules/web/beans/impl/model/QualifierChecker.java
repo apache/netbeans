@@ -122,7 +122,7 @@ class QualifierChecker extends RuntimeAnnotationChecker implements Checker {
         return QualifierVerifier.getInstance( isEvent );
     }
     
-    private static final Set<String> BUILT_IN_QUALIFIERS = new HashSet<String>();
+    private static final Set<String> BUILT_IN_QUALIFIERS = new HashSet<>();
     
     static {
         BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.ANY_QUALIFIER_ANNOTATION);

@@ -48,7 +48,7 @@ public final class GrailsTargetChooserPanel implements WizardDescriptor.Panel<Wi
     private static final Logger LOGGER = Logger.getLogger(GrailsTargetChooserPanel.class.getName());
     private static final String FOLDER_TO_DELETE = "folderToDelete";    //NOI18N
 
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private GrailsTargetChooserPanelGUI gui;
     private WizardDescriptor.Panel<WizardDescriptor> bottomPanel;
     private WizardDescriptor wizard;

@@ -62,7 +62,7 @@ public class PatternResourcesIterator implements WizardDescriptor.ProgressInstan
 
     @Override
     public Set instantiate(ProgressHandle pHandle) throws IOException {
-        final Set<FileObject> result = new HashSet<FileObject>();
+        final Set<FileObject> result = new HashSet<>();
         try {
             Project project = Templates.getProject(wizard);
             

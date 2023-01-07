@@ -75,9 +75,9 @@ public class IndexTransactionTest extends NbTestCase {
 
         //Empty index => invalid
         assertEquals(Index.Status.EMPTY, index.getStatus(true));
-        final List<String> refs = new ArrayList<String>();
+        final List<String> refs = new ArrayList<>();
         refs.add("A");
-        final Set<String> toDel = new HashSet<String>();
+        final Set<String> toDel = new HashSet<>();
         
         index.txStore(
                 refs,

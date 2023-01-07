@@ -225,7 +225,7 @@ public class LookupProviderSupportTest extends NbTestCase {
         }
         Lookup inner = new DelegatingLookupImpl(base, Lookups.fixed(new Prov(impl2)), null);
         Lookup outer = new DelegatingLookupImpl(inner, Lookups.fixed(new Prov(impl3)), null);
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (SourceGroup g : outer.lookup(Sources.class).getSourceGroups("java")) {
             names.add(g.getName());
         }

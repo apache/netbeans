@@ -50,7 +50,7 @@ public class WadlSaasNodeChildren extends SaasNodeChildren<Object> {
     protected void updateKeys() {
         State state = getSaas().getState();
         if (state == Saas.State.READY) {
-            ArrayList<Object> keys = new ArrayList<Object>();
+            ArrayList<Object> keys = new ArrayList<>();
             List<WadlSaasResource> resources = getSaas().getResources();
             Collections.sort(resources);
             keys.addAll(resources);

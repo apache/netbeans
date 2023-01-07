@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
 public class EntityEJBWizardDescriptor implements WizardDescriptor.FinishablePanel, ChangeListener {
 
     private EntityEJBWizardPanel wizardPanel;
-    private final List<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> changeListeners = new ArrayList<>();
     private WizardDescriptor wizardDescriptor;
     private final EJBNameOptions ejbNames;
     
@@ -94,7 +94,7 @@ public class EntityEJBWizardDescriptor implements WizardDescriptor.FinishablePan
         FileObject targetFolder = (FileObject) wizardDescriptor.getProperty(MultiTargetChooserPanel.TARGET_FOLDER);
         if (targetFolder != null) {
             String targetName = (String) wizardDescriptor.getProperty(MultiTargetChooserPanel.TARGET_NAME);
-            List<String> proposedNames = new ArrayList<String>();
+            List<String> proposedNames = new ArrayList<>();
             proposedNames.add(ejbNames.getEntityEjbClassPrefix() + targetName + ejbNames.getEntityEjbClassSuffix());
             if (isLocal) {
                 proposedNames.add(ejbNames.getEntityLocalPrefix() + targetName + ejbNames.getEntityLocalSuffix());

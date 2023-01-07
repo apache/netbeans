@@ -139,7 +139,7 @@ public class NbEditorKit extends ExtKit implements Callable {
             defaults.put("ScrollBar.minimumThumbSize", new Dimension(20, 20));
         }
 
-        contentTypeTable = new HashMap<String, String>();
+        contentTypeTable = new HashMap<>();
         contentTypeTable.put("org.netbeans.modules.properties.syntax.PropertiesKit", "text/x-properties"); // NOI18N
         contentTypeTable.put("org.netbeans.modules.web.core.syntax.JSPKit", "text/x-jsp"); // NOI18N
         contentTypeTable.put("org.netbeans.modules.css.text.syntax.CSSEditorKit", "text/css"); // new  - open source package // NOI18N

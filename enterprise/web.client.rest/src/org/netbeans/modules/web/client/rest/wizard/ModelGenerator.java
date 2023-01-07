@@ -326,7 +326,7 @@ class ModelGenerator {
     {
         List<ExecutableElement> methods = ElementFilter.methodsIn(
                 controller.getElements().getAllMembers(entity));
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         Map<String,TypeMirror> getAttrs = new HashMap<String, TypeMirror>();
         Map<String,TypeMirror> setAttrs = new HashMap<String, TypeMirror>();
         for (ExecutableElement method : methods) {

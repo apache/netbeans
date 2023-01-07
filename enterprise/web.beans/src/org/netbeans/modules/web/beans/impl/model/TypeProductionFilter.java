@@ -331,7 +331,7 @@ class TypeProductionFilter extends Filter<Element> {
     private Element myOriginalElement;
     
     
-    private static final Set<String> WRAPPERS = new HashSet<String>();
+    private static final Set<String> WRAPPERS = new HashSet<>();
     
     static {
         WRAPPERS.add(Boolean.class.getCanonicalName());

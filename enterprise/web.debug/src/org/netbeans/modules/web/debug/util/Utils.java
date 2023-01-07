@@ -55,7 +55,7 @@ public class Utils {
     private static final boolean LOG = err.isLoggable(Level.FINE);
     
     private static final Map<String, Reference<FileObject>> documentBaseByContextPath = new HashMap<String, Reference<FileObject>>();
-    private static final Set<String> relativePathsWithContext = new HashSet<String>();
+    private static final Set<String> relativePathsWithContext = new HashSet<>();
     
     public static Logger getEM () {
         return err;

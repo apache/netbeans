@@ -79,7 +79,7 @@ public class NewConfigFileWizardIterator implements WizardDescriptor.Asynchronou
 
         DataFolder dataFolder = DataFolder.findFolder(dir);
         DataObject dataTemplate = DataObject.find(template);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         if (jasmineWizardPanel != null
                 && jasmineWizardPanel.installJasmine()) {
             map.put("jasmine", "true"); // NOI18N

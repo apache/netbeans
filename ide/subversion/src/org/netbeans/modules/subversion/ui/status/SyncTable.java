@@ -316,7 +316,7 @@ class SyncTable implements MouseListener, ListSelectionListener, AncestorListene
 
     private Collection<File> getSelectedFiles () {
         SyncFileNode[] selectedNodes = getSelectedNodes();
-        Collection<File> files = new HashSet<File>(selectedNodes.length);
+        Collection<File> files = new HashSet<>(selectedNodes.length);
         for (SyncFileNode node : selectedNodes) {
             files.add(node.getFile());
         }

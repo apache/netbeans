@@ -37,7 +37,7 @@ import org.openide.util.WeakListeners;
 @DebuggerServiceRegistration(path="netbeans-JPDASession", types={SmartSteppingFilter.class})
 public class SmartSteppingFilterImpl implements SmartSteppingFilter {
 
-    private final HashSet<String> filter = new HashSet<String>();
+    private final HashSet<String> filter = new HashSet<>();
     private final PropertyChangeSupport pcs;
     {pcs = new PropertyChangeSupport (this);}
     private final Properties options = Properties.getDefault().
@@ -87,7 +87,7 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
      */
     @Override
     public void addExclusionPatterns (Set<String> patterns) {
-        Set<String> reallyNew = new HashSet<String>(patterns);
+        Set<String> reallyNew = new HashSet<>(patterns);
         reallyNew.removeAll (filter);
         if (reallyNew.size () < 1) return;
 

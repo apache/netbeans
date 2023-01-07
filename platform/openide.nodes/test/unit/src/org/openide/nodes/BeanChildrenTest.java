@@ -65,8 +65,8 @@ public class BeanChildrenTest extends NbTestCase {
         // Note that BeanContextSupport keeps a HashMap of children
         // so the order is not deterministic.
         assertEquals("correct subnodes",
-            new HashSet<String>(Arrays.asList(new String[] {"one", "two", "three"})),
-            new HashSet<String>(Arrays.asList(nodes2Names(c.getNodes()))));
+            new HashSet<>(Arrays.asList(new String[] {"one", "two", "three"})),
+            new HashSet<>(Arrays.asList(nodes2Names(c.getNodes()))));
     }
     
     public void testRemoveBeanRemovesChild() throws Exception {
@@ -74,7 +74,7 @@ public class BeanChildrenTest extends NbTestCase {
         final Children c = new BeanChildren(bc, new SimpleFactory());
         bc.remove("two");
         assertEquals("correct beans",
-            new HashSet<String>(Arrays.asList(new String[] {"one", "three"})),
+            new HashSet<>(Arrays.asList(new String[] {"one", "three"})),
             new HashSet<Object>(Arrays.asList(bc.toArray())));
         // Make sure we let the children thread run to completion.
         // Check the result in the reader.
@@ -89,8 +89,8 @@ public class BeanChildrenTest extends NbTestCase {
             }
         });
         assertEquals("correct subnodes",
-            new HashSet<String>(Arrays.asList(new String[] {"one", "three"})),
-            new HashSet<String>(Arrays.asList(nodes2Names(nodes))));
+            new HashSet<>(Arrays.asList(new String[] {"one", "three"})),
+            new HashSet<>(Arrays.asList(nodes2Names(nodes))));
     }
     
     // Cf. #7925.
@@ -108,7 +108,7 @@ public class BeanChildrenTest extends NbTestCase {
             }
         });
         assertEquals("correct beans",
-            new HashSet<String>(Arrays.asList(new String[] {"one", "three"})),
+            new HashSet<>(Arrays.asList(new String[] {"one", "three"})),
             new HashSet<Object>(Arrays.asList(bc.toArray())));
     }
     

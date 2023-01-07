@@ -450,7 +450,7 @@ public class EventTest extends CommonTestCase {
             List<ExecutableElement> methods = ElementFilter.methodsIn( children );
             
             assertEquals(5, methods.size());
-            Map<String, String> observer2Field = new HashMap<String, String>();
+            Map<String, String> observer2Field = new HashMap<>();
             for ( int i=0 ; i<5; i++){
                 int eventIndex = i+1;
                 String observer = null;
@@ -519,7 +519,7 @@ public class EventTest extends CommonTestCase {
             Name simpleName = method.getSimpleName();
             List<VariableElement> eventInjectionPoints = 
                 model.getEventInjectionPoints( method , (DeclaredType) mirror);
-            Set<String> fields = new HashSet<String>();
+            Set<String> fields = new HashSet<>();
             for (VariableElement variableElement : eventInjectionPoints) {
                 String name = variableElement.getSimpleName().toString();
                 fields.add( name );

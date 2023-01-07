@@ -83,7 +83,7 @@ public final class ProcessBuilder implements Callable<Process>, Lookup.Provider 
     private String workingDirectory;
 
     /**<i>GuardedBy("lock")</i>*/
-    private final List<String> arguments = new ArrayList<String>();
+    private final List<String> arguments = new ArrayList<>();
 
     /**<i>GuardedBy("lock")</i>*/
     private boolean redirectErrorStream;
@@ -230,8 +230,8 @@ public final class ProcessBuilder implements Callable<Process>, Lookup.Provider 
     public Process call() throws IOException {
         String currentExecutable;
         String currentWorkingDirectory;
-        List<String> currentArguments = new ArrayList<String>();
-        Map<String, String> currentVariables = new HashMap<String, String>();
+        List<String> currentArguments = new ArrayList<>();
+        Map<String, String> currentVariables = new HashMap<>();
         boolean currentRedirectErrorStream;
 
         synchronized (lock) {

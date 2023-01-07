@@ -163,7 +163,7 @@ public class NbModuleProjectGenerator {
                     EditableProperties props = new EditableProperties(true);
                     props.put(SingleModuleProperties.IS_AUTOLOAD, "true"); // NOI18N
                     SortedSet<String> packageList = new TreeSet<String>();
-                    Map<String,String> classPathExtensions = new HashMap<String, String>();
+                    Map<String,String> classPathExtensions = new HashMap<>();
                     for (File jar : jars) {
                         try {
                             String[] entry = ApisupportAntUtils.copyClassPathExtensionJar(projectDir, jar);
@@ -382,7 +382,7 @@ public class NbModuleProjectGenerator {
         props.put("nbplatform.active", platformID); // NOI18N
         NbPlatform plaf = NbPlatform.getPlatformByID(platformID);
         if (plaf != null && plaf.getHarnessVersion().compareTo(HarnessVersion.V65) > 0) {
-            List<String> clusterPath = new ArrayList<String>();
+            List<String> clusterPath = new ArrayList<>();
             File[] files = plaf.getDestDir().listFiles();
             for (File file : files) {
                 if (ClusterUtils.isValidCluster(file))

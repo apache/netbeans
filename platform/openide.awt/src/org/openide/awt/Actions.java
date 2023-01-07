@@ -533,7 +533,7 @@ public class Actions {
         String key, Action fallback, boolean surviveFocusChange,
         String displayName, String iconBase, boolean noIconInMenu
     ) {
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> map = new HashMap<>();
         map.put("key", key); // NOI18N
         map.put("surviveFocusChange", surviveFocusChange); // NOI18N
         map.put("fallback", fallback); // NOI18N
@@ -725,7 +725,7 @@ public class Actions {
         String key,
         String displayName, String iconBase, boolean noIconInMenu
     ) {
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> map = new HashMap<>();
         map.put("key", key); // NOI18N
         map.put("surviveFocusChange", surviveFocusChange); // NOI18N
         map.put("delegate", delegate); // NOI18N

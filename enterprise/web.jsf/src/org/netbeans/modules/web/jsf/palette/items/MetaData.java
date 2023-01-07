@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
  */
 public class MetaData implements ActiveEditorDrop, PaletteItem {
 
-    private HashMap<String, String> properties = new HashMap<String, String>();
+    private HashMap<String, String> properties = new HashMap<>();
 
     private JsfLibrariesSupport jsfLibrariesSupport;
 

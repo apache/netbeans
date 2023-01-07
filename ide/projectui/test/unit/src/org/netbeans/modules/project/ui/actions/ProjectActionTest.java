@@ -172,7 +172,7 @@ public class ProjectActionTest extends NbTestCase {
         
         private String[] ACTIONS = new String[] { COMMAND };
         
-        private List<String> invocations = new ArrayList<String>();
+        private List<String> invocations = new ArrayList<>();
         Boolean listenerSuccess;
         
         public String[] getSupportedActions() {

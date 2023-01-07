@@ -182,7 +182,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     public void applyValues(NetbeansActionMapping mapp) {
         StringTokenizer tok = new StringTokenizer(txtGoals.getText().trim());
-        List<String> lst = new ArrayList<String>();
+        List<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
@@ -191,7 +191,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         mapp.setProperties(ActionMappings.convertStringToActionProperties(epProperties.getText()));
 
         tok = new StringTokenizer(txtProfiles.getText().trim(), " ,");
-        lst = new ArrayList<String>();
+        lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
@@ -202,13 +202,13 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     public void applyValues(BeanRunConfig rc) {
         StringTokenizer tok = new StringTokenizer(txtGoals.getText().trim());
-        List<String> lst = new ArrayList<String>();
+        List<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
         rc.setGoals(lst.size() > 0 ? lst : Collections.singletonList("install")); //NOI18N
         tok = new StringTokenizer(txtProfiles.getText().trim());
-        lst = new ArrayList<String>();
+        lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }

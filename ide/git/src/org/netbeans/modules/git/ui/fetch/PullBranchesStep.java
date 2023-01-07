@@ -149,7 +149,7 @@ public class PullBranchesStep extends AbstractWizardPanel implements WizardDescr
 
     private void fillRemoteBranches (Map<String, GitBranch> branches, Map<String, GitBranch> localBranches) {
         List<BranchMapping> l = new ArrayList<BranchMapping>(branches.size());
-        Set<String> displayedBranches = new HashSet<String>(localBranches.size());
+        Set<String> displayedBranches = new HashSet<>(localBranches.size());
         for (GitBranch branch : localBranches.values()) {
             if (branch.isActive()) {
                 currentBranch = branch;

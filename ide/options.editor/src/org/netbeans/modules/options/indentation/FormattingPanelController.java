@@ -119,7 +119,7 @@ public final class FormattingPanelController extends OptionsPanelController {
             }
 
             // Find mimeTypes that do not have a customizer
-            Set<String> mimeTypes = new HashSet<String>(EditorSettings.getDefault().getAllMimeTypes());
+            Set<String> mimeTypes = new HashSet<>(EditorSettings.getDefault().getAllMimeTypes());
             mimeTypes.removeAll(selector.getMimeTypes());
 
             // and make sure that they do NOT override basic settings from All Languages
@@ -262,7 +262,7 @@ public final class FormattingPanelController extends OptionsPanelController {
         boolean isChanged = false;
         Preferences prefs = selector.getCustomizerPreferences(c);
         Preferences savedPrefs = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
-        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<String> hashSet = new HashSet<>();
         try {
             hashSet.addAll(Arrays.asList(prefs.keys()));
             hashSet.addAll(Arrays.asList(savedPrefs.keys()));

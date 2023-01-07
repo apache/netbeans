@@ -142,7 +142,7 @@ public class ModuleListTest extends TestBase {
     }
 
     private class ModuleListLogHandler extends Handler {
-        private Set<String> scannedDirs = Collections.synchronizedSet(new HashSet<String>(1000));
+        private Set<String> scannedDirs = Collections.synchronizedSet(new HashSet<>(1000));
         String error;
 
         @Override
@@ -212,13 +212,13 @@ public class ModuleListTest extends TestBase {
     }
 
     public void testFindModulesInSuite() throws Exception {
-        assertEquals("correct modules in suite1", new HashSet<File>(Arrays.asList(
+        assertEquals("correct modules in suite1", new HashSet<>(Arrays.asList(
             file(suite1, "action-project"),
             file(suite1, "support/lib-project")
-        )), new HashSet<File>(Arrays.asList(ModuleList.findModulesInSuite(suite1))));
-        assertEquals("correct modules in suite2", new HashSet<File>(Arrays.asList(
+        )), new HashSet<>(Arrays.asList(ModuleList.findModulesInSuite(suite1))));
+        assertEquals("correct modules in suite2", new HashSet<>(Arrays.asList(
             file(suite2, "misc-project")
-        )), new HashSet<File>(Arrays.asList(ModuleList.findModulesInSuite(suite2))));
+        )), new HashSet<>(Arrays.asList(ModuleList.findModulesInSuite(suite2))));
     }
 
 //    XXX: failing test, fix or delete (based on existing NB.org modules, better delete)

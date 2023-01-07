@@ -118,7 +118,7 @@ public class ModuleLogicalViewTest extends TestBase {
 //    }
     
     private static List<String> findKids(Children ch) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         Node[] kids = ch.getNodes(true);
         for (int i = 0; i < kids.length; i++) {
             l.add(kids[i].getName());

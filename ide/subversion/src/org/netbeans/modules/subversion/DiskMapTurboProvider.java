@@ -108,8 +108,8 @@ class DiskMapTurboProvider implements TurboProvider {
             
             int modifiedFiles = 0;
             int locallyNewFiles = 0;
-            Map<String, Integer> locallyNewFolders = new HashMap<String, Integer>();
-            Map<String, Integer> modifiedFolders = new HashMap<String, Integer>();
+            Map<String, Integer> locallyNewFolders = new HashMap<>();
+            Map<String, Integer> modifiedFolders = new HashMap<>();
 
             for (int i = 0; i < files.length; i++) {
                 File file = files[i];
@@ -384,9 +384,9 @@ class DiskMapTurboProvider implements TurboProvider {
         Set set = map != null ? map.keySet() : null;
 
         // all modified files
-        Set<File> conflictedSet = new HashSet<File>();
-        Set<File> newSet = new HashSet<File>();
-        Set<File> ignoredSet = new HashSet<File>();
+        Set<File> conflictedSet = new HashSet<>();
+        Set<File> newSet = new HashSet<>();
+        Set<File> ignoredSet = new HashSet<>();
         if(set != null) {
             for (Iterator i = set.iterator(); i.hasNext();) {
                 File file = (File) i.next();
@@ -458,7 +458,7 @@ class DiskMapTurboProvider implements TurboProvider {
     }
 
     private Map<File, FileInformation> readValue(DataInputStream dis, String dirPath) throws IOException {
-        Map<File, FileInformation> map = new HashMap<File, FileInformation>();
+        Map<File, FileInformation> map = new HashMap<>();
         int len = dis.readInt();
         while (len-- > 0) {
             int nameLen = dis.readInt();

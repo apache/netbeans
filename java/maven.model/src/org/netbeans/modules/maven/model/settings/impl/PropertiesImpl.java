@@ -62,7 +62,7 @@ public class PropertiesImpl extends SettingsComponentImpl implements Properties 
 
     @Override
     public Map<String, String> getProperties() {
-        Map<String, String> toRet = new HashMap<String, String>();
+        Map<String, String> toRet = new HashMap<>();
         List<SettingsComponent> chlds = getChildren();
         for (SettingsComponent pc : chlds) {
             Element el = pc.getPeer();

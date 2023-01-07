@@ -99,7 +99,7 @@ public class ListenerGenerator {
     private ClassTree generateInterfaces(WorkingCopy wc, TypeElement te, ClassTree ct, GenerationUtils gu) {
         ClassTree newClassTree = ct;
 
-        List<String> ifList = new ArrayList<String>();
+        List<String> ifList = new ArrayList<>();
         List<ExecutableElement> methods = new ArrayList<ExecutableElement>();
         
         if (isContext) {

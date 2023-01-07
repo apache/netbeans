@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
 public class ConfigurationParser {
 
     private static final String LOAD_EXTERNAL_DTD_FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-    private static final Map<String, String> NAMESPACES = new HashMap<String, String>();
+    private static final Map<String, String> NAMESPACES = new HashMap<>();
 
     static {
         NAMESPACES.put("ds", "urn:jboss:domain:datasources:2.0");

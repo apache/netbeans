@@ -44,7 +44,7 @@ final class PathElements {
     public PathElements(String name) {
         this.name = name;
         tokenizer = new StringTokenizer(name, DELIMITER);
-        tokens = new ArrayList<String>(10);
+        tokens = new ArrayList<>(10);
     }
 
     /**

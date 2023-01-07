@@ -109,7 +109,7 @@ public final class FormattingSettingsFromNbPreferences extends StorageFilter<Str
 
     private static final Logger LOG = Logger.getLogger(FormattingSettingsFromNbPreferences.class.getName());
     
-    private static final Map<String, String> affectedMimeTypes = new HashMap<String, String>();
+    private static final Map<String, String> affectedMimeTypes = new HashMap<>();
     static {
         affectedMimeTypes.put("text/x-java", "org.netbeans.api.java.source.CodeStyle"); //NOI18N
         affectedMimeTypes.put("text/x-ruby", "org.netbeans.modules.ruby.options.CodeStyle"); //NOI18N

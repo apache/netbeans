@@ -56,7 +56,7 @@ public class ElementDescriptorRules {
             ElementDescriptor.TH, ElementDescriptor.TD);
 
     //manually regexped from http://www.w3.org/TR/MathML/appendixl.html#index.elem
-    public static final Collection<String> MATHML_TAG_NAMES = new HashSet<String>(Arrays.asList(new String[]{
+    public static final Collection<String> MATHML_TAG_NAMES = new HashSet<>(Arrays.asList(new String[]{
         "abs", "and", "annotation", "annotation-xml", "apply", "approx", "arccos", "arccosh",
         "arccot", "arccoth", "arccsc", "arccsch", "arcsec", "arcsech", "arcsin", "arcsinh",
         "arctan", "arctanh", "arg", "bvar", "card", "cartesianproduct", "ceiling", "ci", "cn",
@@ -81,7 +81,7 @@ public class ElementDescriptorRules {
         "vector", "vectorproduct", "xor"}));//NOI18N
 
     //manually regexped from http://www.w3.org/TR/SVGTiny12/elementTable.html
-    public static final Collection<String> SVG_TAG_NAMES = new HashSet<String>(Arrays.asList(new String[]{
+    public static final Collection<String> SVG_TAG_NAMES = new HashSet<>(Arrays.asList(new String[]{
         "a", "animate", "animateColor", "animateMotion", "animateTransform", "animation", "audio",
         "circle", "defs", "desc", "discard", "ellipse", "font", "font-face", "font-face-src",
         "font-face-uri", "foreignObject", "g", "glyph", "handler", "hkern", "image", "line",

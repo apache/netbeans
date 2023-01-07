@@ -46,7 +46,7 @@ import org.openide.util.actions.SystemAction;
 public class GsfDataNode extends DataNode {
     private static final Logger LOG = Logger.getLogger(GsfDataNode.class.getName());
     
-    private static Map<String, Action[]> mimeTypeToActions = new HashMap<String, Action[]>();
+    private static Map<String, Action[]> mimeTypeToActions = new HashMap<>();
 
     public GsfDataNode(GsfDataObject basDataObject, Language language) {
         super(basDataObject, Children.LEAF);

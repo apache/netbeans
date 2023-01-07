@@ -139,7 +139,7 @@ public class ChooseArchetypePanel extends JPanel {
     }
 
     private void updateList() {        
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         String filter = textFilter.getText();
         List<Archetype> filtered = new ArrayList<Archetype>();
         for (Archetype a : archetypes) {

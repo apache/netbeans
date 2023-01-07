@@ -722,7 +722,7 @@ public final class EarProjectProperties {
                     List<ClassPathSupport.Item> oldContent = project.getClassPathSupport().itemsList(
                             ep.get( JAR_CONTENT_ADDITIONAL ), TAG_WEB_MODULE__ADDITIONAL_LIBRARIES);
                     List<ClassPathSupport.Item> l = new ArrayList<ClassPathSupport.Item>(oldContent);
-                    List<String> referencesToBeDestroyed = new ArrayList<String>();
+                    List<String> referencesToBeDestroyed = new ArrayList<>();
                     for (int i = 0; i < moduleProjects.length; i++) {
                         AntArtifact artifacts[] = AntArtifactQuery.findArtifactsByType(
                                 moduleProjects[i],

@@ -102,7 +102,7 @@ public abstract class BaseEEModuleImpl implements J2eeModuleImplementation2, Mod
     public FileObject[] getJavaSources() {
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] sourceGroup = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        List<FileObject> toRet = new ArrayList<FileObject>();
+        List<FileObject> toRet = new ArrayList<>();
         if (sourceGroup != null) {
             for (SourceGroup group : sourceGroup) {
                 toRet.add(group.getRootFolder());
@@ -284,7 +284,7 @@ public abstract class BaseEEModuleImpl implements J2eeModuleImplementation2, Mod
         private FileObject root;
         
         private ContentIterator(FileObject f) {
-            this.ch = new ArrayList<FileObject>();
+            this.ch = new ArrayList<>();
             ch.add(f);
             this.root = f;
         }

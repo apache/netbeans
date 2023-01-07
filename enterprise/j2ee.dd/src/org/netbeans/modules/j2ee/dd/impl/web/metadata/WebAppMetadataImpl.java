@@ -100,7 +100,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
     }
 
     public List<FileObject> getFragmentFiles() {
-        List<FileObject> res = new ArrayList<FileObject>();
+        List<FileObject> res = new ArrayList<>();
         for (FragmentRec fr : myRootToFragment.values()) {
             res.add(fr.source);
         }

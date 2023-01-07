@@ -135,7 +135,7 @@ public class MessageGeneratorTest extends TestBase {
         // added by both previous generators
         
         AssemblyDescriptor assemblyDescriptor = ejbJar.getSingleAssemblyDescriptor();
-        List<String> messageDestinationNames = new ArrayList<String>();
+        List<String> messageDestinationNames = new ArrayList<>();
         for (org.netbeans.modules.j2ee.dd.api.common.MessageDestination msgDest : assemblyDescriptor.getMessageDestination()) {
             messageDestinationNames.add(msgDest.getMessageDestinationName());
         }

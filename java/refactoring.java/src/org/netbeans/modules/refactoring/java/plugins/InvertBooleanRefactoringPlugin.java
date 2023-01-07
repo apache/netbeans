@@ -227,7 +227,7 @@ public class InvertBooleanRefactoringPlugin implements RefactoringPlugin { //ext
                    parameter.toPhase(Phase.RESOLVED);
 
                     final TreePath path = original.resolve(parameter);
-                    Map<String, String> arguments = new HashMap<String, String>();
+                    Map<String, String> arguments = new HashMap<>();
                     String scriptTemplate;
                     Tree leaf = path.getLeaf();
                     TypeElement parent = (TypeElement) parameter.getTrees().getElement(path.getParentPath());

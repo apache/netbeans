@@ -76,7 +76,7 @@ public class LayerUtils {
      */
     public static ClassPath findResourceCP(Project project) {
         Sources s = ProjectUtils.getSources(project);
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         for (String type : new String[] {JavaProjectConstants.SOURCES_TYPE_JAVA, JavaProjectConstants.SOURCES_TYPE_RESOURCES}) {
             for (SourceGroup group : s.getSourceGroups(type)) {
                 roots.add(group.getRootFolder());
@@ -106,7 +106,7 @@ public class LayerUtils {
                     return new URL[] {fo.toURL()};
                 }
             } else if (u.getProtocol().equals("nbresloc")) { // NOI18N
-                List<URL> urls = new ArrayList<URL>();
+                List<URL> urls = new ArrayList<>();
                 String path = u.getFile();
                 if (path.startsWith("/")) path = path.substring(1); // NOI18N
                 int idx = path.lastIndexOf('/');

@@ -398,7 +398,7 @@ public final class ProjectEar extends J2eeApplicationProvider
         private IT(ProjectEar pe, FileObject f) {
             J2eeModule mods[] = pe.getModules();
             // build filter
-            Set<String> filter = new HashSet<String>(mods.length);
+            Set<String> filter = new HashSet<>(mods.length);
             for (int i = 0; i < mods.length; i++) {
                 FileObject modArchive = null;
                 try {

@@ -149,7 +149,7 @@ public class FetchBranchesStep extends AbstractWizardPanel implements WizardDesc
 
     private void fillRemoteBranches (Map<String, GitBranch> branches, Map<String, GitBranch> localBranches) {
         List<BranchMapping> l = new ArrayList<BranchMapping>(branches.size());
-        Set<String> displayedBranches = new HashSet<String>(localBranches.size());
+        Set<String> displayedBranches = new HashSet<>(localBranches.size());
         for (GitBranch branch : branches.values()) {
             String branchName = remote.getRemoteName() + "/" + branch.getName();
             displayedBranches.add(branchName);

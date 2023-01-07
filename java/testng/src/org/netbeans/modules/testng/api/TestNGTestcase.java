@@ -35,7 +35,7 @@ public final class TestNGTestcase extends Testcase {
     private FileObject classFO = null;
     private boolean confMethod = false;
     private String parameters;
-    private List<String> values = new ArrayList<String>();
+    private List<String> values = new ArrayList<>();
     private final String testName;
     private String description;
 

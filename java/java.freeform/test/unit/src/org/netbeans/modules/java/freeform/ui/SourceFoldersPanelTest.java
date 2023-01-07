@@ -101,7 +101,7 @@ public class SourceFoldersPanelTest extends TestBase {
         
         model = ProjectModel.createEmptyModel(baseFolder, projectFolder, evaluator);
         
-        assertEquals("should reject invalid location", new HashSet<File>(Arrays.asList(invalidFile1, invalidFile2)),
+        assertEquals("should reject invalid location", new HashSet<>(Arrays.asList(invalidFile1, invalidFile2)),
                 SourceFoldersPanel.processRoots(model, new File[] {invalidFile1, invalidFile2}, false, true));
         
         //test isTests option:

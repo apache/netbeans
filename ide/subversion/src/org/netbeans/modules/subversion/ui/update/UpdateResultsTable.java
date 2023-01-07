@@ -351,7 +351,7 @@ class UpdateResultsTable implements MouseListener, ListSelectionListener, Ancest
     }
     
     private File[] getSelectedFiles(int[] selection) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for(int idx : selection) {
             int nodesIdx = sorter.modelIndex(idx);
             Node node = nodes[nodesIdx];

@@ -47,11 +47,11 @@ final class FileAssociationsModel extends MIMEResolver.UIHelpers {
     private static final String MIME_RESOLVERS_PATH = "Services/MIMEResolver";  //NOI18N
     private static final Logger LOGGER = Logger.getLogger(FileAssociationsModel.class.getName());
     /** Maps both system and user-defined extensions to MIME type. */
-    private HashMap<String, String> extensionToMimeAll = new HashMap<String, String>();
+    private HashMap<String, String> extensionToMimeAll = new HashMap<>();
     /** Maps system extensions to MIME type. */
-    private HashMap<String, String> extensionToMimeSystem = new HashMap<String, String>();
+    private HashMap<String, String> extensionToMimeSystem = new HashMap<>();
     /** Maps user-defined extensions to MIME type. */
-    private HashMap<String, String> extensionToMimeUser = new HashMap<String, String>();
+    private HashMap<String, String> extensionToMimeUser = new HashMap<>();
     /** Ordered set of all MIME types registered in system. */
     private TreeSet<String> mimeTypes = new TreeSet<String>();
     /** Maps MIME type to MimeItem object which holds display name. */
@@ -260,7 +260,7 @@ final class FileAssociationsModel extends MIMEResolver.UIHelpers {
             String mimeType = entry.getValue();
             Set<String> extensions = mimeToExtensions.get(mimeType);
             if (extensions == null) {
-                extensions = new HashSet<String>();
+                extensions = new HashSet<>();
                 mimeToExtensions.put(mimeType, extensions);
             }
             extensions.add(extension);

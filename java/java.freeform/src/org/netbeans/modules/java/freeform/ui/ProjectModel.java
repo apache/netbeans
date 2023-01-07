@@ -121,8 +121,8 @@ public class ProjectModel  {
     }
     
     private void resetState() {
-        addedSourceFolders = new HashSet<String>();
-        removedSourceFolders = new HashSet<String>();
+        addedSourceFolders = new HashSet<>();
+        removedSourceFolders = new HashSet<>();
     }
 
     /** Create empty project model. Useful for new project creation. */
@@ -494,7 +494,7 @@ public class ProjectModel  {
                 continue;
             }
             CompilationUnitKey cul = new CompilationUnitKey();
-            cul.locations = new ArrayList<String>();
+            cul.locations = new ArrayList<>();
             cul.locations.add(sf.location);
             cul.label = sf.label;
             // try to find corresponding JavaCompilationUnit
@@ -553,7 +553,7 @@ public class ProjectModel  {
             javaCompilationUnitsList.clear();
             for (JavaProjectGenerator.SourceFolder sf : sourceFolders) {
                 JavaProjectGenerator.JavaCompilationUnit cu = new JavaProjectGenerator.JavaCompilationUnit();
-                cu.packageRoots = new ArrayList<String>();
+                cu.packageRoots = new ArrayList<>();
                 cu.packageRoots.add(sf.location);
                 if (classpath != null) {
                     JavaProjectGenerator.JavaCompilationUnit.CP cp = new JavaProjectGenerator.JavaCompilationUnit.CP();
@@ -563,7 +563,7 @@ public class ProjectModel  {
                     cu.classpath.add(cp);
                 }
                 if (output != null) {
-                    cu.output = new ArrayList<String>();
+                    cu.output = new ArrayList<>();
                     cu.output.addAll(output);
                 }
                 cu.sourceLevel = sourceLevel;
@@ -572,7 +572,7 @@ public class ProjectModel  {
         } else {
             // This means that there are some compilation units which should be
             // merged into one which will be used for all sources.
-            List<String> packageRoots = new ArrayList<String>();
+            List<String> packageRoots = new ArrayList<>();
             // First list of source roots
             for (JavaProjectGenerator.SourceFolder sf : sourceFolders) {
                 packageRoots.add(sf.location);

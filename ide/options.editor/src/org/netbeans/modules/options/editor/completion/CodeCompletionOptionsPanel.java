@@ -81,7 +81,7 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
 
             // Languages combobox model
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            ArrayList<String> mimeTypes = new ArrayList<String>();
+            ArrayList<String> mimeTypes = new ArrayList<>();
             mimeTypes.addAll(selector.getMimeTypes());
             Collections.sort(mimeTypes, LanguagesComparator.INSTANCE);
 

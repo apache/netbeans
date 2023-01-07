@@ -55,7 +55,7 @@ public class DocumentIndexImpl implements DocumentIndex2, Runnable {
     private static final Convertor<String,Query> REMOVE_CONVERTOR = Convertors.newSourceNameToQueryConvertor();
     private static final Logger LOGGER = Logger.getLogger(DocumentIndexImpl.class.getName());
     
-    private final Set</*@GuardedBy("this")*/String> dirtyKeys = new HashSet<String>();
+    private final Set</*@GuardedBy("this")*/String> dirtyKeys = new HashSet<>();
     //@GuardedBy ("this")
     private final DocumentIndexCache cache;
     private final Index luceneIndex;

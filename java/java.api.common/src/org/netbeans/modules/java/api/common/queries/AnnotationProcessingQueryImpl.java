@@ -73,7 +73,7 @@ final class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryIm
         this.annotationProcessingEnabledInEditorProperty = annotationProcessingEnabledInEditorProperty;
         this.runAllAnnotationProcessorsProperty = runAllAnnotationProcessorsProperty;
         this.annotationProcessorsProperty = annotationProcessorsProperty;
-        this.properties = new HashSet<String>(Arrays.asList(annotationProcessingEnabledProperty, annotationProcessingEnabledInEditorProperty, runAllAnnotationProcessorsProperty, annotationProcessorsProperty, sourceOutputProperty, processorOptionsProperty));
+        this.properties = new HashSet<>(Arrays.asList(annotationProcessingEnabledProperty, annotationProcessingEnabledInEditorProperty, runAllAnnotationProcessorsProperty, annotationProcessorsProperty, sourceOutputProperty, processorOptionsProperty));
         this.sourceOutputProperty = sourceOutputProperty;
         this.processorOptionsProperty = processorOptionsProperty;
     }
@@ -103,7 +103,7 @@ final class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryIm
         }
     }
 
-    private static final Set<String> TRUE = new HashSet<String>(Arrays.asList("true", "on", "1"));
+    private static final Set<String> TRUE = new HashSet<>(Arrays.asList("true", "on", "1"));
     
     private final class ResultImpl implements Result, PropertyChangeListener, ChangeListener {
 

@@ -210,7 +210,7 @@ public class JavaWsdlMapper {
              return Collections.EMPTY_LIST;
         }
                 
-        final List<String> faults = new ArrayList<String>();
+        final List<String> faults = new ArrayList<>();
         try {    
             JavaSource js = JavaSource.forFileObject(implClass);
             if ( js== null){
@@ -315,7 +315,7 @@ public class JavaWsdlMapper {
     }
     
     public static List<String> getOperationNames(FileObject implClass) {
-        final List<String> operations = new ArrayList<String>();
+        final List<String> operations = new ArrayList<>();
         if (implClass == null) {
             return operations;
         }

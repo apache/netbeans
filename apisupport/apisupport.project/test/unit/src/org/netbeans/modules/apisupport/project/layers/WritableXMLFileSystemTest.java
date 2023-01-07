@@ -106,7 +106,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
 
     // check that nbres: and nbresloc: URL protocols work here too (with a classpath)
     public void testNBResLocURL() throws Exception {
-        Map<String, String> files = new HashMap<String, String>();
+        Map<String, String> files = new HashMap<>();
         files.put("org/test/x.txt", "stuff");
         files.put("org/test/resources/y.txt", "more stuff");
         Layer orig = new Layer("<file name='x' url='nbres:/org/test/x.txt'/><file name='y' url='nbresloc:/org/test/resources/y.txt'/>", files);
@@ -146,7 +146,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
         FileSystem fs = new Layer("<file name='x'><attr name='a' stringvalue='v'/> <attr name='b' urlvalue='file:/nothing'/></file> " +
                 "<folder name='y'> <file name='ignore'/><attr name='a' boolvalue='true'/><!--ignore--></folder>").read();
         FileObject x = fs.findResource("x");
-        assertEquals(new HashSet<String>(Arrays.asList("a", "b")), new HashSet<String>(Collections.list(x.getAttributes())));
+        assertEquals(new HashSet<>(Arrays.asList("a", "b")), new HashSet<>(Collections.list(x.getAttributes())));
         assertEquals("v", x.getAttribute("a"));
         assertEquals(new URL("file:/nothing"), x.getAttribute("b"));
         assertEquals(null, x.getAttribute("dummy"));
@@ -222,7 +222,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
                 "        </folder>\n" +
                 "    </folder>\n";
         assertEquals("correct XML written", xml, l.write());
-        Map<String,String> m = new HashMap<String,String>();
+        Map<String,String> m = new HashMap<>();
         m.put("Foo_java", "some stuff");
         assertEquals("one external file created in " + l, m, l.files());
         TestUtil.dump(f, "new stuff");
@@ -614,7 +614,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
         FileUtil.createData(fs.getRoot(), "f/b");
         fs.findResource("x").delete();
         assertEquals("expected things fired",
-                new HashSet<String>(Arrays.asList("a", "f/b", "x")),
+                new HashSet<>(Arrays.asList("a", "f/b", "x")),
                         fcl.changes());
     }
 
@@ -804,7 +804,7 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
          * Keys are relative file paths and values are file contents.
          */
         public Map<String,String> files() throws IOException {
-            Map<String,String> m = new HashMap<String,String>();
+            Map<String,String> m = new HashMap<>();
             traverse(m, folder, "");
             return m;
         }
@@ -833,13 +833,13 @@ public class WritableXMLFileSystemTest extends LayerTestBase {
     
     private static final class Listener implements FileChangeListener {
         
-        private Set<String> changes = new HashSet<String>();
+        private Set<String> changes = new HashSet<>();
         
         public Listener() {}
         
         public Set<String> changes() {
             Set<String> _changes = changes;
-            changes = new HashSet<String>();
+            changes = new HashSet<>();
             return _changes;
         }
         

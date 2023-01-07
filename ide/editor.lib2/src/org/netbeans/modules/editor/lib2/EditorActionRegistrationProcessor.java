@@ -50,7 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class EditorActionRegistrationProcessor extends LayerGeneratingProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             EditorActionRegistration.class.getCanonicalName(),
             EditorActionRegistrations.class.getCanonicalName()
         ));

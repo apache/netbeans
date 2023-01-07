@@ -367,7 +367,7 @@ public final class GrailsProjectConfig {
         boolean changed = false;
         synchronized (this) {
             oldValue = getLocalPlugins();
-            Map<String, String> prepared = new HashMap<String, String>();
+            Map<String, String> prepared = new HashMap<>();
             for (Map.Entry<String, File> entry : plugins.entrySet()) {
                 prepared.put(entry.getKey(), entry.getValue().getAbsolutePath());
 

@@ -6,7 +6,7 @@ import java.util.List;
 public class ConstructorsAreMethods {
     
     public static void main(String[] args) {
-        List<String> s = new ArrayList<String>();
+        List<String> s = new ArrayList<>();
     }
     
 }

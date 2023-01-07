@@ -315,8 +315,8 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                      instanceof AbsoluteLayoutSupport.AbsoluteLayoutConstraints)))
             return;
         
-        List<Integer> xlines = new ArrayList<Integer>();
-        List<Integer> ylines = new ArrayList<Integer>();
+        List<Integer> xlines = new ArrayList<>();
+        List<Integer> ylines = new ArrayList<>();
         
         Rectangle parentbound;
         Container con = components[0].getParent();

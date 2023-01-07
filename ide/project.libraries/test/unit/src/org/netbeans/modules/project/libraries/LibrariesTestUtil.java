@@ -383,7 +383,7 @@ public class LibrariesTestUtil {
 
     public static void assertLibEquals (LibraryImplementation[] libs, String[] names) {
         assertEquals("Libraries Equals (size)",names.length,libs.length);
-        Set<String> s = new HashSet<String>(Arrays.asList(names)); //Ordering is not important
+        Set<String> s = new HashSet<>(Arrays.asList(names)); //Ordering is not important
         for (LibraryImplementation lib : libs) {
             String name = lib.getName();
             assertTrue("Libraries Equals (unknown library "+name+")", s.remove(name));
@@ -491,7 +491,7 @@ public class LibrariesTestUtil {
             this.supportedTypes = new HashSet<>(Arrays.asList(TestLibraryTypeProvider.SUPPORTED_TYPES));
             this.support = new PropertyChangeSupport (this);
             this.contents = new HashMap<String,List<URI>>(2);
-            this.props = new HashMap<String, String>();
+            this.props = new HashMap<>();
         }
 
         public TestLibrary (String name) {

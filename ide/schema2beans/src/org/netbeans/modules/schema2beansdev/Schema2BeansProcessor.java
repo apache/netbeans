@@ -50,7 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class Schema2BeansProcessor extends AbstractProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
                 Schema2Beans.class.getCanonicalName(),
                 Multiple.class.getCanonicalName()));
     }

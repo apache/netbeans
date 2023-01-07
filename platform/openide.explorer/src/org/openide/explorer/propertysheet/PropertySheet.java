@@ -973,7 +973,7 @@ public class PropertySheet extends JPanel {
 
     private static final TabInfo getTabItems(Node n) {
         Map<String, List<PropertySet>> titlesToContents = new HashMap<String, List<PropertySet>>();
-        ArrayList<String> order = new ArrayList<String>();
+        ArrayList<String> order = new ArrayList<>();
 
         PropertySet[] sets = n.getPropertySets();
 

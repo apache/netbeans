@@ -42,7 +42,7 @@ public class KenaiConfiguration extends BugzillaConfiguration {
 
     public KenaiConfiguration(KenaiRepository repository, String product) {
         this.repository = repository;
-        ArrayList<String> l = new ArrayList<String>();
+        ArrayList<String> l = new ArrayList<>();
         l.add(product);
         this.products = Collections.unmodifiableList(l);
     }

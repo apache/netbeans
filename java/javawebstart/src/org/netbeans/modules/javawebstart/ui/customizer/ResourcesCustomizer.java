@@ -241,7 +241,7 @@ public final class ResourcesCustomizer extends javax.swing.JPanel {
             final Collection<? extends File> runtimeClassPath,
             final Collection<? extends File> lazyJars) {        
         final Map<File,Boolean> result = new LinkedHashMap<File, Boolean>();
-        final Set<File> lazy = new HashSet<File>(lazyJars);                       
+        final Set<File> lazy = new HashSet<>(lazyJars);                       
         for (final File p : runtimeClassPath) {
             result.put(p, lazy.contains(p));
         }

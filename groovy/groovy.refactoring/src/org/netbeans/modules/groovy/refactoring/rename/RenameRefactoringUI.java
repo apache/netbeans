@@ -50,7 +50,7 @@ public class RenameRefactoringUI implements RefactoringUI, RefactoringUIBypass {
 
     public RenameRefactoringUI(RefactoringElement element) {
         name = element.getName();
-        Collection<Object> lookupContent = new ArrayList<Object>();
+        Collection<Object> lookupContent = new ArrayList<>();
         lookupContent.add(element);
         refactoring = new RenameRefactoring(Lookups.fixed(lookupContent.toArray()));
         refactoring.getContext().add(UI.Constants.REQUEST_PREVIEW);

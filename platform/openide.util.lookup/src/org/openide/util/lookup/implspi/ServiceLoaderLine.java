@@ -79,7 +79,7 @@ final class ServiceLoaderLine implements Comparable<ServiceLoaderLine> {
         String line;
         String impl = null;
         int position = Integer.MAX_VALUE;
-        List<String> supersedes = new ArrayList<String>();
+        List<String> supersedes = new ArrayList<>();
         while ((line = br.readLine()) != null) {
             if (line.startsWith(POSITION)) {
                 position = Integer.parseInt(line.substring(POSITION.length()));

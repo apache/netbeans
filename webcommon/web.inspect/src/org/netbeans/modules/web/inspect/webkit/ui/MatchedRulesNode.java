@@ -70,7 +70,7 @@ public class MatchedRulesNode extends AbstractNode {
      */
     private void initChildren() {
         Children.Array children = (Children.Array)getChildren();
-        List<String> properties = new ArrayList<String>();
+        List<String> properties = new ArrayList<>();
         List<MatchedRuleNode> nodes = new ArrayList<MatchedRuleNode>();
         for (Rule rule : matchedStyles.getMatchedRules()) {
             if (Utilities.showInCSSStyles(rule)) {
@@ -124,7 +124,7 @@ public class MatchedRulesNode extends AbstractNode {
         RuleInfo ruleInfo = new RuleInfo();
         ruleInfo.fillMetaSourceInfo(rule, project);
         List<org.netbeans.modules.web.webkit.debugging.api.css.Property> ruleProperties = rule.getStyle().getProperties();
-        List<String> active = new ArrayList<String>(); // Names of active properties in this rule
+        List<String> active = new ArrayList<>(); // Names of active properties in this rule
         for (int i=ruleProperties.size()-1; i>=0; i--) {
             org.netbeans.modules.web.webkit.debugging.api.css.Property property = ruleProperties.get(i);
             String name = property.getName();

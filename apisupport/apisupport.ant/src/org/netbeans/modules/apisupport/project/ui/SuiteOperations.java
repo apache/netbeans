@@ -189,7 +189,7 @@ public final class SuiteOperations implements DeleteOperationImplementation,
     }
 
     public List<FileObject> getMetadataFiles() {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         addFile(GeneratedFilesHelper.BUILD_XML_PATH, files);
         addFile("nbproject", files); // NOI18N
         addFile("master.jnlp", files);    // NOI18N
@@ -198,7 +198,7 @@ public final class SuiteOperations implements DeleteOperationImplementation,
     }
     
     public List<FileObject> getDataFiles() {
-        List<FileObject> files = new ArrayList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
         addFile(suite.getEvaluator().getProperty(SuiteBrandingModel.BRANDING_DIR_PROPERTY), files);
         return files;
     }

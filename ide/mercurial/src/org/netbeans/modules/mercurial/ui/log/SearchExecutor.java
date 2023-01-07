@@ -93,7 +93,7 @@ class SearchExecutor extends HgProgressSupport {
             rootFile = master.getRoots()[0];
         }
         root = rootFile;
-        files = new HashSet<File>(Arrays.asList(master.getRoots()));
+        files = new HashSet<>(Arrays.asList(master.getRoots()));
 
     }    
         
@@ -202,7 +202,7 @@ class SearchExecutor extends HgProgressSupport {
      * @return 
      */
     private Set<String> getBranches (HgLogMessage logMessage) {
-        Set<String> headOfBranches = new HashSet<String>(2);
+        Set<String> headOfBranches = new HashSet<>(2);
         for (HgBranch b : branches) {
             if (b.getRevisionInfo().getCSetShortID().equals(logMessage.getCSetShortID())) {
                 headOfBranches.add(b.getName());

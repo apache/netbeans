@@ -38,7 +38,7 @@ import org.openide.util.Parameters;
  */
 final class MergeAction extends NbAction implements PropertyChangeListener {
     private NbAction[] actions;
-    private Map<String, Object> knownValues = new HashMap<String, Object>();
+    private Map<String, Object> knownValues = new HashMap<>();
     private Action delegateAction;
     private volatile boolean enabled;
     final boolean allowOnlyOne;
@@ -151,7 +151,7 @@ final class MergeAction extends NbAction implements PropertyChangeListener {
     }
 
     private void sievePropertyChanges() {
-        Map<String, Object> nue = new HashMap<String, Object>();
+        Map<String, Object> nue = new HashMap<>();
         for (Map.Entry<String, Object> entry : knownValues.entrySet()) {
             String key = entry.getKey();
             Object expected = entry.getValue();

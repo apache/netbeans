@@ -225,7 +225,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             }
 
             if (data == null) {
-                data = new HashMap<String,String>();
+                data = new HashMap<>();
             }
 
             data.put(relative, content);

@@ -90,7 +90,7 @@ public class DiffSidebarManager implements PreferenceChangeListener, PropertyCha
         // pushing the change ... we may as well listen for changes in versioning manager
         Set<FileObject> fileObjects = null;
         if (proxies != null) {
-            fileObjects = new HashSet<FileObject>(proxies.size());
+            fileObjects = new HashSet<>(proxies.size());
             for (VCSFileProxy file : proxies) {
                 fileObjects.add(file.toFileObject());
             }

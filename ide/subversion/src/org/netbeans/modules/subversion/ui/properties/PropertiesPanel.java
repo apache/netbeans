@@ -206,7 +206,7 @@ public class PropertiesPanel extends JPanel implements DocumentListener,
     }
 
     void setRecursiveProperties (Collection<String> propNames) {
-        recursiveProperties = new HashSet<String>(propNames);
+        recursiveProperties = new HashSet<>(propNames);
     }
 
     void setForDirectory(boolean forDirectory) {

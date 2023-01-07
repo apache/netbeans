@@ -117,7 +117,7 @@ public class OptionsPanel extends JPanel {
     private final HashMap<String, JTabbedPane> categoryid2tabbedpane = new HashMap<String, JTabbedPane>();
     private final HashMap<String, ArrayList<String>> categoryid2words = new HashMap<String, ArrayList<String>>();
     private HashMap<String, HashMap<Integer, TabInfo>> categoryid2tabs = new HashMap<String, HashMap<Integer, TabInfo>>();
-    private final ArrayList<String> disabledCategories = new ArrayList<String>();
+    private final ArrayList<String> disabledCategories = new ArrayList<>();
 
     private Map<String, CategoryButton> buttons = new LinkedHashMap<String, CategoryButton>();    
     private final boolean isMac = UIManager.getLookAndFeel ().getID ().equals ("Aqua");
@@ -475,7 +475,7 @@ public class OptionsPanel extends JPanel {
         JTabbedPane pane = categoryid2tabbedpane.get(location);
         int tabIndex = pane == null ? -1 : pane.indexOfTab(tabTitle);
 
-        Set<String> keywords = new HashSet<String>();
+        Set<String> keywords = new HashSet<>();
 	keywords.add(location.toUpperCase());
         keywords.add(tabTitle.toUpperCase());
 	Enumeration<String> attributes = keywordsFO.getAttributes();
@@ -489,10 +489,10 @@ public class OptionsPanel extends JPanel {
 
         ArrayList<String> words = categoryid2words.get(location);
         if (words == null) {
-            words = new ArrayList<String>();
+            words = new ArrayList<>();
         }
 
-        Set<String> newWords = new HashSet<String>();
+        Set<String> newWords = new HashSet<>();
         for (String keyword : keywords) {
             if (!words.contains(keyword)) {
                 newWords.add(keyword);
@@ -540,7 +540,7 @@ public class OptionsPanel extends JPanel {
         private ArrayList<String> words;
 
         public TabInfo() {
-            this.words = new ArrayList<String>();
+            this.words = new ArrayList<>();
         }
 
         public ArrayList<String> getWords() {
@@ -626,7 +626,7 @@ public class OptionsPanel extends JPanel {
         }
 
 	private ArrayList<String> getAllMatchedKeywords(ArrayList<String> keywords, Collection<String> stWords) {
-	    ArrayList<String> allMatched = new ArrayList<String>();
+	    ArrayList<String> allMatched = new ArrayList<>();
 	    Iterator<String> e = stWords.iterator();
             while (e.hasNext()) {
 		allMatched.addAll(getMatchedKeywords(keywords, e.next(), allMatched));
@@ -635,7 +635,7 @@ public class OptionsPanel extends JPanel {
 	}
 
 	private ArrayList<String> getMatchedKeywords(ArrayList<String> keywords, String stWord, ArrayList<String> allMatched) {
-	    ArrayList<String> matched = new ArrayList<String>();
+	    ArrayList<String> matched = new ArrayList<>();
 	    Iterator<String> e = keywords.iterator();
             while (e.hasNext()) {
 		String next = e.next();

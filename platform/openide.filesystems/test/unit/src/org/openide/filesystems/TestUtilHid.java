@@ -287,8 +287,8 @@ public class TestUtilHid {
     }
     
     public static class Resource extends ResourceElement {
-        private Map<String, String> attributeTypes = new HashMap<String, String>();
-        private Map<String, String> attributeContents = new HashMap<String, String>();
+        private Map<String, String> attributeTypes = new HashMap<>();
+        private Map<String, String> attributeContents = new HashMap<>();
         private CharSequence fileContents = null;
         private URL contentURL = null;
         private boolean forceFolder;

@@ -112,7 +112,7 @@ public class TransientRepositoriesTest extends NbTestCase {
     // XXX test mirrors; current code mistakenly suppresses <name> of a mirrored repo when mirrored 1-1
 
     private void assertRepos(String... expected) {
-        List<String> actual = new ArrayList<String>();
+        List<String> actual = new ArrayList<>();
         for (RepositoryInfo info : RepositoryPreferences.getInstance().getRepositoryInfos()) {
             if (info.isLocal()) {
                 continue;

@@ -94,7 +94,7 @@ public class ManualArrayCopy {
             if (used[0]) return null;
         }
         
-        while (MatcherUtilities.matches(ctx, base, "$oarr[$innerIndex]", innerVariables, new HashMap<String, Collection<? extends TreePath>>(), new HashMap<String, String>())) {
+        while (MatcherUtilities.matches(ctx, base, "$oarr[$innerIndex]", innerVariables, new HashMap<String, Collection<? extends TreePath>>(), new HashMap<>())) {
             base = innerVariables.get("$oarr");
             
         }

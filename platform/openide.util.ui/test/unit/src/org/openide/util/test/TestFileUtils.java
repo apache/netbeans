@@ -133,7 +133,7 @@ public class TestFileUtils {
      */
     public static void writeZipFile(OutputStream os, Map<String,byte[]> entries) throws IOException {
         ZipOutputStream zos = new ZipOutputStream(os);
-        Set<String> parents = new HashSet<String>();
+        Set<String> parents = new HashSet<>();
         if (entries.isEmpty()) {
             entries = Collections.singletonMap("PLACEHOLDER", new byte[0]);
         }

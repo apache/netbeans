@@ -54,7 +54,7 @@ abstract class AbstractEntryWithSources extends AbstractEntry {
     }
     
     protected Set<String> computePublicClassNamesInMainModule() throws IOException {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         File srcF = new File(getSourceLocation(), src);
         for (ManifestManager.PackageExport p : getPublicPackages()) {
             String pkg = p.getPackage();

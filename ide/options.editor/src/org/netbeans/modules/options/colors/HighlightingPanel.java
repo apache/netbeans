@@ -61,7 +61,7 @@ public class HighlightingPanel extends JPanel implements ActionListener, ItemLis
     /** cache Map (String (profile name) > List (AttributeSet)). */
     private Map<String, List<AttributeSet>> profileToCategories = new HashMap<String, List<AttributeSet>>();
     /** Set (String (profile name)) of changed profile names. */
-    private Set<String>         toBeSaved = new HashSet<String>();
+    private Set<String>         toBeSaved = new HashSet<>();
     private boolean             changed = false;
 
     
@@ -249,7 +249,7 @@ public class HighlightingPanel extends JPanel implements ActionListener, ItemLis
     }
     
     public void cancel () {
-        toBeSaved = new HashSet<String>();
+        toBeSaved = new HashSet<>();
         profileToCategories = new HashMap<String, List<AttributeSet>>();        
         changed = false;
     }
@@ -265,7 +265,7 @@ public class HighlightingPanel extends JPanel implements ActionListener, ItemLis
             }
             colorModel.setHighlightings(profile, cat);
         }
-        toBeSaved = new HashSet<String>();
+        toBeSaved = new HashSet<>();
         profileToCategories = new HashMap<String, List<AttributeSet>>();
         changed = false;
     }

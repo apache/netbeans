@@ -60,7 +60,7 @@ public class DefaultAWTBridgeTest extends NbTestCase {
     private static List<String> popupMenu(Action a) {
         ActionPresenterProvider app = new DefaultAWTBridge();
         Component[] comps = app.convertComponents(app.createPopupPresenter(a));
-        List<String> r = new ArrayList<String>();
+        List<String> r = new ArrayList<>();
         for (Component comp : comps) {
             JMenuItem mi = (JMenuItem) comp;
             r.add(mi.getText() + (mi.isEnabled() ? "" : "[disabled]"));

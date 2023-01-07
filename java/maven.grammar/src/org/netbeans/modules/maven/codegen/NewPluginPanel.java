@@ -123,7 +123,7 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
     }
 
     public List<String> getGoals () {
-        List<String> goals = new ArrayList<String>();
+        List<String> goals = new ArrayList<>();
         Enumeration<GoalEntry> e  = listModel.elements();
         GoalEntry ge;
         while (e.hasMoreElements()) {

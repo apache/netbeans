@@ -115,7 +115,7 @@ public class WLTrustHandler implements WebLogicTrustHandler {
             return Collections.emptyMap();
         }
 
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         result.put("weblogic.security.TrustKeyStore", "CustomTrust"); // NOI18N
         result.put("weblogic.security.CustomTrustKeyStoreType", "JKS"); // NOI18N
         result.put("weblogic.security.CustomTrustKeyStoreFileName", file.getAbsolutePath()); // NOI18N

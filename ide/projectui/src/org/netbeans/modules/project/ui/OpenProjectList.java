@@ -191,7 +191,7 @@ public final class OpenProjectList {
         };
         pchSupport = new PropertyChangeSupport( this );
         recentProjects = new RecentProjectList(10); // #47134
-        recentTemplates = new ArrayList<String>();
+        recentTemplates = new ArrayList<>();
         projectGroupSupport = new ArrayList<ProjectGroupChangeListener>();
     }
     
@@ -542,7 +542,7 @@ public final class OpenProjectList {
 
         private final RequestProcessor.Task resChangedTask = Hacks.RP.create(new Runnable() {
                 public @Override void run() {
-                    Set<FileObject> lazyPDirs = new HashSet<FileObject>();
+                    Set<FileObject> lazyPDirs = new HashSet<>();
                     for (FileObject fileObject : currentFiles.allInstances()) {
                         Project p = FileOwnerQuery.getOwner(fileObject);
                         if (p != null) {
@@ -1446,8 +1446,8 @@ public final class OpenProjectList {
   
     private static void saveProjectList( List<UnloadedProjectInformation> projects ) {
         assert MUTEX.isWriteAccess();
-        List<URL> URLs = new ArrayList<URL>();
-        List<String> names = new ArrayList<String>();
+        List<URL> URLs = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
         for (UnloadedProjectInformation p : projects) {
             names.add(p.getDisplayName());
@@ -1476,7 +1476,7 @@ public final class OpenProjectList {
         PrivilegedTemplates pt = priv != null ? priv : project != null ? project.getLookup().lookup( PrivilegedTemplates.class ) : null;
         String ptNames[] = pt == null ? null : pt.getPrivilegedTemplates();        
         final ArrayList<String> privilegedTemplates = new ArrayList<String>( Arrays.asList( pt == null ? new String[0]: ptNames ) );
-        final ArrayList<String> toRemove = new ArrayList<String>();
+        final ArrayList<String> toRemove = new ArrayList<>();
         if (priv == null) {
             // when the privileged templates are part of the active lookup,
             // do not mix them with the recent templates, but use only the privileged ones.

@@ -43,7 +43,7 @@ import org.openide.filesystems.FileObject;
  */
 public class RuleInfo {
     /** Names of properties that are overridden by other rules. */
-    private final Set<String> overridenProperties = new HashSet<String>();
+    private final Set<String> overridenProperties = new HashSet<>();
     /**
      * Determines whether the rules matches the selected element or whether
      * it matches some parent of the selected element (i.e., is inherited).

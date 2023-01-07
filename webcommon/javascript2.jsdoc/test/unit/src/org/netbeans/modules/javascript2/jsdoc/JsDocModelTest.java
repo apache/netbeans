@@ -454,7 +454,7 @@ public class JsDocModelTest extends JsDocumentationTestBase {
     private static class FakeJsDocElement implements JsDocElement {
 
         private final JsDocElementType type;
-        private Map<String, String> properties = new HashMap<String, String>();
+        private Map<String, String> properties = new HashMap<>();
 
         public FakeJsDocElement(JsDocElementType type) {
             assertNotNull(type);

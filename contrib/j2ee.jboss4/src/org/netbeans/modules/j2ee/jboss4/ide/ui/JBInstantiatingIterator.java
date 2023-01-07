@@ -133,7 +133,7 @@ public class JBInstantiatingIterator implements WizardDescriptor.InstantiatingIt
         url += "&"+ installLocation;                                        // NOI18N
       
         try {
-            Map<String, String> initialProperties = new HashMap<String, String>();
+            Map<String, String> initialProperties = new HashMap<>();
             initialProperties.put(JBPluginProperties.PROPERTY_SERVER, server);
             initialProperties.put(JBPluginProperties.PROPERTY_DEPLOY_DIR, deployDir);
             initialProperties.put(JBPluginProperties.PROPERTY_SERVER_DIR, serverPath);

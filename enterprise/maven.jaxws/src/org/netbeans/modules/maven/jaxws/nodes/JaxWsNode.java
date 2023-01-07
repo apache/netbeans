@@ -617,7 +617,7 @@ public class JaxWsNode extends AbstractNode implements ConfigureHandlerCookie {
     @Override
     public void configureHandler() {
         FileObject implBeanFo = getImplBean();
-        List<String> handlerClasses = new ArrayList<String>();
+        List<String> handlerClasses = new ArrayList<>();
         FileObject handlerFO = null;
         HandlerChains handlerChains = null;
         //obtain the handler config file, if any from annotation in implbean

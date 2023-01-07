@@ -159,7 +159,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         assertSame(defaultCatalog, schema.getParent());
 
         Collection<Table> tables = schema.getTables();
-        assertNames(new HashSet<String>(Arrays.asList("foo", "bar", "groucho", "chico")), tables);
+        assertNames(new HashSet<>(Arrays.asList("foo", "bar", "groucho", "chico")), tables);
         Table barTable = schema.getTable("bar");
         assertTrue(tables.contains(barTable));
         assertSame(schema, barTable.getParent());
@@ -186,7 +186,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
     public void testSchemaRefresh() throws Exception {
         Schema schema = metadata.getDefaultSchema();
         Collection<Table> tables = schema.getTables();
-        assertNames(new HashSet<String>(Arrays.asList("foo", "bar", "groucho", "chico")), tables);
+        assertNames(new HashSet<>(Arrays.asList("foo", "bar", "groucho", "chico")), tables);
 
         stmt.executeUpdate("CREATE TABLE testSchemaRefresh ("
                 + "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, "
@@ -195,7 +195,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         schema.refresh();
 
         tables = schema.getTables();
-        assertNames(new HashSet<String>(Arrays.asList("foo", "bar", "groucho", "chico", "testSchemaRefresh")), tables);
+        assertNames(new HashSet<>(Arrays.asList("foo", "bar", "groucho", "chico", "testSchemaRefresh")), tables);
 
     }
 
@@ -203,7 +203,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         Schema schema = metadata.getDefaultSchema();
         Table table = schema.getTable("groucho");
         Collection<Index> indexes = table.getIndexes();
-        assertNames(new HashSet<String>(Arrays.asList("groucho_index", "PRIMARY")), indexes);
+        assertNames(new HashSet<>(Arrays.asList("groucho_index", "PRIMARY")), indexes);
 
         Index index = table.getIndex("groucho_index");
         assertEquals(index.getParent(), table);
@@ -211,7 +211,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         assertEquals(IndexType.OTHER, index.getIndexType());
         Collection<IndexColumn> columns = index.getColumns();
         assertEquals(1, columns.size());
-        assertNames(new HashSet<String>(Arrays.asList("id2")), columns);
+        assertNames(new HashSet<>(Arrays.asList("id2")), columns);
         IndexColumn col = index.getColumn("id2");
         assertNotNull(col);
         assertEquals(index, col.getParent());
@@ -224,7 +224,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         assertEquals(IndexType.OTHER, index.getIndexType());
         columns = index.getColumns();
         assertEquals(2, columns.size());
-        assertNames(new HashSet<String>(Arrays.asList("id2", "id")), columns);
+        assertNames(new HashSet<>(Arrays.asList("id2", "id")), columns);
         col = index.getColumn("id2");
         assertNotNull(col);
         assertEquals(index, col.getParent());
@@ -239,13 +239,13 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
 
         table = schema.getTable("bar");
         indexes = table.getIndexes();
-        assertNames(new HashSet<String>(Arrays.asList("bar_name_index", "bar_foo_index", "PRIMARY")), indexes);
+        assertNames(new HashSet<>(Arrays.asList("bar_name_index", "bar_foo_index", "PRIMARY")), indexes);
 
         index = table.getIndex("bar_name_index");
         assertEquals(index.getParent(), table);
         assertFalse(index.isUnique());
         columns = index.getColumns();
-        assertNames(new HashSet<String>(Arrays.asList("bar_name", "bar_digit")), columns);
+        assertNames(new HashSet<>(Arrays.asList("bar_name", "bar_digit")), columns);
         col = index.getColumn("bar_name");
         assertEquals(index, col.getParent());
         assertEquals(Ordering.ASCENDING, col.getOrdering());
@@ -258,18 +258,18 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         Table table = schema.getTable("chico");
 
         Collection<ForeignKey> fkeys = table.getForeignKeys();
-        assertNames(new HashSet<String>(Arrays.asList("groucho_fk", "foo_fk")), fkeys);
+        assertNames(new HashSet<>(Arrays.asList("groucho_fk", "foo_fk")), fkeys);
 
         for (ForeignKey key : fkeys) {
             Collection<ForeignKeyColumn> cols = key.getColumns();
 
             if ("groucho_fk".equals(key.getName())) {
-                assertNames(new HashSet<String>(Arrays.asList("groucho_id2", "groucho_id")), cols);
+                assertNames(new HashSet<>(Arrays.asList("groucho_id2", "groucho_id")), cols);
                 Table referredTable = schema.getTable("groucho");
                 checkForeignKeyColumn(key, referredTable, "groucho_id2", "id2", 1);
                 checkForeignKeyColumn(key, referredTable, "groucho_id", "id", 2);
             } else {
-                assertNames(new HashSet<String>(Arrays.asList("foo_id")), cols);
+                assertNames(new HashSet<>(Arrays.asList("foo_id")), cols);
                 checkForeignKeyColumn(key, schema.getTable("foo"), "foo_id", "id", 1);
             }
         }
@@ -320,7 +320,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         Schema schema = metadata.getDefaultSchema();
 
         Collection<View> views = schema.getViews();
-        assertNames(new HashSet<String>(Arrays.asList("barview")), views);
+        assertNames(new HashSet<>(Arrays.asList("barview")), views);
         View barView = schema.getView("barview");
         assertTrue(views.contains(barView));
         assertSame(schema, barView.getParent());

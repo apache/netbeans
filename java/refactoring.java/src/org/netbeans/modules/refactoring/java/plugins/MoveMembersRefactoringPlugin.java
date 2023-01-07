@@ -336,7 +336,7 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
 
     @SuppressWarnings("CollectionContainsUrl")
     private Problem checkProjectDeps(FileObject sourceFile, FileObject targetFile) {
-        Set<FileObject> sourceRoots = new HashSet<FileObject>();
+        Set<FileObject> sourceRoots = new HashSet<>();
         ClassPath cp = ClassPath.getClassPath(sourceFile, ClassPath.SOURCE);
         if (cp != null) {
             FileObject root = cp.findOwnerRoot(sourceFile);

@@ -117,7 +117,7 @@ public abstract class CreateClassFix extends ModificationResultBasedFix implemen
         boolean removeDefaultConstructor = (kind == ElementKind.INTERFACE) || (kind == ElementKind.ANNOTATION_TYPE);
         
         if (argumentNames != null) {
-            List<VariableTree>         argTypes = new ArrayList<VariableTree>();
+            List<VariableTree>         argTypes = new ArrayList<>();
             Iterator<TypeMirrorHandle> typeIt   = argumentTypes.iterator();
             Iterator<String>           nameIt   = argumentNames.iterator();
             
@@ -305,7 +305,7 @@ public abstract class CreateClassFix extends ModificationResultBasedFix implemen
                     TreeMaker make = working.getTreeMaker();
                     List<Tree> members = new ArrayList<>();
                     if (argumentNames != null) {
-                        List<VariableTree>         argTypes = new ArrayList<VariableTree>();
+                        List<VariableTree>         argTypes = new ArrayList<>();
                         Iterator<TypeMirrorHandle> typeIt   = argumentTypes.iterator();
                         Iterator<String>           nameIt   = argumentNames.iterator();
                         while (typeIt.hasNext() && nameIt.hasNext()) {

@@ -351,7 +351,7 @@ public class RepositoryRegistry {
         if (keys == null || keys.length == 0) {
             return new String[0];
         }
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         for (String key : keys) {
             if (key.startsWith(prefix)) {
                 ret.add(key);
@@ -432,7 +432,7 @@ public class RepositoryRegistry {
         if (keys == null || keys.length == 0) {
             return new String[0];
         }
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         for (String key : keys) {
             if (key.startsWith(repoId)) {
                 ret.add(key.substring(repoId.length()));

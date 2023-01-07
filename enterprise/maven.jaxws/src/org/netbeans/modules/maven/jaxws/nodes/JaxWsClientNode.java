@@ -364,7 +364,7 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, Refresh
     @Override
     public void configureHandler() {
         Project project = FileOwnerQuery.getOwner(wsdlFileObject);
-        ArrayList<String> handlerClasses = new ArrayList<String>();
+        ArrayList<String> handlerClasses = new ArrayList<>();
         BindingsModel bindingsModel = getBindingsModel();
         if(bindingsModel != null){  //if there is an existing bindings file, load it
             GlobalBindings gb = bindingsModel.getGlobalBindings();

@@ -327,7 +327,7 @@ public class JPAEditorUtil {
             ErrorManager.getDefault().log(ErrorManager.INFORMATIONAL, "The " + datasourceName + " was not found."); // NOI18N
             return null;
         }
-        props = new HashMap<String,String>();
+        props = new HashMap<>();
         props.put(JDBCURLKEY,datasource.getUrl());
         props.put(JDBCUSERKEY,datasource.getUsername());
         props.put(JDBCDRIVERKEY, datasource.getDriverClassName());

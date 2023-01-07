@@ -67,7 +67,7 @@ public class Components extends HttpServlet {
         desires.put("nb-visualweb", Arrays.asList("glassfish"));
         
         final Map<String, String> comments =
-                new HashMap<String, String>();
+                new HashMap<>();
         comments.put("jdk", "WTF!T!&!&");
         
         try {
@@ -80,7 +80,7 @@ public class Components extends HttpServlet {
             final List<Group> groups = registry.getGroups();
             
             final Map<Integer, Integer> productMapping =
-                    new HashMap<Integer, Integer>();
+                    new HashMap<>();
             
             final List<String> productUids =
                     new LinkedList<String>();

@@ -94,10 +94,10 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
     private int numConflicts;
     private int numUnresolvedConflicts;
     private int currentConflictPos;
-    private final List<Integer> resolvedLeftConflictsLineNumbers = new ArrayList<Integer>();
-    private final List<Integer> resolvedRightConflictsLineNumbers = new ArrayList<Integer>();
-    private final List<Integer> resolvedLeftRightConflictsLineNumbers = new ArrayList<Integer>();
-    private final List<Integer> resolvedRightLeftConflictsLineNumbers = new ArrayList<Integer>();
+    private final List<Integer> resolvedLeftConflictsLineNumbers = new ArrayList<>();
+    private final List<Integer> resolvedRightConflictsLineNumbers = new ArrayList<>();
+    private final List<Integer> resolvedLeftRightConflictsLineNumbers = new ArrayList<>();
+    private final List<Integer> resolvedRightLeftConflictsLineNumbers = new ArrayList<>();
 
     private ArrayList<ActionListener> controlListeners = new ArrayList<ActionListener>();
     

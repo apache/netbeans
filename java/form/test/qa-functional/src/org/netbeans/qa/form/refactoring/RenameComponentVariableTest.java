@@ -91,7 +91,7 @@ public class RenameComponentVariableTest extends ExtJellyTestCase {
         openFile(JAVA_FILE_NAME);
         FormDesignerOperator designer = new FormDesignerOperator(JAVA_FILE_NAME);
         
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
 
         // local variable in my own method with same name
         lines.add("JButton jButton2 = jButton1;"); // NOI18N

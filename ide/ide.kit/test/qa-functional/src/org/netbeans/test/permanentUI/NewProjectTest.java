@@ -183,7 +183,7 @@ public class NewProjectTest extends PermUITestCase {
         wait(2000);
         npwo.selectCategory(categoryName);
         JListOperator jlo = npwo.lstProjects();
-        ArrayList<String> actualProjects = new ArrayList<String>();
+        ArrayList<String> actualProjects = new ArrayList<>();
         actualProjects.add(categoryName); /// add category as the first item
         actualProjects.addAll(getProjectsList(jlo));
 
@@ -224,7 +224,7 @@ public class NewProjectTest extends PermUITestCase {
     }
 
     private ArrayList<String> getProjectsList(JListOperator projectsListOperator) {
-        ArrayList<String> projectsList = new ArrayList<String>();
+        ArrayList<String> projectsList = new ArrayList<>();
         int catSize = projectsListOperator.getModel().getSize();
         for (int j = 0; j <= catSize - 1; j++) { // last (null) nodes
             projectsList.add(projectsListOperator.getModel().getElementAt(j).toString());
@@ -235,7 +235,7 @@ public class NewProjectTest extends PermUITestCase {
 
     private ArrayList<String> getChildren(TreeModel tree, Object root, String spaces) {
         int categoriesCount = tree.getChildCount(root);
-        ArrayList<String> returnList = new ArrayList<String>();
+        ArrayList<String> returnList = new ArrayList<>();
         for (int i = 0; i <= categoriesCount - 1; i++) {
             Object actualChild = tree.getChild(root, i);
             returnList.add(spaces + actualChild.toString());

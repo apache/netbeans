@@ -55,7 +55,7 @@ final class DefaultModeModel implements ModeModel {
     /** Programatic name of mode. */
     private String name;
     
-    private final Set<String> otherNames = new HashSet<String>(3);
+    private final Set<String> otherNames = new HashSet<>(3);
 
     private final Rectangle bounds = new Rectangle();
 

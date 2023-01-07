@@ -179,14 +179,14 @@ public final class NbProblemDisplayer {
 
     static void problemMessagesForModules(final Appendable writeTo, Collection<? extends Module> modules, final boolean justRootCause) {
         try {
-            HashSet<String> names = new HashSet<String>();
+            HashSet<String> names = new HashSet<>();
             for (Module m : modules) {
                 names.add(m.getCodeName());
             }
-            HashSet<String> dependentModules = new HashSet<String>();
+            HashSet<String> dependentModules = new HashSet<>();
             class Report {
                 final Module m;
-                final List<Object> problems = new ArrayList<Object>();
+                final List<Object> problems = new ArrayList<>();
                 Report(Module m) {
                     this.m = m;
                 }

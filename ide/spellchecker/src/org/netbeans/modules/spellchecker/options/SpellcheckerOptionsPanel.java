@@ -464,7 +464,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        Collection<String> currentLocales = new HashSet<String>();
+        Collection<String> currentLocales = new HashSet<>();
         ListModel locales = installedLocalesList.getModel();
 
         for (int c = 0; c < locales.getSize(); c++) {

@@ -454,7 +454,7 @@ public class CreationDescriptor {
                    IllegalArgumentException, InvocationTargetException
         {
                                 
-            List<Object> paramValuesList = new ArrayList<Object>(); 
+            List<Object> paramValuesList = new ArrayList<>(); 
             for (int i=0; i < properties.length; i++) {
                 FormProperty prop = CreationFactory.findProperty(properties[i].getPropertyName(), props);
                 if (prop == null)

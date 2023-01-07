@@ -56,7 +56,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 public class PatchedPublicProcessor extends AbstractProcessor {
     
-    private static final Set<String> ANNOTATIONS = new HashSet<String>(
+    private static final Set<String> ANNOTATIONS = new HashSet<>(
         Arrays.asList(
             PatchedPublic.class.getCanonicalName(),
             PatchFor.class.getCanonicalName(),
@@ -74,7 +74,7 @@ public class PatchedPublicProcessor extends AbstractProcessor {
      * Map keyed by the original API class, values are superclasses to be injected
      * into the API class.
      */
-    private Map<String, String>     superclasses = new HashMap<String, String>();
+    private Map<String, String>     superclasses = new HashMap<>();
     
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {

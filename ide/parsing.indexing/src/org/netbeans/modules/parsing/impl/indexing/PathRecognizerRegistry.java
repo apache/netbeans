@@ -153,10 +153,10 @@ public final class PathRecognizerRegistry {
 
     private synchronized Object [] getData () {
         if (cachedData == null) {
-            Set<String> sourceIds = new HashSet<String>();
-            Set<String> libraryIds = new HashSet<String>();
-            Set<String> binaryLibraryIds = new HashSet<String>();
-            Set<String> mimeTypes = new HashSet<String>();
+            Set<String> sourceIds = new HashSet<>();
+            Set<String> libraryIds = new HashSet<>();
+            Set<String> binaryLibraryIds = new HashSet<>();
+            Set<String> mimeTypes = new HashSet<>();
             Map<String, Set<String>[]> sidsMap = new HashMap<String, Set<String>[]>();
             Map<String, Set<String>[]> lidsMap = new HashMap<String, Set<String>[]>();
             Map<String, Set<String>[]> blidsMap = new HashMap<String, Set<String>[]>();

@@ -64,7 +64,7 @@ public class CheckoutPathsAction extends SingleRepositoryAction {
 
             @Override
             protected void perform () {
-                final Collection<File> notifiedFiles = new HashSet<File>();
+                final Collection<File> notifiedFiles = new HashSet<>();
                 try {
                     final GitClient client = getClient();
                     client.addNotificationListener(new FileListener() {

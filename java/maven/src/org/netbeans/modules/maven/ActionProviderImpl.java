@@ -185,7 +185,7 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Override
     public String[] getSupportedActions() {
-        Set<String> supp = new HashSet<String>();
+        Set<String> supp = new HashSet<>();
         supp.addAll( Arrays.asList(supported));
         
         M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
@@ -423,7 +423,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
     
     public static Map<String,String> replacements(Project proj, String action, Lookup lookup) {
-        Map<String,String> replacements = new HashMap<String,String>();
+        Map<String,String> replacements = new HashMap<>();
         for (ReplaceTokenProvider prov : proj.getLookup().lookupAll(ReplaceTokenProvider.class)) {
             replacements.putAll(prov.createReplacements(action, lookup));
         }
@@ -615,7 +615,7 @@ public class ActionProviderImpl implements ActionProvider {
             ModelRunConfig rc = new ModelRunConfig(proj, mapping, mapping.getActionName(), null, Lookup.EMPTY, false);
 
             //#171086 also inject profiles from currently selected configuratiin
-            List<String> acts = new ArrayList<String>();
+            List<String> acts = new ArrayList<>();
             acts.addAll(rc.getActivatedProfiles());
             acts.addAll(conf.getActiveConfiguration().getActivatedProfiles());
             rc.setActivatedProfiles(acts);

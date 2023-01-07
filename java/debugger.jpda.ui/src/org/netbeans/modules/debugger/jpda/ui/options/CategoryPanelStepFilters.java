@@ -366,7 +366,7 @@ class CategoryPanelStepFilters extends StorablePanel {
         p.setBoolean("FilterConstructors", filterConstructorsCheckBox.isSelected());
         TableModel filterClassesModel = filterClassesTable.getModel();
         Set<String> allFilters = new LinkedHashSet<String>();
-        Set<String> enabledFilters = new HashSet<String>();
+        Set<String> enabledFilters = new HashSet<>();
         int n = filterClassesModel.getRowCount();
         for (int i = 0; i < n; i++) {
             boolean isEnabled = (Boolean) filterClassesModel.getValueAt(i, 0);
@@ -395,7 +395,7 @@ class CategoryPanelStepFilters extends StorablePanel {
     public boolean isChanged() {
         TableModel filterClassesModel = filterClassesTable.getModel();
         Set<String> allFilters = new LinkedHashSet<String>();
-        Set<String> enabledFilters = new HashSet<String>();
+        Set<String> enabledFilters = new HashSet<>();
         for (int i = 0; i < filterClassesModel.getRowCount(); i++) {
             boolean isEnabled = (Boolean) filterClassesModel.getValueAt(i, 0);
             String clazz = (String) filterClassesModel.getValueAt(i, 1);

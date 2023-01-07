@@ -135,7 +135,7 @@ public final class RelPaths {
 
     private static synchronized String[] dirs() {
         if (dirs == null) {
-            List<String> tmp = new ArrayList<String>();
+            List<String> tmp = new ArrayList<>();
             String nbdirs = System.getProperty("netbeans.dirs"); // NOI18N
             if (nbdirs != null) {
                 StringTokenizer tok = new StringTokenizer(nbdirs, File.pathSeparator);

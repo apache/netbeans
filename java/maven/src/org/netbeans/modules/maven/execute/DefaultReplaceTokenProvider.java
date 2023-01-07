@@ -102,7 +102,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
         SourceGroup group = findGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), fos);
-        HashMap<String, String> replaceMap = new HashMap<String, String>();
+        HashMap<String, String> replaceMap = new HashMap<>();
         // read environment variables in the IDE and prefix them with "env." just in case someone uses it as variable in the action mappings
         for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
             replaceMap.put(MavenCommandLineExecutor.ENV_PREFIX + entry.getKey(), entry.getValue());
@@ -130,7 +130,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         if (group != null) {
             boolean first = true;
             boolean isTest = false;
-            Set<String> uniqueClassNames = new HashSet<String>(fos.length);
+            Set<String> uniqueClassNames = new HashSet<>(fos.length);
             for (FileObject file : fos) {
                 if (first) {
                     first = false;
@@ -212,7 +212,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                 ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                 ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName)) 
             {
-                HashSet<String> test = new HashSet<String>();
+                HashSet<String> test = new HashSet<>();
                 addSelectedFiles(false, fos, test);
                 addSelectedFiles(true, fos, test);
                 String files2test = test.toString().replace(" ", "");
@@ -293,7 +293,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     }
 
     public static Map<String, String> readVariables() {
-        Map<String, String> vs = new HashMap<String, String>();
+        Map<String, String> vs = new HashMap<>();
         EditableProperties ep = PropertyUtils.getGlobalProperties();
         for (Map.Entry<String, String> entry : ep.entrySet()) {
             if (entry.getKey().startsWith(VARIABLE_PREFIX)) {
@@ -312,7 +312,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
 //            throw new IllegalArgumentException("Not a folder: " + dir); // NOI18N
 //        }
 //
-//        List<FileObject> files = new ArrayList<FileObject>();
+//        List<FileObject> files = new ArrayList<>();
 //        for (DataObject d : context.lookupAll(DataObject.class)) {
 //            FileObject f = d.getPrimaryFile();
 //            boolean matches = FileUtil.toFile(f) != null;

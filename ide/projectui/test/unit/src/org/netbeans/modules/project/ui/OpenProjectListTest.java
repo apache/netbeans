@@ -444,7 +444,7 @@ public class OpenProjectListTest extends NbTestCase {
     }
     
     private static class TestOpenCloseProjectDocument implements ProjectUtilities.OpenCloseProjectDocument {
-        public Set<String> openFiles = new HashSet<String>();
+        public Set<String> openFiles = new HashSet<>();
         public Map<Project,Set<String>> urls4project = new HashMap<Project,Set<String>>();
         
         public boolean open (FileObject fo) {

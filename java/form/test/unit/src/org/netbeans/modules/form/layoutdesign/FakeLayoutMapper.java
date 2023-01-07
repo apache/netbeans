@@ -178,7 +178,7 @@ public class FakeLayoutMapper implements VisualMapper {
                 RADVisualContainer subcont = (RADVisualContainer) sub;
                 if (subcont.getLayoutSupport() == null) {
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                     }
                     list.add(subcont.getId());
                 } else {

@@ -200,7 +200,7 @@ public class XMLDataLoader extends UniFileLoader {
          * @return format to use for formating lines
          */
         protected java.text.Format createFormat (FileObject target, String name, String ext) {
-            HashMap<String, String> map = new HashMap<String, String>();
+            HashMap<String, String> map = new HashMap<>();
             Date now = new Date();
 
             map.put ("NAME", name + "." + ext); // NOI18N

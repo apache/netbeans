@@ -86,7 +86,7 @@ class UsageLogger {
         int compilationUnits = 0;
         int compilationUnitsMissingBuiltTo = 0;
         int compilationUnitsMultipleRoots = 0;
-        Set<String> classpathEntries = new HashSet<String>();
+        Set<String> classpathEntries = new HashSet<>();
         Element java = JavaProjectGenerator.getJavaCompilationUnits(aux);
         if (java != null) {
             for (Element compilationUnitEl : XMLUtil.findSubElements(java)) {

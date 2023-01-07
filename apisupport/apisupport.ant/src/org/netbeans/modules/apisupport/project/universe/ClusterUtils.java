@@ -147,13 +147,13 @@ public final class ClusterUtils {
         String cpwdcp = eval.getProperty(SuiteProperties.CLUSTER_PATH_WDC_PROPERTY);
         String[] pathsWDC = cpwdcp != null ? PropertyUtils.tokenizePath(cpwdcp) : null;
         String[] wp = (pathsWDC != null) ? pathsWDC : paths;
-        Set<String> enabledPaths = new HashSet<String>();
+        Set<String> enabledPaths = new HashSet<>();
         if (pathsWDC != null) {
             enabledPaths.addAll(Arrays.asList(paths));
         }
 
-        Map<File, String> srcRootsMap = new HashMap<File, String>();
-        Map<File, String> jRootsMap = new HashMap<File, String>();
+        Map<File, String> srcRootsMap = new HashMap<>();
+        Map<File, String> jRootsMap = new HashMap<>();
         Map<String, String> props = eval.getProperties();
         for (Map.Entry<String, String> entry : props.entrySet()) {
             String key = entry.getKey();

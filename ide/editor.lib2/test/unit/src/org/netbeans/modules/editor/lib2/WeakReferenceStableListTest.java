@@ -38,7 +38,7 @@ public class WeakReferenceStableListTest extends NbTestCase {
     
     public WeakReferenceStableListTest(String testName) {
         super(testName);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimple1");
 //        filterTests(includes);
     }
@@ -56,7 +56,7 @@ public class WeakReferenceStableListTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp(); //To change body of generated methods, choose Tools | Templates.
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         tested= new WeakReferenceStableList<Object>();
     }
 

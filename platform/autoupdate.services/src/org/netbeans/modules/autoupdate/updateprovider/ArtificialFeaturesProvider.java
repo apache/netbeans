@@ -162,7 +162,7 @@ public class ArtificialFeaturesProvider implements UpdateProvider {
             Set<FeatureUpdateElementImpl> features,
             UpdateElementImpl original,
             String additionalDescription) {
-        Set<String> containsModulesOrFeatures = new HashSet<String>();
+        Set<String> containsModulesOrFeatures = new HashSet<>();
         String versionN = "";
         for (ModuleUpdateElementImpl impl : modules) {
             ModuleInfo info = impl.getModuleInfo ();

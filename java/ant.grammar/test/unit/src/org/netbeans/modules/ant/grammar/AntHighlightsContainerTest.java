@@ -51,7 +51,7 @@ public class AntHighlightsContainerTest extends NbTestCase {
      * @return same document with highlighted parts surrounded by {@code (...)} (not merged at split points)
      */
     private static String highlight(String text) throws Exception {
-        List<Integer> splits = new ArrayList<Integer>();
+        List<Integer> splits = new ArrayList<>();
         AbstractDocument doc = new DefaultStyledDocument();
         int lastSplit = 0;
         for (String piece : text.split("[|]")) {

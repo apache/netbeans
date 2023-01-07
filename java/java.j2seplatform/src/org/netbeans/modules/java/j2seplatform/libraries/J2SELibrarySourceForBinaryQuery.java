@@ -208,7 +208,7 @@ public class J2SELibrarySourceForBinaryQuery implements SourceForBinaryQueryImpl
                 // entry is not resolved so directly volume content can be searched for it:
                 final Library _lib = this.lib;
                 if (getResolvedURIContent(_lib, manager, J2SELibraryTypeProvider.VOLUME_TYPE_CLASSPATH).contains(entry)) {
-                    List<FileObject> result = new ArrayList<FileObject>();
+                    List<FileObject> result = new ArrayList<>();
                     for (URL u : _lib.getContent(J2SELibraryTypeProvider.VOLUME_TYPE_SRC)) {
                         FileObject sourceRoot = URLMapper.findFileObject(u);
                         if (sourceRoot!=null) {

@@ -101,7 +101,7 @@ public class SourceModeler extends ResourceModel {
         String name = null;
         String path = null;
         String template = RestUtils.findUri(rSrc);
-        resourceFqns = new HashSet<String>();
+        resourceFqns = new HashSet<>();
         if (template != null) {
             path = template;
             name = path;

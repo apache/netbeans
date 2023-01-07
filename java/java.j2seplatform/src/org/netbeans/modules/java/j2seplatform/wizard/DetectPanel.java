@@ -694,7 +694,7 @@ public class DetectPanel extends javax.swing.JPanel {
         @NonNull
         private static List<URL> stringToJavadoc(@NonNull final String path) {
             assert path != null;
-            final List<URL> result = new ArrayList<URL>();
+            final List<URL> result = new ArrayList<>();
             final StringTokenizer tk = new StringTokenizer(path,PATH_SEPARATOR);
             while (tk.hasMoreTokens()) {
                 try {

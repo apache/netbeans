@@ -354,7 +354,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
         if(files == null) {
             return;
         }
-        Set<FileObject> fileSet = new HashSet<FileObject>();
+        Set<FileObject> fileSet = new HashSet<>();
         for (VCSFileProxy f : evt.getFiles()) {
             FileObject fo = f != null ? f.toFileObject() : null;
             if(fo != null) {

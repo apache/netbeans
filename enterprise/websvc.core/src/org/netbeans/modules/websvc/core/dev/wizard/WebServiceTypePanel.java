@@ -59,7 +59,7 @@ public class WebServiceTypePanel extends javax.swing.JPanel implements HelpCtx.P
     private Project project;
     private Node[] sessionBeanNodes;
     
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     
     private boolean jsr109Supported;
     private boolean jsr109oldSupported;

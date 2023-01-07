@@ -81,14 +81,14 @@ public class DebuggingTreeModel extends CachedChildrenTreeModel {
     public static final String SHOW_THREAD_GROUPS = "show.threadGroups";
     public static final String SHOW_SUSPENDED_THREADS_ONLY = "show.suspendedThreadsOnly";
     
-    private static final Set<String> SYSTEM_THREAD_NAMES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> SYSTEM_THREAD_NAMES = new HashSet<>(Arrays.asList(new String[] {
                                                            "Reference Handler",
                                                            "Signal Dispatcher",
                                                            "Finalizer",
                                                            "Java2D Disposer",
                                                            "TimerQueue",
                                                            "Attach Listener"}));
-    private static final Set<String> SYSTEM_MAIN_THREAD_NAMES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> SYSTEM_MAIN_THREAD_NAMES = new HashSet<>(Arrays.asList(new String[] {
                                                            "DestroyJavaVM",
                                                            "AWT-XAWT",
                                                            "AWT-Shutdown"}));

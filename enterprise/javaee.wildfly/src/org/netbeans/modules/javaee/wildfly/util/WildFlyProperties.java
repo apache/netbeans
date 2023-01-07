@@ -217,7 +217,7 @@ public class WildFlyProperties {
             }
             return Collections.EMPTY_LIST;
         }
-        List<URL> result = new ArrayList<URL>();
+        List<URL> result = new ArrayList<>();
         for (FileObject child : file.getChildren()) {
             result.addAll(selectJars(child));
         }
@@ -236,7 +236,7 @@ public class WildFlyProperties {
     public List<URL> getSources() {
         String path = ip.getProperty(PROP_SOURCES);
         if (path == null) {
-            return new ArrayList<URL>();
+            return new ArrayList<>();
         }
         return CustomizerSupport.tokenizePath(path);
     }
@@ -250,7 +250,7 @@ public class WildFlyProperties {
     public List<URL> getJavadocs() {
         String path = ip.getProperty(PROP_JAVADOCS);
         if (path == null) {
-            ArrayList<URL> list = new ArrayList<URL>();
+            ArrayList<URL> list = new ArrayList<>();
             File j2eeDoc = InstalledFileLocator.getDefault().locate("docs/javaee-doc-api.jar", null, false); // NOI18N
             if (j2eeDoc != null) {
                 addFileToList(list, j2eeDoc);

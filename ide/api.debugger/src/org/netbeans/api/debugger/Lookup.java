@@ -199,7 +199,7 @@ abstract class Lookup implements ContextProvider {
                     if (hp1 && hp2) { // merge
                         if (!positioned.isEmpty()) {
                             Collections.sort(positioned);
-                            Set<String> hiddenClassNames = new HashSet<String>();
+                            Set<String> hiddenClassNames = new HashSet<>();
                             addHiddenClassNames(list1, hiddenClassNames);
                             addHiddenClassNames(list2, hiddenClassNames);
                             List<T> sorted = new LookupList<T>(hiddenClassNames);
@@ -335,9 +335,9 @@ abstract class Lookup implements ContextProvider {
         
         private String rootFolder;
         private final Map<String,List<String>> registrationCache = new HashMap<String,List<String>>();
-        private final HashMap<String, Object> instanceCache = new HashMap<String, Object>();
+        private final HashMap<String, Object> instanceCache = new HashMap<>();
         private final HashMap<String, FutureInstance> instanceFutureCache = new HashMap<String, FutureInstance>();
-        private final HashMap<String, Object> origInstanceCache = new HashMap<String, Object>();
+        private final HashMap<String, Object> origInstanceCache = new HashMap<>();
         private final HashMap<String, Item> lookupItemsCache = new HashMap<String, Item>();
         private Lookup context;
         private org.openide.util.Lookup.Result<ModuleInfo> moduleLookupResult;
@@ -431,7 +431,7 @@ abstract class Lookup implements ContextProvider {
                 String className = (String) l.get (i);
                 if (className.endsWith(HIDDEN)) {
                     if (s == null) {
-                        s = new HashSet<String>();
+                        s = new HashSet<>();
                     }
                     s.add(className.substring(0, className.length() - HIDDEN.length()));
                 }
@@ -444,7 +444,7 @@ abstract class Lookup implements ContextProvider {
          * folder. Given context isused as the parameter to constructor.
          */
         private List<String> loadMetaInf(String resourceName) {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             try {
                 ClassLoader cl = org.openide.util.Lookup.getDefault().lookup(ClassLoader.class);
                 StringBuilder v = new StringBuilder("\nR lookup ").append(resourceName);
@@ -683,7 +683,7 @@ abstract class Lookup implements ContextProvider {
             private List<PropertyChangeListener> propertyChangeListeners;
             public int notifyLoadOrder = 0;
             public int notifyUnloadOrder = 0;
-            public List<Integer> elementPositions = new ArrayList<Integer>();
+            public List<Integer> elementPositions = new ArrayList<>();
             
             public MetaInfLookupList(String folder, Class<T> service) {
                 this(list(folder, service), listLookup(folder, service), service);

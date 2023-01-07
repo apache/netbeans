@@ -579,7 +579,7 @@ public final class InstantRefactoringPerformer implements DocumentListener, KeyL
         assert keyValuePairs.length % 2 == 0 : "There must be even number of prameters. " +
             "They are key-value pairs of attributes that will be inserted into the set.";
 
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         
         for(int i = keyValuePairs.length / 2 - 1; i >= 0 ; i--) {
             Object attrKey = keyValuePairs[2 * i];

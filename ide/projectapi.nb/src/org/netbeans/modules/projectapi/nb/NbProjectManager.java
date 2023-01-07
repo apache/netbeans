@@ -276,7 +276,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
                         dir2Proj.put(projectDirectory, LoadStatus.LOADING_PROJECT.wrap());
                         Set<FileObject> ldng = loadingThread.get();
                         if (ldng == null) {
-                            ldng = new HashSet<FileObject>();
+                            ldng = new HashSet<>();
                             loadingThread.set(ldng);
                         }
                         ldng.add(projectDirectory);

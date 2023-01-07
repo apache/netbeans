@@ -1618,7 +1618,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
 
         int nextLineIndent = -1;
         Line previousLine = null;
-        Map<Integer, Integer> suggestedIndentsForOtherLines = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> suggestedIndentsForOtherLines = new HashMap<>();
 
         // iterate over lines indentation commands and calculate real indentation
         startTime1 = System.currentTimeMillis();

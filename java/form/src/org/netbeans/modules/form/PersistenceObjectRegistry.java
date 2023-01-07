@@ -33,8 +33,8 @@ import org.openide.filesystems.FileObject;
 public class PersistenceObjectRegistry
 {
 
-    private static Map<String,String> _nameToClassname = new HashMap<String,String>();
-    private static Map<String,String> _classToPrimaryName = new HashMap<String,String>();
+    private static Map<String,String> _nameToClassname = new HashMap<>();
+    private static Map<String,String> _classToPrimaryName = new HashMap<>();
 
     private PersistenceObjectRegistry() {
     }

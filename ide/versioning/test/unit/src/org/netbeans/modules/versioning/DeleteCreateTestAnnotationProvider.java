@@ -47,7 +47,7 @@ import org.openide.filesystems.FileUtil;
 public class DeleteCreateTestAnnotationProvider extends BaseAnnotationProvider {
 
     static DeleteCreateTestAnnotationProvider instance = null;
-    List<String> events = new ArrayList<String>();
+    List<String> events = new ArrayList<>();
     FilesystemInterceptor interceptor = new FilesystemInterceptor();
     
     public DeleteCreateTestAnnotationProvider() {

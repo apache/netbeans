@@ -875,7 +875,7 @@ final class NbInstaller extends ModuleInstaller {
     private Set<String> findKosher(Module m) {
         Set<String> s = kosherPackages.get(m);
         if (s == null) {
-            s = new HashSet<String>();
+            s = new HashSet<>();
             Set<Dependency> deps = m.getDependencies();
             SpecificationVersion openide = Util.getModuleDep(deps, "org.openide"); // NOI18N
             boolean pre27853 = (openide == null || openide.compareTo(new SpecificationVersion("1.3.12")) < 0); // NOI18N
@@ -984,7 +984,7 @@ final class NbInstaller extends ModuleInstaller {
         Set<Module> modulesConsidered = new HashSet<Module>(50);
         // Code names of modules on which this module has an impl dependency
         // (so can use any package):
-        Set<String> implDeps = new HashSet<String>(10);
+        Set<String> implDeps = new HashSet<>(10);
         for (Dependency dep : m.getDependencies()) {
             // Remember, provide-require deps do not affect classpath!
             if (dep.getType() == Dependency.TYPE_MODULE && dep.getComparison() == Dependency.COMPARE_IMPL) {

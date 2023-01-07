@@ -121,8 +121,8 @@ class ColumnSelectionPanel extends JPanel {
     @SuppressWarnings("unchecked")
     private JPanel layoutPanel(List<TableColumn> columns, int width, ETable table) {
         JPanel toAdd = new JPanel(new GridBagLayout());
-        Map<String, Object> displayNameToCheckBox = new HashMap<String, Object>();
-        ArrayList<String> displayNames = new ArrayList<String>();
+        Map<String, Object> displayNameToCheckBox = new HashMap<>();
+        ArrayList<String> displayNames = new ArrayList<>();
         for (int col = 0; col < columns.size (); col++) {
             ETableColumn etc = (ETableColumn) columns.get (col);
             JCheckBox checkBox = new JCheckBox();
@@ -276,7 +276,7 @@ class ColumnSelectionPanel extends JPanel {
             List<TableColumn> columns = etcm.getAllColumns();
             Collections.sort(columns, ETableColumnComparator.DEFAULT);
             Map<String,Object> displayNameToCheckBox = new HashMap<String,Object>();
-            ArrayList<String> displayNames = new ArrayList<String>();
+            ArrayList<String> displayNames = new ArrayList<>();
             for (Iterator<TableColumn> it = columns.iterator(); it.hasNext(); ) {
                 final ETableColumn etc = (ETableColumn)it.next();
                 JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem();
@@ -386,7 +386,7 @@ class ColumnSelectionPanel extends JPanel {
      * changes to the visible column for the given table.
      */
     private static void makeVisibleColumns(ETable table, String[] visibleColumns) {
-        HashSet<String> visible = new HashSet<String>(Arrays.asList(visibleColumns));
+        HashSet<String> visible = new HashSet<>(Arrays.asList(visibleColumns));
         TableColumnModel columnModel = table.getColumnModel();
         if (! (columnModel instanceof ETableColumnModel)) {
             return;
@@ -427,7 +427,7 @@ class ColumnSelectionPanel extends JPanel {
             columns = etcm.getAllColumns();
         }
         Collections.sort(columns, ETableColumnComparator.DEFAULT);
-        ArrayList<String> displayNames = new ArrayList<String>();
+        ArrayList<String> displayNames = new ArrayList<>();
         for (Iterator<TableColumn> it = columns.iterator(); it.hasNext(); ) {
             final ETableColumn etc = (ETableColumn)it.next();
             String dName = table.getColumnDisplayName(etc.getHeaderValue().toString());

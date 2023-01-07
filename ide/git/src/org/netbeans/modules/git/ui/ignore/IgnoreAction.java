@@ -106,7 +106,7 @@ public class IgnoreAction extends MultipleRepositoryAction {
             return null;
         } else {
             GitProgressSupport supp = new GitProgressSupport() {
-                private final Set<File> notifiedFiles = new HashSet<File>();
+                private final Set<File> notifiedFiles = new HashSet<>();
                 private File[] modifiedIgnores = new File[0];
                 @Override
                 protected void perform () {

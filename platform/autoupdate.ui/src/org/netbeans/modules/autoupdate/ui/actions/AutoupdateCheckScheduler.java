@@ -208,7 +208,7 @@ public class AutoupdateCheckScheduler {
             OperationContainer.createForInstall ();
 
 
-        List<UpdateElement> elements = new ArrayList<UpdateElement>();
+        List<UpdateElement> elements = new ArrayList<>();
 
         for (UnitCategory cat : cats) {
             for (Unit u : cat.getUnits ()) {        

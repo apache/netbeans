@@ -335,7 +335,7 @@ public final class EjbEntRefContainerImpl implements EnterpriseReferenceContaine
     }
 
     private String getUniqueResRefName(Ejb bean, String originalValue) {
-        Set<String> resRefNames = new HashSet<String>();
+        Set<String> resRefNames = new HashSet<>();
         for (ResourceRef resourceRef : bean.getResourceRef()) {
             resRefNames.add(resourceRef.getResRefName());
         }
@@ -343,7 +343,7 @@ public final class EjbEntRefContainerImpl implements EnterpriseReferenceContaine
     }
 
     private String getUniqueEjbRefName(Ejb bean, String originalValue) {
-        Set<String> ejbRefNames = new HashSet<String>();
+        Set<String> ejbRefNames = new HashSet<>();
         for (EjbRef ejbRef : bean.getEjbRef()) {
             ejbRefNames.add(ejbRef.getEjbRefName());
         }
@@ -351,7 +351,7 @@ public final class EjbEntRefContainerImpl implements EnterpriseReferenceContaine
     }
 
     private String getUniqueEjbLocalRefName(Ejb bean, String originalValue) {
-        Set<String> ejbLocalRefNames = new HashSet<String>();
+        Set<String> ejbLocalRefNames = new HashSet<>();
         for (EjbLocalRef ejbLocalRef : bean.getEjbLocalRef()) {
             ejbLocalRefNames.add(ejbLocalRef.getEjbRefName());
         }
@@ -359,7 +359,7 @@ public final class EjbEntRefContainerImpl implements EnterpriseReferenceContaine
     }
 
     private String getUniqueMessageDestRefName(Ejb bean, String originalValue) {
-        Set<String> messageDestRefNames = new HashSet<String>();
+        Set<String> messageDestRefNames = new HashSet<>();
         try {
             for (MessageDestinationRef messageDestRef : bean.getMessageDestinationRef()) {
                 messageDestRefNames.add(messageDestRef.getMessageDestinationRefName());

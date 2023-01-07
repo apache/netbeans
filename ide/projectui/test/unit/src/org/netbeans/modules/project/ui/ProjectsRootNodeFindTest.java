@@ -60,13 +60,13 @@ public class ProjectsRootNodeFindTest extends NbTestCase {
         FileObject foChild = TestSupport.createTestProject(foMain, "prj_2");
         FileObject foData = foChild.createData("data", "txt");
 
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         list.add(URLMapper.findURL(foMain, URLMapper.EXTERNAL));
         list.add(URLMapper.findURL(foChild, URLMapper.EXTERNAL));
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
         icons.add(new ExtIcon());
         icons.add(new ExtIcon());
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add(list.get(0).toExternalForm());
         names.add(list.get(1).toExternalForm());
         TestSupport.TestProject prjMain = (TestSupport.TestProject) ProjectManager.getDefault().findProject(foMain);

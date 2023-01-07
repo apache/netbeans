@@ -92,7 +92,7 @@ public abstract class PUCompletor {
             List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
-            HashSet<String> providers = new HashSet<String>();
+            HashSet<String> providers = new HashSet<>();
             Project project = FileOwnerQuery.getOwner(
                     NbEditorUtilities.getFileObject(context.getDocument()));
             for(Provider provider: Util.getProviders(project)){
@@ -323,7 +323,7 @@ public abstract class PUCompletor {
             Project enclosingProject = FileOwnerQuery.getOwner(
                     NbEditorUtilities.getFileObject(context.getDocument()));
             Provider provider = ProviderUtil.getProvider(providerClass, enclosingProject);
-            ArrayList<String> keys = new ArrayList<String>();
+            ArrayList<String> keys = new ArrayList<>();
             String ver = provider == null ? context.getDocumentContext().getVersion() : ProviderUtil.getVersion(provider);
             if (provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
                 keys.addAll(allKeyAndValues.get(null).keySet());

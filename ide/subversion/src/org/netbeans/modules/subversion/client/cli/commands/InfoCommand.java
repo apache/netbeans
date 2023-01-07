@@ -54,7 +54,7 @@ public class InfoCommand extends SvnCommand {
         url
     }
     
-    private List<String> output = new ArrayList<String>();
+    private List<String> output = new ArrayList<>();
     private final SVNUrl url;
     private final File[] files;
     private final SVNRevision revision;
@@ -138,7 +138,7 @@ public class InfoCommand extends SvnCommand {
                 if(map != null) {
                     infos.add(new Info(map));            
                 }
-                map = new HashMap<String, String>();
+                map = new HashMap<>();
             }
             
             int idx = outputLine.indexOf(':');            

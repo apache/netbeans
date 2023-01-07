@@ -231,7 +231,7 @@ class GlobalManager extends Object implements LookupListener {
         
         @Override
         protected ActionMap newMap(ActionMap prev, ActionMap newMap) {
-            ArrayList<Object> old = new ArrayList<Object>();
+            ArrayList<Object> old = new ArrayList<>();
             if (prev != null) {
                 Object[] all = prev.allKeys();
                 if (all != null) {

@@ -158,7 +158,7 @@ public class LogicalViewProviderImpl implements LogicalViewProvider {
             } else if (FileUtil.isParentOf(xfo, fo)) {
                 FileObject folder = fo.isFolder() ? fo : fo.getParent();
                 String relPath = FileUtil.getRelativePath(xfo, folder);
-                List<String> path = new ArrayList<String>();
+                List<String> path = new ArrayList<>();
                 StringTokenizer strtok = new StringTokenizer(relPath, "/"); // NOI18N
                 while (strtok.hasMoreTokens()) {
                     String token = strtok.nextToken();

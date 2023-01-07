@@ -213,7 +213,7 @@ public class MultiBundleStructureTest extends NbTestCase {
     @Test
     public void test_200108_fix() throws Exception {
         System.out.println("deleting prop file with more then 2 locale");
-        List<FileObject> fileObjects = new ArrayList<FileObject>();
+        List<FileObject> fileObjects = new ArrayList<>();
         clearWorkDir();
 
         File folder = new File(getWorkDir(), "properties");

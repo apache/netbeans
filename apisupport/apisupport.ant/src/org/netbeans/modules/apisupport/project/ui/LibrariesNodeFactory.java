@@ -54,7 +54,7 @@ public class LibrariesNodeFactory implements NodeFactory {
         }
     
         public @Override List<String> keys() {
-            List<String> toRet = new ArrayList<String>();
+            List<String> toRet = new ArrayList<>();
             toRet.add(LibrariesNode.LIBRARIES_NAME);
             for (String testType : project.supportedTestTypes()) {
                 toRet.add(testType);

@@ -361,7 +361,7 @@ public class KeyStrokeEditor extends PropertyEditorSupport
             // fill in virtual key list
 
             if (_virtualKeys == null) {
-                java.util.List<String> list = new ArrayList<String>();
+                java.util.List<String> list = new ArrayList<>();
 
                 Field[] fields = KeyEvent.class.getDeclaredFields();
                 for (int i = 0; i < fields.length; i++) {

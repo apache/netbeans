@@ -190,7 +190,7 @@ public final class NewOptionsIterator extends BasicWizardIterator {
         }
 
         private Map<String, String> getTokenMap(boolean useAnnotations) {
-            Map<String, String> retval = new HashMap<String, String>();
+            Map<String, String> retval = new HashMap<>();
             for (int i = 0; i < TOKENS.length; i++) {
                 retval.put(TOKENS[i], getReplacement(TOKENS[i], useAnnotations));
             }

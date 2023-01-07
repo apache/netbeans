@@ -177,7 +177,7 @@ public class HintTest {
     private final FileObject cache;
     private final Preferences testPreferences;
     private final HintsSettings hintSettings;
-    private final List<FileObject> checkCompilable = new ArrayList<FileObject>();
+    private final List<FileObject> checkCompilable = new ArrayList<>();
     private String sourceLevel = "1.5";
     private List<String> extraOptions = new ArrayList<>();
     private Character caretMarker;
@@ -222,9 +222,9 @@ public class HintTest {
 
         Set<String> amt = MimeTypes.getAllMimeTypes();
         if (amt == null) {
-            amt = new HashSet<String>();
+            amt = new HashSet<>();
         } else {
-            amt = new HashSet<String>(amt);
+            amt = new HashSet<>(amt);
         }
         amt.add("text/x-java");
         MimeTypes.setAllMimeTypes(amt);
@@ -809,7 +809,7 @@ public class HintTest {
          * @throws AssertionError if the given warnings do not match the actual warnings
          */
         public HintOutput assertContainsWarnings(String... warnings) {
-            Set<String> goldenSet = new HashSet<String>(Arrays.asList(warnings));
+            Set<String> goldenSet = new HashSet<>(Arrays.asList(warnings));
             List<String> errorsNames = new LinkedList<String>();
 
             for (ErrorDescription d : errors) {
@@ -832,7 +832,7 @@ public class HintTest {
          * @throws AssertionError if the given warnings do not match the actual warnings
          */
         public HintOutput assertNotContainsWarnings(String... warnings) {
-            Set<String> goldenSet = new HashSet<String>(Arrays.asList(warnings));
+            Set<String> goldenSet = new HashSet<>(Arrays.asList(warnings));
             List<String> errorsNames = new LinkedList<String>();
 
             boolean fail = false;
@@ -1341,7 +1341,7 @@ public class HintTest {
         return realP;
     }
 
-    private static Set<String> usedPaths = new HashSet<String>();
+    private static Set<String> usedPaths = new HashSet<>();
     
     private static String abbrevDots(String dotted) {
         StringBuilder sb = new StringBuilder();

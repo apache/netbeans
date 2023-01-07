@@ -181,7 +181,7 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
         "LBL_ChooseMainClass_OK=Select Main Class"
     })
     private String showMainClassDialog(Project project, String actionName) {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         Sources srcs = ProjectUtils.getSources(project);
         for (SourceGroup sourceGroup : srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             if (MavenSourcesImpl.NAME_SOURCE.equals(sourceGroup.getName())) {

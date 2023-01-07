@@ -106,7 +106,7 @@ public final class SourceUtilsEx {
         /**
          * mapping of top level classes FQN to their source files
          */
-        private final Map<String, Object> cacheOfSrcFiles = new HashMap<String, Object>();
+        private final Map<String, Object> cacheOfSrcFiles = new HashMap<>();
     }
 
     /**

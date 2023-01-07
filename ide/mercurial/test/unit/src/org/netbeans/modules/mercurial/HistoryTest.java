@@ -114,13 +114,13 @@ public class HistoryTest extends AbstractHgTestCase {
                 "paths", NULL_LOGGER);
         HgLogMessage rev2 = HgCommand.doTip(workdir, NULL_LOGGER);
         
-        Map<String, String> paths = new HashMap<String, String>();
+        Map<String, String> paths = new HashMap<>();
         paths.put("folder/fileM", "A");
         paths.put("folder/fileD", "A");
         paths.put("folder/fileRF", "A");
         assertChangePaths(rev1.getCSetShortID(), paths);
         
-        paths = new HashMap<String, String>();
+        paths = new HashMap<>();
         paths.put("folder/fileM", "M");
         paths.put("folder/fileD", "D");
         paths.put("folder/fileA", "A");

@@ -61,7 +61,7 @@ public class JavaFXCSSModule extends CssEditorModule implements CssModule {
     @Override
     public Collection<String> getPseudoClasses(EditorFeatureContext context) {
         if(pseudoClasses == null) {
-            pseudoClasses = new ArrayList<String>();
+            pseudoClasses = new ArrayList<>();
             PropertyDefinition prop = getJavaFXProperties().get(PSEUDO_CLASSES_PROPERTY);
             if(prop != null) {
                 String grammar = prop.getGrammar();

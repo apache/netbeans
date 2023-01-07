@@ -146,11 +146,11 @@ public final class EditorBridge extends KeymapManager {
      */
     public void saveKeymap(String profile, Map<ShortcutAction, Set<String>> actionToShortcuts) {
 
-        Set<String> allMimes = new HashSet<String>(getEditorSettings().getMimeTypes());
+        Set<String> allMimes = new HashSet<>(getEditorSettings().getMimeTypes());
         allMimes.add(null); // NOI18N
         
         // all knon action IDs for EditorActions (those which are handled by this Bridge)
-        Set<String> actionIds = new HashSet<String>(actionToShortcuts.size());
+        Set<String> actionIds = new HashSet<>(actionToShortcuts.size());
         for(ShortcutAction action : actionToShortcuts.keySet()) {
             action = action.getKeymapManagerInstance(EDITOR_BRIDGE);
             if (!(action instanceof EditorAction)) {
@@ -471,7 +471,7 @@ public final class EditorBridge extends KeymapManager {
             }
             Set<String> s = map.get(action);
             if (s == null) {
-                s = new HashSet<String>();
+                s = new HashSet<>();
                 map.put(action, s);
             }
             s.addAll(keyStrokes);
@@ -499,7 +499,7 @@ public final class EditorBridge extends KeymapManager {
 
             Set<String> keyStrokes = actionNameToShortcuts.get(mkb.getActionName());
             if (keyStrokes == null) {
-                keyStrokes = new HashSet<String>();
+                keyStrokes = new HashSet<>();
                 actionNameToShortcuts.put(mkb.getActionName(), keyStrokes);
             }
             keyStrokes.add(sb.toString());
@@ -509,7 +509,7 @@ public final class EditorBridge extends KeymapManager {
     }
 
     private static Map<String, String> readCategories() {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         FileObject fo = FileUtil.getConfigFile("OptionsDialog/Actions"); //NOI18N
         if (fo == null) {
             return result;

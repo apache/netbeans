@@ -169,7 +169,7 @@ public final class StatusCommand extends HgCommand<Map<File, FileInformation>> {
                 workDirStatus = false;
             }
         }
-        List<String> commandOutput = new ArrayList<String>();
+        List<String> commandOutput = new ArrayList<>();
         List<String> changedPaths = skipMidChanges ? new ArrayList<String>() : null;
         for (List<String> attributes : attributeGroups) {
             if (changedPaths != null) {
@@ -210,7 +210,7 @@ public final class StatusCommand extends HgCommand<Map<File, FileInformation>> {
 
     private static Map<File, FileInformation> processStatusResult (List<String> commandOutput, File repository,
             String statusFlags, List<String> changedPaths) {
-        Map<File, FileInformation> repositoryFiles = new HashMap<File, FileInformation>(commandOutput.size());
+        Map<File, FileInformation> repositoryFiles = new HashMap<>(commandOutput.size());
         File file = null;
         FileInformation prev_info = null;
         String repositoryPath = repository.getAbsolutePath();

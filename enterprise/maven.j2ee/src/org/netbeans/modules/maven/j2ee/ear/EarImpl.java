@@ -545,7 +545,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         private ContentIterator(FileObject root) {
             this.root = root;
 
-            filesUnderRoot = new ArrayList<FileObject>();
+            filesUnderRoot = new ArrayList<>();
             filesUnderRoot.add(root);
         }
 

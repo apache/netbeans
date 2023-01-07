@@ -114,8 +114,8 @@ public class J2SEProjectBuilder {
         Parameters.notNull("name", name);                           //NOI18N
         this.projectDirectory = projectDirectory;
         this.name = name;
-        this.sourceRoots = new ArrayList<File>();
-        this.testRoots = new ArrayList<File>();
+        this.sourceRoots = new ArrayList<>();
+        this.testRoots = new ArrayList<>();
         this.jvmArgs = new StringBuilder();
         this.compileLibraries = new ArrayList<Library>();
         this.runtimeLibraries = new ArrayList<Library>();

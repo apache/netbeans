@@ -142,7 +142,7 @@ public final class GlobalJavadocForBinaryImpl implements JavadocForBinaryQueryIm
    
     @SuppressWarnings("DE_MIGHT_IGNORE")
     private Result findByDashedCNB(final String cnbdashes, final URL[] roots, boolean allowRemote) throws MalformedURLException {
-        final List<URL> candidates = new ArrayList<URL>();
+        final List<URL> candidates = new ArrayList<>();
         for (URL root : roots) {
             // XXX: so should be checked, instead of always adding both?
             // 1. user may insert directly e.g ...nbbuild/build/javadoc/org-openide-actions[.zip]

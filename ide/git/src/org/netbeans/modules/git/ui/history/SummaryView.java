@@ -297,7 +297,7 @@ class SummaryView extends AbstractSummaryView {
     }
     
     private static SummaryViewMaster createViewSummaryMaster (final SearchHistoryPanel master) {
-        final Map<String, String> colors = new HashMap<String, String>();
+        final Map<String, String> colors = new HashMap<>();
         colors.put("A", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()));
         colors.put("C", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()));
         colors.put("R", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()));

@@ -266,7 +266,7 @@ public class ModelIndexTest extends ModelTestBase {
             }
             List<String> methNameList = typeMethods.get(typeName);
             if (methNameList == null) {
-                methNameList = new ArrayList<String>();
+                methNameList = new ArrayList<>();
                 typeMethods.put(typeName, methNameList);
             }
 
@@ -275,7 +275,7 @@ public class ModelIndexTest extends ModelTestBase {
 
             List<String> allMethNameList = allMethods.get(typeName);
             if (allMethNameList == null) {
-                allMethNameList = new ArrayList<String>();
+                allMethNameList = new ArrayList<>();
                 allMethods.put(typeName, allMethNameList);
             }
 

@@ -254,7 +254,7 @@ public final class HTMLIterator extends BasicWizardIterator {
         }
 
         if (name != null) {
-            Map<String,String> replaceTokens = new HashMap<String,String>();
+            Map<String,String> replaceTokens = new HashMap<>();
             replaceTokens.put("TEMPLATENAME", name);//NOI18N
             replaceTokens.put("PACKAGENAME", packageName);//NOI18N
 

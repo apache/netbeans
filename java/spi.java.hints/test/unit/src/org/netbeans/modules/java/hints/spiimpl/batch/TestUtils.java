@@ -96,7 +96,7 @@ public class TestUtils {
 
         assertTrue(constraints.length % 2 == 0);
 
-        Map<String, String> constr = new HashMap<String, String>();
+        Map<String, String> constr = new HashMap<>();
 
         for (int i = 0; i < constraints.length; i += 2) {
             constr.put(constraints[i], constraints[i + 1]);

@@ -904,7 +904,7 @@ public class ContextActionTest extends NbTestCase {
     private class PCL implements PropertyChangeListener {
 
         PropertyChangeEvent evt;
-        Map<String, Object> fired = new HashMap<String, Object>();
+        Map<String, Object> fired = new HashMap<>();
 
         void clear() {
             fired.clear();
@@ -1016,7 +1016,7 @@ public class ContextActionTest extends NbTestCase {
 
         @Override
         protected void actionPerformed(Collection<? extends String> targets) {
-            perfStrings = new HashSet<String>(targets);
+            perfStrings = new HashSet<>(targets);
         }
     }
 

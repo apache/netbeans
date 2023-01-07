@@ -134,7 +134,7 @@ public class OverrideDependencyManagementError implements POMErrorFixProvider {
     private Map<String, String> collectManaged(Project prj) {
         NbMavenProject project = prj.getLookup().lookup(NbMavenProject.class);
         @SuppressWarnings("unchecked")
-        HashMap<String, String> toRet = new HashMap<String, String>();
+        HashMap<String, String> toRet = new HashMap<>();
         if (project == null) { //#154462
             return toRet;
         }

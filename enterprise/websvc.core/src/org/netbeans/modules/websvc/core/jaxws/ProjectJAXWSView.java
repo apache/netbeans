@@ -50,7 +50,7 @@ public class ProjectJAXWSView implements JAXWSViewImpl {
                 if (sources!=null) {
                     SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                     if (groups!=null) {
-                        List<FileObject> roots = new ArrayList<FileObject>();
+                        List<FileObject> roots = new ArrayList<>();
                         for (SourceGroup group: groups) {
                             roots.add(group.getRootFolder());
                         }

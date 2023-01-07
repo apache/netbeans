@@ -66,8 +66,8 @@ import org.netbeans.modules.websvc.saas.util.SaasUtil;
 public abstract class SaasBean extends GenericResourceBean {
 
     public static final String RESOURCE_TEMPLATE = SaasClientCodeGenerator.TEMPLATES_SAAS+"WrapperResource.java"; //NOI18N
-    private List<String> outputWrapperNames = new ArrayList<String>();
-    private List<String> wrapperPackageNames = new ArrayList<String>();
+    private List<String> outputWrapperNames = new ArrayList<>();
+    private List<String> wrapperPackageNames = new ArrayList<>();
     private List<ParameterInfo> inputParams;
     private List<ParameterInfo> headerParams;
     private List<ParameterInfo> templateParams;
@@ -161,7 +161,7 @@ public abstract class SaasBean extends GenericResourceBean {
     
     @Override
     public String[] getUriParams() {
-        List<String> uriParams = new ArrayList<String>();
+        List<String> uriParams = new ArrayList<>();
 
         for (ParameterInfo param : getTemplateParameters()) {
             uriParams.add(param.getName());
@@ -231,7 +231,7 @@ public abstract class SaasBean extends GenericResourceBean {
         if (getMimeTypes().length == 1 && getMimeTypes()[0] == MimeType.HTML) {
             return new String[]{String.class.getName()};
         } else {
-            List<String> repList = new ArrayList<String>();
+            List<String> repList = new ArrayList<>();
             for(int i=0;i<getOutputWrapperNames().size();i++) {
                 String rep = getOutputWrapperPackageNames().get(i) + "." + getOutputWrapperNames().get(i);
                 for(MimeType m:getMimeTypes()) {//stuff rep with as much mimetype length
@@ -488,7 +488,7 @@ public abstract class SaasBean extends GenericResourceBean {
             List<Artifacts> artifactsList = codegen.getArtifacts();
             if(artifactsList != null) {
                 for(Artifacts artifacts: artifactsList) {
-                    Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String> map = new HashMap<>();
                     String targets = artifacts.getTargets();
                     List<Artifact> artifactList = artifacts.getArtifact();
                     if(artifactList != null) {
@@ -845,7 +845,7 @@ public abstract class SaasBean extends GenericResourceBean {
                 private String url;
 
                 public Template(String dropTypes, String id, String type, String url) {
-                    this.dropTypeList = new ArrayList<String>();
+                    this.dropTypeList = new ArrayList<>();
                     for(String dropType: dropTypes.split(","))
                         this.dropTypeList.add(dropType);
                     this.id = id;

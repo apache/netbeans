@@ -48,7 +48,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
     ResourceBundle          bundle = NbBundle.getBundle(PlatformInstallIterator.class);
     LocationChooser.Panel   locationPanel = new LocationChooser.Panel();
     SelectorPanel.Panel     selectorPanel = new SelectorPanel.Panel ();
-    Collection<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    Collection<ChangeListener> listeners = new ArrayList<>();
     
     PlatformInstallIterator() {
         selectorPanel.addChangeListener(this);

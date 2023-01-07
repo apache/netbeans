@@ -171,7 +171,7 @@ public class BroadCatchBlock {
         
         private CatchClauseProcessor initGenericQNames(String names) {
             StringTokenizer tukac = new StringTokenizer(names, ", "); // NOI18N
-            genericQNames = new HashSet<String>(5);
+            genericQNames = new HashSet<>(5);
             while (tukac.hasMoreTokens()) {
                 genericQNames.add(tukac.nextToken());
             }
@@ -181,7 +181,7 @@ public class BroadCatchBlock {
         
         public CatchClauseProcessor suppressUmbrellas(String names) {
             StringTokenizer tukac = new StringTokenizer(names, ", "); // NOI18N
-            umbrellas = new HashSet<String>(5);
+            umbrellas = new HashSet<>(5);
             while (tukac.hasMoreTokens()) {
                 umbrellas.add(tukac.nextToken());
             }
@@ -408,7 +408,7 @@ public class BroadCatchBlock {
         }
     }
     
-    private static final Set<String> HARDCODED_GENERAL_EXCEPTIONS = new HashSet<String>();
+    private static final Set<String> HARDCODED_GENERAL_EXCEPTIONS = new HashSet<>();
     
     static {
         HARDCODED_GENERAL_EXCEPTIONS.add("java.lang.RuntimeException"); // NOI18N

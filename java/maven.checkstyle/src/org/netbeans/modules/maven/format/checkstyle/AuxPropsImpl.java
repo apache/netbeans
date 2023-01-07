@@ -67,7 +67,7 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
 
     private Properties cache;
     private boolean recheck = true;
-    private final List<String> defaults = new ArrayList<String>();
+    private final List<String> defaults = new ArrayList<>();
     private final AtomicBoolean enabledSet = new AtomicBoolean(false);
     private boolean enabled = false;
 
@@ -215,7 +215,7 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
      * @return list of files in local repository
      */
     private List<File> findDependencyArtifacts() {
-        List<File> cpFiles = new ArrayList<File>();
+        List<File> cpFiles = new ArrayList<>();
         final NbMavenProject p = project.getLookup().lookup(NbMavenProject.class);
         List<Plugin> plugins = p.getMavenProject().getBuildPlugins();
         for (Plugin plug : plugins) {
@@ -312,13 +312,13 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
     @Override
     public Iterable<String> listKeys(boolean shared) {
         if (shared) {
-            List<String> str = new ArrayList<String>();
+            List<String> str = new ArrayList<>();
             for (Object k : getCache().keySet()) {
                 str.add((String)k);
             }
             return str;
         }
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override

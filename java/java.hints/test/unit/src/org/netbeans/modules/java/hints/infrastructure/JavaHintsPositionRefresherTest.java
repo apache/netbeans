@@ -211,7 +211,7 @@ public class JavaHintsPositionRefresherTest extends NbTestCase {
             }
         });
 
-        Set<String> eds = new HashSet<String>();
+        Set<String> eds = new HashSet<>();
         for (Entry<String, List<ErrorDescription>> e : errorDescriptionsAt.entrySet()) {
             for (ErrorDescription ed : e.getValue()) {
                 eds.add(ed.toString().replace(":  ", "  :"));

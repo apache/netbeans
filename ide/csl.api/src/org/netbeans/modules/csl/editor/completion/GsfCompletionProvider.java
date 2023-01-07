@@ -434,7 +434,7 @@ public class GsfCompletionProvider implements CompletionProvider {
                     int MAX_WIDTH = 50; // Max width before wrapping to the next line
                     int column = 0;
                     List<List<String>> parameterList = new ArrayList<List<String>>();
-                    List<String> p = new ArrayList<String>();
+                    List<String> p = new ArrayList<>();
                     for (int length = params.size(), i = 0; i < length; i++) {
                         String parameter = params.get(i);
                         if (i < length-1) {
@@ -446,7 +446,7 @@ public class GsfCompletionProvider implements CompletionProvider {
                         if (column > MAX_WIDTH) {
                             column = 0;
                             parameterList.add(p);
-                            p = new ArrayList<String>();
+                            p = new ArrayList<>();
                             
                         }
                     }

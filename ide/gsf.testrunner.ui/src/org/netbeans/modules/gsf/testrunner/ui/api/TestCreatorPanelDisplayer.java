@@ -67,7 +67,7 @@ public final class TestCreatorPanelDisplayer {
         boolean isJ2MEProject = isJ2MEProject(activatedFOs);
 	cfg.createCfgPanel(false, isJ2MEProject);
 
-	ArrayList<String> testingFrameworks = new ArrayList<String>();
+	ArrayList<String> testingFrameworks = new ArrayList<>();
 	Collection<? extends Lookup.Item<TestCreatorProvider>> providers = Lookup.getDefault().lookupResult(TestCreatorProvider.class).allItems();
         if (!isJ2MEProject) {
             for (Lookup.Item<TestCreatorProvider> provider : providers) {

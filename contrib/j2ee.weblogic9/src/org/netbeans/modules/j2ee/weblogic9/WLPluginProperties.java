@@ -521,7 +521,7 @@ public final class WLPluginProperties {
             return Collections.emptyList();
         }
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         BufferedReader lnr = null;
 
         // read the list file line by line fetching out the domain paths
@@ -576,7 +576,7 @@ public final class WLPluginProperties {
             return Collections.emptyList();
         }
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         // init the input stream for the file and the w3c document object
         InputStream inputStream = null;
         Document document = null;

@@ -50,7 +50,7 @@ import org.openide.util.NbBundle.Messages;
  */
 public class AccessError implements ErrorRule<Void> {
 
-    private static final Set<String> CODES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("compiler.err.report.access")));
+    private static final Set<String> CODES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("compiler.err.report.access")));
     
     @Override
     public Set<String> getCodes() {

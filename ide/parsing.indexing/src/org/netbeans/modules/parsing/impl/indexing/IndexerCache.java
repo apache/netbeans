@@ -378,7 +378,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         for (T factory : r.allInstances()) {
             Set<String> mimeTypes = factories.get(factory);
             if (mimeTypes == null) {
-                mimeTypes = new HashSet<String>();
+                mimeTypes = new HashSet<>();
                 mimeTypes.add(ALL_MIME_TYPES);
                 factories.put(factory, mimeTypes);
             } // else the factory is already in the map (this should not happen unless ill configured in the layer)
@@ -396,7 +396,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
             for (T factory : r.allInstances()) {
                 Set<String> factoryMimeTypes = factories.get(factory);
                 if (factoryMimeTypes == null) {
-                    factoryMimeTypes = new HashSet<String>();
+                    factoryMimeTypes = new HashSet<>();
                     factoryMimeTypes.add(mimeType);
                     factories.put(factory, factoryMimeTypes);
                 } else if (!factoryMimeTypes.contains(ALL_MIME_TYPES)) {
@@ -422,7 +422,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
                 if (firstGetData && !transientUpdate) {
                     firstGetData = false;
                     if (changedIndexers != null) {
-                        mimeTypesToCheck = new HashSet<String>();
+                        mimeTypesToCheck = new HashSet<>();
                         for(IndexerInfo<T> ii : lastKnownInfos.values()) {
                             mimeTypesToCheck.addAll(ii.getMimeTypes());
                         }
@@ -776,7 +776,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
 
             if (getMIMETypesMethod != null) {
                 Collection<? extends MIMEResolver> resolvers = Lookup.getDefault().lookupAll(MIMEResolver.class);
-                order = new HashMap<String, Integer>();
+                order = new HashMap<>();
                 int idx = 0;
                 for(MIMEResolver r : resolvers) {
                     String [] mimeTypes = null;

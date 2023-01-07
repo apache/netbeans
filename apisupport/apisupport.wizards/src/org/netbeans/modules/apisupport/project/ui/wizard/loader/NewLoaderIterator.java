@@ -208,7 +208,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         String namePrefix = model.getPrefix();
         String packageName = model.getPackageName();
         final String mime = model.getMimeType();
-        Map<String, String> replaceTokens = new HashMap<String, String>();
+        Map<String, String> replaceTokens = new HashMap<>();
         replaceTokens.put("PREFIX", namePrefix);//NOI18N
         replaceTokens.put("PACKAGENAME", packageName);//NOI18N
         replaceTokens.put("MIMETYPE", mime);//NOI18N
@@ -351,7 +351,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
             // 7. register in layer
             if (!annotationReadyObject) {
             String path = "Loaders/" + mime + "/Factories/" + namePrefix + "DataLoader.instance";
-            Map<String,Object> attrs = new HashMap<String, Object>();
+            Map<String,Object> attrs = new HashMap<>();
             attrs.put("instanceCreate", "methodvalue:org.openide.loaders.DataLoaderPool.factory"); //NOI18N
             attrs.put("dataObjectClass", packageName + "." + namePrefix + "DataObject"); //NOI18N
             attrs.put("mimeType", mime); //NOI18N
@@ -382,7 +382,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         if (!annotationReadyObject) fileChanges.add(fileChanges.layerModifications(new CreatedModifiedFiles.LayerOperation() {
             @Override
             public void run(FileSystem layer) throws IOException {
-                List<String> actions = new ArrayList<String>();
+                List<String> actions = new ArrayList<>();
                 if (isEditable) {
                     actions.add("System/org-openide-actions-OpenAction"); // NOI18N
                 }

@@ -117,7 +117,7 @@ public final class OptionsExportModel {
                 while (entries.hasMoreElements()) {
                     ZipEntry zipEntry = (ZipEntry) entries.nextElement();
                     if(zipEntry.getName().equals(OptionsExportModel.ENABLED_ITEMS_INFO)) {
-                        enabledItems = new ArrayList<String>();
+                        enabledItems = new ArrayList<>();
                         InputStream stream = zipFile.getInputStream(zipEntry);
                         BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
                         String strLine;
@@ -139,7 +139,7 @@ public final class OptionsExportModel {
                 }
             });
             if(children.length == 1) {
-                enabledItems = new ArrayList<String>();
+                enabledItems = new ArrayList<>();
                 BufferedReader br;
                 try {
                     br = Files.newBufferedReader(Paths.get(Utilities.toURI(children[0])), StandardCharsets.UTF_8);
@@ -351,7 +351,7 @@ public final class OptionsExportModel {
      * @return set of single patterns containing just one # (e.g. [filePattern1#keyPattern1, filePattern2#keyPattern2, filePattern3])
      */
     static Set<String> parsePattern(String pattern) {
-        Set<String> patterns = new HashSet<String>();
+        Set<String> patterns = new HashSet<>();
         if (pattern.contains("#")) {  //NOI18N
             StringBuilder partPattern = new StringBuilder();
             ParserState state = ParserState.START;
@@ -411,7 +411,7 @@ public final class OptionsExportModel {
     /** Returns set of include patterns. */
     private Set<String> getIncludePatterns() {
         if (includePatterns == null) {
-            includePatterns = new HashSet<String>();
+            includePatterns = new HashSet<>();
             for (OptionsExportModel.Category category : getCategories()) {
                 for (OptionsExportModel.Item item : category.getItems()) {
                     if (item.isEnabled()) {
@@ -429,7 +429,7 @@ public final class OptionsExportModel {
     /** Returns set of exclude patterns. */
     private Set<String> getExcludePatterns() {
         if (excludePatterns == null) {
-            excludePatterns = new HashSet<String>();
+            excludePatterns = new HashSet<>();
             String passwords = NbBundle.getMessage(OptionsChooserPanel.class, "OptionsChooserPanel.export.passwords.displayName");
             for (OptionsExportModel.Category category : getCategories()) {
                 for (OptionsExportModel.Item item : category.getItems()) {
@@ -591,7 +591,7 @@ public final class OptionsExportModel {
             List<String> applicablePaths = getApplicablePaths(
                     Collections.singleton(include),
                     Collections.singleton(exclude));
-            Set<String> groups = new HashSet<String>();
+            Set<String> groups = new HashSet<>();
             Pattern p = Pattern.compile(include);
             for (String path : applicablePaths) {
                 Matcher m = p.matcher(path);
@@ -714,7 +714,7 @@ public final class OptionsExportModel {
      * @return relative patsh which match include/exclude patterns
      */
     private List<String> getApplicablePaths(Set<String> includePatterns, Set<String> excludePatterns) {
-        List<String> applicablePaths = new ArrayList<String>();
+        List<String> applicablePaths = new ArrayList<>();
         for (String relativePath : getRelativePaths()) {
             if (matches(relativePath, includePatterns, excludePatterns)) {
                 applicablePaths.add(relativePath);
@@ -822,7 +822,7 @@ public final class OptionsExportModel {
 
     private static List<String> getRelativePaths(File root, File file) {
         String relativePath = getRelativePath(root, file);
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (file.isDirectory()) {
             if (IGNORED_FOLDERS.contains(relativePath)) {
                 return result;
@@ -897,7 +897,7 @@ public final class OptionsExportModel {
      * @throws IOException if properties cannot be loaded
      */
     private Set<String> matchingKeys(String relativePath, String propertiesPattern) throws IOException {
-        Set<String> matchingKeys = new HashSet<String>();
+        Set<String> matchingKeys = new HashSet<>();
         String[] patterns = propertiesPattern.split("#", 2);
         String filePattern = patterns[0];
         String keyPattern = patterns[1];
@@ -922,8 +922,8 @@ public final class OptionsExportModel {
     private void copyFile(String relativePath) throws IOException {
         currentProperties = null;
         boolean includeFile = false;  // include? entire file
-        Set<String> includeKeys = new HashSet<String>();
-        Set<String> excludeKeys = new HashSet<String>();
+        Set<String> includeKeys = new HashSet<>();
+        Set<String> excludeKeys = new HashSet<>();
         for (String pattern : getIncludePatterns()) {
             if (pattern.contains("#")) {  //NOI18N
                 includeKeys.addAll(matchingKeys(relativePath, pattern));
@@ -1117,7 +1117,7 @@ public final class OptionsExportModel {
      * @throws java.io.IOException
      */
     static List<String> listZipFile(File file) throws IOException {
-        List<String> relativePaths = new ArrayList<String>();
+        List<String> relativePaths = new ArrayList<>();
         // Open the ZIP file
         ZipFile zipFile = new ZipFile(file);
         // Enumerate each entry

@@ -242,7 +242,7 @@ public class HighlightsMergeTesting {
             Document doc = document(context);
             Random random = context.container().random();
             int lastOffset = 0;
-            List<Object> highlights = new ArrayList<Object>();
+            List<Object> highlights = new ArrayList<>();
             int addCount = random.nextInt(MAX_LAYER_HIGHLIGHT_COUNT);
             for (int i = 0; i < addCount; i++) {
                 boolean nextCont = random.nextBoolean();

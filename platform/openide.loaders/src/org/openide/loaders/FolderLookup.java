@@ -253,7 +253,7 @@ public class FolderLookup extends FolderInstance {
     private static void exception (Exception e) {
         Logger.getLogger(FolderLookup.class.getName()).log(Level.INFO, null, e);
     }
-    private static final Set<String> notified = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> notified = Collections.synchronizedSet(new HashSet<>());
     private static void exception(Exception e, FileObject fo) {
         Logger.getLogger(FolderLookup.class.getName()).log(notified.add(fo.getPath()) ? Level.INFO : Level.FINE, "Bad file: " + fo, e);
     }

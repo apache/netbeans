@@ -473,7 +473,7 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
     private void updateCompilationUnitJavadoc(JavaProjectGenerator.JavaCompilationUnit cu) {
         if (javadoc.isEnabled()) {
             if (javadoc.getText().length() > 0) {
-                cu.javadoc = new ArrayList<String>();
+                cu.javadoc = new ArrayList<>();
                 for (String part : javadoc.getText().split(",")) {
                     File f = FileUtil.normalizeFile(new File(part.trim()));
                     String path = Util.relativizeLocation(model.getBaseFolder(), model.getNBProjectFolder(), f);
@@ -491,7 +491,7 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
             cu.output = null;
             return;
         }
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (int i=0; i<output.getModel().getSize(); i++) {
             File f = new File((String)output.getModel().getElementAt(i));
             String path = Util.relativizeLocation(model.getBaseFolder(), model.getNBProjectFolder(), f);

@@ -116,7 +116,7 @@ public final class Utils {
     /**
      * Keeps track about already logged metrics events
      */
-    private static final Set<String> metrics = new HashSet<String>(3);
+    private static final Set<String> metrics = new HashSet<>(3);
 
     private static File tempDir;
     
@@ -125,7 +125,7 @@ public final class Utils {
      */
     private static final Set<String> forbiddenFolders;
     static {
-        Set<String> files = new HashSet<String>();
+        Set<String> files = new HashSet<>();
         try {
             String forbidden = System.getProperty("versioning.forbiddenFolders", ""); //NOI18N
             files.addAll(Arrays.asList(forbidden.split("\\;"))); //NOI18N
@@ -242,7 +242,7 @@ public final class Utils {
      * @return Set<File> all files that belong to the same DataObject as the argument
      */
     public static Set<File> getAllDataObjectFiles(File file) {
-        Set<File> filesToCheckout = new HashSet<File>(2);
+        Set<File> filesToCheckout = new HashSet<>(2);
         filesToCheckout.add(file);
         FileObject fo = FileUtil.toFileObject(file);
         if (fo != null) {
@@ -396,7 +396,7 @@ public final class Utils {
      * @return List<String> stored List of String or an empty List if the key was not found (order is preserved)
      */
     public static List<String> getStringList(Preferences prefs, String key) {
-        List<String> retval = new ArrayList<String>();
+        List<String> retval = new ArrayList<>();
         try {
             String[] keys = prefs.keys();
             for (int i = 0; i < keys.length; i++) {
@@ -499,7 +499,7 @@ public final class Utils {
      * File[1] contains all other files
      */
     public static File[][] splitFlatOthers(File [] files) {
-        Set<File> flat = new HashSet<File>(1);
+        Set<File> flat = new HashSet<>(1);
         for (int i = 0; i < files.length; i++) {
             if (VersioningSupport.isFlat(files[i])) {
                 flat.add(files[i]);
@@ -508,7 +508,7 @@ public final class Utils {
         if (flat.isEmpty()) {
             return new File[][] { new File[0], files };
         } else {
-            Set<File> allFiles = new HashSet<File>(Arrays.asList(files));
+            Set<File> allFiles = new HashSet<>(Arrays.asList(files));
             allFiles.removeAll(flat);
             return new File[][] {
                 flat.toArray(new File[flat.size()]),
@@ -524,7 +524,7 @@ public final class Utils {
      */
     public static Set<File> flattenFiles (File[] roots, Collection<File> files) {
         File[][] split = Utils.splitFlatOthers(roots);
-        Set<File> filteredFiles = new HashSet<File>(files);
+        Set<File> filteredFiles = new HashSet<>(files);
         if (split[0].length > 0) {
             outer:
             for (Iterator<File> it = filteredFiles.iterator(); it.hasNext(); ) {
@@ -1578,7 +1578,7 @@ public final class Utils {
      */
     public static Set<File> getOpenFiles() {
         TopComponent[] comps = TopComponent.getRegistry().getOpened().toArray(new TopComponent[0]);
-        Set<File> openFiles = new HashSet<File>(comps.length);
+        Set<File> openFiles = new HashSet<>(comps.length);
         for (TopComponent tc : comps) {
             Node[] nodes = tc.getActivatedNodes();
             if (nodes == null) {
@@ -1687,7 +1687,7 @@ public final class Utils {
      */
     public static File[] getProjectRootFiles(Project project){
         if (project == null) return null;
-        Set<File> set = new HashSet<File>();
+        Set<File> set = new HashSet<>();
 
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup [] sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);

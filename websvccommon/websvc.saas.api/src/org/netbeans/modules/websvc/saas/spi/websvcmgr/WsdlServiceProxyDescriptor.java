@@ -128,7 +128,7 @@ public class WsdlServiceProxyDescriptor {
 
     public Map<String, Object> getConsumerData() {
         if (consumerData == null) {
-            consumerData = new HashMap<String, Object>();
+            consumerData = new HashMap<>();
         }
         return consumerData;
     }

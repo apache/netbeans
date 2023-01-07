@@ -95,7 +95,7 @@ public class ControllerTest extends NbTestCase implements TestConstants {
         String[] parametersReturned = params.split("&");
 //        assertEquals(parametersGiven.length, parametersReturned.length);
 
-        Set<String> returnedSet = new HashSet<String>(parametersReturned.length);
+        Set<String> returnedSet = new HashSet<>(parametersReturned.length);
         for (String string : parametersReturned) {
             returnedSet.add(string);
         }

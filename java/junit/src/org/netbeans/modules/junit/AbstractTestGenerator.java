@@ -1696,7 +1696,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         boolean[] conflicts = new boolean[count];
         boolean issueFound = false;
 
-        Set<String> varNamesSet = new HashSet<String>((int) ((count + 2) * 1.4));
+        Set<String> varNamesSet = new HashSet<>((int) ((count + 2) * 1.4));
         varNamesSet.add(INSTANCE_VAR_NAME);
         varNamesSet.add(RESULT_VAR_NAME);
         varNamesSet.add(EXP_RESULT_VAR_NAME);

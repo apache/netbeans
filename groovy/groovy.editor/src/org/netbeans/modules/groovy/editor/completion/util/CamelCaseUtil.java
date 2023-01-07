@@ -85,7 +85,7 @@ public class CamelCaseUtil {
      * @return list of splitted prefixes
      */
     private static List<String> splitByUpperCases(String prefix) {
-        List<String> splitedPrefixes = new ArrayList<String>();
+        List<String> splitedPrefixes = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < prefix.length(); i++) {

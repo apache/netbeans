@@ -559,7 +559,7 @@ public class JavaCustomIndexer extends CustomIndexer {
             if (javaContext.getClassIndexImpl().getType() == ClassIndexImpl.Type.EMPTY)
                 return; //No java no need to continue
             final Set<ElementHandle<TypeElement>> removedTypes = new HashSet <ElementHandle<TypeElement>> ();
-            final Set<File> removedFiles = new HashSet<File> ();
+            final Set<File> removedFiles = new HashSet<> ();
             final boolean[] isModuleInfo = new boolean[1];
             ElementHandle<ModuleElement> module = null;
             for (Indexable i : files) {
@@ -900,7 +900,7 @@ public class JavaCustomIndexer extends CustomIndexer {
             for (URL u2 : l1) {
                 List<URL> l2 = inverseDeps.get(u2);
                 if (l2 == null) {
-                    l2 = new ArrayList<URL>();
+                    l2 = new ArrayList<>();
                     inverseDeps.put (u2,l2);
                 }
                 l2.add (u1);
@@ -969,7 +969,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                         if (rootPrj == null) {
                             depRoots = Collections.singletonList(root);
                         } else {
-                            depRoots = new ArrayList<URL>();
+                            depRoots = new ArrayList<>();
                             depRoots.add(root);
                             int index = depRoots.indexOf(root);
                             depRoots.addAll(index+1, getSrcRootPeers(peers, root));
@@ -998,7 +998,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                     break;
                 case ENABLED:
                     if (depRoots == null) {
-                        depRoots = new ArrayList<URL>();
+                        depRoots = new ArrayList<>();
                         depRoots.add(root);
                     } else {
                         List<URL> l = new ArrayList<URL>(depRoots);
@@ -1053,7 +1053,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                     continue;
                 }
 
-                final Set<FileObject> files = new HashSet<FileObject>();
+                final Set<FileObject> files = new HashSet<>();
                 for (ElementHandle<TypeElement> e : toHandle)
                     files.addAll(index.getResources(e, EnumSet.complementOf(EnumSet.of(ClassIndex.SearchKind.IMPLEMENTORS)), EnumSet.of(ClassIndex.SearchScope.SOURCE)));
 
@@ -1348,7 +1348,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         return JavaIndex.ensureAttributeValue(root.toURL(), SOURCE_PATH, srcPathStr);
     }
 
-    private static final Set<String> JDK7AndLaterWarnings = new HashSet<String>(Arrays.asList(
+    private static final Set<String> JDK7AndLaterWarnings = new HashSet<>(Arrays.asList(
             "compiler.warn.diamond.redundant.args", 
             "compiler.warn.diamond.redundant.args.1",
             "compiler.note.potential.lambda.found"));

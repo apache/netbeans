@@ -78,7 +78,7 @@ public class ParametersPicker extends javax.swing.JPanel {
         Mnemonics.setLocalizedText(methodButton, FormUtils.getBundleString("CTL_CW_Method")); // NOI18N
         Mnemonics.setLocalizedText(codeButton, FormUtils.getBundleString("CTL_CW_UserCode")); // NOI18N
 
-        beansList = new ArrayList<RADComponent>();
+        beansList = new ArrayList<>();
         for (RADComponent radComp : formModel.getAllComponents()) {
             if (this.requiredType.isAssignableFrom(radComp.getBeanClass()))
                 beansList.add(radComp);
@@ -315,7 +315,7 @@ public class ParametersPicker extends javax.swing.JPanel {
 
     public synchronized void addChangeListener(ChangeListener l) {
         if (listeners == null)
-            listeners = new ArrayList<ChangeListener>();
+            listeners = new ArrayList<>();
         listeners.add(l);
     }
 

@@ -37,7 +37,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.Pa
  */
 public class WebFilter extends PersistentObject implements Refreshable {
     private String name;
-    private List<String> urlPatterns = new ArrayList<String>();
+    private List<String> urlPatterns = new ArrayList<>();
     private String clazz;
 
     public WebFilter(AnnotationModelHelper helper, TypeElement typeElement) {

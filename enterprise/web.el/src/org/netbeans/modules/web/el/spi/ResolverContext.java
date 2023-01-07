@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public final class ResolverContext {
 
-    private final Map<String, Object> context = new HashMap<String, Object>();
+    private final Map<String, Object> context = new HashMap<>();
 
     public ResolverContext() {
     }

@@ -250,7 +250,7 @@ public class EncodingUtilTest extends TestCase {
                 }
                 
             } else {
-                Set<String> known = new HashSet<String>();
+                Set<String> known = new HashSet<>();
                 known.add("Cp930");
                 known.add("MacDingbat");
                 known.add("MacSymbol");

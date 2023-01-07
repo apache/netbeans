@@ -387,7 +387,7 @@ public class CordovaPerformer implements BuildPerformer {
             }
             if (fresh) {
                 preferences.putInt(PROP_BUILD_SCRIPT_VERSION, BUILD_SCRIPT_VERSION);
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("__PROJECT_NAME__", ProjectUtils.getInformation(project).getName());// NOI18N
                 ConfigUtils.replaceToken(project.getProjectDirectory().getFileObject(PATH_BUILD_XML), map);
                 createScript(project, "empty.properties", PATH_PLUGINS_PROPERTIES, false);

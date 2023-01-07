@@ -113,7 +113,7 @@ public class RepositoryInfo {
     private GitBranch activeBranch;
     private GitRepositoryState repositoryState;
     private final String name;
-    private static final Set<String> logged = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> logged = Collections.synchronizedSet(new HashSet<>());
     private NBGitConfig nbConfig;
     private static final String NETBEANS_CONFIG_FILE = "nbconfig"; //NOI18N
     private PushMode pushMode = PushMode.ASK;

@@ -146,7 +146,7 @@ public final class WildflyMessageDestinationManager implements MessageDestinatio
 
             WildflyMessageDestination jbossMessageDestination = (WildflyMessageDestination) destination;
             String name = jbossMessageDestination.getName();
-            Set<String> jndiNames = new HashSet<String>(jbossMessageDestination.getJndiNames());
+            Set<String> jndiNames = new HashSet<>(jbossMessageDestination.getJndiNames());
             jndiNames.retainAll(deployed.keySet());
             if (deployed.keySet().contains(jbossMessageDestination.getName()) || !jndiNames.isEmpty()) { // conflicting destination found
                 MessageDestination deployedMessageDestination = deployed.get(name);

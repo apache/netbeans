@@ -102,7 +102,7 @@ public class ResourcesHelper {
         String sample_jdbc = "jdbc/sample"; //NOI18N
         String sample_classname = "org.apache.derby.jdbc.ClientDataSource"; //NOI18N
         String sample_restype = "javax.sql.DataSource"; //NOI18N
-        Map<String, String> sample_props = new HashMap<String, String>();
+        Map<String, String> sample_props = new HashMap<>();
         sample_props.put("DatabaseName", "sample");
         sample_props.put("User", "app");
         sample_props.put("Password", "app");

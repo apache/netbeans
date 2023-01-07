@@ -64,7 +64,7 @@ class TestBeansModelImpl implements BeansModel {
      */
     @Override
     public Set<String> getAlternativeClasses() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for( BeanClass clazz : getAlternativeElement(BeanClass.class)){
             result.add( clazz.getBeanClass() );
         }
@@ -76,7 +76,7 @@ class TestBeansModelImpl implements BeansModel {
      */
     @Override
     public Set<String> getAlternativeStereotypes() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for( Stereotype stereotype : getAlternativeElement(Stereotype.class)){
             result.add( stereotype.getStereotype() );
         }

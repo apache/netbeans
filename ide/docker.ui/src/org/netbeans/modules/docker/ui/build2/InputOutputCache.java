@@ -45,7 +45,7 @@ public final class InputOutputCache {
 
     private static final Map<InputOutput, CachedInputOutput> AVAILABLE = new WeakHashMap<>();
 
-    private static final Set<String> ACTIVE_DISPLAY_NAMES = new HashSet<String>();
+    private static final Set<String> ACTIVE_DISPLAY_NAMES = new HashSet<>();
 
     private InputOutputCache() {
         super();

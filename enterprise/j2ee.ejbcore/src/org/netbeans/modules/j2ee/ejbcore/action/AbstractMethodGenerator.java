@@ -122,7 +122,7 @@ public abstract class AbstractMethodGenerator {
         Future<Map<String, String>> futureResult = ejbModule.getMetadataModel().runReadActionWhenReady(new MetadataModelAction<EjbJarMetadata, Map<String, String>>() {
             public Map<String, String> run(EjbJarMetadata metadata) throws Exception {
                 EntityAndSession ejb = (EntityAndSession) metadata.findByEjbClass(ejbClass);
-                Map<String, String> result = new HashMap<String, String>();
+                Map<String, String> result = new HashMap<>();
                 if (ejb != null){
                     result.put(EntityAndSession.LOCAL, ejb.getLocal());
                     result.put(EntityAndSession.LOCAL_HOME, ejb.getLocalHome());

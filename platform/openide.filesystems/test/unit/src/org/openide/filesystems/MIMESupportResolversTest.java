@@ -85,7 +85,7 @@ public class MIMESupportResolversTest extends TestCase {
         }
         
         public void turn (MIMEResolver c) {
-            ArrayList<Object> l = new ArrayList<Object>();
+            ArrayList<Object> l = new ArrayList<>();
             l.add(err);
             l.add(c);
             ic.set (l, null);

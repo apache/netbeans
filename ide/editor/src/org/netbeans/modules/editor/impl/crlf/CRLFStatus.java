@@ -80,7 +80,7 @@ public class CRLFStatus {
 
     private static final Insets NULL_INSETS = new Insets(0, 0, 0, 0);
     private static final JLabel GLOBAL_CRLF = new JLabel("    ");
-    private static final Map<String, String> LINE_ENDINGS_DN = new HashMap<String, String>();
+    private static final Map<String, String> LINE_ENDINGS_DN = new HashMap<>();
     private static final String UNKNOWN = Bundle.LBL_Unknown();
 
     static {

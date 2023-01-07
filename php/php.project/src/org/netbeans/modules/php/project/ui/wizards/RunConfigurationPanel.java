@@ -759,7 +759,7 @@ public class RunConfigurationPanel implements WizardDescriptor.Panel<WizardDescr
         public WizardConfigProvider() {
             configs = ConfigManager.createEmptyConfigs();
             // we will be using the default configuration (=> no bold labels)
-            configs.put(null, new HashMap<String, String>());
+            configs.put(null, new HashMap<>());
         }
 
         @Override

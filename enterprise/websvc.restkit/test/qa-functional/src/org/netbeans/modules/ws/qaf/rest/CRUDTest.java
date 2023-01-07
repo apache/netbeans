@@ -125,7 +125,7 @@ public class CRUDTest extends RestTestBase {
 
         String packageName = getRestPackage() + ".service";
         Set<File> files = getFiles(packageName);
-        Set<File> allFiles = new HashSet<File>(files);
+        Set<File> allFiles = new HashSet<>(files);
         if (!getJavaEEversion().equals(JavaEEVersion.JAVAEE5)) {
             assertEquals("Missing files in package " + packageName, 9, files.size()); //NOI18N
         } else {
@@ -331,7 +331,7 @@ public class CRUDTest extends RestTestBase {
     }
 
     protected Set<File> getFiles(String pkg) {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         FileObject fo = getProjectSourceRoot().getFileObject(pkg.replace('.', '/') + "/"); //NOI18N
         if (fo != null) {
             File pkgRoot = FileUtil.toFile(fo);
@@ -348,7 +348,7 @@ public class CRUDTest extends RestTestBase {
     }
 
     protected Set<File> getFilesFromCustomPkg(String... pkg) {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         for (int i = 0; i < pkg.length; i++) {
             FileObject fo = getProjectSourceRoot().getFileObject(pkg[i].replace('.', '/') + "/"); //NOI18N
             File pkgRoot = FileUtil.toFile(fo);

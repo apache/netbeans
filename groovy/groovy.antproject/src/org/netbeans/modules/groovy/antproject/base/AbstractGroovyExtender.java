@@ -167,7 +167,7 @@ public abstract class AbstractGroovyExtender implements GroovyExtenderImplementa
         Parameters.notNull("classpath", classPath); // NOI18N
         Parameters.notNull("className", className); // NOI18N
 
-        List<File> diskFiles = new ArrayList<File>();
+        List<File> diskFiles = new ArrayList<>();
         for (URL url : classPath) {
             URL archiveURL = FileUtil.getArchiveFile(url);
 

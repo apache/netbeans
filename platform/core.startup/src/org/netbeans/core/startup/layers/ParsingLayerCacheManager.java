@@ -136,7 +136,7 @@ abstract class ParsingLayerCacheManager extends LayerCacheManager implements Con
             Iterator<URL> it = urls.iterator();
             while (it.hasNext()) {
                 base = it.next(); // store base for resolving in parser
-                oneLayerFiles = new HashSet<String>(100);
+                oneLayerFiles = new HashSet<>(100);
                 currPath = null;
                 LayerCacheManager.err.log(Level.FINE, "Parsing: {0}", base);
                 atLeastOneFileOrFolderInLayer = false;
@@ -461,7 +461,7 @@ abstract class ParsingLayerCacheManager extends LayerCacheManager implements Con
             List<URL> urls;
             if (base instanceof URL) {
                 URL u = (URL)base;
-                base = urls = new ArrayList<URL>();
+                base = urls = new ArrayList<>();
                 urls.add(u);
             } else {
                 urls = (List<URL>)base;

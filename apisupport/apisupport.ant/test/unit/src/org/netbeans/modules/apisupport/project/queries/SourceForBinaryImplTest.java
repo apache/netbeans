@@ -140,7 +140,7 @@ public class SourceForBinaryImplTest extends TestBase {
     }
 
     private List<FileObject> trimGenerated(List<FileObject> dirs) {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         for (FileObject dir : dirs) {
             if (!dir.getName().endsWith("-generated")) {
                 result.add(dir);

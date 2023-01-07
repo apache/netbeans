@@ -43,7 +43,7 @@ public final class FieldNamesCalculator {
     }
 
     public List<String> calculate() {
-        List<String> nameBlocks = new ArrayList<String>();
+        List<String> nameBlocks = new ArrayList<>();
         LinkedHashSet<String> names = new LinkedHashSet<String>();
         Matcher matcher = pattern.matcher(typeName);
         if (matcher.find()) {

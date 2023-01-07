@@ -35,7 +35,7 @@ import org.openide.modules.OnStop;
 @OnStop
 public class Installer implements Runnable {
     
-    private static Map<String,Integer> mimeTypes = new HashMap<String,Integer>();
+    private static Map<String,Integer> mimeTypes = new HashMap<>();
 
     public static void add (String mimeType) {
         if (mimeTypes.containsKey(mimeType)) {

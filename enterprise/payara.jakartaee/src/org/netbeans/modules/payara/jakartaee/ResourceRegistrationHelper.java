@@ -109,7 +109,7 @@ public class ResourceRegistrationHelper {
     }
 
     private static void checkUpdateServerResources(File sunResourcesXml, Hk2DeploymentManager dm){
-          Map<String, String> changedData = new HashMap<String, String>();
+          Map<String, String> changedData = new HashMap<>();
           List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
           ResourceFinder cpFinder = new ResourceFinder("name"); // NOI18N
           pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", cpFinder)); // NOI18N
@@ -148,7 +148,7 @@ public class ResourceRegistrationHelper {
             String jndiName = resources.get(i);
             Map<String, String> localData = resourceFinder.getResourceData().get(jndiName);
             String remoteKey = prefix + jndiName + "."; // NOI18N
-            Map<String, String> remoteData = new HashMap<String, String>();
+            Map<String, String> remoteData = new HashMap<>();
             Iterator<String> itr = allRemoteData.keySet().iterator();
             while (itr.hasNext()) {
                 String key = itr.next();
@@ -164,7 +164,7 @@ public class ResourceRegistrationHelper {
     }
     
     private static Map<String, String> getChangedData(Map<String, String> remoteData, Map<String, String> localData, Map<String, String> changedData, String resourceKey) {
-        List<String> props = new ArrayList<String>();
+        List<String> props = new ArrayList<>();
         Iterator<String> keys = remoteData.keySet().iterator();
         Set<String> localKeySet = localData.keySet();
         while (keys.hasNext()) {
@@ -217,7 +217,7 @@ public class ResourceRegistrationHelper {
             Logger.getLogger("payara-jakartaee").log(Level.INFO,
                     "Could not retrieve property from server.", gfie);
         }
-        return new HashMap<String,String>();
+        return new HashMap<>();
     }
 
     public static void putResourceData(Map<String, String> data, Hk2DeploymentManager dm) {
@@ -249,7 +249,7 @@ public class ResourceRegistrationHelper {
         
         @Override
         public void readAttributes(String qname, Attributes attributes) throws SAXException {
-            properties = new HashMap<String, String>();
+            properties = new HashMap<>();
 
             String resourceName = attributes.getValue(nameKey);
             properties.put(nameKey, resourceName);  //NOI18N

@@ -47,7 +47,7 @@ public class RepositoryImpl extends Repository {
         systemDir.mkdirs();
         lfs.setRootDirectory(systemDir);
         lfs.setReadOnly(false);
-        List<FileSystem> layers = new ArrayList<FileSystem>();
+        List<FileSystem> layers = new ArrayList<>();
         layers.add(lfs);
         // get layer for the TestServer
         //addLayer(layers, "org/netbeans/modules/j2ee/test/testserver/resources/layer.xml");

@@ -232,7 +232,7 @@ public class JSPELPlugin extends ELPlugin {
     }
 
     private static List<String> getParametersForSignature(String signature) {
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         String paramString = signature.substring(signature.indexOf("(") + 1, signature.indexOf(")")); //NOI18N
         for (String param : paramString.split(",")) { //NOI18N
             params.add(getSimpleNameForType(param.trim()));

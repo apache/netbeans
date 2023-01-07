@@ -81,8 +81,8 @@ final class TestQuery implements MultipleRootsUnitTestForSourceQueryImplementati
      * @return two-element array: first source roots, then test source roots
      */
     private URL[][] findSourcesAndTests() {
-        List<URL> sources = new ArrayList<URL>();
-        List<URL> tests = new ArrayList<URL>();
+        List<URL> sources = new ArrayList<>();
+        List<URL> tests = new ArrayList<>();
         Element data = aux.getConfigurationFragment(JavaProjectNature.EL_JAVA, JavaProjectNature.NS_JAVA_LASTEST, true);
         if (data != null) {
             for (Element cu : XMLUtil.findSubElements(data)) {

@@ -380,8 +380,8 @@ public class WSDLSemanticsVisitor  implements WSDLVisitor {
         
         //(a)validate if all operation input name are unique
         //(b)validate if all operation output name are unique
-        ArrayList<String> inputNames = new ArrayList<String>();
-        ArrayList<String> outputNames = new ArrayList<String>();
+        ArrayList<String> inputNames = new ArrayList<>();
+        ArrayList<String> outputNames = new ArrayList<>();
         Collection operations = portType.getOperations();
         Iterator it = operations.iterator();
         while(it.hasNext()) {
@@ -424,7 +424,7 @@ public class WSDLSemanticsVisitor  implements WSDLVisitor {
     }
     
     private void validateOverloadedOperations(PortType portType) {
-        Set<String> operationNames = new HashSet<String>();
+        Set<String> operationNames = new HashSet<>();
         
         for (Operation operation : portType.getOperations()) {
             String opName = operation.getName();
@@ -876,7 +876,7 @@ public class WSDLSemanticsVisitor  implements WSDLVisitor {
         if(bindingFaults.size() != portTypeFaults.size()) return false;
         if(portTypeFaults.size() == 0) return true;
         
-        Set<String> portTypeFaultNames = new HashSet<String>();
+        Set<String> portTypeFaultNames = new HashSet<>();
         for(Fault portTypeFault : portTypeFaults){
             portTypeFaultNames.add(portTypeFault.getName());
         }
@@ -976,7 +976,7 @@ public class WSDLSemanticsVisitor  implements WSDLVisitor {
         //wsdl spec:
         //2.4.5 Names of Elements within an Operation:
         //The name of the fault element is unique within the set of faults defined for the operation
-        ArrayList<String> faultNames = new ArrayList<String>();
+        ArrayList<String> faultNames = new ArrayList<>();
         
         Collection faults = operation.getFaults();
         Iterator it = faults.iterator();

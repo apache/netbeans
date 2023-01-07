@@ -140,7 +140,7 @@ public class MenuChecker {
         if (menu.submenu == null) {
             return;
         }
-        Map<Integer,String> check = new HashMap<Integer,String>();
+        Map<Integer,String> check = new HashMap<>();
         for (NbMenu item : menu.submenu) {
             if (item.mnemo != 0) {
                 if (check.containsKey(item.mnemo)) {
@@ -165,7 +165,7 @@ public class MenuChecker {
         if (menu.submenu == null) {
             return;
         }
-        Map<String,String> check = new HashMap<String,String>();
+        Map<String,String> check = new HashMap<>();
         for (NbMenu item : menu.submenu) {
             if (item.accelerator != null) {
                 if (check.containsKey(item.accelerator)) {

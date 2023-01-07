@@ -948,7 +948,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         }
         
         private Collection<String> computeAnnotationTypesToAnalyze(Collection<AnnotationDesc> startAt) {
-            Collection<String> annotationTypes = new HashSet<String>();
+            Collection<String> annotationTypes = new HashSet<>();
             List<AnnotationDesc> combinationsToAnalyze = new LinkedList<AnnotationDesc>(startAt);
             
             while (!combinationsToAnalyze.isEmpty()) {

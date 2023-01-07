@@ -41,7 +41,7 @@ public final class Icons {
     private static final String GIF_EXTENSION = ".gif";
     private static final String PNG_EXTENSION = ".png";
     private static final String WAIT = ICON_BASE + "wait" + PNG_EXTENSION;
-    //private static final Map<String, Icon> icons = new HashMap<String, Icon>();
+    //private static final Map<String, Icon> icons = new HashMap<>();
 
     /** Creates a new instance of Icons */
     private Icons() {

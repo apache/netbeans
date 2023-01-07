@@ -43,8 +43,8 @@ public class InstallationCompletenessTest extends NbTestCase {
     public static final String EXPECTED_INCLUDES_PROPERTY = "expected.includes";
     public static final String EXPECTED_EXCLUDES_PROPERTY = "expected.excludes";
 
-    private Set<String> expectedIncludes = new HashSet<String>();
-    private Set<String> expectedExcludes = new HashSet<String>();
+    private Set<String> expectedIncludes = new HashSet<>();
+    private Set<String> expectedExcludes = new HashSet<>();
     
     public enum Type {
 
@@ -100,7 +100,7 @@ public class InstallationCompletenessTest extends NbTestCase {
             kitsGolden.removeAll(expectedExcludes);
             listExpectedParams();
         }
-        Set<String> redundantKits = new HashSet<String>();
+        Set<String> redundantKits = new HashSet<>();
         UpdateManager um = UpdateManager.getDefault();
         List<UpdateUnit> l = um.getUpdateUnits(UpdateManager.TYPE.KIT_MODULE);
         for (UpdateUnit updateUnit : l) {
@@ -150,7 +150,7 @@ public class InstallationCompletenessTest extends NbTestCase {
     }
     
     private  Set<String> getModulesForDistro(String distro, File f) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         Type distroT = Type.valueOf(distro.toUpperCase());
         Properties p = readProps(f);
         assertNotNull("Distro golden files are correctly read", p);
@@ -165,7 +165,7 @@ public class InstallationCompletenessTest extends NbTestCase {
     private Set<String> filterPlatformSpecific(Set<String> set){
         if (!org.openide.util.Utilities.isWindows()){
             //filter javacard modules on non-win platforms
-            Set<String> toRemove = new HashSet<String>();
+            Set<String> toRemove = new HashSet<>();
             for (String kit : set) {
                 if(kit.startsWith(JAVACARD_PREFIX)) {
                     toRemove.add(kit);

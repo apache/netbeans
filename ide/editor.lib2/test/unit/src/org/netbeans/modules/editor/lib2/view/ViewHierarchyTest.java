@@ -50,7 +50,7 @@ public class ViewHierarchyTest extends NbTestCase {
 
     public ViewHierarchyTest(String testName) {
         super(testName);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimple1");
 //        includes.add("testSimpleUndoRedo");
 //        includes.add("testCustomBounds");

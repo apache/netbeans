@@ -129,7 +129,7 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
                             try {
                                 PrintWriter pw = new PrintWriter(os);
                                 pw.println("IndexRemove " + d + File.separator);
-                                scan(d, pw, cnt, new HashSet<String>(Arrays.asList(r.excludes())), "");
+                                scan(d, pw, cnt, new HashSet<>(Arrays.asList(r.excludes())), "");
                                 pw.flush();
                             } finally {
                                 os.close();

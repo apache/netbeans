@@ -144,7 +144,7 @@ abstract class AbstractBinaryEntry extends AbstractEntry {
     }
 
     protected Set<String> computePublicClassNamesInMainModule() throws IOException {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         scanJarForPublicClassNames(result, jar);
         return result;
     }

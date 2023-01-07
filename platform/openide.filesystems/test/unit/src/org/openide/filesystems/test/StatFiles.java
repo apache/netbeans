@@ -154,7 +154,7 @@ public class StatFiles extends SecurityManager {
         String stackTrace = sb.toString();
         Map<String, Integer> stackMap = fileStackMap.get(file);
         if (stackMap == null) {
-            stackMap = new HashMap<String, Integer>();
+            stackMap = new HashMap<>();
             fileStackMap.put(file, stackMap);
         }
         if (stackMap.get(stackTrace) == null) {
@@ -189,11 +189,11 @@ public class StatFiles extends SecurityManager {
     public static class Results {
 
         private Map<File, Integer> forRead = new HashMap<File, Integer>();
-        private Map<File, Map<String, Integer>> forReadStack = new HashMap<File, Map<String, Integer>>();
+        private Map<File, Map<String, Integer>> forReadStack = new HashMap<>();
         private Map<File, Integer> forWrite = new HashMap<File, Integer>();
-        private Map<File, Map<String, Integer>> forWriteStack = new HashMap<File, Map<String, Integer>>();
+        private Map<File, Map<String, Integer>> forWriteStack = new HashMap<>();
         private Map<File, Integer> forDelete = new HashMap<File, Integer>();
-        private Map<File, Map<String, Integer>> forDeleteStack = new HashMap<File, Map<String, Integer>>();
+        private Map<File, Map<String, Integer>> forDeleteStack = new HashMap<>();
         
         Results addResult(Results results) {
             if (results == this) {
@@ -222,7 +222,7 @@ public class StatFiles extends SecurityManager {
         }
 
         public Set<File> getFiles() {
-            Set<File> result = new HashSet<File>();
+            Set<File> result = new HashSet<>();
             result.addAll(forRead.keySet());
             result.addAll(forWrite.keySet());
             result.addAll(forDelete.keySet());

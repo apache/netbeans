@@ -66,7 +66,7 @@ public class InstancePropertiesTest extends NbTestCase {
         allProps = manager.getProperties(PLUGIN_NAME);
         assertEquals(2, allProps.size());
 
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         Collections.addAll(ids, props1.getId(), props2.getId());
         for (InstanceProperties props : allProps) {
             ids.remove(props.getId());

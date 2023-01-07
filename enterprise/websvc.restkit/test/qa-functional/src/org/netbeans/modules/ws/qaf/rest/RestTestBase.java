@@ -309,7 +309,7 @@ public abstract class RestTestBase extends WebServicesTestBase {
         } catch (InterruptedException ie) {
         }
         if (!CREATE_GOLDEN_FILES) {
-            Set<String> set = new HashSet<String>(newFiles.size() / 2);
+            Set<String> set = new HashSet<>(newFiles.size() / 2);
             for (Iterator<File> i = newFiles.iterator(); i.hasNext();) {
                 File newFile = i.next();
                 File goldenFile;

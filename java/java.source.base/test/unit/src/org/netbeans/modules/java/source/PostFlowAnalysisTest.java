@@ -70,7 +70,7 @@ public class PostFlowAnalysisTest extends NbTestCase {
         TestUtilities.copyStringToFile(src, code);
         SourceUtilsTestUtil.setSourceLevel(src, sourceLevel);
         JavaSource javaSource = JavaSource.forFileObject(src);
-        final Set<String> actual = new HashSet<String>();
+        final Set<String> actual = new HashSet<>();
         javaSource.runUserActionTask(new Task<CompilationController>() {
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(Phase.RESOLVED);
@@ -80,7 +80,7 @@ public class PostFlowAnalysisTest extends NbTestCase {
             }
         }, true);
         
-        assertEquals(new HashSet<String>(Arrays.asList(errors)), actual);
+        assertEquals(new HashSet<>(Arrays.asList(errors)), actual);
     }
 
     private FileObject sourceRoot;

@@ -130,10 +130,10 @@ public class EditorTestLookup extends ProxyLookup {
     
     public static void setLookup(URL[] layers, File workDir, Object[] instances, ClassLoader cl, Class [] exclude)
     throws IOException, PropertyVetoException {
-        ArrayList<FileSystem> fs = new ArrayList<FileSystem>();
+        ArrayList<FileSystem> fs = new ArrayList<>();
         fs.add(createLocalFileSystem(workDir, new String[0]));
 
-        ArrayList<URL> xmlLayers = new ArrayList<URL>();
+        ArrayList<URL> xmlLayers = new ArrayList<>();
         for(URL layer : layers) {
             if (layer.getPath().endsWith(".xml")) {
                 xmlLayers.add(layer);

@@ -150,7 +150,7 @@ final class PatternSet {
      */
     private void addIncludePatterns(String patternsString) {
         if (includePatterns == null) {
-            includePatterns = new ArrayList<String>();
+            includePatterns = new ArrayList<>();
         }
         addPatterns(patternsString, includePatterns);
     }
@@ -159,7 +159,7 @@ final class PatternSet {
      */
     private void addExcludePatterns(String patternsString) {
         if (excludePatterns == null) {
-            excludePatterns = new ArrayList<String>();
+            excludePatterns = new ArrayList<>();
         }
         addPatterns(patternsString, excludePatterns);
     }
@@ -168,7 +168,7 @@ final class PatternSet {
      */
     private void addIncludePatterns(File includesFile) {
         if (includePatterns == null) {
-            includePatterns = new ArrayList<String>();
+            includePatterns = new ArrayList<>();
         }
         readPatterns(includesFile, includePatterns);
     }
@@ -177,7 +177,7 @@ final class PatternSet {
      */
     private void addExcludePatterns(File excludesFile) {
         if (excludePatterns == null) {
-            excludePatterns = new ArrayList<String>();
+            excludePatterns = new ArrayList<>();
         }
         readPatterns(excludesFile, excludePatterns);
     }

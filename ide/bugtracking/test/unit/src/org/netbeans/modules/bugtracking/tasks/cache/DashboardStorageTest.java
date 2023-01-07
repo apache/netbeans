@@ -52,7 +52,7 @@ public class DashboardStorageTest extends NbTestCase {
 
     public void testClosedEntriesStorage() throws Exception {
         DashboardStorage storage = DashboardStorage.getInstance();
-        List<String> categoryNames = new ArrayList<String>();
+        List<String> categoryNames = new ArrayList<>();
         categoryNames.add("Dummy1");
         categoryNames.add("Dummy2");
         categoryNames.add("Dummy3");
@@ -70,7 +70,7 @@ public class DashboardStorageTest extends NbTestCase {
         readClosedCategories = storage.readClosedCategories();
         assertEquals(0, readClosedCategories.size());
 
-        List<String> repositoryIds = new ArrayList<String>();
+        List<String> repositoryIds = new ArrayList<>();
         repositoryIds.add("Dummy1");
         repositoryIds.add("Dummy2");
         repositoryIds.add("Dummy3");

@@ -111,7 +111,7 @@ public class WLJ2eePlatformFactoryTest extends NbTestCase {
     }    
 
     private void checkJars(List<URL> urls, File... expected) throws Exception {
-        Set<File> jars = new HashSet<File>();
+        Set<File> jars = new HashSet<>();
         for (URL url : urls) {
             URL fileUrl = FileUtil.getArchiveFile(url);
             jars.add(new File(fileUrl.toURI()));

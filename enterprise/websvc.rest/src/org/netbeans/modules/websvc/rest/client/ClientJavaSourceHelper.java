@@ -435,7 +435,7 @@ public class ClientJavaSourceHelper {
 
         // add security stuff
         if (Security.Authentication.BASIC == security.getAuthentication()) {
-            List<VariableTree> authParams = new ArrayList<VariableTree>();
+            List<VariableTree> authParams = new ArrayList<>();
             Tree argTypeTree = maker.Identifier("String"); //NOI18N
             ModifiersTree fieldModifier = maker.Modifiers(
                     Collections.<Modifier>emptySet());
@@ -828,7 +828,7 @@ public class ClientJavaSourceHelper {
             return result;
         }
         
-        private Set<String> javaIds = new HashSet<String>();
+        private Set<String> javaIds = new HashSet<>();
     }
     
     static class ResourcePath {
@@ -874,7 +874,7 @@ public class ClientJavaSourceHelper {
                     if (sign != null) {
                         Params secParams = sign.getParams();
                         if (secParams != null) {
-                            List<String> params = new ArrayList<String>();
+                            List<String> params = new ArrayList<>();
                             for (Params.Param secParam : secParams.getParam()) {
                                 params.add(secParam.getName());
                             }

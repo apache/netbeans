@@ -112,7 +112,7 @@ public final class NbMavenProject {
     //that's because source roots get added repeatedly but never get removed and listening to changed happens elsewhere.
     //the imagined fix for 216001 is to keep each item just once. That would break once multiple sources add a given file and one of them removes it
     //as a hotfix this solution is ok, if we don't get some data updated, we should remove the watchedPath pattern altogether.
-    private final Set<File> files = new HashSet<File>();
+    private final Set<File> files = new HashSet<>();
     
     static {
         AccessorImpl impl = new AccessorImpl();

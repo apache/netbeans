@@ -102,13 +102,13 @@ public class NbBundleProcessor extends AbstractProcessor {
             } else {
                 processingEnv.getMessager().printMessage(Kind.WARNING, "Could not check for other source files in " + pkg);
             }
-            Map</*key*/String,/*value*/String> pairs = new HashMap<String,String>();
+            Map</*key*/String,/*value*/String> pairs = new HashMap<>();
             Map</*identifier*/String,Element> identifiers = new HashMap<String,Element>();
-            Map</*key*/String,/*simplename*/String> compilationUnits = new HashMap<String,String>();
+            Map</*key*/String,/*simplename*/String> compilationUnits = new HashMap<>();
             Map</*key*/String,/*line*/String[]> comments = new HashMap<String,String[]>();
             for (Element e : annotatedElements) {
                 String simplename = findCompilationUnitName(e);
-                List<String> runningComments = new ArrayList<String>();
+                List<String> runningComments = new ArrayList<>();
                 for (String keyValue : e.getAnnotation(NbBundle.Messages.class).value()) {
                     if (keyValue.startsWith("#")) {
                         runningComments.add(keyValue);
@@ -194,7 +194,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                     String value = entry2.getValue();
                     StringBuilder method = new StringBuilder();
                     method.append("    /**\n");
-                    List<String> params = new ArrayList<String>();
+                    List<String> params = new ArrayList<>();
                     int i = 0;
                     while (value.contains("{" + i)) {
                         params.add("arg" + i++);

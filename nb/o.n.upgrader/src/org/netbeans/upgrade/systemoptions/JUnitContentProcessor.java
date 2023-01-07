@@ -33,7 +33,7 @@ public class JUnitContentProcessor extends ContentProcessor{
     }
     
     protected Result parseContent(final Iterator<Object> it, boolean types) {
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         assert it.hasNext();
         Object o = it.next();
         assert o.getClass().equals(SerParser.ObjectWrapper.class);

@@ -500,7 +500,7 @@ implements java.io.Serializable {
             }
         }
 
-        Set<FileObject> recognized = r == emptyDataLoaderRecognized ? emptyDataLoaderRecognized : new HashSet<FileObject>();
+        Set<FileObject> recognized = r == emptyDataLoaderRecognized ? emptyDataLoaderRecognized : new HashSet<>();
         // scan through loaders
         Enumeration<? extends DataObject.Factory> en = allLoaders (fo);
         while (en.hasMoreElements ()) {
@@ -550,7 +550,7 @@ implements java.io.Serializable {
                 fo.setAttribute(DataObject.EA_ASSIGNED_LOADER_MODULE, module.getCodeNameBase());
             }
         }
-        Set<FileObject> one = new HashSet<FileObject>();
+        Set<FileObject> one = new HashSet<>();
         one.add(fo);
         if (!DataObjectPool.getPOOL().revalidate(one).isEmpty()) {
             DataObject.LOG.log(Level.FINE, "It was not possible to invalidate data object: {0}", fo); // NOI18N

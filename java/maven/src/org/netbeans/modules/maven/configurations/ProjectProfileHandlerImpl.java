@@ -50,8 +50,8 @@ public class ProjectProfileHandlerImpl implements ProjectProfileHandler {
     private static final String ACTIVEPROFILES = "activeProfiles";//NOI18N
     private static final String SEPARATOR = " ";//NOI18N
     private static final String NAMESPACE = null;//FIXME add propper namespase
-    private final List<String> privateProfiles = new ArrayList<String>();
-    private final List<String> sharedProfiles = new ArrayList<String>();
+    private final List<String> privateProfiles = new ArrayList<>();
+    private final List<String> sharedProfiles = new ArrayList<>();
     private final AtomicBoolean lazyProfilesSet = new AtomicBoolean(false);
     private final AuxiliaryConfiguration ac;
     private final NbMavenProjectImpl nmp;
@@ -70,7 +70,7 @@ public class ProjectProfileHandlerImpl implements ProjectProfileHandler {
 
     public @Override List<String> getAllProfiles() {
         lazyInit();
-        Set<String> profileIds = new HashSet<String>();
+        Set<String> profileIds = new HashSet<>();
         //pom profiles come first
         extractProfiles(profileIds);
         //Add settings file Properties
@@ -85,7 +85,7 @@ public class ProjectProfileHandlerImpl implements ProjectProfileHandler {
     }
     public @Override List<String> getMergedActiveProfiles(boolean shared) {
         lazyInit();
-        Set<String> profileIds = new HashSet<String>();
+        Set<String> profileIds = new HashSet<>();
         MavenProject mavenProject = nmp.getOriginalMavenProject();
         List<Profile> profiles = mavenProject.getActiveProfiles();
         for (Profile profile : profiles) {
@@ -115,7 +115,7 @@ public class ProjectProfileHandlerImpl implements ProjectProfileHandler {
 
         if (activeProfiles != null && activeProfiles.length() > 0) {
             StringTokenizer tokenizer = new StringTokenizer(activeProfiles, SEPARATOR);
-            Set<String> set = new HashSet<String>(tokenizer.countTokens());
+            Set<String> set = new HashSet<>(tokenizer.countTokens());
             while (tokenizer.hasMoreTokens()) {
                 set.add(tokenizer.nextToken());
             }
@@ -170,7 +170,7 @@ public class ProjectProfileHandlerImpl implements ProjectProfileHandler {
 
     private List<String> retrieveActiveProfiles(AuxiliaryConfiguration ac, boolean shared) {
 
-        Set<String> prifileides = new HashSet<String>();
+        Set<String> prifileides = new HashSet<>();
         Element element = ac.getConfigurationFragment(PROFILES, NAMESPACE, shared);
         if (element != null) {
 

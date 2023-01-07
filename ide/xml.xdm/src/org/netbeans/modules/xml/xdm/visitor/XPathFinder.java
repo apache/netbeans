@@ -194,7 +194,7 @@ public class XPathFinder extends ChildVisitor {
              
         private void parse() {
             StringTokenizer tokenizer = new StringTokenizer(token, ":[");
-            List<String> parts = new ArrayList<String>();
+            List<String> parts = new ArrayList<>();
             while (tokenizer.hasMoreTokens()) {
                 String t = tokenizer.nextToken();
                 parts.add(t);
@@ -341,8 +341,8 @@ public class XPathFinder extends ChildVisitor {
              
     private boolean done = false;
     private Node currentParent = null;
-    private Map<String, String> namespaces = new HashMap<String,String>();
-    private Map<String, String> prefixes = new HashMap<String,String>();
+    private Map<String, String> namespaces = new HashMap<>();
+    private Map<String, String> prefixes = new HashMap<>();
     private List<XPathSegment> tokens;
     private StringBuffer fixedUpXpath = new StringBuffer();
              

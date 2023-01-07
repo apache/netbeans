@@ -86,7 +86,7 @@ public class OtherRootNodeFactory implements NodeFactory {
         
         @Override
         public List<String> keys() {
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             if (project.getOtherRoots(false).length > 0) {
                 list.add(KEY_OTHER);
             }

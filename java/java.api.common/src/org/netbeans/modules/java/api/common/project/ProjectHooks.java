@@ -143,7 +143,7 @@ public final class ProjectHooks {
         private final UpdateHelper updateHelper;
         private final GeneratedFilesHelper genFilesHelper;
         private final AbstractClassPathProvider cpProvider;
-        private final Set<String> classPathTypes = new HashSet<String>();
+        private final Set<String> classPathTypes = new HashSet<>();
         private final List<Runnable> preOpen = new LinkedList<Runnable>();
         private final List<Runnable> postOpen = new LinkedList<Runnable>();
         private final List<Runnable> preClose = new LinkedList<Runnable>();

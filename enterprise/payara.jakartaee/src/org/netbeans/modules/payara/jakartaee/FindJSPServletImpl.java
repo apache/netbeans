@@ -68,7 +68,7 @@ class FindJSPServletImpl implements FindJSPServlet {
 
         });
         if (null != subdirs) {
-            final List<File> candidates = new ArrayList<File>();
+            final List<File> candidates = new ArrayList<>();
             for (File z : subdirs) {
                 z.listFiles(new FileFilter() {
 

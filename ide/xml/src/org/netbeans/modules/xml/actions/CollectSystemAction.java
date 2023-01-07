@@ -63,7 +63,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
     protected abstract void addRegisteredAction();
 
     protected void addRegisteredAction(String folderPath) {
-        List<String> actionClassNames = new ArrayList<String>();
+        List<String> actionClassNames = new ArrayList<>();
         for (Object obj : registeredAction) {
             if (obj == null) continue;
             actionClassNames.add(obj.getClass().getName());

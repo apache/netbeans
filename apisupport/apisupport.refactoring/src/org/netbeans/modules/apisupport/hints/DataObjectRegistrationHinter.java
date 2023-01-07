@@ -257,7 +257,7 @@ public class DataObjectRegistrationHinter implements Hinter {
 
         @Override
         public void run(WorkingCopy wc, Element declaration, ModifiersTree modifiers) throws Exception {
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             FileObject file = ctx.file();
 
             String displayName = ctx.bundlevalue(file.getAttribute("literal:displayName"), declaration);
@@ -311,7 +311,7 @@ public class DataObjectRegistrationHinter implements Hinter {
         @Override
         public void run(WorkingCopy wc, Element declaration, ModifiersTree modifiers) throws Exception {
             FileObject file = ctx.file();
-            List<FileObject> toDelete = new ArrayList<FileObject>(); // store fileobject to delete to allow delete at once
+            List<FileObject> toDelete = new ArrayList<>(); // store fileobject to delete to allow delete at once
 // precheck classpath
             TypeElement annActionID = wc.getElements().getTypeElement("org.openide.awt.ActionID");
             if (annActionID == null) {
@@ -330,7 +330,7 @@ public class DataObjectRegistrationHinter implements Hinter {
             if (!file.isData()) { // if data we are not well placed in the filesystem
 
                 //list the children registred all layer important for dealing with separator
-                List<FileObject> foList = new ArrayList<FileObject>();
+                List<FileObject> foList = new ArrayList<>();
                 for (FileObject achildren : NbCollections.iterable(file.getData(true))) {
                     foList.add(achildren);
 

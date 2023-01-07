@@ -117,7 +117,7 @@ abstract class CreateRefreshAction extends ContextAction {
                 protected void perform () {
                     String message = panel.getParameters().getCommitMessage();
                     String patchName = panel.getParameters().getPatchName();
-                    Set<File> excludedFiles = new HashSet<File>();
+                    Set<File> excludedFiles = new HashSet<>();
                     List<File> addCandidates = new LinkedList<File>();
                     List<File> deleteCandidates = new LinkedList<File>();
                     List<File> commitCandidates = new LinkedList<File>();
@@ -149,7 +149,7 @@ abstract class CreateRefreshAction extends ContextAction {
                     }
                     
                     OutputLogger logger = getLogger();
-                    Set<File> filesToRefresh = new HashSet<File>();
+                    Set<File> filesToRefresh = new HashSet<>();
                     try {
                         logger.outputInRed(NbBundle.getMessage(CreateRefreshAction.class, "MSG_CREATE_REFRESH_TITLE." + bundleKeyPostfix)); //NOI18N
                         logger.outputInRed(NbBundle.getMessage(CreateRefreshAction.class, "MSG_CREATE_REFRESH_TITLE_SEP." + bundleKeyPostfix)); //NOI18N
@@ -280,7 +280,7 @@ abstract class CreateRefreshAction extends ContextAction {
 
             @Override
             void doCmd () throws HgException {
-                Set<File> files = new HashSet<File>(candidates);
+                Set<File> files = new HashSet<>(candidates);
                 files.addAll(excludedFiles); // should be also refreshed because previously included files will now change to modified
                 try {                    
                     runHgCommand(repository, candidates, excludedFiles, patchId, msg, user, logger);
@@ -290,7 +290,7 @@ abstract class CreateRefreshAction extends ContextAction {
                     String offeredFileNames = "";                       //NOI18N
                     if (rootFiles != null && rootFiles.size() < 5) {
                         reducedCommitCandidates = new ArrayList<File>(rootFiles);
-                        files = new HashSet<File>(rootFiles);
+                        files = new HashSet<>(rootFiles);
                         for (File f : reducedCommitCandidates) {
                             offeredFileNames += "\n" + f.getName();     //NOI18N
                         }

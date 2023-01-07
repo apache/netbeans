@@ -811,7 +811,7 @@ public class MetaComponentCreator {
 
         // 3rd - copy changed properties
         java.util.List<RADProperty> sourceList = new ArrayList<RADProperty>();
-        java.util.List<String> namesList = new ArrayList<String>();
+        java.util.List<String> namesList = new ArrayList<>();
 
         Iterator<RADProperty> it = sourceComp.getBeanPropertiesIterator(
                                    ResourceSupport.COPIED_PROPERTY_FILTER,
@@ -1768,7 +1768,7 @@ public class MetaComponentCreator {
         Map<String, Object> changes = null;
 
         if (comp instanceof AbstractButton && targetComp instanceof JToolBar) {
-            changes = new HashMap<String, Object>();
+            changes = new HashMap<>();
             changes.put("focusable", false); // NOI18N
             changes.put("horizontalTextPosition", SwingConstants.CENTER); // NOI18N
             changes.put("verticalTextPosition", SwingConstants.BOTTOM); // NOI18N

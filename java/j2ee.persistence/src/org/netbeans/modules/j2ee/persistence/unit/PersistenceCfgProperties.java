@@ -219,7 +219,7 @@ public class PersistenceCfgProperties {
      */
     public static List<String> getKeys(Provider provider){
         //TODO: cache lists?
-        ArrayList<String> ret = new ArrayList<String>();
+        ArrayList<String> ret = new ArrayList<>();
         String ver = provider == null ? null : ProviderUtil.getVersion(provider);
         if(provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
             ret.addAll(possiblePropertyValues.get(null).keySet());

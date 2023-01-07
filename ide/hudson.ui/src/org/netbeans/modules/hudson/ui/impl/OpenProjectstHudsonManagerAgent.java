@@ -192,7 +192,7 @@ public class OpenProjectstHudsonManagerAgent extends HudsonManagerAgent {
         if (providers == null) {
             return;
         }
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (Project prj : providers) {
             ProjectHudsonProvider.Association assoc
                     = ProjectHudsonProvider.getDefault().findAssociation(prj);

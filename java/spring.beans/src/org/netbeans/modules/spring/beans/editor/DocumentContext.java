@@ -48,7 +48,7 @@ public class DocumentContext {
     private Token<XMLTokenId> token;
     private int tokenOffset;
     private HashMap<String, String> declaredNamespaces =
-            new HashMap<String, String>();
+            new HashMap<>();
 
     public static DocumentContext create(Document document, int caretOffset) {
         try {

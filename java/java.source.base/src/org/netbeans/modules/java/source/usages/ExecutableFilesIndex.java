@@ -122,7 +122,7 @@ public class ExecutableFilesIndex {
             mainSources = unwrap(JavaIndex.getAttribute(root, "executable-files", "")); //NOI18N
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-            mainSources = new HashSet<String>();
+            mainSources = new HashSet<>();
         } finally {
             lastLoadURL = root;
         }
@@ -138,12 +138,12 @@ public class ExecutableFilesIndex {
 
     static Set<String> unwrap(String value) {
         if (value.length() == 0) {
-            return new HashSet<String>();
+            return new HashSet<>();
         }
         
         String[] executableFiles = value.split("::"); //NOI18N
 
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
 
         for (String file : executableFiles) {
             result.add(file.replace("\\d", ":") //NOI18N

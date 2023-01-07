@@ -162,7 +162,7 @@ public class JavaEEWSOpenHook extends ProjectOpenedHook {
                 wsModel.runReadActionWhenReady(new MetadataModelAction<WebservicesMetadata, Void>() {
 
                     public Void run(WebservicesMetadata metadata) {
-                        Map<String, String> result = new HashMap<String, String>();
+                        Map<String, String> result = new HashMap<>();
                         Webservices webServices = metadata.getRoot();
                         for (WebserviceDescription wsDesc : webServices.getWebserviceDescription()) {
                             PortComponent[] ports = wsDesc.getPortComponent();
@@ -208,7 +208,7 @@ public class JavaEEWSOpenHook extends ProjectOpenedHook {
                 // compare new services with existing
 
                 // looking for common services (implementationClass)
-                Set<String> commonServices = new HashSet<String>();
+                Set<String> commonServices = new HashSet<>();
                 Set<String> keys1 = oldServices.keySet();
                 Set<String> keys2 = services.keySet();
                 for (String key : keys1) {
@@ -228,7 +228,7 @@ public class JavaEEWSOpenHook extends ProjectOpenedHook {
                     jaxWsModel.removeService(oldServices.get(key).getName());
                     needToSave = true;
                 }
-                Set<String> removedFromWsdl = new HashSet<String>( 
+                Set<String> removedFromWsdl = new HashSet<>(
                         oldServicesFromWsdl.keySet());
                 removedFromWsdl.removeAll( services.keySet() );
                 for( String key : removedFromWsdl ){

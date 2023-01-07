@@ -199,7 +199,7 @@ public final class PathMatcher {
         if (includes == null) {
             return Collections.singleton(base);
         }
-        Set<File> roots = new HashSet<File>();
+        Set<File> roots = new HashSet<>();
         if (base != null) {
             for (String incl : knownIncludes) {
                 roots.add(new File(base, incl.replace('/', File.separatorChar)));

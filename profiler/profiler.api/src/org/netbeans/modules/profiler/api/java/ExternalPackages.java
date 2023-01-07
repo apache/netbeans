@@ -288,7 +288,7 @@ public final class ExternalPackages {
         if (root != null) {
             Queue<FileObject> stack = new ArrayDeque<FileObject>();
             Set<FileObject> packages = new TreeSet<FileObject>(pathComparator);
-            Set<String> pkgsContent = new HashSet<String>();
+            Set<String> pkgsContent = new HashSet<>();
 
             stack.offer(root);
             while (!stack.isEmpty()) {

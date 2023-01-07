@@ -43,7 +43,7 @@ public interface InputTextTagValueProvider {
 
         public static Map<String, String> getInputTextValuesMap(FileObject fo) {
             Collection<? extends InputTextTagValueProvider> all = Lookup.getDefault().lookupAll(InputTextTagValueProvider.class);
-            Map<String, String> result = new HashMap<String, String>();
+            Map<String, String> result = new HashMap<>();
             for(InputTextTagValueProvider provider : all) {
                 Map<String, String> map = provider.getInputTextValuesMap(fo);
                 if(map != null) {

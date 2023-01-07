@@ -186,7 +186,7 @@ public final class ModuleUpdater extends Thread {
                 if (nbm.exists()) {
                     File cluster = getCluster (nbm);
                     if (files2clustersForInstall.get (cluster) == null) {
-                        files2clustersForInstall.put (cluster, new HashSet<File> ());
+                        files2clustersForInstall.put (cluster, new HashSet<> ());
                     }
                     files2clustersForInstall.get (cluster).add (nbm);
                 }
@@ -233,7 +233,7 @@ public final class ModuleUpdater extends Thread {
         totalLength = 0L;
 
         context.setLabel (Localization.getBrandedString ("CTL_PreparingUnpack"));
-        Collection<File> allFiles = new HashSet<File> ();
+        Collection<File> allFiles = new HashSet<> ();
         for (File c : getClustersForInstall ()) {
             allFiles.addAll (getFilesForInstallInCluster (c));
         }
@@ -609,7 +609,7 @@ public final class ModuleUpdater extends Thread {
     }
 
     private List<String> readExecutableFilesList(JarFile jarFile) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         JarEntry executableFilesEntry = jarFile.getJarEntry(EXECUTABLE_FILES_ENTRY);
         if (executableFilesEntry != null) {
             BufferedReader reader = null;
@@ -1131,7 +1131,7 @@ public final class ModuleUpdater extends Thread {
         if (arr == null) {
             return Collections.emptySet ();
         } else {
-            return new HashSet<File> (Arrays.asList (arr));
+            return new HashSet<> (Arrays.asList (arr));
         }
     }
 

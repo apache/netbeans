@@ -74,7 +74,7 @@ public class FoDSearchInOptionsTest extends JellyTestCase {
 
         String[] tabIndexes = {"General"};
         String[] selectedCategories = {"Editor"};
-        ArrayList<String> enabledCategories = new ArrayList<String>();
+        ArrayList<String> enabledCategories = new ArrayList<>();
         enabledCategories.add("Editor");
         searchFor("general editor", tabIndexes, selectedCategories, enabledCategories, null);
 

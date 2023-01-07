@@ -236,7 +236,7 @@ public class ServiceModel {
                 }
             }
             // looking for common operations (operationName)
-            Set<String> commonOperations = new HashSet<String>();
+            Set<String> commonOperations = new HashSet<>();
             Set<String> keys1 = op1.keySet();
             Set<String> keys2 = op2.keySet();
             for(String key:keys1) {

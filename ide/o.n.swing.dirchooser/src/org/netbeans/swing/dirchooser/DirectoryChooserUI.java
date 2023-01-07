@@ -974,7 +974,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             
             RequestProcessor.getDefault().post(new Runnable() {
                 DirectoryNode node;
-                ArrayList<File> list = new ArrayList<File>();
+                ArrayList<File> list = new ArrayList<>();
                 int cannotDelete;
                 ArrayList<DirectoryNode> nodes2Remove = new ArrayList<DirectoryNode>(nodePath.length);
 
@@ -2510,7 +2510,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             public void run() {
                 if (!EventQueue.isDispatchThread()) {
                     // first phase
-                    realDirs = new HashSet<String>();
+                    realDirs = new HashSet<>();
                     File[] files = folder.listFiles();
                     files = files == null ? new File[0] : files;
                     for (File file : files) {
@@ -2534,7 +2534,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                         }
                     }
 
-                    Set<String> realCloned = new HashSet<String>( realDirs );
+                    Set<String> realCloned = new HashSet<>( realDirs );
                     if ( realCloned.removeAll( currentFiles.keySet()) ){
                         // Handle added folders
                         for ( String name : realCloned ){
@@ -2542,7 +2542,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                             model.insertNodeInto( added, node, node.getChildCount());
                         }
                     }
-                    Set<String> currentNames = new HashSet<String>( currentFiles.keySet());
+                    Set<String> currentNames = new HashSet<>( currentFiles.keySet());
                     if ( currentNames.removeAll( realDirs )){
                         // Handle deleted folders
                         for ( String name : currentNames ){

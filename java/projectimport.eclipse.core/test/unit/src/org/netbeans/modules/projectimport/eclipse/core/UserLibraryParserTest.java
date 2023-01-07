@@ -57,9 +57,9 @@ public class UserLibraryParserTest extends NbTestCase {
                 "\t<archive path=\"/space/java/0_lib/commons-collections-2.1.jar\"/>\n" +
                 "\t<archive path=\"/space/java/0_lib/commons-digester-1.4.1.jar\"/>\n" +
                 "</userlibrary>\n";
-        List<String> jars = new ArrayList<String>();
-        List<String> sources = new ArrayList<String>();
-        List<String> javadoc = new ArrayList<String>();
+        List<String> jars = new ArrayList<>();
+        List<String> sources = new ArrayList<>();
+        List<String> javadoc = new ArrayList<>();
         UserLibraryParser.getJars("aName", xmlDoc, jars, javadoc, sources);
         assertEquals("three classpath entries", 3, jars.size());
         assertEquals("one sources entries", 1, sources.size());
@@ -104,9 +104,9 @@ public class UserLibraryParserTest extends NbTestCase {
                 "\t\t</attributes>\n" +
                 "\t</archive>\n" +
                 "</userlibrary>\n";
-        List<String> jars = new ArrayList<String>();
-        List<String> sources = new ArrayList<String>();
-        List<String> javadoc = new ArrayList<String>();
+        List<String> jars = new ArrayList<>();
+        List<String> sources = new ArrayList<>();
+        List<String> javadoc = new ArrayList<>();
         UserLibraryParser.getJars("aName", xmlDoc, jars, javadoc, sources);
         assertEquals("three classpath entries", 3, jars.size());
         assertEquals("three sources entries", 3, sources.size());

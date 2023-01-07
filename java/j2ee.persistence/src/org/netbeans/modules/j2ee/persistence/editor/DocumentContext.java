@@ -56,7 +56,7 @@ public class DocumentContext {
     private SyntaxElement docRoot;
     private String defaultNamespace;
     private HashMap<String, String> declaredNamespaces =
-            new HashMap<String, String>();
+            new HashMap<>();
     private String schemaLocation;
     private String noNamespaceSchemaLocation;
     private final String VERSION = "version";//NOI18N

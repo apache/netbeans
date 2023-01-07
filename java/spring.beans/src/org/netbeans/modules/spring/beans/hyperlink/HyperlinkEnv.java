@@ -130,7 +130,7 @@ public final class HyperlinkEnv {
     }
     
     private Map<String, String> collectAttributes(Node currentTag) {
-        Map<String, String> attribsMap = new HashMap<String, String>();
+        Map<String, String> attribsMap = new HashMap<>();
         NamedNodeMap attribsNodeMap = currentTag.getAttributes();
         for(int i = 0; i < attribsNodeMap.getLength(); i++) {
             Node n = attribsNodeMap.item(i);

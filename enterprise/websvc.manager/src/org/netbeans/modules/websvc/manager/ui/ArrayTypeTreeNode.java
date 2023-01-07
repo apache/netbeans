@@ -43,7 +43,7 @@ public class ArrayTypeTreeNode extends AbstractParameterTreeNode {
          * create a new ArrayList from all of the child values.
          */
         TypeNodeData data = (TypeNodeData)this.getUserObject();
-        ArrayList<Object> newList = new ArrayList<Object>();
+        ArrayList<Object> newList = new ArrayList<>();
         
         for(int ii=0; ii < this.getChildCount(); ii++) {
             DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)this.getChildAt(ii);

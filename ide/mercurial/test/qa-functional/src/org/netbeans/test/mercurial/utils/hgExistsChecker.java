@@ -40,7 +40,7 @@ public class hgExistsChecker {
 
         BufferedReader input;
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         try {
             proc = rt.exec("hg -v");

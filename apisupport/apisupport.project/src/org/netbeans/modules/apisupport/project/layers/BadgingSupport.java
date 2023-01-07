@@ -87,9 +87,9 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
     private final FileChangeListener fileChangeListener;
     private final List<FileStatusListener> listeners = new ArrayList<FileStatusListener>();
     // #171204: compute badged information asynch since it can be quite slow
-    private final Map<String,String> names = new HashMap<String,String>();
-    private final Map<String,Image> smallIcons = new HashMap<String,Image>();
-    private final Map<String,Image> bigIcons = new HashMap<String,Image>();
+    private final Map<String,String> names = new HashMap<>();
+    private final Map<String,Image> smallIcons = new HashMap<>();
+    private final Map<String,Image> bigIcons = new HashMap<>();
     
     public BadgingSupport(FileSystem fs) {
         this.fs = fs;
@@ -131,7 +131,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
         }
         RP.post(new Runnable() {
             public void run() {
-                Set<FileObject> toFire = new HashSet<FileObject>(files);
+                Set<FileObject> toFire = new HashSet<>(files);
                 String r = annotateNameGeneral(name, files, suffix, fileChangeListener, toFire);
                 synchronized (names) {
                     for (FileObject f : files) {
@@ -436,7 +436,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
             for (URL layer : layers) {
                 URL jar = FileUtil.getArchiveFile(layer);
                 if (jar != null) {
-                    List<URL> roots = new ArrayList<URL>();
+                    List<URL> roots = new ArrayList<>();
                     roots.add(FileUtil.getArchiveRoot(jar));
                     Matcher m = Pattern.compile("(file:.+/)([^/]+)[.]jar").matcher(jar.toString()); // NOI18N
                     if (m.matches()) {

@@ -311,7 +311,7 @@ public class FieldBreakpoint extends JPDABreakpoint {
 
             @Override
             public FileObject[] getFiles() {
-                List<FileObject> files = new ArrayList<FileObject>();
+                List<FileObject> files = new ArrayList<>();
                 String className = getClassName();
                 // TODO: annotate also other matched classes
                 if (!className.startsWith("*") && !className.endsWith("*")) {

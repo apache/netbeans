@@ -130,7 +130,7 @@ public abstract class LookupBasedJavaSourceTaskFactory extends JavaSourceTaskFac
     }
 
     private synchronized void updateCurrentFiles() {
-        Set<FileObject> newCurrentFiles = new HashSet<FileObject>();
+        Set<FileObject> newCurrentFiles = new HashSet<>();
 
         newCurrentFiles.addAll(fileObjectResult.allInstances());
 

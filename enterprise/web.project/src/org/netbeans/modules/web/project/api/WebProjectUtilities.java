@@ -330,7 +330,7 @@ public class WebProjectUtilities {
     }
 
     public static Set<FileObject> ensureWelcomePage(FileObject webRoot, FileObject dd, Profile profile) throws IOException {
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
 
         if (dd == null) {
             FileObject indexFile = createWelcomeFile(webRoot, profile);

@@ -72,7 +72,7 @@ public class VirtualSourceProviderQueryTest extends NbTestCase {
     }
     
     private static void assertEquals (final String[] expected, Iterable<? extends CompileTuple> data) {
-        final Set<String> es = new HashSet<String>();
+        final Set<String> es = new HashSet<>();
         es.addAll(Arrays.asList(expected));
         for (CompileTuple p : data) {
             assertTrue (es.remove(p.jfo.inferBinaryName()));
@@ -83,7 +83,7 @@ public class VirtualSourceProviderQueryTest extends NbTestCase {
     public static class TestVirtualSourceProvider implements VirtualSourceProvider {
 
         public Set<String> getSupportedExtensions() {
-            final Set<String> result = new HashSet<String>();
+            final Set<String> result = new HashSet<>();
             result.add("groovy");   //NOI18N
             result.add ("scala");   //NOI18N
             return result;
@@ -94,7 +94,7 @@ public class VirtualSourceProviderQueryTest extends NbTestCase {
         }
 
         public void translate(Iterable<File> files, File sourceRoot, VirtualSourceProvider.Result r) {
-            final Set<String> ext = new HashSet<String>();
+            final Set<String> ext = new HashSet<>();
             final CharSequence d = "";  //NOI18N
             for (File f : files) {
                 ext.add(FileObjects.getExtension(f.getName()));

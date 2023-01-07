@@ -212,7 +212,7 @@ public final class Selenium2Support {
             if (serverPort == null) {
                 serverPort = DEFAULT_SERVER_PORT;
             }
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             params.put("server_port", serverPort);   //NOI18N
             params.put("selenium_server_port", DEFAULT_SELENIUM_SERVER_PORT);   //NOI18N
             

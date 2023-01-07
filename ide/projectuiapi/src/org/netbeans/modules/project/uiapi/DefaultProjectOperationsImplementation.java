@@ -155,7 +155,7 @@ public final class DefaultProjectOperationsImplementation {
         
         final List<FileObject> metadataFiles = ProjectOperations.getMetadataFiles(project);
         final List<FileObject> dataFiles = ProjectOperations.getDataFiles(project);
-        final List<FileObject> allFiles = new ArrayList<FileObject>();
+        final List<FileObject> allFiles = new ArrayList<>();
         
         allFiles.addAll(metadataFiles);
         allFiles.addAll(dataFiles);
@@ -277,7 +277,7 @@ public final class DefaultProjectOperationsImplementation {
             
             FileObject target = newTarget.createFolder(nueName);
             FileObject projectDirectory = project.getProjectDirectory();
-            List<FileObject> toCopyList = new ArrayList<FileObject>();
+            List<FileObject> toCopyList = new ArrayList<>();
             for (FileObject child : projectDirectory.getChildren()) {
                 if (child.isValid()) {
                     toCopyList.add(child);

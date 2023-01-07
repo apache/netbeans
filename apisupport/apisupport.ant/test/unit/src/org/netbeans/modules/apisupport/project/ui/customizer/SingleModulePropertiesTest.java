@@ -326,7 +326,7 @@ public class SingleModulePropertiesTest extends TestBase {
     }
     
     public void testAvailablePublicPackages() throws Exception {
-        Map<String,String> contents = new HashMap<String,String>();
+        Map<String,String> contents = new HashMap<>();
         contents.put("lib/pkg/Clazz3.class", "");
         contents.put("lib/pkg2/Clazz4.class", "");
         contents.put("1.0/oldlib/Clazz5.class", ""); // #72669

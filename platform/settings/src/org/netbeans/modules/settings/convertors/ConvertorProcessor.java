@@ -50,7 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class ConvertorProcessor extends LayerGeneratingProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>(Arrays.asList(
+        return new HashSet<>(Arrays.asList(
             ConvertAsProperties.class.getCanonicalName(),
             ConvertAsJavaBean.class.getCanonicalName(),
             FactoryMethod.class.getCanonicalName()

@@ -105,7 +105,7 @@ public class JPDAStart extends Task implements Runnable {
     private static final String MODULE_INFO_CLZ = "module-info.class";  //NOI18N
     private static final Set<? extends String> MODULE_FILES;
     static {
-        final Set<String> exts = new HashSet<String>();
+        final Set<String> exts = new HashSet<>();
         exts.add("jar");    //NOI18N
         exts.add("jmod");   //NOI18N
         MODULE_FILES = Collections.unmodifiableSet(exts);

@@ -128,7 +128,7 @@ public class ProjectCustomizerListenersTest extends NbTestCase {
         assertEquals(new EventRecord(LType.OK, "testCat1", 0), events.get(2));
         assertEquals(new EventRecord(LType.OK, "testCat3", 0), events.get(3));
         // CLOSE and STORE events can theoretically be intermixed
-        Map<String, Integer> event = new HashMap<String, Integer>();
+        Map<String, Integer> event = new HashMap<>();
         for(int i = 4; i < 14; i++) {
             EventRecord er = events.get(i);
             assertNotNull(er);

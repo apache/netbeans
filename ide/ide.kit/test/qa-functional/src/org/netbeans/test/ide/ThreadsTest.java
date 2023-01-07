@@ -43,7 +43,7 @@ public class ThreadsTest extends JellyTestCase {
 
     public ThreadsTest(String name) throws IOException {
         super(name);
-        allowedThreads = new HashSet<String>();
+        allowedThreads = new HashSet<>();
         InputStream is = ThreadsTest.class.getResourceAsStream("allowed-threads.txt");
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
         for (;;) {

@@ -671,7 +671,7 @@ public class NbValidationTransaction extends ValidationTransaction {
     protected void setErrorProfile() {
 //        profile = request.getParameter("profile");
 
-        HashMap<String, String> profileMap = new HashMap<String, String>();
+        HashMap<String, String> profileMap = new HashMap<>();
 
 //        if ("pedagogical".equals(profile)) {
 //            profileMap.put("xhtml1", "warn");

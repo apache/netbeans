@@ -424,7 +424,7 @@ public abstract class TabState {
         return attentionToggle && alarmTabs.contains(new Integer(tab));
     }
     
-    private final HashSet<Integer> alarmTabs = new HashSet<Integer>(6);
+    private final HashSet<Integer> alarmTabs = new HashSet<>(6);
     
     /** Add a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
@@ -443,7 +443,7 @@ public abstract class TabState {
         }
     }
 
-    private final HashSet<Integer> highlightTabs = new HashSet<Integer>(6);
+    private final HashSet<Integer> highlightTabs = new HashSet<>(6);
 
     private boolean isHighlightTab(int tab) {
         return highlightTabs.contains( tab ) && !alarmTabs.contains( tab );

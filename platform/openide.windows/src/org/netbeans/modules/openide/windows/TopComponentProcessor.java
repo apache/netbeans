@@ -44,7 +44,7 @@ public final class TopComponentProcessor extends LayerGeneratingProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> hash = new HashSet<String>();
+        Set<String> hash = new HashSet<>();
         hash.add(TopComponent.Registration.class.getCanonicalName());
         hash.add(TopComponent.OpenActionRegistration.class.getCanonicalName());
         hash.add(TopComponent.Description.class.getCanonicalName());
@@ -72,7 +72,7 @@ public final class TopComponentProcessor extends LayerGeneratingProcessor {
                 rootFolder = "Windows2";
                 generateSettingsAndWstcref(e, rootFolder, id, reg, info);
             } else {
-                Set<String> uniqueRoles = new HashSet<String>();
+                Set<String> uniqueRoles = new HashSet<>();
                 for (String role : roles) {
                     if (!uniqueRoles.add(role)) {
                         throw new LayerGenerationException("Duplicate role name found", e, processingEnv, reg);

@@ -634,8 +634,8 @@ public class CustomScopePanel extends javax.swing.JPanel implements ExplorerMana
     /** Creates new form CustomScopePanel */
     public CustomScopePanel() {
         projectList = new LinkedList<ProjectData>();
-        sourceRoots = new HashSet<FileObject>();
-        files = new HashSet<FileObject>();
+        sourceRoots = new HashSet<>();
+        files = new HashSet<>();
         folders = new HashMap<String, NonRecursiveFolder>();
         manager = new ExplorerManager();
         initComponents();

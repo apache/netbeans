@@ -144,7 +144,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
         //
         configurePersistence();
 
-        Set<String> fqnEntities = new HashSet<String>();
+        Set<String> fqnEntities = new HashSet<>();
         for (EntityClassInfo info : model.getEntityInfos()) {
             if ( !fqnEntities.contains( info.getEntityFqn() )){
                 fqnEntities.add( info.getEntityFqn() );
@@ -159,7 +159,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
 
         finishProgressReporting();
 
-        return new HashSet<FileObject>();
+        return new HashSet<>();
     }
     
     /* (non-Javadoc)
@@ -171,7 +171,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
             String entityFQN, String idClass, String pkg, boolean hasRemote,
             boolean hasLocal, boolean overrideExisting ) throws IOException
     {
-        final Set<FileObject> createdFiles = new HashSet<FileObject>();
+        final Set<FileObject> createdFiles = new HashSet<>();
         final String entitySimpleName = JavaIdentifiers.unqualify(entityFQN);
         
         // create the facade
@@ -342,7 +342,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
             GenerationUtils genUtils, TreeMaker maker,
             RestGenerationOptions option, ModifiersTree paramModifier )
     {
-        List<VariableTree> vars = new ArrayList<VariableTree>();
+        List<VariableTree> vars = new ArrayList<>();
         String[] paramNames = option.getParameterNames();
         int paramLength = paramNames == null ? 0 : option.getParameterNames().length ;
 

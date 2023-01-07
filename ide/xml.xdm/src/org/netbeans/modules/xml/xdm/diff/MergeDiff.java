@@ -292,7 +292,7 @@ public class MergeDiff {
         
         // get new positions
         NamedNodeMap nm2 = curNode.getAttributes();
-        HashMap<String, Integer> nodeToPosition = new HashMap<String, Integer>();
+        HashMap<String, Integer> nodeToPosition = new HashMap<>();
         for ( int i=0; i < nm2.getLength(); i++ ) {
             Attribute newAttr = (Attribute) nm2.item(i);
             assert newAttr.getName() != null;

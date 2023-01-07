@@ -107,7 +107,7 @@ public final class BeanIdCompletor extends Completor {
         if (model == null) {
             return (Collections.emptySet());
         }
-        final Set<String> names = new HashSet<String>();
+        final Set<String> names = new HashSet<>();
         model.runReadAction(new Action<SpringBeans>() {
 
             public void run(SpringBeans sb) {

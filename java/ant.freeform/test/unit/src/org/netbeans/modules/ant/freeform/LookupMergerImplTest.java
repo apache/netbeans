@@ -43,7 +43,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class LookupMergerImplTest extends NbTestCase {
 
-    private static List<String> targetsRun = new ArrayList<String>();
+    private static List<String> targetsRun = new ArrayList<>();
     static {
         Actions.TARGET_RUNNER = new Actions.TargetRunner() {
             public void runTarget(FileObject scriptFile, String[] targetNameArray, Properties props, ActionProgress listener) {

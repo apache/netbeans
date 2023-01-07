@@ -118,7 +118,7 @@ public final class MacroExpanderFactory {
             {7, 3, 3, 3, 8, 8}
         };
         protected final Map<String, String> predefinedMacros =
-                Collections.synchronizedMap(new HashMap<String, String>());
+                Collections.synchronizedMap(new HashMap<>());
         protected final HostInfo hostInfo;
 
         public MacroExpanderImpl(final HostInfo hostInfo, final ExpanderStyle style) {

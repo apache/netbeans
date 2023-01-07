@@ -298,7 +298,7 @@ class TableQuickSearchSupport implements QuickSearch.Callback {
     static final class QuickSearchSettings {
 
         private boolean matchCase = NbPreferences.forModule(QuickSearchSettings.class).getBoolean("matchCase", false);
-        private Set<String> columnsIgnoredToSearch = new HashSet<String>();
+        private Set<String> columnsIgnoredToSearch = new HashSet<>();
 
         public boolean isMatchCase() {
             return matchCase;

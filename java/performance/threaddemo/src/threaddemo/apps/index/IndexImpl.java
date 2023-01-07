@@ -54,7 +54,7 @@ final class IndexImpl implements Index, Runnable, PhadhailListener, ChangeListen
     private static final Logger logger = Logger.getLogger(IndexImpl.class.getName());
     
     private final Phadhail root;
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private boolean running = false;
     private final LinkedList<Phadhail> toProcess = new LinkedList<Phadhail>();
     private final Map<Phadhail, Map<String, Integer>> processed = new /*Weak*/HashMap<Phadhail,Map<String,Integer>>();
@@ -209,7 +209,7 @@ final class IndexImpl implements Index, Runnable, PhadhailListener, ChangeListen
         // Wait till after p.getDocument(), since that will fire stateChanged
         // the first time it is called (not ready -> ready)
         p.addChangeListener(WeakListeners.change(this, p));
-        Map<String,Integer> m = new HashMap<String,Integer>();
+        Map<String,Integer> m = new HashMap<>();
         NodeList l = d.getElementsByTagName("*");
         for (int i = 0; i < l.getLength(); i++) {
             String name = ((Element)l.item(i)).getTagName();
@@ -235,7 +235,7 @@ final class IndexImpl implements Index, Runnable, PhadhailListener, ChangeListen
             Phadhail parent = (Phadhail)phadhails2Parents.get(ph);
             assert parent != null : ph;
             assert parent.hasChildren();
-            Map<String,Integer> recalc = new HashMap<String,Integer>();
+            Map<String,Integer> recalc = new HashMap<>();
             for (Phadhail kid : parent.getChildren()) {
                 Map<String,Integer> subdata = processed.get(kid);
                 if (subdata == null) {

@@ -265,7 +265,7 @@ public class J2SEProjectProperties {
         privateGroup = new StoreGroup();
         projectGroup = new StoreGroup();
         
-        additionalProperties = new HashMap<String,String>();
+        additionalProperties = new HashMap<>();
         runModulePathExtension = new ArrayList<>();
         init(); // Load known properties        
     }
@@ -995,7 +995,7 @@ public class J2SEProjectProperties {
     }
     
     void loadIncludesExcludes(IncludeExcludeVisualizer v) {
-        Set<File> roots = new HashSet<File>();
+        Set<File> roots = new HashSet<>();
         for (DefaultTableModel model : new DefaultTableModel[] {SOURCE_ROOTS_MODEL, TEST_ROOTS_MODEL}) {
             for (Object row : model.getDataVector()) {
                 File d = (File) ((Vector) row).elementAt(0);
@@ -1015,8 +1015,8 @@ public class J2SEProjectProperties {
     }
 
     boolean makeSharable() {
-        List<String> libs = new ArrayList<String>();
-        List<String> jars = new ArrayList<String>();
+        List<String> libs = new ArrayList<>();
+        List<String> jars = new ArrayList<>();
         collectLibs(JAVAC_CLASSPATH_MODEL, libs, jars);
         collectLibs(JAVAC_PROCESSORPATH_MODEL, libs, jars);
         collectLibs(JAVAC_TEST_CLASSPATH_MODEL, libs, jars);

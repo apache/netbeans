@@ -1239,7 +1239,7 @@ private void importDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//
                 List<BindingDescriptor> descriptors = designSupport.getAllBindingDescriptors(elemType);
                 columnSelector.setVisible(descriptors.size() > 0);
                 List<String> available = new LinkedList<String>();
-                columnToType = new HashMap<String,String>();
+                columnToType = new HashMap<>();
                 for (BindingDescriptor desc : descriptors) {
                     TypeHelper t = desc.getGenericValueType();
                     String className = t.getName();

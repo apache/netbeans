@@ -54,7 +54,7 @@ public final class MIMEResolverImpl {
 
     // notification limit in bytes for reading file content. It should not exceed 4192 (4kB) because it is read in one disk touch.
     private static final int READ_LIMIT = 4000;
-    private static Set<String> readLimitReported = new HashSet<String>();
+    private static Set<String> readLimitReported = new HashSet<>();
 
     // constants for user defined declarative MIME resolver
     private static final String MIME_RESOLVERS_PATH = "Services/MIMEResolver";  //NOI18N
@@ -155,7 +155,7 @@ public final class MIMEResolverImpl {
                 String mimeType = fileElement.getMimeType();
                 if (mimeType != null) {  // can be null if <exit/> element is used
                     String[] extensions = fileElement.getExtensions();
-                    Set<String> extensionsSet = new HashSet<String>();
+                    Set<String> extensionsSet = new HashSet<>();
                     if (extensions != null) {
                         for (String extension : extensions) {
                             if (extension.length() > 0) {  // ignore empty extension
@@ -345,7 +345,7 @@ public final class MIMEResolverImpl {
     }
 
     private static List<String> readArray(FileObject fo, final String prefix) {
-        List<String> exts = new ArrayList<String>();
+        List<String> exts = new ArrayList<>();
         int cnt = 0;
         for (;;) {
             String ext = (String) fo.getAttribute(prefix + cnt++);
@@ -700,7 +700,7 @@ public final class MIMEResolverImpl {
                         }
                         if (file_state == IN_PATTERN) {
                             if (patternLevelSet == null) {
-                                patternLevelSet = new HashSet<Integer>();
+                                patternLevelSet = new HashSet<>();
                             }
                             if (!patternLevelSet.add(patternLevel)) {
                                 error("Second pattern element on the same level not allowed");  //NOI18N

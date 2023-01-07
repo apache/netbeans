@@ -882,7 +882,7 @@ public class MakeOSGi extends Task {
         "org.xml.sax.helpers"
     ));
 
-    private static final Set<String> SKIPPED_PSEUDO_MODULES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> SKIPPED_PSEUDO_MODULES = new HashSet<>(Arrays.asList(
             "org.eclipse.osgi",
             "org.netbeans.core.netigso",
             "org.netbeans.modules.netbinox",
@@ -890,7 +890,7 @@ public class MakeOSGi extends Task {
             "org.netbeans.libs.felix"
     ));
 
-    private static final Set<String> STARTUP_PSEUDO_MODULES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> STARTUP_PSEUDO_MODULES = new HashSet<>(Arrays.asList(
             "org.openide.util.lookup",
             "org.openide.util.ui",
             "org.openide.util",

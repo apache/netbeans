@@ -42,8 +42,8 @@ public class HistoryRegistry {
 
     private static final Logger LOG = Logger.getLogger("org.netbeans.modules.mercurial.HistoryRegistry"); // NOI18N
     
-    private Map<File, List<GitRevisionInfo>> logs = Collections.synchronizedMap(new HashMap<File, List<GitRevisionInfo>>());
-    private Map<File, Map<String, List<GitFileInfo>>> changesets = new HashMap<File, Map<String, List<GitFileInfo>>>();
+    private Map<File, List<GitRevisionInfo>> logs = Collections.synchronizedMap(new HashMap<>());
+    private Map<File, Map<String, List<GitFileInfo>>> changesets = new HashMap<>();
     
     private HistoryRegistry() {}
     

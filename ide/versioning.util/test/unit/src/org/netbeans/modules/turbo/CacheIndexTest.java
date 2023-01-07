@@ -155,7 +155,7 @@ public class CacheIndexTest extends NbTestCase {
         file112_1.createNewFile();
 
         // add file111_1, file111_2, file111_3 -> all versioned parents will be added
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file111_1);
         s.add(file111_2);
         s.add(file111_3);
@@ -169,7 +169,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder111), new File[] {file111_1, file111_2, file111_3});
 
         // add file111_1, file111_3 -> all versioned parents will be added
-        s = new HashSet<File>();
+        s = new HashSet<>();
         s.add(file111_1);
         s.add(file111_3);
         ci.add(folder111, s);
@@ -182,7 +182,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder111), new File[] {file111_1, file111_3});
 
         // add file112_1
-        s = new HashSet<File>();
+        s = new HashSet<>();
         s.add(file112_1);
         ci.add(folder112, s);
 
@@ -211,7 +211,7 @@ public class CacheIndexTest extends NbTestCase {
         file111_1.createNewFile();
 
         // add file111_1
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file111_1);
         ci.add(folder111, s);
         checkParents(index, file111_1);
@@ -223,7 +223,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder111), new File[] {file111_1});
 
         // add empty set 
-        s = new HashSet<File>();
+        s = new HashSet<>();
         ci.add(folder111, s);
 
         assertEquals(0, index.keySet().size());
@@ -245,7 +245,7 @@ public class CacheIndexTest extends NbTestCase {
         file111_1.createNewFile();
 
         // add file111_1
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file111_1);
         s.add(file111_2);
         ci.add(folder111, s);
@@ -258,7 +258,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder111), new File[] {file111_1, file111_2});
 
         // add empty set
-        s = new HashSet<File>();
+        s = new HashSet<>();
         s.add(file111_1); // file111_2 will be removed
         ci.add(folder111, s);
 
@@ -289,7 +289,7 @@ public class CacheIndexTest extends NbTestCase {
         file112_1.createNewFile();
 
         // add file111_1, file112_1 -> all versioned parents will be added
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file111_1);
         ci.add(folder111, s);
         s.clear();
@@ -305,7 +305,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder112), new File[] {file112_1});
 
         // remove folder111 -> nothing will be removed - file111_1 still there
-        s = new HashSet<File>();
+        s = new HashSet<>();
         s.add(folder112);
         ci.add(folder11, s);
         checkParents(index, file111_1, file112_1);
@@ -318,7 +318,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder112), new File[] {file112_1});
 
         // remove file111_1 -> parent folder111 will be also removed
-        s = new HashSet<File>();        
+        s = new HashSet<>();
         ci.add(folder111, s);
         checkParents(index, file112_1);
 
@@ -346,7 +346,7 @@ public class CacheIndexTest extends NbTestCase {
         file111_1.createNewFile();
 
         // add file111_1, file112_1 -> all versioned parents will be added
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file11_1);
         ci.add(folder11, s);
         s.clear();
@@ -361,7 +361,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder111), new File[] {file111_1});
 
         // remove file111_1 -> folder111 will be removed, folder11 remains
-        s = new HashSet<File>();        
+        s = new HashSet<>();
         ci.add(folder11, s);
         checkParents(index, file111_1);
 
@@ -393,7 +393,7 @@ public class CacheIndexTest extends NbTestCase {
         file12_1.createNewFile();
 
         // add file111_1 -> all versioned parents will be added
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file111_1);
         ci.add(folder111, s);
         s.clear();
@@ -409,7 +409,7 @@ public class CacheIndexTest extends NbTestCase {
         assertValueSet(index.get(folder111), new File[] {file111_1});
 
         // remove file112_1 which isn't indexed -> folder111 remains
-        s = new HashSet<File>();
+        s = new HashSet<>();
         ci.add(folder112, s);
         checkParents(index, file111_1, file12_1);
 
@@ -440,7 +440,7 @@ public class CacheIndexTest extends NbTestCase {
         file2.createNewFile();
 
         // add file111_1 -> all versioned parents will be added
-        Set<File> s = new HashSet<File>();
+        Set<File> s = new HashSet<>();
         s.add(file1);
         ci.add(folder, s);
         checkParents(index, file1);
@@ -491,7 +491,7 @@ public class CacheIndexTest extends NbTestCase {
     }
 
     private void checkParents(Map<File, Set<File>> index, File... files) {
-        Set<File> parents = new HashSet<File>();
+        Set<File> parents = new HashSet<>();
 
         for (File file : files) {
             File parent = file;

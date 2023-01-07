@@ -53,7 +53,7 @@ public class ChromiumManagerAccessor implements ExtensionManagerAccessor {
 
         protected String[] getUserData(){
             if (Utilities.isWindows()) {
-                ArrayList<String> result = new ArrayList<String>();
+                ArrayList<String> result = new ArrayList<>();
                 String localAppData = System.getenv("LOCALAPPDATA");                // NOI18N
                 if (localAppData != null) {
                     result.add(localAppData+"\\Chromium\\User Data");

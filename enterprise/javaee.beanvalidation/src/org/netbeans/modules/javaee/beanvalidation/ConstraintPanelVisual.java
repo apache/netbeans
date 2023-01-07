@@ -47,7 +47,7 @@ public class ConstraintPanelVisual extends javax.swing.JPanel implements Documen
     private static final String METHOD = "METHOD";   //NOI18N
     private static final String FIELD = "FIELD";    //NOI18N
     private static final String ANNOTATION_TYPE = "ANNOTATION_TYPE";    //NOI18N
-    private final List<String> targetElements = new ArrayList<String>();
+    private final List<String> targetElements = new ArrayList<>();
 
     /** Creates new form ConstraintPanelVisual */
     public ConstraintPanelVisual(TemplateWizard wizard) {

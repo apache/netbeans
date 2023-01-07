@@ -1931,7 +1931,7 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
             this.matchCount = matchCount;
         }
         public static State empty() {
-            return new State(new HashMap<String, TreePath>(), new HashMap<String, Collection<? extends TreePath>>(), new HashMap<String, String>(), new HashMap<Element, Element>(), new HashMap<Element, TreePath>(), 0);
+            return new State(new HashMap<String, TreePath>(), new HashMap<String, Collection<? extends TreePath>>(), new HashMap<>(), new HashMap<Element, Element>(), new HashMap<Element, TreePath>(), 0);
         }
 
         static State startFrom(State original) {

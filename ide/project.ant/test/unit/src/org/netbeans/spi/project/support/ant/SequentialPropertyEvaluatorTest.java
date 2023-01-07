@@ -55,12 +55,12 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
     }
 
     public void testSequentialEvaluatorBasic() throws Exception {
-        Map<String,String> defs1 = new HashMap<String,String>();
+        Map<String,String> defs1 = new HashMap<>();
         defs1.put("key1", "val1");
         defs1.put("key2", "val2");
         defs1.put("key5", "5=${key1}");
         defs1.put("key6", "6=${key3}");
-        Map<String,String> defs2 = new HashMap<String,String>();
+        Map<String,String> defs2 = new HashMap<>();
         defs2.put("key3", "val3");
         defs2.put("key4", "4=${key1}:${key3}");
         defs2.put("key7", "7=${undef}");
@@ -121,7 +121,7 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
         PropertyEvaluator eval = new SequentialPropertyEvaluator(predefs, defs1, defs2);
         MockPropertyChangeListener l = new MockPropertyChangeListener();
         eval.addPropertyChangeListener(l);
-        Map<String,String> result = new HashMap<String,String>();
+        Map<String,String> result = new HashMap<>();
         result.put("x", "xval1");
         result.put("y", "yval1");
         result.put("a", "aval1");
@@ -135,11 +135,11 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
         // Change predefs.
         predefs.defs.put("x", "xval2");
         predefs.mutated();
-        Map<String,String> oldvals = new HashMap<String,String>();
+        Map<String,String> oldvals = new HashMap<>();
         oldvals.put("x", result.get("x"));
         oldvals.put("b", result.get("b"));
         oldvals.put("n", result.get("n"));
-        Map<String,String> newvals = new HashMap<String,String>();
+        Map<String,String> newvals = new HashMap<>();
         newvals.put("x", "xval2");
         newvals.put("b", "bval1=xval2");
         newvals.put("n", "nval1=xval2:bval1=xval2");
@@ -176,7 +176,7 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
         // XXX check override order, property name evaluation, $$ escaping, bare or final $,
         // cyclic errors, undef'd property substitution, no substs in predefs, etc.
         Map<String,String> m1 = Collections.singletonMap("y", "val");
-        Map<String,String> m2 = new HashMap<String,String>();
+        Map<String,String> m2 = new HashMap<>();
         m2.put("x", "${y}");
         m2.put("y", "y-${x}");
         List<Map<String,String>> m1m2 = new ArrayList<Map<String,String>>();
@@ -206,12 +206,12 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
     }
 
     public void testEvaluateString() throws Exception {
-        Map<String,String> predefs = new HashMap<String,String>();
+        Map<String,String> predefs = new HashMap<>();
         predefs.put("homedir", "/home/me");
-        Map<String,String> defs1 = new HashMap<String,String>();
+        Map<String,String> defs1 = new HashMap<>();
         defs1.put("outdirname", "foo");
         defs1.put("outdir", "${homedir}/${outdirname}");
-        Map<String,String> defs2 = new HashMap<String,String>();
+        Map<String,String> defs2 = new HashMap<>();
         defs2.put("outdir2", "${outdir}/subdir");
         List<Map<String,String>> defs12 = new ArrayList<Map<String,String>>();
         defs12.add(defs1);
@@ -225,15 +225,15 @@ public class SequentialPropertyEvaluatorTest extends NbTestCase {
         // #48449: too many String instances.
         // String constants used in the test are interned; make sure the results are the same.
         // Not necessary for the provider to intern strings, just to not copy them.
-        Map<String,String> defs = new HashMap<String,String>();
+        Map<String,String> defs = new HashMap<>();
         defs.put("pre-a", "pre-a-val");
         defs.put("pre-b", "pre-b-val");
         PropertyProvider preprovider = PropertyUtils.fixedPropertyProvider(defs);
-        defs = new HashMap<String,String>();
+        defs = new HashMap<>();
         defs.put("main-1-a", "main-1-a-val");
         defs.put("main-1-b", "main-1-b-val+${pre-b}");
         PropertyProvider provider1 = PropertyUtils.fixedPropertyProvider(defs);
-        defs = new HashMap<String,String>();
+        defs = new HashMap<>();
         defs.put("main-2-a", "main-2-a-val");
         defs.put("main-2-b", "main-2-b-val+${main-1-b}");
         PropertyProvider provider2 = PropertyUtils.fixedPropertyProvider(defs);

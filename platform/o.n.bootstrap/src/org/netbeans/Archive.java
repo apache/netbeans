@@ -74,7 +74,7 @@ class Archive implements Stamps.Updater {
     private volatile boolean active;
     // These two collections are guarded by the "active" volatile flag transition.
     // They are modified from a single thread only, when "active" flag is false
-    private Map<String,Integer> sources = new HashMap<String,Integer>();
+    private Map<String,Integer> sources = new HashMap<>();
     private Map<Entry, Entry> entries = new HashMap<Entry,Entry>();
     
     public Archive() {

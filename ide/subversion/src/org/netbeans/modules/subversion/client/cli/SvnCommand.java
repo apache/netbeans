@@ -44,7 +44,7 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public abstract class SvnCommand implements CommandNotificationListener {
                
-    private final List<String> cmdError = new ArrayList<String>(10);
+    private final List<String> cmdError = new ArrayList<>(10);
        
     /**
      * If the command throws an execption, this is it.

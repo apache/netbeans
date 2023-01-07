@@ -40,7 +40,7 @@ public class ListPropertiesCommand extends SvnCommand {
         file
     }
     
-    private List<String> output = new ArrayList<String>();
+    private List<String> output = new ArrayList<>();
     private final File file;
     private final boolean rec;
     private final SVNUrl url;

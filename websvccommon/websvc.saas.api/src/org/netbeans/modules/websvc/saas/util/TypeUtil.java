@@ -93,7 +93,7 @@ public class TypeUtil {
     public static List<URL> buildClasspath(File srcPath, boolean isJaxWS) throws IOException {
         // The classpath needs to be equivalent to (plus the ws client package root):
         // classpath="${java.home}/../lib/tools.jar:${libs.jaxrpc16.classpath}:${libs.jsf12-support.classpath}"
-        ArrayList<URL> urls = new ArrayList<URL>();
+        ArrayList<URL> urls = new ArrayList<>();
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("netbeans.user") + "/build.properties");
         try {

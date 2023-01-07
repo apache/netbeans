@@ -154,7 +154,7 @@ public final class GrailsCommandChooser extends JPanel {
 
     private void initTaskParameters() {
         GrailsCommand task = getSelectedTask();
-        List<? super Object> params = new ArrayList<Object>();
+        List<? super Object> params = new ArrayList<>();
         // no param option for convenience
         params.add(""); //NOI18N
         params.addAll(getStoredParams(task));
@@ -653,7 +653,7 @@ public final class GrailsCommandChooser extends JPanel {
      */
     private static class ParameterContainer {
 
-        private final Set<String> params = new HashSet<String>();
+        private final Set<String> params = new HashSet<>();
         private String lastSelected;
 
         public void addParam(String param) {

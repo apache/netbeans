@@ -108,7 +108,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
     private static final RequestProcessor RP = new RequestProcessor(ActionMappings.class);
     private NbMavenProjectImpl project;
     private ModelHandle2 handle;
-    private final HashMap<String, String> titles = new HashMap<String, String>();
+    private final HashMap<String, String> titles = new HashMap<>();
     
     private final GoalsListener goalsListener;
     private final TextValueCompleter goalcompleter;
@@ -269,7 +269,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         addListeners();
         RP.post(new Runnable() {
             @Override public void run() {
-                final Set<String> strs = new HashSet<String>();
+                final Set<String> strs = new HashSet<>();
                 final GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
                 if (provider != null) {
                     strs.addAll(provider.getAvailableGoals());
@@ -1203,7 +1203,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtGoals.getText();
                 StringTokenizer tok = new StringTokenizer(text, " "); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> goals = new ArrayList<String>();
+                List<String> goals = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     goals.add(token);
@@ -1228,7 +1228,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtProfiles.getText();
                 StringTokenizer tok = new StringTokenizer(text, " ,"); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> profs = new ArrayList<String>();
+                List<String> profs = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     profs.add(token);
@@ -1250,7 +1250,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtPackagings.getText().trim();
                 StringTokenizer tok = new StringTokenizer(text, " ,"); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> packs = new ArrayList<String>();
+                List<String> packs = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     packs.add(token.trim());

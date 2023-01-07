@@ -769,7 +769,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
         assert !SwingUtilities.isEventDispatchThread();
         final Result<NBVersionInfo> result = RepositoryQueries.getVersionsResult(groupId, artifactId, RepositoryPreferences.getInstance().getRepositoryInfos());
         List<NBVersionInfo> lst = result.getResults();
-        final List<String> vers = new ArrayList<String>();
+        final List<String> vers = new ArrayList<>();
         for (NBVersionInfo rec : lst) {
             if (!vers.contains(rec.getVersion())) {
                 vers.add(rec.getVersion());
@@ -777,7 +777,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
         }
         // also include properties/expressions that could be related to version
         // management
-        List<String> propList = new ArrayList<String>();
+        List<String> propList = new ArrayList<>();
         for (Object propKey : project.getProperties().keySet()) {
             String key = (String)propKey;
             if (key.endsWith(".version")) { //NOI18N
@@ -804,7 +804,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
         //mkleint: without the managementKey checks I got some entries multiple times.
         // do we actually need to traverse the parent poms, are they completely resolved anyway?
         //XXX
-        Set<String> knownKeys = new HashSet<String>();
+        Set<String> knownKeys = new HashSet<>();
 
         while (localProj != null) {
             curDM = localProj.getDependencyManagement();
@@ -1107,7 +1107,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
             String q = queryText.trim();
             String[] splits = q.split(" "); //NOI118N
 
-            List<String> fStrings = new ArrayList<String>();
+            List<String> fStrings = new ArrayList<>();
             fStrings.add(QueryField.FIELD_GROUPID);
             fStrings.add(QueryField.FIELD_ARTIFACTID);
             fStrings.add(QueryField.FIELD_VERSION);
@@ -1241,7 +1241,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
                 if (chkNbOnly.isSelected()) { // #181656: show only NB modules
                     List<NBVersionInfo> refined = new ArrayList<NBVersionInfo>();
                     Map<String, NBVersionInfo> check = new HashMap<String, NBVersionInfo>(); // class index works only on JAR artifacts
-                    Set<String> found = new HashSet<String>(); // but search string might also be found in other fields
+                    Set<String> found = new HashSet<>(); // but search string might also be found in other fields
                     for (NBVersionInfo nbvi : infos) {
                         String key = key(nbvi);
                         if (NbMavenProject.TYPE_NBM.equals(nbvi.getPackaging())) {

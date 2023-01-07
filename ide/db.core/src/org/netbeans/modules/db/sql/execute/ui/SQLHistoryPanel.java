@@ -603,7 +603,7 @@ private void sqlLimitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private final class HistoryTableModel extends AbstractTableModel {
         
         private List<SQLHistoryEntry> sqlList;
-        private List<String> jdbcURLs = new ArrayList<String>();
+        private List<String> jdbcURLs = new ArrayList<>();
         private SQLHistoryManager shm = SQLHistoryManager.getInstance();
              
         public HistoryTableModel() {

@@ -308,7 +308,7 @@ public class AppClientProjectWebServicesClientSupport implements WebServicesClie
         EditableProperties projectProperties = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         
         { // Block that adjusts wscompile.client.classpath as necessary.
-            Set<String> wscJars = new HashSet<String>();
+            Set<String> wscJars = new HashSet<>();
             boolean newWscJars = false;
             String wscClientClasspath = projectProperties.getProperty(WSCOMPILE_CLASSPATH);
             if(wscClientClasspath != null) {

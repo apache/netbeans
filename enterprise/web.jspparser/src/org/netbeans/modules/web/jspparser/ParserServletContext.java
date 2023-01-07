@@ -481,7 +481,7 @@ public class ParserServletContext implements ServletContext {
     public Set<String> getResourcePaths(String path) {
         
         LOGGER.log(Level.FINE,  "getResourcePaths({0})", path);
-        Set<String> thePaths = new HashSet<String>();
+        Set<String> thePaths = new HashSet<>();
         if (!path.endsWith("/"))
             path += "/";
         String basePath = getRealPath(path);

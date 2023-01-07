@@ -135,7 +135,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
         checkSourceDownloads();
         checkJavadocDownloads();
         project.attachUpdater();
-        registerWithSubmodules(FileUtil.toFile(proj.getProjectDirectory()), new HashSet<File>());
+        registerWithSubmodules(FileUtil.toFile(proj.getProjectDirectory()), new HashSet<>());
         //manually register the listener for this project, we know it's loaded and should be listening on changes.
         //registerCoordinates() doesn't attach listeners
         MavenFileOwnerQueryImpl.getInstance().attachProjectListener(project);

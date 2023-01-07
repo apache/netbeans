@@ -353,7 +353,7 @@ public class CatalogFileWrapperDOMImpl  implements EntityResolver, CatalogFileWr
     }
     
     private HashMap<String,String> getOtherAttributes(Element elm, String[] strArry) {
-        HashMap<String, String> result = new HashMap<String,String>();
+        HashMap<String, String> result = new HashMap<>();
         NamedNodeMap attrs = elm.getAttributes();
         for(int i = 0; i<attrs.getLength();i++){
             String key = attrs.item(i).getNodeName();

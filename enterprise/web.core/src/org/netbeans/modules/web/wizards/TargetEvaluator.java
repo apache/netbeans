@@ -128,7 +128,7 @@ public class TargetEvaluator extends Evaluator {
      * WEB-INF/classes portion from the path name. 
      */
     private void setInitialPath(String dirPath) {
-        pathItems = new ArrayList<String>();
+        pathItems = new ArrayList<>();
 
         String path[] = dirPath.split("/"); //NOI18N
         if (path.length > 0) {

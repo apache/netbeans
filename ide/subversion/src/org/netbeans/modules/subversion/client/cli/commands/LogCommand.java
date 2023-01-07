@@ -231,7 +231,7 @@ public class LogCommand extends SvnCommand {
         public void startElement(String uri, String localName, String qName, Attributes elementAttributes) throws SAXException {            
             tag = qName.trim();                
             if (ENTRY_ELEMENT_NAME.equals(qName)) {                        
-                values = new HashMap<String, Object>();
+                values = new HashMap<>();
                 values.put(REVISION_ATTRIBUTE, elementAttributes.getValue(REVISION_ATTRIBUTE));            
             } else if (PATH_ELEMENT_NAME.equals(qName)) {                                
                 List<Path> paths = getPathList();

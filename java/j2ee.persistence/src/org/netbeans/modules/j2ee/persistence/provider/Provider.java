@@ -247,7 +247,7 @@ public abstract class Provider {
      *  representing value of the property).
      */
     public final Map<String, String> getConnectionPropertiesMap(DatabaseConnection connection, String version){
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         result.put(getJdbcDriver(), connection != null ? connection.getDriverClass() : "");
         result.put(getJdbcUrl(), connection != null ? connection.getDatabaseURL() : "");
         result.put(getJdbcUsername(), connection != null ? connection.getUser(): "");

@@ -85,7 +85,7 @@ public class DbSchemaEjbGenerator {
         this.useColumNamesInRelations = useColumnNamesInRelationships;
         this.generateUnresolvedRelationships = generateUnresolvedRelationships;
         this.useDefaults = useDefaults;
-        //warningMessages = new ArrayList<String>();
+        //warningMessages = new ArrayList<>();
 
         tablesReferecedByOtherTables = getTablesReferecedByOtherTables(schemaElement);
         primaryKeyIsForeignKeyTables = getTablesReferencesOtherTablesWithPrimaryKeyMatch(schemaElement);
@@ -97,7 +97,7 @@ public class DbSchemaEjbGenerator {
      * @return A set of tables that are referenced by at least one another table
      */
     public static Set<String> getTablesReferecedByOtherTables(SchemaElement schemaElement) {
-        Set<String> tableNames = new HashSet<String>();
+        Set<String> tableNames = new HashSet<>();
         TableElement[] allTables = schemaElement.getTables();
         for(int i = 0; i < allTables.length; i ++ ) {
             ForeignKeyElement[] fkElements = allTables[i].getForeignKeys();
@@ -114,7 +114,7 @@ public class DbSchemaEjbGenerator {
      * @return A set of tables that reference another tables with primary key to promary key reference
      */
     public static Set<String> getTablesReferencesOtherTablesWithPrimaryKeyMatch(SchemaElement schemaElement) {
-        Set<String> tableNames = new HashSet<String>();
+        Set<String> tableNames = new HashSet<>();
         TableElement[] allTables = schemaElement.getTables();
         for(int i = 0; i < allTables.length; i ++ ) {
             TableElement table0 = allTables[i];

@@ -40,7 +40,7 @@ import org.openide.util.Utilities;
  */
 public class ModuleTargetChooserPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
 
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private ModuleTargetChooserPanelGUI gui;
     private WizardDescriptor wizard;
 

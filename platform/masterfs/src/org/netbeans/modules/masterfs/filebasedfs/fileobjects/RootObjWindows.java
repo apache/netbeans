@@ -138,7 +138,7 @@ public final class RootObjWindows extends FileObject {
 
     public final FileObject[] getChildren() {
         Collection<? extends FileObjectFactory> all = FileBasedFileSystem.factories().values();
-        ArrayList<FileObject> rootChildren = new ArrayList<FileObject>();         
+        ArrayList<FileObject> rootChildren = new ArrayList<>();
         for (FileObjectFactory fs : all) {
             BaseFileObj root = fs.getRoot();
             if (root != null) { // #252580

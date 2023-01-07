@@ -76,7 +76,7 @@ public class PrerequisitesCheckerImpl implements PrerequisitesChecker, LateBound
             StartupExtender.StartMode mode = StartupExtender.StartMode.TEST_PROFILE;
             for (Map.Entry<? extends String, ? extends String> entry : config.getProperties().entrySet()) {
                 if (entry.getKey().equals("exec.args")) {
-                    List<String> args = new ArrayList<String>();
+                    List<String> args = new ArrayList<>();
                     InstanceContent ic = new InstanceContent();
                     Project p = config.getProject();
                     if (p != null) {

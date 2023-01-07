@@ -156,7 +156,7 @@ public class MdbPropertiesPanelVisual extends javax.swing.JPanel {
     }
 
     public Map<String, String> getProperties() {
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         for (int i = 0; i < propertiesTable.getRowCount(); i++) {
             Object value = propertiesTable.getValueAt(i, 1);
             if (value instanceof String) {

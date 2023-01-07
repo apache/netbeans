@@ -78,7 +78,7 @@ public class MoveTransformer extends RefactoringVisitor {
         elementsToImport = new HashSet<Element>();
         isThisFileReferencingOldPackage = false;
         importToRemove = new HashSet<ImportTree>();
-        importToAdd = new HashSet<String>();
+        importToAdd = new HashSet<>();
     }
     
     @Override

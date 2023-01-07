@@ -190,7 +190,7 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
 
     private FileObject [] getSources () {
         SourceGroup sg [] = ProjectUtils.getSources (project).getSourceGroups (JavaProjectConstants.SOURCES_TYPE_JAVA);
-        Set<FileObject> srcRootSet = new HashSet<FileObject>();
+        Set<FileObject> srcRootSet = new HashSet<>();
         for (int i = 0; i < sg.length; i++) {
             URL entry = sg[i].getRootFolder().toURL();
             // There is important calling this. Withouth calling this, will not work java cc in Jsp editor correctly.
@@ -222,7 +222,7 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
             return null;
         }
         String[] path = PropertyUtils.tokenizePath(cpEval);
-        Set<File> entries = new HashSet<File>();
+        Set<File> entries = new HashSet<>();
         for (int i = 0; i < path.length; i++) {
             entries.add(helper.resolveFile(path[i]));
         }
@@ -328,7 +328,7 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
                 if (classPath != null) {
                     return classPath;
                 }
-                Set<FileObject> all = new HashSet<FileObject>();
+                Set<FileObject> all = new HashSet<>();
                 FileObject[] javaRoots = null;
                 for (int i = 0; i < sourcesFOs.length; i++) {
                     ClassPath cp = ClassPath.getClassPath(sourcesFOs[i], type);

@@ -273,22 +273,22 @@ class EventProperty extends PropertySupport.ReadWrite {
         }
         List<String> getAdded() {
             if (added == null)
-                added = new ArrayList<String>();
+                added = new ArrayList<>();
             return added;
         }
         List<String> getRemoved() {
             if (removed == null)
-                removed = new ArrayList<String>();
+                removed = new ArrayList<>();
             return removed;
         }
         List<String> getRenamedOldNames() {
             if (renamedOldName == null)
-                renamedOldName = new ArrayList<String>();
+                renamedOldName = new ArrayList<>();
             return renamedOldName;
         }
         List<String> getRenamedNewNames() {
             if (renamedNewName == null)
-                renamedNewName = new ArrayList<String>();
+                renamedNewName = new ArrayList<>();
             return renamedNewName;
         }
         private List<String> added;

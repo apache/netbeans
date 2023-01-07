@@ -56,7 +56,7 @@ public class FlowControlTest extends NbTestCase {
     public void testCorrectThreadSwitching() throws Exception {
         
         class Run implements Runnable {
-            public List<Object> events = new ArrayList<Object>();
+            public List<Object> events = new ArrayList<>();
             
             public void run() {
                 events.add("A");
@@ -105,7 +105,7 @@ public class FlowControlTest extends NbTestCase {
     public void testWorksWithRegularExpressionsAsWell() throws Exception {
         
         class Run implements Runnable {
-            public List<Object> events = new ArrayList<Object>();
+            public List<Object> events = new ArrayList<>();
             
             public void run() {
                 events.add("A");
@@ -154,7 +154,7 @@ public class FlowControlTest extends NbTestCase {
     public void testLogMessagesCanRepeat() throws Exception {
         
         class Run implements Runnable {
-            public List<Object> events = new ArrayList<Object>();
+            public List<Object> events = new ArrayList<>();
             
             public void run() {
                 events.add("A");

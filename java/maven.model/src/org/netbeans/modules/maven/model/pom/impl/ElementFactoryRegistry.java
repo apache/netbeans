@@ -124,7 +124,7 @@ public class ElementFactoryRegistry {
     
     private Set<String> knownElementNames() {
         if (knownNames == null) {
-            knownNames = new HashSet<String>();
+            knownNames = new HashSet<>();
             for (QName q : knownQNames()) {
                 knownNames.add(q.getLocalPart());
             }

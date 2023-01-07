@@ -43,7 +43,7 @@ public final class ModuleDeactivator extends Object {
     public void delete () {
         assert ! SwingUtilities.isEventDispatchThread () : "Cannot run in EQ";
         context.setLabel (Localization.getBrandedString ("CTL_DeletingFiles"));
-        Collection<File> allFiles = new HashSet<File> ();
+        Collection<File> allFiles = new HashSet<> ();
         for (File cluster : UpdateTracking.clusters (true)) {
             boolean modified = allFiles.addAll (readFilesMarkedForDeleteInCluster (cluster));
             modified = allFiles.add (getControlFileForMarkedForDelete (cluster)) || modified;
@@ -63,7 +63,7 @@ public final class ModuleDeactivator extends Object {
     public void disable () {
         assert ! SwingUtilities.isEventDispatchThread () : "Cannot run in EQ";
         context.setLabel (Localization.getBrandedString ("CTL_DisablingFiles"));
-        Collection<File> allControlFiles = new HashSet<File> ();
+        Collection<File> allControlFiles = new HashSet<> ();
         for (File cluster : UpdateTracking.clusters (true)) {
             allControlFiles.addAll (readFilesMarkedForDisableInCluster (cluster));
             doDelete (getControlFileForMarkedForDisable (cluster));
@@ -204,7 +204,7 @@ public final class ModuleDeactivator extends Object {
             return Collections.emptySet ();
         }
         
-        Set<File> toDelete = new HashSet<File> ();
+        Set<File> toDelete = new HashSet<> ();
 
         String content = readStringFromFile (mark4deleteFile);
         StringTokenizer tokenizer = new StringTokenizer (content, UpdateTracking.PATH_SEPARATOR);
@@ -226,7 +226,7 @@ public final class ModuleDeactivator extends Object {
             return Collections.emptySet ();
         }
         
-        Set<File> toDisable = new HashSet<File> ();
+        Set<File> toDisable = new HashSet<> ();
 
         String content = readStringFromFile (mark4disableFile);
         StringTokenizer tokenizer = new StringTokenizer (content, UpdateTracking.PATH_SEPARATOR);

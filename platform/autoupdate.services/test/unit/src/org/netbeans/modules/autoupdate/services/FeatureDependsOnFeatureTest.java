@@ -95,7 +95,7 @@ public class FeatureDependsOnFeatureTest extends NbTestCase {
             assertTrue(higherSV + " is more then " + pilotSV, higherSV.compareTo(pilotSV) > 0);
             String higherDep = pilotModuleItem.getModuleInfo().getCodeNameBase() + " > " + higherSV;
 
-            Set<String> deps = new HashSet<String>(items.size());
+            Set<String> deps = new HashSet<>(items.size());
             for (String id : items.keySet()) {
                 String dep = null;
                 if (!pilotName.equals(id)) {

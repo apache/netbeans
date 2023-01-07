@@ -58,12 +58,12 @@ public class ExtensionList extends Object
             ExtensionList l = (ExtensionList)super.clone ();
             
             if (list != null) {
-                l.list = new HashSet<String>();
+                l.list = new HashSet<>();
                 l.list.addAll (list);
             }
             
             if (mimeTypes != null) {
-                l.mimeTypes = new HashSet<String>();
+                l.mimeTypes = new HashSet<>();
                 l.mimeTypes.addAll(mimeTypes);
             }
             
@@ -79,7 +79,7 @@ public class ExtensionList extends Object
     */
     public synchronized void addExtension (String ext) {
         if (list == null) {
-            list = new HashSet<String>();
+            list = new HashSet<>();
         }
         
         list.add (ext);
@@ -99,7 +99,7 @@ public class ExtensionList extends Object
     */
     public synchronized void addMimeType (String mime) {
         if (mimeTypes == null) {
-            mimeTypes = new HashSet<String>();
+            mimeTypes = new HashSet<>();
         }
 
         mimeTypes.add (mime);
@@ -198,7 +198,7 @@ public class ExtensionList extends Object
     private static Set<String> normalizeSet(Set<String> s, boolean flattenCase) {
         if (s == null || s.isEmpty()) return Collections.emptySet();
         if (flattenCase) {
-            Set<String> s2 = new HashSet<String>(s.size() * 4 / 3 + 1);
+            Set<String> s2 = new HashSet<>(s.size() * 4 / 3 + 1);
             for (String item: s) {
                 s2.add(item.toLowerCase(Locale.US));
             }

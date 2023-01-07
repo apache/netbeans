@@ -716,7 +716,7 @@ public final class ClassIndex {
             @NonNull final String... pkgs) {
         Parameters.notNull("base", base);   //NOI18N
         Parameters.notNull("pkgs", pkgs);   //NOI18N
-        final Set<String> pkgSet = new HashSet<String>(Arrays.asList(pkgs));
+        final Set<String> pkgSet = new HashSet<>(Arrays.asList(pkgs));
         final Set<? extends String> basePkgs = base.getPackages();
         if (basePkgs != null) {
             pkgSet.addAll(basePkgs);

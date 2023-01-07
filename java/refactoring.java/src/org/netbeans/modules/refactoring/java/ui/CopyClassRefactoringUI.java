@@ -186,7 +186,7 @@ public class CopyClassRefactoringUI implements RefactoringUI, RefactoringUIBypas
         PasteType paste = RefactoringActionsProvider.getPaste(lookup);
         FileObject tar = RefactoringActionsProvider.getTarget(lookup);
         if (files != null && (files.length > 1 || files.length == 1 && files[0].isFolder())) {
-            Set<FileObject> s = new HashSet<FileObject>();
+            Set<FileObject> s = new HashSet<>();
             s.addAll(Arrays.asList(files));
             return new CopyClassesUI(s, tar, paste);
         }

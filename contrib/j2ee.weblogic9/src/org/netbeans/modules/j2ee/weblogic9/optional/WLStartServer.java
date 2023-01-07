@@ -232,7 +232,7 @@ public final class WLStartServer extends StartServer {
 
     private static synchronized void addServerInDebug(String uri) {
         if (SERVERS_IN_DEBUG == null) {
-            SERVERS_IN_DEBUG = new HashSet<String>(1);
+            SERVERS_IN_DEBUG = new HashSet<>(1);
         }
         SERVERS_IN_DEBUG.add(uri);
     }
@@ -249,7 +249,7 @@ public final class WLStartServer extends StartServer {
     }
 
     private static Map<String, String> getStartVariables(WLDeploymentManager dm) {
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
 
         String javaOpts = dm.getInstanceProperties().getProperty(WLPluginProperties.JAVA_OPTS);
         StringBuilder sb = new StringBuilder((javaOpts != null && javaOpts.trim().length() > 0)
@@ -279,7 +279,7 @@ public final class WLStartServer extends StartServer {
     }
 
     private static Map<String, String> getStartDebugVariables(WLDeploymentManager dm) {
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
         int debugPort = 4000;
         debugPort = Integer.parseInt(dm.getInstanceProperties().getProperty(
                 WLPluginProperties.DEBUGGER_PORT_ATTR));
@@ -315,7 +315,7 @@ public final class WLStartServer extends StartServer {
     }
 
     private static Map<String, String> getStartProfileVariables(WLDeploymentManager dm) {
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
         StringBuilder javaOptsBuilder = new StringBuilder();
         String javaOpts = dm.getInstanceProperties().getProperty(
                 WLPluginProperties.JAVA_OPTS);

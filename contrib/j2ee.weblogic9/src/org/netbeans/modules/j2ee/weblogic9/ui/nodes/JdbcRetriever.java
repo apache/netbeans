@@ -115,7 +115,7 @@ public class JdbcRetriever implements JdbcChildrenFactory.Retriever {
 
                     ObjectName[] adminServers = (ObjectName[]) con
                             .getAttribute(service, "ServerRuntimes"); // NOI18N
-                    Set<String> adminNames = new HashSet<String>();
+                    Set<String> adminNames = new HashSet<>();
                     for (ObjectName adminServer : adminServers) {
                         adminNames.add(con.getAttribute(adminServer, "Name").toString()); // NOI18N
                     }

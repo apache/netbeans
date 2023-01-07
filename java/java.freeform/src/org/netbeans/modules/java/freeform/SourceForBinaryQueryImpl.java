@@ -148,7 +148,7 @@ final class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementati
      * Result may be empty.
      */
     private List<URL> findBinaries(Element compilationUnitEl) {
-        List<URL> binaries = new ArrayList<URL>();
+        List<URL> binaries = new ArrayList<>();
         for (Element builtToEl : XMLUtil.findSubElements(compilationUnitEl)) {
             if (!builtToEl.getLocalName().equals("built-to")) { // NOI18N
                 continue;

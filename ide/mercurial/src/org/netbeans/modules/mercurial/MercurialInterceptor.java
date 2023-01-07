@@ -333,7 +333,7 @@ public class MercurialInterceptor extends VCSInterceptor {
                 if (root == null) return false;
                 final OutputLogger logger = hg.getLogger(root.getAbsolutePath());
                 try {
-                    List<File> revertFiles = new ArrayList<File>();
+                    List<File> revertFiles = new ArrayList<>();
                     revertFiles.add(file);
                     HgCommand.doRevert(root, revertFiles, null, false, logger);
                 } catch (HgException ex) {
@@ -634,7 +634,7 @@ public class MercurialInterceptor extends VCSInterceptor {
                 return;
             }
             // fill a fileset with all the modified files
-            Collection<File> files = new HashSet<File>(filesToRefresh.size());
+            Collection<File> files = new HashSet<>(filesToRefresh.size());
             File file;
             while ((file = filesToRefresh.poll()) != null) {
                 files.add(file);
@@ -658,7 +658,7 @@ public class MercurialInterceptor extends VCSInterceptor {
         for (Map.Entry<File, Set<File>> e : sortedFiles.entrySet()) {
             Set<File> alreadyPlanned = lockedRepositories.get(e.getKey());
             if (alreadyPlanned == null) {
-                alreadyPlanned = new HashSet<File>();
+                alreadyPlanned = new HashSet<>();
                 lockedRepositories.put(e.getKey(), alreadyPlanned);
             }
             alreadyPlanned.addAll(e.getValue());
@@ -697,7 +697,7 @@ public class MercurialInterceptor extends VCSInterceptor {
             if (repository != null) {
                 Set<File> repoFiles = sorted.get(repository);
                 if (repoFiles == null) {
-                    repoFiles = new HashSet<File>();
+                    repoFiles = new HashSet<>();
                     sorted.put(repository, repoFiles);
                 }
                 repoFiles.add(f);
@@ -791,9 +791,9 @@ public class MercurialInterceptor extends VCSInterceptor {
         private final HashMap<File, HgFolderTimestamps> hgFolders = new HashMap<File, HgFolderTimestamps>(5);
         private final HashMap<File, FileChangeListener> hgFolderRLs = new HashMap<File, FileChangeListener>(5);
         private final HashMap<File, Set<File>> seenRoots = new HashMap<File, Set<File>>(5);
-        private final HashSet<File> disabledEvents = new HashSet<File>(5);
+        private final HashSet<File> disabledEvents = new HashSet<>(5);
 
-        private final HashSet<File> filesToInitialize = new HashSet<File>();
+        private final HashSet<File> filesToInitialize = new HashSet<>();
         private RequestProcessor rp = new RequestProcessor("MercurialInterceptorEventsHandlerRP", 1); //NOI18N
         private RequestProcessor.Task initializingTask = rp.create(new Runnable() {
             @Override
@@ -810,7 +810,7 @@ public class MercurialInterceptor extends VCSInterceptor {
                 }
             }
         });
-        private final Set<File> historyChandegRepositories = new HashSet<File>(5);
+        private final Set<File> historyChandegRepositories = new HashSet<>(5);
         private RequestProcessor.Task refreshHistoryTabTask = rp.create(new Runnable() {
             @Override
             public void run() {
@@ -918,7 +918,7 @@ public class MercurialInterceptor extends VCSInterceptor {
         }
 
         private Set<File> getSeenRoots (File repositoryRoot) {
-            Set<File> retval = new HashSet<File>();
+            Set<File> retval = new HashSet<>();
             Set<File> seenRootsForRepository = getSeenRootsForRepository(repositoryRoot);
             synchronized (seenRootsForRepository) {
                  retval.addAll(seenRootsForRepository);
@@ -943,7 +943,7 @@ public class MercurialInterceptor extends VCSInterceptor {
             synchronized (seenRoots) {
                  Set<File> seenRootsForRepository = seenRoots.get(repositoryRoot);
                  if (seenRootsForRepository == null) {
-                     seenRoots.put(repositoryRoot, seenRootsForRepository = new HashSet<File>());
+                     seenRoots.put(repositoryRoot, seenRootsForRepository = new HashSet<>());
                  }
                  return seenRootsForRepository;
             }

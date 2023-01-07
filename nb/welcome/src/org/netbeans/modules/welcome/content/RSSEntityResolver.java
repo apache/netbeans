@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
 public class RSSEntityResolver implements EntityResolver {
 
     private static final Logger LOG = Logger.getLogger(RSSEntityResolver.class.getName());
-    private static final Map<String, String> EMBEDDED_DTDS = new HashMap<String, String>();
+    private static final Map<String, String> EMBEDDED_DTDS = new HashMap<>();
 
     static {
         String base = "/org/netbeans/modules/welcome/resources/";

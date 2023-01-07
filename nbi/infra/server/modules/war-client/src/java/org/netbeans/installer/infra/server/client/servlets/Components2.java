@@ -98,7 +98,7 @@ public class Components2 extends HttpServlet {
                 //"nb-php",
                 "openesb",
                 "sjsam");
-        final Map<String, String> notes = new HashMap<String, String>();
+        final Map<String, String> notes = new HashMap<>();
         //notes.put("nb-javase", "for Java SE, includes GUI Builder, Profiler");
         
         try {
@@ -111,7 +111,7 @@ public class Components2 extends HttpServlet {
             final List<Group> groups = getGroups(registry.getRegistryRoot());
             
             final Map<Integer, Integer> productMapping =
-                    new HashMap<Integer, Integer>();
+                    new HashMap<>();
             
             final List<String> productUids =
                     new LinkedList<String>();

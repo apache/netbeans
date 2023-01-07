@@ -189,7 +189,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
 
     private boolean areThereNewFiles(final File installLocation) throws IOException {
         LogManager.log("areThereNewFiles:  location "  + installLocation);
-        Set<File> installedFiles = new HashSet<File>();
+        Set<File> installedFiles = new HashSet<>();
         Set<File> existentFilesList = FileUtils.getRecursiveFileSet(installLocation);
 
         for (Product product : Registry.getInstance().getProductsToUninstall()) {
@@ -714,7 +714,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
         }
         private List<String> getRegisteredGlassFishLocations(File nbLocation) throws IOException{
             //temporary solution
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             for(String nbattrs : new String[] {"nb/config/GlassFishEE6WC/Instances/.nbattrs", "nb/config/GlassFishEE6/Instances/.nbattrs"}) {
             File f = new File(nbLocation, nbattrs);
             if (f.exists()) {
@@ -740,7 +740,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
         private List<String> getRegisteredTomcatLocations(File nbLocation) throws IOException {
             //temporary solution
             File f = new File(nbLocation, "nb/config/J2EE/InstalledServers/.nbattrs");
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             if (f.exists()) {
                 try {
                     List<String> list = FileUtils.readStringList(f, "utf-8");
@@ -766,7 +766,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
         }
         private List<String> getRegisteredGlassFishV2Locations(File nbLocation) throws IOException{
             String s = NetBeansUtils.getJvmOption(nbLocation, GLASSFISH_JVM_OPTION_NAME);
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             if (s!=null) {
                 result.add(s);
             }
@@ -775,7 +775,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
         private List<String> getRegisteredWebLogicLocations(File nbLocation) throws IOException {
             //temporary solution
             File f = new File(nbLocation, "nb/config/J2EE/InstalledServers/.nbattrs");
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             if (f.exists()) {
                 try {
                     List<String> list = FileUtils.readStringList(f, "utf-8");

@@ -70,7 +70,7 @@ public final class BeanNavigatorJavaSourceFactory extends LookupBasedJavaSourceT
     }
 
     public List<FileObject> getFileObjects() {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
 
         // Filter uninteresting files from the lookup
         for( FileObject fileObject : super.getFileObjects() ) {

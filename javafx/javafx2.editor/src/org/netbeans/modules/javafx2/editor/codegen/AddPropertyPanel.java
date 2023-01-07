@@ -807,7 +807,7 @@ public class AddPropertyPanel extends javax.swing.JPanel {
 
         @SuppressWarnings("unchecked")
         private List<? extends String> getTypeNames(String text, int[] retry) {
-            List<String> items = new ArrayList<String>();
+            List<String> items = new ArrayList<>();
             // Multiple providers: merge results
             String[] message = new String[1];
             assert RP.isRequestProcessorThread();

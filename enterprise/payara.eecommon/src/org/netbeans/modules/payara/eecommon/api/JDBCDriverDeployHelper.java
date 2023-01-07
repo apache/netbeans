@@ -95,7 +95,7 @@ public class JDBCDriverDeployHelper {
      * @return List of JDBC drivers URLs to be deployed.
      */
     public static List<URL> getMissingDrivers(File[] driverLocs, Set<Datasource> datasources) {
-        List<URL> drivers = new ArrayList<URL>();
+        List<URL> drivers = new ArrayList<>();
         for (Datasource datasource : datasources) {
             String className = datasource.getDriverClassName();
             if (null != className) {

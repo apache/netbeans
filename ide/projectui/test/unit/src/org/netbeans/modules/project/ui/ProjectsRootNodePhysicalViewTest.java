@@ -75,9 +75,9 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         
         down = new CountDownLatch(1);
         
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             FileObject prj = TestSupport.createTestProject(workDir, "prj" + i);
             URL url = URLMapper.findURL(prj, URLMapper.EXTERNAL);

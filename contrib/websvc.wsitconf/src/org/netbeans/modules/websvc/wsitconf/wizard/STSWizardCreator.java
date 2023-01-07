@@ -254,7 +254,7 @@ public class STSWizardCreator {
                     );
                     annotations.add(resourceAnnotation);
                     
-                    List<VariableTree> classField = new ArrayList<VariableTree>();
+                    List<VariableTree> classField = new ArrayList<>();
                     // final ObjectOutput arg0
                     classField.add(make.Variable(
                             make.Modifiers(
@@ -317,7 +317,7 @@ public class STSWizardCreator {
                     }
 
                     // create parameters
-                    List<VariableTree> params = new ArrayList<VariableTree>();
+                    List<VariableTree> params = new ArrayList<>();
                     // final ObjectOutput arg0
                     params.add(make.Variable(
                             make.Modifiers(

@@ -143,7 +143,7 @@ public class MavenBinaryForSourceQueryImpl implements BinaryForSourceQueryImplem
 
     
     private static class Res implements BinaryForSourceQuery.Result {
-        private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+        private final List<ChangeListener> listeners = new ArrayList<>();
         private NbMavenProjectImpl project;
         private boolean isTest;
         Res(boolean test, NbMavenProjectImpl prj) {
@@ -184,7 +184,7 @@ public class MavenBinaryForSourceQueryImpl implements BinaryForSourceQueryImplem
         }
         
         void fireChanged() {
-            List<ChangeListener> lists = new ArrayList<ChangeListener>();
+            List<ChangeListener> lists = new ArrayList<>();
             synchronized(listeners) {
                 lists.addAll(listeners);
             }

@@ -114,7 +114,7 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
         
         initValues();
         lblMainClass.setFont(lblMainClass.getFont().deriveFont(Font.BOLD));
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
         Sources srcs =  ProjectUtils.getSources(project);
         SourceGroup[] grps = srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         for (int i = 0; i < grps.length; i++) {

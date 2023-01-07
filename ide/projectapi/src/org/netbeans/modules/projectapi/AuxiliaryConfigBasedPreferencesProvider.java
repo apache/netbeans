@@ -176,8 +176,8 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     
     private final Map<String, Map<String, String>> path2Data = new HashMap<String, Map<String, String>>();
     private final Map<String, Set<String>> path2Removed = new HashMap<String, Set<String>>();
-    private final Set<String> removedNodes = new HashSet<String>();
-    private final Set<String> createdNodes = new HashSet<String>();
+    private final Set<String> removedNodes = new HashSet<>();
+    private final Set<String> createdNodes = new HashSet<>();
 
     AuxiliaryConfigBasedPreferencesProvider(Project project, AuxiliaryConfiguration ac, AuxiliaryProperties ap, boolean shared) {
         this.project = project;
@@ -362,7 +362,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         Map<String, String> data = path2Data.get(path);
         
         if (data == null) {
-            path2Data.put(path, data = new HashMap<String, String>());
+            path2Data.put(path, data = new HashMap<>());
         }
         
         return data;
@@ -372,7 +372,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         Set<String> removed = path2Removed.get(path);
         
         if (removed == null) {
-            path2Removed.put(path, removed = new HashSet<String>());
+            path2Removed.put(path, removed = new HashSet<>());
         }
         
         return removed;

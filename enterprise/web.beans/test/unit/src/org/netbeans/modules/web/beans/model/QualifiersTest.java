@@ -351,7 +351,7 @@ public class QualifiersTest extends CommonTestCase {
                 TypeMirror mirror = model.resolveType( "foo.Three" );
                 Element clazz = ((DeclaredType)mirror).asElement();
                 
-                Set<String> names = new HashSet<String>();
+                Set<String> names = new HashSet<>();
                 List<? extends Element> children = clazz.getEnclosedElements();
                 for (Element element : children) {
                     String name = element.getSimpleName().toString() ;

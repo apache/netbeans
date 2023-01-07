@@ -54,7 +54,7 @@ public class IteratorTest extends TestCase {
     
     public void testChainedIterables () {
         final List<List<Integer>> data = new ArrayList<List<Integer>>();
-        final List<Integer> result = new ArrayList<Integer>();
+        final List<Integer> result = new ArrayList<>();
         for (int i=0; i<TEST_SEQS; i++) {
             List<Integer> l = createSequentialList(TEST_SEQ_SIZE);
             data.add (l);

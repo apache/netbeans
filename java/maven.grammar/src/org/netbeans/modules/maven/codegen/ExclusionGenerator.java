@@ -88,7 +88,7 @@ public class ExclusionGenerator extends AbstractGenerator<POMModel> {
                             org.netbeans.modules.maven.model.pom.Dependency dep = model.getProject().findDependencyById(directArt.getGroupId(), directArt.getArtifactId(), null);
                             if (dep == null) {
                                 // now check the active profiles for the dependency..
-                                List<String> profileNames = new ArrayList<String>();
+                                List<String> profileNames = new ArrayList<>();
                                 NbMavenProject project = prj.getLookup().lookup(NbMavenProject.class);
                                 Iterator<org.apache.maven.model.Profile> it = project.getMavenProject().getActiveProfiles().iterator();
                                 while (it.hasNext()) {

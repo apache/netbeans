@@ -244,7 +244,7 @@ public class InterceptorTest extends NbTestCase {
     /**
      * methods that aren't implemented in {@link LocalHistoryVCSInterceptor}
      */
-    private static final Set<String> INTERCEPTOR_COMPLETE_WHITELIST = new HashSet<String>(Arrays.asList(
+    private static final Set<String> INTERCEPTOR_COMPLETE_WHITELIST = new HashSet<>(Arrays.asList(
         "isMutable",
         "getAttribute",
         "doDelete",
@@ -258,7 +258,7 @@ public class InterceptorTest extends NbTestCase {
      * files that are implemented in LocalHistoryVCSInterceptor,
      * but do not have to call {@link LocalHistoryStore.waitForProcessedStoring}
      */
-    private static final Set<String> WAIT_FOR_STORING_WHITELIST = new HashSet<String>(Arrays.asList(
+    private static final Set<String> WAIT_FOR_STORING_WHITELIST = new HashSet<>(Arrays.asList(
         "beforeEdit",
         "afterChange",
         "afterDelete",
@@ -274,7 +274,7 @@ public class InterceptorTest extends NbTestCase {
     public void testTestInterceptorComplete() throws IOException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         LocalHistoryStore original = setupTestStore(new TestLocalHistoryStore());
         try {
-            Set<String> testInterceptorMethods = new HashSet<String>();
+            Set<String> testInterceptorMethods = new HashSet<>();
             Method[]  methods = LocalHistoryVCSInterceptor.class.getDeclaredMethods();
             for (Method method : methods) {
                 if((method.getModifiers() & Modifier.PUBLIC) != 0) {

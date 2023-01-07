@@ -90,7 +90,7 @@ public final class SuiteUtils {
         try {
             return ProjectManager.mutex().readAccess(new Mutex.ExceptionAction<NbModuleProject[]>(){
                 public NbModuleProject[] run() throws Exception {
-                    Set<NbModuleProject> result = new HashSet<NbModuleProject>();
+                    Set<NbModuleProject> result = new HashSet<>();
                     SuiteProject suite = SuiteUtils.findSuite(suiteComponent);
                     if (suite == null) { // #88303
                         Util.err.log(ErrorManager.WARNING,
@@ -426,7 +426,7 @@ public final class SuiteUtils {
     }
     
     public static String[] getAntProperty(final Collection<String> pieces) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (Iterator<String> it = pieces.iterator(); it.hasNext();) {
             String piece = it.next() + (it.hasNext() ? ":" : ""); // NOI18N
             l.add(piece);

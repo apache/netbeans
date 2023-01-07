@@ -163,7 +163,7 @@ public class GenericResourceBean {
         }
         
         String[] segments = template.split("/");
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         
         for (String segment : segments) {
             if (segment.startsWith("{")) {

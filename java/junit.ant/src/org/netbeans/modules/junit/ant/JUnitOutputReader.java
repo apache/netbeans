@@ -776,7 +776,7 @@ final class JUnitOutputReader {
             }
 	} else {
 	    if (!error) {
-		List<String> addedLines = new ArrayList<String>();
+		List<String> addedLines = new ArrayList<>();
 		addedLines.add(text);
 		Testcase tc = testSession.getCurrentTestCase();
 		if (tc != null) {

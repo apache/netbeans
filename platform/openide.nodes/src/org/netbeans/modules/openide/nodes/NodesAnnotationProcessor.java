@@ -59,7 +59,7 @@ public class NodesAnnotationProcessor extends LayerGeneratingProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         set.add(PropertyEditorSearchPath.class.getName());
         set.add(PropertyEditorRegistration.class.getName());
         set.add(BeanInfoSearchPath.class.getName());

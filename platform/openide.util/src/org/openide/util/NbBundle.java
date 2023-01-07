@@ -183,7 +183,7 @@ public class NbBundle extends Object {
         // USE_DEBUG_LOADER and ext is "html" or "txt" etc...
         URL lookup = null;
         Iterator<String> it = new LocaleIterator(locale);
-        List<String> cacheCandidates = new ArrayList<String>(10);
+        List<String> cacheCandidates = new ArrayList<>(10);
         String baseNameSlashes = baseName.replace('.', '/');
         Map<String,URL> perLoaderCache = localizedFileCache.get(loader);
 
@@ -1092,7 +1092,7 @@ public class NbBundle extends Object {
         /** indices of known bundles; needed since DebugLoader's can be collected
          * when softly reachable, but this should be transparent to the user
          */
-        private static final Map<String,Integer> knownIDs = new HashMap<String,Integer>();
+        private static final Map<String,Integer> knownIDs = new HashMap<>();
 
         /** cache of existing debug loaders for regular loaders */
         private static final Map<ClassLoader,Reference<ClassLoader>> existing = new WeakHashMap<ClassLoader,Reference<ClassLoader>>();

@@ -77,7 +77,7 @@ public class DebugPluginSourceAction extends AbstractAction {
         URL[] urls = mojo.getClasspathURLs();
         String impl = mojo.getImplementationClass();
         if (urls != null) {
-            List<URL> normalizedUrls = new ArrayList<URL>();
+            List<URL> normalizedUrls = new ArrayList<>();
             //first download the source files for the binaries..
             MavenSourceJavadocAttacher attacher = new MavenSourceJavadocAttacher();
             for (URL url : urls) {
@@ -97,7 +97,7 @@ public class DebugPluginSourceAction extends AbstractAction {
                     SourceForBinaryQuery.Result2 result = SourceForBinaryQuery.findSourceRoots2(url);
                     if (result.getRoots().length == 0 && !ret.isEmpty()) {
                         //binary not in repository, we need to hardwire the mapping here to have sfbq pick it up.
-                        Set<File> fls = new HashSet<File>();
+                        Set<File> fls = new HashSet<>();
                         for (URL u : ret) {
                             File f = FileUtil.archiveOrDirForURL(u);
                             if (f != null) {

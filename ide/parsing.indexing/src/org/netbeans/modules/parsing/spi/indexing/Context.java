@@ -96,7 +96,7 @@ public final class Context {
         this.cancelRequest = cancelRequest;
         this.suspendedStatus = suspendedStatus;
         this.logContext = logContext;
-        this.props = new HashMap<String, Object>();
+        this.props = new HashMap<>();
     }
 
     Context (@NonNull final Callable<FileObject> indexBaseFolderFactory,
@@ -125,7 +125,7 @@ public final class Context {
         this.cancelRequest = cancelRequest;
         this.suspendedStatus = suspendedStatus;
         this.logContext = logContext;
-        this.props = new HashMap<String, Object>();
+        this.props = new HashMap<>();
     }
 
     // -----------------------------------------------------------------------

@@ -327,7 +327,7 @@ public class LibrariesTest extends JellyTestCase {
         } catch (Exception e) {
             fail("Unable to open following golden file '" + goldenFile.toString() + "'"); // NOI18N
         }
-        List<String> linesList = new ArrayList<String>();
+        List<String> linesList = new ArrayList<>();
         String line;
         try {
             while ((line = reader.readLine()) != null) {

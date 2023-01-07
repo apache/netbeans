@@ -323,13 +323,13 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
         public QFileNode[] getNodes (File repository, File[] roots, boolean[] refreshFinished) {
             // Ensure that cache is uptodate
             FileStatusCache cache = Mercurial.getInstance().getFileStatusCache();
-            cache.refreshAllRoots(Collections.<File, Set<File>>singletonMap(repository, new HashSet<File>(Arrays.asList(roots))));
+            cache.refreshAllRoots(Collections.<File, Set<File>>singletonMap(repository, new HashSet<>(Arrays.asList(roots))));
             // the realy time consuming part is over;
             // no need to show the progress component,
             // which only makes the dialog flicker
             refreshFinished[0] = true;
             File[][] split = Utils.splitFlatOthers(roots);
-            List<File> fileList = new ArrayList<File>();
+            List<File> fileList = new ArrayList<>();
             for (int c = 0; c < split.length; c++) {
                 File[] splitRoots = split[c];
                 boolean recursive = c == 1;
@@ -389,7 +389,7 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
                 if (parent != null && parent != HgLogMessage.HgRevision.EMPTY) {
                     Map<File, FileInformation> patchChanges = HgCommand.getStatus(repository, Collections.singletonList(repository), parent.getRevisionNumber(), QPatch.TAG_QTIP);
                     FileStatusCache cache = Mercurial.getInstance().getFileStatusCache();
-                    Set<File> toRefresh = new HashSet<File>(Arrays.asList(roots));
+                    Set<File> toRefresh = new HashSet<>(Arrays.asList(roots));
                     toRefresh.addAll(patchChanges.keySet());
                     cache.refreshAllRoots(Collections.<File, Set<File>>singletonMap(repository, toRefresh));
                     
@@ -439,7 +439,7 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
 
         // should contain only patch changes that apply to current selection
         private Set<File> getPatchChangesUnderSelection(Map<File, FileInformation> patchChanges, File[] roots) {
-            Set<File> patchChangesUnderSelection = new HashSet<File>(patchChanges.keySet());
+            Set<File> patchChangesUnderSelection = new HashSet<>(patchChanges.keySet());
             for (Iterator<File> it = patchChangesUnderSelection.iterator(); it.hasNext(); ) {
                 File f = it.next();
                 boolean isUnderRoots = false;
@@ -459,7 +459,7 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
 
         private Map<File, FileInformation> getLocalChanges (File[] roots, FileStatusCache cache) {
             File[] files = cache.listFiles(roots, FileInformation.STATUS_LOCAL_CHANGE);
-            Map<File, FileInformation> retval = new HashMap<File, FileInformation>(files.length);
+            Map<File, FileInformation> retval = new HashMap<>(files.length);
             for (File file : files) {
                 retval.put(file, cache.getCachedStatus(file));
             }

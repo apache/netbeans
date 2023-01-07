@@ -87,7 +87,7 @@ public class JerseyLibraryHelper {
                     }
 
                     StringBuilder mavenDeps = new StringBuilder();
-                    List<URL> cp = new ArrayList<URL>();
+                    List<URL> cp = new ArrayList<>();
                     for (ServerJar jar : serverToUse.getServerJars()) {
                         FileObject fo = getJarFile(modulesFolder, jar.getFilename());
                         if (fo != null) {

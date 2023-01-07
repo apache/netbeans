@@ -74,7 +74,7 @@ public class Utils {
      */
     private static final Set<String> forbiddenFolders;
     static {
-        Set<String> files = new HashSet<String>();
+        Set<String> files = new HashSet<>();
         try {
             String forbidden = System.getProperty("versioning.forbiddenFolders", ""); //NOI18N
             files.addAll(Arrays.asList(forbidden.split("\\;"))); //NOI18N
@@ -342,7 +342,7 @@ public class Utils {
      * @return List<String> stored List of String or an empty List if the key was not found (order is preserved)
      */
     public static List<String> getStringList (Preferences prefs, String key) {
-        List<String> retval = new ArrayList<String>();
+        List<String> retval = new ArrayList<>();
         try {
             String[] keys = prefs.keys();
             for (int i = 0; i < keys.length; i++) {

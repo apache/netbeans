@@ -251,7 +251,7 @@ import org.openide.util.BaseUtilities;
     private void buildThreadTraces(String dumpString) {
         String[] threads = dumpString.split("Thread id ");
         threadTraces = new HashMap<String, String[]>();
-        threadStatuses = new HashMap<String, String>();
+        threadStatuses = new HashMap<>();
         
         for (String t : threads) {
             String[] lines = t.split("\n");
@@ -887,13 +887,13 @@ import org.openide.util.BaseUtilities;
         if (paths == null || paths.isEmpty()) {
             return this;
         }
-        final Set<String> toAdd = new HashSet<String>();
+        final Set<String> toAdd = new HashSet<>();
         for (ClassPath cp : paths) {
             toAdd.add(cp.toString());
         }
         synchronized (this) {
             if (classPathsChanged.isEmpty()) {
-                classPathsChanged = new HashSet<String>(paths.size());
+                classPathsChanged = new HashSet<>(paths.size());
             }
             classPathsChanged.addAll(toAdd);
         }
@@ -905,7 +905,7 @@ import org.openide.util.BaseUtilities;
             return this;
         }
         if (filePathsChanged.isEmpty()) {
-            filePathsChanged = new HashSet<String>(paths.size());
+            filePathsChanged = new HashSet<>(paths.size());
         }
         filePathsChanged.addAll(paths);
         return this;
@@ -1404,14 +1404,14 @@ import org.openide.util.BaseUtilities;
         }
         Set<String> inits = reindexInitiators.get(root);
         if (inits == null) {
-            inits = new HashSet<String>();
+            inits = new HashSet<>();
             reindexInitiators.put(root, inits);
         }
         inits.add(indexerName);
     }
     synchronized void newIndexerSeen(String s) {
         if (indexersAdded.isEmpty()) {
-            indexersAdded = new ArrayList<String>();
+            indexersAdded = new ArrayList<>();
         }
         indexersAdded.add(s);
     }

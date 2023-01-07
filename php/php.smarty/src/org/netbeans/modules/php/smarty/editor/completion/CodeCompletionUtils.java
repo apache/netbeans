@@ -143,14 +143,14 @@ public class CodeCompletionUtils {
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public static ArrayList<String> getLastKeywords(String area, String openDelimiter) {
         int delimiterPosition = area.lastIndexOf(openDelimiter);
         String searchingContent = (delimiterPosition > -1) ? area.substring(delimiterPosition + openDelimiter.length()) : area;
         String[] keywords = searchingContent.split("[ =]");
-        ArrayList<String> availableItems = new ArrayList<String>();
+        ArrayList<String> availableItems = new ArrayList<>();
         for (String string : keywords) {
             if (SmartyCodeCompletionOffer.getFunctionParameters().get(string) != null) {
                 if (availableItems.isEmpty()) {

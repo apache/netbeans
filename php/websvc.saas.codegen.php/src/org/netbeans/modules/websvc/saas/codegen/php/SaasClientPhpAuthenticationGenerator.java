@@ -184,7 +184,7 @@ public class SaasClientPhpAuthenticationGenerator extends SaasClientAuthenticati
                         if (fobj == null) {
                             Util.createDataObjectFromTemplate(templateUrl, targetFolder,
                                     fileName);
-                            Map<String, String> tokens = new HashMap<String, String>();
+                            Map<String, String> tokens = new HashMap<>();
                             tokens.put("__GROUP__", targetFolder.getName());
                             replaceTokens(targetFolder.getFileObject(fileName, Constants.PHP_EXT), tokens);
                         }
@@ -427,7 +427,7 @@ public class SaasClientPhpAuthenticationGenerator extends SaasClientAuthenticati
                                     fileName);
                             if (d != null) {
                                 fObj = d.getPrimaryFile();
-                                Map<String, String> tokens = new HashMap<String, String>();
+                                Map<String, String> tokens = new HashMap<>();
                                 tokens.put("__GROUP__", targetFolder.getName());
                                 replaceTokens(targetFolder.getFileObject(fileName, Constants.PHP_EXT), tokens);
                             }

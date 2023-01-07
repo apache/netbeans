@@ -266,7 +266,7 @@ public class CSSStylesOperator extends TopComponentOperator {
     public HashMap<String, String> getCSSProperties() throws IllegalAccessException, InvocationTargetException {
         JTableOperator _tabTreeTable = new JTableOperator(sppProperties());
         TableModel tm = _tabTreeTable.getModel();
-        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, String> properties = new HashMap<>();
         org.openide.nodes.Node.Property t;
         for (int i = 0; i < tm.getRowCount(); i++) {
             t = (org.openide.nodes.Node.Property) tm.getValueAt(i, 1);
@@ -287,7 +287,7 @@ public class CSSStylesOperator extends TopComponentOperator {
     public HashMap<String, String> getRuleEditorProperties() throws IllegalAccessException, InvocationTargetException {
         JTableOperator _tabTreeTable = new JTableOperator(sppPseudoClasses(), 1);
         TableModel tm = _tabTreeTable.getModel();
-        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, String> properties = new HashMap<>();
         RuleEditorNode.DeclarationProperty t;
         for (int i = 0; i < tm.getRowCount(); i++) {
             if (tm.getValueAt(i, 0) instanceof RuleEditorNode.DeclarationProperty) {

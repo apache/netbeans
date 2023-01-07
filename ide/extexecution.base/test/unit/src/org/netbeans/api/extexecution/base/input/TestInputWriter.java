@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class TestInputWriter extends PrintWriter {
 
-    private List<String> printed = new ArrayList<String>();
+    private List<String> printed = new ArrayList<>();
 
     private StringBuilder builder = new StringBuilder();
 

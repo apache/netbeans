@@ -56,7 +56,7 @@ public class EjbMetadataReader implements MetadataModelAction<EjbJarMetadata, Ma
      *  with the same structure (and thus ad infinitum)
      */
     private static Map<String, Object> genProperties(EjbJar ejbJar) {
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         if(ejbJar != null) {
             EnterpriseBeans eb = ejbJar.getEnterpriseBeans();
             if(eb != null) {
@@ -65,7 +65,7 @@ public class EjbMetadataReader implements MetadataModelAction<EjbJarMetadata, Ma
                     for(Session session: sessionBeans) {
                         String ejbName = session.getEjbName();
                         if(Utils.notEmpty(ejbName)) {
-                            Map<String, Object> sessionMap = new HashMap<String, Object>();
+                            Map<String, Object> sessionMap = new HashMap<>();
                             data.put(ejbName, sessionMap);
                             sessionMap.put(DDBinding.PROP_NAME, ejbName);
 
@@ -81,7 +81,7 @@ public class EjbMetadataReader implements MetadataModelAction<EjbJarMetadata, Ma
                     for(MessageDriven message: messageBeans) {
                         String ejbName = message.getEjbName();
                         if(Utils.notEmpty(ejbName)) {
-                            Map<String, Object> messageMap = new HashMap<String, Object>();
+                            Map<String, Object> messageMap = new HashMap<>();
                             data.put(ejbName, messageMap);
                             messageMap.put(DDBinding.PROP_NAME, ejbName);
 
@@ -106,7 +106,7 @@ public class EjbMetadataReader implements MetadataModelAction<EjbJarMetadata, Ma
                     for(Entity entity: entityBeans) {
                         String ejbName = entity.getEjbName();
                         if(Utils.notEmpty(ejbName)) {
-                            Map<String, Object> entityMap = new HashMap<String, Object>();
+                            Map<String, Object> entityMap = new HashMap<>();
                             data.put(ejbName, entityMap);
                             entityMap.put(DDBinding.PROP_NAME, ejbName);
 

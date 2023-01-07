@@ -48,8 +48,8 @@ public class MavenGroupPanel extends javax.swing.JPanel {
     private String mavenRuntimeHome = null;
     private static final String SEPARATOR = "SEPARATOR";
     private final ProjectCustomizer.Category category;
-    private final List<String>       userDefinedMavenRuntimes = new ArrayList<String>();
-    private final List<String>       predefinedRuntimes = new ArrayList<String>();
+    private final List<String>       userDefinedMavenRuntimes = new ArrayList<>();
+    private final List<String>       predefinedRuntimes = new ArrayList<>();
     private final ActionListener listItemChangedListener;
     private int                lastSelected = -1;
     private String globalMavenValue;
@@ -211,7 +211,7 @@ public class MavenGroupPanel extends javax.swing.JPanel {
             File projectDir = chooser.getSelectedFile();
             String newRuntimePath = FileUtil.normalizeFile(projectDir).getAbsolutePath();
             boolean existed = false;
-            List<String> runtimes = new ArrayList<String>();
+            List<String> runtimes = new ArrayList<>();
             runtimes.addAll(predefinedRuntimes);
             runtimes.addAll(userDefinedMavenRuntimes);
             for (String runtime : runtimes) {
@@ -244,7 +244,7 @@ public class MavenGroupPanel extends javax.swing.JPanel {
                 }
                 userDefinedMavenRuntimes.clear();
                 userDefinedMavenRuntimes.addAll(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
-                final List<String> toAdd = new ArrayList<String>();
+                final List<String> toAdd = new ArrayList<>();
                 final File command = EmbedderFactory.getEffectiveMavenHome(grp);
                 for (String runtime : predefinedRuntimes) {
                     boolean bundledRuntime = runtime.isEmpty();
@@ -285,7 +285,7 @@ public class MavenGroupPanel extends javax.swing.JPanel {
     
     public void applyValues(ProjectGroup grp) {
         // remember only user-defined runtimes of RUNTIME_COUNT_LIMIT count at the most
-        List<String> runtimes = new ArrayList<String>();
+        List<String> runtimes = new ArrayList<>();
         for (int i = 0; i < userDefinedMavenRuntimes.size() && i < SettingsPanel.RUNTIME_COUNT_LIMIT; ++i) {
             runtimes.add(0, userDefinedMavenRuntimes.get(userDefinedMavenRuntimes.size() - 1 - i));
         }

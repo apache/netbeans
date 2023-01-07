@@ -178,7 +178,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     /**
      * DIFF setups that we show in the DIFF view. Contents is changed when the user switches DIFF types or a file under the context changes.
      */
-    private final Map<File, Setup> setups = new HashMap<File, Setup>();
+    private final Map<File, Setup> setups = new HashMap<>();
     /**
      * editor cookies belonging to the files being diffed.
      * The array may contain {@code null}s if {@code EditorCookie}s
@@ -186,7 +186,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
      *
      * @see  #nodes
      */
-    private final Map<File, EditorCookie> editorCookies = new HashMap<File, EditorCookie>();
+    private final Map<File, EditorCookie> editorCookies = new HashMap<>();
     private JComponent diffView;
 
     private RequestProcessor.Task prepareTask;
@@ -1295,7 +1295,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     private static Map<File, EditorCookie> getCookiesFromSetups(Map<File, Setup> localSetups) {
         Setup[] retSetups = localSetups.values().toArray(new Setup[localSetups.values().size()]);
         EditorCookie[] cookies = DiffUtils.setupsToEditorCookies(retSetups);
-        Map<File, EditorCookie> map = new HashMap<File, EditorCookie>();
+        Map<File, EditorCookie> map = new HashMap<>();
         for (int i = 0; i < cookies.length; ++i) {
             if (cookies[i] != null) {
                 map.put(retSetups[i].getBaseFile(), cookies[i]);
@@ -1426,7 +1426,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         private Map<File, Setup> getLocalToBaseSetups (final List<DiffNode> nodes) {
             Git git = Git.getInstance();
             File[] interestingFiles = git.getFileStatusCache().listFiles(context.getRootFiles(), displayStatuses);
-            final Map<File, Setup> localSetups = new HashMap<File, Setup>(interestingFiles.length);
+            final Map<File, Setup> localSetups = new HashMap<>(interestingFiles.length);
             for (File f : interestingFiles) {
                 if (canceled) {
                     break;
@@ -1456,7 +1456,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                         revisionLeft.getCommitId(), GitUtils.NULL_PROGRESS_MONITOR);
                 statuses.keySet().retainAll(Utils.flattenFiles(context.getRootFiles().toArray(
                         new File[context.getRootFiles().size()]), statuses.keySet()));
-                final Map<File, Setup> localSetups = new HashMap<File, Setup>(statuses.size());
+                final Map<File, Setup> localSetups = new HashMap<>(statuses.size());
                 for (Map.Entry<File, GitStatus> e : statuses.entrySet()) {
                     if (canceled) {
                         break;
@@ -1502,7 +1502,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                 client = git.getClient(repository);
                 Map<File, GitRevisionInfo.GitFileInfo> statuses = client.getStatus(context.getRootFiles().toArray(new File[context.getRootFiles().size()]),
                         revisionLeft.getCommitId(), revisionRight.getCommitId(), GitUtils.NULL_PROGRESS_MONITOR);
-                final Map<File, Setup> historySetups = new HashMap<File, Setup>();
+                final Map<File, Setup> historySetups = new HashMap<>();
                 for (Map.Entry<File, GitRevisionInfo.GitFileInfo> e : statuses.entrySet()) {
                     if (canceled) {
                         break;
@@ -1532,7 +1532,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         return revisionRight == Revision.LOCAL;
     }
 
-    private final Map<File, FileStatusCache.ChangedEvent> changes = new HashMap<File, FileStatusCache.ChangedEvent>();
+    private final Map<File, FileStatusCache.ChangedEvent> changes = new HashMap<>();
     /**
      * Eliminates unnecessary cache.listFiles call as well as the whole node creation process ()
      */
@@ -1570,7 +1570,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             final List<DiffNode> toRemove = new LinkedList<DiffNode>();
             final List<DiffNode> toRefresh = new LinkedList<DiffNode>();
             final List<DiffNode> toAdd = new LinkedList<DiffNode>();
-            final Map<File, Setup> localSetups = new HashMap<File, Setup>(nodes.size());
+            final Map<File, Setup> localSetups = new HashMap<>(nodes.size());
             for (FileStatusCache.ChangedEvent evt : events) {
                 if (canceled) {
                     break;

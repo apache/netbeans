@@ -127,7 +127,7 @@ public class ImportAnalysis2 {
             addImport(imp);
         }
         
-        implicitlyImportedClassNames = new HashSet<String>();
+        implicitlyImportedClassNames = new HashSet<>();
         javaLang = overlay.resolve(model, elements, "java.lang");
         
         if (javaLang != null) {//might be null for broken platforms

@@ -375,7 +375,7 @@ public class ProcessorTest extends TestCase {
         assertEquals(exp, w.toString());
     }
     public void testAbilityToSendOwnTemplate() throws Exception {
-        Map<String,Object> myValues = new HashMap<String, Object>();
+        Map<String,Object> myValues = new HashMap<>();
         myValues.put("prefix", "#");
 
         FileObject template = FileUtil.createData(root, "some.txt");
@@ -483,7 +483,7 @@ public class ProcessorTest extends TestCase {
         
         StringWriter w = new StringWriter();
         
-        Map<String,Object> param = new HashMap<String, Object>();
+        Map<String,Object> param = new HashMap<>();
         param.put("html", "html");
         apply(template, w, param);
         

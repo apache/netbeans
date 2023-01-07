@@ -77,7 +77,7 @@ public final class RuntimeCatalog extends EntityCatalog {
     
     public void registerCatalogEntry(String publicId, String uri) {
         if (id2uri == null) {
-            id2uri = new HashMap<String,String>();
+            id2uri = new HashMap<>();
         }
         id2uri.put(publicId, uri);
     }
@@ -85,7 +85,7 @@ public final class RuntimeCatalog extends EntityCatalog {
     /** Map publicid to a resource accessible by a classloader. */
     public void registerCatalogEntry(String publicId, String resourceName, ClassLoader loader) {
         if (id2resource == null) {
-            id2resource = new HashMap<String,String>();
+            id2resource = new HashMap<>();
         }
         id2resource.put(publicId, resourceName);
         

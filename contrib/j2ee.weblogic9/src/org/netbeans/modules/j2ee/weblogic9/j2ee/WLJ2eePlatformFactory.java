@@ -158,7 +158,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
     public static List<URL> getWLSClassPath(@NonNull File platformRoot,
             @NullAllowed File mwHome, @NullAllowed J2eePlatformImplImpl j2eePlatform) {
 
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         try {
             // the WLS jar is intentional
             File weblogicFile = WebLogicLayout.getWeblogicJar(platformRoot);
@@ -241,7 +241,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
 
     // package for tests only
     static List<URL> getJarClassPath(File jarFile, File mwHome) {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
 
         try {
             JarFile file = new JarFile(jarFile);
@@ -717,7 +717,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
                             lib.getSpecificationVersion() == null ? "" : lib.getSpecificationVersion()}));
                 }
 
-                List<URL> cp = new ArrayList<URL>();
+                List<URL> cp = new ArrayList<>();
                 for (File file : entry.getValue()) {
                     addFileToList(cp, file);
                 }
@@ -749,7 +749,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
                     "LIBRARY_NAME"));
             
             // add the required jars to the library
-            List<URL> list = new ArrayList<URL>();
+            List<URL> list = new ArrayList<>();
             list.addAll(getWLSClassPath(getServerHome(), getMiddlewareHome(), this));
 
             library.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_CLASSPATH, list);

@@ -31,7 +31,7 @@ import org.netbeans.modules.websvc.saas.model.jaxb.ServletDescriptor;
  */
 public class SecurityParams {
     String signature;
-    List<String> params = new ArrayList<String>();
+    List<String> params = new ArrayList<>();
     List<MethodDescriptor> methodDescriptors = new ArrayList<MethodDescriptor>();
     List<FieldDescriptor> fieldDescriptors = new ArrayList<FieldDescriptor>();
     List<ServletDescriptor> servletDescriptors = new ArrayList<ServletDescriptor>();

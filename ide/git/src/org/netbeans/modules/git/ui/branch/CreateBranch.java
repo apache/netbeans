@@ -174,7 +174,7 @@ public class CreateBranch implements DocumentListener {
     }
 
     private static Set<String> getLocalBranches (Map<String, GitBranch> existingBranches) {
-        Set<String> branchNames = new HashSet<String>();
+        Set<String> branchNames = new HashSet<>();
         for (Map.Entry<String, GitBranch> e : existingBranches.entrySet()) {
             GitBranch branch = e.getValue();
             if (!branch.isRemote() && !GitBranch.NO_BRANCH.equals(branch.getName())) {

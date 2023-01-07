@@ -286,7 +286,7 @@ public class LogViewMgr {
     }
 
     private Map<String, String> getLevelMap() {
-        Map<String, String> levelMap = new HashMap<String, String>();
+        Map<String, String> levelMap = new HashMap<>();
         for(Level l: new Level [] { Level.ALL, Level.CONFIG, Level.FINE,
                 Level.FINER, Level.FINEST, Level.INFO, Level.SEVERE, Level.WARNING } ) {
             String name = l.getName();

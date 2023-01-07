@@ -211,7 +211,7 @@ public class ProfilerLauncher {
         private JavaPlatform platform;
         private String command;
         private Lookup context;
-        private final Map<String, Object> customProps = new HashMap<String, Object>();
+        private final Map<String, Object> customProps = new HashMap<>();
         
         private boolean configured = false;
         private boolean rerun;
@@ -231,7 +231,7 @@ public class ProfilerLauncher {
         }
         
         private Session(Project p) {
-            this.props = new HashMap<String, String>();
+            this.props = new HashMap<>();
             this.launcher = null;
             this.project = p;
         }
@@ -243,7 +243,7 @@ public class ProfilerLauncher {
             this.project = context.lookup(Project.class);
             this.fo = context.lookup(FileObject.class);
             this.command = command;
-            this.props = new HashMap<String, String>();
+            this.props = new HashMap<>();
             this.context = context;
             
             initLauncher();

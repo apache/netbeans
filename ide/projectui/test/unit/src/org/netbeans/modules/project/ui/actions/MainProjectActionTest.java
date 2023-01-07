@@ -61,7 +61,7 @@ public class MainProjectActionTest extends NbTestCase {
 
     public void testSeqRun() throws Exception {
         final String CMD = "cmd";
-        final List<Integer> invocations = new ArrayList<Integer>();
+        final List<Integer> invocations = new ArrayList<>();
         class BlockingRun implements ActionProvider {
             final int which;
             final boolean success;

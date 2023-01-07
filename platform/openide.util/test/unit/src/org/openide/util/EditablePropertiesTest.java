@@ -45,7 +45,7 @@ public class EditablePropertiesTest extends NbTestCase {
     }
     
     public void testLoad() throws Exception {
-        Map<String,String> content = new HashMap<String,String>();
+        Map<String,String> content = new HashMap<>();
         for (int i=1; i<=26; i++) {
             content.put("key"+i, "value"+i);
         }

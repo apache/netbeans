@@ -56,7 +56,7 @@ public class APITokenConnectionAuthenticator extends JPanel {
      * Map from home URL to encoded username:password.
      * @see <a href="http://stackoverflow.com/questions/496651/connecting-to-remote-url-which-requires-authentication-using-java/5137446#5137446">technique</a>
      */
-    private static final Map</*URL*/String,String> BASIC_AUTH = new HashMap<String,String>();
+    private static final Map</*URL*/String,String> BASIC_AUTH = new HashMap<>();
 
     @ServiceProvider(service=ConnectionAuthenticator.class, position=200)
     public static final class Impl implements ConnectionAuthenticator {

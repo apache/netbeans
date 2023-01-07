@@ -278,7 +278,7 @@ public final class AddModulePanel extends JPanel {
         final boolean nonApiDeps = showNonAPIModules.isSelected();
         final boolean exclModules = showExclModulesCheckBox.isSelected();
         final Object lastSelectedItem = clusterFilterComboBox.getSelectedItem();
-        final List<String> allClustersList = new ArrayList<String>();
+        final List<String> allClustersList = new ArrayList<>();
         ModuleProperties.RP.post(new Runnable() {
             public void run() {
                 final Set<ModuleDependency> universeDeps = selectedDeps = props.getUniverseDependencies(!exclModules, !nonApiDeps);

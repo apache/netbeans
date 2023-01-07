@@ -117,7 +117,7 @@ public class PlatformLayersCacheManager {
 
     static class PLFSCache {
         // jar --> cache entry map
-        private Map<File, PLFSCacheEntry> allEntries = new HashMap<File, PLFSCacheEntry>();
+        private Map<File, PLFSCacheEntry> allEntries = new HashMap<>();
         private boolean modified;
 
         private void add(PLFSCacheEntry entry) {
@@ -143,7 +143,7 @@ public class PlatformLayersCacheManager {
 
     // <cluster root folder> --> <already loaded layer cache> mapping
     // also used for cache synchronization
-    private static final Map<File, PLFSCache> loadedCaches = new HashMap<File, PLFSCache>();
+    private static final Map<File, PLFSCache> loadedCaches = new HashMap<>();
     // XXX maybe some runtime cleanup of long unused caches from memory? WeakHashMap is too agile, nothing is usually left even for saving.
     // maybe just keep strong collection until caches are saved.
 
@@ -233,7 +233,7 @@ public class PlatformLayersCacheManager {
      */
     @Messages("MSG_scanning_layers=Scanning NetBeans Platform layers...")
     public static Collection<FileSystem> getCache(File[] clusters, FileFilter filter) throws IOException {
-        List<FileSystem> entries = new ArrayList<FileSystem>();
+        List<FileSystem> entries = new ArrayList<>();
         LOGGER.fine("getCache for clusters: " + Arrays.toString(clusters) + (filter != null ? ", FILTERED" : ""));
         synchronized (loadedCaches) {
             try (ProgressHandle handle = ProgressHandle.createHandle(MSG_scanning_layers())) {
@@ -441,7 +441,7 @@ public class PlatformLayersCacheManager {
     private static final String[] MODULE_DIRS = { "modules", "lib", "core" };
 
     private static File[] getClusterJars(File clusterDir) {
-        Collection<File> allJars = new ArrayList<File>();
+        Collection<File> allJars = new ArrayList<>();
 
         for (String mds : MODULE_DIRS) {
             File[] jars;
@@ -479,7 +479,7 @@ public class PlatformLayersCacheManager {
                 cache.add(new PLFSCacheEntry(jar, jar.length(), jar.lastModified(), true, false, null, null));
                 continue JAR;
             }
-            List<URL> urll = new ArrayList<URL>(2);
+            List<URL> urll = new ArrayList<>(2);
             try {
                 URI juri = Utilities.toURI(jar);
                 if (layer != null) {

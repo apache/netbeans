@@ -118,7 +118,7 @@ public final class IndexingBridge {
             try {
                 return operation.call();
             } finally {
-                final Set<File> parents = new HashSet<File>();
+                final Set<File> parents = new HashSet<>();
                 for (File f : files) {
                     File parent = f.getParentFile();
                     if (parent != null) {

@@ -132,7 +132,7 @@ public class ReleasePackage extends Task {
      */
     public void execute() throws BuildException {
         try {
-            final Map<String, Object> args = new HashMap<String, Object>();
+            final Map<String, Object> args = new HashMap<>();
             
             
             args.put("registry", registry); // NOI18N

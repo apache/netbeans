@@ -160,13 +160,13 @@ public final class Util extends Object {
             return false;
         }
 
-        HashSet<String> knownLanguages = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
+        HashSet<String> knownLanguages = new HashSet<>(Arrays.asList(Locale.getISOLanguages()));
         if (!knownLanguages.contains(s1)) {
             return false;
         }
 
         if (s2 != null) {
-            HashSet<String> knownCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
+            HashSet<String> knownCountries = new HashSet<>(Arrays.asList(Locale.getISOCountries()));
             if (!knownCountries.contains(s2)) {
                 return false;
             }

@@ -76,7 +76,7 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
     private FileObject projectFolder;
 
     // Contains well known paths in the WebProject
-    private static final Map<String, String> WELL_KNOWN_PATHS_NAMES = new HashMap<String, String>();
+    private static final Map<String, String> WELL_KNOWN_PATHS_NAMES = new HashMap<>();
     static {
         WELL_KNOWN_PATHS_NAMES.put( ProjectProperties.JAVAC_MODULEPATH, NbBundle.getMessage( ClassPathListCellRenderer.class, "LBL_JavacModulepath_DisplayName" ) );
         WELL_KNOWN_PATHS_NAMES.put( ProjectProperties.JAVAC_CLASSPATH, NbBundle.getMessage( ClassPathListCellRenderer.class, "LBL_JavacClasspath_DisplayName" ) );

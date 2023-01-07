@@ -333,7 +333,7 @@ public class Saas implements Comparable<Saas> {
         }
 
         if (libraryJars == null) {
-            libraryJars = new ArrayList<FileObject>();
+            libraryJars = new ArrayList<>();
             if (getSaasMetadata() != null && getSaasMetadata().getCodeGen() != null) {
                 for (Artifacts arts : getSaasMetadata().getCodeGen().getArtifacts()) {
                     for (Artifact art : arts.getArtifact()) {

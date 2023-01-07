@@ -88,7 +88,7 @@ public class Utils {
     }
     
     private static Set<String> collectClasspaths(Project prj) throws DependencyResolutionRequiredException {
-        Set<String> toRet = new HashSet<String>();
+        Set<String> toRet = new HashSet<>();
         NbMavenProject watcher = prj.getLookup().lookup(NbMavenProject.class);
         MavenProject mproject = watcher.getMavenProject();
         //TODO this ought to be really configurable based on what class gets debugged.
@@ -105,7 +105,7 @@ public class Utils {
         return toRet;
     }
     private static Set<String> collectSourceRoots(Project prj) {
-        Set<String> toRet = new HashSet<String>();
+        Set<String> toRet = new HashSet<>();
         NbMavenProject watcher = prj.getLookup().lookup(NbMavenProject.class);
         MavenProject mproject = watcher.getMavenProject();
         //TODO this ought to be really configurable based on what class gets debugged.

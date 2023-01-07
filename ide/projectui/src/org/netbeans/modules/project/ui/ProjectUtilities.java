@@ -559,7 +559,7 @@ public class ProjectUtilities {
         ERR.log(Level.FINE, "Trying to open files from {0}...", p);
         
         Set<String> urls = getOpenFilesUrls(p, groupName);
-        Set<FileObject> toRet = new HashSet<FileObject>();
+        Set<FileObject> toRet = new HashSet<>();
         for (String url : urls) {
             ERR.log(Level.FINE, "Will try to open {0}", url);
             FileObject fo;
@@ -623,7 +623,7 @@ public class ProjectUtilities {
         }
         
         NodeList list = groupEl.getElementsByTagNameNS(OPEN_FILES_NS2, FILE_ELEMENT);
-        Set<String> toRet = new HashSet<String>();
+        Set<String> toRet = new HashSet<>();
         for (int i = 0; i < list.getLength (); i++) {
             String url = list.item (i).getChildNodes ().item (0).getNodeValue ();
             toRet.add(url);

@@ -405,7 +405,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
     private void customScopeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_customScopeButtonActionPerformed
         Object selectedItem = scopeCombo.getSelectedItem();
         if (selectedItem == allProjects) {
-            Set<FileObject> todo = new HashSet<FileObject>();
+            Set<FileObject> todo = new HashSet<>();
 
             for (ClassPath source : GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE)) {
                 todo.addAll(Arrays.asList(source.getRoots()));
@@ -598,7 +598,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
     //End of copy/paste
     
     private Scope getThisProjectScope() {
-        List<FileObject> roots = new ArrayList<FileObject>();
+        List<FileObject> roots = new ArrayList<>();
 
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             roots.add(sg.getRootFolder());

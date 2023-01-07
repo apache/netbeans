@@ -172,7 +172,7 @@ public class BugzillaConfig {
 
     public Icon getPriorityIcon(String priority) {
         if(priorityIcons == null) {
-            priorityIcons = new HashMap<String, Icon>();
+            priorityIcons = new HashMap<>();
             priorityIcons.put("P1", ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/p1.png", true)); // NOI18N
             priorityIcons.put("P2", ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/p2.png", true)); // NOI18N
             priorityIcons.put("P3", ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/p3.png", true)); // NOI18N

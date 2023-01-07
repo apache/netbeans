@@ -107,7 +107,7 @@ public class JBPluginUtils {
     public static  List<URL> getJB5ClientClasspath(String serverRoot) throws
             MalformedURLException {
 
-        List<URL> urlList = new ArrayList<URL>();
+        List<URL> urlList = new ArrayList<>();
 
         File clientDir = new File(serverRoot, JBPluginUtils.CLIENT);
         if (clientDir.exists()) {

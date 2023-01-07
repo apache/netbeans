@@ -104,7 +104,7 @@ public final class ArrayDiff {
     public Set<Integer> getDeletedIndices() {
         if (deleted == null) {
             HashSet<TabData> set = new HashSet<TabData>(Arrays.asList(nue));
-            HashSet<Integer> results = new HashSet<Integer>(old.length);
+            HashSet<Integer> results = new HashSet<>(old.length);
             for (int i = 0; i < old.length; i++) {
                 if (!set.contains(old[i])) {
                     results.add(new Integer(i));
@@ -124,7 +124,7 @@ public final class ArrayDiff {
     public Set<Integer> getAddedIndices() {
         if (added == null) {
             HashSet<TabData> set = new HashSet<TabData>(Arrays.asList(old));
-            Set<Integer> results = new HashSet<Integer>(nue.length);
+            Set<Integer> results = new HashSet<>(nue.length);
             for (int i = 0; i < nue.length; i++) {
                 if (!set.contains(nue[i])) {
                     results.add(new Integer(i));
@@ -145,7 +145,7 @@ public final class ArrayDiff {
         //to prove useful.  getDeletedIndices() and getAddedIndices() are called
         //more than once, and the computation can be expensive.
         int max = Math.max(nue.length, old.length);
-        HashSet<Integer> results = new HashSet<Integer>(max);
+        HashSet<Integer> results = new HashSet<>(max);
 
         for (int i = 0; i < max; i++) {
             if (i < old.length && i < nue.length) {
@@ -166,7 +166,7 @@ public final class ArrayDiff {
      */
     public Set<Integer> getMovedIndices() {
         HashSet<TabData> set = new HashSet<TabData>(Arrays.asList(nue));
-        HashSet<Integer> results = new HashSet<Integer>(old.length);
+        HashSet<Integer> results = new HashSet<>(old.length);
 
         for (int i = 0; i < old.length; i++) {
             boolean isPresent = set.contains(old[i]);

@@ -122,7 +122,7 @@ public class MavenSettingsGrammar extends AbstractSchemaBasedGrammar {
 
     /*Return repo url's*/
     private List<String> getRepoUrls() {
-        List<String> repos = new ArrayList<String>();
+        List<String> repos = new ArrayList<>();
 
         List<RepositoryInfo> ris = RepositoryPreferences.getInstance().getRepositoryInfos();
         for (RepositoryInfo ri : ris) {

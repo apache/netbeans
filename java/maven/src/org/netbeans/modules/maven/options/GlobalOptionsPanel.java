@@ -38,7 +38,7 @@ public class GlobalOptionsPanel extends javax.swing.JPanel {
     public GlobalOptionsPanel() {
         initComponents();
         DefaultListModel dlm = new DefaultListModel();
-        descMap = new HashMap<String, String>();
+        descMap = new HashMap<>();
         int i = 0;
         String[] desc = SettingsPanel.getAvailableOptionsDescriptions();
         for (String s : SettingsPanel.AVAILABLE_OPTIONS) {

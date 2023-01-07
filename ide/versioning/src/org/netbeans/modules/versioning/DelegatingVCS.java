@@ -403,7 +403,7 @@ public class DelegatingVCS extends org.netbeans.modules.versioning.core.spi.Vers
 
     private Collection<String> getMetadataFolderNames() {
         if(metadataFolderNames == null) {
-            metadataFolderNames = new HashSet<String>();
+            metadataFolderNames = new HashSet<>();
             int i = 0;
             while(true) {
                 String name = (String) map.get("metadataFolderName" + i++);

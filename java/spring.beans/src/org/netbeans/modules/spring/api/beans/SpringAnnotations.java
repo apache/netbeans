@@ -31,7 +31,7 @@ import java.util.Set;
 public final class SpringAnnotations {
 
     public static final Set<String> SPRING_COMPONENTS = Collections.unmodifiableSet(
-            new HashSet<String>(Arrays.asList(
+            new HashSet<>(Arrays.asList(
             "org.springframework.stereotype.Component", //NOI18N
             "org.springframework.stereotype.Controller", //NOI18N
             "org.springframework.stereotype.Repository", //NOI18N

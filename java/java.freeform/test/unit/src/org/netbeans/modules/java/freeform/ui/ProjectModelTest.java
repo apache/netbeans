@@ -48,7 +48,7 @@ public class ProjectModelTest extends NbTestCase {
     public void testCreateEmptyModel() throws Exception {
         File baseFolder = new File(getWorkDir(), "somefolder/");
         File nbProjectFolder = new File(getWorkDir(), "nbprojfolder/");
-        Map<String,String> p = new HashMap<String,String>();
+        Map<String,String> p = new HashMap<>();
         p.put("key", "value");
         PropertyEvaluator evaluator = PropertyUtils.sequentialPropertyEvaluator(null, PropertyUtils.fixedPropertyProvider(p));
         ProjectModel pm = ProjectModel.createEmptyModel(baseFolder, nbProjectFolder, evaluator);
@@ -455,7 +455,7 @@ public class ProjectModelTest extends NbTestCase {
     private ProjectModel createEmptyProjectModel() throws Exception {
         File baseFolder = new File(getWorkDir(), "somefolder/");
         File nbProjectFolder = new File(getWorkDir(), "nbprojfolder/");
-        Map<String,String> p = new HashMap<String,String>();
+        Map<String,String> p = new HashMap<>();
         p.put("key", "value");
         PropertyEvaluator evaluator = PropertyUtils.sequentialPropertyEvaluator(null, PropertyUtils.fixedPropertyProvider(p));
         return ProjectModel.createEmptyModel(baseFolder, nbProjectFolder, evaluator);

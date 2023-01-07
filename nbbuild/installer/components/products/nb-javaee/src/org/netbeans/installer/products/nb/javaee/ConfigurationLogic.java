@@ -217,7 +217,7 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
             }
         }
         String mainClass = "org.netbeans.modules.glassfish.common.registration.AutomaticRegistration";
-        List<String> commands = new ArrayList<String>();
+        List<String> commands = new ArrayList<>();
         File nbCluster = new File(nbLocation, "nb");
         commands.add(javaExe.getAbsolutePath());
         commands.add("-cp");
@@ -252,7 +252,7 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
             }
         }
         String mainClass = "org.netbeans.modules.tomcat5.registration.AutomaticRegistration";
-        List<String> commands = new ArrayList<String>();
+        List<String> commands = new ArrayList<>();
         File nbCluster = new File(nbLocation, "nb");
         commands.add(javaExe.getAbsolutePath());
         commands.add("-cp");

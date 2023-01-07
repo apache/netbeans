@@ -113,7 +113,7 @@ public class LookupMergerImpl implements LookupMerger<ActionProvider> {
         }
 
         public String[] getSupportedActions() {
-            Set<String> actions = new HashSet<String>();
+            Set<String> actions = new HashSet<>();
             Collection<? extends ActionProvider> aps = delegates();
             for (ActionProvider ap : aps) {
                 actions.addAll(Arrays.asList(ap.getSupportedActions()));

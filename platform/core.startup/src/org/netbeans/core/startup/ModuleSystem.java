@@ -136,7 +136,7 @@ public final class ModuleSystem {
     public List<File> getModuleJars () {
         mgr.mutexPrivileged().enterReadAccess();
         try {
-            List<File> l = new ArrayList<File>();
+            List<File> l = new ArrayList<>();
             for (Module m: mgr.getEnabledModules()) {
                 l.addAll(m.getAllJars());
             }
@@ -159,7 +159,7 @@ public final class ModuleSystem {
         // Keep a list of manifest URL bases which we know we do not need to
         // parse. Some of these manifests might be signed, and if so, we do not
         // want to touch them, as it slows down startup quite a bit.
-        Set<File> ignoredJars = new HashSet<File>();
+        Set<File> ignoredJars = new HashSet<>();
         String javaHome = System.getProperty("java.home"); // NOI18N
         if (javaHome != null) {
             File lib = new File(new File(javaHome).getParentFile(), "lib"); // NOI18N

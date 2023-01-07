@@ -64,7 +64,7 @@ public final class FolderBasedController extends OptionsPanelController implemen
     private FolderBasedOptionPanel panel;
     private Map<String, OptionsPanelController> mimeType2delegates;
     private final boolean allowFiltering;
-    private final Set<String> supportFiltering = new HashSet<String>();
+    private final Set<String> supportFiltering = new HashSet<>();
     private final Document filterDocument = new PlainDocument();
 
     @OptionsPanelController.SubRegistration(

@@ -96,9 +96,9 @@ final class MainImpl extends Object {
             public void connect() throws IOException {}
         }.setDefaultUseCaches(false);
 
-        ArrayList<File> list = new ArrayList<File>();
+        ArrayList<File> list = new ArrayList<>();
 
-        HashSet<File> processedDirs = new HashSet<File> ();
+        HashSet<File> processedDirs = new HashSet<> ();
         HashSet<String> processedPaths = new HashSet<String> ();
         List<String> argsL = Arrays.asList (args);
         // only nbexec.exe puts userdir into netbeans.user
@@ -317,7 +317,7 @@ final class MainImpl extends Object {
                 if (user != null) {
                     JarClassLoader.initializeCache();
                     
-                    build_cp (new File (user), toAdd, new HashSet<File> (), new HashSet<String> ());
+                    build_cp (new File (user), toAdd, new HashSet<> (), new HashSet<String> ());
         
                 }
 

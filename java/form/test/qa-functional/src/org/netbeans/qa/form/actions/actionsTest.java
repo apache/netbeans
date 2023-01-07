@@ -172,7 +172,7 @@ public class actionsTest extends ExtJellyTestCase {
 
         Thread.sleep(1000);
 
-        ArrayList lines = new ArrayList<String>();
+        ArrayList lines = new ArrayList<>();
 
         lines.add("jButton1");
         lines.add("jButton2");

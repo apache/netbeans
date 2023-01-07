@@ -190,7 +190,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
                     //now attempt to extract
                     if (config instanceof BeanRunConfig) {
                         BeanRunConfig brc = (BeanRunConfig) config;
-                        List<String> processedGoals = new ArrayList<String>();
+                        List<String> processedGoals = new ArrayList<>();
                         for (String goal : brc.getGoals()) {
                             if (Constants.DEFAULT_PHASES.contains(goal) || Constants.CLEAN_PHASES.contains(goal)) {
                                 continue;
@@ -261,7 +261,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
                 //now attempt to extract
                 if (config instanceof BeanRunConfig) {
                     BeanRunConfig brc = (BeanRunConfig) config;
-                    List<String> processedGoals = new ArrayList<String>();
+                    List<String> processedGoals = new ArrayList<>();
                     for (String goal : brc.getGoals()) {
                         if (Constants.DEFAULT_PHASES.contains(goal) || Constants.CLEAN_PHASES.contains(goal)) {
                             continue;

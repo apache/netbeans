@@ -763,7 +763,7 @@ public final class J2eePlatform implements Lookup.Provider {
 
     private FileObject[] getVolumeContent(J2eePlatform platform, String volumeType) {
         LibraryImplementation[] libraries = platform.getLibraries();
-        List<FileObject> ret = new ArrayList<FileObject>();
+        List<FileObject> ret = new ArrayList<>();
         for (int i = 0; i < libraries.length; i++) {
             for (URL url : libraries[i].getContent(volumeType)) {
                 if ("jar".equals(url.getProtocol())) { // NOI18N

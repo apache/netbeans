@@ -34,8 +34,8 @@ import org.netbeans.modules.javawebstart.ui.customizer.JWSProjectProperties;
  */
 public class CustomizerRunComponent extends javax.swing.JPanel implements ActionListener {
     
-    private Map<String,String> runSelectedMap = new HashMap<String,String>();
-    private Map<String,String> runUnselectedMap = new HashMap<String,String>();
+    private Map<String,String> runSelectedMap = new HashMap<>();
+    private Map<String,String> runUnselectedMap = new HashMap<>();
     
     private J2SECategoryExtensionProvider.ConfigChangeListener listener;
     

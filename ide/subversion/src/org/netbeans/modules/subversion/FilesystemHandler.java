@@ -55,11 +55,11 @@ class FilesystemHandler extends VCSInterceptor {
     /**
      * Stores all moved files for a later cache refresh in afterMove
      */
-    private final Set<File> movedFiles = new HashSet<File>();
-    private final Set<File> copiedFiles = new HashSet<File>();
+    private final Set<File> movedFiles = new HashSet<>();
+    private final Set<File> copiedFiles = new HashSet<>();
 
-    private final Set<File> internalyDeletedFiles = new HashSet<File>();
-    private final Set<File> toLockFiles = Collections.synchronizedSet(new HashSet<File>());
+    private final Set<File> internalyDeletedFiles = new HashSet<>();
+    private final Set<File> toLockFiles = Collections.synchronizedSet(new HashSet<>());
     private final Map<File, Boolean> readOnlyFiles = Collections.synchronizedMap(new LinkedHashMap<File, Boolean>() {
         @Override
         protected boolean removeEldestEntry (Entry<File, Boolean> eldest) {
@@ -71,7 +71,7 @@ class FilesystemHandler extends VCSInterceptor {
     /**
      * Stores .svn folders that should be deleted ASAP.
      */
-    private final Set<File> invalidMetadata = new HashSet<File>(5);
+    private final Set<File> invalidMetadata = new HashSet<>(5);
     private static final int STATUS_VCS_MODIFIED_ATTRIBUTE
             = FileInformation.STATUS_VERSIONED_CONFLICT
             | FileInformation.STATUS_VERSIONED_MERGE
@@ -727,7 +727,7 @@ class FilesystemHandler extends VCSInterceptor {
      * @throws org.tigris.subversion.svnclientadapter.SVNClientException
      */
     private static List<File> getDeletedParents(File file, SvnClient client) throws SVNClientException {
-        List<File> ret = new ArrayList<File>();
+        List<File> ret = new ArrayList<>();
         for(File parent = file.getParentFile(); parent != null; parent = parent.getParentFile()) {
             ISVNStatus status = getStatus(client, parent);
             if (status == null || !status.getTextStatus().equals(SVNStatusKind.DELETED)) {

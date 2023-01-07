@@ -91,7 +91,7 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
 
     protected RunConfig config;
     private TabContext tabContext;
-    private List<String> messages = new ArrayList<String>();
+    private List<String> messages = new ArrayList<>();
     private List<OutputListener> listeners = new ArrayList<OutputListener>();
     protected ExecutorTask task;
     protected MavenItem item;

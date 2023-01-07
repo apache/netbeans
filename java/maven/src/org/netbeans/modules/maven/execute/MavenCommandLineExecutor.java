@@ -421,7 +421,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
     
     private void kill(Process prcs, String uuid) {
-        Map<String, String> env = new HashMap<String, String>();
+        Map<String, String> env = new HashMap<>();
         env.put(KEY_UUID, uuid);
         Processes.killTree(prcs, env);
     }

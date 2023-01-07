@@ -194,7 +194,7 @@ public class EarProjectGeneratorTest extends NbTestCase {
         List createdProperties = new ArrayList(props.keySet());
         int extFileRefCount = 0;
 
-        List<String> extProperties = new ArrayList<String>();
+        List<String> extProperties = new ArrayList<>();
         Collections.addAll(extProperties, CREATED_PROPERTIES_EXT_SOURCES);
         extProperties.add("file.reference." + getWorkDir().getName() + "-EARProject");
 

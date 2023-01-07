@@ -101,7 +101,7 @@ public class MethodRefactoringElement extends RefactoringElement {
 
     private List<String> getParamTypes(MethodCallExpression methodCall) {
         final Expression arguments = methodCall.getArguments();
-        final List<String> paramTypes = new ArrayList<String>();
+        final List<String> paramTypes = new ArrayList<>();
 
         if (arguments instanceof ArgumentListExpression) {
             ArgumentListExpression argumentList = ((ArgumentListExpression) arguments);
@@ -115,7 +115,7 @@ public class MethodRefactoringElement extends RefactoringElement {
     }
 
     private List<String> getParams(MethodNode methodNode) {
-        final List<String> paramTypes = new ArrayList<String>();
+        final List<String> paramTypes = new ArrayList<>();
 
         for (Parameter param : methodNode.getParameters()) {
             paramTypes.add(ElementUtils.getTypeName(param));

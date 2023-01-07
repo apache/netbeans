@@ -331,7 +331,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     ERROR_INSTALL_JDK_ERROR_KEY),e);
         }
 
-             List<File> directories = new ArrayList<File>();
+             List<File> directories = new ArrayList<>();
         directories.add(location);
         directories.add(tempDir);
         long maxDeltaSize = getJDKinstallationSize()  + getProduct().getDownloadSize();

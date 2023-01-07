@@ -652,7 +652,7 @@ public class HgModuleConfig {
     
     synchronized Set<String> getCommitExclusions() {
         if (exclusions == null) {
-            exclusions = new HashSet<String>(Utils.getStringList(getPreferences(), PROP_COMMIT_EXCLUSIONS));
+            exclusions = new HashSet<>(Utils.getStringList(getPreferences(), PROP_COMMIT_EXCLUSIONS));
         }
         return exclusions;
     }

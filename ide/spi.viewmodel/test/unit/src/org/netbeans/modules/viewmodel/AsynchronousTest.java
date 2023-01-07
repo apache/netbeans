@@ -49,7 +49,7 @@ import org.openide.util.RequestProcessor;
  */
 public class AsynchronousTest extends NbTestCase {
 
-    private static final Set<String> SYNCHRONOUS_METHODS = Collections.unmodifiableSet(new HashSet<String>(
+    private static final Set<String> SYNCHRONOUS_METHODS = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList( "isLeaf",    // TreeModel
                            "getIconBase", "canCopy", "canCut", "canRename", // NodeModel
                            "clipboardCopy", "clipboardCut", "getPasteTypes", "getIconBaseWithExtension", // ExtendedNodeModel

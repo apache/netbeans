@@ -122,7 +122,7 @@ public class DerbyServerNode extends AbstractNode implements Comparable {
 
         @Override
         protected boolean createKeys(List<String> toPopulate) {
-            List<String> fresh = new ArrayList<String>();
+            List<String> fresh = new ArrayList<>();
 
             fresh.addAll(databasesImpl.getDatabases());
 

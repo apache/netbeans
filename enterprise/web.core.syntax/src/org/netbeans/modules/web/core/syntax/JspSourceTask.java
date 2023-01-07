@@ -63,15 +63,15 @@ public final class JspSourceTask extends ParserResultTask<JspParserResult> {
     static {
         Map<String, Set<String>> tags = new HashMap<String, Set<String>>();
         tags.put("jsp:useBean",
-                new HashSet<String>(Arrays.asList(new String[]{"class", "type", "id"}))); //NOI18N
+                new HashSet<>(Arrays.asList(new String[]{"class", "type", "id"}))); //NOI18N
         
         Map<String, Set<String>> dirs = new HashMap<String, Set<String>>();
         dirs.put("page",
-                new HashSet<String>(Arrays.asList(new String[]{"extends", "import"}))); //NOI18N
+                new HashSet<>(Arrays.asList(new String[]{"extends", "import"}))); //NOI18N
         dirs.put("tag",
-                new HashSet<String>(Collections.singletonList("import"))); //NOI18N
+                new HashSet<>(Collections.singletonList("import"))); //NOI18N
         dirs.put("attribute",
-                new HashSet<String>(Collections.singletonList("type"))); //NOI18N
+                new HashSet<>(Collections.singletonList("type"))); //NOI18N
 
         EMBEDDINGS.put(JspSyntaxElement.Kind.OPENTAG, tags);
         EMBEDDINGS.put(JspSyntaxElement.Kind.DIRECTIVE, dirs);

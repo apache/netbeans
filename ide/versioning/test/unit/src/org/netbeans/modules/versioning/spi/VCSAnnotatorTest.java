@@ -51,7 +51,7 @@ public class VCSAnnotatorTest extends NbTestCase {
         FileSystem fs = fo.getFileSystem();
         StatusDecorator status = fs.getDecorator();
         
-        Set<FileObject> sof = new HashSet<FileObject>();
+        Set<FileObject> sof = new HashSet<>();
         sof.add(fo);
         String annotatedName = status.annotateName("xxx", sof);
         assertEquals(annotatedName, "xxx");

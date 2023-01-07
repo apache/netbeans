@@ -121,7 +121,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                     for (int k = 0; k < kidsSize; k++) {
                         kids.add(dis.readUTF());
                     }
-                    fileToKids.put(f, new HashSet<String>(kids));
+                    fileToKids.put(f, new HashSet<>(kids));
                 }
                 fileCache.put(key, fileToKids);
             }
@@ -375,7 +375,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 if (isDir) {
                     String[] kids = d.list();
                     if (kids != null) {
-                        fileCachePerPrefix.put(root, new HashSet<String>(Arrays.asList(kids)));
+                        fileCachePerPrefix.put(root, new HashSet<>(Arrays.asList(kids)));
                     } else {
                         Util.err.log(Level.WARNING, "could not read files in {0} at {1}", new Object[] {d, findCaller()});
                     }
@@ -429,7 +429,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 LOG.log(Level.WARNING, "no such module {0} at {1}", new Object[] {list, findCaller()});
                 return true;
             }
-            ownership = new HashSet<String>();
+            ownership = new HashSet<>();
             try {
                 // Could do a proper XML parse but likely too slow.
                 if (LOG.isLoggable(Level.FINE)) {
@@ -492,7 +492,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
     }
 
     static List<File> computeDirs() {
-        List<File> _dirs = new ArrayList<File>();
+        List<File> _dirs = new ArrayList<>();
         addDir(_dirs, System.getProperty("netbeans.user")); // NOI18N
         String nbdirs = System.getProperty("netbeans.dirs"); // #27151
         if (nbdirs != null) {

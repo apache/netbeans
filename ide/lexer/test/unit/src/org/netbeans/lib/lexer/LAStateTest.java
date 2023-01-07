@@ -62,7 +62,7 @@ public class LAStateTest extends TestCase {
     }
 
     public void testLAState() {
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         LAState laState = LAState.empty();
         laState = add(expected, laState, 0, null);
         laState = add(expected, laState, 1, null);
@@ -74,7 +74,7 @@ public class LAStateTest extends TestCase {
         List<Object> expectedInner = expected;
         LAState laStateInner = laState;
 
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         laState = laState.empty();
         laState = add(expected, laState, 1, null);
         laState = add(expected, laState, 7, null);

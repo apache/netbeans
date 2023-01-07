@@ -120,7 +120,7 @@ public final class PreferencesStorage implements StorageDescription<String, Type
     private static final class Reader extends PreferencesReader {
 
         private Map<String, TypedValue> entriesMap = new HashMap<String, TypedValue>();
-        private Set<String> removedEntries = new HashSet<String>();
+        private Set<String> removedEntries = new HashSet<>();
         
         // The entry being processed
         private String name = null;

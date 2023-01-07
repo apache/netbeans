@@ -197,7 +197,7 @@ public class WSDLInlineSchemaValidator extends XsdBasedValidator {
     }
     
     private List<Integer> setupLinePositions(String str) {
-        List<Integer> linePositions = new ArrayList<Integer>();
+        List<Integer> linePositions = new ArrayList<>();
         String[] lines = str.split("\n"); //NOI18N
         linePositions.add(Integer.valueOf(-1));
         int pos = 0;

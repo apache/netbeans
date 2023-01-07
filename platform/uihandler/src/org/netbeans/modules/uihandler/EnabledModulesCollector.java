@@ -107,7 +107,7 @@ public class EnabledModulesCollector implements Deactivated {
         String dirs = System.getProperty("netbeans.dirs");                      // NOI18N
         if (dirs != null) {
             String [] dirsArray = dirs.split(File.pathSeparator);
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             for (int i = 0; i < dirsArray.length; i++) {
                 File f = new File(dirsArray[i]);
                 if (f.exists()){
@@ -129,7 +129,7 @@ public class EnabledModulesCollector implements Deactivated {
     
     static LogRecord getUserInstalledModules(Logger logger) {
         LogRecord rec = new LogRecord(Level.INFO, "USG_USER_INSTALLED_MODULES");
-        Set<String> clusterNames = new HashSet<String>(getClusterNames());
+        Set<String> clusterNames = new HashSet<>(getClusterNames());
         clusterNames.add("platform");                                           // NOI18N
         List<ModuleInfo> userInstalledModules = new ArrayList<ModuleInfo>();
         for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {

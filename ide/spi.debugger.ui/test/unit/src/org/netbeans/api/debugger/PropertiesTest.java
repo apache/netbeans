@@ -442,7 +442,7 @@ public class PropertiesTest extends TestCase {
             "test.string",
         };
 
-        public static final Map<String, Object> DEFAULT_VALUES = new HashMap<String, Object>();
+        public static final Map<String, Object> DEFAULT_VALUES = new HashMap<>();
 
         static {
             DEFAULT_VALUES.put(PROPERTY_NAMES[0], new String[] {"TestArray"});

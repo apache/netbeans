@@ -164,7 +164,7 @@ public class UtilitiesTest extends NbTestCase {
 
     public void testActionsToPopupWithLookup() throws Exception {
         MockLookup.setInstances(new AwtBridgeImpl());
-        final List<String> commands = new ArrayList<String>();
+        final List<String> commands = new ArrayList<>();
         class BasicAction extends AbstractAction {
             public BasicAction(String name) {
                 super(name);

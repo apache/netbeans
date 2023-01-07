@@ -66,7 +66,7 @@ public class NewCodeGeneratorIterator extends BasicWizardIterator {
      * @param cmf modified files
      */
     private static void createContextProvider(DataModel model, CreatedModifiedFiles cmf) {
-        Map<String, String> cpReplaceTokens = new HashMap<String, String>();
+        Map<String, String> cpReplaceTokens = new HashMap<>();
         String providerFileName = model.getProviderFileName();
         cpReplaceTokens.put("CLASS_NAME", providerFileName);
         Set<String> cpImports = new TreeSet<String>(Arrays.asList(PROVIDER_HARDCODED_IMPORTS));
@@ -103,7 +103,7 @@ public class NewCodeGeneratorIterator extends BasicWizardIterator {
         
         String actionPath = model.getDefaultPackagePath(fileName + ".java", false); // NOI18N
         
-        Map<String,String> replaceTokens = new HashMap<String,String>();
+        Map<String,String> replaceTokens = new HashMap<>();
         replaceTokens.put("CLASS_NAME",fileName); // NOI18N
         replaceTokens.put("PACKAGE_NAME", model.getPackageName()); // NOI18N
         Set<String> imports = new TreeSet<String>(Arrays.asList(HARDCODED_IMPORTS));

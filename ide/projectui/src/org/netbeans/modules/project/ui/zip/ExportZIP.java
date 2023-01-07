@@ -140,7 +140,7 @@ public class ExportZIP extends JPanel {
         });
         handle.start();
         try {
-            List<String> files = new ArrayList<String>();
+            List<String> files = new ArrayList<>();
             scanForFiles(root, files, "", handle, canceled, true);
             if (canceled.get()) {
                 return false;
@@ -149,7 +149,7 @@ public class ExportZIP extends JPanel {
             OutputStream os = new FileOutputStream(zip);
             try {
                 ZipOutputStream zos = new ZipOutputStream(os);
-                Set<String> written = new HashSet<String>();
+                Set<String> written = new HashSet<>();
                 String prefix = root.getName() + '/';
                 for (int i = 0; i < files.size(); i++) {
                     if (canceled.get()) {

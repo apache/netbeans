@@ -70,7 +70,7 @@ public class WindowManagerParser {
     private Map<String, GroupParser> groupParserMap = new HashMap<String, GroupParser>(19);
     
     //Used to collect names of all localy stored wstcref files.
-    private Set<String> tcRefNameLocalSet = new HashSet<String>(101);
+    private Set<String> tcRefNameLocalSet = new HashSet<>(101);
     
     private static final Object SAVING_LOCK = new Object();
     
@@ -477,7 +477,7 @@ public class WindowManagerParser {
     }
     
     private void mergeModes( List<ModeConfig> modeCfgList ) {
-        Set<String> mergedModes = new HashSet<String>( 20 );
+        Set<String> mergedModes = new HashSet<>( 20 );
         for( ModeConfig modeConfig : modeCfgList ) {
             if( modeConfig.otherNames == null )
                 continue;
@@ -728,7 +728,7 @@ public class WindowManagerParser {
         for (int i = 0; i < wmc.modes.length; i++) {
             modeConfigMap.put(wmc.modes[i].name, wmc.modes[i]);
         }
-        List<String> toDelete = new ArrayList<String>(10);
+        List<String> toDelete = new ArrayList<>(10);
         for (ModeParser modeParser: modeParserMap.values()) {
             if (!modeConfigMap.containsKey(modeParser.getName())) {
                 toDelete.add(modeParser.getName());
@@ -761,7 +761,7 @@ public class WindowManagerParser {
             //if (DEBUG) Debug.log(WindowManagerParser.class, "writeGroups group[" + i + "]: " + wmc.groups[i].name);
             groupConfigMap.put(wmc.groups[i].name, wmc.groups[i]);
         }
-        List<String> toDelete = new ArrayList<String>(10);
+        List<String> toDelete = new ArrayList<>(10);
         for (GroupParser groupParser: groupParserMap.values()) {
             if (!groupConfigMap.containsKey(groupParser.getName())) {
                 toDelete.add(groupParser.getName());
@@ -872,7 +872,7 @@ public class WindowManagerParser {
         private List<SplitConstraint> itemList = new ArrayList<SplitConstraint>(10);
         
         /** List to store parsed tc-ids */
-        private List<String> tcIdList = new ArrayList<String>(10);
+        private List<String> tcIdList = new ArrayList<>(10);
         
         /** Lock to prevent mixing readData and writeData */
         private final Object RW_LOCK = new Object();

@@ -286,7 +286,7 @@ public class MavenSourcesImpl implements Sources, SourceGroupModifierImplementat
 
     private boolean checkGeneratedGroupsCache() {
         boolean changed = false;
-        List<File> checked = new ArrayList<File>();
+        List<File> checked = new ArrayList<>();
         for (boolean test : new boolean[] {false, true}) {
             for (URI u : project().getGeneratedSourceRoots(test)) {
                 File file = FileUtil.normalizeFile(Utilities.toFile(u));
@@ -295,7 +295,7 @@ public class MavenSourcesImpl implements Sources, SourceGroupModifierImplementat
                 checked.add(file);
             }
         }
-        Set<File> currs = new HashSet<File>();
+        Set<File> currs = new HashSet<>();
         currs.addAll(genSrcGroup.keySet());
         for (File curr : currs) {
             if (!checked.contains(curr)) {
@@ -341,11 +341,11 @@ public class MavenSourcesImpl implements Sources, SourceGroupModifierImplementat
 
     private boolean checkOtherGroupsCache(File[] roots, boolean test) {
         boolean ch = false;
-        Set<File> toRemove = new HashSet<File>(test ? otherTestGroups.keySet() : otherMainGroups.keySet());
+        Set<File> toRemove = new HashSet<>(test ? otherTestGroups.keySet() : otherMainGroups.keySet());
         toRemove.removeAll(Arrays.asList(roots));
 
         URI[] res = project().getResources(test);
-        Set<File> resources = new HashSet<File>();
+        Set<File> resources = new HashSet<>();
         for (URI ur : res) {
             resources.add(Utilities.toFile(ur));
         }

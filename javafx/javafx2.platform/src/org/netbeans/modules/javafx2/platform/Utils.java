@@ -181,7 +181,7 @@ public final class Utils {
     @NonNull
     public static List<? extends URL> getRuntimeClassPath(@NonNull final File javafxRuntime) {
         Parameters.notNull("javafxRuntime", javafxRuntime); //NOI18N
-        final List<URL> result = new ArrayList<URL>();
+        final List<URL> result = new ArrayList<>();
         final File lib = new File (javafxRuntime,"lib");    //NOI18N
         final File[] children = lib.listFiles(new FileFilter() {
             @Override

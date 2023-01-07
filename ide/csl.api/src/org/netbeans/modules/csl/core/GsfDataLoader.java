@@ -57,7 +57,7 @@ public class GsfDataLoader extends UniFileLoader {
 
     final void initExtensions() {
         ExtensionList list = new ExtensionList();
-        Set mimes = new HashSet<String>();
+        Set mimes = new HashSet<>();
         for (Language language : LanguageRegistry.getInstance()) {
             
             if(language.useCustomEditorKit()) {
@@ -146,7 +146,7 @@ public class GsfDataLoader extends UniFileLoader {
                 } else {
                     ErrorManager.getDefault().log(ErrorManager.WARNING, "No classpath was found for folder: "+target);
                 }
-                Map<String,String> m = new HashMap<String,String>();
+                Map<String,String> m = new HashMap<>();
                 m.put("NAME", n ); //NOI18N
                 String capitalizedName;
                 if (n.length() > 1) {

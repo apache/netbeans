@@ -122,7 +122,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
     }
 
     public void refresh() {
-        Set<String> supportedActionsSet = new HashSet<String>();
+        Set<String> supportedActionsSet = new HashSet<>();
         globalCommands.put(ActionProvider.COMMAND_BUILD, new String[] {"build"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_CLEAN, new String[] {"clean"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_REBUILD, new String[] {"clean", "build"}); // NOI18N
@@ -347,7 +347,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                 return new TestSources(matches, testType, testSrcDir, null);
             } else {
                 // no test files found. The selected FOs must be folders under source packages
-                ArrayList<FileObject> testFOs = new ArrayList<FileObject>();
+                ArrayList<FileObject> testFOs = new ArrayList<>();
                 for (FileObject file : sourceFiles) {
                     if (file.isFolder()) {
                         String relativePath = FileUtil.getRelativePath(srcDir, file);
@@ -375,7 +375,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
         String testType = "unit"; // NOI18N
         FileObject[] sourcesFOs = findSources(context, false, false);
         FileObject[] testSourcesFOs = findTestSourcesFOs(context, false, false);
-        HashSet<FileObject> testFiles = new HashSet<FileObject>();
+        HashSet<FileObject> testFiles = new HashSet<>();
         FileObject testRoot = project.getTestSourceDirectory(testType);
         if (testRoot == null) {
             return null;
@@ -832,7 +832,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                 return false;
             }
             try {
-                Map<String, Object> properties = new HashMap<String, Object>();
+                Map<String, Object> properties = new HashMap<>();
 
                 prepareSystemProperties(properties);
 

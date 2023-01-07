@@ -50,7 +50,7 @@ public class DynaMenuModelTest extends TestCase {
     public void testLoadSubmenu() {
         System.out.println("loadSubmenu");
         
-        List<Object> cInstances = new ArrayList<Object>();
+        List<Object> cInstances = new ArrayList<>();
         cInstances.add(new Act1());
         cInstances.add(new Act2());
         JMenu m = new JMenu();
@@ -68,7 +68,7 @@ public class DynaMenuModelTest extends TestCase {
      * Test of checkSubmenu method, of class org.openide.awt.DynaMenuModel.
      */
     public void testCheckSubmenu() {
-        List<Object> cInstances = new ArrayList<Object>();
+        List<Object> cInstances = new ArrayList<>();
         cInstances.add(new Act1());
         cInstances.add(new Act2());
         JMenu m = new JMenu();

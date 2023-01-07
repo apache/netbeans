@@ -940,7 +940,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                         org.netbeans.modules.maven.model.pom.Dependency dep = model.getProject().findDependencyById(directArt.getGroupId(), directArt.getArtifactId(), null);
                         if (dep == null) {
                             // now check the active profiles for the dependency..
-                            List<String> profileNames = new ArrayList<String>();
+                            List<String> profileNames = new ArrayList<>();
                             Iterator it = data.getMavenProject().getActiveProfiles().iterator();
                             while (it.hasNext()) {
                                 Profile prof = (Profile) it.next();
@@ -1133,7 +1133,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                         org.netbeans.modules.maven.model.pom.Dependency dep = model.getProject().findDependencyById(art.getGroupId(), art.getArtifactId(), null);
                         if (dep == null) {
                             // now check the active profiles for the dependency..
-                            List<String> profileNames = new ArrayList<String>();
+                            List<String> profileNames = new ArrayList<>();
                             Iterator it = project.getOriginalMavenProject().getActiveProfiles().iterator();
                             while (it.hasNext()) {
                                 Profile prof = (Profile) it.next();

@@ -67,9 +67,9 @@ public class ServiceRefMetadataReader extends CommonBeanReader {
                 String serviceRefName = serviceRef.getServiceRefName();
                 if(Utils.notEmpty(serviceRefName)) {
                     if(result == null) {
-                        result = new HashMap<String, Object>();
+                        result = new HashMap<>();
                     }
-                    Map<String, Object> serviceRefMap = new HashMap<String, Object>();
+                    Map<String, Object> serviceRefMap = new HashMap<>();
                     result.put(serviceRefName, serviceRefMap);
                     serviceRefMap.put(DDBinding.PROP_NAME, serviceRefName);
                 }

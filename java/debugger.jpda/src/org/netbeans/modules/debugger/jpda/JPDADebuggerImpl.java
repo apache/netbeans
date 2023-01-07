@@ -225,7 +225,7 @@ public class JPDADebuggerImpl extends JPDADebugger {
             throw new IllegalArgumentException
                 ("JavaEngineProvider have to be used to start JPDADebugger!");
         }
-        languages = new HashSet<String>();
+        languages = new HashSet<>();
         languages.add ("Java");
         threadsTranslation = ObjectTranslation.createThreadTranslation(this);
         localsTranslation = ObjectTranslation.createLocalsTranslation(this);

@@ -36,7 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=GuiUtilsProvider.class, position=10)
 public class JavaGuiUtilsProvider extends GuiUtilsProvider {
     
-    private HashMap<String, String> checkboxes = new HashMap<String, String>();
+    private HashMap<String, String> checkboxes = new HashMap<>();
     {
         checkboxes.put("CHK_PUBLIC", GuiUtils.CHK_PUBLIC);
         checkboxes.put("CHK_PROTECTED", GuiUtils.CHK_PROTECTED);

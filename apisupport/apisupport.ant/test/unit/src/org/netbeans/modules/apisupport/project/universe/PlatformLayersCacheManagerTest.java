@@ -54,7 +54,7 @@ public class PlatformLayersCacheManagerTest extends TestBase {
         cacheDir = new File(Places.getCacheDirectory(), PlatformLayersCacheManager.CACHE_PATH);
         assertFalse("Cache not yet saved", cacheDir.isDirectory());
         plaf = NbPlatform.getDefaultPlatform();
-        jarNames = new HashSet<String>();
+        jarNames = new HashSet<>();
         Collections.addAll(jarNames, "org-netbeans-modules-apisupport-project.jar",
                 "org-netbeans-core-windows.jar",
                 "org-openide-filesystems.jar",  // not in "modules" dir, but has layer.xml
@@ -98,13 +98,13 @@ public class PlatformLayersCacheManagerTest extends TestBase {
             }
         });
         assertNotNull(cache);
-        HashSet<String> foundJars = new HashSet<String>();
+        HashSet<String> foundJars = new HashSet<>();
         for (FileSystem fs : cache) {
             File origJar = PlatformLayersCacheManager.findOriginatingJar(fs);
             assertTrue("Originating JAR exists", origJar.exists());
             foundJars.add(origJar.getName());
         }
-        HashSet<String> expectedJars = new HashSet<String>(jarNames);
+        HashSet<String> expectedJars = new HashSet<>(jarNames);
         expectedJars.remove("org-openide-util.jar");    // doesn't have layer file
         assertEquals(expectedJars, foundJars);
         assertNull("Null on not cached FS", PlatformLayersCacheManager.findOriginatingJar(FileUtil.createMemoryFileSystem()));

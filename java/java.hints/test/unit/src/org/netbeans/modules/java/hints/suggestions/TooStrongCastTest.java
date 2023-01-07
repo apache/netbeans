@@ -335,7 +335,7 @@ public class TooStrongCastTest extends NbTestCase {
             "\n" +
             "class VarArgsCast {\n" +
             "    void bu() {\n" +
-            "        List<String> strings = new ArrayList<String>();\n" +
+            "        List<String> strings = new ArrayList<>();\n" +
             "        strings.addAll(Collections.nCopies(10, (String)null));\n" +
             "    }\n" +
             "}\n" +

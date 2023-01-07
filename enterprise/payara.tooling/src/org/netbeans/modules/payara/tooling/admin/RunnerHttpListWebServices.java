@@ -87,8 +87,8 @@ public class RunnerHttpListWebServices extends RunnerHttp {
             if(manifest == null) {
                 return false;
             }
-            result.value = new ArrayList<String>();
-            Map <String, String> filter = new HashMap<String, String>();
+            result.value = new ArrayList<>();
+            Map <String, String> filter = new HashMap<>();
             Iterator<String> keyIterator = manifest.getEntries().keySet().iterator();
             while (keyIterator.hasNext()) {
                 String k = keyIterator.next();

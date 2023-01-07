@@ -165,7 +165,7 @@ public class GeneralJSF extends J2eeTestCase {
     }
     
     protected void checkCompletionItemsJSF(CompletionJListOperator jlist, String[] asIdeal, int maxItems) throws Exception {
-        Set<String> actual = new HashSet<String>();
+        Set<String> actual = new HashSet<>();
         List list = jlist.getCompletionItems();
         StringBuilder suggestions = new StringBuilder();
         String _t;

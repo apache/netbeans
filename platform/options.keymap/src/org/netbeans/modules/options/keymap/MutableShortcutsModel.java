@@ -83,7 +83,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
     private volatile Map<String, Map<ShortcutAction, Set<String>>> modifiedProfiles = 
             new HashMap<String, Map<ShortcutAction, Set<String>>> ();
     
-    private volatile Set<String> revertedProfiles = new HashSet<String>();
+    private volatile Set<String> revertedProfiles = new HashSet<>();
     
     private volatile Set<ShortcutAction> revertedActions = new HashSet<ShortcutAction>();
     
@@ -477,7 +477,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
         setShortcuts(action, shortcuts);
         for (ShortcutAction a : filtered) {
             String[] ss = getShortcuts(a);
-            Set<String> newSs = new HashSet<String>(Arrays.asList(ss));
+            Set<String> newSs = new HashSet<>(Arrays.asList(ss));
             newSs.removeAll(shortcuts);
             setShortcuts(a, newSs);
         }
@@ -524,7 +524,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
         }
         applyInProgress = true;
         
-        final Set<String> revertedProfiles = new HashSet<String>(this.revertedProfiles);
+        final Set<String> revertedProfiles = new HashSet<>(this.revertedProfiles);
         final Set<ShortcutAction> revertedActions = new HashSet<ShortcutAction>(this.revertedActions);
         final Map<String, Map<ShortcutAction, Set<String>>> modifiedProfiles = 
             cloneProfileMap(this.modifiedProfiles);
@@ -585,7 +585,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
         modifiedProfiles = new HashMap<String, Map<ShortcutAction, Set<String>>> ();
         deletedProfiles = new HashSet<String> ();
         revertedActions = new HashSet<ShortcutAction>();
-        revertedProfiles = new HashSet<String>();
+        revertedProfiles = new HashSet<>();
         currentProfile = null;
         dirty = false;
     }
@@ -681,7 +681,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
             List<ShortcutAction> allActions = new ArrayList<ShortcutAction>();
             List<ShortcutAction> thisActions = Collections.emptyList();
             
-            Set<String> filtered = new HashSet<String>(model.getActionCategories());
+            Set<String> filtered = new HashSet<>(model.getActionCategories());
             for (Iterator<String> it = filtered.iterator(); it.hasNext(); ) {
                 String cat = it.next();
                 if (!cat.startsWith(category)) {

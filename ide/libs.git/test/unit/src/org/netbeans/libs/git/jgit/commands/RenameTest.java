@@ -341,7 +341,7 @@ public class RenameTest extends AbstractGitTestCase {
         assertTrue(moved2.exists());
         assertTrue(moved11.exists());
         assertTrue(moved21.exists());
-        assertEquals(new HashSet<File>(Arrays.asList(moved1, moved11, moved21)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(moved1, moved11, moved21)), m.notifiedFiles);
         Map<File, GitStatus> statuses = client.getStatus(new File[] { file1, file2, file11, file21, moved1, moved11, moved2, moved21 }, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_REMOVED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_REMOVED, false);
         assertNull(statuses.get(file2));
@@ -391,7 +391,7 @@ public class RenameTest extends AbstractGitTestCase {
         assertTrue(moved2.exists());
         assertTrue(moved11.exists());
         assertTrue(moved21.exists());
-        assertEquals(new HashSet<File>(Arrays.asList(moved1, moved11, moved21)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(moved1, moved11, moved21)), m.notifiedFiles);
         Map<File, GitStatus> statuses = client.getStatus(new File[] { file1, file2, file11, file21, moved1, moved11, moved2, moved21 }, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_REMOVED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_REMOVED, false);
         assertNull(statuses.get(file2));

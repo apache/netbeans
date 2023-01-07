@@ -30,7 +30,7 @@ import org.openide.util.lookup.Lookups;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 final class OnShowingHandler implements LookupListener, Runnable {
-    private final Set<String> onShowing = new HashSet<String>();
+    private final Set<String> onShowing = new HashSet<>();
     private final Lookup lkpShowing;
     private final WindowManager wm;
     private Lookup.Result<Runnable> resShow;

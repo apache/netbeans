@@ -67,7 +67,7 @@ public enum SecurityQName {
     private final QName qName;
 
     public Map<String, String> getSchemaLocations(boolean local) {
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        HashMap<String, String> hmap = new HashMap<>();
         hmap.put(SECURITY_UTILITY, getSchemaLocation(SECURITY_UTILITY, local));
         return hmap;
     }

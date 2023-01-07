@@ -73,7 +73,7 @@ public class AntSettings {
     }
 
     public static Map<String,String> getProperties() {
-        Map<String,String> p = new HashMap<String,String>();
+        Map<String,String> p = new HashMap<>();
         // Enable hyperlinking for Jikes by default:
         for (String pair : prefs().get(PROP_PROPERTIES, "build.compiler.emacs=true").split("\n")) { // NOI18N
             String[] nameval = pair.split("=", 2); // NOI18N
@@ -190,7 +190,7 @@ public class AntSettings {
     }
 
     public static List<File> getExtraClasspath() {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (String f : prefs().get(PROP_EXTRA_CLASSPATH, "").split(Pattern.quote(File.pathSeparator))) {
             if (f.length() == 0) {
                 continue; // otherwise would add CWD to CP!
@@ -228,7 +228,7 @@ public class AntSettings {
             });
         }
         if (defAECP == null) {
-            defAECP = new ArrayList<File>();
+            defAECP = new ArrayList<>();
             for (AutomaticExtraClasspathProvider provider : aecpResult.allInstances()) {
                 assert provider != null;
                 defAECP.addAll(Arrays.asList(provider.getClasspathItems()));

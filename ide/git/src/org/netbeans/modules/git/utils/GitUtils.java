@@ -115,7 +115,7 @@ public final class GitUtils {
     public static final String PREFIX_R_REMOTES = "refs/remotes/"; //NOI18N
     public static final ProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
     public static final String MASTER = "master"; //NOI18N
-    private static final Set<File> loggedRepositories = new HashSet<File>();
+    private static final Set<File> loggedRepositories = new HashSet<>();
     public static final String REMOTE_ORIGIN = "origin"; //NOI18N
     public static final String ORIGIN = "origin"; //NOI18N
 
@@ -168,7 +168,7 @@ public final class GitUtils {
      */
     public static boolean prepareRootFiles (File repository, Collection<File> filesUnderRoot, File file) {
         boolean added = false;
-        Set<File> filesToRemove = new HashSet<File>();
+        Set<File> filesToRemove = new HashSet<>();
         for (File fileUnderRoot : filesUnderRoot) {
             if (file.equals(fileUnderRoot) || fileUnderRoot.equals(repository)) {
                 // file has already been inserted or scan is planned for the whole repository root
@@ -300,7 +300,7 @@ public final class GitUtils {
             // get cached patterns
             Set<String> ignores = notSharable.get(topFile);
             if (ignores == null) {
-                ignores = new HashSet<String>();
+                ignores = new HashSet<>();
             }
             String patternCandidate = ignoredPath;
             // test for duplicate patterns
@@ -401,7 +401,7 @@ public final class GitUtils {
      * @return repository roots
      */
     public static Set<File> getRepositoryRoots (Collection<File> roots) {
-        Set<File> ret = new HashSet<File>();
+        Set<File> ret = new HashSet<>();
 
         // filter managed roots
         for (File file : roots) {
@@ -532,7 +532,7 @@ public final class GitUtils {
      */
     public static File[] listFiles (File[] roots, EnumSet<Status> includedStatuses) {
         File[][] split = Utils.splitFlatOthers(roots);
-        List<File> fileList = new ArrayList<File>();
+        List<File> fileList = new ArrayList<>();
         FileStatusCache cache = Git.getInstance().getFileStatusCache();
         for (int c = 0; c < split.length; c++) {
             File[] splitRoots = split[c];
@@ -721,7 +721,7 @@ public final class GitUtils {
      */
     public static void headChanged (File... repositories) {
         Set<File> openFiles = Utils.getOpenFiles();
-        Set<File> repositorySet = new HashSet<File>(Arrays.asList(repositories));
+        Set<File> repositorySet = new HashSet<>(Arrays.asList(repositories));
         for (Iterator<File> it = openFiles.iterator(); it.hasNext(); ) {
             File file = it.next();
             if (!repositorySet.contains(Git.getInstance().getRepositoryRoot(file))) {
@@ -813,7 +813,7 @@ public final class GitUtils {
             if (repository != null) {
                 Set<File> repoFiles = sorted.get(repository);
                 if (repoFiles == null) {
-                    repoFiles = new HashSet<File>();
+                    repoFiles = new HashSet<>();
                     sorted.put(repository, repoFiles);
                 }
                 repoFiles.add(f);
@@ -892,7 +892,7 @@ public final class GitUtils {
                     if (Git.LOG.isLoggable(Level.FINER)) {
                         Git.LOG.log(Level.FINER, "Running block in indexing bridge: on {0}", Arrays.asList(files)); //NOI18N
                     }
-                    indexingFiles.set(new HashSet<File>(Arrays.asList(files)));
+                    indexingFiles.set(new HashSet<>(Arrays.asList(files)));
                     return IndexingBridge.getInstance().runWithoutIndexing(callable, files);
                 } finally {
                     indexingFiles.remove();
@@ -1010,7 +1010,7 @@ public final class GitUtils {
             Git.getInstance().getRequestProcessor(repositoryRoot).post(new Runnable() {
                 @Override
                 public void run () {
-                    Set<String> urls = new HashSet<String>();
+                    Set<String> urls = new HashSet<>();
                     GitClient client = null;
                     try {
                         client = Git.getInstance().getClient(repositoryRoot);

@@ -309,8 +309,8 @@ public final class CustomizerLibraries extends JPanel implements HelpCtx.Provide
     }//GEN-LAST:event_librariesBrowseActionPerformed
 
     static boolean makeSharable(final EarProjectProperties uiProperties) {
-        List<String> libs = new ArrayList<String>();
-        List<String> jars = new ArrayList<String>();
+        List<String> libs = new ArrayList<>();
+        List<String> jars = new ArrayList<>();
         collectLibs(uiProperties.DEBUG_CLASSPATH_MODEL, libs, jars);
         collectLibs(uiProperties.EAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel(), libs, jars);
         collectLibs(uiProperties.ENDORSED_CLASSPATH_MODEL, libs, jars);

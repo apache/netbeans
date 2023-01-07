@@ -153,7 +153,7 @@ public class LibraryManagerTest extends NbTestCase {
         Area home = new Area("home");
         Area away = new Area("away");
         alp.setOpen(home, away);
-        List<String> locations = new ArrayList<String>(); // use list, not set, to confirm size also
+        List<String> locations = new ArrayList<>(); // use list, not set, to confirm size also
         for (LibraryManager mgr : LibraryManager.getOpenManagers()) {
             URL loc = mgr.getLocation();
             locations.add(loc != null ? loc.toString() : "<none>");

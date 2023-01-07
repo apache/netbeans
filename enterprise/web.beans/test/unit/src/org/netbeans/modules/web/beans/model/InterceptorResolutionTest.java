@@ -527,8 +527,8 @@ public class InterceptorResolutionTest extends CommonTestCase {
         InterceptorsResult result = checkMethodInterceptors(model, className, 
                 methodName, list.toArray( new String[0] ));
         
-        Set<String> disabled = new HashSet<String>();
-        Set<String> enabled =  new HashSet<String>();
+        Set<String> disabled = new HashSet<>();
+        Set<String> enabled =  new HashSet<>();
         List<TypeElement> allInterceptors = result.getAllInterceptors();
         for (TypeElement typeElement : allInterceptors) {
             if ( result.isDisabled(typeElement)){
@@ -539,12 +539,12 @@ public class InterceptorResolutionTest extends CommonTestCase {
             }
         }
 
-        Set<String> requiredEnabled = new HashSet<String>( Arrays.asList( enabledInterceptors));
+        Set<String> requiredEnabled = new HashSet<>( Arrays.asList( enabledInterceptors));
         compareCollections(enabled, requiredEnabled, "Not found enabled interceptors :");
         compareCollections(Arrays.asList( enabledInterceptors), 
                 enabled, "These interceptos are unexpectedly enabled :");
         
-        Set<String> requiredDisabled = new HashSet<String>( Arrays.asList( disabledInterceptors));
+        Set<String> requiredDisabled = new HashSet<>( Arrays.asList( disabledInterceptors));
         compareCollections(disabled, requiredDisabled, "Not found disabled interceptors :");
         compareCollections(Arrays.asList( disabledInterceptors), 
                 disabled, "These interceptos are unexpectedly disabled :");
@@ -581,12 +581,12 @@ public class InterceptorResolutionTest extends CommonTestCase {
         else {
             interceptors = result.getDeclaredInterceptors();
         }
-        Set<String> foundIceptors = new HashSet<String>();
+        Set<String> foundIceptors = new HashSet<>();
         for (TypeElement typeElement : interceptors) {
             String fqn = typeElement.getQualifiedName().toString();
             foundIceptors.add( fqn );
         }
-        Set<String> requiredFqns = new HashSet<String>( Arrays.asList( interceptorFqns));
+        Set<String> requiredFqns = new HashSet<>( Arrays.asList( interceptorFqns));
         
         requiredFqns.removeAll( foundIceptors );
         if ( !requiredFqns.isEmpty() ){

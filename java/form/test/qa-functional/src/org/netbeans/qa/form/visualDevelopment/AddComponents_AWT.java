@@ -184,7 +184,7 @@ public class AddComponents_AWT extends ExtJellyTestCase {
         FormDesignerOperator designer = new FormDesignerOperator(FILE_NAME);
         OpenAction openAction = new OpenAction();
         openAction.perform(formnode);
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
 
         lines.add("label1 = new java.awt.Label();");
         lines.add("button1 = new java.awt.Button();");

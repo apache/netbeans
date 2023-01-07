@@ -236,7 +236,7 @@ public class ProxyClassLoader extends ClassLoader {
         b.append(']');
         return b.toString();
     }
-    private static final Set<String> arbitraryLoadWarnings = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> arbitraryLoadWarnings = Collections.synchronizedSet(new HashSet<>());
 
     /** May return null */ 
     private synchronized Class<?> selfLoadClass(String pkg, String name) { 

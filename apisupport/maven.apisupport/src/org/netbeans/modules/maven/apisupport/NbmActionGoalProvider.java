@@ -81,7 +81,7 @@ public class NbmActionGoalProvider implements MavenActionsProvider {
 
 
     public @Override Set<String> getSupportedDefaultActions() {
-        return new HashSet<String>(Arrays.asList(NBMRELOAD, RELOAD_TARGET));
+        return new HashSet<>(Arrays.asList(NBMRELOAD, RELOAD_TARGET));
     }
     
     

@@ -69,7 +69,7 @@ class RequiredProjectsPanel extends javax.swing.JPanel {
     }
     
     public static boolean showConfirmation(Collection<UpdateAllProjects.ProjectsAndDestination> projsAndDests) {
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, String> values = new HashMap<>();
         for (UpdateAllProjects.ProjectsAndDestination pad : projsAndDests) {
             for (EclipseProject ep : pad.getEclipseProjects()) {
                 values.put(ep.getName(), pad.getDestination().getPath());

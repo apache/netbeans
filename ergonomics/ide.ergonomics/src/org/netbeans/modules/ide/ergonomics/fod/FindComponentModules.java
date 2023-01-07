@@ -112,7 +112,7 @@ public final class FindComponentModules extends Task {
         if (infos.length == 1) {
             codeNames = info.getCodeNames();
         } else {
-            codeNames = new HashSet<String>(info.getCodeNames());
+            codeNames = new HashSet<>(info.getCodeNames());
             for (FeatureInfo fi : additional) {
                 codeNames.addAll(fi.getCodeNames());
             }
@@ -184,7 +184,7 @@ public final class FindComponentModules extends Task {
 
 
     private Set<String> clusterClosure(Collection<UpdateElement> all) {
-        HashSet<String> closure = new HashSet<String>();
+        HashSet<String> closure = new HashSet<>();
         for (UpdateElement ue : all) {
             for (FeatureInfo featureInfo : FeatureManager.features()) {
                 if (featureInfo.getCodeNames().contains(ue.getCodeName())) {
@@ -465,7 +465,7 @@ public final class FindComponentModules extends Task {
     private Collection<UpdateElement> getAllForEnable (Collection<UpdateElement> elements, Collection<UpdateUnit> units) {
         Collection<UpdateElement> toAdd = elements;
         Collection<UpdateElement> all = new HashSet<UpdateElement> ();
-        Collection<String> ignore = new HashSet<String>();
+        Collection<String> ignore = new HashSet<>();
         OperationContainer<OperationSupport> ocForEnable = OperationContainer.createForEnable ();
         for (;;) {
             if (toAdd.isEmpty()) {

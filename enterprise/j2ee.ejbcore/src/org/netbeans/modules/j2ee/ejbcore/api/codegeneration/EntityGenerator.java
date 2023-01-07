@@ -103,7 +103,7 @@ public final class EntityGenerator {
         this.displayName = ejbNameOptions.getEntityDisplayNamePrefix() + wizardTargetName + ejbNameOptions.getEntityDisplayNameSuffix();
         this.packageName = EjbGenerationUtil.getSelectedPackageName(pkg);
         this.packageNameWithDot = packageName + ".";
-        this.templateParameters = new HashMap<String, String>();
+        this.templateParameters = new HashMap<>();
         // fill all possible template parameters
         this.templateParameters.put("package", packageName);
         this.templateParameters.put("primaryKey", primaryKeyClassName);

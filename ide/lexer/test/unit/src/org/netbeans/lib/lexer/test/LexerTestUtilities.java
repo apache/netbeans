@@ -283,7 +283,7 @@ public final class LexerTestUtilities {
      *  equal to the index in the list.
      */
     public static List<Integer> flyweightDistribution(TokenSequence<?> ts) {
-        List<Integer> distribution = new ArrayList<Integer>();
+        List<Integer> distribution = new ArrayList<>();
         ts.moveIndex(0);
         while (ts.moveNext()) {
             if (ts.token().isFlyweight()) {

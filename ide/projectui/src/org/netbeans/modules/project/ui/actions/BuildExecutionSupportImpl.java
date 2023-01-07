@@ -48,7 +48,7 @@ import org.openide.util.Lookup;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.project.uiapi.BuildExecutionSupportImplementation.class)
 public class BuildExecutionSupportImpl implements BuildExecutionSupportImplementation {
 
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
 
     private final List<IndentityHashCodeWrapper> runningItems = new ArrayList<IndentityHashCodeWrapper>();
     
@@ -69,7 +69,7 @@ public class BuildExecutionSupportImpl implements BuildExecutionSupportImplement
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(OpenProjects.PROPERTY_OPEN_PROJECTS)) {
                     List<Project> opened = Arrays.asList(OpenProjects.getDefault().getOpenProjects());
-                    Set<FileObject> fos = new HashSet<FileObject>();
+                    Set<FileObject> fos = new HashSet<>();
                     for (Project p : opened) {
                         if (p != null) {
                             fos.add(p.getProjectDirectory());

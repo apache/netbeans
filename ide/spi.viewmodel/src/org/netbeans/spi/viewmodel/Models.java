@@ -791,7 +791,7 @@ public final class Models {
                     if (equals (as [j])) {
                         ArrayList<Object> l = h.get (as [j]);
                         if (l == null) {
-                            l = new ArrayList<Object>();
+                            l = new ArrayList<>();
                             h.put (as [j], l);
                         }
                         l.add (node);

@@ -183,7 +183,7 @@ public class SyntaxHighlightTest extends EditorTestCase{
             Enumeration en = as.getAttributeNames();//produces elements in random order!
             getRef().println(hs.getStartOffset()+ " "+hs.getEndOffset()  /* +" "+doc.getText(hs.getStartOffset(),hs.getEndOffset()-hs.getStartOffset()) */);
             //            getRef().println(as);
-            ArrayList<String> tmpEnumContent = new ArrayList<String>();
+            ArrayList<String> tmpEnumContent = new ArrayList<>();
             while(en.hasMoreElements()) {
                 Object s = en.nextElement();
                 tmpEnumContent.add("    "+s+" "+as.getAttribute(s));

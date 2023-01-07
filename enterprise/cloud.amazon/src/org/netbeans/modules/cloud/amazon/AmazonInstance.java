@@ -174,7 +174,7 @@ public class AmazonInstance {
 
     public List<String> readApplicationNames() {
         assert !SwingUtilities.isEventDispatchThread();
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
 
         try {
             LOG.log(Level.INFO, "read AWS applications"); // NOI18N
@@ -213,7 +213,7 @@ public class AmazonInstance {
     
     public List<String> readContainerTypes() {
         assert !SwingUtilities.isEventDispatchThread();
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
 
         try {
             LOG.log(Level.INFO, "read AWS solution stacks"); // NOI18N

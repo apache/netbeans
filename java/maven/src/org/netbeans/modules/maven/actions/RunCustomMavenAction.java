@@ -91,7 +91,7 @@ public class RunCustomMavenAction extends AbstractAction implements ContextAware
     @Override
     public Action createContextAwareInstance(Lookup actionContext) {
         NbMavenProjectImpl owner = null;
-        List<FileObject> fs = new ArrayList<FileObject>();
+        List<FileObject> fs = new ArrayList<>();
         for (FileObject fo : actionContext.lookupAll(FileObject.class)) {
             Project p = FileOwnerQuery.getOwner(fo);
             if (p != null) {

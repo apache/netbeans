@@ -316,7 +316,7 @@ public final class PreferencesImpl extends AbstractPreferences implements Prefer
         Preferences prefs = getInherited();
                 
         if (prefs != null) {
-            keys = new HashSet<String>();
+            keys = new HashSet<>();
             keys.addAll(Arrays.asList(prefs.keys()));
             keys.addAll(getLocal().keySet());
         } else {

@@ -251,7 +251,7 @@ public class NbCollectionsTest extends NbTestCase {
             fail();
         } catch (ClassCastException x) {/*OK*/}
         try {
-            new HashSet<String>(s2);
+            new HashSet<>(s2);
             fail();
         } catch (ClassCastException x) {/*OK*/}
         s.remove(1);
@@ -430,7 +430,7 @@ public class NbCollectionsTest extends NbTestCase {
 
     public void testIterable() throws Exception {
         String text = "hello kitty!";
-        List<String> l1 = new ArrayList<String>();
+        List<String> l1 = new ArrayList<>();
         for (String token : NbCollections.iterable(new Scanner(text))) {
             l1.add(token);
         }
@@ -442,7 +442,7 @@ public class NbCollectionsTest extends NbTestCase {
             NbCollections.iterable((Iterator<?>) null);
             fail();
         } catch (NullPointerException x) {/* OK */}
-        List<URL> l2 = new ArrayList<URL>();
+        List<URL> l2 = new ArrayList<>();
         for (URL u : NbCollections.iterable(NbCollections.class.getClassLoader().getResources(NbCollections.class.getName().replace('.', '/') + ".class"))) {
             assertNotNull(u);
             l2.add(u);

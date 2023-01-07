@@ -92,13 +92,13 @@ public final class ProjectWebServiceView {
         switch (viewType) {
             case SERVICE:
                 if (serviceListeners == null) {
-                    serviceListeners = new ArrayList<ChangeListener>();
+                    serviceListeners = new ArrayList<>();
                 }
                 serviceListeners.add(l);
                 break;
             case CLIENT:
                 if (clientListeners == null) {
-                    clientListeners = new ArrayList<ChangeListener>();
+                    clientListeners = new ArrayList<>();
                 }
                 clientListeners.add(l);
                 break;

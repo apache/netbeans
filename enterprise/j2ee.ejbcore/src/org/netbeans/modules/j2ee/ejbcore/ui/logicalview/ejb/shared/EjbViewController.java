@@ -329,7 +329,7 @@ public final class EjbViewController {
     }
 
     private void deleteClasses() {
-        final ArrayList<FileObject> classFileObjects = new ArrayList<FileObject>();
+        final ArrayList<FileObject> classFileObjects = new ArrayList<>();
 
         try {
             ejbModule.getMetadataModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {

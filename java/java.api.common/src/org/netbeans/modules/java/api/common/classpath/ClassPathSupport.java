@@ -224,7 +224,7 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
      * @since 1.22
      */
     public String[] encodeToStrings( List<Item> classpath, String projectXMLElement, String libraryVolumeType ) {
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         for (Item item : classpath) {
             String reference = null;
 
@@ -330,7 +330,7 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
     private static synchronized Set<String> getWellKnownPaths() {
         if (wellKnownPaths == null) {
              wellKnownPaths = Collections.unmodifiableSet(
-                     new HashSet<String>(Arrays.asList(ProjectProperties.WELL_KNOWN_PATHS)));
+                     new HashSet<>(Arrays.asList(ProjectProperties.WELL_KNOWN_PATHS)));
         }
         return wellKnownPaths;
     }
@@ -369,7 +369,7 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
         private String libraryName;
         private String variableBasedProperty;
         
-        private Map<String, String> additionalProperties = new HashMap<String, String>();
+        private Map<String, String> additionalProperties = new HashMap<>();
 
         private Item( int type, Object object, String property, boolean broken) {
             this.type = type;

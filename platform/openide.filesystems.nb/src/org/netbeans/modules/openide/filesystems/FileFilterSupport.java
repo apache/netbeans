@@ -120,7 +120,7 @@ public final class FileFilterSupport {
                     != null) {
                 Set<FileObject> set = filterNameToResolversMap.get(f);
                 if (set == null) {
-                    set = new HashSet<FileObject>();
+                    set = new HashSet<>();
                     filterNameToResolversMap.put(f, set);
                 }
                 set.add(child);

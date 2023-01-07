@@ -107,7 +107,7 @@ public class CopyFinderTest extends NbTestCase {
     }
 
     public void testSimple4() throws Exception {
-        performTest("package test; import java.util.ArrayList; public class Test {public void test() {Object o = new ArrayList<String>();o = new ArrayList<String>();}}", 114 - 22, 137- 22, 142 - 22, 165 - 22);
+        performTest("package test; import java.util.ArrayList; public class Test {public void test() {Object o = new ArrayList<>();o = new ArrayList<>();}}", 114 - 22, 137- 22, 142 - 22, 165 - 22);
     }
 
     public void testSimple5() throws Exception {
@@ -1624,7 +1624,7 @@ public class CopyFinderTest extends NbTestCase {
             }
         }
 
-        Map<String, String> golden = new HashMap<String, String>();
+        Map<String, String> golden = new HashMap<>();
 
         for ( Pair<String, String> e : duplicatesNames) {
             golden.put(e.getA(), e.getB());

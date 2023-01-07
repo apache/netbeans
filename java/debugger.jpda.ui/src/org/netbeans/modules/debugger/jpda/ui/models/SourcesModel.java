@@ -82,12 +82,12 @@ NodeActionsProvider {
     private JPDADebugger            debugger;
     private Vector<ModelListener>   listeners = new Vector<ModelListener>();
     
-    //private Set<String>             enabledSourceRoots = new HashSet<String>();
-    //private Set<String>             disabledSourceRoots = new HashSet<String>();
+    //private Set<String>             enabledSourceRoots = new HashSet<>();
+    //private Set<String>             disabledSourceRoots = new HashSet<>();
     private Set<String>             additionalSourceRoots = null;
     //private Properties              filterProperties = Properties.
     //    getDefault ().getProperties ("debugger").getProperties ("sources");
-    private final Set<String>       sourceRootsSet = new HashSet<String>();
+    private final Set<String>       sourceRootsSet = new HashSet<>();
 
 
     public SourcesModel (ContextProvider lookupProvider) {

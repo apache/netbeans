@@ -42,7 +42,7 @@ public class PatternSelectionPanelVisual extends javax.swing.JPanel implements A
     /** Creates new form CrudSetupPanel */
     public PatternSelectionPanelVisual(String name) {
         setName(name);
-        this.listeners = new ArrayList<ChangeListener>();
+        this.listeners = new ArrayList<>();
         initComponents();
         
     }

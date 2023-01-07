@@ -101,7 +101,7 @@ public class Utils {
     }
 
     private static ClassPath convertToClassPath(File[] roots) {
-        List<URL> l = new ArrayList<URL>();
+        List<URL> l = new ArrayList<>();
         for (int i = 0; i < roots.length; i++) {
             URL url = Utils.fileToURL(roots[i]);
             l.add(url);

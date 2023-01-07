@@ -358,7 +358,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
 
 
     public List<String> getPropertyNames(final Project project, final String entityClass, final boolean collection) {
-        final List<String> res = new ArrayList<String>();
+        final List<String> res = new ArrayList<>();
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         assert wm != null;
         List<FacesManagedBean> beans = JSFBeanCache.getBeans(project);
@@ -395,7 +395,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
     public List<String> getManagedBeanPropertyNames(Project project,
             final String managedBean, final String entityClassName,
             final String managedBeanName, final boolean collection) {
-        final List<String> res = new ArrayList<String>();
+        final List<String> res = new ArrayList<>();
 
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] sourceGroups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);

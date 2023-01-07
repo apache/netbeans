@@ -66,7 +66,7 @@ public class SpeedTest extends NbTestCase {
         w.close();
         
         
-        parameters = new HashMap<String,String>();
+        parameters = new HashMap<>();
         parameters.put("title", "SOME_TITLE");
 
         LocalFileSystem lfs = new LocalFileSystem();

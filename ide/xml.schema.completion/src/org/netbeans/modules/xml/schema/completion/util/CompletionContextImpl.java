@@ -82,7 +82,7 @@ public class CompletionContextImpl extends CompletionContext {
      * Tags on the path from root to the context element (the one the CC tries to fill)
      */
     private List<SyntaxElement> elementsFromRoot;
-    private Map<String, String>  schemaLocationMap = new HashMap<String, String>();
+    private Map<String, String>  schemaLocationMap = new HashMap<>();
     private String schemaLocation;
     private String noNamespaceSchemaLocation;
     private String defaultNamespace;
@@ -92,11 +92,11 @@ public class CompletionContextImpl extends CompletionContext {
     private List<CompletionModel> noNSModels =
             new ArrayList<CompletionModel>();
     private HashMap<String, String> declaredNamespaces =
-            new HashMap<String, String>();
+            new HashMap<>();
     private HashMap<String, String> suggestedNamespaces =
-            new HashMap<String, String>();
+            new HashMap<>();
     private HashMap<String, String> specialNamespaceMap =
-            new HashMap<String, String>();
+            new HashMap<>();
     private CompletionModel noNamespaceModel;
     private transient List<String> existingAttributes;
     private boolean specialCompletion;
@@ -1102,7 +1102,7 @@ public class CompletionContextImpl extends CompletionContext {
     List<String> getExistingAttributes() {
         if(existingAttributes != null)
             return existingAttributes;
-        existingAttributes = new ArrayList<String>();
+        existingAttributes = new ArrayList<>();
         try {
             support.runWithSequence(tokenOffset, (TokenSequence ts) -> {
                 if (ts.movePrevious()) {

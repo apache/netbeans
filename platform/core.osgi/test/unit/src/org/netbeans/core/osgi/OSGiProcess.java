@@ -58,7 +58,7 @@ class OSGiProcess {
 
     private final File workDir;
     private int backwards = 1;
-    private final Set<String> modules = new HashSet<String>();
+    private final Set<String> modules = new HashSet<>();
     private final List<NewModule> newModules = new ArrayList<NewModule>();
     private int newModuleCount = 0;
 
@@ -69,7 +69,7 @@ class OSGiProcess {
     public class NewModule {
 
         private final int counter;
-        private final Map<String, String> sources = new HashMap<String, String>();
+        private final Map<String, String> sources = new HashMap<>();
         private final List<Class<?>> classes = new ArrayList<Class<?>>();
         private String manifest;
 
@@ -166,7 +166,7 @@ class OSGiProcess {
         }
         makeosgi.add(fs);
         File extra = new File(workDir, "extra");
-        List<File> cp = new ArrayList<File>();
+        List<File> cp = new ArrayList<>();
         for (String entry : System.getProperty("java.class.path").split(File.pathSeparator)) {
             if (!entry.isEmpty()) {
                 cp.add(new File(entry));
@@ -215,7 +215,7 @@ class OSGiProcess {
         /* Would need to introspect manifestContents above:
         assertTrue(new File(bundles, "custom-1.0.0.jar").isFile());
          */
-        Map<String,String> config = new HashMap<String,String>();
+        Map<String,String> config = new HashMap<>();
         File cache = new File(workDir, "cache");
         config.put(Constants.FRAMEWORK_STORAGE, cache.toString());
         Framework f = ServiceLoader.load(FrameworkFactory.class).iterator().next().newFramework(config);

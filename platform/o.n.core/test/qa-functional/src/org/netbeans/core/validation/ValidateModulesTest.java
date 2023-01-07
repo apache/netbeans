@@ -85,7 +85,7 @@ public class ValidateModulesTest extends NbTestCase {
     
     public void testInvisibleModules() throws Exception {
         Set<Manifest> manifests = loadManifests();
-        Set<String> requiredBySomeone = new HashSet<String>();
+        Set<String> requiredBySomeone = new HashSet<>();
         for (Manifest m : manifests) {
             String deps = m.getMainAttributes().getValue("OpenIDE-Module-Module-Dependencies");
             if (deps != null) {
@@ -234,7 +234,7 @@ public class ValidateModulesTest extends NbTestCase {
     }
 
     public void testAutomaticDependenciesUnused() throws Exception {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         for (FileObject kid : FileUtil.getConfigFile("ModuleAutoDeps").getChildren()) {
             urls.add(kid.toURL());
         }

@@ -190,7 +190,7 @@ public final class CreateMethodFix extends ModificationResultBasedFix implements
                 
                 TreeMaker make = working.getTreeMaker();
                 
-                List<VariableTree>         argTypes = new ArrayList<VariableTree>();
+                List<VariableTree>         argTypes = new ArrayList<>();
                 Iterator<TypeMirrorHandle> typeIt   = CreateMethodFix.this.argumentTypes.iterator();
                 Iterator<String>           nameIt   = CreateMethodFix.this.argumentNames.iterator();
                 

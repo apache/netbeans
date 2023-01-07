@@ -188,7 +188,7 @@ public class ServletIterator implements TemplateWizard.AsynchronousInstantiating
             template = templateParent.getFileObject("AdvancedFilter","java"); //NOI18N
         }
         
-        HashMap<String, Object> templateParameters = new HashMap<String, Object>();
+        HashMap<String, Object> templateParameters = new HashMap<>();
         templateParameters.put("servletEditorFold", NbBundle.getMessage(ServletIterator.class, "MSG_ServletEditorFold")); //NOI18N
         templateParameters.put("java17style", isJava17orLater(df.getPrimaryFile())); //NOI18N
 

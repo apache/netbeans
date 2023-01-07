@@ -345,7 +345,7 @@ public final class Utilities {
     }
     
     public static List<String> varNamesSuggestions(TypeMirror type, ElementKind kind, Set<Modifier> modifiers, String suggestedName, String prefix, Types types, Elements elements, Iterable<? extends Element> locals, CodeStyle codeStyle) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (type == null && suggestedName == null)
             return result;
         Collection<String> vnct;
@@ -404,7 +404,7 @@ public final class Utilities {
         }
         String p = prefix;
         while (p != null && p.length() > 0) {
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             for(String name : vnct)
                 if (org.netbeans.modules.java.completion.Utilities.startsWith(name, p))
                     l.add(name);
@@ -545,7 +545,7 @@ public final class Utilities {
                 TypeMirror ct = ((ArrayType)type).getComponentType();
                 if (ct.getKind() == TypeKind.ARRAY && iterable != null && types.isSubtype(ct, iterable))
                     return varNamesForType(ct, types, elements, prefix);
-                List<String> vnct = new ArrayList<String>();
+                List<String> vnct = new ArrayList<>();
                 for (String name : varNamesForType(ct, types, elements, prefix))
                     vnct.add(name.endsWith("s") ? name + "es" : name + "s"); //NOI18N
                 return vnct;
@@ -568,7 +568,7 @@ public final class Utilities {
                 if (tn.toUpperCase(Locale.ENGLISH).contentEquals(tn))
                     return Collections.<String>singletonList(tn.toLowerCase(Locale.ENGLISH));
                 StringBuilder sb = new StringBuilder();
-                ArrayList<String> al = new ArrayList<String>();
+                ArrayList<String> al = new ArrayList<>();
                 if ("Iterator".equals(tn)) //NOI18N
                     al.add("it"); //NOI18N
                 while((tn = nextName(tn)).length() > 0) {
@@ -588,7 +588,7 @@ public final class Utilities {
                 if (tn.toUpperCase(Locale.ENGLISH).contentEquals(tn))
                     return Collections.<String>singletonList(tn.toLowerCase(Locale.ENGLISH));
                 sb = new StringBuilder();
-                al = new ArrayList<String>();
+                al = new ArrayList<>();
                 if ("Iterator".equals(tn)) //NOI18N
                     al.add("it"); //NOI18N
                 while((tn = nextName(tn)).length() > 0) {

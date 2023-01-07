@@ -120,7 +120,7 @@ public final class FileSearchUtility {
     }
     
     public static FileObject[] guessJavaRoots(final FileObject dir) {
-        List<FileObject> foundRoots = new ArrayList<FileObject>();
+        List<FileObject> foundRoots = new ArrayList<>();
         if (null == dir)
             return null;
         Enumeration<FileObject> ch = FileSearchUtility.getChildrenToDepth(dir, 10, true); // .getChildren(true);

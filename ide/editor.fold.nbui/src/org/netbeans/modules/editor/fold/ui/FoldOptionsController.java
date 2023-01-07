@@ -76,7 +76,7 @@ import org.openide.util.WeakListeners;
 public class FoldOptionsController extends OptionsPanelController implements PreferenceChangeListener {
     // logging to catch issue #231362
     private static final Logger PREF_LOG = Logger.getLogger(FoldHierarchy.class.getName() + ".enabled");
-    static final Map<String, String> LEGACY_SETTINGS_MAP = new HashMap<String, String>();
+    static final Map<String, String> LEGACY_SETTINGS_MAP = new HashMap<>();
     
     /**
      * The main panel.
@@ -122,8 +122,8 @@ public class FoldOptionsController extends OptionsPanelController implements Pre
     private void initLanguages() {
         Set<String> mimeTypes = EditorSettings.getDefault().getAllMimeTypes();
         
-        Collection<String> legacy = new HashSet<String>();
-        Collection<String> updated = new HashSet<String>();
+        Collection<String> legacy = new HashSet<>();
+        Collection<String> updated = new HashSet<>();
         
         for (String s : mimeTypes) {
             if (FoldUtilities.getFoldTypes(s).values().isEmpty()) {

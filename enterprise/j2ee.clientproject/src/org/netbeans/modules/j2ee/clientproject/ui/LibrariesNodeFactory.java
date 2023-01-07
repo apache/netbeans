@@ -92,7 +92,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
         }
         
         public List<String> keys() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(LIBRARIES);
             URL[] testRoots = testSources.getRootURLs();
             boolean addTestSources = false;

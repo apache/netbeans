@@ -110,7 +110,7 @@ public abstract class HistoryAction extends NodeAction {
             callback = new Callback<HistoryEntry>() {
                 @Override
                 public void call(HistoryEntry entry, Set<VCSFileProxy> files) {
-                    Set<File> s = new HashSet<File>();
+                    Set<File> s = new HashSet<>();
                     for (VCSFileProxy file : files) {
                         File f = file.toFile();
                         if(f != null) {

@@ -164,7 +164,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
                 Collection<VCSFileProxy> doFiles = toFileCollection(daoFiles);
                 if(files != null && files.length > 0) {
                     // check for possible changes
-                    Set<FileObject> s = new HashSet<FileObject>(Arrays.asList(files));
+                    Set<FileObject> s = new HashSet<>(Arrays.asList(files));
                     boolean changed = false;
                     for (FileObject fo : daoFiles) {
                         if(!s.contains(fo)) {
@@ -763,7 +763,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
     
         private class ShowHistoryAction extends AbstractAction {
             private VersioningSystem vs;
-            private final Set<String> forPaths = new HashSet<String>(1);
+            private final Set<String> forPaths = new HashSet<>(1);
             private Action delegate;
 
             public ShowHistoryAction(VersioningSystem vs) {

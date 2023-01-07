@@ -51,7 +51,7 @@ public class EntityMappingsUtilities {
      * the ORM annotations that can appear <strong>in</strong> an entity,
      * that is, <code>javax.persistence.Entity</code> is left out intentionally.
      */
-    private static final Set<String> ORM_ANNOTATIONS = new HashSet<String>();
+    private static final Set<String> ORM_ANNOTATIONS = new HashSet<>();
 
     static {
         ORM_ANNOTATIONS.add("javax.persistence.AssociationOverride");      // NOI18N

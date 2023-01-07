@@ -76,7 +76,7 @@ public class SuiteProjectTest extends NbTestCase {
         ep.setProperty("app.name", "sweetness");
         ep.setProperty("app.title", "Sweetness is Now!");
         p.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
-        assertEquals(new HashSet<String>(Arrays.asList(ProjectInformation.PROP_NAME, ProjectInformation.PROP_DISPLAY_NAME)), l.changed);
+        assertEquals(new HashSet<>(Arrays.asList(ProjectInformation.PROP_NAME, ProjectInformation.PROP_DISPLAY_NAME)), l.changed);
         assertEquals("Sweet_Stuff", i.getName());
         assertEquals("Sweetness is Now!", i.getDisplayName());
         model = new SuiteBrandingModel(new SuiteProperties(p, p.getHelper(), p.getEvaluator(), Collections.<NbModuleProject>emptySet()));

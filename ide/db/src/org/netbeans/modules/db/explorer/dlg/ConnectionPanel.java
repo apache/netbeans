@@ -211,7 +211,7 @@ public class ConnectionPanel implements AddConnectionWizard.Panel, WizardDescrip
                             if (rs != null) {
                                 while (rs.next()) {
                                     if (schemas == null) {
-                                        schemas = new ArrayList<String>();
+                                        schemas = new ArrayList<>();
                                     }
                                     schemas.add(rs.getString(1).trim());
                                 }

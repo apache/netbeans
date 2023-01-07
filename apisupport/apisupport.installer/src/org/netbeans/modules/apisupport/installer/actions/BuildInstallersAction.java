@@ -242,7 +242,7 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                                     "nbi.license.file", licenseFile.getAbsolutePath());
                         }
 
-                        List<String> platforms = new ArrayList<String>();
+                        List<String> platforms = new ArrayList<>();
 
                         boolean installerConfDefined = false;
                         for (String k : new String[] {

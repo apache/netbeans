@@ -121,7 +121,7 @@ public class CmFieldGeneratorTest extends TestBase {
                 Entity entity = (Entity) metadata.findByEjbClass("cmplr.CmpLRBean");
                 CmpField[] cmpFields = entity.getCmpField();
                 assertEquals(2, cmpFields.length);
-                Set<String> cmpFieldsNames = new HashSet<String>();
+                Set<String> cmpFieldsNames = new HashSet<>();
                 for (CmpField cmpField : cmpFields) {
                     cmpFieldsNames.add(cmpField.getFieldName());
                 }

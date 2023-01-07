@@ -77,7 +77,7 @@ public class SeleniumTestCreatorConfiguration extends TestCreatorConfiguration {
 
     @Override
     public Object[] getTestSourceRoots(Collection<SourceGroup> createdSourceRoots, FileObject fo) {
-        List<Object> folders = new ArrayList<Object>();
+        List<Object> folders = new ArrayList<>();
         Project p = FileOwnerQuery.getOwner(fo);
         if (p != null) {
             Selenium2SupportImpl selenium2Support = Selenium2Support.findSelenium2Support(p);

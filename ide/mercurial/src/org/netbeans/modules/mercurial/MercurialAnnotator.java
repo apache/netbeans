@@ -663,7 +663,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
         synchronized (filesWithRepositoryAnnotations) {
             Set<File> files = filesWithRepositoryAnnotations.get(info);
             if (files == null) {
-                filesWithRepositoryAnnotations.put(info, files = new HashSet<File>());
+                filesWithRepositoryAnnotations.put(info, files = new HashSet<>());
             }
             files.add(file);
         }

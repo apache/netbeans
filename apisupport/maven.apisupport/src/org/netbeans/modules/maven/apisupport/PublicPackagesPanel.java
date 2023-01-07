@@ -235,11 +235,11 @@ public class PublicPackagesPanel extends javax.swing.JPanel implements SelectedI
      */
     public static SortedSet<String> getPublicPackagesForPlugin (SortedMap<String, Boolean> selItems) {
         SortedSet<String> result = new TreeSet<String>();
-        Set<String> processed = new HashSet<String>();
+        Set<String> processed = new HashSet<>();
         for (Entry<String, Boolean> entry : selItems.entrySet()) {
             if (entry.getValue() && !processed.contains(entry.getKey())) {
                 boolean allSubpackages = true;
-                Set<String> processedCandidates = new HashSet<String>();
+                Set<String> processedCandidates = new HashSet<>();
                 String prefix = entry.getKey() + ".";
                 for (String key : selItems.keySet()) {
                     if (key.startsWith(prefix)) {

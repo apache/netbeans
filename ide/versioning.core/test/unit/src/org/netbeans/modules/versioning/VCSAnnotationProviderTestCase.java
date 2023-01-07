@@ -164,7 +164,7 @@ public class VCSAnnotationProviderTestCase extends NbTestCase {
 
         @Override
         public void annotationChanged(FileStatusEvent ev) {
-            HashSet<FileObject> fos = new HashSet<FileObject>();
+            HashSet<FileObject> fos = new HashSet<>();
             for (FileObject fo : allFiles) {
                 if (ev.hasChanged(fo)) {
                     fos.add(fo);

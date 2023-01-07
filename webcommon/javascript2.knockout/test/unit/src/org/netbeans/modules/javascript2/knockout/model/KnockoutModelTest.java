@@ -83,7 +83,7 @@ public class KnockoutModelTest extends ModelTestBase {
             JsFunction func = (JsFunction) observableArray;
             func.addReturnType(new TypeUsage("ko.observableArray.result", -1, true));
 
-            Set<String> arrayMethods = new HashSet<String>();
+            Set<String> arrayMethods = new HashSet<>();
             Collections.addAll(arrayMethods,
                     "pop", "push", "reverse", "shift", "sort", "splice", "unshift", "slice");
             JsObject fn = observableArray.getProperty("fn");
@@ -110,7 +110,7 @@ public class KnockoutModelTest extends ModelTestBase {
         }
 
         // XXX remove additional (generated ?) objects - 3.2.0
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         Collections.addAll(names, "$bindings", "$data", "$dataFn", "$parents", "$rawData", "$root", "knockout-3.2.0.debug_L5220");
         for (String name : names) {
             ko.getProperties().remove(name);

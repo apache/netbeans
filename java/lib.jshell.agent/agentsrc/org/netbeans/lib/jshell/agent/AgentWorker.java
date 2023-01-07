@@ -346,7 +346,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
         
 
     private Object returnVMInfo(ObjectOutput o) throws IOException {
-        Map<String, String>  result = new HashMap<String, String>();
+        Map<String, String>  result = new HashMap<>();
         Properties props = System.getProperties();
         for (String s : props.stringPropertyNames()) {
             if (!s.startsWith("java")) { // NOI18N

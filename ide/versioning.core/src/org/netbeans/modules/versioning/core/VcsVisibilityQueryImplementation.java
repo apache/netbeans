@@ -52,7 +52,7 @@ import org.openide.util.RequestProcessor.Task;
 public class VcsVisibilityQueryImplementation implements VisibilityQueryImplementation2 {
 
     private final InvisibleFiles cache = new InvisibleFiles(25);
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private List<ChangeListener> listeners = new ArrayList<>();
     private static VcsVisibilityQueryImplementation instance;
     private static RequestProcessor rp = new RequestProcessor(VcsVisibilityQueryImplementation.class.getName(), 1, false, false);
     private RequestProcessor.Task refreshTask = rp.create(new RefreshTask());

@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public class RemoveOverride implements ErrorRule<Void> {
 
-    private static final Set<String> CODES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("compiler.err.method.does.not.override.superclass")));
+    private static final Set<String> CODES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("compiler.err.method.does.not.override.superclass")));
     
     @Override
     public Set<String> getCodes() {

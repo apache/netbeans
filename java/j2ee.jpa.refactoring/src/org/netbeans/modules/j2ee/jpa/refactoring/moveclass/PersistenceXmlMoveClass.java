@@ -89,7 +89,7 @@ public class PersistenceXmlMoveClass extends PersistenceXmlRefactoring{
 
     private Set<FileObject> getMovedFolders(){
         Collection<? extends FileObject> fos = moveRefactoring.getRefactoringSource().lookupAll(FileObject.class);
-        Set<FileObject> result = new HashSet<FileObject>();
+        Set<FileObject> result = new HashSet<>();
         for (FileObject each : fos){
             if (each.isFolder()){
                 result.add(each);

@@ -81,7 +81,7 @@ abstract class PropertyProcessor  {
     }
     
     static Map<String, String> processProperty(String propertyName, Object value, boolean types) {
-        results = new HashMap<String, String>();
+        results = new HashMap<>();
         PropertyProcessor p = (types) ? TYPES : findDelegate(value);
         if (p == null) {
             p = DEFAULT;

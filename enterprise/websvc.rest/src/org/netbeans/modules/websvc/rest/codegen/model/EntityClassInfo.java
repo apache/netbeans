@@ -65,7 +65,7 @@ public class EntityClassInfo {
     
     private static final String ENTITY = JAVAX_PERSISTENCE+"Entity";    // NOI18N
     
-    private static final Set<String> LIFECYCLE_ANNOTATIONS = new HashSet<String>(7);
+    private static final Set<String> LIFECYCLE_ANNOTATIONS = new HashSet<>(7);
     static {
         LIFECYCLE_ANNOTATIONS.add("PrePersist");    // NOI18N
         LIFECYCLE_ANNOTATIONS.add("PostPersist");   // NOI18N

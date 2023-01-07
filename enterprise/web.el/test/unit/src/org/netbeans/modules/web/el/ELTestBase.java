@@ -399,7 +399,7 @@ public class ELTestBase extends CslTestBase {
             }
 
 //            if (proposal.getModifiers().size() > 0) {
-//                List<String> modifiers = new ArrayList<String>();
+//                List<String> modifiers = new ArrayList<>();
 //                for (Modifier mod : proposal.getModifiers()) {
 //                    modifiers.add(mod.name());
 //                }
@@ -564,7 +564,7 @@ public class ELTestBase extends CslTestBase {
     public final ClassPath createServletAPIClassPath() throws MalformedURLException, IOException {
         String path = System.getProperty("web.project.jars");
         String[] st = PropertyUtils.tokenizePath(path);
-        List<FileObject> fos = new ArrayList<FileObject>();
+        List<FileObject> fos = new ArrayList<>();
         for (int i = 0; i < st.length; i++) {
             String token = st[i];
             File f = new File(token);

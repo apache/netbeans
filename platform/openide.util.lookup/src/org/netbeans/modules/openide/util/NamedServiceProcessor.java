@@ -54,7 +54,7 @@ public final class NamedServiceProcessor extends AbstractServiceProviderProcesso
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> all = new HashSet<String>();
+        Set<String> all = new HashSet<>();
         all.add(NamedServiceDefinition.class.getName());
         searchAnnotations(all, true);
         return all;
@@ -141,7 +141,7 @@ public final class NamedServiceProcessor extends AbstractServiceProviderProcesso
             register(e, PATH);
         }
         
-        Set<String> index = new HashSet<String>();
+        Set<String> index = new HashSet<>();
         searchAnnotations(index, false);
         for (String className : index) {
             Class<? extends Annotation> c;
@@ -194,7 +194,7 @@ public final class NamedServiceProcessor extends AbstractServiceProviderProcesso
     }
 
     private List<String> findPath(String path, Annotation a) {
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         arr.add(path);
         RESTART: for (;;) {
             for (int i = 0; i < arr.size(); i++) {

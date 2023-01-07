@@ -79,7 +79,7 @@ final class BuildInfo {
                     map.put(m.group(1), m.group(2));
                 }
             }
-            params = new ArrayList<String>();
+            params = new ArrayList<>();
             for (int i = 0; i < order.length; i++) {
                 String param = map.get(order[i]);
                 if (param != null) {

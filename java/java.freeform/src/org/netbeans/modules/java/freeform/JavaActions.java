@@ -779,7 +779,7 @@ final class JavaActions implements ActionProvider {
      * Check to see if a (node-like) selection contains one or more Java sources (or folders) inside the root.
      */
     static boolean containsSelectedJavaSources(FileObject root, Lookup context) {
-        Set<FileObject> selection = new HashSet<FileObject>();
+        Set<FileObject> selection = new HashSet<>();
         for (DataObject dob : context.lookupAll(DataObject.class)) {
             selection.add(dob.getPrimaryFile());
         }
@@ -915,7 +915,7 @@ final class JavaActions implements ActionProvider {
      * @return array with content of all <built-to> elements built by CU containing the srcRoot
      */
     private String[] findCUOutputs(String srcRoot) {
-        List<String> outputs = new ArrayList<String>();
+        List<String> outputs = new ArrayList<>();
         Element cuElem = findCompilationUnit(srcRoot);
         if (cuElem != null) {
             NodeList builts = cuElem.getElementsByTagName("built-to"); // NOI18N
@@ -1158,7 +1158,7 @@ final class JavaActions implements ActionProvider {
                 if (script != null) {
                     scriptName = XMLUtil.findText(script);
                 }
-                List<String> scriptPlusTargetNames = new ArrayList<String>();
+                List<String> scriptPlusTargetNames = new ArrayList<>();
                 scriptPlusTargetNames.add(scriptName);
                 for (Element target : XMLUtil.findSubElements(action)) {
                     if (target.getLocalName().equals("target")) { // NOI18N

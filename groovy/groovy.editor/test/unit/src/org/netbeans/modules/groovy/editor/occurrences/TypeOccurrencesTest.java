@@ -60,7 +60,7 @@ public class TypeOccurrencesTest extends GroovyTestBase {
     }
 
     public void testPropertyList() throws Exception {
-        testCaretLine("    List<St^ring> propertyList = new ArrayList<String>();");
+        testCaretLine("    List<St^ring> propertyList = new ArrayList<>();");
     }
 
     public void testPropertyList_init() throws Exception {

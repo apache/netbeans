@@ -52,7 +52,7 @@ public class LineProcessorsTest extends NbTestCase {
 
     private static final long TEST_TIMEOUT = 5000;
 
-    private static final List<String> PROXY_TEST_LINES = new ArrayList<String>();
+    private static final List<String> PROXY_TEST_LINES = new ArrayList<>();
 
     private static final List<String> PRINTING_TEST_LINES = new ArrayList<String>(5);
 

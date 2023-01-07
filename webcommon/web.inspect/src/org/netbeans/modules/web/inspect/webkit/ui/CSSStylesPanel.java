@@ -517,7 +517,7 @@ public class CSSStylesPanel extends JPanel implements PageModel.CSSStylesView {
                                 if (ruleInfo.getMetaSourceFile() != null) {
                                     controller.setMessage(NbBundle.getMessage(CSSStylesPanel.class, "CSSStylesPanel.generatedRule")); // NOI18N
                                 }
-                                List<String> active = new ArrayList<String>();
+                                List<String> active = new ArrayList<>();
                                 Declarations decls = modelRule.getDeclarations();
                                 if (decls != null) {
                                     List<Declaration> declarations = decls.getDeclarations();

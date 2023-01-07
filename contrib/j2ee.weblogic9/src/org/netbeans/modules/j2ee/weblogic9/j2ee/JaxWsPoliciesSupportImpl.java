@@ -102,7 +102,7 @@ class JaxWsPoliciesSupportImpl implements JaxWsPoliciesSupportImplementation {
      */
     @Override
     public Map<String, String> getPolicyDescriptions() {
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         getAllPolicyIds( map );
         return map;
     }

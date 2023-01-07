@@ -170,7 +170,7 @@ public class JBDeploymentFactory implements DeploymentFactory {
 //            // jboss-logging-spi.jar for JBoss Application Server 5.0
 //            File logging50 = new File(serverRoot + "/client/jboss-logging-spi.jar"); // NOI18N
 
-            List<URL> urlList = new ArrayList<URL>();
+            List<URL> urlList = new ArrayList<>();
 
             if (domFile != null) {
                 urlList.add(domFile.toURI().toURL());
@@ -542,7 +542,7 @@ public class JBDeploymentFactory implements DeploymentFactory {
     }
 
     private static Set<String> getServerInstancesNames(FileObject serverInstanceDir) {
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         for (FileObject instanceFO : serverInstanceDir.getChildren()) {
             String instanceName = (String)instanceFO.getAttribute(InstanceProperties.DISPLAY_NAME_ATTR);
             names.add(instanceName.toUpperCase());

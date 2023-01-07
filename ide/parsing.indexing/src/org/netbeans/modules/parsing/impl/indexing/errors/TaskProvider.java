@@ -203,8 +203,8 @@ public final class TaskProvider extends PushTaskScanner {
             final FileObject root,
             final AtomicBoolean cancelled) {
         Set<FileObject> filesWithErrors = getFilesWithAttachedErrors(root);
-        Set<FileObject> fixedFiles = new HashSet<FileObject>(filesWithErrors);
-        Set<FileObject> nueFilesWithErrors = new HashSet<FileObject>();
+        Set<FileObject> fixedFiles = new HashSet<>(filesWithErrors);
+        Set<FileObject> nueFilesWithErrors = new HashSet<>();
 
         try {
             for (URL u : TaskCache.getDefault().getAllFilesWithRecord(root.toURL())) {

@@ -44,7 +44,7 @@ public class SyncUnit {
     private Map<String, Attr> addedAttributes = new HashMap<String, Attr>();
     private boolean componentChanged;
     private boolean hasTextContentChanges = false;
-    private Set<String> nonDomainedChanges = new HashSet<String>(); //tagname of top level non-domained element
+    private Set<String> nonDomainedChanges = new HashSet<>(); //tagname of top level non-domained element
     
     public SyncUnit(DocumentComponent syncTarget) {
         if (syncTarget == null) {

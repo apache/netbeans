@@ -61,7 +61,7 @@ public class RunOffEDTImpl implements RunOffEDTProvider, Progress, Progress2 {
     
     private static final Map<String, Long> CUMULATIVE_SPENT_TIME = new HashMap<String, Long>();
     private static final Map<String, Long> MAXIMAL_SPENT_TIME = new HashMap<String, Long>();
-    private static final Map<String, Integer> INVOCATION_COUNT = new HashMap<String, Integer>();
+    private static final Map<String, Integer> INVOCATION_COUNT = new HashMap<>();
     private static final int CANCEL_TIME = 1000;
     private static final int WARNING_TIME = Integer.getInteger("org.netbeans.modules.progress.ui.WARNING_TIME", 10000);
     private static final Logger LOG = Logger.getLogger(RunOffEDTImpl.class.getName());

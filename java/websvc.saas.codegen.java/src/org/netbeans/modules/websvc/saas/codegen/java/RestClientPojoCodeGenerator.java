@@ -174,7 +174,7 @@ public class RestClientPojoCodeGenerator extends SaasClientCodeGenerator {
 
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Collections.<FileObject>emptyList());
+        return new HashSet<>(Collections.<FileObject>emptyList());
     }
 
     private void setJaxbWrapper() {
@@ -304,7 +304,7 @@ public class RestClientPojoCodeGenerator extends SaasClientCodeGenerator {
     }
 
     protected void addImportsToTargetFile() throws IOException {
-        List<String> imports = new ArrayList<String>();
+        List<String> imports = new ArrayList<>();
         imports.add(getBean().getSaasServicePackageName() + "." + getBean().getSaasServiceName());
         imports.add(REST_CONNECTION_PACKAGE + "." + REST_RESPONSE);
 //        if(getBean().canGenerateJAXBUnmarshaller()) {
@@ -314,7 +314,7 @@ public class RestClientPojoCodeGenerator extends SaasClientCodeGenerator {
     }
 
     protected void addImportsToSaasService() throws IOException {
-        List<String> imports = new ArrayList<String>();
+        List<String> imports = new ArrayList<>();
         imports.add(REST_CONNECTION_PACKAGE + "." + REST_CONNECTION);
         imports.add(REST_CONNECTION_PACKAGE + "." + REST_RESPONSE);
 //        if(getBean().canGenerateJAXBUnmarshaller()) {
@@ -355,7 +355,7 @@ public class RestClientPojoCodeGenerator extends SaasClientCodeGenerator {
             saasServiceJS = JavaSourceHelper.createJavaSource(
                     getBean().getSaasServiceTemplate()+"."+Constants.JAVA_EXT, 
                         targetFolder, pkg, getBean().getSaasServiceName());
-            Set<FileObject> files = new HashSet<FileObject>(saasServiceJS.getFileObjects());
+            Set<FileObject> files = new HashSet<>(saasServiceJS.getFileObjects());
             if (files != null && files.size() > 0) {
                 saasServiceFile = files.iterator().next();
             }

@@ -58,7 +58,7 @@ public class WebServicesSchemaCatalog implements CatalogReader, CatalogDescripto
      * @return null if cannot proceed, try later.
      */
     public Iterator<String> getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(SUN_JAXWS_ID);
         list.add(JAXWS_WSDL_BINDING_ID);
         list.add(JAXWS_HANDLER_CHAIN_ID);

@@ -1142,7 +1142,7 @@ public class JavaSourceTest extends NbTestCase {
         final ClasspathInfo cpInfo = ClasspathInfo.create(bootPath,compilePath,srcPath);
         final JavaSource js = JavaSource.create(cpInfo, test2, test);
 
-        final List<FileObject> files = new ArrayList<FileObject>();
+        final List<FileObject> files = new ArrayList<>();
 
         js.runUserActionTask(new Task<CompilationController>() {
             public void run(CompilationController cc) throws IOException {

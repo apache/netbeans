@@ -132,7 +132,7 @@ class Ordering {
             if (f1 != null && f2 != null) {
                 Set<FileObject> edge = edges.get(f1);
                 if (edge == null) {
-                    edges.put(f1, edge = new HashSet<FileObject>());
+                    edges.put(f1, edge = new HashSet<>());
                 }
                 edge.add(f2);
                 if (logWarnings) {
@@ -158,7 +158,7 @@ class Ordering {
                 FileObject subsequentChild = it2.next().child;
                 Set<FileObject> edge = edges.get(previousChild);
                 if (edge == null) {
-                    edges.put(previousChild, edge = new HashSet<FileObject>());
+                    edges.put(previousChild, edge = new HashSet<>());
                 }
                 edge.add(subsequentChild);
                 previousChild = subsequentChild;

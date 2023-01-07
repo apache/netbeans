@@ -341,7 +341,7 @@ public abstract class ActionsProvider {
             }
             strArray = strArray.trim();
             int index = 0;
-            List<String> strings = new ArrayList<String>();
+            List<String> strings = new ArrayList<>();
             while (index < strArray.length()) {
                 int index2 = strArray.indexOf(',', index);
                 if (index2 < 0) {

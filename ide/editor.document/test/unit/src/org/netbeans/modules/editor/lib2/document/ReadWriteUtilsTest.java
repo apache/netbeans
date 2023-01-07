@@ -44,7 +44,7 @@ public class ReadWriteUtilsTest extends NbTestCase {
     
     public ReadWriteUtilsTest(String testName) {
         super(testName);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
 //        includes.add("testSimpleUndo");
 //        includes.add("testSimplePositionSharingMods");
 //        includes.add("testEndPosition");

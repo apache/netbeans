@@ -51,7 +51,7 @@ public class LibraryDeclarationHandlerImpl implements LibraryDeclarationHandler 
     private String localizingBundle;
     private String displayName;
     private final Map<String,List<URL>> contentTypes = new HashMap<String,List<URL>>();
-    private final Map<String,String> properties = new HashMap<String, String>();
+    private final Map<String,String> properties = new HashMap<>();
 
     // last volume
     private List<URL> cpEntries;
@@ -80,7 +80,7 @@ public class LibraryDeclarationHandlerImpl implements LibraryDeclarationHandler 
 
     @Override
     public void start_volume(final Attributes meta) throws SAXException {
-        cpEntries = new ArrayList<URL>();
+        cpEntries = new ArrayList<>();
         this.state = State.VOLUME;
     }
 

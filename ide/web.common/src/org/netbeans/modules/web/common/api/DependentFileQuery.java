@@ -63,7 +63,7 @@ public class DependentFileQuery {
         if ( impls.size() == 1){
             return impls.iterator().next().getDependent(fileObject);
         }
-        HashSet<FileObject> result = new HashSet<FileObject>();
+        HashSet<FileObject> result = new HashSet<>();
         for( DependentFileQueryImplementation impl : lookup.allInstances()){
             Set<FileObject> set = impl.getDependent(fileObject);
             result.addAll(set);

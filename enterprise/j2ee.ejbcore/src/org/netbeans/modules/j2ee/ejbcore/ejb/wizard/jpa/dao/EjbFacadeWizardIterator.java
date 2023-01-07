@@ -130,7 +130,7 @@ import org.openide.util.NbBundle;
      * Contains the names of the entities. Key the FQN class name,
      * value the name of the entity.
      */
-    private final Map<String, String> entityNames = new HashMap<String, String>();
+    private final Map<String, String> entityNames = new HashMap<>();
 
     private static final String EJB30_STATELESS_EJBCLASS = "Templates/J2EE/EJB30/StatelessEjbClass.java"; // NOI18N
 
@@ -161,7 +161,7 @@ import org.openide.util.NbBundle;
         List<String> entities = (List<String>) wizard.getProperty(WizardProperties.ENTITY_CLASS);
 
         final FileObject targetFolder = Templates.getTargetFolder(wizard);
-        final Set<FileObject> createdFiles = new HashSet<FileObject>();
+        final Set<FileObject> createdFiles = new HashSet<>();
         final EjbFacadeWizardPanel2 panel = (EjbFacadeWizardPanel2) panels[1];
         String pkg = panel.getPackage();
 
@@ -228,7 +228,7 @@ import org.openide.util.NbBundle;
             final Class<? extends EntityManagerGenerationStrategy> strategyClass,
             boolean overrideExisting) throws IOException {
 
-        final Set<FileObject> createdFiles = new HashSet<FileObject>();
+        final Set<FileObject> createdFiles = new HashSet<>();
         final String entitySimpleName = JavaIdentifiers.unqualify(entityFQN);
         final String variableName = entitySimpleName.toLowerCase().charAt(0) + entitySimpleName.substring(1);
 

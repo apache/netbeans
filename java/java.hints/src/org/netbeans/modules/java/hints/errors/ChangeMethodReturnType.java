@@ -49,7 +49,7 @@ import org.openide.util.NbBundle;
  */
 public class ChangeMethodReturnType implements ErrorRule<Void> {
 
-    private static final Set<String> CODES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> CODES = new HashSet<>(Arrays.asList(
             "compiler.err.cant.ret.val.from.meth.decl.void",
             "compiler.err.prob.found.req"
     ));

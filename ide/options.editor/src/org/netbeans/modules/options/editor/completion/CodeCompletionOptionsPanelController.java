@@ -176,7 +176,7 @@ public final class CodeCompletionOptionsPanelController extends OptionsPanelCont
         boolean isChanged = false;
         Preferences prefs = pf.getPreferences(mimeType);
         Preferences savedPrefs = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
-        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<String> hashSet = new HashSet<>();
         try {
             hashSet.addAll(Arrays.asList(prefs.keys()));
             hashSet.addAll(Arrays.asList(savedPrefs.keys()));

@@ -149,7 +149,7 @@ class DelegatingLookupImpl extends ProxyLookup implements LookupListener, Change
             newLookups.add(baseLookup);
             unmergedController.setLookups(notifyLater, newLookups.toArray(new Lookup[newLookups.size()]));
             List<Class<?>> filteredClasses = new ArrayList<Class<?>>();
-            List<Object> mergedInstances = new ArrayList<Object>();
+            List<Object> mergedInstances = new ArrayList<>();
             LookupListener l = listenerRef != null ? listenerRef.get() : null;
             if (l != null) {
                 mergers.removeLookupListener(l);

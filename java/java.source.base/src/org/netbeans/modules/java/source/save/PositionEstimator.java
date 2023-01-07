@@ -852,7 +852,7 @@ public abstract class PositionEstimator {
         
         public String getIndentString() {
             if (!initialized) initialize();
-            Map<String, Integer> map = new HashMap<String, Integer>();
+            Map<String, Integer> map = new HashMap<>();
             for (String item : separatorList) {
                 String s = item;
                 if (s.lastIndexOf("\n") > -1) {

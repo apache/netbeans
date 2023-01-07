@@ -181,7 +181,7 @@ public final class PropertiesDataLoader extends MultiFileLoader {
         }
         
         if (knownLanguages == null) {
-            knownLanguages = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
+            knownLanguages = new HashSet<>(Arrays.asList(Locale.getISOLanguages()));
         }
         if (!knownLanguages.contains(s1)) {
             return false;
@@ -189,7 +189,7 @@ public final class PropertiesDataLoader extends MultiFileLoader {
 
         if (s2 != null) {
             if (knownCountries == null) {
-                knownCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
+                knownCountries = new HashSet<>(Arrays.asList(Locale.getISOCountries()));
             }
             if (!knownCountries.contains(s2)) {
                 return false;

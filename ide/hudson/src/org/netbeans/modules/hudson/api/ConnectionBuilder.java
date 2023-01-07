@@ -73,7 +73,7 @@ public final class ConnectionBuilder {
     private static final Logger LOG = Logger.getLogger(ConnectionBuilder.class.getName());
     private static final RequestProcessor TIMER = new RequestProcessor(ConnectionBuilder.class.getName() + ".TIMER"); // NOI18N
     /** Do not prompt for authentication for the same server more than once in a given session. */
-    private static final Set</*URL*/String> authenticationRejected = new HashSet<String>();
+    private static final Set</*URL*/String> authenticationRejected = new HashSet<>();
 
     /**
      * Session cookies set by home.

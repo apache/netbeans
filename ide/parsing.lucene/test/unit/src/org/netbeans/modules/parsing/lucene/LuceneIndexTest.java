@@ -75,9 +75,9 @@ public class LuceneIndexTest extends NbTestCase {
         assertEquals(Index.Status.EMPTY, index.getStatus(true));
 
         clearValidityCache(index);
-        List<String> refs = new ArrayList<String>();
+        List<String> refs = new ArrayList<>();
         refs.add("A");
-        Set<String> toDel = new HashSet<String>();
+        Set<String> toDel = new HashSet<>();
         index.store(
                 refs,
                 toDel,
@@ -140,9 +140,9 @@ public class LuceneIndexTest extends NbTestCase {
         
         //No TX store -> no warning
         handler.clear();
-        List<String> refs = new ArrayList<String>();
+        List<String> refs = new ArrayList<>();
         refs.add("A");
-        Set<String> toDel = new HashSet<String>();
+        Set<String> toDel = new HashSet<>();
         index.store(
             refs,
             toDel,

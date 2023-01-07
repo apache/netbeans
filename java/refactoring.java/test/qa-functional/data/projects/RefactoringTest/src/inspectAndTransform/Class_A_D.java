@@ -9,7 +9,7 @@ public class Class_A_D {
     public void m() {
         List<Class_A_D> ls1 = new ArrayList<Class_A_D>();
         List<Class_A_D> ls2 = new ArrayList<>();
-        List<Integer> ls3 = new ArrayList<Integer>();
+        List<Integer> ls3 = new ArrayList<>();
         HashMap<Integer, Boolean> ls4 = new HashMap<Integer, Boolean>();
     }
 }

@@ -35,7 +35,7 @@ import org.netbeans.modules.xml.schema.model.*;
  */
 public abstract class Datatype implements AXIType {
     
-    List<String> enumerations = new ArrayList<String>();
+    List<String> enumerations = new ArrayList<>();
         
     /*
      * returns the kind of this datatype
@@ -199,7 +199,7 @@ public abstract class Datatype implements AXIType {
         if(!(enumeration instanceof String))
             return;
         if(enumerations == null)
-            enumerations = new ArrayList<String>();
+            enumerations = new ArrayList<>();
         enumerations.add((String)enumeration);
     }
     

@@ -123,7 +123,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
     
     private synchronized Dictionary createDictionary(Locale locale) {
         try {
-            List<URL> sources = new ArrayList<URL>();
+            List<URL> sources = new ArrayList<>();
             String suffix = getDictionaryStream(locale, sources);
             
             if (suffix == null) {

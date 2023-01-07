@@ -214,7 +214,7 @@ public class NewNbModuleWizardIterator implements WizardDescriptor.AsynchronousI
         
         this.createdProjectFolder = FileUtil.toFileObject(FileUtil.normalizeFile(projectFolder));
         
-        Set<FileObject> resultSet = new HashSet<FileObject>();
+        Set<FileObject> resultSet = new HashSet<>();
         resultSet.add(createdProjectFolder);
 
         if (!projectFolder.getParent().equals(data.getSuiteRoot())) { // #184830

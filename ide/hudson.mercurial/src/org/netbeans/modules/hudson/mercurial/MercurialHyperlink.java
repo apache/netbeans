@@ -112,7 +112,7 @@ class MercurialHyperlink implements OutputListener {
         return StreamSource.createSource(name, title, mimeType, r);
     }
 
-    private static final Map<String,String> parents = new HashMap<String,String>();
+    private static final Map<String,String> parents = new HashMap<>();
     private static final Pattern PARENT_COMMENT = Pattern.compile("# Parent +([0-9a-f]{40})"); // NOI18N
     private static synchronized String findParent(URI repo, String node) throws IOException {
         String parent = parents.get(node);

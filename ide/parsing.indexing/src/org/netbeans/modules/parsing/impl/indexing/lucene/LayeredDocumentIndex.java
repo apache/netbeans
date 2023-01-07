@@ -49,7 +49,7 @@ public final class LayeredDocumentIndex implements DocumentIndex2.Transactional 
     
     private final DocumentIndex2.Transactional base;
     
-    private final Set<String> filter = new HashSet<String>();
+    private final Set<String> filter = new HashSet<>();
     //@GuardedBy("this")
     private DocumentIndex2 overlay;
     
@@ -233,7 +233,7 @@ public final class LayeredDocumentIndex implements DocumentIndex2.Transactional 
     
     @NonNull
     private synchronized Pair<DocumentIndex2,Set<String>> getOverlayIfExists() throws IOException {
-        final Set<String> f = filter.isEmpty() ? null : new HashSet<String>(filter);
+        final Set<String> f = filter.isEmpty() ? null : new HashSet<>(filter);
         return Pair.<DocumentIndex2,Set<String>>of(overlay,f);
     }
     

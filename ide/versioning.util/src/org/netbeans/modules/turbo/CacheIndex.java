@@ -118,7 +118,7 @@ public abstract class CacheIndex {
             Set<File> set = index.get(parent);
             if(set == null) {
                 LOG.log(Level.FINER, "  add({0}) - creating new file entry", new Object[]{file});
-                set = Collections.synchronizedSet(new HashSet<File>());
+                set = Collections.synchronizedSet(new HashSet<>());
                 set.add(file);
                 index.put(parent, set);
             } else {
@@ -135,9 +135,9 @@ public abstract class CacheIndex {
             LOG.finer("   " + files);
         }
         if(files == null) {
-            files = new HashSet<File>(0);
+            files = new HashSet<>(0);
         }
-        Set<File> newSet = new HashSet<File>(files.size());
+        Set<File> newSet = new HashSet<>(files.size());
 
         synchronized(this) {
             Set<File> oldSet = index.get(file);
@@ -183,7 +183,7 @@ public abstract class CacheIndex {
                         LOG.log(Level.FINE, "  ensureParents({0}) - parent {1} - not managed - done!", new Object[]{pFile, parent});
                         break;
                     }
-                    set = new HashSet<File>();
+                    set = new HashSet<>();
                     LOG.log(Level.FINE, "  ensureParents({0}) - parent {1} - creating parent node", new Object[]{pFile, parent});
                     index.put(parent, set);
                 }

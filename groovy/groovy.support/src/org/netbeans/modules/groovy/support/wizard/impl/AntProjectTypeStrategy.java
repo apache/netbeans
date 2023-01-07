@@ -167,7 +167,7 @@ public class AntProjectTypeStrategy extends ProjectTypeStrategy {
     }
 
     private List<FileObject> getTestFolders(Project project) {
-        List<FileObject> testFolders = new ArrayList<FileObject>();
+        List<FileObject> testFolders = new ArrayList<>();
 
         FileObject[] children = project.getProjectDirectory().getChildren();
         for (FileObject child : children) {

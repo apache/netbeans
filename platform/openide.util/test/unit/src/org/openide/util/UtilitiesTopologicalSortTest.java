@@ -257,14 +257,14 @@ public class UtilitiesTopologicalSortTest extends NbTestCase {
         */
     }
     public void testTopologicalSortCompile() throws Exception {
-        Collection<String> c = new ArrayList<String>();
+        Collection<String> c = new ArrayList<>();
         Map<Object, Collection<String>> edges = new HashMap<Object,Collection<String>>();
         
         List<String> result = BaseUtilities.topologicalSort(c, edges);
     }
     
     public void testTopologicalSortCompile2() throws Exception  {
-        Collection<String> c = new ArrayList<String>();
+        Collection<String> c = new ArrayList<>();
         Map<Object, List<String>> edges = new HashMap<Object,List<String>>();
         
         List<String> result = BaseUtilities.topologicalSort(c, edges);

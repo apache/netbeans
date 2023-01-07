@@ -297,10 +297,10 @@ public class DecoratorTest extends CommonTestCase {
         assertEquals( "Class "+className+" should have exactly "+
                 decorators.length+" decorator(s)", decorators.length ,  
                 decoratorElements.size());
-        Set<String> set =new HashSet<String>();
+        Set<String> set =new HashSet<>();
         set.addAll( Arrays.asList( decorators ));
         
-        Set<String> fqns = new HashSet<String>();
+        Set<String> fqns = new HashSet<>();
         for (TypeElement typeElement : decoratorElements) {
             fqns.add( typeElement.getQualifiedName().toString());
         }

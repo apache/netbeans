@@ -368,7 +368,7 @@ public class ConnectPanel extends JPanel implements ActionListener, HelpCtx.Prov
         record.setResourceBundle(NbBundle.getBundle(ConnectPanel.class));
         record.setResourceBundleName(ConnectPanel.class.getPackage().getName() + ".Bundle"); // NOI18N
         record.setLoggerName(USG_LOGGER.getName());
-        List<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
         params.add(c.name());
         StringBuilder arguments = new StringBuilder();
         for (Map.Entry argEntry : args.entrySet()) {
@@ -524,7 +524,7 @@ public class ConnectPanel extends JPanel implements ActionListener, HelpCtx.Prov
         Connector             connector
     ) {
         Map<String, Argument> defaultValues = connector.defaultArguments ();
-        Map<String, String> argsToSave = new HashMap<String, String>();
+        Map<String, String> argsToSave = new HashMap<>();
         for(Map.Entry<String, Argument> entry : args.entrySet ()) {
             String argName = entry.getKey ();
             Argument value = entry.getValue();
@@ -791,7 +791,7 @@ public class ConnectPanel extends JPanel implements ActionListener, HelpCtx.Prov
                 return;  // nothing stored
             }
             Map<String, Argument> defaultValues = connector.defaultArguments ();
-            Map<String, String> argsToSave = new HashMap<String, String>();
+            Map<String, String> argsToSave = new HashMap<>();
             Iterator<String> i = args.keySet ().iterator ();
             while (i.hasNext()) {
                 String argName = i.next ();

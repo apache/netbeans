@@ -226,7 +226,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                                             List<? extends VariableElement> params = 
                                                 webMethod.getParameters();
                                             List<String> paramTypes = 
-                                                new ArrayList<String>();
+                                                new ArrayList<>();
                                             for (VariableElement param:params) {
                                                 TypeMirror type = param.asType();
                                                 if (type instanceof DeclaredType ) {
@@ -332,7 +332,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
 //        }    
 //
 //        FileObject bindingsFolder = support.getBindingsFolderForService(getNode().getName(),true);
-//        List<URL> list = new ArrayList<URL>();
+//        List<URL> list = new ArrayList<>();
 //        for (int i=0;i<bindingFiles.length;i++) {
 //            FileObject fo = bindingsFolder.getFileObject(bindingFiles[i]);
 //            try {

@@ -227,7 +227,7 @@ public abstract class LayerCacheManager implements LayerFactory {
             byte[] arr = new byte[bb.limit()];
             bb.get(arr);
             DataInputStream is = new DataInputStream(new ByteArrayInputStream(arr));
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             while (is.available() > 0) {
                 String u = is.readUTF();
                 urls.add(new URL(u));

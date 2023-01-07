@@ -51,7 +51,7 @@ public final class ProjectOperations {
      * @see DataFilesProviderImplementation#getMetadataFiles
      */
     public static List<FileObject> getMetadataFiles(Project prj) {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         
         for (DataFilesProviderImplementation i : prj.getLookup().lookupAll(DataFilesProviderImplementation.class)) {
             result.addAll(i.getMetadataFiles());
@@ -70,7 +70,7 @@ public final class ProjectOperations {
      * @see DataFilesProviderImplementation#getDataFiles
      */
     public static List<FileObject> getDataFiles(Project prj) {
-        List<FileObject> result = new ArrayList<FileObject>();
+        List<FileObject> result = new ArrayList<>();
         
         for (DataFilesProviderImplementation i : prj.getLookup().lookupAll(DataFilesProviderImplementation.class)) {
             result.addAll(i.getDataFiles());

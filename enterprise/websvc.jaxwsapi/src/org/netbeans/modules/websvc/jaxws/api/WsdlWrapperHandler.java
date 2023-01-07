@@ -44,9 +44,9 @@ public class WsdlWrapperHandler extends DefaultHandler{
     
     /** Creates a new instance of WsdlWrapperHandler */
     public WsdlWrapperHandler() {
-        prefixes = new HashMap<String, String>();
+        prefixes = new HashMap<>();
         bindings = new HashMap<String, BindingInfo>();
-        ports = new HashMap<String, String>();
+        ports = new HashMap<>();
     }    
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {

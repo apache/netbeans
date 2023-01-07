@@ -618,7 +618,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
                 }
                 Set<String> s = interceptedMethods.get(localHistory.getClass().getName());
                 if(s == null) {
-                    s = new HashSet<String>();
+                    s = new HashSet<>();
                     Method[] m = localHistory.getVCSInterceptor().getClass().getDeclaredMethods();
                     for (Method method : m) {
                         if((method.getModifiers() & Modifier.PUBLIC) != 0) {

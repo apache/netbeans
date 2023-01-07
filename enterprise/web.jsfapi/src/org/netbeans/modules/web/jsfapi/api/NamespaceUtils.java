@@ -102,7 +102,7 @@ public final class NamespaceUtils {
     }
 
     public static Set<String> getAvailableNss(Map<String, ? extends Library> libraries, boolean jsf22plus) {
-        Set<String> nss = new HashSet<String>();
+        Set<String> nss = new HashSet<>();
         for (Map.Entry<String, ? extends Library> entry : libraries.entrySet()) {
             // library well known namespace
             nss.add(entry.getKey());

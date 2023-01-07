@@ -239,7 +239,7 @@ class ControllerFileMaker {
         FileObject templateF = FileUtil.getConfigFile(TEMPLATE_PATH);
         DataObject template = DataObject.find(templateF);
         
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("package", packageName); //NOI18N
 
         // try what if the controller already exists; mainly for the case with null controller name in FXML:

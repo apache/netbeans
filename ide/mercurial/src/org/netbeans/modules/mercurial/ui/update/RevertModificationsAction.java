@@ -111,14 +111,14 @@ public class RevertModificationsAction extends ContextAction {
     }
 
     public static void performRevert(File repository, String revStr, File file, boolean doBackup, OutputLogger logger) {
-        List<File> revertFiles = new ArrayList<File>();
+        List<File> revertFiles = new ArrayList<>();
         revertFiles.add(file);        
 
         performRevert(repository, revStr, revertFiles, doBackup, false, logger);
     }
     
     public static void performRevert(File repository, String revStr, File[] files, boolean doBackup, boolean removeNewFiles, OutputLogger logger) {
-        List<File> revertFiles = new ArrayList<File>();
+        List<File> revertFiles = new ArrayList<>();
         revertFiles.addAll(Arrays.asList(files));
         performRevert(repository, revStr, revertFiles, doBackup, removeNewFiles, logger);
     }
@@ -190,7 +190,7 @@ public class RevertModificationsAction extends ContextAction {
             HgUtils.notifyException(ex);
         }
 
-        Mercurial.getInstance().getFileStatusCache().refreshAllRoots(Collections.singletonMap(repository, (Set<File>)new HashSet<File>(revertFiles)));
+        Mercurial.getInstance().getFileStatusCache().refreshAllRoots(Collections.singletonMap(repository, (Set<File>)new HashSet<>(revertFiles)));
 
         logger.outputInRed(
                 NbBundle.getMessage(RevertModificationsAction.class,

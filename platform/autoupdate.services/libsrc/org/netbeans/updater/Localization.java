@@ -147,7 +147,7 @@ class Localization {
             brandedLoader = Localization.class.getClassLoader();
             
             // Try to find some localized jars and store the URLS
-            List<URL> locJarURLs = new ArrayList<URL>();
+            List<URL> locJarURLs = new ArrayList<>();
                         
             for( LocaleIterator li = new LocaleIterator( Locale.getDefault() ); li.hasNext(); ) {
                 String localeName = li.next().toString ();

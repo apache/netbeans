@@ -76,7 +76,7 @@ public class JaxWsClientMethodGenerator implements CancellableTask<WorkingCopy> 
             }
             TypeElement returnTypeEl = copy.getElements().getTypeElement(returnType);
             ExpressionTree returnTypeTree =  returnTypeEl == null ? maker.Identifier(returnType) : maker.QualIdent(returnTypeEl);
-            List<VariableTree> variables = new ArrayList<VariableTree>();
+            List<VariableTree> variables = new ArrayList<>();
             ModifiersTree fieldModif = maker.Modifiers(Collections.<Modifier>emptySet());
             for (int i=0; i<paramTypes.length; i++) {
                 ExpressionTree paramType = maker.Identifier(paramTypes[i]);

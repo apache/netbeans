@@ -130,7 +130,7 @@ public class AnyTest extends CommonTestCase {
                         injectionPoints.add( (VariableElement)element);
                     }
                 }
-                Set<String> names = new HashSet<String>(); 
+                Set<String> names = new HashSet<>(); 
                 for( VariableElement element : injectionPoints ){
                     names.add( element.getSimpleName().toString() );
                     if ( element.getSimpleName().contentEquals("myField1")){
@@ -219,7 +219,7 @@ public class AnyTest extends CommonTestCase {
                     injectionPoints.add( (VariableElement)element);
                 }
             }
-            Set<String> names = new HashSet<String>(); 
+            Set<String> names = new HashSet<>(); 
             for( VariableElement element : injectionPoints ){
                 names.add( element.getSimpleName().toString() );
                 if ( element.getSimpleName().contentEquals("myField1")){

@@ -189,7 +189,7 @@ public class GridBagCustomizerTest extends ExtJellyTestCase {
                 clo.btClose().push();
 
                 
-                ArrayList<String> lines = new ArrayList<String>();
+                ArrayList<String> lines = new ArrayList<>();
 
                 lines.add("jButton1.setText(\"jButton1\");");
                 lines.add("gridBagConstraints = new java.awt.GridBagConstraints();");

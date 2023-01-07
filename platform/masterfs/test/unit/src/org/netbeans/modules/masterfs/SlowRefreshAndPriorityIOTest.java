@@ -125,7 +125,7 @@ public class SlowRefreshAndPriorityIOTest extends NbTestCase {
 
         Runnable r = (Runnable)obj;
         class AE extends ActionEvent implements Runnable {
-            List<FileObject> files = new ArrayList<FileObject>();
+            List<FileObject> files = new ArrayList<>();
             boolean boosted;
             boolean finished;
             int goingIdle;

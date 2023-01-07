@@ -51,7 +51,7 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         set.add(MIMEResolver.Registration.class.getCanonicalName());
         set.add(MIMEResolver.ExtensionRegistration.class.getCanonicalName());
         set.add(MIMEResolver.NamespaceRegistration.class.getCanonicalName());

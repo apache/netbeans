@@ -212,12 +212,12 @@ public class testCC extends GeneralGroovy {
         List listB = completion2.listItems;
         assertEquals("Code completion list size differs", listA.size(), listB.size());
 
-        ArrayList<String> lA = new ArrayList<String>();
+        ArrayList<String> lA = new ArrayList<>();
         for (int i = 0; i < listA.size(); i++) {
             lA.add(listA.get(i).toString());
         }
 
-        ArrayList<String> lB = new ArrayList<String>();
+        ArrayList<String> lB = new ArrayList<>();
         for (int i = 0; i < listB.size(); i++) {
             lB.add(listB.get(i).toString());
         }

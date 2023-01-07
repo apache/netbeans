@@ -464,7 +464,7 @@ public class Subversion {
         return rp;
     }
 
-    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<File>(20));
+    private final Set<File> unversionedParents = Collections.synchronizedSet(new HashSet<>(20));
     /**
      * Delegates to SubversionVCS.getTopmostManagedAncestor
      * @param file a file for which the topmost managed ancestor shall be looked up.
@@ -493,7 +493,7 @@ public class Subversion {
             }
         }
         File topmost = null;
-        Set<File> done = new HashSet<File>();
+        Set<File> done = new HashSet<>();
         for (; file != null; file = file.getParentFile()) {
             if(unversionedParents.contains(file)) {
                 if (Subversion.LOG.isLoggable(Level.FINE)) {
@@ -564,7 +564,7 @@ public class Subversion {
      * @param files files to chage the annotations for
      */
     public void refreshAnnotations(File... files) {
-        Set<File> s = new HashSet<File>(Arrays.asList(files));
+        Set<File> s = new HashSet<>(Arrays.asList(files));
         support.firePropertyChange(PROP_ANNOTATIONS_CHANGED, null, s);
     }
 

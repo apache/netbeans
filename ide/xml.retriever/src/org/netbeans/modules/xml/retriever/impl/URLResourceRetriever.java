@@ -50,7 +50,7 @@ public class URLResourceRetriever implements ResourceRetriever{
      * Hack: this is a URL rewriter for well-known XML namespaces whose resources
      * do not follow the convention - most prominent is the XSLT schema
      */
-    private static final Map<String, String>    rewriteURIMap = new HashMap<String, String>();
+    private static final Map<String, String>    rewriteURIMap = new HashMap<>();
     
     /**
      * Well known XML schemas from specs

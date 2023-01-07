@@ -154,8 +154,8 @@ public final class ReferencesCount {
             if (typeFreqs == null) {
                 long st = System.currentTimeMillis();
                 final ClassIndexManager cim = ClassIndexManager.getDefault();
-                final Map<String,Integer> typef = new HashMap<String, Integer>();
-                final Map<String,Integer> pkgf = new HashMap<String, Integer>();
+                final Map<String,Integer> typef = new HashMap<>();
+                final Map<String,Integer> pkgf = new HashMap<>();
                 try {
                     for (URL root : roots) {
                         final ClassIndexImpl ci = cim.getUsagesQuery(root, true);

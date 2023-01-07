@@ -68,7 +68,7 @@ public class WatcherDeadlockTest extends NbTestCase {
         final FileObject r = FileUtil.toFileObject(root);
         r.refresh(true);
         
-        Set<FileObject> all = new HashSet<FileObject>();
+        Set<FileObject> all = new HashSet<>();
         Enumeration<? extends FileObject> en = r.getChildren(true);
         while (en.hasMoreElements()) {
             FileObject fileObject = en.nextElement();

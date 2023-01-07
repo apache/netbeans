@@ -37,7 +37,7 @@ class ShortcutManager {
     private ShortcutManager() {}
 
     // command -> shortcut
-    Map<String, Object> shorcuts = new HashMap<String, Object>();
+    Map<String, Object> shorcuts = new HashMap<>();
 
     // command -> WeakSet of actions
     HashMap<String, Set<Action>> actions = new HashMap<String, Set<Action>>();

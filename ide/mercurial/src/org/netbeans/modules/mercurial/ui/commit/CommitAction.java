@@ -343,7 +343,7 @@ public class CommitAction extends ContextAction {
                     File[] roots = ctx.getRootFiles().toArray(new File[ctx.getRootFiles().size()]);
 
                     File[][] split = Utils.splitFlatOthers(roots);
-                    List<File> fileList = new ArrayList<File>();
+                    List<File> fileList = new ArrayList<>();
                     for (int c = 0; c < split.length; c++) {
                         roots = split[c];
                         boolean recursive = c == 1;
@@ -511,9 +511,9 @@ public class CommitAction extends ContextAction {
         Map<File, List<File>> commitCandidates = new HashMap<File, List<File>>();
         Map<File, Set<File>> filesToRefresh = new HashMap<File, Set<File>>();
 
-        List<String> excPaths = new ArrayList<String>();
-        Map<File, Boolean> locallyModifiedExcluded = new HashMap<File, Boolean>();
-        List<String> incPaths = new ArrayList<String>();
+        List<String> excPaths = new ArrayList<>();
+        Map<File, Boolean> locallyModifiedExcluded = new HashMap<>();
+        List<String> incPaths = new ArrayList<>();
         if (commitAllFiles && closeBranch) {
             assert rootFiles.size() == 1;
             for (File root : rootFiles.keySet()) {
@@ -610,7 +610,7 @@ public class CommitAction extends ContextAction {
     }
 
     private static void refreshFS (Map<File, Set<File>> filesPerRepository) {
-        final Set<File> files = new HashSet<File>();
+        final Set<File> files = new HashSet<>();
         for (Set<File> values : filesPerRepository.values()) {
             files.addAll(values);
         }
@@ -625,7 +625,7 @@ public class CommitAction extends ContextAction {
     private static void putCandidate(Map<File, List<File>> m, File repository, File file) {
         List<File> l = m.get(repository);
         if(l == null) {
-            l = new ArrayList<File>();
+            l = new ArrayList<>();
             m.put(repository, l);
         }
         l.add(file);
@@ -815,14 +815,14 @@ public class CommitAction extends ContextAction {
             @Override
             void doCmd(File repository, List<File> candidates) throws HgException {
                 boolean commitAfterMerge = false;
-                Set<File> refreshFiles = new HashSet<File>(candidates);
+                Set<File> refreshFiles = new HashSet<>(candidates);
                 List<File> commitedFiles = null;
                 try {
                     try {
                         if (afterMerge) {
                             if(commitAfterMerge(Boolean.TRUE.equals(locallyModifiedExcluded.get(repository)), repository)) {
                                 HgCommand.doCommit(repository, Collections.<File>emptyList(), msg, user, closingBranch, logger);
-                                refreshFiles = new HashSet<File>(Mercurial.getInstance().getSeenRoots(repository));
+                                refreshFiles = new HashSet<>(Mercurial.getInstance().getSeenRoots(repository));
                                 commitAfterMerge = true;
                             } else {
                                 return;
@@ -838,7 +838,7 @@ public class CommitAction extends ContextAction {
                         Set<File> roots = rootFilesPerRepository.get(repository);
                         if (roots != null && roots.size() < 5) {
                             reducedCommitCandidates = new ArrayList<File>(roots);
-                            refreshFiles = new HashSet<File>(roots);
+                            refreshFiles = new HashSet<>(roots);
                             for (File f : reducedCommitCandidates) {
                                 offeredFileNames += "\n" + f.getName();     //NOI18N
                             }
@@ -870,7 +870,7 @@ public class CommitAction extends ContextAction {
                             return;
                         } else {
                             HgCommand.doCommit(repository, Collections.<File>emptyList(), msg, user, closingBranch, logger);
-                            refreshFiles = new HashSet<File>(Mercurial.getInstance().getSeenRoots(repository));
+                            refreshFiles = new HashSet<>(Mercurial.getInstance().getSeenRoots(repository));
                             commitAfterMerge = true;
                         }
                     } else {

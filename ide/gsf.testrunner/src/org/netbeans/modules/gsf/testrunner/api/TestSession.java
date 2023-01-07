@@ -71,7 +71,7 @@ public class TestSession {
      * a test finishes, the output of that testcase needs to be associated 
      * with it after it has been created.
      */
-    private final List<String> output = new ArrayList<String>();
+    private final List<String> output = new ArrayList<>();
     /*
      * The message to display when this session is starting.
      */

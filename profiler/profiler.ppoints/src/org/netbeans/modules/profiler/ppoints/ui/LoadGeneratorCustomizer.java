@@ -640,7 +640,7 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
             chooser.setDialogTitle(Bundle.LoadGeneratorCustomizer_ChooseScriptDialogCaption());
     
             chooser.setFileFilter(new FileFilter() {
-                    private Set<String> extensions = new HashSet<String>();
+                    private Set<String> extensions = new HashSet<>();
 
                     {
                         LoadGenPlugin lg = Lookup.getDefault().lookup(LoadGenPlugin.class);

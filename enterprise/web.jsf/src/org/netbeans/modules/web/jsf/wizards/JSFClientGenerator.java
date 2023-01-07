@@ -1612,7 +1612,7 @@ public class JSFClientGenerator {
         return controllerFileObject;
     }
 
-    private static HashSet<String> CONVERTED_TYPES = new HashSet<String>();
+    private static HashSet<String> CONVERTED_TYPES = new HashSet<>();
     static {
         CONVERTED_TYPES.add("Boolean");
         CONVERTED_TYPES.add("Byte");
@@ -1623,7 +1623,7 @@ public class JSFClientGenerator {
         CONVERTED_TYPES.add("Short");
         CONVERTED_TYPES.add("StringBuffer");
     }
-    private static HashMap<String,String> PRIMITIVE_TYPES = new HashMap<String, String>();
+    private static HashMap<String,String> PRIMITIVE_TYPES = new HashMap<>();
     static {
         PRIMITIVE_TYPES.put("boolean", "Boolean");
         PRIMITIVE_TYPES.put("byte", "Byte");

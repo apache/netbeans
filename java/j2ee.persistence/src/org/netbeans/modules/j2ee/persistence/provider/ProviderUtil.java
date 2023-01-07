@@ -224,7 +224,7 @@ public class ProviderUtil {
             return null;
         }
 
-        HashMap<String, String> ret = new HashMap<String,String>();
+        HashMap<String, String> ret = new HashMap<>();
         Property[] properties = pu.getProperties().getProperty2();
         Provider provider = getProvider(pu);
 

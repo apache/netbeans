@@ -73,7 +73,7 @@ public final class ConfigurationPersistenceUtils {
                     String profs = enEl.getAttribute(CONFIG_PROFILES_ATTR);
                     if (profs != null) {
                         String[] s = profs.split(" ");
-                        List<String> prf = new ArrayList<String>();
+                        List<String> prf = new ArrayList<>();
                         for (String s2 : s) {
                             if (s2.trim().length() > 0) {
                                 prf.add(s2.trim());

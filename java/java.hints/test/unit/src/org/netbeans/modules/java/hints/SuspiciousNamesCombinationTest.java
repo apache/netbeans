@@ -162,7 +162,7 @@ public class SuspiciousNamesCombinationTest extends NbTestCase {
         
         new ScannerImpl().scan(info.getCompilationUnit(), null);
         
-        List<String> errorDisplaNames = new ArrayList<String>();
+        List<String> errorDisplaNames = new ArrayList<>();
         
         for (ErrorDescription ed : errors) {
             errorDisplaNames.add(ed.toString());

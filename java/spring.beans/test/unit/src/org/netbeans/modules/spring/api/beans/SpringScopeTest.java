@@ -74,7 +74,7 @@ public class SpringScopeTest extends ConfigFileTestCase {
 
         final FileObject configFO = FileUtil.toFileObject(configFile);
         SpringConfigModel model = SpringScopeAccessor.getDefault().getConfigModel(scope, configFO);
-        final Set<String> beanNames = new HashSet<String>();
+        final Set<String> beanNames = new HashSet<>();
         model.runReadAction(new Action<SpringBeans>() {
             public void run(SpringBeans beans) {
                 for (SpringBean bean : beans.getFileBeans(configFO).getBeans()) {

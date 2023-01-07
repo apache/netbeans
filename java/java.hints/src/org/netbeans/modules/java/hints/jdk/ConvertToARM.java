@@ -949,7 +949,7 @@ public class ConvertToARM {
                 tail.iterator().next().getCompilationUnit(),
                 trees));
 
-        final Set<String> usedAfterCloseVarNames = new HashSet<String>();
+        final Set<String> usedAfterCloseVarNames = new HashSet<>();
 
         for (VariableTree vt : usedAfterCloseVarDecls) {
             usedAfterCloseVarNames.add(vt.getName().toString());

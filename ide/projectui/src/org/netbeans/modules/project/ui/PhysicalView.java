@@ -492,7 +492,7 @@ public class PhysicalView {
 
                 String relPath = FileUtil.getRelativePath( groupRoot, fo );
                 
-                ArrayList<String> path = new ArrayList<String>();
+                ArrayList<String> path = new ArrayList<>();
                 StringTokenizer strtok = new StringTokenizer( relPath, "/" );
                 while( strtok.hasMoreTokens() ) {
                    path.add( strtok.nextToken() );

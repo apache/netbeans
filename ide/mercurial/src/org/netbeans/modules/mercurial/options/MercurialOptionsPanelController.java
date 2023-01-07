@@ -128,7 +128,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
 
     @Override
     public boolean acceptKeywords (List<String> keywords) {
-        Set<String> allKeywords = new HashSet<String>(panel.getKeywords());
+        Set<String> allKeywords = new HashSet<>(panel.getKeywords());
         allKeywords.retainAll(keywords);
         return !allKeywords.isEmpty();
     }

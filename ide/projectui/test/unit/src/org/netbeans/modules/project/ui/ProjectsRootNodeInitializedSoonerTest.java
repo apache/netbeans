@@ -65,9 +65,9 @@ public class ProjectsRootNodeInitializedSoonerTest extends NbTestCase {
         System.setProperty("test.projectnode.sync", "true");
         
         MockLookup.setInstances(new TestSupport.TestProjectFactory());
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         clearWorkDir();
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         assertNotNull(workDir);

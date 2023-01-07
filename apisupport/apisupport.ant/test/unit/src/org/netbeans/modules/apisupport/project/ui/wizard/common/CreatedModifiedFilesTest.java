@@ -78,7 +78,7 @@ public class CreatedModifiedFilesTest extends LayerTestBase {
         "</html>"
     };
     
-    private static final Map<String,String> TOKENS_MAP = new HashMap<String,String>();
+    private static final Map<String,String> TOKENS_MAP = new HashMap<>();
     
     static {
         TOKENS_MAP.put("file", "template");
@@ -654,7 +654,7 @@ public class CreatedModifiedFilesTest extends LayerTestBase {
     public static void assertLayerContent(final String[] supposedContent,
             final File layerF) throws IOException, FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader(layerF));
-        List<String> actualContent = new ArrayList<String>();
+        List<String> actualContent = new ArrayList<>();
         boolean fsElementReached = false;
         String line;
         

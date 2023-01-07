@@ -149,7 +149,7 @@ public final class GlobalFormatAction extends AbstractAction {
             handle.switchToIndeterminate();
             handle.progress(Bundle.LBL_Preparing());
 
-            Set<String> sourceIds = new HashSet<String>();
+            Set<String> sourceIds = new HashSet<>();
 
             for (PathRecognizer pr : Lookup.getDefault().lookupAll(PathRecognizer.class)) {
                 Set<String> ids = pr.getSourcePathIds();
@@ -160,8 +160,8 @@ public final class GlobalFormatAction extends AbstractAction {
             }
 
             Lookup context = Utilities.actionsGlobalContext();
-            List<FileObject> toFormat = new ArrayList<FileObject>();
-            Set<FileObject> nonRecursiveRoots = new HashSet<FileObject>();
+            List<FileObject> toFormat = new ArrayList<>();
+            Set<FileObject> nonRecursiveRoots = new HashSet<>();
 
             for (NonRecursiveFolder f : context.lookupAll(NonRecursiveFolder.class)) {
                 if (cancel.get()) return;

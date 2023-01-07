@@ -154,7 +154,7 @@ public class SpringCatalog implements CatalogReader, CatalogDescriptor2, EntityR
     private static final String SPRING_WEBFLOW_CONFIG_1_0_XSD_ID = "SCHEMA:" + SPRING_WEBFLOW_CONFIG_1_0;                                                             // NOI18N
 
     public Iterator getPublicIDs() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(SPRING_AOP_2_0_XSD_ID);
         list.add(SPRING_AOP_2_1_XSD_ID);
         list.add(SPRING_AOP_2_5_XSD_ID);

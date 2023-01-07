@@ -82,7 +82,7 @@ public class SchemaPanel extends AbstractPanel implements ActionListener, TableM
     private static final String PREFIX = "ns"; // NOI18N
 
    /** Hashmap to keep track of prefixes */
-   //private Set<String> prefixSet = new HashSet<String>();
+   //private Set<String> prefixSet = new HashSet<>();
    
     
     /** Creates new form SchemaPanel */
@@ -481,7 +481,7 @@ private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 */
     
     private boolean isPrefixUnique(String prefix) {
-        Set<String> prefixSet = new HashSet<String>();
+        Set<String> prefixSet = new HashSet<>();
         for (int i = 0; i < tableModel.getRowCount(); ++i) {
             Object prefixValue = tableModel.getValueAt(i, PREFIX_COL);
             if (prefixValue instanceof String) {

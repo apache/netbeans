@@ -925,7 +925,7 @@ public class FolderChildrenTest extends NbTestCase {
 
     public void testRenameHiddenEntry() throws Exception {
         FileObject folder = FileUtil.createFolder(FileUtil.getConfigRoot(), "two");
-        List<FileObject> arr = new ArrayList<FileObject>();
+        List<FileObject> arr = new ArrayList<>();
         final int FILES = 2;
         for (int i = 0; i < FILES; i++) {
             arr.add(FileUtil.createData(folder, "" + i + ".dat"));
@@ -951,7 +951,7 @@ public class FolderChildrenTest extends NbTestCase {
 
     public void testALotOfHiddenEntries() throws Exception {
         FileObject folder = FileUtil.createFolder(FileUtil.getConfigRoot(), "aLotOf");
-        List<FileObject> arr = new ArrayList<FileObject>();
+        List<FileObject> arr = new ArrayList<>();
         final int FILES = 1000;
         for (int i = 0; i < FILES; i++) {
             arr.add(FileUtil.createData(folder, "" + i + ".dat"));
@@ -1002,7 +1002,7 @@ public class FolderChildrenTest extends NbTestCase {
     
     public void testALotOfHiddenEntriesInLazyMode() throws Exception {
         FileObject folder = FileUtil.createFolder(FileUtil.getConfigRoot(), "aLotOf");
-        List<FileObject> arr = new ArrayList<FileObject>();
+        List<FileObject> arr = new ArrayList<>();
         final int FILES = 1000;
         for (int i = 0; i < FILES; i++) {
             arr.add(FileUtil.createData(folder, "" + i + ".dat"));

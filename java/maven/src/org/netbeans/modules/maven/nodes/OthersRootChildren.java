@@ -93,7 +93,7 @@ class OthersRootChildren extends Children.Keys<SourceGroup> {
     private void regenerateKeys() {
         List<SourceGroup> list = new ArrayList<SourceGroup>();
         SourceGroup[] resgroup = getSourceGroups();
-        Set<FileObject> files = new HashSet<FileObject>();
+        Set<FileObject> files = new HashSet<>();
         for (int i = 0; i < resgroup.length; i++) {
             list.add(resgroup[i]);
             files.add(resgroup[i].getRootFolder());

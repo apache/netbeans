@@ -440,7 +440,7 @@ class VariableNameImpl extends ScopeImpl implements VariableName {
         sb.append(varName).append(Signature.ITEM_DELIMITER);
         //makes little sense because the variable with the same name can exists in huge number of files
         /*
-        Set<String> typeNames = new HashSet<String>(getTypeNames(getNameRange().getEnd()+1));
+        Set<String> typeNames = new HashSet<>(getTypeNames(getNameRange().getEnd()+1));
         if (typeNames.size() == 1) {
             for (String typeName : typeNames) {
                 if (!typeName.contains(VariousUtils.PRE_OPERATION_TYPE_DELIMITER)) {

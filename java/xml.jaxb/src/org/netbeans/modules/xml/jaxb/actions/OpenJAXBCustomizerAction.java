@@ -97,7 +97,7 @@ public class OpenJAXBCustomizerAction extends NodeAction  {
             int sssSize = sss.sizeSchemaSource();
             String origSrcLocType = null;
             if (sssSize > 0){
-                List<String> xsdFileList = new ArrayList<String>();                            
+                List<String> xsdFileList = new ArrayList<>();
                 for (int i=0; i < sssSize; i++){
                     ss = sss.getSchemaSource(i);
                     xsdFileList.add(ss.getOrigLocation());
@@ -115,7 +115,7 @@ public class OpenJAXBCustomizerAction extends NodeAction  {
         if (bindings != null){
             int numBindings = bindings.sizeBinding();
             if (numBindings > 0){
-                List<String> bs = new ArrayList<String>();
+                List<String> bs = new ArrayList<>();
                 Binding binding = null;
                 for (int i=0; i < numBindings;i++){
                     binding = bindings.getBinding(i);

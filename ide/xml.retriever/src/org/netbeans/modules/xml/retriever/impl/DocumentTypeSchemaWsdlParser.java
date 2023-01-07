@@ -79,8 +79,8 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
         }
     }
     
-    private Map<String, String> namespaces = new HashMap<String,String>();
-    private Map<String, String> prefixes = new HashMap<String,String>();
+    private Map<String, String> namespaces = new HashMap<>();
+    private Map<String, String> prefixes = new HashMap<>();
     
     private NamespaceContext getNamespaceContext() {
         namespaces.put("xsd","http://www.w3.org/2001/XMLSchema"); //NOI18N
@@ -100,7 +100,7 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
     
     
     public List<String> getAllLocationOfReferencedEntities(File parsedFile) throws Exception{
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         initXpath();
         Node documentNode = getDOMTree(parsedFile);
         

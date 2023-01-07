@@ -96,7 +96,7 @@ public class OpenProjectListSettings {
     
     protected final List<URL> getURLList(String key, boolean allowGrouped) {
         List<String> strs = getStringList(key, allowGrouped);
-        List<URL> toRet = new ArrayList<URL>();
+        List<URL> toRet = new ArrayList<>();
         for (String val : strs) {
             try {
                 toRet.add(new URL(val));
@@ -111,7 +111,7 @@ public class OpenProjectListSettings {
         Preferences pref = getPreferences(allowGrouped);
         int count = 0;
         String val = pref.get(key + "." + count, null);
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         while (val != null) {
             toRet.add(val);
             count = count + 1;

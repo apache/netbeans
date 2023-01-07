@@ -86,7 +86,7 @@ public class DOMNode extends AbstractNode {
      * @return lookup for the given page model and node.
      */
     private static Lookup lookupFor(WebKitPageModel model, Node node) {
-        List<Object> items = new ArrayList<Object>();
+        List<Object> items = new ArrayList<>();
 
         items.add(node);
 
@@ -360,7 +360,7 @@ public class DOMNode extends AbstractNode {
          * @param childToRefresh child that may need refresh.
          */
         void updateKeys(Node node, Node childToRefresh) {
-            List<Integer> keys = new ArrayList<Integer>();
+            List<Integer> keys = new ArrayList<>();
             List<Node> subNodes = node.getChildren();
             if (subNodes != null) {
                 for (Node subNode : subNodes) {

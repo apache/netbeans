@@ -1610,7 +1610,7 @@ public class FormUtils
         if ((nodes == null) || (nodes.length < 1))
             return null;
 
-        List<RADComponent> components = new ArrayList<RADComponent>();
+        List<RADComponent> components = new ArrayList<>();
         for (int i=0; i<nodes.length; i++) {
             RADComponentCookie radCookie = nodes[i].getCookie(RADComponentCookie.class);
             if (radCookie != null) {
@@ -1649,7 +1649,7 @@ public class FormUtils
     }
     
     private static Set<String> superClasses(Class beanClass) {
-        Set<String> superClasses = new HashSet<String>();
+        Set<String> superClasses = new HashSet<>();
         Class[] infaces = beanClass.getInterfaces();
         for (int i=0; i<infaces.length; i++) {
             superClasses.add(infaces[i].getName());

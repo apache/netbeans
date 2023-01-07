@@ -102,8 +102,8 @@ abstract class AbstractEntry implements ModuleEntry {
     }
     
     protected final void scanJarForPublicClassNames(Set<String> result, File jar) throws IOException {
-        Set<String> publicPackagesSlashNonRec = new HashSet<String>();
-        List<String> publicPackagesSlashRec = new ArrayList<String>();
+        Set<String> publicPackagesSlashNonRec = new HashSet<>();
+        List<String> publicPackagesSlashRec = new ArrayList<>();
         for (ManifestManager.PackageExport pkg : getPublicPackages()) {
             String name = pkg.getPackage().replace('.', '/') + '/';
             if (pkg.isRecursive()) {

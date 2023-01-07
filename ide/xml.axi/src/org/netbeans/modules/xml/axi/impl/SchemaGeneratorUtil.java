@@ -1609,7 +1609,7 @@ public class SchemaGeneratorUtil {
                 lrges.add(e);
         }
         //find remove global elements
-        List<Integer> removeList = new ArrayList<Integer>();
+        List<Integer> removeList = new ArrayList<>();
         for(int i=0;i<lrges.size();i++) {
             Element e = lrges.get(i);
             if(refges.contains(e.getPeer())) {
@@ -1893,7 +1893,7 @@ public class SchemaGeneratorUtil {
         NamedNodeMap attrs1 = n1.getAttributes();
         NamedNodeMap attrs2 = n2.getAttributes();
         
-        List<String> nameSet = new ArrayList<String>();
+        List<String> nameSet = new ArrayList<>();
         nameSet.add( "id" );
         nameSet.add( "name" );
         nameSet.add( "ref" );

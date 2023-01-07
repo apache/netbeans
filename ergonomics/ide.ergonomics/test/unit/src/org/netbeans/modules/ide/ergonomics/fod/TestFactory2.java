@@ -37,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class TestFactory2 extends ProjectOpenedHook
 implements ProjectFactory, Project, ProjectInformation {
 
-    static Set<FileObject> recognize = new HashSet<FileObject>();
+    static Set<FileObject> recognize = new HashSet<>();
     int closed;
     int opened;
     int listenerCount;

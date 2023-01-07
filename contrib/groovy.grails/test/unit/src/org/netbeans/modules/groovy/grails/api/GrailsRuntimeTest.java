@@ -173,7 +173,7 @@ public class GrailsRuntimeTest extends NbTestCase {
     }
 
     private static void assertEquals(Properties expected, Properties value) {
-        Set<String> valueNames = new HashSet<String>();
+        Set<String> valueNames = new HashSet<>();
         for (Enumeration e = value.propertyNames(); e.hasMoreElements();) {
             valueNames.add(e.nextElement().toString());
         }

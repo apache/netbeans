@@ -211,7 +211,7 @@ public final class CommonProjectUtils {
         impl.setContent("classpath", Arrays.asList(classPath)); //NOI18N
         impl.setContent("src", Arrays.asList(sources));     //NOI18N
         impl.setContent("javadoc", Arrays.asList(javadoc));     //NOI18N
-        final Map<String,String> props = new HashMap<String, String>();
+        final Map<String,String> props = new HashMap<>();
         // properties: "maven-dependencies", "maven-repositories"
         props.put("maven-dependencies", getPropertyValue(mavendeps));  //NOI18N
         props.put("maven-repositories", getPropertyValue(mavenrepos)); //NOI18N

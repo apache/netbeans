@@ -79,7 +79,7 @@ public class WildflyStartServer extends StartServer implements ProgressObject {
     private boolean consoleConfigured = false;
 
     private static final Set<String> IS_DEBUG_MODE_URI = Collections.synchronizedSet(
-            new HashSet<String>(AVERAGE_SERVER_INSTANCES));
+            new HashSet<>(AVERAGE_SERVER_INSTANCES));
 
     public WildflyStartServer(DeploymentManager dm) {
         this.dm = (WildflyDeploymentManager) dm;

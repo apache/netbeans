@@ -130,7 +130,7 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
     private InstanceProperties instantiate(String displayName) throws IOException {
         // if all the data is normally validated - create the instance and
         // attach the additional properties
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(WLPluginProperties.SERVER_ROOT_ATTR, serverRoot);
         props.put(WLPluginProperties.DOMAIN_ROOT_ATTR, domainRoot);
         props.put(WLPluginProperties.DOMAIN_NAME, domainName);

@@ -69,7 +69,7 @@ class ShowEffPomDiffPanel extends javax.swing.JPanel {
     
     List<String> getSelectedProfiles() {
         StringTokenizer tok = new StringTokenizer(txtProfiles.getText().trim(), " ,");
-        ArrayList<String> lst = new ArrayList<String>();
+        ArrayList<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }

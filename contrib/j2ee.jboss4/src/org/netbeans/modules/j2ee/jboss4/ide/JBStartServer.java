@@ -78,7 +78,7 @@ public class JBStartServer extends StartServer implements ProgressObject{
     private final JBDeploymentManager dm;
 
     private static Set<String> isDebugModeUri = Collections.synchronizedSet(
-            new HashSet<String>(AVERAGE_SERVER_INSTANCES));
+            new HashSet<>(AVERAGE_SERVER_INSTANCES));
     
     public JBStartServer(DeploymentManager dm) {
         if (!(dm instanceof JBDeploymentManager)) {

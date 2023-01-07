@@ -799,8 +799,8 @@ public class CustomizerLibraries extends JPanel implements HelpCtx.Provider, Lis
     }//GEN-LAST:event_librariesBrowseActionPerformed
     
     static boolean makeSharable(final EjbJarProjectProperties uiProperties) {
-        List<String> libs = new ArrayList<String>();
-        List<String> jars = new ArrayList<String>();
+        List<String> libs = new ArrayList<>();
+        List<String> jars = new ArrayList<>();
         collectLibs(uiProperties.JAVAC_CLASSPATH_MODEL.getDefaultListModel(), libs, jars);
         collectLibs(uiProperties.JAVAC_TEST_CLASSPATH_MODEL, libs, jars);
         collectLibs(uiProperties.RUN_TEST_CLASSPATH_MODEL, libs, jars);

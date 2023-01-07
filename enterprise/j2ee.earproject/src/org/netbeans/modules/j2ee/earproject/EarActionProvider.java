@@ -434,7 +434,7 @@ public class EarActionProvider implements ActionProvider {
         } else {
             return Collections.emptyList();
         }
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
         JavaPlatform p = getActivePlatform();
         for (StartupExtender group : StartupExtender.getExtenders(Lookups.fixed(project, p != null ? p : JavaPlatformManager.getDefault().getDefaultPlatform()), mode)) {
             args.addAll(group.getArguments());

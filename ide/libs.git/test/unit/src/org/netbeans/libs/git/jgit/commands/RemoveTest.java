@@ -161,7 +161,7 @@ public class RemoveTest extends AbstractGitTestCase {
         assertFalse(folder2.exists());
         assertTrue(file.exists());
         assertTrue(folder.exists());
-        assertEquals(new HashSet<File>(Arrays.asList(file1, file2, file3, folder1, folder2)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file1, file2, file3, folder1, folder2)), m.notifiedFiles);
         statuses = client.getStatus(folders, NULL_PROGRESS_MONITOR);
         assertEquals(3, statuses.size());
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_REMOVED, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_REMOVED, false);
@@ -208,7 +208,7 @@ public class RemoveTest extends AbstractGitTestCase {
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
-        assertEquals(new HashSet<File>(Arrays.asList(file1, file2, file3)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file1, file2, file3)), m.notifiedFiles);
         statuses = client.getStatus(folders, NULL_PROGRESS_MONITOR);
         assertEquals(3, statuses.size());
         assertStatus(statuses, workDir, file1, true, GitStatus.Status.STATUS_REMOVED, GitStatus.Status.STATUS_ADDED, GitStatus.Status.STATUS_NORMAL, false);
@@ -273,7 +273,7 @@ public class RemoveTest extends AbstractGitTestCase {
         assertFalse(folder1.exists());
         assertFalse(folder2.exists());
         assertTrue(folder.exists());
-        assertEquals(new HashSet<File>(Arrays.asList(file1, file2, file3, folder1, folder2)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file1, file2, file3, folder1, folder2)), m.notifiedFiles);
         statuses = client.getStatus(folders, NULL_PROGRESS_MONITOR);
         assertEquals(0, statuses.size());
     }

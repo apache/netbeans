@@ -261,7 +261,7 @@ public class OptionsOperator extends NbDialogOperator {
     protected int getValue(int row, int column) {
         try { 
             Node.Property<?> property = ((Node.Property<?>)treeTable().getValueAt(row, column));
-            return(((Integer)property.getValue()).intValue());
+            return((Integer) property.getValue());
         } catch(IllegalAccessException e) {
             throw new JemmyException("Can not access value!", e);
         } catch(InvocationTargetException e) {

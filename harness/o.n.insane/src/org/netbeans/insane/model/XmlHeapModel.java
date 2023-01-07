@@ -150,7 +150,7 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
 
     Item createItem(int id, String type, int size, String val) {
         Item item = new MemItem(id, type, size, val);
-        items.put(Integer.valueOf(id), item);
+        items.put(id, item);
         return item;
     }
 

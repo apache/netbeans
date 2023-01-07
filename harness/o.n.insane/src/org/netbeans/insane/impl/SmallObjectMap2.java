@@ -61,14 +61,14 @@ class SmallObjectMap2 implements ObjectMap {
     public String getID(Object o) {
         // find whether it is known and wrapped
         Integer wid = wrappers.get(o);
-        if (wid != null) return getWrappedId(o, wid.intValue());
+        if (wid != null) return getWrappedId(o, wid);
 
         // ... or at least known
         if (isKnown(o)) return getNormalId(o);
 
         // unknown object
         if (putObject(o)) { //wrapped
-            return getWrappedId(o, wrappers.get(o).intValue());
+            return getWrappedId(o, wrappers.get(o));
         } else {
              return getNormalId(o);
         }
@@ -124,7 +124,7 @@ class SmallObjectMap2 implements ObjectMap {
         table[bucket] = o;
 
         // add the wrapping info
-        if (wrap) wrappers.put(o, Integer.valueOf(nextFreeId()));
+        if (wrap) wrappers.put(o, nextFreeId());
         return wrap;
     }
 

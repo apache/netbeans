@@ -349,7 +349,7 @@ public class Action {
         JellyVersion.checkJemmyVersion();
 
         if (JemmyProperties.getCurrentProperty("Action.DefaultMode") == null) {
-            JemmyProperties.setCurrentProperty("Action.DefaultMode", Integer.valueOf(POPUP_MODE));
+            JemmyProperties.setCurrentProperty("Action.DefaultMode", POPUP_MODE);
         }
         Timeouts.initDefault("Action.WaitAfterShortcutTimeout", WAIT_AFTER_SHORTCUT_TIMEOUT);
         // Set case sensitive comparator as default because of 

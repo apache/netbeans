@@ -60,7 +60,7 @@ class URLProcessor extends PropertyProcessor {
                     SerParser.NameValue nv = (SerParser.NameValue)elem;
                     if (nv.value != null && nv.name != null) {
                         if (nv.name.name.equals("port")) {//NOI18N
-                            port = ((Integer)nv.value).intValue();//NOI18N
+                            port = (Integer) nv.value;//NOI18N
                         }
                         else if (nv.name.name.equals("file")) {//NOI18N
                             file = nv.value.toString();//NOI18N

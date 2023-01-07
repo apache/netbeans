@@ -191,7 +191,7 @@ public final class AutoUpgrade {
         JDialog d = Util.createJOptionProgressDialog(p, NbBundle.getMessage (AutoUpgrade.class, "MSG_Confirmation_Title"), source, progressBar);
         d.setVisible (true);
 
-        return new Integer (JOptionPane.YES_OPTION).equals (p.getValue ());
+        return p.getValue().equals(JOptionPane.YES_OPTION);
     }
 
     private static void showNoteDialog (String note) {

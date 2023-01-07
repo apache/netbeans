@@ -1255,9 +1255,9 @@ public class UnixNativeUtils extends NativeUtils {
                 if(mode==0) return;
                 String fullmode = StringUtils.EMPTY_STRING;
                 
-                Integer [] rModes = new Integer [] {FileAccessMode.RU, FileAccessMode.RG, FileAccessMode.RO };
-                Integer [] wModes = new Integer [] {FileAccessMode.WU, FileAccessMode.WG, FileAccessMode.WO };
-                Integer [] xModes = new Integer [] {FileAccessMode.EU, FileAccessMode.EG, FileAccessMode.EO };
+                Integer [] rModes = {FileAccessMode.RU, FileAccessMode.RG, FileAccessMode.RO };
+                Integer [] wModes = {FileAccessMode.WU, FileAccessMode.WG, FileAccessMode.WO };
+                Integer [] xModes = {FileAccessMode.EU, FileAccessMode.EG, FileAccessMode.EO };
                 
                 List <Pair <List <Integer>, String >> modes = new ArrayList<>();
                 

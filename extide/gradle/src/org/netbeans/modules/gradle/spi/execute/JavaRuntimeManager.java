@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.annotations.common.NonNull;
 
 /**
  *
@@ -41,11 +42,11 @@ public interface JavaRuntimeManager {
     default void addChangeListener(ChangeListener l) {}
     default void removeChangeListener(ChangeListener l) {}
 
-    public static JavaRuntime createJavaRuntime(String id, File javaHome) {
+    public static JavaRuntime createJavaRuntime(@NonNull String id, File javaHome) {
         return new JavaRuntime(id, null, javaHome);
     }
 
-    public static JavaRuntime createJavaRuntime(String id, String displayName, File javaHome) {
+    public static JavaRuntime createJavaRuntime(@NonNull String id, String displayName, File javaHome) {
         return new JavaRuntime(id, displayName, javaHome);
     }
 
@@ -54,9 +55,9 @@ public interface JavaRuntimeManager {
         final String displayName;
         final File javaHome;
 
-        private JavaRuntime(String id, String displayName, File javaHome) {
+        private JavaRuntime(@NonNull String id, String displayName, File javaHome) {
             this.id = id;
-            this.displayName = displayName;
+            this.displayName = displayName != null ? displayName : id;
             this.javaHome = javaHome;
         }
 
@@ -65,7 +66,7 @@ public interface JavaRuntimeManager {
         }
 
         public String getDisplayName() {
-            return displayName != null ? displayName : id;
+            return displayName;
         }
 
         public File getJavaHome() {

@@ -21,9 +21,8 @@ package org.netbeans.modules.gradle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
@@ -57,11 +56,9 @@ public class GradleBrokenRuntimeProblemProvider implements ProjectProblemsProvid
         "LBL_BrokenPlatform=Broken Platform.",
     })
     public Collection<? extends ProjectProblemsProvider.ProjectProblem> getProblems() {
-        List<ProjectProblemsProvider.ProjectProblem> ret = new ArrayList<>();
-        if (RunUtils.getActiveRuntime(project).isBroken()) {
-            ret.add(ProjectProblemsProvider.ProjectProblem.createWarning(Bundle.LBL_BrokenPlatform(), Bundle.LBL_BrokenPlatform()));
-        }
-        return ret;
+        return RunUtils.getActiveRuntime(project).isBroken()
+                ? Collections.singleton(ProjectProblemsProvider.ProjectProblem.createWarning(Bundle.LBL_BrokenPlatform(), Bundle.LBL_BrokenPlatform()))
+                : Collections.emptySet();
     }
 
     @Override

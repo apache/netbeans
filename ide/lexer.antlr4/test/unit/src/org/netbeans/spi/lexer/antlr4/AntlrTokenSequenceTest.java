@@ -16,28 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.antlr;
+package org.netbeans.spi.lexer.antlr4;
 
-import org.antlr.parser.antlr4.ANTLRv4Lexer;
+import org.antlr.grammars.dummy.DummyLexer;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
-import static org.netbeans.modules.languages.antlr.AntlrTokenSequence.DEFAULT_CHANNEL;
+import static org.netbeans.spi.lexer.antlr4.AntlrTokenSequence.DEFAULT_CHANNEL;
+
 /**
  *
- * @author lkishalmi
+ * @author Laszlo Kishalmi
  */
 public class AntlrTokenSequenceTest {
-    
+
     public AntlrTokenSequenceTest() {
     }
-    
+
     /**
      * Test of seekTo method, of class AntlrTokenSequence.
      */
     @Test
     public void testSeekTo1() {
+        System.out.println("seekTo");
         int offset = 0;
         AntlrTokenSequence instance = sequence("");
         instance.seekTo(offset);
@@ -46,8 +47,9 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo2() {
+        System.out.println("seekTo");
         int offset = 0;
-        AntlrTokenSequence instance = sequence("/**/");
+        AntlrTokenSequence instance = sequence("# Properties");
         instance.seekTo(offset);
         assertFalse(instance.isEmpty());
         assertTrue(instance.next().isPresent());
@@ -55,6 +57,7 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo3() {
+        System.out.println("seekTo");
         int offset = 4;
         AntlrTokenSequence instance = sequence("/**/");
         instance.seekTo(offset);
@@ -65,6 +68,7 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo4() {
+        System.out.println("seekTo");
         int offset = 5;
         AntlrTokenSequence instance = sequence("/* */lexer");
         instance.seekTo(offset);
@@ -75,6 +79,7 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo5() {
+        System.out.println("seekTo");
         AntlrTokenSequence instance = sequence("/* */lexer");
         instance.seekTo(10);
         assertFalse(instance.next().isPresent());
@@ -90,24 +95,28 @@ public class AntlrTokenSequenceTest {
      */
     @Test
     public void testIsEmpty() {
+        System.out.println("isEmpty");
         AntlrTokenSequence instance = sequence("");
         assertTrue(instance.isEmpty());
     }
 
     @Test
     public void testHasNext1() {
+        System.out.println("hasNext");
         AntlrTokenSequence instance = sequence("lexer");
         assertTrue(instance.hasNext());
     }
 
     @Test
     public void testHasNext2() {
+        System.out.println("hasNext");
         AntlrTokenSequence instance = sequence("");
         assertFalse(instance.hasNext());
     }
 
     @Test
     public void testHasNext3() {
+        System.out.println("hasNext");
         AntlrTokenSequence instance = sequence("lexer");
         assertTrue(instance.hasNext());
         instance.next();
@@ -130,9 +139,9 @@ public class AntlrTokenSequenceTest {
     @Test
     public void testGetOffset1() {
         AntlrTokenSequence instance = sequence("/* */lexer");
-        instance.seekTo(7);
+        instance.seekTo("/* */le".length());
         assertTrue(instance.hasNext());
-        assertEquals(5, instance.getOffset());
+        assertEquals("/* */".length(), instance.getOffset());
         instance.previous();
         assertEquals(0, instance.getOffset());
     }
@@ -143,7 +152,7 @@ public class AntlrTokenSequenceTest {
         assertTrue(instance.hasNext());
         instance.next(DEFAULT_CHANNEL).ifPresent((t) -> assertEquals("lexer", t.getText()));
         instance.next(DEFAULT_CHANNEL).ifPresent((t) -> assertEquals("grammar", t.getText()));
-        assertFalse(instance.hasNext());        
+        assertFalse(instance.hasNext());
     }
 
     @Test
@@ -153,10 +162,10 @@ public class AntlrTokenSequenceTest {
         assertFalse(instance.hasNext());
         instance.previous(DEFAULT_CHANNEL).ifPresent((t) -> assertEquals("grammar", t.getText()));
         instance.previous(DEFAULT_CHANNEL).ifPresent((t) -> assertEquals("lexer", t.getText()));
-        assertTrue(instance.hasPrevious());        
+        assertTrue(instance.hasPrevious());
     }
 
     private AntlrTokenSequence sequence(String s) {
-        return new AntlrTokenSequence(new ANTLRv4Lexer(CharStreams.fromString(s)));
+        return new AntlrTokenSequence(new DummyLexer(CharStreams.fromString(s)));
     }
 }

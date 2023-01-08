@@ -131,7 +131,7 @@ public class DDRegistryParser implements Iterator {
 		    int in = path.indexOf(':');
 		    if (in != -1) {
 			String name = path.substring(in+1);
-			path = this.getDDNameValue(cur, name).toString();;
+			path = this.getDDNameValue(cur, name).toString();
 			path = cur.getRegistry().getName(path);
 		    } else {
 			path = cur.getRegistry().getName(cur);

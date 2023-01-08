@@ -327,6 +327,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         fileInfoCheckBox.setEnabled(tbSummary.isSelected());
 
         searchCriteriaPanel.setVisible(criteriaVisible);
+        bSearch.setVisible(criteriaVisible);
         expandCriteriaButton.setIcon(criteriaVisible ? ICON_EXPANDED : ICON_COLLAPSED);
         if (criteria.getLimit() <= 0) {
             criteria.setLimit(SearchExecutor.UNLIMITTED);
@@ -600,9 +601,10 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
 }//GEN-LAST:event_fileInfoCheckBoxActionPerformed
 
     private void expandCriteriaButtonActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expandCriteriaButtonActionPerformed
-        searchCriteriaPanel.setVisible(!searchCriteriaPanel.isVisible());
-        expandCriteriaButton.setIcon(searchCriteriaPanel.isVisible() ? ICON_EXPANDED : ICON_COLLAPSED);
-        criteriaVisible = searchCriteriaPanel.isVisible();
+        criteriaVisible = !searchCriteriaPanel.isVisible();
+        searchCriteriaPanel.setVisible(criteriaVisible);
+        bSearch.setVisible(criteriaVisible);
+        expandCriteriaButton.setIcon(criteriaVisible ? ICON_EXPANDED : ICON_COLLAPSED);
     }//GEN-LAST:event_expandCriteriaButtonActionPerformed
 
     private void cmbFilterKindActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFilterKindActionPerformed

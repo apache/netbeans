@@ -1190,6 +1190,13 @@ public class JavacParser extends Parser {
                                new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
                     return SourceLevelUtils.JDK1_8;
                 }
+                if (source.compareTo(SourceLevelUtils.JDK15) >= 0 &&
+                    !hasResource("java/lang/Record", new ClassPath[] {moduleBoot}, new ClassPath[] {moduleCompile, moduleAllUnnamed}, new ClassPath[] {srcClassPath})) { //NOI18N
+                    LOGGER.log(warnLevel,
+                               "Even though the source level of {0} is set to: {1}, java.lang.Record cannot be found on the system module path: {2}\n", //NOI18N
+                               new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
+                    return SourceLevelUtils.JDK14;
+                }
                 return source;
             }
         }

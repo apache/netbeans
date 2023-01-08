@@ -47,7 +47,7 @@ final class GraalContext implements ScriptContext {
     private SimpleBindings bindings;
     private boolean allowAllAccess;
 
-    // BEGIN: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
+    // @start region="SANDBOX"
     private static final HostAccess SANDBOX = HostAccess.newBuilder().
             allowPublicAccess(true).
             allowArrayAccess(true).
@@ -59,7 +59,7 @@ final class GraalContext implements ScriptContext {
             denyAccess(Proxy.class).
             denyAccess(Object.class, false).
             build();
-    // END: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
+    // @end region="SANDBOX"
 
     GraalContext(Bindings globals) {
         this.globals = globals;

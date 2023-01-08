@@ -583,7 +583,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             File tmpFolder = Places.getCacheDirectory();
             // see also issue #250365
             String noSpaceLeftMsg = null;
-            if(e.getMessage().contains("No space left on device")) {
+            if(e.getMessage() != null && e.getMessage().contains("No space left on device")) {
                 noSpaceLeftMsg = Bundle.MSG_NoSpace(tmpFolder.getAbsolutePath(), repo.getName());
             }
             
@@ -1275,10 +1275,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<NBVersionInfo> findBySHA1(final String sha1, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
-        BooleanQuery bq = new BooleanQuery.Builder()
-                .add(new BooleanClause((setBooleanRewrite(constructQuery(MAVEN.SHA1, sha1))), BooleanClause.Occur.SHOULD))
-                .build();
         iterate(repos, (RepositoryInfo repo, IndexingContext context) -> {
+            BooleanQuery bq = new BooleanQuery.Builder()
+                    .add(new BooleanClause((setBooleanRewrite(constructQuery(MAVEN.SHA1, sha1))), BooleanClause.Occur.SHOULD))
+                    .build();
             IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), MAX_RESULT_COUNT);
             if (response != null) {
                 try {
@@ -1688,21 +1688,6 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
 
     private void storeGroupCache(RepositoryInfo repoInfo, IndexingContext ic) throws IOException {
-        // MINDEXER-157: After import all groups and root groups are inverted in the IndexingContext
-        Set<String> allGroups = ic.getAllGroups();
-        Set<String> rootGroups = ic.getRootGroups();
-        if(rootGroups.size() > allGroups.size()) {
-            // Inversion - allGroups should always have the same size as rootGroups or be larger
-            ic.setAllGroups(rootGroups);
-            ic.setRootGroups(allGroups);
-        } else if (rootGroups.size() == allGroups.size()) {
-            // Inversion if any groupId in rootGroups contains a dot (so is not a root id)
-            boolean inversion = rootGroups.stream().anyMatch(s -> s.contains("."));
-            if (inversion) {
-                ic.setAllGroups(rootGroups);
-                ic.setRootGroups(allGroups);
-            }
-        }
 
         Path indexDir = getIndexDirectory(repoInfo).toPath();
         Path tempAllCache = Files.createTempFile(indexDir, GROUP_CACHE_ALL_PREFIX, GROUP_CACHE_ALL_SUFFIX);

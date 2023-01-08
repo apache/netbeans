@@ -189,6 +189,11 @@ import static org.openide.util.test.MockLookup.setLookup;
  */
 public abstract class CslTestBase extends NbTestCase {
 
+    static {
+        // testing performance: set scanner update delay to 0
+        System.setProperty(PathRegistry.class.getName()+".FIRER_EVT_COLLAPSE_WINDOW", "0");
+    }
+
     public CslTestBase(String testName) {
         super(testName);
     }
@@ -3040,7 +3045,7 @@ public abstract class CslTestBase extends NbTestCase {
                 completionResult.insert(proposal);
                 completionResult.afterInsert(proposal);
 
-                String fileContent = doc.getText(0, doc.getLength());;
+                String fileContent = doc.getText(0, doc.getLength());
                 assertFileContentsMatches(file, fileContent, false, ".ccresult");
             }
         });

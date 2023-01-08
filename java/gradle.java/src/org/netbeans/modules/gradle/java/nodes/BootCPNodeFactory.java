@@ -288,7 +288,7 @@ public class BootCPNodeFactory implements NodeFactory {
         public void stateChanged(ChangeEvent e) {
             this.fireNameChange(null,null);
             this.fireDisplayNameChange(null,null);
-            ((CPChildren) getChildren()).addNotify();;
+            ((CPChildren) getChildren()).addNotify();
         }
 
 

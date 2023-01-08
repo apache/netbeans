@@ -180,4 +180,19 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
         checkDeclaration(TEST_BASE + "Annotations.groovy",
                 "    @Annot^ation public String method() {}", "Annotation.java", 30);
     }
+
+    public void testGroovyClassInner1() throws Exception {
+        checkDeclaration(TEST_BASE + "ClassWithInner.groovy",
+                "            this.^x = null", "ClassWithInner.groovy", 96);
+    }
+
+    public void testGroovyClassInner2() throws Exception {
+        checkDeclaration(TEST_BASE + "ClassWithInner.groovy",
+                "            ^y.isEmpty()", "ClassWithInner.groovy", 54);
+    }
+
+    public void testGroovyClassInner3() throws Exception {
+        checkDeclaration(TEST_BASE + "ClassWithInner.groovy",
+                "        this.^x.isNumber()", "ClassWithInner.groovy", 35);
+    }
 }

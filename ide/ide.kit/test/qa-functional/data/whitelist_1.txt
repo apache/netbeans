@@ -3398,6 +3398,7 @@ org.netbeans.modules.j2ee.ddloaders.client.DDChangeListener
 org.netbeans.modules.j2ee.ddloaders.common.DD2beansDataObject
 org.netbeans.modules.j2ee.ddloaders.common.xmlutils.XMLJ2eeDataObject
 org.netbeans.modules.j2ee.ddloaders.ejb.DDChangeListener
+org.netbeans.modules.j2ee.ddloaders.ejb.EjbJar40DataLoader
 org.netbeans.modules.j2ee.ddloaders.ejb.EjbJar30DataLoader
 org.netbeans.modules.j2ee.ddloaders.ejb.EjbJarDataLoader
 org.netbeans.modules.j2ee.ddloaders.multiview.DDMultiViewDataObject
@@ -3405,6 +3406,9 @@ org.netbeans.modules.j2ee.ddloaders.multiview.EjbJarMultiViewDataObject
 org.netbeans.modules.j2ee.ddloaders.web.DDDataLoader
 org.netbeans.modules.j2ee.ddloaders.web.DDDataObject
 org.netbeans.modules.j2ee.ddloaders.web.DDWeb25DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWeb30DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWeb40DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWeb50DataLoader
 org.netbeans.modules.j2ee.ddloaders.web.event.DDChangeListener
 org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 org.netbeans.modules.j2ee.deployment.impl.Install

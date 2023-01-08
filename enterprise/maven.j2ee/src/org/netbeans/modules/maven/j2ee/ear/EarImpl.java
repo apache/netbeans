@@ -258,6 +258,9 @@ public class EarImpl implements EarImplementation, EarImplementation2,
     @Override
     public String getModuleVersion() {
         Profile prf = getJ2eeProfile();
+        if (prf == Profile.JAKARTA_EE_9_1_FULL || prf == Profile.JAKARTA_EE_9_FULL) return Application.VERSION_9;
+        if (prf == Profile.JAKARTA_EE_8_FULL || prf == Profile.JAVA_EE_8_FULL) return Application.VERSION_8;
+        if (prf == Profile.JAVA_EE_7_FULL) return Application.VERSION_7;
         if (prf == Profile.JAVA_EE_6_FULL) return Application.VERSION_6;
         if (prf == Profile.JAVA_EE_5) return Application.VERSION_5;
         return Application.VERSION_1_4;
@@ -384,6 +387,10 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         @SuppressWarnings("unchecked")
         List<Dependency> deps = mp.getRuntimeDependencies();
         String fileNameMapping = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_EAR, "fileNameMapping", "ear", null); //NOI18N
+        if (fileNameMapping == null) {
+            // EAR maven plugin property was renamed from fileNameMapping to outputFileNameMapping in version 3.0.0
+            fileNameMapping = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_EAR, "outputFileNameMapping", "ear", null); //NOI18N
+        }
         if (fileNameMapping == null) {
             fileNameMapping = "standard"; //NOI18N
         }

@@ -34,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.css.lib.api.CssParserResult;
@@ -54,7 +55,6 @@ import org.netbeans.modules.web.common.api.WebUtils;
 import org.netbeans.modules.web.inspect.PageInspectorImpl;
 import org.netbeans.modules.web.inspect.PageModel;
 import org.netbeans.spi.project.ActionProvider;
-import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -139,7 +139,7 @@ public abstract class CssStylesPanelProviderImpl extends JPanel implements CssSt
         noStylesLabel.setHorizontalAlignment(SwingConstants.CENTER);
         noStylesLabel.setVerticalAlignment(SwingConstants.CENTER);
         noStylesLabel.setEnabled(false);
-        noStylesLabel.setBackground(new BeanTreeView().getViewport().getView().getBackground());
+        noStylesLabel.setBackground(UIManager.getColor("Tree.background"));
         noStylesLabel.setOpaque(true);
     }
 

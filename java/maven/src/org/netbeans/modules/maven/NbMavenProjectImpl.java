@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -69,12 +70,14 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
+import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.configurations.ProjectProfileHandlerImpl;
@@ -82,6 +85,7 @@ import org.netbeans.modules.maven.cos.CopyResourcesOnSave;
 import org.netbeans.modules.maven.debug.MavenJPDAStart;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
+import org.netbeans.modules.maven.execute.ActionToGoalUtils;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.problems.ProblemReporterImpl;
@@ -139,6 +143,7 @@ public final class NbMavenProjectImpl implements Project {
                 if (hardReferencingMavenProject) {
                     hardRefProject = prj;
                 }
+                projectVariants.clear();
             }
             ACCESSOR.doFireReload(watcher);
         }
@@ -424,6 +429,53 @@ public final class NbMavenProjectImpl implements Project {
     }
     
     /**
+     * Variants of the projects, possibly other than the ones with the
+     * <b>active configuration</b>
+     */
+    private Map<ProjectActionContext, Reference<MavenProject>> projectVariants = new WeakHashMap<>();
+    
+    public @NonNull MavenProject getEvaluatedProject(ProjectActionContext ctx) {
+        if (ctx == null) {
+            return getOriginalMavenProject();
+        }
+        ProjectActionContext stripped = 
+                ProjectActionContext.newBuilder(ctx.getProject())
+                    .withProfiles(ctx.getProfiles())
+                    .withProperties(ctx.getProperties())
+                    .forProjectAction(ctx.getProjectAction())
+                    .context();
+        MavenProject result;
+        
+        synchronized (this) {
+            Reference<MavenProject> ref = projectVariants.get(stripped);
+            if (ref != null) {
+                result = ref.get();
+                if (result != null) {
+                    return result;
+                } else {
+                    projectVariants.remove(stripped);
+                }
+            }
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Loading evaluated project. Action = {0}, properties = {1}, profiles = {2}",
+                        new Object[] { stripped.getProjectAction(), stripped.getProperties(), stripped.getProfiles() });
+            }
+        }
+        RunConfig runConf = null;
+        if (ctx != null && ctx.getProjectAction() != null) {
+            runConf = ActionToGoalUtils.createRunConfig(ctx.getProjectAction(), this, ctx.getConfiguration(), Lookup.EMPTY);
+        }
+        MavenProject newproject = MavenProjectCache.loadMavenProject(this.getPOMFile(), ctx, runConf);
+        synchronized (this) {
+            Reference<MavenProject> ref = projectVariants.get(stripped);
+            if (ref == null || ref.get() == null) {
+                projectVariants.put(stripped, new SoftReference<>(newproject));
+            }
+        }
+        return newproject;
+    }
+    
+    /**
      * a marginally unreliable, non blocking method for figuring if the model is loaded or not.
      * @return 
      */
@@ -465,6 +517,7 @@ public final class NbMavenProjectImpl implements Project {
             + "Please file a bug report with details about your project and the IDE's log file.\n\n"
     })
     private @NonNull MavenProject loadOriginalMavenProject(boolean reload) {
+        LOG.log(Level.FINE, "Loading original project: {0}", getPOMFile());
         MavenProject newproject;
         try {
             synchronized(MODEL_LOCK) {
@@ -473,6 +526,7 @@ public final class NbMavenProjectImpl implements Project {
             newproject = MavenProjectCache.getMavenProject(this.getPOMFile(), reload);
             if (newproject == null) { //null when no pom.xml in project folder..
                 newproject = MavenProjectCache.getFallbackProject(projectFile);
+                LOG.log(Level.FINE, "Project {0} going to fallback, with packaging: {1}", new Object[] { getPOMFile(), newproject.getPackaging() });
             }
             final MavenExecutionResult res = MavenProjectCache.getExecutionResult(newproject);
             final MavenProject np = newproject;
@@ -923,8 +977,10 @@ public final class NbMavenProjectImpl implements Project {
             String newPackaging = packaging != null ? packaging : NbMavenProject.TYPE_JAR;
             List<Lookup> lookups = new ArrayList<>();
             List<String> old = currentIds;
+            LOG.log(Level.FINE, "Watcher is: {0}, packaging is: {1}", new Object[] { watcher, newPackaging });
             if (watcher != null) {
                 newPackaging = watcher.getPackagingType(); 
+                LOG.log(Level.FINE, "Watcher {0} returned packacing: {1}", new Object[] { watcher, newPackaging });
                 if (newPackaging == null) {
                     newPackaging = NbMavenProject.TYPE_JAR;
                 }
@@ -956,6 +1012,8 @@ public final class NbMavenProjectImpl implements Project {
                     }
                     currentIds = newComponents;
                 }
+                LOG.log(Level.FINE, "Composing lookups for {0}, packaging: {1}, lookups: {2}: ", 
+                        new Object[] { watcher.getMavenProject().getFile(), newPackaging, newComponents });
                 setLookups(lookups.toArray(new Lookup[lookups.size()]));
             }
         }

@@ -60,6 +60,7 @@ import org.openide.util.Utilities;
  */
 public final class GradleCommandLine implements Serializable {
 
+    private static final String GRADLE_PROJECT_PROPERTY = "gradle-project"; //NOI18N
     private static final Logger LOGGER = Logger.getLogger(GradleCommandLine.class.getName());
     private static final String PROP_JVMARGS = "org.gradle.jvmargs"; // NOI18N
     /**
@@ -146,6 +147,7 @@ public final class GradleCommandLine implements Serializable {
         REFRESH_KEYS(PARAM, GradleVersionRange.from("6.2"), "--refresh-keys"),
         RERUN_TASKS(PARAM, "--rerun-tasks"),
         SCAN(PARAM, GradleVersionRange.from("4.3"), "--scan"),
+        SHOW_VERSION(PARAM, GradleVersionRange.from("7.5"), "-V", "--show-version"),
         STACKTRACE(PARAM, "-s", "--stacktrace"),
         STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
         STATUS(UNSUPPORTED, "--status"),

@@ -58,11 +58,13 @@ public final class GradleFiles implements Serializable {
         PROJECT_PROPERTIES,
         ROOT_PROPERTIES,
         /** @since 2.4 */
-        BUILD_SRC;
+        BUILD_SRC,
+        /** @since 2.25 */
+        VERSION_CATALOG;
 
         public static final Set<Kind> SCRIPTS = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, BUILD_SRC);
         public static final Set<Kind> PROPERTIES = EnumSet.of(USER_PROPERTIES, PROJECT_PROPERTIES, ROOT_PROPERTIES);
-        public static final Set<Kind> PROJECT_FILES = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, PROJECT_PROPERTIES, ROOT_PROPERTIES);
+        public static final Set<Kind> PROJECT_FILES = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, VERSION_CATALOG, PROJECT_PROPERTIES, ROOT_PROPERTIES);
     }
 
     private static final Logger LOG = Logger.getLogger(GradleFiles.class.getName());
@@ -73,6 +75,8 @@ public final class GradleFiles implements Serializable {
     public static final String BUILD_FILE_NAME_KTS    = "build.gradle.kts"; //NOI18N
     public static final String GRADLE_PROPERTIES_NAME = "gradle.properties"; //NOI18N
     public static final String WRAPPER_PROPERTIES     = "gradle/wrapper/gradle-wrapper.properties"; //NOI18N
+    /** @since 2.25 */
+    public static final String VERSION_CATALOG        = "gradle/libs.versions.toml"; //NOI18N
 
     final File projectDir;
     final boolean knownProject;
@@ -216,7 +220,7 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isRootProject() {
-        return (buildScript != null) && rootDir.equals(projectDir);
+        return isProject() && rootDir.equals(projectDir);
     }
 
     public boolean isSubProject() {
@@ -300,10 +304,11 @@ public final class GradleFiles implements Serializable {
                     return new File(projectDir, GRADLE_PROPERTIES_NAME);
                 case ROOT_PROPERTIES:
                     return new File(rootDir, GRADLE_PROPERTIES_NAME);
-                case USER_PROPERTIES: {
+                case USER_PROPERTIES: 
                     File guh = GradleSettings.getDefault().getGradleUserHome();
                     return new File(guh, GRADLE_PROPERTIES_NAME);
-                }
+                case VERSION_CATALOG:
+                    return new File(rootDir, VERSION_CATALOG);
                 case BUILD_SRC:
                     return new File(rootDir, "buildSrc"); //NOI18N
                 default:

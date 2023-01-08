@@ -53,6 +53,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
+import org.netbeans.modules.java.openjdk.common.BuildUtils.ExtraMakeTargets;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.netbeans.modules.java.openjdk.project.Settings;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -170,9 +171,17 @@ public class ActionProviderImpl implements ActionProvider {
                         }
 
                         if (toRun != null) {
+                            String[] extraMakeTarget;
+                            switch (inferTestType(prj)) {
+                                case JDK:
+                                    extraMakeTarget = new String[] {"build-test-jdk-jtreg-native"};
+                                    break;
+                                default:
+                                    extraMakeTarget = new String[0];
+                            }
                             final CountDownLatch wait = new CountDownLatch(1);
                             final boolean[] state = new boolean[1];
-                            targetContext = Lookups.singleton(new ActionProgress() {
+                            targetContext = Lookups.fixed(new ActionProgress() {
                                 @Override
                                 protected void started() {
                                     state[0] = true;
@@ -181,6 +190,12 @@ public class ActionProviderImpl implements ActionProvider {
                                 public void finished(boolean success) {
                                     state[0] = success;
                                     wait.countDown();
+                                }
+                            },
+                            new ExtraMakeTargets() {
+                                @Override
+                                public String[] getExtraMakeTargets() {
+                                    return extraMakeTarget;
                                 }
                             });
                             prjAP.invokeAction(toRun, targetContext);
@@ -224,9 +239,10 @@ public class ActionProviderImpl implements ActionProvider {
                     options.add(jtregReport.getAbsolutePath());
                     options.add("-xml:verify");
                     options.add("-javacoptions:-g");
+                    File buildDir = BuildUtils.getBuildTargetDir(file);
+                    options.add("-vmoption:-Djava.library.path=" + buildDir.getAbsolutePath() + "/support/test/jdk/jtreg/native/lib/");
                     Set<File> toRefresh = new HashSet<>();
                     if (hasXPatch(targetJavaHome)) {
-                        File buildDir = BuildUtils.getBuildTargetDir(file);
                         CoverageSupport covSupp = Lookup.getDefault().lookup(CoverageSupport.class);
                         CoverageSupport.Result covResult = covSupp != null ? covSupp.coverage(jtregOutput, buildDir, io.getOut()) : null;
                         if (covResult != null) {
@@ -662,6 +678,20 @@ public class ActionProviderImpl implements ActionProvider {
         }
 
         return false;
+    }
+
+    private static TestType inferTestType(Project prj) {
+        switch (prj.getProjectDirectory().getNameExt()) {
+            case "java.base": return TestType.JDK;
+            case "java.compiler": return TestType.LANGTOOLS;
+            default: return TestType.OTHER;
+        }
+    }
+
+    static enum TestType {
+        JDK,
+        LANGTOOLS,
+        OTHER;
     }
 
     private static final class StopAction extends AbstractAction {

@@ -194,11 +194,11 @@ public class BrowserUtils {
         return new TreePath(p.toArray());
     }
     
-    public static void restoreState(final JTreeTable ttable, List paths, TreePath selected) {
+    public static void restoreState(final JTreeTable ttable, List<TreePath> paths, TreePath selected) {
         if (paths != null) {
             JTree tree = ttable.getTree();
             HeapWalkerNode root = (HeapWalkerNode)tree.getModel().getRoot();
-            for (Object path : paths) ensurePathComputed(root, (TreePath)path, new HashSet());
+            for (TreePath path : paths) ensurePathComputed(root, (TreePath)path, new HashSet());
             ttable.setup(paths, selected);
         }
     }

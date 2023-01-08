@@ -26,6 +26,8 @@
             <file name="general-node-commands.instance">
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
                 <attr name="action:org.openide.actions.DeleteAction" stringvalue="Edit"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.CloudRefresh" stringvalue="Tools"/>
             </file>
             <file name="database-connections-commands.instance">
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
@@ -34,12 +36,23 @@
                 <attr name="action:netbeans.db.explorer.action.Refresh" stringvalue="Database"/>
                 <attr name="action:netbeans.db.explorer.action.makepreferred" stringvalue="Database"/>
             </file>
+            <file name="foundProjects-commands.instance">
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddRepository" stringvalue="Tools"/>
+            </file>
             <file name="cloud-resources-commands.instance">
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.CloudRefresh" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddToProject" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddRepository" stringvalue="Tools"/>
             </file>
+        </folder>
+        <folder name="AutoupdateType">
+            <file name="82pluginportal-update-provider.instance_hidden"/>
+            <file name="pluginportal-update-provider.instance_hidden"/>
         </folder>
     </folder>
     <folder name="Explorers">
@@ -49,15 +62,12 @@
         <folder name="cloud.resources">
             <file name="cloud-cookies.contextValues" url="cloud-cookies.contextValues"/>
         </folder>
+        <folder name="foundProjects">
+            <file name="project-cookies.contextValues" url="project-cookies.contextValues"/>
+        </folder>
     </folder>
     <folder name="Debugger">
         <file name="org-netbeans-modules-debugger-jpda-ui-CurrentThreadAnnotationListener.instance_hidden"/>
-    </folder>
-    <folder name="Services">
-        <folder name="AutoupdateType">
-            <file name="82pluginportal-update-provider.instance_hidden"/>
-            <file name="pluginportal-update-provider.instance_hidden"/>
-        </folder>
     </folder>
     <folder name="Templates">
         <folder name="Classes">

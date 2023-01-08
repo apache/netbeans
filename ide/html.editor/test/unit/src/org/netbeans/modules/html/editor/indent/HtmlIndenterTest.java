@@ -183,7 +183,7 @@ public class HtmlIndenterTest extends TestBase2 {
     }
 
     public void testFormattingHTML07() throws Exception {
-        // #198659
+        // #198659 - checks that indention works without assertion in MarkupAbstractIndenter
         reformatFileContents("testfiles/simple07.html",new IndentPrefs(4,4));
     }
 

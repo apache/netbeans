@@ -252,6 +252,11 @@ public final class GsfUtilities {
     }
 
     /**
+     * see org.openide.text.DataEditorSupport#BIG_FILE_THRESHOLD_MB
+     */
+    private static final long BIG_FILE_THRESHOLD_MB = Integer.getInteger("org.openide.text.big.file.size", 5) * 1024 * 1024;
+
+    /**
      * Load the document for the given fileObject.
      * @param fileObject the file whose document we want to obtain
      * @param openIfNecessary If true, block if necessary to open the document. If false, will only return the
@@ -275,7 +280,7 @@ public final class GsfUtilities {
             // (see issue http://www.netbeans.org/issues/show_bug.cgi?id=148702 )
             // but for many cases, the user probably doesn't want really large files as indicated
             // by the skipLarge parameter).
-            if (fileObject.getSize () > 1024 * 1024) {
+            if (fileObject.getSize () > BIG_FILE_THRESHOLD_MB) {
                 return null;
             }
         }

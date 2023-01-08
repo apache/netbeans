@@ -54,6 +54,7 @@ public class TomcatWebModuleNode extends AbstractNode {
         getCookieSet().add(module);
     }
     
+    @Override
     public Action[] getActions(boolean context){
         TomcatManager tm = (TomcatManager)module.getDeploymentManager();
         java.util.List actions = new LinkedList();
@@ -66,25 +67,28 @@ public class TomcatWebModuleNode extends AbstractNode {
         }
         actions.add(null);
         actions.add(SystemAction.get(UndeployAction.class));
-        return (SystemAction[])actions.toArray(new SystemAction[actions.size()]);
+        return (SystemAction[])actions.toArray(new SystemAction[0]);
     }
     
     
+    @Override
     public Image getIcon(int type) {
         return UISupport.getIcon(ServerIcon.WAR_ARCHIVE);
     }
 
+    @Override
     public Image getOpenedIcon(int type) {
         return getIcon(type);
     }
    
     private String constructName(){
-        if (module.isRunning())
+        if (module.isRunning()) {
             return module.getTomcatModule ().getPath();
-        else
+        } else {
             return module.getTomcatModule ().getPath() + " [" +
-                NbBundle.getMessage(TomcatWebModuleNode.class, "LBL_Stopped")  // NOI18N
-                + "]";
+                    NbBundle.getMessage(TomcatWebModuleNode.class, "LBL_Stopped")  // NOI18N
+                    + "]";
+        }
     }
       
 }

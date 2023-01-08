@@ -37,7 +37,7 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.core.startup.InstalledFileLocatorImpl;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;

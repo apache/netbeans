@@ -1270,7 +1270,7 @@ public class DockerAction {
                 return Endpoint.forSocket(s);
             } else if ("file".equals(realUrl.getProtocol())) {
                 AFUNIXSocket s = AFUNIXSocket.newInstance();
-                AFUNIXSocketAddress sockAdd = new AFUNIXSocketAddress(new File(realUrl.getFile()));
+                AFUNIXSocketAddress sockAdd = AFUNIXSocketAddress.of(new File(realUrl.getFile()));
                 s.connect(sockAdd);
                 return Endpoint.forSocket(s);
             } else {

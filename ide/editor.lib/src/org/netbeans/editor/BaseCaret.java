@@ -1741,7 +1741,7 @@ AtomicLockListener, FoldHierarchyListener {
         }
         JTextComponent c = component;
         int offset = c.viewToModel(new Point(x, y));
-        Rectangle r = null;;
+        Rectangle r = null;
         if (offset >= 0) {
             try {
                 r = c.modelToView(offset);

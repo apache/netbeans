@@ -75,7 +75,7 @@ class GtkToolBarButtonUI extends ButtonUI implements ChangeListener {
         } else if (b.getModel().isPressed()) {
             compositeColor (g, r, Color.BLUE, 0.3f);
         } else if (b.getModel().isSelected()) {
-            compositeColor (g, r, new Color (0, 120, 255), 0.2f);;
+            compositeColor (g, r, new Color (0, 120, 255), 0.2f);
         } 
     }
     

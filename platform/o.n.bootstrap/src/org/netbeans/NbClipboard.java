@@ -350,6 +350,8 @@ implements LookupListener, FlavorListener, AWTEventListener
         if (ev.getID() == WindowEvent.WINDOW_ACTIVATED) {
             if( Utilities.isWindows() ) {
                 systemClipboard.addFlavorListener(this);
+                // Catch up on any events missed while we were away.
+                fireChange();
             }
             anyWindowIsActivated = true;
             if (System.currentTimeMillis() - lastWindowDeactivated < 100 &&

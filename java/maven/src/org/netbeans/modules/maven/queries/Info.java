@@ -69,7 +69,7 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
                             pcs.firePropertyChange(ProjectInformation.PROP_DISPLAY_NAME, null, null);
                         }
                     }
-                };;
+                };
     private final AtomicBoolean prefChangeListenerSet = new AtomicBoolean(false);
     
     private boolean displayNameRunning = false;

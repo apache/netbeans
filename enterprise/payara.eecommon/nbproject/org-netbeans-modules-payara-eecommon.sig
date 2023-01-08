@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11.0
+#Version 2.14.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -763,7 +763,7 @@ hcls ModuleSpy,MonitorInfoListener,MonitorLookupListener
 CLSS public org.netbeans.modules.payara.eecommon.api.JDBCDriverDeployHelper
 cons public init()
 meth public static java.util.List<java.net.URL> getMissingDrivers(java.io.File[],java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource>)
-meth public static javax.enterprise.deploy.spi.status.ProgressObject getProgressObject(java.io.File,java.util.List)
+meth public static javax.enterprise.deploy.spi.status.ProgressObject getProgressObject(java.io.File,java.util.List<java.net.URL>)
 supr java.lang.Object
 hcls JDBCDriversProgressObject
 
@@ -1138,6 +1138,8 @@ CLSS public final org.netbeans.modules.payara.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_1
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_7_0

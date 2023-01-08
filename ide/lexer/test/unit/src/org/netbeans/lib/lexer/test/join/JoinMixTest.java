@@ -23,7 +23,6 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.logging.Level;
 import javax.swing.text.AbstractDocument;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -55,7 +54,7 @@ public class JoinMixTest extends NbTestCase {
     @Override
     protected Level logLevel() {
         return Level.INFO;
-//        return super.logLevel();;
+//        return super.logLevel();
     }
 
     public void testMixedSectionsForward() throws Exception {

@@ -241,3 +241,5 @@
 <link href="${javadoc.docs.org-netbeans-modules-db-core}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-db-core"/>
 <link href="${javadoc.docs.org-netbeans-modules-nativeimage-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-nativeimage-api"/>
 <link href="${javadoc.docs.org-netbeans-api-lsp}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-lsp"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-j2seplatform}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-j2seplatform"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-wsdl-model}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-wsdl-model"/>

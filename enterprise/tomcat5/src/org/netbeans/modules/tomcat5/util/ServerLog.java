@@ -131,14 +131,11 @@ class ServerLog {
     }
 
     public void stop() {
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-
-            public Void run() {
-                synchronized (ServerLog.this) {
-                    service.shutdownNow();
-                }
-                return null;
+        AccessController.doPrivileged( (PrivilegedAction<Void>) () -> {
+            synchronized (ServerLog.this) {
+                service.shutdownNow();
             }
+            return null;
         });
     }
     
@@ -163,12 +160,12 @@ class ServerLog {
             // look for unix file links (e.g. /foo/bar.java:51: 'error msg')
             if (logLine.startsWith("/")) {
                 error = true;
-                int colonIdx = logLine.indexOf(':');
+                int colonIdx = logLine.indexOf(":");
                 if (colonIdx > -1) {
                     path = logLine.substring(0, colonIdx);
                     accessible = true;
                     if (lineLenght > colonIdx) {
-                        int nextColonIdx = logLine.indexOf(':', colonIdx + 1);
+                        int nextColonIdx = logLine.indexOf(":", colonIdx + 1);
                         if (nextColonIdx > -1) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
@@ -188,12 +185,12 @@ class ServerLog {
             else if (lineLenght > 3 && Character.isLetter(logLine.charAt(0))
                         && (logLine.charAt(1) == ':') && (logLine.charAt(2) == '\\')) {
                 error = true;
-                int secondColonIdx = logLine.indexOf(':', 2);
+                int secondColonIdx = logLine.indexOf(":", 2);
                 if (secondColonIdx > -1) {
                     path = logLine.substring(0, secondColonIdx);
                     accessible = true;
                     if (lineLenght > secondColonIdx) {
-                        int thirdColonIdx = logLine.indexOf(':', secondColonIdx + 1);
+                        int thirdColonIdx = logLine.indexOf(":", secondColonIdx + 1);
                         if (thirdColonIdx > -1) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
@@ -213,18 +210,18 @@ class ServerLog {
             //                                 at t.HyperlinkTest$1.run(HyperlinkTest.java:24))
             else if (logLine.startsWith("at ") && lineLenght > 3) {
                 error = true;
-                int parenthIdx = logLine.indexOf('(');
+                int parenthIdx = logLine.indexOf("(");
                 if (parenthIdx > -1) {
                     String classWithMethod = logLine.substring(3, parenthIdx);
-                    int lastDotIdx = classWithMethod.lastIndexOf('.');
+                    int lastDotIdx = classWithMethod.lastIndexOf(".");
                     if (lastDotIdx > -1) {  
-                        int lastParenthIdx = logLine.lastIndexOf(')');
+                        int lastParenthIdx = logLine.lastIndexOf(")");
                         String content = null;
                         if (lastParenthIdx > -1) {
                             content = logLine.substring(parenthIdx + 1, lastParenthIdx);
                         }
                         if (content != null) {
-                            int lastColonIdx = content.lastIndexOf(':');
+                            int lastColonIdx = content.lastIndexOf(":");
                             if (lastColonIdx > -1) {
                                 String lineNum = content.substring(lastColonIdx + 1);
                                 try {
@@ -236,7 +233,7 @@ class ServerLog {
                                 message = prevMessage;
                             }
                         }
-                        int firstDolarIdx = classWithMethod.indexOf('$'); // > -1 for inner classes
+                        int firstDolarIdx = classWithMethod.indexOf("$"); // > -1 for inner classes
                         String className = classWithMethod.substring(0, firstDolarIdx > -1 ? firstDolarIdx : lastDotIdx);
                         path = className.replace('.','/') + ".java"; // NOI18N
                         accessible = globalPathRegistry.findResource(path) != null;

@@ -64,6 +64,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
@@ -132,6 +133,10 @@ public final class NbGradleProjectImpl implements Project {
         public abstract void activate(NbGradleProject watcher);
 
         public abstract void passivate(NbGradleProject watcher);
+
+        public abstract GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy);
+
+        public abstract void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems);
     }
 
     @java.lang.SuppressWarnings("LeakingThisInConstructor")
@@ -265,7 +270,7 @@ public final class NbGradleProjectImpl implements Project {
        synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (! force && c.getQuality().atLeast(aim)) {
                     LOG.log(Level.FINER, "Asked for {0}, got {1} already: ", new Object[] { aim, c.getQuality() });
                     return c;
                 }
@@ -306,7 +311,7 @@ public final class NbGradleProjectImpl implements Project {
         synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (!force && c.getQuality().atLeast(aim)) {
                     return CompletableFuture.completedFuture(c);
                 }
                 if (!force && attemptedQuality.atLeast(aim)) {

@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.javascript2.jsdoc.model;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.modules.javascript2.types.api.Identifier;
 import org.netbeans.modules.javascript2.types.api.Type;
@@ -78,22 +78,20 @@ public class JsDocElementUtils {
      * @return list of {@code Type}s
      */
     public static List<Type> parseTypes(String textToParse, int offset) {
-        List<Type> types = new LinkedList<Type>();
         String text = textToParse.trim();
         if (text.isEmpty()) {
-            return types;
+            return new ArrayList<>();
         }
-        if (text.charAt(0) == '(') {
-            text = text.substring(1);
-            if (text.charAt(text.length() - 1) == ')') {
-                text = text.substring(0, text.length() - 2);
-            }
+        if (text.charAt(0) == '(' && text.charAt(text.length() - 1) == ')') {
+            text = text.substring(1, text.length() - 1);
             text = text.trim();
-        } 
+        }
         String[] typesArray = text.split("[|]"); //NOI18N
+        List<Type> types = new ArrayList<>(typesArray.length);
         for (String string : typesArray) {
-            if (!string.trim().isEmpty()) {
-                types.add(createTypeUsage(string, offset + textToParse.indexOf(string)));
+            String type = string.trim();
+            if (!type.isEmpty()) {
+                types.add(createTypeUsage(type, offset + textToParse.indexOf(type)));
             }
         }
         return types;
@@ -101,7 +99,7 @@ public class JsDocElementUtils {
 
     private static DeclarationElement createDeclarationElement(JsDocElementType elementType, String elementText, int descStartOffset) {
         String type = elementText;
-        int typeOffset = descStartOffset + (elementText.indexOf("{") == -1 ? 0 : elementText.indexOf("{") + 1); //NOI18N
+        int typeOffset = descStartOffset + (!elementText.contains("{") ? 0 : elementText.indexOf("{") + 1); //NOI18N
         if (typeOffset > 0 && elementText.endsWith("}")) { //NOI18N
             type = type.substring(1, type.length() - 1);
             if (type.equals("*")) {
@@ -166,7 +164,7 @@ public class JsDocElementUtils {
                         types = parts[0].trim();
                         process++;
                     } else {
-                        //else return the part containing type  
+                        //else return the part containing type
                         for (String part : parts) {
                             if (part.startsWith("{")) {
                                 curlyEnd = curlyStart + part.length();
@@ -185,7 +183,7 @@ public class JsDocElementUtils {
             if ((curlyStart == 0) && (curlyEnd != -1)) {
                 parts = elementText.substring(Math.min(curlyEnd + 1, elementText.length())).trim().split("[\\s]+");
             } else if (curlyStart > 0) {
-                //use entire text minus the types part to get name and desc 
+                //use entire text minus the types part to get name and desc
                 String typesStr = elementText.substring(curlyStart, Math.min(curlyEnd + 1, elementText.length()));
                 StringBuilder buf = new StringBuilder(elementText);
                 elementText = buf.replace(curlyStart, curlyStart + typesStr.length(), "").toString();
@@ -209,9 +207,9 @@ public class JsDocElementUtils {
                     }
                     while (process < parts.length - 1 && currentPart.charAt(currentPart.length() - 1) != ']') {
                          process++;
-                         currentPart = parts[process].trim();                        
+                         currentPart = parts[process].trim();
                     }
-                    
+
                     if (process < parts.length && currentPart.charAt(currentPart.length() - 1) == ']') {
                         process++;
                     }
@@ -241,11 +239,12 @@ public class JsDocElementUtils {
         }
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     private static int buildNameForString(StringBuilder name, int currentOffset, String[] parts) {
         // TODO - better would be to solve that using lexer
         String nameString = name.toString();
-        if ((nameString.indexOf("\"") != -1 && (nameString.indexOf("\"") == nameString.lastIndexOf("\""))) //NOI18N
-                || (nameString.indexOf("'") != -1 && nameString.indexOf("'") == nameString.lastIndexOf("'"))) { //NOI18N
+        if ((nameString.contains("\"") && (nameString.indexOf("\"") == nameString.lastIndexOf("\""))) //NOI18N
+                || (nameString.contains("'") && nameString.indexOf("'") == nameString.lastIndexOf("'"))) { //NOI18N
             // string with spaces
             boolean endOfString = false;
             while (currentOffset < parts.length && !endOfString) {
@@ -264,12 +263,12 @@ public class JsDocElementUtils {
             boolean result = (type.charAt(type.length() - 1) == '=');
             return result;
         }
-        
+
         public static boolean isMarkedAsOptional(String type) {
             boolean result = (type.charAt(type.length() - 1) == '=');
             return result;
         }
-        
+
         public static String removeSyntax(String type) {
             String result = type;
             if (isMarkedAsOptional(type)) {
@@ -278,5 +277,5 @@ public class JsDocElementUtils {
             return result;
         }
     }
-    
+
 }

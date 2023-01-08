@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import junit.framework.AssertionFailedError;
 import org.junit.Assert;
 import org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
@@ -114,7 +113,7 @@ public class HtmlCompletionTestSupport {
 
         try {
             assertCompletionItemNames(expectedItemsNames, items, type);
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             for (CompletionItem item : items) {
                 System.out.println(((HtmlCompletionItem) item).getItemText());
             }

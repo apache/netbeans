@@ -57,7 +57,7 @@ final class CallHierarchyTopComponent extends TopComponent implements ExplorerMa
     private static final String PREFERRED_ID = "CallHierarchyTopComponent"; // NOI18N
     
     private final ExplorerManager manager;
-    private final ExplorerManager managerCtx = new ExplorerManager();;
+    private final ExplorerManager managerCtx = new ExplorerManager();
     private CallHierarchyModel model;
 
     private CallHierarchyTopComponent() {

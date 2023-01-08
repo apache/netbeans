@@ -87,12 +87,6 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
     public ValidateLayerConsistencyTest(String name) {
         super (name);
     }
-
-    @Override
-    protected int timeOut() {
-        // sometimes can deadlock and then we need to see the thread dump
-        return 1000 * 60 * 10;
-    }
     
     public @Override void setUp() throws Exception {
         clearWorkDir();
@@ -887,6 +881,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
         "EnvironmentProviders/ProfileTypes/Execution/nb-j2ee-deployment.instance",
         "Shortcuts/D-BACK_QUOTE.shadow",
         "Windows2/Components/", // cannot be loaded with a headless toolkit, so we have to skip these for now
+        "Maven/actionTemplate.instance", // template
     };
     private boolean skipFile(FileObject fo) {
         String s = fo.getPath();

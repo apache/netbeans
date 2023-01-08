@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -80,10 +81,12 @@ import org.openide.util.Parameters;
  * @author tomslot
  */
 public final class CodeUtils {
-    public static final String FUNCTION_TYPE_PREFIX = "@fn:";
-    public static final String METHOD_TYPE_PREFIX = "@mtd:";
-    public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:";
+
+    public static final String FUNCTION_TYPE_PREFIX = "@fn:"; // NOI18N
+    public static final String METHOD_TYPE_PREFIX = "@mtd:"; // NOI18N
+    public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:"; // NOI18N
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
+    public static final String ELLIPSIS = "..."; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(CodeUtils.class.getName());
 
     private CodeUtils() {
@@ -286,6 +289,8 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             NullableType nullableType = (NullableType) typeName;
             return NULLABLE_TYPE_PREFIX + extractQualifiedName(nullableType.getType());
+        } else if (typeName instanceof ExpressionArrayAccess) {
+            return extractQualifiedName(((ExpressionArrayAccess) typeName).getExpression());
         } else if (typeName instanceof UnionType) {
             UnionType unionType = (UnionType) typeName;
             StringBuilder sb = new StringBuilder();

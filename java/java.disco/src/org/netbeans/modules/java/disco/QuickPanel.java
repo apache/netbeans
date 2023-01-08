@@ -18,21 +18,53 @@
  */
 package org.netbeans.modules.java.disco;
 
+import eu.hansolo.jdktools.Architecture;
+import eu.hansolo.jdktools.ArchiveType;
+import eu.hansolo.jdktools.Latest;
+import eu.hansolo.jdktools.LibCType;
+import eu.hansolo.jdktools.OperatingSystem;
+import eu.hansolo.jdktools.PackageType;
 import eu.hansolo.jdktools.TermOfSupport;
+import eu.hansolo.jdktools.versioning.VersionNumber;
+import io.foojay.api.discoclient.pkg.Distribution;
+import io.foojay.api.discoclient.pkg.Pkg;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "QuickPanel.searching=Searching...",
+    "QuickPanel.error=No matching JDK found."
+})
 public class QuickPanel extends javax.swing.JPanel {
 
+    private final DefaultComboBoxModel<Distribution> distrosModel = new DefaultComboBoxModel<>();
+    private final SelectPackagePanel parentPanel;
+
+    private Pkg pkg;
+    private boolean ignoreChanges;
+
+    @Deprecated
     public QuickPanel() {
+        this(null);
+    }
+
+    QuickPanel(SelectPackagePanel parentPanel) {
+        this.parentPanel = parentPanel;
         initComponents();
+        distributionComboBox.setRenderer(new DistributionListCellRenderer());
     }
 
     /**
@@ -44,30 +76,38 @@ public class QuickPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel versionLabel = new javax.swing.JLabel();
         versions = new javax.swing.JSlider();
-        autoInstallJDK = new javax.swing.JRadioButton();
-        manualJDK = new javax.swing.JRadioButton();
+        javax.swing.JLabel distributionLabel = new javax.swing.JLabel();
+        distributionComboBox = new javax.swing.JComboBox<>();
+        pkgLabel = new javax.swing.JLabel();
+        pkgInfo = new javax.swing.JLabel();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(versionLabel, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.versionLabel.text")); // NOI18N
 
-        versions.setMaximum(20);
-        versions.setMinimum(8);
+        versions.setMinorTickSpacing(1);
         versions.setPaintLabels(true);
         versions.setPaintTicks(true);
         versions.setSnapToTicks(true);
-        versions.setValue(15);
         versions.setInverted(true);
+        versions.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                versionsStateChanged(evt);
+            }
+        });
 
-        buttonGroup1.add(autoInstallJDK);
-        autoInstallJDK.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(autoInstallJDK, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.autoInstallJDK.text")); // NOI18N
-        autoInstallJDK.setToolTipText(org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.autoInstallJDK.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(distributionLabel, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.distributionLabel.text")); // NOI18N
 
-        buttonGroup1.add(manualJDK);
-        org.openide.awt.Mnemonics.setLocalizedText(manualJDK, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.manualJDK.text")); // NOI18N
-        manualJDK.setToolTipText(org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.manualJDK.toolTipText")); // NOI18N
+        distributionComboBox.setModel(createDistrosModel());
+        distributionComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                distributionComboBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(pkgLabel, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.pkgLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(pkgInfo, "<PKG_INFO>"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -77,38 +117,69 @@ public class QuickPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(versionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE))
+                        .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(autoInstallJDK)
-                            .addComponent(manualJDK))
+                            .addComponent(distributionLabel)
+                            .addComponent(pkgLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pkgInfo)
+                            .addComponent(distributionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(autoInstallJDK)
-                .addGap(12, 12, 12)
-                .addComponent(manualJDK)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(distributionLabel)
+                    .addComponent(distributionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pkgLabel)
+                    .addComponent(pkgInfo))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void distributionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_distributionComboBoxActionPerformed
+        updatePackage();
+    }//GEN-LAST:event_distributionComboBoxActionPerformed
+
+    private void versionsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_versionsStateChanged
+        if (!versions.getValueIsAdjusting()) {
+            updatePackage();
+        }
+    }//GEN-LAST:event_versionsStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JRadioButton autoInstallJDK;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JRadioButton manualJDK;
+    private javax.swing.JComboBox<Distribution> distributionComboBox;
+    private javax.swing.JLabel pkgInfo;
+    private javax.swing.JLabel pkgLabel;
     private javax.swing.JSlider versions;
     // End of variables declaration//GEN-END:variables
+
+    private ComboBoxModel<Distribution> createDistrosModel() {
+        return distrosModel;
+    }
+
+    public void updateDistributions(List<Distribution> distributions, Distribution defaultDist) {
+        ignoreChanges = true;
+        distrosModel.removeAllElements();
+        distributions.stream()
+                .sorted(Comparator.comparing(Distribution::getUiString))
+                .forEachOrdered(distrosModel::addElement);
+        distributionComboBox.setSelectedItem(defaultDist);
+        ignoreChanges = false;
+    }
 
     //The `versions` slider holds *the index* in versionsJDKs and
     //this model holds the actual JDKs and the mapping between
@@ -116,13 +187,15 @@ public class QuickPanel extends javax.swing.JPanel {
 
         private final List<Integer> versionJDKs;
         private final Map<Integer, TermOfSupport> lts;
+        private final int currentJdk;
 
-        private VersionsModel(List<Integer> jdks, Map<Integer, TermOfSupport> lts) {
+        private VersionsModel(List<Integer> jdks, Map<Integer, TermOfSupport> lts, int currentJdk) {
             this.versionJDKs = new ArrayList<>(jdks);
             //quick panel shows only maintained JDKs
             versionJDKs.removeIf(v -> !lts.containsKey(v));
-            versionJDKs.removeIf(v -> v < 8);
+            versionJDKs.removeIf(v -> v < 8 || v > currentJdk);
             this.lts = lts;
+            this.currentJdk = currentJdk;
         }
 
         public int getMinimum() {
@@ -143,14 +216,20 @@ public class QuickPanel extends javax.swing.JPanel {
             Hashtable<Integer, JLabel> labels = new Hashtable<>();
             for (Integer v : versionJDKs) {
                 boolean isLTS = lts.get(v) == TermOfSupport.LTS;
-                String name = LTSes.text(v, lts.get(v));
-                JLabel label = new JLabel(name);
+                JLabel label = new JLabel();
+                StringJoiner info = new StringJoiner(", ", " (", ")");
+                info.setEmptyValue("");
+                if (v == currentJdk) {
+                    info.add("latest");
+                }
                 if (isLTS) {
+                    info.add("LTS");
                     //these decorations do nothing on macOS...
                     Font font = label.getFont();
                     label.setFont(font.deriveFont(font.getStyle() | Font.BOLD));
                     label.setToolTipText("Long Term Support");
                 }
+                label.setText(v.toString() + info.toString());
                 labels.put(versionJDKs.indexOf(v), label);
             }
             return labels;
@@ -160,33 +239,111 @@ public class QuickPanel extends javax.swing.JPanel {
             return versionJDKs.get(index);
         }
 
+        private int indexOf(int version) {
+            return versionJDKs.indexOf(version);
+        }
+
     }
 
     @MonotonicNonNull
     private VersionsModel versionsModel;
 
-    void setVersions(List<Integer> jdks, Map<Integer, TermOfSupport> lts) {
-        versionsModel = new VersionsModel(jdks, lts);
+    void setVersions(List<Integer> jdks, Map<Integer, TermOfSupport> lts, int current) {
+        ignoreChanges = true;
+        versionsModel = new VersionsModel(jdks, lts, current);
         versions.setMaximum(versionsModel.getMaximum());
         versions.setMinimum(versionsModel.getMinimum());
         versions.setLabelTable(versionsModel.createLabels());
         versions.setValue(versionsModel.getDefaultValue());
+        ignoreChanges = false;
     }
 
-    @UIEffect
-    @NonNull
-    QuickSelection getSelectedPackage() {
-        return new QuickSelection(versionsModel.getJDK(versions.getValue()), autoInstallJDK.isSelected());
+    void initFocus() {
+        versions.requestFocusInWindow();
+        updatePackage();
     }
 
-    static class QuickSelection {
+    void switchFocus(Distribution distribution, Integer version) {
+        ignoreChanges = true;
+        if (distribution != null) {
+            distributionComboBox.setSelectedItem(distribution);
+        }
+        if (version != null) {
+            int versionIdx = versionsModel.indexOf(version);
+            if (versionIdx >= 0) {
+                versions.setValue(versionIdx);
+            }
+        }
+        ignoreChanges = false;
+        initFocus();
+    }
 
-        final int version;
-        final boolean zip;
+    Distribution getSelectedDistribution() {
+        return (Distribution) distributionComboBox.getSelectedItem();
+    }
 
-        public QuickSelection(int version, boolean zip) {
-            this.version = version;
-            this.zip = zip;
+    Integer getSelectedVersion() {
+        return versionsModel.getJDK(versions.getValue());
+    }
+
+    Pkg getSelectedPackage() {
+        return pkg;
+    }
+
+    private void updatePackage() {
+
+        if (ignoreChanges) {
+            return;
+        }
+
+        pkg = null;
+        parentPanel.fireValidityChange();
+        pkgInfo.setText(Bundle.QuickPanel_searching());
+
+        Distribution distribution = (Distribution) distributionComboBox.getSelectedItem();
+        VersionNumber version = new VersionNumber(versionsModel.getJDK(versions.getValue()));
+        OperatingSystem operatingSystem = OS.getOperatingSystem();
+        Architecture architecture = OS.getArchitecture();
+        SwingWorker2.submit(() -> {
+            List<Pkg> pkgs = Client.getInstance().getPkgs(distribution,
+                    version,
+                    Latest.AVAILABLE,
+                    operatingSystem,
+                    architecture,
+                    ArchiveType.NONE,
+                    PackageType.JDK,
+                    false,
+                    false);
+            return pkgs.stream()
+                    .filter(p -> validatePackage(operatingSystem, p))
+                    .findFirst();
+        }).then(p -> {
+            if (p.isPresent()) {
+                pkg = p.get();
+                pkgInfo.setText(pkg.getFileName());
+            } else {
+                pkg = null;
+                pkgInfo.setText(Bundle.QuickPanel_error());
+            }
+            parentPanel.fireValidityChange();
+        }).handle(ex -> {
+            Exceptions.printStackTrace(ex);
+            pkg = null;
+            pkgInfo.setText(Bundle.QuickPanel_error());
+        }).execute();
+    }
+
+    private boolean validatePackage(OperatingSystem os, Pkg p) {
+        switch (os) {
+            case MACOS:
+                return ArchiveType.ZIP == p.getArchiveType() || ArchiveType.TAR_GZ == p.getArchiveType();
+            case LINUX:
+                return (ArchiveType.ZIP == p.getArchiveType() || ArchiveType.TAR_GZ == p.getArchiveType())
+                        && (LibCType.MUSL != p.getLibCType());
+            case WINDOWS:
+            default:
+                return ArchiveType.ZIP == p.getArchiveType();
         }
     }
+
 }

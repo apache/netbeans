@@ -77,6 +77,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
@@ -210,16 +211,31 @@ public class TreeFactory {
         return make.at(NOPOS).DefaultCaseLabel();
     }
 
+    public ConstantCaseLabelTree ConstantCaseLabel(ExpressionTree expr) {
+        return make.at(NOPOS).ConstantCaseLabel((JCExpression) expr);
+    }
+
+    public PatternCaseLabelTree PatternCaseLabel(PatternTree pat, ExpressionTree guard) {
+        return make.at(NOPOS).PatternCaseLabel((JCPattern) pat, (JCExpression) guard);
+    }
+
+    public DeconstructionPatternTree DeconstructionPattern(ExpressionTree deconstructor, List<? extends PatternTree> nested, VariableTree var) {
+        ListBuffer<JCPattern> pats = new ListBuffer<>();
+        for (PatternTree t : nested)
+            pats.append((JCPattern)t);
+        return make.at(NOPOS).RecordPattern((JCExpression) deconstructor, pats.toList(), (JCVariableDecl) var);
+    }
+
     public CaseTree Case(ExpressionTree expression, List<? extends StatementTree> statements) {
         return Case(expression != null ? Collections.singletonList(expression) : Collections.emptyList(), statements);
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, List<? extends StatementTree> statements) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions, statements);
+        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), statements);
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, Tree body) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions, body);
+        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), body);
     }
     
     public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, Tree body) {
@@ -904,10 +920,6 @@ public class TreeFactory {
     
     public BindingPatternTree BindingPattern(VariableTree vt) {
         return make.at(NOPOS).BindingPattern((JCVariableDecl) vt);
-    }
-
-    public GuardedPatternTree GuardedPattern(PatternTree pattern, ExpressionTree guard) {
-        return make.at(NOPOS).GuardPattern((JCPattern) pattern, (JCExpression) guard);
     }
 
     public ParenthesizedPatternTree ParenthesizedPattern(PatternTree pattern) {

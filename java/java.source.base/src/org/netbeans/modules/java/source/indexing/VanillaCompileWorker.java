@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -59,6 +61,7 @@ import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -103,6 +106,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -531,6 +535,8 @@ final class VanillaCompileWorker extends CompileWorker {
         Trees trees = Trees.instance(BasicJavacTask.instance(ctx));
         Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
+        Elements el = JavacElements.instance(ctx);
+        boolean hasMatchException = el.getTypeElement("java.lang.MatchException") != null;
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
             private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
@@ -582,7 +588,8 @@ final class VanillaCompileWorker extends CompileWorker {
                 } else {
                     scan(node.getInitializer(), null);
                 }
-                decl.sym.type = decl.type = error2Object(decl.type);
+                decl.type = error2Object(decl.type);
+                decl.sym.type = error2Object(decl.sym.type);
                 clearAnnotations(decl.sym.getMetadata());
                 return null;
             }
@@ -881,6 +888,18 @@ final class VanillaCompileWorker extends CompileWorker {
                     errorFound |= isErroneous(varArgs);
                 }
                 return super.visitMethodInvocation(node, p);
+            }
+
+            @Override
+            public Void visitBindingPattern(BindingPatternTree node, Void p) {
+                errorFound |= !hasMatchException;
+                return super.visitBindingPattern(node, p);
+            }
+
+            @Override
+            public Void visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
+                errorFound |= !hasMatchException;
+                return super.visitDeconstructionPattern(node, p);
             }
 
             @Override

@@ -85,7 +85,7 @@ public class WebProjectGenerator {
             foldersEl = doc.createElementNS(Util.NAMESPACE, "folders"); // NOI18N
             XMLUtil.appendChildElement(data, foldersEl, rootElementsOrder);
         } else {
-            List l = XMLUtil.findSubElements(foldersEl);
+            List<Element> l = XMLUtil.findSubElements(foldersEl);
             for (int i = 0; i < l.size(); i++) {
                 Element e = (Element) l.get(i);
                 Element te = XMLUtil.findElement(e, "type", Util.NAMESPACE);
@@ -106,7 +106,7 @@ public class WebProjectGenerator {
             itemsEl = doc.createElementNS(Util.NAMESPACE, "items"); // NOI18N
             XMLUtil.appendChildElement(viewEl, itemsEl, viewElementsOrder);
         } else {
-            List l = XMLUtil.findSubElements(itemsEl);
+            List<Element> l = XMLUtil.findSubElements(itemsEl);
             for (int i = 0; i < l.size(); i++) {
                 Element e = (Element) l.get(i);
                 if (e.hasAttribute("style")) {

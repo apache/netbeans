@@ -104,6 +104,10 @@ public final class ActionToTaskUtils {
 
     public static ActionMapping getActiveMapping(String action, Project project, Lookup context) {
         GradleExecConfiguration c = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        return getActiveMapping(action, project, c);
+    }
+    
+    public static ActionMapping getActiveMapping(String action, Project project, GradleExecConfiguration c) {
         ConfigurableActionProvider contextProvider = project.getLookup().lookup(ConfigurableActionProvider.class);
         
         if (c == null) {

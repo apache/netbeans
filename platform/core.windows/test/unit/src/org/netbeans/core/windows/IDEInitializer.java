@@ -19,25 +19,9 @@
 
 package org.netbeans.core.windows;
 
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
-import java.util.Enumeration;
-import junit.framework.Assert;
 import org.netbeans.core.startup.MainLookup;
-import org.netbeans.junit.Manager;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.MultiFileSystem;
-import org.openide.filesystems.Repository;
 import org.openide.filesystems.XMLFileSystem;
-import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 
 /**

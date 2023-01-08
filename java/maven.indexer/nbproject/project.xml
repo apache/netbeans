@@ -175,8 +175,8 @@
                 <package>org.netbeans.modules.maven.indexer.spi.impl</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/indexer-core-6.2.0.jar</runtime-relative-path>
-                <binary-origin>external/indexer-core-6.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/indexer-core-6.2.2.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-6.2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/lucene-core-8.11.1.jar</runtime-relative-path>

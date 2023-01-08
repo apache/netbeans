@@ -37,7 +37,6 @@ import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
-import org.openide.filesystems.URLMapper;
 
 /**
  *
@@ -105,12 +104,7 @@ public final class NbBreakpoint {
         boolean isJava = sourceURLLower.endsWith(".java");      // NOI18N
         boolean isGroovy = sourceURLLower.endsWith(".groovy");  // NOI18N
         if (isJava || isGroovy) {
-            LineBreakpoint b;
-            if (isJava) {
-                b = LineBreakpoint.create(sourceURL, line);
-            } else {
-                b = GroovyBreakpointFactory.create(sourceURL, line);
-            }
+            LineBreakpoint b = LineBreakpoint.create(sourceURL, line);
             if (condition != null && !condition.isEmpty()) {
                 b.setCondition(condition);
             }

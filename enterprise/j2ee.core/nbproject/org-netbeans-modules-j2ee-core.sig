@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.40
+#Version 1.43
 
 CLSS public java.lang.Object
 cons public init()
@@ -21,6 +21,8 @@ fld public final static org.netbeans.api.j2ee.core.Profile J2EE_13
 fld public final static org.netbeans.api.j2ee.core.Profile J2EE_14
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_WEB
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_5

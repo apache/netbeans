@@ -48,8 +48,10 @@ import java.io.*;
 import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.schema2beans.Schema2BeansRuntimeException;
 import org.netbeans.modules.tomcat5.AuthorizationException;
 import org.netbeans.modules.tomcat5.util.TomcatProperties;
 
@@ -140,7 +142,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                     ctxPath = "/"+wmfile.getName ();    // NOI18N
                 }
                 else {
-                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ('.'));    // NOI18N
+                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ("."));    // NOI18N
                 }
                 tmId = new TomcatModule (t, ctxPath); // NOI18N
                 command = "deploy?update=true&path="+encodePath(ctxPath)+"&war="+docBase; // NOI18N
@@ -163,7 +165,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                     ctxPath = "/"+wmfile.getName ();    // NOI18N
                 }
                 else {
-                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ('.'));    // NOI18N
+                    ctxPath = "/"+wmfile.getName ().substring (0, wmfile.getName ().lastIndexOf ("."));    // NOI18N
                 }
                 ctxPath = ctx.getAttributeValue ("path");
                 tmId = new TomcatModule (t, ctxPath); // NOI18N
@@ -203,7 +205,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             rp ().post (this, 0, Thread.NORM_PRIORITY);
         } catch (java.io.IOException ioex) {
             pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, cmdType, ioex.getLocalizedMessage (), StateType.FAILED));
-        } catch (RuntimeException e) {
+        } catch (MissingResourceException e) {
             String msg = NbBundle.getMessage(TomcatManagerImpl.class, "MSG_DeployBrokenContextXml");
             pes.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, cmdType, msg, StateType.FAILED));
         }
@@ -217,7 +219,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             try {
                 f = tm.getTomcatProperties().getServerXml();
                 server.write(f);
-            } catch (Exception e) {
+            } catch (IOException | Schema2BeansRuntimeException e) {
                 // cannot save changes
                 pes.fireHandleProgressEvent(tmId, new Status (ActionType.EXECUTE, 
                         CommandType.UNDEPLOY, 
@@ -241,7 +243,9 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
      */
     private boolean removeContextFromServer(Server server, String path) {
         // root web application is specified as an empty string
-        if (path.equals("/")) path = ""; // NOI18N
+        if (path.equals("/")) {
+            path = ""; // NOI18N
+        }
         Service[] service = server.getService();
         if (service.length > 0) {
             Engine engine = service[0].getEngine();
@@ -312,10 +316,9 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             rp ().post (this, 0, Thread.NORM_PRIORITY);
         } catch (java.io.IOException ioex) {
             pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, cmdType, ioex.getLocalizedMessage (), StateType.FAILED));
-        } catch (RuntimeException e) {
+        } catch (MissingResourceException e) {
             String msg = NbBundle.getMessage(TomcatManagerImpl.class, "MSG_DeployBrokenContextXml");
             pes.fireHandleProgressEvent(null, new Status(ActionType.EXECUTE, cmdType, msg, StateType.FAILED));
-            return;
         }
     }
     
@@ -330,7 +333,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             }
             StringBuilder result = new StringBuilder();
             while (st.hasMoreTokens()) {
-                result.append("/").append(URLEncoder.encode(st.nextToken(), "UTF-8")); // NOI18N
+                result.append("/").append(URLEncoder.encode(st.nextToken(), StandardCharsets.UTF_8.name()));
             }
             return result.toString();
         } catch (UnsupportedEncodingException e) {
@@ -349,13 +352,13 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
         tmpContextXml.deleteOnExit();
         if (!docBase.equals (ctx.getAttributeValue ("docBase"))) { //NOI18N
             ctx.setAttributeValue ("docBase", docBase); //NOI18N
-            FileOutputStream fos = new FileOutputStream (tmpContextXml);
-            ctx.write (fos);
-            fos.close ();
+            try (FileOutputStream fos = new FileOutputStream (tmpContextXml)) {
+                ctx.write (fos);
+            }
         }
         // http://www.netbeans.org/issues/show_bug.cgi?id=167139
         URL url = tmpContextXml.toURI().toURL();
-        String ret = URLEncoder.encode(url.toString(), "UTF-8"); // NOI18N
+        String ret = URLEncoder.encode(url.toString(), StandardCharsets.UTF_8.name());
         return ret;
     }
     
@@ -414,7 +417,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 }
             }
         }
-        return (TargetModuleID []) modules.toArray (new TargetModuleID[modules.size ()]);
+        return (TargetModuleID []) modules.toArray (new TargetModuleID[0]);
     }
     
     /** Queries Tomcat server to get JMX beans containing management information
@@ -429,52 +432,62 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
     }
     
     /** JSR88 method. */
+    @Override
     public ClientConfiguration getClientConfiguration (TargetModuleID targetModuleID) {
         return null; // PENDING
     }
     
     /** JSR88 method. */
+    @Override
     public DeploymentStatus getDeploymentStatus () {
         return pes.getDeploymentStatus ();
     }
     
     /** JSR88 method. */
+    @Override
     public TargetModuleID[] getResultTargetModuleIDs () {
         return new TargetModuleID [] { tmId };
     }
     
     /** JSR88 method. */
+    @Override
     public boolean isCancelSupported () {
         return false;
     }
     
     /** JSR88 method. */
+    @Override
     public void cancel () 
     throws OperationUnsupportedException {
         throw new OperationUnsupportedException ("cancel not supported in Tomcat deployment"); // NOI18N
     }
     
     /** JSR88 method. */
+    @Override
     public boolean isStopSupported () {
         return false;
     }
     
     /** JSR88 method. */
+    @Override
     public void stop () throws OperationUnsupportedException {
         throw new OperationUnsupportedException ("stop not supported in Tomcat deployment"); // NOI18N
     }
     
     /** JSR88 method. */
+    @Override
     public void addProgressListener (ProgressListener l) {
         pes.addProgressListener (l);
     }
     
     /** JSR88 method. */
+    @Override
     public void removeProgressListener (ProgressListener l) {
         pes.removeProgressListener (l);
     }
     
     /** Executes one management task. */
+    @Override
     public synchronized void run () {
         LOGGER.log(Level.FINE, command);
         pes.fireHandleProgressEvent (tmId, new Status (ActionType.EXECUTE, cmdType, command /* message */, StateType.RUNNING));
@@ -486,7 +499,6 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
         
         // similar to Tomcat's Ant task
         URLConnection conn = null;
-        InputStreamReader reader = null;
         
         URL urlToConnectTo = null;
 
@@ -555,70 +567,70 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 }
                 // Send the request data (if any)
                 if (istream != null) {
-                    BufferedOutputStream ostream =
-                        new BufferedOutputStream(hconn.getOutputStream(), 1024);
-                    byte buffer[] = new byte[1024];
-                    while (true) {
-                        int n = istream.read(buffer);
-                        if (n < 0) {
-                            break;
+                    try (BufferedOutputStream ostream = new BufferedOutputStream(hconn.getOutputStream(), 1024)) {
+                        byte buffer[] = new byte[1024];
+                        while (true) {
+                            int n = istream.read(buffer);
+                            if (n < 0) {
+                                break;
+                            }
+                            ostream.write(buffer, 0, n);
                         }
-                        ostream.write(buffer, 0, n);
+                        ostream.flush();
                     }
-                    ostream.flush();
-                    ostream.close();
                     istream.close();
                 }
 
                 // Process the response message
-                reader = new InputStreamReader(hconn.getInputStream(), StandardCharsets.UTF_8);
-                retries = -1;
-                StringBuffer buff = new StringBuffer();
-                String error = null;
-                msg = null;
-                boolean first = !command.startsWith ("jmxproxy");   // NOI18N
-                while (true) {
-                    int ch = reader.read();
-                    if (ch < 0) {
-                        output += buff.toString ()+"\n";    // NOI18N
-                        break;
-                    } else if ((ch == '\r') || (ch == '\n')) {
-                        String line = buff.toString();
-                        buff.setLength(0);
-                        LOGGER.log(Level.FINE, line);
-                        if (first) {
-                            // hard fix to accept the japanese localization of manager app
-                            String japaneseOK="\u6210\u529f"; //NOI18N
-                            msg = line;
-                            // see issue #62529
-                            if (line.indexOf("java.lang.ThreadDeath") != -1) { // NOI18N
-                                String warning = NbBundle.getMessage(TomcatManagerImpl.class, "MSG_ThreadDeathWarning");
-                                pes.fireHandleProgressEvent(
-                                    tmId, 
-                                    new Status(ActionType.EXECUTE, cmdType, warning, StateType.RUNNING)
-                                );
-                            } else if (!(line.startsWith("OK -") || line.startsWith(japaneseOK))) { // NOI18N
-                                error = line;
+                try (InputStreamReader reader = new InputStreamReader(hconn.getInputStream(), StandardCharsets.UTF_8)) {
+                    retries = -1;
+                    StringBuffer buff = new StringBuffer();
+                    String error = null;
+                    msg = null;
+                    boolean first = !command.startsWith ("jmxproxy");   // NOI18N
+                    while (true) {
+                        int ch = reader.read();
+                        if (ch < 0) {
+                            output += buff.toString ()+"\n";    // NOI18N
+                            break;
+                        } else if ((ch == '\r') || (ch == '\n')) {
+                            String line = buff.toString();
+                            buff.setLength(0);
+                            LOGGER.log(Level.FINE, line);
+                            if (first) {
+                                // hard fix to accept the japanese localization of manager app
+                                String japaneseOK="\u6210\u529f"; //NOI18N
+                                msg = line;
+                                // see issue #62529
+                                if (line.indexOf("java.lang.ThreadDeath") != -1) { // NOI18N
+                                    String warning = NbBundle.getMessage(TomcatManagerImpl.class, "MSG_ThreadDeathWarning");
+                                    pes.fireHandleProgressEvent(
+                                        tmId, 
+                                        new Status(ActionType.EXECUTE, cmdType, warning, StateType.RUNNING)
+                                    );
+                                } else if (!(line.startsWith("OK -") || line.startsWith(japaneseOK))) { // NOI18N
+                                    error = line;
+                                }
+                                first = false;
                             }
-                            first = false;
+                            output += line+"\n";    // NOI18N
+                        } else {
+                            buff.append((char) ch);
                         }
-                        output += line+"\n";    // NOI18N
-                    } else {
-                        buff.append((char) ch);
+                    }
+                    if (buff.length() > 0) {
+                        LOGGER.log(Level.FINE, buff.toString());
+                    }
+                    if (error != null) {
+                        LOGGER.log (Level.INFO, "TomcatManagerImpl connecting to: " + urlToConnectTo, error); // NOI18N
+                        pes.fireHandleProgressEvent (tmId, new Status (ActionType.EXECUTE, cmdType, error, StateType.FAILED));
+                        failed = true;
+                    }
+                    if (msg == null) {
+                        msg = buff.toString();
                     }
                 }
-                if (buff.length() > 0) {
-                    LOGGER.log(Level.FINE, buff.toString());
-                }
-                if (error != null) {
-                    LOGGER.log (Level.INFO, "TomcatManagerImpl connecting to: " + urlToConnectTo, error); // NOI18N
-                    pes.fireHandleProgressEvent (tmId, new Status (ActionType.EXECUTE, cmdType, error, StateType.FAILED));
-                    failed = true;
-                }
-                if (msg == null) {
-                    msg = buff.toString();
-                }
-            } catch (Exception e) {
+            } catch (IOException | MissingResourceException e) {
                 if (e instanceof IOException && e.getMessage() != null
                         && e.getMessage().contains(Integer.toString(HttpURLConnection.HTTP_BAD_GATEWAY))) {
                     tm.setMisconfiguredProxy(true);
@@ -633,13 +645,6 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 }
                 // throw t;
             } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (java.io.IOException ioe) { // ignore this
-                    }
-                    reader = null;
-                }
                 if (istream != null) {
                     try {
                         istream.close();

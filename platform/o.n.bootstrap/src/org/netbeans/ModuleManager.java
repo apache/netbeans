@@ -932,10 +932,12 @@ public final class ModuleManager extends Modules {
             return;
         }
         for (Module inject : injectList) {
-            Util.err.log(Level.FINER, "Compat: injecting contents of fragment " + inject.getCodeNameBase() + " into " + m.getCodeNameBase());
-            List<File> allJars = inject.getAllJars();
-            // PENDING: shouldn't we add those jars first, so they take precedence ?
-            path.addAll(allJars);
+            if (isOrWillEnable(inject)) {
+                Util.err.log(Level.FINER, "Compat: injecting contents of fragment " + inject.getCodeNameBase() + " into " + m.getCodeNameBase());
+                List<File> allJars = inject.getAllJars();
+                // PENDING: shouldn't we add those jars first, so they take precedence ?
+                path.addAll(allJars);
+            }
         }
     }
 
@@ -1253,6 +1255,34 @@ public final class ModuleManager extends Modules {
     public void enable(Set<Module> modules) throws IllegalArgumentException, InvalidException {
         enable(modules, true);
     }
+    
+    /**
+     * Context of the pending 'enable' operation. Some calls go back to ModuleManager
+     * from other objects, that can't be compatibly passed 'willEnable' info.
+     */
+    static class EnableContext {
+        final List<Module> willEnable;
+
+        public EnableContext(List<Module> willEnable) {
+            this.willEnable = willEnable;
+        }
+    }
+    
+    private final ThreadLocal<EnableContext> enableContext = new ThreadLocal<>();
+    
+    /**
+     * Checks if the module is enabled or WILL be enabled by the current enable operation.
+     * @param m module to check
+     * @return true, if the module is/will enable.
+     */
+    boolean isOrWillEnable(Module m) {
+        if (m.isEnabled()) {
+            return true;
+        }
+        EnableContext ctx = enableContext.get();
+        return ctx != null && ctx.willEnable.contains(m);
+    }
+    
     private void enable(Set<Module> modules, boolean honorAutoloadEager) throws IllegalArgumentException, InvalidException {
         assertWritable();
         Util.err.log(Level.FINE, "enable: {0}", modules);
@@ -1296,15 +1326,16 @@ public final class ModuleManager extends Modules {
 
         ev.log(Events.START_ENABLE_MODULES, toEnable);
         netigso.willEnable(toEnable);
+        try {
+            enableContext.set(new EnableContext(toEnable));
+            doEnable(toEnable);
+        } finally {
+            enableContext.remove();
+        }
+    }
+    
+    private void doEnable(List<Module> toEnable) throws IllegalArgumentException, InvalidException {
         for (;;) {
-            // first connect fragments to their hosts, so classloaders are populated
-            for (Module m: toEnable) {
-                if (m.isEnabled()) {
-                    continue;
-                }
-                // store information from fragment modules for early initialization of hosting classlaoder:
-                attachModuleFragment(m);
-            }
             // Actually turn on the listed modules.
             // List of modules that need to be "rolled back".
             LinkedList<Module> fallback = new LinkedList<Module>();
@@ -1518,7 +1549,14 @@ public final class ModuleManager extends Modules {
                 installer.dispose(m);
                 m.setEnabled(false);
                 m.unregisterInstrumentation();
-                m.classLoaderDown();
+                // do not down classloader for fragments, as they are shared with the
+                // hosting module.
+                if (m.getFragmentHostCodeName() == null) {
+                    m.classLoaderDown();
+                }
+                // release the classloader from the module; it will be created again by
+                // classLoaderUp.
+                m.releaseClassLoader();
             }
             System.gc(); // hope OneModuleClassLoader.finalize() is called...
             System.runFinalization();
@@ -1572,10 +1610,15 @@ public final class ModuleManager extends Modules {
         Collection<Module> fragments = getAttachedFragments(m);
         if (!fragments.isEmpty()) {
             for (Module frag : fragments) {
-                Set<Module> mods = calculateParents(frag);
-                mods.remove(m);
-                res.addAll(mods);
+                if (isOrWillEnable(frag)) {
+                    Set<Module> mods = calculateParents(frag);
+                    res.addAll(mods);
+                }
             }
+            // remove m and m's fragments from parent classloaders, as fragment
+            // jars are merged into m's own classloader already.
+            res.remove(m);
+            res.removeAll(fragments);
         }
         return res;
     }
@@ -1769,7 +1812,9 @@ public final class ModuleManager extends Modules {
         }
         Collection<Module> frags = getAttachedFragments(m);
         for (Module fragMod : frags) {
-            if (! fragMod.isEnabled()) {
+            // do not enable regular fragments unless eager: if something depends on a fragment, it will 
+            // enable the fragment along with normal dependencies.
+            if (fragMod.isEager()) {
                 maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isAutoload() || fragMod.isEager());
             }
         }
@@ -1793,6 +1838,13 @@ public final class ModuleManager extends Modules {
                 continue;
             }
             if (m.isEager()) {
+                if (m.getFragmentHostCodeName() != null) {
+                    Module host = modulesByName.get(m.getFragmentHostCodeName());
+                    if (host == null || (!m.isEnabled() && !willEnable.contains(m))) {
+                        // will not enable if its host is not enabled or will not be enabled
+                        continue;
+                    }
+                }
                 if (couldBeEnabledWithEagers(m, willEnable, new HashSet<Module>())) {
                     // Go for it!
                     found = true;
@@ -1982,6 +2034,15 @@ public final class ModuleManager extends Modules {
     FIND_AUTOLOADS:
         while (it.hasNext()) {
             Module m = it.next();
+            String host = m.getFragmentHostCodeName();
+            if (host != null) {
+                Module theHost = modulesByName.get(host);
+                if (theHost != null && theHost.isEnabled()) {
+                    // will not disable fragment module, as it is merged to an
+                    // enabled host.
+                    continue;
+                }
+            }
             if (m.isAutoload()) {
                 for (Module other: stillEnabled) {
                     Dependency[] dependencies = other.getDependenciesArray();

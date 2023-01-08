@@ -60,11 +60,8 @@
         <token id='T_OPEN_PARENTHESE' start='94' end='95'>
             <text>(</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='95' end='96'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='96' end='105'>
-            <text>Exception</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='95' end='105'>
+            <text>\Exception</text>
         </token>
         <token id='T_VARIABLE' start='106' end='108'>
             <text>$e</text>

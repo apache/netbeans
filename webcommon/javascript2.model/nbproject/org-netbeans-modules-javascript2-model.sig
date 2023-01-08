@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.19
+#Version 1.23
 
 CLSS public abstract com.oracle.js.parser.ir.visitor.NodeVisitor<%0 extends com.oracle.js.parser.ir.LexicalContext>
 cons public init({com.oracle.js.parser.ir.visitor.NodeVisitor%0})
@@ -200,7 +200,7 @@ meth public java.util.Collection<org.netbeans.modules.javascript2.model.api.Inde
 meth public static org.netbeans.modules.javascript2.model.api.Index get(java.util.Collection<org.openide.filesystems.FileObject>)
 meth public static org.netbeans.modules.javascript2.model.api.Index get(org.openide.filesystems.FileObject)
 supr java.lang.Object
-hfds AVERAGE_BASIC_INFO_SIZE,CACHE_INDEX_RESULT_LARGE,CACHE_INDEX_RESULT_SMALL,INDEX_CACHE,INVALIDATE_LISTENER,LOCK,LOG,MAX_CACHE_VALUE_SIZE,MAX_ENTRIES_CACHE_INDEX_RESULT,MAX_FIND_PROPERTIES_RECURSION,PROPERTIES_PATTERN,QUERY_STATS,READ_LOCK,WRITE_LOCK,cacheHit,cacheMiss,querySupport,updateCache
+hfds AVERAGE_BASIC_INFO_SIZE,CACHE_INDEX_RESULT_LARGE,CACHE_INDEX_RESULT_SMALL,INDEX_CACHE,INVALIDATE_LISTENER,LOCK,LOG,MAX_CACHE_VALUE_SIZE,MAX_ENTRIES_CACHE_INDEX_RESULT,MAX_FIND_PROPERTIES_RECURSION,QUERY_STATS,READ_LOCK,WRITE_LOCK,cacheHit,cacheMiss,querySupport,updateCache
 hcls CacheKey,CacheValue,StatsKey,StatsValue
 
 CLSS public org.netbeans.modules.javascript2.model.api.IndexedElement
@@ -422,7 +422,7 @@ meth public static void changeDeclarationScope(org.netbeans.modules.javascript2.
 meth public static void copyOccurrences(org.netbeans.modules.javascript2.model.api.JsObject,org.netbeans.modules.javascript2.model.api.JsObject)
 meth public static void moveProperty(org.netbeans.modules.javascript2.model.api.JsObject,org.netbeans.modules.javascript2.model.api.JsObject)
 supr java.lang.Object
-hfds CTX_DELIMITERS,GENERATED_ANONYM_PREFIX,GENERATED_FUNCTION_PREFIX,GLOBAL_DIRECTIVE,KNOWN_TYPES,LOG,MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS,deepRA,knownGlobalObjects
+hfds GENERATED_ANONYM_PREFIX,GENERATED_FUNCTION_PREFIX,GLOBAL_DIRECTIVE,KNOWN_TYPES,LOG,MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS,deepRA,knownGlobalObjects
 hcls State
 
 CLSS public final org.netbeans.modules.javascript2.model.api.Occurrence

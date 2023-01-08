@@ -137,12 +137,20 @@ public class YamlKeystrokeHandlerTest extends YamlTestBase {
         insertChar("c^ass", 'l', "cl^ass");
     }
 
+    public void testInsertBracket() throws Exception {
+        insertChar("^", '[', "[^]");
+    }
+
+    public void testDeleteBracket() throws Exception {
+        deleteChar("[^]", "^");
+    }
+
     public void testInsertCurly() throws Exception {
-        insertChar("{^", '{', "{{^}}");
+        insertChar("^", '{', "{^}");
     }
 
     public void testDeleteCurly() throws Exception {
-        deleteChar("{{^}}", "^");
+        deleteChar("{{^}}", "{^}");
     }
 
     public void testInsertSpaceCurly() throws Exception {
@@ -151,6 +159,14 @@ public class YamlKeystrokeHandlerTest extends YamlTestBase {
 
     public void testDeleteSpaceCurly() throws Exception {
         deleteChar("{{ ^ }}", "{{^}}");
+    }
+
+    public void testInsertSpaceBracket() throws Exception {
+        insertChar("[^]", ' ', "[ ^ ]");
+    }
+
+    public void testDeleteSpaceBracket() throws Exception {
+        deleteChar("[ ^ ]", "[^]");
     }
 
     public void testInsertSingleQuote1() throws Exception {
@@ -167,6 +183,10 @@ public class YamlKeystrokeHandlerTest extends YamlTestBase {
 
     public void testInsertSingleQuote4() throws Exception {
         insertChar("foo: ^bar", '\'', "foo: 'bar'^", "bar");
+    }
+
+    public void  testStepSingleQuote() throws Exception {
+        insertChar("foo: '^'", '\'', "foo: ''^");
     }
 
     public void testDeleteSingle1() throws Exception {
@@ -193,6 +213,14 @@ public class YamlKeystrokeHandlerTest extends YamlTestBase {
         insertChar("foo: ^bar", '"', "foo: \"bar\"^", "bar");
     }
 
+    public void testInsertDoubleQuote5() throws Exception {
+        insertChar("foo: \"\\\"^", '"', "foo: \"\\\"\"^");
+    }
+
+    public void testStepDoubleQuote() throws Exception {
+        insertChar("foo: \"^\"", '"', "foo: \"\"^");
+    }
+    
     public void testDeleteDouble1() throws Exception {
         deleteChar("foo: \"^\"", "foo: ^");
     }

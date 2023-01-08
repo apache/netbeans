@@ -32,6 +32,7 @@ package org.netbeans.modules.web.monitor.data;
 
 import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 import org.netbeans.modules.schema2beans.AttrProp;
@@ -91,11 +92,11 @@ public class RequestAttributesOut extends BaseBean {
 	return (Param[])this.getValues(PARAM);
     }
 
-    public Hashtable getHashtable() {
+    public Map<String, String> getHashtable() {
 
 	Param[] attributes =  (Param[])this.getValues(PARAM);
 	int numAttributes = attributes.length;
-	Hashtable ht = new Hashtable(numAttributes);
+	Map<String, String> ht = new Hashtable<>(numAttributes);
 	
 	for(int i=0; i<numAttributes; ++i) {
 	    String name =  attributes[i].getAttributeValue("name");  // NOI18N

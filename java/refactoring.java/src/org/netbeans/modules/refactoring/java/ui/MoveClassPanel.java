@@ -515,6 +515,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
 
                                 @Override
                                 public void run(CompilationController parameter) throws Exception {
+                                    parameter.toPhase(JavaSource.Phase.RESOLVED);
                                     for (ElementHandle<TypeElement> elementHandle : result) {
                                         TypeElement element = elementHandle.resolve(parameter);
                                         if (element != null) {

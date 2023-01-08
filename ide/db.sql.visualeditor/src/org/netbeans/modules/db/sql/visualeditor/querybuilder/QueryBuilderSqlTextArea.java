@@ -395,7 +395,7 @@ public class QueryBuilderSqlTextArea extends JEditorPane
 //     }
     
 //     private void processWords(String str){
-//         StringBuffer wordBuffer = new StringBuffer();;
+//         StringBuffer wordBuffer = new StringBuffer();
 //         stringIsParsed = false;
 //         for ( int i =0; i < str.length(); i++ ) {
 //             char strChar = str.charAt(i);

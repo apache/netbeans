@@ -20,7 +20,6 @@
 package org.netbeans.modules.maven.queries;
 
 import java.util.regex.Matcher;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;

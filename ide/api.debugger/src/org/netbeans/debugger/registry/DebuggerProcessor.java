@@ -66,6 +66,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
     public @Override Set<String> getSupportedAnnotationTypes() {
         return new HashSet<String>(Arrays.asList(
             ActionsProvider.Registration.class.getCanonicalName(),
+            ActionsProvider.Registrations.class.getCanonicalName(),
             DebuggerEngineProvider.Registration.class.getCanonicalName(),
             SessionProvider.Registration.class.getCanonicalName(),
             LazyActionsManagerListener.Registration.class.getCanonicalName(),

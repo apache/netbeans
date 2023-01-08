@@ -35,6 +35,7 @@ import org.netbeans.modules.xml.wsdl.model.WSDLModelFactory;
 import org.netbeans.modules.xml.xam.ModelSource;
 import org.netbeans.modules.xml.xam.spi.Validation;
 import org.netbeans.modules.xml.xam.spi.ValidationResult;
+import org.netbeans.modules.xml.xam.spi.Validator;
 
 /**
  *
@@ -167,7 +168,13 @@ public class WSDLSchemaValidatorTest extends TestCase {
         assertNotNull(vr.getValidationResult());
         
         ValidationHelper.dumpErrors(vr);
-        assertTrue("expect error " + expectedErrorCount,  vr.getValidationResult().size() == expectedErrorCount);
+        
+        // some missing element errors appear twice on newer JDKs
+        int uniqueErrors = (int) vr.getValidationResult().stream()
+                .map(Validator.ResultItem::getDescription)
+                .distinct().count();
+
+        assertTrue("expect error " + expectedErrorCount,  uniqueErrors == expectedErrorCount);
      }
      
      

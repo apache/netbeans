@@ -26,12 +26,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.Action;
 
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
+import org.netbeans.modules.java.openjdk.common.BuildUtils.ExtraMakeTargets;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProgress;
@@ -199,12 +201,17 @@ public class ActionProviderImpl implements ActionProvider {
             scriptFO = genericScript;
             command = COMMAND_BUILD_FAST; //XXX: should only do this if genericScript supports it
         }
+        String extraTargets = context.lookupAll(ExtraMakeTargets.class)
+                                     .stream()
+                                     .flatMap(emt -> Arrays.stream(emt.getExtraMakeTargets()))
+                                     .collect(Collectors.joining(" "));
         FileObject basedirFO = project.currentModule != null ? scriptFO == genericScript ? project.moduleRepository.getJDKRoot()
                                                                                          : repository
                                                              : repository.getParent();
         props.put("basedir", FileUtil.toFile(basedirFO).getAbsolutePath());
         props.put("CONF", project.configurations.getActiveConfiguration().getLocation().getName());
         props.put("nb.jdk.project.target.java.home", BuildUtils.findTargetJavaHome(project.getProjectDirectory()).getAbsolutePath());
+        props.put("nb.extra.make.targets", extraTargets);
         RootKind kind = getKind(context);
         RunSingleConfig singleFileProperty = command2Properties.get(Pair.of(command, kind));
         if (singleFileProperty != null) {

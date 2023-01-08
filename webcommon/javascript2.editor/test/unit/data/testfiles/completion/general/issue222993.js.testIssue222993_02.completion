@@ -4,31 +4,33 @@ this.content.|slides.titles[0] = {};
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 CLASS      slides                          [PUBLIC]   issue222993.js
-METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
-METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform
-METHOD     defineProperties(obj: Object,   [PUBLIC,   JS Platform
-METHOD     defineProperty(obj: Object, pr  [PUBLIC,   JS Platform
-METHOD     entries(obj: Object): Array     [PUBLIC,   JS Platform
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
-METHOD     is(value1: String, value2: Str  [PUBLIC,   JS Platform
-METHOD     isExtensible(obj: Object): Boo  [PUBLIC,   JS Platform
-METHOD     isFrozen(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     isSealed(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     keys(obj: Object): Array        [PUBLIC,   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
+METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
+METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
+METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
+METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
+METHOD     isFrozen(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     isSealed(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     keys(o: Object): String         [PUBLIC,   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform
 FIELD      numberOfSlide: Number           [PUBLIC]   issue222993.js
 FIELD      title: String                   [PUBLIC]   issue222993.js

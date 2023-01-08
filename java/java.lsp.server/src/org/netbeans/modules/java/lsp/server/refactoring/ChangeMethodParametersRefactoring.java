@@ -57,9 +57,9 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
@@ -187,7 +187,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         return "null";
     }
 
-    @HTMLDialog(url = "ui/ChangeMethodParameters.html")
+    @HTMLDialog(url = "ui/ChangeMethodParameters.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showChangeMethodParametersUI(
         CompilationController ci,
         NbCodeLanguageClient client,

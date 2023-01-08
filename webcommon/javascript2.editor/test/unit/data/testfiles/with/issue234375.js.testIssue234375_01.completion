@@ -2,8 +2,6 @@ Code completion result for source line:
 g| // cc doesn't offer Date functions
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     getAttention(): undefined       [PUBLIC,   JS Platform
-METHOD     getComputedStyle(element: Elem  [PUBLIC,   JS Platform
 METHOD     getDate(): Number               [PUBLIC]   JS Platform
 METHOD     getDay(): Number                [PUBLIC]   JS Platform
 METHOD     getFullYear(): Number           [PUBLIC]   JS Platform
@@ -11,13 +9,12 @@ METHOD     getHours(): Number              [PUBLIC]   JS Platform
 METHOD     getMilliseconds(): Number       [PUBLIC]   JS Platform
 METHOD     getMinutes(): Number            [PUBLIC]   JS Platform
 METHOD     getMonth(): Number              [PUBLIC]   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
 METHOD     getSeconds(): Number            [PUBLIC]   JS Platform
-METHOD     getSelection(): Selection       [PUBLIC,   JS Platform
 METHOD     getTime(): Number               [PUBLIC]   JS Platform
 METHOD     getTimezoneOffset(): Number     [PUBLIC]   JS Platform
 METHOD     getUTCDate(): Number            [PUBLIC]   JS Platform
@@ -28,4 +25,4 @@ METHOD     getUTCMilliseconds(): Number    [PUBLIC]   JS Platform
 METHOD     getUTCMinutes(): Number         [PUBLIC]   JS Platform
 METHOD     getUTCMonth(): Number           [PUBLIC]   JS Platform
 METHOD     getUTCSeconds(): Number         [PUBLIC]   JS Platform
-METHOD     ---getYear(): Number       ---  [PUBLIC,   JS Platform
+FIELD      getVarDate: Function            [PUBLIC]   JS Platform

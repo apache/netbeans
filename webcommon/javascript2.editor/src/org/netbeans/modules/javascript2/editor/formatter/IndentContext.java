@@ -58,9 +58,9 @@ public final class IndentContext {
      * fooBar();        // [ ]
      * </pre>
      */
-    private final Stack<BlockDescription> blocks = new Stack<BlockDescription>();
+    private final Stack<BlockDescription> blocks = new Stack<>();
 
-    private final List<Indentation> indentations = new ArrayList<Indentation>();
+    private final List<Indentation> indentations = new ArrayList<>();
 
     private int embeddedIndent;
 
@@ -75,7 +75,7 @@ public final class IndentContext {
         this.embedded = !JsTokenId.JAVASCRIPT_MIME_TYPE.equals(context.mimePath())
                 && !JsTokenId.JSON_MIME_TYPE.equals(context.mimePath());
         LineDocument doc = LineDocumentUtils.as(context.document(), LineDocument.class);
-        
+
         int lineStart = -1;
         if (doc != null) {
             try {
@@ -96,7 +96,7 @@ public final class IndentContext {
                         context.caretOffset());
             } catch (BadLocationException | IndexOutOfBoundsException ex) {
             }
-        }        
+        }
         if (lineEnd == -1) {
              lineEnd = context.caretOffset();
         }

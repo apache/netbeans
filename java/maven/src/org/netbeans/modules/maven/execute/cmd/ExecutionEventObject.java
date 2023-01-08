@@ -165,30 +165,36 @@ public class ExecutionEventObject {
          * Start fold for the curent tree.
          *
          * @param io InputOutput the output is written to.
+         * @return true if the fold system is too broken to use
          */
-        public void startFold(InputOutput io) {
+        public boolean startFold(InputOutput io) {
             if (!IOFolding.isSupported(io)) {
-                return;
+                return false;
             }
 
             assert foldHandle == null;
             ExecutionEventObject.Tree parentProject = findParentNodeOfType(ExecutionEvent.Type.MojoStarted);
             if (parentProject != null) {
                 //in forked environment..
-                assert parentProject.foldHandle != null;
+                if (parentProject.foldHandle == null) {
+                    return true;
+                }
                 this.foldHandle = parentProject.foldHandle.silentStartFold(true);
-                return;
+                return false;
             }
 
             parentProject = findParentNodeOfType(ExecutionEvent.Type.ProjectStarted);
             if (parentProject == null) {
                 this.foldHandle = IOFolding.startFold(io, true);
+                return false;
             } else {
+                boolean broken = false;
                 if (parentProject.foldHandle == null) {
-                    parentProject.startFold(io);
+                    broken = parentProject.startFold(io);
                 }
                 assert parentProject.foldHandle != null;
                 this.foldHandle = parentProject.foldHandle.silentStartFold(true);
+                return broken;
             }
         }
 

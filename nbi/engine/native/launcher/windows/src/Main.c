@@ -634,22 +634,27 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hi, LPSTR lpCmdLine, int nCmd
     globalInstance = hInstance;
     UNREFERENCED_PARAMETER(lpCmdLine);
     initWow64();
-    if(!createEvents()) {
-        status = EXIT_CODE_EVENTS_INITIALIZATION_ERROR;
+    if(is9x()) {
+        MessageBoxA(0, "Windows 9X platform is not supported", "Message", MB_OK);
+        status = EXIT_CODE_SYSTEM_ERROR;
     } else {
-        LauncherProperties * props = createLauncherProperties();
-        createLauncherThread(props);
-        if(!createGui(props, hInstance, hi, nCmdShow)) {
-            status = EXIT_CODE_GUI_INITIALIZATION_ERROR;
+        if(!createEvents()) {
+            status = EXIT_CODE_EVENTS_INITIALIZATION_ERROR;
         } else {
-            messageLoop(props);
-            WaitForSingleObject(closingWindowsConfirmed, INFINITE);
+            LauncherProperties * props = createLauncherProperties();
+            createLauncherThread(props);
+            if(!createGui(props, hInstance, hi, nCmdShow)) {
+                status = EXIT_CODE_GUI_INITIALIZATION_ERROR;	        
+            } else {	        
+                messageLoop(props);
+                WaitForSingleObject(closingWindowsConfirmed, INFINITE);
+            }
+            
+            status = props->status;
+            exitCode = props->exitCode;
+            printStatus(props);
+            freeLauncherProperties(&props);
         }
-
-        status = props->status;
-        exitCode = props->exitCode;
-        printStatus(props);
-        freeLauncherProperties(&props);
     }
     FREE(currentProgressSize);
     FREE(totalProgressSize);

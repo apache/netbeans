@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
@@ -274,6 +275,15 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(expression.getEndOffset(), -1 * options.continualIndentSize));
             }
         }
+    }
+
+    @Override
+    public void visit(AnonymousObjectVariable node) {
+        // (new Test)->method();
+        super.visit(node);
+        // avoid adding incorrect space for "within a method call"
+        // e.g. (new Test)->method(); -> (new Test )->method();
+        addAllUntilOffset(node.getEndOffset());
     }
 
     @Override
@@ -1885,12 +1895,19 @@ public class FormatVisitor extends DefaultVisitor {
                 && lastIndex < ts.index()) {
             addFormatToken(formatTokens);
         }
-        // don't add to AND, OR, and XOR (PHPTokenId.PHP_TEXTUAL_OPERATOR)
-        // see https://netbeans.org/bugzilla/show_bug.cgi?id=240274
-        if (ts.token().id() == PHPTokenId.PHP_TOKEN || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
+        // don't add WHITESPACE_BEFORE_BINARY_OP and WHITESPACE_AFTER_BINARY_OP to AND, OR, and XOR (PHPTokenId.PHP_TEXTUAL_OPERATOR)
+        // e.g. copy($old,$new) or die("error"); -> copy($old,$new) ordie("error");
+        // see https://bz.apache.org/netbeans/show_bug.cgi?id=240274
+        if (ts.token().id() == PHPTokenId.PHP_TOKEN
+                || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
             formatTokens.add(new FormatToken(whitespaceBefore, ts.offset()));
             addFormatToken(formatTokens);
             formatTokens.add(new FormatToken(whitespaceAfter, ts.offset() + ts.token().length()));
+        } else if (ts.token().id() == PHPTokenId.PHP_TEXTUAL_OPERATOR) {
+            // always add whitespace gh-4635
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_TEXTUAL_OP, ts.offset()));
+            addFormatToken(formatTokens);
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_TEXTUAL_OP, ts.offset() + ts.token().length()));
         } else {
             ts.movePrevious();
         }

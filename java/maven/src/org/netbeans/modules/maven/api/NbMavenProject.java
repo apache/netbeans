@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.InvalidArtifactRTException;
@@ -44,6 +46,7 @@ import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import static org.netbeans.modules.maven.api.Bundle.*;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -75,7 +78,7 @@ import org.openide.util.Utilities;
  * artifact ID. 
  * <p/>
  * <div class="nonnormative">
- * {@codesnippet ProjectServiceProvider.pluginSpecific}
+ * {@snippet file="org/netbeans/modules/maven/NbMavenProjectImplTest.java" region="ProjectServiceProvider.pluginSpecific"}
  * Shows a service, that will become available from project Lookup whenever the project uses {@code org.netbeans.modules.maven:test.plugin}
  * plugin in its model.
  * </div>
@@ -83,7 +86,7 @@ import org.openide.util.Utilities;
  * @author mkleint
  */
 public final class NbMavenProject {
-
+    private static final Logger LOG = Logger.getLogger(NbMavenProject.class.getName());
     /**
      * the only property change fired by the class, means that the pom file
      * has changed.
@@ -287,6 +290,22 @@ public final class NbMavenProject {
     }
     
     /**
+     * Returns a project evaluated for a certain purpose. The while {@link #getMavenProject}
+     * works with the <b>active configuration</b> and does not apply any action-specific properties,
+     * this method tries to apply mappings, configurations, etc when loading the project model.
+     * <p>
+     * Note that loading an evaluated project may take significant time (comparable to loading
+     * the base project itself). The implementation might optimize if the passed context does not
+     * prescribe different profiles, properties etc than have been used for the default model.
+     * 
+     * @param context the loading context
+     * @return evaluated project
+     */
+    public @NonNull MavenProject getEvaluatedProject(ProjectActionContext context) {
+        return project.getEvaluatedProject(context);
+    }
+    
+    /**
      * a marginally unreliable, non blocking method for figuring if the model is loaded or not.
      * @return 
      */
@@ -358,6 +377,7 @@ public final class NbMavenProject {
         for (PackagingProvider pp : Lookup.getDefault().lookupAll(PackagingProvider.class)) {
             String p = pp.packaging(project);
             if (p != null) {
+                LOG.log(Level.FINE, "Packaging provider {0} returned packacing: {1}", new Object[] { pp, p });
                 return p;
             }
         }

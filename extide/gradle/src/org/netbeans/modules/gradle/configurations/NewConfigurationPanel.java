@@ -27,11 +27,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
-import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
+import org.netbeans.modules.gradle.customizer.BuildActionsCustomizer;
 import org.openide.NotificationLineSupport;
 import org.openide.filesystems.FileUtil;
 import org.openide.text.CloneableEditorSupport;
@@ -54,9 +53,9 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
         this.configProvider = confProvider;
 
         initComponents();
-        EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
+        EditorKit kit = CloneableEditorSupport.getEditorKit("text/x-gradle-cli"); //NOI18N
         txParameters.setEditorKit(kit);
-        txParameters.getDocument().putProperty(Document.StreamDescriptionProperty, project);
+        txParameters.getDocument().putProperty(BuildActionsCustomizer.GRADLE_PROJECT_PROPERTY, project);
         if (isNew) {
             txId.getDocument().addDocumentListener(this);
             txId.getDocument().addDocumentListener(this);

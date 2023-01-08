@@ -20,6 +20,7 @@ package org.netbeans.modules.java.editor.javadoc;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.DocTree.Kind;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.Scope;
@@ -31,6 +32,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -42,6 +44,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -72,6 +76,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.completion.Utilities;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocCompletionUtils;
 import org.netbeans.modules.java.editor.javadoc.TagRegistery.TagEntry;
@@ -281,7 +286,15 @@ public class JavadocCompletionTask<T> extends UserTask {
         new DocTreePathScanner<Void, Void>() {
             @Override
             public Void scan(DocTree node, Void p) {
-                if (node != null && jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node) <= normalizedOffset && jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node) >= normalizedOffset) {
+                long endPos = jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node);
+                long startPos = jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node);
+                if (node.getKind() == Kind.ERRONEOUS && getCurrentPath() != null) {
+                    String text = jdctx.javac.getText().substring((int) startPos, (int) endPos);
+                    if (text.length() > 0 && text.charAt(0) == '{' && text.charAt(text.length() - 1) != '}') {
+                        endPos = jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, getCurrentPath().getLeaf());
+                    }
+                }
+                if (node != null && startPos <= normalizedOffset && endPos >= normalizedOffset) {
                     final DocTreePath docTreePath = new DocTreePath(getCurrentPath(), node);
                     if (JavadocCompletionUtils.isBlockTag(docTreePath) || JavadocCompletionUtils.isInlineTag(docTreePath)) {
                         result[0] = docTreePath;
@@ -369,6 +382,9 @@ public class JavadocCompletionTask<T> extends UserTask {
                 break;
             case REFERENCE:
                 insideReference(tag, jdctx);
+                break;
+            case SNIPPET:
+                insideSnippet(tag, jdctx);
                 break;
         }
     }
@@ -1212,6 +1228,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         CharSequence text = token.text();
         int pos = caretOffset - jdts.offset();
         DocTreePath tag = getTag(jdctx, caretOffset);
+
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
                 int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
@@ -1229,6 +1246,82 @@ public class JavadocCompletionTask<T> extends UserTask {
             }
         } else if (JavadocCompletionUtils.isLineBreak(token, pos)) {
             resolveBlockTag(null, jdctx);
+        }
+    }
+
+    void insideSnippet(DocTreePath tag, JavadocContext jdctx) {
+        int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
+        int index = subStr.lastIndexOf("\n");
+        String markupLine = JavadocCompletionUtils.getCharSequence(jdctx.doc, (index + startPos), caretOffset).toString();
+        insideInlineSnippet(markupLine);
+    }
+
+    private static final List<String> SNIPPET_TAGS = Collections.unmodifiableList(Arrays.asList(
+            "@highlight",
+            "@replace",
+            "@link",
+            "@start",
+            "@end"
+    ));
+
+    private static final Pattern TAG_PATTERN = Pattern.compile("@\\b\\w{1,}\\b\\s+(?!.*@\\b\\w{1,}\\b\\s+)");
+
+    void insideInlineSnippet(String subStr) {
+        if (subStr.contains("//")) {
+            int lastAt = subStr.lastIndexOf('@');
+            if (lastAt != (-1)) {
+                String suffix = subStr.substring(lastAt);
+                if (!suffix.contains(" ")) {
+                    for (String str : SNIPPET_TAGS) {
+                        if (str.startsWith(suffix)) {
+                            items.add(factory.createNameItem(str.substring(1), this.caretOffset));
+                        }
+                    }
+                    return ;
+                }
+            }
+            Matcher match = TAG_PATTERN.matcher(subStr);
+            if (match.find()) {
+                String tag = match.group(0);
+                if (SNIPPET_TAGS.contains(tag.trim())) {
+                    completeInlineMarkupTag(tag.trim(), new ArrayList() {
+                        {
+                            add("substring");
+                            add("regex");
+                            add("region");
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void completeInlineMarkupTag(String str, List<String> attr) {
+        String value = " = \"<value>\"";
+        switch (str) {
+            case "@highlight":
+                attr.add("type");
+                break;
+            case "@replace":
+                attr.add("replacement");
+                break;
+            case "@link":
+                attr.add("target");
+                attr.add("type");
+                break;
+            case "@start":
+            case "@end":
+                attr.clear();
+                attr.add("region");
+                break;
+            default:
+                break;
+        }
+        if (!attr.isEmpty()) {
+            for (String entry : attr) {
+                items.add(factory.createNameItem(entry + value, this.caretOffset));
+            }
         }
     }
 

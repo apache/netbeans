@@ -57,7 +57,9 @@ import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixBase;
 import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixProvider;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
+import org.netbeans.modules.maven.model.pom.POMComponent;
 import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.modules.xml.xam.Model;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
@@ -151,7 +153,7 @@ public final class PomModelUtils {
     }
     
     public static List<ErrorDescription> findHints(final @NonNull POMModel model, final Project project) {
-        final List<ErrorDescription> err = new ArrayList<ErrorDescription>();
+        final List<ErrorDescription> err = new ArrayList<>();
         //before checkModelValid because of #216093
         runMavenValidation(model, err);
         if (!checkModelValid(model)) {
@@ -230,7 +232,7 @@ public final class PomModelUtils {
         try {
             problems = embedder.lookupComponent(ProjectBuilder.class).build(new M2S(pom, doc), req).getProblems();
         } catch (ProjectBuildingException x) {
-            problems = new ArrayList<ModelProblem>();
+            problems = new ArrayList<>();
             List<ProjectBuildingResult> results = x.getResults();
             if (results != null) { //one code point throwing ProjectBuildingException contains results,
                 for (ProjectBuildingResult result : results) {
@@ -244,7 +246,7 @@ public final class PomModelUtils {
                 }
             }
         }
-        List<ModelProblem> toRet = new LinkedList<ModelProblem>();
+        List<ModelProblem> toRet = new LinkedList<>();
         for (ModelProblem problem : problems) {
             if(ModelUtils.checkByCLIMavenValidationLevel(problem)) {
                 toRet.add(problem);
@@ -272,5 +274,46 @@ public final class PomModelUtils {
         });
         return providers;
     }
-    
+
+    /**
+     * Returns true if the given text could be a maven property.
+     */
+    static boolean isPropertyExpression(String expression) {
+        return expression != null && expression.startsWith("${") && expression.endsWith("}");
+    }
+
+    /**
+     * Returns the property name of a property expression.
+     */
+    static String getPropertyName(String expression) {
+        if (isPropertyExpression(expression)) {
+            return expression.substring(2, expression.length() - 1);
+        }
+        return expression;
+    }
+
+    /**
+     * Returns the value of the maven property or null.
+     * @param expression the property text, for example: <code>${java.version}</code>.
+     */
+    static String getProperty(POMModel model, String expression) {
+        Properties properties = model.getProject().getProperties();
+        if (properties != null) {
+            return properties.getProperty(getPropertyName(expression));
+        }
+        return null;
+    }
+
+    /**
+     * Returns the first child component with the given name or null.
+     */
+    static POMComponent getFirstChild(POMComponent parent, String name) {
+        for (POMComponent child : parent.getChildren()) {
+            if (name.equals(child.getPeer().getNodeName())) {
+                return child;
+            }
+        }
+        return null;
+    }
+
 }

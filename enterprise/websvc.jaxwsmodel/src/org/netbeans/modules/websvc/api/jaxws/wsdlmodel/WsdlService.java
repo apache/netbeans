@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.websvc.api.jaxws.wsdlmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sun.tools.ws.processor.model.Port;
 import com.sun.tools.ws.processor.model.Service;
-import java.util.*;
 import org.netbeans.modules.websvc.jaxwsmodelapi.WSService;
 
 /**
@@ -49,7 +51,7 @@ public class WsdlService implements WSService {
     }
     
     public List<WsdlPort> getPorts() {
-        List wsdlPorts = new ArrayList();
+        List<WsdlPort> wsdlPorts = new ArrayList<>();
         if (service==null) return wsdlPorts;
         List<Port> ports = service.getPorts();
         for (Port p:ports)

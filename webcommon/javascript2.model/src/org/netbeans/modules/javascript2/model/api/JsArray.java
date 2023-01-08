@@ -26,7 +26,7 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  * @author Petr Hejl
  */
 public interface JsArray extends JsObject {
-    
+
     Collection<? extends TypeUsage> getTypesInArray();
 
 }

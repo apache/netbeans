@@ -93,6 +93,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 import org.openide.util.actions.NodeAction;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.PasteType;
@@ -1262,7 +1263,7 @@ public class TemplatesPanel extends TopComponent implements ExplorerManager.Prov
         chooser.setApproveButtonText(BTN_TemplatesPanel_JFileChooser_AddButtonName());
         chooser.setFileHidingEnabled (false);
         chooser.setMultiSelectionEnabled (false);
-        int result = chooser.showOpenDialog (null);
+        int result = chooser.showOpenDialog (Utilities.findDialogParent());
         if (JFileChooser.APPROVE_OPTION == result) {
             final File f = chooser.getSelectedFile ();
             assert f != null;

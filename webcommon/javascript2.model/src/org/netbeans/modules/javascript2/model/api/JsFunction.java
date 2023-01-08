@@ -31,7 +31,7 @@ public interface JsFunction extends JsObject, DeclarationScope {
     public JsObject getParameter(String name);
     public void addReturnType(TypeUsage type);
     /**
-     * 
+     *
      * @return collection of possible types that can be returned by the function.
      * It can return {@link Type.UNRESOLVED} if the type can not be resolved. The function
      * also can return {@link Type.UNDEFINED} if there is no return statement.

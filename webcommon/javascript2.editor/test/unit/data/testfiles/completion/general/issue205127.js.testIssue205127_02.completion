@@ -2,7 +2,4 @@ Code completion result for source line:
 elem.st|yle.color = "FFFFF";
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-FIELD      style: CSSStyleDeclaration      [PUBLIC]   JS Platform
-ATTRIBUTE  start                                      <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  step                                       <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  style                                      <font color=#999999>HTML Attribute</font>
+CLASS      style                           [PUBLIC]   issue205127.js

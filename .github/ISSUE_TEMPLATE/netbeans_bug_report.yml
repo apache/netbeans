@@ -27,8 +27,7 @@ body:
         Latest releases are always available from https://netbeans.apache.org/download/
       multiple: false
       options:
-        - "Apache NetBeans 13"
-#        - "Apache NetBeans 14 release candidate"
+        - "Apache NetBeans 16"
         - "Apache NetBeans latest daily build"
     validations:
       required: true
@@ -63,12 +62,11 @@ body:
         specified in the description. 
       multiple: false
       options:
-        - "No"
+        - "No / Don't know"
+        - "Apache NetBeans 15"
+        - "Apache NetBeans 14"
         - "Apache NetBeans 13"
-        - "Apache NetBeans 12.6"
-        - "Apache NetBeans 12.5"
-        - "Apache NetBeans 12.4"
-        - "Apache NetBeans 12.3 or earlier"
+        - "Apache NetBeans 12.6 or earlier"
     validations:
       required: true
   - type: input
@@ -121,7 +119,6 @@ body:
         This is absolutely not required, but we are happy to guide you in the contribution process,
         especially if you already have a good understanding of how to implement the fix. <br>
         Apache NetBeans is a community-managed project and we love to bring new contributors in.
-        
       options:
         - "Yes"
         - "No"

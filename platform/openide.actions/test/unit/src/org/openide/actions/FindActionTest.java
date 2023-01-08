@@ -79,7 +79,7 @@ public class FindActionTest extends NbTestCase {
      * Test getHelpCtx method. 
      */ 
     public void testGetHelpCtx() { 
-        HelpCtx expected = new HelpCtx(FindAction.class);; 
+        HelpCtx expected = new HelpCtx(FindAction.class);
         HelpCtx result   = instance.getHelpCtx(); 
          
         assertEquals(expected, result); 

@@ -524,17 +524,7 @@ public class MiscUtilities {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if (Profile.JAVA_EE_6_WEB == profile ||
-                    Profile.JAVA_EE_6_FULL == profile ||
-                        Profile.JAVA_EE_7_WEB == profile ||
-                                Profile.JAVA_EE_7_FULL == profile ||
-                                    Profile.JAVA_EE_8_WEB == profile ||
-                                            Profile.JAVA_EE_8_FULL == profile ||
-                                                Profile.JAKARTA_EE_8_WEB == profile ||
-                                                    Profile.JAKARTA_EE_8_FULL == profile ||
-                                                    Profile.JAKARTA_EE_9_WEB == profile ||
-                                                        Profile.JAKARTA_EE_9_FULL == profile )
-            {
+            if (profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                 return true;
             }
         }

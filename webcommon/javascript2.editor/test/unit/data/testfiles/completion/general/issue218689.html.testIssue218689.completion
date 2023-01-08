@@ -3,5 +3,5 @@ b.v|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform
 FIELD      value: Number                   [PUBLIC]   issue218689.html

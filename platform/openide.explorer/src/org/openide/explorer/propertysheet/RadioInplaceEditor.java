@@ -383,7 +383,7 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
                 return;
             }
 
-            list = (List<ActionListener>) ((ArrayList) actionListenerList).clone();
+            list = new ArrayList<>(actionListenerList);
         }
 
         final List<ActionListener> theList = list;

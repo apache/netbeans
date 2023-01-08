@@ -1482,6 +1482,20 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             // XXX currently, only when mixins are used directly in the class. should support all cases?
                             accessibleTypeMembers.addAll(request.index.getAccessibleMixinTypeMembers(typeScope, enclosingType));
                         }
+                    } else if (typeScope instanceof EnumElement) {
+                        // add methods of BackedEnum/UnitEnum interface
+                        EnumElement enumElement = (EnumElement) typeScope;
+                        String backingTypeName = enumElement.getBackingType() != null ? enumElement.getBackingType().toString() : ""; // NOI18N
+                        String enumInterfaceName = !backingTypeName.isEmpty() ? "\\BackedEnum" : "\\UnitEnum"; // NOI18N
+                        final NameKind nameQuery = NameKind.exact(QualifiedName.create(enumInterfaceName));
+                        Set<InterfaceElement> enums = request.index.getInterfaces(nameQuery);
+                        for (InterfaceElement backedEnum : enums) {
+                            accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(backedEnum, backedEnum));
+                        }
+                        if (!staticContext
+                                && !backingTypeName.isEmpty()) {
+                            completionResult.add(PHPCompletionItem.AdditionalFieldItem.getItem("value", backingTypeName, enumElement.getFullyQualifiedName().toString(), request)); // NOI18N
+                        }
                     }
                     for (final PhpElement phpElement : accessibleTypeMembers) {
                         if (CancelSupport.getDefault().isCancelled()) {

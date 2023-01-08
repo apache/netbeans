@@ -68,28 +68,31 @@ public class Client {
     private Client() {
     }
 
-    public synchronized final List<MajorVersion> getAllMajorVersions() {
+    /**
+     * Returns all major versions which are still maintained (excludes EA releases).
+     */
+    public synchronized final List<MajorVersion> getAllMaintainedMajorVersions() {
         if (majorVersions == null) {
-            majorVersions = Collections.unmodifiableList(
-                    getDisco().getAllMajorVersions(false).stream()
-                            .filter(majorVersion -> majorVersion.isMaintained())
-                            .filter(majorVersion -> majorVersion.isEarlyAccessOnly() != Boolean.TRUE)
-                            .collect(Collectors.toList()));
+            majorVersions = getDisco().getAllMajorVersions(
+                    Optional.of(true),   // maintained
+                    Optional.of(false),  // EA
+                    Optional.of(true),   // GA
+                    Optional.of(false)); // build
         }
         return majorVersions;
     }
 
-    public synchronized MajorVersion getLatestLts(boolean b) {
-        return getDisco().getLatestLts(b);
+    public synchronized MajorVersion getLatestLts(boolean includeEA) {
+        return getDisco().getLatestLts(includeEA);
     }
 
-    public synchronized MajorVersion getLatestSts(boolean b) {
-        return getDisco().getLatestSts(b);
+    public synchronized MajorVersion getLatestSts(boolean includeEA) {
+        return getDisco().getLatestSts(includeEA);
     }
 
     public synchronized List<Pkg> getPkgs(final Distribution distribution, final VersionNumber versionNumber, final Latest latest, final OperatingSystem operatingSystem,
             final Architecture architecture, final ArchiveType archiveType, final PackageType packageType,
-            final Boolean javafxBundled) {
+            final boolean ea, final boolean javafxBundled) {
         return getDisco().getPkgs(asList(distribution),
                 versionNumber,
                 latest,
@@ -101,7 +104,7 @@ public class Client {
                 packageType,
                 javafxBundled,
                 /*directlyDownloadable*/ true,
-                asList(ReleaseStatus.NONE),
+                ea ? asList(ReleaseStatus.GA, ReleaseStatus.EA) : asList(ReleaseStatus.GA),
                 TermOfSupport.NONE,
                 asList(Scope.PUBLIC),
                 null

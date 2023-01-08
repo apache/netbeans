@@ -94,7 +94,7 @@ public class RecordOwnerLockFactoryTest extends NbTestCase {
         assertTrue(lock2.obtain());
         lockFactory.clearLock("test4"); //NOI18N
         assertTrue(lockFactory.hasLocks());
-        lock2.release();;
+        lock2.release();
         assertFalse(lockFactory.hasLocks());
     }
 

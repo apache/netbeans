@@ -104,8 +104,8 @@ public class SourceUtilsTest extends ClassIndexTestCase {
 
         ExecutableElement testMethod = ElementFilter.methodsIn(test.getEnclosedElements()).get(0);
 //        TypeElement classInMethod = ElementFilter.typesIn(testMethod.getEnclosedElements()).get(0);
-//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);;
-//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);;
+//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);
+//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);
 //        TypeElement classInMethodNestedClass = ElementFilter.typesIn(classInMethod.getEnclosedElements()).get(0);
         VariableElement testField = ElementFilter.fieldsIn(test.getEnclosedElements()).get(0);
         TypeElement nestedClass = ElementFilter.typesIn(test.getEnclosedElements()).get(0);
@@ -195,8 +195,8 @@ public class SourceUtilsTest extends ClassIndexTestCase {
 
 	ExecutableElement testMethod = ElementFilter.methodsIn(test.getEnclosedElements()).get(0);
 //        TypeElement classInMethod = ElementFilter.typesIn(testMethod.getEnclosedElements()).get(0);
-//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);;
-//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);;
+//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);
+//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);
 //        TypeElement classInMethodNestedClass = ElementFilter.typesIn(classInMethod.getEnclosedElements()).get(0);
         VariableElement testField = ElementFilter.fieldsIn(test.getEnclosedElements()).get(0);
         TypeElement nestedClass = ElementFilter.typesIn(test.getEnclosedElements()).get(0);

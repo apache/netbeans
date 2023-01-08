@@ -119,7 +119,7 @@ public class OpenActionTest extends NbTestCase {
      * Test getHelpCtx method. 
      */ 
     public void testGetHelpCtx() { 
-        HelpCtx expected = new HelpCtx(OpenAction.class);; 
+        HelpCtx expected = new HelpCtx(OpenAction.class);
         HelpCtx result   = instance.getHelpCtx(); 
          
         assertEquals(expected, result); 

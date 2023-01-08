@@ -458,7 +458,7 @@ class OutWriter extends PrintWriter {
                 } else if (c == '\b') {
                     int skip = handleBackspace(charBuff);
                     if (skip == -2) {
-                        lineCLVT -= lines.removeLastTab();;
+                        lineCLVT -= lines.removeLastTab();
                     } else if (skip == 2) {
                         lineCLVT--;
                     } else if (skip == 1) {

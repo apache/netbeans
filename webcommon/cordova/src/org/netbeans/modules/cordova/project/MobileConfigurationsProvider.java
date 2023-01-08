@@ -186,7 +186,7 @@ public class MobileConfigurationsProvider implements ProjectConfigurationProvide
             calculateConfigs();
         }
         Preferences c = ProjectUtils.getPreferences(p, MobileConfigurationsProvider.class, false);
-        String config = c.get(PROP_CONFIG, null);;
+        String config = c.get(PROP_CONFIG, null);
         if (config != null && configs.containsKey(config)) {
             return configs.get(config);
         }

@@ -301,7 +301,7 @@ public class RenameTransformer extends RefactoringVisitor {
                     } else if(elementToFind.getKind() == ElementKind.METHOD) {
                         ElementUtilities utils = workingCopy.getElementUtilities();
                         if(utils.alreadyDefinedIn((CharSequence) newName, (ExecutableType) elementToFind.asType(), (TypeElement) enclosingTypeElement)) {
-                            boolean isSuper = false;;
+                            boolean isSuper = false;
                             if (tree.getKind() == Tree.Kind.MEMBER_SELECT) {
                                 String superString = ((MemberSelectTree) tree).getExpression().toString();
                                 if (superString.equals("super") || superString.endsWith(".super")) { // NOI18N

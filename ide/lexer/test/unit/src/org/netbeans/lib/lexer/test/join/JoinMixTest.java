@@ -54,7 +54,7 @@ public class JoinMixTest extends NbTestCase {
     @Override
     protected Level logLevel() {
         return Level.INFO;
-//        return super.logLevel();;
+//        return super.logLevel();
     }
 
     public void testMixedSectionsForward() throws Exception {

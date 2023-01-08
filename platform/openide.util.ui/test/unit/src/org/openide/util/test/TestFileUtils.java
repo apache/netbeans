@@ -128,7 +128,7 @@ public class TestFileUtils {
     /**
      * Create a new ZIP file.
      * @param os a stream to which the ZIP will be written
-     * @param entries entries as maps from filename to binary contents;; parent dirs created automatically
+     * @param entries entries as maps from filename to binary contents; parent dirs created automatically
      * @throws IOException for the usual reasons
      */
     public static void writeZipFile(OutputStream os, Map<String,byte[]> entries) throws IOException {

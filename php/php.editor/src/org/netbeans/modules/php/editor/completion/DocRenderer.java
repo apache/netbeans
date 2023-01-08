@@ -257,7 +257,7 @@ final class DocRenderer {
             LINK_TAGS.add("@use"); // NOI18N
         }
         private final CCDocHtmlFormatter header;
-        private final StringBuilder phpDoc = new StringBuilder();;
+        private final StringBuilder phpDoc = new StringBuilder();
         private final PhpElement indexedElement;
         private final List<String> links = new ArrayList<>();
         private final ASTNode node;

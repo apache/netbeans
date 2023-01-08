@@ -26,15 +26,31 @@
 
     <target name="-checkout-graalvm" unless="graal.dir.available">
         <delete dir="${graal.dir}"/>
-        <mkdir dir="${graal.dir}/.."/>
-        <exec dir="${graal.dir}/.." executable="git" failonerror="true">
-            <arg value="clone"/>
-            <arg value="--depth=1"/>
-            <arg value="--branch"/>
-            <arg value="vm-20.3.0"/>
-            <arg value="--single-branch"/>
+        <mkdir dir="${graal.dir}"/>
+
+        <!-- Avoid git-clone of the full Graal repository -->
+        <exec dir="${graal.dir}" executable="git" failonerror="true">
+            <arg value="init"/>
+        </exec>
+        <exec dir="${graal.dir}" executable="git" failonerror="true">
+            <arg value="remote"/>
+            <arg value="add"/>
+            <arg value="origin"/>
             <arg value="https://github.com/oracle/graal"/>
         </exec>
+        <echo message="Fetching GraalVM revision from https://github.com/oracle/graal"/>
+        <exec dir="${graal.dir}" executable="git" failonerror="true">
+            <arg value="fetch"/>
+            <arg value="origin"/>
+            <!-- The commit ID corresponds to a removed tag vm-20.3.0, by Gilles Duboscq, message "Release 20.3.0", Thu Nov 12 22:49:14 -->
+            <arg value="c5ff5a5a091bfd974640aaf6fbe51c81bd080438"/>
+        </exec>
+        <exec dir="${graal.dir}" executable="git" failonerror="true">
+            <arg value="reset"/>
+            <arg value="--hard"/>
+            <arg value="FETCH_HEAD"/>
+        </exec>
+
         <delete dir="${mx.dir}"/>
         <mkdir dir="${mx.dir}/.."/>
         <exec dir="${mx.dir}/.." executable="git" failonerror="true">

@@ -2404,7 +2404,7 @@ new EncodedActionTable18().getTableData()
     protected final static Integer STATIC = Integer.valueOf(BodyDeclaration.Modifier.STATIC);
     protected final static Integer READONLY = Integer.valueOf(BodyDeclaration.Modifier.READONLY);
 
-    private ErrorStrategy defaultStrategy = new DefaultErrorStrategy();;
+    private ErrorStrategy defaultStrategy = new DefaultErrorStrategy();
     private ErrorStrategy errorStrategy = defaultStrategy;
 
     private ParserErrorHandler errorHandler = null;

@@ -86,6 +86,7 @@ import java.awt.peer.ScrollbarPeer;
 import java.awt.peer.TextAreaPeer;
 import java.awt.peer.TextFieldPeer;
 import java.awt.peer.WindowPeer;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -269,6 +270,39 @@ public class UtilitiesTest extends NbTestCase {
         ready.acquire();
         try {
             assertEquals("[hello, null, there]", Utilities.actionsForPath("stuff").toString());
+        } finally {
+            done.release();
+        }
+    }
+    
+    public static class ContextData {
+        final String suffix;
+
+        public ContextData(String suffix) {
+            this.suffix = suffix;
+        }
+    }
+
+    public void testActionsForPathWithLookup() throws Exception {
+        MockLookup.setInstances(new NamedServicesProviderImpl());
+        // #156829: ensure that no tree lock is acquired.
+        final Semaphore ready = new Semaphore(0);
+        final Semaphore done = new Semaphore(0);
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                synchronized (new JSeparator().getTreeLock()) {
+                    ready.release();
+                    try {
+                        done.acquire();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        });
+        ready.acquire();
+        try {
+            assertEquals("[hello-ehlo, null, there-ehlo]", Utilities.actionsForPath("stuff", Lookups.fixed(new ContextData("ehlo"))).toString());
         } finally {
             done.release();
         }
@@ -511,21 +545,34 @@ public class UtilitiesTest extends NbTestCase {
                 return Lookup.EMPTY;
             }
             InstanceContent content = new InstanceContent();
-            InstanceContent.Convertor<String, Action> actionConvertor = new InstanceContent.Convertor<String, Action>() {
 
-                public Action convert(final String obj) {
-                    return new AbstractAction() {
+            class ContextAction extends AbstractAction implements ContextAwareAction {
+                final String obj;
 
-                        public void actionPerformed(ActionEvent e) {
-                        }
-
-                        @Override
-                        public String toString() {
-                            return obj;
-                        }
-                    };
+                public ContextAction(String obj) {
+                    this.obj = obj;
+                }
+                
+                public void actionPerformed(ActionEvent e) {
                 }
 
+                @Override
+                public String toString() {
+                    return obj;
+                }
+
+                @Override
+                public Action createContextAwareInstance(Lookup actionContext) {
+                    ContextData cd = actionContext.lookup(ContextData.class);
+                    return new ContextAction(obj + (cd == null ? "-ctx" : "-" + cd.suffix));
+                }
+            }
+            
+            InstanceContent.Convertor<String, Action> actionConvertor = new InstanceContent.Convertor<String, Action>() {
+                public Action convert(final String obj) {
+                    return new ContextAction(obj);
+                }
+                
                 public Class<? extends Action> type(String obj) {
                     return AbstractAction.class;
                 }

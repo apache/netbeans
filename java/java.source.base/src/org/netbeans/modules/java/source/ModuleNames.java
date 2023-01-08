@@ -564,7 +564,7 @@ public final class ModuleNames {
         void invalidate() {
             super.invalidate();
             if (this.copsCl != null) {
-                this.cops.removeChangeListener(this.copsCl);;
+                this.cops.removeChangeListener(this.copsCl);
             }
             if (this.resCl != null) {
                 this.res.removeChangeListener(this.resCl);

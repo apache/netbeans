@@ -51,6 +51,10 @@ public class KnowledgeBaseItem extends OCIItem implements URLProvider{
         registerItem();
     }
     
+    public String getCompartmentId() {
+        return compartmentId;
+    }
+    
     void registerItem() {
         synchronized (KnowledgeBaseItem.class) {
             itemInstances.computeIfAbsent(getKey(), x -> new ArrayList<>()).add(new WeakReference<>(this));

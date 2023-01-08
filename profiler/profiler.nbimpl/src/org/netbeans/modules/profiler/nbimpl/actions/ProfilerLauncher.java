@@ -320,7 +320,7 @@ public class ProfilerLauncher {
             NetBeansProfiler.getDefaultNB().setProfiledProject(project, fo);
 
 //            // ** display select task panel
-//            ProfilingSettings ps = ProfilingSupport.getDefault().selectTaskForProfiling(project, ss, fo, true);;
+//            ProfilingSettings ps = ProfilingSupport.getDefault().selectTaskForProfiling(project, ss, fo, true);
 //            if (ps != null) {
 //                this.ps = ps;
 //                this.ps.store(props); // TODO: check whether necessary or not!

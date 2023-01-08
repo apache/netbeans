@@ -389,6 +389,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
         if (jCheckBoxShared.isEnabled() && jCheckBoxShared.isSelected()) {
             url += ":base=" + jTextFieldBaseDir.getText();  // NOI18N
         }
+        Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.INFO, "[{0}] url= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), url});
         Logger.getLogger(InstallPanelVisual.class.getName()).log(Level.FINE, "TomcatInstall.getUrl: {0}", url);    // NOI18N
         return url;
     }

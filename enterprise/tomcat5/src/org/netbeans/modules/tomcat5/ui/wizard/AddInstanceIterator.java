@@ -63,6 +63,8 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
     private WizardDescriptor wizard;
     private InstallPanel panel;
     
+    private static final Logger LOGGER = Logger.getLogger(AddInstanceIterator.class.getName());  // NOI18N
+    
     public AddInstanceIterator() {
         super();
     }
@@ -125,9 +127,10 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
             TomcatManager manager = null;
             try {
                 manager = (TomcatManager) TomcatFactory.getInstance().getDeploymentManager(url, username, password);
+                LOGGER.log(Level.INFO, "[{0}] manager= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), manager});
             } catch (DeploymentManagerCreationException e) {
                 // this should never happen
-                Logger.getLogger(AddInstanceIterator.class.getName()).log(Level.SEVERE, null, e);
+                LOGGER.log(Level.SEVERE, null, e);
                 return result;
             }
             manager.ensureCatalinaBaseReady();
@@ -137,7 +140,7 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
             }
         } catch (IOException e) {
             // TODO: remove this catch as soon as the ensureCatalinaBaseReady method is refactored
-            Logger.getLogger(AddInstanceIterator.class.getName()).log(Level.WARNING, null, e);
+            LOGGER.log(Level.WARNING, null, e);
         }
         return result;
     }

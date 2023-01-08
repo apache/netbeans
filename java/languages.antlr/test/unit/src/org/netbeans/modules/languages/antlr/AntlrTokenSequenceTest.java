@@ -38,7 +38,6 @@ public class AntlrTokenSequenceTest {
      */
     @Test
     public void testSeekTo1() {
-        System.out.println("seekTo");
         int offset = 0;
         AntlrTokenSequence instance = sequence("");
         instance.seekTo(offset);
@@ -47,7 +46,6 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo2() {
-        System.out.println("seekTo");
         int offset = 0;
         AntlrTokenSequence instance = sequence("/**/");
         instance.seekTo(offset);
@@ -57,7 +55,6 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo3() {
-        System.out.println("seekTo");
         int offset = 4;
         AntlrTokenSequence instance = sequence("/**/");
         instance.seekTo(offset);
@@ -68,7 +65,6 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo4() {
-        System.out.println("seekTo");
         int offset = 5;
         AntlrTokenSequence instance = sequence("/* */lexer");
         instance.seekTo(offset);
@@ -79,7 +75,6 @@ public class AntlrTokenSequenceTest {
 
     @Test
     public void testSeekTo5() {
-        System.out.println("seekTo");
         AntlrTokenSequence instance = sequence("/* */lexer");
         instance.seekTo(10);
         assertFalse(instance.next().isPresent());
@@ -95,28 +90,24 @@ public class AntlrTokenSequenceTest {
      */
     @Test
     public void testIsEmpty() {
-        System.out.println("isEmpty");
         AntlrTokenSequence instance = sequence("");
         assertTrue(instance.isEmpty());
     }
 
     @Test
     public void testHasNext1() {
-        System.out.println("hasNext");
         AntlrTokenSequence instance = sequence("lexer");
         assertTrue(instance.hasNext());
     }
 
     @Test
     public void testHasNext2() {
-        System.out.println("hasNext");
         AntlrTokenSequence instance = sequence("");
         assertFalse(instance.hasNext());
     }
 
     @Test
     public void testHasNext3() {
-        System.out.println("hasNext");
         AntlrTokenSequence instance = sequence("lexer");
         assertTrue(instance.hasNext());
         instance.next();

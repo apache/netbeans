@@ -269,6 +269,27 @@ public class SourceUtils {
 	return (TypeElement)ec;
     }
 
+    /** Finds a source name that the {@code element} originates from. In case
+     * of {@code element} being created via {@link JavaSource#forFileObject(org.openide.filesystems.FileObject) source file}
+     * it should be the name (without any path) of the source file. For elements
+     * originating from {@code .class} file the returned value corresponds to
+     * the value of {@code SourceFile} attribute, if present.
+     *
+     * @param element element of a source file
+     * @return the (short) name of source file that this elements originates
+     *    from or {@code null}, if the name isn't known
+     * @since 2.60
+     */
+    public static String findSourceFileName(Element element) {
+        if (element instanceof ClassSymbol) {
+            ClassSymbol s = (ClassSymbol) element;
+            if (s.sourcefile != null) {
+                return s.sourcefile.getName();
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns an array containing the JVM signature of the {@link ElementHandle}.
      * @param handle to obtain the JVM signature for.

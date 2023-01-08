@@ -1246,16 +1246,7 @@ public class GoToSupport {
     }
 
     static String findFileName(Element resolved) {
-        try {
-            Field src = resolved.getClass().getField("sourcefile");
-            JavaFileObject jfo = (JavaFileObject) src.get(resolved);
-            if (jfo != null) {
-                return jfo.getName();
-            }
-        } catch (Exception ex) {
-            // go on
-        }
-        return null;
+        return SourceUtils.findSourceFileName(resolved);
     }
 
     static UiUtilsCaller CALLER = new UiUtilsCaller() {

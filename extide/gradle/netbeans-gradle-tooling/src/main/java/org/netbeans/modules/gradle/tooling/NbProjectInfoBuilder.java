@@ -1119,8 +1119,17 @@ class NbProjectInfoBuilder {
             }
         }
         Map<String, Object> archives = new HashMap<>();
-        project.getTasks().withType(Jar.class).forEach(jar -> {
-            archives.put(jar.getClassifier(), jar.getArchivePath());
+        beforeGradle("5.2", () -> {
+            // The jar.getCassifier() and jar.getArchievePath() are deprecated since 5.2
+            // These methods got removed in 8.0
+            project.getTasks().withType(Jar.class).forEach(jar -> {
+                archives.put(jar.getClassifier(), jar.getArchivePath());
+            });
+        });
+        sinceGradle("5.2", () -> {
+            project.getTasks().withType(Jar.class).forEach(jar -> {
+                archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile());
+            });
         });
         model.getInfo().put("archives", archives);
     }

@@ -93,8 +93,6 @@ public class DefaultTabDataModel implements TabDataModel {
             return;
         }
 
-        List newContents = Arrays.asList(data);
-
         list.clear();
         list.addAll(Arrays.asList(data));
 

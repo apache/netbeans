@@ -354,9 +354,6 @@ public class ReferencesBrowserControllerUI extends JTitledPanel {
             });
             // --- 
         } else {
-            Object[] shortPath = new Object[length];
-            System.arraycopy(path, 0, shortPath, 0, length);
-            final TreePath p = new TreePath(shortPath);
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     selectPath(path, length + MAX_STEP);

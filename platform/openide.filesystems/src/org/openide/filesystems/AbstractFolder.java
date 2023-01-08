@@ -820,7 +820,7 @@ abstract class AbstractFolder extends FileObject {
                 fire && (added == null) && (removed == null) && !getFileSystem().isReadOnly() &&
                     !(this instanceof MultiFileObject)
             ) {
-                Set<String> nameFilter = nameFilter = new HashSet<String>();
+                Set<String> nameFilter = new HashSet<>();
 
                 if (addedNames != null) {
                     nameFilter.addAll(addedNames);

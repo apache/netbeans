@@ -189,7 +189,6 @@ public class TestFrame extends javax.swing.JFrame {
         
         jb9.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                int[] idxs = new int [] { 1, 3, 6, 8};
                 TabData[] td = new TabData[] {
                     new TabData(new JButton("inserted c 1"), myIcon, "Ic-1", "tip"),
                     new TabData(new JButton("inserted c 2"), myIcon, "Ic-2", "tip"),

@@ -220,7 +220,7 @@ public class SvnFileSystemTest extends FileSystemFactoryHid {
     }
     
     private SVNUrl getRepoUrl () throws MalformedURLException {
-        return new SVNUrl("file:///" + getRepoDir().getAbsolutePath().replaceAll("\\\\", "/"));
+        return new SVNUrl("file:///" + getRepoDir().getAbsolutePath().replace("\\", "/"));
     }    
 
     private void setupUserdir () {

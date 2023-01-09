@@ -1484,10 +1484,10 @@ public final class ParseProjectXml extends Task {
         log("Distilling " + ppjar + " from " + jars);
         String corePattern = pubpkgs.
                 replaceAll(" +", "").
-                replaceAll("\\.", "/").
-                replaceAll(",", "|").
-                replaceAll("\\*\\*", "(.+/)?").
-                replaceAll("\\*", "");
+                replace(".", "/").
+                replace(",", "|").
+                replace("**", "(.+/)?").
+                replace("*", "");
         // include e.g. icons so that annotation processors using validateResource can confirm they exist
         Pattern p = Pattern.compile("(" + corePattern + ")[^/]+[.].+");
         boolean foundAtLeastOneEntry = false;

@@ -209,7 +209,7 @@ public class WLManagerNode extends AbstractNode implements Node.Cookie {
                    ) {
                        public Object getValue() {
                            String password = deploymentManager.getInstanceProperties().getProperty(InstanceProperties.PASSWORD_ATTR);
-                           return password.replaceAll(".", "\\*");
+                           return password.replaceAll(".", "\\*"); //Here dot is any character
                        }
 
                        public void setValue(Object value) {

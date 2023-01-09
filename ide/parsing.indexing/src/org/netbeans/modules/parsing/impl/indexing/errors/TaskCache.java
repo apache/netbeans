@@ -280,9 +280,9 @@ public class TaskCache {
             int lineNumber = Integer.parseInt(parts[1]);
             String message = parts[2];
 
-            message = message.replaceAll("\\\\d", ":"); //NOI18N
-            message = message.replaceAll("\\\\n", " "); //NOI18N
-            message = message.replaceAll("\\\\\\\\", "\\\\"); //NOI18N
+            message = message.replace("\\d", ":"); //NOI18N
+            message = message.replace("\\n", " "); //NOI18N
+            message = message.replace("\\\\", "\\"); //NOI18N
 
             String severity = getTaskType(kind);
 

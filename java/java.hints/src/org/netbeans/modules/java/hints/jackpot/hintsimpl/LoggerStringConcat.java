@@ -254,7 +254,7 @@ public class LoggerStringConcat {
                             String literalValue = ((LiteralTree) tp.getLeaf()).getValue().toString();
 
                             if (literalValue.contains("'") || literalValue.contains("{") || literalValue.contains("}")) {
-                                literalValue = literalValue.replaceAll("'", "''");
+                                literalValue = literalValue.replace("'", "''");
                                 literalValue = literalValue.replaceAll(Pattern.quote("{"), Matcher.quoteReplacement("'{'"));
                                 literalValue = literalValue.replaceAll(Pattern.quote("}"), Matcher.quoteReplacement("'}'"));
                                 if (it.hasNext()) {

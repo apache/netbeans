@@ -318,7 +318,7 @@ public class ClientHandlerButtonListener implements ActionListener {
         
         SourceGroup[] groups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         ClassPath cp = ClassPath.getClassPath(groups[0].getRootFolder(), ClassPath.SOURCE);
-        final FileObject serviceFO = cp.findResource(serviceName.replaceAll("\\.", "/")  + ".java");  //NOI18N
+        final FileObject serviceFO = cp.findResource(serviceName.replace(".", "/")  + ".java");  //NOI18N
 
         //if serviceFO is null, the Service interface has not been generated, so no need to remove any annotation
         if(serviceFO == null) return;

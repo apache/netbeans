@@ -50,7 +50,7 @@ public class WriteFileList extends Task{
         String path = f.getPath();
         String parentPath = parent.getPath();
         path = path.substring(parentPath.length());
-        path = path.replaceAll("\\\\","/");
+        path = path.replace("\\", "/");
         if(path.length()>0) {
             path = path.substring(1);
         }

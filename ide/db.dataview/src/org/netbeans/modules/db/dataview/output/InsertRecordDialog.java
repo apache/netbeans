@@ -420,7 +420,7 @@ private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         } catch (DBException ex) {
             JLabel errorLabel = new JLabel(
                     "<html><body><font color=\"#FF0000\">" //NOI18N
-                    + ex.getMessage().replaceAll("\\n", "<br>") //NOI18N
+                    + ex.getMessage().replace("\n", "<br>") //NOI18N
                     + "</font></body></html>"); //NOI18N
             errorLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
             errorLabel.setVerticalAlignment(SwingConstants.TOP);

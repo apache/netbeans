@@ -247,7 +247,7 @@ class QueryModel {
                     candidate = tableName+"_"+i;    // NOI18N
                 }
                 else {
-                    candidate = "\"" + tableName.replaceAll ("\"", "")+"_"+i + "\"" ;    // NOI18N
+                    candidate = "\"" + tableName.replace("\"", "")+"_"+i + "\"" ;    // NOI18N
                 }
                 */
 

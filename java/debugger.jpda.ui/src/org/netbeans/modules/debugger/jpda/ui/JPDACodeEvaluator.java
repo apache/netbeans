@@ -295,11 +295,11 @@ public class JPDACodeEvaluator extends CodeEvaluator.EvaluatorService {
                 this.toString = toString;
                 StringBuffer buf = new StringBuffer();
                 buf.append("<html>");
-                String text = expr.replaceAll ("&", "&amp;");
-                text = text.replaceAll ("<", "&lt;");
-                text = text.replaceAll (">", "&gt;");
-                text = text.replaceAll ("\n", "<br/>");
-                text = text.replaceAll ("\r", "");
+                String text = expr.replace("&", "&amp;");
+                text = text.replace("<", "&lt;");
+                text = text.replace(">", "&gt;");
+                text = text.replace("\n", "<br/>");
+                text = text.replace("\r", "");
                 buf.append(text);
                 buf.append("</html>");
                 this.tooltip = buf.toString();

@@ -822,7 +822,7 @@ public class QueryBuilderMetaData {
 		checkMetaData();
 		// hack, getColumns throws an exception if table name has
 		// spaces.
-		colNames = _dbmdh.getColumns(fullTableName.replaceAll("\"", "") );
+		colNames = _dbmdh.getColumns(fullTableName.replace("\"", "") );
 	    } catch (SQLException sqle) {
 		// First time we catch an error, try resetting the RowSet
 		refreshDataBaseMetaData();

@@ -81,7 +81,7 @@ public class JaxWsGenWSDLImpl implements JaxWsGenWSDLCookie {
                 PropertyEvaluator evaluator = helper.getStandardPropertyEvaluator();
                 String buildGenDir = evaluator.evaluate(propValue);
                 String relativePath = buildGenDir + File.separator + "jax-ws"+ File.separator + "resources"; //NOI18N
-                relativePath = Pattern.compile("\\\\").matcher(relativePath).replaceAll("/");   //relativePath  should not have backslashes
+                relativePath = relativePath.replace("\\", "/");   //relativePath  should not have backslashes
                 FileObject wsdlDir = project.getProjectDirectory().getFileObject(relativePath);
                 if (wsdlDir != null && wsdlDir.getChildren().length > 0) {
                     FileObject[] wsdlArtifacts = wsdlDir.getChildren();

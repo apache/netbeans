@@ -1712,7 +1712,7 @@ public final class Utils {
             if(!pathPrefix.endsWith("/")) {                                     // NOI18N
                 pathPrefix += "/";                                              // NOI18N
             }
-            FileObject fo = FileUtil.getConfigFile(pathPrefix + foAction.getClass().getName().replaceAll("\\.", "-") + ".instance"); // NOI18N
+            FileObject fo = FileUtil.getConfigFile(pathPrefix + foAction.getClass().getName().replace(".", "-") + ".instance"); // NOI18N
             if(fo != null) {   
                 AcceleratorBinding.setAccelerator(a, fo);
             }

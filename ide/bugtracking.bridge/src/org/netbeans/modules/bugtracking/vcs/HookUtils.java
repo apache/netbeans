@@ -39,20 +39,16 @@ public class HookUtils {
      * will ignore them.
      *
      * @param formatString
-     * @param keys
+     * @param keys any string values. Not applied as regexps, but regexp safe. If regexp keys
+     *             required you need create dedicated method like prepareFormatStringWithRegexpKeys.
      * @return
      */
     public static String prepareFormatString(String formatString, String... keys) {
-        formatString = formatString.replaceAll("\\{", "'\\{'");                 // NOI18N
-        formatString = formatString.replaceAll("\\}", "'\\}'");                 // NOI18N
+        formatString = formatString.replace("{", "'{'");                 // NOI18N
+        formatString = formatString.replace("}", "'}'");                 // NOI18N
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            formatString =
-                formatString.replaceAll(
-                    "'\\{'" + key + "'\\}'",                                    // NOI18N
-                    "\\{" + i + "\\}"                                           // NOI18N
-                );
-
+            formatString = formatString.replace("'{'" + key + "'}'", "{" + i + "}");
         }
         return formatString;
     }

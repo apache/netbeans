@@ -36,12 +36,12 @@ import org.openide.util.lookup.ServiceProvider;
  * A general registry permitting clients to find instances of services
  * (implementation of a given interface).
  * This class is inspired by the
- * <a href="http://www.jini.org/">Jini</a>
+ * <a href="https://river.apache.org">Jini</a>
  * registration and lookup mechanism. The difference is that the methods do
  * not throw checked exceptions (as they usually work only locally and not over the network)
  * and that the Lookup API concentrates on the lookup, not on the registration
- * (although {@link Lookup#getDefault} is strongly encouraged to support
- * {@link Lookups#metaInfServices} for registration in addition to whatever
+ * (although {@link Lookup#getDefault()} is strongly encouraged to support
+ * {@link Lookups#metaInfServices(java.lang.ClassLoader) } for registration in addition to whatever
  * else it decides to support).
  * <p>
  * For a general talk about the idea behind the lookup pattern please see
@@ -222,7 +222,8 @@ public abstract class Lookup {
      * If more than one object matches, the first will be returned.
      * The template class may be a class or interface; the instance is
      * guaranteed to be assignable to it.
-     *
+     * 
+     * @param <T> type of interface we are searching for
      * @param clazz class of the object we are searching for
      * @return an object implementing the given class or <code>null</code> if no such
      *         implementation is found
@@ -236,7 +237,8 @@ public abstract class Lookup {
      * specify whether subsequent calls with the same template produce new
      * instance of the {@link Lookup.Result} or return shared instance. The
      * prefered behaviour however is to return shared one.
-     *
+     * 
+     * @param <T> type of interface we are searching for
      * @param template a template describing the services to look for
      * @return an object containing the results
      */
@@ -244,6 +246,8 @@ public abstract class Lookup {
 
     /** Look up the first item matching a given template.
      * Includes not only the instance but other associated information.
+     * 
+     * @param <T> type of interface we are searching for
      * @param template the template to check
      * @return a matching item or <code>null</code>
      *
@@ -259,6 +263,8 @@ public abstract class Lookup {
      * Find a result corresponding to a given class.
      * Equivalent to calling {@link #lookup(Lookup.Template)} but slightly more convenient.
      * Subclasses may override this method to produce the same semantics more efficiently.
+     * 
+     * @param <T> type of interface we are searching for
      * @param clazz the supertype of the result
      * @return a live object representing instances of that type
      * @since org.openide.util 6.10
@@ -447,10 +453,10 @@ public abstract class Lookup {
     public abstract static class Result<T> extends Object {
         /** Registers a listener that is invoked when there is a possible
          * change in this result. 
-         * <p>
+         *
          * <div class="nonnormative">
          * Sometimes people report that their listener is not receiving 
-         * events (for example <a href="https://netbeans.org/bugzilla/show_bug.cgi?id=191471">IZ 191471</a>)
+         * events (for example <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=191471">IZ 191471</a>)
          * or that the listener receives few events, but then it <em>stops</em>
          * listening.
          * Such behavior is often caused by not keeping strong reference to 
@@ -473,7 +479,7 @@ public abstract class Lookup {
          * should be {@link List} as the order matters, but the {@link Collection}
          * is kept for compatibility reasons) of all instances present in
          * the {@link Result} right now that will never change its content.
-         * <p></p>
+         *
          * <div class="nonnormative">
          * While the returned collection never changes its content, some
          * implementation like {@link ProxyLookup} may
@@ -505,7 +511,7 @@ public abstract class Lookup {
          * should be {@link List} as the order matters, but the {@link Collection}
          * is kept for compatibility reasons) of all {@link Item items} present in
          * the {@link Result} right now that will never change its content.
-         * <p></p>
+         *
          * <div class="nonnormative">
          * While the returned collection never changes its content, some
          * implementation like {@link ProxyLookup} may

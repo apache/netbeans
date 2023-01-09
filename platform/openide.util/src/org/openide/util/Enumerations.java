@@ -49,6 +49,7 @@ public final class Enumerations extends Object {
      * Always returns <code>false</code> from
      * <code>empty().hasMoreElements()</code> and throws <code>NoSuchElementException</code>
      * from <code>empty().nextElement()</code>.
+     * @param <T> type of initial content
      * @return the enumeration
      */
     public static final <T> Enumeration<T> empty() {
@@ -58,6 +59,7 @@ public final class Enumerations extends Object {
 
     /**
      * Creates an enumeration with one element.
+     * @param <T> type of initial content
      * @param obj the element to be present in the enumeration.
      * @return enumeration
      */
@@ -71,7 +73,7 @@ public final class Enumerations extends Object {
      * end of <code>en1</code> is reached its elements are being served.
      * As soon as the <code>en1</code> has no more elements, the content
      * of <code>en2</code> is being returned.
-     *
+     * @param <T> type of initial content
      * @param en1 first enumeration
      * @param en2 second enumeration
      * @return enumeration
@@ -90,7 +92,7 @@ public final class Enumerations extends Object {
      * all their content. Each of the provided enumeration is fully read
      * and their content returned before the next enumeration is asked for
      * their elements.
-     *
+     * @param <T> type of initial content
      * @param enumOfEnums Enumeration of Enumeration elements
      * @return enumeration
      */
@@ -103,7 +105,7 @@ public final class Enumerations extends Object {
      * each of the provided elements just once.
      * The elements are compared
      * using their default <code>equals</code> and <code>hashCode</code> methods.
-     *
+     * @param <T> type of initial content
      * @param en enumeration to filter
      * @return enumeration without duplicated items
      */
@@ -121,6 +123,7 @@ public final class Enumerations extends Object {
 
     /**
      * Returns an enumeration that iterates over provided array.
+     * @param <T> type of initial content
      * @param arr the array of object
      * @return enumeration of those objects
      */
@@ -130,6 +133,7 @@ public final class Enumerations extends Object {
 
     /**
      * Removes all <code>null</code>s from the input enumeration.
+     * @param <T> type of initial content
      * @param en enumeration that can contain nulls
      * @return new enumeration without null values
      */
@@ -151,7 +155,8 @@ public final class Enumerations extends Object {
      * };
      * Enumeration strings = Enumerations.convert(elems, convertToString);
      * </pre>
-     *
+     * @param <T> type of initial content
+     * @param <R> type of result content
      * @param en enumeration of any objects
      * @param processor a callback processor for the elements (its toAdd arguments is always null)
      * @return new enumeration where all elements has been processed
@@ -179,7 +184,8 @@ public final class Enumerations extends Object {
      * };
      * Enumeration strings = Enumerations.filter(elems, onlyString);
      * </pre>
-     *
+     * @param <T> type of initial content
+     * @param <R> type of result content
      * @param en enumeration of any objects
      * @param filter a callback processor for the elements (its toAdd arguments is always null)
      * @return new enumeration which does not include non-processed (returned null from processor) elements
@@ -196,7 +202,7 @@ public final class Enumerations extends Object {
      * Before any element is returned
      * for the resulting enumeration it is processed in the {@link Processor} and
      * the processor is allowed to modify it and also add additional elements
-     * at the (current) end of the <q>queue</q> by calling <code>toAdd.add</code>
+     * at the (current) end of the <code>queue</code> by calling <code>toAdd.add</code>
      * or <code>toAdd.addAll</code>. No other methods can be called on the
      * provided <code>toAdd</code> collection.
      * <p>
@@ -211,7 +217,8 @@ public final class Enumerations extends Object {
      * };
      * Enumeration strings = Enumerations.queue(elems, queueSubnodes);
      * </pre>
-     *
+     * @param <T> type of initial content
+     * @param <R> type of result content
      * @param en initial content of the resulting enumeration
      * @param filter the processor that is called for each element and can
      *        add and addAll elements to its toAdd Collection argument and

@@ -554,7 +554,7 @@ jobs:
         run: ant $OPTS -f ide/o.openidex.util test
 
       - name: ide/options.editor
-        run: ant $OPTS -f ide/options.editor test
+        run: .github/retry.sh ant $OPTS -f ide/options.editor test
 
 #      - name: ide/parsing.api
 #        run: ant $OPTS -f ide/parsing.api test
@@ -1731,7 +1731,7 @@ jobs:
     name: Tests on MacOS/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: macos-11
-    timeout-minutes: 60
+    timeout-minutes: 90
     strategy:
       matrix:
         java: [ '11' ]

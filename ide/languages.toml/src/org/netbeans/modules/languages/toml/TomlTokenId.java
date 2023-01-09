@@ -26,6 +26,7 @@ import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
+import org.netbeans.spi.lexer.antlr4.LexerInputCharStream;
 
 /**
  *
@@ -66,7 +67,7 @@ public enum TomlTokenId implements TokenId {
 
         @Override
         protected Lexer<TomlTokenId> createLexer(LexerRestartInfo<TomlTokenId> info) {
-            return new TomlLexer(info);
+            return new TomlLexer(info, new org.tomlj.internal.TomlLexer(new LexerInputCharStream(info.input())));
         }
 
         @Override

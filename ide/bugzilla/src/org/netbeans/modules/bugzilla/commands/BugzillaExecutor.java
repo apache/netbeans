@@ -308,7 +308,7 @@ public class BugzillaExecutor {
         html = html.substring(idxS, idxE);
 
         // very nice
-        html = html.replaceAll("Please press \\<b\\>Back\\</b\\> and try again.", ""); // NOI18N
+        html = html.replace("Please press <b>Back</b> and try again.", ""); // NOI18N
 
         return html;
     }

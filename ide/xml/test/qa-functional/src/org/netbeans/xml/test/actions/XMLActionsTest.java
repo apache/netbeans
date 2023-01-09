@@ -165,7 +165,7 @@ public class XMLActionsTest extends XMLTest {
         Thread.sleep(1000);//wait for opening a window
         String text = new EditorOperator(outputName).getText();
         //create one line because of Windows are adding few empty lines
-        text = text.replaceAll("\n", "");
+        text = text.replace("\n", "");
         ref(text);
         ending();
     }

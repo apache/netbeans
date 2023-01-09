@@ -20,6 +20,7 @@ package org.netbeans.modules.cloud.oracle;
 
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import com.oracle.bmc.ConfigFileReader;
+import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -34,10 +35,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,9 +51,13 @@ import java.util.stream.Collectors;
 import org.netbeans.api.server.properties.InstanceProperties;
 import org.netbeans.api.server.properties.InstancePropertiesManager;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -62,10 +70,26 @@ import org.openide.util.lookup.ProxyLookup;
 public final class OCIManager {
     private static final Logger LOG = Logger.getLogger(OCIManager.class.getName());
     
-    private static final Map<OCIConfig, OCIProfile> profiles = new HashMap<>();
-    
     public static final String PROP_ACTIVE_PROFILE = "activeProfile"; // NOI18N
     public static final String PROP_CONNECTED_PROFILES = "connectedProfiles"; // NOI18N
+    
+    /**
+     * Maps all created profiles.
+     */
+    private static final Map<OCIConfig, OCIProfile> profiles = new HashMap<>();
+    
+    // @GuardedBy(this)
+    /**
+     * Implicit profiles inferred at runtime. Unitialized initially, will auto-populate
+     * to the default config on first reference, if OCIManager_Autoload_DefaultConfig=true.
+     */
+    private Map<String, List<OCIProfile>> implicitProfiles = new HashMap<>();
+    
+    // @GuardedBy(this)
+    /**
+     * Not read, but used to keep the listern from GC.
+     */
+    private FileChangeListener defaultProfileListener;
     
     /**
      * Configuration for the OCI manager
@@ -216,6 +240,9 @@ public final class OCIManager {
         if (configPath == null) {
             configPath = getDefaultConfigPath();
         }
+        if (profile == null) {
+            profile = OCIProfile.DEFAULT_ID;
+        }
         OCIConfig c = new OCIConfig(configPath, profile);
         synchronized (profiles) {
             prof = profiles.get(c);
@@ -223,10 +250,19 @@ public final class OCIManager {
                 return prof;
             }
         }
-        prof = new OCIProfile(getDefaultConfigPath(), c.getProfile());
+        OCIProfile newProf = new OCIProfile(getDefaultConfigPath(), c.getProfile());
         synchronized (profiles) {
-            OCIProfile check = profiles.putIfAbsent(c, prof);
-            return check != null ? check : prof;
+            OCIProfile check;
+            if (prof == null) {
+                check = profiles.putIfAbsent(c, newProf);
+                return check != null ? check : newProf;
+            } else {
+                check = profiles.get(c);
+                if (check == null || !check.isValid()) {
+                    profiles.put(c, newProf);
+                }
+                return newProf;
+            }
         }
     }
     
@@ -241,6 +277,88 @@ public final class OCIManager {
     private static final String KEY_CONFIG_PATH = "configPath";
     private static final String KEY_PROFILE_ID = "profile";
     
+    public void setImplicitProfiles(String key, List<OCIProfile> profiles) {
+        
+        List<OCIProfile> current  = getConnectedProfiles();
+        
+        boolean changes = false;
+        OCIProfile active;
+        synchronized (this) {
+             current = new ArrayList<>(implicitProfiles.getOrDefault(key, Collections.emptyList()));
+             for (Iterator<OCIProfile> it = current.iterator(); it.hasNext(); ) {
+                 OCIProfile p = it.next();
+                 if (!p.isValid()) {
+                     it.remove();
+                     changes = true;
+                 }
+             }
+             changes |= !(current.size() == profiles.size() && current.containsAll(profiles));
+             if (!changes) {
+                 return;
+             }
+             current.addAll(profiles);
+             implicitProfiles.put(key, profiles);
+             active = activeProfile;
+        }
+        listeners.firePropertyChange(PROP_CONNECTED_PROFILES, null, null);
+        synchronized (this) {
+            if ((active != null || profiles.isEmpty()) && !current.contains(active)) {
+                return;
+            }
+            activeProfile = null;
+        }
+        listeners.firePropertyChange(PROP_ACTIVE_PROFILE, null, null);
+    }
+    
+    static boolean loadDefaultConfigProfiles() {
+        return Boolean.valueOf(NbBundle.getMessage(OCIManager.class, "OCIManager_Autoload_DefaultConfig"));
+    }
+    
+    private Map<String, List<OCIProfile>> initImplicitProfiles() {
+        if (!loadDefaultConfigProfiles()) {
+            return implicitProfiles;
+        }
+        Path path = getDefaultConfigPath();
+        String s = path.toString();
+        synchronized (this) {
+            if (implicitProfiles.get(s) != null) {
+                return implicitProfiles;
+            }
+            try {
+                implicitProfiles.put(s, listProfiles(null));
+            } catch (IOException ex) {
+                // TODO: report inability to load profiles.
+                Exceptions.printStackTrace(ex);
+            }
+            FileUtil.addFileChangeListener(defaultProfileListener = new FileChangeAdapter() {
+                @Override
+                public void fileDeleted(FileEvent fe) {
+                    refresh();
+                }
+
+                @Override
+                public void fileChanged(FileEvent fe) {
+                    refresh();
+                }
+
+                @Override
+                public void fileDataCreated(FileEvent fe) {
+                    refresh();
+                }
+                
+                private void refresh() {
+                    try {
+                        setImplicitProfiles(s, listProfiles(null));
+                    } catch (IOException ex) {
+                        // TODO: display some lightweight unobtrusive message, or status line item
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                
+            }, path.toFile());
+        }
+        return implicitProfiles;
+    }
     
     public void addConnectedProfile(OCIProfile profile) {
         if (profile.getTenantId() == null) {
@@ -267,7 +385,11 @@ public final class OCIManager {
         listeners.firePropertyChange(PROP_ACTIVE_PROFILE, null, null);
     }
     
-    public void removeConnectedProfile(OCIProfile profile) {
+    public boolean isConfiguredProfile(OCIProfile profile) {
+        return findProfileProperties(profile) != null;
+    }
+    
+    private InstanceProperties findProfileProperties(OCIProfile profile) {
         List<InstanceProperties> props = InstancePropertiesManager.getInstance().getProperties("cloud.oracle.com.ociprofiles");
         for (InstanceProperties p : props) {
             String cfgPath = p.getString(KEY_CONFIG_PATH, null);
@@ -282,30 +404,39 @@ public final class OCIManager {
                 profName = OCIProfile.DEFAULT_ID;
             }
             if (profName.equals(profile.getId())) {
-                OCIProfile resetToProfile = null;
-                
-                synchronized (this) {
-                    OCIConfig cfg = new OCIConfig(profile.getConfigPath(), OCIProfile.DEFAULT_ID.equals(profile.getId()) ? null : profile.getId());
-                    if (profiles.remove(cfg) == null) {
-                        return;
-                    }
-                    if (profile == getActiveProfile()) {
-                        OCIProfile def = forConfig(defaultConfigPath, profName);
-                        if (profiles.values().contains(def) || profiles.isEmpty()) {
-                            resetToProfile = def;
-                        } else {
-                            resetToProfile = profiles.values().iterator().next();
-                        }
-                    }
-                }
-                p.remove();
-                if (resetToProfile != null) {
-                    setActiveProfile(resetToProfile);
-                }
-                listeners.firePropertyChange("connectedProfiles", null, null);
-                return;
+                return p;
             }
         }
+        return null;
+    }
+    
+    public void removeConnectedProfile(OCIProfile profile) {
+        String profName = profile.getId();
+        InstanceProperties p = findProfileProperties(profile);
+        if (p == null) {
+            return;
+        }
+        OCIProfile resetToProfile = null;
+
+        synchronized (this) {
+            OCIConfig cfg = new OCIConfig(profile.getConfigPath(), OCIProfile.DEFAULT_ID.equals(profile.getId()) ? null : profile.getId());
+            if (profiles.remove(cfg) == null) {
+                return;
+            }
+            if (profile == getActiveProfile()) {
+                OCIProfile def = forConfig(defaultConfigPath, profName);
+                if (profiles.values().contains(def) || profiles.isEmpty()) {
+                    resetToProfile = def;
+                } else {
+                    resetToProfile = profiles.values().iterator().next();
+                }
+            }
+        }
+        p.remove();
+        if (resetToProfile != null) {
+            setActiveProfile(resetToProfile);
+        }
+        listeners.firePropertyChange("connectedProfiles", null, null);
     }
     
     /**
@@ -313,7 +444,7 @@ public final class OCIManager {
      * @return list of OCI profiles.
      */
     public List<OCIProfile> getConnectedProfiles() {
-        List<OCIProfile> toReturn = new ArrayList<>();
+        Set<OCIProfile> toReturn = new LinkedHashSet<>();
         
         Path defConfigPath = getDefaultConfigPath();
         List<InstanceProperties> props = InstancePropertiesManager.getInstance().getProperties("cloud.oracle.com.ociprofiles");
@@ -335,7 +466,10 @@ public final class OCIManager {
             }
             toReturn.add(forConfig(defConfigPath, profName));
         }
-        return toReturn;
+        
+        initImplicitProfiles().values().stream().flatMap(l -> l.stream()).forEach(toReturn::add);
+        
+        return new ArrayList<>(toReturn);
     }
     
     /**
@@ -346,6 +480,10 @@ public final class OCIManager {
         OCIProfile p = Lookup.getDefault().lookup(OCIProfile.class);
         if (p != null) {
             return p;
+        }
+        OCIProfile active;
+        synchronized (this) {
+            active = activeProfile;
         }
         if (activeProfile == null) {
             Preferences prefs = NbPreferences.forModule(OCIManager.class);

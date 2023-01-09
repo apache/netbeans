@@ -534,7 +534,7 @@ public class Tiny {
             List<? extends TypeMirror> type = CreateElementUtilities.resolveType(
                     EnumSet.noneOf(ElementKind.class), ctx.getInfo(), parent, leaf, pos, new TypeMirror[1], new int[1]);
 
-            if (!type.isEmpty()) {
+            if ((type != null) && !type.isEmpty()) {
                 return type.get(0);
             }
         }

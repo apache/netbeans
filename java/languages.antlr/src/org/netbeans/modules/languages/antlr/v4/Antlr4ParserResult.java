@@ -58,11 +58,14 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
     private static final Logger LOG = Logger.getLogger(Antlr4ParserResult.class.getName());
 
     public static final Reference HIDDEN = new Reference(ReferenceType.CHANNEL, "HIDDEN", OffsetRange.NONE);
+    public static final Reference DEFAULT_MODE = new Reference(ReferenceType.MODE, "DEFAULT_MODE", OffsetRange.NONE);
+
     final Set<String> unknownReferences = new HashSet<>();
 
     public Antlr4ParserResult(Snapshot snapshot) {
         super(snapshot);
         references.put(HIDDEN.name, HIDDEN);
+        references.put(DEFAULT_MODE.name, DEFAULT_MODE);
     }
     
     @Override

@@ -402,8 +402,11 @@ public class CustomizerDataSupport {
         if (platformAdapters.isEmpty()) {
             jvmModel.setSelectedItem(null);
             return;
+        } else {
+            for (JavaPlatformAdapter platformAdapter : platformAdapters) {
+                jvmModel.addElement(platformAdapter);
+            }
         }
-        jvmModel.addAll(platformAdapters);
         
         // try to set selected item
         for (JavaPlatformAdapter j2sePlatform : platformAdapters) {

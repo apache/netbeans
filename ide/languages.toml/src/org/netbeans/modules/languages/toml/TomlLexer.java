@@ -32,8 +32,8 @@ import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
  */
 public final class TomlLexer extends AbstractAntlrLexerBridge<org.tomlj.internal.TomlLexer, TomlTokenId> {
 
-    public TomlLexer(LexerRestartInfo<TomlTokenId> info, org.tomlj.internal.TomlLexer lexer) {
-        super(info, lexer);
+    public TomlLexer(LexerRestartInfo<TomlTokenId> info) {
+        super(info, org.tomlj.internal.TomlLexer::new);
     }
 
     @Override
@@ -122,6 +122,7 @@ public final class TomlLexer extends AbstractAntlrLexerBridge<org.tomlj.internal
             this.arrayDepthStack = new IntegerStack(lexer.arrayDepthStack);
         }
 
+        @Override
         public void restore(org.tomlj.internal.TomlLexer lexer) {
             super.restore(lexer);
 

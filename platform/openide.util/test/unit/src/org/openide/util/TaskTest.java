@@ -35,7 +35,8 @@ import org.junit.Ignore;
 
 
 public class TaskTest {
-    private final static long tenMiliseconds = 10000000; // in nanosecods
+    private final static long tenMiliseconds = 10000000; // in nanoseconds
+    private final static long fiveHundredMiliseconds = 500000000; // in nanoseconds
     
     private static final Logger LOG = Logger.getLogger("org.openide.util.TaskTest");
 
@@ -115,14 +116,14 @@ public class TaskTest {
             this.executedListenerTask = t;
         });
 
-        assertFalse(task.isFinished());
+        assertFalse("Task should not have been finished.", task.isFinished());
         assertNotEquals("null", task.debug());
 
         task.run();
 
-        assertTrue(this.runHasBeenExecuted);
+        assertTrue("Runnable should have been executed.", this.runHasBeenExecuted);
         assertSame(task, this.executedListenerTask);
-        assertTrue(task.isFinished());
+        assertTrue("Task should have finished.", task.isFinished());
     }
 
     //--------------------------------------------------------------------------
@@ -141,7 +142,7 @@ public class TaskTest {
 
         task.run();
 
-        assertTrue(task.isFinished());
+        assertTrue("Task should have finished.", task.isFinished());
         assertNull(this.executedListenerTask);
     }
 
@@ -156,20 +157,20 @@ public class TaskTest {
         task.run();
 
         assertNull(this.executedListenerTask);
-        assertTrue(task.isFinished());
+        assertTrue("Task should have finished.", task.isFinished());
 
         task.addTaskListener((t) -> {
             this.executedListenerTask = t;
         });
 
         assertSame(task, this.executedListenerTask);
-        assertTrue(task.isFinished()); // still finished
+        assertTrue("Task should have finished.", task.isFinished()); // still finished
     }
     
     //--------------------------------------------------------------------------
     @Ignore("Current implementation allows null listener but then Task.run throws NPE :(")
     @Test
-    public void addTaskListener_throwsNullPointer_whenGivenNullArgument() {
+    public void addTaskListener_throwsNullPointer_whenGivenNull() {
 
         Task task = new Task(() -> {
         });
@@ -183,7 +184,7 @@ public class TaskTest {
 
     //--------------------------------------------------------------------------
     @Test
-    public void removeTaskListener_doesNothing_whenGivenNullArgument() {
+    public void removeTaskListener_doesNothing_whenGivenNull() {
 
         this.executedListenerTask = null;
         
@@ -200,6 +201,62 @@ public class TaskTest {
         assertSame(task, this.executedListenerTask);
     }
     
+    //--------------------------------------------------------------------------
+    @Test
+    public void taksIsNotFinished_untilRunMethodCompletes()
+          throws Exception {
+
+        Object lock = new Object();
+        Task task = new Task(() -> {
+            synchronized (lock) {
+                lock.notify(); // let the test thread continue
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    fail("This shall never happen as the test does not call 'interrupt()'.");
+                }
+            }
+        });
+
+        assertFalse("Task should not have been finished.", task.isFinished());
+
+        synchronized (lock) {
+            new Thread(task).start();
+            lock.wait(); // wait for task to start
+        }
+
+        assertFalse("Task should not have been finished.", task.isFinished());
+
+        synchronized (lock) {
+            lock.notify(); //let the task finish
+        }
+        task.waitFinished();
+
+        assertTrue("Task should have finished.", task.isFinished());
+    }
+    //--------------------------------------------------------------------------
+    @Test
+    public void waitFinished_returnsAfterTimeout_whenTaksIsNotExecutedAtAll()
+            throws Exception {
+ 
+        Task task = new Task(()->{});
+        
+        assertFalse("Task should not have been finished.", task.isFinished());
+        
+        final long begin = nanoTime();
+        
+        assertFalse("Task should not have been finished.", task.waitFinished(500));
+        
+        final long duration = nanoTime()- begin;
+        
+        assertTrue("Task.waitFinished(long) waited shorter than expected (" + 
+                duration + " ns < " + fiveHundredMiliseconds + " ns).", 
+              duration >= fiveHundredMiliseconds);
+        assertFalse("Task should not have been finished.", task.isFinished());
+    }
+    
+    // this test is being repaced by taksIsNotFinished_untilRunMethodCompletes 
+    // and will be removed by next PR
     @Test
     public void testPlainTaskWaitsForBeingExecuted () throws Exception {
         R run = new R ();
@@ -220,21 +277,8 @@ public class TaskTest {
         assertTrue ("Finished", t.isFinished ());
     }
     
-    // this test is covered by emptyTask_isImmediatelyFinished_andNeverWaits and will be removed in next PR
-    @Test
-    public void testTaskEMPTYIsFinished () throws Exception {
-        assertTrue (Task.EMPTY.isFinished ());
-    }
-        // this test is covered by emptyTask_isImmediatelyFinished_andNeverWaits and will be removed in next PR
-    @Test
-    public void testWaitFinishedOnEMPTYTaskReturnsImmediatelly () throws Exception {
-        Task.EMPTY.waitFinished ();
-    }
-    // this test is covered by emptyTask_isImmediatelyFinished_andNeverWaits and will be removed in next PR
-    @Test
-    public void testWaitWithTimeOutReturnsImmediatellyOnFinishedTasks () throws Exception {
-        assertTrue ("Was successfully finished", Task.EMPTY.waitFinished (0));
-    }
+    // this test is being replaced by waitFinishedWithTimeout_returnsAfterTimeout_whenTaksIsNotExecutedAtAll
+    // and will be removed by next PR
     @Test
     public void testWaitWithTimeOutReturnsAfterTimeOutWhenTheTaskIsNotComputedAtAll () throws Exception {
         if (!canWait1s()) {
@@ -260,26 +304,32 @@ public class TaskTest {
         
         fail ("Something wrong happened the task should wait for 1000ms but it took: " + time + "\n" + log);
     }
+    
+    //--------------------------------------------------------------------------
     @Test
-    public void testWaitOnStrangeTaskThatStartsItsExecutionInOverridenWaitFinishedMethodLikeFolderInstancesDo () throws Exception {
+    public void waitOnTask_withOverridenWaitFinishedMethod() 
+            throws Exception { // like FolderInstances do
+        
         class MyTask extends Task {
-            private int values;
-            
-            public MyTask () {
-                notifyFinished ();
+
+            private int values = 0;
+
+            public MyTask() {
+                notifyFinished();
             }
-            
-            public void waitFinished () {
-                notifyRunning ();
+
+            @Override
+            public void waitFinished() {
+                notifyRunning();
                 values++;
-                notifyFinished ();
+                notifyFinished();
             }
         }
-        
-        MyTask my = new MyTask ();
-        assertTrue ("The task thinks that he is finished", my.isFinished ());
-        assertTrue ("Ok, even with timeout we got the result", my.waitFinished (1000));
-        assertEquals ("But the old waitFinished is called", 1, my.values);
+
+        MyTask my = new MyTask(); 
+        assertTrue("Task should have finished.", my.isFinished()); //The task thinks that it is finished.
+        assertTrue("Task should have finished.", my.waitFinished(1000)); //Even with timeout we got the result,
+        assertEquals(1, my.values); //but the old waitFinished is called.
     }
     @Test
     public void testWaitOnStrangeTaskThatTakesReallyLongTime () throws Exception {

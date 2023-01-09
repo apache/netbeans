@@ -114,6 +114,8 @@ derby.log
 /extide/gradle/test/unit/data/**/.gradle/
 /java/gradle.java/test/unit/data/**/build/
 /java/gradle.java/test/unit/data/**/.gradle/
+/enterprise/micronaut/test/unit/data/**/build/
+/enterprise/micronaut/test/unit/data/**/.gradle/
 
 # ANTLR v4 Grammar
 ##################################

@@ -28,7 +28,7 @@ import org.netbeans.spi.lexer.*;
  *
  * @author Laszlo Kishalmi
  */
-public class LexerInputCharStream implements CharStream {
+final class LexerInputCharStream implements CharStream {
     private final LexerInput input;
 
     private int tokenMark = Integer.MAX_VALUE;

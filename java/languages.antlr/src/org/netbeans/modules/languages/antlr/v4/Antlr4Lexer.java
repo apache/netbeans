@@ -26,7 +26,6 @@ import static org.antlr.parser.antlr4.ANTLRv4Lexer.*;
 import org.netbeans.modules.languages.antlr.AntlrTokenId;
 import static org.netbeans.modules.languages.antlr.AntlrTokenId.*;
 import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
-import org.netbeans.spi.lexer.antlr4.LexerInputCharStream;
 
 /**
  *
@@ -36,7 +35,7 @@ public final class Antlr4Lexer extends AbstractAntlrLexerBridge<ANTLRv4Lexer, An
 
 
     public Antlr4Lexer(LexerRestartInfo<AntlrTokenId> info) {
-        super(info, new ANTLRv4Lexer(new LexerInputCharStream(info.input())));
+        super(info, ANTLRv4Lexer::new);
     }
 
     @Override

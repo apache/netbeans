@@ -18,6 +18,8 @@
  */
 package org.netbeans.spi.lexer.antlr4;
 
+import java.util.function.Function;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.misc.IntegerList;
 import org.netbeans.api.lexer.Token;
 import org.antlr.v4.runtime.Lexer;
@@ -38,24 +40,24 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
 
     private final TokenFactory<T> tokenFactory;
     protected final L lexer;
-    protected final LexerInputCharStream input;
+    private final LexerInputCharStream input;
 
     /**
      * Constructor for the lexer bridge, usually used as:
      * <pre>{@code
      * public SomeLexer(LexerRestartInfo<SomeTokenId> info) {
-     *     super(info, new SomeANTLRLexer(new LexerInputCharStream(info.input())));
+     *     super(info, SomeANTLRLexer::new);
      * }
      * }
      * </pre>
      * @param info  The lexer restart info
-     * @param lexer The ANTLR generated Lexer
+     * @param lexerCreator A function to create an ANTLR from a {@code CharSteram}.
      */
     @SuppressWarnings("unchecked")
-    public AbstractAntlrLexerBridge(LexerRestartInfo<T> info, L lexer) {
+    public AbstractAntlrLexerBridge(LexerRestartInfo<T> info, Function<CharStream, L> lexerCreator) {
         this.tokenFactory = info.tokenFactory();
-        this.lexer = lexer;
-        this.input = (LexerInputCharStream) lexer.getInputStream();
+        this.input = new LexerInputCharStream(info.input());
+        this.lexer = lexerCreator.apply(input);
         if (info.state() != null) {
             ((LexerState<L>) info.state()).restore(lexer);
         }

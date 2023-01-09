@@ -26,7 +26,6 @@ import static org.antlr.parser.antlr3.ANTLRv3Lexer.*;
 import org.netbeans.modules.languages.antlr.AntlrTokenId;
 import static org.netbeans.modules.languages.antlr.AntlrTokenId.*;
 import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
-import org.netbeans.spi.lexer.antlr4.LexerInputCharStream;
 
 /**
  *
@@ -36,7 +35,7 @@ public final class Antlr3Lexer extends AbstractAntlrLexerBridge<ANTLRv3Lexer, An
 
 
     public Antlr3Lexer(LexerRestartInfo<AntlrTokenId> info) {
-        super(info, new ANTLRv3Lexer(new LexerInputCharStream(info.input())));
+        super(info, ANTLRv3Lexer::new);
     }
 
     @Override

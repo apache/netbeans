@@ -51,7 +51,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Stepan Herold
  */
-    public class TomcatPlatformImpl extends J2eePlatformImpl2 {
+public class TomcatPlatformImpl extends J2eePlatformImpl2 {
     
     private static final String WSCOMPILE_LIBS[] = new String[] {
         "jaxrpc/lib/jaxrpc-api.jar",        // NOI18N
@@ -561,7 +561,7 @@ import org.openide.util.lookup.Lookups;
                     break;
                 case TOMEE_71:
                 case TOMEE_70:
-                   versions = versionRange(7, 8);
+                    versions = versionRange(7, 8);
                     break;
                 case TOMEE_17:
                 case TOMEE_16:

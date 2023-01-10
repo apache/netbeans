@@ -135,7 +135,6 @@ public final class TomcatFactory implements DeploymentFactory {
     public static synchronized TomcatFactory getInstance() {
         if (instance == null) {
             instance = new TomcatFactory();
-            LOGGER.log(Level.INFO, "[{0}] instance= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), instance});
             DeploymentFactoryManager.getInstance().registerDeploymentFactory(instance);
         }
         return instance;
@@ -169,7 +168,6 @@ public final class TomcatFactory implements DeploymentFactory {
             if (tm == null) {
                 try {
                     TomcatVersion version = getTomcatVersion(uri);
-                    LOGGER.log(Level.INFO, "[{0}] version= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), version});
                     tm = new TomcatManager(true, stripUriPrefix(uri, version), version);
                     managerCache.put(ip, tm);
                 } catch (IllegalArgumentException iae) {
@@ -177,7 +175,6 @@ public final class TomcatFactory implements DeploymentFactory {
                     throw (DeploymentManagerCreationException)(t.initCause(iae));
                 }
             }
-            LOGGER.log(Level.INFO, "[{0}] tm= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), tm});
             return tm;
         }
     }
@@ -201,7 +198,7 @@ public final class TomcatFactory implements DeploymentFactory {
     
     /**
      * @param str
-     * @return <CODE>true</CODE> for URIs beggining with <CODE>tomcat[55|110]:</CODE> prefix
+     * @return <CODE>true</CODE> for URIs beggining with <CODE>tomcat[55|60]:</CODE> prefix
      */    
     @Override
     public boolean handlesURI(String str) {
@@ -222,44 +219,35 @@ public final class TomcatFactory implements DeploymentFactory {
      * @throws IllegalStateException if the version information cannot be retrieved 
      */
     public static String getTomcatVersionString(File catalinaHome) throws IllegalStateException {
-        LOGGER.log(Level.INFO, "[{0}] catalinaHome= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), catalinaHome});
         File catalinaJar = new File(catalinaHome, "lib/catalina.jar"); // NOI18N
         File coyoteJar = new File(catalinaHome, "lib/tomcat-coyote.jar"); // NOI18N
-        LOGGER.log(Level.INFO, "[{0}] catalinaJar= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), catalinaJar});
-        LOGGER.log(Level.INFO, "[{0}] coyoteJar= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), coyoteJar});
         if (!catalinaJar.exists()) {
             // For Tomcat 5/5.5
-            LOGGER.log(Level.INFO, "[{0}] Catalina jar for Tomcat 5/5.5", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             catalinaJar = new File(catalinaHome, "server/lib/catalina.jar"); // NOI18N
             coyoteJar = new File(catalinaHome, "server/lib/tomcat-coyote.jar"); // NOI18N
         }
-        LOGGER.log(Level.INFO, "[{0}] Calling getTomcatVersionFallback", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+
         try {
             URLClassLoader loader = new URLClassLoader(new URL[] {
                 Utilities.toURI(catalinaJar).toURL(), Utilities.toURI(coyoteJar).toURL() });
-            LOGGER.log(Level.INFO, "[{0}] loader= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), loader});
+            
             Class serverInfo = loader.loadClass("org.apache.catalina.util.ServerInfo"); // NOI18N
             try {
                 Method method = serverInfo.getMethod("getServerNumber", new Class[] {}); // NOI18N
                 String version = (String) method.invoke(serverInfo, new Object[] {});
-                LOGGER.log(Level.INFO, "[{0}] version= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), version});
                 return version;
             } catch (NoSuchMethodException ex) {
                 // try getServerInfo
-                LOGGER.log(Level.INFO, "[{0}] serverInfo.getMethod does not exist", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             }
 
             Method method = serverInfo.getMethod("getServerInfo", new Class[] {}); // NOI18N
-            LOGGER.log(Level.INFO, "[{0}] method= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), method});
             String version = (String) method.invoke(serverInfo, new Object[] {});
             int idx = version.indexOf('/');
             if (idx > 0) {
-                LOGGER.log(Level.INFO, "[{0}] version= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), version.substring(idx + 1)});
                 return version.substring(idx + 1);
             }
             throw new IllegalStateException("Cannot identify the version of the server."); // NOI18N
         } catch (MalformedURLException | ReflectiveOperationException e) {
-            LOGGER.log(Level.INFO, "[{0}] something went wrong", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             throw new IllegalStateException(e);
         }
     }
@@ -269,23 +257,18 @@ public final class TomcatFactory implements DeploymentFactory {
         try {
             // TODO we might use fallback as primary check - it might be faster
             // than loading jars and executing code in JVM
-            LOGGER.log(Level.INFO, "[{0}] catalinaHome= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), catalinaHome});
             version = getTomcatVersionString(catalinaHome);
         } catch (IllegalStateException | UnsupportedClassVersionError ex) {
             LOGGER.log(Level.INFO, null, ex);
-            LOGGER.log(Level.INFO, "[{0}] Calling getTomcatVersionFallback", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             return getTomcatVersionFallback(catalinaHome);
         }
         return getTomcatVersion(version, TomcatVersion.TOMCAT_80);
     }
 
     private static TomcatVersion getTomcatVersionFallback(File catalinaHome) throws IllegalStateException {
-        LOGGER.log(Level.INFO, "[{0}] catalinaHome= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), catalinaHome});
         File lib = new File(catalinaHome, "common" + File.separator + "lib"); // NOI18N
-        LOGGER.log(Level.INFO, "[{0}] lib= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), lib});
         if (lib.isDirectory()) {
             // 5 or 5.5
-            LOGGER.log(Level.INFO, "[{0}] lib.isDirectory()", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             File tasks = new File(catalinaHome, "bin" + File.separator + "catalina-tasks.xml"); // NOI18N
             if (tasks.isFile()) {
                 // 5.5
@@ -294,9 +277,7 @@ public final class TomcatFactory implements DeploymentFactory {
             return TomcatVersion.TOMCAT_50;
         } else {
             // 6 or 7 or 8
-            LOGGER.log(Level.INFO, "[{0}] at least Tomcat 6", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             File bootstrapJar = new File(catalinaHome, "bin" + File.separator + "bootstrap.jar"); // NOI18N
-            LOGGER.log(Level.INFO, "[{0}] bootstrapJar= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), bootstrapJar});
             if (!bootstrapJar.exists()) {
                 return null;
             }
@@ -306,10 +287,8 @@ public final class TomcatFactory implements DeploymentFactory {
                 if (manifest != null) {
                     specificationVersion = manifest.getMainAttributes()
                             .getValue("Specification-Version"); // NOI18N
-                    LOGGER.log(Level.INFO, "[{0}] manifest= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), manifest});
                 }
                 if (specificationVersion != null) { // NOI18N
-                    LOGGER.log(Level.INFO, "[{0}] specificationVersion= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), specificationVersion});
                     specificationVersion = specificationVersion.trim();
                     return getTomcatVersion(specificationVersion, TomcatVersion.TOMCAT_55);
                 }
@@ -321,8 +300,6 @@ public final class TomcatFactory implements DeploymentFactory {
     }
 
     private static TomcatVersion getTomcatVersion(String version, TomcatVersion defaultVersion) throws IllegalStateException {
-        LOGGER.log(Level.INFO, "[{0}] version= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), version});
-        LOGGER.log(Level.INFO, "[{0}] defaultVersion= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), defaultVersion});
         if (version.startsWith("5.0.")) { // NOI18N
             return TomcatVersion.TOMCAT_50;
         } else if (version.startsWith("5.5.")) { // NOI18N
@@ -346,7 +323,6 @@ public final class TomcatFactory implements DeploymentFactory {
         if (dotIndex > 0) {
             try {
                 int major = Integer.parseInt(version.substring(0, dotIndex));
-                LOGGER.log(Level.INFO, "[{0}] major= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), major});
                 // forward compatibility - handle any newer tomcat as Tomcat 9
                 if (major > 9) {
                     return TomcatVersion.TOMCAT_90;
@@ -359,7 +335,6 @@ public final class TomcatFactory implements DeploymentFactory {
     }
 
     private static TomcatVersion getTomcatVersion(String uri) throws IllegalStateException {
-        LOGGER.log(Level.INFO, "[{0}] uri= {1}", new Object[]{String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()), uri});
         if (uri.startsWith(TOMCAT_URI_PREFIX_110)) {
             return TomcatVersion.TOMCAT_110;
         } else if (uri.startsWith(TOMCAT_URI_PREFIX_101)) {

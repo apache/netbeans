@@ -683,7 +683,7 @@ public class SourceUtils {
         }
 
         final boolean apply(final FileObject fo) {
-            if (name.equals(fo.getNameExt())) {
+            if (fo.getNameExt().equals(name)) {
                 return true;
             }
             final String foName = fo.getName();

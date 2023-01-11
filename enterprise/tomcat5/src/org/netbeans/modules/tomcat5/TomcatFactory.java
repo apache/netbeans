@@ -21,10 +21,7 @@ package org.netbeans.modules.tomcat5;
 
 import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,12 +47,13 @@ import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomEEType;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomEEVersion;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomcatVersion;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /** 
- * Factory capable to create DeploymentManager that can deploy to Tomcat 5 and 6.
+ * Factory capable to create DeploymentManager that can deploy to Tomcat and TomEE.
  *
  * Tomcat URI has following format:
- * <PRE><CODE>tomcat[55|60]:[home=&lt;home_path&gt;:[base=&lt;base_path&gt;:]]&lt;manager_app_url&gt;</CODE></PRE>
+ * <PRE><CODE>tomcat[90|100]:[home=&lt;home_path&gt;:[base=&lt;base_path&gt;:]]&lt;manager_app_url&gt;</CODE></PRE>
  * for example
  * <PRE><CODE>tomcat:http://localhost:8080/manager/</CODE></PRE>
  * where paths values will be used as CATALINA_HOME and CATALINA_BASE properties and manager_app_url
@@ -70,6 +68,9 @@ public final class TomcatFactory implements DeploymentFactory {
     public static final String SERVER_ID_70 = "Tomcat70";   // NOI18N
     public static final String SERVER_ID_80 = "Tomcat80";   // NOI18N
     public static final String SERVER_ID_90 = "Tomcat90";   // NOI18N
+    public static final String SERVER_ID_100 = "Tomcat100";   // NOI18N
+    public static final String SERVER_ID_101 = "Tomcat101";   // NOI18N
+    public static final String SERVER_ID_110 = "Tomcat110";   // NOI18N
     
     public static final String TOMCAT_URI_PREFIX_50 = "tomcat:";    // NOI18N
     public static final String TOMCAT_URI_PREFIX_55 = "tomcat55:";  // NOI18N
@@ -77,16 +78,25 @@ public final class TomcatFactory implements DeploymentFactory {
     public static final String TOMCAT_URI_PREFIX_70 = "tomcat70:";  // NOI18N
     public static final String TOMCAT_URI_PREFIX_80 = "tomcat80:";  // NOI18N
     public static final String TOMCAT_URI_PREFIX_90 = "tomcat90:";  // NOI18N
+    public static final String TOMCAT_URI_PREFIX_100 = "tomcat100:";  // NOI18N
+    public static final String TOMCAT_URI_PREFIX_101 = "tomcat101:";  // NOI18N
+    public static final String TOMCAT_URI_PREFIX_110 = "tomcat110:";  // NOI18N
     
     public static final String TOMCAT_URI_HOME_PREFIX = "home=";    // NOI18N
     public static final String TOMCAT_URI_BASE_PREFIX = ":base=";   // NOI18N
 
-    private static final Pattern TOMEE_JAR_PATTERN = Pattern.compile("tomee-common-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
-
-    private static final Pattern TOMEE_JAXRS_JAR_PATTERN = Pattern.compile("tomee-jaxrs-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
-
-    private static final Pattern TOMEE_GERONIMO_JAR_PATTERN = Pattern.compile("geronimo-connector-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
-
+    static final Pattern TOMEE_JAR_PATTERN = Pattern.compile("tomee-common-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    
+    static final Pattern TOMEE_WEBPROFILE_JAR_PATTERN = Pattern.compile("openejb-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    
+    static final Pattern TOMEE_JAXRS_JAR_PATTERN = Pattern.compile("jettison-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    
+    static final Pattern TOMEE_MICROPROFILE_JAR_PATTERN = Pattern.compile("microprofile-config-api-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    
+    static final Pattern TOMEE_PLUS_JAR_PATTERN = Pattern.compile("activemq-protobuf-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    
+    static final Pattern TOMEE_PLUME_JAR_PATTERN = Pattern.compile("eclipselink-(\\d+(\\.\\d+)*).*\\.jar"); // NOI18N
+    
     private static final String GENERIC_DISCONNECTED_URI_PREFIX = "tomcat-any:"; // NOI18N
     private static final String GENERIC_DISCONNECTED_URI =
             GENERIC_DISCONNECTED_URI_PREFIX + "jakarta-tomcat-generic"; // NOI18N
@@ -96,19 +106,23 @@ public final class TomcatFactory implements DeploymentFactory {
     private static final String DISCONNECTED_URI_70 = TOMCAT_URI_PREFIX_70 + "apache-tomcat-7.0.x";   // NOI18N
     private static final String DISCONNECTED_URI_80 = TOMCAT_URI_PREFIX_80 + "apache-tomcat-8.0.x";   // NOI18N
     private static final String DISCONNECTED_URI_90 = TOMCAT_URI_PREFIX_90 + "apache-tomcat-9.0.x";   // NOI18N
+    private static final String DISCONNECTED_URI_100 = TOMCAT_URI_PREFIX_100 + "apache-tomcat-10.0.x";   // NOI18N
+    private static final String DISCONNECTED_URI_101 = TOMCAT_URI_PREFIX_101 + "apache-tomcat-10.1.x";   // NOI18N
+    private static final String DISCONNECTED_URI_110 = TOMCAT_URI_PREFIX_110 + "apache-tomcat-11.0.x";   // NOI18N
     
     private static final Set<String> DISCONNECTED_URIS = new HashSet<>();
     static {
         Collections.addAll(DISCONNECTED_URIS, DISCONNECTED_URI_50,
                 DISCONNECTED_URI_55, DISCONNECTED_URI_60, DISCONNECTED_URI_70,
-                DISCONNECTED_URI_80, DISCONNECTED_URI_90, GENERIC_DISCONNECTED_URI);
+                DISCONNECTED_URI_80, DISCONNECTED_URI_90, DISCONNECTED_URI_100,
+                DISCONNECTED_URI_101, DISCONNECTED_URI_110, GENERIC_DISCONNECTED_URI);
     }
     
     private static TomcatFactory instance;
     
     private static final WeakHashMap managerCache = new WeakHashMap();
     
-    private static final Logger LOGGER = Logger.getLogger("org.netbeans.modules.tomcat5");  // NOI18N
+    private static final Logger LOGGER = Logger.getLogger(TomcatFactory.class.getName());  // NOI18N
     
     private TomcatFactory() {
         super();
@@ -193,24 +207,30 @@ public final class TomcatFactory implements DeploymentFactory {
                 || str.startsWith(TOMCAT_URI_PREFIX_60)
                 || str.startsWith(TOMCAT_URI_PREFIX_70)
                 || str.startsWith(TOMCAT_URI_PREFIX_80)
-                || str.startsWith(TOMCAT_URI_PREFIX_90));
+                || str.startsWith(TOMCAT_URI_PREFIX_90)
+                || str.startsWith(TOMCAT_URI_PREFIX_100)
+                || str.startsWith(TOMCAT_URI_PREFIX_101)
+                || str.startsWith(TOMCAT_URI_PREFIX_110));
     }
     
     /** 
-     * Retrieve the tomcat version e.g. '6.0.10'
+     * Retrieve the tomcat version e.g. '9.0.70'
      * 
      * @throws IllegalStateException if the version information cannot be retrieved 
      */
     public static String getTomcatVersionString(File catalinaHome) throws IllegalStateException {
         File catalinaJar = new File(catalinaHome, "lib/catalina.jar"); // NOI18N
-        if (!catalinaJar.exists()) {
-            catalinaJar = new File(catalinaHome, "server/lib/catalina.jar"); // NOI18N
-        }
         File coyoteJar = new File(catalinaHome, "lib/tomcat-coyote.jar"); // NOI18N
+        if (!catalinaJar.exists()) {
+            // For Tomcat 5/5.5
+            catalinaJar = new File(catalinaHome, "server/lib/catalina.jar"); // NOI18N
+            coyoteJar = new File(catalinaHome, "server/lib/tomcat-coyote.jar"); // NOI18N
+        }
 
         try {
             URLClassLoader loader = new URLClassLoader(new URL[] {
-                catalinaJar.toURI().toURL(), coyoteJar.toURI().toURL() });
+                Utilities.toURI(catalinaJar).toURL(), Utilities.toURI(coyoteJar).toURL() });
+            
             Class serverInfo = loader.loadClass("org.apache.catalina.util.ServerInfo"); // NOI18N
             try {
                 Method method = serverInfo.getMethod("getServerNumber", new Class[] {}); // NOI18N
@@ -242,7 +262,7 @@ public final class TomcatFactory implements DeploymentFactory {
             LOGGER.log(Level.INFO, null, ex);
             return getTomcatVersionFallback(catalinaHome);
         }
-        return getTomcatVersion(version, TomcatVersion.TOMCAT_50);
+        return getTomcatVersion(version, TomcatVersion.TOMCAT_80);
     }
 
     private static TomcatVersion getTomcatVersionFallback(File catalinaHome) throws IllegalStateException {
@@ -280,7 +300,9 @@ public final class TomcatFactory implements DeploymentFactory {
     }
 
     private static TomcatVersion getTomcatVersion(String version, TomcatVersion defaultVersion) throws IllegalStateException {
-        if (version.startsWith("5.5.")) { // NOI18N
+        if (version.startsWith("5.0.")) { // NOI18N
+            return TomcatVersion.TOMCAT_50;
+        } else if (version.startsWith("5.5.")) { // NOI18N
             return TomcatVersion.TOMCAT_55;
         } else if (version.startsWith("6.")) { // NOI18N
             return TomcatVersion.TOMCAT_60;
@@ -290,6 +312,12 @@ public final class TomcatFactory implements DeploymentFactory {
             return TomcatVersion.TOMCAT_80;
         } else if (version.startsWith("9.")) { // NOI18N
             return TomcatVersion.TOMCAT_90;
+        } else if (version.startsWith("10.0")) { // NOI18N
+            return TomcatVersion.TOMCAT_100;
+        } else if (version.startsWith("10.1")) { // NOI18N
+            return TomcatVersion.TOMCAT_101;
+        } else if (version.startsWith("11.")) { // NOI18N
+            return TomcatVersion.TOMCAT_110;
         }
         int dotIndex = version.indexOf('.');
         if (dotIndex > 0) {
@@ -307,7 +335,13 @@ public final class TomcatFactory implements DeploymentFactory {
     }
 
     private static TomcatVersion getTomcatVersion(String uri) throws IllegalStateException {
-        if (uri.startsWith(TOMCAT_URI_PREFIX_90)) {
+        if (uri.startsWith(TOMCAT_URI_PREFIX_110)) {
+            return TomcatVersion.TOMCAT_110;
+        } else if (uri.startsWith(TOMCAT_URI_PREFIX_101)) {
+            return TomcatVersion.TOMCAT_101;
+        } else if (uri.startsWith(TOMCAT_URI_PREFIX_100)) {
+            return TomcatVersion.TOMCAT_100;
+        } else if (uri.startsWith(TOMCAT_URI_PREFIX_90)) {
             return TomcatVersion.TOMCAT_90;
         } else if (uri.startsWith(TOMCAT_URI_PREFIX_80)) {
             return TomcatVersion.TOMCAT_80;
@@ -336,16 +370,28 @@ public final class TomcatFactory implements DeploymentFactory {
     @NonNull
     public static TomEEType getTomEEType(@NonNull File libFolder) {
         File[] children = libFolder.listFiles();
-        TomEEType type = TomEEType.TOMEE_WEB;
+        TomEEType type = TomEEType.TOMEE_OPENEJB;
         if (children != null) {
             for (File file : children) {
-                if (TOMEE_JAXRS_JAR_PATTERN.matcher(file.getName()).matches()) {
-                    if (type.ordinal() < TomEEType.TOMEE_JAXRS.ordinal()) {
+                if (TOMEE_PLUME_JAR_PATTERN.matcher(file.getName()).matches()) {
+                    if(type.ordinal() < TomEEType.TOMEE_PLUME.ordinal()) {
+                        return TomEEType.TOMEE_PLUME;
+                    }
+                } else if (TOMEE_PLUS_JAR_PATTERN.matcher(file.getName()).matches()) {
+                    if(type.ordinal() < TomEEType.TOMEE_PLUS.ordinal()) {
+                        type = TomEEType.TOMEE_PLUS;
+                    }
+                } else if (TOMEE_MICROPROFILE_JAR_PATTERN.matcher(file.getName()).matches()) {
+                    if(type.ordinal() < TomEEType.TOMEE_MICROPROFILE.ordinal()) {
+                        type = TomEEType.TOMEE_MICROPROFILE;
+                    }
+                } else if (TOMEE_JAXRS_JAR_PATTERN.matcher(file.getName()).matches()) {
+                    if(type.ordinal() < TomEEType.TOMEE_JAXRS.ordinal()) {
                         type = TomEEType.TOMEE_JAXRS;
                     }
-                } else if (TOMEE_GERONIMO_JAR_PATTERN.matcher(file.getName()).matches()) {
-                    if (type.ordinal() < TomEEType.TOMEE_PLUS.ordinal()) {
-                        type = TomEEType.TOMEE_PLUS;
+                } else if (TOMEE_JAR_PATTERN.matcher(file.getName()).matches()) {
+                    if(type.ordinal() < TomEEType.TOMEE_WEBPROFILE.ordinal()) {
+                        type = TomEEType.TOMEE_WEBPROFILE;
                     }
                 }
             }
@@ -411,6 +457,14 @@ public final class TomcatFactory implements DeploymentFactory {
             return TomcatManager.TomEEVersion.TOMEE_16;
         } else if (version.startsWith("1.7.")) { // NOI18N
             return TomcatManager.TomEEVersion.TOMEE_17;
+        } else if (version.startsWith("7.")) { // NOI18N
+            return TomcatManager.TomEEVersion.TOMEE_70;
+        } else if (version.startsWith("7.1.")) { // NOI18N
+            return TomcatManager.TomEEVersion.TOMEE_71;
+        } else if (version.startsWith("8.")) { // NOI18N
+            return TomcatManager.TomEEVersion.TOMEE_80;
+        } else if (version.startsWith("9.")) { // NOI18N
+            return TomcatManager.TomEEVersion.TOMEE_90;
         }
         return defaultVersion;
     }
@@ -420,6 +474,12 @@ public final class TomcatFactory implements DeploymentFactory {
             return uri.substring(GENERIC_DISCONNECTED_URI_PREFIX.length());
         }
         switch (tomcatVersion) {
+            case TOMCAT_110:
+                return uri.substring(TomcatFactory.TOMCAT_URI_PREFIX_110.length());
+            case TOMCAT_101:
+                return uri.substring(TomcatFactory.TOMCAT_URI_PREFIX_101.length());
+            case TOMCAT_100:
+                return uri.substring(TomcatFactory.TOMCAT_URI_PREFIX_100.length());
             case TOMCAT_90:
                 return uri.substring(TomcatFactory.TOMCAT_URI_PREFIX_90.length());
             case TOMCAT_80:

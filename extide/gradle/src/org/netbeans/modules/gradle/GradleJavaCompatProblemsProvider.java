@@ -143,8 +143,13 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
 
             }
             String javaVersion = releasePros.getProperty("JAVA_VERSION"); //NOI18N
+            // This should look like "17" or "17.0.9"
+            //TODO: Use Runtime.Version (when we move to Java 11)
             if ((javaVersion != null) && javaVersion.startsWith("\"") && javaVersion.endsWith("\"")) {
-                javaVersion = javaVersion.substring(1, javaVersion.indexOf('.'));
+                int dot = javaVersion.indexOf('.');
+                javaVersion = dot > 0
+                        ? javaVersion.substring(1, javaVersion.indexOf('.'))
+                        : javaVersion.substring(1, javaVersion.length() - 1);
                 try {
                     ret = Integer.parseInt(javaVersion);
                 } catch (NumberFormatException ex) {

@@ -28,11 +28,13 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.process.CommandLineArgumentProvider;
+import org.gradle.util.GradleVersion;
 /**
  *
  * @author Laszlo Kishalmi
  */
 class NetBeansRunSinglePlugin implements Plugin<Project> {
+    private static final GradleVersion GRADLE_VERSION = GradleVersion.current().getBaseVersion();
     private static final Logger LOG = Logging.getLogger(NetBeansRunSinglePlugin.class);
 
     private static final String RUN_SINGLE_TASK = "runSingle";
@@ -81,8 +83,13 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
         SourceSetContainer sourceSets = project.getExtensions().findByType(SourceSetContainer.class);
 
         project.getTasks().register(RUN_SINGLE_TASK, JavaExec.class, (je) -> {
-            // Using setMain to keep the backward compatibility
-            je.setMain(project.property(RUN_SINGLE_MAIN).toString());
+            String mainClass = project.property(RUN_SINGLE_MAIN).toString();
+            if (GRADLE_VERSION.compareTo(GradleVersion.version("6.4")) < 0) {
+                // Using setMain to keep the backward compatibility before Gradle 6.4
+                je.setMain(mainClass);
+            } else {
+                je.getMainClass().set(mainClass);
+            }
             je.setClasspath(sourceSets.findByName("main").getRuntimeClasspath());
             if (project.hasProperty(RUN_SINGLE_ARGS)) {
                 je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));

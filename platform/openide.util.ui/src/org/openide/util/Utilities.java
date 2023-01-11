@@ -1157,11 +1157,9 @@ public final class Utilities {
                 return w.getGraphicsConfiguration();
             } else {
                 //#217737 - try to find the main window which could be placed in secondary screen
-                for( Frame f : Frame.getFrames() ) {
-                    if( "NbMainWindow".equals(f.getName())) { //NOI18N
-                        return f.getGraphicsConfiguration();
-                    }
-                }
+                Frame f = findMainWindow();
+                if(f != null)
+                    return f.getGraphicsConfiguration();
             }
         }
 
@@ -1326,6 +1324,25 @@ public final class Utilities {
     }
 
     /**
+     * Find the main NetBeans window; must have width or height.
+     * This is used locally to avoid dependency issues. 
+     * @return NetBeans' main window
+     */
+    private static Frame findMainWindow()
+    {
+        Frame f = null;
+        for( Frame f01 : Frame.getFrames() ) {
+            if( "NbMainWindow".equals(f01.getName())) { //NOI18N
+                if(f01.getWidth() != 0 || f01.getHeight() != 0) {
+                    f = f01;
+                }
+                break;
+            }
+        }
+        return f;
+    }
+
+    /**
      * This is for use in situations where a standard swing API,
      * such as {@linkplain JOptionPane.show*} or {@linkplain JFileChooser.show*},
      * is used to display a dialog. {@code null} should never be used
@@ -1345,8 +1362,8 @@ public final class Utilities {
             parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
         }
         if (parent == null) {
-            Frame[] f = Frame.getFrames();
-            parent = f.length == 0 ? null : f[f.length - 1];
+            // PR#5280
+            parent = findMainWindow();
         }
         return parent;
     }

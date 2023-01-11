@@ -1591,6 +1591,18 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
      */
     private Window findFocusedWindow() {
         Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        if( w == null ) {
+            // PR#5280
+            LOG.fine( () -> "No focused window, find mainWindow" );
+            for( Frame f01 : Frame.getFrames() ) {
+                if( "NbMainWindow".equals(f01.getName())) { //NOI18N
+                    if(f01.getWidth() != 0 || f01.getHeight() != 0) {
+                        w = f01;
+                    }
+                    break;
+                }
+            }
+        }
         while( null != w && !w.isShowing() ) {
             w = w.getOwner();
         }

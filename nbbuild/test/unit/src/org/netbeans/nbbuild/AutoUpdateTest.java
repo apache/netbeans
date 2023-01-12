@@ -167,11 +167,11 @@ public class AutoUpdateTest extends TestBase {
         modules.setClusters("platform|ide");
         File catalog = extractString(
                 "<module_updates>\n" +
-                " <module codenamebase='org.apache.commons-io' distribution='ide/org-apache-commons-io.jar' downloadsize='109043' targetcluster='ide'>\n" +
+                " <module codenamebase='org.apache.commons-io' distribution='platform/org-apache-commons-io.jar' downloadsize='109043' targetcluster='platform'>\n" +
                 "  <manifest AutoUpdate-Show-In-Client='false' OpenIDE-Module='org.apache.commons-io' OpenIDE-Module-Name='Apache Commons IO Bundle' OpenIDE-Module-Specification-Version='1.4'/>\n" +
                 " </module>\n" +
                 "</module_updates>\n");
-        File bundle = new File(getWorkDir(), "ide/org-apache-commons-io.jar");
+        File bundle = new File(getWorkDir(), "platform/org-apache-commons-io.jar");
         bundle.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(bundle);
         Manifest m = new Manifest();
@@ -180,7 +180,7 @@ public class AutoUpdateTest extends TestBase {
         new JarOutputStream(os, m).close();
         au.setUpdateCenter(catalog.toURI().toURL());
         au.execute();
-        File tracking = new File(install, "ide/update_tracking/org-apache-commons-io.xml");
+        File tracking = new File(install, "platform/update_tracking/org-apache-commons-io.xml");
         assertTrue(tracking.isFile());
         Document doc = XMLUtil.parse(new InputSource(tracking.toURI().toString()), false, false, null, null);
         Set<String> files = new TreeSet<>();
@@ -189,8 +189,8 @@ public class AutoUpdateTest extends TestBase {
             files.add(((Element) nl.item(i)).getAttribute("name"));
         }
         assertEquals("[config/Modules/org-apache-commons-io.xml, modules/org-apache-commons-io.jar]", files.toString());
-        assertEquals(bundle.length(), new File(install, "ide/modules/org-apache-commons-io.jar").length());
-        File config = new File(install, "ide/config/Modules/org-apache-commons-io.xml");
+        assertEquals(bundle.length(), new File(install, "platform/modules/org-apache-commons-io.jar").length());
+        File config = new File(install, "platform/config/Modules/org-apache-commons-io.xml");
         assertTrue(config.isFile());
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n<module name=\"org.apache.commons-io\">\n    <param name=\"autoload\">true</param>\n    <param name=\"eager\">false</param>\n    <param name=\"jar\">modules/org-apache-commons-io.jar</param>\n    <param name=\"reloadable\">false</param>\n</module>\n", readFile(config));
     }

@@ -402,7 +402,7 @@ public class ScreenshotComponent extends TopComponent {
     
     private static ComponentInfo getFirstCustomComponent(Node node) {
         ComponentInfo ci = node.getLookup().lookup(ComponentInfo.class);
-        if (ci != null && ci instanceof JavaComponentInfo && ((JavaComponentInfo) ci).isCustomType()) {
+        if (ci instanceof JavaComponentInfo && ((JavaComponentInfo) ci).isCustomType()) {
             return ci;
         } else {
             Node[] nodes = node.getChildren().getNodes();

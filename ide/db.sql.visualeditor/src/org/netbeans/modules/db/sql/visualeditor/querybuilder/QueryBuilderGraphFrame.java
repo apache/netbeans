@@ -2039,7 +2039,7 @@ public class QueryBuilderGraphFrame extends JPanel
         public void select(Widget widget, Point localLocation, boolean invertSelection) {
 
             Object object = _scene.findObject(widget);
-            if ((object != null) && (object instanceof AbstractNode)) {
+            if (object instanceof AbstractNode) {
 		AbstractNode an = (AbstractNode)object;
 		_queryBuilder.setActivatedNodes(new Node[] { an });
                 _scene.userSelectionSuggested(Collections.singleton(object), invertSelection);

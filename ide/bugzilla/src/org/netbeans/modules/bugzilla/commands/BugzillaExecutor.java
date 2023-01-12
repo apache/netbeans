@@ -423,7 +423,7 @@ public class BugzillaExecutor {
                 return null;
             }
             Throwable cause = status.getException();
-            if(cause != null && cause instanceof RedirectException) {
+            if(cause instanceof RedirectException) {
                 String msg = cause.getMessage();
                 if(msg.contains(KENAI_LOGIN_REDIRECT)) {
                     Bugzilla.LOG.log(Level.FINER, "returned error message [{0}]", msg);                     // NOI18N

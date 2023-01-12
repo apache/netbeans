@@ -72,7 +72,7 @@ public final class HtmlDataNode extends org.openide.loaders.DataNode {
                 Action a = actions[i];
                 if (a != null) {
                     Object value = a.getValue("type"); //NOI18N
-                    if (value != null && (value instanceof String)) {
+                    if (value instanceof String) {
                         String type = (String) value;
                         if (VIEWABLE_CLASS_NAME.equals(type)) {
                             continue;

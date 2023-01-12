@@ -109,7 +109,7 @@ public abstract class IndentFileEntry extends FileEntry.Format {
         Object attr = getFile().getAttribute(EA_PREFORMATTED);
         boolean preformatted = false;
         
-        if (attr != null && attr instanceof Boolean) {
+        if (attr instanceof Boolean) {
             preformatted = ((Boolean)attr).booleanValue();
         }
 

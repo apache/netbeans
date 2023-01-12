@@ -618,7 +618,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                     dotPos = target.getCaret().getDot();
                     try {
                         SyntaxElement sel = getElementChain(dotPos);
-                        if(sel != null && sel instanceof StartTag) {
+                        if(sel instanceof StartTag) {
                             retVal = COMPLETION_POPUP;
                         }
                     } catch (BadLocationException e) {

@@ -63,7 +63,7 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         Children childrens = node.getChildren();
         if (childrens != null) {
             Node child = childrens.getNodeAt(0);
-            if ((child != null) && (child instanceof MavenJUnitTestMethodNode)) {
+            if (child instanceof MavenJUnitTestMethodNode) {
                 final FileObject fo = ((MavenJUnitTestMethodNode) child).getTestcaseFileObject();
                 if (fo != null) {
                     final long[] line = new long[]{0};

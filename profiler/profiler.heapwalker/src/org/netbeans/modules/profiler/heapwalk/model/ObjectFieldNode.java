@@ -77,7 +77,7 @@ public class ObjectFieldNode extends ObjectNode implements HeapWalkerFieldNode {
         JavaClass declaringClass = fieldValue.getField().getDeclaringClass();
         HeapWalkerNode parent = getParent();
 
-        while ((parent != null) && parent instanceof HeapWalkerInstanceNode) {
+        while (parent instanceof HeapWalkerInstanceNode) {
             if (parent instanceof HeapWalkerFieldNode) {
                 HeapWalkerFieldNode parentF = (HeapWalkerFieldNode) parent;
 

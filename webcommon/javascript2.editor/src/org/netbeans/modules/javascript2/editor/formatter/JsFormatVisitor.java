@@ -1482,7 +1482,7 @@ public class JsFormatVisitor extends NodeVisitor {
             }
         } else if (node instanceof VarNode) {
             VarNode var = (VarNode) node;
-            if (var.getInit() != null && (var.getInit() instanceof ClassNode)) {
+            if (var.getInit() instanceof ClassNode) {
                 return getFinish(var.getInit());
             }
             Token token = tokenUtils.getNextNonEmptyToken(getFinishFixed(node) - 1);

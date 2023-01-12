@@ -145,7 +145,7 @@ public final class NbMarshalledObject implements Serializable {
             return true;
         }
 
-        if ((obj != null) && obj instanceof NbMarshalledObject) {
+        if (obj instanceof NbMarshalledObject) {
             NbMarshalledObject other = (NbMarshalledObject) obj;
 
             return Arrays.equals(objBytes, other.objBytes);

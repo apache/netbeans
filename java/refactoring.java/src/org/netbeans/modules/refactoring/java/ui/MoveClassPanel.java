@@ -628,7 +628,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
 
     public TreePathHandle getTargetClass() {
         final Object selectedItem = typeCombobox.getSelectedItem();
-        if(typeCheckBox.isSelected() && selectedItem != null && selectedItem instanceof ClassItem) {
+        if(typeCheckBox.isSelected() && selectedItem instanceof ClassItem) {
             return ((ClassItem)selectedItem).getHandle();
         }
         return null;

@@ -116,7 +116,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
     
     private HistoryRootNode getRootNode() {
         Node rootContext = tablePanel.getExplorerManager().getRootContext();
-        if(rootContext == null || !(rootContext instanceof HistoryRootNode)) {
+        if(!(rootContext instanceof HistoryRootNode)) {
             return null;
         }  
         return (HistoryRootNode) rootContext;

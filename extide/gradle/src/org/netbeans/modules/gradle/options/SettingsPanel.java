@@ -919,7 +919,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             if (cmp instanceof JLabel) {
                 JLabel label = (JLabel) cmp;
                 label.setHorizontalAlignment(RIGHT);
-                if (value != null && value instanceof GradleDistribution) {
+                if (value instanceof GradleDistribution) {
                     GradleDistribution dist = (GradleDistribution) value;
                     label.setText(dist.getVersion());
                     if (!dist.isAvailable()) {

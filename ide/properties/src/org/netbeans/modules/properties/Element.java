@@ -599,7 +599,7 @@ public abstract class Element implements Serializable {
 
         /** Checks for equality of two ItemElem-s */
         public boolean equals(Object item) {
-            if (item == null || !(item instanceof ItemElem))
+            if (!(item instanceof ItemElem))
                 return false;
             ItemElem ie = (ItemElem)item;
             return isKeyEqual(ie) && isValueEqual(ie) && isCommentEqual(ie);

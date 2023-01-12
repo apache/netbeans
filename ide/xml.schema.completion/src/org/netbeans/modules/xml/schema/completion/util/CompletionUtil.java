@@ -309,8 +309,8 @@ public class CompletionUtil {
         if(element == null)
             return null;
         AXIType type = element.getType();
-        if( type == null || !(type instanceof Datatype) ||
-            ((Datatype)type).getEnumerations() == null)
+        if(!(type instanceof Datatype) ||
+           ((Datatype) type).getEnumerations() == null)
             return null;
         for(Object value: ((Datatype)type).getEnumerations()) {
             if(context.getTypedChars() == null || context.getTypedChars().equals("")) {
@@ -345,8 +345,8 @@ public class CompletionUtil {
         if(attr == null)
             return null;
         AXIType type = attr.getType();
-        if(type == null || !(type instanceof Datatype) ||
-           ((Datatype)type).getEnumerations() == null)
+        if(!(type instanceof Datatype) ||
+           ((Datatype) type).getEnumerations() == null)
             return null;                
         for(Object value: ((Datatype)type).getEnumerations()) {
             String str = (value != null) ? value.toString() : null;
@@ -589,7 +589,7 @@ public class CompletionUtil {
             parent = child;
         }
         
-        if(child != null && (child instanceof Element))
+        if((child instanceof Element))
             return (Element)child;
         
         return null;

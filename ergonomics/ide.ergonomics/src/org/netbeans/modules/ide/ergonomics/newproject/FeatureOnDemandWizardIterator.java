@@ -85,7 +85,7 @@ implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor>, Cha
             if (o == null) {
                 o = fo.getAttribute ("templateWizardIterator");
             }
-            assert o != null && o instanceof WizardDescriptor.InstantiatingIterator :
+            assert o instanceof InstantiatingIterator :
                 o + " is not null and instanceof WizardDescriptor.InstantiatingIterator";
             WizardDescriptor.InstantiatingIterator iterator = (WizardDescriptor.InstantiatingIterator) o;
             if (! FeatureOnDemandWizardIterator.class.equals (o.getClass ())) {

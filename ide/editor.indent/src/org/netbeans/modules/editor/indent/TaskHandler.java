@@ -561,9 +561,9 @@ public final class TaskHandler {
         }
 
         private Lookup getLookup() {
-            if (indentTask != null && indentTask instanceof Lookup.Provider) {
+            if (indentTask instanceof Lookup.Provider) {
                 return ((Lookup.Provider)indentTask).getLookup();
-            } else if (reformatTask != null && reformatTask instanceof Lookup.Provider) {
+            } else if (reformatTask instanceof Lookup.Provider) {
                 return ((Lookup.Provider)reformatTask).getLookup();
             } else {
                 return null;

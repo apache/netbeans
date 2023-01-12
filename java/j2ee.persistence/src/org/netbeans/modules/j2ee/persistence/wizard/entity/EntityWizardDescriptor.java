@@ -62,7 +62,7 @@ public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel,
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(EntityWizardPanel.IS_VALID)) {
                         Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                        if (newvalue instanceof Boolean) {
                             stateChanged(null);
                         }
                     }

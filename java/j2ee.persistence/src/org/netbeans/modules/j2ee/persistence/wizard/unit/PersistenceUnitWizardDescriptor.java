@@ -75,7 +75,7 @@ public class PersistenceUnitWizardDescriptor implements WizardDescriptor.Finisha
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
                         Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                        if (newvalue instanceof Boolean) {
                             stateChanged(null);
                         }
                     }

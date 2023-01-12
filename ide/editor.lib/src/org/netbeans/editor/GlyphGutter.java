@@ -898,7 +898,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                             Object defAction = a.getValue("default-action");
                             if (toInvoke == null && defAction != null && ((Boolean) defAction)) {
                                 Object supportedAnnotationTypes = a.getValue("default-action-excluded-annotation-types");
-                                if (supportedAnnotationTypes == null || !(supportedAnnotationTypes instanceof String[]) || Collections.disjoint(Arrays.asList((String[]) supportedAnnotationTypes), annotationTypes)) {
+                                if (!(supportedAnnotationTypes instanceof String[]) || Collections.disjoint(Arrays.asList((String[]) supportedAnnotationTypes), annotationTypes)) {
                                     toInvoke = a;
                                 }
                             }

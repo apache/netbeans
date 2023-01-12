@@ -254,7 +254,7 @@ public class WebServiceTypePanel extends javax.swing.JPanel implements HelpCtx.P
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(EjbChooser.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                    if (newvalue instanceof Boolean) {
                         dd.setValid(((Boolean) newvalue));
                     }
                 }

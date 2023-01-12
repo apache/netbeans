@@ -159,7 +159,7 @@ public class TemplateIterator implements TemplateWizard.Iterator {
         // Creating steps.
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);

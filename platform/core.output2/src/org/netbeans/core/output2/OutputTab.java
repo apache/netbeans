@@ -164,7 +164,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         Document old = getDocument();
         hasOutputListeners = false;
         super.setDocument(doc);
-        if (old != null && old instanceof OutputDocument) {
+        if (old instanceof OutputDocument) {
             ((OutputDocument) old).dispose();
         }
         applyOptions();

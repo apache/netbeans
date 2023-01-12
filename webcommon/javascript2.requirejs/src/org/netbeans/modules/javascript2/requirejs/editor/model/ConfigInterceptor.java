@@ -145,7 +145,7 @@ public class ConfigInterceptor implements FunctionInterceptor {
                     }
                 }
 
-                if (packages != null && packages instanceof JsArray) {
+                if (packages instanceof JsArray) {
                     Map<String, String> packagesMap = loadPackages(th, packages.getOffset());
                     if (packagesMap != null) {
                         // save packages to the index

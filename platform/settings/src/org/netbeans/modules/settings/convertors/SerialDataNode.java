@@ -481,7 +481,7 @@ public final class SerialDataNode extends DataNode {
         convertProps (p, descr.expert, this);
         if (bd != null) {
             Object helpID = bd.getValue("expertHelpID"); // NOI18N
-            if (helpID != null && helpID instanceof String) {
+            if (helpID instanceof String) {
                 p.setValue("helpID", helpID); // NOI18N
             }
         }
@@ -497,7 +497,7 @@ public final class SerialDataNode extends DataNode {
         if (bd != null) {
             // #29550: help from the beaninfo on property tabs
             Object helpID = bd.getValue("propertiesHelpID"); // NOI18N
-            if (helpID != null && helpID instanceof String) {
+            if (helpID instanceof String) {
                 props.setValue("helpID", helpID); // NOI18N
             }
         }

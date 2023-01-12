@@ -670,7 +670,7 @@ public final class Terminal extends JComponent {
         }
         findState.setVisible(true);
         Container ancestor = SwingUtilities.getAncestorOfClass(TerminalContainer.class, this);
-        if (ancestor != null && ancestor instanceof TerminalContainer) {
+        if (ancestor instanceof TerminalContainer) {
             Task t = new Task.ActivateSearch((TerminalContainer) ancestor, this);
             t.post();
         }
@@ -1043,7 +1043,7 @@ public final class Terminal extends JComponent {
 	findAction.setEnabled(false);
         
         Container container = SwingUtilities.getAncestorOfClass(TerminalContainer.class, this);
-        boolean isTerminalContainer = (container != null && container instanceof TerminalContainer);
+        boolean isTerminalContainer = container instanceof TerminalContainer;
 	
 	JPopupMenu menu = Utilities.actionsToPopup(
 		new Action[]{

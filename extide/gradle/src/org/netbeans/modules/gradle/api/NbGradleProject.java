@@ -396,7 +396,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void addPropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().addPropertyChangeListener(l);
         } else {
             assert false : "Attempted to add PropertyChangeListener to project " + project; //NOI18N
@@ -410,7 +410,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void removePropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().removePropertyChangeListener(l);
         } else {
             assert false : "Attempted to remove PropertyChangeListener to project " + project; //NOI18N

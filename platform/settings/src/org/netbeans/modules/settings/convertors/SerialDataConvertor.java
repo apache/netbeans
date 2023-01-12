@@ -224,7 +224,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
     
     private static boolean isSystemOption(final Object obj) {
         boolean b =  false;
-        if (obj != null && obj instanceof SharedClassObject){
+        if (obj instanceof SharedClassObject){
             for(Class c = obj.getClass(); !b && c != null; c = c.getSuperclass()) {
                 b =  "org.openide.options.SystemOption".equals(c.getName());//NOI18N
             }
@@ -543,7 +543,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
         /** store setting or provide just SaveCookie? */
         private boolean acceptSave() {
             Object inst = instance.get();
-            if (inst == null || !(inst instanceof Serializable) ||
+            if (!(inst instanceof Serializable) ||
                 // XXX bad dep; should perhaps have some marker in the .settings file for this??
                 inst instanceof TopComponent) return false;
             
@@ -581,7 +581,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
                     FileObject foEntity = Env.findEntityRegistration(newProviderFO);
                     if (foEntity == null) foEntity = newProviderFO;
                     Object attrb = foEntity.getAttribute(Env.EA_PUBLICID);
-                    if (attrb == null || !(attrb instanceof String)) {
+                    if (!(attrb instanceof String)) {
                         throw new IOException("missing or invalid attribute: " + //NOI18N
                             Env.EA_PUBLICID + ", provider: " + foEntity); //NOI18N
                     }
@@ -591,7 +591,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
                     }
                     
                     attrb = newProviderFO.getAttribute(Env.EA_CONVERTOR);
-                    if (attrb == null || !(attrb instanceof Convertor)) {
+                    if (!(attrb instanceof Convertor)) {
                         throw new IOException("cannot create convertor: " + //NOI18N
                             attrb + ", provider: " + newProviderFO); //NOI18N
                     } else {

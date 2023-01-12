@@ -612,7 +612,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     protected void firePropertyChange(String nm, Object old, Object nue) {
         if (
             ("flat".equals(nm) || "radioButtonMax".equals(nm) || "suppressCustomEditor".equals(nm) ||
-                "useLabels".equals(nm)) && (displayer != null) && displayer instanceof PropertyDisplayer_Inline
+                "useLabels".equals(nm)) && displayer instanceof PropertyDisplayer_Inline
         ) { //NOI18N
             updateDisplayerFromClientProp(nm, nue);
         }
@@ -945,7 +945,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * @since 2.20
      */
     public final Object getState() {
-        if ((displayer != null) && displayer instanceof PropertyDisplayer_Editable) {
+        if (displayer instanceof PropertyDisplayer_Editable) {
             return ((PropertyDisplayer_Editable) displayer).getPropertyEnv().getState();
         } else {
             PropertyEditor ed = propertyEditor();
@@ -974,7 +974,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * is used.
      */
     public void updateValue() {
-        if ((displayer != null) && displayer instanceof PropertyDisplayer_Editable) {
+        if (displayer instanceof PropertyDisplayer_Editable) {
             PropertyEnv env = ((PropertyDisplayer_Editable) displayer).getPropertyEnv();
 
             if (PropertyEnv.STATE_NEEDS_VALIDATION.equals(env.getState())) {
@@ -1277,7 +1277,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         public void actionPerformed(ActionEvent e) {
             if( inner == e.getSource() && "enterPressed".equals(e.getActionCommand()) ) { //NOI18N
                 Object beanBridge = getClientProperty("beanBridgeIdentifier"); //NOI18N
-                if( null != beanBridge && beanBridge instanceof CellEditor ) {
+                if( beanBridge instanceof CellEditor ) {
                     boolean wasCommitted = false;
                     if (e instanceof CellEditorActionEvent) {
                         // Prevent from a second commit on stop of cell editing:

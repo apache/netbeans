@@ -579,7 +579,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
             if( t.isDataFlavorSupported(buttonDataFlavor) ) {
                 o = t.getTransferData(buttonDataFlavor);
             }
-            if( null != o && o instanceof DataObject ) {
+            if(o instanceof DataObject) {
                 ((DataObject) o).delete();
                 sourceToolbar.repaint();
             }

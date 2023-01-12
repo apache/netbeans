@@ -107,7 +107,7 @@ public abstract class CompletionActionsMainMenu extends MainMenuAction implement
 
         presenter.setEnabled(action != null);
         JTextComponent comp = Utilities.getFocusedComponent();
-        if (comp != null && comp instanceof JEditorPane){
+        if (comp instanceof JEditorPane){
             addAccelerators(this, presenter, comp);
         } else {
             presenter.setAccelerator(getDefaultAccelerator());

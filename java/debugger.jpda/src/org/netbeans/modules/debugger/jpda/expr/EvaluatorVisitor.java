@@ -2621,7 +2621,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     throw iex; // re-throw the original
                 }
             }
-            if (enclosing != null && enclosing instanceof ObjectReference) {
+            if (enclosing instanceof ObjectReference) {
                 ObjectReference enclosingObject = (ObjectReference) enclosing;
                 argVals.add(0, enclosingObject);
                 firstParamSignature = enclosingObject.referenceType().signature();
@@ -2705,7 +2705,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     throw iex; // re-throw the original
                 }
             }
-            if (enclosing != null && enclosing instanceof ObjectReference) {
+            if (enclosing instanceof ObjectReference) {
                 ObjectReference enclosingObject = (ObjectReference) enclosing;
                 argVals.add(0, enclosingObject);
                 argTypes.add(0, enclosingObject.referenceType());

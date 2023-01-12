@@ -766,7 +766,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     } else {
                         item.setEnabled(action.isEnabled());
                         Object helpID = action.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String)) {
+                        if ((helpID instanceof String)) {
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                         }
                         assignAccelerator(component.getKeymap(), action, item);
@@ -1060,7 +1060,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                         Mnemonics.setLocalizedText(item, itemText);
                         addAcceleretors(a, item, target);
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if ((helpID instanceof String))
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }
@@ -1243,7 +1243,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     addAcceleretors(nonContextAction, item, target);
                     item.setEnabled(action.isEnabled());
                     Object helpID = action.getValue ("helpID"); // NOI18N
-                    if (helpID != null && (helpID instanceof String)) {
+                    if (helpID instanceof String) {
                         item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }

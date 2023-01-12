@@ -2475,8 +2475,8 @@ public class OutlineView extends JScrollPane {
 
         @Override
         public boolean equals(Object o) {
-            return o != null && o instanceof Property &&
-                    getName().equals(((Property)o).getName());
+            return o instanceof Property &&
+                   getName().equals(((Property) o).getName());
         }
 
         @Override

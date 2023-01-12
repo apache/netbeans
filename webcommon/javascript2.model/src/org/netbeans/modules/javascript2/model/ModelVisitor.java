@@ -919,7 +919,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             if(!(property instanceof JsFunction)) {
                 property = fncParent.getProperty(modelBuilder.getGlobal().getName() + modelBuilder.getFunctionName(functionNode));
             }
-            if (property != null && property instanceof JsFunction) {
+            if (property instanceof JsFunction) {
                 if (property instanceof JsFunctionReference) {
                     fncScope = (JsFunctionImpl)((JsFunctionReference)property).getOriginal();
                 } else {
@@ -2491,7 +2491,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                     for (int i = isPriviliged ? 1 : 0; parent != null && i < name.size(); i++) {
                         parent = parent.getProperty(name.get(i).getName());
                     }
-                    if (parent!= null && parent instanceof JsFunction) {
+                    if (parent instanceof JsFunction) {
                         Identifier propertyName = create(parserResult, varNode.getName());
                         Set<Modifier> modifiers;
                         if (isPriviliged) {

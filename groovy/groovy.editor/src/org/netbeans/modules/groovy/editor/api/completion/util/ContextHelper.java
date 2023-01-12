@@ -291,7 +291,7 @@ public final class ContextHelper {
                 ASTNode node = getASTNodeForToken(ctx.before1, request);
                 LOG.log(Level.FINEST, "getASTNodeForToken(ASTNode) : {0}", node); //NOI18N
 
-                if (node != null && (node instanceof ClassExpression || node instanceof DeclarationExpression)) {
+                if (node instanceof ClassExpression || node instanceof DeclarationExpression) {
                     LOG.log(Level.FINEST, "ClassExpression or DeclarationExpression discovered"); //NOI18N
                     return true;
                 }

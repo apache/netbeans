@@ -634,7 +634,7 @@ public class MonitorFilter extends Logger implements Filter {
 	if(debug) log ("handleDispatchBefore: start");//NOI18N
 
 	Object w  = req.getAttribute(attNameRequest); 
-	if(w == null || !(w instanceof MonitorRequestWrapper)) { 
+	if(!(w instanceof MonitorRequestWrapper)) {
 	    return; 
 	} 
 	// get the dispatch data 
@@ -668,7 +668,7 @@ public class MonitorFilter extends Logger implements Filter {
 	if(debug) log ("handleDispatchedAfter()");//NOI18N
 
 	Object w  = req.getAttribute(attNameRequest); 
-	if(w == null || !(w instanceof MonitorRequestWrapper)) { 
+	if(!(w instanceof MonitorRequestWrapper)) {
 	    return; 
 	} 
 

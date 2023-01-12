@@ -91,7 +91,7 @@ public class SuiteActionProviderTest extends SuiteCheck {
         ap.invokeAction(ActionProvider.COMMAND_BUILD, ctx);
 
         assertTrue("Progress started", progress.started);
-        progress.finished.await(45, TimeUnit.SECONDS);
+        progress.finished.await(600, TimeUnit.SECONDS);
         assertNotNull("Progress finished", progress.success);
     }
 

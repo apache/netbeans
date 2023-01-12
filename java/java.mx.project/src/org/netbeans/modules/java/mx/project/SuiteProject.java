@@ -114,7 +114,7 @@ final class SuiteProject implements Project {
         private CompilerOptionsQueryImplementation.Result RESULT = new Result() {
             @Override
             public List<? extends String> getArguments() {
-                return Arrays.asList("--add-modules", "ALL-MODULE-PATH", "--limit-modules", "java.se");
+                return Arrays.asList("--add-modules", "ALL-MODULE-PATH", "--limit-modules", "java.se,jdk.unsupported,jdk.management");
             }
 
             @Override

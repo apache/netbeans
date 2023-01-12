@@ -183,7 +183,7 @@ public final class PomModelUtils {
 
         @Override
         public ModelSource2 getRelatedSource(String relative) {
-            return new M2S(new File(pomFile, relative), null);
+            return new M2S(new File(pomFile.getParentFile(), relative), null);
         }
 
         @Override

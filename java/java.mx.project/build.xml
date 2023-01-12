@@ -42,8 +42,8 @@
         <exec dir="${graal.dir}" executable="git" failonerror="true">
             <arg value="fetch"/>
             <arg value="origin"/>
-            <!-- The commit ID corresponds to a removed tag vm-20.3.0, by Gilles Duboscq, message "Release 20.3.0", Thu Nov 12 22:49:14 -->
-            <arg value="c5ff5a5a091bfd974640aaf6fbe51c81bd080438"/>
+            <!-- The commit ID corresponds to a tag vm-22.3.0. Commit ID is used since the previous vm-20.3.0 tag was removed recently by Gilles Duboscq -->
+            <arg value="2a0af49b3c8dfcc255992d3096aec02a81874c68"/>
         </exec>
         <exec dir="${graal.dir}" executable="git" failonerror="true">
             <arg value="reset"/>
@@ -57,7 +57,7 @@
             <arg value="clone"/>
             <arg value="--depth=1"/>
             <arg value="--branch"/>
-            <arg value="5.279.0"/>
+            <arg value="6.7.0"/>
             <arg value="--single-branch"/>
             <arg value="https://github.com/graalvm/mx"/>
         </exec>

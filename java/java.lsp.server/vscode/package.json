@@ -88,7 +88,7 @@
 		"viewsWelcome": [
 			{
 				"view": "database.connections",
-				"contents": "No Database Connections found.\n[Add a new connection](command:db.add.connection)"
+				"contents": "No Database Connections found.\n[Add a new connection](command:db.add.connection)\n[Add Oracle Autonomous DB](command:nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction)"
 			}
 		],
 		"configuration": {
@@ -583,6 +583,10 @@
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
+			},
+                        {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction",
+				"title": "Add Oracle Autonomous Database"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",

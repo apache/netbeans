@@ -37,8 +37,8 @@ public final class TomlLexer extends AbstractAntlrLexerBridge<org.tomlj.internal
     }
 
     @Override
-    protected Token<TomlTokenId> mapToken(int antlrTokenType) {
-        switch (antlrTokenType) {
+    protected Token<TomlTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
+        switch (antlrToken.getType()) {
             case EOF:
                 return null;
 

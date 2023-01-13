@@ -20,10 +20,14 @@ package org.netbeans.spi.lexer.antlr4;
 
 import java.util.function.Function;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.misc.IntegerList;
 import org.netbeans.api.lexer.Token;
 import org.antlr.v4.runtime.Lexer;
 import static org.antlr.v4.runtime.Recognizer.EOF;
+import org.antlr.v4.runtime.TokenSource;
+import org.antlr.v4.runtime.misc.Interval;
+import org.antlr.v4.runtime.misc.Pair;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.netbeans.spi.lexer.TokenFactory;
@@ -58,6 +62,8 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         this.tokenFactory = info.tokenFactory();
         this.input = new LexerInputCharStream(info.input());
         this.lexer = lexerCreator.apply(input);
+        lexer.setTokenFactory(FIXED_TOKEN_FACTORY);
+
         if (info.state() != null) {
             ((LexerState<L>) info.state()).restore(lexer);
         }
@@ -77,15 +83,15 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         } else {
             nextToken = nextRealToken();
         }
-        return nextToken.getType() != EOF ? mapToken(nextToken.getType()) : null;
+        return nextToken.getType() != EOF ? mapToken(nextToken) : null;
     }
 
     /**
      * Implementations shall provide a suitable mapping between ANTLR lexer
-     * token types and NetBeans lexer tokens. The mapping is usually many to one,
+     * tokens and NetBeans lexer tokens. The mapping is usually many to one,
      * could be implemented as:
      * <pre>{@code
-     * switch (antlrTokenType) {
+     * switch (antlrToken.getType()) {
      *      case DOC_COMMENT:
      *      case BLOCK_COMMENT:
      *      case LINE_COMMENT:
@@ -97,11 +103,11 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
      *          return token(SomeTokenId.ERROR);
      *  }
      * }</pre>
-     * @param antlrTokenType the token type from the ANTLR Lexer
+     * @param antlrToken the token from the ANTLR Lexer
      *
      * @return a NetBeans lexer token.
      */
-    protected abstract Token<T> mapToken(int antlrTokenType);
+    protected abstract Token<T> mapToken(org.antlr.v4.runtime.Token antlrToken);
 
     @Override
     /**
@@ -182,4 +188,62 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         }
     }
 
+    private static final org.antlr.v4.runtime.TokenFactory<FixedToken> FIXED_TOKEN_FACTORY = new org.antlr.v4.runtime.TokenFactory<FixedToken>() {
+        @Override
+        public FixedToken create(Pair<TokenSource, CharStream> source, int type, String text, 
+                int channel, int start, int stop, int line, int charPositionInLine) {
+
+            FixedToken token = new FixedToken(source, type, channel, start, stop);
+            token.setLine(line);
+            token.setCharPositionInLine(charPositionInLine);
+            token.setText(text);
+            return token;
+        }
+
+        @Override
+        public FixedToken create(int type, String text) {
+            return new FixedToken(type, text);
+        }
+
+    };
+
+    private static final class FixedToken extends CommonToken {
+
+        public FixedToken(Pair<TokenSource, CharStream> source, int type, int channel, int start, int stop) {
+            super(source, type, channel, start, stop);
+        }
+
+        public FixedToken(int type, String text) {
+            super(type, text);
+        }
+
+	@Override
+        public String getText() {
+            if (text != null ) {
+                return text;
+            }
+
+            CharStream input = getInputStream();
+            if (input != null ) {
+                // The original implementation in CommonToken does not honor the
+                // contract with UnsupportedOperationException on CharStream.size()
+                // and CharStream.getText which renders CommonToken broken on
+                // getText() calls. That makes toString() unusable when using
+                // LexerInputCharStream as well.
+                //
+                // While the stream size is unknown, and the getText() is somewhat
+                // limited in the LexerInputCharStream implementation. There is
+                // a good chance that the following call would go through.
+                try {
+                    return input.getText(Interval.of(start, stop));
+                } catch (UnsupportedOperationException ex) {
+                    // The original implementation returns "<EOF>" when EOF
+                    // is reached. As the situation here is not really known
+                    // returning an "<N/A>" looks as good as "<EOF>"
+                    return "<N/A>";
+                }
+            }
+            return null;
+        }
+    }
 }

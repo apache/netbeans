@@ -44,8 +44,8 @@ public final class Antlr4Lexer extends AbstractAntlrLexerBridge<ANTLRv4Lexer, An
     }
 
     @Override
-    protected Token<AntlrTokenId> mapToken(int antlrTokenType) {
-        switch (antlrTokenType) {
+    protected Token<AntlrTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
+        switch (antlrToken.getType()) {
             case TOKEN_REF:
                 return token(TOKEN);
             case RULE_REF:

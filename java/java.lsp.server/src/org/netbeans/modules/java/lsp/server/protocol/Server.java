@@ -73,6 +73,8 @@ import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceFoldersOptions;
+import org.eclipse.lsp4j.WorkspaceServerCapabilities;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -120,7 +122,6 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -642,6 +643,7 @@ public final class Server {
                 projectSet.retainAll(openedProjects);
                 projectSet.addAll(projects);
 
+                Project[] prjsRequested = projects.toArray(new Project[projects.size()]);
                 Project[] prjs = projects.toArray(new Project[projects.size()]);
                 LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
                 synchronized (this) {
@@ -661,7 +663,7 @@ public final class Server {
                         openingFileOwners.put(p, f.thenApply(unused -> p));
                     }
                 }
-                f.complete(prjs);
+                f.complete(prjsRequested);
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
                 return null;
@@ -736,7 +738,7 @@ public final class Server {
                 capabilities.setDocumentFormattingProvider(true);
                 capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
-                
+
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
@@ -773,6 +775,14 @@ public final class Server {
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
                 textDocumentService.init(init.getCapabilities(), capabilities);
+
+                // register for workspace changess
+                WorkspaceServerCapabilities wcaps = new WorkspaceServerCapabilities();
+                WorkspaceFoldersOptions wfopts = new WorkspaceFoldersOptions();
+                wfopts.setSupported(true);
+                wfopts.setChangeNotifications(true);
+                wcaps.setWorkspaceFolders(wfopts);
+                capabilities.setWorkspace(wcaps);
             }
             return new InitializeResult(capabilities);
         }

@@ -37,7 +37,7 @@ public final class ParseSuitesTest extends NbTestCase {
     }
 
     public void testParseThemAll() throws IOException {
-        assertSuitePys(getDataDir(), 14);
+        assertSuitePys(getDataDir(), 15);
     }
 
     public static void main(String... args) throws IOException {

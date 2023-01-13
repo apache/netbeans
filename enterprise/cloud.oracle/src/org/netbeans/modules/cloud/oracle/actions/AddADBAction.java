@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentNode;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
@@ -61,7 +62,7 @@ import org.openide.util.NbBundle;
     @ActionReference(path = "Cloud/Oracle/Common/Actions", position = 260)
 })
 @NbBundle.Messages({
-    "AddADB=Add Oracle ADB",
+    "AddADB=Add Oracle Autonomous DB",
     "SelectTenancy=Select Tenancy",
     "SelectCompartment=Select Compartment",
     "SelectDatabase=Select Database"
@@ -72,46 +73,47 @@ public class AddADBAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<TenancyItem> tenancies = OCIManager.getDefault()
-                .getConnectedProfiles()
-                .stream()
-                .map(p -> p.getTenancy())
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        List<TenancyItem> tenancies = new ArrayList<>();
+        for (OCIProfile p : OCIManager.getDefault().getConnectedProfiles()) {
+           p.getTenancy().ifPresent(tenancies::add);
+        }
         Optional<TenancyItem> selectedTenancy = chooseOneItem(tenancies, Bundle.SelectTenancy());
         
         Optional<CompartmentItem> selectedCompartment = Optional.empty();
                 
-        if (selectedTenancy.isPresent()) {
-            List<CompartmentItem> compartments = CompartmentNode.getCompartments().apply(selectedTenancy.get());
-            selectedCompartment = chooseOneItem(compartments, Bundle.SelectCompartment());
+        if (!selectedTenancy.isPresent()) {
+            return;
         }
-        Optional<DatabaseItem> selectedDatabase = Optional.empty();
+        
+        List<CompartmentItem> compartments = CompartmentNode.getCompartments().apply(selectedTenancy.get());
+        selectedCompartment = chooseOneItem(compartments, Bundle.SelectCompartment());
+        DatabaseItem selectedDatabase = null;
         
         if (selectedCompartment.isPresent()) {
-            while(!selectedDatabase.isPresent()) {
+            while(selectedDatabase == null) {
                 OCIItem item = chooseCopartmentOrDb(selectedCompartment.get());
                 if (item == null) {
                     return;
                 }
                 if (item instanceof DatabaseItem) {
-                    selectedDatabase = Optional.of((DatabaseItem) item);
+                    selectedDatabase = (DatabaseItem) item;
                 }
                 if (item instanceof CompartmentItem) {
                     selectedCompartment = Optional.of((CompartmentItem) item);
                 }
             }
         }
-        if (selectedDatabase.isPresent()) {
-            DownloadWalletAction action = new DownloadWalletAction(selectedDatabase.get());
+        if (selectedDatabase != null) {
+            DownloadWalletAction action = new DownloadWalletAction(selectedDatabase);
             action.actionPerformed(null);
         }
     }
     
     private <T extends OCIItem> Optional<T> chooseOneItem(List<T> ociItems, String title) {
         Optional<T> result = Optional.empty();
-        if (ociItems.size() > 0) {
+        if (ociItems.size() == 1) {
+            result = Optional.of(ociItems.get(0));
+        } else if (ociItems.size() > 0) {
             List<Item> items = ociItems.stream()
                     .map(tenancy -> new Item(tenancy.getName(), tenancy.getDescription()))
                     .collect(Collectors.toList());
@@ -123,9 +125,7 @@ public class AddADBAction implements ActionListener {
                 }
                 
             }
-        } else if (ociItems.size() == 1) {
-            result = Optional.of(ociItems.get(0));
-        }
+        } 
         return result;
     }
     

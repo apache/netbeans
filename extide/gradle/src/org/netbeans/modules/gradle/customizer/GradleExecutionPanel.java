@@ -43,7 +43,6 @@ import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.TrustLevel.*;
 import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
 import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
-import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
@@ -377,11 +376,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     }
 
     private void saveJavaRuntime(Project project) {
-        Project root = ProjectUtils.rootOf(project);
-        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
-        JavaRuntime rt = (JavaRuntime) cbRuntime.getSelectedItem();
-        String id = (rt != null) && !JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(rt.getId()) ? rt.getId() : null;
-        aux.put(HINT_JDK_PLATFORM, id, true);
+        RunUtils.setActiveRuntime(project, (JavaRuntime) cbRuntime.getSelectedItem());
     }
 
     private void saveCheckBox(JCheckBox check, String property) {

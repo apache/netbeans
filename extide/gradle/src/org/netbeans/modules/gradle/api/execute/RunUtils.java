@@ -56,6 +56,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 
 import org.netbeans.api.project.ui.OpenProjects;
@@ -675,18 +676,54 @@ public final class RunUtils {
         return getActivePlatform("deprecated"); //NOI18N
     }
 
+    /**
+     * Return the current active JavaRuntime used by the specified project.
+     * JavaRuntime is defined in the root project level. If there is no
+     * runtime specified on the root project, then this method would return the
+     * default runtime. Usually the one, which is used by the IDE.
+     * <p>
+     * It is possible that the ID representing the project runtime, has no
+     * associated runtime in the IDE. In this case a broken JavaRuntime would be
+     * returned with the ID, that would be used.
+     *
+     * @param project the project which root project specifies the runtime.
+     * @return the JavaRuntime to be used by the project, could be broken, but
+     *         not {@code null}
+     *
+     * @since 2.32
+     */
     public static JavaRuntime getActiveRuntime(Project project) {
-        Project root = ProjectUtils.rootOf(project);
-        AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
-        String id = aux.get(HINT_JDK_PLATFORM, true);
-        id = id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
+        return ProjectManager.mutex().readAccess(() -> {
+            Project root = ProjectUtils.rootOf(project);
+            AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+            String id = aux.get(HINT_JDK_PLATFORM, true);
+            id = id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
 
-        JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
-        Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
-        if (runtimes.containsKey(id)) {
-            return runtimes.get(id);
-        }
-        return JavaRuntimeManager.createJavaRuntime(id, null);
+            JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+            Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
+            if (runtimes.containsKey(id)) {
+                return runtimes.get(id);
+            }
+            return JavaRuntimeManager.createJavaRuntime(id, null);
+        });
+    }
+
+    /**
+     * Sets the active JavaRuntime on the specified project root.
+     * 
+     * @param project the project , which root project shall be set the runtime on
+     * @param runtime The JavaRuntime to activate on the project or {@code null}
+     *                can be used to set the default runtime.
+     * 
+     * @since 2.32
+     */
+    public static void setActiveRuntime(Project project, JavaRuntime runtime) {
+        ProjectManager.mutex().postWriteRequest(() -> {
+            Project root = ProjectUtils.rootOf(project);
+            AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+            String id = (runtime != null) && !JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(runtime.getId()) ? runtime.getId() : null;
+            aux.put(HINT_JDK_PLATFORM, id, true);
+        });
     }
 
     static GradleCommandLine getIncludedOpenProjects(Project project) {

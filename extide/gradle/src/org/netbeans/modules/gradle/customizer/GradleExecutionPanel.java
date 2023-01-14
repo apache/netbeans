@@ -197,9 +197,6 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lbTrustLevel = new javax.swing.JLabel();
-        cbTrustLevel = new javax.swing.JComboBox<>();
-        lbTrustTerms = new javax.swing.JLabel();
         lbRuntime = new javax.swing.JLabel();
         cbRuntime = new javax.swing.JComboBox<>();
         btManageRuntimes = new javax.swing.JButton();
@@ -207,19 +204,11 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         lbAugmentedBuild = new javax.swing.JLabel();
         cbIncludeOpenProjects = new javax.swing.JCheckBox();
         lbIncludeOpenProjects = new javax.swing.JLabel();
-        lbReadOnly = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbTrustLevel, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustLevel.text")); // NOI18N
-
-        cbTrustLevel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbTrustLevelActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbTrustTerms, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustTerms.text")); // NOI18N
-        lbTrustTerms.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lbTrustLevel = new javax.swing.JLabel();
+        cbTrustLevel = new javax.swing.JComboBox<>();
+        lbTrustTerms = new javax.swing.JLabel();
+        lbReadOnly = new javax.swing.JLabel();
 
         lbRuntime.setLabelFor(cbRuntime);
         org.openide.awt.Mnemonics.setLocalizedText(lbRuntime, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbRuntime.text")); // NOI18N
@@ -248,6 +237,17 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lbIncludeOpenProjects, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbIncludeOpenProjects.text")); // NOI18N
         lbIncludeOpenProjects.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        org.openide.awt.Mnemonics.setLocalizedText(lbTrustLevel, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustLevel.text")); // NOI18N
+
+        cbTrustLevel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTrustLevelActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbTrustTerms, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustTerms.text")); // NOI18N
+        lbTrustTerms.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
         lbReadOnly.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/gradle/resources/info.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lbReadOnly, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbReadOnly.text")); // NOI18N
 
@@ -258,34 +258,36 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lbReadOnly))
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btManageRuntimes))
+                        .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(317, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lbTrustTerms, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
-                    .addComponent(cbAugmentedBuild, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btManageRuntimes)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbIncludeOpenProjects)
-                            .addComponent(lbReadOnly))
+                            .addComponent(cbIncludeOpenProjects, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(cbAugmentedBuild, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSeparator1)
+                            .addComponent(lbTrustTerms, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addContainerGap())))
         );
 
@@ -294,27 +296,27 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbRuntime)
+                    .addComponent(btManageRuntimes)
+                    .addComponent(cbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbAugmentedBuild)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cbIncludeOpenProjects)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbTrustLevel)
                     .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbTrustTerms, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbRuntime)
-                    .addComponent(btManageRuntimes))
-                .addGap(18, 18, 18)
-                .addComponent(cbAugmentedBuild)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbIncludeOpenProjects)
-                .addGap(8, 8, 8)
-                .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbReadOnly)
                 .addContainerGap())

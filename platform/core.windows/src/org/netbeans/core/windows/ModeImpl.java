@@ -102,26 +102,28 @@ public final class ModeImpl implements Mode.Xml {
         
         getCentral().addModeOtherName(this, modeOtherName);
     }
-    
+
     /** Gets display name of this mode.
      ** Implements <code>Mode</code> interface method.
      * @return Human presentable name of this mode implementation
      * @deprecated It is not used anymore. This impl delegated to {@link #getName} method.  */
+    @Deprecated
     @Override
     public String getDisplayName () {
         WindowManagerImpl.warnIfNotInEDT();
-        
+
         return getName();
     }
 
     /** Gets icon for this mode.
-     * Implements <code>Mode</code> interface method. 
+     * Implements <code>Mode</code> interface method.
      * @return null
      * @deprecated It is not used anymore. */
+    @Deprecated
     @Override
     public Image getIcon () {
         WindowManagerImpl.warnIfNotInEDT();
-        
+
         return null;
     }
 
@@ -178,6 +180,7 @@ public final class ModeImpl implements Mode.Xml {
      * @return The workspace instance to which is this mode asociated.
      * @deprecated XXX Don't use anymore.
      */
+    @Deprecated
     @Override
     public Workspace getWorkspace () {
         WindowManagerImpl.warnIfNotInEDT();

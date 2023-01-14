@@ -74,6 +74,7 @@ import org.openide.util.Parameters;
  * @author Petr Hejl
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.InputReaderTask}
  */
+@Deprecated
 public final class InputReaderTask implements Runnable, Cancellable {
 
     private final org.netbeans.api.extexecution.base.input.InputReaderTask delegate;

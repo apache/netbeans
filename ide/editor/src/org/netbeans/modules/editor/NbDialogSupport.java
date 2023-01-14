@@ -30,6 +30,7 @@ import org.netbeans.modules.editor.impl.NbDialogFactory;
  * @version 1.0
  * @deprecated Without any replacement.
  */
+@Deprecated
 public class NbDialogSupport extends NbDialogFactory implements DialogSupport.DialogFactory {
     public NbDialogSupport() {
         

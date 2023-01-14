@@ -520,6 +520,7 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated This method has been deprecated with no replacement
      */
+    @Deprecated
     public Servlet getServlet(String name) throws ServletException {
         
         return (null);
@@ -542,6 +543,7 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated This method has been deprecated with no replacement
      */
+    @Deprecated
     public Enumeration getServletNames() {
         
         return (new Vector().elements());
@@ -554,6 +556,7 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated This method has been deprecated with no replacement
      */
+    @Deprecated
     public Enumeration getServlets() {
         
         return (new Vector().elements());
@@ -579,6 +582,7 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated Use log(String,Throwable) instead
      */
+    @Deprecated
     public void log(Exception exception, String message) {
         
         log(message, exception);

@@ -71,6 +71,7 @@ public abstract class BaseAction extends TextAction {
      * Reset abbreviation accounting to empty string.
      * @deprecated Not used anymore.
      */
+    @Deprecated
     public static final int ABBREV_RESET = 4;
 
     /** Prevents adding the new undoable edit to the old one when the next
@@ -134,6 +135,7 @@ public abstract class BaseAction extends TextAction {
      * @deprecated this method is deprecated like the LocaleSupport which it uses by default.
      *   It should be replaced by implementing {@link #getShortDescriptionBundleClass()}
      */
+    @Deprecated
     protected Object findValue(String key){
         return LocaleSupport.getString(key);
     }

@@ -29,7 +29,7 @@ package org.netbeans.editor;
  *  to obtain CharSequence instance from a document instead.
  */
 
-
+@Deprecated
 public interface CharSeq {
 
     /**

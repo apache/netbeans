@@ -105,6 +105,7 @@ public class EditList {
      * @deprecated use {@link #applyTo}.
      * @param otherDoc 
      */
+    @Deprecated
     public void applyToDocument(BaseDocument otherDoc/*, boolean narrow*/) {
         applyTo(otherDoc);
     }
@@ -256,6 +257,7 @@ public class EditList {
      * @param doc
      * @return 
      */
+    @Deprecated
     public int firstLine(BaseDocument doc) {
         return firstEditLine(doc);
     }

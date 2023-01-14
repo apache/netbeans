@@ -25,6 +25,7 @@ import javax.swing.text.JTextComponent;
 /** @author Sandip V. Chitale (Sandip.Chitale@Sun.Com)
  * @deprecated use {@link CslActions#createDeleteCamelCasePositionAction(javax.swing.Action, boolean) } instead.
  */
+@Deprecated
 public final class DeleteToNextCamelCasePosition extends SelectNextCamelCasePosition {
     public static final String deleteNextCamelCasePosition = "delete-next-camel-case-position"; //NOI18N
 

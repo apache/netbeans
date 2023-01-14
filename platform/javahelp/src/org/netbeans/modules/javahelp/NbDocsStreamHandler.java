@@ -164,6 +164,7 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
          * @deprecated will be replaced by similar method in Modules Open APIs in
          * future releases
          */
+        @Deprecated
         private static ModuleInfo findModule (String codeNameBase) {
             Lookup.Result<ModuleInfo> modulesResult =
                 Lookup.getDefault().lookup(new Lookup.Template<ModuleInfo>(ModuleInfo.class));

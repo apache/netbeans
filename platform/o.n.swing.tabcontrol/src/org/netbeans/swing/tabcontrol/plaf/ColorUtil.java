@@ -182,6 +182,7 @@ final class ColorUtil {
     /**
      * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead.
      */
+    @Deprecated
     public static final boolean shouldAntialias() {
         return antialias;
     }

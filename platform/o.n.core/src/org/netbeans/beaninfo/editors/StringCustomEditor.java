@@ -68,6 +68,7 @@ public class StringCustomEditor extends javax.swing.JPanel implements PropertyCh
     
     /** Initializes the Form 
      * @deprecated Nothing should be using this constructor */
+    @Deprecated
     public StringCustomEditor(String s, boolean editable) {
         init (s, editable);
     }

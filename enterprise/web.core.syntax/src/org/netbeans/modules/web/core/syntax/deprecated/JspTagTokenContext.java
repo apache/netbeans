@@ -35,7 +35,7 @@ import org.netbeans.editor.BaseTokenID;
 * @author Petr Jiricka
 * @deprecated Use JSP Lexer instead
 */
-
+@Deprecated
 public class JspTagTokenContext extends TokenContext {
 
     //there is not any token category for jsp tags

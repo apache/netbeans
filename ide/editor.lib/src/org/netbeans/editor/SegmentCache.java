@@ -28,6 +28,7 @@ import javax.swing.text.Segment;
  * @deprecated The caching is no longer performed as the object creation
  * in the present JVMs is fast. Simply use <code>new Segment()</code>.
  */
+@Deprecated
 public class SegmentCache {
     
     private static final SegmentCache SHARED = new SegmentCache();

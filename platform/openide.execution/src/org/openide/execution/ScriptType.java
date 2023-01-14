@@ -30,6 +30,7 @@ import org.openide.util.Lookup;
  * @author dstrupl
  * @deprecated Was used only in obsolete modules.
  */
+@Deprecated
 public abstract class ScriptType extends org.openide.ServiceType {
 
     /** generated Serialized Version UID */

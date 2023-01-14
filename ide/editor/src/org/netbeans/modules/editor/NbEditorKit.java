@@ -276,6 +276,7 @@ public class NbEditorKit extends ExtKit implements Callable {
      */
     //@EditorActionRegistration(name = toggleToolbarAction)
     // Registration in createActions() due to getPopupMenuItem()
+    @Deprecated
     public static class ToggleToolbarAction extends BaseAction {
 
         public ToggleToolbarAction() {
@@ -855,6 +856,7 @@ public class NbEditorKit extends ExtKit implements Callable {
     /**
      * @deprecated Without any replacement. This class is no longer functional.
      */
+    @Deprecated
     public class NbStopMacroRecordingAction extends ActionFactory.StopMacroRecordingAction {
         protected @Override MacroDialogSupport getMacroDialogSupport(Class kitClass){
             return super.getMacroDialogSupport(kitClass);
@@ -905,6 +907,7 @@ public class NbEditorKit extends ExtKit implements Callable {
      */
     //@EditorActionRegistration(name = BaseKit.toggleLineNumbersAction)
     // Registration in createActions() due to getPopupMenuItem() in predecessor
+    @Deprecated
     public static final class NbToggleLineNumbersAction extends ActionFactory.ToggleLineNumbersAction {
 
         public NbToggleLineNumbersAction() {

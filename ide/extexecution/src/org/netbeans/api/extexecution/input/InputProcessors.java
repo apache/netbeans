@@ -35,6 +35,7 @@ import org.openide.windows.OutputWriter;
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.InputProcessors}
  *             and {@link org.netbeans.api.extexecution.print.InputProcessors}
  */
+@Deprecated
 public final class InputProcessors {
 
     private InputProcessors() {

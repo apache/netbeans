@@ -36,7 +36,7 @@ import java.util.MissingResourceException;
 * @author Miloslav Metelka
 * @version 1.00
 */
-
+@Deprecated
 public class LocaleSupport {
     
     private static final boolean debug

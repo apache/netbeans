@@ -315,6 +315,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * 
      * @deprecated Use Editor Settings API instead.
      */
+    @Deprecated
     protected static Map<String, Coloring> getSharedColoringMap(Class kitClass) {
         String mimeType = KitsTracker.getInstance().findMimeType(kitClass);
         return ColoringMap.get(mimeType).getMap();
@@ -647,6 +648,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * @deprecated Use Editor Settings or Editor Settings Storage API instead.
      *   This method is never called.
      */
+    @Deprecated
     protected Map createColoringMap() {
         return Collections.emptyMap();
     }
@@ -676,6 +678,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * 
      * @deprecated Use Editor Settings API instead.
      */
+    @Deprecated
     public Map<String, Coloring> getColoringMap() {
         // Return mutable map
         return new HashMap<String, Coloring>(getCMInternal());
@@ -697,6 +700,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * 
      * @deprecated Use Editor Settings API instead.
      */
+    @Deprecated
     public Coloring getDefaultColoring() {
         final MimePath mimePath;
         if (component != null)
@@ -719,6 +723,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      *   requested name.
      * @deprecated Use Editor Settings API instead.
      */
+    @Deprecated
     public Coloring getColoring(String coloringName) {
         return getCMInternal().get(coloringName);
     }
@@ -1011,6 +1016,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
     }
 
     /** @deprecated Use Editor Code Templates API instead. */
+    @Deprecated
     public Abbrev getAbbrev() {
         if (abbrev == null) {
             abbrev = new Abbrev(this, true, true);
@@ -1103,6 +1109,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
     * is really updated, the method returns true.
     * @deprecated virtual size is no longer used and effects of this method are ignored
     */
+    @Deprecated
     public boolean updateVirtualWidth(int width) {
         return false;
     }
@@ -1115,6 +1122,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
     * 0 can be used to update to the real height.
     * @deprecated virtual size is no longer used and effects of this method are ignored
     */
+    @Deprecated
     public boolean updateVirtualHeight(int height) {
         return false;
     }
@@ -1239,6 +1247,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      *
      * @deprecated use <code>JComponent.scrollRectToVisible()</code> instead of this method.
      */
+    @Deprecated
     public void scrollRectToVisible(final Rectangle r, final int scrollPolicy) {
         Utilities.runInEventDispatchThread(
             new Runnable() {
@@ -1499,6 +1508,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * @param scrollPolicy policy to be used when scrolling.
      * @deprecated
      */
+    @Deprecated
     public void caretSetDot(int offset, Rectangle scrollRect, int scrollPolicy) {
         if (component != null) {
             Caret caret = component.getCaret();
@@ -1517,6 +1527,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
      * @param scrollPolicy policy to be used when scrolling.
      * @deprecated
      */
+    @Deprecated
     public void caretMoveDot(int offset, Rectangle scrollRect, int scrollPolicy) {
         if (component != null) {
             Caret caret = component.getCaret();

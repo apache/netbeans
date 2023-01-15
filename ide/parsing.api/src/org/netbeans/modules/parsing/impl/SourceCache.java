@@ -358,7 +358,13 @@ retry:  while (true) {
     }
 
     public Iterable<Embedding> getExistingEmbeddings () {
-        return this.embeddings;
+        List<Embedding> result = this.embeddings;
+
+        if (result == null) {
+            result = Collections.emptyList();
+        }
+
+        return result;
     }
 
     //@GuardedBy(this)

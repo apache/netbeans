@@ -39,9 +39,9 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  */
 public enum JavaMultiLineStringTokenId implements TokenId {
 
-    INDENT("whitespace"),
-    TEXT("text"),
-    NEWLINE("whitespace");
+    INDENT("text-block-whitespace"),
+    TEXT("text-block-text"),
+    NEWLINE("text-block-whitespace");
 
     private final String primaryCategory;
 

@@ -83,6 +83,31 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="java-runtime-manager">
+            <api name="general"/>
+            <summary>Adding JavaRuntimeManager abstracting the Gradle Runtime from Java Platform</summary>
+            <version major="2" minor="32"/>
+            <date day="13" month="1" year="2023"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                Introduced a <code><a href="@TOP@/org/netbeans/modules/gradle/spi/execute/JavaRuntimeManager.html">JavaRuntimeManager</a></code> to
+                create abstraction between the necessary runtime that Gradle needs (just a Java home) and the actual JavaPlatform which is provided by
+                the modules in the Java cluster.
+                </p>
+                <p>
+                    JavaRuntime is bound to be the root project of a project tree from now. The ID of the active rintime is stored in the <code>gradle.properties</code>
+                    of the root project under the property name <code>netbeans.hint.jdkPlatform</code>.
+                </p>
+                <p>
+                    There are two new methods provided in <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html">RunUtils</a></code> to get and set the
+                    active runtime of a project.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.spi.execute" name="JavaRuntimeManager"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+        </change>
         <change id="external-tasks">
             <api name="general"/>
             <summary>Representing external tasks</summary>

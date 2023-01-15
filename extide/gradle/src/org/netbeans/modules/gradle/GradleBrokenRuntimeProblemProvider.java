@@ -16,17 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle.java;
+package org.netbeans.modules.gradle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import static org.netbeans.spi.project.ui.ProjectProblemsProvider.PROP_PROBLEMS;
 import org.openide.util.NbBundle;
@@ -35,12 +35,13 @@ import org.openide.util.NbBundle;
  *
  * @author lkishalmi
  */
-public class GradleJavaProjectProblemProvider implements ProjectProblemsProvider {
+@ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
+public class GradleBrokenRuntimeProblemProvider implements ProjectProblemsProvider {
     private final Project project;
     private final PropertyChangeListener listener;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public GradleJavaProjectProblemProvider(Project project) {
+    public GradleBrokenRuntimeProblemProvider(Project project) {
         this.project = project;
         listener = (PropertyChangeEvent evt) -> {
             if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
@@ -54,12 +55,10 @@ public class GradleJavaProjectProblemProvider implements ProjectProblemsProvider
     @NbBundle.Messages({
         "LBL_BrokenPlatform=Broken Platform.",
     })
-    public Collection<? extends ProjectProblem> getProblems() {
-        List<ProjectProblem> ret = new ArrayList<>();
-        if (JavaRunUtils.getActivePlatform(project) == null) {
-            ret.add(ProjectProblem.createWarning(Bundle.LBL_BrokenPlatform(), Bundle.LBL_BrokenPlatform()));
-        }
-        return ret;
+    public Collection<? extends ProjectProblemsProvider.ProjectProblem> getProblems() {
+        return RunUtils.getActiveRuntime(project).isBroken()
+                ? Collections.singleton(ProjectProblemsProvider.ProjectProblem.createWarning(Bundle.LBL_BrokenPlatform(), Bundle.LBL_BrokenPlatform()))
+                : Collections.emptySet();
     }
 
     @Override
@@ -71,4 +70,5 @@ public class GradleJavaProjectProblemProvider implements ProjectProblemsProvider
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
+
 }

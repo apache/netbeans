@@ -16,20 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle.java.execute;
+package org.netbeans.modules.gradle.execute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Pair;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
+import org.netbeans.spi.project.ProjectServiceProvider;
 
 /**
  *
- * @author lkishalmi
+ * @author Laszlo Kishalmi
  */
+@ProjectServiceProvider(service = GradleJavaPlatformProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
 public final class GradleJavaPlatformProviderImpl implements GradleJavaPlatformProvider {
 
     final Project project;
@@ -38,15 +40,12 @@ public final class GradleJavaPlatformProviderImpl implements GradleJavaPlatformP
         this.project = project;
     }
 
-    
     @Override
     public File getJavaHome() throws FileNotFoundException {
-        Pair<String, JavaPlatform> platform = JavaRunUtils.getActivePlatform(project);
-        if (platform.second() == null || !platform.second().isValid() || platform.second().getInstallFolders().isEmpty()) {
-            throw new FileNotFoundException(platform.first());
+        JavaRuntime rt = RunUtils.getActiveRuntime(project);
+        if (rt.isBroken()) {
+            throw new FileNotFoundException("Could not found runtime for: " + rt.getId());
         }
-        File javaHome = FileUtil.toFile(platform.second().getInstallFolders().iterator().next());
-        return javaHome;
+        return rt.getJavaHome();
     }
-
 }

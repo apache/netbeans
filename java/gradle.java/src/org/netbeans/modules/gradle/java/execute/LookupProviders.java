@@ -30,17 +30,6 @@ import org.openide.util.lookup.Lookups;
  */
 public class LookupProviders {
 
-    @LookupProvider.Registration(projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-    public static LookupProvider createProvider() {
-        return new LookupProvider() {
-            @Override
-            public Lookup createAdditionalLookup(Lookup baseContext) {
-                Project project = baseContext.lookup(Project.class);
-                return Lookups.singleton(new GradleJavaPlatformProviderImpl(project));
-            }
-        };
-    }
-
     @LookupProvider.Registration(projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
     public static LookupProvider createJavaBaseProvider() {
         return new LookupProvider() {

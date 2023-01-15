@@ -31,9 +31,8 @@ public enum GoTokenId implements TokenId{
     IDENTIFIER("identifier"),
     KEYWORD("keyword"),
     NUMBER("number"),
-    PUNCTUATION("separator"),
-    REGEXP_CHARS("regexp-chars"),
     OPERATOR("operator"),
+    SEPARATOR("separator"),
     STRING("string"),
     WHITESPACE("whitespace");
 

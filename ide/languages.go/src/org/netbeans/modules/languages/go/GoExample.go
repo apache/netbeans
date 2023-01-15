@@ -18,7 +18,7 @@ func HtmlFileHandler(response http.ResponseWriter, request *http.Request, filena
 	response.Header().Set("Content-type", "text/html")
 	webpage, err := ioutil.ReadFile(Dir + filename)  // read whole the file
 	if err != nil {
-		http.Error(response, fmt.Sprintf("%s file error \"%v\"", filename, err), 500)
+		http.Error(response, fmt.Sprintf("%s file error %v", filename, err), 500)
 	}
 	fmt.Fprint(response, string(webpage));
 }

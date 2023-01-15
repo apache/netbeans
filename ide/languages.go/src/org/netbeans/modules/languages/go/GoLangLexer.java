@@ -85,7 +85,7 @@ public final class GoLangLexer extends AbstractAntlrLexerBridge<GoLexer, GoToken
             case MINUS_MINUS:
             case DECLARE_ASSIGN:
             case ELLIPSIS:
-                return token(PUNCTUATION);
+                return token(SEPARATOR);
 
             case LOGICAL_OR:
             case LOGICAL_AND:
@@ -143,7 +143,7 @@ public final class GoLangLexer extends AbstractAntlrLexerBridge<GoLexer, GoToken
                     return token(GoTokenId.COMMENT);
                 }
                 if (text.equals(";")) {
-                    return token(PUNCTUATION);
+                    return token(SEPARATOR);
                 }
             default:
                 return token(ERROR);

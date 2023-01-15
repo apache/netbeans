@@ -37,8 +37,8 @@ public final class GoLangLexer extends AbstractAntlrLexerBridge<GoLexer, GoToken
     }
 
     @Override
-    protected Token<GoTokenId> mapToken(int antlrTokenType) {
-        switch (antlrTokenType) {
+    protected Token<GoTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
+        switch (antlrToken.getType()) {
             case BREAK:
             case DEFAULT:
             case FUNC:
@@ -112,6 +112,7 @@ public final class GoLangLexer extends AbstractAntlrLexerBridge<GoLexer, GoToken
 
             case RAW_STRING_LIT:
             case INTERPRETED_STRING_LIT:
+            case RUNE_LIT:
                 return token(STRING);
 
             case DECIMAL_LIT:
@@ -133,6 +134,17 @@ public final class GoLangLexer extends AbstractAntlrLexerBridge<GoLexer, GoToken
             case LINE_COMMENT:
             case LINE_COMMENT_NLSEMI:
                 return  token(GoTokenId.COMMENT);
+            case EOS:
+                String text = antlrToken.getText();
+                if (Character.isWhitespace(text.codePointAt(0))) {
+                    return token(WHITESPACE);
+                }
+                if (text.startsWith("/*")) {
+                    return token(GoTokenId.COMMENT);
+                }
+                if (text.equals(";")) {
+                    return token(PUNCTUATION);
+                }
             default:
                 return token(ERROR);
         }

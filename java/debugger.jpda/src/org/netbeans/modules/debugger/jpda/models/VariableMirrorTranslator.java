@@ -112,7 +112,11 @@ public class VariableMirrorTranslator {
                         return ShortenedStrings.getStringWithLengthControl((StringReference) value);
                     }
                     return createMirrorObject((ObjectReference) value, (ReferenceType) type, clazz, mirrorsMap);
-                } catch (ClassNotFoundException | ClassNotPreparedExceptionWrapper ex) {
+                } catch (ClassNotFoundException | ClassNotLoadedException |
+                        ClassNotPreparedExceptionWrapper |
+                        InvalidTypeException | InvocationException |
+                        IncompatibleThreadStateException ex) {
+                    //nom
                 }
             } else {
                 if (null == typeStr) {

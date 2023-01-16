@@ -25,6 +25,7 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -123,6 +124,11 @@ public class GoLanguage extends DefaultLanguageConfig {
     @Override
     public String getDisplayName() {
         return "Go"; //NOI18N
+    }
+
+    @Override
+    public Parser getParser() {
+        return new GoLangParser();
     }
 
     private static final Language<GoTokenId> LANGUAGE = new LanguageHierarchy<GoTokenId>() {

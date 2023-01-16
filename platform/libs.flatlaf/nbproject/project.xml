@@ -44,11 +44,12 @@
             </module-dependencies>
             <public-packages>
                 <package>com.formdev.flatlaf</package>
+                <package>com.formdev.flatlaf.themes</package>
                 <package>com.formdev.flatlaf.util</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/flatlaf-2.6.jar</runtime-relative-path>
-                <binary-origin>external/flatlaf-2.6.jar</binary-origin>
+                <runtime-relative-path>ext/flatlaf-3.0.jar</runtime-relative-path>
+                <binary-origin>external/flatlaf-3.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -23,6 +23,7 @@ import java.util.EnumSet;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -129,6 +130,16 @@ public class GoLanguage extends DefaultLanguageConfig {
     @Override
     public Parser getParser() {
         return new GoLangParser();
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return new GoLangStructureScanner();
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
     }
 
     private static final Language<GoTokenId> LANGUAGE = new LanguageHierarchy<GoTokenId>() {

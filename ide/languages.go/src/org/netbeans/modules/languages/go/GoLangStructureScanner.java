@@ -18,37 +18,34 @@
  */
 package org.netbeans.modules.languages.go;
 
-import javax.swing.event.ChangeListener;
-import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.Task;
-import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
-import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.api.StructureItem;
+import org.netbeans.modules.csl.api.StructureScanner;
+import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public class GoLangParser extends Parser {
-
-    private Result lastResult;
+public class GoLangStructureScanner implements StructureScanner {
 
     @Override
-    public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
-        lastResult = new GoLangParserResult(snapshot).get();
+    public List<? extends StructureItem> scan(ParserResult info) {
+        return Collections.emptyList();
     }
 
     @Override
-    public Result getResult(Task task) throws ParseException {
-        return lastResult;
+    public Map<String, List<OffsetRange>> folds(ParserResult info) {
+        return Collections.singletonMap("codeblocks", ((GoLangParserResult)info).folds); //NOI18N
+
     }
 
     @Override
-    public void addChangeListener(ChangeListener changeListener) {
-    }
-
-    @Override
-    public void removeChangeListener(ChangeListener changeListener) {
+    public Configuration getConfiguration() {
+        return new Configuration(true, false);
     }
 
 }

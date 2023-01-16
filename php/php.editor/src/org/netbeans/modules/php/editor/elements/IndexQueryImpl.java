@@ -1565,6 +1565,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         Set<TypeElement> types = new HashSet<>();
         types.addAll(getClassesImpl(typeQuery));
         types.addAll(getInterfacesImpl(typeQuery));
+        types.addAll(getTraitsImpl(typeQuery)); // GH-4725 PHP 8.2 Constants In Traits
         types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(constantQuery).filter(getAllTypeConstants(typeElement)));

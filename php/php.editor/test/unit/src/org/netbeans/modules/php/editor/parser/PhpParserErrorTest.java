@@ -1387,4 +1387,8 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php82/constantsInTraits_01.php");
     }
 
+    public void testDnfTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php82/dnfTypes_01.php");
+    }
+
 }

@@ -385,6 +385,9 @@ public class UnusableTypesHintError extends HintErrorRule {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
+                if (type instanceof IntersectionType) {
+                    continue;
+                }
                 QualifiedName qualifiedName = QualifiedName.create(type);
                 assert qualifiedName != null;
                 String name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
@@ -414,22 +417,30 @@ public class UnusableTypesHintError extends HintErrorRule {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
-                QualifiedName qualifiedName = QualifiedName.create(type);
-                assert qualifiedName != null;
-                String name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
+                String name;
+                String typeName;
+                if (type instanceof IntersectionType) {
+                    typeName = VariousUtils.getIntersectionType((IntersectionType) type);
+                    name = typeName.toLowerCase();
+                } else {
+                    QualifiedName qualifiedName = QualifiedName.create(type);
+                    assert qualifiedName != null;
+                    name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
+                    typeName = qualifiedName.toString();
+                }
                 if (checkedTypes.contains(name)) {
-                    createDuplicateTypeError(type, qualifiedName.toString());
+                    createDuplicateTypeError(type, typeName);
                     return;
                 } else if (checkedTypes.contains(Type.BOOL)) {
                     // bool|false bool|true
                     if (Type.FALSE.equals(name) || Type.TRUE.equals(name)) {
-                        createDuplicateTypeError(type, qualifiedName.toString());
+                        createDuplicateTypeError(type, typeName);
                         return;
                     }
                 } else if (checkedTypes.contains(Type.FALSE) || checkedTypes.contains(Type.TRUE)) {
                     // false|bool true|bool
                     if (Type.BOOL.equals(name)) {
-                        createDuplicateTypeError(type, qualifiedName.toString());
+                        createDuplicateTypeError(type, typeName);
                         return;
                     }
                 }

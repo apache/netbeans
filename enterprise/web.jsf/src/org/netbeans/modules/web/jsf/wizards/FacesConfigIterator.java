@@ -150,7 +150,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     }
                     if (!found) {
                         InitParam contextParam = (InitParam) ddRoot.createBean(INIT_PARAM);
-                        if(WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
+                        if(WebApp.VERSION_6_0.equals(ddRoot.getVersion()) || WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
                             contextParam.setParamName(JAKARTAEE_FACES_CONFIG_PARAM);
                         } else {
                             contextParam.setParamName(FACES_CONFIG_PARAM);

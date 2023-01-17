@@ -1773,6 +1773,12 @@ class OccurenceBuilder {
                 matchingTypeNames.add(constantElement.getType().getFullyQualifiedName());
                 QualifiedName typeQualifiedName = nodeCtxInfo.getTypeQualifiedName();
                 if (typeQualifiedName != null) {
+                    if (isParent(typeQualifiedName)) {
+                        TypeScope scope = ModelUtils.getTypeScope(nodeCtxInfo.getModelElemnt());
+                        if (scope != null) {
+                            typeQualifiedName = resolveClassName(typeQualifiedName, scope);
+                        }
+                    }
                     matchingTypeNames.add(typeQualifiedName);
                 }
                 final Exact constantName = NameKind.exact(phpElement.getName());
@@ -1783,6 +1789,11 @@ class OccurenceBuilder {
                     ASTNodeInfo<StaticConstantAccess> nodeInfo = entry.getKey();
                     final Expression dispatcher = nodeInfo.getOriginalNode().getDispatcher();
                     QualifiedName clzName = QualifiedName.create(dispatcher);
+                    // $this::CONSTANT;
+                    if (dispatcher instanceof Variable
+                            && "this".equalsIgnoreCase(CodeUtils.extractQualifiedName(((Variable) dispatcher).getName()))) { // NOI18N
+                        clzName = QualifiedName.create(Type.SELF);
+                    }
                     if (clzName != null) {
                         final TypeScope scope = ModelUtils.getTypeScope(entry.getValue());
                         clzName = resolveClassName(clzName, scope);

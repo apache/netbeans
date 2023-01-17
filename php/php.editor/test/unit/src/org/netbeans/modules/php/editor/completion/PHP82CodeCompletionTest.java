@@ -212,4 +212,85 @@ public class PHP82CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("fetchPropertiesInConstExpressions", "    case VALUE = E::Case->valu^e;");
     }
 
+    public void testConstantsInTraits_01() throws Exception {
+        // no constant items because T::CONSTANT is invalid
+        checkCompletion("constantsInTraits", "echo ExampleTrait::^IMPLICIT_PUBLIC_TRAIT . PHP_EOL; // fatal error");
+    }
+
+    public void testConstantsInTraits_02a() throws Exception {
+        checkCompletion("constantsInTraits", "echo self::^IMPLICIT_PUBLIC_TRAIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_02b() throws Exception {
+        checkCompletion("constantsInTraits", "echo self::IMPLICIT_PUBLIC^_TRAIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_03a() throws Exception {
+        checkCompletion("constantsInTraits", "echo static::^PRIVATE_TRAIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_03b() throws Exception {
+        checkCompletion("constantsInTraits", "echo static::PRIVATE^_TRAIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_04a() throws Exception {
+        checkCompletion("constantsInTraits", "echo $this::^PROTECTED_TRAIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_04b() throws Exception {
+        checkCompletion("constantsInTraits", "echo $this::PROTECTED_TR^AIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_05() throws Exception {
+        checkCompletion("constantsInTraits", "echo self::^IMPLICIT_PUBLIC_TRAIT2 . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_06() throws Exception {
+        checkCompletion("constantsInTraits", "echo static::^PRIVATE_TRAIT2 . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_07() throws Exception {
+        checkCompletion("constantsInTraits", "echo $this::^PROTECTED_TRAIT2 . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_08() throws Exception {
+        checkCompletion("constantsInTraits", "echo self::^IMPLICIT_PUBLIC_TRAIT . PHP_EOL; // class");
+    }
+
+    public void testConstantsInTraits_09() throws Exception {
+        checkCompletion("constantsInTraits", "echo static::^PRIVATE_TRAIT . PHP_EOL; // class");
+    }
+
+    public void testConstantsInTraits_10() throws Exception {
+        checkCompletion("constantsInTraits", "echo $this::^PROTECTED_TRAIT . PHP_EOL; // class");
+    }
+
+    public void testConstantsInTraits_11() throws Exception {
+        checkCompletion("constantsInTraits", "echo self::^IMPLICIT_PUBLIC_TRAIT . PHP_EOL; // child");
+    }
+
+    public void testConstantsInTraits_12() throws Exception {
+        checkCompletion("constantsInTraits", "echo static::^PUBLIC_TRAIT . PHP_EOL; // child");
+    }
+
+    public void testConstantsInTraits_13() throws Exception {
+        checkCompletion("constantsInTraits", "echo $this::^PROTECTED_TRAIT . PHP_EOL; // child");
+    }
+
+    public void testConstantsInTraits_14() throws Exception {
+        checkCompletion("constantsInTraits", "echo parent::^PUBLIC_TRAIT . PHP_EOL; // child");
+    }
+
+    public void testConstantsInTraits_15() throws Exception {
+        checkCompletion("constantsInTraits", "echo ExampleClass::^IMPLICIT_PUBLIC_TRAIT . PHP_EOL;");
+    }
+
+    public void testConstantsInTraits_16() throws Exception {
+        checkCompletion("constantsInTraits", "$i::^PUBLIC_TRAIT;");
+    }
+
+    public void testConstantsInTraits_17() throws Exception {
+        checkCompletion("constantsInTraits", "$c::^PUBLIC_TRAIT;");
+    }
+
 }

@@ -21,6 +21,7 @@ package org.netbeans.modules.php.editor.model.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.api.util.StringUtils;
 
 /**
@@ -30,10 +31,12 @@ import org.netbeans.modules.php.api.util.StringUtils;
 public final class Type {
 
     public enum Kind {
-        NORMAL(""), // NOI18N
-        NULLABLE("?"), // NOI18N
-        UNION(SEPARATOR),
-        INTERSECTION(SEPARATOR_INTERSECTION),
+        NONE(""), // NOI18N
+        NORMAL(""), // NOI18N e.g. MyClass
+        NULLABLE("?"), // NOI18N e.g. ?Nullable
+        UNION(SEPARATOR), // e.g. A|B|C
+        INTERSECTION(SEPARATOR_INTERSECTION), // e.g. A&B&C
+        DNF(""), // NOI18N e.g. (A&B)|(X&Y)|Z
         ;
 
         private final String sign;
@@ -46,9 +49,13 @@ public final class Type {
             return sign;
         }
 
-        public static Kind fromTypes(String types) {
+        public static Kind fromTypes(@NullAllowed String types) {
             Kind kind = NORMAL;
-            if (types.contains(SEPARATOR)) {
+            if (StringUtils.isEmpty(types)) {
+                kind = NONE;
+            } else if (types.contains(SEPARATOR) && types.contains(SEPARATOR_INTERSECTION)) {
+                kind = DNF;
+            } else if (types.contains(SEPARATOR)) {
                 kind = UNION;
             } else if (types.contains(SEPARATOR_INTERSECTION)) {
                 kind = INTERSECTION;

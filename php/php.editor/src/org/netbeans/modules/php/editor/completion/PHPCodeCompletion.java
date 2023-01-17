@@ -106,6 +106,7 @@ import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.ParameterInfoSupport;
 import org.netbeans.modules.php.editor.model.Scope;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.model.VariableScope;
@@ -1507,6 +1508,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     for (final PhpElement phpElement : accessibleTypeMembers) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
+                        }
+                        // https://wiki.php.net/rfc/deprecations_php_8_1 Accessing static members on traits
+                        // e.g. T::$staticField, T::staticMethod() : deprecated since PHP 8.1
+                        // we can fix this here in the future
+                        if (typeScope instanceof TraitScope
+                                && !specialVariable
+                                && phpElement instanceof TypeConstantElement) {
+                            // PHP 8.2: prohibit direct access through a trait name
+                            // e.g. T::CONSTANT;
+                            continue;
                         }
                         if (duplicateElementCheck.add(phpElement)) {
                             if (methodsFilter.isAccepted(phpElement)) {

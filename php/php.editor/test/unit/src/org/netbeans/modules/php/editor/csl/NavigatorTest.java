@@ -124,4 +124,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/standAloneTrueType");
     }
 
+    public void testConstantsInTraits() throws Exception {
+        performTest("structure/php82/constantsInTraits");
+    }
+
 }

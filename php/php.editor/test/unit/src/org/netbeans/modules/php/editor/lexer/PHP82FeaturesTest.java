@@ -28,4 +28,8 @@ public class PHP82FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/php82/readonlyClasses_01");
     }
 
+    public void testConstantsInTraits_01() throws Exception {
+        performTest("lexer/php82/constantsInTraits_01");
+    }
+
 }

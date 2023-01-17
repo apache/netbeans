@@ -55,6 +55,13 @@ class IncorrectEnumCase {
     public static string $property = "correct";
 }
 
+trait IncorrectTraitEnumCase {
+    case X;
+    case Y = 1;
+    public int $property = 0;
+    public static string $property = "correct";
+}
+
 trait TestTrait1 {
     use TestTrait2;
     public int $property = 1;

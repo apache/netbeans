@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo static::PRIVATE|_TRAIT . PHP_EOL;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PRIVATE_TRAIT 'ExampleTrait pr  [PRIVATE]  ExampleTrait

@@ -1457,6 +1457,14 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php82/fetchPropertiesInConstExpressions_01");
     }
 
+    public void testConstantsInTraits_01() throws Exception {
+        performTest("parser/php82/constantsInTraits_01");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        performTest("parser/php82/dnfTypes_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

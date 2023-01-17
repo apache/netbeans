@@ -18,6 +18,7 @@
  */
 package org.netbeans.lib.v8debug;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.lib.v8debug.vars.ReferencedValue;

@@ -117,7 +117,7 @@ class VarUsageVisitor extends RefactoringVisitor {
                     VariableElement parameter = method.getParameters().get(i);
                     Types types = workingCopy.getTypes();
                     TypeMirror parameterType = parameter.asType();
-                    if(parameterType.getKind().equals(TypeKind.TYPEVAR)) {
+                    if(parameterType.getKind() == TypeKind.TYPEVAR) {
                         TypeVariable typeVariable = (TypeVariable) parameterType;
                         TypeMirror upperBound = typeVariable.getUpperBound();
                         TypeMirror lowerBound = typeVariable.getLowerBound();
@@ -207,7 +207,7 @@ class VarUsageVisitor extends RefactoringVisitor {
     private boolean isMemberAvailable(TypeElement subTypeElement, Element methodElement, 
             TypeElement superTypeElement) {
         ElementKind memberKind = methodElement.getKind();
-        if(ElementKind.METHOD.equals(memberKind)){
+        if(ElementKind.METHOD == memberKind) {
             return isMethodAvailable(subTypeElement, (ExecutableElement)methodElement, 
                     superTypeElement);
         }else{
@@ -220,7 +220,7 @@ class VarUsageVisitor extends RefactoringVisitor {
         Elements elements = workingCopy.getElements();
         List<? extends Element> memberElements = elements.getAllMembers(superTypeElement);
         for (Element elem : memberElements) {
-            if(ElementKind.METHOD.equals(elem.getKind())){
+            if(ElementKind.METHOD == elem.getKind()) {
                 if(execElem.getModifiers().contains(Modifier.STATIC) && elements.hides(execElem, elem)){
                     return true;
                 }else{
@@ -276,7 +276,7 @@ class VarUsageVisitor extends RefactoringVisitor {
     }
 
     private boolean isDeclaredType(TypeMirror type) {
-        return TypeKind.DECLARED.equals(type.getKind());
+        return TypeKind.DECLARED == type.getKind();
     }
 
 }

@@ -257,13 +257,13 @@ public final class EncapsulateFieldRefactoringPlugin extends JavaRefactoringPlug
         if (mods.isEmpty()) {
             return null;
         }
-        Set<Modifier> s = new HashSet<Modifier>(mods);
+        Set<Modifier> s = EnumSet.copyOf(mods);
         s.retainAll(accessModifiers);
         return s.isEmpty() ? null : s.iterator().next();
     }
 
     private static Set<Modifier> replaceAccessibility(Modifier currentAccess, Modifier futureAccess, Element elm) {
-        Set<Modifier> mods = new HashSet<Modifier>(elm.getModifiers());
+        Set<Modifier> mods = EnumSet.copyOf(elm.getModifiers());
         if (currentAccess != null) {
             mods.remove(currentAccess);
         }
@@ -971,7 +971,7 @@ public final class EncapsulateFieldRefactoringPlugin extends JavaRefactoringPlug
 
             setterBody.append("}");//NOI18N
 
-            Set<Modifier> mods = new HashSet<Modifier>(useModifiers);
+            Set<Modifier> mods = EnumSet.copyOf(useModifiers);
             if (staticMod) {
                 mods.add(Modifier.STATIC);
             }
@@ -1092,7 +1092,7 @@ public final class EncapsulateFieldRefactoringPlugin extends JavaRefactoringPlug
                     && desc.refactoring.getSetterName() != null) {
                 // remove final flag in case user wants to create setter
                 ModifiersTree mot = newModTree == null ? node.getModifiers() : newModTree;
-                Set<Modifier> flags = new HashSet<Modifier>(mot.getFlags());
+                Set<Modifier> flags = EnumSet.copyOf(mot.getFlags());
                 flags.remove(Modifier.FINAL);
                 newModTree = make.Modifiers(flags, mot.getAnnotations());
             }

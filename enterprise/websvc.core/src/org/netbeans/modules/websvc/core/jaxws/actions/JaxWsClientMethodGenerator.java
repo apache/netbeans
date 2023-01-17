@@ -26,11 +26,8 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.CancellableTask;
@@ -69,8 +66,7 @@ public class JaxWsClientMethodGenerator implements CancellableTask<WorkingCopy> 
         if (javaClass != null) {
 
             TreeMaker maker = copy.getTreeMaker();
-            Set<Modifier> methodModifs = new HashSet<Modifier>();
-            methodModifs.add(Modifier.PRIVATE);
+            Set<Modifier> methodModifs = EnumSet.of(Modifier.PRIVATE);
             if (isStatic) {
                methodModifs.add(Modifier.STATIC);
             }

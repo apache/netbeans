@@ -31,14 +31,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -518,7 +511,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             }
             ClassTree ct = (ClassTree)ctx.getPath().getLeaf();
             ModifiersTree mt = ct.getModifiers();
-            Set<Modifier> mods = new HashSet<>(mt.getFlags());
+            Set<Modifier> mods = EnumSet.copyOf(mt.getFlags());
             mods.remove(Modifier.FINAL);
             mods.add(Modifier.ABSTRACT);
             ModifiersTree newMt = wc.getTreeMaker().Modifiers(mods, mt.getAnnotations());

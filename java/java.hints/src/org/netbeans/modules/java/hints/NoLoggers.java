@@ -26,14 +26,8 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -202,10 +196,7 @@ public final class NoLoggers {
             }
 
             // modifiers
-            Set<Modifier> mods = new HashSet<Modifier>();
-            mods.add(Modifier.PRIVATE);
-            mods.add(Modifier.STATIC);
-            mods.add(Modifier.FINAL);
+            Set<Modifier> mods = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
             ModifiersTree mt = m.Modifiers(mods);
 
             // logger type

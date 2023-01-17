@@ -21,6 +21,7 @@ package org.netbeans.modules.j2ee.ejbverification.fixes;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ModifiersTree;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -71,7 +72,7 @@ public class MakeClassPublic implements Fix {
                     ClassTree clazzTree = workingCopy.getTrees().getTree(clazz);
                     TreeMaker make = workingCopy.getTreeMaker();
 
-                    Set<Modifier> flags = new HashSet<>(clazzTree.getModifiers().getFlags());
+                    Set<Modifier> flags = EnumSet.copyOf(clazzTree.getModifiers().getFlags());
                     flags.add(Modifier.PUBLIC);
                     ModifiersTree newModifiers = make.Modifiers(flags, clazzTree.getModifiers().getAnnotations());
                     workingCopy.rewrite(clazzTree.getModifiers(), newModifiers);

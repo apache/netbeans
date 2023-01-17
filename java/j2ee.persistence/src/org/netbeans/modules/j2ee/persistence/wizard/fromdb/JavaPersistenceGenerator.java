@@ -1171,12 +1171,12 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 for (Tree member : originalClassTree.getMembers()) {
                     List<? extends AnnotationTree> annotations = null;
                     Tree memberType = null;
-                    if (Kind.VARIABLE.equals(member.getKind())) {
+                    if (Kind.VARIABLE == member.getKind()) {
                         VariableTree variable = (VariableTree) member;
                         annotations = variable.getModifiers().getAnnotations();
                         memberType = variable.getType();
                         variables.put(variable.getName().toString(), variable);
-                    } else if (Kind.METHOD.equals(member.getKind())) {
+                    } else if (Kind.METHOD == member.getKind()) {
                         MethodTree method = (MethodTree) member;
                         annotations = method.getModifiers().getAnnotations();
                         memberType = method.getReturnType();
@@ -1342,14 +1342,14 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     property = createProperty(m);
                     if(existingTree !=null){
                         Tree exMemberType = null;
-                        if (Kind.VARIABLE.equals(existingTree.getKind())) {
+                        if (Kind.VARIABLE == existingTree.getKind()) {
                             VariableTree variable = (VariableTree) existingTree;
                             exMemberType = variable.getType();
                             //need to find accessors
                             property.setOldField(variable);
                             property.setOldGetter(getters.get(m.getColumnName().toUpperCase()));
                             property.setOldSetter(setters.get(m.getColumnName().toUpperCase()));
-                        } else if (Kind.METHOD.equals(existingTree.getKind())) {
+                        } else if (Kind.METHOD == existingTree.getKind()) {
                             MethodTree method = (MethodTree) existingTree;
                             exMemberType = method.getReturnType();
                             //need to find setter and variable
@@ -1613,10 +1613,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
              * @return the created field.
              */
             private VariableTree createSerialVersionUID() {
-                Set<Modifier> serialVersionUIDModifiers = new HashSet<Modifier>();
-                serialVersionUIDModifiers.add(Modifier.PRIVATE);
-                serialVersionUIDModifiers.add(Modifier.STATIC);
-                serialVersionUIDModifiers.add(Modifier.FINAL);
+                Set<Modifier> serialVersionUIDModifiers = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
 
                 TreeMaker make = copy.getTreeMaker();
                 VariableTree serialVersionUID = make.Variable(make.Modifiers(serialVersionUIDModifiers),

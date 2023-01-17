@@ -20,17 +20,7 @@ package org.netbeans.modules.web.el;
 
 import com.sun.el.parser.*;
 import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.el.ELException;
@@ -90,8 +80,7 @@ public final class ELTypeUtilities {
     }
 
     private static void put(Class<? extends Node> node, TypeKind... kinds) {
-        Set<TypeKind> kindSet = new HashSet<>();
-        kindSet.addAll(Arrays.asList(kinds));
+        Set<TypeKind> kindSet = EnumSet.copyOf(Arrays.asList(kinds));
         TYPES.put(node, kindSet);
     }
 

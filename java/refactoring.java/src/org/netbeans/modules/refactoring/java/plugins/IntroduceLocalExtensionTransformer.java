@@ -211,7 +211,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
         setterBody.append(longName).append(" = ").append(parName).append(";"); //NOI18N
         setterBody.append("}");//NOI18N
 
-        Set<Modifier> mods = new HashSet<>(useModifiers);
+        Set<Modifier> mods = EnumSet.copyOf(useModifiers);
         if (staticMod) {
             mods.add(Modifier.STATIC);
         }

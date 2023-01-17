@@ -347,14 +347,14 @@ public class PushDownTransformer extends RefactoringVisitor {
                             
                             if (!classIsAbstract) {
                                 classIsAbstract = true;
-                                Set<Modifier> mod = new HashSet<>(njuClass.getModifiers().getFlags());
+                                Set<Modifier> mod = EnumSet.copyOf(njuClass.getModifiers().getFlags());
                                 mod.add(Modifier.ABSTRACT);
                                 ModifiersTree modifiers = make.Modifiers(mod);
                                 translateQueue.getLast().put(njuClass.getModifiers(), modifiers);
                             }
                             
                             MethodTree method = (MethodTree) t;
-                            Set<Modifier> mod = new HashSet<>(method.getModifiers().getFlags());
+                            Set<Modifier> mod = EnumSet.copyOf(method.getModifiers().getFlags());
                             mod.add(Modifier.ABSTRACT);
                             if(mod.contains(Modifier.PRIVATE)) {
                                 mod.remove(Modifier.PRIVATE);

@@ -18,13 +18,13 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
+import java.util.*;
 import java.util.logging.Level;
 import java.io.CharConversionException;
 import org.openide.xml.XMLUtil;
 import java.util.logging.Logger;
 import javax.lang.model.element.Name;
 import com.sun.source.tree.ThrowTree;
-import java.util.Stack;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.IfTree;
@@ -75,17 +75,6 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -809,7 +798,7 @@ public class Utilities {
     private static final Map<Kind, String> operator2DN;
 
     static {
-        operator2DN = new HashMap<Kind, String>();
+        operator2DN = new EnumMap<>(Kind.class);
 
         operator2DN.put(AND, "&");
         operator2DN.put(XOR, "^");

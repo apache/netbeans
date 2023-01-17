@@ -96,7 +96,7 @@ public final class SampledCPUSnapshot {
         getSample(sampleIndex);
         long ret = 0;
         for (ThreadInfo info : sample.getTinfos()) {
-            if (info.getThreadState().equals(Thread.State.RUNNABLE)) {
+            if (info.getThreadState() == Thread.State.RUNNABLE) {
                 ret += info.getStackTrace().length;
             }
         }

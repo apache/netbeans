@@ -44,17 +44,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Logger;
@@ -283,7 +274,7 @@ public class RemoteServices {
                 synchronized (remoteServiceClasses) {
                     Map<ServiceType, ClassObjectReference> basicClassesByType = remoteServiceClasses.get(t.getDebugger());
                     if (basicClassesByType == null) {
-                        basicClassesByType = new HashMap<>();
+                        basicClassesByType = new EnumMap<>(ServiceType.class);
                         remoteServiceClasses.put(t.getDebugger(), basicClassesByType);
                     }
                     basicClassesByType.put(sType, basicClass);

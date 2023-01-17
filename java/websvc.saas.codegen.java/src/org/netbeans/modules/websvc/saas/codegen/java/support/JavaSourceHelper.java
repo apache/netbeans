@@ -33,17 +33,9 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import java.util.List;
+
+import java.util.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.AnnotationMirror;
@@ -608,12 +600,7 @@ public class JavaSourceHelper {
 
     private static ModifiersTree createModifiersTree(WorkingCopy copy, Modifier[] modifiers, String[] annotations, Object[] annotationAttrs) {
         TreeMaker maker = copy.getTreeMaker();
-        Set<Modifier> modifierSet = new HashSet<Modifier>();
-
-        for (Modifier modifier : modifiers) {
-            modifierSet.add(modifier);
-        }
-
+        Set<Modifier> modifierSet = EnumSet.copyOf(Arrays.asList(modifiers));
         List<AnnotationTree> annotationTrees = createAnnotationTrees(copy, annotations, annotationAttrs);
 
         return maker.Modifiers(modifierSet, annotationTrees);

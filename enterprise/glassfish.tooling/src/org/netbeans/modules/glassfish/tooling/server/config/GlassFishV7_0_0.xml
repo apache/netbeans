@@ -23,7 +23,7 @@
     <tools lib="lib">
         <asadmin jar="client/appserver-cli.jar"/>
     </tools>
-    <java version="18">
+    <java version="19">
         <platform version="11"/>
         <platform version="12"/>
         <platform version="13"/>
@@ -32,6 +32,7 @@
         <platform version="16"/>
         <platform version="17"/>
         <platform version="18"/>
+        <platform version="19"/>
     </java>
     <javaee version="10.0.0">
         <profile version="10.0.0" type="web"/>
@@ -74,7 +75,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.0.8/jersey-documentation-3.0.8-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.1.0/jersey-documentation-3.1.0-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

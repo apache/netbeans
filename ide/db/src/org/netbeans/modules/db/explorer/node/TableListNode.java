@@ -66,7 +66,7 @@ public class TableListNode extends BaseNode implements SchemaNameProvider {
     }
 
     private TableListNode(NodeDataLookup lookup, NodeProvider provider, Type type) {
-        super(new ChildNodeFactory(lookup), lookup, Type.SYSTEM.equals(type) ? SYSTEM_FOLDER : FOLDER, provider);
+        super(new ChildNodeFactory(lookup), lookup, Type.SYSTEM == type ? SYSTEM_FOLDER : FOLDER, provider);
         this.connection = getLookup().lookup(DatabaseConnection.class);
         this.type = type;
     }

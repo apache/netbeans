@@ -121,7 +121,7 @@ public class ThreadsPanel extends DataView {
     
     public void setFilter(Filter filter) {
         selectedApplied.clear();
-        if (Filter.SELECTED.equals(filter)) selectedApplied.addAll(selected);
+        if (Filter.SELECTED == filter) selectedApplied.addAll(selected);
         
         this.filter = filter;
         threadsTable.addRowFilter(new ThreadsFilter());

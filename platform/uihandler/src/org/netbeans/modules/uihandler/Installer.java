@@ -1764,7 +1764,7 @@ public class Installer extends ModuleInstall implements Runnable {
 
             synchronized (this) {
                 RP_UI.post(this);
-                while (dialogState.equals(DialogState.NON_CREATED)) {
+                while (dialogState == DialogState.NON_CREATED) {
                     try {
                         wait();
                     } catch (InterruptedException ex) {
@@ -1773,7 +1773,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 }
                 notifyAll();
             }
-            if (dialogState.equals(DialogState.FAILED)){
+            if (dialogState == DialogState.FAILED) {
                 return;
             }
 
@@ -1883,7 +1883,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 assignInternalURL(url);
                 refresh = false;
                 synchronized (this) {
-                    while (dialogState.equals(DialogState.CREATED) && !refresh) {
+                    while (dialogState == DialogState.CREATED && !refresh) {
                         try {
                             wait();
                         } catch (InterruptedException ex) {

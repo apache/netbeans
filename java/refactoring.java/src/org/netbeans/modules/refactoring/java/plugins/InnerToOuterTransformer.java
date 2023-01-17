@@ -594,7 +594,8 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                         
                         AssignmentTree assign = make.Assignment(make.Identifier("this."+referenceName), make.Identifier(referenceName)); // NOI18N
                         BlockTree block = make.insertBlockStatement(newConstructor.getBody(), 1, make.ExpressionStatement(assign));
-                        Set<Modifier> modifiers = new HashSet(newConstructor.getModifiers().getFlags());
+                        Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+                        modifiers.addAll(newConstructor.getModifiers().getFlags());
                         modifiers.remove(Modifier.PRIVATE);
                         newConstructor = make.Constructor(
                                 make.Modifiers(modifiers,newConstructor.getModifiers().getAnnotations()),

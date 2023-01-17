@@ -1247,7 +1247,7 @@ public final class EditorContextSupport {
                                 el = ci.getTrees().getElement(ci.getTrees().getPath(ci.getCompilationUnit(), mst.getExpression()));
                                 if (el != null) {
                                     TypeMirror tm = el.asType();
-                                    if (tm.getKind().equals(TypeKind.DECLARED)) {
+                                    if (tm.getKind() == TypeKind.DECLARED) {
                                         currentElementPtr[0] = tm.toString();
                                         isMemberClass = true;
                                     }
@@ -1335,7 +1335,7 @@ public final class EditorContextSupport {
                             if (te != null) {
                                 List<? extends Element> enclosedElms = te.getEnclosedElements();
                                 for (Element elm : enclosedElms) {
-                                    if (elm.getKind().equals(ElementKind.FIELD) && elm.getSimpleName().contentEquals(fieldName)) {
+                                    if (elm.getKind() == ElementKind.FIELD && elm.getSimpleName().contentEquals(fieldName)) {
                                         currentElementPtr[0] = fieldName;
                                         break;
                                     }
@@ -1345,10 +1345,10 @@ public final class EditorContextSupport {
                             MemberSelectTree mst = (MemberSelectTree) tree;
                             String fieldName = mst.getIdentifier().toString();
                             el = ci.getTrees().getElement(ci.getTrees().getPath(ci.getCompilationUnit(), mst.getExpression()));
-                            if (el != null && el.asType().getKind().equals(TypeKind.DECLARED)) {
+                            if (el != null && el.asType().getKind() == TypeKind.DECLARED) {
                                 List<? extends Element> enclosedElms = ((DeclaredType) el.asType()).asElement().getEnclosedElements();
                                 for (Element elm : enclosedElms) {
-                                    if (elm.getKind().equals(ElementKind.FIELD) && elm.getSimpleName().contentEquals(fieldName)) {
+                                    if (elm.getKind() == ElementKind.FIELD && elm.getSimpleName().contentEquals(fieldName)) {
                                         currentElementPtr[0] = fieldName;
                                         break;
                                     }

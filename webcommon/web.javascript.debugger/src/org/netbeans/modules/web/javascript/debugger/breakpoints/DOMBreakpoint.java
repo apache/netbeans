@@ -165,15 +165,15 @@ public class DOMBreakpoint extends AbstractBreakpoint {
     
     public boolean addType(Type type) {
         boolean added = false;
-        if (Type.SUBTREE_MODIFIED.equals(type)) {
+        if (Type.SUBTREE_MODIFIED == type) {
             added = !isOnSubtreeModification();
             setOnSubtreeModification(true);
         }
-        if (Type.ATTRIBUTE_MODIFIED.equals(type)) {
+        if (Type.ATTRIBUTE_MODIFIED == type) {
             added = !isOnAttributeModification();
             setOnAttributeModification(true);
         }
-        if (Type.NODE_REMOVED.equals(type)) {
+        if (Type.NODE_REMOVED == type) {
             added = !isOnNodeRemoval();
             setOnNodeRemoval(true);
         }
@@ -182,15 +182,15 @@ public class DOMBreakpoint extends AbstractBreakpoint {
     
     public synchronized boolean removeType(Type type) {
         boolean removed = false;
-        if (Type.SUBTREE_MODIFIED.equals(type)) {
+        if (Type.SUBTREE_MODIFIED == type) {
             removed = isOnSubtreeModification();
             setOnSubtreeModification(false);
         }
-        if (Type.ATTRIBUTE_MODIFIED.equals(type)) {
+        if (Type.ATTRIBUTE_MODIFIED == type) {
             removed = isOnAttributeModification();
             setOnAttributeModification(false);
         }
-        if (Type.NODE_REMOVED.equals(type)) {
+        if (Type.NODE_REMOVED == type) {
             removed = isOnNodeRemoval();
             setOnNodeRemoval(false);
         }

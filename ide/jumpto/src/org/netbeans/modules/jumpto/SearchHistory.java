@@ -212,7 +212,7 @@ public final class SearchHistory {
             LOGGER.fine("New text is: " + newText);
         } else {
             LOGGER.fine("Text changed => remember the current one & set the last (or first) one to the text field.");
-            int index = moveOffset.equals(MoveOffset.PREVIOUS) ? getLastIndex() : getFirstIndex();
+            int index = moveOffset == MoveOffset.PREVIOUS ? getLastIndex() : getFirstIndex();
             newText = getCachedText(index);
             LOGGER.fine("New text is: " + newText);
             addHistoryItem(userText, moveOffset);

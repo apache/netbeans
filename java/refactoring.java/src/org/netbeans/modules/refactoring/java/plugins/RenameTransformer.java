@@ -273,7 +273,7 @@ public class RenameTransformer extends RefactoringVisitor {
                     }
                 }
             }
-            if (elementToFind!=null && elementToFind.getKind().isField() || elementToFind.getKind().equals(ElementKind.METHOD)) {
+            if (elementToFind!=null && elementToFind.getKind().isField() || elementToFind.getKind() == ElementKind.METHOD) {
                 Scope scope = workingCopy.getTrees().getScope(elementPath);
                 TypeElement enclosingTypeElement = scope.getEnclosingClass();
                 TypeMirror superclass = enclosingTypeElement==null ? null:enclosingTypeElement.getSuperclass();
@@ -396,7 +396,7 @@ public class RenameTransformer extends RefactoringVisitor {
 
                 @Override
                 public boolean accept(Element element, TypeMirror type) {
-                    return !element.equals(p) && element.getKind().equals(p.getKind()) && element.getSimpleName().contentEquals(newName);
+                    return !element.equals(p) && element.getKind() == p.getKind() && element.getSimpleName().contentEquals(newName);
                 }
             });
         }

@@ -251,7 +251,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                     }
                 } else if (el.getKind() == ElementKind.CONSTRUCTOR) {
                     sourceSet.addAll(idx.getResources(ElementHandle.create((TypeElement) el.getEnclosingElement()), EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES, ClassIndex.SearchKind.IMPLEMENTORS), searchScopeType, resourceType));
-                } else if((el.getKind().equals(ElementKind.LOCAL_VARIABLE) || el.getKind().equals(ElementKind.PARAMETER))
+                } else if((el.getKind() == ElementKind.LOCAL_VARIABLE || el.getKind() == ElementKind.PARAMETER)
                         || el.getModifiers().contains(Modifier.PRIVATE)) {
                     sourceSet.add(file);
                 }

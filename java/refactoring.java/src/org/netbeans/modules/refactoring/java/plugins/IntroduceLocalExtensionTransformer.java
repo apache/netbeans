@@ -134,7 +134,8 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
 
             // create new class
             Tree newClassTree;
-            final Set<Modifier> modifiers = new HashSet(source.getModifiers());
+            final Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+            modifiers.addAll(source.getModifiers());
             modifiers.remove(Modifier.ABSTRACT);
             modifiers.remove(Modifier.STATIC);
             if(noInterface) {
@@ -211,7 +212,9 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
         setterBody.append(longName).append(" = ").append(parName).append(";"); //NOI18N
         setterBody.append("}");//NOI18N
 
-        Set<Modifier> mods = new HashSet<>(useModifiers);
+        Set<Modifier> mods = EnumSet.noneOf(Modifier.class);
+        mods.addAll(useModifiers);
+
         if (staticMod) {
             mods.add(Modifier.STATIC);
         }

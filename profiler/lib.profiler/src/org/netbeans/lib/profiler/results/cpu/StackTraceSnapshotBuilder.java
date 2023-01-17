@@ -356,7 +356,7 @@ public class StackTraceSnapshotBuilder {
             }
             Thread.State newState = tinfo.getThreadState();
             // ignore threads, which has not yet started.
-            if (Thread.State.NEW.equals(newState)) {
+            if (Thread.State.NEW == newState) {
                 tinfoIt.remove();
                 continue;
             }

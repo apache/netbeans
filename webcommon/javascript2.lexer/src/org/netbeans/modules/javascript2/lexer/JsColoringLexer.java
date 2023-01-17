@@ -952,7 +952,7 @@ public final class JsColoringLexer {
                 return false;
             }
             for (int i = 0; i < this.braceBalances.size(); i++) {
-                if (this.braceBalances.get(i).equals(other.braceBalances.get(i))) {
+                if (this.braceBalances.get(i) == other.braceBalances.get(i)) {
                     return false;
                 }
             }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.element.Modifier;
 import org.netbeans.modules.j2ee.core.api.support.java.method.MethodModel;
 import org.netbeans.modules.j2ee.dd.api.ejb.DDProvider;
@@ -64,9 +65,7 @@ public class SelectMethodGenerator extends AbstractMethodGenerator {
         if (!methodModel.getExceptions().contains("javax.ejb.FinderException")) {
             exceptions.add("javax.ejb.FinderException");
         }
-        Set<Modifier> modifiers = new HashSet<Modifier>(2);
-        modifiers.add(Modifier.PUBLIC);
-        modifiers.add(Modifier.ABSTRACT);
+        Set<Modifier> modifiers = EnumSet.of(Modifier.PUBLIC, Modifier.ABSTRACT);
         MethodModel methodModelCopy = MethodModel.create(
                 methodModel.getName(),
                 methodModel.getReturnType(),

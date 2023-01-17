@@ -46,7 +46,7 @@ public final class ContainerManagedJTANonInjectableInWeb extends EntityManagerGe
 
     public ClassTree generate() {
 
-        if(!ElementKind.CLASS.equals(getClassElement().getKind()))
+        if(ElementKind.CLASS != getClassElement().getKind())
         {
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(ContainerManagedJTANonInjectableInWeb.class, "LBL_ClassOnly"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);

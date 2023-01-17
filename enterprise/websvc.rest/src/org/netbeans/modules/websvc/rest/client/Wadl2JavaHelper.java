@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -465,7 +466,7 @@ class Wadl2JavaHelper {
     }
 
     private static Set<Modifier> getModifiers(String modif) {
-        Set<Modifier> modifs = new HashSet<Modifier>();
+        Set<Modifier> modifs = EnumSet.noneOf(Modifier.class);
         if (modif != null) {
             if (modif.contains("public")) { //NOI18N
                 modifs.add(Modifier.PUBLIC);

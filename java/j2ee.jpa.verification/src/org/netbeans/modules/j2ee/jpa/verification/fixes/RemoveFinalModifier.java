@@ -22,6 +22,7 @@ package org.netbeans.modules.j2ee.jpa.verification.fixes;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ModifiersTree;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -64,7 +65,8 @@ public class RemoveFinalModifier implements Fix {
                     ClassTree clazzTree = workingCopy.getTrees().getTree(clazz);
                     TreeMaker make = workingCopy.getTreeMaker();
                     
-                    Set<Modifier> flags = new HashSet<Modifier>(clazzTree.getModifiers().getFlags());
+                    Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+                    flags.addAll(clazzTree.getModifiers().getFlags());
                     flags.remove(Modifier.FINAL);
                     ModifiersTree newModifiers = make.Modifiers(flags, clazzTree.getModifiers().getAnnotations());
                     workingCopy.rewrite(clazzTree.getModifiers(), newModifiers);

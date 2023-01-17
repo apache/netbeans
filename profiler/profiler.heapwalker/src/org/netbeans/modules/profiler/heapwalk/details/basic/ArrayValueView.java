@@ -328,7 +328,7 @@ final class ArrayValueView extends DetailsProvider.View implements Scrollable, E
 
     @Override
     public boolean hasRawData() {
-        return type.equals(PRIMITIVE_ARRAY);
+        return type == PRIMITIVE_ARRAY;
     }
 
     @Override

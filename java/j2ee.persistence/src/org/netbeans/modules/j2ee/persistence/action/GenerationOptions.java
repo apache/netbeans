@@ -142,7 +142,9 @@ public final class GenerationOptions {
     }
 
     public void setModifiers(Set<Modifier> modifiers) {
-        this.modifiers = new HashSet<Modifier>(modifiers);
+        EnumSet<Modifier> mod = EnumSet.noneOf(Modifier.class);
+        mod.addAll(modifiers);
+        this.modifiers = mod;
     }
 
 

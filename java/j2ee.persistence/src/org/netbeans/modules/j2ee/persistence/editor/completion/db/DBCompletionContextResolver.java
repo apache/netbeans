@@ -661,7 +661,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                     element:
                     for(VariableElement f : resultFields) {
                         for(javax.lang.model.element.Modifier mod:f.getModifiers()){
-                            if(javax.lang.model.element.Modifier.TRANSIENT.equals(mod))continue element;
+                            if(javax.lang.model.element.Modifier.TRANSIENT == mod) continue element;
                         }
                         if(JpaControllerUtil.isAnnotatedWith(f,"javax.persistence.Transient"))continue;//NOI18N
                         String name = f.getSimpleName().toString();

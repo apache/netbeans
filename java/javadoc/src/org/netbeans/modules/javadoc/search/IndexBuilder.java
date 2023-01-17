@@ -178,11 +178,10 @@ public class IndexBuilder implements Runnable, ChangeListener {
                 // [PENDING] Display name is not ideal, e.g. "org.openide.windows (NetBeans Input/Output API)"
                 // where simply "NetBeans Input/Output API" is preferable... but standard title filter
                 // regexps are not so powerful (to avoid matching e.g. "Servlets (Main Documentation)").
-                InputStream is = URLUtils.open(fo, "package-list"); // NOI18N
-                if (is != null) {
-                    try {
-                        try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+                try (InputStream is = URLUtils.open(fo, "package-list");
+                        InputStream is2 = URLUtils.open(fo, "element-list")) { // NOI18N
+                    if (is != null || is2 != null) {
+                        try (BufferedReader r = new BufferedReader(new InputStreamReader( is != null ? is : is2 ))) {
                             String line = r.readLine();
                             if (line != null && r.readLine() == null) {
                                 // Good, exactly one line as expected. A package name.
@@ -193,13 +192,12 @@ public class IndexBuilder implements Runnable, ChangeListener {
                                 }
                                 // else fall back to index.html if available
                             }
-                        } finally {
-                            is.close();
                         }
-                    } catch (IOException ioe) {
-                            // Oh well, skip this one.
-                        ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ioe);
                     }
+                }
+                catch (IOException ioe) {
+                    // Oh well, skip this one.
+                    ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ioe);
                 }
             }
             if (index != null) {

@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.db;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.net.URL;
 import java.sql.DatabaseMetaData;
@@ -104,7 +105,7 @@ public class DBAddConnection extends CodeActionsProvider {
         }
         
         if (arguments != null && !arguments.isEmpty()) {
-            final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
+            final Map m = arguments.get(0) instanceof JsonNull ? Collections.emptyMap() : gson.fromJson((JsonObject) arguments.get(0), Map.class);
             String userId = m != null ? (String) m.get(USER_ID) : null;
             String password = m != null ? (String) m.get(PASSWORD) : null;
             String dbUrl = m != null ? (String) m.get(DB_URL) : null;

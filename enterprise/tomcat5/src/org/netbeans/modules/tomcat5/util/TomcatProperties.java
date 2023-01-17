@@ -736,11 +736,10 @@ public class TomcatProperties {
                 } else {
                     String eeDocs;
                     switch (tm.getTomcatVersion()) {
-//                      TODO: Add support for Jakarta EE 10
-//                      case TOMCAT_110:
-//                      case TOMCAT_101:
-//                           eeDocs = "docs/jakartaee10-doc-api.jar";
-//                           break;
+                        case TOMCAT_110:
+                        case TOMCAT_101:
+                           eeDocs = "docs/jakartaee10-doc-api.jar";
+                           break;
                         case TOMCAT_100:
                             eeDocs = "docs/jakartaee9-doc-api.jar";
                             break;

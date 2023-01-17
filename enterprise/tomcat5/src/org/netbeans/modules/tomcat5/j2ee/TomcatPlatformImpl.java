@@ -505,14 +505,12 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
             }
         } else {
             switch (manager.getTomcatVersion()) {
-//                case TOMCAT_110:
-//                    TODO: Add suport for Jakarta EE 10
-//                    profiles.add(Profile.JAKARTA_EE_10_WEB);
-//                    break;
-//                case TOMCAT_101:
-//                    TODO: Add suport for Jakarta EE 10
-//                    profiles.add(Profile.JAKARTA_EE_10_WEB);
-//                    break;
+                case TOMCAT_110:
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    break;
+                case TOMCAT_101:
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    break;
                 case TOMCAT_100:
                     profiles.add(Profile.JAKARTA_EE_9_1_WEB);
                     profiles.add(Profile.JAKARTA_EE_9_WEB);

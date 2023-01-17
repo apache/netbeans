@@ -26,6 +26,7 @@ CLASS      NullableTypesInterface          [PUBLIC]   typingReturnType12.php
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    callable                                   null
+KEYWORD    false                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
@@ -34,3 +35,4 @@ KEYWORD    object                                     null
 KEYWORD    parent                                     null
 KEYWORD    self                                       null
 KEYWORD    string                                     null
+KEYWORD    true                                       null

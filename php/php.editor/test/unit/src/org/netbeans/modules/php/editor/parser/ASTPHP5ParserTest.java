@@ -1335,6 +1335,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/newInInitializers_01");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        performTest("parser/php81/newInInitializers_02");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         performTest("parser/php81/newInInitializersWithClassConstantError");
     }
@@ -1430,6 +1434,35 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testGH4684() throws Exception {
         performTest("parser/gh4684");
+    }
+
+    // PHP 8.2 gh-4725
+    public void testReadonlyClass_01() throws Exception {
+        performTest("parser/php82/readonlyClass_01");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        performTest("parser/php82/readonlyTraitError_01");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        performTest("parser/php82/readonlyInterfaceError_01");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        performTest("parser/php82/readonlyEnumError_01");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        performTest("parser/php82/fetchPropertiesInConstExpressions_01");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        performTest("parser/php82/constantsInTraits_01");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        performTest("parser/php82/dnfTypes_01");
     }
 
     @Override

@@ -29,7 +29,16 @@
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.cls" abbreviation="cls" contexts="php-code">
         <code>
 <![CDATA[class ${ClassName} {
-    function ${__construct}() {
+    public function ${__construct}() {
+        ${selection}${cursor}
+    }
+}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.rcls" abbreviation="rcls" contexts="php-code">
+        <code>
+<![CDATA[readonly class ${ClassName} {
+    public function ${__construct}() {
         ${selection}${cursor}
     }
 }]]>

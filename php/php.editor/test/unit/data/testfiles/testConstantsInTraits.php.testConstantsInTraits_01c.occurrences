@@ -1,0 +1,6 @@
+    const |>MARK_OCCURRENCES:IMPLICIT_PUBLIC_TRAIT<| = 'ExampleTrait implicit public';
+        echo self::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_TRAIT<| . PHP_EOL;
+        echo self::|>MARK_OCCURRENCES:IMPLICIT_P^UBLIC_TRAIT<| . PHP_EOL; // use
+        echo self::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_TRAIT<| . PHP_EOL; // class
+        echo self::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_TRAIT<| . PHP_EOL; // child
+echo ExampleClass::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_TRAIT<| . PHP_EOL;

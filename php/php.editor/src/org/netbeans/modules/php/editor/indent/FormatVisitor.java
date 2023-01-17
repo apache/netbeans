@@ -727,14 +727,14 @@ public class FormatVisitor extends DefaultVisitor {
         while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_CURLY_OPEN) {
             switch (ts.token().id()) {
                 case PHP_CLASS:
-                    if (!ClassDeclaration.Modifier.NONE.equals(node.getModifier())) {
+                    if (!node.getModifiers().containsKey(ClassDeclaration.Modifier.NONE)) {
                         FormatToken lastWhitespace = formatTokens.remove(formatTokens.size() - 1);
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_MODIFIERS, lastWhitespace.getOffset(), lastWhitespace.getOldText()));
                     }
                     addFormatToken(formatTokens);
                     break;
                 case PHP_IMPLEMENTS:
-                    if (node.getInterfaes().size() > 0) {
+                    if (!node.getInterfaes().isEmpty()) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_EXTENDS_IMPLEMENTS, ts.offset()));
                         ts.movePrevious();
                         addListOfNodes(node.getInterfaes(), FormatToken.Kind.WHITESPACE_IN_INTERFACE_LIST);

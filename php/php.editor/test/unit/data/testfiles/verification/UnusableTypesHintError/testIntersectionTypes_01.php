@@ -33,6 +33,7 @@ function testReturnParent(): parent&Iterator {}
 function testReturnSelf(): self&Iterator {}
 function testReturnStatic(): static&Iterator {}
 function testReturnString(): string&Iterator {}
+function testReturnTrue(): true&Iterator {}
 function testReturnVoid(): void&Iterator {}
 
 function testParamArray(Iterator&array $param): Iterator {}
@@ -50,6 +51,7 @@ function testParamParent(Iterator&parent $param): parent {}
 function testParamSelf(Iterator&self $param): self {}
 //function testParamStatic(Iterator&static $param): void {} // syntax error
 function testParamString(Iterator&string $param): string {}
+function testParamString(Iterator&true $param): true {}
 function testParamVoid(Iterator&void $param): void {}
 //function testReturnNullable(): ?Test&Iterator {} // syntax erro
 
@@ -72,6 +74,7 @@ class InvalidField {
     public self&Iterator $self;
 //    public static&Iterator $static; // syntax error
     public string&Iterator $string;
+    public true&Iterator $true;
     public void&Iterator $void;
     public Iterator&Iterator $duplicate;
 }

@@ -9,6 +9,7 @@ CLASS      EnumTest                        [PUBLIC]   EnumTestNamespace
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    callable                                   null
+KEYWORD    false                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
@@ -18,3 +19,4 @@ KEYWORD    parent                                     null
 KEYWORD    self                                       null
 KEYWORD    static                                     null
 KEYWORD    string                                     null
+KEYWORD    true                                       null

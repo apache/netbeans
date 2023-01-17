@@ -163,7 +163,11 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
                     return Collections.unmodifiableSet(WILDFLY_WEB_PROFILES);
                 }
                 if (this.properties.getServerVersion().compareToIgnoreUpdate(WildflyPluginUtils.WILDFLY_27_0_0) >= 0) {
-                    return Collections.unmodifiableSet(JAKARTAEE_FULL_PROFILES);
+                    Set<org.netbeans.api.j2ee.core.Profile> allJakarta = new HashSet<>(
+                            (int) Math.ceil((JAKARTAEE_FULL_PROFILES.size()+JAKARTAEE_WEB_PROFILES.size()) / 0.75));
+                    allJakarta.addAll(JAKARTAEE_FULL_PROFILES);
+                    allJakarta.addAll(JAKARTAEE_WEB_PROFILES);
+                    return Collections.unmodifiableSet(allJakarta);
                 }
                 return Collections.unmodifiableSet(WILDFLY_PROFILES);
             }

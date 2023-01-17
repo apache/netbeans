@@ -176,7 +176,7 @@ public class ServerSelectionHelper {
             try {
                 J2eePlatform pfm = findServerInstance(serverInstance).getJ2eePlatform();
                 Set<Profile> supported = pfm.getSupportedProfiles(projectType);
-                profiles.addAll(findServerInstance(serverInstance).getJ2eePlatform().getSupportedProfiles(projectType));
+                profiles.addAll(supported);
             } catch (InstanceRemovedException ex) {
                 // If selected instance was removed during the process we can easily refresh Server model list and update versions again
                 initServerModel(null);

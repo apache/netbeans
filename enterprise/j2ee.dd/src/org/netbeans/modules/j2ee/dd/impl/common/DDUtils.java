@@ -123,6 +123,8 @@ public class DDUtils {
                 return org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp.createGraph(is);
             } else if (WebApp.VERSION_5_0.equals(version)) {
                 return org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp.createGraph(is);
+            } else if (WebApp.VERSION_6_0.equals(version)) {
+                return org.netbeans.modules.j2ee.dd.impl.web.model_6_0.WebApp.createGraph(is);
             } else {
                 return null;
             }
@@ -151,6 +153,8 @@ public class DDUtils {
                 return org.netbeans.modules.j2ee.dd.impl.client.model_8_0.ApplicationClient.createGraph(is);
             } else if (AppClient.VERSION_9_0.equals(version)) {
                 return org.netbeans.modules.j2ee.dd.impl.client.model_9_0.ApplicationClient.createGraph(is);
+            } else if (AppClient.VERSION_10_0.equals(version)) {
+                return org.netbeans.modules.j2ee.dd.impl.client.model_10_0.ApplicationClient.createGraph(is);
             }
         } catch (RuntimeException ex) {
             throw new SAXException(ex);

@@ -181,6 +181,7 @@ fld public final static java.lang.String VERSION_6_0 = "6"
 fld public final static java.lang.String VERSION_7_0 = "7"
 fld public final static java.lang.String VERSION_8_0 = "8"
 fld public final static java.lang.String VERSION_9_0 = "9"
+fld public final static java.lang.String VERSION_10_0 = "10"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract int addEjbRef(org.netbeans.modules.j2ee.dd.api.common.EjbRef)
 meth public abstract int addEnvEntry(org.netbeans.modules.j2ee.dd.api.common.EnvEntry)
@@ -1949,6 +1950,7 @@ fld public final static java.lang.String VERSION_3_0 = "3.0"
 fld public final static java.lang.String VERSION_3_1 = "3.1"
 fld public final static java.lang.String VERSION_4_0 = "4.0"
 fld public final static java.lang.String VERSION_5_0 = "5.0"
+fld public final static java.lang.String VERSION_6_0 = "6.0"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract boolean isDistributable()
 meth public abstract boolean isMetadataComplete() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException

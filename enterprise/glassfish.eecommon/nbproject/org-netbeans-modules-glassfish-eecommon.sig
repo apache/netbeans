@@ -876,6 +876,7 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppCl
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_7_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_8_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_9_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion APP_CLIENT_10_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.glassfish.eecommon.api.config.AppClientVersion getAppClientVersion(java.lang.String)
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion
@@ -888,6 +889,7 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.Appli
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_7_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_8_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_9_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion APPLICATION_10_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.glassfish.eecommon.api.config.ApplicationVersion getApplicationVersion(java.lang.String)
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion
@@ -1195,6 +1197,7 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEV
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_1
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_10_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_7_0

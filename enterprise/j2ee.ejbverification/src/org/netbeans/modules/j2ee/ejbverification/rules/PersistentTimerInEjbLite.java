@@ -125,6 +125,8 @@ public final class PersistentTimerInEjbLite {
             return false;
         } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)) {
             return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_FULL)) {
+            return false;
         } else {
             return true;
         }

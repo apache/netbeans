@@ -97,6 +97,8 @@ public class GlassFishVersionTest {
                 GlassFishVersion.GF_6_1_0_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_6_2_5,
                 GlassFishVersion.GF_6_2_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_0,
+                GlassFishVersion.GF_7_0_0_STR_NEXT);
     }
 
     /**

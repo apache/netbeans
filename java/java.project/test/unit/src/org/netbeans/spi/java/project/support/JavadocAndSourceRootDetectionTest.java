@@ -101,8 +101,10 @@ public class JavadocAndSourceRootDetectionTest extends NbTestCase {
         final Set<String> expected = new TreeSet<>();
         expected.add(TestFileUtils.writeFile(root, "lib1/dist/javadoc1/package-list", "some content").getParent().getPath());
         expected.add(TestFileUtils.writeFile(root, "lib2/dist/javadoc2/package-list", "some content").getParent().getPath());
-        expected.add(TestFileUtils.writeFile(root, "lib2/dist/javadoc3/package-list", "some content").getParent().getPath());
-        expected.add(TestFileUtils.writeFile(root, "other/lib/dist/javadoc4/package-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "lib3/dist/javadoc3/package-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "lib4/dist/javadoc4/element-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "other/lib1/dist/javadoc5/package-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "other/lib2/dist/javadoc6/element-list", "some content").getParent().getPath());
         final Collection< ? extends FileObject> javadocRoots = JavadocAndSourceRootDetection.findJavadocRoots(root, null);
         final Set<String> result = new TreeSet<>();
         for (FileObject jr : javadocRoots) {

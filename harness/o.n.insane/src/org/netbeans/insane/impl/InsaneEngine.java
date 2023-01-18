@@ -21,6 +21,7 @@ package org.netbeans.insane.impl;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Stream;
 import org.netbeans.insane.hook.MakeAccessible;
 
 import org.netbeans.insane.scanner.*;
@@ -58,16 +59,16 @@ public final class InsaneEngine {
 
         
     // normal set is enough, java.lang.Class have identity-based equals()
-    private Set<Class> knownClasses = new HashSet<Class>();
+    private final Set<Class<?>> knownClasses = new HashSet<>();
     
     // The queue for BFS scan of the heap.
     // each thing, before added to the queue, is added
     // to the known* structures and reported to the visitor
-    private Queue<Object> queue = new Queue<Object>();
+    private final Queue<Object> queue = new Queue<>();
     
     public void traverse(Collection roots) throws Exception {
         // process all given roots first - remember them and put them into queue
-        for (Iterator<?> it = roots.iterator(); it.hasNext(); ) recognize(it.next());
+        roots.forEach(this::recognize);
         
         while (!queue.isEmpty()) {
             process(queue.get());
@@ -100,7 +101,7 @@ public final class InsaneEngine {
         }
     }
     
-    private void recognizeClass(Class cls) {
+    private void recognizeClass(Class<?> cls) {
         // already known?
         if (knownClasses.contains(cls)) return;
 
@@ -113,38 +114,40 @@ public final class InsaneEngine {
             return;
         }
 
-try {        
-        // check the superclass
-        Class sup = cls.getSuperclass();
-        if (sup != null) recognizeClass(sup);
-        
-        // check all interfaces
-        Class[] ifaces = cls.getInterfaces();
-        for (int i=0; i<ifaces.length; i++) recognizeClass(ifaces[i]);
-        
-        // mark the class as known
-        knownClasses.add(cls);
-        
+        try {
+            // check the superclass
+            Class<?> sup = cls.getSuperclass();
+            if (sup != null) {
+                recognizeClass(sup);
+            }
 
-        // scan fields for new types
-        Field[] fields = cls.getDeclaredFields();
-        for (int i=0; i<fields.length; i++) recognizeClass(fields[i].getType());
+            // check all interfaces
+            for (Class<?> i : cls.getInterfaces()) {
+                recognizeClass(i);
+            }
 
-        // scan method signatures for new types
-        Method[] methods = cls.getDeclaredMethods();
-        for (int i=0; i<methods.length; i++) {
-            recognizeClass(methods[i].getReturnType());
-            Class[] params = methods[i].getParameterTypes();
-            for (int j=0; j<params.length; j++) recognizeClass(params[j]);
-        }
+            // mark the class as known
+            knownClasses.add(cls);
 
-        // scan constructor signatures for new types
-        Constructor[] cons = cls.getConstructors();
-        for (int i=0; i<cons.length; i++) {
-            Class[] params = cons[i].getParameterTypes();
-            for (int j=0; j<params.length; j++) recognizeClass(params[j]);
-        }
+            // scan fields for new types
+            for (Field f : cls.getDeclaredFields()) {
+                recognizeClass(f.getType());
+            }
 
+            // scan method signatures for new types
+            for (Method method : cls.getDeclaredMethods()) {
+                recognizeClass(method.getReturnType());
+                for (Class<?> c : method.getParameterTypes()) {
+                    recognizeClass(c);
+                }
+            }
+
+            // scan constructor signatures for new types
+            for (Constructor<?> m : cls.getConstructors()) {
+                for (Class<?> c : m.getParameterTypes()) {
+                    recognizeClass(c);
+                }
+            }
         } catch(Error e) {
             System.err.println("Failed analysing class " + cls.getName() +
                     " because of " + e);
@@ -161,7 +164,9 @@ try {
         if (objects.isKnown(o)) return;
 
         // my own data structures
-        if (o.getClass().getName().startsWith("org.netbeans.insane.scanner")) return;
+        if (o.getClass().getName().startsWith("org.netbeans.insane.scanner")) {
+            return;
+        }
 
         // XXX - implicit safety filter. Really needed?
         assert !(o.getClass().getName().startsWith("sun.reflect."));
@@ -190,8 +195,10 @@ try {
     
     /* follow static references and possibly other class data
      */
-    private void processClass(Class cls) throws Exception {
-        if (! analyzeStaticData) return;
+    private void processClass(Class<?> cls) throws Exception {
+        if (! analyzeStaticData) {
+            return;
+        }
 
         if (cls.getName().startsWith("java.lang.reflect") ||
                     cls.getName().equals("java.lang.Class")) {
@@ -205,7 +212,7 @@ try {
 
         // process only fields declared by this class,
         // fields of all superclasses were already processed in separate run.
-        Field[] flds = null;
+        Field[] flds;
         try {
             flds = cls.getDeclaredFields();
         } catch (NoClassDefFoundError e) {
@@ -217,8 +224,7 @@ try {
                     " because of " + t);
             return; // Some other problem
         }
-        for (int i=0; i<flds.length; i++) {
-            Field act = flds[i];
+        for(Field act : flds) {
             if (((act.getModifiers() & Modifier.STATIC) != 0) &&
                                 (!act.getType().isPrimitive())) {
                 MakeAccessible.setAccessible(act, true);
@@ -230,7 +236,9 @@ try {
                     continue;
                 }
                 if (target!= null) {
-                    if (target.getClass().getName().startsWith("sun.reflect")) continue;
+                    if (target.getClass().getName().startsWith("sun.reflect")) {
+                        continue;
+                    }
 
                     if (filter.accept(target, null, act)) {
                         recognize(target);
@@ -245,9 +253,11 @@ try {
     private void processObject(Object obj) throws Exception {
         assert objects.isKnown(obj) : "Objects in queue must be known";
         
-        Class cls = obj.getClass();
+        Class<?> cls = obj.getClass();
 
-        if (cls.getName().startsWith("java.lang.reflect")) return;
+        if (cls.getName().startsWith("java.lang.reflect")) {
+            return;
+        }
         
         if (cls.isArray() && !cls.getComponentType().isPrimitive()) {
             // enqueue all object array entries
@@ -258,7 +268,9 @@ try {
                 if (target != null) {
                     if (filter.accept(target, arr, null)) {
                         recognize(target);
-                        if (objects.isKnown(target)) visitor.visitArrayReference(objects, obj, target, i);
+                        if (objects.isKnown(target)) {
+                            visitor.visitArrayReference(objects, obj, target, i);
+                        }
                     }
                 }
             }
@@ -266,10 +278,7 @@ try {
             // enqueue all instance fields of reference type
             while (cls != null) { // go over the class hierarchy
 	       try {
-                    Field[] flds = cls.getDeclaredFields();
-                    for (int i=0; i<flds.length; i++) {
-                        Field act = flds[i];
-
+                    for(Field act : cls.getDeclaredFields()) {
                         if (((act.getModifiers() & Modifier.STATIC) == 0) &&
                                     (!act.getType().isPrimitive())) {
                         
@@ -278,7 +287,9 @@ try {
                             if (target!= null) {
                                 if (filter.accept(target, obj, act)) {
                                     recognize(target);
-                                    if (objects.isKnown(target)) visitor.visitObjectReference(objects, obj, target, act);
+                                    if (objects.isKnown(target)) {
+                                        visitor.visitObjectReference(objects, obj, target, act);
+                                    }
                                 }
                             }
                         }
@@ -305,12 +316,15 @@ try {
             add(o);
         }
         
+        @Override
         public boolean isEmpty() {
             return offset >= size();
         }
                 
         public Object get() {
-            if (isEmpty()) throw new NoSuchElementException();
+            if (isEmpty()) {
+                throw new NoSuchElementException();
+            }
             Object o = get(offset++);
             if (offset > 1000) {
                 removeRange(0, offset);

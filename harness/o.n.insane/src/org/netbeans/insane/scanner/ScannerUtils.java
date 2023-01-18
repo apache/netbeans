@@ -46,20 +46,25 @@ public final class ScannerUtils {
         return new Visitor() {
             private final Visitor[] sub = parts.clone();
             
+            @Override
             public void visitClass(Class cls) {
                 for(int i=0; i<sub.length; i++) sub[i].visitClass(cls);
             }
+            @Override
             public void visitObject(ObjectMap map, Object object) {
                 for(int i=0; i<sub.length; i++) sub[i].visitObject(map, object);
             }
+            @Override
             public void visitObjectReference(ObjectMap map, Object from, Object to, Field ref) {
                 for(int i=0; i<sub.length; i++) sub[i].visitObjectReference(map, from, to, ref);
             }
 
+            @Override
             public void visitArrayReference(ObjectMap map, Object from, Object to, int index) {
                 for(int i=0; i<sub.length; i++) sub[i].visitArrayReference(map, from, to, index);
             }
             
+            @Override
             public void visitStaticReference(ObjectMap map, Object to, Field ref) {
                 for(int i=0; i<sub.length; i++) sub[i].visitStaticReference(map, to, ref);
             }
@@ -76,6 +81,7 @@ public final class ScannerUtils {
     public static Filter compoundFilter(final Filter[] parts) {
         return new Filter() {
             private final Filter[] sub = parts.clone();
+            @Override
             public boolean accept(Object o, Object r, Field ref) {
                 for (int i=0; i<sub.length; i++) {
                     if (!sub[i].accept(o, r, ref)) return false;
@@ -96,12 +102,13 @@ public final class ScannerUtils {
      */
     public static Filter skipObjectsFilter(Collection<Object> except, final boolean include) {
         class Except implements Filter {
-            private final IdentityHashMap<Object, Boolean> skip = new IdentityHashMap<Object, Boolean>();
+            private final IdentityHashMap<Object, Boolean> skip = new IdentityHashMap<>();
             
             Except(Collection<Object> col) {
-                for (Iterator<Object> it = col.iterator(); it.hasNext(); skip.put(it.next(), Boolean.TRUE));
+                col.forEach(o -> skip.put(o, Boolean.TRUE));
             }
 
+            @Override
             public boolean accept(Object o, Object refFrom, Field ref) {
                 return !skip.containsKey(include ? refFrom : o);
             }
@@ -117,7 +124,8 @@ public final class ScannerUtils {
      */
     public static Filter skipReferencesFilter(final Collection<Field> except) {
         return new Filter() {
-            private final Set<Field> skip = new HashSet<Field>(except);
+            private final Set<Field> skip = new HashSet<>(except);
+            @Override
             public boolean accept(Object o, Object r, Field ref) {
                 return !skip.contains(ref);
             }
@@ -131,9 +139,8 @@ public final class ScannerUtils {
      * @return the Filter implementation
      */
     public static Filter skipNonStrongReferencesFilter() {
-        Class clsReference = Reference.class;
         try {
-            Field referentOfReference = clsReference.getDeclaredField("referent");
+            Field referentOfReference = Reference.class.getDeclaredField("referent");
             return skipReferencesFilter(Collections.singleton(referentOfReference));
         } catch (NoSuchFieldException x) {
             NoSuchFieldError err = new NoSuchFieldError(x.toString());
@@ -143,11 +150,7 @@ public final class ScannerUtils {
     }
     
     public static Filter noFilter() {
-        return new Filter() {
-            public boolean accept(Object o, Object r, Field ref) {
-                return true;
-            }
-        };
+        return (Object o, Object r, Field ref) -> true;
     }
     
     /*
@@ -194,7 +197,7 @@ public final class ScannerUtils {
      * near all objects on the java heap.
      */
     public static Set<Object> interestingRoots() {
-        return new HashSet<Object>(Arrays.asList(new Object[] {
+        return new HashSet<>(Arrays.asList(new Object[] {
             Thread.currentThread(),
             ScannerUtils.class.getClassLoader()
         }));
@@ -213,16 +216,11 @@ public final class ScannerUtils {
     public static void scanExclusivelyInAWT(final Filter f, final Visitor v, final Set roots) throws Exception {
         final Thread me = Thread.currentThread();
         final Exception[] ret = new Exception[1];
-        Runnable performer = new Runnable() {
-            public void run() {
-                try {
-//                    suspendAllThreads(new HashSet(Arrays.asList(new Object[] {me, Thread.currentThread()})));
-                    scan(f, v, roots, true);
-                } catch (Exception e) {
-                    ret[0] = e;
-                } finally {
-//                    resumeAllThreads();                    
-                }
+        Runnable performer = () -> {
+            try {
+                scan(f, v, roots, true);
+            } catch (Exception e) {
+                ret[0] = e;
             }
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -233,58 +231,22 @@ public final class ScannerUtils {
         if (ret[0] != null) throw ret[0];
     }
     
-    private static Thread[] getAllThreads() {
-        ThreadGroup act = Thread.currentThread().getThreadGroup();
-        while (act.getParent() != null) act = act.getParent();
-        Thread[] all = new Thread[2*act.activeCount()+5];
-        int cnt = act.enumerate(all);
-        Thread[] ret = new Thread[cnt];
-        System.arraycopy(all, 0, ret, 0, cnt);
-        return ret;
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void suspendAllThreads(Set<Thread> except) {
-        Thread[] threads = getAllThreads();
-        
-        for (int i=0; i<threads.length; i++) {
-            if (!except.contains(threads[i])) {
-                if ((threads[i].getName().indexOf("VM") == -1) &&
-                (threads[i].getName().indexOf("CompilerTh") == -1) &&
-                (threads[i].getName().indexOf("Signal") == -1)) {
-                    System.out.println("suspending " + threads[i]);
-                    threads[i].suspend();
-                }
-            }
-        }
-    }
-    
-    @SuppressWarnings("deprecation")
-    private static void resumeAllThreads() {
-        Thread[] threads = getAllThreads();
-        
-        for (int i=0; i<threads.length; i++) {
-            threads[i].resume();
-        }
-    }
-    
     private static class ClassInfo {
-        private static Map<Class, ClassInfo> classInfoRegistry = new WeakHashMap<Class, ClassInfo>();
-        private int size;
+        private static final Map<Class<?>, ClassInfo> classInfoRegistry = new WeakHashMap<>();
+        private final int size;
         
-        private ClassInfo(Class cls) {
-//            this.cls = cls;
+        private ClassInfo(Class<?> cls) {
             if (cls.isArray()) {
-                Class base = cls.getComponentType();
+                Class<?> base = cls.getComponentType();
                 size = -getSize(base, true);
             } else {
                 // iterate all fields and sum the sizes
                 int sum = 0;
-                for (Class act = cls; act != null; act = act.getSuperclass()) {
-                    Field[] flds = act.getDeclaredFields();
-                    for (int i=0; i<flds.length; i++) { // count all nonstatic fields
-                        if ((flds[i].getModifiers() & Modifier.STATIC) == 0) {
-                            sum += getSize(flds[i].getType(), false);
+                for (Class<?> act = cls; act != null; act = act.getSuperclass()) {
+                    // count all nonstatic fields
+                    for(Field field : act.getDeclaredFields()) {
+                        if ((field.getModifiers() & Modifier.STATIC) == 0) {
+                            sum += getSize(field.getType(), false);
                         }
                     } // fields
                 } // classes
@@ -293,7 +255,7 @@ public final class ScannerUtils {
         }
         
         static int sizeOf(Object o) {
-            Class cls = o.getClass();
+            Class<?> cls = o.getClass();
             ClassInfo info = classInfoRegistry.get(cls);
             if (info == null) {
                 info = new ClassInfo(cls);
@@ -304,7 +266,7 @@ public final class ScannerUtils {
                 (19 - info.size*Array.getLength(o)) & 0xFFFFFFF8;
         }
         
-        private static int getSize(Class type, boolean array) {
+        private static int getSize(Class<?> type, boolean array) {
             if (array) {
                 if (type == Byte.TYPE || type == Boolean.TYPE) {
                     return 1;

@@ -36,7 +36,7 @@ class SmallObjectMap implements ObjectMap {
     private int size;
 
     // this map keeps reference to all objects with system hash collision
-    private Map<Object,Integer> wrappers = new IdentityHashMap<Object,Integer>();
+    private final Map<Object,Integer> wrappers = new IdentityHashMap<>();
 
     int idCounter;
 
@@ -44,6 +44,7 @@ class SmallObjectMap implements ObjectMap {
 
     SmallObjectMap() {}
 
+    @Override
     public boolean isKnown(Object o) {
         int bucket = System.identityHashCode(o) % table.length;
 
@@ -57,17 +58,18 @@ class SmallObjectMap implements ObjectMap {
     }
 
 
+    @Override
     public String getID(Object o) {
         // find whether it is known and wrapped
         Integer wid = wrappers.get(o);
-        if (wid != null) return getWrappedId(o, wid.intValue());
+        if (wid != null) return getWrappedId(o, wid);
 
         // ... or at least known
         if (isKnown(o)) return getNormalId(o);
 
         // unknown object
         if (putObject(o)) { //wrapped
-            return getWrappedId(o, wrappers.get(o).intValue());
+            return getWrappedId(o, wrappers.get(o));
         } else {
              return getNormalId(o);
         }
@@ -104,14 +106,13 @@ class SmallObjectMap implements ObjectMap {
         table[bucket] = o;
 
         // add the wrapping info
-        if (wrap) wrappers.put(o, Integer.valueOf(idCounter++));
+        if (wrap) wrappers.put(o, idCounter++);
         return wrap;
     }
 
     private void rehash(int newSize) {
         Object[] newTable = new Object[newSize];
-        for (int i=0; i<table.length; i++) {
-            Object act = table[i];
+        for(Object act : table){
             if (act != null) {
                 int bucket = System.identityHashCode(act) % newTable.length;
                 int temp=0;

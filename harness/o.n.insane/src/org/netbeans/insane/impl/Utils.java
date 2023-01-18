@@ -28,12 +28,6 @@ import org.netbeans.insane.live.Path;
 public class Utils {
     
     static long getUsedMemory() {
-//        for (int i=0; i<5; i++) {
-//            System.gc();
-//            System.runFinalization();
-//            try {Thread.sleep(1000); } catch (InterruptedException ie) {}
-//            try {byte[] a = new byte[1000000000];} catch (OutOfMemoryError oe) {}
-//        }
         System.gc();
         
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();

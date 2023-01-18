@@ -20,17 +20,14 @@
 package org.netbeans.insane.model;
 
 import java.io.*;
-import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
-import javax.imageio.stream.FileImageInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.*;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -85,10 +82,8 @@ final class InsaneConverter {
     private File to;
     
     // parsing intermediate data
-    private Map<String, ClassInfo> classInfo = new LinkedHashMap<String, ClassInfo>();
-    private Map<String, RefInfo> refInfo = new LinkedHashMap<String, RefInfo>();
-//    private Map instanceInfo = new HashMap(); //new LinkedHashMap(); // Map<String id, InstanceInfo>
-  
+    private Map<String, ClassInfo> classInfo = new LinkedHashMap<>();
+    private Map<String, RefInfo> refInfo = new LinkedHashMap<>();  
     private ObjectSet instanceInfo = new ObjectSet();
     
     private int refsOffset;
@@ -105,7 +100,9 @@ final class InsaneConverter {
     }
     
     ByteBuffer getByteBuffer(int offset) {
-        if (offset < 12) throw new IllegalArgumentException("bad offset " + offset );
+        if (offset < 12) {
+            throw new IllegalArgumentException("bad offset " + offset );
+        }
         return ((ByteBuffer)store.duplicate().position(offset)).slice();
     }
     
@@ -236,7 +233,9 @@ final class InsaneConverter {
         
         InstanceInfo ii = (InstanceInfo)instanceInfo.get(template);
         if (ii == null) {
-            if (!prescan) throw new IllegalArgumentException("Unknown element during second pass:" + strId);
+            if (!prescan) {
+                throw new IllegalArgumentException("Unknown element during second pass:" + strId);
+            }
             ii = template;
             instanceInfo.put(ii);
         }
@@ -351,8 +350,8 @@ final class InsaneConverter {
         objsOffset = currentOffset;
         
         // compute offsets of instances
-        for (Iterator<InstanceInfo> it = instanceInfo.iterator(); it.hasNext(); ) {
-            InstanceInfo info = it.next();
+        for (Iterator it = instanceInfo.iterator(); it.hasNext(); ) {
+            InstanceInfo info = (InstanceInfo)it.next();
             currentOffset = info.computeNextOffset(currentOffset);
         }
         totalOffset = currentOffset;

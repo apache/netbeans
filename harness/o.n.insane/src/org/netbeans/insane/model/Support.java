@@ -65,9 +65,9 @@ public final class Support {
     /*
      */
     public static void findRoots(HeapModel model, Item itm, boolean weak) {        
-        LinkedList<PathElement> queue = new LinkedList<PathElement>();
+        LinkedList<PathElement> queue = new LinkedList<>();
         queue.add(new PathElement(itm, null));
-        Set<Object> visited = new HashSet<Object>(queue);
+        Set<Object> visited = new HashSet<>(queue);
         while (!queue.isEmpty()) {
             PathElement act = queue.remove(0);
             Enumeration<Object> en = act.getItem().incomming();
@@ -104,8 +104,8 @@ public final class Support {
     }
 
     private static class PathElement {
-        private Item item;
-        private PathElement next; 
+        private final Item item;
+        private final PathElement next; 
         public PathElement(Item item, PathElement next) {
             this.item = item;
             this.next = next;
@@ -113,6 +113,7 @@ public final class Support {
         public Item getItem() {
             return item;
         }
+        @Override
         public String toString() {
             if (next == null) {
                 return item.toString();

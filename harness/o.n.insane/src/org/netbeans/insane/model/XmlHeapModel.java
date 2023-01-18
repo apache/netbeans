@@ -21,6 +21,7 @@ package org.netbeans.insane.model;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.*;
@@ -39,35 +40,40 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         return model;
     }
 
-    private Map<Integer,Item> items = new HashMap<Integer,Item>();
-    private Map<String,Item> roots = new HashMap<String,Item>();
+    private final Map<Integer,Item> items = new HashMap<>();
+    private final Map<String,Item> roots = new HashMap<>();
     
     // HeapModel interface implementation
+    @Override
     public Iterator<Item> getAllItems() {
         return Collections.unmodifiableCollection(items.values()).iterator();
     }
     
+    @Override
     public Collection<Item> getObjectsOfType(String type) {
-        Collection<Item> filter = new ArrayList<Item>();
-        for (Iterator<Item> it = getAllItems(); it.hasNext();) {
-            Item act = it.next();
-            if (type.equals(act.getType()))filter.add(act);
-        }
-        return filter;
+        
+        return items.values().stream().
+            filter(item -> type.equals(item.getType())).
+            collect(Collectors.toList());
     }
     
+    @Override
     public Collection<String> getRoots() {
         return Collections.unmodifiableSet(roots.keySet());
     }
 
     
+    @Override
     public Item getObjectAt(String staticRefName) {
         return roots.get(staticRefName);
     }
     
+    @Override
     public Item getItem(int id) {
-        Item itm = items.get(new java.lang.Integer(id));
-        if (itm == null) throw new IllegalArgumentException("Bad ID");
+        Item itm = items.get(id);
+        if (itm == null) {
+            throw new IllegalArgumentException("Bad ID");
+        }
         return itm;
     }
 
@@ -75,10 +81,10 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         // a list of Items, Strings and one null
         private Object[] incommingRefs = new Object[0];
         private Item[] outgoingRefs = new Item[0];
-        private int id;
-        private int size;
-        private String type;
-        private String value;
+        private final int id;
+        private final int size;
+        private final String type;
+        private final String value;
 
         MemItem(int id, String type, int size, String value) {
             this.id = id;
@@ -88,31 +94,38 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         }
             
         // Item interface implementation    
+        @Override
         public String getType() {
             return type;
         }
             
+        @Override
         public int getSize() {
             return size;
         }
         
+        @Override
         public String getValue() {
             return value;
         }
 
+        @Override
         public Enumeration<Object> incomming() {
-            return new RefEnum<Object>(incommingRefs);
+            return new RefEnum<>(incommingRefs);
         }
 
+        @Override
         public Enumeration<Item> outgoing() {
-            return new RefEnum<Item>(outgoingRefs);
+            return new RefEnum<>(outgoingRefs);
         }
     
+        @Override
         public int getId() {
             return id;
         }
             
         // debug helper
+        @Override
         public String toString() {
             if (value == null) {
                 return type + "@" + Integer.toHexString(id);
@@ -150,7 +163,7 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
 
     Item createItem(int id, String type, int size, String val) {
         Item item = new MemItem(id, type, size, val);
-        items.put(Integer.valueOf(id), item);
+        items.put(id, item);
         return item;
     }
 
@@ -170,9 +183,12 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
     private class Handler extends DefaultHandler {
         private int depth = 0;
             
+        @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             if (depth == 0) {
-                if (! "insane".equals(qName)) throw new SAXException("format");
+                if (! "insane".equals(qName)) {
+                    throw new SAXException("format");
+                }
             } else if (depth != 1) {
                 throw new SAXException("format");
             } else {
@@ -186,13 +202,11 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
                     String from = atts.getValue("from");
                     String name = atts.getValue("name");
                     String to = atts.getValue("to");
-//                        if (! "java.lang.ref.Reference.referent".equals(name)) {
                         if (from != null) {
                             addReference(getIdFromString(from), getIdFromString(to));
                         } else {
                             addReference(name, getIdFromString(to));
                         }
-//                        }
                 } else {
                     throw new SAXException("format");
                 }
@@ -201,6 +215,7 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         }
             
 
+        @Override
         public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
             depth--;
         }

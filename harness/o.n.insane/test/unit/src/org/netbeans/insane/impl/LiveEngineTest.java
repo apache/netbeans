@@ -36,7 +36,7 @@ public class LiveEngineTest extends TestCase {
         super(testName);
     }
 
-    static LinkedList<Object> list = new LinkedList<Object>();
+    static LinkedList<Object> list = new LinkedList<>();
     static Object last;
 
     @Override

@@ -36,8 +36,8 @@ import org.netbeans.insane.scanner.Filter;
  */
 public class LiveEngine implements ObjectMap, Visitor {
     
-    private IdentityHashMap<Object,Object> objects = new IdentityHashMap<Object,Object>();
-    private Map<Object, String> rest = new IdentityHashMap<Object, String>();
+    private final IdentityHashMap<Object,Object> objects = new IdentityHashMap<>();
+    private final Map<Object, String> rest = new IdentityHashMap<>();
     
     private BoundedRangeModel progress;
     private int objCount;
@@ -60,10 +60,12 @@ public class LiveEngine implements ObjectMap, Visitor {
 
     //--------------------------------------------
     // ObjectMap-like interface. We don't provide IDs though (returns null)
+    @Override
     public boolean isKnown(Object o) {
         return objects.containsKey(o);
     }
     
+    @Override
     public String getID(Object o) {
         objects.put(o, null); // mark as known
         return null; // null - if somebody really uses it, fails quickly
@@ -71,7 +73,9 @@ public class LiveEngine implements ObjectMap, Visitor {
 
     //--------------------------------------------
     // Visitor interface
-    public void visitClass(Class cls) {}
+    @Override
+    public void visitClass(Class<?> cls) {}
+    @Override
     public void visitObject(ObjectMap map, Object object) {
         if (progress != null) {
             objCount++;
@@ -80,14 +84,17 @@ public class LiveEngine implements ObjectMap, Visitor {
         }
     }
 
+    @Override
     public void visitArrayReference(ObjectMap map, Object from, Object to, int index) {
         visitRef(from, to, null);
     }
 
+    @Override
     public void visitObjectReference(ObjectMap map, Object from, Object to, java.lang.reflect.Field ref) {
         visitRef(from, to, ref);
     }
 
+    @Override
     public void visitStaticReference(ObjectMap map, Object to, java.lang.reflect.Field ref) {
         visitRef(null, to, ref);
     }
@@ -98,7 +105,9 @@ public class LiveEngine implements ObjectMap, Visitor {
         addIncommingRef(to, from, field);
         if (rest.containsKey(to)) {
             rest.remove(to);
-            if (rest.size() == 0) throw new ObjectFoundException();
+            if (rest.isEmpty()) {
+                throw new ObjectFoundException();
+            }
         }
     }
 
@@ -126,14 +135,12 @@ public class LiveEngine implements ObjectMap, Visitor {
         objects.put(to, entry);
     }
 
-    private Iterator<Object> getIncomingRefs(Object to) {
+    private Iterable<Object> getIncomingRefs(Object to) {
         Object oo = objects.get(to);
         if (oo instanceof Object[]) {
-            return Arrays.asList((Object[])oo).iterator();
-        } else if (oo == null) {
-            return Collections.emptyIterator();
+            return Arrays.asList((Object[])oo);
         } else {
-            return Collections.singleton(oo).iterator();
+            return oo != null ? Collections.singleton(oo) : Collections.emptyList();
         }
     }
         
@@ -157,9 +164,15 @@ public class LiveEngine implements ObjectMap, Visitor {
                 
         for (Object o: objs ) rest.put(o, "");
         
-        Map<Object,Boolean> s = new IdentityHashMap<Object, Boolean>();
-        for (Object o : ScannerUtils.interestingRoots()) s.put(o, true);
-        if (roots != null) for (Object o : roots) s.put(roots, true);
+        Map<Object,Boolean> s = new IdentityHashMap<>();
+        for (Object o : ScannerUtils.interestingRoots()) {
+            s.put(o, true);
+        }
+        if (roots != null) {
+            for (Object o : roots) {
+                s.put(roots, true);
+            }
+        }
         try {
             InsaneEngine iEngine = new InsaneEngine(this, filter, this, true);
             iEngine.traverse(s.keySet());
@@ -174,32 +187,34 @@ public class LiveEngine implements ObjectMap, Visitor {
             progress.setValue(objExpected); // should move the mark to 90%
         }
 
-        Map<Object,Path> result = new IdentityHashMap<Object,Path>();
+        Map<Object,Path> result = new IdentityHashMap<>();
         
         // split last 10% of progress equally among found objects
         int found = objs.size() - rest.size();
         int base = objExpected;
         int step = found > 0 ? objExpected/9/found : 0;
         
-        for (Iterator<Object> it = objs.iterator(); it.hasNext(); ) {
-            Object obj = it.next();
-            if (rest.containsKey(obj)) continue; // not found
-            Path toObj = findRoots(obj, s.keySet());
-            if (toObj != null) result.put(obj, toObj);
-            if (progress != null) {
-                base += step;
-                progress.setValue(base);
+        for(Object obj : objs) {
+            if (!rest.containsKey(obj)) { // not found
+                Path toObj = findRoots(obj, s.keySet());
+                if (toObj != null) {
+                    result.put(obj, toObj);
+                }
+                if (progress != null) {
+                    base += step;
+                    progress.setValue(base);
+                }
             }
         }
 
         return result;
     }
 
-    private Path findRoots(Object obj, Set roots) {
-        Set<Path> visited = new HashSet<Path>();
+    private Path findRoots(Object obj, Set<?> roots) {
+        Set<Path> visited = new HashSet<>();
         Path last = Utils.createPath(obj, null);
 
-        List<Path> queue = new LinkedList<Path>();
+        List<Path> queue = new LinkedList<>();
         queue.add(last);
         visited.add(last);
 
@@ -212,9 +227,7 @@ public class LiveEngine implements ObjectMap, Visitor {
             }
 
             // follow incomming
-            Iterator<Object> it = getIncomingRefs(item);
-            while(it.hasNext()) {
-                Object o = it.next();
+            for(Object o : getIncomingRefs(item)) {
                 Path prev = Utils.createPath(o, act);
                 if (o instanceof Root) return prev;
 

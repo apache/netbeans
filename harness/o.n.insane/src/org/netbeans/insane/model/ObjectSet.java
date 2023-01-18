@@ -37,10 +37,12 @@ class ObjectSet {
 
     public ObjectSet() {
         this (new Hash() {
+            @Override
             public boolean equals(Object o1, Object o2) {
                 return o1.equals(o2);
             }
 
+            @Override
             public int hashCodeFor(Object o) {
                 return o.hashCode();
             }
@@ -64,8 +66,11 @@ class ObjectSet {
         int bucket = (hash.hashCodeFor(key) & 0x7FFFFFFF)  % table.length;
         
         while (table[bucket] != null) {
-            if (hash.equals(key, table[bucket])) return table[bucket];
-            bucket = (bucket + 1) % table.length;
+            if (hash.equals(key, table[bucket])) {
+                return table[bucket];
+            } else {
+                bucket = (bucket + 1) % table.length;
+            }
         }
         
         return null; // XXX
@@ -73,8 +78,9 @@ class ObjectSet {
     
     /* Always replaces exiting equals object */
     public void put(Object key) {
-//System.err.println("put: size=" + size + ", limit=" + limit + ", len=" + table.length);
-        if ((size+1) > limit) rehash(table.length*2);
+        if ((size+1) > limit) {
+            rehash(table.length*2);
+        }
 
         size++;
         int bucket = (hash.hashCodeFor(key) & 0x7FFFFFFF) % table.length;
@@ -94,6 +100,7 @@ class ObjectSet {
         return new Iterator() {
             int ptr = 0;
             Object next;
+            @Override
             public boolean hasNext() {
                 while (next == null && ptr < table.length) {
                     next = table[ptr++];
@@ -101,6 +108,7 @@ class ObjectSet {
                 return next != null;
             }
             
+            @Override
             public Object next() {
                 if (!hasNext()) throw new NoSuchElementException();
                 Object ret = next;
@@ -108,6 +116,7 @@ class ObjectSet {
                 return ret;
             }
             
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
@@ -117,8 +126,7 @@ class ObjectSet {
 
     private void rehash(int newSize) {
         Object[] newTable = new Object[newSize];
-        for (int i=0; i<table.length; i++) {
-            Object act = table[i];
+        for(Object act : table) {
             if (act != null) {
                 int bucket = (hash.hashCodeFor(act) & 0x7FFFFFFF) % newTable.length;
                 while (newTable[bucket] != null) { // find an empty slot

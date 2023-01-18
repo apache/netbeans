@@ -45,7 +45,7 @@ public class InsaneEngineTest {
 
     @Test
     public void testTraverse() throws Exception {
-        ArrayList roots = new ArrayList();
+        ArrayList<Object> roots = new ArrayList<>();
         
         Object object = new Object();
         roots.add(object);

@@ -35,7 +35,7 @@ import java.util.*;
  */
 public class CountingVisitor implements Visitor {
     
-    private Map<Class<?>, Info> infoMap = new HashMap<Class<?>, Info>();
+    private final Map<Class<?>, Info> infoMap = new HashMap<>();
     private int count;
     private int size;
     
@@ -44,10 +44,12 @@ public class CountingVisitor implements Visitor {
     }
     
     
+    @Override
     public void visitClass(Class<?> cls) {
         infoMap.put(cls, new Info());
     }
     
+    @Override
     public void visitObject(ObjectMap map, Object obj) {
         Info info = infoMap.get(obj.getClass());
         assert info != null : "Engine shall announce the class before instance";
@@ -59,8 +61,11 @@ public class CountingVisitor implements Visitor {
         size += objSize;
     }
     
+    @Override
     public void visitStaticReference(ObjectMap map, Object to, java.lang.reflect.Field ref) {}
+    @Override
     public void visitObjectReference(ObjectMap map, Object from, Object to, java.lang.reflect.Field ref) {}
+    @Override
     public void visitArrayReference(ObjectMap map, Object from, Object to, int index) {}  
 
     public Set<Class<?>> getClasses() {
@@ -69,14 +74,18 @@ public class CountingVisitor implements Visitor {
     
     public int getCountForClass(Class cls) {
         Info info = infoMap.get(cls);
-        if (info == null) throw new IllegalArgumentException("Unknown class");
+        if (info == null) {
+            throw new IllegalArgumentException("Unknown class");
+        }
         
         return info.count;
     }
     
     public int getSizeForClass(Class cls) {
         Info info = infoMap.get(cls);
-        if (info == null) throw new IllegalArgumentException("Unknown class");
+        if (info == null) {
+            throw new IllegalArgumentException("Unknown class");
+        }
         
         return info.size;
     }

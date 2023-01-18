@@ -37,15 +37,11 @@ import org.netbeans.insane.impl.Utils;
  */
 public final class Path {
     static {
-        Utils.PATH_FACTORY = new Utils.PathFactory() {
-            public Path createPath(Object item, Path next) {
-                return new Path(item, next);
-            }
-        };
+        Utils.PATH_FACTORY = Path::new;
     }
     
-    private Object item;
-    private Path nextElement;
+    private final Object item;
+    private final Path nextElement;
 
     /** Internal use only! Will be removed/made private.
      */
@@ -136,11 +132,8 @@ public final class Path {
 
         // Check all fields
         while (cls != null) { // go over the class hierarchy
-            Field[] flds = cls.getDeclaredFields();
-            for (int i=0; i<flds.length; i++) {
+            for(Field act : cls.getDeclaredFields()) {
                 try {
-                    Field act = flds[i];
-
                     if (act.getType().isPrimitive() || (act.getModifiers() & Modifier.STATIC) != 0) continue;
                     MakeAccessible.setAccessible(act, true);
                     if (target == act.get(item)) return act.getName();
@@ -154,10 +147,12 @@ public final class Path {
         return "<changed>";
     }
 
+    @Override
     public int hashCode() {
         return System.identityHashCode(item);
     }
 
+    @Override
     public boolean equals(Object o) {
         return (o instanceof Path) && (((Path)o).item == item);
     }

@@ -38,8 +38,8 @@ class BinaryHeapModel implements HeapModel {
         return model;
     }
 
-    private Map<Integer, Item> createdObjects = new HashMap<Integer, Item>();
-    private Map<Integer, Cls> createdClasses = new HashMap<Integer, Cls>();
+    private final Map<Integer, Item> createdObjects = new HashMap<>();
+    private final Map<Integer, Cls> createdClasses = new HashMap<>();
         
     ByteBuffer buffer;
     int refsOffset;
@@ -49,7 +49,7 @@ class BinaryHeapModel implements HeapModel {
         // mmap it
         long len = data.length();
         buffer = new FileInputStream(data).getChannel().map(FileChannel.MapMode.READ_ONLY, 0, len);
-        System.err.println("magic=" + buffer.getInt(0));
+        System.err.println("magic=" + buffer.getInt(0)); // shouldn't this be replaced with logging statement?
 
         // prepare pointers
         refsOffset = buffer.getInt(4);
@@ -60,8 +60,9 @@ class BinaryHeapModel implements HeapModel {
         // prescan classes?
     }
     
+    @Override
     public Iterator<Item> getAllItems() {
-        ArrayList<Item> all = new ArrayList<Item>();
+        ArrayList<Item> all = new ArrayList<>();
 
         int actOffset = objsOffset;
         while (actOffset < buffer.limit()) {
@@ -72,30 +73,36 @@ class BinaryHeapModel implements HeapModel {
         return all.iterator();
     }
 
+    @Override
     public Collection<Item> getObjectsOfType(String type) {
         Cls cls = getClsByName(type);
         return cls == null ? Collections.<Item>emptyList() : cls.getInstances();
     }
 
+    @Override
     public Collection<String> getRoots() {
-        ArrayList<String> all = new ArrayList<String>();
+        ArrayList<String> all = new ArrayList<>();
 
         int actOffset = refsOffset;
         while (actOffset < objsOffset) {
             RefType act = new RefType(actOffset);
-            if (act.isStatic()) all.add(act.getReferenceName());
+            if (act.isStatic()) {
+                all.add(act.getReferenceName());
+            }
             actOffset = act.getNextOffset();                
         }
         return all;
     }
         
+    @Override
     public Item getObjectAt(String staticRefName) {
         RefType type = getRefTypeByName(staticRefName);
         return type.getInstance();
     }
         
+    @Override
     public Item getItem(int id) {
-        Integer key = Integer.valueOf(id);
+        Integer key = id;
         Item ret = createdObjects.get(key);
         if (ret == null) {
             ret = new HItem(id);
@@ -108,14 +115,17 @@ class BinaryHeapModel implements HeapModel {
         int actOffset = 12;
         while (actOffset < refsOffset) {
             Cls act = getCls(actOffset);
-            if (name.equals(act.getClassName())) return act;
-            actOffset = act.getNextOffset();
+            if (name.equals(act.getClassName())) {
+                return act;
+            } else {
+                actOffset = act.getNextOffset();
+            }
         }
         return null;
     }
 
     private Cls getCls(int offset) {
-        Integer key = Integer.valueOf(offset);
+        Integer key = offset;
         Cls ret = createdClasses.get(key);
         if (ret == null) {
             ret = new Cls(offset);
@@ -143,8 +153,10 @@ class BinaryHeapModel implements HeapModel {
             local.position(local.getInt() + local.position());
             int count = local.getInt();
 
-            ArrayList<Item> list = new ArrayList<Item>(count);
-            while(--count >= 0) list.add(getItem(local.getInt()));
+            ArrayList<Item> list = new ArrayList<>(count);
+            while(--count >= 0) {
+                list.add(getItem(local.getInt()));
+            }
             return list;
         }
 
@@ -218,18 +230,22 @@ class BinaryHeapModel implements HeapModel {
             return ((ByteBuffer)buffer.duplicate().position(offset)).slice();
         }
 
+        @Override
         public String getType() {
             return getCls(prepareBuffer().getInt()).getClassName();
         }
 
+        @Override
         public int getSize() {
             return prepareBuffer().getInt(4);
         }
 
+        @Override
         public String getValue() {
             return "unknown"; // TODO: Add [C content to the file
         }
 
+        @Override
         public Enumeration<Object> incomming() {
             ByteBuffer buff = prepareBuffer();
             buff.position(8);
@@ -237,7 +253,7 @@ class BinaryHeapModel implements HeapModel {
             int inc = buff.getInt();
 
             buff.position(16 + 8*out);
-            Vector<Object> v = new Vector<Object>(inc);
+            Vector<Object> v = new Vector<>(inc);
 
             while (--inc >= 0) {
                 int refOffset = buff.getInt();
@@ -253,12 +269,13 @@ class BinaryHeapModel implements HeapModel {
             return v.elements(); // XXX - eager
         }
 
+        @Override
         public Enumeration<Item> outgoing() {
             ByteBuffer buff = prepareBuffer();
             int out = buff.getInt(8);
             buff.position(16);
 
-            Vector<Item> v = new Vector<Item>(out);
+            Vector<Item> v = new Vector<>(out);
 
             while (--out>= 0) {
                 int refOffset = buff.getInt();
@@ -271,10 +288,12 @@ class BinaryHeapModel implements HeapModel {
         }
 
 
+        @Override
         public String toString() {
             return getType() + "@" + Integer.toHexString(getId());
         }
 
+        @Override
         public int getId() {
             return offset; // XXX - different ID
         }

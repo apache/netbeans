@@ -37,7 +37,7 @@ import java.lang.reflect.Field;
  */
 public final class SimpleXmlVisitor implements Visitor {
     private static char[] pom = new char[0];
-    private static Class CHAR_ARRAY = pom.getClass();
+    private static Class<?> CHAR_ARRAY = pom.getClass();
 
     private Writer writer;
     private IOException storedException;

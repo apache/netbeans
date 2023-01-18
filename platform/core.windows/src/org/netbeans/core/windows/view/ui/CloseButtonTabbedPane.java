@@ -251,7 +251,7 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
             return true;
         return false;
     }
-    private final Pattern removeHtmlTags = HTML_TABS_BROKEN ? Pattern.compile("\\<.*?\\>") : null;
+    private static final Pattern removeHtmlTags = HTML_TABS_BROKEN ? Pattern.compile("\\<.*?\\>") : null;
 
     @Override
     public void setTitleAt(int idx, String title) {

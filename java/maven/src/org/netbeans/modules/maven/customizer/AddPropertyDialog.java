@@ -59,8 +59,8 @@ public class AddPropertyDialog extends javax.swing.JPanel implements ExplorerMan
     private NbMavenProjectImpl project;
     private JButton okbutton;
     private String goalsText;
-    private Pattern COMPLETE = Pattern.compile("(.+)[:](.+)[:](.+)[:](.+)"); //NOI18N
-    private Pattern SHORT = Pattern.compile("(.+)[:](.+)"); //NOI18N
+    private static Pattern COMPLETE = Pattern.compile("(.+)[:](.+)[:](.+)[:](.+)"); //NOI18N
+    private static Pattern SHORT = Pattern.compile("(.+)[:](.+)"); //NOI18N
 
     /** Creates new form AddPropertyDialog */
     public AddPropertyDialog(NbMavenProjectImpl prj, String goalsText) {

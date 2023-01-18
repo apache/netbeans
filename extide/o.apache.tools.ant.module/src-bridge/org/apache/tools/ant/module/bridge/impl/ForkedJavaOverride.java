@@ -381,9 +381,9 @@ public class ForkedJavaOverride extends Java {
      */
     public static class FoldingHelper {
 
-        private final Pattern STACK_TRACE = Pattern.compile(
+        private static final Pattern STACK_TRACE = Pattern.compile(
                 "^\\s+at.*:");                                          //NOI18N
-        private final Pattern EXCEPTION = Pattern.compile(
+        private static final Pattern EXCEPTION = Pattern.compile(
                 "^(\\.?\\w)*(Exception|Error).*");                      //NOI18N
         private FoldHandle foldHandle = null;
         boolean inStackTrace = false;

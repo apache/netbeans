@@ -67,9 +67,9 @@ public class JShellParser2 {
      */
     private final JShell state;
 
-    private Pattern promptPattern = Pattern.compile("(^->|^>>) {0,2}(?<contents>.*)", Pattern.DOTALL); // NOI18N
-    private Pattern commandPattern = Pattern.compile("(^->|^>>) {0,2}/(?<contents>.*)", Pattern.DOTALL); // NOI18N
-    private Pattern messagePattern = Pattern.compile("^\\| (?<contents>.*)", Pattern.DOTALL); // NOI18N
+    private static Pattern promptPattern = Pattern.compile("(^->|^>>) {0,2}(?<contents>.*)", Pattern.DOTALL); // NOI18N
+    private static Pattern commandPattern = Pattern.compile("(^->|^>>) {0,2}/(?<contents>.*)", Pattern.DOTALL); // NOI18N
+    private static Pattern messagePattern = Pattern.compile("^\\| (?<contents>.*)", Pattern.DOTALL); // NOI18N
     
     /**
      * The current position

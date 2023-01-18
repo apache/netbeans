@@ -77,15 +77,15 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
     /** Java EE library name pattern to search for it in
      *  <code>GlassFishLibrary</code> list. */
-    private Pattern JAVAEE_PATTERN = Pattern.compile("[jJ]ava {0,1}[eE]{2}");
+    private static Pattern JAVAEE_PATTERN = Pattern.compile("[jJ]ava {0,1}[eE]{2}");
 
     /** Jersey library name pattern to search for it in
      *  <code>GlassFishLibrary</code> list. */
-    private Pattern JERSEY_PATTERN = Pattern.compile("[jJ]ersey.*");
+    private static Pattern JERSEY_PATTERN = Pattern.compile("[jJ]ersey.*");
 
     /** JAX-RS library name pattern to search for it in
      *  <code>GlassFishLibrary</code> list. */
-    private Pattern JAXRS_PATTERN
+    private static Pattern JAXRS_PATTERN
             = Pattern.compile("[jJ][aA][xX][ -]{0,1}[rR][sS]");
 
     /** Code base for file locator. */

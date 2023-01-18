@@ -86,21 +86,21 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
     /** Java EE library name pattern to search for it in
      *  <code>PayaraLibrary</code> list. */
-    private final Pattern JAVAEE_PATTERN = Pattern.compile("[jJ]ava {0,1}[eE]{2}");
+    private static final Pattern JAVAEE_PATTERN = Pattern.compile("[jJ]ava {0,1}[eE]{2}");
 
     /**
      * MicroProfile library name pattern to search for it in
      * <code>PayaraLibrary</code> list.
      */
-    private final Pattern MICROPROFILE_PATTERN = Pattern.compile("[mM]icro[pP]rofile");
+    private static final Pattern MICROPROFILE_PATTERN = Pattern.compile("[mM]icro[pP]rofile");
 
     /** Jersey library name pattern to search for it in
      *  <code>PayaraLibrary</code> list. */
-    private final Pattern JERSEY_PATTERN = Pattern.compile("[jJ]ersey.*");
+    private static final Pattern JERSEY_PATTERN = Pattern.compile("[jJ]ersey.*");
 
     /** JAX-RS library name pattern to search for it in
      *  <code>PayaraLibrary</code> list. */
-    private final Pattern JAXRS_PATTERN
+    private static final Pattern JAXRS_PATTERN
             = Pattern.compile("[jJ][aA][xX][ -]{0,1}[rR][sS]");
 
     /** Code base for file locator. */

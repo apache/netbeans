@@ -186,7 +186,7 @@ public class WSDLInlineSchemaValidator extends XsdBasedValidator {
      * {<one or more space}{anyNonSpace + schema}{zero or more space}
      * it can be <xsd:schema> or <xsd:schema blah-blah>
      */
-    Pattern pattern = Pattern.compile("(<\\s*)(\\S*schema)(\\s*)");
+    private static final Pattern pattern = Pattern.compile("(<\\s*)(\\S*schema)(\\s*)");
     
     private String getEndTag(String startTag) {
         Matcher matcher = pattern.matcher(startTag);

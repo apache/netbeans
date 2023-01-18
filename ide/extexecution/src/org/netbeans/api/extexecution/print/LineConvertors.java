@@ -285,7 +285,7 @@ public final class LineConvertors {
 
     private static class HttpUrlConvertor implements LineConvertor {
 
-        private final Pattern pattern = Pattern.compile(".*(((http)|(https))://\\S+)(\\s.*|$)"); // NOI18N
+        private static final Pattern pattern = Pattern.compile(".*(((http)|(https))://\\S+)(\\s.*|$)"); // NOI18N
 
         private final HttpOpenHandler handler;
 

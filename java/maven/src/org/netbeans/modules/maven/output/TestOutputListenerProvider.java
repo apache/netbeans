@@ -171,7 +171,7 @@ public class TestOutputListenerProvider implements OutputProcessor {
     private static class TestOutputListener implements OutputListener {
         private final String testname;
         private final String outputDir;
-        private final Pattern testNamePattern = Pattern.compile(".*\\((.*)\\).*<<< (?:FAILURE)?(?:ERROR)?!\\s*"); //NOI18N
+        private static final Pattern testNamePattern = Pattern.compile(".*\\((.*)\\).*<<< (?:FAILURE)?(?:ERROR)?!\\s*"); //NOI18N
         
         public TestOutputListener(String test, String outDir) {
             testname = test;

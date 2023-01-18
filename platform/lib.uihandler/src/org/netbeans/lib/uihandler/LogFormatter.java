@@ -56,10 +56,10 @@ class LogFormatter extends XMLFormatter{
     private final Pattern netbeansUserDir;
     private final Pattern netbeansHome;
     private final List<Pattern> installDirs;
-    private final Pattern filePrefix = Pattern.compile("file:", Pattern.LITERAL);
-    private final Pattern nbjclPrefix = Pattern.compile("nbjcl:", Pattern.LITERAL);
-    private final Pattern jarPrefix = Pattern.compile("jar:", Pattern.LITERAL);
-    private final Pattern hexPattern = Pattern.compile("@[0-9a-fA-F]*");
+    private static final Pattern filePrefix = Pattern.compile("file:", Pattern.LITERAL);
+    private static final Pattern nbjclPrefix = Pattern.compile("nbjcl:", Pattern.LITERAL);
+    private static final Pattern jarPrefix = Pattern.compile("jar:", Pattern.LITERAL);
+    private static final Pattern hexPattern = Pattern.compile("@[0-9a-fA-F]*");
 
     /** Creates a new instance of LogFormatter */
     public LogFormatter() {

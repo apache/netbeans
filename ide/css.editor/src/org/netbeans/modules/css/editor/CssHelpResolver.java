@@ -50,10 +50,10 @@ public class CssHelpResolver {
     private static Pattern NAV_BAR = Pattern.compile("<div\\s+class\\s*=\\s*\"navbar\"",  //NOI18N
             Pattern.MULTILINE);
     
-    private Pattern END_SEARCH = Pattern.compile("<[hH][1-5]>|<a\\s+name=\"propdef-",  //NOI18N
+    private static Pattern END_SEARCH = Pattern.compile("<[hH][1-5]>|<a\\s+name=\"propdef-",  //NOI18N
             Pattern.MULTILINE);  //NOI18N
     
-    private Pattern PROP_DEF_PATTERN = Pattern.compile( 
+    private static Pattern PROP_DEF_PATTERN = Pattern.compile(
             "<div\\s+class\\s*=\\s*\"propdef\"" );              // NOI18N
     
     private static final String HELP_LOCATION = "docs/css21-spec.zip"; //NOI18N

@@ -444,7 +444,7 @@ public class FoldOperationTest extends NbTestCase {
     }
     
     //                                                 index          type       status prio         from    to
-    private Pattern foldPattern = Pattern.compile("^\\s*(?:\\[\\d+\\]:)?\\s+\\[(\\S+)\\]\\s+([CE])(\\d)\\s+\\<(\\d+),(\\d+)\\>");
+    private static Pattern foldPattern = Pattern.compile("^\\s*(?:\\[\\d+\\]:)?\\s+\\[(\\S+)\\]\\s+([CE])(\\d)\\s+\\<(\\d+),(\\d+)\\>");
     
     private static final Map<String, FoldType> FOLD_TYPES = new HashMap<String, FoldType>();
     

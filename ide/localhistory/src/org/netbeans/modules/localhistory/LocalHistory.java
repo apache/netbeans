@@ -81,8 +81,8 @@ public class LocalHistory {
     public static final String LH_TMP_FILE_SUFFIX = ".nblh~";                   // NOI18N
     
     // XXX hotfix - issue 119042
-    private final Pattern metadataPattern = Pattern.compile(".*\\" + File.separatorChar + "((\\.|_)svn|.hg|CVS)(\\" + File.separatorChar + ".*|$)");
-    private final Pattern lhTmpFilePattern = Pattern.compile(".*\\.\\d+?\\" + LH_TMP_FILE_SUFFIX);
+    private static final Pattern metadataPattern = Pattern.compile(".*\\" + File.separatorChar + "((\\.|_)svn|.hg|CVS)(\\" + File.separatorChar + ".*|$)");
+    private static final Pattern lhTmpFilePattern = Pattern.compile(".*\\.\\d+?\\" + LH_TMP_FILE_SUFFIX);
         
     public static final Object EVENT_FILE_CREATED = new Object();
     static final Object EVENT_PROJECTS_CHANGED = new Object();

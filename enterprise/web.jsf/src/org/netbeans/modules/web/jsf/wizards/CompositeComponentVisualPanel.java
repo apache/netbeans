@@ -67,7 +67,7 @@ public class CompositeComponentVisualPanel extends javax.swing.JPanel implements
     private String expectedExtension;
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private final ListCellRenderer CELL_RENDERER = new GroupCellRenderer();
-    private final Pattern FOLDER_NAME_PATTERN = Pattern.compile(".*[\\\\/](.*)");//NOI18N
+    private static final Pattern FOLDER_NAME_PATTERN = Pattern.compile(".*[\\\\/](.*)");//NOI18N
     private boolean indirectModification, prefixLocked;
     private static final String COMPOSITE_LIBRARY_NS = "http://java.sun.com/jsf/composite"; //NOI18N
 

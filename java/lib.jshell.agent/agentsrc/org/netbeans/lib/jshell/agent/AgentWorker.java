@@ -339,7 +339,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
      */
     public static final int CMD_TYPE_ID   = 101;
     
-    private Pattern EXCLUDE_CLASSPATH_ITEMS = Pattern.compile(
+    private static Pattern EXCLUDE_CLASSPATH_ITEMS = Pattern.compile(
               "lib/tools.jar$|"
             + "modules/ext/nb-custom-jshell-probe.jar$"
     );

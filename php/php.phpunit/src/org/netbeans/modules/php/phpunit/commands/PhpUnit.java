@@ -746,7 +746,7 @@ public final class PhpUnit {
 
     private static final class TestGroupsOutputProcessorFactory implements ExecutionDescriptor.InputProcessorFactory2 {
 
-        private final Pattern testGroupName = Pattern.compile("^\\s-\\s(.*)$"); // NOI18N
+        private static final Pattern testGroupName = Pattern.compile("^\\s-\\s(.*)$"); // NOI18N
         private final List<String> testGroups = Collections.synchronizedList(new ArrayList<>());
 
         private volatile boolean hasOutput = false;

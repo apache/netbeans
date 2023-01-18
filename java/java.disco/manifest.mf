@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.java.disco
 OpenIDE-Module-Layer: org/netbeans/modules/java/disco/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/disco/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.java.platform.ui
-OpenIDE-Module-Specification-Version: 2.3
+OpenIDE-Module-Specification-Version: 2.4
 OpenIDE-Module-Java-Dependencies: Java > 11

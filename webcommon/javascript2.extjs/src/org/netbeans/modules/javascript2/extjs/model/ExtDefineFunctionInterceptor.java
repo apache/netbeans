@@ -99,9 +99,11 @@ public class ExtDefineFunctionInterceptor implements FunctionInterceptor {
         return Collections.emptyList();
     }
 
+    private static final Pattern p = Pattern.compile("Ext\\.define");
+
     @Override
     public Pattern getNamePattern() {
-        return Pattern.compile("Ext\\.define");
+        return p;
     }
 
 }

@@ -38,10 +38,10 @@ public class IOSSDK implements SDK {
     private String name;
     private final String identifier;
 
+    private static final Pattern p = Pattern.compile("(.*)-sdk(.*)"); //NOI18N
+
     public static Collection<SDK> parse(String output) throws IOException {
         BufferedReader r = new BufferedReader(new StringReader(output));
-        
-        Pattern pattern = Pattern.compile("(.*)-sdk(.*)"); //NOI18N
         
         ArrayList<SDK> result = new ArrayList<SDK>();
         //ignore first line
@@ -58,7 +58,7 @@ public class IOSSDK implements SDK {
         line = r.readLine();
       
         while (line !=null) {
-            Matcher m = pattern.matcher(line);
+            Matcher m = p.matcher(line);
             if (m.matches()) {
                 IOSSDK sdk = new IOSSDK(m.group(1).trim(), m.group(2).trim());
                 result.add(sdk);

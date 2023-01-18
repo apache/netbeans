@@ -631,7 +631,7 @@ public class CheckLinks extends MatchingTask {
         }
         
         public void setPattern (String s) {
-            pattern = Pattern.compile (s, Pattern.CASE_INSENSITIVE);
+            pattern = Pattern.compile(s, Pattern.CASE_INSENSITIVE);
         }
         
         /** Checks whether a URI is ok. 

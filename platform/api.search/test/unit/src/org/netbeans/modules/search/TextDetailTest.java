@@ -37,6 +37,8 @@ public class TextDetailTest extends NbTestCase {
 
     private static final String ELLIPSIS = "...";
 
+    private static final Pattern p = Pattern.compile("(<html><font .*>\\s*\\d+: </font>)(.*?)(\\s+<font .*>\\[.*\\]</font></html>)");
+
     public TextDetailTest(String name) {
         super(name);
     }
@@ -140,7 +142,6 @@ public class TextDetailTest extends NbTestCase {
         TextDetail td = createMockTextDetail(line, match);
         DetailNode detailNode = new TextDetail.DetailNode(td, false, null);
         String htmlDisplayName = detailNode.getHtmlDisplayName();
-        Pattern p = Pattern.compile("(<html><font .*>\\s*\\d+: </font>)(.*?)(\\s+<font .*>\\[.*\\]</font></html>)");
         Matcher m = p.matcher(htmlDisplayName);
         assertTrue(m.find());
         return m.group(2);

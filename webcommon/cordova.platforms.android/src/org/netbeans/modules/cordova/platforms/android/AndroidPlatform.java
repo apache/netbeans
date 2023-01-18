@@ -341,6 +341,8 @@ public class AndroidPlatform implements MobilePlatform {
         return Collections.emptyList();
     }
 
+    private static final Pattern column = Pattern.compile("(\\S+)(\\s+)(\\S+)(\\s+)(.+)");
+
     public String getProcessIdByName(String appName) {
         try {
             String result = ProcessUtilities.callProcess(getAdbCommand(), true, AndroidPlatform.DEFAULT_TIMEOUT, "shell", "ps"); //NOI18N
@@ -348,7 +350,6 @@ public class AndroidPlatform implements MobilePlatform {
             String line;
             while ((line = r.readLine()) != null) {
                 if (line.trim().endsWith(appName)) {
-                    Pattern column = Pattern.compile("(\\S+)(\\s+)(\\S+)(\\s+)(.+)");
                     Matcher matcher = column.matcher(line);
                     if (matcher.matches()) {
                         return matcher.group(3);

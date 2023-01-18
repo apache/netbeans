@@ -31,6 +31,8 @@ import org.netbeans.modules.parsing.api.Snapshot;
  */
 public class JsDocumentationReader {
 
+    private static final Pattern pattern = Pattern.compile("[@][a-zA-Z]+"); //NOI18N
+
     public static Set<String> getAllTags(Snapshot snapshot) {
         Set<String> tags = new HashSet<String>();
 
@@ -54,7 +56,6 @@ public class JsDocumentationReader {
         Set<String> tags = new HashSet<String>();
         String comment = commentText.toString();
         // XXX - could be rewrite to lexer
-        Pattern pattern = Pattern.compile("[@][a-zA-Z]+"); //NOI18N
         Matcher matcher = pattern.matcher(comment);
         while (matcher.find()) {
 			tags.add(matcher.group());

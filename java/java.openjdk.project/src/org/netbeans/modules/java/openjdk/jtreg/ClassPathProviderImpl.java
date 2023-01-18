@@ -56,6 +56,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ClassPathProvider.class, position=9999)
 public class ClassPathProviderImpl implements ClassPathProvider {
 
+    private static final Pattern library = Pattern.compile("@library (.*)\n");
+
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
         TestRootDescription rootDesc = TestRootDescription.findRootDescriptionFor(file);
@@ -140,7 +142,6 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                     content.append((char) read);
                 }
 
-                Pattern library = Pattern.compile("@library (.*)\n");
                 Matcher m = library.matcher(content.toString());
 
                 if (m.find()) {

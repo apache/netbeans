@@ -32,9 +32,11 @@ import org.netbeans.installer.utils.exceptions.NativeException;
  */
 public class EnvironmentVariableResolver implements StringResolver {
 
+    private static final Pattern p = Pattern.compile("(?<!\\\\)\\$E\\{(.*?)\\}");
+
     public String resolve(String string, ClassLoader loader) {
         String parsed = string;
-        Matcher matcher = Pattern.compile("(?<!\\\\)\\$E\\{(.*?)\\}").matcher(parsed);
+        Matcher matcher = p.matcher(parsed);
         while (matcher.find()) {
             try {
                 String name = matcher.group(1);

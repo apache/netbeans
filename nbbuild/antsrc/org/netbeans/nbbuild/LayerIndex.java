@@ -70,6 +70,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class LayerIndex extends Task {
 
+    private static final Pattern editorFolderPattern = Pattern.compile("Editors/(application|text)/([^/]+)(.*/)");
+
     public LayerIndex() {}
 
     List<FileSet> filesets = new ArrayList<>();
@@ -438,7 +440,6 @@ public class LayerIndex extends Task {
      * See ValidateLayerConsistencyTest.testFolderOrdering for comparison.
      */
     private Map<String,String> computeMIMELookupEntries(Set<String> files) {
-        Pattern editorFolderPattern = Pattern.compile("Editors/(application|text)/([^/]+)(.*/)");
         Map<String,String> result = new HashMap<>();
         for (String editorFolder : files) {
             Matcher m = editorFolderPattern.matcher(editorFolder);

@@ -319,7 +319,7 @@ public class IndentFactory implements IndentTask.Factory {
                 String s = (String) indent.getValue ();
                 int i = s.indexOf (':');
                 if (i < 1) {
-                    patterns.add (Pattern.compile (c (s)));
+                    patterns.add(Pattern.compile (c (s)));
                     continue;
                 }
                 start.add (s.substring (0, i));

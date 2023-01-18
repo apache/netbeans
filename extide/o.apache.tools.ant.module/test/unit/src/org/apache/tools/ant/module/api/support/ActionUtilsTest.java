@@ -48,6 +48,8 @@ public class ActionUtilsTest extends NbTestCase {
     private FileObject dir, f1, f1form, f2, subdir, f3, fx, subdir2, f3a, f4, subsubdir, f5, f5a;
     private DataObject d1, d2, d3, dx;
     private Node n1, n2, n3, nx;
+
+    private static final Pattern fromRx = Pattern.compile("\\.data$");
     
     @Override
     protected void setUp() throws Exception {
@@ -126,7 +128,6 @@ public class ActionUtilsTest extends NbTestCase {
     }
     
     public void testRegexpMapFiles() throws Exception {
-        Pattern fromRx = Pattern.compile("\\.data$");
         String toSubst = ".nondata";
         assertEquals("mapped one file", Collections.singletonList(f4), files2List(
             ActionUtils.regexpMapFiles(new FileObject[] {f3, f3a}, subdir, fromRx, subdir2, toSubst, false)));

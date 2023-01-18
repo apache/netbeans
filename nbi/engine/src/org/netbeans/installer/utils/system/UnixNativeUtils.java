@@ -136,6 +136,13 @@ public class UnixNativeUtils extends NativeUtils {
     public static final String DEFAULT_XDG_DATA_DIRS =
             "/usr/share"; // NOI18N
 
+    private static final Pattern p1 = Pattern.compile("enabled=(.*)");
+    private static final Pattern p2 = Pattern.compile("filename_encoding=(.*)");
+    private static final Pattern p3 = Pattern.compile("^" + XDG_DESKTOP_DIR_ENV_VARIABLE + "=\"(.*)\"");
+
+    private static final Pattern p4 = Pattern.compile("euid=([0-9]+)\\(");
+    private static final Pattern p5 = Pattern.compile("uid=([0-9]+)\\(");
+
     public UnixNativeUtils() {
         initializeForbiddenFiles();
     }
@@ -401,7 +408,7 @@ public class UnixNativeUtils extends NativeUtils {
 
         return currentUserLocation;
     }
-    
+
     private File getDesktopFolder() {
         // TODO
         // If using XDG, desktop folder can be obtained simpler using '/usr/bin/xdg-user-dir DESKTOP' command
@@ -437,7 +444,7 @@ public class UnixNativeUtils extends NativeUtils {
                         continue;
                     }
                     for (String s : FileUtils.readStringList(configFile)) {
-                        final Matcher matcher = Pattern.compile("enabled=(.*)").matcher(s);
+                        final Matcher matcher = p1.matcher(s);
                         if (matcher.find()) {
                             if (!Boolean.parseBoolean(matcher.group(1).toLowerCase(Locale.ENGLISH))) {
                                 LogManager.log("... XDG dirs are disabled");
@@ -458,7 +465,7 @@ public class UnixNativeUtils extends NativeUtils {
                             continue;
                         }
                         for (String s : FileUtils.readStringList(configFile)) {
-                            final Matcher matcher = Pattern.compile("filename_encoding=(.*)").matcher(s);
+                            final Matcher matcher = p2.matcher(s);
                             if (matcher.find()) {
                                 encoding = matcher.group(1);
                                 if (encoding.equals("locale")) {
@@ -479,7 +486,7 @@ public class UnixNativeUtils extends NativeUtils {
 
                     for (String s : content) {
                         LogManager.log("...... evaluating string : " + s);
-                        Matcher matcher = Pattern.compile("^" + XDG_DESKTOP_DIR_ENV_VARIABLE + "=\"(.*)\"").matcher(s);
+                        Matcher matcher = p3.matcher(s);
                         if (matcher.find()) {
                             LogManager.log("...... matches expected pattern");
                             final String value = matcher.group(1).replace("$HOME", userHome.getAbsolutePath());
@@ -1335,7 +1342,7 @@ public class UnixNativeUtils extends NativeUtils {
     private boolean isCurrentUserAdminNative() {
         return (nativeLibraryLoaded) ? isCurrentUserAdmin0() : isCurrentUserAdminJ();
     }
-            
+
     private boolean isCurrentUserAdminJ() {
         boolean adm = false;
         try {
@@ -1358,9 +1365,9 @@ public class UnixNativeUtils extends NativeUtils {
                 LogManager.log(e);
             }
             String stdout = SystemUtils.executeCommand("id").getStdOut();
-            Matcher matcher = Pattern.compile("euid=([0-9]+)\\(").matcher(stdout);
+            Matcher matcher = p4.matcher(stdout);
             if (!matcher.find()) {
-                matcher = Pattern.compile("uid=([0-9]+)\\(").matcher(stdout);
+                matcher = p5.matcher(stdout);
             }
             if (matcher.find()) {
                 adm = Integer.parseInt(matcher.group(1)) == 0;

@@ -39,9 +39,11 @@ import org.netbeans.modules.parsing.api.Snapshot;
 @FunctionInterceptor.Registration(priority = 9)
 public class ExtApplyFunctionInterceptor implements FunctionInterceptor {
 
+    private static final Pattern p = Pattern.compile("Ext\\.apply");
+
     @Override
     public Pattern getNamePattern() {
-        return Pattern.compile("Ext\\.apply");
+        return p;
     }
 
     @Override

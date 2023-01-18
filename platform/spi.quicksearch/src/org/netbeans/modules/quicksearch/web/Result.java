@@ -36,6 +36,9 @@ final class Result {
     private List<Item> items = new ArrayList<Item>(Query.MAX_NUM_OF_RESULTS);
     private boolean searchFinished = false;
 
+    private static final Pattern p = Pattern.compile("<a\\s+href\\s*=\\s*\"(.*?)\"[^>]*>(.*?)</a>", //NOI18N
+            Pattern.CASE_INSENSITIVE|Pattern.MULTILINE);
+
     Result() {
     }
     
@@ -51,8 +54,6 @@ final class Result {
         searchFinished = true;
         items.clear();
         html = new String(html.getBytes(), StandardCharsets.UTF_8);
-        Pattern p = Pattern.compile("<a\\s+href\\s*=\\s*\"(.*?)\"[^>]*>(.*?)</a>", //NOI18N
-                Pattern.CASE_INSENSITIVE|Pattern.MULTILINE);
         Matcher m = p.matcher(html);
         while( m.find() ) {
             String url = m.group(1);

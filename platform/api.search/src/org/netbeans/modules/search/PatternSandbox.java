@@ -76,6 +76,8 @@ public abstract class PatternSandbox extends JPanel
     private Color cboxPatternForegroundStd = null;
     private static final Color errorColor = chooseErrorColor();
 
+    private static final Pattern sep = Pattern.compile("\n");                        //NOI18N
+
     /**
      * Initialize UI components.
      */
@@ -766,7 +768,6 @@ public abstract class PatternSandbox extends JPanel
 
             String text = textPane.getText().replace("\r\n", "\n");  //NOI18N
 
-            Pattern sep = Pattern.compile("\n");                        //NOI18N
             Matcher m = sep.matcher(new TimeLimitedCharSequence(text));
             int lastStart = 0;
             while (m.find()) {

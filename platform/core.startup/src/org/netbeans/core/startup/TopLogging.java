@@ -71,6 +71,8 @@ public final class TopLogging {
     /** reference to the old error stream */
     private static final PrintStream OLD_ERR = System.err;
 
+    private static final Pattern p = Pattern.compile("Hg ID:    ([0-9a-f]{12})"); // NOI18N
+
     /** Initializes the logging configuration. Invoked by <code>LogManager.readConfiguration</code> method.
      */
     public TopLogging() {
@@ -227,7 +229,7 @@ public final class TopLogging {
                 try {
                     try (Reader r = new FileReader(buildInfo)) {
                         BufferedReader b = new BufferedReader(r);
-                        Pattern p = Pattern.compile("Hg ID:    ([0-9a-f]{12})"); // NOI18N
+
                         for (;;) {
                             String line = b.readLine();
                             if (line == null) {

@@ -85,6 +85,8 @@ public class JavaUtils {
      *  version output. */
     private static final int VM_MIN_VERSION_TOKENS = 2;
 
+    private static final Pattern p = Pattern.compile(VM_VERSION_PATTERN);
+
     ////////////////////////////////////////////////////////////////////////////
     // Static classes                                                         //
     ////////////////////////////////////////////////////////////////////////////
@@ -235,10 +237,10 @@ public class JavaUtils {
                 new InputStreamReader(process.getInputStream()));
         int major = 0, minor = 0, revision = 0, patch = 0;
         String line;
-        Pattern pattern = Pattern.compile(VM_VERSION_PATTERN);
+
         try {
             while ((line = in.readLine()) != null) {
-                Matcher matcher = pattern.matcher(line);
+                Matcher matcher = p.matcher(line);
                 if (matcher.find()) {
                     int groupCount = matcher.groupCount();
                     if (groupCount >= VM_MIN_VERSION_TOKENS) {

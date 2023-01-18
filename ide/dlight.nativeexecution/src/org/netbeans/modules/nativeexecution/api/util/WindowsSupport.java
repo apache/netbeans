@@ -50,6 +50,9 @@ public final class WindowsSupport {
     private AtomicReference<String> pathKeyRef = new AtomicReference<>();
     private Charset charset;
 
+    private static final Pattern pat = Pattern.compile("[I]*[\t ]*([0-9]+)[\t ]*([0-9]+)[\t ]*([0-9]+)[\t ]*([0-9]+).*"); // NOI18N
+    private static final Pattern p = Pattern.compile("^([0-9\\.]*).*"); // NOI18N
+
     private WindowsSupport() {
     }
 
@@ -223,7 +226,7 @@ public final class WindowsSupport {
 
         ExitStatus res = ProcessUtils.execute(pb);
         List<String> output = res.getOutputLines();
-        Pattern pat = Pattern.compile("[I]*[\t ]*([0-9]+)[\t ]*([0-9]+)[\t ]*([0-9]+)[\t ]*([0-9]+).*"); // NOI18N
+
         for (String s : output) {
             Matcher m = pat.matcher(s);
             if (m.matches()) {
@@ -361,7 +364,7 @@ public final class WindowsSupport {
             ProcessBuilder pb = new ProcessBuilder(activeShell.bindir + "\\uname.exe", "-r"); // NOI18N
             ExitStatus res = ProcessUtils.execute(pb);
             String output = res.getOutputString();
-            Pattern p = Pattern.compile("^([0-9\\.]*).*"); // NOI18N
+
             Matcher m = p.matcher(output);
             if (m.matches()) {
                 cygwinVersion = m.group(1);

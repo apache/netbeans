@@ -34,9 +34,11 @@ import org.netbeans.installer.utils.SystemUtils;
  */
 public class ResourceResolver implements StringResolver {
 
+    private static final Pattern p = Pattern.compile("(?<!\\\\)\\$R\\{(.*?)(;(.*)?)?}");
+
     public String resolve(String string, ClassLoader loader) {
         String parsed = string;
-        Matcher matcher = Pattern.compile("(?<!\\\\)\\$R\\{(.*?)(;(.*)?)?}").matcher(parsed);
+        Matcher matcher = p.matcher(parsed);
         while (matcher.find()) {
             String path = matcher.group(1);
             String charset = matcher.group(3);

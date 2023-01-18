@@ -118,6 +118,9 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
     private int                 lineNumberForUpdate = -1;
     private final Object        lineLock = new Object();
     private BreakpointsReader   reader;
+
+    private static final Pattern thisDirectoryPattern = Pattern.compile("(/|\\A)\\./");
+    private static final Pattern parentDirectoryPattern = Pattern.compile("(/|\\A)([^/]+?)/\\.\\./");
     
     
     LineBreakpointImpl (
@@ -679,9 +682,6 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
      * @return normalized path without "." and ".." elements
      */ 
     private static String normalize(String path) {
-      Pattern thisDirectoryPattern = Pattern.compile("(/|\\A)\\./");
-      Pattern parentDirectoryPattern = Pattern.compile("(/|\\A)([^/]+?)/\\.\\./");
-      
       for (Matcher m = thisDirectoryPattern.matcher(path); m.find(); )
       {
         path = m.replaceAll("$1");

@@ -67,6 +67,8 @@ import org.openide.windows.WindowManager;
 })
 public class AnnotateAction extends ContextAction {
     public static final String ICON_RESOURCE = "org/netbeans/modules/mercurial/resources/icons/annotate.png"; //NOI18N
+
+    public static final Pattern p = Pattern.compile("^\\s*(\\S+)\\s+(\\d+) (.*?):\\s*(\\d+): (.*)$"); //NOI18N
     
     public AnnotateAction () {
         super(ICON_RESOURCE);
@@ -322,7 +324,7 @@ public class AnnotateAction extends ContextAction {
         - directly behind the linenumber a colon and a space is placed
         - the rest of the line is the line content
         */
-        Pattern p = Pattern.compile("^\\s*(\\S+)\\s+(\\d+) (.*?):\\s*(\\d+): (.*)$"); //NOI18N
+
         for (String line : annotations) {
             i++;
             Matcher m = p.matcher(line);

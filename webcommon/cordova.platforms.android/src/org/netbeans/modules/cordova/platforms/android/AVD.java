@@ -51,12 +51,12 @@ public class AVD implements Device {
     private AVD() {
         this.props = new HashMap<>();
     }
-    
+
+    private static final Pattern pattern = Pattern.compile(" *([\\w]*): (.*)"); //NOI18N
+
     public static Collection<Device> parse(String output) throws IOException {
         BufferedReader r = new BufferedReader(new StringReader(output));
-        
-        Pattern pattern = Pattern.compile(" *([\\w]*): (.*)"); //NOI18N
-        
+
         ArrayList<Device> result = new ArrayList<Device>();
         //ignore first line
         String line = r.readLine();

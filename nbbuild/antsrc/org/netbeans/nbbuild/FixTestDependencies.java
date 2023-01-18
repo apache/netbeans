@@ -58,6 +58,23 @@ public class FixTestDependencies extends Task {
     String cnb;
     
     File projectXmlFile;
+
+    private static final Pattern l = Pattern.compile(
+            "^ *<test-dependency>[^/]*" +
+            "<code-name-base>org.netbeans.core.startup.base</code-name-base>", Pattern.MULTILINE);
+
+    private static final Pattern p = Pattern.compile(
+            "^ *<test-dependency>[^/]*" +
+            "<code-name-base>org.netbeans.core.startup</code-name-base>", Pattern.MULTILINE);
+
+    private static final Pattern l2 = Pattern.compile(
+            "^ *<test-dependency>[^/]*" +
+            "<code-name-base>org.openide.util.lookup</code-name-base>", Pattern.MULTILINE);
+
+    private static final Pattern p2 = Pattern.compile(
+            "^ *<test-dependency>[^/]*" +
+            "<code-name-base>org.openide.util</code-name-base>", Pattern.MULTILINE);
+
     public void setProjectXml(File projectXml) {
         projectXmlFile = projectXml;
         
@@ -438,18 +455,11 @@ public class FixTestDependencies extends Task {
         }
         return retLines;
     }
-    
+
     private String fixCoreStartup(String xml) {
-        Pattern l = Pattern.compile(
-                "^ *<test-dependency>[^/]*" +
-                "<code-name-base>org.netbeans.core.startup.base</code-name-base>", Pattern.MULTILINE);
         if (l.matcher(xml).find()) {
             return xml;
         }
-
-        Pattern p = Pattern.compile(
-                "^ *<test-dependency>[^/]*" +
-                "<code-name-base>org.netbeans.core.startup</code-name-base>", Pattern.MULTILINE);
 
         Matcher m = p.matcher(xml);
         if (m.find()) {
@@ -467,18 +477,11 @@ public class FixTestDependencies extends Task {
     }
 
     private String fixOpenideUtil(String xml) {
-        Pattern l = Pattern.compile(
-                "^ *<test-dependency>[^/]*" +
-                "<code-name-base>org.openide.util.lookup</code-name-base>", Pattern.MULTILINE);
-        if (l.matcher(xml).find()) {
+        if (l2.matcher(xml).find()) {
             return xml;
         }
 
-        Pattern p = Pattern.compile(
-                "^ *<test-dependency>[^/]*" +
-                "<code-name-base>org.openide.util</code-name-base>", Pattern.MULTILINE);
-
-        Matcher m = p.matcher(xml);
+        Matcher m = p2.matcher(xml);
         if (m.find()) {
             final String txt = "</test-dependency>";
             final int s = m.start();

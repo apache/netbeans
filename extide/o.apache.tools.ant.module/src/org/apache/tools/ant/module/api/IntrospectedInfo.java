@@ -77,6 +77,8 @@ public final class IntrospectedInfo {
     private static IntrospectedInfo defaults = null;
     private static boolean defaultsInited = false;
     private static boolean defaultsEverInited = false;
+
+    private static final Pattern p = Pattern.compile("(.+)\\.(supportsText|attrs\\.(.+)|subs\\.(.+)|enumTags)");
     
     /** Get default definitions specified by Ant's defaults.properties.
      * @return the singleton defaults
@@ -673,7 +675,6 @@ public final class IntrospectedInfo {
             null | Map<String,String> subs: .subs.file=java.io.File
             null | String[] enumTags: .enumTags=whenempty,always,never
              */
-            Pattern p = Pattern.compile("(.+)\\.(supportsText|attrs\\.(.+)|subs\\.(.+)|enumTags)");
             public IntrospectedInfo load(Preferences node) {
                 IntrospectedInfo ii = new IntrospectedInfo();
                 try {

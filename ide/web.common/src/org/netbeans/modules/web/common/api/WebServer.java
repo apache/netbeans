@@ -225,6 +225,8 @@ public final class WebServer {
         private int port;
         private static final Map<String, String> mimeTypes = new HashMap<>();
 
+        private static final Pattern p = Pattern.compile("[ \\t]+");
+
         public Server() {
             port = PORT;
             while (true) {
@@ -361,7 +363,6 @@ public final class WebServer {
 
         private void readMimeTypes() {
             InputStream is = WebServer.class.getResourceAsStream("mime.types"); // NOI18N
-            Pattern p = Pattern.compile("[ \\t]+");
             assert is != null;
             Scanner line = new Scanner(is).useDelimiter("\n");
             while (line.hasNext()) {

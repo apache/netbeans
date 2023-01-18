@@ -110,6 +110,8 @@ public class ProjectProblemsProviders {
     private static final Logger LOG = Logger.getLogger(ProjectProblemsProviders.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(ProjectProblemsProviders.class);
 
+    private static final Pattern libPattern = Pattern.compile("\\$\\{(libs\\.[-._a-zA-Z0-9]+\\.classpath)\\}"); //NOI18N
+
     private ProjectProblemsProviders() {
         throw new IllegalStateException(String.format("The %s cannot be instantiated.",this.getClass().getName())); //NOI18N
     }
@@ -346,7 +348,7 @@ public class ProjectProblemsProviders {
 
         //Check for libbraries with broken classpath content
         Set<String> usedLibraries = new HashSet<String>();
-        Pattern libPattern = Pattern.compile("\\$\\{(libs\\.[-._a-zA-Z0-9]+\\.classpath)\\}"); //NOI18N
+
         for (String p : ps) {
             String propertyValue = ep.getProperty(p);
             if (propertyValue != null) {

@@ -71,6 +71,11 @@ public class OpenProjectListTest extends NbTestCase {
     Project project1, project2;
     TestOpenCloseProjectDocument handler = new OpenProjectListTest.TestOpenCloseProjectDocument ();
 
+    private static final Pattern p = Pattern.compile("Opening.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final Pattern p2 = Pattern.compile("Closing.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final Pattern p3 = Pattern.compile("Initializing.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final Pattern p4 = Pattern.compile("Opening.*2.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+
     public OpenProjectListTest (String testName) {
         super (testName);
     }
@@ -117,7 +122,7 @@ public class OpenProjectListTest extends NbTestCase {
         CharSequence log = Log.enable("org.netbeans.ui", Level.FINE);
         OpenProjectList.getDefault ().open (project1, true);        
         assertTrue ("Project1 is opened.", OpenProjectList.getDefault ().isOpen (project1));
-        Pattern p = Pattern.compile("Opening.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+
         Matcher m = p.matcher(log);
         if (!m.find()) {
             fail("There should be TestProject\n" + log.toString());
@@ -136,7 +141,7 @@ public class OpenProjectListTest extends NbTestCase {
         OpenProjectList.getDefault().addPropertyChangeListener(list);
         CharSequence log = Log.enable("org.netbeans.ui", Level.FINE);
         OpenProjectList.getDefault ().open (project1, true);
-        Pattern p = Pattern.compile("Opening.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+
         Matcher m = p.matcher(log);
         if (!m.find()) {
             fail("There should be TestProject\n" + log.toString());
@@ -160,8 +165,8 @@ public class OpenProjectListTest extends NbTestCase {
         
         CharSequence log = Log.enable("org.netbeans.ui", Level.FINE);
         OpenProjectList.getDefault().close(new Project[] {project1}, false);
-        Pattern p = Pattern.compile("Closing.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
-        Matcher m = p.matcher(log);
+
+        Matcher m = p2.matcher(log);
         if (!m.find()) {
             fail("There should be TestProject\n" + log);
         }
@@ -202,8 +207,8 @@ public class OpenProjectListTest extends NbTestCase {
         arr = OpenProjectList.getDefault().getOpenProjects();
         
         assertEquals("One", 1, arr.length);
-        Pattern p = Pattern.compile("Initializing.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
-        Matcher m = p.matcher(whatIsLoggedWhenDeserializing);
+
+        Matcher m = p3.matcher(whatIsLoggedWhenDeserializing);
         if (!m.find()) {
             fail("There should be TestProject\n" + whatIsLoggedWhenDeserializing);
         }
@@ -215,8 +220,8 @@ public class OpenProjectListTest extends NbTestCase {
         OpenProjectList.getDefault ().open (project2, true);        
         assertTrue ("Project1 is opened.", OpenProjectList.getDefault ().isOpen (project1));
         assertTrue ("Project2 is opened.", OpenProjectList.getDefault ().isOpen (project2));
-        Pattern p = Pattern.compile("Opening.*2.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
-        Matcher m = p.matcher(log);
+
+        Matcher m = p4.matcher(log);
         if (!m.find()) {
             fail("There should be TestProject\n" + log);
         }

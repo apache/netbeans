@@ -30,6 +30,9 @@ import java.util.regex.Pattern;
  * @author Jaroslav Tulach
  */
 public class FixDependenciesTest extends TestBase {
+
+    private static final Pattern p = Pattern.compile("^(.*)<dependency>$", Pattern.MULTILINE);
+
     public FixDependenciesTest (String name) {
         super (name);
     }
@@ -66,7 +69,6 @@ public class FixDependenciesTest extends TestBase {
             fail ("org.openide.util.lookup should be there: " + result);
         }
 
-        Pattern p = Pattern.compile("^(.*)<dependency>$", Pattern.MULTILINE);
         Matcher m = p.matcher(result);
         assertTrue("Text found", m.find());
         String spaces = m.group(1);

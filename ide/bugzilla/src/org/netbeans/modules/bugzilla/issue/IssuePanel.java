@@ -3710,6 +3710,8 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     private javax.swing.JLabel workedWarning;
     // End of variables declaration//GEN-END:variables
 
+    private static final Pattern p = Pattern.compile("NetBeans IDE\\s([a-zA-Z0-9\\.?]*)\\s?.*"); // NOI18N
+
     void makeCaretVisible(JTextArea textArea) {
         int pos = textArea.getCaretPosition();
         try {
@@ -3735,9 +3737,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         }
         return CURRENT_NB_VERSION;
     }
-
     static String parseProductVersion(String productVersionValue) {
-        Pattern p = Pattern.compile("NetBeans IDE\\s([a-zA-Z0-9\\.?]*)\\s?.*"); // NOI18N
         Matcher m = p.matcher(productVersionValue);
         if(m.matches()) {
             String version = m.group(1);

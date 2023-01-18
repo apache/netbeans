@@ -67,6 +67,9 @@ public class NativeExecutionTestSupport {
     private static final Map<String, ExecutionEnvironment> spec2env = new LinkedHashMap<>();
     private static final Map<ExecutionEnvironment, String> env2spec = new LinkedHashMap<>();
 
+    private static final Pattern infoPattern = Pattern.compile("^([^#].*)[ \t]+(.*)"); // NOI18N
+    private static final Pattern pwdPattern = Pattern.compile("([^:]+):(.*)@(.*)"); // NOI18N
+
     private NativeExecutionTestSupport() {
     }
 
@@ -221,8 +224,7 @@ public class NativeExecutionTestSupport {
 
         BufferedReader rcReader = new BufferedReader(new FileReader(userInfoFile));
         String str;
-        Pattern infoPattern = Pattern.compile("^([^#].*)[ \t]+(.*)"); // NOI18N
-        Pattern pwdPattern = Pattern.compile("([^:]+):(.*)@(.*)"); // NOI18N
+
         char[] passwd = null;
 
         while ((str = rcReader.readLine()) != null) {

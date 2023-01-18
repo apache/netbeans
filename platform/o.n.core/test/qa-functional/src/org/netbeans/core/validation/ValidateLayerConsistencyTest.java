@@ -82,6 +82,8 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
 
     private static final String SFS_LB = "SystemFileSystem.localizingBundle";
 
+    private static final Pattern editorFolder = Pattern.compile("Editors/(application|text)/([^/]+)(/.+|$)");
+
     private ClassLoader contextClassLoader;   
     
     public ValidateLayerConsistencyTest(String name) {
@@ -776,7 +778,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
         TestHandler h = new TestHandler();
         Logger.getLogger("org.openide.filesystems.Ordering").addHandler(h);
         Set<List<String>> editorMultiFolders = new HashSet<List<String>>();
-        Pattern editorFolder = Pattern.compile("Editors/(application|text)/([^/]+)(/.+|$)");
+
         Enumeration<? extends FileObject> files = FileUtil.getConfigRoot().getChildren(true);
         while (files.hasMoreElements()) {
             FileObject fo = files.nextElement();

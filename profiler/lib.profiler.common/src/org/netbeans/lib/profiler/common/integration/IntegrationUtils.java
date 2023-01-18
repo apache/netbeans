@@ -100,6 +100,8 @@ public class IntegrationUtils {
     private static final String BINARIES_TMP_PREFIX = "NBProfiler";
     private static final String BINARIES_TMP_EXT = ".link";
 
+    private static final Pattern p = Pattern.compile("(/.*?" + BINARIES_TMP_PREFIX + ".*?" + BINARIES_TMP_EXT + ")");
+
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     // Returns command for adding profiler native libraries to path
@@ -788,7 +790,6 @@ public class IntegrationUtils {
     }
     
     public static String getTemporaryBinariesLink(String agentCmds) {
-        Pattern p = Pattern.compile("(/.*?" + BINARIES_TMP_PREFIX + ".*?" + BINARIES_TMP_EXT + ")");
         Matcher m = p.matcher(agentCmds);
         
         if (m.find()) {

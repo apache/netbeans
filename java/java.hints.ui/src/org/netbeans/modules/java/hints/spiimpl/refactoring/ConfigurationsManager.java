@@ -42,6 +42,8 @@ public class ConfigurationsManager {
     private static final String KEY_CONFIGURATIONS_VERSION = "configurations.version";
     private static final int CURRENT_CONFIGURATIONS_VERSION = 1;
 
+    private static final Pattern pattern = Pattern.compile("([0-9]+)$"); //NOI18N
+
     private ChangeSupport changeSupport = new ChangeSupport(this);
 
     private ConfigurationsManager() {
@@ -82,12 +84,10 @@ public class ConfigurationsManager {
             String[] configList = prefs.childrenNames();
             //fix sorting for JDK migrators
             List<String> sl = Arrays.asList(configList);
-            final String exp = "([0-9]+)$"; //NOI18N
 
             sl.sort(new Comparator<String>() {
                 @Override
                 public int compare(String s1, String s2) {
-                    Pattern pattern = Pattern.compile(exp);
                     Matcher m1 = pattern.matcher(s1);
                     if (m1.find()) {
                         Matcher m2 = pattern.matcher(s2);

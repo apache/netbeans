@@ -53,6 +53,8 @@ import org.openide.filesystems.FileUtil;
 public class CompletionContextTest extends FXMLCompletionTestBase {
     
     private static final String MARKER = "\\|([A-Z_]+?),([a-zA-Z]+?)\\|"; // NOI18N
+
+    private static final Pattern p = Pattern.compile(MARKER);
     
     private String text;
     private int offset;
@@ -91,8 +93,7 @@ public class CompletionContextTest extends FXMLCompletionTestBase {
         
         // strip all occurrences of markers:
         String pristine = text.replaceAll(MARKER, "");
-        
-        Pattern p = Pattern.compile(MARKER);
+
         Matcher m = p.matcher(text);
         TestSuite ts = new TestSuite(CompletionContextTest.class.getName());
         

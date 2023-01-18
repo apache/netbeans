@@ -60,6 +60,9 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
     private final String html;
     private final String sourceLevel;
 
+    private static final Pattern p = Pattern.compile("package\\p{javaWhitespace}*([\\p{Alnum}\\.]+)\\p{javaWhitespace}*;", Pattern.MULTILINE);
+    private static final Pattern p2 = Pattern.compile("class\\p{javaWhitespace}*([\\p{Alnum}\\.]+)\\p{javaWhitespace}", Pattern.MULTILINE);
+
     private Compile(String htmlName, String html, String code, String sl) throws IOException {
         this.pkg = findPkg(code);
         this.cls = findCls(code);
@@ -225,7 +228,6 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
         errors.add(diagnostic);
     }
     private static String findPkg(String java) throws IOException {
-        Pattern p = Pattern.compile("package\\p{javaWhitespace}*([\\p{Alnum}\\.]+)\\p{javaWhitespace}*;", Pattern.MULTILINE);
         Matcher m = p.matcher(java);
         if (!m.find()) {
             throw new IOException("Can't find package declaration in the java file");
@@ -234,8 +236,7 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
         return pkg;
     }
     private static String findCls(String java) throws IOException {
-        Pattern p = Pattern.compile("class\\p{javaWhitespace}*([\\p{Alnum}\\.]+)\\p{javaWhitespace}", Pattern.MULTILINE);
-        Matcher m = p.matcher(java);
+        Matcher m = p2.matcher(java);
         if (!m.find()) {
             throw new IOException("Can't find package declaration in the java file");
         }

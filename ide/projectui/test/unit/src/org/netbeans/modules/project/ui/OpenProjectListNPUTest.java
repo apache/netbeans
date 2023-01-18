@@ -54,6 +54,8 @@ public class OpenProjectListNPUTest extends NbTestCase {
 
     Project project1, project2;
 
+    private static final Pattern p = Pattern.compile("Opening.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
+
     public OpenProjectListNPUTest (String testName) {
         super (testName);
     }
@@ -108,7 +110,6 @@ public class OpenProjectListNPUTest extends NbTestCase {
         CharSequence log = Log.enable("org.netbeans.ui", Level.FINE);
         OpenProjectList.getDefault ().open (project1, true);        
         assertTrue ("Project1 is opened.", OpenProjectList.getDefault ().isOpen (project1));
-        Pattern p = Pattern.compile("Opening.*1.*TestProject", Pattern.MULTILINE | Pattern.DOTALL);
         Matcher m = p.matcher(log);
         if (!m.find()) {
             fail("There should be TestProject\n" + log.toString());

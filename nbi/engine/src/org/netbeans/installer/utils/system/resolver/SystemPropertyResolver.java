@@ -28,9 +28,11 @@ import java.util.regex.Pattern;
  */
 public class SystemPropertyResolver implements StringResolver{
 
+    private static final Pattern p = Pattern.compile("(?<!\\\\)\\$S\\{(.*?)\\}");
+
     public String resolve(String string, ClassLoader loader) {
         String parsed = string;
-        Matcher matcher = Pattern.compile("(?<!\\\\)\\$S\\{(.*?)\\}").matcher(parsed);
+        Matcher matcher = p.matcher(parsed);
         while (matcher.find()) {
             String name = matcher.group(1);
             String value = System.getProperty(name);

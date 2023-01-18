@@ -40,7 +40,6 @@ import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.spi.completion.CompletionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -69,6 +68,9 @@ public class DomainCompletionProvider implements CompletionProvider {
     private static final Set<String> QUERY_OPERATOR = new HashSet<String>();
 
     private static final Set<String> QUERY_COMPARATOR = new HashSet<String>();
+
+    private static final Pattern p1 = Pattern.compile("(findBy|findAllBy|countBy)(.*)")
+    private static final Pattern p2 = Pattern.compile("(.*)(LessThan(Equals)?|GreaterThan(Equals)?|Like|ILike|Equal|NotEqual|Between|IsNotNull|IsNull)?"); // NOI18N
 
     // FIXME move it to some resource file, check the grails version - this is for 1.0.4
     static {
@@ -399,7 +401,7 @@ public class DomainCompletionProvider implements CompletionProvider {
     }
 
     private int getUsedComparators(CompletionContext context, Set<String> result) {
-        Matcher matcher = Pattern.compile("(findBy|findAllBy|countBy)(.*)").matcher(context.getPrefix()); // NOI18N
+        Matcher matcher = p1.matcher(context.getPrefix()); // NOI18N
         if (!matcher.matches()) {
             return 0;
         }
@@ -407,11 +409,11 @@ public class DomainCompletionProvider implements CompletionProvider {
         String[] parts = matcher.group(2).split("(And|Or)"); // NOI18N
 
         int paramCount = 0;
-        Pattern pattern = Pattern.compile("(.*)(LessThan(Equals)?|GreaterThan(Equals)?|Like|ILike|Equal|NotEqual|Between|IsNotNull|IsNull)?"); // NOI18N
+
         for (String part : parts) {
             //result.add(part);
 
-            Matcher singleMatcher = pattern.matcher(part);
+            Matcher singleMatcher = p2.matcher(part);
             if (singleMatcher.matches()) {
                 String comparator = singleMatcher.group(2);
                 if ("Between".equals(comparator)) { // NOI18N

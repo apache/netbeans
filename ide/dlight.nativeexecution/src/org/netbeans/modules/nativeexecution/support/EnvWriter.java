@@ -42,6 +42,8 @@ public final class EnvWriter {
         "LC_NUMERIC", "LC_TIME", "TMPDIR", "PATH", "LD_LIBRARY_PATH", // NOI18N
         "LD_PRELOAD")); // NOI18N
 
+    public static final Pattern pattern = Pattern.compile("[A-Z0-9_]+"); // NOI18N
+
     private final OutputStreamWriter writer;
 
     public EnvWriter(final OutputStream os, final boolean remote) {
@@ -86,7 +88,6 @@ public final class EnvWriter {
         if (!env.isEmpty()) {
             String value = null;
             // Very simple sanity check of vars...
-            Pattern pattern = Pattern.compile("[A-Z0-9_]+"); // NOI18N
 
             for (String name : env.getExportVariablesSet()) {
                 // check capitalized key by pattern

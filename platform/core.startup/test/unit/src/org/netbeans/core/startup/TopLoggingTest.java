@@ -46,6 +46,9 @@ public class TopLoggingTest extends NbTestCase {
     private ByteArrayOutputStream w;
     private Handler handler;
     private Logger logger;
+
+    private static final Pattern p1 = Pattern.compile("FINER.*Finer level msg");
+    private static final Pattern p2 = Pattern.compile("IllegalStateException.*Hi");
     
     public TopLoggingTest(String testName) {
         super(testName);
@@ -253,9 +256,8 @@ public class TopLoggingTest extends NbTestCase {
 
         Logger.getLogger(TopLoggingTest.class.getName()).log(Level.FINER, "Finer level msg");
 
-        Pattern p = Pattern.compile("FINER.*Finer level msg");
         String disk = readLog(true);
-        Matcher d = p.matcher(disk);
+        Matcher d = p1.matcher(disk);
 
         if (!d.find()) {
             fail("msg shall be logged to file: " + disk);
@@ -272,9 +274,8 @@ public class TopLoggingTest extends NbTestCase {
         final Logger log = Logger.getLogger("ha.nu.wirta");
         log.log(Level.FINER, "Finer level msg");
 
-        Pattern p = Pattern.compile("FINER.*Finer level msg");
         String disk = readLog(true);
-        Matcher d = p.matcher(disk);
+        Matcher d = p1.matcher(disk);
 
         if (!d.find()) {
             fail("msg shall be logged to file: " + disk);
@@ -290,9 +291,8 @@ public class TopLoggingTest extends NbTestCase {
 
         l.log(Level.FINER, "Finer level msg");
 
-        Pattern p = Pattern.compile("FINER.*Finer level msg");
         String disk = readLog(true);
-        Matcher d = p.matcher(disk);
+        Matcher d = p1.matcher(disk);
 
         if (!d.find()) {
             fail("msg shall be logged to file: " + disk);
@@ -319,9 +319,8 @@ public class TopLoggingTest extends NbTestCase {
         if (next != 10 && next != 13) {
             fail("Expecting 'Ahoj': index: " + 0 + " next char: " + (int)next + "text:\n" + disk);
         }
-        
-        Pattern p = Pattern.compile("IllegalStateException.*Hi");
-        Matcher d = p.matcher(disk);
+
+        Matcher d = p2.matcher(disk);
         if (!d.find()) {
             fail("Expecting exception: " + disk);
         }

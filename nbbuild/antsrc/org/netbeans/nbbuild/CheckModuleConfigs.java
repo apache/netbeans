@@ -43,6 +43,8 @@ import org.apache.tools.ant.Task;
 public final class CheckModuleConfigs extends Task {
     
     private File nbroot;
+
+    private static final Pattern clusterNamePat = Pattern.compile("nb\\.cluster\\.([^.]+)");
     
     public CheckModuleConfigs() {}
     
@@ -71,7 +73,6 @@ public final class CheckModuleConfigs extends Task {
                     ": javadoc config contains entries not in known clusters: " + javadoc);
         }
         // Verify sorting and overlaps:
-        Pattern clusterNamePat = Pattern.compile("nb\\.cluster\\.([^.]+)");
         Map<String,List<String>> allClusters = new HashMap<>();
         for (Map.Entry<String,Object> clusterDef : properties.entrySet()) {
             Matcher m = clusterNamePat.matcher(clusterDef.getKey());

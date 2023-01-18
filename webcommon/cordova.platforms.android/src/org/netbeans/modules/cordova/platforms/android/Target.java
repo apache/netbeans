@@ -44,11 +44,11 @@ public class Target implements SDK {
     private Target() {
         this.props = new HashMap<>();
     }
-    
+
+    private static final Pattern pattern = Pattern.compile("id: ([\\d]*) or \"([^\"]+)\" *"); //NOI18N
+
     public static Collection<SDK> parse(String output) throws IOException {
         BufferedReader r = new BufferedReader(new StringReader(output));
-        
-        Pattern pattern = Pattern.compile("id: ([\\d]*) or \"([^\"]+)\" *"); //NOI18N
         
         ArrayList<SDK> result = new ArrayList<SDK>();
         //ignore first 2 lines

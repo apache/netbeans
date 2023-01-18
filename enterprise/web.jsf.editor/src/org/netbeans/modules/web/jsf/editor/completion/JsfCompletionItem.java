@@ -106,6 +106,8 @@ public class JsfCompletionItem {
         
         private static final String AND_HTML_ENTITY = "&amp;"; //NOI18N
         private static final String AND_HTML = "&"; //NOI18N
+
+        private static final Pattern p = Pattern.compile(JsfTag.AND_HTML_ENTITY);
         
         private LibraryComponent component;
         private boolean autoimport; //autoimport (declare) the tag namespace if set to true
@@ -212,8 +214,7 @@ public class JsfCompletionItem {
             // Bug 208982 - Problem was found in JSF API source metadata file ui.taglib.xml. 
             // This fix is temporary and must be removed after JSF will solve bug http://java.net/jira/browse/JAVASERVERFACES_SPEC_PUBLIC-1106
             if (sb.indexOf(AND_HTML_ENTITY) >= 0) {
-                Pattern pattern = Pattern.compile(AND_HTML_ENTITY);
-                Matcher matcher = pattern.matcher(sb);
+                Matcher matcher = p.matcher(sb);
                 
                 while (matcher.find()) {
                     sb.replace(matcher.start(), matcher.end(), AND_HTML);

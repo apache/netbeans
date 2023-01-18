@@ -33,10 +33,12 @@ import org.netbeans.installer.utils.SystemUtils;
  */
 public class MethodResolver implements StringResolver {
 
+    private static final Pattern p = Pattern.compile("(?<!\\\\)\\$M\\{((?:[a-zA-Z_][a-zA-Z_0-9]*\\.)+[a-zA-Z_][a-zA-Z_0-9]*)\\.([a-zA-Z_][a-zA-Z_0-9]*)\\(\\)\\}");
+
     public String resolve(String string, ClassLoader loader) {
         Matcher matcher;
         String parsed = string;
-        matcher = Pattern.compile("(?<!\\\\)\\$M\\{((?:[a-zA-Z_][a-zA-Z_0-9]*\\.)+[a-zA-Z_][a-zA-Z_0-9]*)\\.([a-zA-Z_][a-zA-Z_0-9]*)\\(\\)\\}").matcher(parsed);
+        matcher = p.matcher(parsed);
         while (matcher.find()) {
             String classname = matcher.group(1);
             String methodname = matcher.group(2);

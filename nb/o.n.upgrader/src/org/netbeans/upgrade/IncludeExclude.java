@@ -68,7 +68,7 @@ final class IncludeExclude extends AbstractSet {
                 }
             }
             
-            Pattern p = Pattern.compile (line);
+            Pattern p = Pattern.compile(line);
             
             set.patterns.add (Union2.<Boolean,Pattern>createFirst(plus));
             set.patterns.add (Union2.<Boolean,Pattern>createSecond(p));

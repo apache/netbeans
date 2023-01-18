@@ -92,7 +92,10 @@ public class MakeOSGi extends Task {
 
     private File destdir;
     private List<ResourceCollection> modules = new ArrayList<>();
-    
+
+    private static final Pattern p = Pattern.compile("Java > (1.[6-9])");
+    private static final Pattern p2 = Pattern.compile("([^/ >=]+)(?:/(\\d+)(?:-(\\d+))?)? *(?:(=|>) *(.+))?");
+
     /**
      * Mandatory destination directory. Bundles will be created here.
      */
@@ -483,7 +486,7 @@ public class MakeOSGi extends Task {
         // ignore OpenIDE-Module-Package-Dependencies; rarely used, and bytecode analysis is probably more accurate anyway
         String javaDeps = netbeans.getValue("OpenIDE-Module-Java-Dependencies");
         if (javaDeps != null) {
-            Matcher m = Pattern.compile("Java > (1.[6-9])").matcher(javaDeps); // 1.5 is not supported anyway
+            Matcher m = p.matcher(javaDeps); // 1.5 is not supported anyway
             if (m.matches()) {
                 osgi.putValue("Bundle-RequiredExecutionEnvironment", "JavaSE-" + m.group(1));
             }
@@ -583,7 +586,7 @@ public class MakeOSGi extends Task {
     }
 
     static String translateDependency(StringBuilder b, String dependency) throws IllegalArgumentException {
-        Matcher m = Pattern.compile("([^/ >=]+)(?:/(\\d+)(?:-(\\d+))?)? *(?:(=|>) *(.+))?").matcher(dependency);
+        Matcher m = p2.matcher(dependency);
         if (!m.matches()) {
             throw new IllegalArgumentException("bad dep: " + dependency);
         }

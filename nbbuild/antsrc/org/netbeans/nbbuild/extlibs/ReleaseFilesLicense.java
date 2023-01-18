@@ -51,6 +51,9 @@ import org.apache.tools.ant.Task;
 public class ReleaseFilesLicense extends Task {
 
     private File license;
+
+    private static final Pattern p = Pattern.compile("Files: (.+)");
+
     public void setLicense(File license) {
         this.license = license;
     }
@@ -109,7 +112,7 @@ public class ReleaseFilesLicense extends Task {
                                         " " + possibleLicense.getName().replaceFirst("-license\\.txt$", ".zip");
                                 String line;
                                 while ((line = r.readLine()) != null && line.length() > 0) {
-                                    Matcher m = Pattern.compile("Files: (.+)").matcher(line);
+                                    Matcher m = p.matcher(line);
                                     if (m.matches()) {
                                         files = m.group(1);
                                         break;

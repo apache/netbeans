@@ -85,6 +85,8 @@ import org.w3c.dom.Element;
  */
 public class ClasspathsTest extends TestBase {
 
+    private static final Pattern p = Pattern.compile("jar:file:/c:/java/([0-9.]+)/jre/lib/rt\\.jar!/");
+
     public ClasspathsTest(String name) {
         super(name);
     }
@@ -175,7 +177,7 @@ public class ClasspathsTest extends TestBase {
         ClassPath.Entry entry = entries.get(0);
         String u = entry.getURL().toExternalForm();
         // Cf. DummyJavaPlatformProvider.
-        Pattern p = Pattern.compile("jar:file:/c:/java/([0-9.]+)/jre/lib/rt\\.jar!/");
+
         Matcher m = p.matcher(u);
         if (m.matches()) {
             return m.group(1);

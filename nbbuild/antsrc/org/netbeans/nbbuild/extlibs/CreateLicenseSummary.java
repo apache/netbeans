@@ -82,6 +82,8 @@ public class CreateLicenseSummary extends Task {
 
     private File nball;
 
+    private static final Pattern p = Pattern.compile("([a-zA-Z]+): (.+)");
+
     public void setNball(File nball) {
         this.nball = nball;
     }
@@ -567,7 +569,7 @@ public class CreateLicenseSummary extends Task {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String line;
                 while ((line = r.readLine()) != null && line.length() > 0) {
-                    Matcher m = Pattern.compile("([a-zA-Z]+): (.+)").matcher(line);
+                    Matcher m = p.matcher(line);
                     if (m.matches()) {
                         headers.put(m.group(1), m.group(2));
                     }

@@ -60,6 +60,8 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
 
     private static final String NO_HELP_MSG = NbBundle.getMessage(StandardPropertiesHelpResolver.class, "completion-help-no-documentation-found");
 
+    private static final Pattern sectionEndFinder = Pattern.compile("(?s)<h[234]"); //NOI18N
+
     @Override
     public String getHelp(FileObject context, PropertyDefinition property) {
         CssModule cssModule = property.getCssModule();
@@ -165,7 +167,6 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
                     //level than was the opening heading!
                     if (sectionStart >= 0) {
                         //find next section
-                        Pattern sectionEndFinder = Pattern.compile("(?s)<h[234]"); //NOI18N
                         Matcher findSectionEnd = sectionEndFinder.matcher(urlContent.subSequence(from, urlContent.length()));
                         if (findSectionEnd.find()) {
                             String help = urlContent.substring(sectionStart, from + findSectionEnd.start());

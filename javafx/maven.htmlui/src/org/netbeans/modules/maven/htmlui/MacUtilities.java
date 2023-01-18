@@ -40,6 +40,8 @@ import org.openide.util.NbBundle;
 final class MacUtilities {
     private static final String ID_UNKNOWN = "0000-0000-0000";
 
+    private static final Pattern pattern = Pattern.compile("\\[([0-9A-Fa-f\\-]+)\\]");
+
     private MacUtilities() {
     }
     
@@ -82,7 +84,6 @@ final class MacUtilities {
     }
 
     static List<Device> parseDevices(List<Device> collectTo, final InputStream is) {
-        Pattern pattern = Pattern.compile("\\[([0-9A-Fa-f\\-]+)\\]");
 
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
         for (int at = collectTo.size();;) {

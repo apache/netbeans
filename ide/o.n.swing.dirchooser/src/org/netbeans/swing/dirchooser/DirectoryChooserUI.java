@@ -185,6 +185,8 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
     private final ListFilesWorker listFilesWorker = new ListFilesWorker();
     private final RequestProcessor.Task listFilesTask = RP.create(listFilesWorker);
 
+    private static final Pattern p = Pattern.compile("(^|[^\\\\])\\$([a-zA-Z_0-9.]+)");
+
     public static ComponentUI createUI(JComponent c) {
         return new DirectoryChooserUI((JFileChooser) c);
     }
@@ -1152,7 +1154,6 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         // XXX what are legal chars for var names? bash manual says only:
         // "The braces are required when PARAMETER [...] is followed by a
         // character that is not to be interpreted as part of its name."
-        Pattern p = Pattern.compile("(^|[^\\\\])\\$([a-zA-Z_0-9.]+)");
         Matcher m;
         while ((m = p.matcher(text)).find()) {
             // Have an env var to subst...

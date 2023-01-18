@@ -265,6 +265,8 @@ public class ServerUtils {
             = Pattern.compile(MANIFEST_COMPONENT_COMP_REGEX,
             Pattern.CASE_INSENSITIVE);
 
+    private static final Pattern p = Pattern.compile(FULL_VERSION_PATTERN);
+
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
     ////////////////////////////////////////////////////////////////////////////
@@ -537,7 +539,6 @@ public class ServerUtils {
      */
     public static String getVersionString(final String fullVersionString) {
         if (fullVersionString != null) {
-            Pattern p = Pattern.compile(FULL_VERSION_PATTERN);
             Matcher m = p.matcher(fullVersionString);
             if (m.find()) {
                 return fullVersionString.substring(m.start(), m.end());

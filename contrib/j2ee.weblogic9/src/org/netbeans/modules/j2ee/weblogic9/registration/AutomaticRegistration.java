@@ -53,6 +53,10 @@ public class AutomaticRegistration {
 
     private static Version JDK8_ONLY_SERVER_VERSION = Version.fromJsr277NotationWithFallback("12.2.1"); // NOI18N
 
+    private static final Pattern p = Pattern.compile(
+            "^" + Pattern.quote(WLDeploymentFactory.URI_PREFIX) // NOI18N
+            + "(.+):(.+):(.+):(.+)$"); // NOI18N
+
     /**
      * Performs registration/uregistration of server instance. May also list
      * existing weblogic instances.
@@ -260,14 +264,10 @@ public class AutomaticRegistration {
             return 2;
         }
 
-        Pattern pattern = Pattern.compile(
-                "^" + Pattern.quote(WLDeploymentFactory.URI_PREFIX) // NOI18N
-                + "(.+):(.+):(.+):(.+)$"); // NOI18N
-
         for (FileObject f : serverInstanceDir.getChildren()) {
             String url = f.getAttribute(InstanceProperties.URL_ATTR).toString();
             if (url != null) {
-                Matcher matcher = pattern.matcher(url);
+                Matcher matcher = p.matcher(url);
                 if (matcher.matches()) {
                     System.out.println(matcher.group(3) + " " + matcher.group(4));
                 }

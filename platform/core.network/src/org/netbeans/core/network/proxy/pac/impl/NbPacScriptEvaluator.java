@@ -193,6 +193,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static final String PAC_HTTPS_FFEXT = "HTTPS"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private final String pacScriptSource;
 
+    private static final Pattern pattern = Pattern.compile(".*(timeRange\\s*\\(|dateRange\\s*\\(|weekdayRange\\s*\\().*", Pattern.DOTALL);
 
     public NbPacScriptEvaluator(String pacSourceCocde) throws PacParsingException {
         this.pacScriptSource = pacSourceCocde;
@@ -418,7 +419,6 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         // Will be called only once so there's little to be gained by precompiling
         // the regex statement.
 
-        Pattern pattern = Pattern.compile(".*(timeRange\\s*\\(|dateRange\\s*\\(|weekdayRange\\s*\\().*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(pacScriptSource);
         return matcher.matches();
     }

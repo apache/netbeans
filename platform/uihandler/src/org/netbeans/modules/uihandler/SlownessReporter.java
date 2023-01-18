@@ -64,6 +64,8 @@ class SlownessReporter {
     } // NOI18N
     private static final int CLEAR = Integer.getInteger("org.netbeans.modules.uihandler.SlownessReporter.clear", 0); // NOI18N
     private static final RequestProcessor IO_RP = new RequestProcessor(SlownessReporter.class);
+
+    private static final Pattern p = Pattern.compile(DELEGATE_PATTERN);
     
     public SlownessReporter() {
         pending = new LinkedList<NotifySnapshot>();
@@ -99,7 +101,6 @@ class SlownessReporter {
                 }
                 if (latestActionClassName != null) {
                     latestActionClassName = latestActionClassName.replace("&", ""); // NOI18N
-                    Pattern p = Pattern.compile(DELEGATE_PATTERN);
                     Matcher m = p.matcher(latestActionClassName);
                     if (m.find()) {
                         String delegate = m.group();

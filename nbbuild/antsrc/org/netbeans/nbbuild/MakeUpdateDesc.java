@@ -83,6 +83,10 @@ public class MakeUpdateDesc extends MatchingTask {
 
     protected boolean usedMatchingTask = false;
 
+    private static final Pattern p = Pattern.compile("([^;]+)(.*)");
+    private static final Pattern p2 = Pattern.compile(";([^:=]+):?=\"?([^;\"]+)\"?");
+    private static final Pattern p3 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)");
+
     /** Set of NBMs presented as a folder in the Update Center. */
     public /*static*/ class Group {
         public List<FileSet> filesets = new ArrayList<>();
@@ -750,7 +754,7 @@ public class MakeUpdateDesc extends MatchingTask {
             boolean needsNetbinox = false;
             // http://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
             for (String dep : requireBundle.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")) {
-                Matcher m = Pattern.compile("([^;]+)(.*)").matcher(dep);
+                Matcher m = p.matcher(dep);
                 if (!m.matches()) {
                     throw new BuildException("Could not parse dependency: " + dep + " in " + whereFrom);
                 }
@@ -759,7 +763,7 @@ public class MakeUpdateDesc extends MatchingTask {
                     needsNetbinox = true;
                     continue;
                 }
-                Matcher m2 = Pattern.compile(";([^:=]+):?=\"?([^;\"]+)\"?").matcher(m.group(2));
+                Matcher m2 = p3.matcher(m.group(2));
                 boolean isOptional = false;
                 while(m2.find()) {
                     if(m2.group(1).equals("resolution") && m2.group(2).equals("optional")) {
@@ -783,7 +787,7 @@ public class MakeUpdateDesc extends MatchingTask {
                         depSB.append(" > ").append(val);
                         continue;
                     }
-                    Matcher m3 = Pattern.compile("\\[([0-9]+)((?:[.][0-9]+)*),([0-9.]+)\\)").matcher(val);
+                    Matcher m3 = p3.matcher(val);
                     if (!m3.matches()) {
                         throw new BuildException("Could not parse version range: " + val + " in " + whereFrom);
                     }

@@ -662,7 +662,7 @@ public class NbModuleSuite {
         final Configuration config;
         private static int invocations;
         private static File lastUserDir;
-        private int testCount = 0; 
+        private int testCount = 0;
         
         public S(Configuration config) {
             this.config = config.getReady();
@@ -1194,6 +1194,8 @@ public class NbModuleSuite {
          */
         private static Method fileToPath, pathToUri, pathsGet, pathToFile;
 
+        private static final Pattern pTests = Pattern.compile(".*\\" + File.separator + "([^\\" + File.separator + "]+)\\" + File.separator + "tests\\.jar");
+
         static {
             try {
                 fileToPath = File.class.getMethod("toPath");
@@ -1252,11 +1254,10 @@ public class NbModuleSuite {
         }
         
         static void preparePatches(String path, Properties prop, Class<?>... classes) throws URISyntaxException {
-            Pattern tests = Pattern.compile(".*\\" + File.separator + "([^\\" + File.separator + "]+)\\" + File.separator + "tests\\.jar");
             StringBuilder sb = new StringBuilder();
             String sep = "";
             for (String jar : tokenizePath(path)) {
-                Matcher m = tests.matcher(jar);
+                Matcher m = pTests.matcher(jar);
                 if (m.matches()) {
                     // in case we need it one day, let's add a switch to Configuration
                     // and choose the following line instead of netbeans.systemclassloader.patches

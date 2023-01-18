@@ -37,7 +37,9 @@ import org.netbeans.test.autoupdate.Autoupdate;
  */
 
 public class xml extends Autoupdate {
-    
+
+    private static final Pattern p = Pattern.compile( "Available Plugins [(]([0-9]+)[)]" );
+
     public xml( String arg0 )
     {
       super( arg0 );
@@ -48,7 +50,7 @@ public class xml extends Autoupdate {
     int iCount = 0;
     int iIndex = tabs.findPage( "Available" );
     //System.out.println( "+++" + iIndex );
-    Pattern p = Pattern.compile( "Available Plugins [(]([0-9]+)[)]" );
+
     while( true )
     {
       String s = tabs.getTitleAt( iIndex );

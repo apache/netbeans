@@ -76,6 +76,9 @@ public final class Utils {
     private static String xmx;
     private static String permSize;
     private static String maxPermSize;
+
+    private static final Pattern p = Pattern.compile("MIDlet-Jar-Size: ([0-9]+).*");
+
     /**
      * Setter for the 'project' property.
      *
@@ -219,9 +222,7 @@ public final class Utils {
                 FileInputStream fis = new FileInputStream(jad);
                 String string = read(fis).toString();  
                 fis.close();
-                final Matcher matcher = Pattern.compile(
-                       "MIDlet-Jar-Size: ([0-9]+).*").
-                        matcher(string);
+                final Matcher matcher = p.matcher(string);
                 if (matcher.find()) {
                     final long size = new Long(matcher.group(1)).longValue();
                     final long realSize = file.length();
@@ -486,7 +487,7 @@ public final class Utils {
         
         return size + file.length();
     }
-    
+
     /**
      * Converts the given string to its java-style ASCII equivalent, escaping
      * non ASCII characters with their \\uXXXX sequences.
@@ -508,7 +509,7 @@ public final class Utils {
             return string;
         }
         
-        Matcher matcher = Pattern.compile(UBERKEY_REGEXP, Pattern.MULTILINE).matcher(outputStream.toString());
+        Matcher matcher = p2.matcher(outputStream.toString());
         
         if (matcher.find()) {
             return matcher.group(1);
@@ -1252,7 +1253,9 @@ public final class Utils {
      */
     public static final String UBERKEY_REGEXP =
             "uberkey=(.*)$"; // NOI18N
-    
+
+    private static final Pattern p2 = Pattern.compile(UBERKEY_REGEXP, Pattern.MULTILINE);
+
     /**
      * Name of the UTF-8 encoding.
      */

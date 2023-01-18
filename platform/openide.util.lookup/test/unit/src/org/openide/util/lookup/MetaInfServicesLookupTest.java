@@ -62,6 +62,8 @@ import org.openide.util.test.MockLookup;
  */
 public class MetaInfServicesLookupTest extends NbTestCase {
     private Logger LOG;
+
+    private static final Pattern p = Pattern.compile(":([^:]+):([^:]*)", Pattern.MULTILINE | Pattern.DOTALL);
     
     public MetaInfServicesLookupTest(String name) {
         super(name);
@@ -114,8 +116,7 @@ public class MetaInfServicesLookupTest extends NbTestCase {
         }
         
         JarOutputStream os = new JarOutputStream(new FileOutputStream(jar));
-        
-        Pattern p = Pattern.compile(":([^:]+):([^:]*)", Pattern.MULTILINE | Pattern.DOTALL);
+
         Matcher m = p.matcher(sb);
         Pattern foobar = Pattern.compile(classPattern, Pattern.MULTILINE);
         Set<String> names = new TreeSet<String>();

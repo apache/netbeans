@@ -38,6 +38,9 @@ import org.openide.util.RequestProcessor;
 public class TopLoggingNbLoggerConsoleTest extends TopLoggingTest {
     private static ByteArrayOutputStream w;
     private static PrintStream ps;
+
+    private static Pattern p = Pattern.compile("INFO.*First visible message");
+
     static {
         final PrintStream OLD = System.err;
         System.setProperty("netbeans.logger.console", "true");
@@ -99,8 +102,6 @@ public class TopLoggingNbLoggerConsoleTest extends TopLoggingTest {
     public void testFlushHappensQuickly() throws Exception {
         Logger.getLogger(TopLoggingTest.class.getName()).log(Level.INFO, "First visible message");
 
-        Pattern p = Pattern.compile("INFO.*First visible message");
-
         Matcher d = null;
         String disk = null;
         // console gets flushed at 500ms
@@ -128,7 +129,6 @@ public class TopLoggingNbLoggerConsoleTest extends TopLoggingTest {
             w.reset();
             Logger.getLogger(TopLoggingTest.class.getName()).log(Level.INFO, "First visible message");
 
-            Pattern p = Pattern.compile("INFO.*First visible message");
             Matcher m = p.matcher(getStream().toString("utf-8"));
 
             Matcher d = null;

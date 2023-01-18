@@ -77,12 +77,14 @@ public class AngularConfigInterceptor implements FunctionInterceptor {
         return Collections.emptyList();
     }
 
+    private static final Pattern p = Pattern.compile("[A-Z]");
+
     public static void saveComponentsToIndex(FileObject fo, Set<String> components) {
         for (String component : components) {
             if (!component.isEmpty()) {
                 // replace the uppercase chars in the component names with dashes and lowercase char
                 // e.g. "myCompDemo" to "my-comp-demo"
-                Matcher m = Pattern.compile("[A-Z]").matcher(component); //NOI18N
+                Matcher m = p.matcher(component); //NOI18N
                 StringBuffer sb = new StringBuffer();
                 while (m.find()) {
                     m.appendReplacement(sb, '-' + m.group().toLowerCase());

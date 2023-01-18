@@ -49,7 +49,21 @@ public final class IncrementSpecificationVersions extends Task {
     private File nbroot;
     private List<String> modules;
     private int stickyLevel = -1;
-    
+
+    private static final Pattern p1 = Pattern.compile("(spec\\.version\\.base=)(.+)");
+    private static final Pattern p2 = Pattern.compile("(OpenIDE-Module-Specification-Version: )(.+)");
+
+    private static final Pattern P1 = Pattern.compile("([0-9]+\\.)([0-9]+)");
+    private static final Pattern P2 = Pattern.compile("([0-9]+)");
+    private static final Pattern P3 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9\\.]+)");
+
+    private static final Pattern P4 = Pattern.compile("([0-9]+\\.)([0-9]+)(\\.0)");
+
+    private static final Pattern P5 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)");
+    private static final Pattern P6 = Pattern.compile("([0-9]+\\.[0-9]+)");
+    private static final Pattern P7 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9\\.]+)");
+
+
     public IncrementSpecificationVersions() {}
     
     public void setNbroot(File f) {
@@ -93,7 +107,7 @@ public final class IncrementSpecificationVersions extends Task {
                 if (pp.isFile()) {
                     String[] lines = gulp(pp, "ISO-8859-1");
                     for (int i = 0; i < lines.length; i++) {
-                        Matcher m1 = Pattern.compile("(spec\\.version\\.base=)(.+)").matcher(lines[i]);
+                        Matcher m1 = p1.matcher(lines[i]);
                         if (m1.matches()) {
                             String old = m1.group(2);
                             String nue = increment(old, stickyLevel, false);
@@ -116,7 +130,7 @@ public final class IncrementSpecificationVersions extends Task {
                 if (mf.isFile()) {
                     String[] lines = gulp(mf, "UTF-8");
                     for (int i = 0; i < lines.length; i++) {
-                        Matcher m1 = Pattern.compile("(OpenIDE-Module-Specification-Version: )(.+)").matcher(lines[i]);
+                        Matcher m1 = p2.matcher(lines[i]);
                         if (m1.matches()) {
                             String old = m1.group(2);
                                 String nue = increment(old, stickyLevel, true);
@@ -149,9 +163,9 @@ public final class IncrementSpecificationVersions extends Task {
         switch (stickyLevel) {
             case 1: // trunk
                 if (manifest) {
-                    Matcher mC = Pattern.compile("([0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);
-                    Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);
+                    Matcher mC = P1.matcher(old);
+                    Matcher mW1 = P2.matcher(old);
+                    Matcher mW2 = P3.matcher(old);
                     if (mC.matches()) {        // Correct e.g 1.0 -> 1.1
                         nue = mC.group(1) + (Integer.parseInt(mC.group(2)) + 1);
                     }
@@ -162,10 +176,10 @@ public final class IncrementSpecificationVersions extends Task {
                         nue = mW2.group(1) + (Integer.parseInt(mW2.group(2)) + 1);                        
                     }
                 } else {
-                    Matcher mC = Pattern.compile("([0-9]+\\.)([0-9]+)(\\.0)").matcher(old);
-                    Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);
-                    Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mW3 = Pattern.compile("([0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);
+                    Matcher mC = P4.matcher(old);
+                    Matcher mW1 = P2.matcher(old);
+                    Matcher mW2 = P1.matcher(old);
+                    Matcher mW3 = P3.matcher(old);
                                         
                     if (mC.matches()) {  // Correct 1.1.0 -> 1.2.0
                         nue = mC.group(1) + (Integer.parseInt(mC.group(2)) + 1) + mC.group(3);
@@ -186,10 +200,10 @@ public final class IncrementSpecificationVersions extends Task {
                 break;
             case 2: // branch
                 if (manifest) {
-                    Matcher mC1 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mC2 = Pattern.compile("([0-9]+\\.[0-9]+)").matcher(old);
-                    Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);
-                    Matcher mW2 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);
+                    Matcher mC1 = P5.matcher(old);
+                    Matcher mC2 = P6.matcher(old);
+                    Matcher mW1 = P2.matcher(old);
+                    Matcher mW2 = P7.matcher(old);
                     if (mC1.matches()) { // Correct 1.2.3 -> 1.2.4
                         nue = mC1.group(1) + (Integer.parseInt(mC1.group(2)) + 1);
                     } 
@@ -204,10 +218,10 @@ public final class IncrementSpecificationVersions extends Task {
                     }
                     
                 } else {
-                    Matcher mC = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mW1 = Pattern.compile("([0-9]+)").matcher(old);                    
-                    Matcher mW2 = Pattern.compile("([0-9]+\\.)([0-9]+)").matcher(old);
-                    Matcher mW3 = Pattern.compile("([0-9]+\\.[0-9]+\\.)([0-9]+)\\.([0-9\\.]+)").matcher(old);                    
+                    Matcher mC = P5.matcher(old);
+                    Matcher mW1 = P2.matcher(old);
+                    Matcher mW2 = P1.matcher(old);
+                    Matcher mW3 = P7.matcher(old);
                     if (mC.matches()) { // Correct 1.2.3 -> 1.2.4
                         nue = mC.group(1) + (Integer.parseInt(mC.group(2)) + 1);
                     }

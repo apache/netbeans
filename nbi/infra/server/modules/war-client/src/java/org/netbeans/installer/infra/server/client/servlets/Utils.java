@@ -31,6 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.netbeans.installer.utils.StreamUtils;
 
 public final class Utils {
+
+    private static final Pattern p = Pattern.compile("^bytes=([0-9]*)-([0-9]*)$");
+
     public static void transfer(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -52,7 +55,7 @@ public final class Utils {
                 
                 StreamUtils.transferData(input, output);
             } else {
-                Matcher matcher = Pattern.compile("^bytes=([0-9]*)-([0-9]*)$").matcher(range);
+                Matcher matcher = p.matcher(range);
                 
                 if (!matcher.find()) {
                     response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);

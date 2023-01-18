@@ -46,6 +46,11 @@ import org.openide.util.Utilities;
  */
 public final class RcFile {
 
+    private static final Pattern commentPattern = Pattern.compile("(#.*)|([ \t]*)"); // NOI18N
+    private static final Pattern sectionPattern = Pattern.compile("\\[(.*)\\] *"); // NOI18N
+    private static final Pattern valuePattern = Pattern.compile("([^=]+)=(.*)"); //NOI18N
+    private static final Pattern justKeyPattern = Pattern.compile("[^=]+"); //NOI18N
+
     public static class FormatException extends Exception {
         public FormatException(String message) {
             super(message);
@@ -145,10 +150,7 @@ public final class RcFile {
     private void read() throws IOException, FormatException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String str;
-        Pattern commentPattern = Pattern.compile("(#.*)|([ \t]*)"); // NOI18N
-        Pattern sectionPattern = Pattern.compile("\\[(.*)\\] *"); // NOI18N
-        Pattern valuePattern = Pattern.compile("([^=]+)=(.*)"); //NOI18N
-        Pattern justKeyPattern = Pattern.compile("[^=]+"); //NOI18N
+
         Section currSection = new Section(""); // default section
         while ((str = reader.readLine()) != null) {
             if (commentPattern.matcher(str).matches()) {

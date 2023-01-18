@@ -66,6 +66,8 @@ class ModelItem implements PropertyChangeListener {
     private final Project project;
     private final AtomicBoolean dataLoaded = new AtomicBoolean(false);
 
+    private static final Pattern p = Pattern.compile("([0-9a-zA-Z_$]+?\\()([\\{\\[].*?[\\}\\]])(\\)[\\;]?[\n\r]?)", Pattern.DOTALL);
+
     public ModelItem(Network.Request request, Network.WebSocketRequest wsRequest,
             BrowserFamilyId browserFamilyId, Project project) {
         this.request = request;
@@ -633,7 +635,6 @@ class ModelItem implements PropertyChangeListener {
     }
 
     static String getJSONPResponse(String data) {
-        Pattern p = Pattern.compile("([0-9a-zA-Z_$]+?\\()([\\{\\[].*?[\\}\\]])(\\)[\\;]?[\n\r]?)", Pattern.DOTALL);
         Matcher m = p.matcher(data);
         if (m.matches()) {
             return m.group(2);

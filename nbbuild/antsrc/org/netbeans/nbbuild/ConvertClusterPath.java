@@ -46,6 +46,9 @@ public class ConvertClusterPath extends Task {
     private String basedir;
     private String to;
 
+    static final Pattern pat = Pattern.compile("(?:.*[\\\\/])?([^/\\\\]*?)([0-9.]+)?[/\\\\]?$");
+    private static final Pattern p = Pattern.compile("^\\$\\{nbplatform\\.(.*)\\.netbeans\\.dest\\.dir\\}$");
+
     /**
      * Name of property to which stores
      * @param to
@@ -89,7 +92,6 @@ public class ConvertClusterPath extends Task {
             log("Converted path: '" + absPath.toString() + "'.", Project.MSG_VERBOSE);
 
             // When cluster does not exist, it is either bare name or one with different number
-            final Pattern pat = Pattern.compile("(?:.*[\\\\/])?([^/\\\\]*?)([0-9.]+)?[/\\\\]?$");
             Path convPath = new Path(fakeproj);
 
             for (Iterator<Resource> it = absPath.iterator(); it.hasNext();) {
@@ -115,7 +117,7 @@ public class ConvertClusterPath extends Task {
                             }
                         });
                         if (alternate == null) {
-                            Matcher matcher = Pattern.compile("^\\$\\{nbplatform\\.(.*)\\.netbeans\\.dest\\.dir\\}$").matcher(parent.getName());
+                            Matcher matcher = p.matcher(parent.getName());
                             if (matcher.matches()) {
                                 throw new BuildException("Unknown platform name '" + matcher.group(1) + "'.", getLocation());
                             } else {

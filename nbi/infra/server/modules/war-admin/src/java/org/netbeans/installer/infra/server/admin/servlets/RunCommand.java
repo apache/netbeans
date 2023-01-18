@@ -49,6 +49,9 @@ public class RunCommand extends HttpServlet {
     /////////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String UTF = "UTF-8";
+
+    private static final Pattern p1 = Pattern.compile(name + "=\"(.*?)\"");
+    private static final Pattern p2 = Pattern.compile("boundary=(.*)$");
     
     /////////////////////////////////////////////////////////////////////////////////
     // Instance
@@ -302,7 +305,7 @@ public class RunCommand extends HttpServlet {
     private String getFileName(String descriptor) {
         return getAttribute(descriptor, "filename");
     }
-    
+
     /**
      * Gets attrbutes' values for a multipart/form-data entry descriptor. The
      * descriptor is expected to have attributes in the form <name>="<value>".
@@ -315,7 +318,7 @@ public class RunCommand extends HttpServlet {
      *          The value of the attribute or null if this attribute is not present.
      */
     private String getAttribute(String descriptor, String name) {
-        Matcher matcher = Pattern.compile(name + "=\"(.*?)\"").matcher(descriptor);
+        Matcher matcher = p1.matcher(descriptor);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
@@ -335,7 +338,7 @@ public class RunCommand extends HttpServlet {
     private boolean isMultiPartFormData(HttpServletRequest request) {
         return request.getContentType().startsWith("multipart/form-data");
     }
-    
+
     /**
      * Gets the boundary value of a multipart/form-data request.
      *
@@ -346,7 +349,7 @@ public class RunCommand extends HttpServlet {
      *          The boundary value or null, if it cannot be obtained.
      */
     private String getBoundary(HttpServletRequest request) {
-        Matcher matcher = Pattern.compile("boundary=(.*)$").matcher(request.getContentType());
+        Matcher matcher = p2.matcher(request.getContentType());
         if (matcher.find()) {
             return "--" + matcher.group(1);
         } else {

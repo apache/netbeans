@@ -48,6 +48,18 @@ public class AutomaticRegistration {
 
     private static final Logger LOGGER = Logger.getLogger(AutomaticRegistration.class.getName());
 
+    private static final Pattern p = Pattern.compile(
+            "^(" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_50) // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_55)  // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_60)  // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_70)  // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_80)  // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_90)  // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_100)  // NOI18N
+            + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_101)  // NOI18N
+            + ")" + Pattern.quote(TomcatFactory.TOMCAT_URI_HOME_PREFIX)  // NOI18N
+            + "(.+)$"); // NOI18N
+
     /**
      * Performs registration/uregistration of server instance. May also list
      * existing tomcat instances.
@@ -232,22 +244,10 @@ public class AutomaticRegistration {
             return 2;
         }
 
-        Pattern pattern = Pattern.compile(
-                "^(" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_50) // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_55)  // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_60)  // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_70)  // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_80)  // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_90)  // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_100)  // NOI18N
-                + "|" + Pattern.quote(TomcatFactory.TOMCAT_URI_PREFIX_101)  // NOI18N
-                + ")" + Pattern.quote(TomcatFactory.TOMCAT_URI_HOME_PREFIX)  // NOI18N
-                + "(.+)$"); // NOI18N
-
         for (FileObject f : serverInstanceDir.getChildren()) {
             String url = f.getAttribute(InstanceProperties.URL_ATTR).toString();
             if (url != null) {
-                Matcher matcher = pattern.matcher(url);
+                Matcher matcher = p.matcher(url);
                 if (matcher.matches()) {
                     String loc = matcher.group(2);
                     int base = loc.indexOf(TomcatFactory.TOMCAT_URI_BASE_PREFIX);

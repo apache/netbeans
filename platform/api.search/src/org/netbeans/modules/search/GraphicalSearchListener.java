@@ -54,6 +54,9 @@ class GraphicalSearchListener extends SearchListener {
      * Limit for length of path shown in the progress bar.
      */
     private static final int PATH_LENGTH_LIMIT = 153;
+
+    private static final Pattern p = Pattern.compile("(/|\\\\)([^/\\\\]+)(/|\\\\)?$");   //NOI18N
+
     /**
      * Underlying search composition.
      */
@@ -177,7 +180,6 @@ class GraphicalSearchListener extends SearchListener {
      * Extract file name from file path.
      */
     private String fileName(String filePath) {
-        Pattern p = Pattern.compile("(/|\\\\)([^/\\\\]+)(/|\\\\)?$");   //NOI18N
         Matcher m = p.matcher(filePath);
         if (m.find()) {
             return m.group(2);

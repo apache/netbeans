@@ -43,6 +43,8 @@ public final class ShellValidationSupport {
     protected static final ShellValidationStatus NOSHELL = new ShellValidationStatus(null, Arrays.asList("No shell"), null); // NOI18N
     protected static final ShellValidationStatus VALID = new ShellValidationStatus(null, null, null);
 
+    private static final Pattern p = Pattern.compile("(.*) on (/.*) type .*"); // NOI18N
+
     private ShellValidationSupport() {
     }
 
@@ -105,12 +107,10 @@ public final class ShellValidationSupport {
             validationErrors.add(loc("ShellValidationSupport.ValidationError.validationFailed", shell.bindir.getAbsolutePath())); // NOI18N
         }
 
-        Pattern pattern = Pattern.compile("(.*) on (/.*) type .*"); // NOI18N
-
         boolean rootIsMounted = false;
 
         for (String line : output) {
-            Matcher m = pattern.matcher(line);
+            Matcher m = p.matcher(line);
             if (m.matches()) {
                 String winpath = m.group(1);
                 File winfile = new File(winpath);

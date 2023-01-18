@@ -47,6 +47,8 @@ public final class FileFilterSupport {
     private static final Logger LOG = Logger.getLogger(
             FileFilterSupport.class.getName());
 
+    private static final Pattern p = Pattern.compile("\\[([^,]+), (true|false), (true|false)\\](\\S*)");     //NOI18N
+
     /**
      * Hide the default constructor.
      */
@@ -196,8 +198,6 @@ public final class FileFilterSupport {
     }
 
     private static void addNameToList(List<FilterElement> list, String name) {
-        Pattern p = Pattern.compile(
-                "\\[([^,]+), (true|false), (true|false)\\](\\S*)");     //NOI18N
         Matcher m = p.matcher(name);
         if (m.find()) {
             String fileName = m.group(1);

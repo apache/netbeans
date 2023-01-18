@@ -171,6 +171,9 @@ public class Installer extends ModuleInstall implements Runnable {
         ".*content=.*charset=([A-Za-z0-9\\-]+)['\"]>", Pattern.CASE_INSENSITIVE
     ); // NOI18N
 
+    private static final Pattern p = Pattern.compile("<meta\\s*http-equiv=.Refresh.\\s*content.*url=['\"]?([^'\" ]*)\\s*['\"]",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+
     static boolean preferencesWritable = false;
     static final String preferencesWritableKey = "uihandler.preferences.writable.check"; // NOI18N
     static {
@@ -1393,7 +1396,6 @@ public class Installer extends ModuleInstall implements Runnable {
 
             LOG.log(Level.FINE, "uploadLogs, Reply from uploadLogs: {0}", redir);
 
-            Pattern p = Pattern.compile("<meta\\s*http-equiv=.Refresh.\\s*content.*url=['\"]?([^'\" ]*)\\s*['\"]", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             m = p.matcher(redir);
         }
 

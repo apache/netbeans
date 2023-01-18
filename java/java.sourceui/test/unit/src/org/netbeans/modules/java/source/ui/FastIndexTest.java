@@ -40,6 +40,8 @@ import org.openide.util.Utilities;
  */
 public class FastIndexTest extends NbTestCase {
 
+    private static final Pattern p = Pattern.compile("^.+$", Pattern.MULTILINE);
+
     public FastIndexTest(String name) {
         super(name);
     }
@@ -110,7 +112,6 @@ public class FastIndexTest extends NbTestCase {
         }
         
         // last check: count non-empty lines
-        Pattern p = Pattern.compile("^.+$", Pattern.MULTILINE);
         Matcher m = p.matcher(nameIndex.files());
 
         while (fileCount-- > 0) {

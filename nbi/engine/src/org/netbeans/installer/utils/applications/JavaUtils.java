@@ -46,6 +46,12 @@ import static org.netbeans.installer.utils.system.windows.WindowsRegistry.HKLM;
  * @author Kirill Sorokin
  */
 public class JavaUtils {
+
+    public static final String NON_FINAL_JVM_PATTERN =
+            "-(ea|rc[0-9]*|beta[0-9]*|preview[0-9]*|" + // NOI18N
+            "dp[0-9]*|alpha[0-9]*|fcs)"; // NOI18N
+    private static final Pattern p = Pattern.compile(NON_FINAL_JVM_PATTERN);
+
     /////////////////////////////////////////////////////////////////////////////////
     // Static
     private static Map<File, JavaInfo> knownJdks = new HashMap<>();
@@ -378,8 +384,7 @@ public class JavaUtils {
                 }
                 
                 // check whether this particular jvm is non final
-                final Matcher nonFinalMatcher = Pattern.compile(
-                        NON_FINAL_JVM_PATTERN).matcher(versionString);
+                final Matcher nonFinalMatcher = p.matcher(versionString);
                 if (nonFinalMatcher.find()) {
                     versionString = versionString.replaceAll(
                             NON_FINAL_JVM_PATTERN,
@@ -519,10 +524,6 @@ public class JavaUtils {
     
     public static final int TEST_JDK_OUTPUT_PARAMETERS =
             5; // java.version, java.vm.version, java.vendor, os.name, os.arch
-    
-    public static final String NON_FINAL_JVM_PATTERN =
-            "-(ea|rc[0-9]*|beta[0-9]*|preview[0-9]*|" + // NOI18N
-            "dp[0-9]*|alpha[0-9]*|fcs)"; // NOI18N
     
     public static final String ERROR_VERIFICATION_KEY =
             "JU.error.verification";//NOI18N

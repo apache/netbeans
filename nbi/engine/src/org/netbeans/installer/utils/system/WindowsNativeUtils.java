@@ -330,7 +330,10 @@ public class WindowsNativeUtils extends NativeUtils {
             return super.getRoot(file);
         }
     }
-    
+
+    private static final Pattern p1 = Pattern.compile("[\\/:*\\?\"<>|]");
+    private static final Pattern p2 = Pattern.compile("^[A-Z,a-z]:\\\\.*");
+
     @Override
     public boolean isPathValid(String path) {
         // there is a max length limitation
@@ -339,7 +342,7 @@ public class WindowsNativeUtils extends NativeUtils {
         }
         
         // the path should be absolute, i.e. should start with "<Drive>:\"
-        if (!path.matches("^[A-Z,a-z]:\\\\.*")) {
+        if (!p2.matcher(path).matches()) {
             // the path can be also in UNC form
             if(!isUNCPath(path)) {
                 return false;
@@ -349,7 +352,7 @@ public class WindowsNativeUtils extends NativeUtils {
         String[] parts = path.split("\\\\");
         
         for (int i = 1; i < parts.length; i++) {
-            if (Pattern.compile("[\\/:*\\?\"<>|]").matcher(parts[i]).find()) {
+            if (p1.matcher(parts[i]).find()) {
                 return false;
             }
             if (parts[i].startsWith(" ") ||

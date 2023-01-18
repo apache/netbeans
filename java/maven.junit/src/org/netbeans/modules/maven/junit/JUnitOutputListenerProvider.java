@@ -86,9 +86,11 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     private TestSession session;
     private String testType;
     private String reportNameSuffix;
-    private final Pattern runningPattern;
-    private final Pattern outDirPattern2;
-    private final Pattern outDirPattern;
+
+    private static final String GROUP_FILE_NAME = "dir";
+    private static final Pattern runningPattern = Pattern.compile("(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
+    private static final Pattern outDirPattern2 = Pattern.compile("(?:\\[INFO\\] )?Setting reports dir\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
+    private static final Pattern outDirPattern = Pattern.compile("(?:\\[INFO\\] )?Surefire report directory\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
     private File outputDir;
     private String runningTestClass;
     private final Set<String> usedNames;
@@ -99,13 +101,8 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     private boolean surefireRunningInParallel = false;
     private ArrayList<String> runningTestClasses;
     private ArrayList<String> runningTestClassesInParallel;
-    
-    private static final String GROUP_FILE_NAME = "dir";
-    
+
     public JUnitOutputListenerProvider(RunConfig config) {
-        runningPattern = Pattern.compile("(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N        
-        outDirPattern = Pattern.compile ("(?:\\[INFO\\] )?Surefire report directory\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
-        outDirPattern2 = Pattern.compile("(?:\\[INFO\\] )?Setting reports dir\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         this.config = config;
         usedNames = new HashSet<String>();
         startTimeStamp = System.currentTimeMillis();

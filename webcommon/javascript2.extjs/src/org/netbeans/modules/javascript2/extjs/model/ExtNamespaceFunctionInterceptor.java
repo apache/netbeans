@@ -80,9 +80,11 @@ public class ExtNamespaceFunctionInterceptor implements FunctionInterceptor {
         return Collections.emptyList();
     }
 
+    private static final Pattern p = Pattern.compile("Ext\\.namespace");
+
     @Override
     public Pattern getNamePattern() {
-        return Pattern.compile("Ext\\.namespace");
+        return p;
     }
 
 }

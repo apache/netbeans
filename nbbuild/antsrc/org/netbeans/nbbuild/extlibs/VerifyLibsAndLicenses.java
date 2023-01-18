@@ -257,6 +257,8 @@ public class VerifyLibsAndLicenses extends Task {
     private static final boolean CHECK_MAX_LINE_LEN = false;
     private static final int MAX_LINE_LEN = 100;//temporary increased from: 80
 
+    private static final Pattern p = Pattern.compile("([a-zA-Z]+): (.+)");
+
     private void testLicenses() throws IOException {
         File licenses = new File(new File(nball, "nbbuild"), "licenses");
         Set<String> requiredHeaders = new TreeSet<>(Arrays.asList("Name", "Version", "Description", "License", "Origin"));
@@ -279,7 +281,7 @@ public class VerifyLibsAndLicenses extends Task {
                     BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                     String line;
                     while ((line = r.readLine()) != null && line.length() > 0) {
-                        Matcher m = Pattern.compile("([a-zA-Z]+): (.+)").matcher(line);
+                        Matcher m = p.matcher(line);
                         if (!m.matches()) {
                             msg.append("\n" + path + " has a non-header line in the header block: \"" + line + "\"");
                             headers = null;

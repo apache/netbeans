@@ -424,6 +424,10 @@ public abstract class HgCommand<T> implements Callable<T> {
     
     private static final String CMD_EXE = "cmd.exe"; //NOI18N
     private static ThreadLocal<Boolean> doNotAddHgPlain = new ThreadLocal<Boolean>();
+
+    private static final Pattern p1 = Pattern.compile("^(.+)(\\b\\d+):(\\S+)(.*)$"); //NOI18N
+    private static final Pattern p2 = Pattern.compile("^\\s*(\\b\\d+)\\s([AU])\\s([^:]+?):\\s?(.*)$"); //NOI18N
+    private static final Pattern p3 = Pattern.compile("^ (.+)\\s*\\|.*?$"); //NOI18N
     
     protected static final class CommandParameters {
         private final ArrayList<String> arguments;
@@ -1174,9 +1178,9 @@ public abstract class HgCommand<T> implements Callable<T> {
 
     private static HgBranch[] processBranches (List<String> lines, List<HgLogMessage> heads) {
         List<HgBranch> branches = new ArrayList<HgBranch>();
-        Pattern p = Pattern.compile("^(.+)(\\b\\d+):(\\S+)(.*)$"); //NOI18N
+
         for (String line : lines) {
-            Matcher m = p.matcher(line);
+            Matcher m = p1.matcher(line);
             if (!m.matches()){
                 Mercurial.LOG.log(Level.WARNING, "HgCommand.processBranches(): Failed when matching: {0}", new Object[] { line }); //NOI18N
             } else {
@@ -1223,11 +1227,10 @@ public abstract class HgCommand<T> implements Callable<T> {
             }
         }
         List<HgTag> tags = new ArrayList<HgTag>();
-        Pattern p = Pattern.compile("^(.+)(\\b\\d+):(\\S+)(.*)$"); //NOI18N
         List<TagInfo> tagInfos = new ArrayList<TagInfo>(lines.size());
         List<String> revisions = new ArrayList<String>(lines.size());
         for (String line : lines) {
-            Matcher m = p.matcher(line);
+            Matcher m = p1.matcher(line);
             if (!m.matches()) {
                 Mercurial.LOG.log(Level.WARNING, "HgCommand.processTags(): Failed when matching: {0}", new Object[] { line }); //NOI18N
             } else {
@@ -3537,9 +3540,9 @@ public abstract class HgCommand<T> implements Callable<T> {
 
     private static QPatch[] parsePatches (List<String> list, Queue q) {
         List<QPatch> patches = new ArrayList<QPatch>(list.size());
-        Pattern p = Pattern.compile("^\\s*(\\b\\d+)\\s([AU])\\s([^:]+?):\\s?(.*)$"); //NOI18N
+
         for (String line : list) {
-            Matcher m = p.matcher(line);
+            Matcher m = p2.matcher(line);
             if (m.matches()) {
                 String status = m.group(2);
                 String id = m.group(3);
@@ -4703,9 +4706,9 @@ public abstract class HgCommand<T> implements Callable<T> {
                 logger.closeLog();
             }
         }
-        Pattern p = Pattern.compile("^ (.+)\\s*\\|.*?$"); //NOI18N
+
         for (String line : list) {
-            Matcher m = p.matcher(line);
+            Matcher m = p3.matcher(line);
             if (m.matches()) {
                 String path = m.group(1);
                 while (path.endsWith(" ")) path = path.substring(0, path.length() - 1);

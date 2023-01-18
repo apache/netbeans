@@ -39,7 +39,11 @@ public class TopLoggingStartLogTest extends NbTestCase {
     private ByteArrayOutputStream w;
     private Handler handler;
     private Logger logger;
-    
+
+    private static final Pattern p = Pattern.compile("@[0-9]+.*First visible message");
+    private static final Pattern p2 = Pattern.compile("@[0-9]+.*run.*started");
+    private static final Pattern p3 = Pattern.compile("@[0-9]+.*run.*finished");
+
     static {
         System.setProperty("org.netbeans.log.startup", "print"); // NOI18N
     }
@@ -107,7 +111,6 @@ public class TopLoggingStartLogTest extends NbTestCase {
     public void testProgress() throws Exception {
         StartLog.logProgress("First visible message");
 
-        Pattern p = Pattern.compile("@[0-9]+.*First visible message");
         Matcher m = p.matcher(getStream().toString());
 
         if (!m.find()) {
@@ -128,15 +131,14 @@ public class TopLoggingStartLogTest extends NbTestCase {
         StartLog.logEnd("run");
 
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*started");
-            Matcher m = p.matcher(getStream().toString());
+            Matcher m = p2.matcher(getStream().toString());
 
             if (!m.find()) {
                 fail("msg shall be logged: " + getStream().toString());
             }
 
             String disk = readLog(true);
-            Matcher d = p.matcher(disk);
+            Matcher d = p2.matcher(disk);
 
             if (!d.find()) {
                 fail("msg shall be logged to file: " + disk);
@@ -144,15 +146,14 @@ public class TopLoggingStartLogTest extends NbTestCase {
         }
         
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*finished");
-            Matcher m = p.matcher(getStream().toString());
+            Matcher m = p3.matcher(getStream().toString());
 
             if (!m.find()) {
                 fail("msg shall be logged: " + getStream().toString());
             }
 
             String disk = readLog(true);
-            Matcher d = p.matcher(disk);
+            Matcher d = p3.matcher(disk);
 
             if (!d.find()) {
                 fail("msg shall be logged to file: " + disk);
@@ -167,15 +168,14 @@ public class TopLoggingStartLogTest extends NbTestCase {
         LOG.log(Level.FINE, "end", "run");
 
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*started");
-            Matcher m = p.matcher(getStream().toString());
+            Matcher m = p2.matcher(getStream().toString());
 
             if (!m.find()) {
                 fail("msg shall be logged: " + getStream().toString());
             }
 
             String disk = readLog(true);
-            Matcher d = p.matcher(disk);
+            Matcher d = p2.matcher(disk);
 
             if (!d.find()) {
                 fail("msg shall be logged to file: " + disk);
@@ -183,15 +183,14 @@ public class TopLoggingStartLogTest extends NbTestCase {
         }
         
         {
-            Pattern p = Pattern.compile("@[0-9]+.*run.*finished");
-            Matcher m = p.matcher(getStream().toString());
+            Matcher m = p3.matcher(getStream().toString());
 
             if (!m.find()) {
                 fail("msg shall be logged: " + getStream().toString());
             }
 
             String disk = readLog(true);
-            Matcher d = p.matcher(disk);
+            Matcher d = p3.matcher(disk);
 
             if (!d.find()) {
                 fail("msg shall be logged to file: " + disk);

@@ -119,6 +119,8 @@ public final class Utils {
     private static final Set<String> metrics = new HashSet<String>(3);
 
     private static File tempDir;
+
+    private static final Pattern p = Pattern.compile("\\{\\w*\\}");
     
     /**
      * Keeps forbidden folders without metadata
@@ -1232,7 +1234,7 @@ public final class Utils {
      */
     public static String skipUnsupportedVariables(String string, String[] supportedVariables) {
         String ret = string;
-        Pattern p = Pattern.compile("\\{\\w*\\}");
+
         Matcher m = p.matcher(string);
         while(m.find()) {
             String g = m.group();

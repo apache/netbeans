@@ -22,6 +22,8 @@ package org.openide.nodes;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 
@@ -36,7 +38,8 @@ public class ChildrenArrayNodeAtShouldNotBeSlowTest extends NbTestCase {
     private static HashMap times = new HashMap ();
     /** node to work on */
     private Node node;
-    
+
+    private static final Pattern p = java.util.regex.Pattern.compile("test[a-zA-Z]*([0-9]+)");
     
     public ChildrenArrayNodeAtShouldNotBeSlowTest (String name) {
         super(name);
@@ -70,7 +73,7 @@ public class ChildrenArrayNodeAtShouldNotBeSlowTest extends NbTestCase {
     /** @return the size of this test */
     private Integer getNumber () {
         try {
-            java.util.regex.Matcher m = java.util.regex.Pattern.compile ("test[a-zA-Z]*([0-9]+)").matcher (getName ());
+            java.util.regex.Matcher m = p.matcher (getName ());
             assertTrue ("Name does not contain numbers: " + getName (), m.find ());
             return Integer.valueOf (m.group (1));
         } catch (Exception ex) {

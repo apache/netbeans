@@ -52,6 +52,9 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
      * The max length for files we will try to parse (to avoid OOMEs).
      */
     private static final int MAX_LENGTH = 512 * 1024;
+
+    private static final Pattern p = Pattern.compile("\\^/.*?\\[.*?\\].*?,");
+
     private YamlParserResult lastResult;
 
     @Override
@@ -151,7 +154,6 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
     private static String replaceInlineRegexBrackets(String source) {
         // XXX this is just a workaround for issue #246787
         // it is caused by jvyamlb yaml parser
-        Pattern p = Pattern.compile("\\^/.*?\\[.*?\\].*?,");
         Matcher m = p.matcher(source);
         while (m.find()) {
             String found = m.group();

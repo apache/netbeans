@@ -73,6 +73,9 @@ import org.netbeans.installer.utils.system.WindowsNativeUtils;
  * @author Kirill Sorokin
  */
 public final class FileUtils {
+
+    private static final Pattern pattern = Pattern.compile("(\\/([^\\/]+)\\/\\.\\.\\/)");
+
     /////////////////////////////////////////////////////////////////////////////////
     // Static
     
@@ -1267,7 +1270,7 @@ public final class FileUtils {
     public static boolean isUNCPath(String path) {
         return SystemUtils.getNativeUtils().isUNCPath(path);
     }
-    
+
     public static File eliminateRelativity(
             final String path) {
         String corrected = path;
@@ -1287,8 +1290,6 @@ public final class FileUtils {
         while (corrected.indexOf(SLASH + CURRENT + SLASH) != -1) {
             corrected = corrected.replace(SLASH + CURRENT + SLASH, SLASH);
         }
-        
-        final Pattern pattern = Pattern.compile("(\\/([^\\/]+)\\/\\.\\.\\/)");
         
         Matcher matcher = pattern.matcher(corrected);
         while (matcher.find()) {

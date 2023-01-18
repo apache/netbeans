@@ -29,12 +29,14 @@ import org.netbeans.installer.utils.ResourceUtils;
  */
 public class BundlePropertyResolver implements StringResolver{
 
+    private static final Pattern p = Pattern.compile("(?<!\\\\)\\$P\\{(.*?), (.*?)(?:, (.*?))?\\}");
+
     public String resolve(String string, ClassLoader loader) {
         Matcher matcher;
         String parsed = string;
         
         // P for Properties
-        matcher = Pattern.compile("(?<!\\\\)\\$P\\{(.*?), (.*?)(?:, (.*?))?\\}").matcher(parsed);
+        matcher = p.matcher(parsed);
         while (matcher.find()) {
             String basename        = matcher.group(1);
             String key             = matcher.group(2);

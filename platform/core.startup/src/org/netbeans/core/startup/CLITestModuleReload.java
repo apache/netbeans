@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.OutputStream;
 import org.netbeans.CLIHandler;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -64,9 +65,12 @@ public final class CLITestModuleReload extends CLIHandler {
     }
     
     private static void log(String msg, CLIHandler.Args args) {
-        PrintWriter w = new PrintWriter(args.getOutputStream());
-        w.println(msg);
-        w.flush();
+        try (OutputStream os = args.getOutputStream();
+             PrintWriter w = new PrintWriter(os)) {
+            w.println(msg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     protected void usage(PrintWriter w) {

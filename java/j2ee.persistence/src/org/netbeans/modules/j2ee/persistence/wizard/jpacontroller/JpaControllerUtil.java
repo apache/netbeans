@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
@@ -144,11 +145,10 @@ public class JpaControllerUtil {
     
     public static void createFile(FileObject target, String content, String encoding) throws IOException{
         FileLock lock = target.lock();
-        try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding));
+        try (OutputStream os = target.getOutputStream(lock);
+             OutputStreamWriter osw = new OutputStreamWriter(os, encoding);
+             BufferedWriter bw = new BufferedWriter(osw)) {
             bw.write(content);
-            bw.close();
-            
         } finally {
             lock.releaseLock();
         }

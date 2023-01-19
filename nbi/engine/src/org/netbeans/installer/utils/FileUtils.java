@@ -79,10 +79,9 @@ public final class FileUtils {
     // file/stream read/write ///////////////////////////////////////////////////////
     public static String readFile(
             final File file, String charset) throws IOException {
-        FileInputStream fis   = new FileInputStream(file);
-        InputStreamReader isr = new InputStreamReader(fis, charset);            
-        final Reader reader = new BufferedReader(isr);
-        try {
+        try (FileInputStream fis   = new FileInputStream(file);
+             InputStreamReader isr = new InputStreamReader(fis, charset);
+             Reader reader = new BufferedReader(isr)) {
             final char[] buffer = new char[BUFFER_SIZE];
             final StringBuilder stringBuilder = new StringBuilder();
             int readLength;
@@ -90,13 +89,6 @@ public final class FileUtils {
                 stringBuilder.append(buffer, 0, readLength);
             }
             return stringBuilder.toString();
-        } finally {
-            try {
-                reader.close();
-                isr.close();
-                fis.close();
-            } catch(IOException ignord) {            
-            }
         }
     }    
     public static String readFile(
@@ -1135,16 +1127,10 @@ public final class FileUtils {
             final String entry,
             final File source,
             final File target) throws IOException {
-        JarFile jar = new JarFile(source);
-        FileOutputStream out = new FileOutputStream(target);
-        
-        try {
+        try (JarFile jar = new JarFile(source);
+             FileOutputStream out = new FileOutputStream(target)) {
             StreamUtils.transferData(jar.getInputStream(jar.getEntry(entry)), out);
-            
             return target;
-        } finally {
-            jar.close();
-            out.close();
         }
     }
     
@@ -1432,19 +1418,13 @@ public final class FileUtils {
             }            
             
             if (copyNesteJre && SystemUtils.isWindows()) {
-                InputStream is = null;
-                OutputStream os = null;
-                try {
-                    is = new FileInputStream(source);
-                    os = new FileOutputStream(target);
+                try (InputStream is = new FileInputStream(source);
+                     OutputStream os = new FileOutputStream(target)) {
                     byte[] buffer = new byte[1024];
                     int length;
                     while ((length = is.read(buffer)) > 0) {
                         os.write(buffer, 0, length);
                     }
-                } finally {                    
-                    is.close();
-                    os.close();
                 }
             } else {
                 Files.copy(source.toPath(), target.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING, LinkOption.NOFOLLOW_LINKS);

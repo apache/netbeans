@@ -324,8 +324,7 @@ public final class EditMediator implements ActionListener, ListSelectionListener
                                     }
                                     assert fo != null : fl;
                                     if (FileUtil.isArchiveFile (fo))
-                                        try {
-                                            new JarFile (fl);
+                                        try (JarFile jf = new JarFile(fl)) {
                                         } catch (IOException ex) {
                                             JOptionPane.showMessageDialog (
                                                 SwingUtilities.getWindowAncestor (list.getComponent ()),

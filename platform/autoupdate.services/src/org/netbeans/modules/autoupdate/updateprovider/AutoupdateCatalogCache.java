@@ -181,21 +181,11 @@ public final class AutoupdateCatalogCache {
         }
     }
     private void writeToFile(String content, File file) {
-        FileOutputStream fw = null;
-        try {
-            fw = new FileOutputStream(file);
+        try (FileOutputStream fw = new FileOutputStream(file)) {
             fw.write(content.getBytes("utf-8")); //NOI18N
+            fw.flush();
         } catch (IOException e) {
             err.log(Level.INFO, "Can`t write to " + file, e);
-        } finally {
-            if (fw != null) {
-                try {
-                    fw.flush();
-                    fw.close();
-                } catch (IOException e) {
-                    err.log(Level.INFO, "Can`t output stream for " + file, e);
-                }
-            }
         }
     }
     
@@ -258,17 +248,15 @@ public final class AutoupdateCatalogCache {
         if (!temp.renameTo(cache)) {
             err.log(Level.INFO, "Cannot rename temp {0} to cache {1}", new Object[]{temp, cache});
             err.log(Level.INFO, "Trying to copy {0} to cache {1}", new Object[] {temp, cache});
-            try {
-                FileOutputStream os = new FileOutputStream(cache);
-                FileInputStream is = new FileInputStream(temp);
+            try (FileOutputStream os = new FileOutputStream(cache);
+                 FileInputStream is = new FileInputStream(temp)) {
                 FileUtil.copy(is, os);
-                os.close();
-                is.close();
-                temp.delete();
             } catch (IOException ex) {
                 err.log(Level.INFO, "Cannot even copy: {0}", ex.getMessage());
                 err.log(Level.FINE, null, ex);
             }
+
+            temp.delete();
         }
 
         if (cache.exists() && cache.length() == 0) {

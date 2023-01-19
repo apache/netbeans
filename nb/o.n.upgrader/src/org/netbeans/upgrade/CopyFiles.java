@@ -56,11 +56,9 @@ final class CopyFiles extends Object {
     private CopyFiles(File source, File target, File patternsFile) {
         this.sourceRoot = source;
         this.targetRoot = target;
-        try {
-            InputStream is = new FileInputStream(patternsFile);
-            Reader reader = new InputStreamReader(is, "utf-8"); // NOI18N
+        try (InputStream is = new FileInputStream(patternsFile);
+             Reader reader = new InputStreamReader(is, "utf-8")) {
             readPatterns(reader);
-            reader.close();
         } catch (IOException ex) {
             // set these to null to stop further copying (see copyDeep method)
             sourceRoot = null;
@@ -69,7 +67,6 @@ final class CopyFiles extends Object {
             // show error message and continue
             JDialog dialog = Util.createJOptionDialog(new JOptionPane(ex, JOptionPane.ERROR_MESSAGE), "Import settings will not proceed");
             dialog.setVisible(true);
-            return;
         }
     }
 

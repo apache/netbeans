@@ -506,13 +506,16 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
     
     private void generateMissingQuestions(String version, SortedSet<String> missing) throws IOException, BuildException {
         StringBuffer sb = new StringBuffer();
-        InputStreamReader is = new InputStreamReader(new FileInputStream(questionsFile.toString()));
-        char[] arr = new char[4096];
-        for (;;) {
-            int len = is.read(arr);
-            if (len == -1) break;
-            
-            sb.append(arr, 0, len);
+
+        try (FileInputStream fileInputStream = new FileInputStream(questionsFile.toString());
+             InputStreamReader is = new InputStreamReader(fileInputStream)) {
+            char[] arr = new char[4096];
+            for (; ; ) {
+                int len = is.read(arr);
+                if (len == -1) break;
+
+                sb.append(arr, 0, len);
+            }
         }
         
         int indx = sb.indexOf("</api-answers>");
@@ -527,8 +530,9 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
             sb.delete(m.start(1), m.end(1));
             sb.insert(m.start(1), version);
         }
-        
-        try (Writer w = new OutputStreamWriter (new FileOutputStream (questionsFile.toString ()))) {
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(questionsFile.toString());
+             Writer w = new OutputStreamWriter(fileOutputStream)) {
             w.write(sb.toString());
             writeQuestions (w, missing);
             w.write("</api-answers>\n");

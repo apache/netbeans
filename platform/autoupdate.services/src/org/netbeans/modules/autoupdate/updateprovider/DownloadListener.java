@@ -93,12 +93,11 @@ public class DownloadListener implements NetworkAccess.NetworkListener {
     }
 
     private void doCopy(URL sourceUrl, InputStream is, File temp, int contentLength) throws IOException {
-        OutputStream os = null;
-        int read = 0;
+        int read;
         int totalRead = 0;
 
-        try {
-            os = new BufferedOutputStream(new FileOutputStream(temp));
+        try (FileOutputStream fos = new FileOutputStream(temp);
+             OutputStream os = new BufferedOutputStream(fos)) {
             byte[] bytes = new byte[1024];
             while ((read = is.read(bytes)) != -1) {
                 os.write(bytes, 0, read);
@@ -111,10 +110,6 @@ public class DownloadListener implements NetworkAccess.NetworkListener {
         } finally {
             try {
                 is.close();
-                if (os != null) {
-                    os.flush();
-                    os.close();
-                }
             } catch (IOException ioe) {
                 err.log(Level.INFO, "Closing streams failed.", ioe);
             }

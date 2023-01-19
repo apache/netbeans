@@ -206,8 +206,12 @@ public class CacheReader {
     }
     
     protected ByteBuffer createBuffer(File file) throws IOException {
-        return new FileInputStream (file).getChannel().map(
-            FileChannel.MapMode.READ_ONLY, 0, file.length());
+        try (FileInputStream fis = new FileInputStream(file);
+             FileChannel fc = fis.getChannel()) {
+            //A mapping, once established, is not dependent upon the file channel that was used to create it.
+            //Closing the channel, in particular, has no effect upon the validity of the mapping.
+            return fc.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+        }
     }
     
     private ByteBuffer getBuffer() throws IOException {

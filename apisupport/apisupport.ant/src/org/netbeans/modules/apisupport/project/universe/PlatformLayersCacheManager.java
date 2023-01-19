@@ -526,14 +526,14 @@ public class PlatformLayersCacheManager {
             if (cacheFile == null) {
                 return null;
             }
-            FileInputStream fis = null;
-            try {
-                File[] moduleDirs = new File[MODULE_DIRS.length];
-                for (int i = 0; i < moduleDirs.length; i++) {
-                    moduleDirs[i] = new File(clusterDir, MODULE_DIRS[i]);
-                }
-                fis = new FileInputStream(cacheFile);
-                ObjectInputStream ois = new ObjectInputStream(fis);
+
+            File[] moduleDirs = new File[MODULE_DIRS.length];
+            for (int i = 0; i < moduleDirs.length; i++) {
+                moduleDirs[i] = new File(clusterDir, MODULE_DIRS[i]);
+            }
+
+            try (FileInputStream fis = new FileInputStream(cacheFile);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
                 // cache file starts with version number (int), number of entries (int) and continues with a sequence of entries in format:
                 // <JAR name (no path)><JAR size><JAR timestamp><ignore JAR>[<has masked entries><binary layerFS size><serialized binary layerFS>];
                 // when <ignore JAR> is true, the rest of the entry is missing
@@ -573,9 +573,8 @@ public class PlatformLayersCacheManager {
                 LOGGER.log(Level.WARNING, "Exception while loading project layers cache (from file " + cacheFile.getAbsolutePath()
                         + " for cluster " + clusterDir + "): " + ex2.toString());
                 return null;
-            } finally {
-                fis.close();
             }
+
             LOGGER.fine("Cache for cluster " + clusterDir + " successfully loaded from cache file " + cacheFile);
         } catch (IOException ex) {
             // corrupted cache or index file, throw the cache away

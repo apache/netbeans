@@ -96,8 +96,7 @@ public class ForeignClassBundlerImpl implements ForeignClassBundler, ProjectProb
                 for (Artifact a : mp.getRuntimeArtifacts()) { //TODO runtime or compile??
                     File f = a.getFile();
                     if (f != null && f.isFile()) {
-                        try {
-                            JarFile jf = new JarFile(f);
+                        try (JarFile jf = new JarFile(f)) {
                             Enumeration<JarEntry> en = jf.entries();
                             while (en.hasMoreElements()) {
                                 JarEntry je = en.nextElement();

@@ -119,18 +119,15 @@ public class LocMakeNBM extends Task {
     if (( modInfo == null) && (moduleName != null)) {
         // load module info frommodule jarfile
         File f = new File (topDir,moduleName.replace('/', File.separatorChar));
-        java.util.jar.JarFile jf;
-        try {
-            jf= new java.util.jar.JarFile(f);
+
+        java.util.jar.Manifest mani;
+
+        try (java.util.jar.JarFile jf = new java.util.jar.JarFile(f)) {
+            mani = jf.getManifest();
         } catch (java.io.IOException ioe) {
             throw new BuildException("I/O error during opening module jarfile", ioe, this.getLocation());
         }
-        java.util.jar.Manifest mani;
-        try {
-            mani = jf.getManifest();
-        } catch (java.io.IOException ioe) {
-            throw new BuildException("I/O error getting manifest from file '"+f.getAbsolutePath()+"'", ioe, this.getLocation());
-        }
+
         if ( mani != null ) {
             java.util.jar.Attributes attr = mani.getMainAttributes();
             String cname = JarWithModuleAttributes.extractCodeName(attr);
@@ -460,40 +457,35 @@ public class LocMakeNBM extends Task {
     }
   }
 
-  protected String getSrcDir( File file) {
-    InputStreamReader isr ;
-    FileInputStream fis ;
-    char[] buf = new char[ 200] ;
-    String s = null ;
-    int idx, len ;
+  protected String getSrcDir(File file) {
+    char[] buf = new char[200];
+    String s = null;
+    int idx, len;
 
-    try {
+    try (FileInputStream fis = new FileInputStream(file);
+         InputStreamReader isr = new InputStreamReader(fis)) {
 
       // Read the srcdir from the file that locjar wrote. //
-      fis = new FileInputStream( file) ;
-      isr = new InputStreamReader( fis) ;
-      len = isr.read( buf) ;
-      if( len != -1) {
-	if( buf[ len-1] == '\n') { //NOI18N
-	  len-- ;
-	}
-	s = new String( buf, 0, len) ;
-	idx = s.indexOf( "=") ; //NOI18N
-	if( idx != -1) {
-	  s = s.substring( idx + 1) ;
-	  s.trim() ;
-	}
-	else {
-	  s = null ;
-	}
+      len = isr.read(buf);
+      if (len != -1) {
+        if (buf[len - 1] == '\n') { //NOI18N
+          len--;
+        }
+        s = new String(buf, 0, len);
+        idx = s.indexOf("="); //NOI18N
+        if (idx != -1) {
+          s = s.substring(idx + 1);
+          s.trim(); //fixme
+        } else {
+          s = null;
+        }
       }
+    } catch (Exception e) {
+      System.out.println("ERROR: " + e.getMessage());
+      e.printStackTrace();
+      throw new BuildException();
     }
-    catch( Exception e) {
-      System.out.println( "ERROR: " + e.getMessage()) ;
-      e.printStackTrace() ;
-      throw new BuildException() ;
-    }
-    return( s) ;
+    return (s);
   }
 
   protected File findLocBundle( MakeLNBM makenbm,

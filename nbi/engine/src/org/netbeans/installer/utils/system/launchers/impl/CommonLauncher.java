@@ -204,12 +204,14 @@ public abstract class CommonLauncher extends Launcher {
             // get the first            
             for(LauncherResource file : jars) {
                 if(file.isBundled() && !file.isBasedOnResource()) {
-                    JarFile jarFile = new JarFile(new File(file.getPath()));
-                    Manifest manifest = jarFile.getManifest();
-                    jarFile.close();
+                    Manifest manifest;
+
+                    try (JarFile jarFile = new JarFile(new File(file.getPath()))) {
+                        manifest = jarFile.getManifest();
+                    }
+
                     if(manifest!=null) {
-                        mainClass = manifest.getMainAttributes().
-                                getValue(Attributes.Name.MAIN_CLASS);
+                        mainClass = manifest.getMainAttributes().getValue(Attributes.Name.MAIN_CLASS);
                     }
                     if(mainClass!=null) {
                         return;

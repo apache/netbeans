@@ -330,11 +330,10 @@ public class WorkingCopyDetails {
     private boolean isModifiedByByte() throws IOException {
 	boolean returnValue = false;
 
-        InputStream baseStream = null;
-        InputStream fileStream = null;
-        try {
-            baseStream = new BufferedInputStream(new java.io.FileInputStream(textBaseFile));
-            fileStream = new BufferedInputStream(new java.io.FileInputStream(file));
+        try (java.io.FileInputStream fis = new java.io.FileInputStream(textBaseFile);
+             java.io.FileInputStream fis2 = new java.io.FileInputStream(file);
+             InputStream baseStream = new BufferedInputStream(fis);
+             InputStream fileStream = new BufferedInputStream(fis2)) {
 
             int baseRetVal = baseStream.read();
             int fileRetVal =  fileStream.read();
@@ -362,13 +361,6 @@ public class WorkingCopyDetails {
             //If we're here, then baseRetVal is -1.  So, returnValue
             //should be true is fileRetVal != -1
             returnValue = (fileRetVal != -1);
-        } finally {
-            if(fileStream != null) {
-                fileStream.close();
-            }
-            if(baseStream != null) {
-                baseStream.close();
-            }
         }
 
         return returnValue;
@@ -390,13 +382,11 @@ public class WorkingCopyDetails {
         keywordsList.addAll(normalizeKeywords(rawKeywords.split(" ")));             // NOI18N          
 
         String[] keywords = keywordsList.toArray(new String[keywordsList.size()]);
-        
-        BufferedReader baseReader = null;
-        BufferedReader fileReader = null;
 
-        try {
-            baseReader = new BufferedReader(new java.io.FileReader(textBaseFile));
-            fileReader = new BufferedReader(new java.io.FileReader(file));
+        try (java.io.FileReader fr1 = new java.io.FileReader(textBaseFile);
+             java.io.FileReader fr2 = new java.io.FileReader(file);
+             BufferedReader baseReader = new BufferedReader(fr1);
+             BufferedReader fileReader = new BufferedReader(fr2)) {
 
             String baseLine = baseReader.readLine();
             String fileLine = fileReader.readLine();
@@ -423,14 +413,6 @@ public class WorkingCopyDetails {
 
             returnValue = baseLine != null || fileLine != null;
             
-        } finally {
-            if (fileReader != null) {
-                fileReader.close();
-            }
-
-            if (baseReader != null) {
-                baseReader.close();
-            }
         }
 
         return returnValue;

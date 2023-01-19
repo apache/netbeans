@@ -108,25 +108,25 @@ final class Query {
                 if( searchOffset > 0 ) {
                     query += "&start=" + searchOffset; //NOI18N
                 }
-                try {
-                    Socket s = new Socket("google.com",80); //NOI18N
-                    PrintStream p = new PrintStream(s.getOutputStream());
+
+                try (Socket s = new Socket("google.com",80); //NOI18N
+                    PrintStream p = new PrintStream(s.getOutputStream())) {
                     p.print("GET /search?q=" + query + " HTTP/1.0\r\n"); //NOI18N //NOI18N
                     //fake browser headers
                     p.print("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0\r\n"); //NOI18N
                     p.print("Connection: close\r\n\r\n"); //NOI18N
                     //TODO proxy
-                    InputStreamReader in = new InputStreamReader(s.getInputStream());
 
-                    BufferedReader buffer = new BufferedReader(in);
+                    StringBuilder rawHtml = new StringBuilder();
 
-                    String line;
-                    StringBuffer rawHtml = new StringBuffer();
-                    while ((line = buffer.readLine()) != null) {
-                        rawHtml.append(line);
+                    try (InputStreamReader in = new InputStreamReader(s.getInputStream());
+                         BufferedReader buffer = new BufferedReader(in)) {
+                        String line;
+                        while ((line = buffer.readLine()) != null) {
+                            rawHtml.append(line);
+                        }
                     }
 
-                    in.close();            
                     result.parse( rawHtml.toString(), searchOffset );
                     result.filterUrl( URL_PATTERNS );
                 } catch( IOException ioE ) {

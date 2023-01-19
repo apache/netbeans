@@ -644,9 +644,8 @@ public class SaasUtil {
             return Saas.NS_WADL_09;
         }
 
-        try {
-            InputStream is = new URI(url).toURL().openStream();
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try (InputStream is = new URI(url).toURL().openStream();
+             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[1024];
             int count;
 

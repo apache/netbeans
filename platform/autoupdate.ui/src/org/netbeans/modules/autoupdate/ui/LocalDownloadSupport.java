@@ -506,8 +506,7 @@ public class LocalDownloadSupport {
     }
     
     private static boolean isOSGiBundle(File jarFile) {
-        try {
-            JarFile jar = new JarFile(jarFile);
+        try (JarFile jar = new JarFile(jarFile)) {
             Manifest mf = jar.getManifest();
             return mf != null && mf.getMainAttributes().getValue("Bundle-SymbolicName") != null; // NOI18N
         } catch (IOException ioe) {

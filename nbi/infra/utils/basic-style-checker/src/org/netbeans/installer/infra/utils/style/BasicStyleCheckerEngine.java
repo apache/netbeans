@@ -51,30 +51,29 @@ public class BasicStyleCheckerEngine {
         checkers.add(new UnescapedStringChecker());
     }
     
-    public void check(
-            final File file) throws IOException {
-        final BufferedReader reader = new BufferedReader(new FileReader(file));
-        
-        String line = null;
-        for (int i = 1; (line = reader.readLine()) != null; i++) {
-            String error = "";
-            
-            for (Checker checker: checkers) {
-                if (checker.accept(file)) {
-                    final String message = checker.check(line);
-                    
-                    if (message != null) {
-                        error += "        " + message + "\n";
+    public void check(final File file) throws IOException {
+        try (FileReader fileReader = new FileReader(file);
+             BufferedReader reader = new BufferedReader(fileReader)) {
+
+            String line;
+            for (int i = 1; (line = reader.readLine()) != null; i++) {
+                String error = "";
+
+                for (Checker checker : checkers) {
+                    if (checker.accept(file)) {
+                        final String message = checker.check(line);
+
+                        if (message != null) {
+                            error += "        " + message + "\n";
+                        }
                     }
                 }
-            }
-            
-            if (!error.equals("")) {
-                System.out.println("    Line " + i + ":");
-                System.out.println(error);
+
+                if (!error.equals("")) {
+                    System.out.println("    Line " + i + ":");
+                    System.out.println(error);
+                }
             }
         }
-        
-        reader.close();
     }
 }

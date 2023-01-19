@@ -1282,10 +1282,8 @@ public class ProfilerInterface implements CommonConstants {
                     File outFile = new File(name + ".class"); // NOI18N
                     System.err.println("Debug: writing class file: " + name + ", into file: " + outFile.getPath()); // NOI18N
 
-                    try {
-                        FileOutputStream fos = new FileOutputStream(outFile);
+                    try (FileOutputStream fos = new FileOutputStream(outFile)) {
                         fos.write(newBytes[i]);
-                        fos.close();
                     } catch (IOException exc) {
                         System.err.println("error: " + exc + " writing class file: " + outFile.getPath()); // NOI18N
                     }

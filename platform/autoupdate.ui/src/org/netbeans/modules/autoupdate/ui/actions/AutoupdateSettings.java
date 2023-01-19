@@ -376,25 +376,16 @@ public class AutoupdateSettings {
     private static String readSuperFile(File superFile) {
         String res = null;
         // read existing super Id
-        InputStream is = null;
-        try {
-            is = new FileInputStream (superFile);
-            BufferedReader r = new BufferedReader (new InputStreamReader (is));
-            res = r.readLine ().trim ();
+        try (InputStream is = new FileInputStream(superFile);
+             InputStreamReader isr = new InputStreamReader(is);
+             BufferedReader r = new BufferedReader(isr)) {
+            res = r.readLine().trim();
             err.log (Level.FINE, "Read Super Id: " + res + " from " + superFile);
         } catch (IOException ex) {
             // let's ignore it
             err.log (Level.FINER, null, ex);
-        } finally {
-            try {
-                if(is!=null) {
-                    is.close ();
-                }
-            } catch (IOException ex) {
-                // let's ignore it
-                err.log (Level.FINER, null, ex);
-            }
         }
+
         return res;
     }
 

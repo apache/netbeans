@@ -138,10 +138,9 @@ public class CopyIcons extends MatchingTask {
     
     private ByteArrayInputStream readSomeBytes(File fl) throws IOException {
         byte buffer[] = new byte[30];
-        FileInputStream fis = null;
-        fis = new FileInputStream(fl);
-        fis.read(buffer);
-        fis.close();
+        try (FileInputStream fis = new FileInputStream(fl)){
+            fis.read(buffer);
+        }
         return new ByteArrayInputStream(buffer);
     }
     

@@ -442,9 +442,11 @@ public class MakeJNLP extends Task {
                 }   writeJNLP.write("  <component-desc/>\n");
                 writeJNLP.write("</jnlp>\n");
                 writeJNLP.close();
-                FileWriter w = new FileWriter(jnlp);
-                w.write(writeJNLP.toString());
-                w.close();
+
+                try (FileWriter w = new FileWriter(jnlp)) {
+                    w.write(writeJNLP.toString());
+                }
+
                 if (jar.exists() && isSigned(jar) == null) {
                     try {
                         tmpFile = extendLibraryManifest(getProject(), jar, signed, manifestCodebase, manifestPermissions, appName, jnlp);
@@ -987,9 +989,9 @@ public class MakeJNLP extends Task {
             writeVersionXML.close();
 
             File versionXML = new File(directory, "version.xml");
-            FileWriter w = new FileWriter(versionXML);
-            w.write(writeVersionXML.toString());
-            w.close();
+            try (FileWriter w = new FileWriter(versionXML)) {
+                w.write(writeVersionXML.toString());
+            }
         }
     }
 

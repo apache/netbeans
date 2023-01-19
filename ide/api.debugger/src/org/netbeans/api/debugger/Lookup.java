@@ -457,29 +457,28 @@ abstract class Lookup implements ContextProvider {
                         continue;
                     }
                     urls.add(url);
-                    InputStream is = url.openStream ();
-                    if (is == null) {
-                        continue;
-                    }
-                    try {
-                        BufferedReader br = new BufferedReader (
-                            new InputStreamReader (is)
-                        );
-                        for (String s = br.readLine(); s != null; s = br.readLine()) {
-                            if (s.startsWith ("#")) {
-                                continue;
-                            }
-                            if (s.length () == 0) {
-                                continue;
-                            }
-                            if (verbose) {
-                                v.append("\nR  service ").append(s).append(" found");
-                            }
 
-                            l.add (s);
+                    try (InputStream is = url.openStream ()) {
+                        if (is == null) {
+                            continue;
                         }
-                    } finally {
-                        is.close();
+
+                        try (InputStreamReader isr = new InputStreamReader(is);
+                             BufferedReader br = new BufferedReader(isr)) {
+                            for (String s = br.readLine(); s != null; s = br.readLine()) {
+                                if (s.startsWith("#")) {
+                                    continue;
+                                }
+                                if (s.length() == 0) {
+                                    continue;
+                                }
+                                if (verbose) {
+                                    v.append("\nR  service ").append(s).append(" found");
+                                }
+
+                                l.add(s);
+                            }
+                        }
                     }
                 }
                 if (verbose) {

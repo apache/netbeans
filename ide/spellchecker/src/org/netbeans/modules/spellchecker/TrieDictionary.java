@@ -76,14 +76,9 @@ public class TrieDictionary implements Dictionary {
     private TrieDictionary(File data) throws IOException {
         this.array = null;
 
-        FileInputStream ins = new FileInputStream(data);
-        FileChannel channel = ins.getChannel();
-        
-        try {
+        try (FileInputStream ins = new FileInputStream(data);
+             FileChannel channel = ins.getChannel()) {
             this.buffer = channel.map(MapMode.READ_ONLY, 0, channel.size());
-        } finally {
-            channel.close();
-            ins.close();
         }
     }
 

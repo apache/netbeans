@@ -134,16 +134,16 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
         try {
             f1 = FileUtil.normalizeFile(File.createTempFile("TempDiff".intern(), null));
             f2 = FileUtil.normalizeFile(File.createTempFile("TempDiff".intern(), null));
-            FileWriter fw1 = new FileWriter(f1);
-            FileWriter fw2 = new FileWriter(f2);
-            char[] buffer = new char[BUFF_LENGTH];
-            int length;
-            while((length = r1.read(buffer)) > 0) fw1.write(buffer, 0, length);
-            while((length = r2.read(buffer)) > 0) fw2.write(buffer, 0, length);
-            r1.close();
-            r2.close();
-            fw1.close();
-            fw2.close();
+
+            try (FileWriter fw1 = new FileWriter(f1);
+                 FileWriter fw2 = new FileWriter(f2)) {
+                char[] buffer = new char[BUFF_LENGTH];
+                int length;
+                while ((length = r1.read(buffer)) > 0) fw1.write(buffer, 0, length);
+                while ((length = r2.read(buffer)) > 0) fw2.write(buffer, 0, length);
+                r1.close();
+                r2.close();
+            }
             return createDiff(f1, f2);
         } finally {
             if (f1 != null) f1.delete();

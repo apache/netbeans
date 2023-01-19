@@ -232,10 +232,8 @@ public class STSWizard implements TemplateWizard.Iterator {
 
                     wiz.putProperty(WizardProperties.WSDL_FILE_PATH, newFile.getPath());
 
-                    BufferedWriter writer = null;
-                    try {
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
                         List<String> lines = wsdlFO.asLines();
-                        writer = new BufferedWriter(new FileWriter(newFile));
 
                         for (String line : lines) {
                             if ((index = line.indexOf(SERVICENAME_TAG)) != -1) {
@@ -248,15 +246,6 @@ public class STSWizard implements TemplateWizard.Iterator {
                         logger.log(Level.INFO, null, ex);
                     } catch (IOException ex) {
                         logger.log(Level.INFO, null, ex);
-                    } finally {
-                        try {
-                            if (writer != null) {
-                                writer.flush();
-                                writer.close();
-                            }
-                        } catch (IOException ex) {
-                            logger.log(Level.INFO, null, ex);
-                        }
                     }
 
                     wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlURL);

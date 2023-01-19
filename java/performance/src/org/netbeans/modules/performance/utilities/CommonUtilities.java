@@ -333,11 +333,15 @@ public class CommonUtilities {
      */
     public static void copyFile(java.io.File f1, java.io.File f2) throws java.io.FileNotFoundException, java.io.IOException{
         int data;
-        java.io.InputStream fis = new java.io.BufferedInputStream(new java.io.FileInputStream(f1));
-        java.io.OutputStream fos = new java.io.BufferedOutputStream(new java.io.FileOutputStream(f2));
-        
-        while((data=fis.read())!=-1){
-            fos.write(data);
+
+        try (java.io.FileInputStream fis = new java.io.FileInputStream(f1);
+             java.io.FileOutputStream fos = new java.io.FileOutputStream(f2);
+             java.io.InputStream bis = new java.io.BufferedInputStream(fis);
+             java.io.OutputStream bos = new java.io.BufferedOutputStream(fos)) {
+
+            while ((data = bis.read()) != -1) {
+                bos.write(data);
+            }
         }
     }
     
@@ -864,28 +868,28 @@ public class CommonUtilities {
 
         testResultsTag.appendChild(testSuiteTag);
 
+        try (FileOutputStream fos = new FileOutputStream(resGlobal);
+             PrintStream ps = new PrintStream(fos)) {
+            Transformer tr = null;
+            try {
+                tr = TransformerFactory.newInstance().newTransformer();
+            } catch (TransformerConfigurationException ex) {
+            }
 
-        try {
-            out = new PrintStream(new FileOutputStream(resGlobal));
+            tr.setOutputProperty(OutputKeys.INDENT, "no");
+            tr.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            DOMSource docSrc = new DOMSource(allPerfDoc);
+            StreamResult result = new StreamResult(ps);
+
+            try {
+                tr.transform(docSrc, result);
+            } catch (TransformerException ex) {
+            }
+
         } catch (FileNotFoundException ex) {
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        Transformer tr=null;
-        try {
-            tr = TransformerFactory.newInstance().newTransformer();
-        } catch (TransformerConfigurationException ex) {
-        }
-
-        tr.setOutputProperty(OutputKeys.INDENT, "no");
-        tr.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        DOMSource docSrc = new DOMSource(allPerfDoc);
-        StreamResult result = new StreamResult(out);
-
-        try {
-            tr.transform(docSrc, result);
-        } catch (TransformerException ex) {
-        }
-        out.close();
     }
 
     public static void processUnitTestsResults(String className, PerformanceData pd) {

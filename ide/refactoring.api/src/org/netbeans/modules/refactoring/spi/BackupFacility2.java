@@ -566,9 +566,10 @@ abstract class BackupFacility2 {
         }
 
         private void copy(File a, File b) throws IOException {
-            FileInputStream fs = new FileInputStream(a);
-            FileOutputStream fo = new FileOutputStream(b);
-            copy(fs, fo);
+            try (FileInputStream fs = new FileInputStream(a);
+                 FileOutputStream fo = new FileOutputStream(b)) {
+                copy(fs, fo);
+            }
         }
 
         private void copy(File a, FileObject b) throws IOException {

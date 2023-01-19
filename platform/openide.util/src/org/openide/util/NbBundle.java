@@ -544,24 +544,20 @@ public class NbBundle extends Object {
 
             if (u != null) {
                 //System.err.println("Loading " + res);
-                try {
-                    // #51667: but in case we are in USE_DEBUG_LOADER mode, use gRAS (since getResource is not overridden)
-                    InputStream is = USE_DEBUG_LOADER ?
+                try (InputStream is = USE_DEBUG_LOADER ?
                         (loader != null ? loader.getResourceAsStream(res) : ClassLoader.getSystemResourceAsStream(res)) :
-                            u.openStream();
+                        u.openStream()) {
+                    // #51667: but in case we are in USE_DEBUG_LOADER mode, use gRAS (since getResource is not overridden)
 
                     // #NETBEANS-5181
                     String encoding = System.getProperty("java.util.PropertyResourceBundle.encoding");
                     UtfThenIsoCharset charset = "UTF-8".equals(encoding) ? utfThenIsoCharsetOnlyUTF8 : utfThenIsoCharset;
-                    InputStreamReader reader = new InputStreamReader(is,
-                            "ISO-8859-1".equals(encoding)
-                            ? StandardCharsets.ISO_8859_1.newDecoder()
-                            : charset.newDecoder());
 
-                    try {
+                    try (InputStreamReader reader = new InputStreamReader(is,
+                            "ISO-8859-1".equals(encoding)
+                                    ? StandardCharsets.ISO_8859_1.newDecoder()
+                                    : charset.newDecoder())) {
                         p.load(reader);
-                    } finally {
-                        is.close();
                     }
                 } catch (IOException e) {
                     Exceptions.attachMessage(e, "While loading: " + res); // NOI18N

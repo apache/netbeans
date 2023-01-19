@@ -264,38 +264,40 @@ public class Sigtest extends Task {
         return type.cast(task.getClass().getMethod(name).invoke(task));
     }
     private void apitest() throws Exception {
-        URLClassLoader url = new URLClassLoader(new URL[] { sigtestJar.toURI().toURL() }, Sigtest.class.getClassLoader());
-        Class<?> clazz = url.loadClass("org.netbeans.apitest.Sigtest");
-        Task task = (Task) clazz.getConstructor().newInstance();
-        
-        task.setProject(getProject());
-        task.setTaskName(getTaskName());
-        setM(task, "setFailOnError", boolean.class, failOnError);
-        setM(task, "setFileName", File.class, fileName);
-        setM(task, "setReport", File.class, report);
-        setM(task, "setPackages", String.class, packages);
-        setM(task, "setVersion", String.class, version);
-        setM(task, "setRelease", String.class, release);
-        
-        Class<? extends EnumeratedAttribute> actionType = url.loadClass("org.netbeans.apitest.Sigtest$ActionType").asSubclass(EnumeratedAttribute.class);
-        setM(task, "setAction", EnumeratedAttribute.getInstance(actionType, action.getValue()));
+        try (URLClassLoader url = new URLClassLoader(new URL[] { sigtestJar.toURI().toURL() }, Sigtest.class.getClassLoader())) {
+            Class<?> clazz = url.loadClass("org.netbeans.apitest.Sigtest");
+            Task task = (Task) clazz.getConstructor().newInstance();
 
-        Path path = getM(task, "createClasspath", Path.class);
-        path.add(classpath);
-        
-        File outputFile = null;
-        String s = getProject().getProperty("sigtest.output.dir");
-        if (s != null) {
-            File dir = getProject().resolveFile(s);
-            dir.mkdirs();
-            outputFile = new File(dir, fileName.getName().replace(".sig", "").replace("-", "."));
-            log(outputFile.toString());
+            task.setProject(getProject());
+            task.setTaskName(getTaskName());
+            setM(task, "setFailOnError", boolean.class, failOnError);
+            setM(task, "setFileName", File.class, fileName);
+            setM(task, "setReport", File.class, report);
+            setM(task, "setPackages", String.class, packages);
+            setM(task, "setVersion", String.class, version);
+            setM(task, "setRelease", String.class, release);
+
+            Class<? extends EnumeratedAttribute> actionType = url.loadClass("org.netbeans.apitest.Sigtest$ActionType").asSubclass(EnumeratedAttribute.class);
+            setM(task, "setAction", EnumeratedAttribute.getInstance(actionType, action.getValue()));
+
+
+            Path path = getM(task, "createClasspath", Path.class);
+            path.add(classpath);
+
+            File outputFile = null;
+            String s = getProject().getProperty("sigtest.output.dir");
+            if (s != null) {
+                File dir = getProject().resolveFile(s);
+                dir.mkdirs();
+                outputFile = new File(dir, fileName.getName().replace(".sig", "").replace("-", "."));
+                log(outputFile.toString());
 //            java.setOutput(outputFile);
-        }
+            }
 
-        task.execute();
-        if (outputFile != null) {
-            outputFile.delete();
+            task.execute();
+            if (outputFile != null) {
+                outputFile.delete();
+            }
         }
     }
 

@@ -255,21 +255,13 @@ public class HelperUtility {
         dstFile.getParentFile().mkdirs();
         dstFile.createNewFile();
 
-        FileChannel source = null;
-        FileChannel destination = null;
+        try (FileInputStream fis = new FileInputStream(srcFile);
+             FileOutputStream fos = new FileOutputStream(dstFile);
+             FileChannel source = fis.getChannel();
+             FileChannel destination = fos.getChannel()) {
 
-        try {
-            source = new FileInputStream(srcFile).getChannel();
-            destination = new FileOutputStream(dstFile).getChannel();
             destination.transferFrom(source, 0, source.size());
             dstFile.setExecutable(true);
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
         }
     }
 

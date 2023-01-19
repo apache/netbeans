@@ -203,16 +203,19 @@ public class Generate {
         StringBuilder sb = new StringBuilder();
         File f = new File(System.getProperty("user.dir"));
         f = new File(f, "gensrc/"+Generate.class.getName().replace('.', '/')+".java");
-        BufferedReader r = new BufferedReader(new FileReader(f));
-        while (true) {
-            String line = r.readLine();
-            sb.append(line);
-            sb.append(System.getProperty("line.separator"));
-            if (line.trim().indexOf("*/") >= 0) {
-                break;
+
+        try (FileReader fr = new FileReader(f);
+             BufferedReader r = new BufferedReader(fr)) {
+            while (true) {
+                String line = r.readLine();
+                sb.append(line);
+                sb.append(System.getProperty("line.separator"));
+                if (line.trim().indexOf("*/") >= 0) {
+                    break;
+                }
             }
         }
-        r.close();
+
         return sb.toString();
     }
 
@@ -232,20 +235,23 @@ public class Generate {
         String cName = name + "Wrapper";
         String eName = jdiException.getName();
         File cf = new File(dir, cName+".java");
-        Writer w = new BufferedWriter(new FileWriter(cf));
-        w.write(getLicense());
-        w.write("\npackage "+PACKAGE+";\n\n");
-        w.write("/**\n * Wrapper for "+name+" JDI exception.\n * The calling code must count with this exception being thrown.\n */\n");
-        w.write("public final class "+cName+" extends Exception {\n");
-        w.write("\n    public "+cName+"("+eName+" ex) {\n");
-        w.write("        super(ex);\n");
-        w.write("    }\n\n");
-        w.write("    @Override\n");
-        w.write("    public "+eName+" getCause() {\n");
-        w.write("        return ("+eName+") super.getCause();\n");
-        w.write("    }\n\n");
-        w.write("}\n");
-        w.close();
+
+        try (FileWriter fw = new FileWriter(cf);
+             Writer w = new BufferedWriter(fw)) {
+            w.write(getLicense());
+            w.write("\npackage " + PACKAGE + ";\n\n");
+            w.write("/**\n * Wrapper for " + name + " JDI exception.\n * The calling code must count with this exception being thrown.\n */\n");
+            w.write("public final class " + cName + " extends Exception {\n");
+            w.write("\n    public " + cName + "(" + eName + " ex) {\n");
+            w.write("        super(ex);\n");
+            w.write("    }\n\n");
+            w.write("    @Override\n");
+            w.write("    public " + eName + " getCause() {\n");
+            w.write("        return (" + eName + ") super.getCause();\n");
+            w.write("    }\n\n");
+            w.write("}\n");
+        }
+
         return PACKAGE+"."+cName;
     }
 
@@ -254,26 +260,28 @@ public class Generate {
         URL resource = ClassLoader.getSystemClassLoader().getResource("com/sun/jdi/VirtualMachine.class");
         String jarFileName = resource.getFile();
         jarFileName = jarFileName.substring("file:".length(), jarFileName.indexOf('!'));
-        ZipFile jar = new ZipFile(jarFileName);
-        Enumeration<? extends ZipEntry> classEntries = jar.entries();
-        while (classEntries.hasMoreElements()) {
-            ZipEntry classEntry = classEntries.nextElement();
-            String name = classEntry.getName();
-            if (name.startsWith(JDI_CLASSES_PATH) && name.endsWith(".class")) {
-                String className = name.substring(0, name.length() - ".class".length()).replace('/', '.');
-                //className = className.replace('$', '.');
-                //System.err.println("Have class from JAR: '"+className+"'");
-                Class c;
-                try {
-                    c = Class.forName(className);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
-                    continue;
+
+        try (ZipFile jar = new ZipFile(jarFileName)) {
+            Enumeration<? extends ZipEntry> classEntries = jar.entries();
+            while (classEntries.hasMoreElements()) {
+                ZipEntry classEntry = classEntries.nextElement();
+                String name = classEntry.getName();
+                if (name.startsWith(JDI_CLASSES_PATH) && name.endsWith(".class")) {
+                    String className = name.substring(0, name.length() - ".class".length()).replace('/', '.');
+                    //className = className.replace('$', '.');
+                    //System.err.println("Have class from JAR: '"+className+"'");
+                    Class c;
+                    try {
+                        c = Class.forName(className);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
+                        continue;
+                    }
+                    if (Throwable.class.isAssignableFrom(c)) {
+                        continue;
+                    }
+                    classes.add(c);
                 }
-                if (Throwable.class.isAssignableFrom(c)) {
-                    continue;
-                }
-                classes.add(c);
             }
         }
         Collections.sort(classes, new Comparator<Class>() {
@@ -310,113 +318,115 @@ public class Generate {
         }
 
         File jdkLogFile = new File(rootResource, METHODS_BY_JDK+jdkVersion);
-        Writer log = new BufferedWriter(new FileWriter(jdkLogFile));
-        // Information about all JDI methods of the current JDK version are stored
-        // in the following form:
-        // <class name>:<wrapper class simple name> [isObjectReference]
-        //  <method name>(<generic parameter types>):<generic return type>:<default return value> throws <exception classes>
 
-        Map<String, List<String>> higherVersionMethods = getHigherVersionMethods(rootResource, jdkVersion);
-        int[] higherVersionMethodIndexes = new int[higherVersionMethods.size()];
+        try (FileWriter fw = new FileWriter(jdkLogFile);
+             Writer log = new BufferedWriter(fw)) {
+            // Information about all JDI methods of the current JDK version are stored
+            // in the following form:
+            // <class name>:<wrapper class simple name> [isObjectReference]
+            //  <method name>(<generic parameter types>):<generic return type>:<default return value> throws <exception classes>
 
-        Set<String> higherVersionClasses = new HashSet<String>();
-        int[] indexes = new int[higherVersionMethods.size()];
-        for (Class c : classes) {
-            if (c.getDeclaredMethods().length == 0) {
-                continue;
+            Map<String, List<String>> higherVersionMethods = getHigherVersionMethods(rootResource, jdkVersion);
+            int[] higherVersionMethodIndexes = new int[higherVersionMethods.size()];
+
+            Set<String> higherVersionClasses = new HashSet<String>();
+            int[] indexes = new int[higherVersionMethods.size()];
+            for (Class c : classes) {
+                if (c.getDeclaredMethods().length == 0) {
+                    continue;
+                }
+                int ii = 0;
+                for (Iterator<String> it = higherVersionMethods.keySet().iterator(); it.hasNext(); ii++) {
+                    String version = it.next();
+                    List<String> methodsLog = higherVersionMethods.get(version);
+                    int i;
+                    for (i = indexes[ii]; i < methodsLog.size(); i++) {
+                        String loggedClass = methodsLog.get(i);
+                        if (loggedClass.startsWith(" ")) continue;
+                        int colonIndex = loggedClass.indexOf(':');
+                        if (!loggedClass.substring(0, colonIndex).equals(c.getName())) {
+                            higherVersionClasses.add(loggedClass.substring(0, colonIndex).replace('$', '.'));
+                        } else {
+                            i++;
+                            break;
+                        }
+                    }
+                    indexes[ii] = i;
+                }
             }
-            int ii = 0;
-            for (Iterator<String> it = higherVersionMethods.keySet().iterator(); it.hasNext(); ii++) {
-                String version = it.next();
-                List<String> methodsLog = higherVersionMethods.get(version);
-                int i;
-                for (i = indexes[ii]; i < methodsLog.size(); i++) {
-                    String loggedClass = methodsLog.get(i);
-                    if (loggedClass.startsWith(" ")) continue;
-                    int colonIndex = loggedClass.indexOf(':');
-                    if (!loggedClass.substring(0, colonIndex).equals(c.getName())) {
-                        higherVersionClasses.add(loggedClass.substring(0, colonIndex).replace('$', '.'));
-                    } else {
-                        i++;
-                        break;
+            System.out.println("\nHigher version classes: " + higherVersionClasses + "\n");
+
+            for (Class c : classes) {
+                String name = c.getSimpleName();
+                String className = c.getName().replace('$', '.');
+                String classPackage = c.getPackage().getName();
+                String cName;
+                Class enclosingClass = c.getEnclosingClass();
+                if (enclosingClass != null) {
+                    cName = enclosingClass.getSimpleName() + name + "Wrapper";
+                    name = enclosingClass.getSimpleName() + "." + name;
+                } else {
+                    cName = name + "Wrapper";
+                }
+                Method[] methods = c.getDeclaredMethods();
+                if (methods.length == 0) {
+                    System.err.println("Class: " + c.getName());
+                    System.err.println(" - ignored, have no methods.");
+                    continue;
+                }
+                writeHigherVersionClasses(dir, c, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
+                System.err.println("Class: " + c.getName());
+                Arrays.sort(methods, new Comparator<Method>() {
+                    public int compare(Method m1, Method m2) {
+                        int c = m1.getName().compareTo(m2.getName());
+                        if (c == 0) {
+                            StringBuilder p1 = new StringBuilder();
+                            for (Class pt : m1.getParameterTypes()) {
+                                p1.append(pt.getName());
+                                p1.append(" ");
+                            }
+                            StringBuilder p2 = new StringBuilder();
+                            for (Class pt : m2.getParameterTypes()) {
+                                p2.append(pt.getName());
+                                p2.append(" ");
+                            }
+                            c = p1.toString().compareTo(p2.toString());
+                        }
+                        return c;
+                    }
+                });
+                log.write(c.getName() + ":" + cName + "\n");
+                Writer w;
+                if (NOT_USED_CLASSES.contains(c.getName()) || c.getName().startsWith("com.sun.jdi.connect")) {
+                    w = null;
+                } else {
+                    w = writeClassHeader(dir, name, classPackage, cName, null);
+                }
+                for (Method m : methods) {
+                    writeHigherVersionMethods(w, m, className, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
+                    String mName = m.getName();
+                    Type[] paramTypes = m.getGenericParameterTypes();
+                    String rType = translateType(m.getGenericReturnType());
+                    String defaultReturn = getDefaultReturn(m.getReturnType());
+                    Class[] exceptionTypes = m.getExceptionTypes();
+
+                    System.err.println("  Method: " + mName);
+                    logMethod(log, mName, paramTypes, exceptionTypes, rType, defaultReturn);
+                    if (w != null) {
+                        if (defaultReturn != null) {
+                            writeMethod(w, c, className, mName, mName + "0", paramTypes, exceptionTypes, rType, defaultReturn);
+                        }
+                        writeMethod(w, c, className, mName, mName, paramTypes, exceptionTypes, rType, null);
                     }
                 }
-                indexes[ii] = i;
-            }
-        }
-        System.out.println("\nHigher version classes: "+higherVersionClasses+"\n");
-        
-        for (Class c : classes) {
-            String name = c.getSimpleName();
-            String className = c.getName().replace('$', '.');
-            String classPackage = c.getPackage().getName();
-            String cName;
-            Class enclosingClass = c.getEnclosingClass();
-            if (enclosingClass != null) {
-                cName = enclosingClass.getSimpleName() + name + "Wrapper";
-                name = enclosingClass.getSimpleName() + "." + name;
-            } else {
-                cName = name + "Wrapper";
-            }
-            Method[] methods = c.getDeclaredMethods();
-            if (methods.length == 0) {
-                System.err.println("Class: "+c.getName());
-                System.err.println(" - ignored, have no methods.");
-                continue;
-            }
-            writeHigherVersionClasses(dir, c, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
-            System.err.println("Class: "+c.getName());
-            Arrays.sort(methods, new Comparator<Method>() {
-                public int compare(Method m1, Method m2) {
-                    int c = m1.getName().compareTo(m2.getName());
-                    if (c == 0) {
-                        StringBuilder p1 = new StringBuilder();
-                        for (Class pt : m1.getParameterTypes()) {
-                            p1.append(pt.getName());
-                            p1.append(" ");
-                        }
-                        StringBuilder p2 = new StringBuilder();
-                        for (Class pt : m2.getParameterTypes()) {
-                            p2.append(pt.getName());
-                            p2.append(" ");
-                        }
-                        c = p1.toString().compareTo(p2.toString());
-                    }
-                    return c;
-                }
-            });
-            log.write(c.getName()+":"+cName+"\n");
-            Writer w;
-            if (NOT_USED_CLASSES.contains(c.getName()) || c.getName().startsWith("com.sun.jdi.connect")) {
-                w = null;
-            } else {
-                w = writeClassHeader(dir, name, classPackage, cName, null);
-            }
-            for (Method m : methods) {
-                writeHigherVersionMethods(w, m, className, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
-                String mName = m.getName();
-                Type[] paramTypes = m.getGenericParameterTypes();
-                String rType = translateType(m.getGenericReturnType());
-                String defaultReturn = getDefaultReturn(m.getReturnType());
-                Class[] exceptionTypes = m.getExceptionTypes();
-                
-                System.err.println("  Method: "+mName);
-                logMethod(log, mName, paramTypes, exceptionTypes, rType, defaultReturn);
+                writeHigherVersionMethods(w, null, className, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
                 if (w != null) {
-                    if (defaultReturn != null) {
-                        writeMethod(w, c, className, mName, mName+"0", paramTypes, exceptionTypes, rType, defaultReturn);
-                    }
-                    writeMethod(w, c, className, mName, mName, paramTypes, exceptionTypes, rType, null);
+                    w.write("}\n");
+                    w.close();
                 }
             }
-            writeHigherVersionMethods(w, null, className, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
-            if (w != null) {
-                w.write("}\n");
-                w.close();
-            }
+            writeHigherVersionClasses(dir, null, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
         }
-        writeHigherVersionClasses(dir, null, higherVersionMethods, higherVersionMethodIndexes, higherVersionClasses);
-        log.close();
     }
 
     private static Writer writeClassHeader(File dir, String name, String classPackage, String cName, String jdkVersion) throws IOException {
@@ -1018,12 +1028,15 @@ public class Generate {
 
     private static List<String> readMethodsLog(File resource) throws IOException {
         List<String> list = new ArrayList<String>();
-        BufferedReader log = new BufferedReader(new FileReader(resource));
-        String line;
-        while ((line = log.readLine()) != null) {
-            list.add(line);
+
+        try (FileReader fr = new FileReader(resource);
+             BufferedReader log = new BufferedReader(fr)) {
+            String line;
+            while ((line = log.readLine()) != null) {
+                list.add(line);
+            }
         }
-        log.close();
+
         return list;
     }
 

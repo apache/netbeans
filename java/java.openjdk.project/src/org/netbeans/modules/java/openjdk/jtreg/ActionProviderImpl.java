@@ -45,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
@@ -628,9 +629,8 @@ public class ActionProviderImpl implements ActionProvider {
         File buildDir = BuildUtils.getBuildTargetDir(file);
         File spec = new File(buildDir, "spec.gmk");
         if (spec.canRead()) {
-            try {
-                String jtHome = Files.lines(spec.toPath())
-                                     .filter(l -> l.startsWith(JT_HOME_KEY))
+            try (Stream<String> lines = Files.lines(spec.toPath())) {
+                String jtHome = lines.filter(l -> l.startsWith(JT_HOME_KEY))
                                      .findAny()
                                      .orElse(JT_HOME_KEY)
                                      .substring(JT_HOME_KEY.length());

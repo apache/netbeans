@@ -69,23 +69,20 @@ public class NativeDiff implements Diff {
             diffFile = File.createTempFile("~diff", "tmp~");
         else
             diffFile = new File(diff);
-        
-        FileOutputStream fos = new FileOutputStream(diffFile);
-        prs = Runtime.getRuntime().exec(prepareCommand(new File(first).getAbsolutePath(), new File(second).getAbsolutePath()));
-        StreamGobbler outputGobbler = new StreamGobbler(prs.getInputStream(), fos);
-        outputGobbler.start();
 
-        try {
-            prs.waitFor();
-            outputGobbler.join();
-        }
-        catch (java.lang.InterruptedException e) {}
+        try (FileOutputStream fos = new FileOutputStream(diffFile)) {
+            prs = Runtime.getRuntime().exec(prepareCommand(new File(first).getAbsolutePath(), new File(second).getAbsolutePath()));
+            StreamGobbler outputGobbler = new StreamGobbler(prs.getInputStream(), fos);
+            outputGobbler.start();
 
-        try {
+            try {
+                prs.waitFor();
+                outputGobbler.join();
+            } catch (java.lang.InterruptedException e) {
+            }
+
             fos.flush();
-            fos.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

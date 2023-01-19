@@ -144,8 +144,7 @@ public class DeclarativeHintsTestBase extends NbTestCase {
     private static Collection<String> listTestsFromJar(File archive) {
         Collection<String> result = new LinkedList<String>();
 
-        try {
-            JarFile jf = new JarFile(archive);
+        try (JarFile jf = new JarFile(archive)) {
             Enumeration<JarEntry> entries = jf.entries();
 
             while (entries.hasMoreElements()) {

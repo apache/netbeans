@@ -163,9 +163,10 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         try {
             FileObject fo = getPrimaryFile();
             byte[] imageData = new byte[(int)fo.getSize()];
-            BufferedInputStream in = new BufferedInputStream(fo.getInputStream());
-            in.read(imageData, 0, (int)fo.getSize());
-            in.close();
+            try (InputStream is = fo.getInputStream();
+                 BufferedInputStream in = new BufferedInputStream(is)) {
+                in.read(imageData, 0, (int) fo.getSize());
+            }
             return imageData; 
         } catch(IOException ioe) {
             return new byte[0];

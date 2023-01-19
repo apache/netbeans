@@ -354,15 +354,16 @@ public class V8Debug {
                 Long fromLine = null;
                 Long toLine = null;
                 if (!args.isEmpty()) {
-                    Scanner scan = new Scanner(args);
-                    if (scan.hasNextLong()) {
-                        frameNum = scan.nextLong();
-                    }
-                    if (scan.hasNextLong()) {
-                        fromLine = scan.nextLong();
-                    }
-                    if (scan.hasNextLong()) {
-                        toLine = scan.nextLong();
+                    try (Scanner scan = new Scanner(args)) {
+                        if (scan.hasNextLong()) {
+                            frameNum = scan.nextLong();
+                        }
+                        if (scan.hasNextLong()) {
+                            fromLine = scan.nextLong();
+                        }
+                        if (scan.hasNextLong()) {
+                            toLine = scan.nextLong();
+                        }
                     }
                 }
                 cc.send(Source.createRequest(requestSequence++, frameNum, fromLine, toLine));
@@ -371,17 +372,18 @@ public class V8Debug {
                 if (args.isEmpty()) {
                     cc.send(Scope.createRequest(requestSequence++));
                 } else {
-                    Scanner scan = new Scanner(args);
-                    if (!scan.hasNextLong()) {
-                        printMSG("ERR_WrongScopeNumber", args);
-                        printPrompt();
-                    } else {
-                        long scopeNumber = scan.nextLong();
-                        Long frameNumber = null;
-                        if (scan.hasNextLong()) {
-                            frameNumber = scan.nextLong();
+                    try (Scanner scan = new Scanner(args)) {
+                        if (!scan.hasNextLong()) {
+                            printMSG("ERR_WrongScopeNumber", args);
+                            printPrompt();
+                        } else {
+                            long scopeNumber = scan.nextLong();
+                            Long frameNumber = null;
+                            if (scan.hasNextLong()) {
+                                frameNumber = scan.nextLong();
+                            }
+                            cc.send(Scope.createRequest(requestSequence++, scopeNumber, frameNumber));
                         }
-                        cc.send(Scope.createRequest(requestSequence++, scopeNumber, frameNumber));
                     }
                 }
                 return true;
@@ -442,21 +444,22 @@ public class V8Debug {
             case "lookup":
                 if (!args.isEmpty()) {
                     args = args.replace(',', ' ');
-                    Scanner scan = new Scanner(args);
-                    if (!scan.hasNextLong()) {
-                        printMSG("ERR_WrongObjectHandle", args);
-                        printPrompt();
-                    } else {
-                        List<Long> handlesL = new ArrayList<>();
-                        while (scan.hasNextLong()) {
-                            long handle = scan.nextLong();
-                            handlesL.add(handle);
+                    try (Scanner scan = new Scanner(args)) {
+                        if (!scan.hasNextLong()) {
+                            printMSG("ERR_WrongObjectHandle", args);
+                            printPrompt();
+                        } else {
+                            List<Long> handlesL = new ArrayList<>();
+                            while (scan.hasNextLong()) {
+                                long handle = scan.nextLong();
+                                handlesL.add(handle);
+                            }
+                            long[] handles = new long[handlesL.size()];
+                            for (int i = 0; i < handlesL.size(); i++) {
+                                handles[i] = handlesL.get(i);
+                            }
+                            cc.send(Lookup.createRequest(requestSequence++, handles, false));
                         }
-                        long[] handles = new long[handlesL.size()];
-                        for (int i = 0; i < handlesL.size(); i++) {
-                            handles[i] = handlesL.get(i);
-                        }
-                        cc.send(Lookup.createRequest(requestSequence++, handles, false));
                     }
                 } else {
                     printMSG("ERR_MissingObjectHandle");
@@ -607,22 +610,23 @@ public class V8Debug {
     }
     
     private void deleteBreakpoints(String args) throws NumberFormatException, IOException {
-        Scanner scanner = new Scanner(args);
-        scanner.useDelimiter("[,\\p{javaWhitespace}]+");
-        while (scanner.hasNext()) {
-            String brkp = scanner.next();
-            int dash = brkp.indexOf('-');
-            if (dash > 0) {
-                String brkp1 = brkp.substring(0, dash).trim();
-                String brkp2 = brkp.substring(dash+1).trim();
-                long b1 = Long.parseLong(brkp1);
-                long b2 = Long.parseLong(brkp2);
-                for (long b = b1; b <= b2; b++) {
+        try (Scanner scanner = new Scanner(args)) {
+            scanner.useDelimiter("[,\\p{javaWhitespace}]+");
+            while (scanner.hasNext()) {
+                String brkp = scanner.next();
+                int dash = brkp.indexOf('-');
+                if (dash > 0) {
+                    String brkp1 = brkp.substring(0, dash).trim();
+                    String brkp2 = brkp.substring(dash + 1).trim();
+                    long b1 = Long.parseLong(brkp1);
+                    long b2 = Long.parseLong(brkp2);
+                    for (long b = b1; b <= b2; b++) {
+                        deleteBreakpoint(b);
+                    }
+                } else {
+                    long b = Long.parseLong(brkp);
                     deleteBreakpoint(b);
                 }
-            } else {
-                long b = Long.parseLong(brkp);
-                deleteBreakpoint(b);
             }
         }
     }

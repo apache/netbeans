@@ -34,18 +34,20 @@ public class Main {
         final String newline = "\n";
         
         final List<String> lines = new LinkedList<String>();
-        
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String line2read = null;
-        while ((line2read = reader.readLine()) != null) {
-            lines.add(line2read);
+
+        try (FileReader fileReader = new FileReader(file);
+             BufferedReader reader = new BufferedReader(fileReader)) {
+            String line2read;
+            while ((line2read = reader.readLine()) != null) {
+                lines.add(line2read);
+            }
         }
-        reader.close();
-        
-        PrintWriter writer = new PrintWriter(new FileWriter(file));
-        for (String line2write: lines) {
-            writer.write(line2write + newline);
+
+        try (FileWriter fileWriter = new FileWriter(file);
+             PrintWriter writer = new PrintWriter(fileWriter)) {
+            for (String line2write : lines) {
+                writer.write(line2write + newline);
+            }
         }
-        writer.close();
     }
 }

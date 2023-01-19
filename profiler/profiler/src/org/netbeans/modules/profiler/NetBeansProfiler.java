@@ -1433,45 +1433,21 @@ public abstract class NetBeansProfiler extends Profiler {
         int state = getAgentState(host, port, agentId);
 
         if (state == CommonConstants.AGENT_STATE_READY_DIRECT) {
-            Socket clientSocket = null;
-            ObjectOutputStream socketOut = null;
-            ObjectInputStream socketIn = null;
-
-            try {
-                clientSocket = new Socket(host, port);
+            try (Socket clientSocket = new Socket(host, port)) {
                 clientSocket.setSoTimeout(100);
                 clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
-                socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
-                socketIn = new ObjectInputStream(clientSocket.getInputStream());
 
-                WireIO wio = new WireIO(socketOut, socketIn);
-                wio.sendSimpleCommand(Command.TERMINATE_TARGET_JVM);
+                try (ObjectOutputStream socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
+                     ObjectInputStream socketIn = new ObjectInputStream(clientSocket.getInputStream())) {
 
-                Object o = wio.receiveCommandOrResponse();
+                    WireIO wio = new WireIO(socketOut, socketIn);
+                    wio.sendSimpleCommand(Command.TERMINATE_TARGET_JVM);
 
-                if (o instanceof Response && ((Response) o).isOK()) {
-                    return true;
-                } else {
-                    return false;
+                    Object o = wio.receiveCommandOrResponse();
+                    return o instanceof Response && ((Response) o).isOK();
                 }
             } catch (IOException e) {
                 return false;
-            } finally {
-                try {
-                    if (socketIn != null) {
-                        socketIn.close();
-                    }
-
-                    if (socketOut != null) {
-                        socketOut.close();
-                    }
-
-                    if (clientSocket != null) {
-                        clientSocket.close();
-                    }
-                } catch (IOException e) {
-                    ProfilerLogger.log(e);
-                }
             }
         } else {
             return false;
@@ -1838,51 +1814,31 @@ public abstract class NetBeansProfiler extends Profiler {
     // Returns true if TERMINATE_TARGET_JVM was invoked on agent (not necessarily killed!), false if the agent is already profiling (port is used)
     private boolean shutdownAgent(String host, int port) {
         if (port == -1) return false; // invalid port
-        
-        Socket clientSocket = null;
-        ObjectOutputStream socketOut = null;
-        ObjectInputStream socketIn = null;
 
-        try {
-            clientSocket = new Socket(host, port);
+        try (Socket clientSocket = new Socket(host, port)) {
             clientSocket.setSoTimeout(100);
             clientSocket.setTcpNoDelay(true); // Necessary at least on Solaris to avoid delays in e.g. readInt() etc.
-            socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
-            socketIn = new ObjectInputStream(clientSocket.getInputStream());
 
-            WireIO wio = new WireIO(socketOut, socketIn);
-            wio.sendSimpleCommand(Command.TERMINATE_TARGET_JVM);
+            try (ObjectOutputStream socketOut = new ObjectOutputStream(clientSocket.getOutputStream());
+                 ObjectInputStream socketIn = new ObjectInputStream(clientSocket.getInputStream())) {
 
-            try {
-                Object o = wio.receiveCommandOrResponse();
-            } catch (Exception e) {
-            } // Throws SocketTimeoutException!
+                WireIO wio = new WireIO(socketOut, socketIn);
+                wio.sendSimpleCommand(Command.TERMINATE_TARGET_JVM);
 
-            ProfilerLogger.warning(">>> An existing Profiler agent listening on port " + port
-                                   + " was terminated to allow starting new profiling session on the same port."); // NOI18N
+                try {
+                    Object o = wio.receiveCommandOrResponse();
+                } catch (Exception e) {
+                } // Throws SocketTimeoutException!
 
-            return true;
+                ProfilerLogger.warning(">>> An existing Profiler agent listening on port " + port
+                                       + " was terminated to allow starting new profiling session on the same port."); // NOI18N
+
+                return true;
+            }
         } catch (SocketTimeoutException e) { // port already in use
-
             return false;
         } catch (IOException e) {
             return true;
-        } finally {
-            try {
-                if (socketIn != null) {
-                    socketIn.close();
-                }
-
-                if (socketOut != null) {
-                    socketOut.close();
-                }
-
-                if (clientSocket != null) {
-                    clientSocket.close();
-                }
-            } catch (IOException e) {
-                //        e.printStackTrace(System.err);
-            }
         }
     }
 

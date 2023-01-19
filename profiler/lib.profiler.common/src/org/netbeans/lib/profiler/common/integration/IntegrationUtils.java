@@ -192,22 +192,17 @@ public class IntegrationUtils {
     }
 
     public static boolean isFileModifiedForProfiler(File file) {
-        try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+        try (FileReader fr = new FileReader(file);
+             BufferedReader br = new BufferedReader(fr)) {
 
             // check if first line contains Profiler header
             String line = br.readLine();
 
             if (line == null) {
-                br.close();
-
                 return false;
             }
 
             if (line.indexOf(MODIFIED_FOR_PROFILER_STRING) != -1) {
-                br.close();
-
                 return true;
             }
 
@@ -215,18 +210,12 @@ public class IntegrationUtils {
             line = br.readLine();
 
             if (line == null) {
-                br.close();
-
                 return false;
             }
 
             if (line.indexOf(MODIFIED_FOR_PROFILER_STRING) != -1) {
-                br.close();
-
                 return true;
             }
-
-            br.close();
 
             return false;
         } catch (Exception ex) {
@@ -254,7 +243,7 @@ public class IntegrationUtils {
         }
         return null;
     }
-    
+
     public static String getPlatformByOSAndArch(int platform, int dataModel, String arch, String archAbi) {
         switch (dataModel) {
             case Platform.ARCH_32:
@@ -263,7 +252,7 @@ public class IntegrationUtils {
                         if (archAbi != null &&
                               archAbi.toLowerCase().contains("abihf")) {   //NOI18N
                             return PLATFORM_LINUX_ARM_VFP_HFLT_OS;
-                        } 
+                        }
                         return PLATFORM_LINUX_ARM_OS;
                     } else {
                         return PLATFORM_LINUX_OS;
@@ -344,7 +333,7 @@ public class IntegrationUtils {
 
         return Profiler.getDefault().getLibsDir();
     }
-    
+
     private static String getRemoteLibsDir(String prefix, String targetPlatform) {
         return prefix + getDirectorySeparator(targetPlatform) + "lib"; //NOI18N;
     }
@@ -429,7 +418,7 @@ public class IntegrationUtils {
                + getDirectorySeparator(targetPlatform) + getJavaPlatformNativeLibrariesDirectoryName(targetJVM)
                + getDirectorySeparator(targetPlatform) + getOSPlatformNativeLibrariesDirectoryName(targetPlatform, isRemote);
     }
-    
+
     private static String getRemoteNativeLibrariesPath(String prefix, String targetPlatform, String targetJVM) {
         return getRemoteLibsDir(prefix, targetPlatform) + getDirectorySeparator(targetPlatform) + "deployed" //NOI18N
                 + getDirectorySeparator(targetPlatform) + getJavaPlatformNativeLibrariesDirectoryName(targetJVM)
@@ -475,7 +464,7 @@ public class IntegrationUtils {
     /**
      * The separator used in the classpath construction
      * @return Returns ";" or ":" according to provided platform
-     */ 
+     */
     public static String getClassPathSeparator(String targetPlatform) {
         if (isWindowsPlatform(targetPlatform)) {
             return ";"; //NOI18N
@@ -488,12 +477,12 @@ public class IntegrationUtils {
     public static String getProfilerAgentCommandLineArgs(String targetPlatform, String targetJVM, boolean isRemote, int portNumber) {
         return getProfilerAgentCommandLineArgs(targetPlatform, targetJVM, isRemote, portNumber, true);
     }
-    
+
     public static String getProfilerAgentCommandLineArgs(String targetPlatform, String targetJVM, boolean isRemote, int portNumber, boolean createTemp) {
         if ((getNativeLibrariesPath(targetPlatform, targetJVM, isRemote).indexOf(' ') == -1)) {
             return getProfilerAgentCommandLineArgsWithoutQuotes(targetPlatform, targetJVM, isRemote, portNumber); //NOI18N
         }
-        if (!isWindowsPlatform(targetPlatform)) { 
+        if (!isWindowsPlatform(targetPlatform)) {
             // Profiler is installed in directory with space on Unix (Linux, Solaris, Mac OS X)
             // create temporary link in /tmp directory and use it instead of directory with space
             String libsDirPath = getLibsDir(targetPlatform, isRemote);
@@ -509,7 +498,7 @@ public class IntegrationUtils {
     public static String fixLibsDirPath(final String libsDirPath, final String args) {
         return fixLibsDirPath(libsDirPath, args, true);
     }
-    
+
     public static String fixLibsDirPath(final String libsDirPath, final String args, boolean createTmp) {
         if (createTmp) {
             try {
@@ -540,11 +529,11 @@ public class IntegrationUtils {
                 append(getRemoteLibsDir(prefix,targetPlatform)).append(",").append(portNumber); //NOI18N
         return args.toString();
     }
-    
+
     public static String getProfilerAgentCommandLineArgsWithoutQuotes(String targetPlatform, String targetJVM, boolean isRemote,
                                                                       int portNumber) {
         StringBuilder args = new StringBuilder();
-        
+
         if ((targetJVM.equals(PLATFORM_JAVA_60) || targetJVM.equals(PLATFORM_JAVA_70) || targetJVM.equals(PLATFORM_JAVA_80) || targetJVM.equals(PLATFORM_JAVA_90) || targetJVM.equals(PLATFORM_JAVA_110_BEYOND)) &&
             isLinuxPlatform(targetPlatform)) {
             args.append(" -XX:+UseLinuxPosixThreadCPUClocks "); // NOI18N
@@ -554,11 +543,11 @@ public class IntegrationUtils {
                append(getLibsDir(targetPlatform, isRemote)).append(",").append(portNumber); //NOI18N
         return args.toString();
     }
-    
+
     public static String getProfilerAgentCommandLineArgsWithoutQuotes(String targetPlatform, String targetJVM, boolean isRemote,
                                                                       int portNumber, String pathSpaceChar) {
         StringBuilder args = new StringBuilder();
-        
+
         if ((targetJVM.equals(PLATFORM_JAVA_60) || targetJVM.equals(PLATFORM_JAVA_70) || targetJVM.equals(PLATFORM_JAVA_80) || targetJVM.equals(PLATFORM_JAVA_90) || targetJVM.equals(PLATFORM_JAVA_110_BEYOND)) &&
             isLinuxPlatform(targetPlatform)) {
             args.append(" -XX:+UseLinuxPosixThreadCPUClocks "); // NOI18N
@@ -635,14 +624,14 @@ public class IntegrationUtils {
     public static boolean isWindowsPlatform(String targetPlatform) {
         return targetPlatform.equals(PLATFORM_WINDOWS_OS) || targetPlatform.equals(PLATFORM_WINDOWS_AMD64_OS) || targetPlatform.equals(PLATFORM_WINDOWS_CVM);
     }
-    
+
     public static boolean isSolarisPlatform(String targetPlatform) {
-        return targetPlatform.equals(PLATFORM_SOLARIS_AMD64_OS) || targetPlatform.equals(PLATFORM_SOLARIS_INTEL_OS) 
+        return targetPlatform.equals(PLATFORM_SOLARIS_AMD64_OS) || targetPlatform.equals(PLATFORM_SOLARIS_INTEL_OS)
                 || targetPlatform.equals(PLATFORM_SOLARIS_SPARC64_OS);
     }
-    
+
     public static boolean isMacPlatform(String targetPlatform) {
-        return targetPlatform.equals(PLATFORM_MAC_OS); 
+        return targetPlatform.equals(PLATFORM_MAC_OS);
     }
 
     public static boolean isLinuxPlatform(String targetPlatform) {
@@ -692,17 +681,12 @@ public class IntegrationUtils {
             source.createNewFile();
             target = new File(source.getAbsolutePath() + FILE_BACKUP_EXTENSION);
 
-            FileChannel sourceChannel = new FileOutputStream(source).getChannel();
-            try {
-                FileChannel targetChannel = new FileInputStream(target).getChannel();
-                try {
-                    targetChannel.transferTo(0, targetChannel.size(), sourceChannel);
-                    return true;
-                } finally {
-                    targetChannel.close();
-                }
-            } finally {
-                sourceChannel.close();
+            try (FileOutputStream fileOutputStreamSrc = new FileOutputStream(source);
+                 FileInputStream fileInputStreamTgt = new FileInputStream(target);
+                 FileChannel tgtChannel = fileOutputStreamSrc.getChannel();
+                 FileChannel srcChannel = fileInputStreamTgt.getChannel()) {
+                srcChannel.transferTo(0, srcChannel.size(), tgtChannel);
+                return true;
             }
         } catch (Exception ex) {
             ProfilerLogger.severe(MessageFormat.format(BACKUP_ERROR_COPY_FILE_MESSAGE,
@@ -728,19 +712,12 @@ public class IntegrationUtils {
             }
         }
 
-        try {
-            FileChannel sourceChannel = new FileInputStream(sourceFile).getChannel();
-            try {
-                FileChannel destinationChannel = new FileOutputStream(targetFile).getChannel();
-                try {
-                    sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
-                    return true;
-                } finally {
-                    destinationChannel.close();
-                }
-            } finally {
-                sourceChannel.close();                
-            }
+        try (FileInputStream fileInputStream = new FileInputStream(sourceFile);
+             FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
+             FileChannel sourceChannel = fileInputStream.getChannel();
+             FileChannel destinationChannel = fileOutputStream.getChannel()) {
+            sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
+            return true;
         } catch (Exception ex) {
             ProfilerLogger.log(ex);
             ProfilerLogger.severe(MessageFormat.format(COPY_ERROR_MESSAGE,
@@ -786,15 +763,15 @@ public class IntegrationUtils {
 
         return true;
     }
-    
+
     public static String getTemporaryBinariesLink(String agentCmds) {
         Pattern p = Pattern.compile("(/.*?" + BINARIES_TMP_PREFIX + ".*?" + BINARIES_TMP_EXT + ")");
         Matcher m = p.matcher(agentCmds);
-        
+
         if (m.find()) {
             return m.group(1);
         }
-        
+
         return null;
     }
 }

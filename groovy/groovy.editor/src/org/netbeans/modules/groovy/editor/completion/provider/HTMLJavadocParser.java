@@ -153,10 +153,12 @@ final class HTMLJavadocParser {
         if (startOffset > endOffset) {
             throw new IOException();
         }
-        InputStream fis = url.openStream();
-        InputStreamReader fisreader = charset == null ? new InputStreamReader(fis) : new InputStreamReader(fis, charset);
+
         char buffer[];
-        try {
+
+        try (InputStream fis = url.openStream();
+             InputStreamReader fisreader = charset == null ? new InputStreamReader(fis) : new InputStreamReader(fis, charset)) {
+
             int len = endOffset - startOffset;
             int bytesAlreadyRead = 0;
             buffer = new char[len];
@@ -174,9 +176,6 @@ final class HTMLJavadocParser {
                 }
                 bytesAlreadyRead += count;
             } while (bytesAlreadyRead < len);
-
-        } finally {
-            fisreader.close();
         }
         
         return new String(buffer);

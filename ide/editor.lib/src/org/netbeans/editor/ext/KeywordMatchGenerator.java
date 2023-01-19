@@ -349,14 +349,15 @@ public class KeywordMatchGenerator {
                 return;
             }
             char arr[] = new char[(int)f.length()];
-            Reader isr = new FileReader(f);
 
-            int n = 0;
-            while (n < f.length()) {
-                int count = isr.read(arr, n, (int)f.length() - n);
-                if (count < 0)
-                    break;
-                n += count;
+            try (Reader isr = new FileReader(f)) {
+                int n = 0;
+                while (n < f.length()) {
+                    int count = isr.read(arr, n, (int) f.length() - n);
+                    if (count < 0)
+                        break;
+                    n += count;
+                }
             }
 
             kwds = new String(arr);

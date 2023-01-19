@@ -356,8 +356,8 @@ public class Editor extends javax.swing.JFrame {
         KitInfo info = KitInfo.getKitInfoOrDefault( file );
         
         final JEditorPane pane = new JEditorPane( info.getType(), "" );
-        try {
-            pane.read( new FileInputStream( file ), file.getCanonicalPath() );
+        try (FileInputStream fis = new FileInputStream(file)) {
+            pane.read(fis, file.getCanonicalPath());
         } catch( IOException exc ) {
             JOptionPane.showMessageDialog( this, "Can't read from file '" + // NOI18N
             file.getName() + "'.", "Error", JOptionPane.ERROR_MESSAGE ); // NOI18N
@@ -479,8 +479,8 @@ public class Editor extends javax.swing.JFrame {
         final JEditorPane pane = new JEditorPane( info.getType(), "" );
         URL template = info.getTemplate();
         if( template != null ) {
-            try {
-                pane.read( template.openStream(), file.getCanonicalPath() );
+            try (InputStream is = template.openStream()) {
+                pane.read(is, file.getCanonicalPath() );
             } catch( IOException e ) {
                 JOptionPane.showMessageDialog( this, "Can't read template", "Error", JOptionPane.ERROR_MESSAGE ); // NOI18N
             }

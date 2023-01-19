@@ -329,8 +329,10 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
                 try {
                     boolean success = nue.createNewFile();
                     if (success) {
-                        FileWriter w = new FileWriter (nue);
-                        doc.getTextPane().write(w);
+                        try (FileWriter w = new FileWriter(nue)) {
+                            doc.getTextPane().write(w);
+                        }
+
                         file = nue;
                         documentTabs.setTitleAt(documentTabs.getSelectedIndex(), nue.getName());
                         documentTabs.setToolTipTextAt(documentTabs.getSelectedIndex(), nue.toString());

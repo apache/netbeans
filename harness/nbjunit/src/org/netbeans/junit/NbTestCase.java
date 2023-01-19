@@ -554,24 +554,16 @@ public abstract class NbTestCase extends TestCase implements NbTest {
                 copytree(f, new File(to, f.getName()));
             }
         } else {
-            InputStream is = new FileInputStream(from);
-            try {
-                OutputStream os = new FileOutputStream(to);
-                try {
-                    // XXX using FileChannel would be more efficient, but more complicated
-                    BufferedInputStream bis = new BufferedInputStream(is);
-                    BufferedOutputStream bos = new BufferedOutputStream(os);
-                    int c;
-                    while ((c = bis.read()) != -1) {
-                        bos.write(c);
-                    }
-                    bos.flush();
-                    bos.close();
-                } finally {
-                    os.close();
+            try (InputStream is = new FileInputStream(from);
+                 OutputStream os = new FileOutputStream(to);
+                 BufferedInputStream bis = new BufferedInputStream(is);
+                 BufferedOutputStream bos = new BufferedOutputStream(os)) {
+                // XXX using FileChannel would be more efficient, but more complicated
+
+                int c;
+                while ((c = bis.read()) != -1) {
+                    bos.write(c);
                 }
-            } finally {
-                is.close();
             }
         }
     }

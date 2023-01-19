@@ -205,49 +205,48 @@ public class VerifyLibsAndLicenses extends Task {
                     continue;
                 }
                 File f = new File(d, n);
-                InputStream is = new FileInputStream(f);
+
                 int line = 1;
-                try {
+                try (InputStream is = new FileInputStream(f)) {
                     CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder().
                             onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT);
-                    Reader r = new InputStreamReader(is, decoder);
-                    int column = 0;
-                    boolean pastHeader = false;
-                    boolean trailingSpace = false;
-                    int c;
-                    while ((c = r.read()) != -1) {
-                        if (trailingSpace && (c == '\r' || c == '\n')) {
-                            msg.append("\n" + path + " has a trailing space on line #" + line);
-                            continue FILE;
-                        }
-                        if (c == '\r') {
-                            column = 0;
-                        } else if (c == '\n') {
-                            if (column == 0 && line > 1 && !pastHeader) {
-                                pastHeader = true;
-                                //System.err.println("encountered header end in " + path + " at line " + line);
-                            }
-                            column = 0;
-                            line++;
-                        } else if (c == '\f') {
-                            msg.append("\n" + path + " uses a form feed (^L) on line #" + line);
-                            continue FILE;
-                        } else {
-                            trailingSpace = c == ' ';
-                            column++;
-                            if (pastHeader && column > MAX_LINE_LEN && CHECK_MAX_LINE_LEN) {
-                                msg.append("\n" + path + " has line #" + line + " longer than 80 characters");
+                    try (Reader r = new InputStreamReader(is, decoder)) {
+                        int column = 0;
+                        boolean pastHeader = false;
+                        boolean trailingSpace = false;
+                        int c;
+                        while ((c = r.read()) != -1) {
+                            if (trailingSpace && (c == '\r' || c == '\n')) {
+                                msg.append("\n" + path + " has a trailing space on line #" + line);
                                 continue FILE;
                             }
+                            if (c == '\r') {
+                                column = 0;
+                            } else if (c == '\n') {
+                                if (column == 0 && line > 1 && !pastHeader) {
+                                    pastHeader = true;
+                                    //System.err.println("encountered header end in " + path + " at line " + line);
+                                }
+                                column = 0;
+                                line++;
+                            } else if (c == '\f') {
+                                msg.append("\n" + path + " uses a form feed (^L) on line #" + line);
+                                continue FILE;
+                            } else {
+                                trailingSpace = c == ' ';
+                                column++;
+                                if (pastHeader && column > MAX_LINE_LEN && CHECK_MAX_LINE_LEN) {
+                                    msg.append("\n" + path + " has line #" + line + " longer than 80 characters");
+                                    continue FILE;
+                                }
+                            }
                         }
-                    }
-                    if (column > 0) {
-                        msg.append("\n" + path + " must end in a newline");
+                        if (column > 0) {
+                            msg.append("\n" + path + " must end in a newline");
+                        }
                     }
                 } catch (IOException x) {
                     msg.append("\n" + path + " at line #" + line + ": " + x);
-                } finally {
-                    is.close();
                 }
             }
         }
@@ -273,10 +272,11 @@ public class VerifyLibsAndLicenses extends Task {
                 File f = new File(d, n);
                 String path = module + "/external/" + n;
                 Map<String,String> headers = new HashMap<>();
-                InputStream is = new FileInputStream(f);
+
                 StringBuffer body = new StringBuffer();
-                try {
-                    BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+                try (InputStream is = new FileInputStream(f);
+                     BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
                     String line;
                     while ((line = r.readLine()) != null && line.length() > 0) {
                         Matcher m = Pattern.compile("([a-zA-Z]+): (.+)").matcher(line);
@@ -290,9 +290,8 @@ public class VerifyLibsAndLicenses extends Task {
                     while ((line = r.readLine()) != null) {
                         body.append(line).append('\n');
                     }
-                } finally {
-                    is.close();
                 }
+
                 if (headers == null) {
                     headers = Collections.emptyMap();
                 } else if (headers.isEmpty()) {
@@ -339,16 +338,15 @@ public class VerifyLibsAndLicenses extends Task {
                     File licenseFile = new File(licenses, license);
                     if (licenseFile.isFile()) {
                         StringBuffer masterBody = new StringBuffer();
-                        is = new FileInputStream(licenseFile);
-                        try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+                        try (InputStream is = new FileInputStream(licenseFile);
+                             BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
                             int c;
                             while ((c = r.read()) != -1) {
                                 masterBody.append((char) c);
                             }
-                        } finally {
-                            is.close();
                         }
+
                         String master = masterBody.toString().replaceAll("[ \n\t]+", " ").trim();
                         String actual = body.toString().replaceAll("[ \n\t]+", " ").trim();
                         String problem = templateMatch(actual, master, false);

@@ -134,9 +134,9 @@ public class Populate {
                         Document doc = createXML(i);
                         XMLUtil.write(doc, os, "UTF-8");
                     } else {
-                        PrintStream ps = new PrintStream(os);
-                        ps.println("Sample data for file #" + i);
-                        ps.close();
+                        try (PrintStream ps = new PrintStream(os)) {
+                            ps.println("Sample data for file #" + i);
+                        }
                     }
                 } finally {
                     os.close();

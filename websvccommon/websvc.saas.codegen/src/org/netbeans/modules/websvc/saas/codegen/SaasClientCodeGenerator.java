@@ -19,10 +19,10 @@
 package org.netbeans.modules.websvc.saas.codegen;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -218,22 +218,16 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     public void copyFile(String resourceName, File destFile) throws IOException {
         String path = resourceName;
         if(!destFile.exists()) {
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                is = this.getClass().getResourceAsStream(path);
-                os = new FileOutputStream(destFile);
-                int c;
-                while ((c = is.read()) != -1) {
-                    os.write(c);
+            try (InputStream is = this.getClass().getResourceAsStream(path);
+                 OutputStream os = Files.newOutputStream(destFile.toPath())) {
+
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = is.read(buffer, 0, 8192)) >= 0) {
+                    os.write(buffer, 0, read);
                 }
-            } finally {
-                if(os != null) {
-                    os.flush();
-                    os.close();
-                }
-                if(is != null)
-                    is.close();            
+
+                os.flush();
             }
         }
     }

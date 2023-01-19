@@ -73,8 +73,9 @@ public final class XMLBeanConvertor extends Convertor implements PropertyChangeL
         } else {
             buf.reset();
         }
-        XMLDecoder d = new XMLDecoder(new ReaderInputStream(buf, "UTF-8"));
-        return d.readObject();
+        try (XMLDecoder d = new XMLDecoder(new ReaderInputStream(buf, "UTF-8"))) {
+            return d.readObject();
+        }
     }
     
     public @Override void write(java.io.Writer w, final Object inst) throws IOException {

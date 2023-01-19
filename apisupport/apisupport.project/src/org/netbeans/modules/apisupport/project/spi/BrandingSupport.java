@@ -517,21 +517,21 @@ public abstract class BrandingSupport {
     private void loadLocalizedBundlesFromPlatform(final BrandableModule moduleEntry,
             final String bundleEntry, final Set<String> keys, final Set<BundleKey> bundleKeys) throws IOException {
         Properties p = new Properties();
-        JarFile module = new JarFile(moduleEntry.getJarLocation());
-        JarEntry je = module.getJarEntry(bundleEntry);
-        InputStream is = module.getInputStream(je);
-        File bundle = new File(getModuleEntryDirectory(moduleEntry),bundleEntry);
-        try {
-            
-            p.load(is);
-        } finally {
-            is.close();
-        }
-        for (String key : NbCollections.checkedMapByFilter(p, String.class, String.class, true).keySet()) {
-            if (keys.contains(key)) {
-                String value = p.getProperty(key);
-                bundleKeys.add(new BundleKey(moduleEntry, bundle, key, value));
-            } 
+
+        try (JarFile module = new JarFile(moduleEntry.getJarLocation())) {
+            JarEntry je = module.getJarEntry(bundleEntry);
+
+            File bundle = new File(getModuleEntryDirectory(moduleEntry), bundleEntry);
+            try (InputStream is = module.getInputStream(je)) {
+                p.load(is);
+            }
+
+            for (String key : NbCollections.checkedMapByFilter(p, String.class, String.class, true).keySet()) {
+                if (keys.contains(key)) {
+                    String value = p.getProperty(key);
+                    bundleKeys.add(new BundleKey(moduleEntry, bundle, key, value));
+                }
+            }
         }
     }
     

@@ -110,19 +110,20 @@ public final class OptionsExportModel {
     ArrayList<String> getEnabledItemsDuringExport(File importSource) {
         ArrayList<String> enabledItems = null;
         if (importSource.isFile()) { // importing from .zip file
-            try {
-                ZipFile zipFile = new ZipFile(importSource);
+            try (ZipFile zipFile = new ZipFile(importSource)) {
                 // Enumerate each entry
                 Enumeration<? extends ZipEntry> entries = zipFile.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry zipEntry = (ZipEntry) entries.nextElement();
                     if(zipEntry.getName().equals(OptionsExportModel.ENABLED_ITEMS_INFO)) {
                         enabledItems = new ArrayList<String>();
-                        InputStream stream = zipFile.getInputStream(zipEntry);
-                        BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-                        String strLine;
-                        while ((strLine = br.readLine()) != null) {
-                            enabledItems.add(strLine);
+                        try (InputStream stream = zipFile.getInputStream(zipEntry);
+                             InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
+                             BufferedReader br = new BufferedReader(isr)) {
+                            String strLine;
+                            while ((strLine = br.readLine()) != null) {
+                                enabledItems.add(strLine);
+                            }
                         }
                     }
                 }
@@ -158,8 +159,7 @@ public final class OptionsExportModel {
     double getBuildNumberDuringExport(File importSource) {
         String buildNumber = null;
         if (importSource.isFile()) { // importing from .zip file
-            try {
-                ZipFile zipFile = new ZipFile(importSource);
+            try (ZipFile zipFile = new ZipFile(importSource)) {
                 // Enumerate each entry
                 Enumeration<? extends ZipEntry> entries = zipFile.entries();
                 while (entries.hasMoreElements()) {
@@ -1119,15 +1119,17 @@ public final class OptionsExportModel {
     static List<String> listZipFile(File file) throws IOException {
         List<String> relativePaths = new ArrayList<String>();
         // Open the ZIP file
-        ZipFile zipFile = new ZipFile(file);
-        // Enumerate each entry
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry zipEntry = (ZipEntry) entries.nextElement();
-            if (!zipEntry.isDirectory()) {
-                relativePaths.add(zipEntry.getName());
+        try (ZipFile zipFile = new ZipFile(file)) {
+            // Enumerate each entry
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                if (!zipEntry.isDirectory()) {
+                    relativePaths.add(zipEntry.getName());
+                }
             }
         }
+
         return relativePaths;
     }
 

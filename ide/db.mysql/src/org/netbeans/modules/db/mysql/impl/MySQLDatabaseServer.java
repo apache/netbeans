@@ -411,15 +411,14 @@ public final class MySQLDatabaseServer implements DatabaseServer, PropertyChange
                             return;
                         }
 
-                        PreparedStatement ps = conn.prepareStatement(GET_DATABASES_SQL);
-                        ResultSet rs = ps.executeQuery();
+                        try (PreparedStatement ps = conn.prepareStatement(GET_DATABASES_SQL);
+                             ResultSet rs = ps.executeQuery()) {
 
-                        while (rs.next()) {
-                            String dbname = rs.getString(1);
-                            dblist.put(dbname, new Database(server, dbname));
+                            while (rs.next()) {
+                                String dbname = rs.getString(1);
+                                dblist.put(dbname, new Database(server, dbname));
+                            }
                         }
-                        rs.close();
-                        ps.close();
                         setDatabases(dblist);
                     } finally {
                         notifyChange();
@@ -655,9 +654,9 @@ public final class MySQLDatabaseServer implements DatabaseServer, PropertyChange
                     Connection conn = connProcessor.getConnection();
                     Quoter quoter = connProcessor.getQuoter();
                     String quotedName = quoter.quoteIfNeeded(dbname);
-                    PreparedStatement stmt = conn.prepareStatement(CREATE_DATABASE_SQL + quotedName);
-                    stmt.executeUpdate();
-                    stmt.close();
+                    try (PreparedStatement stmt = conn.prepareStatement(CREATE_DATABASE_SQL + quotedName)) {
+                        stmt.executeUpdate();
+                    }
                 } finally {
                     refreshDatabaseList();
                 }
@@ -675,9 +674,9 @@ public final class MySQLDatabaseServer implements DatabaseServer, PropertyChange
                     Connection conn = connProcessor.getConnection();
                     Quoter quoter = connProcessor.getQuoter();
                     String quotedName = quoter.quoteIfNeeded(dbname);
-                    PreparedStatement stmt = conn.prepareStatement(DROP_DATABASE_SQL + quotedName);
-                    stmt.executeUpdate();
-                    stmt.close();
+                    try (PreparedStatement stmt = conn.prepareStatement(DROP_DATABASE_SQL + quotedName)) {
+                        stmt.executeUpdate();
+                    }
 
                     if (deleteConnections) {
                         String hostname = getHost();

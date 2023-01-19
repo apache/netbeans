@@ -317,9 +317,9 @@ final class InsaneConverter {
         compute();
         // store headers
         
-        RandomAccessFile raf = new RandomAccessFile(to, "rw"); 
-        store = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, totalOffset);
-        raf.close();
+        try (RandomAccessFile raf = new RandomAccessFile(to, "rw")) {
+            store = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, totalOffset);
+        }
         storeHeaders();
         
         // second pass

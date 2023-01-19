@@ -91,12 +91,14 @@ public class SimpleDiff extends Object implements Diff {
         if (first.length() != second.length())
             return true;
         
-        InputStream fs1 = new BufferedInputStream(new FileInputStream(first));
-        InputStream fs2 = new BufferedInputStream(new FileInputStream(second));
+
         byte[] b1 = new byte[BUFSIZE];
         byte[] b2 = new byte[BUFSIZE];
 
-        try {
+        try (FileInputStream fileInputStreamFirst = new FileInputStream(first);
+             FileInputStream fileInputStreamSecond = new FileInputStream(second);
+             InputStream fs1 = new BufferedInputStream(fileInputStreamFirst);
+             InputStream fs2 = new BufferedInputStream(fileInputStreamSecond)) {
             while (true) {
                 int l1 = fs1.read(b1);
                 int l2 = fs2.read(b2);
@@ -109,9 +111,6 @@ public class SimpleDiff extends Object implements Diff {
                 if (!java.util.Arrays.equals(b1,b2))
                     return true;  // files differ in content
             }
-        } finally {
-            fs1.close();
-            fs2.close();
         }
     }
     

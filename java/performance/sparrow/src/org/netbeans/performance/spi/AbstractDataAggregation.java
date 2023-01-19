@@ -143,8 +143,12 @@ public abstract class AbstractDataAggregation extends AbstractLogElement impleme
     
     public void writeToFile(String filename) throws java.io.IOException {
         File f = new File(filename);
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-        oos.writeObject(this);
+
+        try (FileOutputStream fos = new FileOutputStream(f);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(this);
+        }
+
         System.out.println("Serialized data written to: " + f);
     }
     

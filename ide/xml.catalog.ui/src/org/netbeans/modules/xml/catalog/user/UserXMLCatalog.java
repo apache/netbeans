@@ -353,16 +353,16 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     }
     
     private String createCatalogBuffer(FileObject fo) throws IOException {
-        BufferedInputStream is = new BufferedInputStream(fo.getInputStream());
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
-        int b;
-        byte[] buf = new byte[512];
-        while ((b=is.read(buf, 0, 512)) !=-1) {
-            temp.write(buf, 0, b);
+        try (InputStream is = fo.getInputStream();
+             BufferedInputStream bis = new BufferedInputStream(is);
+             ByteArrayOutputStream temp = new ByteArrayOutputStream()) {
+            int b;
+            byte[] buf = new byte[512];
+            while ((b = is.read(buf, 0, 512)) != -1) {
+                temp.write(buf, 0, b);
+            }
+            return temp.toString("UTF-8");//NOI18N
         }
-        is.close();
-        temp.close();
-        return temp.toString("UTF-8");//NOI18N
     }
     
     private Map parse(FileObject userCatalog) 

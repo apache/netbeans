@@ -421,10 +421,10 @@ public final class NbProxySelector extends ProxySelector {
                 }
 
                 fname = netProperties.getCanonicalPath();
-                InputStream in = new FileInputStream(fname);
-                BufferedInputStream bin = new BufferedInputStream(in);
-                props.load(bin);
-                bin.close();
+                try (InputStream in = new FileInputStream(fname);
+                     BufferedInputStream bin = new BufferedInputStream(in)) {
+                    props.load(bin);
+                }
 
                 String val = props.getProperty(propertyKey);
                 val = System.getProperty(propertyKey, val);

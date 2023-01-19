@@ -385,8 +385,9 @@ public class ClassPathUtils {
 
         FileObject[] files = folder.getChildren();
         for (int i=0; i < files.length; i++) {
-            try {
-                BufferedReader r = new BufferedReader(new InputStreamReader(files[i].getInputStream()));
+            try (InputStream is = files[i].getInputStream();
+                 InputStreamReader isr = new InputStreamReader(is);
+                 BufferedReader r = new BufferedReader(isr)) {
                 String line = r.readLine();
                 while (line != null) {
                     line = line.trim();
@@ -407,8 +408,7 @@ public class ClassPathUtils {
                     }
                     line = r.readLine();
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             }
         }

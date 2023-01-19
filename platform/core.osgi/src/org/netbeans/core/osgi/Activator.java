@@ -302,38 +302,34 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
                 URL entry = bundle.getEntry(path + "java.net.URLStreamHandler");
                 if (entry != null) {
                     String protocol = path.replaceAll("^META-INF/namedservices/URLStreamHandler/|/$", "");
-                    try {
-                        InputStream is = entry.openStream();
-                        try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                            String line;
-                            while ((line = r.readLine()) != null) {
-                                if (!line.isEmpty() && !line.startsWith("#")) {
-                                    final String fqn = line;
-                                    Dictionary<String,Object> props = new Hashtable<String,Object>();
-                                    props.put(URLConstants.URL_HANDLER_PROTOCOL, protocol);
-                                    class Svc extends AbstractURLStreamHandlerService {
-                                        public @Override URLConnection openConnection(final URL u) throws IOException {
-                                            try {
-                                                URLStreamHandler handler = (URLStreamHandler) bundle.loadClass(fqn).newInstance();
-                                                Method openConnection = URLStreamHandler.class.getDeclaredMethod("openConnection", URL.class);
-                                                openConnection.setAccessible(true);
-                                                return (URLConnection) openConnection.invoke(handler, u);
-                                            } catch (Exception x) {
-                                                throw (IOException) new IOException(x.toString()).initCause(x);
-                                            }
+                    try (InputStream is = entry.openStream();
+                         InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                         BufferedReader r = new BufferedReader(isr)) {
+                        String line;
+                        while ((line = r.readLine()) != null) {
+                            if (!line.isEmpty() && !line.startsWith("#")) {
+                                final String fqn = line;
+                                Dictionary<String,Object> props = new Hashtable<String,Object>();
+                                props.put(URLConstants.URL_HANDLER_PROTOCOL, protocol);
+                                class Svc extends AbstractURLStreamHandlerService {
+                                    public @Override URLConnection openConnection(final URL u) throws IOException {
+                                        try {
+                                            URLStreamHandler handler = (URLStreamHandler) bundle.loadClass(fqn).newInstance();
+                                            Method openConnection = URLStreamHandler.class.getDeclaredMethod("openConnection", URL.class);
+                                            openConnection.setAccessible(true);
+                                            return (URLConnection) openConnection.invoke(handler, u);
+                                        } catch (Exception x) {
+                                            throw (IOException) new IOException(x.toString()).initCause(x);
                                         }
                                     }
-                                    BundleContext context = bundle.getBundleContext();
-                                    if (context != null) {
-                                        context.registerService(URLStreamHandlerService.class.getName(), new Svc(), props);
-                                    } else {
-                                        LOG.log(Level.WARNING, "no context for {0} in state {1}", new Object[] {bundle.getSymbolicName(), bundle.getState()});
-                                    }
+                                }
+                                BundleContext context = bundle.getBundleContext();
+                                if (context != null) {
+                                    context.registerService(URLStreamHandlerService.class.getName(), new Svc(), props);
+                                } else {
+                                    LOG.log(Level.WARNING, "no context for {0} in state {1}", new Object[] {bundle.getSymbolicName(), bundle.getState()});
                                 }
                             }
-                        } finally {
-                            is.close();
                         }
                     } catch (Exception x) {
                         LOG.log(Level.WARNING, "Could not load protocol handler for " + protocol + " from " + bundle.getSymbolicName(), x);

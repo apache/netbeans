@@ -331,8 +331,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
     /** Get file content as String. If some exception occures its stack trace
      * is return instead. */
     private static String getFileContent(FileObject fo) {
-        try {
-            InputStreamReader isr = new InputStreamReader(fo.getInputStream());
+        try (InputStreamReader isr = new InputStreamReader(fo.getInputStream())) {
             char[] cbuf = new char[1024];
             int length;
             StringBuffer sbuf = new StringBuffer(1024);

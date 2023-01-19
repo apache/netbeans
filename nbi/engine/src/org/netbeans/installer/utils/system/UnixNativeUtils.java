@@ -731,14 +731,17 @@ public class UnixNativeUtils extends NativeUtils {
                         return files;
                     }
                 }
+
                 // is it an ELF file?
-                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(child));
-                byte[] buf = new byte[4];
-                bis.read(buf);
-                bis.close();
-                if (Arrays.equals(buf, ELF_BYTES)){
-                    files.add(child);
-                    return files;
+                try (FileInputStream fileInputStream = new FileInputStream(child);
+                     BufferedInputStream bis = new BufferedInputStream(fileInputStream)) {
+                    byte[] buf = new byte[4];
+                    bis.read(buf);
+
+                    if (Arrays.equals(buf, ELF_BYTES)){
+                        files.add(child);
+                        return files;
+                    }
                 }
             }
         }

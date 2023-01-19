@@ -411,14 +411,12 @@ public class DefaultSettings {
             }
         }
 
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
         String line = null;
         boolean added = false;
 
         // First check to see if our import statement has already been added.
-        try {
-            reader = new BufferedReader(new FileReader(buildScript));
+        try (FileReader fileReader = new FileReader(buildScript);
+             BufferedReader reader = new BufferedReader(fileReader)) {
             while ((line = reader.readLine()) != null) {
                 if (line.indexOf(IMPORT_WSIT_DEPLOY_XML) != -1) {
                     added = true;
@@ -429,25 +427,15 @@ public class DefaultSettings {
             logger.log(Level.INFO, null, ex);
         } catch (IOException ex) {
             logger.log(Level.INFO, null, ex);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ex) {
-                    logger.log(Level.INFO, null, ex);
-                }
-            }
         }
 
         // If our import statement has not been added, add it now.
         if (added) {
-            try {
+            try (BufferedReader reader = new BufferedReader(new FileReader(buildScript + BACKUP_EXT));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(buildScript))) {
                 // Rename the original to build.xml.bak
                 File backupBuildScript = new File(buildScript);
                 backupBuildScript.renameTo(new File(buildScript + BACKUP_EXT));
-
-                reader = new BufferedReader(new FileReader(buildScript + BACKUP_EXT));
-                writer = new BufferedWriter(new FileWriter(buildScript));
                 added = false;
 
                 while ((line = reader.readLine()) != null) {
@@ -460,19 +448,6 @@ public class DefaultSettings {
                 logger.log(Level.INFO, null, ex);
             } catch (IOException ex) {
                 logger.log(Level.INFO, null, ex);
-            } finally {
-                try {
-                    if (writer != null) {
-                        writer.flush();
-                        writer.close();
-                    }
-
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException ex) {
-                    logger.log(Level.INFO, null, ex);
-                }
             }
         }
     }

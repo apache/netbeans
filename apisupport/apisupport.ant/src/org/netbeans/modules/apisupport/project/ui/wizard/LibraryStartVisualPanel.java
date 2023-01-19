@@ -89,8 +89,8 @@ final class LibraryStartVisualPanel extends NewTemplateVisualPanel {
                     setError(getMessage("MSG_Invalid_Library_Path"));
                     return;
                 }
-                try {
-                    new JarFile(fil); // just checking whether the jar is valid
+                try (JarFile jarFile = new JarFile(fil)) {
+                    // just checking whether the jar is valid
                 } catch (IOException exc) {
                     setError(getMessage("MSG_Selected_File_Is_Not_A_JAR"));
                     return;

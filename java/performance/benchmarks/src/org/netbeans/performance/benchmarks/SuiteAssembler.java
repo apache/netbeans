@@ -125,9 +125,9 @@ public final class SuiteAssembler {
         
         generateSuite(classList, buffer);
         
-        Writer writer = new FileWriter(dest);
-        writer.write(buffer.toString());
-        writer.close();
+        try (Writer writer = new FileWriter(dest)) {
+            writer.write(buffer.toString());
+        }
     }
     
     /** Generates a textual representation */

@@ -47,7 +47,7 @@ public class Util {
     public static boolean hasInstallLocation() {
         return getCheckedLocation() != null;
     }
-    
+
     public static boolean checkInstallLocation() {
         if (!hasInstallLocation()) {
             showInformation(NbBundle.getMessage(Util.class, "MSG_DerbyLocationIncorrect"));
@@ -71,7 +71,7 @@ public class Util {
         }
         return null;
     }
-    
+
     public static boolean ensureSystemHome() {
         if (DerbyOptions.getDefault().getSystemHome().length() <= 0) {
             return Mutex.EVENT.writeAccess(new Mutex.Action<Boolean>() {
@@ -113,9 +113,9 @@ public class Util {
     }
 
     public static void extractZip(File source, FileObject target) throws IOException {
-        FileInputStream is = new FileInputStream(source);
-        try {
-            ZipInputStream zis = new ZipInputStream(is);
+        try (FileInputStream is = new FileInputStream(source);
+             ZipInputStream zis = new ZipInputStream(is)) {
+
             ZipEntry ze;
 
             while ((ze = zis.getNextEntry()) != null) {
@@ -130,25 +130,18 @@ public class Util {
                 // if file, copy
                 FileObject fd = FileUtil.createData(target, name);
                 FileLock lock = fd.lock();
-                try {
-                    OutputStream os = fd.getOutputStream(lock);
-                    try {
-                        FileUtil.copy(zis, os);
-                    } finally {
-                        os.close();
-                    }
+                try (OutputStream os = fd.getOutputStream(lock)) {
+                    FileUtil.copy(zis, os);
                 } finally {
                     lock.releaseLock();
                 }
             }
-        } finally {
-            is.close();
         }
     }
 
     /**
      * Check if candiate FileObject is a derby database.
-     * 
+     *
      * @param candidate the value of candidate
      * @return true if candidate is a derby database
      */

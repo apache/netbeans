@@ -93,9 +93,8 @@ public class BaseSampleProvider implements SampleProvider {
         return SAMPLES.contains(name);
     }
     private boolean checkInnodbSupport(Connection conn) throws DatabaseException {
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW STORAGE ENGINES"); // NOI18N
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SHOW STORAGE ENGINES")) { // NOI18N
 
             while (rs.next()) {
                 if ("INNODB".equals(rs.getString(1).toUpperCase()) &&
@@ -103,8 +102,6 @@ public class BaseSampleProvider implements SampleProvider {
                     return true;
                 }
             }
-            rs.close();
-            stmt.close();
 
             return false;
         } catch (SQLException sqle) {

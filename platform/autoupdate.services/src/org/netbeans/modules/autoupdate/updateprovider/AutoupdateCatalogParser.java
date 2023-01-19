@@ -97,9 +97,8 @@ public class AutoupdateCatalogParser extends DefaultHandler {
         StringBuilder sb = new StringBuilder();
         sb.append(updaterLocation.exists());
         if (updaterLocation.exists()) {
-            try {
+            try (URLClassLoader url = new URLClassLoader(new URL[] { updaterLocation.toURI().toURL() })) {
                 sb.append(", length = ").append(updaterLocation.length()).append(" bytes");
-                URLClassLoader url = new URLClassLoader(new URL[] { updaterLocation.toURI().toURL() });
                 sb.append(", loading resource: ").append(url.getResource("org/netbeans/updater/XMLUtil.class"));
                 sb.append(", loading class: ").append(url.loadClass("org.netbeans.updater.XMLUtil"));
             } catch (Throwable ex) {

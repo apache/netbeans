@@ -76,12 +76,11 @@ public class GrabTableHelper {
                             setPrimaryKeyColumns(pks, connector, cmd, table);
                         }
 
-                        FileOutputStream fstream = new FileOutputStream(file);
-                        ObjectOutputStream ostream = new ObjectOutputStream(fstream);
-                        cmd.setSpecification(null);
-                        ostream.writeObject(cmd);
-                        ostream.flush();
-                        ostream.close();
+                        try (FileOutputStream fstream = new FileOutputStream(file);
+                             ObjectOutputStream ostream = new ObjectOutputStream(fstream)) {
+                            cmd.setSpecification(null);
+                            ostream.writeObject(cmd);
+                        }
                     } catch (Exception e) {
                         array[0] = e;
                     }

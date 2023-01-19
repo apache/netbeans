@@ -236,19 +236,14 @@ class JaveleonModuleReloader {
         if (layer == null) {
             return -1;
         }
-        try {
-            InputStream is = layer.openStream();
-            try {
-                CheckedInputStream cis = new CheckedInputStream(is, new CRC32());
-                // Compute the CRC32 checksum
-                byte[] buf = new byte[1024];
-                while (cis.read(buf) >= 0) {
-                }
-                cis.close();
-                return cis.getChecksum().getValue();
-            } finally {
-                is.close();
+
+        try (InputStream is = layer.openStream();
+             CheckedInputStream cis = new CheckedInputStream(is, new CRC32())) {
+            // Compute the CRC32 checksum
+            byte[] buf = new byte[1024];
+            while (cis.read(buf) >= 0) {
             }
+            return cis.getChecksum().getValue();
         } catch (IOException e) {
             return -1;
         }

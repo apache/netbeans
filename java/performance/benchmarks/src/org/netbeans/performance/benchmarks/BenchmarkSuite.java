@@ -122,12 +122,12 @@ public final class BenchmarkSuite implements Test {
         if (ldef == null) {
             return;
         }
-        
-        try {
-            File store = ldef.getFile();
-            ObjectInputStream obtis = new ObjectInputStream(new FileInputStream(store));
+
+        File store = ldef.getFile();
+
+        try (FileInputStream fis = new FileInputStream(store);
+             ObjectInputStream obtis = new ObjectInputStream(fis)) {
             class2DD = (Map) obtis.readObject();
-            obtis.close();
         } catch (Exception e) {
             result.addError(this, e);
         }
@@ -138,12 +138,12 @@ public final class BenchmarkSuite implements Test {
         if (sdef == null) {
             return;
         }
-        
-        try {
-            File store = sdef.getFile();
-            ObjectOutputStream obtos = new ObjectOutputStream(new FileOutputStream(store));
+
+        File store = sdef.getFile();
+
+        try (FileOutputStream fos = new FileOutputStream(store);
+             ObjectOutputStream obtos = new ObjectOutputStream(fos)) {
             obtos.writeObject(class2DD);
-            obtos.close();
         } catch (Exception e) {
             result.addError(this, e);
         }

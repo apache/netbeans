@@ -67,10 +67,9 @@ final class BuildInfo {
 
     private static List<String> logBuildInfo(File f) {
         ArrayList<String> params = null;
-        FileReader fr = null;
-        try {
-            fr = new FileReader(f);
-            BufferedReader br = new BufferedReader(fr);
+
+        try (FileReader fr = new FileReader(f);
+             BufferedReader br = new BufferedReader(fr)) {
             Map<String, String> map = new Hashtable<String, String> ();
             String line;
             while ((line = br.readLine()) != null) {
@@ -92,13 +91,8 @@ final class BuildInfo {
 
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-        } finally {
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
+
         return params;
     }
 

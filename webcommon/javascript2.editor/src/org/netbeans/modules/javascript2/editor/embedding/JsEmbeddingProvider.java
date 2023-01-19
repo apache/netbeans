@@ -938,12 +938,14 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
         }
 
         // inline comments inside script
-        Scanner scanner = new Scanner(text).useDelimiter("(<!--).*(-->)"); //NOI18N
-        while (scanner.hasNext()) {
-            scanner.next();
-            MatchResult match = scanner.match();
-            embeddings.add(new EmbeddingPosition(sourceStart + match.start(), match.group().length()));
+        try (Scanner scanner = new Scanner(text).useDelimiter("(<!--).*(-->)")) { //NOI18N
+            while (scanner.hasNext()) {
+                scanner.next();
+                MatchResult match = scanner.match();
+                embeddings.add(new EmbeddingPosition(sourceStart + match.start(), match.group().length()));
+            }
         }
+
         return embeddings;
     }
 

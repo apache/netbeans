@@ -103,29 +103,30 @@ public class OracleSchema extends JDBCSchema {
             if (databaseMajorVersion < 10 || types == null) {
                 return Collections.emptySet();
             }
-            Statement stmt = dmd.getConnection().createStatement();
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery("SELECT OBJECT_NAME, TYPE FROM SYS.DBA_RECYCLEBIN"); // NOI18N
-            } catch (SQLException ex) {
-                LOGGER.log(Level.FINE, ex.getMessage(), ex); 
-                // try both
-                rs = stmt.executeQuery("SELECT OBJECT_NAME, TYPE FROM RECYCLEBIN"); // NOI18N
-            }
-            if (rs != null) {
-                List<String> typesL = types == null ? emptyList : Arrays.asList(types);
+
+            try (Statement stmt = dmd.getConnection().createStatement()) {
+                ResultSet rs = null;
                 try {
-                    while (rs.next()) {
-                        String type = rs.getString("TYPE"); // NOI18N
-                        if (typesL.isEmpty() || typesL.contains(type)) {
-                            result.add(rs.getString("OBJECT_NAME")); // NOI18N
+                    rs = stmt.executeQuery("SELECT OBJECT_NAME, TYPE FROM SYS.DBA_RECYCLEBIN"); // NOI18N
+                } catch (SQLException ex) {
+                    LOGGER.log(Level.FINE, ex.getMessage(), ex);
+                    // try both
+                    rs = stmt.executeQuery("SELECT OBJECT_NAME, TYPE FROM RECYCLEBIN"); // NOI18N
+                }
+                if (rs != null) {
+                    List<String> typesL = types == null ? emptyList : Arrays.asList(types);
+                    try {
+                        while (rs.next()) {
+                            String type = rs.getString("TYPE"); // NOI18N
+                            if (typesL.isEmpty() || typesL.contains(type)) {
+                                result.add(rs.getString("OBJECT_NAME")); // NOI18N
+                            }
                         }
+                    } finally {
+                        rs.close();
                     }
-                } finally {
-                    rs.close();
                 }
             }
-            stmt.close();
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Error while analyzing the recycle bin. JDBC Driver: " + driverName + "(" + driverVer + ")", e);
         }
@@ -138,11 +139,12 @@ public class OracleSchema extends JDBCSchema {
         Map<String, Procedure> newProcedures = new LinkedHashMap<String, Procedure>();
         try {
             DatabaseMetaData dmd = jdbcCatalog.getJDBCMetadata().getDmd();
-            Statement stmt = dmd.getConnection().createStatement();
             Set<String> recycleBinObjects = getRecycleBinObjects(dmd, "TRIGGER", "FUNCTION", "PROCEDURE"); // NOI18N
-            ResultSet rs = stmt.executeQuery("SELECT OBJECT_NAME, OBJECT_TYPE, STATUS FROM SYS.ALL_OBJECTS WHERE OWNER='" + name + "'" // NOI18N
-                    + " AND ( OBJECT_TYPE = 'PROCEDURE' OR OBJECT_TYPE = 'TRIGGER' OR OBJECT_TYPE = 'FUNCTION' )"); // NOI18N
-            try {
+
+            try (Statement stmt = dmd.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT OBJECT_NAME, OBJECT_TYPE, STATUS FROM SYS.ALL_OBJECTS WHERE OWNER='" + name + "'" // NOI18N
+                                                  + " AND ( OBJECT_TYPE = 'PROCEDURE' OR OBJECT_TYPE = 'TRIGGER' OR OBJECT_TYPE = 'FUNCTION' )"); // NOI18N
+                ) {
                 while (rs.next()) {
                     String procedureName = rs.getString("OBJECT_NAME"); // NOI18N
                     Procedure procedure = createJDBCProcedure(procedureName).getProcedure();
@@ -153,12 +155,7 @@ public class OracleSchema extends JDBCSchema {
                         LOGGER.log(Level.FINEST, "Oracle procedure found id RECYCLEBIN: {0}, type: {1}, status: {2}", new Object[]{procedure, rs.getString("OBJECT_TYPE"), rs.getString("STATUS")});
                     }
                 }
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
             }
-            stmt.close();
         } catch (SQLException e) {
             throw new MetadataException(e);
         }

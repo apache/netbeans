@@ -183,39 +183,40 @@ public class CacheWriter {
                 ibuf.put(pixel);
             }
         }
-        FileOutputStream fileOut = new FileOutputStream (out, append);
-        FileOutputStream metaOut = new FileOutputStream (meta, append);
-        FileChannel fileChannel = fileOut.getChannel();
-        
-        if (append) {
-            fileChannel.position(out.length());
+
+        try (FileOutputStream fileOut = new FileOutputStream(out, append);
+             FileOutputStream metaOut = new FileOutputStream(meta, append);
+             FileChannel fileChannel = fileOut.getChannel()) {
+
+            if (append) {
+                fileChannel.position(out.length());
+            }
+
+            //Check the size of the file we're creating - nio bytebuffers are
+            //limited to dealing with files < Integer.MAX_VALUE large
+            if (fileChannel.position() + buf.limit() > Integer.MAX_VALUE) {
+                //Can handle this and create a second cache file in the unlikely
+                //event this comes to pass
+                throw new BufferOverflowException();
+            }
+
+            long start = fileChannel.position();
+
+            fileChannel.write(buf);
+
+            long end = fileChannel.position();
+
+            fileChannel.force(true);
+
+            try (FileChannel metaChannel = metaOut.getChannel()) {
+                if (append) {
+                    metaChannel.position(meta.length());
+                }
+
+                metaChannel.write(getMetadata(img, id, start, end));
+                metaChannel.force(true);
+            }
         }
-        
-        //Check the size of the file we're creating - nio bytebuffers are
-        //limited to dealing with files < Integer.MAX_VALUE large
-        if (fileChannel.position() + buf.limit() > Integer.MAX_VALUE) {
-            //Can handle this and create a second cache file in the unlikely
-            //event this comes to pass
-            throw new BufferOverflowException();
-        }
-        
-        long start = fileChannel.position();
-        
-        fileChannel.write(buf);
-        
-        long end = fileChannel.position();
-        
-        fileChannel.force(true);
-        fileChannel.close();
-        
-        FileChannel metaChannel = metaOut.getChannel();
-        if (append) {
-            metaChannel.position(meta.length());
-        }
-        
-        metaChannel.write(getMetadata(img, id, start, end));
-        metaChannel.force(true);
-        metaChannel.close();
     }
     
     private ByteBuffer getMetadata (BufferedImage img, String id, long start, long end) throws IOException {

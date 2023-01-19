@@ -235,103 +235,33 @@ final class MetaInfServicesLookup extends AbstractLookup {
             URL url = en.nextElement();
             Item currentItem = null;
 
-            try {
-                InputStream is = url.openStream();
+            try (InputStream is = url.openStream();
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                 BufferedReader reader = new BufferedReader(isr)) {
 
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                // XXX consider using ServiceLoaderLine instead
+                while (true) {
+                    String line = reader.readLine();
 
-                    // XXX consider using ServiceLoaderLine instead
-                    while (true) {
-                        String line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
 
-                        if (line == null) {
-                            break;
-                        }
+                    line = line.trim();
 
-                        line = line.trim();
-
-                        // is it position attribute?
-                        if (line.startsWith("#position=")) {
-                            if (currentItem == null) {
-                                LOGGER.log(Level.INFO, "Found line ''{0}'' in {1} but there is no item to associate it with", new Object[] {line, url});
-                                continue;
-                            }
-
-                            try {
-                                currentItem.position = Integer.parseInt(line.substring(10));
-                            } catch (NumberFormatException e) {
-                                // do not use ErrorManager because we are in the startup code
-                                // and ErrorManager might not be ready
-                                e.printStackTrace();
-                            }
-                        }
-
-                        if (currentItem != null) {
-                            insertItem(currentItem, foundClasses);
-                            currentItem = null;
-                        }
-
-                        // Ignore blank lines and comments.
-                        if (line.length() == 0) {
+                    // is it position attribute?
+                    if (line.startsWith("#position=")) {
+                        if (currentItem == null) {
+                            LOGGER.log(Level.INFO, "Found line ''{0}'' in {1} but there is no item to associate it with", new Object[] {line, url});
                             continue;
                         }
 
-                        boolean remove = false;
-
-                        if (line.charAt(0) == '#') {
-                            if ((line.length() == 1) || (line.charAt(1) != '-')) {
-                                continue;
-                            }
-
-                            // line starting with #- is a sign to remove that class from lookup
-                            remove = true;
-                            line = line.substring(2);
-                        }
-                        Class<?> inst = null;
                         try {
-                            Object ldr = url.getContent(new Class[] { ClassLoader.class });
-                            if (ldr instanceof ClassLoader) {
-                                inst = Class.forName(line, false, (ClassLoader)ldr);
-                            }
-                        } catch (LinkageError err) {
-                            // go on
-                        } catch (ClassNotFoundException ex) {
-                            LOGGER.log(Level.FINER, "No class found in " + url, ex);
-                        } catch (IOException ex) {
-                            LOGGER.log(Level.FINER, "URL does not support classloader protocol " + url, ex);
-                        }
-                        
-                        if (inst == null) try {
-                            // Most lines are fully-qualified class names.
-                            inst = Class.forName(line, false, loader);
-                        } catch (LinkageError err) {
-                            if (remove) {
-                                continue;
-                            }
-                            throw new ClassNotFoundException(err.getMessage(), err);
-                        } catch (ClassNotFoundException cnfe) {
-                            if (remove) {
-                                // if we are removing somthing and the something
-                                // cannot be found it is ok to do nothing
-                                continue;
-                            } else {
-                                // but if we are not removing just rethrow
-                                throw cnfe;
-                            }
-                        }
-
-                        if (!clazz.isAssignableFrom(inst)) {
-                            throw new ClassNotFoundException(clazzToString(inst) + " not a subclass of " + clazzToString(clazz)); // NOI18N
-                        }
-
-                        if (remove) {
-                            removeClasses.add(inst);
-                        } else {
-                            // create new item here, but do not put it into
-                            // foundClasses array yet because following line
-                            // might specify its position
-                            currentItem = new Item(inst);
+                            currentItem.position = Integer.parseInt(line.substring(10));
+                        } catch (NumberFormatException e) {
+                            // do not use ErrorManager because we are in the startup code
+                            // and ErrorManager might not be ready
+                            e.printStackTrace();
                         }
                     }
 
@@ -339,8 +269,73 @@ final class MetaInfServicesLookup extends AbstractLookup {
                         insertItem(currentItem, foundClasses);
                         currentItem = null;
                     }
-                } finally {
-                    is.close();
+
+                    // Ignore blank lines and comments.
+                    if (line.length() == 0) {
+                        continue;
+                    }
+
+                    boolean remove = false;
+
+                    if (line.charAt(0) == '#') {
+                        if ((line.length() == 1) || (line.charAt(1) != '-')) {
+                            continue;
+                        }
+
+                        // line starting with #- is a sign to remove that class from lookup
+                        remove = true;
+                        line = line.substring(2);
+                    }
+                    Class<?> inst = null;
+                    try {
+                        Object ldr = url.getContent(new Class[] { ClassLoader.class });
+                        if (ldr instanceof ClassLoader) {
+                            inst = Class.forName(line, false, (ClassLoader)ldr);
+                        }
+                    } catch (LinkageError err) {
+                        // go on
+                    } catch (ClassNotFoundException ex) {
+                        LOGGER.log(Level.FINER, "No class found in " + url, ex);
+                    } catch (IOException ex) {
+                        LOGGER.log(Level.FINER, "URL does not support classloader protocol " + url, ex);
+                    }
+
+                    if (inst == null) try {
+                        // Most lines are fully-qualified class names.
+                        inst = Class.forName(line, false, loader);
+                    } catch (LinkageError err) {
+                        if (remove) {
+                            continue;
+                        }
+                        throw new ClassNotFoundException(err.getMessage(), err);
+                    } catch (ClassNotFoundException cnfe) {
+                        if (remove) {
+                            // if we are removing somthing and the something
+                            // cannot be found it is ok to do nothing
+                            continue;
+                        } else {
+                            // but if we are not removing just rethrow
+                            throw cnfe;
+                        }
+                    }
+
+                    if (!clazz.isAssignableFrom(inst)) {
+                        throw new ClassNotFoundException(clazzToString(inst) + " not a subclass of " + clazzToString(clazz)); // NOI18N
+                    }
+
+                    if (remove) {
+                        removeClasses.add(inst);
+                    } else {
+                        // create new item here, but do not put it into
+                        // foundClasses array yet because following line
+                        // might specify its position
+                        currentItem = new Item(inst);
+                    }
+                }
+
+                if (currentItem != null) {
+                    insertItem(currentItem, foundClasses);
+                    currentItem = null;
                 }
             } catch (ClassNotFoundException ex) {
                 LOGGER.log(Level.INFO, null, ex);

@@ -160,9 +160,10 @@ public class CrxTask {
     private byte[] readFile(File file) throws IOException {
         int fileLength = (int)file.length();
         byte[] bytes = new byte[fileLength];
-        DataInputStream input = new DataInputStream(new FileInputStream(file));
-        input.readFully(bytes);
-        input.close();
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             DataInputStream input = new DataInputStream(fileInputStream)) {
+            input.readFully(bytes);
+        }
         return bytes;
     }
 

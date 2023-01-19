@@ -152,9 +152,11 @@ public final class GradleDistributionManager {
         if ((gradleLauncher == null) || (gradleLauncher.length != 1)) {
             throw new FileNotFoundException(lib.getAbsolutePath() + "lib/gradle-launcher-xxxx.jar not found or ambigous!"); //NOI18N
         }
-        JarFile launcherJar = new JarFile(gradleLauncher[0]);
-        String version = launcherJar.getManifest().getMainAttributes().getValue("Implementation-Version"); //NOI18N
-        return new GradleDistribution(distDir, null, version);
+
+        try (JarFile launcherJar = new JarFile(gradleLauncher[0])) {
+            String version = launcherJar.getManifest().getMainAttributes().getValue("Implementation-Version"); //NOI18N
+            return new GradleDistribution(distDir, null, version);
+        }
     }
 
     /**
@@ -667,12 +669,14 @@ public final class GradleDistributionManager {
                 }
                 int allRead = 0;
                 int read;
-                InputStream is = url.openStream();
-                while ((read = is.read(buf)) > 0) {
-                    os.write(buf, 0, read);
-                    allRead += read;
-                    if (size > 0) {
-                        handle.progress(allRead);
+
+                try (InputStream is = url.openStream()) {
+                    while ((read = is.read(buf)) > 0) {
+                        os.write(buf, 0, read);
+                        allRead += read;
+                        if (size > 0) {
+                            handle.progress(allRead);
+                        }
                     }
                 }
             }

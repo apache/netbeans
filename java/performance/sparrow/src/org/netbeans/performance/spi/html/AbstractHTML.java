@@ -46,8 +46,11 @@ abstract class AbstractHTML implements HTML {
 
     public void writeToFile(String filename) throws IOException {
         File f = new File(filename);
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write(toHTML().getBytes());
+
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+            fos.write(toHTML().getBytes());
+        }
+
         System.out.println("Wrote html to " + f.toString());
     }
 

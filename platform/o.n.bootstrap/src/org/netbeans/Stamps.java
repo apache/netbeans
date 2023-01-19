@@ -185,9 +185,9 @@ public final class Stamps {
         if (cacheFile == null) {
             return null;
         }
-        
-        try {
-            FileChannel fc = new FileInputStream(cacheFile).getChannel();
+
+        try (FileInputStream fis = new FileInputStream(cacheFile);
+             FileChannel fc = fis.getChannel()) {
             ByteBuffer master;
             if (mmap) {
                 master = fc.map(FileChannel.MapMode.READ_ONLY, 0, len[0]);
@@ -202,8 +202,6 @@ public final class Stamps {
                 master.flip();
             }
 
-            fc.close();
-            
             return master;
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Cannot read cache " + cacheFile, ex); // NOI18N
@@ -452,9 +450,9 @@ public final class Stamps {
             }
             if (writeFile) {
                 file.getParentFile().mkdirs();
-                FileOutputStream os = new FileOutputStream(file);
-                os.write(expected);
-                os.close();
+                try (FileOutputStream os = new FileOutputStream(file)) {
+                    os.write(expected);
+                }
                 if (areCachesOK) {
                     file.setLastModified(lastMod);
                 }
@@ -548,39 +546,43 @@ public final class Stamps {
         if (children != null && children.length > 0) {
             return;
         }
-        InputStream is = Stamps.getModulesJARs().asStream("populate.zip"); // NOI18N
-        if (is == null) {
-            return;
-        }
-        ZipInputStream zip = null;
-        FileOutputStream os = null;
-        try {
+
+        try (InputStream is = Stamps.getModulesJARs().asStream("populate.zip")) { // NOI18z
+            if (is == null) {
+                return;
+            }
+
             byte[] arr = new byte[4096];
+
             LOG.log(Level.FINE, "Found populate.zip about to extract it into {0}", cache);
-            zip = new ZipInputStream(is);
-            for (;;) {
-                ZipEntry en = zip.getNextEntry();
-                if (en == null) {
-                    break;
-                }
-                if (en.isDirectory()) {
-                    continue;
-                }
-                File f = new File(cache, en.getName().replace('/', File.separatorChar));
-                f.getParentFile().mkdirs();
-                os = new FileOutputStream(f);
-                for (;;) {
-                    int len = zip.read(arr);
-                    if (len == -1) {
+
+            try (ZipInputStream zip = new ZipInputStream(is)) {
+                for (; ; ) {
+                    ZipEntry en = zip.getNextEntry();
+                    if (en == null) {
                         break;
                     }
-                    os.write(arr, 0, len);
+                    if (en.isDirectory()) {
+                        continue;
+                    }
+                    File f = new File(cache, en.getName().replace('/', File.separatorChar));
+                    f.getParentFile().mkdirs();
+
+                    try (FileOutputStream os = new FileOutputStream(f)) {
+                        for (; ; ) {
+                            int len = zip.read(arr);
+                            if (len == -1) {
+                                break;
+                            }
+                            os.write(arr, 0, len);
+                        }
+                    }
                 }
-                os.close();
+            } catch (IOException ex) {
+                LOG.log(Level.INFO, "Failed to populate {0}", cache);
             }
-            zip.close();
-        } catch (IOException ex) {
-            LOG.log(Level.INFO, "Failed to populate {0}", cache);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     

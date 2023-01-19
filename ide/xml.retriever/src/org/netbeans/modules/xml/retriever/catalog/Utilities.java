@@ -412,43 +412,34 @@ public class Utilities {
         ucn.connect();
         
         byte buffer[] = new byte[1024];
-        BufferedInputStream bis = new BufferedInputStream(ucn.getInputStream());
-        saveFile.getParentFile().mkdirs();
-        BufferedOutputStream bos = null;
-        try {
-            bos = new BufferedOutputStream(new FileOutputStream(saveFile));
-        } catch (FileNotFoundException ex) {
-            bis.close();
-            throw ex;
-        }
-        
-        int len = 1024;
-        while((len = bis.read(buffer, 0, 1024)) > 0) {
-            try {
-                if(Thread.currentThread().isInterrupted())
-                    break;
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {}
-            try{
-                bos.write(buffer, 0, len);
-            } catch (IOException e){
-                expn = e;
-                break;
+
+        try (BufferedInputStream bis = new BufferedInputStream(ucn.getInputStream())) {
+            saveFile.getParentFile().mkdirs();
+            try (FileOutputStream fos = new FileOutputStream(saveFile);
+                 BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+                int len = 1024;
+                while ((len = bis.read(buffer, 0, 1024)) > 0) {
+                    try {
+                        if (Thread.currentThread().isInterrupted())
+                            break;
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                    }
+                    try {
+                        bos.write(buffer, 0, len);
+                    } catch (IOException e) {
+                        expn = e;
+                        break;
+                    }
+                }
+
+                if (expn != null)
+                    throw expn;
+                return saveFile;
+            } catch (FileNotFoundException ex) {
+                throw ex;
             }
         }
-        try {
-            bis.close();
-        } catch (IOException ex) {
-            //cant do much: ignore
-        }
-        try {
-            bos.close();
-        } catch (IOException ex) {
-            //cant do much: ignore
-        }
-        if(expn != null)
-            throw expn;
-        return saveFile;
     }
     
     public static InputStream getInputStreamOfURL(URL downloadURL, Proxy proxy) throws IOException {

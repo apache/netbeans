@@ -45,17 +45,15 @@ final class ControlFlow extends Object {
      * @exception IOException thrown when there is problem reading the url
      */
     static void registerSwitches(Logger listenTo, Logger reportTo, URL url, int timeout) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        InputStream is = url.openStream();
-        for (;;) {
-            int ch = is.read ();
-            if (ch == -1) break;
-            os.write (ch);
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream();
+             InputStream is = url.openStream()) {
+            for (; ; ) {
+                int ch = is.read();
+                if (ch == -1) break;
+                os.write(ch);
+            }
+            registerSwitches(listenTo, reportTo, new String(os.toByteArray(), "utf-8"), timeout);
         }
-        os.close();
-        is.close();
-        
-        registerSwitches(listenTo, reportTo, new String(os.toByteArray(), "utf-8"), timeout);
     }
     
     /** Registers hints for controlling thread switching in multithreaded

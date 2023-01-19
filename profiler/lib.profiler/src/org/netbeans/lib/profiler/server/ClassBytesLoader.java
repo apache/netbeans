@@ -122,14 +122,13 @@ public class ClassBytesLoader {
                             throws IOException, URISyntaxException {
         URI uri = new URI(classUrl.toString());
         File file = new File(uri);
-        RandomAccessFile f = new RandomAccessFile(file, "r");   // NOI18N
-        byte[] buf = new byte[(int) f.length()];
+        try (RandomAccessFile f = new RandomAccessFile(file, "r")) {   // NOI18N
+            byte[] buf = new byte[(int) f.length()];
 
-        f.readFully(buf);
-        //System.err.println("Size "+buf.length);
-        f.close();
-
-        return buf;
+            f.readFully(buf);
+            //System.err.println("Size "+buf.length);
+            return buf;
+        }
     }
 
     private static byte[] readJar(final URL classUrl) throws IOException {
@@ -163,16 +162,17 @@ public class ClassBytesLoader {
     }
 
     private static byte[] readUrl(URL classUrl) throws IOException {
-        InputStream is = classUrl.openStream();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(16384);
-        byte[] buffer = new byte[4096];
-        int len;
-        
-        while ((len = is.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
+        try (InputStream is = classUrl.openStream();
+             ByteArrayOutputStream bos = new ByteArrayOutputStream(16384)) {
+            byte[] buffer = new byte[4096];
+            int len;
+
+            while ((len = is.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+
+            //System.err.println("Size "+bos.size());
+            return bos.toByteArray();
         }
-        is.close();
-        //System.err.println("Size "+bos.size());
-        return bos.toByteArray();
     }
 }

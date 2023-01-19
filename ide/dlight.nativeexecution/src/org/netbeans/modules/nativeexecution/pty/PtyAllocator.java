@@ -108,12 +108,16 @@ public final class PtyAllocator {
             PtyInfo ptyInfo = PtyOpenUtility.getInstance().readSatelliteOutput(streams.out);
 
             if (ptyInfo == null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(streams.err));
-                String errorLine;
                 StringBuilder err_msg = new StringBuilder();
-                while ((errorLine = br.readLine()) != null) {
-                    err_msg.append(errorLine).append('\n');
+
+                try (InputStreamReader isr = new InputStreamReader(streams.err);
+                     BufferedReader br = new BufferedReader(isr)) {
+                    String errorLine;
+                    while ((errorLine = br.readLine()) != null) {
+                        err_msg.append(errorLine).append('\n');
+                    }
                 }
+
                 throw new IOException(err_msg.toString());
             }
 

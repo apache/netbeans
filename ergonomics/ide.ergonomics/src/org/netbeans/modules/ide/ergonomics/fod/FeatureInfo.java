@@ -20,6 +20,7 @@
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,47 +68,51 @@ public final class FeatureInfo {
 
     public static FeatureInfo create(String clusterName, URL delegateLayer, URL bundle) throws IOException {
         Properties p = new Properties();
-        p.load(bundle.openStream());
-        String cnbs = p.getProperty("cnbs");
-        assert cnbs != null : "Error loading from " + bundle; // NOI18N
-        TreeSet<String> s = new TreeSet<String>();
-        s.addAll(Arrays.asList(cnbs.split(",")));
 
-        FeatureInfo info = new FeatureInfo(clusterName, s, delegateLayer, p);
-        final String prefix = "nbproject.";
-        final String prefFile = "project.file.";
-        final String prefXPath = "project.xpath.";
-        for (Object k : p.keySet()) {
-            String key = (String) k;
-            if (key.startsWith(prefix)) {
-                info.nbproject(
-                    key.substring(prefix.length()),
-                    p.getProperty(key)
-                );
-            }
-            if (key.startsWith(prefFile)) {
-                try {
-                    info.projectFile(key.substring(prefFile.length()), null, p.getProperty(key));
-                } catch (XPathExpressionException ex) {
-                    IOException e = new IOException(ex.getMessage());
-                    e.initCause(ex);
-                    throw e;
+        try (InputStream inputStream = bundle.openStream()) {
+            p.load(inputStream);
+            String cnbs = p.getProperty("cnbs");
+            assert cnbs != null : "Error loading from " + bundle; // NOI18N
+            TreeSet<String> s = new TreeSet<String>();
+            s.addAll(Arrays.asList(cnbs.split(",")));
+
+            FeatureInfo info = new FeatureInfo(clusterName, s, delegateLayer, p);
+            final String prefix = "nbproject.";
+            final String prefFile = "project.file.";
+            final String prefXPath = "project.xpath.";
+            for (Object k : p.keySet()) {
+                String key = (String) k;
+                if (key.startsWith(prefix)) {
+                    info.nbproject(
+                            key.substring(prefix.length()),
+                            p.getProperty(key)
+                    );
                 }
-            }
-            if (key.startsWith(prefXPath)) {
-                try {
-                    String xpaths = p.getProperty(key);
-                    for (String xp : safeXPathSplit(xpaths)) {
-                        info.projectFile(key.substring(prefXPath.length()), xp, "");
+                if (key.startsWith(prefFile)) {
+                    try {
+                        info.projectFile(key.substring(prefFile.length()), null, p.getProperty(key));
+                    } catch (XPathExpressionException ex) {
+                        IOException e = new IOException(ex.getMessage());
+                        e.initCause(ex);
+                        throw e;
                     }
-                } catch (XPathExpressionException ex) {
-                    IOException e = new IOException(ex.getMessage());
-                    e.initCause(ex);
-                    throw e;
+                }
+                if (key.startsWith(prefXPath)) {
+                    try {
+                        String xpaths = p.getProperty(key);
+                        for (String xp : safeXPathSplit(xpaths)) {
+                            info.projectFile(key.substring(prefXPath.length()), xp, "");
+                        }
+                    } catch (XPathExpressionException ex) {
+                        IOException e = new IOException(ex.getMessage());
+                        e.initCause(ex);
+                        throw e;
+                    }
                 }
             }
+
+            return info;
         }
-        return info;
     }
     
 

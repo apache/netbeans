@@ -65,15 +65,13 @@ public class MultiLineMappedMatcherSmall extends AbstractMatcher {
             SearchListener listener) {
 
         MappedByteBuffer bb = null;
-        FileChannel fc = null;
-        try {
 
-            listener.fileContentMatchingStarted(fo.getPath());
-            File file = FileUtil.toFile(fo);
+        listener.fileContentMatchingStarted(fo.getPath());
+        File file = FileUtil.toFile(fo);
 
+        try (FileInputStream fis = new FileInputStream(file);
+             FileChannel fc = fis.getChannel()) {
             // Open the file and then get a channel from the stream
-            FileInputStream fis = new FileInputStream(file);
-            fc = fis.getChannel();
 
             // Get the file's size and then map it into memory
             int sz = (int) fc.size();
@@ -101,13 +99,6 @@ public class MultiLineMappedMatcherSmall extends AbstractMatcher {
             listener.generalError(e);
             return null;
         } finally {
-            if (fc != null) {
-                try {
-                    fc.close();
-                } catch (IOException ex) {
-                    listener.generalError(ex);
-                }
-            }
             MatcherUtils.unmap(bb);
         }
     }

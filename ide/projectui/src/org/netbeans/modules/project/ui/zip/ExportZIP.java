@@ -146,9 +146,9 @@ public class ExportZIP extends JPanel {
                 return false;
             }
             handle.switchToDeterminate(files.size());
-            OutputStream os = new FileOutputStream(zip);
-            try {
-                ZipOutputStream zos = new ZipOutputStream(os);
+
+            try (OutputStream os = new FileOutputStream(zip);
+                 ZipOutputStream zos = new ZipOutputStream(os)) {
                 Set<String> written = new HashSet<String>();
                 String prefix = root.getName() + '/';
                 for (int i = 0; i < files.size(); i++) {
@@ -160,9 +160,6 @@ public class ExportZIP extends JPanel {
                     handle.progress(MSG_packed(name), i);
                 }
                 zos.finish();
-                zos.close();
-            } finally {
-                os.close();
             }
         } finally {
             handle.finish();

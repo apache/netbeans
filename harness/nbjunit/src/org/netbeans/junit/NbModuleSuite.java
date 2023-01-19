@@ -1141,37 +1141,33 @@ public class NbModuleSuite {
             int dot = n.lastIndexOf('.');
             File jarCopy = File.createTempFile(n.substring(0, dot) + '-', n.substring(dot));
             jarCopy.deleteOnExit();
-            InputStream is = new FileInputStream(jar);
-            try {
-                OutputStream os = new FileOutputStream(jarCopy);
-                try {
-                    JarInputStream jis = new JarInputStream(is);
+
+            try (InputStream is = new FileInputStream(jar);
+                 OutputStream os = new FileOutputStream(jarCopy);
+                 JarInputStream jis = new JarInputStream(is)) {
+
                     Manifest mani = new Manifest(jis.getManifest());
                     mani.getMainAttributes().putValue("Class-Path", classPathHeader.toString());
-                    JarOutputStream jos = new JarOutputStream(os, mani);
-                    JarEntry entry;
-                    while ((entry = jis.getNextJarEntry()) != null) {
-                        if (entry.getName().matches("META-INF/.+[.]SF")) {
-                            throw new IOException("cannot handle signed JARs");
-                        }
-                        jos.putNextEntry(entry);
-                        byte[] buf = new byte[4092];
-                        for (;;) {
-                            int more = jis.read(buf, 0, buf.length);
-                            if (more == -1) {
-                                break;
+
+                    try (JarOutputStream jos = new JarOutputStream(os, mani)) {
+                        JarEntry entry;
+                        while ((entry = jis.getNextJarEntry()) != null) {
+                            if (entry.getName().matches("META-INF/.+[.]SF")) {
+                                throw new IOException("cannot handle signed JARs");
                             }
-                            jos.write(buf, 0, more);
+                            jos.putNextEntry(entry);
+                            byte[] buf = new byte[4092];
+                            for (; ; ) {
+                                int more = jis.read(buf, 0, buf.length);
+                                if (more == -1) {
+                                    break;
+                                }
+                                jos.write(buf, 0, more);
+                            }
                         }
                     }
-                    jis.close();
-                    jos.close();
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
             }
+
             return jarCopy;
         }
         
@@ -1558,9 +1554,10 @@ public class NbModuleSuite {
                     LOG.finest("end----");
                 }
             }
-            FileOutputStream os = new FileOutputStream(file);
-            os.write(xml.getBytes(StandardCharsets.UTF_8));
-            os.close();
+
+            try (FileOutputStream os = new FileOutputStream(file)) {
+                os.write(xml.getBytes(StandardCharsets.UTF_8));
+            }
         }
 
         private static void charDump(Level logLevel, String text) {

@@ -110,7 +110,11 @@ NodeActionsProvider, TableModel {
             if (row == ROOT) return null;
             if (columnID.equals ("sizeID")) {
                 if (((File) row).isDirectory ()) return "<dir>";
-                return "" + new FileInputStream ((File) row).getChannel ().size ();
+
+                try (FileInputStream fis = new FileInputStream((File) row);
+                     FileChannel fc = fis.getChannel()) {
+                    return "" + fc.size();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace ();

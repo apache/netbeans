@@ -289,41 +289,36 @@ public final class Utils {
     public static void unzip(
             final File file,
             final File directory) throws IOException {
-        ZipFile zip = new ZipFile(file);
-        
-        if (directory.exists() && directory.isFile()) {
-            throw new IOException("Directory is an existing file, cannot unzip.");
-        }
-        
-        if (!directory.exists() && !directory.mkdirs()) {
-            throw new IOException("Cannot create directory");
-        }
-        
-        Enumeration<? extends ZipEntry> entries =
-                (Enumeration<? extends ZipEntry>) zip.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            
-            File entryFile = new File(directory, entry.getName());
-            
-            InputStream  in;
-            OutputStream out;
-            if (entry.getName().endsWith(SLASH)) {
-                entryFile.mkdirs();
-            } else {
-                in = zip.getInputStream(entry);
-                out = new FileOutputStream(entryFile);
-                
-                copy(in, out);
-                
-                in.close();
-                out.close();
+        try (ZipFile zip = new ZipFile(file)) {
+
+            if (directory.exists() && directory.isFile()) {
+                throw new IOException("Directory is an existing file, cannot unzip.");
             }
-            
-            entryFile.setLastModified(entry.getTime());
+
+            if (!directory.exists() && !directory.mkdirs()) {
+                throw new IOException("Cannot create directory");
+            }
+
+            Enumeration<? extends ZipEntry> entries =
+                    (Enumeration<? extends ZipEntry>) zip.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+
+                File entryFile = new File(directory, entry.getName());
+
+                if (entry.getName().endsWith(SLASH)) {
+                    entryFile.mkdirs();
+                } else {
+                    try (InputStream in = zip.getInputStream(entry);
+                         OutputStream out = new FileOutputStream(entryFile)) {
+                        copy(in, out);
+                    }
+                }
+
+                entryFile.setLastModified(entry.getTime());
+            }
+
         }
-        
-        zip.close();
     }
     
     public static void nativeUnzip(
@@ -398,24 +393,14 @@ public final class Utils {
             if (project != null) {
                 project.log("... extract compressed tar archive to temporary file " + tempSource);
             }
-            final FileInputStream fis = new FileInputStream(file);
-            InputStream is = (gzipCompression) ? new GZIPInputStream(fis) : new CBZip2InputStream(fis);
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(tempSource);
+
+            try (FileInputStream fis = new FileInputStream(file);
+                 InputStream is = (gzipCompression) ? new GZIPInputStream(fis) : new CBZip2InputStream(fis);
+                 FileOutputStream fos = new FileOutputStream(tempSource)) {
                 copy(is, fos);
             } catch (IOException e) {
-                if(fos != null) {
-                    fos.close();
-                    fos = null;
-                }
                 tempSource.delete();
-                throw e;   
-            } finally {          
-                if(fos != null) {
-                    fos.close();
-                }
-                is.close();
+                throw e;
             }
         }
         String tar = getTarExecutable();
@@ -527,10 +512,10 @@ public final class Utils {
     public static void write(
             final File file,
             final CharSequence chars) throws IOException {
-        OutputStreamWriter writer =
-                new OutputStreamWriter(new FileOutputStream(file), UTF8);
-        writer.write(chars.toString());
-        writer.close();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+                OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream, UTF8)) {
+            writer.write(chars.toString());
+        }
     }
     
     /**
@@ -709,9 +694,7 @@ public final class Utils {
             }
         }
 
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
+        try (FileInputStream fis = new FileInputStream(file)) {
             byte[] bytes = new byte[64];
 
             int c;
@@ -736,12 +719,6 @@ public final class Utils {
                 }
             }
         } catch (IOException e) {
-            if(fis!=null) {
-                try {
-                    fis.close();
-                } catch (IOException ex) {
-                }
-            }
         }
 
         return false;

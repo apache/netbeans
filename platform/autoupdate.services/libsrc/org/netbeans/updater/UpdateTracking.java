@@ -279,23 +279,19 @@ public final class UpdateTracking {
         org.w3c.dom.Document document;
 
         File file;
-        InputStream is;
         int avail = 0;
-        try {
-            file = trackingFile;
-            
-            if ( ! file.isFile () ) {
-                return;
-            }
-            
-            is = new FileInputStream( file );
+
+        file = trackingFile;
+
+        if (!file.isFile()) {
+            return;
+        }
+
+        try (InputStream is = new FileInputStream(file)) {
             avail = is.available();
 
             InputSource xmlInputSource = new InputSource( is );
             document = XMLUtil.parse(xmlInputSource, false, false, DUMMY_ERROR_HANDLER, XMLUtil.createAUResolver());
-            if (is != null) {
-                is.close();
-            }
         }
         catch ( org.xml.sax.SAXException e ) {
             XMLUtil.LOG.log(Level.SEVERE, "Bad update_tracking: " + trackingFile + ", available bytes: " + avail, e); // NOI18N

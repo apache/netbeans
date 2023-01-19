@@ -151,10 +151,9 @@ public class ShelveChangesAction extends SingleRepositoryAction {
             "# {0} - repository name", "MSG_ShelveChanges.progress.exporting=Saving changes in {0}"
         })
         protected void exportPatch (File toFile, File commonParent) throws IOException {
-            BufferedOutputStream out = null;
             boolean success = false;
-            try {
-                out = new BufferedOutputStream(new FileOutputStream(toFile));
+            try (FileOutputStream fos = new FileOutputStream(toFile);
+                 BufferedOutputStream out = new BufferedOutputStream(fos)) {
                 if (support.isCanceled()) {
                     return;
                 }
@@ -172,17 +171,13 @@ public class ShelveChangesAction extends SingleRepositoryAction {
                     }
                 }
                 success = true;
+
+                out.flush();
             } finally {
-                if (out != null) {
-                    try {
-                        out.flush();
-                        out.close();
-                    } catch (IOException ex) {}
-                    if (success && toFile.length() > 0) {
-                        Utils.openFile(toFile);
-                    } else {
-                        toFile.delete();
-                    }
+                if (success && toFile.length() > 0) {
+                    Utils.openFile(toFile);
+                } else {
+                    toFile.delete();
                 }
             }
         }

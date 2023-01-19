@@ -96,17 +96,12 @@ public class CalibrationDataFileIO {
             return -1;
         }
 
-        FileInputStream fiStream = null;
-        try {
-            fiStream = new FileInputStream(savedDataFile);
-            ObjectInputStream oiStream = new ObjectInputStream(fiStream);
-
+        try (FileInputStream fiStream = new FileInputStream(savedDataFile);
+             ObjectInputStream oiStream = new ObjectInputStream(fiStream)) {
             status.methodEntryExitCallTime = (double[]) oiStream.readObject();
             status.methodEntryExitInnerTime = (double[]) oiStream.readObject();
             status.methodEntryExitOuterTime = (double[]) oiStream.readObject();
             status.timerCountsInSecond = (long[]) oiStream.readObject();
-
-            fiStream.close();
         } catch (Exception e) {
             errorMessage = e.getMessage();
             String prefix = CALIBRATION_DATA_CORRUPTED_PREFIX;
@@ -122,28 +117,18 @@ public class CalibrationDataFileIO {
             errorMessage += ("\n" + RERUN_CALIBRATION_MSG + "\n"); // NOI18N
 
             return -2;
-        } finally {
-            if (fiStream != null) {
-                try {
-                    fiStream.close();
-                } catch (IOException e) {}
-            }
         }
 
         return 0;
     }
 
     public static boolean saveCalibrationData(ProfilingSessionStatus status) {
-        try {
-            FileOutputStream foStream = new FileOutputStream(getCalibrationDataFileName(status.targetJDKVersionString));
-            ObjectOutputStream ooStream = new ObjectOutputStream(foStream);
-
+        try (FileOutputStream foStream = new FileOutputStream(getCalibrationDataFileName(status.targetJDKVersionString));
+             ObjectOutputStream ooStream = new ObjectOutputStream(foStream)) {
             ooStream.writeObject(status.methodEntryExitCallTime);
             ooStream.writeObject(status.methodEntryExitInnerTime);
             ooStream.writeObject(status.methodEntryExitOuterTime);
             ooStream.writeObject(status.timerCountsInSecond);
-
-            foStream.close();
         } catch (IOException e) {
             errorMessage = e.getMessage();
             String prefix = ERROR_WRITING_CALIBRATION_FILE_PREFIX;

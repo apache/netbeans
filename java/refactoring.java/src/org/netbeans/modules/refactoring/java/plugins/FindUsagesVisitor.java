@@ -108,15 +108,16 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
                 Token t = ts.token();
 
                 if (t.id() == JavaTokenId.BLOCK_COMMENT || t.id() == JavaTokenId.LINE_COMMENT || t.id() == JavaTokenId.JAVADOC_COMMENT) {
-                    Scanner tokenizer = new Scanner(t.text().toString());
-                    tokenizer.useDelimiter("[^a-zA-Z0-9_]"); //NOI18N
-                    while (tokenizer.hasNext()) {
-                        String current = tokenizer.next();
-                        if (current.equals(originalName)) {
-                            WhereUsedElement comment = WhereUsedElement.create(ts.offset() + tokenizer.match().start(),
-                                                                               ts.offset() + tokenizer.match().end(), workingCopy, fromTestRoot, fromPlatform, fromDependency);
-                            elements.add(comment);
-                            usagesInComments = true;
+                    try (Scanner tokenizer = new Scanner(t.text().toString())) {
+                        tokenizer.useDelimiter("[^a-zA-Z0-9_]"); //NOI18N
+                        while (tokenizer.hasNext()) {
+                            String current = tokenizer.next();
+                            if (current.equals(originalName)) {
+                                WhereUsedElement comment = WhereUsedElement.create(ts.offset() + tokenizer.match().start(),
+                                        ts.offset() + tokenizer.match().end(), workingCopy, fromTestRoot, fromPlatform, fromDependency);
+                                elements.add(comment);
+                                usagesInComments = true;
+                            }
                         }
                     }
                 }

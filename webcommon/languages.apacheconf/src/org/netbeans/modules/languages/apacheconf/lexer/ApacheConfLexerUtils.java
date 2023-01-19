@@ -42,14 +42,18 @@ public class ApacheConfLexerUtils {
     public static String getFileContent(File file) throws Exception{
         StringBuilder sb = new StringBuilder();
         String lineSep = "\n";//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-        String line = br.readLine();
-        while (line != null) {
-            sb.append(line);
-            sb.append(lineSep);
-            line = br.readLine();
+
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(inputStreamReader)) {
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                sb.append(lineSep);
+                line = br.readLine();
+            }
         }
-        br.close();
+
         return sb.toString();
     }
 

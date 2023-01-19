@@ -192,32 +192,32 @@ public final class TerminalLocalNativeProcess extends AbstractNativeProcess {
                 pb.environment().put("DISPLAY", display); // NOI18N
             }
 
-            OutputStreamWriter shWriter = new OutputStreamWriter(shfos, scriptCharset);
-            shWriter.write("echo $$ > \"" + pidFile + "\" || exit $?\n"); // NOI18N
+            try (OutputStreamWriter shWriter = new OutputStreamWriter(shfos, scriptCharset)) {
+                shWriter.write("echo $$ > \"" + pidFile + "\" || exit $?\n"); // NOI18N
 
-            if (!env.isEmpty()) {
-                // TODO: FIXME (?)
-                // Do PATH normalization on Windows....
-                // Problem here is that this is done for PATH env. variable only!
+                if (!env.isEmpty()) {
+                    // TODO: FIXME (?)
+                    // Do PATH normalization on Windows....
+                    // Problem here is that this is done for PATH env. variable only!
 
-                if (osFamily == OSFamily.WINDOWS) {
-                    // Make sure that path in upper case
-                    // [for external terminal only]
-                    String path = env.get("PATH"); // NOI18N
-                    env.remove("PATH"); // NOI18N
-                    env.put("PATH", WindowsSupport.getInstance().convertToAllShellPaths(path)); // NOI18N
+                    if (osFamily == OSFamily.WINDOWS) {
+                        // Make sure that path in upper case
+                        // [for external terminal only]
+                        String path = env.get("PATH"); // NOI18N
+                        env.remove("PATH"); // NOI18N
+                        env.put("PATH", WindowsSupport.getInstance().convertToAllShellPaths(path)); // NOI18N
+                    }
+
+                    EnvWriter ew = new EnvWriter(shWriter);
+                    ew.write(env);
+
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        env.dump(System.err);
+                    }
                 }
 
-                EnvWriter ew = new EnvWriter(shWriter);
-                ew.write(env);
-
-                if (LOG.isLoggable(Level.FINEST)) {
-                    env.dump(System.err);
-                }
+                shWriter.write("exec " + commandLine + "\n"); // NOI18N
             }
-
-            shWriter.write("exec " + commandLine + "\n"); // NOI18N
-            shWriter.close();
 
             Process terminalProcess = ProcessUtils.ignoreProcessOutputAndError(pb.start());
 

@@ -271,17 +271,17 @@ public class NbBundleProcessor extends AbstractProcessor {
                 String fqn = pkg + ".Bundle";
                 Writer w = processingEnv.getFiler().createSourceFile(fqn, elements).openWriter();
                 try {
-                    PrintWriter pw = new PrintWriter(w);
-                    pw.println("package " + pkg + ";");
-                    pw.println("/** Localizable strings for {@link " + pkg + "}. */");
-                    pw.println("class Bundle {");
-                    for (String method : methods.values()) {
-                        pw.print(method);
+                    try (PrintWriter pw = new PrintWriter(w)) {
+                        pw.println("package " + pkg + ";");
+                        pw.println("/** Localizable strings for {@link " + pkg + "}. */");
+                        pw.println("class Bundle {");
+                        for (String method : methods.values()) {
+                            pw.print(method);
+                        }
+                        pw.println("    private Bundle() {}");
+                        pw.println("}");
+                        pw.flush();
                     }
-                    pw.println("    private Bundle() {}");
-                    pw.println("}");
-                    pw.flush();
-                    pw.close();
                 } finally {
                     w.close();
                 }

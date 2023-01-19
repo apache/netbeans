@@ -199,16 +199,17 @@ public class CheckBundles extends Task {
             });
         String [] srcs = new String[files.length];
         for (int i=0; i<files.length; i++) {
-            InputStream is = new BufferedInputStream (new FileInputStream(files[i]));
-            byte [] arr = new byte [2048];
-            srcs[i] = "";
-            int len;
-            while ((len = is.read(arr)) != -1) {
-                srcs[i] = srcs[i]+ new String(arr, 0, len);
+            try (FileInputStream fileInputStream = new FileInputStream(files[i]);
+                 InputStream is = new BufferedInputStream(fileInputStream)) {
+                byte[] arr = new byte[2048];
+                srcs[i] = "";
+                int len;
+                while ((len = is.read(arr)) != -1) {
+                    srcs[i] = srcs[i] + new String(arr, 0, len);
+                }
             }
         }
         map.put(dir, srcs);
-        return;
     }
     
     /**
@@ -216,25 +217,28 @@ public class CheckBundles extends Task {
      */
     private Map<String,Integer> entries(File bundle) throws IOException {
         Map<String,Integer> entries = new LinkedHashMap<>();
-        BufferedReader r = new BufferedReader (new FileReader (bundle));
-        String l;
-        boolean multi = false;
-        int line = 0;
-        while ((l = r.readLine()) != null) {
-            line++;
-            if (!l.startsWith("#")) {
-            
-                int i = l.indexOf('=');
-                if (i>0 && !multi) {
-                    String key = l.substring(0,i).trim();
-                    entries.put(key, line);
+        try (FileReader fileReader = new FileReader(bundle);
+             BufferedReader r = new BufferedReader(fileReader)) {
+            String l;
+            boolean multi = false;
+            int line = 0;
+            while ((l = r.readLine()) != null) {
+                line++;
+                if (!l.startsWith("#")) {
+
+                    int i = l.indexOf('=');
+                    if (i > 0 && !multi) {
+                        String key = l.substring(0, i).trim();
+                        entries.put(key, line);
+                    }
+                    if (l.endsWith("\\"))
+                        multi = true;
+                    else
+                        multi = false;
                 }
-                if (l.endsWith("\\"))
-                    multi = true;
-                else
-                    multi = false;
             }
         }
+
         return entries;
     }
 

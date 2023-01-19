@@ -314,9 +314,9 @@ public class StartLog {
             if(logFileProp!=null){
                 try{
                     java.io.File logFile = new java.io.File(logFileProp);
-                    java.io.FileWriter writer = new java.io.FileWriter(logFile);
-                    writer.write(logs.toString());
-                    writer.close();
+                    try (java.io.FileWriter writer = new java.io.FileWriter(logFile)) {
+                        writer.write(logs.toString());
+                    }
                 }catch (Exception exc){
                     System.err.println("EXCEPTION rises during startup logging:");
                     exc.printStackTrace(System.err);

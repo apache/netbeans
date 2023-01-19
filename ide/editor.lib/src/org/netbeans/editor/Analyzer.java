@@ -782,9 +782,11 @@ public class Analyzer {
     public static char[] loadFile(String fileName) throws IOException {
         File file = new File(fileName);
         char chars[] = new char[(int)file.length()];
-        FileReader reader = new FileReader(file);
-        reader.read(chars);
-        reader.close();
+
+        try (FileReader reader = new FileReader(file)) {
+            reader.read(chars);
+        }
+
         int len = Analyzer.convertLSToLF(chars, chars.length);
         if (len != chars.length) {
             char copyChars[] = new char[len];

@@ -1306,21 +1306,25 @@ public class Installer extends ModuleInstall implements Runnable {
             long alreadyWritten = 0;
             os.print("Content-Disposition: form-data; name=\"heapdump\"; filename=\"" + id + "_heapdump.gz\""+eol);
             os.print("Content-Type: x-application/heap"+eol+eol);
-            GZIPOutputStream gzip = new GZIPOutputStream(os);
-            try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f))) {
-                byte[] heapDumpData = new byte[8192];
-                int read;
-                int workunit;
-                while ((read = bis.read(heapDumpData)) != -1){
-                    gzip.write(heapDumpData, 0, read);
-                    alreadyWritten += read;
-                    workunit = (int)(alreadyWritten / progressUnit);
-                    if(workunit < 1000) {
-                        h.progress(70 + workunit);
+
+            try (GZIPOutputStream gzip = new GZIPOutputStream(os)) {
+                try (FileInputStream fis = new FileInputStream(f);
+                     BufferedInputStream bis = new BufferedInputStream(fis)) {
+                    byte[] heapDumpData = new byte[8192];
+                    int read;
+                    int workunit;
+                    while ((read = bis.read(heapDumpData)) != -1) {
+                        gzip.write(heapDumpData, 0, read);
+                        alreadyWritten += read;
+                        workunit = (int) (alreadyWritten / progressUnit);
+                        if (workunit < 1000) {
+                            h.progress(70 + workunit);
+                        }
                     }
                 }
+                gzip.finish();
             }
-            gzip.finish();
+
             os.print(END_OF_DATA_BLOCK+eol);
 
             h.progress(1070);

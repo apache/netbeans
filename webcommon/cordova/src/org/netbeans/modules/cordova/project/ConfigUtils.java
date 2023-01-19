@@ -66,8 +66,10 @@ public final class ConfigUtils {
             return;
         }
         FileLock lock = fo.lock();
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FileUtil.toFile(fo)), StandardCharsets.UTF_8));
+        try (FileInputStream fileInputStream = new FileInputStream(FileUtil.toFile(fo));
+             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(inputStreamReader)) {
+
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -77,12 +79,9 @@ public final class ConfigUtils {
                 sb.append(line);
                 sb.append("\n");
             }
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
-            try {
+
+            try (OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8)) {
                 writer.write(sb.toString());
-            } finally {
-                writer.close();
-                reader.close();
             }
         } finally {
             lock.releaseLock();

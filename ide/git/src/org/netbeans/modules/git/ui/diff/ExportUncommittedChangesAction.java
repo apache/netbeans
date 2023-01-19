@@ -92,15 +92,19 @@ public class ExportUncommittedChangesAction extends SingleRepositoryAction {
                             @Override
                             protected void perform () {
                                 boolean success = false;
-                                OutputStream out = null;
                                 OutputLogger logger = getLogger();
                                 try {
                                     GitClient client = getClient();
                                     ensureParentExists(toFile);
-                                    out = new BufferedOutputStream(new FileOutputStream(toFile));
-                                    client.addNotificationListener(new DefaultFileListener(roots));
-                                    setProgress(NbBundle.getMessage(ExportUncommittedChangesAction.class, "MSG_ExportUncommittedChangesAction.preparingDiff")); //NOI18N
-                                    client.exportDiff(files, diffMode, out, getProgressMonitor());
+
+                                    try (FileOutputStream fos = new FileOutputStream(toFile);
+                                         OutputStream out = new BufferedOutputStream(fos)) {
+                                        client.addNotificationListener(new DefaultFileListener(roots));
+                                        setProgress(NbBundle.getMessage(ExportUncommittedChangesAction.class, "MSG_ExportUncommittedChangesAction.preparingDiff")); //NOI18N
+                                        client.exportDiff(files, diffMode, out, getProgressMonitor());
+                                        out.flush();
+                                    }
+
                                     if (!isCanceled()) {
                                         success = true;
                                     }
@@ -108,12 +112,6 @@ public class ExportUncommittedChangesAction extends SingleRepositoryAction {
                                     logger.outputInRed(NbBundle.getMessage(ExportUncommittedChangesAction.class, "MSG_ExportUncommittedChangesAction.failed")); //NOI18N
                                     GitClientExceptionHandler.notifyException(ex, true);
                                 } finally {
-                                    if (out != null) {
-                                        try {
-                                            out.flush();
-                                            out.close();
-                                        } catch (IOException ex) { }
-                                    }
                                     if (success && toFile.length() > 0) {
                                         Utils.openFile(toFile);
                                     } else {

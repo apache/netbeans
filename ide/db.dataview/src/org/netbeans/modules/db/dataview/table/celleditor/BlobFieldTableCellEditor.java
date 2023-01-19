@@ -210,11 +210,9 @@ public class BlobFieldTableCellEditor extends AbstractCellEditor
         if (fileDialogState == JFileChooser.APPROVE_OPTION) {
             File f = c.getSelectedFile();
             lastFile = f;
-            InputStream is;
-            FileOutputStream fos;
-            try {
-                is = b.getBinaryStream();
-                fos = new FileOutputStream(f);
+
+            try (InputStream  is = b.getBinaryStream();
+                 FileOutputStream  fos = new FileOutputStream(f)) {
                 if(! doTransfer(is, fos, (int) b.length(), "Saving to file: " + f.toString())) {
                     f.delete();
                 }
@@ -236,11 +234,10 @@ public class BlobFieldTableCellEditor extends AbstractCellEditor
         if (fileDialogState == JFileChooser.APPROVE_OPTION) {
             File f = c.getSelectedFile();
             lastFile = f;
-            FileInputStream fis;
-            try {
-                fis = new FileInputStream(f);
+
+            try (FileInputStream fis = new FileInputStream(f)) {
                 result = new FileBackedBlob();
-                if(! doTransfer(fis, result.setBinaryStream(1), (int) f.length(), "Loading file: " + f.toString())) {
+                if(!doTransfer(fis, result.setBinaryStream(1), (int) f.length(), "Loading file: " + f.toString())) {
                     result = null;
                 }
             } catch (IOException ex) {

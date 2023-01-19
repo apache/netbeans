@@ -156,12 +156,9 @@ public final class WLConnectionSupport {
                 env.put("jmx.remote.credentials", // NOI18N
                         new String[] {username, password});
 
-                JMXConnector jmxConnector = JMXConnectorFactory.newJMXConnector(url, env);
-                jmxConnector.connect();
-                try {
+                try (JMXConnector jmxConnector = JMXConnectorFactory.newJMXConnector(url, env)) {
+                    jmxConnector.connect();
                     return action.call(jmxConnector.getMBeanServerConnection());
-                } finally {
-                    jmxConnector.close();
                 }
             }
         });

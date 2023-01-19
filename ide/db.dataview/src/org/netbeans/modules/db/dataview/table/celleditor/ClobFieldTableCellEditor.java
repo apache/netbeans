@@ -210,11 +210,11 @@ public class ClobFieldTableCellEditor extends AbstractCellEditor
         if (fileDialogState == JFileChooser.APPROVE_OPTION) {
             File f = c.getSelectedFile();
             lastFile = f;
-            Reader r;
-            Writer w;
-            try {
-                r = b.getCharacterStream();
-                w = new OutputStreamWriter(new FileOutputStream(f), charset.getSelectedCharset());
+
+            try (Reader r = b.getCharacterStream();
+                 FileOutputStream fos = new FileOutputStream(f);
+                 Writer w = new OutputStreamWriter(fos, charset.getSelectedCharset())) {
+
                 if(! doTransfer(r, w, (int) b.length(), "Save to file: " + f.toString(), false)) {
                     f.delete();
                 }
@@ -238,10 +238,10 @@ public class ClobFieldTableCellEditor extends AbstractCellEditor
         if (fileDialogState == JFileChooser.APPROVE_OPTION) {
             File f = c.getSelectedFile();
             lastFile = f;
-            Reader r;
-            try {
+            try (FileInputStream fis = new FileInputStream(f);
+                 Reader r = new InputStreamReader(fis, charset.getSelectedCharset())) {
                 result = new FileBackedClob();
-                r = new InputStreamReader(new FileInputStream(f), charset.getSelectedCharset());
+
                 if(! doTransfer(r, result.setCharacterStream(1), (int) f.length() / 2, "Load from file: " + f.toString(), true)) {
                     result = null;
                 }

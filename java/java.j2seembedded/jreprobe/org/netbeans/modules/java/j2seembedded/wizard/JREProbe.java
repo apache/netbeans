@@ -66,10 +66,8 @@ public class JREProbe {
             p.putAll(getBOMData(new File(installDir)));
         }
         File f = new File(args[0]);
-        try {
-            FileOutputStream fos = new FileOutputStream(f);
+        try (FileOutputStream fos = new FileOutputStream(f)) {
             p.store(fos, null);
-            fos.close();
         } catch (Exception exc) {
             //PENDING
             exc.printStackTrace();

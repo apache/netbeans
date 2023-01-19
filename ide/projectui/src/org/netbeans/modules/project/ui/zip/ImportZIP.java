@@ -137,9 +137,9 @@ public class ImportZIP extends JPanel {
         handle.start();
         try {
             List<File> folders = new ArrayList<File>();
-            InputStream is = new FileInputStream(zip);
-            try {
-                ZipInputStream zis = new ZipInputStream(is);
+
+            try (InputStream is = new FileInputStream(zip);
+                 ZipInputStream zis = new ZipInputStream(is)) {
                 ZipEntry entry;
                 //boolean override = false;
                 while ((entry = zis.getNextEntry()) != null) {
@@ -226,12 +226,11 @@ public class ImportZIP extends JPanel {
                         if (!p.isDirectory() && !p.mkdirs()) {
                             throw new IOException("could not make " + p);
                         }
-                        OutputStream os = new FileOutputStream(f);
-                        try {
+
+                        try (OutputStream os = new FileOutputStream(f)) {
                             FileUtil.copy(zis, os);
-                        } finally {
-                            os.close();
                         }
+
                         if (entry.getTime() > 0) {
                             if (!f.setLastModified(entry.getTime())) {
                                 // oh well
@@ -239,9 +238,8 @@ public class ImportZIP extends JPanel {
                         }
                     }
                 }
-            } finally {
-                is.close();
             }
+
             handle.switchToDeterminate(folders.size());
             FileUtil.refreshAll(); //#225109? before using FileObjects, refresh stuff
             for (int i = 0; i < folders.size(); i++) {

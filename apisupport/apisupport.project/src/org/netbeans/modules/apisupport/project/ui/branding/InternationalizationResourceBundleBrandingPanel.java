@@ -250,9 +250,8 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
         jars.retainAll(brandableJars);
         
         for (File file : jars) {
-            try {
+            try (JarFile jf = new JarFile(file)) {
                 URI juri = Utilities.toURI(file);
-                JarFile jf = new JarFile(file);
                 String codeNameBase = ManifestManager.getInstance(jf.getManifest(), false).getCodeNameBase();
                 Enumeration<JarEntry> entries = jf.entries();
                 while (entries.hasMoreElements()) {

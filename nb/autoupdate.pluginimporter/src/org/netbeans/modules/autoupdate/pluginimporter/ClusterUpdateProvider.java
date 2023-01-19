@@ -109,24 +109,26 @@ public class ClusterUpdateProvider implements UpdateProvider {
                 continue;
             }
 
-            Manifest mf = new JarFile (jarFile).getManifest ();
-            UpdateItem item = UpdateItem.createModule (
-                cnb,
-                attr.get ("specversion"), // NOI18N
-                null,
-                cluster.getName (), // XXX: to identify such items later
-                "0", // NOI18N
-                "",
-                "",
-                "",
-                mf,
-                Boolean.valueOf (attr.get ("eager")), // NOI18N
-                Boolean.valueOf (attr.get ("autoload")), // NOI18N
-                null,
-                null,
-                "",
-                UpdateLicense.createUpdateLicense ("unknown-license", "none")); // NOI18N
-            res.put (cnb + '_' + attr.get ("specversion"), item); // NOI18N
+            try (JarFile jarFile2 = new JarFile(jarFile)) {
+                Manifest mf = jarFile2.getManifest();
+                UpdateItem item = UpdateItem.createModule(
+                        cnb,
+                        attr.get("specversion"), // NOI18N
+                        null,
+                        cluster.getName(), // XXX: to identify such items later
+                        "0", // NOI18N
+                        "",
+                        "",
+                        "",
+                        mf,
+                        Boolean.valueOf(attr.get("eager")), // NOI18N
+                        Boolean.valueOf(attr.get("autoload")), // NOI18N
+                        null,
+                        null,
+                        "",
+                        UpdateLicense.createUpdateLicense("unknown-license", "none")); // NOI18N
+                res.put(cnb + '_' + attr.get("specversion"), item); // NOI18N
+            }
         }
         return res;
     }

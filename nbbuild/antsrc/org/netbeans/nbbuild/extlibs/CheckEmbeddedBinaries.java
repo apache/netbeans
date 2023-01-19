@@ -26,10 +26,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -96,13 +99,16 @@ public class CheckEmbeddedBinaries extends Task {
         }
         try {
             StringBuilder errorList = new StringBuilder();
-            Files.list(dir.toPath())
-                    .forEach((t) -> {
-                        String sha1 = hash(t.toFile());
-                        if (!shamap.containsKey(sha1)) {
-                            errorList.append("No sha1 (expected ").append(sha1).append(" for file: ").append(t).append("\n");
-                        }                          
-                    });
+
+            try (Stream<Path> list = Files.list(dir.toPath())) {
+                list.forEach((t) -> {
+                    String sha1 = hash(t.toFile());
+                    if (!shamap.containsKey(sha1)) {
+                        errorList.append("No sha1 (expected ").append(sha1).append(" for file: ").append(t).append("\n");
+                    }
+                });
+            }
+
             if (errorList.toString().length()>0) {
                 log(""+errorList.toString());
                 throw new BuildException("Missing Sha1 file", getLocation());

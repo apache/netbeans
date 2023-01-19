@@ -103,10 +103,10 @@ public class CslJar extends JarWithModuleAttributes {
                 String modifiedLayer = getModifiedLayer(is);
                 if (modifiedLayer != null) {
                     File tmpFile = File.createTempFile("csl", "tmp"); // NOI18N
-                    BufferedWriter w = new BufferedWriter(new FileWriter(tmpFile));
-                    w.write(modifiedLayer);
-                    w.flush();
-                    w.close();
+                    try (BufferedWriter w = new BufferedWriter(new FileWriter(tmpFile))) {
+                        w.write(modifiedLayer);
+                        w.flush();
+                    }
                     // Note - we're passing the temp file instead of the "real" layer file
                     super.zipFile(tmpFile, zOut, vPath, mode);
                     // Remove the tmpfile

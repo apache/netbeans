@@ -131,29 +131,21 @@ public final class Utils {
                 extensionZip = new ZipFile(zipFile);
                 ZipEntry entry = extensionZip.getEntry(checkSumName);
                 
-                if (entry != null) {                    
-                    BufferedInputStream profileInput  = new BufferedInputStream(
-                            new FileInputStream(checksumFile));
-                    InputStream xpiInput = extensionZip.getInputStream(entry);
-                    
-                    try {
+                if (entry != null) {
+                    try (FileInputStream fileInputStream = new FileInputStream(checksumFile);
+                         BufferedInputStream profileInput = new BufferedInputStream(fileInputStream);
+                         InputStream xpiInput = extensionZip.getInputStream(entry)) {
                         int red;
-                        
+
                         do {
                             red = profileInput.read();
-                            if ( red != xpiInput.read() ){
+                            if (red != xpiInput.read()) {
                                 return false;
                             }
-                        } 
-                        while (red>=0);
-                        
+                        } while (red >= 0);
+
                         return true;
-                    } 
-                    finally {
-                        profileInput.close();
-                        xpiInput.close();
                     }
-                    
                 }
             } 
             catch (IOException ex) {
@@ -297,22 +289,17 @@ public final class Utils {
                         throw new IOException("Cannot write normal file " +
                         		"to existing directory with the same path");  // NOI18N
                     }
-                    
-                    BufferedOutputStream output = new BufferedOutputStream(
-                            new FileOutputStream(file));
-                    InputStream input = zip.getInputStream(entry);
-                    
-                    try {
+
+                    try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+                         BufferedOutputStream output = new BufferedOutputStream(fileOutputStream);
+                         InputStream input = zip.getInputStream(entry)) {
                         final byte[] buffer = new byte[4096];
                         int len;
-                        while ((len = input.read(buffer)) >= 0) {
+                        while ((len = input.read(buffer, 0, 4096)) >= 0) {
                             output.write(buffer, 0, len);
                         }
                     } 
-                    finally {
-                        output.close();
-                        input.close();
-                    }
+
                 }
             }
         } 

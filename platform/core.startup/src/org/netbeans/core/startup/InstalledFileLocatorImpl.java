@@ -435,9 +435,9 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.log(Level.FINE, "Parsing {0} due to {1}", new Object[] {list, path});
                 }
-                Reader r = new FileReader(list);
-                try {
-                    BufferedReader br = new BufferedReader(r);
+
+                try (Reader r = new FileReader(list);
+                     BufferedReader br = new BufferedReader(r)) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         Matcher m = FILE_PATTERN.matcher(line);
@@ -445,9 +445,6 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                             ownership.add(m.group(1));
                         }
                     }
-                    br.close();
-                } finally {
-                    r.close();
                 }
             } catch (IOException x) {
                 LOG.log(Level.INFO, "could not parse " + list, x);

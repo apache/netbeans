@@ -572,14 +572,12 @@ public class GlassFishUtils {
     
     public static void saveDomainXmlDocument(File location, String domainName, Document document) throws IOException, XMLException {
         try {
-            OutputStream outputStream = new FileOutputStream(getDomainXml(location, domainName));
-            
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, document.getDoctype().getPublicId());
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, document.getDoctype().getSystemId());
-            transformer.transform(new DOMSource(document), new StreamResult(outputStream));
-            
-            outputStream.close();
+            try (OutputStream outputStream = new FileOutputStream(getDomainXml(location, domainName))) {
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, document.getDoctype().getPublicId());
+                transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, document.getDoctype().getSystemId());
+                transformer.transform(new DOMSource(document), new StreamResult(outputStream));
+            }
         } catch (TransformerConfigurationException e) {
             throw new XMLException(ERROR_CANNOT_CONFIGURE_TRANSFORMER_STRING, e);
         } catch (TransformerException e) {

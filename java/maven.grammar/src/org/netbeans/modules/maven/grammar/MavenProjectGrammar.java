@@ -664,8 +664,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
             String repopath = embedder.getLocalRepository().pathOf(art);
             File fil = new File(embedder.getLocalRepositoryFile(), repopath);
             if (fil.exists()) {
-                try {
-                    JarFile jf = new JarFile(fil);
+                try (JarFile jf = new JarFile(fil)) {
                     JarEntry entry = jf.getJarEntry("META-INF/maven/plugin.xml"); //NOI18N
                     if (entry != null) {
                         InputStream str = jf.getInputStream(entry);

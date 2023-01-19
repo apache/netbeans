@@ -130,28 +130,21 @@ public class MiscUtils implements CommonConstants {
     }
 
     public static void getAllClassesInJar(String jarName, boolean removeClassExt, Collection res) {
-        ZipFile zip = null;
+        try (ZipFile zip = new ZipFile(jarName)) {
+            for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                String className = entry.getName();
 
-        try {
-            zip = new ZipFile(jarName);
+                if (className.endsWith(".class")) { // NOI18N
+                    if (removeClassExt) {
+                        className = className.substring(0, className.length() - 6);
+                    }
+
+                    res.add(className.intern());
+                }
+            }
         } catch (Exception ex) {
             System.err.println("Warning: could not open archive " + jarName); // NOI18N
-
-            return;
-        }
-
-        for (Enumeration entries = zip.entries(); entries.hasMoreElements();) {
-            ZipEntry entry = (ZipEntry) entries.nextElement();
-            String className = entry.getName();
-
-            if (className.endsWith(".class")) { // NOI18N
-
-                if (removeClassExt) {
-                    className = className.substring(0, className.length() - 6);
-                }
-
-                res.add(className.intern());
-            }
         }
     }
 
@@ -374,9 +367,13 @@ public class MiscUtils implements CommonConstants {
     private static void getClassPathFromManifest(String jarPath,List pathList) throws IOException, URISyntaxException {
         if (jarPath.toLowerCase().endsWith(".jar")) {   // NOI18N
             File pathFile = new File(jarPath);
-            JarFile jarFile = new JarFile(pathFile);
-            Manifest manifest = jarFile.getManifest();
-            
+
+            Manifest manifest;
+
+            try (JarFile jarFile = new JarFile(pathFile)) {
+                manifest = jarFile.getManifest();
+            }
+
             if (manifest != null) {
                 Attributes attrs = manifest.getMainAttributes();
 
@@ -386,12 +383,12 @@ public class MiscUtils implements CommonConstants {
                     if (jarCp != null) {
                         File parent = pathFile.getParentFile();
                         StringTokenizer tokens = new StringTokenizer(jarCp);
-                        
+
                         while(tokens.hasMoreTokens()) {
                             URI fileUri = new URI(tokens.nextToken());
                             File cpFile;
                             String cpName;
-                            
+
                             if (!fileUri.isAbsolute()) {
                                 cpFile = new File(parent,fileUri.getPath());
                             } else {

@@ -49,7 +49,9 @@ public class Main {
             public void run() {
                 try {
                     System.out.println("occupying: " + port);
-                    new ServerSocket(port).accept();
+                    try (ServerSocket serverSocket = new ServerSocket(port)) {
+                        serverSocket.accept();
+                    }
                 } catch (IOException e) {
                     System.out.println("    failed: " + port + " (" + e.getMessage() + ")");
                 }

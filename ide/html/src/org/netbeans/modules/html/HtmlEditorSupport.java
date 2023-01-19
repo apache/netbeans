@@ -20,6 +20,7 @@ package org.netbeans.modules.html;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -279,8 +280,8 @@ public final class HtmlEditorSupport extends DataEditorSupport implements OpenCo
 
     private boolean canDecodeFile(FileObject fo, String encoding) {
         CharsetDecoder decoder = Charset.forName(encoding).newDecoder().onUnmappableCharacter(CodingErrorAction.REPORT).onMalformedInput(CodingErrorAction.REPORT);
-        try {
-            BufferedInputStream bis = new BufferedInputStream(fo.getInputStream());
+        try (InputStream is = fo.getInputStream();
+             BufferedInputStream bis = new BufferedInputStream(is)) {
             //I probably have to create such big buffer since I am not sure
             //how to cut the file to smaller byte arrays so it cannot happen
             //that an encoded character is divided by the arrays border.
@@ -288,7 +289,6 @@ public final class HtmlEditorSupport extends DataEditorSupport implements OpenCo
             //incorrect value.
             byte[] buffer = new byte[(int) fo.getSize()];
             bis.read(buffer);
-            bis.close();
             decoder.decode(ByteBuffer.wrap(buffer));
             return true;
         } catch (CharacterCodingException ex) {

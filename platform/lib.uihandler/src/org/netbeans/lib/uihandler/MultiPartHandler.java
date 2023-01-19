@@ -414,19 +414,18 @@ class MultiPartHandler {
  private byte[] parseFormFieldBytes() throws IOException {
 
     // Copy the part's contents into a byte array
-    MultipartInputStream pis = new MultipartInputStream(in, boundary);
+    try (MultipartInputStream pis = new MultipartInputStream(in, boundary);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(512)) {
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
-    byte[] buf = new byte[128];
-    int read;
-    while ((read = pis.read(buf)) != -1) {
-      baos.write(buf, 0, read);
+        byte[] buf = new byte[128];
+        int read;
+        while ((read = pis.read(buf)) != -1) {
+            baos.write(buf, 0, read);
+        }
+
+        // get the value bytes
+        return baos.toByteArray();
     }
-    pis.close();
-    baos.close();
-    
-    // get the value bytes
-    return baos.toByteArray();
   }
 
   /**
@@ -471,10 +470,9 @@ class MultiPartHandler {
                 throws IOException {
 
     long written = 0;
-    OutputStream fileOut = null;
 
     File file = new File(uploadDir, fileName);
-    try {
+
       // Only do something if this part contains a file
       for (int i = 0; file.exists(); i++) {
           if (!file.exists()) {
@@ -484,37 +482,36 @@ class MultiPartHandler {
       }
       fileName = file.getName();
 
-      fileOut = new BufferedOutputStream(new FileOutputStream(file));
-      int numBytes;
-      byte[] buf = new byte[8 * 1024];
+      try (FileOutputStream fos = new FileOutputStream(file);
+           OutputStream fileOut = new BufferedOutputStream(fos)) {
+          int numBytes;
+          byte[] buf = new byte[8 * 1024];
 
-      InputStream partInput;
-      boolean canCloseStream = true;
-      if (content.equals("x-application/gzip")) { // NOI18N
-          // sending from NetBeans UI Gestures Collector
-          partInput = in.getInputStream();
-          canCloseStream = false;
-      } else {
-          /** input stream containing file data */
-          partInput = new MultipartInputStream(in, boundary);
-      }
-      while((numBytes = partInput.read(buf)) != -1) {
-        fileOut.write(buf, 0, numBytes);
-        written += numBytes;
-      }
-      if (canCloseStream){
-        partInput.close();
-      }
-    } catch (SocketTimeoutException ste) {
+          InputStream partInput;
+          boolean canCloseStream = true;
+          if (content.equals("x-application/gzip")) { // NOI18N
+              // sending from NetBeans UI Gestures Collector
+              partInput = in.getInputStream();
+              canCloseStream = false;
+          } else {
+              /** input stream containing file data */
+              partInput = new MultipartInputStream(in, boundary);
+          }
+          while((numBytes = partInput.read(buf)) != -1) {
+            fileOut.write(buf, 0, numBytes);
+            written += numBytes;
+          }
+          if (canCloseStream){
+            partInput.close();
+          }
+      } catch (SocketTimeoutException ste) {
         if (file.exists()){
             file.delete();
         }
         throw ste;
-    } finally {
-      if (fileOut != null) fileOut.close();
-    }
+      }
 
-    return fileName;
+      return fileName;
   }
 
 

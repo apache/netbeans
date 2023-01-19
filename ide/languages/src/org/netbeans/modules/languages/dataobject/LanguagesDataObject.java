@@ -100,26 +100,15 @@ public class LanguagesDataObject extends MultiDataObject {
      
     private static void copyAndSubstituteTokens(final URL content,
             final FileLock lock, final FileObject targetFO, final Map<String,String> tokens) throws IOException {
-        OutputStream os = targetFO.getOutputStream(lock);
-        try {
-            PrintWriter pw = new PrintWriter(os);
-            try {
-                InputStream is = content.openStream();
-                try {
-                    Reader r = new InputStreamReader(is);
-                    BufferedReader br = new BufferedReader(r);
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        pw.println(tokens == null ? line : replaceTokens(tokens, line));
-                    }
-                } finally {
-                    is.close();
-                }
-            } finally {
-                pw.close();
+        try (OutputStream os = targetFO.getOutputStream(lock);
+             PrintWriter pw = new PrintWriter(os);
+             InputStream is = content.openStream();
+             Reader r = new InputStreamReader(is);
+             BufferedReader br = new BufferedReader(r)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                pw.println(tokens == null ? line : replaceTokens(tokens, line));
             }
-        } finally {
-            os.close();
         }
     }
     

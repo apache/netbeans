@@ -143,21 +143,19 @@ class ImportImageWizard extends WizardDescriptor {
                             if (targetFile != null) {
                                 targetFile.delete();
                             }
-                            FileInputStream is = new FileInputStream(f);
-                            targetFile = targetFolder.createData(fileName);
-                            FileLock lock = targetFile.lock();
-                            OutputStream os = targetFile.getOutputStream(lock);
 
-                            byte[] buf = new byte[4096];
-                            int count;
-                            try {
-                                while ((count = is.read(buf)) != -1) {
-                                    os.write(buf, 0, count);
+                            try (FileInputStream is = new FileInputStream(f)) {
+                                targetFile = targetFolder.createData(fileName);
+                                FileLock lock = targetFile.lock();
+                                try (OutputStream os = targetFile.getOutputStream(lock)) {
+                                    byte[] buf = new byte[4096];
+                                    int count;
+                                    while ((count = is.read(buf)) != -1) {
+                                        os.write(buf, 0, count);
+                                    }
+                                } finally {
+                                    lock.releaseLock();
                                 }
-                            }
-                            finally {
-                                os.close();
-                                lock.releaseLock();
                             }
                         }
                         copied[i] = targetFile;

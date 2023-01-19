@@ -151,108 +151,109 @@ public class ModuleDependencies extends Task {
             for (String incl : scan.getIncludedFiles()) {
                 File f = new File(scan.getBasedir(), incl);
                 getProject().log("Processing " + f, Project.MSG_VERBOSE);
-                JarFile file = new JarFile (f);
-                
-                Manifest manifest = file.getManifest();
-                if (manifest == null) {
-                    // process only manifest files
-                    continue;
-                }
+                try (JarFile file = new JarFile(f)) {
 
-                final boolean[] osgi = new boolean[1];
-                String module = JarWithModuleAttributes.extractCodeName(manifest.getMainAttributes(), osgi);
-
-                if (module == null) {
-                    // skip this one
-                    continue;
-                }
-
-
-                ModuleInfo m;
-                {
-                    String codebasename;
-                    int majorVersion;
-                    // base name
-                    int slash = module.indexOf ('/');
-                    if (slash == -1) {
-                        codebasename = module;
-                        majorVersion = -1;
-                    } else {
-                        codebasename = module.substring (0, slash);
-                        majorVersion = Integer.valueOf(module.substring(slash + 1));
+                    Manifest manifest = file.getManifest();
+                    if (manifest == null) {
+                        // process only manifest files
+                        continue;
                     }
-                    m = new ModuleInfo (input.name, f, codebasename);
-                    m.majorVersion = majorVersion;
-                }
 
-                String lb = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle");
-                if (lb != null) {
-                    Properties props = new Properties();
-                    try (InputStream is = file.getInputStream(file.getEntry(lb))) {
-                        props.load(is);
+                    final boolean[] osgi = new boolean[1];
+                    String module = JarWithModuleAttributes.extractCodeName(manifest.getMainAttributes(), osgi);
+
+                    if (module == null) {
+                        // skip this one
+                        continue;
                     }
-                    m.displayName = props.getProperty("OpenIDE-Module-Name");
-                    m.displayCategory = props.getProperty("OpenIDE-Module-Display-Category");
-                }
 
-                // XXX if osgi[0], instead load Export-Package, Require-Bundle, Bundle-Version... ought to be some utility class to interconvert NB & OSGi manifests!
 
-                m.publicPackages = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-Public-Packages");
-
-                {
-                    m.specificationVersion = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-Specification-Version");
-                }
-
-                m.implementationVersion = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-Implementation-Version");
-
-                TreeSet<Dependency> depends = new TreeSet<>();
-                TreeSet<Dependency> provides = new TreeSet<>();
-                addDependencies (depends, file.getManifest (), Dependency.Type.REQUIRES, "OpenIDE-Module-Requires");
-                addDependencies (depends, file.getManifest (), Dependency.Type.REQUIRES, "OpenIDE-Module-Needs");
-                addDependencies (depends, file.getManifest (), Dependency.Type.RECOMMENDS, "OpenIDE-Module-Recommends");
-                addDependencies (provides, file.getManifest (), /*irrelevant*/Dependency.Type.REQUIRES, "OpenIDE-Module-Provides");
-                {
-                    String ideDeps = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-IDE-Dependencies"); // IDE/1 > 4.25
-                    if (ideDeps != null) {
-                        throw new BuildException("OpenIDE-Module-IDE-Dependencies is obsolete in " + f);
+                    ModuleInfo m;
+                    {
+                        String codebasename;
+                        int majorVersion;
+                        // base name
+                        int slash = module.indexOf('/');
+                        if (slash == -1) {
+                            codebasename = module;
+                            majorVersion = -1;
+                        } else {
+                            codebasename = module.substring(0, slash);
+                            majorVersion = Integer.valueOf(module.substring(slash + 1));
+                        }
+                        m = new ModuleInfo(input.name, f, codebasename);
+                        m.majorVersion = majorVersion;
                     }
-                }
-                addDependencies (depends, file.getManifest (), Dependency.Type.DIRECT, "OpenIDE-Module-Module-Dependencies");
+
+                    String lb = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle");
+                    if (lb != null) {
+                        Properties props = new Properties();
+                        try (InputStream is = file.getInputStream(file.getEntry(lb))) {
+                            props.load(is);
+                        }
+                        m.displayName = props.getProperty("OpenIDE-Module-Name");
+                        m.displayCategory = props.getProperty("OpenIDE-Module-Display-Category");
+                    }
+
+                    // XXX if osgi[0], instead load Export-Package, Require-Bundle, Bundle-Version... ought to be some utility class to interconvert NB & OSGi manifests!
+
+                    m.publicPackages = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Public-Packages");
+
+                    {
+                        m.specificationVersion = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Specification-Version");
+                    }
+
+                    m.implementationVersion = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Implementation-Version");
+
+                    TreeSet<Dependency> depends = new TreeSet<>();
+                    TreeSet<Dependency> provides = new TreeSet<>();
+                    addDependencies(depends, file.getManifest(), Dependency.Type.REQUIRES, "OpenIDE-Module-Requires");
+                    addDependencies(depends, file.getManifest(), Dependency.Type.REQUIRES, "OpenIDE-Module-Needs");
+                    addDependencies(depends, file.getManifest(), Dependency.Type.RECOMMENDS, "OpenIDE-Module-Recommends");
+                    addDependencies(provides, file.getManifest(), /*irrelevant*/Dependency.Type.REQUIRES, "OpenIDE-Module-Provides");
+                    {
+                        String ideDeps = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-IDE-Dependencies"); // IDE/1 > 4.25
+                        if (ideDeps != null) {
+                            throw new BuildException("OpenIDE-Module-IDE-Dependencies is obsolete in " + f);
+                        }
+                    }
+                    addDependencies(depends, file.getManifest(), Dependency.Type.DIRECT, "OpenIDE-Module-Module-Dependencies");
                 /* org.netbeans.api.java/1,org.netbeans.modules.queries/0,
                  org.netbeans.modules.javacore/1,org.netbeans.jmi.javamodel/1 > 1.11,org.netbeans.api.mdr/1,
                  org.netbeans.modules.mdr/1= 1.0.0,org.netbeans.modules.
                  jmiutils/1 = 1.0.0,javax.jmi.reflect/1,
                  org.openide.loaders,org.openide.src > 1.0
                  */
-                m.depends = depends;
-                m.provides = new HashSet<>();
-                for (Dependency d : provides) {
-                    m.provides.add(d.getName());
-                }
-                {
-                    String friends = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-Friends"); 
-                    if (friends != null) {
-			TreeSet<String> set = new TreeSet<>();
-                        StringTokenizer tok = new StringTokenizer(friends, ", ");
-			while (tok.hasMoreElements()) {
-			    set.add(tok.nextToken());
-			}
-			m.friends = set;
+                    m.depends = depends;
+                    m.provides = new HashSet<>();
+                    for (Dependency d : provides) {
+                        m.provides.add(d.getName());
                     }
+                    {
+                        String friends = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Friends");
+                        if (friends != null) {
+                            TreeSet<String> set = new TreeSet<>();
+                            StringTokenizer tok = new StringTokenizer(friends, ", ");
+                            while (tok.hasMoreElements()) {
+                                set.add(tok.nextToken());
+                            }
+                            m.friends = set;
+                        }
+                    }
+                    String essential = file.getManifest().getMainAttributes().getValue("AutoUpdate-Essential-Module");
+                    m.isEssential = essential == null ?
+                            false :
+                            Boolean.parseBoolean(file.getManifest().getMainAttributes().getValue("AutoUpdate-Essential-Module"));
+                    m.isAutoload = determineParameter(f, "autoload");
+                    m.isEager = determineParameter(f, "eager");
+                    String showInAutoUpdate = file.getManifest().getMainAttributes().getValue("AutoUpdate-Show-In-Client");
+                    if (showInAutoUpdate == null) {
+                        m.showInAutoupdate = !m.isAutoload && !m.isEager;
+                    } else {
+                        m.showInAutoupdate = Boolean.parseBoolean(showInAutoUpdate);
+                    }
+                    modules.add(m);
                 }
-                String essential = file.getManifest ().getMainAttributes ().getValue ("AutoUpdate-Essential-Module");
-                m.isEssential = essential == null ? 
-                    false : 
-                    Boolean.parseBoolean(file.getManifest().getMainAttributes().getValue("AutoUpdate-Essential-Module"));
-                m.isAutoload = determineParameter(f, "autoload");
-                m.isEager = determineParameter(f, "eager");
-                String showInAutoUpdate = file.getManifest().getMainAttributes().getValue("AutoUpdate-Show-In-Client");
-                if (showInAutoUpdate == null) {
-                    m.showInAutoupdate = !m.isAutoload && !m.isEager;
-                } else {
-                    m.showInAutoupdate = Boolean.parseBoolean(showInAutoUpdate);
-                }
-                modules.add (m);
             }
         }
     }

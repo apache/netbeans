@@ -148,49 +148,50 @@ implements Comparator<ExecutableElement> {
                 JavaFileObject f = processingEnv.getFiler().createSourceFile(
                     clazzName, elems.toArray(new Element[0])
                 );
-                Writer w = f.openWriter();
 
-                final String[] arr = splitPkg(clazzName, first);
-                w.append("package ").append(arr[0]).append(";\n");
-                w.append("\n");
-                w.append("import org.netbeans.api.htmlui.HTMLDialog.Builder;\n");
-                w.append("class ").append(arr[1]).append(" {\n");
-                w.append("  private ").append(arr[1]).append("() {\n  }\n");
-                w.append("\n");
+                try (Writer w = f.openWriter()) {
 
-                for (ExecutableElement ee : elems) {
-                    HTMLDialog reg = ee.getAnnotation(HTMLDialog.class);
-                    HTMLComponent comp = ee.getAnnotation(HTMLComponent.class);
-                    if (reg != null) {
-                        String url = findURL(reg.url(), ee);
-                        if (url == null) {
-                            continue;
+                    final String[] arr = splitPkg(clazzName, first);
+                    w.append("package ").append(arr[0]).append(";\n");
+                    w.append("\n");
+                    w.append("import org.netbeans.api.htmlui.HTMLDialog.Builder;\n");
+                    w.append("class ").append(arr[1]).append(" {\n");
+                    w.append("  private ").append(arr[1]).append("() {\n  }\n");
+                    w.append("\n");
+
+                    for (ExecutableElement ee : elems) {
+                        HTMLDialog reg = ee.getAnnotation(HTMLDialog.class);
+                        HTMLComponent comp = ee.getAnnotation(HTMLComponent.class);
+                        if (reg != null) {
+                            String url = findURL(reg.url(), ee);
+                            if (url == null) {
+                                continue;
+                            }
+                            generateDialog(w, ee, url, reg.resources(), reg.techIds());
                         }
-                        generateDialog(w, ee, url, reg.resources(), reg.techIds());
+                        if (comp != null) {
+                            String url = findURL(comp.url(), ee);
+                            if (url == null) {
+                                continue;
+                            }
+                            String t;
+                            try {
+                                t = comp.type().getName();
+                            } catch (MirroredTypeException ex) {
+                                t = ex.getTypeMirror().toString();
+                            }
+                            if (
+                                    !t.equals("javafx.scene.Node") &&
+                                    !t.equals("javax.swing.JComponent")
+                            ) {
+                                error("type() can be either Node.class or JComponent.class", ee);
+                            }
+                            generateComponent(w, ee, t, url, comp.techIds());
+                        }
                     }
-                    if (comp != null) {
-                        String url = findURL(comp.url(), ee);
-                        if (url == null) {
-                            continue;
-                        }
-                        String t;
-                        try {
-                            t = comp.type().getName();
-                        } catch (MirroredTypeException ex) {
-                            t = ex.getTypeMirror().toString();
-                        }
-                        if (
-                            !t.equals("javafx.scene.Node") &&
-                            !t.equals("javax.swing.JComponent")
-                        ) {
-                            error("type() can be either Node.class or JComponent.class", ee);
-                        }
-                        generateComponent(w, ee, t, url, comp.techIds());
-                    }
+
+                    w.append("}\n");
                 }
-
-                w.append("}\n");
-                w.close();
 
             } catch (IOException ex) {
                 error("Cannot create " + clazzName, first);

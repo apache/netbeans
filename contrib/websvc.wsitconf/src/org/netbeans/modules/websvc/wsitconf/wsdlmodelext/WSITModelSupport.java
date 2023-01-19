@@ -339,9 +339,11 @@ public class WSITModelSupport {
                 if (createdFiles != null) {
                     createdFiles.add(mainConfig);
                 }
-                FileWriter fw = new FileWriter(FileUtil.toFile(mainConfig));
-                fw.write(NbBundle.getMessage(WSITEditor.class, "EMPTY_WSDL"));       //NOI18N
-                fw.close();
+
+                try (FileWriter fw = new FileWriter(FileUtil.toFile(mainConfig))) {
+                    fw.write(NbBundle.getMessage(WSITEditor.class, "EMPTY_WSDL"));       //NOI18N
+                }
+
                 mainConfig.refresh(true);
             }
         } catch (IOException ex) {
@@ -428,9 +430,11 @@ public class WSITModelSupport {
                 if (createdFiles != null) {
                     createdFiles.add(wsdlFO);
                 }
-                FileWriter fw = new FileWriter(FileUtil.toFile(wsdlFO));
-                fw.write(NbBundle.getMessage(WSITEditor.class, "EMPTY_WSDL"));       //NOI18N
-                fw.close();
+
+                try (FileWriter fw = new FileWriter(FileUtil.toFile(wsdlFO))) {
+                    fw.write(NbBundle.getMessage(WSITEditor.class, "EMPTY_WSDL"));       //NOI18N
+                }
+
                 wsdlFO.refresh(true);
             }
             

@@ -612,7 +612,6 @@ public class Utilities {
     }
     
     static void writeUpdateOfUpdaterJar (JarEntry updaterJarEntry, File zipFileWithUpdater, File targetCluster) throws IOException {
-        JarFile jf = new JarFile(zipFileWithUpdater);
         String entryPath = updaterJarEntry.getName();
         String entryName = entryPath.contains("/") ? entryPath.substring(entryPath.lastIndexOf("/") + 1) : entryPath;
         File dest = new File (targetCluster, UpdaterDispatcher.UPDATE_DIR + // updater
@@ -622,19 +621,11 @@ public class Utilities {
         
         dest.getParentFile ().mkdirs ();
         assert dest.getParentFile ().exists () && dest.getParentFile ().isDirectory () : "Parent of " + dest + " exists and is directory.";
-        InputStream is = null;
-        OutputStream fos = null;            
-        
-        try {
-            try {
-                fos = new FileOutputStream (dest);
-                is = jf.getInputStream (updaterJarEntry);
-                FileUtil.copy (is, fos);
-            } finally {
-                if (is != null) is.close();
-                if (fos != null) fos.close();
-                jf.close();
-            }                
+
+        try (JarFile jf = new JarFile(zipFileWithUpdater);
+             OutputStream fos = new FileOutputStream(dest);
+             InputStream is = jf.getInputStream(updaterJarEntry)) {
+            FileUtil.copy(is, fos);
         } catch (java.io.FileNotFoundException fnfe) {
             getLogger ().log (Level.SEVERE, fnfe.getLocalizedMessage (), fnfe);
         } catch (java.io.IOException ioe) {

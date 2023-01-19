@@ -49,12 +49,9 @@ public class VerifyFile {
      */
     public static void main(String[] args) {
         File file = new File(args[0]);
-        
-        try {
-            JarFile jar = new JarFile(file);
-            URLClassLoader loader = 
-                    new URLClassLoader(new URL[]{file.toURI().toURL()});
-            
+
+        try (JarFile jar = new JarFile(file);
+             URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()})) {
             Enumeration<JarEntry> entries = jar.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
@@ -72,16 +69,14 @@ public class VerifyFile {
                     }
                 }
             }
-            
-            jar.close();
-            
-            System.exit(0);
         } catch (Throwable e) { 
             // we need to catch everything here in order to not 
             // allow unexpected exceptions to pass through
             e.printStackTrace();
             System.exit(1);
         }
+
+        System.exit(0);
     }
     
     /**

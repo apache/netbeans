@@ -38,6 +38,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.netbeans.nbbuild.extlibs.licenseinfo.CommentType;
@@ -78,30 +80,34 @@ public class ReportFromLicenseinfo extends Task {
             }
             
             Path nballPath = nball.toPath();
-            List<File> licenseinfofiles = Files.walk(nballPath)
-                    .filter(p -> p.endsWith("licenseinfo.xml"))
-                    .map(p -> p.toFile())
-                    .collect(Collectors.toList());
-            
-            TreeMap<LicenseGroup,List<File>> licenseInfo = new TreeMap<>();
-            
-            for (File licenseInfoFile: licenseinfofiles) {
-                Licenseinfo li = Licenseinfo.parse(licenseInfoFile);
-                for(Fileset fs: li.getFilesets()) {
-                    LicenseGroup lg = new LicenseGroup(
-                            fs.getLicenseRef(),
-                            fs.getLicenseInfo(),
-                            fs.getCommentType(),
-                            fs.getComment()
-                    );
-                    if(! licenseInfo.containsKey(lg)) {
-                        licenseInfo.put(lg, new ArrayList<>());
+
+            TreeMap<LicenseGroup, List<File>> licenseInfo = new TreeMap<>();
+
+            try (Stream<Path> walk = Files.walk(nballPath)) {
+
+                List<File> licenseinfofiles = walk
+                        .filter(p -> p.endsWith("licenseinfo.xml"))
+                        .map(p -> p.toFile())
+                        .collect(Collectors.toList());
+
+                for (File licenseInfoFile : licenseinfofiles) {
+                    Licenseinfo li = Licenseinfo.parse(licenseInfoFile);
+                    for (Fileset fs : li.getFilesets()) {
+                        LicenseGroup lg = new LicenseGroup(
+                                fs.getLicenseRef(),
+                                fs.getLicenseInfo(),
+                                fs.getCommentType(),
+                                fs.getComment()
+                        );
+                        if (!licenseInfo.containsKey(lg)) {
+                            licenseInfo.put(lg, new ArrayList<>());
+                        }
+                        for (File f : fs.getFiles()) {
+                            licenseInfo.get(lg).add(f);
+                        }
                     }
-                    for(File f: fs.getFiles()) {
-                        licenseInfo.get(lg).add(f);
-                    }
+
                 }
-                
             }
             
             pw.print("======================================  Per File Information  ======================================\n\n");

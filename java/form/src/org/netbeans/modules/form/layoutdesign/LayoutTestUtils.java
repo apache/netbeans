@@ -23,6 +23,7 @@ import java.awt.Rectangle;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
@@ -96,7 +97,6 @@ public class LayoutTestUtils implements LayoutConstants {
     }
     
     static void dumpTestcode(List codeList, DataObject form, final int modelCounter) {
-        FileWriter fw = null;
         StringBuilder template = new StringBuilder();
         
         if (form == null) return;
@@ -131,9 +131,9 @@ public class LayoutTestUtils implements LayoutConstants {
                 String output = template.toString().replace("${CLASS_NAME}", testFO.getName()); //NOI18N
 
                 //Write the file to disc
-                fw = new FileWriter(FileUtil.toFile(testFO));
-                fw.write(output);
-                fw.close();
+                try (FileWriter fw = new FileWriter(FileUtil.toFile(testFO))) {
+                    fw.write(output);
+                }
             }
 
             //8. Add the method to test class
@@ -148,16 +148,15 @@ public class LayoutTestUtils implements LayoutConstants {
             sb.append("}\n\n"); // NOI18N
             sb.append(oldContent.substring(idx));
             FileLock lock = testFO.lock();
-            try {
-                Writer writer = new OutputStreamWriter(testFO.getOutputStream(lock));
+
+            try (OutputStream os = testFO.getOutputStream(lock);
+                 Writer writer = new OutputStreamWriter(os)) {
                 writer.write(sb.toString());
-                writer.close();
             } finally {
                 lock.releaseLock();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-            return;
         }
     }
     

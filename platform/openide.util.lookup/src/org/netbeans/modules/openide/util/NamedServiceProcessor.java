@@ -249,24 +249,27 @@ public final class NamedServiceProcessor extends AbstractServiceProviderProcesso
             Enumeration<URL> en = NamedServiceProcessor.class.getClassLoader().getResources(PATH);
             while (en.hasMoreElements()) {
                 URL url = en.nextElement();
-                InputStream is = url.openStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
-                // XXX consider using ServiceLoaderLine instead
-                while (true) {
-                    String line = reader.readLine();
+                try (InputStream is = url.openStream();
+                     InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                     BufferedReader reader = new BufferedReader(isr)) {
 
-                    if (line == null) {
-                        break;
+                    // XXX consider using ServiceLoaderLine instead
+                    while (true) {
+                        String line = reader.readLine();
+
+                        if (line == null) {
+                            break;
+                        }
+                        line = line.trim();
+                        if (line.startsWith("#")) { // NOI18N
+                            continue;
+                        }
+                        if (canonicalName) {
+                            line = line.replace('$', '.');
+                        }
+                        found.add(line);
                     }
-                    line = line.trim();
-                    if (line.startsWith("#")) { // NOI18N
-                        continue;
-                    }
-                    if (canonicalName) {
-                        line = line.replace('$', '.');
-                    }
-                    found.add(line);
                 }
             }
         } catch (IOException ex) {

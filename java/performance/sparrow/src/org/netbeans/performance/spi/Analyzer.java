@@ -38,11 +38,12 @@ public abstract class Analyzer extends Task {
     protected String datadir=null;
     /**Deserialize a DataAggregation instance.  */
     protected DataAggregation getData() throws Exception {
-        File f = new File (datafile);
-        InputStream is = new FileInputStream (f);
-        ObjectInputStream ois = new ObjectInputStream (is);
-        DataAggregation result = (DataAggregation) ois.readObject();
-        return result;
+        File f = new File(datafile);
+
+        try (InputStream is = new FileInputStream(f);
+             ObjectInputStream ois = new ObjectInputStream(is)) {
+            return (DataAggregation) ois.readObject();
+        }
     }
 
     public void execute() throws BuildException {

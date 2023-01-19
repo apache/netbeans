@@ -64,26 +64,24 @@ public class ExportCommitAction extends SingleRepositoryAction {
                             @Override
                             public void perform() {
                                 boolean success = false;
-                                    OutputStream out = null;
                                     try {
                                         GitClient client = getClient();
                                         ensureParentExists(toFile);
-                                        out = new BufferedOutputStream(new FileOutputStream(toFile));
-                                        client.addNotificationListener(new DefaultFileListener(new File[0]));
-                                        setProgress(NbBundle.getMessage(ExportUncommittedChangesAction.class, "MSG_ExportCommitAction.preparingDiff")); //NOI18N
-                                        client.exportCommit(revStr, out, getProgressMonitor());
+
+                                        try (FileOutputStream fos = new FileOutputStream(toFile);
+                                             OutputStream out = new BufferedOutputStream(fos)) {
+                                            client.addNotificationListener(new DefaultFileListener(new File[0]));
+                                            setProgress(NbBundle.getMessage(ExportUncommittedChangesAction.class, "MSG_ExportCommitAction.preparingDiff")); //NOI18N
+                                            client.exportCommit(revStr, out, getProgressMonitor());
+                                        }
+
                                         if (!isCanceled()) {
                                             success = true;
                                         }
+
                                     } catch (Exception ex) {
                                         GitClientExceptionHandler.notifyException(ex, true);
                                     } finally {
-                                        if (out != null) {
-                                            try {
-                                                out.flush();
-                                                out.close();
-                                            } catch (IOException ex) { }
-                                        }
                                         if (success && toFile.length() > 0) {
                                             Utils.openFile(toFile);
                                         } else {

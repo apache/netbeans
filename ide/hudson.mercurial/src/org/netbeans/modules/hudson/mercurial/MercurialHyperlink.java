@@ -118,20 +118,17 @@ class MercurialHyperlink implements OutputListener {
         String parent = parents.get(node);
         if (parent == null) {
             URL rawrev = repo.resolve("raw-rev/" + node).toURL(); // NOI18N
-            try {
-                InputStream is = rawrev.openStream();
-                try {
-                    BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.ISO_8859_1));
-                    String line;
-                    while ((line = r.readLine()) != null) {
-                        Matcher m = PARENT_COMMENT.matcher(line);
-                        if (m.matches()) {
-                            parent = m.group(1);
-                            break;
-                        }
+            try (InputStream is = rawrev.openStream();
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.ISO_8859_1);
+                 BufferedReader r = new BufferedReader(isr)) {
+
+                String line;
+                while ((line = r.readLine()) != null) {
+                    Matcher m = PARENT_COMMENT.matcher(line);
+                    if (m.matches()) {
+                        parent = m.group(1);
+                        break;
                     }
-                } finally {
-                    is.close();
                 }
                 if (parent == null) {
                     throw new IOException("No parent rev spec found"); // NOI18N

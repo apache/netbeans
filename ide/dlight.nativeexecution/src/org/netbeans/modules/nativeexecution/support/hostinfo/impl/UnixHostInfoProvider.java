@@ -191,16 +191,16 @@ public class UnixHostInfoProvider implements HostInfoProvider {
             }
             out.flush();
 
-            BufferedReader scriptReader = new BufferedReader(new FileReader(hostinfoScript));
-            String scriptLine = scriptReader.readLine();
+            try (BufferedReader scriptReader = new BufferedReader(new FileReader(hostinfoScript))) {
+                String scriptLine = scriptReader.readLine();
 
-            while (scriptLine != null) {
-                out.write((scriptLine + '\n').getBytes());
-                out.flush();
-                scriptLine = scriptReader.readLine();
+                while (scriptLine != null) {
+                    out.write((scriptLine + '\n').getBytes());
+                    out.flush();
+                    scriptLine = scriptReader.readLine();
+                }
+
             }
-
-            scriptReader.close();
 
             NativeTaskExecutorService.submit(new Runnable() {
                 @Override

@@ -169,7 +169,12 @@ final class JavaIoFile extends File {
         if (mode == FileChannel.MapMode.PRIVATE) {
             java.io.File newBufferFile = new java.io.File(delegate.getAbsolutePath()+".new"); // NOI18N
             int length = buf.capacity();
-            new FileOutputStream(newBufferFile).getChannel().write(buf);
+
+            try (FileOutputStream fileOutputStream = new FileOutputStream(newBufferFile);
+                 FileChannel fileChannel = fileOutputStream.getChannel()) {
+                fileChannel.write(buf);
+            }
+
             delegate.delete();
             newBufferFile.renameTo(delegate);
             return newRandomAccessFile("rw").mmap(mode, length, true); // NOI18N
@@ -200,21 +205,26 @@ final class JavaIoFile extends File {
         if (MAP_MODE == FileChannel.MapMode.PRIVATE) {
             java.io.File newBufferFile = new java.io.File(getAbsolutePath()+".new"); // NOI18N
             long length = delegate.length();
-            FileChannel channel = new FileOutputStream(newBufferFile).getChannel();
-            int offset_start = 0;
 
-            for (int i = 0; i < dumpBuffer.length; i++) {
-                ByteBuffer buf = dumpBuffer[i];
-                long offset_end = (((i+1)*bufferSize)/entrySize)*entrySize + entrySize;
+            try (FileOutputStream fileOutputStream = new FileOutputStream(newBufferFile);
+                 FileChannel channel = fileOutputStream.getChannel()) {
 
-                if (offset_end > length) {
-                    offset_end = length;
+                int offset_start = 0;
+
+                for (int i = 0; i < dumpBuffer.length; i++) {
+                    ByteBuffer buf = dumpBuffer[i];
+                    long offset_end = (((i + 1) * bufferSize) / entrySize) * entrySize + entrySize;
+
+                    if (offset_end > length) {
+                        offset_end = length;
+                    }
+                    buf.limit((int) (offset_end - i * bufferSize));
+                    buf.position(offset_start);
+                    channel.write(buf);
+                    offset_start = (int) (offset_end - (i + 1) * bufferSize);
                 }
-                buf.limit((int)(offset_end - i*bufferSize));
-                buf.position(offset_start);
-                channel.write(buf);
-                offset_start = (int)(offset_end - (i+1)*bufferSize);
             }
+
             delegate.delete();
             newBufferFile.renameTo(delegate);
             return newRandomAccessFile("rw").mmapAsBuffers(MAP_MODE, length, bufferSize, bufferExt); // NOI18N

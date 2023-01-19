@@ -1150,17 +1150,13 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
             return file.exists() ? "" : null;                           //NOI18N
         }
 
-        FileInputStream inputStream = new FileInputStream(file);
-        FileChannel inputChannel = inputStream.getChannel();
-
-        try {
-            int inputSize = (int) inputChannel.size();
+        try (FileInputStream inputStream = new FileInputStream(file);
+             FileChannel fc = inputStream.getChannel()) {
+            int inputSize = (int) fc.size();
             ByteBuffer inBuf = ByteBuffer.allocate(inputSize);
-            inputChannel.read(inBuf);
+            fc.read(inBuf);
             char[] chars = new StringDecoder(charset).decode(inBuf);
             return new String(chars);
-        } finally {
-            inputChannel.close();
         }
     }
 

@@ -188,15 +188,17 @@ public final class ClientConnection {
     }
     
     private static Map<String, String> readPropertiesScan(String properties) {
-        Scanner sp = new Scanner(properties);
         Map<String, String> map = new HashMap<>();
-        try {
+
+        try (Scanner sp = new Scanner(properties)) {
             while (sp.hasNext()) {
                 String key = sp.next(": ");
                 String value = sp.next("\r\n");
                 map.put(key, value);
             }
-        } catch (NoSuchElementException ex) {}
+        } catch (NoSuchElementException ex) {
+        }
+
         return map;
     }
     

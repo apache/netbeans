@@ -154,10 +154,8 @@ final class InternalSampler extends Sampler {
     }
 
     private void writeToFile(File file, byte[] arr) {
-        try {
-            FileOutputStream fstream = new FileOutputStream(file);
+        try (FileOutputStream fstream = new FileOutputStream(file)) {
             fstream.write(arr);
-            fstream.close();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

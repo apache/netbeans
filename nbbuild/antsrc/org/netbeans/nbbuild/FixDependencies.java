@@ -341,9 +341,9 @@ public class FixDependencies extends Task {
                         save.append(stream.substring(after));
                         String x = save.toString();
                         if (!old.equals (x)) {
-                            FileWriter fw = new FileWriter (file);
-                            fw.write (x);
-                            fw.close ();
+                            try (FileWriter fw = new FileWriter(file)) {
+                                fw.write(x);
+                            }
 
                             try {
                                 if (compiled && cleanTask != null) {
@@ -363,9 +363,9 @@ public class FixDependencies extends Task {
                                 }
                             } catch (BuildException ex) {
                                 log ("Compilation failed: ", ex, Project.MSG_INFO);
-                                fw = new FileWriter (file);
-                                fw.write (old);
-                                fw.close ();
+                                try (FileWriter fw = new FileWriter(file)){
+                                    fw.write(old);
+                                }
                                 if (changed == mods) {
                                     throw new BuildException("Could not fix dependencies.");
                                 }

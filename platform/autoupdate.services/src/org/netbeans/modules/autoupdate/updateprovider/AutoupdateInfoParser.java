@@ -403,22 +403,21 @@ public class AutoupdateInfoParser extends DefaultHandler {
 
     private static InputSource getAutoupdateInfoInputSource (File nbmFile) throws IOException, SAXException {
         // find info.xml entry
-        JarFile jf = null;
-        try {
-            jf = new JarFile (nbmFile);
+        try (JarFile jf = new JarFile (nbmFile)) {
+            String locale = Locale.getDefault ().toString ();
+            ZipEntry entry = jf.getEntry (INFO_DIR + '/' + INFO_LOCALE + '/' + INFO_NAME + '_' + locale + INFO_EXT);
+            if (entry == null) {
+                entry = jf.getEntry (INFO_DIR + '/' + INFO_FILE);
+            }
+
+            if (entry == null) {
+                throw new IllegalArgumentException ("info.xml found in file " + nbmFile);
+            }
+
+            return new InputSource (new BufferedInputStream (jf.getInputStream (entry)));
         } catch (IOException ex) {
             throw new IOException("Cannot open NBM file " + nbmFile + ": " + ex, ex);
         }
-        String locale = Locale.getDefault ().toString ();
-        ZipEntry entry = jf.getEntry (INFO_DIR + '/' + INFO_LOCALE + '/' + INFO_NAME + '_' + locale + INFO_EXT);
-        if (entry == null) {
-            entry = jf.getEntry (INFO_DIR + '/' + INFO_FILE);
-        }
-        if (entry == null) {
-            throw new IllegalArgumentException ("info.xml found in file " + nbmFile);
-        }        
-
-        return new InputSource (new BufferedInputStream (jf.getInputStream (entry)));
     }
     
     private static InputStream getAutoupdateInfoInputStream (File nbmFile) throws IOException, SAXException {
@@ -453,8 +452,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
     }
     
     private static boolean isOSGiBundle(File jarFile) {
-        try {
-            JarFile jar = new JarFile(jarFile);
+        try (JarFile jar = new JarFile(jarFile)) {
             Manifest mf = jar.getManifest();
             return mf != null && mf.getMainAttributes().getValue("Bundle-SymbolicName") != null; // NOI18N
         } catch (IOException ioe) {

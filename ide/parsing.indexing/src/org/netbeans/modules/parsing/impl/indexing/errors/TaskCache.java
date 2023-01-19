@@ -257,42 +257,44 @@ public class TaskCache {
 
     private List<Task> loadErrors(File input, FileObject file) throws IOException {
         List<Task> result = new LinkedList<Task>();
-        BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8));
-        String line;
+        try (FileInputStream fis = new FileInputStream(input);
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+             BufferedReader pw = new BufferedReader(isr)) {
+            String line;
 
-        while ((line = pw.readLine()) != null) {
-            String[] parts = line.split(":"); //NOI18N
-            if (parts.length != 3) {
-                continue;
+            while ((line = pw.readLine()) != null) {
+                String[] parts = line.split(":"); //NOI18N
+                if (parts.length != 3) {
+                    continue;
+                }
+
+                ErrorKind kind = null;
+                try {
+                    kind = ErrorKind.valueOf(parts[0]);
+                } catch (IllegalArgumentException iae) {
+                    LOG.log(Level.FINE, "Invalid ErrorKind: {0}", line);    //NOI18N
+                }
+
+                if (kind == null) {
+                    continue;
+                }
+
+                int lineNumber = Integer.parseInt(parts[1]);
+                String message = parts[2];
+
+                message = message.replaceAll("\\\\d", ":"); //NOI18N
+                message = message.replaceAll("\\\\n", " "); //NOI18N
+                message = message.replaceAll("\\\\\\\\", "\\\\"); //NOI18N
+
+                String severity = getTaskType(kind);
+
+                if (null != severity) {
+                    Task err = Task.create(file, severity, message, lineNumber);
+                    result.add(err);
+                }
             }
 
-            ErrorKind kind = null;
-            try {
-                kind = ErrorKind.valueOf(parts[0]);
-            } catch (IllegalArgumentException iae) {
-                LOG.log(Level.FINE, "Invalid ErrorKind: {0}", line);    //NOI18N
-            }
-            
-            if (kind == null) {
-                continue;
-            }
-
-            int lineNumber = Integer.parseInt(parts[1]);
-            String message = parts[2];
-
-            message = message.replaceAll("\\\\d", ":"); //NOI18N
-            message = message.replaceAll("\\\\n", " "); //NOI18N
-            message = message.replaceAll("\\\\\\\\", "\\\\"); //NOI18N
-
-            String severity = getTaskType(kind);
-
-            if (null != severity) {
-                Task err = Task.create(file, severity, message, lineNumber);
-                result.add(err);
-            }
         }
-
-        pw.close();
         
         return result;
     }

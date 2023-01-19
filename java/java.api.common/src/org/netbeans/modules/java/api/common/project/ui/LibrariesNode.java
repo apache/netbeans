@@ -1841,8 +1841,7 @@ public final class LibrariesNode extends AbstractNode {
                             }
                         }
                         if (isArchiveFile) {
-                            try {
-                                new JarFile (fl);
+                            try (JarFile jf = new JarFile(fl)) {
                             } catch (IOException ex) {
                                 JOptionPane.showMessageDialog (
                                     WindowManager.getDefault ().getMainWindow (),

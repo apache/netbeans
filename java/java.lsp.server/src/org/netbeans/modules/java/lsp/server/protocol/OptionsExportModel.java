@@ -719,16 +719,17 @@ final class OptionsExportModel {
     private static List<String> listZipFile(File file) throws IOException {
         List<String> relativePaths = new ArrayList<>();
         // Open the ZIP file
-        ZipFile zipFile = new ZipFile(file);
-        // Enumerate each entry
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry zipEntry = (ZipEntry) entries.nextElement();
-            if (!zipEntry.isDirectory()) {
-                relativePaths.add(zipEntry.getName());
+        try (ZipFile zipFile = new ZipFile(file)) {
+            // Enumerate each entry
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                if (!zipEntry.isDirectory()) {
+                    relativePaths.add(zipEntry.getName());
+                }
             }
+            return relativePaths;
         }
-        return relativePaths;
     }
 
     private static OutputStream createOutputStream(File file) throws IOException {

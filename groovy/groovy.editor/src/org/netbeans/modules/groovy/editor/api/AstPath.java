@@ -83,19 +83,22 @@ public class AstPath implements Iterable<ASTNode> {
             if (length > 0 && offset >= length) {
                 offset = length - 1;
             }
-            Scanner scanner = new Scanner(document.getText(0, offset));
-            int line = 0;
-            String lineText = "";
-            while (scanner.hasNextLine()) {
-                lineText = scanner.nextLine();
-                line++;
+
+            try (Scanner scanner = new Scanner(document.getText(0, offset))) {
+                int line = 0;
+                String lineText = "";
+                while (scanner.hasNextLine()) {
+                    lineText = scanner.nextLine();
+                    line++;
+                }
+
+                int column = lineText.length();
+
+                this.lineNumber = line;
+                this.columnNumber = column;
+
+                findPathTo(root, line, column, dot);
             }
-            int column = lineText.length();
-
-            this.lineNumber = line;
-            this.columnNumber = column;
-
-            findPathTo(root, line, column, dot);
         } catch (BadLocationException ble) {
             Exceptions.printStackTrace(ble);
         }

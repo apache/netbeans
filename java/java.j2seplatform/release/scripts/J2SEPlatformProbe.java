@@ -26,10 +26,8 @@ public class J2SEPlatformProbe {
         Properties p = System.getProperties();
 
         File f = new File(args[0]);
-        try {
-            FileOutputStream fos = new FileOutputStream(f);
+        try (FileOutputStream fos = new FileOutputStream(f)) {
             p.store(fos, null);
-            fos.close();
         } catch (Exception exc) {
             //PENDING
             exc.printStackTrace();

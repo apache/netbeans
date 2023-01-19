@@ -112,44 +112,47 @@ public class LineDiff implements Diff {
      * @return true iff files differ
      */
     public boolean diff(File refFile,File passFile,File diffFile) throws IOException {
-        LineNumberReader first = new LineNumberReader(new FileReader(refFile));
-        LineNumberReader second = new LineNumberReader(new FileReader(passFile));
-        String line;
-        
-        String[] refLines, passLines;
-        
-        //read golden file
-        List<String> tmp = new ArrayList<String>(64);
-        while ((line = second.readLine()) != null) {
-            if (ignoreEmptyLines && line.trim().length() == 0) {
-                continue;
+        try (FileReader fileReaderFirst = new FileReader(refFile);
+             FileReader fileReaderSecond = new FileReader(passFile);
+             LineNumberReader first = new LineNumberReader(fileReaderFirst);
+             LineNumberReader second = new LineNumberReader(fileReaderSecond)) {
+            String line;
+
+            String[] refLines, passLines;
+
+            //read golden file
+            List<String> tmp = new ArrayList<String>(64);
+            while ((line = second.readLine()) != null) {
+                if (ignoreEmptyLines && line.trim().length() == 0) {
+                    continue;
+                }
+                tmp.add(line);
             }
-            tmp.add(line);
-        }
-        passLines = tmp.toArray(new String[tmp.size()]);
-        tmp.clear();
-        second.close();
-        //read ref file
-        tmp = new ArrayList<String>(64);
-        while ((line = first.readLine()) != null) {
-            if (ignoreEmptyLines && line.trim().length() == 0) {
-                continue;
+            passLines = tmp.toArray(new String[tmp.size()]);
+            tmp.clear();
+
+            //read ref file
+            tmp = new ArrayList<String>(64);
+            while ((line = first.readLine()) != null) {
+                if (ignoreEmptyLines && line.trim().length() == 0) {
+                    continue;
+                }
+                tmp.add(line);
             }
-            tmp.add(line);
+            refLines = tmp.toArray(new String[tmp.size()]);
+            tmp.clear();
+
+            //collect differences
+            List<Result> results = findDifferences(passLines, refLines);
+            //without differences it can be finished here
+            if (results.size() == 0) return false;
+            if (diffFile == null) return results.size() > 0;
+            //merge
+            merge(results);
+            //print
+            printResults(passLines, refLines, results, diffFile);
+            return results.size() > 0;
         }
-        refLines = tmp.toArray(new String[tmp.size()]);
-        tmp.clear();
-        first.close();
-        //collect differences
-        List<Result> results = findDifferences(passLines, refLines);
-        //without differences it can be finished here
-        if (results.size() == 0) return false;
-        if (diffFile == null) return results.size() > 0;
-        //merge
-        merge(results);
-        //print
-        printResults(passLines, refLines, results, diffFile);
-        return results.size() > 0;
     }
     
     /**

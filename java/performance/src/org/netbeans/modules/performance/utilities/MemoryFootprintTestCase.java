@@ -255,8 +255,8 @@ public abstract class MemoryFootprintTestCase extends PerformanceTestCase {
             fail("Cannot find file containing PID of running IDE (" + ideRunning.getAbsolutePath());
         }
 
-        try {
-            LineNumberReader reader = new LineNumberReader(new FileReader(ideRunning));
+        try (FileReader fileReader = new FileReader(ideRunning);
+             LineNumberReader reader = new LineNumberReader(fileReader)) {
             String pid = reader.readLine().trim();
             log("PID = " + pid);
             return pid;

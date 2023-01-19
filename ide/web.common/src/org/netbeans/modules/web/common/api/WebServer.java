@@ -369,14 +369,16 @@ public final class WebServer {
                 if(lineString.trim().startsWith("#") || lineString.trim().isEmpty()) {
                     continue;
                 }
-                Scanner elements = new Scanner(lineString).useDelimiter(p);
-                String mimeType = null;
-                while (elements.hasNext()) {
-                    String s = elements.next();
-                    if (mimeType == null) {
-                        mimeType = s;
-                    } else {
-                        mimeTypes.put(s, mimeType);
+
+                try (Scanner elements = new Scanner(lineString).useDelimiter(p)) {
+                    String mimeType = null;
+                    while (elements.hasNext()) {
+                        String s = elements.next();
+                        if (mimeType == null) {
+                            mimeType = s;
+                        } else {
+                            mimeTypes.put(s, mimeType);
+                        }
                     }
                 }
             }

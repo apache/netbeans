@@ -168,20 +168,20 @@ public class EditorPaneDemo extends DemoTokenUpdater {
                 String contentFileName = args[1];
                 File contentFile = new File(contentFileName);
                 if (contentFile.exists()) {
-                    Reader reader = new FileReader(contentFile);
-                    char[] contentChars = new char[(int)contentFile.length() + 1];
-                    int totalReadCount = 0;
-                    while (true) {
-                        int readCount = reader.read(contentChars, totalReadCount,
-                            contentChars.length - totalReadCount);
-                        if (readCount == -1) { // no more chars
-                            break;
+                    try (Reader reader = new FileReader(contentFile)) {
+                        char[] contentChars = new char[(int) contentFile.length() + 1];
+                        int totalReadCount = 0;
+                        while (true) {
+                            int readCount = reader.read(contentChars, totalReadCount,
+                                    contentChars.length - totalReadCount);
+                            if (readCount == -1) { // no more chars
+                                break;
+                            }
+                            totalReadCount += readCount;
                         }
-                        totalReadCount += readCount;
+
+                        content = new String(contentChars, 0, totalReadCount);
                     }
-
-                    content = new String(contentChars, 0, totalReadCount);
-
                 } else { // content file does not exist
                     System.err.println("Input file NOT FOUND:\n"
                         + contentFile);

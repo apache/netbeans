@@ -159,7 +159,6 @@ public class NbValidationTransaction extends ValidationTransaction {
         try {
             LOGGER.fine("Starting initialization.");
 
-            BufferedReader r = new BufferedReader(new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), StandardCharsets.UTF_8));
             String line;
             List<String> doctypes = new LinkedList<String>();
             List<String> namespaces = new LinkedList<String>();
@@ -168,15 +167,18 @@ public class NbValidationTransaction extends ValidationTransaction {
 
             LOGGER.fine("Starting to loop over config file lines.");
 
-            while ((line = r.readLine()) != null) {
-                if ("".equals(line.trim())) {
-                    break;
+            try (InputStreamReader isr = new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), StandardCharsets.UTF_8);
+                 BufferedReader r = new BufferedReader(isr)) {
+                while ((line = r.readLine()) != null) {
+                    if ("".equals(line.trim())) {
+                        break;
+                    }
+                    String s[] = line.split("\t");
+                    doctypes.add(s[0]);
+                    namespaces.add(s[1]);
+                    labels.add(s[2]);
+                    urls.add(s[3]);
                 }
-                String s[] = line.split("\t");
-                doctypes.add(s[0]);
-                namespaces.add(s[1]);
-                labels.add(s[2]);
-                urls.add(s[3]);
             }
 
 //            progress.start(10 * (urls.size() + 50) /* reading the html spec */);

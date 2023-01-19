@@ -175,14 +175,14 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                                 licenseFile.getParentFile().mkdirs();
                                 licenseFile.deleteOnExit();
 
-                                OutputStream os = new FileOutputStream(licenseFile);
-                                byte[] bytes = new byte[4096];
-                                int read = 0;
-                                while ((read = is.read(bytes)) > 0) {
-                                    os.write(bytes, 0, read);
+                                try (OutputStream os = new FileOutputStream(licenseFile)) {
+                                    byte[] bytes = new byte[4096];
+                                    int read;
+                                    while ((read = is.read(bytes)) > 0) {
+                                        os.write(bytes, 0, read);
+                                    }
+                                    os.flush();
                                 }
-                                os.flush();
-                                os.close();
                             } else {
                                 Logger.getLogger(BuildInstallersAction.class.getName()).log(
                                         Level.WARNING, "License resource {0} not found", licenseResource);

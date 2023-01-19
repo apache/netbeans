@@ -28,6 +28,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.netbeans.modules.java.j2seproject.moduletask.classfile.Attribute;
@@ -68,22 +70,24 @@ public final class ModuleMainClassTest {
             return;
         }
         final Path from = testRoot.toPath();
-        Files.walk(from)
-                .filter(new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path p) {
-                        return Files.isRegularFile(p) &&
-                                p.getName(p.getNameCount()-1).toString().endsWith(".class") &&
-                                !p.getName(p.getNameCount()-1).toString().contains("$");    //NOI18N
-                    }
-                })
-                .limit(1)
-                .forEach(new Consumer<Path>() {
+
+        try (Stream<Path> walk = Files.walk(from)) {
+            walk
+                    .filter(new Predicate<Path>() {
+                        @Override
+                        public boolean test(Path p) {
+                            return Files.isRegularFile(p) &&
+                                   p.getName(p.getNameCount() - 1).toString().endsWith(".class") &&
+                                   !p.getName(p.getNameCount() - 1).toString().contains("$");    //NOI18N
+                        }
+                    })
+                    .limit(1)
+                    .forEach(new Consumer<Path>() {
                         @Override
                         public void accept(Path p) {
                             try {
                                 System.out.println(p);
-                                try(InputStream in = Files.newInputStream(p)) {
+                                try (InputStream in = Files.newInputStream(p)) {
                                     final ClassFile cf = new ClassFile(in);
                                     System.out.println(cf);
                                 }
@@ -91,7 +95,8 @@ public final class ModuleMainClassTest {
                                 throw new RuntimeException(ioe);
                             }
                         }
-                });
+                    });
+        }
     }
 
     @Test

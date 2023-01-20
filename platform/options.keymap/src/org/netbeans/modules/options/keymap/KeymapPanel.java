@@ -299,8 +299,9 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
             getModel().runWithoutEvents(new Runnable() {
                 public void run() {
                     getModel().getDataVector().removeAllElements();
-                    for (String categorySet : getModel().getCategories().keySet()) {
-                        for (String category : getModel().getCategories().get(categorySet)) {
+
+                    for(List<String> categories : getModel().getCategories().values()) {
+                        for(String category : categories) {
                             for (Object o : getMutableModel().getItems(category, false)) {
                                 ShortcutAction sca = (ShortcutAction) o;
                                 String[] shortcuts = getMutableModel().getShortcuts(sca);

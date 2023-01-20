@@ -1178,9 +1178,8 @@ public final class JFXProjectProperties {
                 toRemove.add(artifact);
             }
         }
-        for(PreloaderArtifact artifact : toRemove) {
-            preloaderArtifacts.remove(artifact);
-        }
+        
+        preloaderArtifacts.removeAll(toRemove);
     }
     
     private static boolean isTest(final @NonNull FileObject root, final @NonNull Project project) {

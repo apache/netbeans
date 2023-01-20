@@ -331,8 +331,8 @@ class DominatorTree {
             text+=" NewDom: "+printInstance(newDom);
             m.put(number,text);
         }
-        for (Integer in : m.keySet()) {
-            Systems.debug(m.get(in));
+        for (String value : m.values()) {
+            Systems.debug(value);
         }
     }
     

@@ -290,9 +290,7 @@ class NbProjectInfoBuilder {
         Map<String, Object> taskProperties = new HashMap<>();
         Map<String, String> taskPropertyTypes = new HashMap<>();
         
-        Map<String, Task> taskList = new HashMap<>(project.getTasks().getAsMap());
-        for (String s : taskList.keySet()) {
-            Task task = taskList.get(s);
+        for (Task task : project.getTasks().getAsMap().values()) {
             Class taskClass = task.getClass();
             Class nonDecorated = findNonDecoratedClass(taskClass);
             
@@ -307,9 +305,7 @@ class NbProjectInfoBuilder {
     private void detectTaskDependencies(NbProjectInfoModel model) {
         Map<String, Object> tasks = new HashMap<>();
         
-        Map<String, Task> taskList = new HashMap<>(project.getTasks().getAsMap());
-        for (String s : taskList.keySet()) {
-            Task task = taskList.get(s);
+        for (Task task : project.getTasks().getAsMap().values()) {
             Map<String, String> taskInfo = new HashMap<>();
             taskInfo.put("name", task.getPath()); // NOI18N
             taskInfo.put("enabled", Boolean.toString(task.getEnabled())); // NOI18N
@@ -687,9 +683,10 @@ class NbProjectInfoBuilder {
                     Map<String, ?> m = new HashMap<>(nc.getAsMap());
                     List<String> ss = new ArrayList<>(m.keySet());
                     propertyTypes.put(prefix + propName + COLLECTION_KEYS_MARKER, String.join(";;", ss));
-                    for (String k : m.keySet()) {
+                    for (Map.Entry<String, ?> it : m.entrySet()) {
+                        String k = it.getKey();
                         newPrefix = prefix + propName + "." + k + "."; // NOI18N
-                        Object v = m.get(k);
+                        Object v = it.getValue();
                         defaultValues.put(prefix + propName + "." + k, Objects.toString(v)); // NOI18N
                         inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
                     }

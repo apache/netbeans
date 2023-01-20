@@ -35,7 +35,7 @@ import org.openide.modules.OnStop;
 @OnStop
 public class Installer implements Runnable {
     
-    private static Map<String,Integer> mimeTypes = new HashMap<String,Integer>();
+    private static Map<String,Integer> mimeTypes = new HashMap<>();
 
     public static void add (String mimeType) {
         if (mimeTypes.containsKey(mimeType)) {
@@ -50,10 +50,10 @@ public class Installer implements Runnable {
     
     @Override
     public void run() {
-        for (String s : mimeTypes.keySet()) {
+        for (Map.Entry<String,Integer> entry : mimeTypes.entrySet()) {
             Logger logger = Logger.getLogger("org.netbeans.ui.metrics.editor"); //NOI18N
             LogRecord rec = new LogRecord(Level.INFO, "USG_EDITOR_MIME_TYPE"); //NOI18N
-            rec.setParameters(new Object[] { s, mimeTypes.get(s) });
+            rec.setParameters(new Object[] { entry.getKey(), entry.getValue() });
             rec.setLoggerName(logger.getName());
             logger.log(rec);
         }

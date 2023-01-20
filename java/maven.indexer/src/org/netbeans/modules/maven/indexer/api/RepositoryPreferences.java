@@ -201,9 +201,8 @@ public final class RepositoryPreferences {
                     ids.add(ri.getId());
                     urls.add(ri.getRepositoryUrl());
                 }
-                for (String g : gone) {
-                    infoCache.remove(g);
-                }
+                
+                infoCache.keySet().removeAll(gone);
             } catch (BackingStoreException x) {
                 LOG.log(Level.INFO, null, x);
             }

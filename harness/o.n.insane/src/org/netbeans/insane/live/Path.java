@@ -125,7 +125,9 @@ public final class Path {
             // find array offset
             Object[] arr = (Object[])item;
             for (int i=0; i<arr.length; i++) {
-                if (arr[i] == target) return "[" + i + "]";
+                if (arr[i] == target) {
+                    return "[" + i + "]";
+                }
             }
             return "<changed>";
         }
@@ -134,12 +136,16 @@ public final class Path {
         while (cls != null) { // go over the class hierarchy
             for(Field act : cls.getDeclaredFields()) {
                 try {
-                    if (act.getType().isPrimitive() || (act.getModifiers() & Modifier.STATIC) != 0) continue;
+                    if (act.getType().isPrimitive() || (act.getModifiers() & Modifier.STATIC) != 0) {
+                        continue;
+                    }
                     MakeAccessible.setAccessible(act, true);
-                    if (target == act.get(item)) return act.getName();
+                    if (target == act.get(item)) {
+                        return act.getName();
+                    }
                 } catch (Exception e) {
                     return "<error>";
-                };
+                }
             }
             cls = cls.getSuperclass();
         }

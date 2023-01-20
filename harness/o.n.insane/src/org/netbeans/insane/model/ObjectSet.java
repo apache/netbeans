@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  *
  * @author Nenik
  */
-class ObjectSet {
+class ObjectSet implements Iterable {
 
     private Hash hash;
     private Object[] table;
@@ -96,6 +96,7 @@ class ObjectSet {
         return get(key) != null;
     }
     
+    @Override
     public Iterator iterator() {
         return new Iterator() {
             int ptr = 0;

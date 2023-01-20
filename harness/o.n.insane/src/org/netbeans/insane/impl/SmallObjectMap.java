@@ -120,7 +120,9 @@ class SmallObjectMap implements ObjectMap {
                     temp++;
                     bucket = (bucket + 1) % newTable.length;
                 }
-                if (temp > maxDisplace) maxDisplace = temp;
+                if (temp > maxDisplace) {
+                    maxDisplace = temp;
+                }
 
                 newTable[bucket] = act;
             }

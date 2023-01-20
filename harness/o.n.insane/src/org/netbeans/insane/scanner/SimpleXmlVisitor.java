@@ -35,11 +35,11 @@ import java.lang.reflect.Field;
  *
  * @author  Nenik
  */
-public final class SimpleXmlVisitor implements Visitor {
-    private static char[] pom = new char[0];
-    private static Class<?> CHAR_ARRAY = pom.getClass();
+public final class SimpleXmlVisitor implements Visitor, AutoCloseable {
+    private static final char[] pom = new char[0];
+    private static final Class<?> CHAR_ARRAY = pom.getClass();
 
-    private Writer writer;
+    private final Writer writer;
     private IOException storedException;
     
     /** Creates a new instance of SimpleXmlVisitor */
@@ -53,16 +53,21 @@ public final class SimpleXmlVisitor implements Visitor {
         
         
 
+    @Override
     public void close() throws IOException {
         writer.write("</insane>\n");
         writer.close();
-        if (storedException != null) throw storedException;
+        if (storedException != null) {
+            throw storedException;
+        }
     }
         
     
     // ignore for this xml format
+    @Override
     public void visitClass(Class cls) {}
         
+    @Override
     public void visitObject(ObjectMap map, Object obj) {
         try {
             if (CHAR_ARRAY == obj.getClass()) {
@@ -75,21 +80,30 @@ public final class SimpleXmlVisitor implements Visitor {
                     if (copy[i]=='&') copy[i] ='_';
                 }
             
-                writer.write("<object id='" + map.getID(obj) +
-                    "' type='" + obj.getClass().getName() + 
-                    "' size='" + ScannerUtils.sizeOf(obj) +
-                    "' value='" + new String(copy) + "'/>\n");
+                writer.write("<object id='");
+                writer.write(map.getID(obj));
+                writer.write("' type='");
+                writer.write(obj.getClass().getName());
+                writer.write("' size='");
+                writer.write(String.valueOf(ScannerUtils.sizeOf(obj)));
+                writer.write("' value='");
+                writer.write(copy);
+                writer.write("'/>\n");
             } else {
-                writer.write("<object id='" + map.getID(obj) +
-                    "' type='" + obj.getClass().getName() + 
-                    "' size='" + ScannerUtils.sizeOf(obj) +
-                    "'/>\n");
+                writer.write("<object id='");
+                writer.write(map.getID(obj));
+                writer.write("' type='");
+                writer.write(obj.getClass().getName());
+                writer.write("' size='");
+                writer.write(String.valueOf(ScannerUtils.sizeOf(obj)));
+                writer.write("'/>\n");
             }
         } catch (IOException ioe) {
               storedException = ioe;
         }
     }
     
+    @Override
     public void visitObjectReference(ObjectMap map, Object from, Object to, Field ref) {
         try {
             writer.write("<ref from='" + map.getID(from) +
@@ -100,6 +114,7 @@ public final class SimpleXmlVisitor implements Visitor {
         }
     }
 
+    @Override
     public void visitStaticReference(ObjectMap map, Object to, Field ref) {
         try {
             writer.write("<ref name='" + getFldName(ref) + 
@@ -109,6 +124,7 @@ public final class SimpleXmlVisitor implements Visitor {
         }
     }
 
+    @Override
     public void visitArrayReference(ObjectMap map, Object from, Object to, int index) {
         try {
             writer.write("<ref from='" + map.getID(from) +

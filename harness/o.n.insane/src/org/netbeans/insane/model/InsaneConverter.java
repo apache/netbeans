@@ -78,13 +78,13 @@ import org.xml.sax.helpers.DefaultHandler;
 // XXX use UTF8
 final class InsaneConverter {
     
-    private File from;
-    private File to;
+    private final File from;
+    private final File to;
     
     // parsing intermediate data
-    private Map<String, ClassInfo> classInfo = new LinkedHashMap<>();
-    private Map<String, RefInfo> refInfo = new LinkedHashMap<>();  
-    private ObjectSet instanceInfo = new ObjectSet();
+    private final Map<String, ClassInfo> classInfo = new LinkedHashMap<>();
+    private final Map<String, RefInfo> refInfo = new LinkedHashMap<>();  
+    private final ObjectSet instanceInfo = new ObjectSet();
     
     private int refsOffset;
     private int objsOffset;
@@ -152,10 +152,9 @@ final class InsaneConverter {
         return ret;
     }
     
-    private static Object[] EMPTY = new Object[0];
     
     private static class InstanceInfo {
-        private int id1;
+        private final int id1;
         private int offset;
         private int incommingCountOrPtr;
         private int outgoingCountOrPtr;
@@ -216,10 +215,8 @@ final class InsaneConverter {
         }
         
         public boolean equals(Object o) {
-            if (o instanceof InstanceInfo) {
-                return id1 == ((InstanceInfo)o).id1;
-            }
-            return false;
+            
+            return (o instanceof InstanceInfo) && id1 == ((InstanceInfo)o).id1;
         }
         
         public int hashCode() {
@@ -305,29 +302,22 @@ final class InsaneConverter {
     
     
     private void process()  throws Exception {
-        FileInputStream fis = new FileInputStream(from);
-        // parse
-        try {
+        
+        try(FileInputStream fis = new FileInputStream(from)) { 
             parse(fis);
-        } finally {
-            fis.close();
-        }
+        } 
         // compute offsets
         compute();
         // store headers
-        
-        RandomAccessFile raf = new RandomAccessFile(to, "rw"); 
-        store = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, totalOffset);
-        raf.close();
+        try (RandomAccessFile raf = new RandomAccessFile(to, "rw")) {
+            store = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, totalOffset);
+        }
         storeHeaders();
         
         // second pass
         prescan = false;
-        fis = new FileInputStream(from);
-        try {
+        try(FileInputStream fis = new FileInputStream(from)) { 
             parse(fis);
-        } finally {
-            fis.close();
         }
         store.force();
     }
@@ -373,12 +363,6 @@ final class InsaneConverter {
             info.storeHeader();
         }
         
-/*        // store instances
-        for (Iterator it = instanceInfo.values().iterator(); it.hasNext(); ) {
-            InstanceInfo info = (InstanceInfo)it.next();
-            info.store(out);
-        }
-  */      
     }
     
     private static void storeString(ByteBuffer buff, String str)  { //throws IOException {
@@ -395,9 +379,13 @@ final class InsaneConverter {
         class Handler extends DefaultHandler {
             private int depth = 0;
             
-            public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+            @Override
+            public void startElement(String namespaceURI, String localName, 
+                  String qName, Attributes atts) throws SAXException {
                 if (depth == 0) {
-                    if (! "insane".equals(qName)) throw new SAXException("format");
+                    if (! "insane".equals(qName)) {
+                        throw new SAXException("format");
+                    }
                 } else if (depth != 1) {
                     throw new SAXException("format");
                 } else {
@@ -420,7 +408,9 @@ final class InsaneConverter {
             }
             
 
-            public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+            @Override
+            public void endElement(String namespaceURI, String localName, String qName) 
+                  throws SAXException {
                 depth--;
             }
             

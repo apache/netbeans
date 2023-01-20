@@ -50,7 +50,9 @@ class SmallObjectMap2 implements ObjectMap {
         int bucket = System.identityHashCode(o) % table.length;
 
         while (table[bucket] != null) {
-            if (table[bucket] == o) return true;
+            if (table[bucket] == o) {
+                return true;
+            }
 
             bucket = (bucket + 1) % table.length;
         }
@@ -63,10 +65,14 @@ class SmallObjectMap2 implements ObjectMap {
     public String getID(Object o) {
         // find whether it is known and wrapped
         Integer wid = wrappers.get(o);
-        if (wid != null) return getWrappedId(o, wid);
+        if (wid != null) {
+            return getWrappedId(o, wid);
+        }
 
         // ... or at least known
-        if (isKnown(o)) return getNormalId(o);
+        if (isKnown(o)) {
+            return getNormalId(o);
+        }
 
         // unknown object
         if (putObject(o)) { //wrapped
@@ -77,14 +83,18 @@ class SmallObjectMap2 implements ObjectMap {
     }
 
     private boolean usedId(int id) {
-        if (id > 0 && id < idCounter) return true;
+        if (id > 0 && id < idCounter) {
+            return true;
+        }
 
         int bucket = id % table.length;
 
         while (table[bucket] != null) {
-            if (System.identityHashCode(table[bucket]) == id) return true;
-
-            bucket = (bucket + 1) % table.length;
+            if (System.identityHashCode(table[bucket]) == id) {
+                return true;
+            } else {
+                bucket = (bucket + 1) % table.length;
+            }
         }
 
         return false;
@@ -106,7 +116,9 @@ class SmallObjectMap2 implements ObjectMap {
     // knows it is not there.
     // returns true iff wraps
     private boolean putObject(Object o) {
-        if (5*size/4 > table.length) rehash(3*table.length/2);
+        if (5*size/4 > table.length) {
+            rehash(3*table.length/2);
+        }
 
         size++;
         int sysID = System.identityHashCode(o);
@@ -116,17 +128,20 @@ class SmallObjectMap2 implements ObjectMap {
         int temp = 0;
         // find an empty slot, look for friends with the same ID
         while (table[bucket] != null) {
-//                if (System.identityHashCode(table[bucket]) == sysID) wrap = true;
             temp++;
             bucket = (bucket + 1) % table.length;
         }
-        if (temp > maxDisplace) maxDisplace = temp;
+        if (temp > maxDisplace) {
+            maxDisplace = temp;
+        }
 
         // fill the slot
         table[bucket] = o;
 
         // add the wrapping info
-        if (wrap) wrappers.put(o, nextFreeId());
+        if (wrap) {
+            wrappers.put(o, nextFreeId());
+        }
         return wrap;
     }
 

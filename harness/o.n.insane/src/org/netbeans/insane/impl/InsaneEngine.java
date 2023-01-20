@@ -161,7 +161,9 @@ public final class InsaneEngine {
     
     private void recognizeObject(Object o) {
         // already known?
-        if (objects.isKnown(o)) return;
+        if (objects.isKnown(o)) {
+            return;
+        }
 
         // my own data structures
         if (o.getClass().getName().startsWith("org.netbeans.insane.scanner")) {
@@ -205,10 +207,10 @@ public final class InsaneEngine {
             return;
         }
 
-        //if (cls.getName().startsWith("org.netbeans.insane.scanner")) return; // skip refs from myself
-
         ClassLoader cl = cls.getClassLoader();
-        if ( cl != null) recognize(cl);
+        if ( cl != null) {
+            recognize(cl);
+        }
 
         // process only fields declared by this class,
         // fields of all superclasses were already processed in separate run.
@@ -243,7 +245,9 @@ public final class InsaneEngine {
                     if (filter.accept(target, null, act)) {
                         recognize(target);
                         // can be refused by recognize, needs to recheck here
-                        if (objects.isKnown(target)) visitor.visitStaticReference(objects, target, act);
+                        if (objects.isKnown(target)) {
+                            visitor.visitStaticReference(objects, target, act);
+                        }
                     }
                 }
             }
@@ -277,7 +281,7 @@ public final class InsaneEngine {
         } else {
             // enqueue all instance fields of reference type
             while (cls != null) { // go over the class hierarchy
-	       try {
+                try {
                     for(Field act : cls.getDeclaredFields()) {
                         if (((act.getModifiers() & Modifier.STATIC) == 0) &&
                                     (!act.getType().isPrimitive())) {

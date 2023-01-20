@@ -49,7 +49,7 @@ class BinaryHeapModel implements HeapModel {
         // mmap it
         long len = data.length();
         buffer = new FileInputStream(data).getChannel().map(FileChannel.MapMode.READ_ONLY, 0, len);
-        System.err.println("magic=" + buffer.getInt(0)); // shouldn't this be replaced with logging statement?
+        System.err.println("magic=" + buffer.getInt(0));
 
         // prepare pointers
         refsOffset = buffer.getInt(4);

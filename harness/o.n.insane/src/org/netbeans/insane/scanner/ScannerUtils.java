@@ -48,25 +48,35 @@ public final class ScannerUtils {
             
             @Override
             public void visitClass(Class cls) {
-                for(int i=0; i<sub.length; i++) sub[i].visitClass(cls);
+                for(Visitor v : sub) {
+                    v.visitClass(cls);
+                }
             }
             @Override
             public void visitObject(ObjectMap map, Object object) {
-                for(int i=0; i<sub.length; i++) sub[i].visitObject(map, object);
+                for(Visitor v : sub) {
+                    v.visitObject(map, object);
+                }
             }
             @Override
             public void visitObjectReference(ObjectMap map, Object from, Object to, Field ref) {
-                for(int i=0; i<sub.length; i++) sub[i].visitObjectReference(map, from, to, ref);
+                for(Visitor v : sub) {
+                    v.visitObjectReference(map, from, to, ref);
+                }
             }
 
             @Override
             public void visitArrayReference(ObjectMap map, Object from, Object to, int index) {
-                for(int i=0; i<sub.length; i++) sub[i].visitArrayReference(map, from, to, index);
+                for(Visitor v : sub) {
+                    v.visitArrayReference(map, from, to, index);
+                }
             }
             
             @Override
             public void visitStaticReference(ObjectMap map, Object to, Field ref) {
-                for(int i=0; i<sub.length; i++) sub[i].visitStaticReference(map, to, ref);
+                for(Visitor v : sub) {
+                    v.visitStaticReference(map, to, ref);
+                }
             }
         };
     }
@@ -83,8 +93,10 @@ public final class ScannerUtils {
             private final Filter[] sub = parts.clone();
             @Override
             public boolean accept(Object o, Object r, Field ref) {
-                for (int i=0; i<sub.length; i++) {
-                    if (!sub[i].accept(o, r, ref)) return false;
+                for(Filter f : sub) {
+                    if (!f.accept(o, r, ref)) {
+                        return false;
+                    }
                 }
                 return true;
             }
@@ -197,10 +209,11 @@ public final class ScannerUtils {
      * near all objects on the java heap.
      */
     public static Set<Object> interestingRoots() {
-        return new HashSet<>(Arrays.asList(new Object[] {
-            Thread.currentThread(),
-            ScannerUtils.class.getClassLoader()
-        }));
+        
+        Set roots =  new HashSet<>(5);
+        roots.add(Thread.currentThread());
+        roots.add(ScannerUtils.class.getClassLoader());
+        return roots;
     }
     
     
@@ -228,7 +241,9 @@ public final class ScannerUtils {
         } else {
             SwingUtilities.invokeAndWait(performer);
         }
-        if (ret[0] != null) throw ret[0];
+        if (ret[0] != null) {
+            throw ret[0];
+        }
     }
     
     private static class ClassInfo {
@@ -243,13 +258,12 @@ public final class ScannerUtils {
                 // iterate all fields and sum the sizes
                 int sum = 0;
                 for (Class<?> act = cls; act != null; act = act.getSuperclass()) {
-                    // count all nonstatic fields
                     for(Field field : act.getDeclaredFields()) {
                         if ((field.getModifiers() & Modifier.STATIC) == 0) {
                             sum += getSize(field.getType(), false);
                         }
-                    } // fields
-                } // classes
+                    } 
+                } 
                 size = (sum + 8 + 7) & 0xFFFFFFF8; // 8byte align
             }
         }

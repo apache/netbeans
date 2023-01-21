@@ -30,9 +30,9 @@ import org.netbeans.modules.css.lib.api.Node;
  */
 public abstract class AbstractParseTreeNode extends ParseTree implements Node {
 
-    Tree parent;
+    private Tree parent;
     
-    private CharSequence source;
+    private final CharSequence source;
     
     public AbstractParseTreeNode(CharSequence source) {
         super(null);
@@ -73,6 +73,7 @@ public abstract class AbstractParseTreeNode extends ParseTree implements Node {
 
     @Override
     public List<Node> children() {
+        @SuppressWarnings("unchecked")
         List<Node> ch = (List<Node>) (List<?>) getChildren();
         return ch == null ? Collections.<Node>emptyList() : ch;
     }

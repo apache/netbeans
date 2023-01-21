@@ -21,7 +21,6 @@ package org.netbeans.modules.css.lib.api.properties;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
-import java.util.regex.Pattern;
 import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.openide.util.Lookup;
@@ -34,11 +33,9 @@ import org.openide.util.lookup.InstanceContent;
  */
 public abstract class TokenAcceptor {
 
-    public static final Collection<TokenAcceptor> ACCEPTORS = 
-            new ArrayList<TokenAcceptor>();
-    public static final Map<String, TokenAcceptor> ACCEPTORS_MAP = 
-            new LinkedHashMap<String, TokenAcceptor> ();
-    private static Lookup INSTANCES;
+    public static final Collection<TokenAcceptor> ACCEPTORS = new ArrayList<>();
+    public static final Map<String, TokenAcceptor> ACCEPTORS_MAP = new LinkedHashMap<> ();
+    private static final Lookup INSTANCES;
 
     static {
         ACCEPTORS.add(new Resolution("resolution"));
@@ -83,7 +80,7 @@ public abstract class TokenAcceptor {
         return ACCEPTORS_MAP.get(name.toLowerCase());
     }
 
-    private String id;
+    private final String id;
 
     public TokenAcceptor(String id) {
         this.id = id;
@@ -186,8 +183,6 @@ public abstract class TokenAcceptor {
     }
 
     public static class HashColor extends TokenAcceptor {
-
-        private static final Pattern COLOR_PATTERN = Pattern.compile("#[0-9a-fA-F]{3,8}");
 
         public HashColor(String id) {
             super(id);
@@ -388,7 +383,7 @@ public abstract class TokenAcceptor {
         
         public Float getNumberValue(String token) {
             try {
-                return Float.parseFloat(token);
+                return Float.valueOf(token);
             } catch (NumberFormatException nfe) {
                 return null;
             }
@@ -404,6 +399,8 @@ public abstract class TokenAcceptor {
         /**
          * Please be aware that if there are prefixes that ends with another prefix image
          * the order must be: the longer prefix sooner! (khz, hz)
+         * 
+         * @return postfixes to match with this acceptor
          */
         protected abstract List<String> postfixes();
 
@@ -429,7 +426,7 @@ public abstract class TokenAcceptor {
             
             CharSequence numberImage = image.subSequence(0, image.length() - postfix.length());
             try {
-                return Float.parseFloat(numberImage.toString());
+                return Float.valueOf(numberImage.toString());
             } catch (NumberFormatException nfe) {
                 return null;
             }

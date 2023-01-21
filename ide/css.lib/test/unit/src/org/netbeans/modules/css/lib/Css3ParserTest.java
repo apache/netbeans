@@ -1482,6 +1482,9 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("div {\n"
                 + "    padding: calc(1 * 1);\n"
                 + "}");
+        assertParses("div {\n"
+                + "     width: calc(var(--widthC) + 2px);\n"
+                + "}");
     }
     
     public void testLessScssKeywordInCss() {

@@ -55,7 +55,7 @@ public class GrammarParserTest extends CssTestBase {
         String g = "[ a | b ]($my) && c ($yours)";
         GroupGrammarElement root = GrammarParser.parse(g);
         
-        System.out.println(root.toString2(0));
+        System.out.println(dumpGETree(root));
         
         
         List<GrammarElement> children = root.elements();
@@ -78,7 +78,7 @@ public class GrammarParserTest extends CssTestBase {
         String g = "[ x ]($my)*";
         GroupGrammarElement root = GrammarParser.parse(g);
         
-        System.out.println(root.toString2(0));
+        System.out.println(dumpGETree(root));
         
         
         List<GrammarElement> children = root.elements();
@@ -99,7 +99,7 @@ public class GrammarParserTest extends CssTestBase {
         String g = "[ x ] ($my) {3,10}";
         GroupGrammarElement root = GrammarParser.parse(g);
         
-        System.out.println(root.toString2(0));
+        System.out.println(dumpGETree(root));
         
         
         List<GrammarElement> children = root.elements();
@@ -121,7 +121,7 @@ public class GrammarParserTest extends CssTestBase {
         String g = "( )";
         GroupGrammarElement root = GrammarParser.parse(g);
         
-        System.out.println(root.toString2(0));
+        System.out.println(dumpGETree(root));
         
         
         List<GrammarElement> children = root.elements();

@@ -84,7 +84,8 @@ public class EmbeddingProviderImplTest extends NbTestCase {
                 "    public void a(@Language(\"test\") String test) {}\n" +
                 "    }\n" +
                 "    @interface Language { public String value(); }\n" +
-                "}\n");
+                "}\n",
+                "<html>\n");
     }
 
     public void testFromAnnotationVariable() throws Exception {
@@ -97,10 +98,25 @@ public class EmbeddingProviderImplTest extends NbTestCase {
                 "          \"\"\");\n" +
                 "    }\n" +
                 "    @interface Language { public String value(); }\n" +
-                "}\n");
+                "}\n",
+                "<html>\n");
     }
 
-    private void runTest(String code) throws Exception {
+    public void testFromAnnotationConstructorParameter() throws Exception {
+        runTest("public class Test {\n" +
+                "    public void t() {\n" +
+                "        new Test(\"\"\"\n" +
+                "          <html|>\n" +
+                "          \"\"\");\n" +
+                "    }\n" +
+                "    public Test(@Language(\"test\") String test) {}\n" +
+                "    }\n" +
+                "    @interface Language { public String value(); }\n" +
+                "}\n",
+                "<html>\n");
+    }
+
+    private void runTest(String code, String snippet) throws Exception {
         String fileName = "Test";
         int caretPos = code.indexOf('|');
 
@@ -142,6 +158,7 @@ public class EmbeddingProviderImplTest extends NbTestCase {
                 invoked.set(true);
                 Result result = resultIterator.getParserResult(caretPos);
                 assertTrue(result instanceof TestParser.TestParserResult);
+                assertEquals(snippet, result.getSnapshot().getText().toString());
             }
         });
 

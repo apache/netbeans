@@ -269,7 +269,7 @@ public enum JavaTokenId implements TokenId {
                     return LanguageEmbedding.create(JavaCharacterTokenId.language(), 1,
                             (token.partType() == PartType.COMPLETE) ? 1 : 0);
                 case MULTILINE_STRING_LITERAL:
-                    return LanguageEmbedding.create(JavaMultiLineStringTokenId.language(), /*XXX: whitespaces!*/4,
+                    return LanguageEmbedding.create(JavaStringTokenId.language(), /*XXX: whitespaces!*/4,
                             (token.partType() == PartType.COMPLETE) ? 3 : 0);
             }
             return null; // No embedding

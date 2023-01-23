@@ -60,12 +60,11 @@ public abstract class TokenAcceptor {
         ACCEPTORS.add(new Anything("anything"));
         ACCEPTORS.add(new Urange("urange"));
         ACCEPTORS.add(new Flex("flex"));
-        
-        ACCEPTORS.add(new GenericFunctionContent("function-content")); 
+        ACCEPTORS.add(new NonBrace("nonbrace"));
         
         InstanceContent content = new InstanceContent();
         for(TokenAcceptor ta : ACCEPTORS) {
-            ACCEPTORS_MAP.put(ta.id(), ta);
+            ACCEPTORS_MAP.put(ta.id().toLowerCase(), ta);
             content.add(ta);
         }
         INSTANCES = new AbstractLookup(content);
@@ -588,17 +587,24 @@ public abstract class TokenAcceptor {
 
     }
 
-    private static class GenericFunctionContent extends TokenAcceptor {
+    private static class NonBrace extends TokenAcceptor {
+        private static final Set<CssTokenId> BRACES = new HashSet<>(Arrays.asList(
+                CssTokenId.LBRACE,
+                CssTokenId.LBRACKET,
+                CssTokenId.LPAREN,
+                CssTokenId.RBRACE,
+                CssTokenId.RBRACKET,
+                CssTokenId.RPAREN
+        ));
 
-        public GenericFunctionContent(String id) {
+        public NonBrace(String id) {
             super(id);
         }
 
         @Override
         public boolean accepts(Token token) {
-            //consume everything except ")"
-            return token.tokenId() != CssTokenId.RPAREN;
+            //consume everything except block paratheses
+            return ! BRACES.contains(token.tokenId());
         }
-        
     }
 }

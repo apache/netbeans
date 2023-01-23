@@ -1478,13 +1478,25 @@ public class Css3ParserTest extends CssTestBase {
         assertParses(".less {}");
     }
 
+    public void testParseVariable() {
+        assertParses("h1 {--demoVar: 1em; margin: var(--demoVar);}");
+        assertParses("h1 {--demoVar: 1em; margin: var(--demoVar, 3ex 2em);}");
+        assertParses(":root {--primary-font: 'Arial', 'Helvetica', sans-serif;}");
+        assertParses("h1 {--grid-gutter: ( var(--margins) * var(--spacing-unit));}");
+        assertParses("h1 {--grid-gutter:;}");
+    }
+
     public void testMathExpressionInFunction() {
         assertParses("div {\n"
                 + "    padding: calc(1 * 1);\n"
                 + "}");
-        assertParses("div {\n"
-                + "     width: calc(var(--widthC) + 2px);\n"
-                + "}");
+    }
+
+    public void testCalcVarCombination() {
+        assertParses("div {width: calc(var(--widthC) + 2px);}");
+        assertParses("div {width: calc(var(--grid-margin) - var(--cell-margin));}");
+        assertParses("div {width: var(--demoVal, calc(var(--grid-margin) - var(--cell-margin)));}");
+        assertParses(read(getTestFile("testfiles/google-chrome-css-custom-properties.css")));
     }
     
     public void testLessScssKeywordInCss() {
@@ -1586,13 +1598,6 @@ public class Css3ParserTest extends CssTestBase {
         assertParses(".5hallo {\n"
                 + "	color: #ff3366;\n"
                 + "}");
-    }
-
-    public void testParseVariable() {
-        assertParses("h1 {"
-            + "--demoVar: 1em;"
-            + "margin: var(--demoVar, 3ex 2em);"
-            + "}");
     }
 
     public void testParseSelectorListCSS4() {

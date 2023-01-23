@@ -902,7 +902,8 @@ pseudo
 
 propertyDeclaration
     :
-{isCssPreprocessorSource()}? STAR? property ws? COLON ws? cp_propertyValue //cp_expression may contain the IMPORT_SYM
+      {isCssPreprocessorSource() && !tokenNameStartsWith("--")}? STAR? property ws? COLON ws? cp_propertyValue //cp_expression may contain the IMPORT_SYM
+    | {tokenNameStartsWith("--")}? property ws? COLON ws? componentValueOuter?
     | STAR? property ws? COLON ws? propertyValue (ws? prio)?
     
     ;
@@ -931,6 +932,20 @@ expressionPredicate
     :
     ( ~ (AT_IDENT | STAR | SOLIDUS | LBRACE | SEMI | RBRACE | SASS_VAR) )+ ( SEMI | RBRACE )
     ;
+
+preservedToken: ~ (LPAREN | LBRACE | LBRACKET | RPAREN | RBRACE | RBRACKET);
+
+preservedTokenTopLevel: ~ (LPAREN | LBRACE | LBRACKET | RPAREN | RBRACE | RBRACKET | SEMI );
+
+braceBlock: LBRACE componentValue+ RBRACE;
+
+bracketBlock: LBRACKET componentValue+ RBRACKET;
+
+parenBlock: LPAREN componentValue+ RPAREN;
+
+componentValue: parenBlock | braceBlock | bracketBlock | (functionName ws? LPAREN) => function | preservedToken;
+
+componentValueOuter: (parenBlock | braceBlock | bracketBlock | (functionName ws? LPAREN) => function | preservedTokenTopLevel) componentValueOuter*;
 
 //recovery: syncs the parser to the first identifier in the token input stream or the closing curly bracket
 //since the rule matches epsilon it will always be entered

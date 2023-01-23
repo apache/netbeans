@@ -178,8 +178,8 @@ public final class ElementFactoryImpl implements ElementFactory {
                 return new PageI(model, node);
             case "Ws":
                 return new WsI(model, node);
+            case "ComponentValueOuter":
             case "Token":
-                return new PlainElementI(model, node);
             case "Error":
                 return new PlainElementI(model, node);
             default:

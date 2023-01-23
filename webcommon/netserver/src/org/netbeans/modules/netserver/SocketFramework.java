@@ -154,31 +154,27 @@ public abstract class SocketFramework implements Runnable {
     protected void readData( SelectionKey key ) throws IOException {
         handler.read(key);
     }
-    
-    protected void writeData( SelectionKey key ) throws IOException  {
-        Queue<ByteBuffer> queue = getWriteQueue(key);
-        int ops = SelectionKey.OP_READ;
-        while( queue!= null ){
-            ByteBuffer buffer = queue.peek();
-            if ( buffer == null ){
+
+    protected void writeData(SelectionKey key) {
+        ByteBuffer buf = ByteBuffer.allocate(1024);
+        while(true) {
+            int bytesRead = channel.read(buf);
+            if(bytesRead == -1) {
+                // EOF, close channel
+                channel.close();
                 break;
             }
-            else {
-                int length = buffer.remaining();
-                int written = ((SocketChannel)key.channel()).write(buffer);
-                if (written < length) {
-                    // Not all bytes written. Socket's output buffer is full probably.
-                    // Keep the rest of this buffer in the write queue and wait until
-                    // the channel is writable again.
-                    ops |= SelectionKey.OP_WRITE;
-                    break;
-                } else {
-                    // The whole content of the buffer written => remove it from the queue
-                    queue.poll();
-                }
+            buf.flip(); // set position to 0 and limit to bytesRead
+            while(buf.hasRemaining()) {
+                channel.write(buf);
             }
+            // compact buffer and prepare for more reads
+            buf.compact();
+            // wake up selector thread
+            selector.wakeup();
+            // cancel selection key to close file descriptor
+            key.cancel();
         }
-        key.interestOps(ops);
     }
     
     private Selector selector;

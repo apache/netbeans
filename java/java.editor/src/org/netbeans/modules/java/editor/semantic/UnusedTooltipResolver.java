@@ -128,6 +128,10 @@ final class UnusedTooltipResolver implements HighlightAttributeValue<String> {
                             key = "LBL_UnusedInterface"; // NOI18N
                             elementDisplayName = e.getSimpleName().toString();
                             break;
+                        case RECORD:
+                            key = "LBL_UnusedRecord"; // NOI18N
+                            elementDisplayName = e.getSimpleName().toString();
+                            break;
                         case ANNOTATION_TYPE:
                             key = "LBL_UnusedAnnotationType"; // NOI18N
                             elementDisplayName = e.getSimpleName().toString();

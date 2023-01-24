@@ -78,11 +78,10 @@ public class NewQuickSearchIterator extends BasicWizardIterator {
         Map<String, String> replaceTokens = new HashMap<String, String>();
         replaceTokens.put("CLASS_NAME", fileName); // NOI18N
         replaceTokens.put("PACKAGE_NAME", model.getPackageName()); // NOI18N
-        Set<String> imports = new TreeSet<String>(Arrays.asList(HARDCODED_IMPORTS));
-        StringBuffer importsBuffer = new StringBuffer();
+        StringBuilder importsBuffer = new StringBuilder();
 
-        for (String imprt : imports) {
-            importsBuffer.append("import " + imprt + ';' + lineSep); // NOI18N
+        for (String imprt : HARDCODED_IMPORTS) {
+            importsBuffer.append("import ").append(imprt).append(';').append(lineSep); // NOI18N
         }
         replaceTokens.put("IMPORTS", importsBuffer.toString()); // NOI18N
         cmf.add(cmf.createFileWithSubstitutions(actionPath, template, replaceTokens));

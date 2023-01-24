@@ -191,7 +191,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
             imports.addAll(Arrays.asList(HARDCODED_IMPORTS));
         }
         Set<String> addedFQNCs = new TreeSet<String>();
-        StringBuffer cookieSB = new StringBuffer();
+        StringBuilder cookieSB = new StringBuilder();
         if (!alwaysEnabled) {
             String cName = parseClassName(cookieClasses[0]);
             String cNameVar = Character.toLowerCase(cName.charAt(0)) + cName.substring(1);
@@ -204,7 +204,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
                 if (cookieSB.length() > 0) {
                     cookieSB.append(", ");
                 }
-                cookieSB.append(parseClassName(cookieClass) + ".class"); // NOI18N
+                cookieSB.append(parseClassName(cookieClass)).append(".class"); // NOI18N
             }
             replaceTokens.put("COOKIE_CLASSES_BLOCK", cookieSB.toString()); // NOI18N
             replaceTokens.put("CONTEXT_TYPE", multiSelection ? "List<" + cName + ">" : cName);
@@ -230,9 +230,9 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         }
         // imports
         imports.addAll(addedFQNCs);
-        StringBuffer importsBuffer = new StringBuffer();
+        StringBuilder importsBuffer = new StringBuilder();
         for (String imprt : imports) {
-            importsBuffer.append("import " + imprt + ';' + NEW_LINE); // NOI18N
+            importsBuffer.append("import ").append(imprt).append(';').append(NEW_LINE); // NOI18N
         }
         replaceTokens.put("IMPORTS", importsBuffer.toString()); // NOI18N
         

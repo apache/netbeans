@@ -69,10 +69,9 @@ public class NewCodeGeneratorIterator extends BasicWizardIterator {
         Map<String, String> cpReplaceTokens = new HashMap<String, String>();
         String providerFileName = model.getProviderFileName();
         cpReplaceTokens.put("CLASS_NAME", providerFileName);
-        Set<String> cpImports = new TreeSet<String>(Arrays.asList(PROVIDER_HARDCODED_IMPORTS));
-        StringBuffer cpImportsBuffer = new StringBuffer();
-        for (String imprt : cpImports) {
-            cpImportsBuffer.append("import " + imprt + ';' + lineSep); // NOI18N
+        StringBuilder cpImportsBuffer = new StringBuilder();
+        for (String imprt : PROVIDER_HARDCODED_IMPORTS) {
+            cpImportsBuffer.append("import ").append(imprt).append(';').append(lineSep); // NOI18N
         }
 
         String cpFileName = model.getProviderFileName();
@@ -106,11 +105,10 @@ public class NewCodeGeneratorIterator extends BasicWizardIterator {
         Map<String,String> replaceTokens = new HashMap<String,String>();
         replaceTokens.put("CLASS_NAME",fileName); // NOI18N
         replaceTokens.put("PACKAGE_NAME", model.getPackageName()); // NOI18N
-        Set<String> imports = new TreeSet<String>(Arrays.asList(HARDCODED_IMPORTS));
-        StringBuffer importsBuffer = new StringBuffer();
+        StringBuilder importsBuffer = new StringBuilder();
         
-        for (String imprt : imports) {
-            importsBuffer.append("import " + imprt + ';' + lineSep); // NOI18N
+        for (String imprt : HARDCODED_IMPORTS) {
+            importsBuffer.append("import ").append(imprt).append(';').append(lineSep); // NOI18N
         }
         replaceTokens.put("IMPORTS", importsBuffer.toString()); // NOI18N
         replaceTokens.put("MIME_TYPE", model.getMimeType());

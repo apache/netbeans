@@ -258,7 +258,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         final boolean isEditable = Pattern.matches("(application/([a-zA-Z0-9_.-])*\\+xml|text/([a-zA-Z0-9_.+-])*)", //NOI18N
                 mime);
         if (isEditable) {
-            StringBuffer editorBuf = new StringBuffer();
+            StringBuilder editorBuf = new StringBuilder();
             editorBuf.append("        CookieSet cookies = getCookieSet();\n");//NOI18N
             editorBuf.append("        cookies.add((Node.Cookie) DataEditorSupport.create(this, getPrimaryEntry(), cookies));"); // NOI18N
             replaceTokens.put("EDITOR_SUPPORT_SNIPPET", editorBuf.toString());//NOI18N
@@ -478,7 +478,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         if (!isExtensionBased) {
             return "";
         }
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
         StringTokenizer tokens = new StringTokenizer(ext, " ,"); // NOI18N
         while (tokens.hasMoreTokens()) {
             String element = tokens.nextToken().trim();
@@ -521,7 +521,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         if (isExtensionBased) {
             return "";
         }
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
         buff.append("        <ext name=\"xml\"/>\n"); //NOI18N
         buff.append("        <resolver mime=\"").append(mime).append("\">\n"); //NOI18N
         buff.append("            <xml-rule>\n"); // NOI18N
@@ -539,7 +539,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
         if (path == null) {
             return "return super.getIcon(type); // TODO add a custom icon here: ImageUtilities.loadImage(..., true)\n"; //NOI18N
         }
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
         buff.append("        if (type == BeanInfo.ICON_COLOR_16x16 || type == BeanInfo.ICON_MONO_16x16) {\n"); //NOI18N
         buff.append("            return ImageUtilities.loadImage(\""); //NOI18N
         buff.append(path).append("\");\n"); //NOI18N

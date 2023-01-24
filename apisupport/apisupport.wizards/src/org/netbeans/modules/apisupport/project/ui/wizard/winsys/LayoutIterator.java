@@ -284,7 +284,7 @@ public final class LayoutIterator extends BasicWizardIterator {
     }
 
     private static String defineWinSysBehavior( DataModel model ) {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         if( model.isClosingNotAllowed() ) {
             res.append("\tputClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);\n");
         }
@@ -308,7 +308,7 @@ public final class LayoutIterator extends BasicWizardIterator {
     
     private static String getRelativePath(String rootpath, String fullyQualifiedPackageName,
             String prefix, String postfix) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         
         sb.append(rootpath).append('/').append(fullyQualifiedPackageName.replace('.','/'))
                         .append('/').append(prefix).append(postfix);

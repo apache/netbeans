@@ -184,7 +184,6 @@ public final class DesignSupport implements TaskListener, Runnable {
     @Override
     public void taskFinished(Task task) {
         FileObject modeDir = userDir.get().getFileObject("config/Windows2Local/Modes");
-        OutputStream os;
         if (modeDir != null) {
             StringBuilder sb = new StringBuilder();
             try {
@@ -197,9 +196,9 @@ public final class DesignSupport implements TaskListener, Runnable {
                     if (m.isData() && "wsmode".equals(m.getExt())) { 
                         final String name = "Windows2/Modes/" + m.getNameExt(); // NOI18N
                         FileObject mode = FileUtil.createData(layer.getRoot(), name); // NOI18N
-                        os = mode.getOutputStream();
-                        os.write(DesignSupport.readMode(m).getBytes(StandardCharsets.UTF_8));
-                        os.close();
+                        try(OutputStream os = mode.getOutputStream()) {
+                            os.write(DesignSupport.readMode(m).getBytes(StandardCharsets.UTF_8));
+                        }
                         sb.append(name).append("\n");
                     }
                 }

@@ -81,7 +81,7 @@ public class WizardUtils {
 
     public static String keyStrokeToString(KeyStroke keyStroke) {
         int modifiers = keyStroke.getModifiers();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if ((modifiers & InputEvent.CTRL_DOWN_MASK) > 0) {
             sb.append("Ctrl+"); // NOI18N
         }
@@ -155,7 +155,7 @@ public class WizardUtils {
     }
 
     public static String keyStrokesToString(final KeyStroke[] keyStrokes) {
-        StringBuffer sb = new StringBuffer(keyStrokeToString(keyStrokes [0]));
+        StringBuilder sb = new StringBuilder(keyStrokeToString(keyStrokes [0]));
         int i, k = keyStrokes.length;
         for (i = 1; i < k; i++) {
             sb.append(' ').append(keyStrokeToString(keyStrokes [i]));
@@ -165,7 +165,7 @@ public class WizardUtils {
     }
 
     public static String keyStrokesToLogicalString(final KeyStroke[] keyStrokes) {
-        StringBuffer sb = new StringBuffer(keyToLogicalString(keyStrokes [0]));
+        StringBuilder sb = new StringBuilder(keyToLogicalString(keyStrokes [0]));
         int i, k = keyStrokes.length;
         for (i = 1; i < k; i++) {
             sb.append(' ').append(keyToLogicalString((keyStrokes [i])));
@@ -297,7 +297,7 @@ public class WizardUtils {
      *        {@link CreatedModifiedFiles#getModifiedPaths()}.
      */
     public static String generateTextAreaContent(String[] relPaths) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (relPaths.length > 0) {
             for (int i = 0; i < relPaths.length; i++) {
                 if (i > 0) {
@@ -383,7 +383,7 @@ public class WizardUtils {
         public String getDisplayName() {
             if (displayName == null) {
                 displayName = computeDisplayName();
-                LOGGER.log(Level.FINE, "Computed display name '" + displayName + "'");
+                LOGGER.log(Level.FINE, "Computed display name ''{0}''", displayName);
             }
             return displayName;
         }
@@ -411,7 +411,7 @@ public class WizardUtils {
                 s.push(LayerUtil.getAnnotatedName(parent));
                 parent = parent.getParent();
             }
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(s.pop());
             while (!s.empty()) {
                 sb.append(displaySeparator).append(s.pop());

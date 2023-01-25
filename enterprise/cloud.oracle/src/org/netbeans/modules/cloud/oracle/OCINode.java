@@ -111,7 +111,9 @@ public class OCINode extends AbstractNode {
     }
     
     public void refresh() {
-        factory.refreshKeys();
+        if (factory != null) {
+            factory.refreshKeys();
+        }
     }
 
     @Override

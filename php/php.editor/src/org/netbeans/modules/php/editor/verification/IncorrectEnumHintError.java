@@ -30,6 +30,7 @@ import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.PredefinedSymbols;
 import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
@@ -57,7 +58,25 @@ import org.openide.util.NbBundle;
  */
 public class IncorrectEnumHintError extends HintErrorRule {
 
+    private static final Map<String, String> FORBIDDEN_MAGIC_METHODS = new HashMap<>();
+    private static final Map<String, String> FORBIDDEN_BACKED_ENUM_METHODS = new HashMap<>();
+
     private FileObject fileObject;
+
+    static {
+        for (String methodName : PredefinedSymbols.MAGIC_METHODS) {
+            // Methods __call, __callStatic and __invoke are allowed in enum.
+            if ("__call".equals(methodName) // NOI18N
+                    || "__callStatic".equals(methodName) // NOI18N
+                    || "__invoke".equals(methodName)) { // NOI18N
+                continue;
+            }
+            FORBIDDEN_MAGIC_METHODS.put(methodName.toLowerCase(), methodName);
+        }
+
+        FORBIDDEN_BACKED_ENUM_METHODS.put("from", "from"); // NOI18N
+        FORBIDDEN_BACKED_ENUM_METHODS.put("tryfrom", "tryFrom"); // NOI18N
+    }
 
     @Override
     @NbBundle.Messages("IncorrectEnumHintError.displayName=Incorrect Declaration of Enumeration")
@@ -73,7 +92,11 @@ public class IncorrectEnumHintError extends HintErrorRule {
         "# {0} - the trait name",
         "IncorrectEnumHintError.incorrectEnumPropertiesWithTrait=Enum cannot have properties, but \"{0}\" has properties",
         "IncorrectEnumHintError.incorrectEnumConstructor=Enum cannot have a constructor",
-    })
+        "IncorrectEnumHintError.incorrectEnumMethodCases=Enum cannot redeclare method \"cases\"",
+        "# {0} - the method name",
+        "IncorrectEnumHintError.incorrectEnumMagicMethod=Enum cannot contain magic method method \"{0}\"",
+        "# {0} - the method name",
+        "IncorrectEnumHintError.incorrectBackedEnumMethod=Backed enum cannot redeclare method \"{0}\"",})
     public void invoke(PHPRuleContext context, List<Hint> hints) {
         PHPParseResult phpParseResult = (PHPParseResult) context.parserResult;
         if (phpParseResult.getProgram() == null) {
@@ -113,7 +136,9 @@ public class IncorrectEnumHintError extends HintErrorRule {
                     return;
                 }
                 checkTraits(declaredEnum.getTraits(), declaredEnum, hints, checkVisitor.getUseTraits());
-                checkConstructor(declaredEnum.getDeclaredMethods(), hints);
+                // Forbidden methods from traits are ignored by PHP
+                boolean isBackedEnum = declaredEnum.getBackingType() != null;
+                checkMethods(declaredEnum.getDeclaredMethods(), isBackedEnum, hints);
             }
         }
     }
@@ -142,13 +167,22 @@ public class IncorrectEnumHintError extends HintErrorRule {
         }
     }
 
-    private void checkConstructor(Collection<? extends MethodScope> methods, List<Hint> hints) {
+    private void checkMethods(Collection<? extends MethodScope> methods, boolean isBackedEnum, List<Hint> hints) {
         for (MethodScope method : methods) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
             if (method.isConstructor()) {
                 addHint(method, Bundle.IncorrectEnumHintError_incorrectEnumConstructor(), hints);
+                continue;
+            }
+            String methodName = method.getName().toLowerCase();
+            if ("cases".equals(methodName)) { // NOI18N
+                addHint(method, Bundle.IncorrectEnumHintError_incorrectEnumMethodCases(), hints);
+            } else if (FORBIDDEN_MAGIC_METHODS.containsKey(methodName)) {
+                addHint(method, Bundle.IncorrectEnumHintError_incorrectEnumMagicMethod(FORBIDDEN_MAGIC_METHODS.get(methodName)), hints);
+            } else if (isBackedEnum && FORBIDDEN_BACKED_ENUM_METHODS.containsKey(methodName)) {
+                addHint(method, Bundle.IncorrectEnumHintError_incorrectBackedEnumMethod(FORBIDDEN_BACKED_ENUM_METHODS.get(methodName)), hints);
             }
         }
     }

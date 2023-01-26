@@ -205,16 +205,15 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                         path = tu.getPathElementOfKind(Tree.Kind.TRY, path);
                         if (path != null && ((TryTree)path.getLeaf()).getBlock() != null) {
                             tu.attributeTree(stmt, scope);
-                            StringBuilder sb = new StringBuilder();
+                            StringBuilder sb = new StringBuilder(200);
                             int cnt = 0;
                             for (TypeMirror tm : tu.getUncaughtExceptions(new TreePath(path, ((TryTree)path.getLeaf()).getBlock()))) {
                                 sb.append("catch ("); //NOI18N
-                                sb.append("${_GEN_UCE_TYPE_" + cnt++ + " type=" + Utilities.getTypeName(cInfo, tm, true) + " default=" + Utilities.getTypeName(cInfo, tm, false) + "}"); //NOI18N
-                                sb.append(" ${_GEN_UCE_NAME_" + cnt++ + " newVarName}){}"); //NOI18N
+                                sb.append("${_GEN_UCE_TYPE_".append(cnt++).append(" type=").append(Utilities.getTypeName(cInfo, tm, true)).append(" default=").append(Utilities.getTypeName(cInfo, tm, false)).append("}"); //NOI18N
+                                sb.append(" ${_GEN_UCE_NAME_").append(cnt++).append(" newVarName}){}"); //NOI18N
                             }
                             if (sb.length() > 0) {
-                                StringBuilder ptBuilder = new StringBuilder(request.getParametrizedText());
-                                ptBuilder.replace(parameter.getParametrizedTextStartOffset(), parameter.getParametrizedTextEndOffset(), sb.toString());
+                                ptBuilder.replace(parameter.getParametrizedTextStartOffset(), parameter.getParametrizedTextEndOffset(), request.getParametrizedText());
                                 request.setParametrizedText(ptBuilder.toString());
                             }
                         }
@@ -245,7 +244,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                     idx++;
                                 final StringBuilder selectionText = new StringBuilder(parameter.getValue().trim());
                                 final int caretOffset = component.getSelectionStart() + idx;
-                                final StringBuilder sb = new StringBuilder();
+                                final StringBuilder sb = new StringBuilder(80);
                                 final Trees trees = cInfo.getTrees();
                                 final SourcePositions sp = trees.getSourcePositions();
                                 final Map<VariableElement, VariableTree> vars = new HashMap<>();
@@ -262,10 +261,10 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                             switch(tm.getKind()) {
                                                 case ARRAY:
                                                 case DECLARED:
-                                                    sb.append(" = ${_GEN_PARAM_" + cnt++ + " default=\"null\"}"); //NOI18N
+                                                    sb.append(" = ${_GEN_PARAM_").append(cnt++).append(" default=\"null\"}"); //NOI18N
                                                     break;
                                                 case BOOLEAN:
-                                                    sb.append(" = ${_GEN_PARAM_" + cnt++ + " default=\"false\"}"); //NOI18N
+                                                    sb.append(" = ${_GEN_PARAM_").append(cnt++).append(" default=\"false\"}"); //NOI18N
                                                     break;
                                                 case BYTE:
                                                 case CHAR:
@@ -274,7 +273,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                                 case INT:
                                                 case LONG:
                                                 case SHORT:
-                                                    sb.append(" = ${_GEN_PARAM_" + cnt++ + " default=\"0\"}"); //NOI18N
+                                                    sb.append(" = ${_GEN_PARAM_").append(cnt++).append(" default=\"0\"}"); //NOI18N
                                                     break;
                                             }
                                             sb.append(";\n"); //NOI18N

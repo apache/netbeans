@@ -209,7 +209,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                             int cnt = 0;
                             for (TypeMirror tm : tu.getUncaughtExceptions(new TreePath(path, ((TryTree)path.getLeaf()).getBlock()))) {
                                 sb.append("catch ("); //NOI18N
-                                sb.append("${_GEN_UCE_TYPE_".append(cnt++).append(" type=").append(Utilities.getTypeName(cInfo, tm, true)).append(" default=").append(Utilities.getTypeName(cInfo, tm, false)).append("}"); //NOI18N
+                                sb.append("${_GEN_UCE_TYPE_").append(cnt++).append(" type=").append(Utilities.getTypeName(cInfo, tm, true)).append(" default=").append(Utilities.getTypeName(cInfo, tm, false)).append("}"); //NOI18N
                                 sb.append(" ${_GEN_UCE_NAME_").append(cnt++).append(" newVarName}){}"); //NOI18N
                             }
                             if (sb.length() > 0) {

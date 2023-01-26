@@ -55,10 +55,12 @@
                 <attr name="config-J2EE/InstalledServers/" boolvalue="true"/>
                 <!-- More appropriate place would be GF module, but that would need another action-->
                 <attr name="config-GlassFishEE6/Instances/" boolvalue="true"/>
+                <attr name="config-GlassFishEE7/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishEE8/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishJakartaEE8/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishJakartaEE9/Instances/" boolvalue="true"/>
-                <!--attr name="config-GlassFishJakartaEE91/Instances/" boolvalue="true"/-->
+                <attr name="config-GlassFishJakartaEE91/Instances/" boolvalue="true"/>
+                <attr name="config-GlassFishJakartaEE10/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishEE6WC/Instances/" boolvalue="true"/>
             </file>
         </folder>
@@ -134,7 +136,7 @@
     <folder name="OptionsExport">
         <folder name="Advanced">
             <file name="J2EE">
-                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC|GlassFishEE8|GlassFishJakartaEE8|GlassFishJakartaEE9)/.*"/>
+                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC||GlassFishEE7|GlassFishEE8|GlassFishJakartaEE8|GlassFishJakartaEE9|GlassFishJakartaEE91|GlassFishJakartaEE10)/.*"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.j2ee.deployment.impl.Bundle#J2EE.Options.Export.displayName"/>
             </file>
         </folder>

@@ -107,6 +107,12 @@ public final class ServerUtilities {
                 GlassfishWizardProvider.createJakartaEe91());
     }
 
+    public static ServerUtilities getJakartaEe10Utilities() {
+        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
+        return null == gip ? null : new ServerUtilities(gip,
+                GlassfishWizardProvider.createJakartaEe10());
+    }
+
 //    public static ServerUtilities getEe6WCUtilities() {
 //        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
 //        return null == gip ? null : new ServerUtilities(gip,
@@ -321,9 +327,8 @@ public final class ServerUtilities {
                 } else if(!candidate.getNameExt().endsWith(".jar")) {
                     continue;
                 }
-                JarFile jarFile = null;
-                try {
-                    jarFile = new JarFile(FileUtil.toFile(candidate), false);
+                
+                try (JarFile jarFile = new JarFile(FileUtil.toFile(candidate), false)) {
                     Manifest manifest = jarFile.getManifest();
                     if(manifest != null) {
                         Attributes attrs = manifest.getMainAttributes();
@@ -342,18 +347,7 @@ public final class ServerUtilities {
                 } catch (IOException ex) {
                     Logger.getLogger(ServerUtilities.class.getName()).log(Level.INFO,
                             candidate.getPath(), ex);
-                } finally {
-                    if (null != jarFile) {
-                        try {
-                            jarFile.close();
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServerUtilities.class.getName()).log(Level.INFO,
-                                    candidate.getPath(), ex);
-                        }
-                        jarFile = null;
-                    }
                 }
-
             }
         } else {
            Logger.getLogger(ServerUtilities.class.getName()).log(Level.FINER,

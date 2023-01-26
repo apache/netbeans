@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Vector_Icons"
+   x="0px"
+   y="0px"
+   width="8"
+   height="8"
+   viewBox="0 0 8 8"
+   xml:space="preserve"
+   sodipodi:docname="cloudBadge.svg"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs894" /><sodipodi:namedview
+   id="namedview892"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   width="8px"
+   inkscape:zoom="46.4375"
+   inkscape:cx="5.8034993"
+   inkscape:cy="8"
+   inkscape:window-width="1628"
+   inkscape:window-height="969"
+   inkscape:window-x="127"
+   inkscape:window-y="25"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="Vector_Icons" />
+<style
+   type="text/css"
+   id="style883">
+	.st0{fill:#E9F7FF;}
+	.st1{fill:#527C99;}
+	.st2{fill:#FFC36D;}
+	.st3{opacity:0.33;}
+	.st4{fill:#E79B00;}
+	.st5{fill:#CAE3FF;}
+	.st6{fill:#3883CE;}
+	.st7{fill:#FBDC7C;}
+	.st8{fill:#FFDB43;}
+	.st9{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
+	.st10{fill:#E8513D;}
+	.st11{fill:#9FCBFF;}
+	.st12{fill:#62707C;}
+	.st13{fill:#7A8896;}
+	.st14{fill:#57BFFF;}
+	.st15{fill:#E69D35;}
+	.st16{fill:#9CFF73;}
+	.st17{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st18{fill:#EAEAEA;}
+	.st19{fill:#E57067;}
+	.st20{fill:#94E0EF;}
+	.st21{fill:#4A4A4A;}
+	.st22{fill:#727272;}
+	.st23{fill:#EDEDED;}
+	.st24{fill:#5B5B5B;}
+	.st25{fill:#E9E9E9;}
+	.st26{opacity:0.4;}
+	.st27{opacity:0.15;}
+	.st28{fill:#C3E3FF;}
+	.st29{fill:#0084D3;}
+	.st30{opacity:0.5;fill:#E9F7FF;}
+	.st31{opacity:0.66;}
+</style>
+<g
+   id="g889"
+   transform="matrix(0.56710665,0,0,0.56710665,-0.52678831,-1.8932948)">
+	<path
+   class="st28"
+   d="m 3.92,14.5 c -1.334,0 -2.42,-1.086 -2.42,-2.42 0,-1.334 1.085,-2.42 2.42,-2.42 0.006,0 0.013,0 0.019,0 C 3.913,9.508 3.9,9.354 3.9,9.2 3.9,7.6 5.201,6.3 6.8,6.3 7.951,6.3 8.96,6.972 9.424,7.976 9.725,7.822 10.059,7.74 10.4,7.74 c 1.202,0 2.18,0.978 2.18,2.18 0,0.078 -0.004,0.156 -0.013,0.233 1.086,0.123 1.933,1.048 1.933,2.167 0,1.086 -0.803,2.021 -1.869,2.175 L 12.596,14.5 Z"
+   id="path885" />
+	<path
+   class="st29"
+   d="M 6.8,6.8 C 7.987,6.8 8.966,7.664 9.159,8.796 9.467,8.457 9.906,8.24 10.4,8.24 c 0.928,0 1.68,0.752 1.68,1.68 0,0.286 -0.078,0.551 -0.204,0.787 0.142,-0.039 0.289,-0.067 0.444,-0.067 0.928,0 1.68,0.752 1.68,1.68 0,0.846 -0.627,1.563 -1.44,1.68 H 3.92 C 2.86,14 2,13.14 2,12.08 c 0,-1.06 0.86,-1.92 1.92,-1.92 0.275,0 0.535,0.06 0.772,0.164 C 4.512,9.987 4.4,9.609 4.4,9.2 4.4,7.874 5.474,6.8 6.8,6.8 m 0,-1 c -1.875,0 -3.4,1.525 -3.4,3.4 0,0.002 0,0.004 0,0.006 C 2.037,9.452 1,10.647 1,12.08 1,13.69 2.31,15 3.92,15 h 8.64 0.072 l 0.071,-0.01 C 14.012,14.801 15,13.653 15,12.32 15,11.104 14.186,10.075 13.075,9.748 12.986,8.35 11.82,7.24 10.4,7.24 10.144,7.24 9.891,7.278 9.649,7.349 9.04,6.406 7.985,5.8 6.8,5.8 Z"
+   id="path887" />
+</g>
+</svg>

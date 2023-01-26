@@ -34,6 +34,7 @@ import org.openide.util.Parameters;
  * @since 1.16
  * @deprecated use {@link Processes}
  */
+@Deprecated
 public final class ExternalProcessSupport {
 
     private ExternalProcessSupport() {

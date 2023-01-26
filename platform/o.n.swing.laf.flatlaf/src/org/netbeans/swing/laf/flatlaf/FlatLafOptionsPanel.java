@@ -20,7 +20,17 @@ package org.netbeans.swing.laf.flatlaf;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.util.SystemInfo;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import org.netbeans.api.actions.Editable;
 import org.netbeans.spi.options.OptionsPanelController;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  * @author Karl Tauber
@@ -31,6 +41,8 @@ import org.netbeans.spi.options.OptionsPanelController;
     tabTitle="#FlatLaf_DisplayName"
 )
 public class FlatLafOptionsPanel extends javax.swing.JPanel {
+
+    private static final RequestProcessor RP = new RequestProcessor(FlatLafOptionsPanel.class);
 
     private final FlatLafOptionsPanelController controller;
 
@@ -66,6 +78,9 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         unifiedTitleBarCheckBox = new javax.swing.JCheckBox();
         underlineMenuSelectionCheckBox = new javax.swing.JCheckBox();
         alwaysShowMnemonicsCheckBox = new javax.swing.JCheckBox();
+        advPanel = new javax.swing.JPanel();
+        customPropertiesLabel = new javax.swing.JLabel();
+        customPropertiesButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -104,18 +119,53 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
             }
         });
 
+        advPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(FlatLafOptionsPanel.class, "FlatLafOptionsPanel.Advanced.title"))); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(customPropertiesLabel, org.openide.util.NbBundle.getMessage(FlatLafOptionsPanel.class, "FlatLafOptionsPanel.customPropertiesLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(customPropertiesButton, org.openide.util.NbBundle.getMessage(FlatLafOptionsPanel.class, "FlatLafOptionsPanel.customPropertiesButton.text")); // NOI18N
+        customPropertiesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customPropertiesButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout advPanelLayout = new javax.swing.GroupLayout(advPanel);
+        advPanel.setLayout(advPanelLayout);
+        advPanelLayout.setHorizontalGroup(
+            advPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(advPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(customPropertiesLabel)
+                    .addComponent(customPropertiesButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        advPanelLayout.setVerticalGroup(
+            advPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advPanelLayout.createSequentialGroup()
+                .addComponent(customPropertiesLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(customPropertiesButton)
+                .addGap(0, 54, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useWindowDecorationsCheckBox)
-                    .addComponent(unifiedTitleBarCheckBox)
-                    .addComponent(menuBarEmbeddedCheckBox)
-                    .addComponent(underlineMenuSelectionCheckBox)
-                    .addComponent(alwaysShowMnemonicsCheckBox))
-                .addContainerGap(73, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(useWindowDecorationsCheckBox)
+                            .addComponent(unifiedTitleBarCheckBox)
+                            .addComponent(menuBarEmbeddedCheckBox)
+                            .addComponent(underlineMenuSelectionCheckBox)
+                            .addComponent(alwaysShowMnemonicsCheckBox))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(advPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,7 +179,9 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 .addComponent(underlineMenuSelectionCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(alwaysShowMnemonicsCheckBox)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(advPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -153,6 +205,27 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
     private void alwaysShowMnemonicsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwaysShowMnemonicsCheckBoxActionPerformed
         fireChanged();
     }//GEN-LAST:event_alwaysShowMnemonicsCheckBoxActionPerformed
+
+    private void customPropertiesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customPropertiesButtonActionPerformed
+        RP.execute(() -> {
+            try {
+                FileObject lafFolder = FileUtil.createFolder(FileUtil.getConfigRoot(), "LookAndFeel"); // NOI18N
+                FileObject customProp = lafFolder.getFileObject("FlatLaf.properties"); // NOI18N
+                if (customProp == null) {
+                    customProp = lafFolder.createData("FlatLaf.properties"); // NOI18N
+                    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(customProp.getOutputStream()))) {
+                        writer.append(NbBundle.getMessage(FlatLafOptionsPanel.class,
+                                "FlatLafOptionsPanel.customProperties.content")); // NOI18N
+                    }
+                }
+                DataObject dob = DataObject.find(customProp);
+                Editable editable = dob.getLookup().lookup(Editable.class);
+                editable.edit();
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        });
+    }//GEN-LAST:event_customPropertiesButtonActionPerformed
 
     private void fireChanged() {
         boolean isChanged = false;
@@ -191,7 +264,10 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel advPanel;
     private javax.swing.JCheckBox alwaysShowMnemonicsCheckBox;
+    private javax.swing.JButton customPropertiesButton;
+    private javax.swing.JLabel customPropertiesLabel;
     private javax.swing.JCheckBox menuBarEmbeddedCheckBox;
     private javax.swing.JCheckBox underlineMenuSelectionCheckBox;
     private javax.swing.JCheckBox unifiedTitleBarCheckBox;

@@ -27,8 +27,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 import org.netbeans.junit.Filter;
 import org.netbeans.junit.NbTestCase;
 import org.openide.cookies.EditorCookie;

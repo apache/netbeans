@@ -66,10 +66,15 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
     private MdbLocationPanel ejbPanel;
     private MdbPropertiesPanel propertiesPanel;
     private WizardDescriptor wiz;
-    private static final Map<Profile, String> MAVEN_JAVAEE_API_LIBS = new HashMap<>(2);
+    private static final Map<Profile, String> MAVEN_JAVAEE_API_LIBS = new HashMap<>(6);
     private static final String[] MAVEN_JAVAEE_WEB_API_LIBS = new String[]{
         "javaee-web-api-6.0", //NOI18N
         "javaee-web-api-7.0", //NOI18N
+        "javaee-web-api-8.0", //NOI18N
+        "jakarta.jakartaee-web-api-8.0.0", //NOI18N
+        "jakarta.jakartaee-web-api-9.0.0", //NOI18N
+        "jakarta.jakartaee-web-api-9.1.0", //NOI18N
+        "jakarta.jakartaee-web-api-10.0.0", //NOI18N
     };
     private static final String[] SESSION_STEPS = new String[]{
         NbBundle.getMessage(MdbWizard.class, "LBL_SpecifyEJBInfo"), //NOI18N
@@ -80,8 +85,10 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAVA_EE_6_FULL, "javaee-api-6.0"); //NOI18N
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAVA_EE_7_FULL, "javaee-api-7.0"); //NOI18N
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAVA_EE_8_FULL, "javaee-api-8.0"); //NOI18N
-        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_8_FULL, "jakartaee-api-8.0.0"); //NOI18N
-        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_9_FULL, "jakartaee-api-9.0.0"); //NOI18N
+        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_8_FULL, "jakarta.jakartaee-api-8.0.0"); //NOI18N
+        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_9_FULL, "jakarta.jakartaee-api-9.0.0"); //NOI18N
+        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_9_1_FULL, "jakarta.jakartaee-api-9.1.0"); //NOI18N
+        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_10_FULL, "jakarta.jakartaee-api-10.0.0"); //NOI18N
     }
 
     @Override
@@ -179,9 +186,13 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
     private Profile getTargetFullProfile() {
         Profile profile = JavaEEProjectSettings.getProfile(Templates.getProject(wiz));
         if (profile != null) {
-          if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
-            return Profile.JAKARTA_EE_9_FULL;
-          } else if (profile.isAtLeast(Profile.JAKARTA_EE_8_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+              return Profile.JAKARTA_EE_10_FULL;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_1_WEB)) {
+              return Profile.JAKARTA_EE_9_1_FULL;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+              return Profile.JAKARTA_EE_9_FULL;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_8_WEB)) {
               return Profile.JAKARTA_EE_8_FULL;
             } else if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
                 return Profile.JAVA_EE_8_FULL;

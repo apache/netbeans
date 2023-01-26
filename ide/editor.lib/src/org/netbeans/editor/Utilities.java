@@ -158,6 +158,7 @@ public class Utilities {
     * @return position of the start of the row or -1 for invalid position
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowStart(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineStart(doc, offset);
@@ -175,6 +176,7 @@ public class Utilities {
     * @return position of the start of the row or -1 for invalid position
     * @deprecated Deprecated without replacement
     */
+    @Deprecated
     public static int getRowStart(BaseDocument doc, int offset, int lineShift)
     throws BadLocationException {
         checkOffsetValid(doc, offset);
@@ -214,6 +216,7 @@ public class Utilities {
     *   if there's no non-white character on that line.
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowLastNonWhite(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
@@ -268,6 +271,7 @@ public class Utilities {
     * @return position of the end of the row or -1 for invalid position
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowEnd(JTextComponent c, int offset)
     throws BadLocationException {
         Rectangle2D r = modelToView(c, offset);
@@ -285,6 +289,7 @@ public class Utilities {
      * @throws BadLocationException
      * @deprecated use {@link LineDocumentUtils}
      */
+    @Deprecated
     public static int getRowEnd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineEnd(doc, offset);
@@ -335,6 +340,7 @@ public class Utilities {
     *   the required x-coordinate value
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getPositionAbove(JTextComponent c, int offset, int x)
     throws BadLocationException {
         // Ignore returned bias
@@ -352,6 +358,7 @@ public class Utilities {
     *   the required x-coordinate value
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getPositionBelow(JTextComponent c, int offset, int x)
     throws BadLocationException {
         // Ignore returned bias
@@ -366,6 +373,7 @@ public class Utilities {
     * @param offset position in document from which the current line is determined
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getWordStart(JTextComponent c, int offset)
     throws BadLocationException {
         return getWordStart((BaseDocument)c.getDocument(), offset);
@@ -434,6 +442,7 @@ public class Utilities {
     * @return position of the first white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteFwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getNextWhitespace(doc, offset);
@@ -447,6 +456,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteFwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getNextWhitespace(doc, offset, limitPos);
@@ -458,6 +468,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteFwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getNextNonWhitespace(doc, offset);
@@ -471,6 +482,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteFwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getNextNonWhitespace(doc, offset, limitPos);
@@ -484,6 +496,7 @@ public class Utilities {
     * @return position of the first white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteBwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousWhitespace(doc, offset);
@@ -499,6 +512,7 @@ public class Utilities {
     * @return position of the first white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteBwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousWhitespace(doc, offset, limitPos);
@@ -512,6 +526,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteBwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousNonWhitespace(doc, offset);
@@ -527,6 +542,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteBwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousNonWhitespace(doc, offset, limitPos);
@@ -537,6 +553,7 @@ public class Utilities {
     * @param offset position in document where to start searching
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getLineOffset(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineIndex(doc, offset);
@@ -547,6 +564,7 @@ public class Utilities {
     * @return start position of the line or -1 if lineIndex was invalid
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowStartFromLineOffset(BaseDocument doc, int lineIndex) {
         return LineDocumentUtils.getLineStartFromIndex(doc, lineIndex);
     }
@@ -808,6 +826,7 @@ public class Utilities {
     * @return whether the line is empty or not
     * @deprecated use {@link LineDocumentUtils#isLineEmpty(org.netbeans.api.editor.document.LineDocument, int)}.
     */
+    @Deprecated
     public static boolean isRowEmpty(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.isLineEmpty(doc, offset);
@@ -829,6 +848,7 @@ public class Utilities {
     * @return whether the line is empty or not
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static boolean isRowWhite(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.isLineWhitespace(doc, offset);
@@ -913,6 +933,7 @@ public class Utilities {
     /** @deprecated
      * @see Formatter.insertTabString()
      */
+    @Deprecated
     public static String getTabInsertString(BaseDocument doc, int offset)
     throws BadLocationException {
         int col = getVisualColumn(doc, offset);
@@ -1337,6 +1358,7 @@ public class Utilities {
      * @deprecated Use java.util.logging.Logger instead with the proper name,
      * log level and message.
      */
+    @Deprecated
     public static void annotateLoggable(Throwable t) {
         Logger.getLogger("org.netbeans.editor").log(Level.INFO, null, t); //NOI18N
     }

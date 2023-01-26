@@ -162,14 +162,14 @@ class SummaryCellRenderer implements ListCellRenderer {
             ListCellRenderer ren = getRenderer(value);
             if (ren == null) {
                 ren = new RevisionRenderer();
-                renderers.put(value, new SoftReference<ListCellRenderer>(ren));
+                renderers.put(value, new SoftReference<>(ren));
             }
             return ren.getListCellRendererComponent(list, value, index, selected, hasFocus);
         } else if (value instanceof AbstractSummaryView.EventItem) {
             ListCellRenderer ren = getRenderer(value);
             if (ren == null) {
                 ren = new EventRenderer();
-                renderers.put(value, new SoftReference<ListCellRenderer>(ren));
+                renderers.put(value, new SoftReference<>(ren));
             }
             return ren.getListCellRendererComponent(list, value, index, selected, hasFocus);
         } else if (value instanceof AbstractSummaryView.LoadingEventsItem) {

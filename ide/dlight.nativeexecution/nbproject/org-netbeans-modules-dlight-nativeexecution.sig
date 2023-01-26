@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.54.0
+#Version 1.57.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -247,6 +247,7 @@ supr java.lang.Enum<org.netbeans.modules.nativeexecution.api.HostInfo$Bitness>
 
 CLSS public final static !enum org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily
  outer org.netbeans.modules.nativeexecution.api.HostInfo
+fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily AARCH64
 fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily ARM
 fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily SPARC
 fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily UNKNOWN

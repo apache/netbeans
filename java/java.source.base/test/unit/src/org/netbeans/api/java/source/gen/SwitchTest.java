@@ -289,7 +289,7 @@ public class SwitchTest extends GeneratorTestBase {
                              labels.remove(0);
                              return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
-                         "case " + /*XXX: too many spaces:*/ " " + "0, 1:"),
+                         "case 0, 1:"),
             new TestCase("case -1, 0, 1:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(tree.getExpressions());

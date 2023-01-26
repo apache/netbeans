@@ -512,7 +512,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                         Element lineElementRoot = doc.getDefaultRootElement();
                         ParagraphViewDescriptor pViewDesc = lockedVH.getParagraphViewDescriptor(pViewIndex);
                         int pViewStartOffset = pViewDesc.getStartOffset();
-                        int lineIndex = lineElementRoot.getElementIndex(pViewStartOffset);;
+                        int lineIndex = lineElementRoot.getElementIndex(pViewStartOffset);
                         int lineEndOffset = lineElementRoot.getElement(lineIndex).getEndOffset();
                         int lineWithAnno = -1;
                         float rowHeight = lockedVH.getDefaultRowHeight();
@@ -898,7 +898,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                             Object defAction = a.getValue("default-action");
                             if (toInvoke == null && defAction != null && ((Boolean) defAction)) {
                                 Object supportedAnnotationTypes = a.getValue("default-action-excluded-annotation-types");
-                                if (supportedAnnotationTypes == null || !(supportedAnnotationTypes instanceof String[]) || Collections.disjoint(Arrays.asList((String[]) supportedAnnotationTypes), annotationTypes)) {
+                                if (!(supportedAnnotationTypes instanceof String[]) || Collections.disjoint(Arrays.asList((String[]) supportedAnnotationTypes), annotationTypes)) {
                                     toInvoke = a;
                                 }
                             }

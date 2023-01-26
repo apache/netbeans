@@ -21,10 +21,13 @@ package org.openide.util.test;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import static junit.framework.Assert.*;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Mock implementation of system default lookup suitable for use in unit tests.

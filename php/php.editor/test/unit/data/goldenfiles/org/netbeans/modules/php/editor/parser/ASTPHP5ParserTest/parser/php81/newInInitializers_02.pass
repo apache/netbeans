@@ -1,0 +1,812 @@
+<testresult testFile='newInInitializers_02.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='825' end='835'>
+            <text>Test\Test1</text>
+        </token>
+        <token id='T_SEMICOLON' start='835' end='836'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='837' end='842'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='843' end='850'>
+            <text>Example</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='851' end='852'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='858' end='864'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='865' end='871'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='872' end='878'>
+            <text>$field</text>
+        </token>
+        <token id='T_EQUAL' start='879' end='880'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='881' end='888'>
+            <text>"field"</text>
+        </token>
+        <token id='T_SEMICOLON' start='888' end='889'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='894' end='900'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='901' end='907'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='908' end='914'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='915' end='927'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_EQUAL' start='928' end='929'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='930' end='943'>
+            <text>"staticField"</text>
+        </token>
+        <token id='T_SEMICOLON' start='943' end='944'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='949' end='955'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='956' end='961'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='962' end='970'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='971' end='972'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='973' end='983'>
+            <text>"CONSTANT"</text>
+        </token>
+        <token id='T_SEMICOLON' start='983' end='984'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='990' end='996'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='997' end='1003'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1004' end='1012'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1013' end='1025'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1025' end='1026'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1026' end='1027'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1027' end='1028'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1029' end='1033'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1034' end='1035'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1044' end='1048'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1049' end='1063'>
+            <text>"staticMethod"</text>
+        </token>
+        <token id='T_NEKUDA' start='1064' end='1065'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1066' end='1073'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1073' end='1074'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1079' end='1080'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1086' end='1092'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1093' end='1101'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1102' end='1108'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1108' end='1109'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1109' end='1110'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1111' end='1112'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1121' end='1125'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1126' end='1134'>
+            <text>"method"</text>
+        </token>
+        <token id='T_NEKUDA' start='1135' end='1136'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1137' end='1144'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1144' end='1145'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1150' end='1151'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1153' end='1154'>
+            <text>}</text>
+        </token>
+        <token id='T_CONST' start='1156' end='1161'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1162' end='1165'>
+            <text>CON</text>
+        </token>
+        <token id='T_EQUAL' start='1166' end='1167'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1168' end='1171'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1172' end='1179'>
+            <text>Example</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1179' end='1180'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1180' end='1181'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1181' end='1182'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1183' end='1186'>
+            <text>CON</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1186' end='1188'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1188' end='1194'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1194' end='1195'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1195' end='1196'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1196' end='1197'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1198' end='1201'>
+            <text>CON</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1201' end='1204'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1204' end='1210'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1210' end='1211'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1211' end='1212'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1212' end='1213'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1214' end='1229'>
+            <text>\Test\Test1\CON</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1229' end='1231'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1231' end='1237'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1237' end='1238'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1238' end='1239'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1239' end='1240'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1241' end='1256'>
+            <text>\Test\Test1\CON</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1256' end='1259'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1259' end='1265'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1265' end='1266'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1266' end='1267'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1267' end='1268'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1269' end='1273'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='1274' end='1277'>
+            <text>CON</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1277' end='1279'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1279' end='1284'>
+            <text>field</text>
+        </token>
+        <token id='T_NEKUDA' start='1285' end='1286'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1287' end='1294'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1294' end='1295'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1296' end='1300'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='1301' end='1304'>
+            <text>CON</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1304' end='1307'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1307' end='1312'>
+            <text>field</text>
+        </token>
+        <token id='T_NEKUDA' start='1313' end='1314'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1315' end='1322'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1322' end='1323'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1324' end='1328'>
+            <text>echo</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1329' end='1344'>
+            <text>\Test\Test1\CON</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1344' end='1346'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1346' end='1351'>
+            <text>field</text>
+        </token>
+        <token id='T_NEKUDA' start='1352' end='1353'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1354' end='1361'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1361' end='1362'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1363' end='1367'>
+            <text>echo</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1368' end='1383'>
+            <text>\Test\Test1\CON</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1383' end='1386'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1386' end='1391'>
+            <text>field</text>
+        </token>
+        <token id='T_NEKUDA' start='1392' end='1393'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1394' end='1401'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1401' end='1402'>
+            <text>;</text>
+        </token>
+        <token id='T_NAMESPACE' start='1554' end='1563'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='1564' end='1568'>
+            <text>Test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1568' end='1569'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1571' end='1580'>
+            <text>Test1\CON</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1580' end='1582'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1582' end='1588'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1588' end='1589'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1589' end='1590'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1590' end='1591'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1592' end='1601'>
+            <text>Test1\CON</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1601' end='1604'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1604' end='1610'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1610' end='1611'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1611' end='1612'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1612' end='1613'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1614' end='1618'>
+            <text>echo</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1619' end='1628'>
+            <text>Test1\CON</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1628' end='1630'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1630' end='1635'>
+            <text>field</text>
+        </token>
+        <token id='T_NEKUDA' start='1636' end='1637'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1638' end='1645'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1645' end='1646'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1647' end='1651'>
+            <text>echo</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1652' end='1661'>
+            <text>Test1\CON</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1661' end='1664'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1664' end='1669'>
+            <text>field</text>
+        </token>
+        <token id='T_NEKUDA' start='1670' end='1671'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1672' end='1679'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1679' end='1680'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1681' end='1681'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1681'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1403' end='1462' commentType='singleLine'/>
+            <Comment start='1462' end='1485' commentType='singleLine'/>
+            <Comment start='1485' end='1521' commentType='singleLine'/>
+            <Comment start='1521' end='1553' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1403' end='1462' commentType='singleLine'/>
+            <Comment start='1462' end='1485' commentType='singleLine'/>
+            <Comment start='1485' end='1521' commentType='singleLine'/>
+            <Comment start='1521' end='1553' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='815' end='1402' isBracketed='false'>
+                <NamespaceName start='825' end='835' isCurrent='false' isGlobal='false'>
+                    <Identifier start='825' end='829' name='Test'/>
+                    <Identifier start='830' end='835' name='Test1'/>
+                </NamespaceName>
+                <Block start='836' end='1402' isCurly='true'>
+                    <ClassDeclaration start='837' end='1154' modifier='NONE'>
+                        <ClassName>
+                            <Identifier start='843' end='850' name='Example'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='851' end='1154' isCurly='true'>
+                            <FieldsDeclaration start='858' end='889' modifier='public'>
+                                <FieldType>
+                                    <NamespaceName start='865' end='871' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='865' end='871' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='872' end='878' isDollared='true'>
+                                        <Identifier start='873' end='878' name='field'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='881' end='888' type='STRING' value='"field"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='894' end='944' modifier='public static'>
+                                <FieldType>
+                                    <NamespaceName start='908' end='914' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='908' end='914' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='915' end='927' isDollared='true'>
+                                        <Identifier start='916' end='927' name='staticField'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='930' end='943' type='STRING' value='"staticField"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <ClassConstantDeclaration start='949' end='984' modifier='public'>
+                                <Names>
+                                    <Identifier start='962' end='970' name='CONSTANT'/>
+                                </Names>
+                                <Initializers>
+                                    <Scalar start='973' end='983' type='STRING' value='"CONSTANT"'/>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                            <MethodDeclaration start='990' end='1080' modifiers='public static'>
+                                <FunctionDeclaration start='1004' end='1080' isReference='false'>
+                                    <Identifier start='1013' end='1025' name='staticMethod'/>
+                                    <FormalParameters>
+                                    </FormalParameters>
+                                    <NamespaceName start='1029' end='1033' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1029' end='1033' name='void'/>
+                                    </NamespaceName>
+                                    <Block start='1034' end='1080' isCurly='true'>
+                                        <EchoStatement start='1044' end='1074'>
+                                            <InfixExpression start='1049' end='1073' operator='CONCAT'>
+                                                <Scalar start='1049' end='1063' type='STRING' value='"staticMethod"'/>
+                                                <NamespaceName start='1066' end='1073' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1066' end='1073' name='PHP_EOL'/>
+                                                </NamespaceName>
+                                            </InfixExpression>
+                                        </EchoStatement>
+                                    </Block>
+                                </FunctionDeclaration>
+                            </MethodDeclaration>
+                            <MethodDeclaration start='1086' end='1151' modifiers='public'>
+                                <FunctionDeclaration start='1093' end='1151' isReference='false'>
+                                    <Identifier start='1102' end='1108' name='method'/>
+                                    <FormalParameters>
+                                    </FormalParameters>
+                                    <Block start='1111' end='1151' isCurly='true'>
+                                        <EchoStatement start='1121' end='1145'>
+                                            <InfixExpression start='1126' end='1144' operator='CONCAT'>
+                                                <Scalar start='1126' end='1134' type='STRING' value='"method"'/>
+                                                <NamespaceName start='1137' end='1144' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1137' end='1144' name='PHP_EOL'/>
+                                                </NamespaceName>
+                                            </InfixExpression>
+                                        </EchoStatement>
+                                    </Block>
+                                </FunctionDeclaration>
+                            </MethodDeclaration>
+                        </Block>
+                    </ClassDeclaration>
+                    <GlobalConstantDeclaration start='1156' end='1182'>
+                        <Names>
+                            <Identifier start='1162' end='1165' name='CON'/>
+                        </Names>
+                        <Initializers>
+                            <ClassInstanceCreation start='1168' end='1181' anonymous='false'>
+                                <ClassName start='1172' end='1179'>
+                                    <NamespaceName start='1172' end='1179' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1172' end='1179' name='Example'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <ExpressionStatement start='1183' end='1197'>
+                        <MethodInvocation start='1183' end='1196' isNullsafe='false'>
+                            <ConstantVariable start='1183' end='1186'>
+                                <NamespaceName start='1183' end='1186' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1183' end='1186' name='CON'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Method>
+                                <FunctionInvocation start='1188' end='1196'>
+                                    <FucntionName start='1188' end='1194'>
+                                        <Variable start='1188' end='1194' isDollared='false'>
+                                            <Identifier start='1188' end='1194' name='method'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1198' end='1213'>
+                        <MethodInvocation start='1198' end='1212' isNullsafe='true'>
+                            <ConstantVariable start='1198' end='1201'>
+                                <NamespaceName start='1198' end='1201' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1198' end='1201' name='CON'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Method>
+                                <FunctionInvocation start='1204' end='1212'>
+                                    <FucntionName start='1204' end='1210'>
+                                        <Variable start='1204' end='1210' isDollared='false'>
+                                            <Identifier start='1204' end='1210' name='method'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1214' end='1240'>
+                        <MethodInvocation start='1214' end='1239' isNullsafe='false'>
+                            <ConstantVariable start='1214' end='1229'>
+                                <NamespaceName start='1214' end='1229' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1215' end='1219' name='Test'/>
+                                    <Identifier start='1220' end='1225' name='Test1'/>
+                                    <Identifier start='1226' end='1229' name='CON'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Method>
+                                <FunctionInvocation start='1231' end='1239'>
+                                    <FucntionName start='1231' end='1237'>
+                                        <Variable start='1231' end='1237' isDollared='false'>
+                                            <Identifier start='1231' end='1237' name='method'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1241' end='1268'>
+                        <MethodInvocation start='1241' end='1267' isNullsafe='true'>
+                            <ConstantVariable start='1241' end='1256'>
+                                <NamespaceName start='1241' end='1256' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1242' end='1246' name='Test'/>
+                                    <Identifier start='1247' end='1252' name='Test1'/>
+                                    <Identifier start='1253' end='1256' name='CON'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Method>
+                                <FunctionInvocation start='1259' end='1267'>
+                                    <FucntionName start='1259' end='1265'>
+                                        <Variable start='1259' end='1265' isDollared='false'>
+                                            <Identifier start='1259' end='1265' name='method'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </ExpressionStatement>
+                    <EchoStatement start='1269' end='1295'>
+                        <InfixExpression start='1274' end='1294' operator='CONCAT'>
+                            <FieldAccess start='1274' end='1284' isNullsafe='false'>
+                                <ConstantVariable start='1274' end='1277'>
+                                    <NamespaceName start='1274' end='1277' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1274' end='1277' name='CON'/>
+                                    </NamespaceName>
+                                </ConstantVariable>
+                                <Field>
+                                    <Variable start='1279' end='1284' isDollared='false'>
+                                        <Identifier start='1279' end='1284' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <NamespaceName start='1287' end='1294' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1287' end='1294' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='1296' end='1323'>
+                        <InfixExpression start='1301' end='1322' operator='CONCAT'>
+                            <FieldAccess start='1301' end='1312' isNullsafe='true'>
+                                <ConstantVariable start='1301' end='1304'>
+                                    <NamespaceName start='1301' end='1304' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1301' end='1304' name='CON'/>
+                                    </NamespaceName>
+                                </ConstantVariable>
+                                <Field>
+                                    <Variable start='1307' end='1312' isDollared='false'>
+                                        <Identifier start='1307' end='1312' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <NamespaceName start='1315' end='1322' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1315' end='1322' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='1324' end='1362'>
+                        <InfixExpression start='1329' end='1361' operator='CONCAT'>
+                            <FieldAccess start='1329' end='1351' isNullsafe='false'>
+                                <ConstantVariable start='1329' end='1344'>
+                                    <NamespaceName start='1329' end='1344' isCurrent='false' isGlobal='true'>
+                                        <Identifier start='1330' end='1334' name='Test'/>
+                                        <Identifier start='1335' end='1340' name='Test1'/>
+                                        <Identifier start='1341' end='1344' name='CON'/>
+                                    </NamespaceName>
+                                </ConstantVariable>
+                                <Field>
+                                    <Variable start='1346' end='1351' isDollared='false'>
+                                        <Identifier start='1346' end='1351' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <NamespaceName start='1354' end='1361' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1354' end='1361' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='1363' end='1402'>
+                        <InfixExpression start='1368' end='1401' operator='CONCAT'>
+                            <FieldAccess start='1368' end='1391' isNullsafe='true'>
+                                <ConstantVariable start='1368' end='1383'>
+                                    <NamespaceName start='1368' end='1383' isCurrent='false' isGlobal='true'>
+                                        <Identifier start='1369' end='1373' name='Test'/>
+                                        <Identifier start='1374' end='1379' name='Test1'/>
+                                        <Identifier start='1380' end='1383' name='CON'/>
+                                    </NamespaceName>
+                                </ConstantVariable>
+                                <Field>
+                                    <Variable start='1386' end='1391' isDollared='false'>
+                                        <Identifier start='1386' end='1391' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <NamespaceName start='1394' end='1401' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1394' end='1401' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1554' end='1680' isBracketed='false'>
+                <NamespaceName start='1564' end='1568' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1564' end='1568' name='Test'/>
+                </NamespaceName>
+                <Block start='1569' end='1680' isCurly='true'>
+                    <ExpressionStatement start='1571' end='1591'>
+                        <MethodInvocation start='1571' end='1590' isNullsafe='false'>
+                            <ConstantVariable start='1571' end='1580'>
+                                <NamespaceName start='1571' end='1580' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1571' end='1576' name='Test1'/>
+                                    <Identifier start='1577' end='1580' name='CON'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Method>
+                                <FunctionInvocation start='1582' end='1590'>
+                                    <FucntionName start='1582' end='1588'>
+                                        <Variable start='1582' end='1588' isDollared='false'>
+                                            <Identifier start='1582' end='1588' name='method'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1592' end='1613'>
+                        <MethodInvocation start='1592' end='1612' isNullsafe='true'>
+                            <ConstantVariable start='1592' end='1601'>
+                                <NamespaceName start='1592' end='1601' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1592' end='1597' name='Test1'/>
+                                    <Identifier start='1598' end='1601' name='CON'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Method>
+                                <FunctionInvocation start='1604' end='1612'>
+                                    <FucntionName start='1604' end='1610'>
+                                        <Variable start='1604' end='1610' isDollared='false'>
+                                            <Identifier start='1604' end='1610' name='method'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </ExpressionStatement>
+                    <EchoStatement start='1614' end='1646'>
+                        <InfixExpression start='1619' end='1645' operator='CONCAT'>
+                            <FieldAccess start='1619' end='1635' isNullsafe='false'>
+                                <ConstantVariable start='1619' end='1628'>
+                                    <NamespaceName start='1619' end='1628' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1619' end='1624' name='Test1'/>
+                                        <Identifier start='1625' end='1628' name='CON'/>
+                                    </NamespaceName>
+                                </ConstantVariable>
+                                <Field>
+                                    <Variable start='1630' end='1635' isDollared='false'>
+                                        <Identifier start='1630' end='1635' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <NamespaceName start='1638' end='1645' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1638' end='1645' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='1647' end='1680'>
+                        <InfixExpression start='1652' end='1679' operator='CONCAT'>
+                            <FieldAccess start='1652' end='1669' isNullsafe='true'>
+                                <ConstantVariable start='1652' end='1661'>
+                                    <NamespaceName start='1652' end='1661' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1652' end='1657' name='Test1'/>
+                                        <Identifier start='1658' end='1661' name='CON'/>
+                                    </NamespaceName>
+                                </ConstantVariable>
+                                <Field>
+                                    <Variable start='1664' end='1669' isDollared='false'>
+                                        <Identifier start='1664' end='1669' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <NamespaceName start='1672' end='1679' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1672' end='1679' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

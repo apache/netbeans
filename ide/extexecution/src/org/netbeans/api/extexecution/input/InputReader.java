@@ -33,6 +33,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
  * @author Petr Hejl
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.InputReader}
  */
+@Deprecated
 public interface InputReader extends Closeable {
 
     /**

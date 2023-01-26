@@ -504,7 +504,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         var = make.Variable(mods, "context", etree, null);
                         varTree.add(var);      
                         type =  workingCopy.getElements().getTypeElement("java.lang.StringBuffer");// NOI18N
-                        etree = make.QualIdent(type);;
+                        etree = make.QualIdent(type);
                         var = make.Variable(mods, "buffer", etree, null);
                         varTree.add(var);
                         type =  workingCopy.getElements().getTypeElement("org.xml.sax.EntityResolver");// NOI18N

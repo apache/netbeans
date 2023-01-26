@@ -22,7 +22,6 @@ import com.sun.tools.javac.code.Symbol;
 import java.io.IOException;
 import java.net.URI;
 import javax.lang.model.element.TypeElement;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;

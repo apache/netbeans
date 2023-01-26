@@ -47,6 +47,7 @@ import org.openide.util.Utilities;
  * @see #call()
  * @deprecated use {@link org.netbeans.api.extexecution.base.ProcessBuilder#getLocal()}
  */
+@Deprecated
 public final class ExternalProcessBuilder implements Callable<Process> {
 
     private static final Logger LOGGER = Logger.getLogger(ExternalProcessBuilder.class.getName());

@@ -2,159 +2,37 @@ Code completion result for source line:
 window.|location.toString();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+CLASS      location                        [PUBLIC]   issue215863.js
 CLASS      prototype                       [PUBLIC]   JS Platform
-METHOD     Image                           [PUBLIC,   JS Platform
-METHOD     Option                          [PUBLIC,   JS Platform
-METHOD     Worker                          [PUBLIC,   JS Platform
-METHOD     addEventListener(type: String,  [PUBLIC,   JS Platform
-METHOD     alert(): undefined              [PUBLIC,   JS Platform
-METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
-METHOD     atob(encodedData: String): Str  [PUBLIC,   JS Platform
-METHOD     back(): undefined               [PUBLIC,   JS Platform
-METHOD     blur(): undefined               [PUBLIC,   JS Platform
-METHOD     btoa(stringToEncode: String):   [PUBLIC,   JS Platform
-METHOD     clearImmediate(immediateID: Nu  [PUBLIC,   JS Platform
-METHOD     clearInterval(intervalID: Numb  [PUBLIC,   JS Platform
-METHOD     clearTimeout(timeoutID: Number  [PUBLIC,   JS Platform
-METHOD     close(): undefined              [PUBLIC,   JS Platform
-METHOD     confirm(message: String): Bool  [PUBLIC,   JS Platform
-METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform
-METHOD     defineProperties(obj: Object,   [PUBLIC,   JS Platform
-METHOD     defineProperty(obj: Object, pr  [PUBLIC,   JS Platform
-METHOD     dump(message: String): undefin  [PUBLIC,   JS Platform
-METHOD     entries(obj: Object): Array     [PUBLIC,   JS Platform
-METHOD     escape(regular: String): Strin  [PUBLIC,   JS Platform
-METHOD     find(aString: String, aCaseSen  [PUBLIC,   JS Platform
-METHOD     focus(): undefined              [PUBLIC,   JS Platform
-METHOD     forward(): undefined            [PUBLIC,   JS Platform
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
-METHOD     getAttention(): undefined       [PUBLIC,   JS Platform
-METHOD     getComputedStyle(element: Elem  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
-METHOD     getSelection(): Selection       [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
-METHOD     is(value1: String, value2: Str  [PUBLIC,   JS Platform
-METHOD     isExtensible(obj: Object): Boo  [PUBLIC,   JS Platform
-METHOD     isFrozen(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     isSealed(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     keys(obj: Object): Array        [PUBLIC,   JS Platform
-METHOD     matchMedia(mediaQueryString: S  [PUBLIC,   JS Platform
-METHOD     moveBy(deltaX: Number, deltaY:  [PUBLIC,   JS Platform
-METHOD     moveTo(x: Number, y: Number):   [PUBLIC,   JS Platform
-METHOD     open(strUrl: String, strWindow  [PUBLIC,   JS Platform
-METHOD     openDialog(url: String, name:   [PUBLIC,   JS Platform
-METHOD     postMessage(message: String, t  [PUBLIC,   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     print(): undefined              [PUBLIC,   JS Platform
-METHOD     prompt(text: String, value: St  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
-METHOD     removeEventListener(type: Stri  [PUBLIC,   JS Platform
-METHOD     resizeBy(xDelta: Number, yDelt  [PUBLIC,   JS Platform
-METHOD     resizeTo(iWidth: Number, iHeig  [PUBLIC,   JS Platform
-METHOD     scroll(xcoord: Number, ycoord:  [PUBLIC,   JS Platform
-METHOD     scrollBy(X: Number, Y: Number)  [PUBLIC,   JS Platform
-METHOD     scrollByLines(lines: Number):   [PUBLIC,   JS Platform
-METHOD     scrollByPages(pages: Number):   [PUBLIC,   JS Platform
-METHOD     scrollTo(xcoord: Number, ycoor  [PUBLIC,   JS Platform
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
-METHOD     setCursor(): undefined          [PUBLIC,   JS Platform
-METHOD     setImmediate(func: Function):   [PUBLIC,   JS Platform
-METHOD     setInterval(func: Function, de  [PUBLIC,   JS Platform
-METHOD     setTimeout(func: Function, del  [PUBLIC,   JS Platform
-METHOD     showModalDialog(uri: String):   [PUBLIC,   JS Platform
-METHOD     sizeToContent(): undefined      [PUBLIC,   JS Platform
-METHOD     stop(): undefined               [PUBLIC,   JS Platform
+METHOD     Worker                          [PUBLIC]   <font color=#999999>issue248132.js</font>
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
+METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
+METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
+METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
+METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
+METHOD     isFrozen(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     isSealed(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     keys(o: Object): String         [PUBLIC,   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
-METHOD     unescape(escaped: String): Str  [PUBLIC,   JS Platform
-METHOD     updateCommands(sCommandName):   [PUBLIC,   JS Platform
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
-FIELD      Components: Components          [PUBLIC]   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform
 FIELD      TEST: Test                      [PUBLIC]   issue220101.js
-FIELD      applicationCache: Object        [PUBLIC]   JS Platform
-FIELD      closed: Boolean                 [PUBLIC]   JS Platform
-FIELD      console: Console                [PUBLIC]   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
-FIELD      content: Window                 [PUBLIC]   JS Platform
-FIELD      controllers: XULControllers     [PUBLIC]   JS Platform
-FIELD      crypto: Crypto                  [PUBLIC]   JS Platform
-FIELD      defaultStatus: String           [PUBLIC]   JS Platform
-FIELD      dialogArguments: Object         [PUBLIC]   JS Platform
-FIELD      document: document              [PUBLIC]   JS Platform
-FIELD      frameElement: Element           [PUBLIC]   JS Platform
-FIELD      frames: Array                   [PUBLIC]   JS Platform
-FIELD      fullScreen: Boolean             [PUBLIC]   JS Platform
 FIELD      globalThree235206: Number       [PUBLIC]   issue235206.js
 FIELD      globalTwo235206: Number         [PUBLIC]   issue235206.js
-FIELD      history: History                [PUBLIC]   JS Platform
-FIELD      innerHeight: Number             [PUBLIC]   JS Platform
-FIELD      innerWidth: Number              [PUBLIC]   JS Platform
-FIELD      length: Number                  [PUBLIC]   JS Platform
-FIELD      localStorage: Storage           [PUBLIC]   JS Platform
-FIELD      location: Location              [PUBLIC]   JS Platform
-FIELD      locationbar: Object             [PUBLIC]   JS Platform
-FIELD      menubar: Object                 [PUBLIC]   JS Platform
-FIELD      name: DOMString                 [PUBLIC]   JS Platform
-FIELD      navigator: Navigator            [PUBLIC]   JS Platform
-FIELD      onabort: Function               [PUBLIC]   JS Platform
-FIELD      onbeforeunload: Function        [PUBLIC]   JS Platform
-FIELD      onblur: Function                [PUBLIC]   JS Platform
-FIELD      onchange: Function              [PUBLIC]   JS Platform
-FIELD      onclick: Function               [PUBLIC]   JS Platform
-FIELD      onclose: Function               [PUBLIC]   JS Platform
-FIELD      oncontextmenu: Function         [PUBLIC]   JS Platform
-FIELD      ondragdrop: Function            [PUBLIC]   JS Platform
-FIELD      onerror: Function               [PUBLIC]   JS Platform
-FIELD      onfocus: Function               [PUBLIC]   JS Platform
-FIELD      onhashchange: Function          [PUBLIC]   JS Platform
-FIELD      onkeydown: Function             [PUBLIC]   JS Platform
-FIELD      onkeypress: Function            [PUBLIC]   JS Platform
-FIELD      onkeyup: Function               [PUBLIC]   JS Platform
-FIELD      onload: Function                [PUBLIC]   JS Platform
-FIELD      onmousedown: Function           [PUBLIC]   JS Platform
-FIELD      onmousemove: Function           [PUBLIC]   JS Platform
-FIELD      onmouseout: Function            [PUBLIC]   JS Platform
-FIELD      onmouseover: Function           [PUBLIC]   JS Platform
-FIELD      onmouseup: Function             [PUBLIC]   JS Platform
-FIELD      onpagehide: Function            [PUBLIC]   JS Platform
-FIELD      onpageshow: Function            [PUBLIC]   JS Platform
-FIELD      onpaint: Function               [PUBLIC]   JS Platform
-FIELD      onpopstate: Function            [PUBLIC]   JS Platform
-FIELD      onreset: Function               [PUBLIC]   JS Platform
-FIELD      onresize: Function              [PUBLIC]   JS Platform
-FIELD      onscroll: Function              [PUBLIC]   JS Platform
-FIELD      onselect: Function              [PUBLIC]   JS Platform
-FIELD      onsubmit: Function              [PUBLIC]   JS Platform
-FIELD      onunload: Function              [PUBLIC]   JS Platform
-FIELD      opener: Window                  [PUBLIC]   JS Platform
-FIELD      outerHeight: Number             [PUBLIC]   JS Platform
-FIELD      outerWidth: Number              [PUBLIC]   JS Platform
-FIELD      pageXOffset: Number             [PUBLIC]   JS Platform
-FIELD      pageYOffset: Number             [PUBLIC]   JS Platform
-FIELD      parent: Window                  [PUBLIC]   JS Platform
-FIELD      performance: Object             [PUBLIC]   JS Platform
-FIELD      personalbar: Object             [PUBLIC]   JS Platform
-FIELD      screen: Screen                  [PUBLIC]   JS Platform
-FIELD      screenLeft: Number              [PUBLIC]   JS Platform
-FIELD      screenTop: Number               [PUBLIC]   JS Platform
-FIELD      screenX: Number                 [PUBLIC]   JS Platform
-FIELD      screenY: Number                 [PUBLIC]   JS Platform
-FIELD      scrollMaxX: Number              [PUBLIC]   JS Platform
-FIELD      scrollMaxY: Number              [PUBLIC]   JS Platform
-FIELD      scrollX: Number                 [PUBLIC]   JS Platform
-FIELD      scrollY: Number                 [PUBLIC]   JS Platform
-FIELD      scrollbars: Object              [PUBLIC]   JS Platform
-FIELD      self: Window                    [PUBLIC]   JS Platform
-FIELD      sessionStorage: Storage         [PUBLIC]   JS Platform
-FIELD      sidebar: Object                 [PUBLIC]   JS Platform
-FIELD      status: String                  [PUBLIC]   JS Platform
-FIELD      statusbar: Object               [PUBLIC]   JS Platform
-FIELD      toolbar: Object                 [PUBLIC]   JS Platform
-FIELD      top: Window                     [PUBLIC]   JS Platform
-FIELD      window: Window                  [PUBLIC]   JS Platform

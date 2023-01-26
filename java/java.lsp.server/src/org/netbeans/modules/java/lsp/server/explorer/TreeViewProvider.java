@@ -44,6 +44,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem.CollapsibleState;
 import org.netbeans.modules.java.lsp.server.explorer.TreeItem.IconDescriptor;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
@@ -399,6 +400,9 @@ public abstract class TreeViewProvider {
         v = data.getContextValues() == null ? "" : String.join(" ", data.getContextValues()); // NOI18N
 
         TreeItem ti = new TreeItem(id, n, expanded, v);
+        if (data.isLeaf()) {
+            ti.collapsibleState = CollapsibleState.None;
+        }
         
         if (data.getIconImage() != null && data.getIconImage() != DUMMY_NODE.getIcon(BeanInfo.ICON_COLOR_16x16)) {
             TreeNodeRegistry.ImageDataOrIndex idoi = nodeRegistry.imageOrIndex(data.getIconImage());

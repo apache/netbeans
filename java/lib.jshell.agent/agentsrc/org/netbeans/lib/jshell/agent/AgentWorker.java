@@ -143,7 +143,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
     }
     
     private Executor findExecutor() {
-        Object o = System.getProperties().get(PROPERTY_EXECUTOR);;
+        Object o = System.getProperties().get(PROPERTY_EXECUTOR);
         if (o instanceof Executor) {
             return this.userExecutor = (Executor)o;
         } else if (o instanceof String) {

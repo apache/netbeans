@@ -48,7 +48,7 @@ import org.openide.util.Lookup;
  * or {@link #getProjectProperties()} are not empty, their values will be combined with the {@link ActionMapping} settings.
  * To invoke a Project Action with a specific Configuration, place the Configuration instance in the Action's context Lookup:
  * <div class="nonnormative">
- * {@codesnippet invokeActionWithConfiguraiton}
+ * {@snippet file="org/netbeans/modules/gradle/actions/ConfigurableActionsProviderImplTest.java" region="invokeActionWithConfiguration"}
  * </div>
  * <p>
  * GradleExecConfigurations can be also declared by a Plugin that implements a

@@ -95,6 +95,12 @@ public final class Utilities {
     /** Operating system is Windows NT. */
     public static final int OS_WINNT = BaseUtilities.OS_WINNT;
 
+    /** Operating system is Windows 95. */
+    public static final int OS_WIN95 = BaseUtilities.OS_WIN95;
+
+    /** Operating system is Windows 98. */
+    public static final int OS_WIN98 = BaseUtilities.OS_WIN98;
+
     /** Operating system is Solaris. */
     public static final int OS_SOLARIS = BaseUtilities.OS_SOLARIS;
 
@@ -1319,6 +1325,32 @@ public final class Utilities {
         );
     }
 
+    /**
+     * This is for use in situations where a standard swing API,
+     * such as {@linkplain JOptionPane.show*} or {@linkplain JFileChooser.show*},
+     * is used to display a dialog. {@code null} should never be used
+     * as a dialog's parent because it
+     * frequently does the wrong thing in a multi-screen setup.
+     * <p>
+     * The use of the NetBeans API
+     * {@linkplain DialogDisplayer.getDefault.*}
+     * is encouraged to display a dialog, but stuff happens.
+     * @return A suitable parent component for swing dialog displayers.
+     * @since 9.26
+     */
+    // PR4739
+    public static Component findDialogParent() {
+        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (parent == null) {
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        }
+        if (parent == null) {
+            Frame[] f = Frame.getFrames();
+            parent = f.length == 0 ? null : f[f.length - 1];
+        }
+        return parent;
+    }
+
     /** @return size of the screen. The size is modified for Windows OS
      * - some points are subtracted to reflect a presence of the taskbar
      *
@@ -1810,6 +1842,42 @@ public final class Utilities {
         return actions;
     }
 
+    /**
+     * Loads a menu sequence from a path, given a specific context as Lookup. This variant will allow to use action's contextual presence, enablement or selection,
+     * based on Lookup contents. If the registered action implements a {@link ContextAwareAction}, an instance bound to the passed `context' will be created - if
+     * the context factory returns {@code null}, indicating the action is not appropriate for the context, the registration will be skipped.
+     * Use {@link #actionsGlobalContext()} to supply global context.
+     * 
+     * Any {@link Action} instances are returned as is;
+     * any {@link JSeparator} instances are translated to nulls.
+     * Warnings are logged for any other instances.
+     * @param path a path as given to {@link Lookups#forPath}, generally a layer folder name
+     * @param context the context passed to the action(s)
+     * @return a list of actions interspersed with null separators
+     * @since 7.14
+     */
+    public static List<? extends Action> actionsForPath(String path, Lookup context) {
+        List<Action> actions = new ArrayList<Action>();
+        for (Lookup.Item<Object> item : Lookups.forPath(path).lookupResult(Object.class).allItems()) {
+            if (Action.class.isAssignableFrom(item.getType())) {
+                Object instance = item.getInstance();
+                if (instance instanceof ContextAwareAction) {
+                    Object contextAwareInstance = ((ContextAwareAction)instance).createContextAwareInstance(context);
+                    if (contextAwareInstance == null) {
+                        Logger.getLogger(Utilities.class.getName()).log(Level.WARNING,"ContextAwareAction.createContextAwareInstance(context) returns null. That is illegal!" + " action={0}, context={1}", new Object[] {instance, context});
+                    } else {
+                        instance = contextAwareInstance;
+                    }
+                }
+                actions.add((Action) instance);
+            } else if (JSeparator.class.isAssignableFrom(item.getType())) {
+                actions.add(null);
+            } else {
+                Logger.getLogger(Utilities.class.getName()).log(Level.WARNING, "Unrecognized object of {0} found in actions path {1}", new Object[] {item.getType(), path});
+            }
+        }
+        return actions;
+    }
     /**
      * Global context for actions. Toolbar, menu or any other "global"
      * action presenters shall operate in this context.

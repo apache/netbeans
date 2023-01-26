@@ -47,7 +47,8 @@ public abstract class FileSystemCompat {
     private static final SystemAction[] NO_SYSTEM_ACTIONS = new SystemAction[0];
 
     /** Property name giving capabilities state. @deprecated No more capabilities. */
-    static final String PROP_CAPABILITIES = "capabilities"; // NOI18N    
+    @Deprecated
+    static final String PROP_CAPABILITIES = "capabilities"; // NOI18N
 
     /** hidden flag */
     private boolean hidden = false;

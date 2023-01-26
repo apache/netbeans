@@ -226,15 +226,15 @@ public final class OptionsFilter {
                 return ;
             }
 
-            List<Integer> childIndices = new LinkedList<Integer>();
-            List<Object> children = new LinkedList<Object>();
+            List<Integer> childIndices = new LinkedList<>();
+            List<Object> children = new LinkedList<>();
 
             Object[] ch = e.getChildren();
             
             // special case for root node: include all children
             if (ch == null) {
-                List l = Collections.list(((TreeNode)e.getTreePath().getLastPathComponent()).children());
-                ch = l.toArray(new Object[l.size()]);
+                List<? extends TreeNode> l = Collections.list(((TreeNode)e.getTreePath().getLastPathComponent()).children());
+                ch = l.toArray(new Object[0]);
             }
             for (Object c : ch) {
                 int i = getIndexOfChild(e.getTreePath().getLastPathComponent(), e.getTreePath().getLastPathComponent());

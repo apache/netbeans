@@ -60,7 +60,7 @@ public class Issue226152Test  extends JsTestBase{
 
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new LinkedList<>(ClasspathProviderImplAccessor.getJsStubs());
         
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/navigation/226152")));
         return Collections.singletonMap(

@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
@@ -75,8 +76,8 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
      */
     @Override
     public void annotate(ErrorInfo[] errors){
-        List added, removed, unchanged;
-        Collection newAnnotations;
+        List<LineSetAnnotation> added, removed, unchanged;
+        Collection<LineSetAnnotation> newAnnotations;
         
         // obtain data object
         DataObject doJsp;
@@ -126,18 +127,14 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
 
         // are there new annotations?
         if (!added.isEmpty()) {
-            final List finalAdded = added;
+            final List<LineSetAnnotation>  finalAdded = added;
             final DataObject doJsp2 = doJsp;
-            Runnable docRenderer = new Runnable() {
-                @Override
-                public void run() {
-                    LineCookie cookie = (LineCookie)doJsp2.getCookie(LineCookie.class);
-                    Line.Set lines = cookie.getLineSet();
-
-                    for (Iterator i=finalAdded.iterator();i.hasNext();) {
-                        LineSetAnnotation ann=(LineSetAnnotation)i.next();
-                        ann.attachToLineSet(lines);
-                    }
+            Runnable docRenderer = () -> {
+                LineCookie cookie = (LineCookie)doJsp2.getCookie(LineCookie.class);
+                Line.Set lines = cookie.getLineSet();
+                                
+                for (LineSetAnnotation ann : finalAdded) {
+                    ann.attachToLineSet(lines);
                 }
             };
 
@@ -151,9 +148,9 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
     
     /** Transforms ErrosInfo to Annotation
      */
-    private Collection getAnnotations(ErrorInfo[] errors, StyledDocument document) {
+    private Collection<LineSetAnnotation> getAnnotations(ErrorInfo[] errors, StyledDocument document) {
         BaseDocument doc = (BaseDocument) document;
-        HashMap map = new HashMap(errors.length);
+        Map<Integer, LineSetAnnotation> map = new HashMap<>(errors.length);
         for (int i = 0; i < errors.length; i ++) {
             ErrorInfo err = errors[i];
             int line = err.getLine();

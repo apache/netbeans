@@ -322,7 +322,7 @@ public class JavaKit extends NbEditorKit {
                         addAcceleretors(a, item, target);
                         item.setEnabled(a.isEnabled());
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if (helpID instanceof String)
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }else{
                         if (ExtKit.gotoSourceAction.equals(actionName)){

@@ -66,6 +66,7 @@ public class NbClassLoader extends URLClassLoader {
      * @see FileSystemCapability#fileSystems
      * @deprecated Misuses classpath.
     */
+    @Deprecated
     public NbClassLoader () {
         super(new URL[0], systemClassLoader());
         fast = false;
@@ -77,6 +78,7 @@ public class NbClassLoader extends URLClassLoader {
      * @see org.openide.filesystems.Repository#getFileSystems
      * @deprecated Misuses classpath.
      */
+    @Deprecated
     public NbClassLoader(InputOutput io) {
         super(new URL[0], systemClassLoader());
         fast = false;
@@ -101,6 +103,7 @@ public class NbClassLoader extends URLClassLoader {
      * @param fileSystems file systems to load classes from
      * @deprecated Misuses classpath.
     */
+    @Deprecated
     public NbClassLoader (FileSystem[] fileSystems) {
         super(new URL[0], systemClassLoader(), null);
         fast = false;
@@ -112,6 +115,7 @@ public class NbClassLoader extends URLClassLoader {
      * @param parent fallback class loader
      * @deprecated Misuses classpath.
     */
+    @Deprecated
     public NbClassLoader (FileSystem[] fileSystems, ClassLoader parent) {
         super(new URL[0], parent);
         fast = false;

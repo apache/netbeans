@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.lang.model.SourceVersion;
@@ -215,16 +216,23 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
     }
 
-    public static Supplier<List<TextEdit>> addImport(Document doc, ElementHandle<?> handle) {
+    public static Supplier<List<TextEdit>> addImport(Document doc, int offset, ElementHandle<?> handle) {
         return () -> {
             try {
+                AtomicReference<String> pkg = new AtomicReference<>();
                 TextEdit textEdit = modify2TextEdit(JavaSource.forDocument(doc), copy -> {
                     copy.toPhase(JavaSource.Phase.RESOLVED);
-                    Element e = handle.resolve(copy);
-                    if (e != null) {
-                        copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
+                    String fqn = SourceUtils.resolveImport(copy, copy.getTreeUtilities().pathFor(offset), handle.getQualifiedName());
+                    if (fqn != null) {
+                        int idx = fqn.lastIndexOf('.');
+                        if (idx >= 0) {
+                            pkg.set(fqn.substring(0, idx + 1));
+                        }
                     }
                 });
+                if (textEdit == null && pkg.get() != null) {
+                    textEdit = new TextEdit(offset, offset, pkg.get());
+                }
                 return textEdit != null ? Collections.singletonList(textEdit) : null;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -858,7 +866,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         @Override
-        public Completion createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
+        public Completion createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortText = new StringBuilder();
@@ -915,6 +923,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         private Completion createTypeItem(CompilationInfo info, String prefix, ElementHandle<TypeElement> handle, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType) {
+            int off = info.getSnapshot().getEmbeddedOffset(substitutionOffset);
             String name = elem.getQualifiedName().toString();
             int idx = name.lastIndexOf('.');
             String pkgName = idx < 0 ? EMPTY : name.substring(0, idx);
@@ -936,7 +945,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             } else if (info.getTreeUtilities().isModuleInfo(info.getCompilationUnit())) {
                 insertText.append(elem.getQualifiedName());
             } else {
-                TreePath tp = info.getTreeUtilities().pathFor(info.getSnapshot().getEmbeddedOffset(substitutionOffset));
+                TreePath tp = info.getTreeUtilities().pathFor(off);
                 if (tp != null && tp.getLeaf().getKind() == Tree.Kind.IMPORT) {
                     insertText.append(elem.getQualifiedName());
                     inImport = true;
@@ -955,7 +964,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     insertText.append('<'); //NOI18N
                     if (!insideNew || elem.getModifiers().contains(Modifier.ABSTRACT)
                         || info.getSourceVersion().compareTo(SourceVersion.RELEASE_7) < 0
-                        || !allowDiamond(info, substitutionOffset, type)) {
+                        || !allowDiamond(info, off, type)) {
                         while (tas.hasNext()) {
                             TypeMirror ta = tas.next();
                             insertText.append("${").append(cnt++).append(":");
@@ -1007,9 +1016,9 @@ public class JavaCompletionCollector implements CompletionCollector {
                             .addCommitCharacter('.');
             }
             if (handle != null) {
-                builder.documentation(getDocumentation(doc, offset, handle));
+                builder.documentation(getDocumentation(doc, off, handle));
                 if (!addSimpleName && !inImport) {
-                    builder.additionalTextEdits(addImport(doc, handle));
+                    builder.additionalTextEdits(addImport(doc, off, handle));
                 }
             }
             if (isDeprecated) {

@@ -35,6 +35,7 @@ public class OperationException extends IOException {
     private Exception ex;
 
     /** Default constructor.
+     * @param ex encapsuled exception
     */
     public OperationException(Exception ex) {
         this.ex = ex;

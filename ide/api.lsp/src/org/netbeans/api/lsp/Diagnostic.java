@@ -19,6 +19,7 @@
 package org.netbeans.api.lsp;
 
 import java.util.Collection;
+import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -39,14 +40,16 @@ public class Diagnostic {
     private final Severity severity;
     private final String code;
     private final LazyCodeActions actions;
+    private final URL codeDescription;
 
     private Diagnostic(Position startPosition, Position endPosition, String description,
-                       Severity severity, String code, LazyCodeActions actions) {
+                       Severity severity, String code, URL codeDescription, LazyCodeActions actions) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.description = description;
         this.severity = severity;
         this.code = code;
+        this.codeDescription = codeDescription;
         this.actions = actions;
     }
 
@@ -90,6 +93,14 @@ public class Diagnostic {
     public String getCode() {
         return code;
     }
+    
+    /**
+     * The URL where the problem is described.
+     * @return  URL with problem description
+     */
+    public URL getCodeDescription() {
+        return this.codeDescription;
+    }
 
     /**
      * The actions associated with the diagnostic.
@@ -115,6 +126,7 @@ public class Diagnostic {
         private final String description;
         private Severity severity;
         private String code;
+        private URL codeDescription;
         private LazyCodeActions actions;
 
         private Builder(Position startPosition, Position endPosition, String description) {
@@ -156,6 +168,16 @@ public class Diagnostic {
             this.code = code;
             return this;
         }
+        
+        /**
+         * Set the URL, where the problem is described
+         * @param codeDescription URL with problem description
+         * @return this builder
+         */
+        public Builder setCodeDescription(URL codeDescription) {
+            this.codeDescription = codeDescription;
+            return this;
+        }
 
         /**
          * Set the actions associated with the diagnostic.
@@ -174,7 +196,7 @@ public class Diagnostic {
          * @return the new Diagnostic
          */
         public Diagnostic build() {
-            return new Diagnostic(startPosition, endPosition, description, severity, code, actions);
+            return new Diagnostic(startPosition, endPosition, description, severity, code, codeDescription, actions);
         }
     }
 

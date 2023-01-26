@@ -44,6 +44,7 @@ import org.openide.util.NbBundle;
  * @version 1.0
  * @deprecated Without any replacement. This class is no longer functional.
  */
+@Deprecated
 public class MacroSavePanel extends javax.swing.JPanel {
     
     private final ResourceBundle bundle = NbBundle.getBundle(BaseKit.class);

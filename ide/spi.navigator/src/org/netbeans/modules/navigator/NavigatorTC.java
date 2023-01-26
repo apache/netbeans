@@ -316,7 +316,7 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
 
     @Override
     public UndoRedo getUndoRedo() {
-        if (selectedPanel == null || !(selectedPanel instanceof NavigatorPanelWithUndo)) {
+        if (!(selectedPanel instanceof NavigatorPanelWithUndo)) {
             return UndoRedo.NONE;
         }
         return ((NavigatorPanelWithUndo)selectedPanel).getUndoRedo();

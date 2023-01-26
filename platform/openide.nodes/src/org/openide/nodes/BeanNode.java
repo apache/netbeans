@@ -512,7 +512,7 @@ public class BeanNode<T> extends AbstractNode {
             // Propagate helpID's.
             Object help = propertyDescriptor[i].getValue("helpID"); // NOI18N
 
-            if ((help != null) && (help instanceof String)) {
+            if (help instanceof String) {
                 prop.setValue("helpID", help); // NOI18N
             }
 

@@ -33,22 +33,27 @@ import org.netbeans.modules.tomcat5.ui.nodes.TomcatInstanceNode;
  */
 public class EditServerXmlAction extends NodeAction {
     
+    @Override
     protected boolean enable(Node[] nodes) {
         return true;
     }
     
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
     
+    @Override
     public String getName() {
         return NbBundle.getMessage(SharedContextLogAction.class, "LBL_EditServerXmlAction"); // NOI18N
     }
     
+    @Override
     protected boolean asynchronous() {
         return false;
     }
     
+    @Override
     protected void performAction(Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);

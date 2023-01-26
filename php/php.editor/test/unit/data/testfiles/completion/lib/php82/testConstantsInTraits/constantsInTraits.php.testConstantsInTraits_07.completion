@@ -1,0 +1,14 @@
+Code completion result for source line:
+echo $this::|PROTECTED_TRAIT2 . PHP_EOL;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTraritMethod()      [STATIC]   ExampleTrait
+VARIABLE   ? $publicStaticFieldTrait       [STATIC]   ExampleTrait
+CONSTANT   IMPLICIT_PUBLIC_TRAIT 'Example  [PUBLIC]   ExampleTrait
+CONSTANT   IMPLICIT_PUBLIC_TRAIT2 'Exampl  [PUBLIC]   ExampleTrait2
+CONSTANT   PRIVATE_TRAIT 'ExampleTrait pr  [PRIVATE]  ExampleTrait
+CONSTANT   PRIVATE_TRAIT2 'ExampleTrait2   [PRIVATE]  ExampleTrait2
+CONSTANT   PROTECTED_TRAIT 'ExampleTrait   [PROTECTE  ExampleTrait
+CONSTANT   PROTECTED_TRAIT2 'ExampleTrait  [PROTECTE  ExampleTrait2
+CONSTANT   PUBLIC_TRAIT 'ExampleTrait pub  [PUBLIC]   ExampleTrait
+CONSTANT   PUBLIC_TRAIT2 'ExampleTrait2 p  [PUBLIC]   ExampleTrait2
+CONSTANT   class \ExampleTrait2            [PUBLIC]   Magic Constant

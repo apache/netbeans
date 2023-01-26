@@ -1,0 +1,34 @@
+class TestClass extends FinalClass {}
+      ---------
+HINT:Class "TestClass" cannot extend final class "FinalClass"
+readonly class TestReadonlyClass extends FinalReadonlyClass {}
+               -----------------
+HINT:Class "TestReadonlyClass" cannot extend final class "FinalReadonlyClass"
+abstract final class AbstractFinalClass {}
+                     ------------------
+HINT:Cannot use "final" modifier with "abstract" modifier
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+final abstract class FinalAbstractClass {}
+                     ------------------
+HINT:Cannot use "final" modifier with "abstract" modifier
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+readonly readonly class DuplicatedReadonlyClass {}
+         --------
+HINT:"readonly" is duplicated
+FIX:Remove modifier: readonly
+final final class DuplicatedFinalClass {}
+      -----
+HINT:"final" is duplicated
+FIX:Remove modifier: final
+abstract abstract class DuplicatedAbstractClass {}
+         --------
+HINT:"abstract" is duplicated
+FIX:Remove modifier: abstract
+final readonly final readonly class DuplicatedModifiersClass {}
+                     --------
+HINT:"final" is duplicated
+FIX:Remove modifier: final
+HINT:"readonly" is duplicated
+FIX:Remove modifier: readonly

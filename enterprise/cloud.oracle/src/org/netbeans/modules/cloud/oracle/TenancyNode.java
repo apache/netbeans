@@ -20,31 +20,50 @@ package org.netbeans.modules.cloud.oracle;
 
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
-import java.util.List;
-import javax.swing.Action;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
-import org.openide.loaders.DataNode;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.lookup.Lookups;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyNode extends AbstractNode {
+public class TenancyNode extends OCINode implements PropertyChangeListener {
     
     private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
     
-    public TenancyNode(OCIItem tenancy) {
-        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
+    private final OCISessionInitiator session;
+    
+    public TenancyNode(OCIItem tenancy, String disp, OCISessionInitiator session) {
+        super(tenancy, session);
+        this.session = session;
         setName(tenancy.getName()); 
-        setDisplayName(tenancy.getName());
+        setDisplayName(disp);
         setIconBaseWithExtension(ORCL_ICON);
+        // home region will be set as a description
         setShortDescription(tenancy.getDescription());
+        OCIManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OCIManager.getDefault()));
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        if (OCIManager.PROP_ACTIVE_PROFILE.equals(e.getPropertyName())) {
+            fireDisplayNameChange(null, null);
+        }
+    }
+
+    @NbBundle.Messages({
+        "HTML_EmphasizeName=<b>{0}</b>"
+    })
+    @Override
+    public String getHtmlDisplayName() {
+        if (OCIManager.getDefault().getActiveProfile() == session) {
+            return Bundle.HTML_EmphasizeName(getDisplayName());
+        } else {
+            return null;
+        }
     }
     
     @Override
@@ -60,38 +79,14 @@ public class TenancyNode extends AbstractNode {
     private Image badgeIcon(Image origImg) {
         return origImg;
     }
+
     @Override
-    public Action[] getActions(boolean context) {
-        return new Action[] {
-            
-        };
+    public boolean canDestroy() {
+        return OCIManager.getDefault().isConfiguredProfile((OCIProfile)session);
     }
-    
-    public static class TenancyChildFactory extends org.openide.nodes.ChildFactory<CompartmentItem>
-            implements ChangeListener {
 
-        private final OCIItem tenancy;
-
-        public TenancyChildFactory(OCIItem tenancy) {
-            this.tenancy = tenancy;
-        }
-
-        @Override
-        protected boolean createKeys(List<CompartmentItem> toPopulate) {
-            toPopulate.addAll(OCIManager.getDefault().getCompartments(tenancy.getId()));
-            return true;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            
-        }
-
-        @Override
-        protected Node createNodeForKey(CompartmentItem key) {
-            CompartmentNode node = new CompartmentNode(key);
-            return node;
-        }
+    @Override
+    public void destroy() throws IOException {
+        OCIManager.getDefault().removeConnectedProfile((OCIProfile)session);
     }
-    
 }

@@ -182,7 +182,7 @@ public class CMPMappingModel {
         while (keyIt.hasNext()) {
             String key = keyIt.next();
             ColumnData[] value = cmrFieldMapping.get(key);
-            List l = Arrays.asList(value);
+            List<ColumnData> l = Arrays.asList(value);
             Object otherValue = other.cmrFieldMapping.get(key);
             if (otherValue == null || 
                 !l.equals(Arrays.asList(other.cmrFieldMapping.get(key)))) {

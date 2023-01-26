@@ -53,6 +53,27 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         BaseDocument doc = (BaseDocument) document;
 
         int dotPos = caret.getDot();
+        int length = doc.getLength();
+
+        // Primitive handling of backslash as escape character, far from accurate
+        // but would work most of the time.
+        if ((dotPos > 0) && "\\".equals(doc.getText(dotPos - 1, 1))) {
+            return false;
+        }
+
+        if (c == ' ' && dotPos > 0 && dotPos <= length - 1) {
+            try {
+                String sb = doc.getText(dotPos - 1, 2);
+                if ("{}".equals(sb) || "[]".equals(sb)) {
+                    doc.insertString(dotPos, "  ", null);
+                    caret.setDot(dotPos + 1);
+                    return true;
+                }
+            } catch (BadLocationException ble) {
+                Exceptions.printStackTrace(ble);
+            }
+        }
+
         // Bracket matching on <% %>
         if (c == ' ' && dotPos >= 2) {
             try {
@@ -60,7 +81,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                 if ("%=".equals(s) && dotPos >= 3) { // NOI18N
                     s = doc.getText(dotPos - 3, 3);
                 }
-                if ("<%".equals(s) || "<%=".equals(s) || "{{".equals(s)) { // NOI18N
+                if ("<%".equals(s) || "<%=".equals(s)) { // NOI18N
                     doc.insertString(dotPos, "  ", null);
                     caret.setDot(dotPos + 1);
                     return true;
@@ -72,19 +93,26 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             return false;
         }
 
-        if ((c == '{') && (dotPos > 0)) {
+        if ((c == '{')) {
             try {
-                String s = dotPos > 1 ? doc.getText(dotPos - 2, 2) : doc.getText(dotPos - 1, 1);
-                if ("{".equals(s) || (s.endsWith("{") && (s.length() > 1) && (s.charAt(0) != '{'))) {
-                    doc.insertString(dotPos, "{}}", null);
-                    caret.setDot(dotPos + 1);
-                    return true;
-                }
+                doc.insertString(dotPos, "{}", null);
+                caret.setDot(dotPos + 1);
             } catch (BadLocationException ble) {
                 Exceptions.printStackTrace(ble);
             }
 
-            return false;
+            return true;
+        }
+
+        if ((c == '[')) {
+            try {
+                doc.insertString(dotPos, "[]", null);
+                caret.setDot(dotPos + 1);
+            } catch (BadLocationException ble) {
+                Exceptions.printStackTrace(ble);
+            }
+
+            return true;
         }
 
         if ((c == '\'') || (c == '"')) {
@@ -101,16 +129,25 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             char[] line = doc.getChars(lineStart, lineEnd - lineStart);
 
             int quotes = 0;
-            for (char d : line) {
+            for (int i = 0; i < line.length; i++) {
+                char d = line[i];
+                if ('\\' == d) {
+                    i++;
+                    continue;
+                }
                 if (c == d) quotes++;
             }
+
             // Try to keep the number of quotes even
             if ( quotes % 2 == 1 ) {
                 // Inserting one if the number of quotes are odd
                 return false;
             } else {
-                // Inserting double if the number of quotes are even
-                doc.insertString(sstart, String.valueOf(c) + String.valueOf(c), null);
+                if (dotPos > doc.getLength() - 1 || !doc.getText(dotPos, 1).equals(String.valueOf(c))) {
+                    // Inserting double if the number of quotes are even
+                    // Unless, the next character is a quote as well
+                    doc.insertString(sstart, String.valueOf(c) + String.valueOf(c), null);
+                }
                 caret.setDot(dotPos + 1);
                 return true;
             }
@@ -191,23 +228,29 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             }
         }
 
-        if ((ch == ' ') && (dotPos > 1) && (dotPos <= doc.getLength() - 3)) {
-            String s = doc.getText(dotPos - 2, 5);
-            if ("{{ }}".equals(s)) {
+        if ((ch == ' ') && (dotPos > 0) && (dotPos <= doc.getLength() - 2)) {
+            String s = doc.getText(dotPos - 1, 3);
+            if ("{ }".equals(s) || "[ ]".equals(s)) {
                 doc.remove(dotPos, 1);
                 return true;
             }
         }
 
-        if ((ch == '{') && (dotPos > 0) && (dotPos <= doc.getLength() - 2)) {
-            String s = doc.getText(dotPos - 1, 3);
-            if ("{}}".equals(s)) {
-                doc.remove(dotPos - 1, 3);
-                caret.setDot(dotPos - 1);
+        if ((ch == '{') && (dotPos <= doc.getLength() - 1)) {
+            String s = doc.getText(dotPos, 1);
+            if ("}".equals(s)) {
+                doc.remove(dotPos, 1);
                 return true;
             }
         }
 
+        if ((ch == '[') && (dotPos <= doc.getLength() - 1)) {
+            String s = doc.getText(dotPos, 1);
+            if ("]".equals(s)) {
+                doc.remove(dotPos, 1);
+                return true;
+            }
+        }
         if (((ch == '\'') || (ch == '"')) && (dotPos <= doc.getLength() - 1)) {
             String s = doc.getText(dotPos, 1);
             if (String.valueOf(ch).equals(s)) {

@@ -263,10 +263,28 @@ public final class GradleSettings {
         return getPreferences().get(PROP_GRADLE_VERSION, GradleVersion.current().getVersion());
     }
 
+    /**
+     * Gradle removed this option in version 8.0. NetBeans is going to remove
+     * the UI option in NetBeans 20, beyond that point this option would be
+     * available to keep binary compatibility, but would be un-effective.
+     * 
+     * @param b
+     * @deprecated Do not use, could produce undesirable results.
+     */
+    @Deprecated
     public void setNoRebuild(boolean b) {
         getPreferences().putBoolean(PROP_OPT_NO_REBUILD, b);
     }
 
+    /**
+     * Gradle removed this option in version 8.0. NetBeans is going to remove
+     * the UI option in NetBeans 20, beyond that point this option would be
+     * available to keep binary compatibility, but would return {@code false}.
+     * 
+     * @return whether the {@code --no-rebuild} command line option should be set by default.
+     * @deprecated Do not use, could produce undesirable results.
+     */
+    @Deprecated
     public boolean getNoRebuild() {
         return getPreferences().getBoolean(PROP_OPT_NO_REBUILD, false);
     }

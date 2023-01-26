@@ -25,7 +25,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -43,6 +42,7 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.options.editor.spi.PreviewProvider;
+import org.netbeans.modules.options.util.LanguagesComparator;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -111,7 +111,7 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             ArrayList<String> mimeTypes = new ArrayList<String>();
             mimeTypes.addAll(selector.getMimeTypes());
-            Collections.sort(mimeTypes, new LanguagesComparator());
+            Collections.sort(mimeTypes, LanguagesComparator.INSTANCE);
 
             String preSelectMimeType = null;
             for (String mimeType : mimeTypes) {
@@ -366,17 +366,4 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
     private CustomizerSelector selector;
     private PropertyChangeListener weakListener;
 
-    private static final class LanguagesComparator implements Comparator<String> {
-        public int compare(String mimeType1, String mimeType2) {
-            if (mimeType1.length() == 0)
-                return mimeType2.length() == 0 ? 0 : -1;
-            if (mimeType2.length() == 0)
-                return 1;
-            
-            String langName1 = EditorSettings.getDefault().getLanguageName(mimeType1);
-            String langName2 = EditorSettings.getDefault().getLanguageName(mimeType2);
-            
-            return langName1.compareTo(langName2);
-        }
-    }
 }

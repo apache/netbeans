@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="9">
+  <xsd:annotation>
+    <xsd:documentation>
+
+      Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+      
+      This program and the accompanying materials are made available under the
+      terms of the Eclipse Public License v. 2.0, which is available at
+      http://www.eclipse.org/legal/epl-2.0.
+      
+      This Source Code may also be made available under the following Secondary
+      Licenses when the conditions for such availability set forth in the
+      Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+      version 2 with the GNU Classpath Exception, which is available at
+      https://www.gnu.org/software/classpath/license.html.
+      
+      SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+      
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      <![CDATA[
+      This is the XML Schema for the application or module declared permissions 9.
+      The declared permissions file must be named "META-INF/permissions.xml" in the
+      application's ear file, or in a module's META-INF/permissions.xml if
+      the module is deployed standalone.  All declared permissions must indicate
+      the declared permissions schema by using the Jakarta EE namespace:
+      
+      https://jakarta.ee/xml/ns/jakartaee
+      
+      and indicate the version of the schema by
+      using the version element as shown below:
+      
+      <permissions xmlns="https://jakarta.ee/xml/ns/jakartaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+      	https://jakarta.ee/xml/ns/jakartaee/permissions_9.xsd"
+      version="9">
+      ...
+      </permisssions>
+      
+      The instance documents may indicate the published version of
+      the schema using the xsi:schemaLocation attribute for Jakarta EE
+      namespace with the following location:
+      
+      https://jakarta.ee/xml/ns/jakartaee/permissions_9.xsd
+      
+      ]]>
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      The following conventions apply to all Jakarta EE
+      deployment descriptor elements unless indicated otherwise.
+      
+      - In elements that specify a pathname to a file within the
+      same JAR file, relative filenames (i.e., those not
+      starting with "/") are considered relative to the root of
+      the JAR file's namespace.  Absolute filenames (i.e., those
+      starting with "/") also specify names in the root of the
+      JAR file's namespace.  In general, relative names are
+      preferred.  The exception is .war files where absolute
+      names are preferred for consistency with the Servlet API.
+      
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:include schemaLocation="jakartaee_9.xsd"/>
+
+
+<!-- **************************************************** -->
+
+  <xsd:element name="permissions">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        The permissions element is the root element in a
+        declared permissions file. The declared permissions file
+        declares the code based permissions granted to classes and libraries 
+        packaged in the application archive, or in a module if the module is
+        deployed standalone.
+        
+      </xsd:documentation>
+    </xsd:annotation>
+
+<!-- **************************************************** -->
+
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="permission"
+                     maxOccurs="unbounded"
+                     minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>
+
+              Each permission element declares a permission.  If no permission
+              elements are declared, the application or module needs no special
+              permissions, and the Jakarta EE product may deploy it with no
+              permissions beyond those necessary for the operation of the
+              container.
+              
+              For details on the definition of the 'name' and 'actions'
+              elements, refer to the Java API documentation for the class
+              java.security.Permission, and its derived classes.
+              
+            </xsd:documentation>
+          </xsd:annotation>
+
+<!-- **************************************************** -->
+
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element type="jakartaee:fully-qualified-classType"
+                           name="class-name"/>
+              <xsd:element type="jakartaee:string"
+                           name="name"
+                           minOccurs="0"/>
+              <xsd:element type="jakartaee:string"
+                           name="actions"
+                           minOccurs="0"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="version"
+                     type="jakartaee:dewey-versionType"
+                     fixed="9"
+                     use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+
+            The required value for the version is 9.
+            
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>

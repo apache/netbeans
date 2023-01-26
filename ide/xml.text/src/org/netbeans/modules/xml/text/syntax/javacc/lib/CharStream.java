@@ -47,6 +47,7 @@ public interface CharStream {
      * @deprecated 
      * @see #getEndColumn
      */
+    @Deprecated
     public abstract int getColumn();
 
     /**
@@ -54,6 +55,7 @@ public interface CharStream {
      * @deprecated 
      * @see #getEndLine
      */
+    @Deprecated
     public abstract int getLine();
 
     /**

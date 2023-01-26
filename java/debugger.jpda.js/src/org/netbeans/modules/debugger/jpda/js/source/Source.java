@@ -166,7 +166,7 @@ public final class Source {
         if (fieldContent == null && fieldURL == null) {
             // There is a Data inner class instead:
             Field fieldData = sourceVar.getField(SOURCE_VAR_DATA);
-            if (fieldData != null && fieldData instanceof ObjectVariable) {
+            if (fieldData instanceof ObjectVariable) {
                 fieldURL = ((ObjectVariable) fieldData).getField(SOURCE_VAR_URL);
                 fieldContent = ((ObjectVariable) fieldData).getField(SOURCE_VAR_DATA_ARRAY);
             }

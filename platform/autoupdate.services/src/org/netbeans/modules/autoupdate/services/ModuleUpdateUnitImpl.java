@@ -83,7 +83,7 @@ public class ModuleUpdateUnitImpl extends UpdateUnitImpl {
                 UpdateElementImpl visibleImpl = Trampoline.API.impl(visibleAncestor.getInstalled());
                 String visTargetCluster = null;
                 String visCat = null;
-                if (visibleImpl != null && visibleImpl instanceof ModuleUpdateElementImpl) {
+                if (visibleImpl instanceof ModuleUpdateElementImpl) {
                     visTargetCluster = ((ModuleUpdateElementImpl) visibleImpl).getInstallationCluster();
                     visCat = visibleImpl.getCategory();
                 }

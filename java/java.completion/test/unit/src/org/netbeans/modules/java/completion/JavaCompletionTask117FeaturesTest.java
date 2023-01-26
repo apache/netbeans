@@ -50,6 +50,20 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
         return suite;
     }
 
+    public void testCaseLabels_1() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 998, null, "AutoCompletion_CaseLabels_PatternMatchingSwitch_1.pass", getLatestSource());
+    }
+
+    public void testCaseLabels_2() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1004, null, "AutoCompletion_CaseLabels_PatternMatchingSwitch_2.pass", getLatestSource());
+    }
+
+    public void testCaseLabels_3() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1011, "s, ", "AutoCompletion_CaseLabels_PatternMatchingSwitch_3.pass", getLatestSource());
+    }
 
     public void testVariableNameSuggestion() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
@@ -58,24 +72,24 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
 
     public void testClassMembersAutoCompletion_GuardedPattern() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1085, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1087, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch.pass", getLatestSource());
     }
 
     public void testClassMembersAutoCompletion_GuardedPattern_1() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1093, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_1.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1095, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_1.pass", getLatestSource());
     }
     public void testClassMembersAutoCompletion_GuardedPattern_2() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1113, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_2.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1115, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_2.pass", getLatestSource());
     }
     public void testClassMembersAutoCompletion_ParanthesizedPattern() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1200, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1204, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch.pass", getLatestSource());
     }
     public void testClassMembersAutoCompletion_ParanthesizedPattern_1() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 1224, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch_1.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1228, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch_1.pass", getLatestSource());
     }
     public void noop() {
     }

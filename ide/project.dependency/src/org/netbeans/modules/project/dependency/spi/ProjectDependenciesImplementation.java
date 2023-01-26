@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.project.dependency.spi;
 
+
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
@@ -29,9 +29,8 @@ import org.netbeans.modules.project.dependency.ProjectOperationException;
  * @author sdedic
  */
 public interface ProjectDependenciesImplementation {
-    @NonNull
-    public ArtifactSpec getProjectArtifact();
-    
+    // TODO: change to CompletionStage<>, as the implementation is likely to use some dedicated
+    // thread to evaluate the project.
     @NonNull
     public DependencyResult findDependencies(@NonNull ProjectDependencies.DependencyQuery query)
             throws ProjectOperationException;

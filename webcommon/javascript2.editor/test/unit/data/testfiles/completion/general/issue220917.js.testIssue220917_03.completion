@@ -2,10 +2,4 @@ Code completion result for source line:
 document.query|Selector();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     queryCommandEnabled(command: S  [PUBLIC,   JS Platform
-METHOD     queryCommandIndeterm(command:   [PUBLIC,   JS Platform
-METHOD     queryCommandState(command: Str  [PUBLIC,   JS Platform
-METHOD     queryCommandSupported(command:  [PUBLIC,   JS Platform
-METHOD     queryCommandValue(command: Str  [PUBLIC,   JS Platform
-METHOD     querySelector(): Element        [PUBLIC,   JS Platform
-METHOD     querySelectorAll(): NodeList    [PUBLIC,   JS Platform
+METHOD     querySelector()                 [PUBLIC]   issue220917.js

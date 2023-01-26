@@ -30,7 +30,7 @@ public interface POMErrorFixBase {
     
     /** Gets the UI description for this rule. It is fine to return null
      * to get the default behavior. Notice that the Preferences node is a copy
-     * of the node returned from {link:Configuration.getPreferences()}. This is in oder to permit
+     * of the node returned from {link:Configuration.getPreferences()}. This is in order to permit
      * canceling changes done in the options dialog.<BR>
      * It is fine to return null.
      * @param node Preferences node the customizer should work on.

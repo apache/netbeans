@@ -1262,6 +1262,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/newInInitializers_01.php");
     }
 
+    public void testNewInInitializers_02() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_02.php");
+    }
+
     public void testNewInInitializersWithClassConstantError() throws Exception {
         checkErrors("testfiles/parser/php81/newInInitializersWithClassConstantError.php");
     }
@@ -1294,9 +1298,17 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/enumerations_02.php");
     }
 
+    public void testEnumerations_03() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_03.php");
+    }
+
     public void testEnumAsTypeName() throws Exception {
         // We can use "enum" as a type name
         checkErrors("testfiles/parser/php81/enumAsTypeName.php");
+    }
+
+    public void testFirstClassCallableSyntax_01() throws Exception {
+        checkErrors("testfiles/parser/php81/firstClassCallableSyntax_01.php");
     }
 
     public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
@@ -1345,6 +1357,38 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testTreatNamespacedNamesAsSingleTokenError_03b() throws Exception {
         checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03b.php");
+    }
+
+    public void testGH4684() throws Exception {
+        checkErrors("testfiles/parser/gh4684.php");
+    }
+
+    public void testReadonlyClass_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyClass_01.php");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        checkErrors("testfiles/parser/php82/fetchPropertiesInConstExpressions_01.php");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyTraitError_01.php");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyInterfaceError_01.php");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyEnumError_01.php");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        checkErrors("testfiles/parser/php82/constantsInTraits_01.php");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php82/dnfTypes_01.php");
     }
 
 }

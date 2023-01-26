@@ -48,12 +48,12 @@ public class JsDocParser {
      * @return map of blocks, key is end offset of each block
      */
     public static Map<Integer, JsDocComment> parse(Snapshot snapshot) {
-        Map<Integer, JsDocComment> blocks = new HashMap<Integer, JsDocComment>();
+        Map<Integer, JsDocComment> blocks = new HashMap<>();
 
         if (snapshot == null || snapshot.getTokenHierarchy() == null) {
             return blocks;
         }
-        
+
         TokenSequence tokenSequence = snapshot.getTokenHierarchy().tokenSequence(JsTokenId.javascriptLanguage());
         if (tokenSequence == null) {
             return blocks;
@@ -70,10 +70,8 @@ public class JsDocParser {
                         || commentType == JsDocCommentType.DOC_NO_CODE_END
                         || commentType == JsDocCommentType.DOC_SHARED_TAG_END) {
                     blocks.put(offsetRange.getEnd(), new JsDocComment(offsetRange, commentType, Collections.<JsDocElement>emptyList()));
-                    continue;
                 } else {
                     blocks.put(offsetRange.getEnd(), parseCommentBlock(tokenSequence, offsetRange, commentType));
-                    continue;
                 }
             }
         }
@@ -83,8 +81,6 @@ public class JsDocParser {
 
     private static boolean isTextToken(Token<? extends JsDocumentationTokenId> token) {
         return (token.id() != JsDocumentationTokenId.ASTERISK && token.id() != JsDocumentationTokenId.COMMENT_DOC_START);
-//        return (token.id() != JsDocumentationTokenId.ASTERISK && token.id() != JsDocumentationTokenId.COMMENT_SHARED_BEGIN
-//                && token.id() != JsDocumentationTokenId.COMMENT_DOC_START);
     }
 
     private static TokenSequence getEmbeddedJsDocTS(TokenSequence ts) {
@@ -94,7 +90,7 @@ public class JsDocParser {
     private static JsDocComment parseCommentBlock(TokenSequence ts, OffsetRange range, JsDocCommentType commentType) {
         TokenSequence ets = getEmbeddedJsDocTS(ts);
 
-        List<JsDocElement> jsDocElements = new ArrayList<JsDocElement>();
+        List<JsDocElement> jsDocElements = new ArrayList<>();
         Token<? extends JsDocumentationTokenId> token;
         JsDocElementType type = null;
         boolean afterDescription = false;
@@ -103,8 +99,8 @@ public class JsDocParser {
         while (ets.moveNext()) {
             token = ets.token();
             if (!isTextToken(token)) {
-                boolean isAsterixType = false; 
-                if (token.id() == JsDocumentationTokenId.ASTERISK) {   
+                boolean isAsterixType = false;
+                if (token.id() == JsDocumentationTokenId.ASTERISK) {
                     // we need to check type {*}
                     String currentText = sb.toString();
                     int curlyOpen = currentText.lastIndexOf('{');
@@ -141,7 +137,6 @@ public class JsDocParser {
                 }
 
                 while (ets.moveNext() && ets.token().id() == JsDocumentationTokenId.WHITESPACE) {
-                    continue;
                 }
 
                 offset = ets.offset();
@@ -178,7 +173,7 @@ public class JsDocParser {
     private static JsDocElementType getJsDocKeywordType(String string) {
         return JsDocElementType.fromString(string);
     }
-    
+
     private static boolean textEquals(CharSequence text1, CharSequence text2) {
         if (text1 == text2) {
             return true;
@@ -194,7 +189,7 @@ public class JsDocParser {
         }
         return false;
     }
-    
+
     private static boolean startsWith(CharSequence text, CharSequence prefix) {
         int p_length = prefix.length();
         if (p_length > text.length()) {

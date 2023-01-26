@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.fail;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.JellyTestCase;
 import org.netbeans.jellytools.NewProjectWizardOperator;
@@ -47,8 +46,6 @@ import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.operators.Operator;
 import org.openide.util.Exceptions;
 import javax.swing.JTextField;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import org.netbeans.jellytools.MainWindowOperator;
 import org.netbeans.jellytools.ProjectsTabOperator;
 import org.netbeans.jellytools.nodes.Node;
@@ -172,7 +169,7 @@ public class GeneralKnockout extends JellyTestCase {
             int count = 0;
             while (!text.isEmpty() && count < 20) {
                 eo.pushKey(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
-                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");;
+                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");
                 log(">>" + text + "<<");
                 count++;
             }

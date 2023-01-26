@@ -20,8 +20,6 @@ package org.netbeans.modules.web.jsf.editor.index;
 
 import java.util.ArrayList;
 import java.util.List;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.web.jsf.editor.index.ResourcesMappingModel.Resource;

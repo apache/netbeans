@@ -194,6 +194,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * Values: java.lang.Integer
      * @deprecated property no longer populated; deprecated without replacement.
      */
+    @Deprecated
     public static final String LINE_LIMIT_PROP = "line-limit"; // NOI18N
 
     /**
@@ -209,6 +210,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * especially when processing lines by syntax scanner.
      * @deprecated property no longer populated; deprecated without replacement.
      */
+    @Deprecated
     public static final String LINE_BATCH_SIZE = "line-batch-size"; // NOI18N
 
     /** Line separator is marked by CR (Macintosh) */
@@ -464,6 +466,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @deprecated Use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public BaseDocument(Class kitClass, boolean addToRegistry) {
         super(new EditorDocumentContent());
 
@@ -640,6 +643,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @deprecated Please use Lexer instead, for details see
      *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
      */
+    @Deprecated
     public SyntaxSupport getSyntaxSupport() {
         if (syntaxSupport == null) {
             EditorKit kit = getEditorKit();
@@ -1280,6 +1284,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
     /** Fire the change event to repaint the given block of text.
      * @deprecated Please use <code>JTextComponent.getUI().damageRange()</code> instead.
      */
+    @Deprecated
     public void repaintBlock(int startOffset, int endOffset) {
         BaseDocumentEvent evt = getDocumentEvent(startOffset,
                 endOffset - startOffset, DocumentEvent.EventType.CHANGE, null);
@@ -1563,6 +1568,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @deprecated Please use Editor Indentation API instead, for details see
      *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
      */
+    @Deprecated
     public int getShiftWidth() {
         return shiftWidth;
     }
@@ -1571,6 +1577,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @deprecated Don't use implementation class of editor kits. Use mime type,
      *   <code>MimePath</code> and <code>MimeLookup</code>.
      */
+    @Deprecated
     public final Class getKitClass() {
         return getEditorKit().getClass();
     }
@@ -1707,6 +1714,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * 
      * @deprecated Please use {@link BaseDocument#runAtomic(java.lang.Runnable)} instead.
      */
+    @Deprecated
     @Override
     public final void atomicLock () {
         if (LOG.isLoggable(Level.FINER)) {
@@ -1766,6 +1774,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * 
      * @deprecated Please use {@link BaseDocument#runAtomic(java.lang.Runnable)} instead.
      */
+    @Deprecated
     @Override
     public final synchronized void atomicUnlock () {
         atomicUnlockImpl ();
@@ -1996,6 +2005,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      *
      * @deprecated Use addPostModificationDocumentListener(DocumentListener)
      */
+    @Deprecated
     public void setPostModificationDocumentListener(DocumentListener listener) {
         this.postModificationDocumentListener = listener;
     }

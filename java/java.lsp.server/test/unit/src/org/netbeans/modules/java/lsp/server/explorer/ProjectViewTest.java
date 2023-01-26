@@ -188,6 +188,11 @@ public class ProjectViewTest extends NbTestCase {
         }
 
         @Override
+        public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
         public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
             return CompletableFuture.completedFuture(null);
         }

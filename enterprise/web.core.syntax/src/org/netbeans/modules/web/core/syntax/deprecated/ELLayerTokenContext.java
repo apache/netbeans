@@ -31,7 +31,7 @@ import org.netbeans.editor.TokenContextPath;
 * @author Petr Pisl
 * @deprecated Will be replaced by Semantic Coloring
 */
-
+@Deprecated
 public class ELLayerTokenContext extends TokenContext {
 
     // Token category-ids

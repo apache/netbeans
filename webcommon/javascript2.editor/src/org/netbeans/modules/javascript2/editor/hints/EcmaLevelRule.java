@@ -53,48 +53,36 @@ public abstract class EcmaLevelRule extends JsAstRule {
     }
 
     private static void reindexFile(final FileObject fo) {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                //refresh Action Items for this file
-                IndexingManager.getDefault().refreshIndexAndWait(fo.getParent().toURL(),
-                        Collections.singleton(fo.toURL()), true, false);
-            }
+        RP.post(() -> {
+            //refresh Action Items for this file
+            IndexingManager.getDefault().refreshIndexAndWait(fo.getParent().toURL(),
+                    Collections.singleton(fo.toURL()), true, false);
         });
     }
 
     private static void refreshDocument(final FileObject fo) throws IOException {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DataObject dobj = DataObject.find(fo);
-                    EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
-                    StyledDocument document = editorCookie.openDocument();
-                    forceReparse(document);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        RP.post(() -> {
+            try {
+                DataObject dobj = DataObject.find(fo);
+                EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
+                StyledDocument document = editorCookie.openDocument();
+                forceReparse(document);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         });
 
     }
 
     private static void forceReparse(final Document doc) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                NbEditorDocument nbdoc = (NbEditorDocument) doc;
-                nbdoc.runAtomic(new Runnable() {
-                    @Override
-                    public void run() {
-                        MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
-                        if (mti != null) {
-                            mti.tokenHierarchyControl().rebuild();
-                        }
-                    }
-                });
-            }
+        SwingUtilities.invokeLater(() -> {
+            NbEditorDocument nbdoc = (NbEditorDocument) doc;
+            nbdoc.runAtomic(() -> {
+                MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
+                if (mti != null) {
+                    mti.tokenHierarchyControl().rebuild();
+                }
+            });
         });
     }
 }

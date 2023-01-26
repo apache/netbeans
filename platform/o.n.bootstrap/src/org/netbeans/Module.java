@@ -605,6 +605,14 @@ public abstract class Module extends ModuleInfo {
     void unregisterInstrumentation() {
         NbInstrumentation.unregisterAgent(instr);
     }
+    
+    /**
+     * Release references to the ClassLoader. Package-private for now as only (?) FixedModule
+     * should retain the CL instance.
+     */
+    void releaseClassLoader() {
+       this.classloader = null; 
+    }
 
     /** Struct representing a package exported from a module.
      * @since org.netbeans.core/1 > 1.4

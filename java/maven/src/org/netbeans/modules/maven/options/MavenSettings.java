@@ -85,6 +85,7 @@ public final class MavenSettings  {
     private static final String PROP_PLUGIN_POLICY = "pluginUpdatePolicy"; //NOI18N
     private static final String PROP_FAILURE_BEHAVIOUR = "failureBehaviour"; //NOI18N
     private static final String PROP_USE_REGISTRY = "usePluginRegistry"; //NOI18N
+    public static final String PROP_NETWORK_PROXY = "networkProxy";
       
     private static final MavenSettings INSTANCE = new MavenSettings();
     
@@ -159,7 +160,7 @@ public final class MavenSettings  {
         //import from older versions
         String defOpts = getPreferences().get(PROP_DEFAULT_OPTIONS, null);
         if (defOpts == null) {
-            defOpts = "";
+            defOpts = getDefaultOptions();
             //only when not already set by user or by previous import
             String debug = getPreferences().get(PROP_DEBUG, null);
             if (debug != null) {
@@ -223,7 +224,7 @@ public final class MavenSettings  {
     }
 
     public String getDefaultOptions() {
-        return getPreferences().get(PROP_DEFAULT_OPTIONS, ""); //NOI18N
+        return getPreferences().get(PROP_DEFAULT_OPTIONS, "--no-transfer-progress"); //NOI18N
     }
 
     public void setDefaultOptions(String options) {
@@ -591,4 +592,16 @@ public final class MavenSettings  {
         }
     }
     
+    public NetworkProxySettings getNetworkProxy() {
+        String s = getPreferences().get(PROP_NETWORK_PROXY, NetworkProxySettings.ASK.name());
+        try {
+            return NetworkProxySettings.valueOf(s);
+        } catch (IllegalArgumentException ex) {
+            return NetworkProxySettings.ASK;
+        }
+    }
+    
+    public void setNetworkProxy(NetworkProxySettings s) {
+        getPreferences().put(PROP_NETWORK_PROXY, s.name());
+    }
 }

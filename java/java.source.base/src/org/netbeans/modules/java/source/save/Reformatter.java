@@ -419,6 +419,7 @@ public class Reformatter implements ReformatTask {
         private static final String JDOC_THROWS_TAG = "@throws"; //NOI18N
         private static final String JDOC_VALUE_TAG = "@value"; //NOI18N
         private static final String JDOC_SNIPPET_TAG = "@snippet"; //NOI18N
+        private static final String JDOC_SUMMARY_TAG = "@summary"; //NOI18N
         private static final String ERROR = "<error>"; //NOI18N
 
         private final String fText;
@@ -1151,7 +1152,7 @@ public class Reformatter implements ReformatTask {
                                 newline();
                             else
                                 space();
-                        } else {
+                        } else if (sp.getStartPosition(root, mods) != sp.getStartPosition(root, node.getType())) {
                             space();
                         }
                     } else if (afterAnnotation) {
@@ -2801,20 +2802,48 @@ public class Reformatter implements ReformatTask {
         }
 
         @Override
-        public Boolean visitGuardedPattern(GuardedPatternTree node, Void p) {
+        public Boolean visitDefaultCaseLabel(DefaultCaseLabelTree node, Void p) {
+            accept(DEFAULT);
+            return true;
+        }
+
+        @Override
+        public Boolean visitConstantCaseLabel(ConstantCaseLabelTree node, Void p) {
+            scan(node.getConstantExpression(), p);
+            return true;
+        }
+
+        @Override
+        public Boolean visitPatternCaseLabel(PatternCaseLabelTree node, Void p) {
             scan(node.getPattern(), p);
             space();
-            accept(AMPAMP);
+            accept(IDENTIFIER);
             space();
-            scan(node.getExpression(), p);
+            scan(node.getGuard(), p);
+            return true;
+        }
 
+        @Override
+        public Boolean visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
+            scan(node.getDeconstructor(), p);
+            spaces(0);
+            accept(LPAREN);
+            spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
+            accept(RPAREN);
+            if (node.getVariable() != null) {
+                space();
+                accept(IDENTIFIER);
+            }
             return true;
         }
 
         @Override
         public Boolean visitParenthesizedPattern(ParenthesizedPatternTree node, Void p) {
             accept(LPAREN);
+            spaces(0);
             scan(node.getPattern(), p);
+            spaces(0);
             accept(RPAREN);
             return true;
         }
@@ -2933,36 +2962,24 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitCase(CaseTree node, Void p) {
-            List<? extends Tree> labels = node.getLabels();
-            if (labels != null && labels.size() > 0) {
+            List<? extends CaseLabelTree> labels = node.getLabels();
+            if (labels != null && !labels.isEmpty()) {
                 if (tokens.token().id() == JavaTokenId.DEFAULT && labels.get(0).getKind() == Kind.DEFAULT_CASE_LABEL) {
                     accept(DEFAULT);
                 } else {
                     accept(CASE);
                     space();
-                    for (Tree label : labels) {
-                        switch (label.getKind()) {
-                            case DEFAULT_CASE_LABEL:
-                                removeWhiteSpace(JavaTokenId.DEFAULT);
-                                accept(DEFAULT);
-                                break;
-                            case BINDING_PATTERN:
-                            case PARENTHESIZED_PATTERN:
-                            case GUARDED_PATTERN:
-                                removeWhiteSpace(JavaTokenId.IDENTIFIER);
-                                scan(label, p);
-                                break;
-                            case NULL_LITERAL:
-                                removeWhiteSpace(JavaTokenId.NULL);
-                                scan(label, p);
-                                break;
-                            default:
-                                scan(label, p);
-                                break;
+                    for (Iterator<? extends CaseLabelTree> it = labels.iterator(); it.hasNext();) {
+                        CaseLabelTree label = it.next();
+                        scan(label, p);
+                        if (it.hasNext()) {
+                            spaces(0);
+                            accept(COMMA);
+                            space();
                         }
                     }
                 }
-            } else if (node.getExpressions().size() > 0) {
+            } else if (!node.getExpressions().isEmpty()) {
                 List<? extends ExpressionTree> exprs = node.getExpressions();
                 accept(CASE);
                 space();
@@ -3016,15 +3033,14 @@ public class Reformatter implements ReformatTask {
                 if (tokens.offset() >= endPos) {
                     break;
                 }
-                if (tokens.token().id() == forToken) {
-                    break;
-                }
                 if (tokens.token().id() == WHITESPACE) {
                     String text = tokens.token().text().toString();
                     String ind = getIndent();
                     if (!ind.equals(text)) {
                         addDiff(new Diff(tokens.offset(), tokens.offset() + tokens.token().length(), " "));
                     }
+                } else if (forToken == null || tokens.token().id() == forToken) {
+                    break;
                 }
             } while (tokens.moveNext());
         }
@@ -4820,6 +4836,7 @@ public class Reformatter implements ReformatTask {
                                     || JDOC_DOCROOT_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_INHERITDOC_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_VALUE_TAG.equalsIgnoreCase(tokenText)
+                                    || JDOC_SUMMARY_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_LITERAL_TAG.equalsIgnoreCase(tokenText)) {
                                 insideTag = true;
                                 addMark(Pair.of(currWSOffset >= 0 ? currWSOffset : javadocTokens.offset() - offset, 5), marks, state);

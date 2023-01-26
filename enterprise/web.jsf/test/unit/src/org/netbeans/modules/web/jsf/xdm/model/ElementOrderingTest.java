@@ -22,9 +22,6 @@ package org.netbeans.modules.web.jsf.xdm.model;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.Clazz;

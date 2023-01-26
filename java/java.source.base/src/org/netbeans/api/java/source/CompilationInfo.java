@@ -315,6 +315,7 @@ public class CompilationInfo {
      * the compatibility bridge, when the CompilationInfo was created by the parsing api
      * it returns null. Use {@link CompilationInfo#getSnapshot()} instead.
      */
+    @Deprecated
     public @NullUnknown JavaSource getJavaSource() {
         checkConfinement();
         return javaSource;

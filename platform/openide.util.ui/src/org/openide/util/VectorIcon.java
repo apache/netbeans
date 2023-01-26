@@ -83,7 +83,7 @@ public abstract class VectorIcon implements Icon, Serializable {
         Object desktopHints =
                 Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         Map<Object, Object> hints = new LinkedHashMap<Object, Object>();
-        if (desktopHints != null && desktopHints instanceof Map<?, ?>)
+        if (desktopHints instanceof Map<?, ?>)
             hints.putAll((Map<?, ?>) desktopHints);
         /* Enable antialiasing by default. Adding this is required in order to get non-text
         antialiasing on Windows. */

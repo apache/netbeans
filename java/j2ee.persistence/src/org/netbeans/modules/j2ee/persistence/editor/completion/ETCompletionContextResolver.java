@@ -53,7 +53,7 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
     private static final Logger LOGGER = Logger.getLogger(ETCompletionContextResolver.class.getName());
     
     @Override
-    public List resolve(JPACodeCompletionProvider.Context ctx) {
+    public List<JPACompletionItem> resolve(JPACodeCompletionProvider.Context ctx) {
         
         List<JPACompletionItem> result = new ResultItemsFilterList(ctx);
         
@@ -125,7 +125,7 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
         return results;
     }
     
-     private List completeJPQLContext(JPACodeCompletionProvider.Context ctx, CCParser.CC nn, CCParser.NNAttr nnattr, List<JPACompletionItem> results) {
+     private List<JPACompletionItem> completeJPQLContext(JPACodeCompletionProvider.Context ctx, CCParser.CC nn, CCParser.NNAttr nnattr, List<JPACompletionItem> results) {
         String completedMember = nnattr.getName();
 
         if (completedMember == null || "query".equals(completedMember)) { // NOI18N
@@ -161,7 +161,8 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
         
         return results;
     }
-     private List completeJPQLContext(JPACodeCompletionProvider.Context ctx, CCParser.MD method, List<JPACompletionItem> results) {
+
+     private List<JPACompletionItem> completeJPQLContext(JPACodeCompletionProvider.Context ctx, CCParser.MD method, List<JPACompletionItem> results) {
 
             String completedValue = method.getValue();
             if(completedValue == null) {

@@ -51,8 +51,20 @@ public interface WebApp extends org.netbeans.modules.j2ee.dd.api.common.RootInte
      * @since 1.29
      */
     static final String VERSION_3_1 = "3.1"; //NOI18N
+    /**
+     * web.xml, web-fragment.xml DD version for JavaEE8/JakartaEE8
+     * @since 1.29
+     */
     static final String VERSION_4_0 = "4.0"; //NOI18N
+    /**
+     * web.xml, web-fragment.xml DD version for JakartaEE9/JakartaEE91
+     * @since 1.29
+     */
     static final String VERSION_5_0 = "5.0"; //NOI18N
+    /**
+     * web.xml, web-fragment.xml DD version for JakartaEE10
+     */
+    static final String VERSION_6_0 = "6.0"; //NOI18N
     static final int STATE_VALID = 0;
     static final int STATE_INVALID_PARSABLE = 1;
     static final int STATE_INVALID_UNPARSABLE = 2;
@@ -252,7 +264,7 @@ public interface WebApp extends org.netbeans.modules.j2ee.dd.api.common.RootInte
     void setName(String[] value) throws VersionNotSupportedException;
     String[] getName() throws VersionNotSupportedException;
 
-	AbsoluteOrdering newAbsoluteOrdering() throws VersionNotSupportedException;
+    AbsoluteOrdering newAbsoluteOrdering() throws VersionNotSupportedException;
     void setAbsoluteOrdering(AbsoluteOrdering[] value) throws VersionNotSupportedException;
     AbsoluteOrdering[] getAbsoluteOrdering() throws VersionNotSupportedException;
 }

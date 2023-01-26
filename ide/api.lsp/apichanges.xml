@@ -51,6 +51,31 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="DiagnosticURL">
+        <api name="LSP_API"/>
+        <summary>Added URL to diagnostic code description</summary>
+        <version major="1" minor="12"/>
+        <date day="3" month="8" year="2022"/>
+        <author login="sdedic"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/api/lsp/Diagnostic.html">Diagnostic</a> can link to the details of the error code using URL.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Diagnostic"/>
+    </change>
+    <change id="CodeLensProvider">
+        <api name="LSP_API"/>
+        <summary>Added CodeLensProvider and relevant elements</summary>
+        <version major="1" minor="12"/>
+        <date day="2" month="7" year="2022"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CodeLensProvider.html">CodeLensProvider</a> SPI allows to provide code lens for a given document.
+        </description>
+        <class package="org.netbeans.api.lsp" name="CodeLens"/>
+        <class package="org.netbeans.spi.lsp" name="CodeLensProvider"/>
+    </change>
     <change id="diagnosticReporter">
         <api name="LSP_API"/>
         <summary>Added DiagnosticReporter to trigger diagnostic collection</summary>

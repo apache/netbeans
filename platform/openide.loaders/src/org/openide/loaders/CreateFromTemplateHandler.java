@@ -40,6 +40,7 @@ import org.openide.filesystems.FileObject;
  * @since 6.1
  * @deprecated in 7.59. Use {@link org.netbeans.api.templates.CreateFromTemplateHandler} instead.
  */
+@Deprecated
 public abstract class CreateFromTemplateHandler extends org.netbeans.api.templates.CreateFromTemplateHandler {
     
     @Override

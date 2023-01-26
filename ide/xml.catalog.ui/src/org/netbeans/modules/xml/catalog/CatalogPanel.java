@@ -97,7 +97,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         private void invokeInplaceEditing() {
             if (startEditing == null) {
                 Object o = tree.getActionMap().get("startEditing"); // NOI18N
-                if (o != null && o instanceof Action) {
+                if (o instanceof Action) {
                     startEditing = (Action) o;
                 }
             }

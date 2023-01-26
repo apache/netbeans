@@ -413,7 +413,7 @@ public class Controller {
             case IOEvent.CMD_DEF_COLORS:
                 if (tab != null) {
                     Document doc = tab.getOutputPane().getDocument();
-                    if (doc != null && doc instanceof OutputDocument) {
+                    if (doc instanceof OutputDocument) {
                         Lines lines = ((OutputDocument) doc).getLines();
                         if (lines != null) {
                             IOColors.OutputType type = (IOColors.OutputType) data;

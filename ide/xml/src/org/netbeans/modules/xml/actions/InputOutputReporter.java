@@ -53,6 +53,7 @@ import org.openide.text.Annotation;
  * @see     InputOutput
  * @deprecated XML tools actions API candidate
  */
+@Deprecated
 public final class InputOutputReporter implements CookieObserver {
 
     //0 extends message, 1 line number, 2 url of external entity

@@ -214,21 +214,21 @@ public class ModuleTypePanel{
     
     private static NbPlatform getActiveNbPlatform(WizardDescriptor wizard){
         Object value = wizard.getProperty(ACTIVE_NB_PLATFORM);
-        if (value != null && value instanceof NbPlatform){
+        if (value instanceof NbPlatform){
             return (NbPlatform)value;
         }
         return null;
     }
     
     private static boolean extractBoolean(Object value, boolean defaultValue){
-        if (value != null && value instanceof Boolean){
+        if (value instanceof Boolean){
             return (Boolean)value;
         }
         return defaultValue;
     }
     
     private static String extractString(Object value, String defaultValue){
-        if (value != null && value instanceof String){
+        if (value instanceof String){
             return (String)value;
         }
         return defaultValue;

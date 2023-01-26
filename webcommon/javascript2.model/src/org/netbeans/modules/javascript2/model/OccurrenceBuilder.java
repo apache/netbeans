@@ -61,23 +61,23 @@ public class OccurrenceBuilder {
     }
     private final Map<String, Map<OffsetRange, Item>> holder;
     private final ParserResult parserResult;
-    
+
     public OccurrenceBuilder(ParserResult parserResult) {
-        holder = new HashMap<String, Map<OffsetRange, Item>>();
+        holder = new HashMap<>();
         this.parserResult = parserResult;
     }
-    
+
     public void addOccurrence(String name, OffsetRange range, DeclarationScope whereUsed, JsObject currentParent, JsWith inWith, boolean isFunction, boolean leftSite) {
         Map<OffsetRange, Item> items = holder.get(name);
         if (items == null) {
-            items = new HashMap<OffsetRange, Item>(1);
+            items = new HashMap<>(1);
             holder.put(name, items);
         }
         if (!items.containsKey(range)) {
             items.put(range, new Item(range, whereUsed, currentParent, inWith, isFunction, leftSite));
         }
     }
-    
+
     public void processOccurrences(JsObject global) {
         for (Map.Entry<String, Map<OffsetRange, Item>> entry : holder.entrySet()) {
             String name = entry.getKey();
@@ -101,7 +101,7 @@ public class OccurrenceBuilder {
         JsObject parameter = null;
         DeclarationScope scope = item.scope;
         JsObject parent = item.currentParent;
-        if (!(parent instanceof JsWith || (parent.getParent() != null && parent.getParent() instanceof JsWith))) {
+        if (!(parent instanceof JsWith || parent.getParent() instanceof JsWith)) {
             while (scope != null && property == null && parameter == null) {
                 if (scope instanceof JsFunction) {
                     parameter = ((JsFunction) scope).getParameter(name);
@@ -119,7 +119,7 @@ public class OccurrenceBuilder {
                 }
             }
         } else {
-            if (!(parent instanceof JsWith) && (parent.getParent() != null && parent.getParent() instanceof JsWith)) {
+            if (!(parent instanceof JsWith) && parent.getParent() instanceof JsWith) {
                 parent = parent.getParent();
             }
             property = parent.getProperty(name);
@@ -127,7 +127,7 @@ public class OccurrenceBuilder {
 
         if (!(parent instanceof JsWith) && property == null) {
             JsObject possibleParent = parent;
-            
+
             while (property == null && possibleParent != null) {
                 property = possibleParent.getProperty(name);
                 possibleParent = possibleParent.getParent();
@@ -136,7 +136,7 @@ public class OccurrenceBuilder {
                 }
             }
         }
-        
+
         if (property != null) {
 
             // occurence in the doc
@@ -166,7 +166,7 @@ public class OccurrenceBuilder {
         }
 
     }
-    
+
     private void createNewProperty(JsObject parent, Item item, Identifier nameIden) {
         JsObjectImpl newObject;
         if (!item.isFunction) {
@@ -182,7 +182,7 @@ public class OccurrenceBuilder {
         addDocNameOccurence(newObject);
         addDocTypesOccurence(newObject);
     }
-    
+
     private void addDocNameOccurence(JsObjectImpl jsObject) {
         JsDocumentationHolder holder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         JsComment comment = holder.getCommentForOffset(jsObject.getOffset(), holder.getCommentBlocks());

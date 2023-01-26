@@ -179,14 +179,6 @@ export class MultiStepInput {
 						input.enabled = true;
 						input.busy = false;
 					}),
-					// input.onDidChangeValue(async text => {
-					// 	const current = validate(text);
-					// 	validating = current;
-					// 	const validationMessage = await current;
-					// 	if (current === validating) {
-					// 		input.validationMessage = validationMessage;
-					// 	}
-					// }),
 					input.onDidHide(() => {
 						(async () => {
 							reject(shouldResume && await shouldResume() ? InputFlowAction.resume : InputFlowAction.cancel);

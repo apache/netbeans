@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
@@ -274,6 +275,15 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(expression.getEndOffset(), -1 * options.continualIndentSize));
             }
         }
+    }
+
+    @Override
+    public void visit(AnonymousObjectVariable node) {
+        // (new Test)->method();
+        super.visit(node);
+        // avoid adding incorrect space for "within a method call"
+        // e.g. (new Test)->method(); -> (new Test )->method();
+        addAllUntilOffset(node.getEndOffset());
     }
 
     @Override
@@ -717,14 +727,14 @@ public class FormatVisitor extends DefaultVisitor {
         while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_CURLY_OPEN) {
             switch (ts.token().id()) {
                 case PHP_CLASS:
-                    if (!ClassDeclaration.Modifier.NONE.equals(node.getModifier())) {
+                    if (!node.getModifiers().containsKey(ClassDeclaration.Modifier.NONE)) {
                         FormatToken lastWhitespace = formatTokens.remove(formatTokens.size() - 1);
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_MODIFIERS, lastWhitespace.getOffset(), lastWhitespace.getOldText()));
                     }
                     addFormatToken(formatTokens);
                     break;
                 case PHP_IMPLEMENTS:
-                    if (node.getInterfaes().size() > 0) {
+                    if (!node.getInterfaes().isEmpty()) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_EXTENDS_IMPLEMENTS, ts.offset()));
                         ts.movePrevious();
                         addListOfNodes(node.getInterfaes(), FormatToken.Kind.WHITESPACE_IN_INTERFACE_LIST);
@@ -1321,7 +1331,7 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         ASTNode body = node.getStatement();
-        if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
+        if (body instanceof Block && !((Block) body).isCurly()) {
             addAllUntilOffset(body.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), options.indentSize));
             scan(node.getStatement());
@@ -1388,7 +1398,7 @@ public class FormatVisitor extends DefaultVisitor {
             formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR, ts.offset() + ts.token().length()));
         }
         ASTNode body = node.getBody();
-        if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
+        if (body instanceof Block && !((Block) body).isCurly()) {
             addAllUntilOffset(body.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), options.indentSize));
             scan(node.getBody());
@@ -1885,12 +1895,19 @@ public class FormatVisitor extends DefaultVisitor {
                 && lastIndex < ts.index()) {
             addFormatToken(formatTokens);
         }
-        // don't add to AND, OR, and XOR (PHPTokenId.PHP_TEXTUAL_OPERATOR)
-        // see https://netbeans.org/bugzilla/show_bug.cgi?id=240274
-        if (ts.token().id() == PHPTokenId.PHP_TOKEN || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
+        // don't add WHITESPACE_BEFORE_BINARY_OP and WHITESPACE_AFTER_BINARY_OP to AND, OR, and XOR (PHPTokenId.PHP_TEXTUAL_OPERATOR)
+        // e.g. copy($old,$new) or die("error"); -> copy($old,$new) ordie("error");
+        // see https://bz.apache.org/netbeans/show_bug.cgi?id=240274
+        if (ts.token().id() == PHPTokenId.PHP_TOKEN
+                || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
             formatTokens.add(new FormatToken(whitespaceBefore, ts.offset()));
             addFormatToken(formatTokens);
             formatTokens.add(new FormatToken(whitespaceAfter, ts.offset() + ts.token().length()));
+        } else if (ts.token().id() == PHPTokenId.PHP_TEXTUAL_OPERATOR) {
+            // always add whitespace gh-4635
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_TEXTUAL_OP, ts.offset()));
+            addFormatToken(formatTokens);
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_TEXTUAL_OP, ts.offset() + ts.token().length()));
         } else {
             ts.movePrevious();
         }
@@ -1907,7 +1924,7 @@ public class FormatVisitor extends DefaultVisitor {
         formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
         // #268541
         boolean isTrueStatementCurly = false;
-        if (trueStatement != null && trueStatement instanceof Block && !((Block) trueStatement).isCurly()) {
+        if (trueStatement instanceof Block && !((Block) trueStatement).isCurly()) {
             isCurly = false;
             addAllUntilOffset(trueStatement.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(trueStatement.getStartOffset(), options.indentSize));
@@ -1925,7 +1942,7 @@ public class FormatVisitor extends DefaultVisitor {
             scan(trueStatement);
         }
         Statement falseStatement = node.getFalseStatement();
-        if (falseStatement != null && falseStatement instanceof Block && !((Block) falseStatement).isCurly()
+        if (falseStatement instanceof Block && !((Block) falseStatement).isCurly()
                 && !(falseStatement instanceof IfStatement)) {
             isCurly = false;
             while (ts.moveNext() && ts.offset() < falseStatement.getStartOffset()) {
@@ -2261,7 +2278,7 @@ public class FormatVisitor extends DefaultVisitor {
     public void visit(WhileStatement node) {
         scan(node.getCondition());
         ASTNode body = node.getBody();
-        if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
+        if (body instanceof Block && !((Block) body).isCurly()) {
             addAllUntilOffset(body.getStartOffset());
             formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), options.indentSize));
             scan(node.getBody());

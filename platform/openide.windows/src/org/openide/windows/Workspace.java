@@ -42,6 +42,7 @@ import java.util.Set;
  * @deprecated Do not use any more. Use {@link WindowManager} methods directly,
  * e.g. {@link WindowManager#getModes()} etc.
  */
+@Deprecated
 public interface Workspace extends Serializable {
     /** Name of property for modes in the workspace.
      * @deprecated Use {@link WindowManager#PROP_MODES} instead. */

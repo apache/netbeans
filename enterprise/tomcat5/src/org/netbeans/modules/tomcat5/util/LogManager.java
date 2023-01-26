@@ -45,8 +45,8 @@ public class LogManager {
     private ServerLog serverLog;    
     private LogViewer sharedContextLogViewer;
     private LogViewer juliLogViewer;
-    private Map/*<TomcatModule, TomcatModuleConfig>*/ tomcatModuleConfigs = Collections.synchronizedMap(new WeakHashMap());
-    private Map/*<String, LogViewer>*/ contextLogViewers = Collections.synchronizedMap(new HashMap());
+    private Map<TomcatModule, TomcatModuleConfig> tomcatModuleConfigs = Collections.synchronizedMap(new WeakHashMap());
+    private Map<String, LogViewer> contextLogViewers = Collections.synchronizedMap(new HashMap());
     private TomcatManager manager;
     
     private final Object serverLogLock = new Object();
@@ -86,6 +86,7 @@ public class LogManager {
         //PENDING: currently we copy only Tomcat std & err output. We should
         //         also support copying to Tomcat std input.
         new Thread() {
+            @Override
             public void run() {
                 try {
                     process.waitFor();
@@ -164,12 +165,10 @@ public class LogManager {
                 sharedContextLogViewer.removeAllLogViewerStopListener();
                 sharedContextLogViewer.close();
                 sharedContextLogViewer = newSharedContextLog;
-		sharedContextLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   public void callOnStop() {
-                       synchronized(sharedContextLogLock) {
-                           sharedContextLogViewer = null;
-                       }
-                   }
+		sharedContextLogViewer.addLogViewerStopListener( () -> {
+                    synchronized(sharedContextLogLock) {
+                        sharedContextLogViewer = null;
+                    }
                 });
                 sharedContextLogViewer.start();
             } else if (sharedContextLogViewer == null || !sharedContextLogViewer.isOpen()) {
@@ -177,12 +176,10 @@ public class LogManager {
                     sharedContextLogViewer.removeAllLogViewerStopListener();
                 }
                 sharedContextLogViewer = newSharedContextLog;
-		sharedContextLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   public void callOnStop() {
-                       synchronized(sharedContextLogLock) {
-                           sharedContextLogViewer = null;
-                       }
-                   }
+		sharedContextLogViewer.addLogViewerStopListener( () -> {
+                    synchronized(sharedContextLogLock) {
+                        sharedContextLogViewer = null;
+                    }
                 });
                 sharedContextLogViewer.start();
             }
@@ -229,19 +226,14 @@ public class LogManager {
                     TomcatProperties tp = manager.getTomcatProperties();
                     juliLogViewer = new LogViewer(manager, null, null, null, "localhost.", null, true, false); // NOI18N
                     juliLogViewer.setDisplayName(NbBundle.getMessage(LogManager.class, "TXT_JuliLogDisplayName", tp.getDisplayName()));
-                } catch (UnsupportedLoggerException e) { // should never occur
+                } catch (UnsupportedLoggerException | NullPointerException e) { // should never occur
                     Logger.getLogger(LogManager.class.getName()).log(Level.INFO, null, e);
                     return;
-                } catch (NullPointerException npe) {
-                    Logger.getLogger(LogManager.class.getName()).log(Level.INFO, null, npe);
-                    return;
                 }
-		juliLogViewer.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   public void callOnStop() {
-                       synchronized(juliLogLock) {
-                           juliLogViewer = null;
-                       }
-                   }
+		juliLogViewer.addLogViewerStopListener( () -> {
+                    synchronized(juliLogLock) {
+                        juliLogViewer = null;
+                    }
                 });
                 juliLogViewer.start();
             }
@@ -261,7 +253,7 @@ public class LogManager {
     public void openContextLog(TomcatModule module) {
         final String moduleID = module.getModuleID();
         Object o = tomcatModuleConfigs.get(module);
-        TomcatModuleConfig moduleConfig = null;
+        TomcatModuleConfig  moduleConfig = null;
         LogViewer contextLog = null;
         if (o == null) {
             moduleConfig = new TomcatModuleConfig(
@@ -273,7 +265,9 @@ public class LogManager {
             moduleConfig = (TomcatModuleConfig)o;
             moduleConfig.refresh();
         }
-        if (!moduleConfig.hasLogger()) return;
+        if (!moduleConfig.hasLogger()) {
+            return;
+        }
         contextLog = (LogViewer)contextLogViewers.get(moduleID);
         LogViewer newContextLog = null;
         try {
@@ -303,10 +297,8 @@ public class LogManager {
                 contextLog.removeAllLogViewerStopListener();
                 contextLog.close();
                 contextLog = newContextLog;
-                contextLog.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   public void callOnStop() {
-                       contextLogViewers.remove(moduleID);
-                   }
+                contextLog.addLogViewerStopListener( () -> {
+                    contextLogViewers.remove(moduleID);
                 });
                 contextLogViewers.put(moduleID, contextLog);
                 contextLog.start();
@@ -315,10 +307,8 @@ public class LogManager {
                     contextLog.removeAllLogViewerStopListener();
                 }
                 contextLog = newContextLog;
-                contextLog.addLogViewerStopListener(new LogViewer.LogViewerStopListener() {
-                   public void callOnStop() {
-                       contextLogViewers.remove(moduleID);
-                   }
+                contextLog.addLogViewerStopListener( () -> {
+                    contextLogViewers.remove(moduleID);
                 });                
                 contextLogViewers.put(moduleID, contextLog);
                 contextLog.start();

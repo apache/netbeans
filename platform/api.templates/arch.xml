@@ -134,7 +134,7 @@
             return real instance of <code>ScriptEngine</code> interface or
             a <code>String</code> name of the engine that is then used to
             search for it in the <code>javax.script.ScriptEngineManager</code>.
-            Usually the <a href="http://freemarker.sourceforge.net/">freemarker</a> engine is the one that is 
+            Usually the <a href="https://freemarker.apache.org/">freemarker</a> engine is the one that is
             supported by the NetBeans IDE - if your module wants to use it
             then include a token dependency <code>OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker</code>
             in your manifest file (also accessible through project customizer GUI)

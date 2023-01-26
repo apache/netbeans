@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
  */
 public class CordovaURLMapper implements BrowserURLMapperImplementation {
 
-    private BrowserURLMapperImplementation.BrowserURLMapper browserURLMapper;;
+    private BrowserURLMapperImplementation.BrowserURLMapper browserURLMapper;
 
     public CordovaURLMapper() {
         browserURLMapper = new BrowserURLMapperImplementation.BrowserURLMapper(null, null);

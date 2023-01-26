@@ -31,7 +31,7 @@ import org.openide.nodes.Node;
  *
  * @deprecated
  */
-
+@Deprecated
 public abstract class FormInfo
 {
     /** Constant for empty list of properties */

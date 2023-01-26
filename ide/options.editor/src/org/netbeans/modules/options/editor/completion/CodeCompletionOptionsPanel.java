@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
+import org.netbeans.modules.options.util.LanguagesComparator;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.WeakListeners;
 
@@ -82,7 +83,7 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             ArrayList<String> mimeTypes = new ArrayList<String>();
             mimeTypes.addAll(selector.getMimeTypes());
-            Collections.sort(mimeTypes, new LanguagesComparator());
+            Collections.sort(mimeTypes, LanguagesComparator.INSTANCE);
 
             for (String mimeType : mimeTypes) {
                 model.addElement(mimeType);
@@ -169,17 +170,4 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 
-    private static final class LanguagesComparator implements Comparator<String> {
-        public int compare(String mimeType1, String mimeType2) {
-            if (mimeType1.length() == 0)
-                return mimeType2.length() == 0 ? 0 : -1;
-            if (mimeType2.length() == 0)
-                return 1;
-
-            String langName1 = EditorSettings.getDefault().getLanguageName(mimeType1);
-            String langName2 = EditorSettings.getDefault().getLanguageName(mimeType2);
-
-            return langName1.compareTo(langName2);
-        }
-    }
 }

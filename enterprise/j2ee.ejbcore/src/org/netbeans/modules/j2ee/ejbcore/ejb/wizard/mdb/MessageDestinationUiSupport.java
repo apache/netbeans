@@ -180,7 +180,7 @@ public abstract class MessageDestinationUiSupport {
                 new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
                         Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                        if (newvalue instanceof Boolean) {
                             dialogDescriptor.setValid(((Boolean) newvalue));
                         }
                     }

@@ -64,7 +64,7 @@ public class XMLCompletionProvider implements CompletionProvider {
     @Override
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
         XMLSyntaxSupport support = XMLSyntaxSupport.getSyntaxSupport(component.getDocument());
-        if( (support == null) || !(support instanceof XMLSyntaxSupport))
+        if(!(support instanceof XMLSyntaxSupport))
             return 0;
         
         int type = checkCompletion(support, component, typedText, false);

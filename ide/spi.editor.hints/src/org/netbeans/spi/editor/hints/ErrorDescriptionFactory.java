@@ -271,8 +271,8 @@ public class ErrorDescriptionFactory {
         Parameters.notNull("file", file);
         Parameters.notNull("starts", starts);
         Parameters.notNull("ends", ends);        
-        if (starts.length == 0 || starts[0] < 0) throw new IndexOutOfBoundsException("start < 0 (" + starts + " < 0)");;//NOI18N
-        if ( ends.length == 0 || ends[0] < 0) throw new IndexOutOfBoundsException("end < 0 (" + ends + " < 0)");;//NOI18N
+        if (starts.length == 0 || starts[0] < 0) throw new IndexOutOfBoundsException("start < 0 (" + starts + " < 0)");//NOI18N
+        if ( ends.length == 0 || ends[0] < 0) throw new IndexOutOfBoundsException("end < 0 (" + ends + " < 0)");//NOI18N
         if (ends.length != starts.length) throw new IndexOutOfBoundsException("starts lentgh:" + starts.length + " != " + ends.length + " ends length");//NOI18N
         PositionBounds span = HintsControllerImpl.linePart(file, starts[0], ends[0]);
         ArrayList<PositionBounds> spanTail = new ArrayList<>();
@@ -281,7 +281,7 @@ public class ErrorDescriptionFactory {
                 //just skip if starts greater or equals to end, no need to throw exception
                 if (starts[i] >= ends[i]) {
                     //log and continue
-                    Logger.getLogger(ErrorDescriptionFactory.class.getName()).log(Level.INFO, "Incorrect span,  start=" + starts[i] + ", end=" + ends[i], new Exception());;//NOI18N
+                    Logger.getLogger(ErrorDescriptionFactory.class.getName()).log(Level.INFO, "Incorrect span,  start=" + starts[i] + ", end=" + ends[i], new Exception());//NOI18N
                     continue;
                 }
                 spanTail.add(HintsControllerImpl.linePart(file, starts[i], ends[i]));
@@ -366,8 +366,8 @@ public class ErrorDescriptionFactory {
         Parameters.notNull("ends", ends);                
         DataObject od = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
         FileObject file = od != null ? od.getPrimaryFile() : null;
-        if (starts.length == 0 || starts[0] < 0) throw new IndexOutOfBoundsException("start < 0 (" + starts + " < 0)");;//NOI18N
-        if ( ends.length == 0 || ends[0] < 0) throw new IndexOutOfBoundsException("end < 0 (" + ends + " < 0)");;//NOI18N
+        if (starts.length == 0 || starts[0] < 0) throw new IndexOutOfBoundsException("start < 0 (" + starts + " < 0)");//NOI18N
+        if ( ends.length == 0 || ends[0] < 0) throw new IndexOutOfBoundsException("end < 0 (" + ends + " < 0)");//NOI18N
         if (ends.length != starts.length) throw new IndexOutOfBoundsException("starts lentgh:" + starts.length + " != " + ends.length + " ends length");//NOI18N
         PositionBounds span = HintsControllerImpl.linePart(file, starts[0], ends[0]);
         ArrayList<PositionBounds> spanTail = new ArrayList<>();
@@ -376,7 +376,7 @@ public class ErrorDescriptionFactory {
                 //just skip if starts greater or equals to end
                 if (starts[i] >= ends[i]) {
                     //log and continue
-                    Logger.getLogger(ErrorDescriptionFactory.class.getName()).log(Level.INFO, "Incorrect span,  start=" + starts[i] + ", end=" + ends[i], new Exception());;//NOI18N
+                    Logger.getLogger(ErrorDescriptionFactory.class.getName()).log(Level.INFO, "Incorrect span,  start=" + starts[i] + ", end=" + ends[i], new Exception());//NOI18N
                     continue;
                 }
                 spanTail.add(HintsControllerImpl.linePart(file, starts[i], ends[i]));

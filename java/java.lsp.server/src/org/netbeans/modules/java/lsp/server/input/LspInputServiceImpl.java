@@ -18,10 +18,10 @@
  */
 package org.netbeans.modules.java.lsp.server.input;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 
@@ -32,32 +32,50 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 @JsonSegment("input")
 public class LspInputServiceImpl implements InputService {
 
-    private final Map<String, Function<InputCallbackParams, CompletableFuture<Either<QuickPickStep, InputBoxStep>>>> stepCallbacks = new HashMap<>();
-    private final Map<String, Function<InputCallbackParams, CompletableFuture<String>>> validateCallbacks = new HashMap<>();
-
-    public String registerInput(Function<InputCallbackParams, CompletableFuture<Either<QuickPickStep, InputBoxStep>>> stepCallback, Function<InputCallbackParams, CompletableFuture<String>> validateCallback) {
-        String id = "ID:" + System.identityHashCode(stepCallback);
-        stepCallbacks.put(id, stepCallback);
-        if (validateCallback != null) {
-            validateCallbacks.put(id, validateCallback);
-        }
-        return id;
-    }
-
-    public void unregisterInput(String inputId) {
-        stepCallbacks.remove(inputId);
-        validateCallbacks.remove(inputId);
-    }
+    private final RegistryImpl registry = new RegistryImpl();
 
     @Override
     public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params) {
-        Function<InputCallbackParams, CompletableFuture<Either<QuickPickStep, InputBoxStep>>> callback = stepCallbacks.get(params.getInputId());
-        return callback != null ? callback.apply(params) : CompletableFuture.completedFuture(null);
+        Callback callback = registry.callbacks.get(params.getInputId());
+        if (callback == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        CompletableFuture<Either<QuickPickStep, InputBoxStep>> future = new CompletableFuture<>();
+        callback.step(params).handle((step, ex) -> {
+            if (ex != null) {
+                registry.callbacks.remove(params.getInputId());
+                future.completeExceptionally(ex);
+            } else {
+                if (step == null) {
+                    registry.callbacks.remove(params.getInputId());
+                }
+                future.complete(step);
+            }
+            return null;
+        });
+        return future;
     }
 
     @Override
     public CompletableFuture<String> validate(InputCallbackParams params) {
-        Function<InputCallbackParams, CompletableFuture<String>> callback = validateCallbacks.get(params.getInputId());
-        return callback != null ? callback.apply(params) : CompletableFuture.completedFuture(null);
+        Callback callback = registry.callbacks.get(params.getInputId());
+        return callback != null ? callback.validate(params) : CompletableFuture.completedFuture(null);
+    }
+
+    public Registry getRegistry() {
+        return registry;
+    }
+
+    private static class RegistryImpl implements Registry {
+
+        private final Map<String, Callback> callbacks = new ConcurrentHashMap<>();
+        private final AtomicInteger cnt = new AtomicInteger();
+
+        @Override
+        public String registerInput(Callback callback) {
+            String id = "ID:" + cnt.incrementAndGet();
+            callbacks.put(id, callback);
+            return id;
+        }
     }
 }

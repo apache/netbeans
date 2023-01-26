@@ -109,7 +109,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
     private TextSyncGroup textSyncGroup;
     
     private boolean completionInvoked;
-    
+
     public CodeTemplateInsertHandler(
         CodeTemplate codeTemplate,
         JTextComponent component, 
@@ -127,7 +127,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
 
         setParametrizedText(codeTemplate.getParametrizedText());
 
-        processors = new ArrayList<CodeTemplateProcessor>();
+        processors = new ArrayList<>();
         for (CodeTemplateProcessorFactory factory : processorFactories) {
             processors.add(factory.createProcessor(this.request));
         }
@@ -184,8 +184,9 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
     
     public void setParametrizedText(String parametrizedText) {
         int idx = 0;
-        while(idx < parametrizedText.length() && Character.isWhitespace(parametrizedText.charAt(idx)))
+        while(idx < parametrizedText.length() && Character.isWhitespace(parametrizedText.charAt(idx))) {
             idx++;
+        }
         this.parametrizedText = CharacterConversions.lineSeparatorToLineFeed(idx > 0 ? parametrizedText.substring(idx) : parametrizedText);
         parseParametrizedText();
     }
@@ -226,10 +227,6 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
         }
         // Insert the template into document
         insertTemplate();
-
-        if (masterParameters.stream().noneMatch(param -> param.isEditable())) {
-            SwingUtilities.invokeLater(Completion.get()::showCompletion);
-        }
     }
 
     void checkInsertTextBuilt() {
@@ -279,6 +276,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
         return completionInvoked;
     }
 
+    @Override
     public void run() {
         boolean success = false;
         try {
@@ -435,8 +433,8 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
     }
     
     private void parseParametrizedText() {
-        allParameters = new ArrayList<CodeTemplateParameter>(2);
-        masterParameters = new ArrayList<CodeTemplateParameter>(2);
+        allParameters = new ArrayList<>(2);
+        masterParameters = new ArrayList<>(2);
         parametrizedTextParser = new ParametrizedTextParser(this, parametrizedText);
         parametrizedTextParser.parse();
     }
@@ -468,8 +466,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
         completionInvoked = false;
         TextRegionManager trm = evt.textRegionManager();
         if (evt.isFocusChange()) {
-            TextSync activeTextSync = evt.activeTextSync();
-            if (activeTextSync != null && activeTextSync.isCompletionInvoke()) {
+            if (shouldOpenCompletionAfter(evt)) {
                 SwingUtilities.invokeLater(Completion.get()::showCompletion);
                 completionInvoked = true;
             }
@@ -482,7 +479,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
                 }
             }
 
-            if (removedGroups.size() > 0) {
+            if (!removedGroups.isEmpty()) {
                 TextSync textSync = trm.activeTextSync();
                 if (textSync != null) {
                     TextSyncGroup<CodeTemplateInsertHandler> activeGroup = textSync.<CodeTemplateInsertHandler>group();
@@ -506,6 +503,19 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
                 notifyParameterUpdate(activeMasterImpl.getParameter(), true);
             }
         }
+    }
+
+    private static boolean shouldOpenCompletionAfter(TextRegionManagerEvent evt) {
+        TextSync activeTextSync = evt.activeTextSync();
+        if (activeTextSync != null && activeTextSync.isCompletionInvoke()) {
+            return true;
+        }
+        List<TextSyncGroup<Object>> removed = evt.removedGroups();
+        if (removed.isEmpty() || evt.previousTextSync() != null) {
+            return false;
+        }
+        TextSync last = removed.get(removed.size()-1).activeTextSync();
+        return last != null && last.isCaretMarker() && last.isCompletionInvoke();
     }
 
     void release() {
@@ -564,7 +574,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
     static List<CodeTemplateParameter> prioritizeParameters(List<CodeTemplateParameter> params) {
 
         List<CodeTemplateParameter> result = new ArrayList<>(params);
-        Collections.sort(result, new Comparator<CodeTemplateParameter>() {
+        result.sort(new Comparator<CodeTemplateParameter>() {
             @Override
             public int compare(CodeTemplateParameter p1, CodeTemplateParameter p2) {
                 return getPrio(p1) - getPrio(p2);
@@ -591,7 +601,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
 
     private static final class TemplateInsertUndoEdit extends AbstractUndoableEdit {
         
-        private Document doc;
+        private final Document doc;
 
         private boolean inactive;
         

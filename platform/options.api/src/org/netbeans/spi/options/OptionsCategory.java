@@ -99,6 +99,7 @@ public abstract class OptionsCategory {
      *              {@link #getIcon} instead.
      * @return base name of 32x32 icon
      */
+    @Deprecated
     public String getIconBase () {
         return null;
     }

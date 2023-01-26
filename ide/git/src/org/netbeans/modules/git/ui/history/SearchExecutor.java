@@ -55,7 +55,7 @@ class SearchExecutor extends GitProgressSupport {
     private final String toRevision;
     private final Date from;
     private final Date to;
-    static final int DEFAULT_LIMIT = 10;
+    static final int DEFAULT_LIMIT = 50;
     static final int UNLIMITTED = -1;
     private final SearchCriteria sc;
     private final Mode mode;

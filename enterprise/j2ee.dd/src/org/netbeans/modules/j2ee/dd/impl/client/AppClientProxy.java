@@ -357,23 +357,14 @@ public class AppClientProxy implements AppClient {
     
     public void write(FileObject fo) throws java.io.IOException {
         if (app != null) {
-            try {
-                org.openide.filesystems.FileLock lock = fo.lock();
-                try {
-                    java.io.OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing=true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    lock.releaseLock();
-                }
+            try (org.openide.filesystems.FileLock lock = fo.lock();
+                    java.io.OutputStream os = fo.getOutputStream(lock)) {
+                writing=true;
+                write(os);
             } catch (FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);
-                if (dobj!=null && dobj instanceof AppClientProxy.OutputProvider)
+                if (dobj instanceof OutputProvider)
                     ((AppClientProxy.OutputProvider)dobj).write(this);
                 else throw ex;
             }

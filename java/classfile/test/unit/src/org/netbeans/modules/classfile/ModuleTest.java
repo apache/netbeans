@@ -228,8 +228,13 @@ public class ModuleTest extends TestCase {
             if (provider == null) {
                 return null;
             }
+
+            // JDK 9-12 returns /
+            // JDK 13+ returns /modules as root
             final Path jimageRoot = provider.getPath(URI.create("jrt:///"));    //NOI18N
-            return jimageRoot;
+
+            final Path modules = jimageRoot.resolve("modules");
+            return Files.exists(modules) ? modules : jimageRoot;
         } catch (IOException ioe) {
             LOG.log(Level.WARNING, "Cannot load jrt nio provider.", ioe);   //NOI18N
             return null;

@@ -79,9 +79,7 @@ public class TomcatUsers {
             roles = ""; // NOI18N
         }
         StringBuilder newRoles = new StringBuilder(roles.trim());
-        if (TomcatVersion.TOMCAT_70.equals(version)
-                || TomcatVersion.TOMCAT_80.equals(version)
-                || TomcatVersion.TOMCAT_90.equals(version)) {
+        if (version.isAtLeast(TomcatVersion.TOMCAT_70)) {
             if (!hasRole(roles, "manager-script")) { // NOI18N
                 if (newRoles.length() > 0 && !newRoles.toString().endsWith(",")) { // NOI18N
                     newRoles.append(',');
@@ -109,11 +107,8 @@ public class TomcatUsers {
         if (fo == null) {
             throw new IOException(NbBundle.getMessage(TomcatUsers.class, "MSG_FileNotFound", tomcatUsersFile.getPath()));
         }
-        OutputStream os = fo.getOutputStream();
-        try {
+        try (OutputStream os = fo.getOutputStream()){
             XMLUtil.write(doc, os, "UTF-8"); // NOI18N
-        } finally {
-            os.close();
         }
     }
     
@@ -142,9 +137,7 @@ public class TomcatUsers {
             }
             if (username.equals(name)) { // NOI18N
                 String roles = user.getAttribute("roles"); // NOI18N
-                if (TomcatVersion.TOMCAT_70.equals(version)
-                        || TomcatVersion.TOMCAT_80.equals(version)
-                        || TomcatVersion.TOMCAT_90.equals(version)) {
+                if (version.isAtLeast(TomcatVersion.TOMCAT_70)) {
                     if (hasRole(roles, "manager-script")) { // NOI18N
                         return true;
                     }                    

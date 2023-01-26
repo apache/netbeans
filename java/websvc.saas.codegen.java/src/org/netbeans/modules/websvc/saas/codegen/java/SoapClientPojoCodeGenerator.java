@@ -525,7 +525,7 @@ public class SoapClientPojoCodeGenerator extends SaasClientCodeGenerator {
         }
         if ("java.lang.String".equals(type)) {
             //NOI18N
-            if (defaultVal != null && defaultVal instanceof String) {
+            if (defaultVal instanceof String) {
                 return "\"" + (String) defaultVal + "\";";
             }
             return "\"\";"; //NOI18N

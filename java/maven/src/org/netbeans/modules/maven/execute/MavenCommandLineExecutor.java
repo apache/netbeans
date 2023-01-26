@@ -37,8 +37,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,6 +85,7 @@ import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.LifecycleManager;
 import org.openide.awt.HtmlBrowser;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.execution.ExecutionEngine;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
@@ -93,7 +94,9 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.Places;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -117,7 +120,7 @@ import org.openide.windows.OutputListener;
  * VM parameters injected by {@link StartupExtender} API are not affected by this feature. 
  * <p>
  * Example use:
- * {@codesnippet MavenExecutionTestBase#samplePassAdditionalVMargs}
+ * {@snippet file="org/netbeans/modules/maven/execute/MavenExecutionTestBase.java" region="samplePassAdditionalVMargs"}
  * The example will <b>append</b> <code>-DvmArg2=2</code> to VM arguments and <b>replaces</b> all user
  * program arguments with <code>"paramY"</code>. Append mode can be controlled using {@link ExplicitProcessParameters.Builder#appendArgs} or
  * {@link ExplicitProcessParameters.Builder#appendPriorityArgs}.
@@ -144,6 +147,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
 
     private static final RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
+
+    private static final String ICON_MAVEN_PROJECT = "org/netbeans/modules/maven/resources/Maven2Icon.gif"; // NOI18N
     /**
      * Execute maven build in NetBeans execution engine.
      * Most callers should rather use {@link #run} as this variant does no (non-late-bound) prerequisite checks.
@@ -201,6 +206,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         this.io = io;
     }
 
+    @NbBundle.Messages({
+        "# {0} - original message",
+        "ERR_CannotOverrideProxy=Could not override the proxy: {0}",
+        "ERR_BuildCancelled=Build cancelled by the user"
+    })
     /**
      * not to be called directly.. use execute();
      */
@@ -226,6 +236,49 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         int executionresult = -10;
         final InputOutput ioput = getInputOutput();
 
+        // TODO: maybe global instance for project-less operation ?
+        MavenProxySupport mps = (clonedConfig.getProject() == null) ? null : clonedConfig.getProject().getLookup().lookup(MavenProxySupport.class);
+        if (mps != null) {
+            boolean ok = false;
+            try {
+                MavenProxySupport.ProxyResult res = mps.checkProxySettings().get();
+                
+                if (res != null) {
+                    res.configure(clonedConfig);
+                }
+                if (res.getStatus() == MavenProxySupport.Status.ABORT) {
+                    IOException ex = res.getException();
+                    
+                    if (ex == null) {
+                        ioput.getErr().append(Bundle.ERR_BuildCancelled());
+                    } else {
+                        throw ex;
+                    }
+                    
+                } else {
+                    ok = true;
+                }
+            } catch (IOException ex) {
+                NotificationDisplayer.getDefault().notify(Bundle.TITLE_ProxyUpdateFailed(),
+                        ImageUtilities.loadImageIcon(ICON_MAVEN_PROJECT, false),
+                        ex.getLocalizedMessage(), null, NotificationDisplayer.Priority.NORMAL, NotificationDisplayer.Category.ERROR);
+                ioput.getErr().append(Bundle.ERR_CannotOverrideProxy(ex.getLocalizedMessage()));
+                // FIXME: log exception
+            } catch (ExecutionException ex) {
+                // FIXME: log exception
+            } catch (InterruptedException ex) {
+                // FIXME: log exception
+            } finally {
+                if (!ok) {
+                    ioput.getOut().close();
+                    ioput.getErr().close();
+                    actionStatesAtFinish(null, null);
+                    markFreeTab();
+                    return;
+                }
+            }
+        }
+        
         final ProgressHandle handle = ProgressHandle.createHandle(clonedConfig.getTaskDisplayName(), this, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -470,7 +523,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 toRet.add(rel != null ? rel : mp.getGroupId() + ':' + mp.getArtifactId());
             }
         }
-
+        Object o = config.getInternalProperties().get("NbIde.configOverride"); // NOI18N
+        if (o instanceof String) {
+            toRet.add("--settings");
+            toRet.add(o.toString());
+        }
         String opts = MavenSettings.getDefault().getDefaultOptions();
         if (opts != null) {
             try {

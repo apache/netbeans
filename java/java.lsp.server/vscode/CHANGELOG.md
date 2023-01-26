@@ -20,8 +20,36 @@
     under the License.
 
 -->
+## Version 16.0.1
+* Gradle 7.6 support to work on JDK 19
+* Proxy autodection and configuration for Maven & Gradle
+
+## Version 15.0.301
+* Native image CE debugger works on aarch64
+* Organize Imports fixed for clashing star imports
+* Auto import of types in code completion
+* Added inline redundant variable hint
+* Improvements to Maven and Gradle projects to report project artifacts
+* Return all dependencies for Maven and Gradle projects
+* Support Maven and Gradle vulnerability audits in OCI a proxy to nvd.nist.gov
+* NetBeans should not auto-insert `\n\` in Groovy triple quoted strings 
+* nb-javac 19 support
+
+## Version 15.0
+* Open Type command added
+* Present project view files as tree leaves
+* Minor improvements in OCI ui and VSCode icon mapping
+
 ## Version 14.0.301
-* Format Document and Format Selection added.
+* Settings: `NetBeans:UserDir` is set to `Local` as default value. This means each instance of VSCode runs own VSNetBeans LS
+* Format Document and Format Selection added 
+* External formatters using Eclipse, Google and Spring added.
+* JavaDoc completion added
+* Groovy Go To Symbol added
+* Several refactorings added
+* Settings are Remote-SSH aware
+* Native Image debugging provided by GraalVM works now for GraalVM CE and EE
+* Number of bug fixes and improvements in Java, projects and databases support
 
 ## Version 14.0
 * Workaround for VSCode 1.67 error which breaks Projects explorer icon

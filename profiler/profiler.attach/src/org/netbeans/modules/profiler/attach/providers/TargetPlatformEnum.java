@@ -59,7 +59,7 @@ public class TargetPlatformEnum {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     public boolean equals(Object obj) {
-        if ((obj == null) || !(obj instanceof TargetPlatformEnum)) {
+        if (!(obj instanceof TargetPlatformEnum)) {
             return false;
         }
 

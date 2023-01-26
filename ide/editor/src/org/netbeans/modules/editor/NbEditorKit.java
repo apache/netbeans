@@ -47,6 +47,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JEditorPane;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -275,6 +276,7 @@ public class NbEditorKit extends ExtKit implements Callable {
      */
     //@EditorActionRegistration(name = toggleToolbarAction)
     // Registration in createActions() due to getPopupMenuItem()
+    @Deprecated
     public static class ToggleToolbarAction extends BaseAction {
 
         public ToggleToolbarAction() {
@@ -392,14 +394,14 @@ public class NbEditorKit extends ExtKit implements Callable {
         }
 
         public void run() {
-            List l = PopupMenuActionsProvider.getPopupMenuItems(mimeType);
+            List<String> l = PopupMenuActionsProvider.getPopupMenuItems(mimeType);
 
             if (l.isEmpty()){
                 Preferences prefs = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
                 String actionNames = prefs.get(settingName, null);
 
                 if (actionNames != null) {
-                    l = new ArrayList();
+                    l = new ArrayList<>();
                     for(StringTokenizer t = new StringTokenizer(actionNames, ","); t.hasMoreTokens(); ) { //NOI18N
                         String action = t.nextToken().trim();
                         l.add(action);
@@ -407,7 +409,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                 }
             }
             
-            initedObjects = new ArrayList<Object>(l.size());
+            initedObjects = new ArrayList<>(l.size());
             instructions = new int[l.size()];
 
             for (Iterator i = l.iterator(); i.hasNext(); ) {
@@ -588,7 +590,7 @@ public class NbEditorKit extends ExtKit implements Callable {
         private final NbEditorKit editorKit;
         private final String localizedName;
         
-        List    objects;
+        List<Object>    objects;
         int[]   instructions;
         int     index;
         
@@ -618,13 +620,13 @@ public class NbEditorKit extends ExtKit implements Callable {
             this.localizedName = getLocalizedName(folder);
             
             List items = ActionsList.convert(sort(folder.getChildren()), false);
-            objects = new ArrayList(items.size());
+            objects = new ArrayList<>(items.size());
             instructions = new int[items.size()];
             
             for (Iterator i = items.iterator(); i.hasNext(); ) {
                 Object obj = i.next();
                 
-                if (obj == null || obj instanceof javax.swing.JSeparator) {
+                if (obj == null || obj instanceof JSeparator) {
                     objects.add(null);
                     instructions[index++] = ACTION_SEPARATOR;
                 } else if (obj instanceof String) {
@@ -765,7 +767,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     } else {
                         item.setEnabled(action.isEnabled());
                         Object helpID = action.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String)) {
+                        if ((helpID instanceof String)) {
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                         }
                         assignAccelerator(component.getKeymap(), action, item);
@@ -854,6 +856,7 @@ public class NbEditorKit extends ExtKit implements Callable {
     /**
      * @deprecated Without any replacement. This class is no longer functional.
      */
+    @Deprecated
     public class NbStopMacroRecordingAction extends ActionFactory.StopMacroRecordingAction {
         protected @Override MacroDialogSupport getMacroDialogSupport(Class kitClass){
             return super.getMacroDialogSupport(kitClass);
@@ -904,6 +907,7 @@ public class NbEditorKit extends ExtKit implements Callable {
      */
     //@EditorActionRegistration(name = BaseKit.toggleLineNumbersAction)
     // Registration in createActions() due to getPopupMenuItem() in predecessor
+    @Deprecated
     public static final class NbToggleLineNumbersAction extends ActionFactory.ToggleLineNumbersAction {
 
         public NbToggleLineNumbersAction() {
@@ -1059,7 +1063,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                         Mnemonics.setLocalizedText(item, itemText);
                         addAcceleretors(a, item, target);
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if ((helpID instanceof String))
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }
@@ -1242,7 +1246,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                     addAcceleretors(nonContextAction, item, target);
                     item.setEnabled(action.isEnabled());
                     Object helpID = action.getValue ("helpID"); // NOI18N
-                    if (helpID != null && (helpID instanceof String)) {
+                    if (helpID instanceof String) {
                         item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }

@@ -144,6 +144,7 @@ public class XMLJ2eeUtils {
             }
         }        
     }
+
     /** This method update document in editor after change in beans hierarchy.
      * It takes old document and new document in String.
      * To avoid regeneration of whole document in text editor following steps are done:
@@ -289,14 +290,15 @@ public class XMLJ2eeUtils {
         }
         return new String(text, 0, pos - 1);
     }
+
     /** This method updates the attribute specified by the elementPath in DOM tree
      * @param root Root element of the DOM graph 
-     * @param elementPath List defining the element path to the target element 
+     * @param elementPath List of ElementAttrInfo that defines the element path to the target element
      * @param attrName Attribute name of the target attribute 
      * @param attrValue New value for the attribute defined by attrName
-     * @return true if method was succesful, false otherwise
+     * @return true if method was successful, false otherwise
      */    
-    public static boolean changeAttribute (Element root, List elementPath, String attrName, String attrValue)
+    public static boolean changeAttribute (Element root, List<ElementAttrInfo> elementPath, String attrName, String attrValue)
     throws org.w3c.dom.DOMException {
        
         //if (elementPath.size()==0) return false;
@@ -351,9 +353,9 @@ public class XMLJ2eeUtils {
         }
         return true;
     }
-    public static boolean changeAttribute (Element root, List elementPath, String elementName, int index, String attrName, String attrValue)
+    public static boolean changeAttribute (Element root, List<ElementAttrInfo> elementPath, String elementName, int index, String attrName, String attrValue)
     throws org.w3c.dom.DOMException {
-        if (elementPath.size()==0) return false;
+        if (elementPath.isEmpty()) return false;
         Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         //String keyAttributeName=null;
@@ -393,15 +395,16 @@ public class XMLJ2eeUtils {
             element.setAttribute(attrName,attrValue);
         }
         return true;
-    }    
+    }
+
     /** This method deletes the element specified by elementPath from the DOM tree
      * @param root Root element of the DOM graph 
-     * @param elementPath List defining the element path to the target element 
-     * @return true if method was succesful, false otherwise
+     * @param elementPath List of ElementAttrInfo that defines the element path to the target element
+     * @return true if method was successful, false otherwise
      */    
-    public static boolean deleteElement (Element root, List elementPath)
+    public static boolean deleteElement (Element root, List<ElementAttrInfo> elementPath)
     throws org.w3c.dom.DOMException {
-        if (elementPath.size()==0) return false;
+        if (elementPath.isEmpty()) return false;
         Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element parent = null;
         Element element = root;
@@ -441,7 +444,7 @@ public class XMLJ2eeUtils {
         // removing the next text element (only if this element was the last non text element in parent)
         if (firstElement) {
             Node next = element.getNextSibling();
-            if (next!=null && next instanceof CharacterData && next.getNextSibling()==null)
+            if (next instanceof CharacterData && next.getNextSibling() == null)
                      parent.removeChild(next);        
         }
      
@@ -449,17 +452,18 @@ public class XMLJ2eeUtils {
         
         return true;
     }
+
     /** This method adds the element specified by elementName and element attributes into the element
      * specified by the elementPath
      * @param root Root element of the DOM graph 
-     * @param elementPath List defining the element path to the target element
+     * @param elementPath List of ElementAttrInfo that defines the element path to the target element
      * @param elementName name of the new Element
      * @param keyAttribute key Attribute of the new Element
      * @param attrNames names of the attributes that will be initialized
      * @param attrValues initial values for attrNames
-     * @return true if method was succesful, false otherwise
+     * @return true if method was successful, false otherwise
      */ 
-    public static boolean addElement (Element root, List elementPath, String elementName, String keyAttribute, String[] attrNames, String[] attrValues){
+    public static boolean addElement (Element root, List<ElementAttrInfo> elementPath, String elementName, String keyAttribute, String[] attrNames, String[] attrValues){
         Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         while (it.hasNext()){
@@ -531,11 +535,11 @@ public class XMLJ2eeUtils {
                 Node previous = lastInList.getPreviousSibling();
                 Node next = lastInList.getNextSibling();
                 if (next != null) {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.insertBefore(previous.cloneNode(false),next);
                     element.insertBefore(newElement,next);
                 } else {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.appendChild(previous.cloneNode(false));
                     element.appendChild(newElement);
                 }
@@ -547,12 +551,12 @@ public class XMLJ2eeUtils {
     /** This method adds the element specified by elementName and elementValue into the element
      * specified by the elementPath
      * @param root Root element of the DOM graph 
-     * @param elementPath List defining the element path to the target element
+     * @param elementPath List of ElementAttrInfo that defines the element path to the target element
      * @param elementName name of the new Element
-     * @param elementValue value of te new Element
-     * @return true if method was succesful, false otherwise
+     * @param elementValue value of the new Element
+     * @return true if method was successful, false otherwise
      */ 
-    public static boolean addStringElement (Element root, List elementPath, String elementName, String elementValue){
+    public static boolean addStringElement (Element root, List<ElementAttrInfo> elementPath, String elementName, String elementValue){
         Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         
@@ -607,11 +611,11 @@ public class XMLJ2eeUtils {
                 Node previous = lastInList.getPreviousSibling();
                 Node next = lastInList.getNextSibling();
                 if (next != null) {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.insertBefore(previous.cloneNode(false),next);
                     element.insertBefore(newElement,next);
                 } else {
-                    if (previous!=null && previous instanceof CharacterData)
+                    if (previous instanceof CharacterData)
                         element.appendChild(previous.cloneNode(false));
                     element.appendChild(newElement);
                 }
@@ -622,13 +626,13 @@ public class XMLJ2eeUtils {
     
     /** This method deletes the all elements specified by elementName from the DOM tree
      * @param root Root element of the DOM graph 
-     * @param elementPath List defining the element path to the parent element 
+     * @param elementPath List of ElementAttrInfo that defines the element path to the parent element
      * @param elementName String specifying the elements for deleting 
-     * @return true if method was succesful, false otherwise
+     * @return true if method was successful, false otherwise
      */    
-    public static boolean deleteAllElements (Element root, List elementPath, String elementName)
+    public static boolean deleteAllElements (Element root, List<ElementAttrInfo> elementPath, String elementName)
     throws org.w3c.dom.DOMException {
-        if (elementPath.size()==0) return false;
+        if (elementPath.isEmpty()) return false;
         Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element parent = null;
         Element element = root;
@@ -671,13 +675,13 @@ public class XMLJ2eeUtils {
         // removing the next text element (only if this element was the last non text element in parent)
         if (firstElement) {
             Node next = list.item(list.getLength()-1).getNextSibling();
-            if (next!=null && next instanceof CharacterData && next.getNextSibling()==null)
+            if (next instanceof CharacterData && next.getNextSibling() == null)
                      element.removeChild(next);        
         }
         for(int i=list.getLength()-1;i>=0;i--){
             Node item = list.item(i);
             Node previous = item.getPreviousSibling();
-            if (previous!=null && previous instanceof CharacterData)
+            if (previous instanceof CharacterData)
                 element.removeChild(previous);
             element.removeChild(item);
         }

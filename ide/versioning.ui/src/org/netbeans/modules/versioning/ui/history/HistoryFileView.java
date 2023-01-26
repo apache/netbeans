@@ -116,7 +116,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
     
     private HistoryRootNode getRootNode() {
         Node rootContext = tablePanel.getExplorerManager().getRootContext();
-        if(rootContext == null || !(rootContext instanceof HistoryRootNode)) {
+        if(!(rootContext instanceof HistoryRootNode)) {
             return null;
         }  
         return (HistoryRootNode) rootContext;
@@ -674,6 +674,11 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
 
                         Action[] actions = NodeOp.findActions (selectedNodes);
                         JPopupMenu res = Utilities.actionsToPopup(actions, component);
+                        
+                        if (selectedNodes.length == 1 && (HistoryRootNode.isLoadNext(selectedNodes[0]) || HistoryRootNode.isWait(selectedNodes[0]))) {
+                            return res;
+                        }
+                        
                         if ((component instanceof ETable) && (column >= 0)) {
                             ETable et = (ETable)component;
                             if (row >= 0) {

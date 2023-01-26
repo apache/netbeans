@@ -73,17 +73,20 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
     @Override
     public WSStackVersion getVersion() {
         Set<Profile> supportedProfiles = platform.getSupportedProfiles();
-        if (supportedProfiles.contains(Profile.JAKARTA_EE_9_FULL) ||
-                supportedProfiles.contains(Profile.JAKARTA_EE_9_WEB) ||
-                supportedProfiles.contains(Profile.JAKARTA_EE_8_FULL) ||
-                supportedProfiles.contains(Profile.JAKARTA_EE_8_WEB) ||
-                supportedProfiles.contains(Profile.JAVA_EE_8_FULL) ||
-                supportedProfiles.contains(Profile.JAVA_EE_8_WEB) ||
-                supportedProfiles.contains(Profile.JAVA_EE_7_FULL) ||
-                supportedProfiles.contains(Profile.JAVA_EE_7_WEB)  ||
-                supportedProfiles.contains(Profile.JAVA_EE_6_FULL) ||
-                supportedProfiles.contains(Profile.JAVA_EE_6_WEB))
-        {
+        if (supportedProfiles.contains(Profile.JAKARTA_EE_10_FULL)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_10_WEB)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_9_1_FULL)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_9_1_WEB)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_9_FULL)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_9_WEB)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_8_FULL)
+                || supportedProfiles.contains(Profile.JAKARTA_EE_8_WEB)
+                || supportedProfiles.contains(Profile.JAVA_EE_8_FULL)
+                || supportedProfiles.contains(Profile.JAVA_EE_8_WEB)
+                || supportedProfiles.contains(Profile.JAVA_EE_7_FULL)
+                || supportedProfiles.contains(Profile.JAVA_EE_7_WEB)
+                || supportedProfiles.contains(Profile.JAVA_EE_6_FULL)
+                || supportedProfiles.contains(Profile.JAVA_EE_6_WEB)) {
             // gfv3ee6 GF id
             if (isMetroInstalled()) {
                 return WSStackVersion.valueOf(2, 2, 0, 0);

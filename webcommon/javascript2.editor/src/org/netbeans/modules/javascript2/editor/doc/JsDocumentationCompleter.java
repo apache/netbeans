@@ -92,7 +92,7 @@ public class JsDocumentationCompleter {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         ParserResult parserResult = (ParserResult) resultIterator.getParserResult(offset);
-                        if (parserResult != null && parserResult instanceof JsParserResult) {
+                        if (parserResult instanceof JsParserResult) {
                             final JsParserResult jsParserResult = (JsParserResult) parserResult;
                             if (jsParserResult.getRoot() == null) {
                                 // broken source
@@ -169,7 +169,7 @@ public class JsDocumentationCompleter {
         }
         return result;
     }
-    
+
     private static boolean isWrapperObject(JsParserResult jsParserResult, JsObject jsObject, Node nearestNode) {
         List<Identifier> nodeName = Model.getModel(jsParserResult, false).getNodeName(nearestNode);
         if (nodeName == null || nodeName.isEmpty()) {

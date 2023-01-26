@@ -19,8 +19,6 @@
 package org.netbeans.test.syntax;
 
 import java.awt.event.InputEvent;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;

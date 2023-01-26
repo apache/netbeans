@@ -27,6 +27,20 @@
 </apidefs>
 <changes>
     <change>
+         <api name="dialogs"/>
+         <summary>NotifyDescriptor.ComposedInput added</summary>
+         <version major="7" minor="63"/>
+         <date day="7" month="6" year="2022"/>
+         <author login="dbalek"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added <code>ComposedInput</code> providing a composed input of multiple chained selection lists and/or input lines.
+             </p>
+         </description>
+         <class package="org.openide" name="NotifyDescriptor"/>
+    </change>
+    <change>
          <summary>Support for CompletableFutures in Dialog API</summary>
          <version major="7" minor="61"/>
          <date day="14" month="2" year="2022"/>

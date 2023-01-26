@@ -37,6 +37,7 @@ public class ReaderInputStream extends InputStream {
     /** Creates new input stream from the given reader.
      * Uses the platform default encoding.
     * @param reader Input reader
+    * @throws IOException on IO failure
     */
     public ReaderInputStream(Reader reader) throws IOException {
         this.reader = reader;
@@ -47,7 +48,8 @@ public class ReaderInputStream extends InputStream {
 
     /** Creates new input stream from the given reader and encoding.
      * @param reader Input reader
-     * @param encoding
+     * @param encoding encoding
+     * @throws IOException on IO failure
      */
     public ReaderInputStream(Reader reader, String encoding)
     throws IOException {

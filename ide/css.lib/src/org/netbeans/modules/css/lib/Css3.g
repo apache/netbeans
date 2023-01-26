@@ -36,6 +36,9 @@
 //    from the module directory (ide/css.lib)
 // 3. Rerun unittests
 // 4. Commit Css3.g together with generated Css3Lexer.java and Css3Parser.java
+//
+// INFO: It is known, that the grammar does not compile without warnings
+//
 
 grammar Css3;
 
@@ -895,7 +898,7 @@ pseudo
                 )
                 | {isScssSource()}? sass_interpolation_expression_var
                 | ( NOT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
-                | {tokenNameEquals("is") || tokenNameEquals("where")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | {tokenNameEquals("is") || tokenNameEquals("where") || tokenNameEquals("has")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
                 | ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
              ) 
     ;

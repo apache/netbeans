@@ -1612,6 +1612,9 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("*|*:is(*:hover, *:focus) {}");
         assertParses("a:where(:valid, :unsupported) {}");
         assertParses("a:where(:not(:hover)) {text-decoration: none;}");
+        assertParses("body:has(#aCheck:checked) {}");
+        assertParses(":is(h1, h2, h3):has(+ :is(h2, h3, h4)) {}");
+        assertParses(":is(h1, h2, h3):has(+ h2, + h3, + h4) {}");
     }
 
     public void testParsePage() {

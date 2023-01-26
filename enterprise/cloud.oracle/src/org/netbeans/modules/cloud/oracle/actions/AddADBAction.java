@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,15 +79,15 @@ import org.openide.util.NbBundle;
 public class AddADBAction implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(AddADBAction.class.getName());
     
-    private static final String DB = "db";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
+    private static final String DB = "db"; //NOI18N
+    private static final String USERNAME = "username"; //NOI18N
+    private static final String PASSWORD = "password"; //NOI18N
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Map<String, Object> result = new HashMap<> ();
         
-        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 2, new Callback() {
+        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 3, new Callback() {
             Map<Integer, List> values = new HashMap<> ();
             
             @Override
@@ -113,7 +112,7 @@ public class AddADBAction implements ActionListener {
                     if (prev instanceof NotifyDescriptor.QuickPick) {
                         Optional<String> selected = ((QuickPick) prev).getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).findFirst();
                         if (selected.isPresent()) {
-                            Optional<? extends OCIItem> ti = values.get(number -1).stream().filter(t -> ((OCIItem) t).getName().equals(selected.get())).findFirst();
+                            Optional<? extends OCIItem> ti = values.get(number - 1).stream().filter(t -> ((OCIItem) t).getName().equals(selected.get())).findFirst();
                             if (ti.isPresent()) {
                                 prevItem = ti.get();
                             }
@@ -123,12 +122,17 @@ public class AddADBAction implements ActionListener {
                             return new NotifyDescriptor.InputLine(Bundle.EnterUsername(), Bundle.EnterUsername());
                         }
                         values.put(number, getCompartmentsAndDbs(prevItem));
+                        input.setEstimatedNumberOfInputs(input.getEstimatedNumberOfInputs() + 1);
                         return createQuickPick(values.get(number), Bundle.SelectDatabase());
                     } else if (prev instanceof NotifyDescriptor.PasswordLine) {
                         result.put(PASSWORD, ((NotifyDescriptor.PasswordLine) prev).getInputText());
                         return null;
                     } else if (prev instanceof NotifyDescriptor.InputLine) {
-                        result.put(USERNAME, ((NotifyDescriptor.InputLine) prev).getInputText());
+                        String username = ((NotifyDescriptor.InputLine) prev).getInputText();
+                        if (username == null || username.trim().isEmpty()) {
+                            return prev;
+                        }
+                        result.put(USERNAME, username);
                         return new NotifyDescriptor.PasswordLine(Bundle.EnterPassword(), Bundle.EnterPassword());
                     }
                     return null;
